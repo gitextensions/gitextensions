@@ -32,10 +32,10 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
-             _apiClient = _apiClientFactory.CreateGitlabApiClient(
-                 config.GetString("InstanceUrl", string.Empty),
-                 config.GetString("ApiToken", string.Empty),
-                 config.GetInt("ProjectId", 0));
+            _apiClient = _apiClientFactory.CreateGitlabApiClient(
+                config.GetString("InstanceUrl", string.Empty),
+                config.GetString("ApiToken", string.Empty),
+                config.GetInt("ProjectId", 0));
         }
 
         public string UniqueKey
@@ -66,39 +66,46 @@ namespace GitExtensions.Plugins.GitlabIntegration
         {
             Validates.NotNull(_apiClient);
 
-            PagedResponse<GitlabPipeline> firstPage = await _apiClient.GetPipelinesAsync(sinceDate, running, 1);
-            ProcessLoadedBuilds(firstPage.Items, observer);
-
-            if (firstPage.TotalPages is > 1)
+            try
             {
-                Task[] pagesTasks = new Task[firstPage.TotalPages.Value - 1];
-                for (int i = 2; i <= firstPage.TotalPages; i++)
-                {
-                    Task<PagedResponse<GitlabPipeline>> pageTask = _apiClient.GetPipelinesAsync(sinceDate, running, i);
-                    pagesTasks[i - 2] = pageTask.ContinueWith(x =>
-                        {
-                            ProcessLoadedBuilds(x.Result.Items, observer);
-                        },
-                        cancellationToken,
-                        TaskContinuationOptions.None,
-                        TaskScheduler.Current);
-                }
+                PagedResponse<GitlabPipeline> firstPage = await _apiClient.GetPipelinesAsync(sinceDate, running, 1, cancellationToken);
+                ProcessLoadedBuilds(firstPage.Items, observer);
 
-                await Task.Factory.ContinueWhenAll(pagesTasks, t =>
+                if (firstPage.TotalPages is > 1)
                 {
+                    Task[] pagesTasks = new Task[firstPage.TotalPages.Value - 1];
+                    for (int i = 2; i <= firstPage.TotalPages; i++)
+                    {
+                        Task<PagedResponse<GitlabPipeline>> pageTask = _apiClient.GetPipelinesAsync(sinceDate, running, i, cancellationToken);
+                        pagesTasks[i - 2] = pageTask.ContinueWith(x =>
+                            {
+                                ProcessLoadedBuilds(x.Result.Items, observer);
+                            },
+                            cancellationToken,
+                            TaskContinuationOptions.None,
+                            TaskScheduler.Current);
+                    }
+
+                    await Task.Factory.ContinueWhenAll(pagesTasks, t =>
+                    {
+                        observer.OnCompleted();
+                    }, cancellationToken);
+                }
+                else
+                {
+                    PagedResponse<GitlabPipeline> currentPage = firstPage;
+
+                    while (currentPage.NextPage.HasValue && cancellationToken.IsCancellationRequested == false)
+                    {
+                        currentPage = await _apiClient.GetPipelinesAsync(sinceDate, running, currentPage.NextPage.Value, cancellationToken);
+                        ProcessLoadedBuilds(currentPage.Items, observer);
+                    }
+
                     observer.OnCompleted();
-                }, cancellationToken);
-            }
-            else
-            {
-                PagedResponse<GitlabPipeline> currentPage = firstPage;
-
-                while (currentPage.NextPage.HasValue)
-                {
-                    currentPage = await _apiClient.GetPipelinesAsync(sinceDate, running, currentPage.NextPage.Value);
-                    ProcessLoadedBuilds(currentPage.Items, observer);
                 }
-
+            }
+            catch (OperationCanceledException)
+            {
                 observer.OnCompleted();
             }
         }

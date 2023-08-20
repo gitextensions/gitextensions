@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 using Microsoft;
 using Newtonsoft.Json;
@@ -28,9 +29,9 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
             return client;
         }
 
-        private async Task<HttpResponseMessage> HttpGetAsync(Uri url)
+        private async Task<HttpResponseMessage> HttpGetAsync(Uri url, CancellationToken cancellationToken)
         {
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
+            HttpResponseMessage response = await _httpClient.GetAsync(url, cancellationToken);
             switch (response.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
@@ -55,12 +56,12 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
             return null;
         }
 
-        protected async Task<PagedResponse<TItem>> LoadListAsync<TItem>(Uri url)
+        protected async Task<PagedResponse<TItem>> LoadListAsync<TItem>(Uri url, CancellationToken cancellationToken)
         {
-            using HttpResponseMessage response = await HttpGetAsync(url);
+            using HttpResponseMessage response = await HttpGetAsync(url, cancellationToken);
             Validates.NotNull(response);
 
-            string json = await response.Content.ReadAsStringAsync();
+            string json = await response.Content.ReadAsStringAsync(cancellationToken);
 
             IEnumerable<TItem>? list = JsonConvert.DeserializeObject<IEnumerable<TItem>>(json);
 
@@ -79,7 +80,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 
         protected async Task<TItem?> LoadItemAsync<TItem>(Uri url)
         {
-            using HttpResponseMessage response = await HttpGetAsync(url);
+            using HttpResponseMessage response = await HttpGetAsync(url, CancellationToken.None);
             Validates.NotNull(response);
 
             string json = await response.Content.ReadAsStringAsync();

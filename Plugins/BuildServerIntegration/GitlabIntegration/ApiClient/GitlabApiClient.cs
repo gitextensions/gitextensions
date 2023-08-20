@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Threading;
 using System.Web;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 
@@ -6,7 +7,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 {
     public interface IGitlabApiClient : IDisposable
     {
-        Task<PagedResponse<GitlabPipeline>> GetPipelinesAsync(DateTime? sinceDate, bool running, int pageNumber);
+        Task<PagedResponse<GitlabPipeline>> GetPipelinesAsync(DateTime? sinceDate, bool running, int pageNumber, CancellationToken cancellationToken);
         string InstanceUrl { get; }
     }
 
@@ -21,7 +22,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
             _projectId = projectId;
         }
 
-        public async Task<PagedResponse<GitlabPipeline>> GetPipelinesAsync(DateTime? sinceDate, bool running, int pageNumber)
+        public async Task<PagedResponse<GitlabPipeline>> GetPipelinesAsync(DateTime? sinceDate, bool running, int pageNumber, CancellationToken cancellationToken)
         {
             UriBuilder pipelinesUriBuilder = new($"{InstanceUrl}/api/v4/projects/{_projectId}/pipelines");
             NameValueCollection query = HttpUtility.ParseQueryString(pipelinesUriBuilder.Query);
@@ -45,7 +46,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 
             pipelinesUriBuilder.Query = query.ToString() ?? string.Empty;
 
-            return await LoadListAsync<GitlabPipeline>(pipelinesUriBuilder.Uri);
+            return await LoadListAsync<GitlabPipeline>(pipelinesUriBuilder.Uri, cancellationToken);
         }
 
         public async Task<GitlabProject?> GetProjectAsync(string projectNamespace, string projectName)
