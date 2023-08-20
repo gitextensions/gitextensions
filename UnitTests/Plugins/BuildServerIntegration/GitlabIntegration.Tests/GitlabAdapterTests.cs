@@ -54,12 +54,12 @@ namespace GitlabIntegrationTests
 
             List<BuildInfo> expected = new();
 
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
                 .Returns(pagedResponse);
 
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
 
-            _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>());
+            _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
             result.OrderBy(x => x.Id).SequenceEqual(expected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
         }
 
@@ -83,12 +83,12 @@ namespace GitlabIntegrationTests
                 GitlabAdapterTestData.Builds[1].Item1,
             };
 
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
                 .Returns(pagedResponse);
 
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
 
-            _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>());
+            _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
             result.OrderBy(x => x.Id).SequenceEqual(expected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
         }
 
@@ -112,12 +112,12 @@ namespace GitlabIntegrationTests
                 GitlabAdapterTestData.Builds[-7].Item1,
             };
 
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), true, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), true, 1, Arg.Any<CancellationToken>())
                 .Returns(pagedResponse);
 
             List<BuildInfo> result = ProcessGetRunningBuildsRequest();
 
-            _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>());
+            _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
             result.OrderBy(x => x.Id).SequenceEqual(expected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
         }
 
@@ -162,14 +162,14 @@ namespace GitlabIntegrationTests
                 GitlabAdapterTestData.Builds[1].Item1
             };
 
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
                 .Returns(firstPagedResponse);
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 2)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 2, Arg.Any<CancellationToken>())
                 .Returns(secondPagedResponse);
 
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
 
-            _apiClient.Received(2).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>());
+            _apiClient.Received(2).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
             result.OrderBy(x => x.Id).SequenceEqual(expected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
         }
 
@@ -213,14 +213,14 @@ namespace GitlabIntegrationTests
                 GitlabAdapterTestData.Builds[1].Item1,
             };
 
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
                 .Returns(firstPagedResponse);
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 2)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 2, Arg.Any<CancellationToken>())
                 .Returns(secondPagedResponse);
 
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
 
-            _apiClient.Received(2).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>());
+            _apiClient.Received(2).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
             result.OrderBy(x => x.Id).SequenceEqual(expected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
         }
 
@@ -245,12 +245,12 @@ namespace GitlabIntegrationTests
                 GitlabAdapterTestData.Builds[1].Item1,
             };
 
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
                 .Returns(firstResponse);
 
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
 
-            _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>());
+            _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
             result.OrderBy(x => x.Id).SequenceEqual(firstExpected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
 
             // Request running build
@@ -271,12 +271,12 @@ namespace GitlabIntegrationTests
                 GitlabAdapterTestData.Builds[-7].Item1,
             };
 
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), true, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), true, 1, Arg.Any<CancellationToken>())
                 .Returns(runningResponse);
 
             result = ProcessGetRunningBuildsRequest();
 
-            _apiClient.Received(2).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>());
+            _apiClient.Received(2).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
             result.OrderBy(x => x.Id).SequenceEqual(runningExpected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
 
             // Simulate running build to be finished
@@ -299,12 +299,12 @@ namespace GitlabIntegrationTests
                 GitlabAdapterTestData.Builds[7].Item1,
             };
 
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
                 .Returns(secondResponse);
 
             result = ProcessGetFinishedBuildsRequest();
 
-            _apiClient.Received(3).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>());
+            _apiClient.Received(3).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
             result.OrderBy(x => x.Id).SequenceEqual(secondExpected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
         }
 
@@ -312,7 +312,7 @@ namespace GitlabIntegrationTests
         [Ignore("Settings check should be added first")]
         public void Should_handle_unauthorized_access_exception()
         {
-            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1)
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
                 .Throws(new UnauthorizedAccessException());
 
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();

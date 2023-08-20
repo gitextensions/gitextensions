@@ -16,7 +16,8 @@ namespace GitlabIntegrationTests
                     {
                         Id = "1",
                         CommitHashList = new[] { ObjectId.Parse("ea6e12b9fbf6da0a558f62e1dc6eaf9d52c22f74") },
-                        Duration = 0
+                        Duration = 0,
+                        ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
                     {
@@ -30,7 +31,8 @@ namespace GitlabIntegrationTests
                     {
                         Id = "2",
                         CommitHashList = new[] { ObjectId.Parse("0ecc29cbb3ceaa4d12411ceadae9c500e93c9255") },
-                        Duration = 0
+                        Duration = 0,
+                        ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
                     {
@@ -44,7 +46,8 @@ namespace GitlabIntegrationTests
                     {
                         Id = "3",
                         CommitHashList = new[] { ObjectId.Parse("4ed8079785c070fdaf273771511901e4746c7164") },
-                        Duration = 0
+                        Duration = 0,
+                        ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
                     {
@@ -58,7 +61,8 @@ namespace GitlabIntegrationTests
                     {
                         Id = "4",
                         CommitHashList = new[] { ObjectId.Parse("afe7fd31ae5156f1aff74874693c0fec7b8cd50a") },
-                        Duration = 0
+                        Duration = 0,
+                        ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
                     {
@@ -72,7 +76,8 @@ namespace GitlabIntegrationTests
                     {
                         Id = "5",
                         CommitHashList = new[] { ObjectId.Parse("df0b59d03b11ee5d70c0db11bfcf99fc862df56f") },
-                        Duration = 0
+                        Duration = 0,
+                        ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
                     {
@@ -86,7 +91,8 @@ namespace GitlabIntegrationTests
                     {
                         Id = "6",
                         CommitHashList = new[] { ObjectId.Parse("2b2fb529ba9f24646e5a3a6daf1c42a27940ac26") },
-                        Duration = 0
+                        Duration = 0,
+                        ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
                     {
@@ -102,6 +108,7 @@ namespace GitlabIntegrationTests
                         CommitHashList = new[] { ObjectId.Parse("cd4090d807d75f165a3cf0000a1773422fdf56ca") },
                         Duration = 600000000,
                         Status = BuildInfo.BuildStatus.InProgress,
+                        ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
                     {
@@ -119,7 +126,8 @@ namespace GitlabIntegrationTests
                         Id = "7",
                         CommitHashList = new[] { ObjectId.Parse("cd4090d807d75f165a3cf0000a1773422fdf56ca") },
                         Duration = 900000000,
-                        Status = BuildInfo.BuildStatus.Success
+                        Status = BuildInfo.BuildStatus.Success,
+                        ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
                     {
