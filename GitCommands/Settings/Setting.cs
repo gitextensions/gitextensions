@@ -171,6 +171,10 @@ namespace GitCommands.Settings
             private object? GetValue(string name)
             {
                 string? stringValue = SettingsSource.GetValue(name);
+                if (stringValue is null)
+                {
+                    return null;
+                }
 
                 Type type = typeof(T);
                 Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
