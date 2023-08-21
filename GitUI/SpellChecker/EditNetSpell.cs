@@ -1128,9 +1128,12 @@ namespace GitUI.SpellChecker
             base.Dispose(disposing);
         }
 
-        private void TextBox_MouseDown(object sender, EventArgs e)
+        private void TextBox_MouseDown(object sender, MouseEventArgs e)
         {
-            TextBox.SelectionStart = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
+            if (e.Button == MouseButtons.Right)
+            {
+                TextBox.SelectionStart = TextBox.GetCharIndexFromPosition(e.Location);
+            }
         }
     }
 }
