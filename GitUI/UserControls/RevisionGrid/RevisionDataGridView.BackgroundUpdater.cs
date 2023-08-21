@@ -40,23 +40,28 @@
 
             private async Task WrappedOperationAsync()
             {
-                await _operation();
-
-                if (_rerunRequested)
+                try
                 {
-                    await Task.Delay(_cooldownMilliseconds);
+                    await _operation();
                 }
-
-                lock (_sync)
+                finally
                 {
                     if (_rerunRequested)
                     {
-                        Task.Run(WrappedOperationAsync);
-                        _rerunRequested = false;
+                        await Task.Delay(_cooldownMilliseconds);
                     }
-                    else
+
+                    lock (_sync)
                     {
-                        _executing = false;
+                        if (_rerunRequested)
+                        {
+                            Task.Run(WrappedOperationAsync);
+                            _rerunRequested = false;
+                        }
+                        else
+                        {
+                            _executing = false;
+                        }
                     }
                 }
             }
