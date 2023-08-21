@@ -315,8 +315,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// It is very easy to check if the rowcache is dirty or not. If the last revision added to the rowcache
         /// is not in the same index in the orderednodecache, the order has been changed. Only then rebuilding is
         /// required. If the order is changed after this revision, we do not care since it wasn't processed yet.
+        /// But when filtering revisions, this can mismatch. So check the first revision in addition.
         /// </summary>
-        private static bool CheckRowCacheIsDirty(IList<RevisionGraphRow> orderedRowCache, RevisionGraphRevision[] orderedNodesCache)
+        private static bool IsRowCacheDirty(IList<RevisionGraphRow> orderedRowCache, RevisionGraphRevision[] orderedNodesCache)
         {
             // We need bounds checking on orderedNodesCache. It should be always larger then the rowcache,
             // but another thread could clear the orderedNodesCache while another is building orderedRowCache.
@@ -332,7 +333,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             int indexToCompare = orderedRowCache.Count - 1;
-            return orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare];
+            return orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare]
+                || orderedRowCache[0].Revision != orderedNodesCache[0];
         }
 
         private void BuildOrderedRowCache(RevisionGraphRevision[] orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
@@ -342,7 +344,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // Ensure we keep using the same instance of the rowcache from here on
             IList<RevisionGraphRow>? localOrderedRowCache = _orderedRowCache;
 
-            if (localOrderedRowCache is null || CheckRowCacheIsDirty(localOrderedRowCache, orderedNodesCache))
+            if (localOrderedRowCache is null || IsRowCacheDirty(localOrderedRowCache, orderedNodesCache))
             {
                 localOrderedRowCache = new List<RevisionGraphRow>(capacity: Math.Max(currentRowIndex, lastOrderedNodeIndex) + 1);
             }
