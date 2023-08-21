@@ -305,9 +305,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             if (!updateParents)
             {
-                // The rows may already be cached, invalidate and request reload of "some" rows
+                // The rows may already be cached, invalidate and update but do not reload rows in this context
                 _reorder = true;
-                CacheTo(0, 99);
+                Updated?.Invoke();
             }
         }
 

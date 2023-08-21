@@ -715,7 +715,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             async Task UpdateGraphAsync(int fromIndex, int toIndex)
             {
-                // Cache the next item
+                // Cache the next item; build the cache in limited chunks in order to update intermittently
                 _revisionGraph.CacheTo(currentRowIndex: toIndex, lastToCacheRowIndex: Math.Min(fromIndex + 1500, toIndex));
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
