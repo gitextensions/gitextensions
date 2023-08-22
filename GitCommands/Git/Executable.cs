@@ -151,12 +151,17 @@ namespace GitCommands
                             if (_throwOnErrorExit && exitCode != 0)
                             {
                                 string errorOutput = _process.StandardError.ReadToEnd().Trim();
-                                ExternalOperationException ex
-                                    = new(command: _process.StartInfo.FileName,
+                                Exception ex
+                                    = new ExternalOperationException(command: _process.StartInfo.FileName,
                                             _process.StartInfo.Arguments,
                                             _process.StartInfo.WorkingDirectory,
                                             exitCode,
                                             new Exception(errorOutput));
+                                if (exitCode == NativeMethods.STATUS_CONTROL_C_EXIT)
+                                {
+                                    ex = new OperationCanceledException("Ctrl+C pressed or console closed", ex);
+                                }
+
                                 _logOperation.LogProcessEnd(ex);
                                 _exitTaskCompletionSource.TrySetException(ex);
                             }
