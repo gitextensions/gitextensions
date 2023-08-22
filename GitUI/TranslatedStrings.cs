@@ -168,11 +168,11 @@ following command.
         private readonly TranslationString _seeErrorMessage = new("See error message...");
         private readonly TranslationString _hideErrorMessage = new("Hide error message...");
         private readonly TranslationString _reportIssue = new("Report the issue");
-        private readonly TranslationString _reportIssueDescription = new("If you can consistently reproduce the issue, please report it.");
+        private readonly TranslationString _reportReproducedIssueDescription = new("If you can consistently reproduce the issue, please report it.");
         private readonly TranslationString _restartApplication = new($"Restart {AppSettings.ApplicationName}");
         private readonly TranslationString _restartApplicationDescription = new("Usually restarting the application solves the issue.\r\nSometimes Windows may need to be restarted too.");
         private readonly TranslationString _failedToLoadAnAssembly = new("Failed to load an assembly");
-        private readonly TranslationString _failedToLoadFileOrAssemblyFormat = new("Could not load file or assembly '{0}'");
+        private readonly TranslationString _failedToLoadFileOrAssemblyFormat = new("Could not load file or assembly '{0}'.");
         private readonly TranslationString _failedToLoadFileOrAssemblyText = new("Most of the times the error is temporary, likely caused by Windows Update.");
 
         // public only because of FormTranslate
@@ -350,7 +350,7 @@ following command.
         public static string SeeErrorMessage => _instance.Value._seeErrorMessage.Text;
         public static string HideErrorMessage => _instance.Value._hideErrorMessage.Text;
         public static string ReportIssue => _instance.Value._reportIssue.Text;
-        public static string ReportIssueDescription => _instance.Value._reportIssueDescription.Text;
+        public static string ReportReproducedIssueDescription => _instance.Value._reportReproducedIssueDescription.Text;
         public static string RestartApplication => _instance.Value._restartApplication.Text;
         public static string RestartApplicationDescription => _instance.Value._restartApplicationDescription.Text;
         public static string FailedToLoadAnAssembly => _instance.Value._failedToLoadAnAssembly.Text;

@@ -10093,7 +10093,7 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
-        <source>Could not load file or assembly '{0}'</source>
+        <source>Could not load file or assembly '{0}'.</source>
         <target />
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
@@ -10315,7 +10315,7 @@ Remote: {1}</source>
         <source>Report the issue</source>
         <target />
       </trans-unit>
-      <trans-unit id="_reportIssueDescription.Text">
+      <trans-unit id="_reportReproducedIssueDescription.Text">
         <source>If you can consistently reproduce the issue, please report it.</source>
         <target />
       </trans-unit>

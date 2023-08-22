@@ -18,12 +18,6 @@ namespace GitUI.NBugReports
         private static IntPtr OwnerFormHandle
             => OwnerForm?.Handle ?? IntPtr.Zero;
 
-        private enum UserAction
-        {
-            ReportIssue,
-            RestartApplication
-        }
-
         /// <summary>
         /// Gets the root error.
         /// </summary>
@@ -108,18 +102,9 @@ namespace GitUI.NBugReports
             }
 
             if (exception is FileNotFoundException fileNotFoundException
-                && ReportFailToLoadAnAssembly(fileNotFoundException) == UserAction.RestartApplication)
+                && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
             {
-                // Skipping the 1st parameter that, starting from .net core, contains the path to application dll (instead of exe)
-                string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-                ProcessStartInfo pi = new(Environment.ProcessPath, arguments);
-                pi.WorkingDirectory = Environment.CurrentDirectory;
-                Process.Start(pi);
-                Environment.Exit(0);
-            }
-            else
-            {
-                ShowNBug(OwnerForm, exception, false, isTerminating);
+                ReportFailedToLoadAnAssembly(fileNotFoundException, isTerminating);
                 return;
             }
 
@@ -210,38 +195,54 @@ namespace GitUI.NBugReports
             }
         }
 
-        private static UserAction ReportFailToLoadAnAssembly(FileNotFoundException exception)
+        private static void ReportFailedToLoadAnAssembly(FileNotFoundException exception, bool isTerminating)
         {
-            string error = exception.Message;
-            TaskDialogPage pageFailToLoadAssembly = new()
+            string fileName = exception.FileName ?? "";
+            int uninterestingIndex = fileName.IndexOf(", version=", StringComparison.InvariantCultureIgnoreCase);
+            if (uninterestingIndex > 0)
             {
-                Icon = TaskDialogIcon.Error,
+                fileName = fileName[..uninterestingIndex];
+            }
+
+            TaskDialogPage page = new()
+            {
+                Icon = TaskDialogIcon.Warning,
                 Caption = TranslatedStrings.FailedToLoadAnAssembly,
-                Heading = string.Format(TranslatedStrings.FailedToLoadFileOrAssemblyFormat, exception.FileName),
+                Heading = string.Format(TranslatedStrings.FailedToLoadFileOrAssemblyFormat, fileName),
                 Text = TranslatedStrings.FailedToLoadFileOrAssemblyText,
                 AllowCancel = false,
                 SizeToContent = true,
             };
 
-            TaskDialogCommandLinkButton relaunchButton = new(TranslatedStrings.RestartApplication);
-            relaunchButton.DescriptionText = TranslatedStrings.RestartApplicationDescription;
-            pageFailToLoadAssembly.Buttons.Add(relaunchButton);
+            TaskDialogCommandLinkButton restartButton = new(text: TranslatedStrings.RestartApplication, descriptionText: TranslatedStrings.RestartApplicationDescription);
+            restartButton.Click += (_, _) => RestartGE();
+            page.Buttons.Add(restartButton);
 
-            TaskDialogCommandLinkButton reportButton = new(TranslatedStrings.ReportIssue);
-            reportButton.DescriptionText = TranslatedStrings.ReportIssueDescription;
-            pageFailToLoadAssembly.Buttons.Add(reportButton);
+            TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
+            reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isTerminating);
+            page.Buttons.Add(reportButton);
 
-            pageFailToLoadAssembly.Expander = new TaskDialogExpander
+            page.Expander = new TaskDialogExpander
             {
                 CollapsedButtonText = TranslatedStrings.SeeErrorMessage,
                 ExpandedButtonText = TranslatedStrings.HideErrorMessage,
                 Position = TaskDialogExpanderPosition.AfterFootnote,
-                Text = error,
+                Text = exception.Message
             };
 
-            return TaskDialog.ShowDialog(OwnerFormHandle, pageFailToLoadAssembly) == relaunchButton
-                ? UserAction.RestartApplication
-                : UserAction.ReportIssue;
+            TaskDialog.ShowDialog(OwnerFormHandle, page);
+
+            return;
+
+            static void RestartGE()
+            {
+                // Skipping the 1st parameter that, starting from .net core, contains the path to application dll (instead of exe)
+                string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
+                ProcessStartInfo pi = new(Environment.ProcessPath, arguments);
+                pi.WorkingDirectory = Environment.CurrentDirectory;
+                Process.Start(pi);
+                Environment.Exit(0);
+            }
         }
 
         private static void ReportDubiousOwnership(Exception exception)
