@@ -356,16 +356,17 @@ namespace AppVeyorIntegration
 
         private void UpdateDescription(AppVeyorBuildInfo buildDetails, CancellationToken cancellationToken)
         {
-            var buildDetailsParsed = ThreadHelper.JoinableTaskFactory.Run(() => FetchBuildDetailsManagingVersionUpdateAsync(buildDetails, cancellationToken));
+            JObject buildDetailsParsed = ThreadHelper.JoinableTaskFactory.Run(() => FetchBuildDetailsManagingVersionUpdateAsync(buildDetails, cancellationToken));
             if (buildDetailsParsed is null)
             {
                 return;
             }
 
-            var buildData = buildDetailsParsed["build"];
-            var buildDescription = buildData["jobs"][^1];
+            JToken buildData = buildDetailsParsed["build"];
+            IList<JToken> buildJobs = (JContainer)buildData["jobs"];
+            JToken buildDescription = buildJobs[^1];
 
-            var status = buildDescription["status"].ToObject<string>();
+            string status = buildDescription["status"].ToObject<string>();
             buildDetails.Status = ParseBuildStatus(status);
 
             buildDetails.ChangeProgressCounter();
