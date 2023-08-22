@@ -14,8 +14,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             cbIgnoreWhitespace.Checked = AppSettings.IgnoreWhitespaceOnBlame;
-            cbDetectMoveAndCopyInAllFiles.Checked = AppSettings.DetectCopyInAllOnBlame;
             cbDetectMoveAndCopyInThisFile.Checked = AppSettings.DetectCopyInFileOnBlame;
+            cbDetectMoveAndCopyInAllFiles.Checked = AppSettings.DetectCopyInAllOnBlame;
 
             cbDisplayAuthorFirst.Checked = AppSettings.BlameDisplayAuthorFirst;
             cbShowAuthor.Checked = AppSettings.BlameShowAuthor;
