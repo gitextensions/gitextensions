@@ -218,7 +218,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.SimplifyMergesInFileHistory)], false, false, false);
                 yield return (properties[nameof(AppSettings.LoadFileHistoryOnShow)], true, false, false);
                 yield return (properties[nameof(AppSettings.LoadBlameOnShow)], true, false, false);
-                yield return (properties[nameof(AppSettings.DetectCopyInFileOnBlame)], true, false, false);
+                yield return (properties[nameof(AppSettings.DetectCopyInFileOnBlame)], false, false, false);
                 yield return (properties[nameof(AppSettings.DetectCopyInAllOnBlame)], false, false, false);
                 yield return (properties[nameof(AppSettings.IgnoreWhitespaceOnBlame)], true, false, false);
                 yield return (properties[nameof(AppSettings.OpenSubmoduleDiffInSeparateWindow)], false, false, false);

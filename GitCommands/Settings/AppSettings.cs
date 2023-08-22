@@ -854,7 +854,7 @@ namespace GitCommands
 
         public static bool DetectCopyInFileOnBlame
         {
-            get => GetBool("DetectCopyInFileOnBlame", true);
+            get => GetBool("DetectCopyInFileOnBlame", false);
             set => SetBool("DetectCopyInFileOnBlame", value);
         }
 
