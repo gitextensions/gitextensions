@@ -441,7 +441,7 @@ Click this info icon for more details.</source>
 
 Because of this, make sure to fill in all the fields in the report template please.
 
-Send report anyway?</source>
+Send report?</source>
         <target />
       </trans-unit>
       <trans-unit id="_title.Text">
@@ -10088,6 +10088,10 @@ Select this commit to populate the full message.</source>
         <source>Exit code</source>
         <target />
       </trans-unit>
+      <trans-unit id="_externalErrorDescription.Text">
+        <source>error from git or from other external application</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_failedToLoadAnAssembly.Text">
         <source>Failed to load an assembly</source>
         <target />
@@ -10313,6 +10317,10 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_reportIssue.Text">
         <source>Report the issue</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_reportIssueDescription.Text">
+        <source>for the team to investigate - if you think this was caused by Git Extensions</source>
         <target />
       </trans-unit>
       <trans-unit id="_reportReproducedIssueDescription.Text">

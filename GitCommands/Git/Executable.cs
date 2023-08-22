@@ -151,12 +151,13 @@ namespace GitCommands
                             if (_throwOnErrorExit && exitCode != 0)
                             {
                                 string errorOutput = _process.StandardError.ReadToEnd().Trim();
+                                string errorMessage = errorOutput.Length > 0 ? errorOutput : "External program returned non-zero exit code.";
                                 Exception ex
                                     = new ExternalOperationException(command: _process.StartInfo.FileName,
                                             _process.StartInfo.Arguments,
                                             _process.StartInfo.WorkingDirectory,
                                             exitCode,
-                                            new Exception(errorOutput));
+                                            new Exception(errorMessage));
                                 if (exitCode == NativeMethods.STATUS_CONTROL_C_EXIT)
                                 {
                                     ex = new OperationCanceledException("Ctrl+C pressed or console closed", ex);

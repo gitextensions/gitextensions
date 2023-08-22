@@ -26,11 +26,11 @@ namespace BugReporter
 
 Because of this, make sure to fill in all the fields in the report template please.
 
-Send report anyway?");
+Send report?");
         private readonly TranslationString _toolTipCopy = new("Copy the issue details into clipboard");
         private readonly TranslationString _toolTipSendQuit = new("Report the issue to GitHub and quit application.\r\nA valid GitHub account is required");
         private readonly TranslationString _toolTipQuit = new("Quit application without reporting the issue");
-        private readonly TranslationString _noReproStepsSuppliedErrorMessage = new(@"Please provide as much as information as possible to help the developers solve this issue.");
+        private readonly TranslationString _noReproStepsSuppliedErrorMessage = new("Please provide as much as information as possible to help the developers solve this issue.");
 
         private static readonly IErrorReportUrlBuilder ErrorReportBodyBuilder;
         private static readonly GitHubUrlBuilder UrlBuilder;
@@ -103,11 +103,13 @@ Send report anyway?");
             if (focusDetails)
             {
                 mainTabs.SelectedTab = exceptionTabPage;
+
+                // Hold back users from reporting UserExternalOperationExceptions directly
+                sendAndQuitButton.Enabled = false;
             }
 
             ControlBox = canIgnore;
-            showIgnore &= canIgnore;
-            IgnoreButton.Visible = showIgnore;
+            IgnoreButton.Enabled = showIgnore && canIgnore;
             IgnoreButton.Visible = showIgnore;
 
             DialogResult = DialogResult.None;
