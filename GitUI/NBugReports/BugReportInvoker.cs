@@ -107,20 +107,22 @@ namespace GitUI.NBugReports
                 LogError(exception, isTerminating);
             }
 
-            if (exception is FileNotFoundException fileNotFoundException
-                && ReportFailToLoadAnAssembly(fileNotFoundException) == UserAction.RestartApplication)
+            if (exception is FileNotFoundException fileNotFoundException)
             {
-                // Skipping the 1st parameter that, starting from .net core, contains the path to application dll (instead of exe)
-                string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-                ProcessStartInfo pi = new(Environment.ProcessPath, arguments);
-                pi.WorkingDirectory = Environment.CurrentDirectory;
-                Process.Start(pi);
-                Environment.Exit(0);
-            }
-            else
-            {
-                ShowNBug(OwnerForm, exception, false, isTerminating);
-                return;
+                if (ReportFailToLoadAnAssembly(fileNotFoundException) == UserAction.RestartApplication)
+                {
+                    // Skipping the 1st parameter that, starting from .net core, contains the path to application dll (instead of exe)
+                    string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
+                    ProcessStartInfo pi = new(Environment.ProcessPath, arguments);
+                    pi.WorkingDirectory = Environment.CurrentDirectory;
+                    Process.Start(pi);
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    ShowNBug(OwnerForm, exception, false, isTerminating);
+                    return;
+                }
             }
 
             ExternalOperationException externalOperationException = exception as ExternalOperationException;
