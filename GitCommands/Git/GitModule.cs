@@ -1006,14 +1006,14 @@ namespace GitCommands
 
                 // commit message is not re-encoded by git when format is given
                 // See also RevisionReader for parsing commit body
-                string body = ReEncodeCommitMessage(message).Replace('\v', '\n');
+                string body = ReEncodeCommitMessage(message ?? "").Replace('\v', '\n');
 
-                ReadOnlySpan<char> span = (body ?? "").AsSpan();
+                ReadOnlySpan<char> span = body.AsSpan();
                 int endSubjectIndex = span.IndexOf('\n');
                 revision.HasMultiLineMessage = endSubjectIndex >= 0;
                 revision.Subject = revision.HasMultiLineMessage
                     ? span[..endSubjectIndex].TrimEnd().ToString()
-                    : body ?? "";
+                    : body;
                 revision.Body = revision.HasMultiLineMessage ? body : null;
             }
 
