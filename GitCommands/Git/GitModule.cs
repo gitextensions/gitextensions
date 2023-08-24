@@ -2554,7 +2554,7 @@ namespace GitCommands
                 throwOnErrorExit: false);
             if (!result.ExitedSuccessfully)
             {
-                return (patch: null, errorMessage: $"{result.StandardError}{Environment.NewLine}Git command: {args} ({result.ExitCode}){Environment.NewLine}");
+                return (patch: null, errorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
             }
 
             string patch = result.StandardOutput;
