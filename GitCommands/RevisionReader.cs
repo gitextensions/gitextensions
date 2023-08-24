@@ -322,10 +322,13 @@ namespace GitCommands
             ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).AsSpan();
             StringLineReader reader = new(in s);
 
-            string author = reader.ReadLine();
-            string authorEmail = reader.ReadLine();
-            string committer = reader.ReadLine();
-            string committerEmail = reader.ReadLine();
+            // Authors etc are limited, use a shared string pool
+            string author = reader.ReadLine(useStringPool: true);
+            string authorEmail = reader.ReadLine(useStringPool: true);
+            string committer = reader.ReadLine(useStringPool: true);
+            string committerEmail = reader.ReadLine(useStringPool: true);
+
+            // reflogSelector are always unique andonly used when listing stashes
             string reflogSelector = _hasReflogSelector ? reader.ReadLine(useStringPool: false) : null;
 
             // We keep a full multiline message body within the last six months.
@@ -385,7 +388,7 @@ namespace GitCommands
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public string? ReadLine(in bool useStringPool = true)
+            public string? ReadLine(in bool useStringPool)
             {
                 if (_index >= _s.Length)
                 {
@@ -402,7 +405,6 @@ namespace GitCommands
                 int startIndex = _index;
                 _index += lineLength + 1;
 
-                // Authors etc are limited, use a shared string pool
                 ReadOnlySpan<char> s = _s.Slice(startIndex, lineLength);
                 return useStringPool ? StringPool.Shared.GetOrAdd(s) : s.ToString();
             }
@@ -435,8 +437,6 @@ namespace GitCommands
                 body = keepBody && hasMultiLineMessage
                     ? bodySlice.ToString().Replace('\v', '\n')
                     : null;
-
-                return;
             }
         }
 
