@@ -786,7 +786,7 @@ namespace GitUI.CommandsDialogs
 
             // switch to view (and fills the first level of file tree data model if not already done)
             string name = DiffFiles.SelectedItems.First().Item.Name;
-            int? line = DiffText.Visible ? DiffText.CurrentFileLine : BlameControl.CurrentFileLine;
+            int line = DiffText.Visible ? DiffText.CurrentFileLine : BlameControl.CurrentFileLine;
             (FindForm() as FormBrowse)?.ExecuteCommand(FormBrowse.Command.FocusFileTree);
             _revisionFileTree.ExpandToFile(name, line, requestBlame);
         }

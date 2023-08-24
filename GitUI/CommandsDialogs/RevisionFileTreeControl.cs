@@ -419,9 +419,8 @@ See the changes in the commit form.");
 
             Task ViewItem()
             {
-                // new selection, start show at line 1
                 return e.Node?.Tag is GitItem gitItem
-                    ? ShowGitItemAsync(gitItem, 1)
+                    ? ShowGitItemAsync(gitItem, line: null)
                     : ClearOutputAsync();
             }
         }
@@ -440,7 +439,7 @@ See the changes in the commit form.");
                     {
                         if (!blameToolStripMenuItem1.Checked)
                         {
-                            return ViewGitItemAsync(gitItem, line);
+                            return ViewGitItemAsync(gitItem, line ?? 1);
                         }
 
                         FileText.Visible = false;
@@ -532,7 +531,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            int? line = FileText.Visible ? FileText.CurrentFileLine : BlameControl.CurrentFileLine;
+            int line = FileText.Visible ? FileText.CurrentFileLine : BlameControl.CurrentFileLine;
             blameToolStripMenuItem1.Checked = !blameToolStripMenuItem1.Checked;
 
             this.InvokeAndForget(() => ShowGitItemAsync(gitItem, line));
