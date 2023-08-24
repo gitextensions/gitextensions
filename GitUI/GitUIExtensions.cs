@@ -145,15 +145,15 @@ namespace GitUI
                         : $"Failed to get status for submodule \"{file.Name}\"";
                 }
 
-                (Patch? patch, string? errorMessage)? result = await GetItemPatchAsync(fileViewer.Module, file, firstId, selectedId,
+                (Patch? patch, string? errorMessage) = await GetItemPatchAsync(fileViewer.Module, file, firstId, selectedId,
                     fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
                 cancellationToken.ThrowIfCancellationRequested();
                 return file.IsSubmodule
-                    ? LocalizationHelpers.ProcessSubmodulePatch(fileViewer.Module, file.Name, result.Value.patch)
-                    : result.Value.patch?.Text ?? result.Value.errorMessage;
+                    ? LocalizationHelpers.ProcessSubmodulePatch(fileViewer.Module, file.Name, patch)
+                    : patch?.Text ?? errorMessage;
 
-                static async Task<(Patch? patch, string? errorMessage)?> GetItemPatchAsync(
+                static async Task<(Patch? patch, string? errorMessage)> GetItemPatchAsync(
                     GitModule module,
                     GitItemStatus file,
                     ObjectId? firstId,
