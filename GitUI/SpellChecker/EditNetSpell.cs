@@ -511,7 +511,7 @@ namespace GitUI.SpellChecker
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
             TextBox.Focus();
-            var pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
+            var pos = TextBox.SelectionStart;
             if (pos < 0)
             {
                 e.Cancel = true;
@@ -1126,6 +1126,14 @@ namespace GitUI.SpellChecker
             }
 
             base.Dispose(disposing);
+        }
+
+        private void TextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TextBox.SelectionStart = TextBox.GetCharIndexFromPosition(e.Location);
+            }
         }
     }
 }

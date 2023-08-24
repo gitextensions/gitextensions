@@ -64,6 +64,7 @@
             this.TextBox.Leave += new System.EventHandler(this.TextBoxLeave);
             this.TextBox.GotFocus += TextBox_GotFocus;
             this.TextBox.LostFocus += TextBox_LostFocus;
+            this.TextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TextBox_MouseDown);
             // 
             // AutoComplete
             // 
