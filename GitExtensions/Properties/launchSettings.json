@@ -14,6 +14,10 @@
     "FileHistory": {
       "commandName": "Project",
       "commandLineArgs": "filehistory GitExtensions.settings"
+    },
+    "Editor": {
+      "commandName": "Project",
+      "commandLineArgs": "fileeditor GitExtensions.settings"
     }
   }
 }

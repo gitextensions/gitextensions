@@ -1959,23 +1959,35 @@ namespace GitUI.Editor
                 case Command.Find: internalFileViewer.Find(); break;
                 case Command.FindNextOrOpenWithDifftool: internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true)); break;
                 case Command.FindPrevious: internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false)); break;
-                case Command.GoToLine: goToLineToolStripMenuItem.PerformClick(); break;
-                case Command.IncreaseNumberOfVisibleLines: increaseNumberOfLinesToolStripMenuItem.PerformClick(); break;
-                case Command.DecreaseNumberOfVisibleLines: decreaseNumberOfLinesToolStripMenuItem.PerformClick(); break;
-                case Command.ShowEntireFile: showEntireFileToolStripMenuItem.PerformClick(); break;
-                case Command.TreatFileAsText: treatAllFilesAsTextToolStripMenuItem.PerformClick(); break;
-                case Command.NextChange: nextChangeButton.PerformClick(); break;
-                case Command.PreviousChange: previousChangeButton.PerformClick(); break;
+                case Command.GoToLine: return PerformClickIfAvailable(goToLineToolStripMenuItem);
+                case Command.IncreaseNumberOfVisibleLines: return PerformClickIfAvailable(increaseNumberOfLinesToolStripMenuItem);
+                case Command.DecreaseNumberOfVisibleLines: return PerformClickIfAvailable(decreaseNumberOfLinesToolStripMenuItem);
+                case Command.ShowEntireFile: return PerformClickIfAvailable(showEntireFileToolStripMenuItem);
+                case Command.TreatFileAsText: return PerformClickIfAvailable(treatAllFilesAsTextToolStripMenuItem);
+                case Command.NextChange: return PerformClickIfAvailable(nextChangeButton);
+                case Command.PreviousChange: return PerformClickIfAvailable(previousChangeButton);
                 case Command.NextOccurrence: internalFileViewer.GoToNextOccurrence(); break;
                 case Command.PreviousOccurrence: internalFileViewer.GoToPreviousOccurrence(); break;
                 case Command.StageLines: return StageSelectedLines();
                 case Command.UnstageLines: return UnstageSelectedLines();
                 case Command.ResetLines: return ResetSelectedLines();
-                case Command.IgnoreAllWhitespace: ignoreAllWhitespaceChangesToolStripMenuItem.PerformClick(); break;
+                case Command.IgnoreAllWhitespace: return PerformClickIfAvailable(ignoreAllWhitespaceChangesToolStripMenuItem);
                 default: return base.ExecuteCommand(cmd);
             }
 
             return true;
+
+            bool PerformClickIfAvailable(ToolStripItem item)
+            {
+                if (item.Enabled && item.Available)
+                {
+                    item.PerformClick();
+                    return true;
+                }
+
+                // Don't handle the hotkey to let the control handle it if an action is bound to it
+                return false;
+            }
         }
 
         private string GetShortcutKeyDisplayString(Command cmd)
