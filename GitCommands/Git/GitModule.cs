@@ -2516,7 +2516,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public async Task<(Patch? patch, string? errMsg)> GetSingleDiffAsync(
+        public async Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(
             ObjectId? firstId, ObjectId? secondId,
             string? fileName, string? oldFileName,
             string extraDiffArguments, Encoding encoding,
@@ -2554,13 +2554,13 @@ namespace GitCommands
                 throwOnErrorExit: false);
             if (!result.ExitedSuccessfully)
             {
-                return (patch: null, errMsg: $"{result.StandardError}{Environment.NewLine}Git command: {args} ({result.ExitCode}){Environment.NewLine}");
+                return (patch: null, errorMessage: $"{result.StandardError}{Environment.NewLine}Git command: {args} ({result.ExitCode}){Environment.NewLine}");
             }
 
             string patch = result.StandardOutput;
             IReadOnlyList<Patch> patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
 
-            return (patch: GetPatch(patches, fileName, oldFileName), errMsg: null);
+            return (patch: GetPatch(patches, fileName, oldFileName), errorMessage: null);
         }
 
         public async Task<string> GetRangeDiffAsync(
