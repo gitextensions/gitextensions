@@ -145,15 +145,15 @@ namespace GitUI
                         : $"Failed to get status for submodule \"{file.Name}\"";
                 }
 
-                var patch = await GetItemPatchAsync(fileViewer.Module, file, firstId, selectedId,
+                (Patch? patch, string? errorMessage) = await GetItemPatchAsync(fileViewer.Module, file, firstId, selectedId,
                     fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
                 cancellationToken.ThrowIfCancellationRequested();
                 return file.IsSubmodule
                     ? LocalizationHelpers.ProcessSubmodulePatch(fileViewer.Module, file.Name, patch)
-                    : patch?.Text;
+                    : patch?.Text ?? errorMessage;
 
-                static async Task<Patch?> GetItemPatchAsync(
+                static async Task<(Patch? patch, string? errorMessage)> GetItemPatchAsync(
                     GitModule module,
                     GitItemStatus file,
                     ObjectId? firstId,
@@ -162,7 +162,7 @@ namespace GitUI
                     Encoding encoding)
                 {
                     // Files with tree guid should be presented with normal diff
-                    var isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
+                    bool isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
 
                     return await module.GetSingleDiffAsync(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
                 }
