@@ -66,18 +66,10 @@ namespace GitCommands
             }
             else
             {
-                // $ git log --pretty="format:%B%nNotes:%n%-N" -1
-                // Remove redundant parameter
-                //
-                // The sha1 parameter must match CommitData.Guid.
-                // There's no point passing it. It only creates opportunity for bugs.
-                //
-                // Notes:
-
-                var lines = data.Split(Delimiters.LineFeed);
+                string[] lines = data.Split(Delimiters.LineFeed);
 
                 // Commit message is not re-encoded by Git when format is given
-                commitData.Body = GetModule().ReEncodeCommitMessage(ProcessDiffNotes(startIndex: 0, lines));
+                commitData.Body = GetModule().ReEncodeCommitMessage(ProcessDiffNotes(startIndex: 0, lines)).Replace('\v', '\n');
             }
         }
 
@@ -142,7 +134,7 @@ namespace GitCommands
             var message = ProcessDiffNotes(startIndex: 7, lines);
 
             // commit message is not re-encoded by git when format is given
-            var body = module.ReEncodeCommitMessage(message);
+            var body = module.ReEncodeCommitMessage(message).Replace('\v', '\n');
 
             Validates.NotNull(author);
             Validates.NotNull(committer);

@@ -993,10 +993,9 @@ namespace GitCommands
                 Committer = ReEncodeStringFromLossless(lines[6]),
                 CommitterEmail = ReEncodeStringFromLossless(lines[7]),
                 AuthorUnixTime = long.Parse(lines[5]),
-                CommitUnixTime = long.Parse(lines[8])
+                CommitUnixTime = long.Parse(lines[8]),
+                HasNotes = !shortFormat
             };
-
-            revision.HasNotes = !shortFormat;
             if (shortFormat)
             {
                 revision.Subject = ReEncodeCommitMessage(lines[9]) ?? "";
@@ -1007,14 +1006,15 @@ namespace GitCommands
 
                 // commit message is not re-encoded by git when format is given
                 // See also RevisionReader for parsing commit body
-                string body = ReEncodeCommitMessage(message);
+                string body = ReEncodeCommitMessage(message ?? "").Replace('\v', '\n');
                 revision.Body = body;
 
-                ReadOnlySpan<char> span = (body ?? "").AsSpan();
+                ReadOnlySpan<char> span = body.AsSpan();
                 int endSubjectIndex = span.IndexOf('\n');
-                revision.Subject = endSubjectIndex >= 0
+                revision.HasMultiLineMessage = endSubjectIndex >= 0;
+                revision.Subject = revision.HasMultiLineMessage
                     ? span[..endSubjectIndex].TrimEnd().ToString()
-                    : body ?? "";
+                    : body;
             }
 
             if (loadRefs)
