@@ -9,10 +9,9 @@ namespace GitUITests.UserControls.RevisionGrid
     {
         private RevisionGraph _revisionGraph;
 
-        [SetUp]
-        public void Setup()
+        public void Setup(bool mergeGraphLanesHavingCommonParent)
         {
-            AppSettings.MergeGraphLanesHavingCommonParent.Value = true;
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
 
             _revisionGraph = new RevisionGraph();
 
@@ -29,30 +28,38 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public void ShouldBeAbleToCacheGraphTo()
+        public void ShouldBeAbleToCacheGraphTo([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            Setup(mergeGraphLanesHavingCommonParent);
+
             Assert.AreEqual(0, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(4, 2);
-            Assert.AreEqual(3, _revisionGraph.GetCachedCount());
+            Assert.AreEqual(mergeGraphLanesHavingCommonParent ? 3 : 0, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(4, 4);
-            Assert.AreEqual(5, _revisionGraph.GetCachedCount());
+            Assert.AreEqual(mergeGraphLanesHavingCommonParent ? 5 : 0, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(400, 400);
-            Assert.AreEqual(6, _revisionGraph.GetCachedCount());
+            Assert.AreEqual(mergeGraphLanesHavingCommonParent ? 6 : 0, _revisionGraph.GetCachedCount());
             _revisionGraph.LoadingCompleted();
+            Assert.AreEqual(mergeGraphLanesHavingCommonParent ? 6 + LookAhead : 0, _revisionGraph.GetCachedCount());
+            _revisionGraph.CacheTo(400, 400);
             Assert.AreEqual(6 + LookAhead, _revisionGraph.GetCachedCount());
         }
 
         [Test]
-        public void ShouldBeAbleToClear()
+        public void ShouldBeAbleToClear([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            Setup(mergeGraphLanesHavingCommonParent);
+
             Assert.AreEqual(6 + LookAhead, _revisionGraph.Count);
             _revisionGraph.Clear();
             Assert.AreEqual(0, _revisionGraph.Count);
         }
 
         [Test]
-        public void ShouldBeAbleToHighlightBranch()
+        public void ShouldBeAbleToHighlightBranch([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            Setup(mergeGraphLanesHavingCommonParent);
+
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
             Assert.IsTrue(_revisionGraph.GetNodeForRow(0).IsRelative);
             Assert.IsTrue(_revisionGraph.GetNodeForRow(1).IsRelative);
@@ -64,8 +71,15 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public void ShouldBeAbleToGetLaneCount()
+        public void ShouldBeAbleToGetLaneCount([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            Setup(mergeGraphLanesHavingCommonParent);
+
+            if (!mergeGraphLanesHavingCommonParent)
+            {
+                _revisionGraph.LoadingCompleted();
+            }
+
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
             Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(0).GetLaneCount());
             Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetLaneCount());
@@ -76,8 +90,10 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public void ShouldReorderInTopoOrder()
+        public void ShouldReorderInTopoOrder([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            Setup(mergeGraphLanesHavingCommonParent);
+
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
@@ -107,16 +123,20 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test] // https://github.com/gitextensions/gitextensions/issues/6193
-        public void CacheEmptyGraph()
+        public void CacheEmptyGraph([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            Setup(mergeGraphLanesHavingCommonParent);
+
             _revisionGraph.Clear();
             _revisionGraph.CacheTo(100, 100);
             _revisionGraph.CacheTo(100, 100);
         }
 
         [Test] // https://github.com/gitextensions/gitextensions/issues/6210
-        public async Task DetachedSingleRevision()
+        public async Task DetachedSingleRevision([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            Setup(mergeGraphLanesHavingCommonParent);
+
             _revisionGraph.Clear();
 
             /* Visualization of commit graph:
@@ -148,8 +168,10 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public async Task SegmentsAreStraightened()
+        public async Task SegmentsAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:4  6:5  7:5,6  8:7,2 ");
 
             string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
@@ -157,8 +179,10 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public async Task SegmentsWithCommitsAreStraightened()
+        public async Task SegmentsWithCommitsAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:5  7:4  8:4,7  9:8,6 ");
 
             string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
@@ -166,8 +190,10 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public async Task SegmentsWithOutgoingSecondaryMergesAreNotStraightened()
+        public async Task SegmentsWithOutgoingSecondaryMergesAreNotStraightened([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:4,5  7:6  8:6,7  9:8,5 ");
 
             string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
@@ -175,8 +201,10 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public async Task SegmentsWithIncomingMergesAreStraightened()
+        public async Task SegmentsWithIncomingMergesAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2,4  6:4  7:4,6  8:7,5 ");
 
             string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
@@ -184,8 +212,10 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public async Task SegmentsAreStraightenedAlthoughThisCausesWidthIncrease()
+        public async Task SegmentsAreStraightenedAlthoughThisCausesWidthIncrease([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1  5:1,4  6:2  7:2,6  8:5  9:5,8,3,7 ");
 
             string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
@@ -193,8 +223,10 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public async Task SegmentsWithOutgoingPrimaryMergesAreStraightened()
+        public async Task SegmentsWithOutgoingPrimaryMergesAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  6:1  7:1,6  8:3,2  9:7  10:7,9,8 ");
 
             string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
@@ -202,8 +234,10 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public async Task SegmentsAreNotStraightenedIfThisCausesAShiftForPrimarySegment()
+        public async Task SegmentsAreNotStraightenedIfThisCausesAShiftForPrimarySegment([Values] bool mergeGraphLanesHavingCommonParent)
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
             RevisionGraph revisionGraph = CreateGraph(" 1  a:1  b:1  2:1  3:1  4:1  5:4,1  6:3  7:5,6  8:7,2,6  c:8  d:8  e:8  9:8,e,d,c,b,a ");
 
             // Two segments cross at the 'X'. The one going '/' could be straightened,

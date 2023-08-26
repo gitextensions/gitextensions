@@ -57,7 +57,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Score = minimalScore;
 
-            if (_startSegments.IsEmpty)
+            if (ParentCount == 0)
             {
                 return Score;
             }
@@ -94,6 +94,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public ObjectId Objectid { get; }
 
+        public int ParentCount { get; private set; }
         public IEnumerable<RevisionGraphRevision> Parents => _startSegments.Select(segment => segment.Parent);
         public ImmutableStack<RevisionGraphRevision> Children => _children;
         public RevisionGraphSegment[] GetStartSegments() => _startSegments.ToArray();
@@ -109,7 +110,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            if (_startSegments.IsEmpty)
+            if (ParentCount == 0)
             {
                 IsRelative = true;
                 return;
@@ -153,6 +154,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             parent.AddChild(this);
 
             _startSegments.Enqueue(new RevisionGraphSegment(parent, this));
+            ++ParentCount;
         }
 
         private void AddChild(RevisionGraphRevision child)
