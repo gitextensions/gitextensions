@@ -28,289 +28,287 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.PushWindowGB = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.chkRemotesFromServer = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBoxEmailSettings = new System.Windows.Forms.GroupBox();
-            this.tlpnlEmailSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.SmtpServer = new System.Windows.Forms.TextBox();
-            this.lblSmtpServerPort = new System.Windows.Forms.Label();
-            this.chkUseSSL = new System.Windows.Forms.CheckBox();
-            this.SmtpServerPort = new System.Windows.Forms.TextBox();
-            this.lblSmtpServerName = new System.Windows.Forms.Label();
-            this.mergeWindowGroup = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.addLogMessages = new System.Windows.Forms.CheckBox();
-            this.nbMessages = new System.Windows.Forms.TextBox();
-            this.PushWindowGB.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.groupBoxEmailSettings.SuspendLayout();
-            this.tlpnlEmailSettings.SuspendLayout();
-            this.mergeWindowGroup.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            PushWindowGB = new GroupBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            chkRemotesFromServer = new CheckBox();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            groupBoxEmailSettings = new GroupBox();
+            tlpnlEmailSettings = new TableLayoutPanel();
+            SmtpServer = new TextBox();
+            lblSmtpServerPort = new Label();
+            chkUseSSL = new CheckBox();
+            SmtpServerPort = new TextBox();
+            lblSmtpServerName = new Label();
+            mergeWindowGroup = new GroupBox();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            addLogMessages = new CheckBox();
+            nbMessages = new TextBox();
+            PushWindowGB.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            groupBoxEmailSettings.SuspendLayout();
+            tlpnlEmailSettings.SuspendLayout();
+            mergeWindowGroup.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // PushWindowGB
             // 
-            this.PushWindowGB.AutoSize = true;
-            this.PushWindowGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.PushWindowGB.Controls.Add(this.tableLayoutPanel1);
-            this.PushWindowGB.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PushWindowGB.Location = new System.Drawing.Point(3, 3);
-            this.PushWindowGB.Name = "PushWindowGB";
-            this.PushWindowGB.Padding = new System.Windows.Forms.Padding(8);
-            this.PushWindowGB.Size = new System.Drawing.Size(1318, 52);
-            this.PushWindowGB.TabIndex = 0;
-            this.PushWindowGB.TabStop = false;
-            this.PushWindowGB.Text = "Push window";
+            PushWindowGB.AutoSize = true;
+            PushWindowGB.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            PushWindowGB.Controls.Add(tableLayoutPanel1);
+            PushWindowGB.Dock = DockStyle.Fill;
+            PushWindowGB.Location = new Point(3, 3);
+            PushWindowGB.Name = "PushWindowGB";
+            PushWindowGB.Padding = new Padding(8);
+            PushWindowGB.Size = new Size(1480, 57);
+            PushWindowGB.TabIndex = 0;
+            PushWindowGB.TabStop = false;
+            PushWindowGB.Text = "Push window";
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.chkRemotesFromServer, 0, 4);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 21);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 6;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1302, 23);
-            this.tableLayoutPanel1.TabIndex = 0;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(chkRemotesFromServer, 0, 4);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(8, 24);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 6;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(1464, 25);
+            tableLayoutPanel1.TabIndex = 0;
             // 
             // chkRemotesFromServer
             // 
-            this.chkRemotesFromServer.AutoSize = true;
-            this.chkRemotesFromServer.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.chkRemotesFromServer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkRemotesFromServer.Location = new System.Drawing.Point(3, 3);
-            this.chkRemotesFromServer.Name = "chkRemotesFromServer";
-            this.chkRemotesFromServer.Size = new System.Drawing.Size(1296, 17);
-            this.chkRemotesFromServer.TabIndex = 0;
-            this.chkRemotesFromServer.Text = "Get remote branches directly from the remote";
-            this.chkRemotesFromServer.UseVisualStyleBackColor = true;
+            chkRemotesFromServer.AutoSize = true;
+            chkRemotesFromServer.Dock = DockStyle.Top;
+            chkRemotesFromServer.Location = new Point(3, 3);
+            chkRemotesFromServer.Name = "chkRemotesFromServer";
+            chkRemotesFromServer.Size = new Size(1458, 19);
+            chkRemotesFromServer.TabIndex = 0;
+            chkRemotesFromServer.Text = "Get remote branches directly from the remote";
+            chkRemotesFromServer.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.groupBoxEmailSettings, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.mergeWindowGroup, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.PushWindowGB, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(8, 8);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 4;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1324, 873);
-            this.tableLayoutPanel2.TabIndex = 0;
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel2.ColumnCount = 1;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.Controls.Add(groupBoxEmailSettings, 0, 2);
+            tableLayoutPanel2.Controls.Add(mergeWindowGroup, 0, 1);
+            tableLayoutPanel2.Controls.Add(PushWindowGB, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(8, 8);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 4;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.Size = new Size(1486, 670);
+            tableLayoutPanel2.TabIndex = 0;
             // 
             // groupBoxEmailSettings
             // 
-            this.groupBoxEmailSettings.AutoSize = true;
-            this.groupBoxEmailSettings.Controls.Add(this.tlpnlEmailSettings);
-            this.groupBoxEmailSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxEmailSettings.Location = new System.Drawing.Point(3, 128);
-            this.groupBoxEmailSettings.Name = "groupBoxEmailSettings";
-            this.groupBoxEmailSettings.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBoxEmailSettings.Size = new System.Drawing.Size(1318, 104);
-            this.groupBoxEmailSettings.TabIndex = 2;
-            this.groupBoxEmailSettings.TabStop = false;
-            this.groupBoxEmailSettings.Text = "Email settings for sending patches";
+            groupBoxEmailSettings.AutoSize = true;
+            groupBoxEmailSettings.Controls.Add(tlpnlEmailSettings);
+            groupBoxEmailSettings.Dock = DockStyle.Fill;
+            groupBoxEmailSettings.Location = new Point(3, 139);
+            groupBoxEmailSettings.Name = "groupBoxEmailSettings";
+            groupBoxEmailSettings.Padding = new Padding(8);
+            groupBoxEmailSettings.Size = new Size(1480, 115);
+            groupBoxEmailSettings.TabIndex = 2;
+            groupBoxEmailSettings.TabStop = false;
+            groupBoxEmailSettings.Text = "Email settings for sending patches";
             // 
             // tlpnlEmailSettings
             // 
-            this.tlpnlEmailSettings.AutoSize = true;
-            this.tlpnlEmailSettings.ColumnCount = 3;
-            this.tlpnlEmailSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlEmailSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlEmailSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlEmailSettings.Controls.Add(this.SmtpServer, 2, 0);
-            this.tlpnlEmailSettings.Controls.Add(this.lblSmtpServerPort, 0, 1);
-            this.tlpnlEmailSettings.Controls.Add(this.chkUseSSL, 0, 2);
-            this.tlpnlEmailSettings.Controls.Add(this.SmtpServerPort, 2, 1);
-            this.tlpnlEmailSettings.Controls.Add(this.lblSmtpServerName, 0, 0);
-            this.tlpnlEmailSettings.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tlpnlEmailSettings.Location = new System.Drawing.Point(8, 21);
-            this.tlpnlEmailSettings.Name = "tlpnlEmailSettings";
-            this.tlpnlEmailSettings.RowCount = 3;
-            this.tlpnlEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlEmailSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlEmailSettings.Size = new System.Drawing.Size(1302, 75);
-            this.tlpnlEmailSettings.TabIndex = 0;
+            tlpnlEmailSettings.AutoSize = true;
+            tlpnlEmailSettings.ColumnCount = 3;
+            tlpnlEmailSettings.ColumnStyles.Add(new ColumnStyle());
+            tlpnlEmailSettings.ColumnStyles.Add(new ColumnStyle());
+            tlpnlEmailSettings.ColumnStyles.Add(new ColumnStyle());
+            tlpnlEmailSettings.Controls.Add(SmtpServer, 2, 0);
+            tlpnlEmailSettings.Controls.Add(lblSmtpServerPort, 0, 1);
+            tlpnlEmailSettings.Controls.Add(chkUseSSL, 0, 2);
+            tlpnlEmailSettings.Controls.Add(SmtpServerPort, 2, 1);
+            tlpnlEmailSettings.Controls.Add(lblSmtpServerName, 0, 0);
+            tlpnlEmailSettings.Dock = DockStyle.Top;
+            tlpnlEmailSettings.Location = new Point(8, 24);
+            tlpnlEmailSettings.Name = "tlpnlEmailSettings";
+            tlpnlEmailSettings.RowCount = 3;
+            tlpnlEmailSettings.RowStyles.Add(new RowStyle());
+            tlpnlEmailSettings.RowStyles.Add(new RowStyle());
+            tlpnlEmailSettings.RowStyles.Add(new RowStyle());
+            tlpnlEmailSettings.Size = new Size(1464, 83);
+            tlpnlEmailSettings.TabIndex = 0;
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(117, 3);
-            this.SmtpServer.Name = "SmtpServer";
-            this.SmtpServer.Size = new System.Drawing.Size(179, 20);
-            this.SmtpServer.TabIndex = 0;
+            SmtpServer.Location = new Point(123, 3);
+            SmtpServer.Name = "SmtpServer";
+            SmtpServer.Size = new Size(179, 23);
+            SmtpServer.TabIndex = 0;
             // 
             // lblSmtpServerPort
             // 
-            this.lblSmtpServerPort.AutoSize = true;
-            this.lblSmtpServerPort.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblSmtpServerPort.Location = new System.Drawing.Point(3, 26);
-            this.lblSmtpServerPort.Name = "lblSmtpServerPort";
-            this.lblSmtpServerPort.Size = new System.Drawing.Size(108, 26);
-            this.lblSmtpServerPort.TabIndex = 1;
-            this.lblSmtpServerPort.Text = "Port";
-            this.lblSmtpServerPort.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblSmtpServerPort.AutoSize = true;
+            lblSmtpServerPort.Dock = DockStyle.Fill;
+            lblSmtpServerPort.Location = new Point(3, 29);
+            lblSmtpServerPort.Name = "lblSmtpServerPort";
+            lblSmtpServerPort.Size = new Size(114, 29);
+            lblSmtpServerPort.TabIndex = 1;
+            lblSmtpServerPort.Text = "Port";
+            lblSmtpServerPort.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // chkUseSSL
             // 
-            this.chkUseSSL.AutoSize = true;
-            this.chkUseSSL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkUseSSL.Location = new System.Drawing.Point(3, 55);
-            this.chkUseSSL.Name = "chkUseSSL";
-            this.chkUseSSL.Size = new System.Drawing.Size(108, 17);
-            this.chkUseSSL.TabIndex = 3;
-            this.chkUseSSL.Text = "Use SSL/TLS";
-            this.chkUseSSL.UseVisualStyleBackColor = true;
-            this.chkUseSSL.CheckedChanged += new System.EventHandler(this.chkUseSSL_CheckedChanged);
+            chkUseSSL.AutoSize = true;
+            chkUseSSL.Dock = DockStyle.Fill;
+            chkUseSSL.Location = new Point(3, 61);
+            chkUseSSL.Name = "chkUseSSL";
+            chkUseSSL.Size = new Size(114, 19);
+            chkUseSSL.TabIndex = 3;
+            chkUseSSL.Text = "Use SSL/TLS";
+            chkUseSSL.UseVisualStyleBackColor = true;
+            chkUseSSL.CheckedChanged += chkUseSSL_CheckedChanged;
             // 
             // SmtpServerPort
             // 
-            this.SmtpServerPort.Location = new System.Drawing.Point(117, 29);
-            this.SmtpServerPort.Name = "SmtpServerPort";
-            this.SmtpServerPort.Size = new System.Drawing.Size(49, 20);
-            this.SmtpServerPort.TabIndex = 2;
-            this.SmtpServerPort.Text = "587";
+            SmtpServerPort.Location = new Point(123, 32);
+            SmtpServerPort.Name = "SmtpServerPort";
+            SmtpServerPort.Size = new Size(49, 23);
+            SmtpServerPort.TabIndex = 2;
+            SmtpServerPort.Text = "587";
             // 
             // lblSmtpServerName
             // 
-            this.lblSmtpServerName.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblSmtpServerName.AutoSize = true;
-            this.lblSmtpServerName.Location = new System.Drawing.Point(3, 6);
-            this.lblSmtpServerName.Name = "lblSmtpServerName";
-            this.lblSmtpServerName.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.lblSmtpServerName.Size = new System.Drawing.Size(108, 13);
-            this.lblSmtpServerName.TabIndex = 0;
-            this.lblSmtpServerName.Text = "SMTP server name";
-            this.lblSmtpServerName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblSmtpServerName.Anchor = AnchorStyles.Left;
+            lblSmtpServerName.AutoSize = true;
+            lblSmtpServerName.Location = new Point(3, 7);
+            lblSmtpServerName.Name = "lblSmtpServerName";
+            lblSmtpServerName.Padding = new Padding(0, 0, 10, 0);
+            lblSmtpServerName.Size = new Size(114, 15);
+            lblSmtpServerName.TabIndex = 0;
+            lblSmtpServerName.Text = "SMTP server name";
+            lblSmtpServerName.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // mergeWindowGroup
             // 
-            this.mergeWindowGroup.AutoSize = true;
-            this.mergeWindowGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mergeWindowGroup.Controls.Add(this.tableLayoutPanel4);
-            this.mergeWindowGroup.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mergeWindowGroup.Location = new System.Drawing.Point(3, 61);
-            this.mergeWindowGroup.Name = "mergeWindowGroup";
-            this.mergeWindowGroup.Padding = new System.Windows.Forms.Padding(8);
-            this.mergeWindowGroup.Size = new System.Drawing.Size(1318, 61);
-            this.mergeWindowGroup.TabIndex = 1;
-            this.mergeWindowGroup.TabStop = false;
-            this.mergeWindowGroup.Text = "Merge window";
+            mergeWindowGroup.AutoSize = true;
+            mergeWindowGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            mergeWindowGroup.Controls.Add(tableLayoutPanel4);
+            mergeWindowGroup.Dock = DockStyle.Top;
+            mergeWindowGroup.Location = new Point(3, 66);
+            mergeWindowGroup.Name = "mergeWindowGroup";
+            mergeWindowGroup.Padding = new Padding(8);
+            mergeWindowGroup.Size = new Size(1480, 67);
+            mergeWindowGroup.TabIndex = 1;
+            mergeWindowGroup.TabStop = false;
+            mergeWindowGroup.Text = "Merge window";
             // 
             // tableLayoutPanel4
             // 
-            this.tableLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel4.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(8, 21);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 1;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(1302, 32);
-            this.tableLayoutPanel4.TabIndex = 0;
+            tableLayoutPanel4.AutoSize = true;
+            tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel4.ColumnCount = 1;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel4.Controls.Add(flowLayoutPanel1, 0, 0);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(8, 24);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 1;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.Size = new Size(1464, 35);
+            tableLayoutPanel4.TabIndex = 0;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.addLogMessages);
-            this.flowLayoutPanel1.Controls.Add(this.nbMessages);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(175, 26);
-            this.flowLayoutPanel1.TabIndex = 0;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(addLogMessages);
+            flowLayoutPanel1.Controls.Add(nbMessages);
+            flowLayoutPanel1.Location = new Point(3, 3);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(185, 29);
+            flowLayoutPanel1.TabIndex = 0;
             // 
             // addLogMessages
             // 
-            this.addLogMessages.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.addLogMessages.AutoSize = true;
-            this.addLogMessages.Location = new System.Drawing.Point(3, 4);
-            this.addLogMessages.Name = "addLogMessages";
-            this.addLogMessages.Size = new System.Drawing.Size(112, 17);
-            this.addLogMessages.TabIndex = 0;
-            this.addLogMessages.Text = "Add log messages";
-            this.addLogMessages.UseVisualStyleBackColor = true;
+            addLogMessages.Anchor = AnchorStyles.Left;
+            addLogMessages.AutoSize = true;
+            addLogMessages.Location = new Point(3, 5);
+            addLogMessages.Name = "addLogMessages";
+            addLogMessages.Size = new Size(122, 19);
+            addLogMessages.TabIndex = 0;
+            addLogMessages.Text = "Add log messages";
+            addLogMessages.UseVisualStyleBackColor = true;
             // 
             // nbMessages
             // 
-            this.nbMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.nbMessages.Location = new System.Drawing.Point(121, 3);
-            this.nbMessages.Name = "nbMessages";
-            this.nbMessages.Size = new System.Drawing.Size(51, 20);
-            this.nbMessages.TabIndex = 1;
-            this.nbMessages.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            nbMessages.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            nbMessages.Location = new Point(131, 3);
+            nbMessages.Name = "nbMessages";
+            nbMessages.Size = new Size(51, 23);
+            nbMessages.TabIndex = 1;
+            nbMessages.TextAlign = HorizontalAlignment.Center;
             // 
             // DetailedSettingsPage
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.tableLayoutPanel2);
-            this.Name = "DetailedSettingsPage";
-            this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1340, 889);
-            this.Text = "Detailed";
-            this.PushWindowGB.ResumeLayout(false);
-            this.PushWindowGB.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.groupBoxEmailSettings.ResumeLayout(false);
-            this.groupBoxEmailSettings.PerformLayout();
-            this.tlpnlEmailSettings.ResumeLayout(false);
-            this.tlpnlEmailSettings.PerformLayout();
-            this.mergeWindowGroup.ResumeLayout(false);
-            this.mergeWindowGroup.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(tableLayoutPanel2);
+            Name = "DetailedSettingsPage";
+            Padding = new Padding(8);
+            Size = new Size(1502, 686);
+            Text = "Detailed";
+            PushWindowGB.ResumeLayout(false);
+            PushWindowGB.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
+            groupBoxEmailSettings.ResumeLayout(false);
+            groupBoxEmailSettings.PerformLayout();
+            tlpnlEmailSettings.ResumeLayout(false);
+            tlpnlEmailSettings.PerformLayout();
+            mergeWindowGroup.ResumeLayout(false);
+            mergeWindowGroup.PerformLayout();
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.GroupBox PushWindowGB;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.CheckBox chkRemotesFromServer;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.GroupBox mergeWindowGroup;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.CheckBox addLogMessages;
-        private System.Windows.Forms.TextBox nbMessages;
-        private System.Windows.Forms.GroupBox groupBoxEmailSettings;
-        private System.Windows.Forms.TableLayoutPanel tlpnlEmailSettings;
-        private System.Windows.Forms.TextBox SmtpServer;
-        private System.Windows.Forms.Label lblSmtpServerPort;
-        private System.Windows.Forms.CheckBox chkUseSSL;
-        private System.Windows.Forms.TextBox SmtpServerPort;
-        private System.Windows.Forms.Label lblSmtpServerName;
+        private GroupBox PushWindowGB;
+        private TableLayoutPanel tableLayoutPanel1;
+        private CheckBox chkRemotesFromServer;
+        private TableLayoutPanel tableLayoutPanel2;
+        private GroupBox mergeWindowGroup;
+        private TableLayoutPanel tableLayoutPanel4;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private CheckBox addLogMessages;
+        private TextBox nbMessages;
+        private GroupBox groupBoxEmailSettings;
+        private TableLayoutPanel tlpnlEmailSettings;
+        private TextBox SmtpServer;
+        private Label lblSmtpServerPort;
+        private CheckBox chkUseSSL;
+        private TextBox SmtpServerPort;
+        private Label lblSmtpServerName;
     }
 }
