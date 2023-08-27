@@ -67,10 +67,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
-
+            chkShowRelativeDate.Checked = AppSettings.RelativeDate;
             chkShowRepoCurrentBranch.Checked = AppSettings.ShowRepoCurrentBranch;
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
+            chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
+            truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
+
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
@@ -83,8 +85,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Language.Items.Add("English");
             Language.Items.AddRange(Translator.GetAllTranslations());
             Language.Text = AppSettings.Translation;
-
-            truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
 
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
@@ -106,12 +106,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            chkShowRelativeDate.Checked = AppSettings.RelativeDate;
-
             base.SettingsToPage();
             return;
 
-            int GetTruncatePathMethodIndex(TruncatePathMethod method)
+            static int GetTruncatePathMethodIndex(TruncatePathMethod method)
             {
                 return method switch
                 {
@@ -125,15 +123,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
+            AppSettings.RelativeDate = chkShowRelativeDate.Checked;
+            AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.Checked;
+            AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
+            AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
+            AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
+
             var shouldClearCache =
                 AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
                 || AppSettings.AvatarFallbackType != (AvatarFallbackType)_NO_TRANSLATE_NoImageService.SelectedValue
                 || AppSettings.CustomAvatarTemplate != txtCustomAvatarTemplate.Text;
 
-            AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
-            AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
-            AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.Checked;
-            AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
             AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
@@ -155,14 +155,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 new AvatarControl().ClearCache();
             }
 
-            AppSettings.RelativeDate = chkShowRelativeDate.Checked;
-
             AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;
 
             base.PageToSettings();
             return;
 
-            TruncatePathMethod GetTruncatePathMethodString(int index) => index switch
+            static TruncatePathMethod GetTruncatePathMethodString(int index) => index switch
             {
                 1 => TruncatePathMethod.Compact,
                 2 => TruncatePathMethod.TrimStart,

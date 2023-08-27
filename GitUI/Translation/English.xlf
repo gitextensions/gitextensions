@@ -193,15 +193,15 @@ Click this info icon for more details.</source>
         <target />
       </trans-unit>
       <trans-unit id="gbAuthorImages.Text">
-        <source>Author images</source>
+        <source>&amp;Author images</source>
         <target />
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
-        <source>General</source>
+        <source>&amp;General</source>
         <target />
       </trans-unit>
       <trans-unit id="gbLanguages.Text">
-        <source>Language</source>
+        <source>&amp;Language</source>
         <target />
       </trans-unit>
       <trans-unit id="helpTranslate.Text">

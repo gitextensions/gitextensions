@@ -91,7 +91,6 @@
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 10F));
             tlpnlMain.Size = new Size(1486, 583);
             tlpnlMain.TabIndex = 0;
             // 
@@ -107,7 +106,7 @@
             gbGeneral.Size = new Size(1480, 161);
             gbGeneral.TabIndex = 0;
             gbGeneral.TabStop = false;
-            gbGeneral.Text = "General";
+            gbGeneral.Text = "&General";
             // 
             // tlpnlGeneral
             // 
@@ -121,15 +120,12 @@
             tlpnlGeneral.Controls.Add(chkShowRepoCurrentBranch, 0, 1);
             tlpnlGeneral.Controls.Add(chkShowCurrentBranchInVisualStudio, 0, 2);
             tlpnlGeneral.Controls.Add(chkEnableAutoScale, 0, 3);
-            tlpnlGeneral.Controls.Add(truncateLongFilenames, 0, 7);
-            tlpnlGeneral.Controls.Add(truncatePathMethod, 1, 7);
+            tlpnlGeneral.Controls.Add(truncateLongFilenames, 0, 4);
+            tlpnlGeneral.Controls.Add(truncatePathMethod, 1, 4);
             tlpnlGeneral.Dock = DockStyle.Fill;
             tlpnlGeneral.Location = new Point(8, 24);
             tlpnlGeneral.Name = "tlpnlGeneral";
-            tlpnlGeneral.RowCount = 8;
-            tlpnlGeneral.RowStyles.Add(new RowStyle());
-            tlpnlGeneral.RowStyles.Add(new RowStyle());
-            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowCount = 5;
             tlpnlGeneral.RowStyles.Add(new RowStyle());
             tlpnlGeneral.RowStyles.Add(new RowStyle());
             tlpnlGeneral.RowStyles.Add(new RowStyle());
@@ -158,7 +154,7 @@
             chkShowRepoCurrentBranch.Location = new Point(3, 28);
             chkShowRepoCurrentBranch.Name = "chkShowRepoCurrentBranch";
             chkShowRepoCurrentBranch.Size = new Size(501, 19);
-            chkShowRepoCurrentBranch.TabIndex = 5;
+            chkShowRepoCurrentBranch.TabIndex = 1;
             chkShowRepoCurrentBranch.Text = "Show current branch names in the dashboard and the recent repositories dropdown menu";
             chkShowRepoCurrentBranch.UseVisualStyleBackColor = true;
             // 
@@ -170,7 +166,7 @@
             chkShowCurrentBranchInVisualStudio.Location = new Point(3, 53);
             chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
             chkShowCurrentBranchInVisualStudio.Size = new Size(501, 19);
-            chkShowCurrentBranchInVisualStudio.TabIndex = 1;
+            chkShowCurrentBranchInVisualStudio.TabIndex = 2;
             chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
             chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
             // 
@@ -182,7 +178,7 @@
             chkEnableAutoScale.Location = new Point(3, 78);
             chkEnableAutoScale.Name = "chkEnableAutoScale";
             chkEnableAutoScale.Size = new Size(501, 19);
-            chkEnableAutoScale.TabIndex = 2;
+            chkEnableAutoScale.TabIndex = 3;
             chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
             chkEnableAutoScale.UseVisualStyleBackColor = true;
             // 
@@ -214,13 +210,13 @@
             gbLanguages.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             gbLanguages.Controls.Add(tlpnlLanguage);
             gbLanguages.Dock = DockStyle.Fill;
-            gbLanguages.Location = new Point(3, 394);
+            gbLanguages.Location = new Point(3, 405);
             gbLanguages.Name = "gbLanguages";
             gbLanguages.Padding = new Padding(8);
             gbLanguages.Size = new Size(1480, 90);
             gbLanguages.TabIndex = 2;
             gbLanguages.TabStop = false;
-            gbLanguages.Text = "Language";
+            gbLanguages.Text = "&Language";
             // 
             // tlpnlLanguage
             // 
@@ -254,7 +250,7 @@
             Dictionary.Location = new Point(176, 32);
             Dictionary.Name = "Dictionary";
             Dictionary.Size = new Size(86, 23);
-            Dictionary.TabIndex = 3;
+            Dictionary.TabIndex = 2;
             Dictionary.DropDown += Dictionary_DropDown;
             // 
             // downloadDictionary
@@ -264,7 +260,7 @@
             downloadDictionary.Location = new Point(268, 29);
             downloadDictionary.Name = "downloadDictionary";
             downloadDictionary.Size = new Size(117, 29);
-            downloadDictionary.TabIndex = 4;
+            downloadDictionary.TabIndex = 3;
             downloadDictionary.TabStop = true;
             downloadDictionary.Text = "Download dictionary";
             downloadDictionary.TextAlign = ContentAlignment.MiddleLeft;
@@ -277,7 +273,7 @@
             lblSpellingDictionary.Location = new Point(3, 29);
             lblSpellingDictionary.Name = "lblSpellingDictionary";
             lblSpellingDictionary.Size = new Size(167, 29);
-            lblSpellingDictionary.TabIndex = 3;
+            lblSpellingDictionary.TabIndex = 2;
             lblSpellingDictionary.Text = "Dictionary for spelling checker";
             lblSpellingDictionary.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -324,10 +320,10 @@
             gbAuthorImages.Location = new Point(3, 170);
             gbAuthorImages.Name = "gbAuthorImages";
             gbAuthorImages.Padding = new Padding(8);
-            gbAuthorImages.Size = new Size(1480, 218);
+            gbAuthorImages.Size = new Size(1480, 229);
             gbAuthorImages.TabIndex = 1;
             gbAuthorImages.TabStop = false;
-            gbAuthorImages.Text = "Author images";
+            gbAuthorImages.Text = "&Author images";
             // 
             // tlpnlAuthor
             // 
@@ -353,15 +349,15 @@
             tlpnlAuthor.Dock = DockStyle.Fill;
             tlpnlAuthor.Location = new Point(8, 24);
             tlpnlAuthor.Name = "tlpnlAuthor";
-            tlpnlAuthor.RowCount = 6;
+            tlpnlAuthor.RowCount = 7;
             tlpnlAuthor.RowStyles.Add(new RowStyle());
             tlpnlAuthor.RowStyles.Add(new RowStyle());
             tlpnlAuthor.RowStyles.Add(new RowStyle());
             tlpnlAuthor.RowStyles.Add(new RowStyle());
             tlpnlAuthor.RowStyles.Add(new RowStyle());
             tlpnlAuthor.RowStyles.Add(new RowStyle());
-            tlpnlAuthor.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tlpnlAuthor.Size = new Size(1464, 186);
+            tlpnlAuthor.RowStyles.Add(new RowStyle());
+            tlpnlAuthor.Size = new Size(1464, 197);
             tlpnlAuthor.TabIndex = 0;
             // 
             // ShowAuthorAvatarInCommitGraph
@@ -484,7 +480,7 @@
             lblCustomAvatarTemplate.Location = new Point(3, 137);
             lblCustomAvatarTemplate.Name = "lblCustomAvatarTemplate";
             lblCustomAvatarTemplate.Size = new Size(168, 29);
-            lblCustomAvatarTemplate.TabIndex = 4;
+            lblCustomAvatarTemplate.TabIndex = 5;
             lblCustomAvatarTemplate.Text = "Custom avatar template";
             lblCustomAvatarTemplate.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -494,7 +490,7 @@
             txtCustomAvatarTemplate.Location = new Point(177, 140);
             txtCustomAvatarTemplate.Name = "txtCustomAvatarTemplate";
             txtCustomAvatarTemplate.Size = new Size(183, 23);
-            txtCustomAvatarTemplate.TabIndex = 13;
+            txtCustomAvatarTemplate.TabIndex = 5;
             // 
             // ClearImageCache
             // 
@@ -503,7 +499,7 @@
             ClearImageCache.Dock = DockStyle.Fill;
             ClearImageCache.Location = new Point(177, 169);
             ClearImageCache.Name = "ClearImageCache";
-            ClearImageCache.Size = new Size(183, 14);
+            ClearImageCache.Size = new Size(183, 25);
             ClearImageCache.TabIndex = 6;
             ClearImageCache.Text = "Clear image cache";
             ClearImageCache.UseVisualStyleBackColor = true;
