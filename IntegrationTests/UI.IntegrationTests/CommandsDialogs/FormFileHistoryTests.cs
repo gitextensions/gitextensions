@@ -1,11 +1,9 @@
 ﻿using CommonTestUtils;
-using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
 
 namespace GitExtensions.UITests.CommandsDialogs;
 
@@ -16,15 +14,6 @@ public class FormFileHistoryTests
     public void SetUp()
     {
         AppSettings.UseBrowseForFileHistory.Value = false;
-
-        TestComposition composition = TestComposition.Empty
-            .AddParts(typeof(MockLinkFactory))
-            .AddParts(typeof(MockWindowsJumpListManager))
-            .AddParts(typeof(MockRepositoryDescriptionProvider))
-            .AddParts(typeof(MockAppTitleGenerator));
-
-        ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
-        ManagedExtensibility.SetTestExportProvider(mefExportProvider);
     }
 
     [TestCase("", "file.txt")]

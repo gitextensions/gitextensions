@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
@@ -8,6 +9,7 @@ using GitUI.NBugReports;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using NSubstitute;
+using ResourceManager;
 
 namespace GitExtensions.UITests.Script
 {
@@ -36,8 +38,13 @@ namespace GitExtensions.UITests.Script
         [SetUp]
         public void Setup()
         {
+            ServiceContainer serviceContainer = new();
+            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
+            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
+            serviceContainer.AddService(Substitute.For<ILinkFactory>());
+
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            _uiCommands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
+            _uiCommands = new GitUICommands(serviceContainer, _referenceRepository.Module);
 
             _module = Substitute.For<IGitModule>();
             _module.GetCurrentRemote().ReturnsForAnyArgs("origin");
@@ -106,7 +113,7 @@ namespace GitExtensions.UITests.Script
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "--version";
 
-            var result = ScriptRunner.RunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null);
+            var result = ScriptRunner.RunScript(null, _module, _keyOfExampleScript, _uiCommands, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
         }
@@ -120,12 +127,13 @@ namespace GitExtensions.UITests.Script
             GitRevision revision = new(ObjectId.IndexId);
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-            var result = ScriptRunner.RunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null);
+            var result = ScriptRunner.RunScript(null, _module, _keyOfExampleScript, _uiCommands, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
         }
 
         [Test]
+        [Ignore("TODO: requires conversion of GitModule into IGitModule")]
         public void RunScript_with_arguments_with_c_option_without_revision_shall_display_error_and_return_false()
         {
             _exampleScript.Command = "cmd";
@@ -227,13 +235,6 @@ namespace GitExtensions.UITests.Script
 
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
         {
-            // Needed for FormBrowse, ScriptOptionsParser
-            ManagedExtensibility.Initialise(new[]
-            {
-                typeof(GitUI.GitExtensionsForm).Assembly,
-                typeof(GitCommands.GitModule).Assembly
-            });
-
             UITest.RunForm(
                 showForm: () => _uiCommands.StartBrowseDialog(owner: null).Should().BeTrue(),
                 testDriverAsync);

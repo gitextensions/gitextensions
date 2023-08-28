@@ -23,7 +23,6 @@ namespace GitCommands
     /// <summary>
     /// Generates application title.
     /// </summary>
-    [Export(typeof(IAppTitleGenerator))]
     public sealed class AppTitleGenerator : IAppTitleGenerator
     {
         private readonly IRepositoryDescriptionProvider _descriptionProvider;
@@ -31,7 +30,6 @@ namespace GitCommands
         private static string? _extraInfo;
 #endif
 
-        [ImportingConstructor]
         public AppTitleGenerator(IRepositoryDescriptionProvider descriptionProvider)
         {
             _descriptionProvider = descriptionProvider;

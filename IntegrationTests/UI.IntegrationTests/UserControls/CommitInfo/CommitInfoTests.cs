@@ -1,13 +1,12 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel.Design;
+using System.Reflection;
 using CommonTestUtils;
-using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.UITests.CommandsDialogs;
 using GitUI;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
 using NSubstitute;
 using ResourceManager;
 
@@ -22,13 +21,18 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         // Created once for each test
         private MockExecutable _gitExecutable;
         private GitUICommands _commands;
+        private MockLinkFactory _mockLinkFactory;
 
         [SetUp]
         public void SetUp()
         {
+            _mockLinkFactory = new();
+            ServiceContainer serviceContainer = new();
+            serviceContainer.AddService<ILinkFactory>(_mockLinkFactory);
+
             AppSettings.ShowGitNotes = false;
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
+            _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
 
             // mock git executable
             _gitExecutable = new MockExecutable();
@@ -37,11 +41,6 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
             GitCommandRunner cmdRunner = new(_gitExecutable, () => GitModule.SystemEncoding);
             typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(_commands.Module, cmdRunner);
-
-            var composition = TestComposition.Empty
-                .AddParts(typeof(MockLinkFactory));
-            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
-            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
         [OneTimeTearDown]
@@ -227,12 +226,6 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
             RunCommitInfoTest(async (commitInfo) =>
             {
-                if (ManagedExtensibility.GetExport<ILinkFactory>().Value is not MockLinkFactory mockLinkFactory)
-                {
-                    Assert.Fail($"Unexpected {typeof(ILinkFactory)} implementation.");
-                    return;
-                }
-
                 object commandClickedSender = null;
                 commitInfo.CommandClicked += (s, e) => commandClickedSender = s;
                 commitInfo.SetRevisionWithChildren(revision, children: null);
@@ -244,11 +237,11 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
                 // simulate a click on refText link
                 ta.LinkClicked(ta.RevisionInfo, new(refText, linkStart, linkLength: refText.Length));
-                mockLinkFactory.LastExecutedLinkUri.Should().Be(expectedUri);
+                _mockLinkFactory.LastExecutedLinkUri.Should().Be(expectedUri);
 
                 // simulate a click on hash link
                 ta.LinkClicked(ta.CommitMessage, new(hashInBody, linkStart: 25, linkLength: hashInBody.Length));
-                mockLinkFactory.LastExecutedLinkUri.Should().Be(hashLink);
+                _mockLinkFactory.LastExecutedLinkUri.Should().Be(hashLink);
                 commandClickedSender.Should().Be(ta.CommitMessage);
             });
         }
@@ -278,12 +271,6 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
             RunCommitInfoTest(async (commitInfo) =>
             {
-                if (ManagedExtensibility.GetExport<ILinkFactory>().Value is not MockLinkFactory mockLinkFactory)
-                {
-                    Assert.Fail($"Unexpected {typeof(ILinkFactory)} implementation.");
-                    return;
-                }
-
                 commitInfo.SetRevisionWithChildren(revision, children: null);
 
                 // Wait for pending operations so the Control is loaded completely before testing it
@@ -292,7 +279,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 // simulate a click on refText link
                 var ta = commitInfo.GetTestAccessor();
                 ta.LinkClicked(ta.RevisionInfo, new("not important", linkStart: 423, linkLength: 0));
-                mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/branches");
+                _mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/branches");
 
                 await Verifier.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
             });
@@ -323,12 +310,6 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
             RunCommitInfoTest(async (commitInfo) =>
             {
-                if (ManagedExtensibility.GetExport<ILinkFactory>().Value is not MockLinkFactory mockLinkFactory)
-                {
-                    Assert.Fail($"Unexpected {typeof(ILinkFactory)} implementation.");
-                    return;
-                }
-
                 commitInfo.SetRevisionWithChildren(revision, children: null);
 
                 // Wait for pending operations so the Control is loaded completely before testing it
@@ -337,7 +318,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 // simulate a click on refText link
                 var ta = commitInfo.GetTestAccessor();
                 ta.LinkClicked(ta.RevisionInfo, new("not important", linkStart: 774, linkLength: 0));
-                mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/tags");
+                _mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/tags");
 
                 await Verifier.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
             });
@@ -371,6 +352,35 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
                     await runTestAsync(commitInfo);
                 });
+        }
+
+        private class MockLinkFactory : ILinkFactory
+        {
+            private readonly ILinkFactory _linkFactory = new LinkFactory();
+
+            public string? LastExecutedLinkUri { get; private set; }
+
+            public string CreateBranchLink(string noPrefixBranch)
+                => _linkFactory.CreateBranchLink(noPrefixBranch);
+
+            public string CreateCommitLink(ObjectId objectId, string? linkText = null, bool preserveGuidInLinkText = false)
+                => _linkFactory.CreateCommitLink(objectId, linkText, preserveGuidInLinkText);
+
+            public string CreateLink(string? caption, string uri)
+                => _linkFactory.CreateLink(caption, uri);
+
+            public string CreateShowAllLink(string what)
+                => _linkFactory.CreateShowAllLink(what);
+
+            public string CreateTagLink(string tag)
+                => _linkFactory.CreateTagLink(tag);
+
+            public void ExecuteLink(string? linkUri, Action<CommandEventArgs>? handleInternalLink = null, Action<string?>? showAll = null)
+            {
+                LastExecutedLinkUri = linkUri;
+
+                _linkFactory.ExecuteLink(linkUri, handleInternalLink, showAll);
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
-namespace GitExtensions.UITests.CommandsDialogs
+namespace UITests.CommandsDialogs.SettingsDialog.Pages
 {
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class)]

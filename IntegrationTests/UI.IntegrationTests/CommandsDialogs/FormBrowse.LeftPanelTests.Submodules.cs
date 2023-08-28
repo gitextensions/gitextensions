@@ -1,12 +1,11 @@
-﻿using CommonTestUtils;
-using CommonTestUtils.MEF;
+﻿using System.ComponentModel.Design;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Submodules;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
+using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {
@@ -73,15 +72,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             // Use the singleton provider, which is also used by the left panel, so we can synchronize on updates
             _provider = SubmoduleStatusProvider.Default;
 
-            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _repo1Module);
+            ServiceContainer serviceContainer = new();
+            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
+            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
+            serviceContainer.AddService(Substitute.For<ResourceManager.ILinkFactory>());
 
-            var composition = TestComposition.Empty
-                .AddParts(typeof(MockLinkFactory))
-                .AddParts(typeof(MockWindowsJumpListManager))
-                .AddParts(typeof(MockRepositoryDescriptionProvider))
-                .AddParts(typeof(MockAppTitleGenerator));
-            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
-            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
+            _commands = new GitUICommands(serviceContainer, _repo1Module);
         }
 
         [TearDown]

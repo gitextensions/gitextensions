@@ -13,11 +13,6 @@ namespace GitUITests
         [SetUp]
         public void SetUp()
         {
-            var composition = TestComposition.Empty
-               .AddParts(typeof(LinkFactory));
-            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
-            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
-
             GitModuleForm.IsUnitTestActive = true;
         }
 

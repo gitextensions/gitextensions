@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel.Design;
+using System.Diagnostics;
 using CommonTestUtils;
-using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
-using GitExtensions.UITests.CommandsDialogs;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
+using NSubstitute;
+using ResourceManager;
 
 namespace GitExtensions.UITests.UserControls.RevisionGrid
 {
@@ -48,17 +48,14 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _referenceRepository.CreateCommit("head commit");
             _headCommit = _referenceRepository.CommitHash;
 
-            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
+            ServiceContainer serviceContainer = new();
+            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
+            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
+            serviceContainer.AddService(Substitute.For<ILinkFactory>());
+
+            _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
 
             AppSettings.RevisionGraphShowArtificialCommits = true;
-
-            var composition = TestComposition.Empty
-                .AddParts(typeof(MockLinkFactory))
-                .AddParts(typeof(MockWindowsJumpListManager))
-                .AddParts(typeof(MockRepositoryDescriptionProvider))
-                .AddParts(typeof(MockAppTitleGenerator));
-            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
-            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
         [TearDown]

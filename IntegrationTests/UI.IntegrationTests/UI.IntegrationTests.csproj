@@ -18,5 +18,11 @@
     <ProjectReference Include="..\..\UnitTests\CommonTestUtils\CommonTestUtils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="MEF\MockGenericBuildServerSettingsUserControl.Designer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>
 

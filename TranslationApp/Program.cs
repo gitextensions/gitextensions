@@ -26,12 +26,7 @@ namespace TranslationApp
             {
             }
 
-            ManagedExtensibility.Initialise(new[]
-            {
-                typeof(GitUI.GitExtensionsForm).Assembly,
-                typeof(GitCommands.GitModule).Assembly,
-                typeof(ResourceManager.GitPluginBase).Assembly
-            });
+            ManagedExtensibility.Initialise();
 
             // Required for translation
             PluginRegistry.Initialize();

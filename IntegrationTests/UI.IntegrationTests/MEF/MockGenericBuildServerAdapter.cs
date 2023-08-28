@@ -3,7 +3,7 @@ using System.Reactive.Concurrency;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
-namespace GitExtensions.UITests.CommandsDialogs
+namespace UITests.CommandsDialogs.SettingsDialog.Pages
 {
     [PartNotDiscoverable]
     [MockGenericBuildServerIntegrationMetadata("GenericBuildServerMock")]

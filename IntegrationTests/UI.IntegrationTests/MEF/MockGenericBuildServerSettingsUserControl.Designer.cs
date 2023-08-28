@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Windows.Forms;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
-using ResourceManager;
-
-namespace GitExtensions.UITests.CommandsDialogs
+﻿namespace UITests.CommandsDialogs.SettingsDialog.Pages
 {
     partial class MockGenericBuildServerSettingsUserControl
     {

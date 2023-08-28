@@ -1,13 +1,13 @@
-﻿using CommonTestUtils;
-using CommonTestUtils.MEF;
+﻿using System.ComponentModel.Design;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.UITests;
-using GitExtensions.UITests.CommandsDialogs;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
+using NSubstitute;
+using ResourceManager;
 
 namespace GitUITests.GitUICommandsTests
 {
@@ -40,15 +40,12 @@ namespace GitUITests.GitUICommandsTests
                 AppSettings.UseBrowseForFileHistory.Value = false;
             }
 
-            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
+            ServiceContainer serviceContainer = new();
+            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
+            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
+            serviceContainer.AddService(Substitute.For<ILinkFactory>());
 
-            var composition = TestComposition.Empty
-                .AddParts(typeof(MockLinkFactory))
-                .AddParts(typeof(MockWindowsJumpListManager))
-                .AddParts(typeof(MockRepositoryDescriptionProvider))
-                .AddParts(typeof(MockAppTitleGenerator));
-            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
-            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
+            _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
         }
 
         [OneTimeSetUp]

@@ -19,7 +19,6 @@ namespace GitCommands.Git
     /// <summary>
     /// Resolves the location of .git folder.
     /// </summary>
-    [Export(typeof(IGitDirectoryResolver))]
     public sealed class GitDirectoryResolver : IGitDirectoryResolver
     {
         private readonly IFileSystem _fileSystem;
