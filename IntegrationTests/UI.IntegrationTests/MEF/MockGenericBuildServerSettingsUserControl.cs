@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 
-namespace GitExtensions.UITests.CommandsDialogs
+namespace UITests.CommandsDialogs.SettingsDialog.Pages
 {
     [Export(typeof(IBuildServerSettingsUserControl))]
     [BuildServerSettingsUserControlMetadata("GenericBuildServerMock")]

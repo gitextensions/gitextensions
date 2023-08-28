@@ -19,6 +19,7 @@ using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -51,9 +52,11 @@ namespace GitUI.CommitInfo
         private static readonly TranslationString _plusCommits = new("commits");
         private static readonly TranslationString _repoFailure = new("Repository failure");
 
-        private readonly ILinkFactory _linkFactory;
+        private ICommitDataBodyRenderer? _commitDataBodyRenderer;
+        private ILinkFactory? _linkFactory;
+        private RefsFormatter? _refsFormatter;
+
         private readonly ICommitDataManager _commitDataManager;
-        private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
         private readonly IExternalLinksStorage _externalLinksStorage;
         private readonly IConfiguredLinkDefinitionsProvider _effectiveLinkDefinitionsProvider;
         private readonly IGitRevisionExternalLinksParser _gitRevisionExternalLinksParser;
@@ -61,7 +64,6 @@ namespace GitUI.CommitInfo
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
         private readonly GitDescribeProvider _gitDescribeProvider;
         private readonly CancellationTokenSequence _asyncLoadCancellation = new();
-        private readonly RefsFormatter _refsFormatter;
 
         private readonly IDisposable _revisionInfoResizedSubscription;
         private readonly IDisposable _commitMessageResizedSubscription;
@@ -90,29 +92,14 @@ namespace GitUI.CommitInfo
             InitializeComponent();
             InitializeComplete();
 
-            UICommandsSourceSet += delegate
-            {
-                this.InvokeAndForget(() =>
-                {
-                    UICommandsSource.UICommandsChanged += delegate { RefreshSortedTags(); };
-
-                    // call this event handler also now (necessary for "Contained in branches/tags")
-                    RefreshSortedTags();
-                });
-            };
-
             _commitDataManager = new CommitDataManager(() => Module);
 
-            _linkFactory = ManagedExtensibility.GetExport<ILinkFactory>().Value;
-
-            _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
             _externalLinksStorage = new ExternalLinksStorage();
             _effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
             _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
             _externalLinkRevisionParser = new ExternalLinkRevisionParser(_remotesManager);
             _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
             _gitDescribeProvider = new GitDescribeProvider(() => Module);
-            _refsFormatter = new RefsFormatter(_linkFactory);
 
             var messageBackground = KnownColor.Window.MakeBackgroundDarkerBy(0.04);
             pnlCommitMessage.BackColor = messageBackground;
@@ -161,6 +148,29 @@ namespace GitUI.CommitInfo
             base.Dispose(disposing);
         }
 
+        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
+        {
+            base.OnUICommandsSourceSet(source);
+
+            if (source is null)
+            {
+                _linkFactory = null;
+                _commitDataBodyRenderer = null;
+                _refsFormatter = null;
+            }
+            else
+            {
+                _linkFactory = source.UICommands.GetRequiredService<ILinkFactory>();
+                _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
+                _refsFormatter = new RefsFormatter(_linkFactory);
+
+                source.UICommandsChanged += delegate { RefreshSortedTags(); };
+
+                // call this event handler also now (necessary for "Contained in branches/tags")
+                RefreshSortedTags();
+            }
+        }
+
         private void RefreshSortedTags()
         {
             if (!Module.IsValidGitWorkingDir())
@@ -184,7 +194,8 @@ namespace GitUI.CommitInfo
             try
             {
                 string? linkUri = ((RichTextBox)sender).GetLink(e.LinkStart);
-                _linkFactory.ExecuteLink(linkUri, commandEventArgs => CommandClickedEvent?.Invoke(sender, commandEventArgs), ShowAll);
+                Validates.NotNull(_linkFactory);
+                _linkFactory?.ExecuteLink(linkUri, commandEventArgs => CommandClickedEvent?.Invoke(sender, commandEventArgs), ShowAll);
             }
             catch (Exception ex)
             {
@@ -318,7 +329,7 @@ namespace GitUI.CommitInfo
                 }
 
                 CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
-                return _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: false);
+                return _commitDataBodyRenderer?.Render(data, showRevisionsAsLinks: false) ?? string.Empty;
             }
 
             async Task UpdateCommitMessageAsync()
@@ -332,7 +343,14 @@ namespace GitUI.CommitInfo
                     _revision.HasNotes = true;
                 }
 
-                string commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
+                ICommitDataBodyRenderer? commitDataBodyRenderer = _commitDataBodyRenderer;
+                if (commitDataBodyRenderer is null)
+                {
+                    // Cancel the update if the commands source has been unset
+                    return;
+                }
+
+                string commitMessage = commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
 
                 await this.SwitchToMainThreadAsync();
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
@@ -387,7 +405,14 @@ namespace GitUI.CommitInfo
                     await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var linksInfo = GetLinksForRevision(settings);
+                    ILinkFactory? linkFactory = _linkFactory;
+                    if (linkFactory is null)
+                    {
+                        // Cancel the update if the commands source has been unset
+                        return;
+                    }
+
+                    string linksInfo = GetLinksForRevision(settings);
 
                     // Most commits do not have link; do not switch to main thread if nothing is changed
                     if (_linksInfo == linksInfo)
@@ -402,10 +427,9 @@ namespace GitUI.CommitInfo
 
                     string GetLinksForRevision(DistributedSettings settings)
                     {
+                        IEnumerable<ExternalLink> links = _gitRevisionExternalLinksParser.Parse(revision, settings);
                         cancellationToken.ThrowIfCancellationRequested();
-
-                        var links = _gitRevisionExternalLinksParser.Parse(revision, settings);
-                        var result = string.Join(", ", links.Distinct().Select(link => _linkFactory.CreateLink(link.Caption, link.Uri)));
+                        string result = string.Join(", ", links.Distinct().Select(link => linkFactory.CreateLink(link.Caption, link.Uri)));
 
                         if (string.IsNullOrEmpty(result))
                         {
@@ -508,7 +532,14 @@ namespace GitUI.CommitInfo
                 {
                     await TaskScheduler.Default;
 
-                    var info = GetDescribeInfoForRevision();
+                    ILinkFactory? linkFactory = _linkFactory;
+                    if (linkFactory is null)
+                    {
+                        // Cancel the update if the commands source has been unset
+                        return;
+                    }
+
+                    string info = GetDescribeInfoForRevision();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _gitDescribeInfo = info;
@@ -522,7 +553,7 @@ namespace GitUI.CommitInfo
                         StringBuilder gitDescribeInfo = new();
                         if (!string.IsNullOrEmpty(precedingTag))
                         {
-                            string tagString = ShowBranchesAsLinks ? _linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
+                            string tagString = ShowBranchesAsLinks ? linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
                             gitDescribeInfo.Append(WebUtility.HtmlEncode(_derivesFromTag.Text) + " " + tagString);
                             if (!string.IsNullOrEmpty(commitCount))
                             {
@@ -542,6 +573,13 @@ namespace GitUI.CommitInfo
 
         private void UpdateRevisionInfo()
         {
+            RefsFormatter? refsFormatter = _refsFormatter;
+            if (refsFormatter is null)
+            {
+                // Cancel the update if the commands source has been unset
+                return;
+            }
+
             if (_tagsOrderDict is not null)
             {
                 if (_annotatedTagsMessages is not null &&
@@ -565,14 +603,14 @@ namespace GitUI.CommitInfo
                 if (_tags is not null && string.IsNullOrEmpty(_tagInfo))
                 {
                     _tags.Sort(new TagsComparer(_tagsOrderDict));
-                    _tagInfo = _refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: !_showAllTags);
+                    _tagInfo = refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: !_showAllTags);
                 }
             }
 
             if (_branches is not null && string.IsNullOrEmpty(_branchInfo))
             {
                 _branches.Sort(new BranchComparer(_branches, Module.GetSelectedBranch()));
-                _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
+                _branchInfo = refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
             }
 
             string body = string.Join(Environment.NewLine + Environment.NewLine,

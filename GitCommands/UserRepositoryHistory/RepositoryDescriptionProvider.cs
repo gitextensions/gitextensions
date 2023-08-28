@@ -22,14 +22,12 @@ namespace GitCommands.UserRepositoryHistory
     ///  https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain:
     ///  ...The description file is used only by the GitWeb program, so don’t worry about it...
     /// </remarks>
-    [Export(typeof(IRepositoryDescriptionProvider))]
     public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvider
     {
         private const string RepositoryDescriptionFileName = "description";
         private const string DefaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
         private readonly IGitDirectoryResolver _gitDirectoryResolver;
 
-        [ImportingConstructor]
         public RepositoryDescriptionProvider(IGitDirectoryResolver gitDirectoryResolver)
         {
             _gitDirectoryResolver = gitDirectoryResolver;

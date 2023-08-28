@@ -26,7 +26,6 @@ namespace GitUI
     /// <seealso href="https://www.sevenforums.com/news/44368-developing-windows-7-taskbar-thumbnail-toolbars.html" />
     /// <seealso href="https://github.com/jlnewton87/Programming/blob/master/C%23/Windows%20API%20Code%20Pack%201.1/source/WindowsAPICodePack/Shell/Taskbar/JumpList.cs" />
     /// <inheritdoc />
-    [Export(typeof(IWindowsJumpListManager))]
     public sealed class WindowsJumpListManager : IWindowsJumpListManager
     {
         private static readonly Dictionary<Image, Icon> _iconByImage = new();
@@ -46,7 +45,6 @@ namespace GitUI
             }
         }
 
-        [ImportingConstructor]
         public WindowsJumpListManager(IRepositoryDescriptionProvider repositoryDescriptionProvider)
         {
             _repositoryDescriptionProvider = repositoryDescriptionProvider;

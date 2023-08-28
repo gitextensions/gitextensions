@@ -80,7 +80,7 @@ namespace GitUI.Script
             }
 
             string? originalCommand = scriptInfo.Command;
-            (string? argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
+            (string? argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, uiCommands, owner, revisionGrid);
             if (abort)
             {
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{scriptKey}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",

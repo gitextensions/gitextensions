@@ -273,8 +273,8 @@ namespace GitUI.CommandsDialogs
 
             WorkaroundPaddingIncreaseBug();
 
-            _appTitleGenerator = ManagedExtensibility.GetExport<IAppTitleGenerator>().Value;
-            _windowsJumpListManager = ManagedExtensibility.GetExport<IWindowsJumpListManager>().Value;
+            _appTitleGenerator = commands.GetRequiredService<IAppTitleGenerator>();
+            _windowsJumpListManager = commands.GetRequiredService<IWindowsJumpListManager>();
 
             _formBrowseDiagnosticsReporter = new FormBrowseDiagnosticsReporter(this);
 

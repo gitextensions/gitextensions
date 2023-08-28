@@ -37,13 +37,7 @@ namespace GitExtensions.UITests
             Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
 
             // Needed for FormBrowse, ScriptOptionsParser
-            ManagedExtensibility.Initialise(new[]
-            {
-#if GITUI
-                typeof(GitUI.GitExtensionsForm).Assembly,
-#endif
-                typeof(GitCommands.GitModule).Assembly
-            });
+            ManagedExtensibility.Initialise();
 
             T form = null;
             try

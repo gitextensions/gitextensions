@@ -2,7 +2,6 @@
 using CommonTestUtils.MEF;
 using GitCommands;
 using GitExtensions.UITests;
-using GitExtensions.UITests.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUIPluginInterfaces;

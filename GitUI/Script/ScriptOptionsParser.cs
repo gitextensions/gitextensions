@@ -81,14 +81,15 @@ namespace GitUI.Script
             return option.StartsWith("s");
         }
 
-        public static (string? arguments, bool abort) Parse(string? arguments, IGitModule module, IWin32Window owner, IScriptHostControl? scriptHostControl)
+        public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptHostControl? scriptHostControl)
         {
             if (string.IsNullOrWhiteSpace(arguments))
             {
                 return (arguments, abort: false);
             }
 
-            module = module ?? throw new ArgumentNullException(nameof(module));
+            ArgumentNullException.ThrowIfNull(uiCommands);
+            ArgumentNullException.ThrowIfNull(uiCommands.GitModule);
 
             GitRevision? selectedRevision = null;
             GitRevision? currentRevision = null;
@@ -114,7 +115,7 @@ namespace GitUI.Script
 
                 if (currentRevision is null && option.StartsWith("c"))
                 {
-                    currentRevision = GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
+                    currentRevision = GetCurrentRevision(uiCommands.GitModule, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
                         loadBody: Contains(arguments, currentMessage));
                     if (currentRevision is null)
                     {
@@ -123,14 +124,14 @@ namespace GitUI.Script
 
                     if (currentLocalBranches.Count == 1)
                     {
-                        currentRemote = module.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
+                        currentRemote = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
                     }
                     else
                     {
-                        currentRemote = module.GetCurrentRemote();
+                        currentRemote = uiCommands.GitModule.GetCurrentRemote();
                         if (string.IsNullOrEmpty(currentRemote))
                         {
-                            currentRemote = module.GetSetting(string.Format(SettingKeyString.BranchRemote,
+                            currentRemote = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.BranchRemote,
                                 AskToSpecify(currentLocalBranches, scriptHostControl)));
                         }
                     }
@@ -145,7 +146,7 @@ namespace GitUI.Script
                     }
                 }
 
-                arguments = ParseScriptArguments(arguments, option, owner, scriptHostControl, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision!, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision!, currentRemote);
+                arguments = ParseScriptArguments(arguments, option, owner, scriptHostControl, uiCommands, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision!, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision!, currentRemote);
                 if (arguments is null)
                 {
                     return (arguments: null, abort: true);
@@ -277,7 +278,7 @@ namespace GitUI.Script
         }
 
         private static string? ParseScriptArguments(string arguments, string option, IWin32Window owner,
-            IScriptHostControl? scriptHostControl, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions,
+            IScriptHostControl? scriptHostControl, IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions,
             in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches,
             in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision,
             in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches,
@@ -321,7 +322,7 @@ namespace GitUI.Script
                     if (!string.IsNullOrEmpty(newString))
                     {
                         remote = newString;
-                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        newString = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                     }
 
                     break;
@@ -331,7 +332,7 @@ namespace GitUI.Script
                     if (!string.IsNullOrEmpty(newString))
                     {
                         remote = newString;
-                        url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        url = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         newString = GetRemotePath(url);
                     }
 
@@ -432,7 +433,7 @@ namespace GitUI.Script
                     }
                     else
                     {
-                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        newString = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                     }
 
                     break;
@@ -444,16 +445,14 @@ namespace GitUI.Script
                     }
                     else
                     {
-                        url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        url = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         newString = GetRemotePath(url);
                     }
 
                     break;
 
                 case "RepoName":
-                    newString = module is null
-                        ? string.Empty
-                        : ManagedExtensibility.GetExport<IRepositoryDescriptionProvider>().Value.Get(module.WorkingDir);
+                    newString = uiCommands.GetRequiredService<IRepositoryDescriptionProvider>().Get(uiCommands.GitModule.WorkingDir);
                     break;
 
                 case "UserInput":
@@ -479,7 +478,7 @@ namespace GitUI.Script
                     }
 
                 case "WorkingDir":
-                    newString = module is null ? string.Empty : module.WorkingDir;
+                    newString = uiCommands.GitModule.WorkingDir;
                     break;
             }
 
@@ -555,11 +554,11 @@ namespace GitUI.Script
                 => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, loadBody);
 
             public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptHostControl scriptHostControl,
-                IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
+                IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
                 List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision,
                 List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches,
                 GitRevision currentRevision, string currentRemote)
-                => ScriptOptionsParser.ParseScriptArguments(arguments, option, owner, scriptHostControl, module, allSelectedRevisions,
+                => ScriptOptionsParser.ParseScriptArguments(arguments, option, owner, scriptHostControl, uiCommands, allSelectedRevisions,
                     selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision,
                     currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
         }

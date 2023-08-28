@@ -1,7 +1,10 @@
 using System.ComponentModel.Design;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO.Abstractions;
 using GitCommands;
+using GitCommands.Git;
+using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI;
@@ -12,6 +15,7 @@ using GitUI.NBugReports;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
+using ResourceManager;
 
 namespace GitExtensions
 {
@@ -49,6 +53,8 @@ namespace GitExtensions
             }
 
             Control.CheckForIllegalCrossThreadCalls = checkForIllegalCrossThreadCalls;
+
+            RegisterServices(_serviceContainer);
 
             // If an error happens before we had a chance to init the environment information
             // the call to GetInformation() from BugReporter.ShowNBug() will fail.
@@ -119,13 +125,7 @@ namespace GitExtensions
                 ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
             }
 
-            ManagedExtensibility.Initialise(new[]
-                {
-                    typeof(GitUI.GitExtensionsForm).Assembly,
-                    typeof(GitCommands.GitModule).Assembly,
-                    typeof(ResourceManager.GitPluginBase).Assembly
-                },
-                AppSettings.UserPluginsPath);
+            ManagedExtensibility.Initialise(userPluginsPath: AppSettings.UserPluginsPath);
 
             AppSettings.LoadSettings();
 
@@ -370,6 +370,20 @@ namespace GitExtensions
             }
 
             return false;
+        }
+
+        private static void RegisterServices(ServiceContainer serviceContainer)
+        {
+            FileSystem fileSystem = new();
+            GitDirectoryResolver gitDirectoryResolver = new(fileSystem);
+            RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
+
+            serviceContainer.AddService<IFileSystem>(fileSystem);
+            serviceContainer.AddService<IGitDirectoryResolver>(gitDirectoryResolver);
+            serviceContainer.AddService<IRepositoryDescriptionProvider>(repositoryDescriptionProvider);
+            serviceContainer.AddService<IAppTitleGenerator>(new AppTitleGenerator(repositoryDescriptionProvider));
+            serviceContainer.AddService<IWindowsJumpListManager>(new WindowsJumpListManager(repositoryDescriptionProvider));
+            serviceContainer.AddService<ILinkFactory>(new LinkFactory());
         }
     }
 }
