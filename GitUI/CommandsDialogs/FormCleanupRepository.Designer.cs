@@ -280,7 +280,6 @@
             // 
             // FormCleanupRepository
             // 
-            AcceptButton = AddInclusivePath;
             AutoScaleDimensions = new SizeF(120F, 120F);
             AutoScaleMode = AutoScaleMode.Dpi;
             CancelButton = _NO_TRANSLATE_Close;
