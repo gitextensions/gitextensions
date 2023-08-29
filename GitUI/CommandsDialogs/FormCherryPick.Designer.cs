@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
             cbxAddReference.Location = new Point(3, 308);
             cbxAddReference.Name = "cbxAddReference";
             cbxAddReference.Size = new Size(584, 19);
-            cbxAddReference.TabIndex = 5;
+            cbxAddReference.TabIndex = 6;
             cbxAddReference.Text = "A&dd commit reference to commit message";
             cbxAddReference.UseVisualStyleBackColor = true;
             // 
@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs
             cbxAutoCommit.Location = new Point(3, 333);
             cbxAutoCommit.Name = "cbxAutoCommit";
             cbxAutoCommit.Size = new Size(584, 19);
-            cbxAutoCommit.TabIndex = 6;
+            cbxAutoCommit.TabIndex = 5;
             cbxAutoCommit.Text = "&Automatically create a commit";
             cbxAutoCommit.UseVisualStyleBackColor = true;
             // 
