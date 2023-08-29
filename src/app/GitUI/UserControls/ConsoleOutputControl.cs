@@ -18,6 +18,8 @@ namespace GitUI.UserControls
 
         public abstract void AppendMessageFreeThreaded(string text);
 
+        public abstract void AppendInput(string text);
+
         /// <summary>
         /// Creates the instance best fitting the current environment.
         /// </summary>
