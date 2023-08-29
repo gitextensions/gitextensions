@@ -1396,6 +1396,10 @@ the last selected commit.</source>
         <source>Vertical ruler position [chars]</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblEditor.Text">
+        <source>Local file editor (Leave blank to use built-in editor)</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="EditNetSpell" source-language="en">

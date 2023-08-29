@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
@@ -19,6 +20,9 @@ namespace GitUI
     /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
+        private static readonly char[] _whiteSpaceChars = { ' ', '\r', '\n', '\t' };
+        private static readonly Regex SingleArgRegex = new("([^\" \r\n\t][^ \r\n\t]*)|(\"([^\"\\\\]|(\\\\.))+\")", RegexOptions.Compiled);
+
         private const string BlameHistoryCommand = "blamehistory";
         private const string FileHistoryCommand = "filehistory";
 
@@ -1688,6 +1692,37 @@ namespace GitUI
         {
             using FormEditor formEditor = new(this, filename, showWarning);
             return formEditor.ShowDialog() != DialogResult.Cancel;
+        }
+
+        public void StartLocalFileEditorDialog(string? filename)
+        {
+            string cmd = AppSettings.LocalFileEditor.Value;
+            if (string.IsNullOrWhiteSpace(cmd))
+            {
+                StartFileEditorDialog(filename);
+                return;
+            }
+
+            Match m = SingleArgRegex.Match(cmd);
+            if (!m.Success)
+            {
+                return;
+            }
+
+            StringBuilder args = new StringBuilder();
+            if (m.Length < cmd.Length)
+            {
+                if (m.Index + m.Length < cmd.Length)
+                {
+                    args.Append(cmd.Substring(m.Index + m.Length).TrimStart(_whiteSpaceChars));
+                    args.Append(" ");
+                }
+
+                cmd = cmd.Substring(m.Index, m.Length);
+            }
+
+            args.Append(filename.Quote());
+            new Executable(cmd).Start(args.ToString(), useShellExecute: true, throwOnErrorExit: false);
         }
 
         /// <summary>

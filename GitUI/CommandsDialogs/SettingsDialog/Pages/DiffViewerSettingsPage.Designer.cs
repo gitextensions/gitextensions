@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
+            this.lblEditor = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_cboEditor = new System.Windows.Forms.ComboBox();
             this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
             this.chkRememberShowNonPrintingCharsPreference = new System.Windows.Forms.CheckBox();
             this.chkRememberShowEntireFilePreference = new System.Windows.Forms.CheckBox();
@@ -55,8 +57,8 @@
             this.tlpnlGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpnlGeneral.ColumnCount = 3;
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.Controls.Add(this.chkRememberIgnoreWhiteSpacePreference, 0, 0);
             this.tlpnlGeneral.Controls.Add(this.chkRememberShowNonPrintingCharsPreference, 0, 1);
             this.tlpnlGeneral.Controls.Add(this.chkRememberShowEntireFilePreference, 0, 2);
@@ -69,10 +71,13 @@
             this.tlpnlGeneral.Controls.Add(this.chkShowAllCustomDiffTools, 0, 9);
             this.tlpnlGeneral.Controls.Add(this.label1, 0, 10);
             this.tlpnlGeneral.Controls.Add(this.VerticalRulerPosition, 1, 10);
+            this.tlpnlGeneral.Controls.Add(this.lblEditor, 0, 11);
+            this.tlpnlGeneral.Controls.Add(this._NO_TRANSLATE_cboEditor, 1, 11);
             this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlGeneral.Location = new System.Drawing.Point(8, 24);
             this.tlpnlGeneral.Name = "tlpnlGeneral";
-            this.tlpnlGeneral.RowCount = 11;
+            this.tlpnlGeneral.RowCount = 12;
+            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -216,6 +221,23 @@
             0,
             0});
             // 
+            // lblEditor
+            // 
+            this.lblEditor.AutoSize = true;
+            this.lblEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblEditor.Location = new System.Drawing.Point(3, 275);
+            this.lblEditor.Name = "lblEditor";
+            this.lblEditor.Size = new System.Drawing.Size(325, 27);
+            this.lblEditor.Text = "Local file editor (Leave blank to use built-in editor)";
+            this.lblEditor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // _NO_TRANSLATE_cboEditor
+            // 
+            this._NO_TRANSLATE_cboEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_cboEditor.Location = new System.Drawing.Point(334, 278);
+            this._NO_TRANSLATE_cboEditor.Name = "_NO_TRANSLATE_cboEditor";
+            this._NO_TRANSLATE_cboEditor.Size = new System.Drawing.Size(356, 21);
+            // 
             // tlpnlMain
             // 
             this.tlpnlMain.ColumnCount = 1;
@@ -278,6 +300,8 @@
         private UserControls.Settings.SettingsCheckBox chkShowAllCustomDiffTools;
         private System.Windows.Forms.NumericUpDown VerticalRulerPosition;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblEditor;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cboEditor;
         private System.Windows.Forms.TableLayoutPanel tlpnlMain;
     }
 }

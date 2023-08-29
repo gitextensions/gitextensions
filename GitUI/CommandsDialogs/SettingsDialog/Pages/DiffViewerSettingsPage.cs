@@ -13,6 +13,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowDiffForAllParents.Text = TranslatedStrings.ShowDiffForAllParentsText;
             chkShowDiffForAllParents.ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip;
             chkContScrollToNextFileOnlyWithAlt.Text = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
+
+            _NO_TRANSLATE_cboEditor.Items.Add(string.Empty);
+            _NO_TRANSLATE_cboEditor.Items.AddRange(EditorHelper.GetEditors());
         }
 
         protected override void SettingsToPage()
@@ -28,6 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
             chkShowAllCustomDiffTools.Checked = AppSettings.ShowAvailableDiffTools;
             VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
+            _NO_TRANSLATE_cboEditor.Text = AppSettings.LocalFileEditor.Value;
 
             base.SettingsToPage();
         }
@@ -45,6 +49,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
             AppSettings.ShowAvailableDiffTools = chkShowAllCustomDiffTools.Checked;
             AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;
+            AppSettings.LocalFileEditor.Value = _NO_TRANSLATE_cboEditor.Text;
 
             base.PageToSettings();
         }
