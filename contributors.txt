@@ -198,3 +198,4 @@ YYYY/MM/DD, github id, Full name, email
 2023/07/05, NatRavenhill, Nat Ravenhill, natalie.ravenhill(at)gmail.com
 2023/07/13, Scott Sumrall, ssumrall, snsumrall(at)gmail.com
 2023/08/01, IlijaQ, Ilija Kujovic, ilijaqnet{at]gmail.com
+2023/08/30, SlugFiller, Saar Korren, slugfiller(at)gmail.com
