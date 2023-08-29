@@ -199,8 +199,8 @@ namespace GitUI.CommandsDialogs
             tlpnlMain.Controls.Add(flowLayoutPanel1, 0, 2);
             tlpnlMain.Controls.Add(lblParents, 0, 3);
             tlpnlMain.Controls.Add(lvParentsList, 0, 4);
-            tlpnlMain.Controls.Add(cbxAddReference, 0, 5);
-            tlpnlMain.Controls.Add(cbxAutoCommit, 0, 6);
+            tlpnlMain.Controls.Add(cbxAutoCommit, 0, 5);
+            tlpnlMain.Controls.Add(cbxAddReference, 0, 6);
             tlpnlMain.Dock = DockStyle.Fill;
             tlpnlMain.Location = new Point(12, 12);
             tlpnlMain.Margin = new Padding(0);
