@@ -63,6 +63,11 @@ namespace GitUI.LeftPanel
 
         public bool Checkout()
         {
+            if (!MessageBoxes.ConfirmBranchCheckout(null, FullPath))
+            {
+                return false;
+            }
+
             return UICommands.StartCheckoutRemoteBranch(TreeViewNode.TreeView, FullPath);
         }
 

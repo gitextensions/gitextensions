@@ -54,6 +54,11 @@ namespace GitUI.LeftPanel
 
         public bool Checkout()
         {
+            if (!MessageBoxes.ConfirmBranchCheckout(null, FullPath))
+            {
+                return false;
+            }
+
             return UICommands.StartCheckoutBranch(ParentWindow(), branch: FullPath, remote: false);
         }
 

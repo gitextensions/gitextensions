@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkPushNewBranch.Checked = !AppSettings.DontConfirmPushNewBranch;
             chkAddTrackingRef.Checked = !AppSettings.DontConfirmAddTrackingRef;
             chkBranchDeleteUnmerged.Checked = !AppSettings.DontConfirmDeleteUnmergedBranch;
+            chkBranchCheckoutConfirmation.Checked = AppSettings.ConfirmBranchCheckout.Value;
 
             // Stashes:
             chkAutoPopStashAfterPull.CheckState = ToCheckboxStateInverted(AppSettings.AutoPopStashAfterPull);
@@ -57,6 +58,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontConfirmPushNewBranch = !chkPushNewBranch.Checked;
             AppSettings.DontConfirmAddTrackingRef = !chkAddTrackingRef.Checked;
             AppSettings.DontConfirmDeleteUnmergedBranch = !chkBranchDeleteUnmerged.Checked;
+            AppSettings.ConfirmBranchCheckout.Value = chkBranchCheckoutConfirmation.Checked;
 
             // Stashes:
             AppSettings.AutoPopStashAfterPull = ToBooleanInverted(chkAutoPopStashAfterPull.CheckState);

@@ -33,6 +33,7 @@ namespace GitCommands
         public static DistributedSettings SettingsContainer { get; private set; }
 
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
+        private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
 
         private static Mutex _globalMutex;
 
@@ -1002,6 +1003,8 @@ namespace GitCommands
             get => GetBool("DontConfirmCommitIfNoBranch", false);
             set => SetBool("DontConfirmCommitIfNoBranch", value);
         }
+
+        public static readonly ISetting<bool> ConfirmBranchCheckout = Setting.Create(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), false);
 
         public static bool? AutoPopStashAfterPull
         {
