@@ -283,7 +283,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            if (_NO_TRANSLATE_Branch.Text != AllRefs
+            if (TabControlTagBranch.SelectedTab == BranchTab && _NO_TRANSLATE_Branch.Text != AllRefs
                 && (string.IsNullOrWhiteSpace(_NO_TRANSLATE_Branch.Text)
                     || _NO_TRANSLATE_Branch.Text == DetachedHeadParser.DetachedBranch
                     || string.IsNullOrWhiteSpace(RemoteBranch.Text)
