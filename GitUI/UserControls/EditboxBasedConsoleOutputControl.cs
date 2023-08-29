@@ -20,6 +20,8 @@ namespace GitUI.UserControls
 
         private ProcessOutputThrottle? _outputThrottle;
 
+        private StreamWriter? _input;
+
         public EditboxBasedConsoleOutputControl()
         {
             _editbox = new RichTextBox
@@ -59,6 +61,11 @@ namespace GitUI.UserControls
             _outputThrottle?.Append(text);
         }
 
+        public override void AppendInputFreeThreaded(string text)
+        {
+            _input?.Write(text);
+        }
+
         public override void KillProcess()
         {
             if (InvokeRequired)
@@ -81,6 +88,7 @@ namespace GitUI.UserControls
             }
 
             _process = null;
+            _input = null;
             FireProcessExited();
         }
 
@@ -156,6 +164,7 @@ namespace GitUI.UserControls
                             _exitcode = _process.ExitCode;
                             operation.LogProcessEnd(_exitcode);
                             _process = null;
+                            _input = null;
                             _outputThrottle?.FlushOutput();
                             FireProcessExited();
                             _outputThrottle?.Stop(flush: true);
@@ -165,6 +174,7 @@ namespace GitUI.UserControls
                 process.Start();
                 operation.SetProcessId(process.Id);
                 _process = process;
+                _input = process.StandardInput;
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
             }

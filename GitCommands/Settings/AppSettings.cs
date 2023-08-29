@@ -1260,6 +1260,8 @@ namespace GitCommands
             set => SetBool("closeprocessdialog", value);
         }
 
+        public static ISetting<bool> ShowProcessDialogPasswordInput => Setting.Create(DetailedSettingsPath, nameof(ShowProcessDialogPasswordInput), true);
+
         public static bool ShowCurrentBranchOnly
         {
             get => GetBool("showcurrentbranchonly", false);
