@@ -1,4 +1,6 @@
-﻿namespace GitUI.HelperDialogs
+﻿using GitUI.UserControls;
+
+namespace GitUI.HelperDialogs
 {
     partial class FormStatus
     {
@@ -18,8 +20,10 @@
             Ok = new Button();
             ProgressBar = new ProgressBar();
             KeepDialogOpen = new CheckBox();
+            ShowPassword = new CheckBox();
             Abort = new Button();
             pnlOutput = new Panel();
+            PasswordInput = new PasswordInput();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
             SuspendLayout();
@@ -35,7 +39,8 @@
             ControlsPanel.Controls.Add(Abort);
             ControlsPanel.Controls.Add(Ok);
             ControlsPanel.Controls.Add(KeepDialogOpen);
-            ControlsPanel.Location = new Point(0, 249);
+            ControlsPanel.Controls.Add(ShowPassword);
+            ControlsPanel.Location = new Point(0, 288);
             ControlsPanel.Size = new Size(549, 39);
             // 
             // Ok
@@ -70,11 +75,23 @@
             KeepDialogOpen.Location = new Point(254, 8);
             KeepDialogOpen.Name = "KeepDialogOpen";
             KeepDialogOpen.Size = new Size(120, 22);
-            KeepDialogOpen.TabIndex = 2;
-            KeepDialogOpen.Text = "Keep dialog open";
+            KeepDialogOpen.TabIndex = 3;
+            KeepDialogOpen.Text = "&Keep dialog open";
             KeepDialogOpen.UseCompatibleTextRendering = true;
             KeepDialogOpen.UseVisualStyleBackColor = true;
             KeepDialogOpen.CheckedChanged += KeepDialogOpen_CheckedChanged;
+            // 
+            // ShowPassword
+            // 
+            ShowPassword.AutoSize = true;
+            ShowPassword.Location = new Point(108, 8);
+            ShowPassword.Name = "ShowPassword";
+            ShowPassword.Size = new Size(140, 22);
+            ShowPassword.TabIndex = 2;
+            ShowPassword.Text = "Show &password input";
+            ShowPassword.UseCompatibleTextRendering = true;
+            ShowPassword.UseVisualStyleBackColor = true;
+            ShowPassword.CheckedChanged += ShowPassword_CheckedChanged;
             // 
             // Abort
             // 
@@ -86,7 +103,7 @@
             Abort.Name = "Abort";
             Abort.Size = new Size(75, 23);
             Abort.TabIndex = 1;
-            Abort.Text = "Abort";
+            Abort.Text = "&Abort";
             Abort.UseCompatibleTextRendering = true;
             Abort.UseVisualStyleBackColor = true;
             Abort.Click += Abort_Click;
@@ -100,14 +117,26 @@
             pnlOutput.Size = new Size(549, 246);
             pnlOutput.TabIndex = 0;
             // 
+            // PasswordPanel
+            // 
+            PasswordInput.Dock = DockStyle.Bottom;
+            PasswordInput.Location = new Point(0, 249);
+            PasswordInput.Margin = new Padding(0);
+            PasswordInput.Name = "PasswordInput";
+            PasswordInput.Padding = new Padding(8);
+            PasswordInput.Size = new Size(549, 39);
+            PasswordInput.TabIndex = 2;
+            PasswordInput.PasswordEntered += PasswordInput_PasswordEntered;
+            // 
             // FormStatus
             // 
             AcceptButton = Ok;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             CancelButton = Abort;
-            ClientSize = new Size(549, 288);
+            ClientSize = new Size(549, 327);
             Controls.Add(ProgressBar);
+            Controls.Add(PasswordInput);
             MaximizeBox = false;
             MinimizeBox = false;
             MinimumSize = new Size(500, 200);
@@ -115,6 +144,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Process";
             Controls.SetChildIndex(ControlsPanel, 0);
+            Controls.SetChildIndex(PasswordInput, 0);
             Controls.SetChildIndex(ProgressBar, 0);
             Controls.SetChildIndex(MainPanel, 0);
             MainPanel.ResumeLayout(false);
@@ -122,14 +152,15 @@
             ControlsPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
 
         private ProgressBar ProgressBar;
+        protected PasswordInput PasswordInput;
         protected Button Ok;
         protected CheckBox KeepDialogOpen;
+        protected CheckBox ShowPassword;
         protected Button Abort;
         protected Panel pnlOutput;
     }

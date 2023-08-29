@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
+using Microsoft;
 using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.UserControls
@@ -20,6 +21,8 @@ namespace GitUI.UserControls
         private Process? _process;
 
         private ProcessOutputThrottle? _outputThrottle;
+
+        private StreamWriter? _input;
 
         public EditboxBasedConsoleOutputControl()
         {
@@ -60,6 +63,12 @@ namespace GitUI.UserControls
             _outputThrottle?.Append(text);
         }
 
+        public override void AppendInput(string text)
+        {
+            Validates.NotNull(_input);
+            _input.Write(text);
+        }
+
         public override void KillProcess()
         {
             if (InvokeRequired)
@@ -82,6 +91,7 @@ namespace GitUI.UserControls
             }
 
             _process = null;
+            _input = null;
             FireProcessExited();
         }
 
@@ -157,6 +167,7 @@ namespace GitUI.UserControls
                             _exitcode = _process.ExitCode;
                             operation.LogProcessEnd(_exitcode);
                             _process = null;
+                            _input = null;
                             _outputThrottle?.FlushOutput();
                             FireProcessExited();
                             _outputThrottle?.Stop(flush: true);
@@ -166,6 +177,7 @@ namespace GitUI.UserControls
                 process.Start();
                 operation.SetProcessId(process.Id);
                 _process = process;
+                _input = process.StandardInput;
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
             }
