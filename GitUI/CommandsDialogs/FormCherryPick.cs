@@ -7,7 +7,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormCherryPick : GitModuleForm
+    public partial class FormCherryPick : GitExtensionsDialog
     {
         #region Translation
         private readonly TranslationString _noneParentSelectedText =
@@ -25,10 +25,11 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCherryPick(GitUICommands commands, GitRevision? revision)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             Revision = revision;
             InitializeComponent();
+            Size = MinimumSize;
             InitializeComplete();
         }
 
@@ -45,85 +46,103 @@ namespace GitUI.CommandsDialogs
 
         private void LoadSettings()
         {
-            AutoCommit.Checked = AppSettings.CommitAutomaticallyAfterCherryPick;
-            checkAddReference.Checked = AppSettings.AddCommitReferenceToCherryPick;
+            cbxAutoCommit.Checked = AppSettings.CommitAutomaticallyAfterCherryPick;
+            cbxAddReference.Checked = AppSettings.AddCommitReferenceToCherryPick;
         }
 
         private void SaveSettings()
         {
-            AppSettings.CommitAutomaticallyAfterCherryPick = AutoCommit.Checked;
-            AppSettings.AddCommitReferenceToCherryPick = checkAddReference.Checked;
+            if (DialogResult == DialogResult.OK)
+            {
+                AppSettings.CommitAutomaticallyAfterCherryPick = cbxAutoCommit.Checked;
+                AppSettings.AddCommitReferenceToCherryPick = cbxAddReference.Checked;
+            }
         }
 
         private void OnRevisionChanged()
         {
-            commitSummaryUserControl1.Revision = Revision;
-
-            ParentsList.Items.Clear();
-
-            if (Revision is not null)
+            try
             {
-                _isMerge = Module.IsMerge(Revision.ObjectId);
-            }
+                tlpnlMain.SuspendLayout();
 
-            panelParentsList.Visible = _isMerge;
+                commitSummaryUserControl1.Revision = Revision;
 
-            if (_isMerge && Revision is not null)
-            {
-                var parents = Module.GetParentRevisions(Revision.ObjectId);
+                lvParentsList.Items.Clear();
 
-                for (int i = 0; i < parents.Count; i++)
+                if (Revision is not null)
                 {
-                    ParentsList.Items.Add(new ListViewItem((i + 1).ToString())
+                    _isMerge = Module.IsMerge(Revision.ObjectId);
+                }
+
+                lblParents.Visible = _isMerge;
+                lvParentsList.Visible = _isMerge;
+
+                if (_isMerge && Revision is not null)
+                {
+                    var parents = Module.GetParentRevisions(Revision.ObjectId);
+
+                    for (int i = 0; i < parents.Count; i++)
                     {
-                        SubItems =
+                        lvParentsList.Items.Add(new ListViewItem((i + 1).ToString())
+                        {
+                            SubItems =
                         {
                             parents[i].Subject,
                             parents[i].Author,
                             parents[i].CommitDate.ToShortDateString()
                         }
-                    });
-                }
+                        });
+                    }
 
-                ParentsList.TopItem.Selected = true;
-                Size size = MinimumSize;
-                size.Height += 100;
-                MinimumSize = size;
+                    lvParentsList.TopItem.Selected = true;
+                    Size size = MinimumSize;
+                    size.Height += 100;
+                    MinimumSize = size;
+                }
+            }
+            finally
+            {
+                tlpnlMain.ResumeLayout(performLayout: true);
             }
         }
 
-        private void Revert_Click(object sender, EventArgs e)
+        private void btnAbort_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void btnPick_Click(object sender, EventArgs e)
         {
             ArgumentBuilder args = new();
             var canExecute = true;
 
             if (_isMerge)
             {
-                if (ParentsList.SelectedItems.Count == 0)
+                if (lvParentsList.SelectedItems.Count == 0)
                 {
                     MessageBox.Show(this, _noneParentSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     canExecute = false;
                 }
                 else
                 {
-                    args.Add("-m " + (ParentsList.SelectedItems[0].Index + 1));
+                    args.Add("-m " + (lvParentsList.SelectedItems[0].Index + 1));
                 }
             }
 
-            if (checkAddReference.Checked)
+            if (cbxAddReference.Checked)
             {
                 args.Add("-x");
             }
 
             if (canExecute && Revision is not null)
             {
-                var command = GitCommandHelpers.CherryPickCmd(Revision.ObjectId, AutoCommit.Checked, args.ToString());
+                var command = GitCommandHelpers.CherryPickCmd(Revision.ObjectId, cbxAutoCommit.Checked, args.ToString());
 
                 // Don't verify whether the command is successful.
                 // If it fails, likely there is a conflict that needs to be resolved.
                 FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
-                MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
+                MergeConflictHandler.HandleMergeConflicts(UICommands, this, cbxAutoCommit.Checked);
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -131,8 +150,8 @@ namespace GitUI.CommandsDialogs
 
         public void CopyOptions(FormCherryPick source)
         {
-            AutoCommit.Checked = source.AutoCommit.Checked;
-            checkAddReference.Checked = source.checkAddReference.Checked;
+            cbxAutoCommit.Checked = source.cbxAutoCommit.Checked;
+            cbxAddReference.Checked = source.cbxAddReference.Checked;
         }
 
         private void btnChooseRevision_Click(object sender, EventArgs e)
