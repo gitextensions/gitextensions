@@ -308,6 +308,68 @@ namespace GitlabIntegrationTests
             result.OrderBy(x => x.Id).SequenceEqual(secondExpected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
         }
 
+        [TestCase(3, null, 3)]
+        [TestCase(3, 2, 2)]
+        [TestCase(null, null, 3)]
+        [TestCase(null, 2, 2)]
+        public void Should_respect_page_limit(int? totalPages, int? pagesLimit, int expectedPages)
+        {
+            MemorySettings settings = new();
+            settings.SetInt("PagesLimit", pagesLimit);
+
+            _target.Initialize(Substitute.For<IBuildServerWatcher>(), settings, () => { });
+
+            PagedResponse<GitlabPipeline> firstPagedResponse = new()
+            {
+                TotalPages = totalPages,
+                PageSize = 1,
+                PageNumber = 1,
+                NextPage = 2,
+                Total = totalPages,
+                Items = new[]
+                {
+                    GitlabAdapterTestData.Builds[3].Item2,
+                }
+            };
+
+            PagedResponse<GitlabPipeline> secondPagedResponse = new()
+            {
+                TotalPages = totalPages,
+                PageSize = 1,
+                PageNumber = 2,
+                NextPage = 3,
+                Total = totalPages,
+                Items = new[]
+                {
+                    GitlabAdapterTestData.Builds[2].Item2,
+                }
+            };
+
+            PagedResponse<GitlabPipeline> thirdPagedResponse = new()
+            {
+                TotalPages = totalPages,
+                PageSize = 1,
+                PageNumber = 3,
+                NextPage = null,
+                Total = totalPages,
+                Items = new[]
+                {
+                    GitlabAdapterTestData.Builds[1].Item2,
+                }
+            };
+
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
+                .Returns(firstPagedResponse);
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 2, Arg.Any<CancellationToken>())
+                .Returns(secondPagedResponse);
+            _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 3, Arg.Any<CancellationToken>())
+                .Returns(thirdPagedResponse);
+
+            List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
+
+            result.Count.Should().Be(expectedPages);
+        }
+
         [Test]
         [Ignore("Settings check should be added first")]
         public void Should_handle_unauthorized_access_exception()

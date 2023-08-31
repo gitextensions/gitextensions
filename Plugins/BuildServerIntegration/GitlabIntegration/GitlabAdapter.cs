@@ -19,6 +19,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
         private readonly IGitlabApiClientFactory _apiClientFactory;
         private IGitlabApiClient? _apiClient;
+        private int? _pagesLimit;
 
         public GitlabAdapter()
             : this(new GitlabApiClientFactory())
@@ -36,6 +37,12 @@ namespace GitExtensions.Plugins.GitlabIntegration
                 config.GetString("InstanceUrl", string.Empty),
                 config.GetString("ApiToken", string.Empty),
                 config.GetInt("ProjectId", 0));
+
+            _pagesLimit = config.GetInt("PagesLimit");
+            if (_pagesLimit is 0)
+            {
+                _pagesLimit = null;
+            }
         }
 
         public string UniqueKey
@@ -73,8 +80,14 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
                 if (firstPage.TotalPages is > 1)
                 {
-                    Task[] pagesTasks = new Task[firstPage.TotalPages.Value - 1];
-                    for (int i = 2; i <= firstPage.TotalPages; i++)
+                    int totalPages = firstPage.TotalPages.Value;
+                    if (_pagesLimit < totalPages)
+                    {
+                        totalPages = _pagesLimit.Value;
+                    }
+
+                    Task[] pagesTasks = new Task[totalPages - 1];
+                    for (int i = 2; i <= totalPages; i++)
                     {
                         Task<PagedResponse<GitlabPipeline>> pageTask = _apiClient.GetPipelinesAsync(sinceDate, running, i, cancellationToken);
                         pagesTasks[i - 2] = pageTask.ContinueWith(x =>
@@ -95,7 +108,9 @@ namespace GitExtensions.Plugins.GitlabIntegration
                 {
                     PagedResponse<GitlabPipeline> currentPage = firstPage;
 
-                    while (currentPage.NextPage.HasValue && cancellationToken.IsCancellationRequested == false)
+                    while (currentPage.NextPage.HasValue
+                           && (_pagesLimit.HasValue == false || currentPage.NextPage.Value <= _pagesLimit.Value)
+                           && cancellationToken.IsCancellationRequested == false)
                     {
                         currentPage = await _apiClient.GetPipelinesAsync(sinceDate, running, currentPage.NextPage.Value, cancellationToken);
                         ProcessLoadedBuilds(currentPage.Items, observer);
