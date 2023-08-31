@@ -112,6 +112,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
             }
 
             buildServerConfig.SetString("ApiToken", ApiTokenTextBox.Text.NullIfEmpty());
+            buildServerConfig.SetInt("PagesLimit", 0);
         }
 
         private void GetProjectIdLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
