@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormEditor(GitUICommands commands, string? fileName, bool showWarning, bool readOnly = false)
+        public FormEditor(GitUICommands commands, string? fileName, bool showWarning, bool readOnly = false, int? lineNumber = null)
             : base(commands)
         {
             _fileName = fileName;
@@ -42,6 +42,7 @@ namespace GitUI.CommandsDialogs
             panelMessage.Visible = showWarning;
 
             fileViewer.IsReadOnly = readOnly;
+            fileViewer.InitalLineNumber = lineNumber;
         }
 
         private bool HasChanges

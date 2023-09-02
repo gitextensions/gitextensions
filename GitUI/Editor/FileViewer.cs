@@ -406,6 +406,11 @@ namespace GitUI.Editor
             return internalFileViewer.GetLineFromVisualPosY(visualPosY);
         }
 
+        public int? InitalLineNumber
+        {
+            set => internalFileViewer.InitalLineNumber = value;
+        }
+
         public int CurrentFileLine => internalFileViewer.CurrentFileLine(IsDiffView(_viewMode));
 
         public void HighlightLines(int startLine, int endLine, Color color)

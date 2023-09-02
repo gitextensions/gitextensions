@@ -993,8 +993,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Item.Name);
-            UICommands.StartFileEditorDialog(fileName);
+            string? fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Item.Name);
+            UICommands.StartFileEditorDialog(fileName, lineNumber: DiffText.CurrentFileLine);
             RequestRefresh();
         }
 

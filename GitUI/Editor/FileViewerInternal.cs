@@ -282,6 +282,12 @@ namespace GitUI.Editor
                 _shouldScrollToTop = false;
                 _shouldScrollToBottom = false;
             }
+
+            if (InitalLineNumber.HasValue)
+            {
+                GoToLine(InitalLineNumber.Value);
+                InitalLineNumber = null;
+            }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -443,6 +449,8 @@ namespace GitUI.Editor
 
             return TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
         }
+
+        public int? InitalLineNumber { get; set; }
 
         public void GoToLine(int lineNumber)
         {

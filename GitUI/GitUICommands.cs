@@ -1684,9 +1684,9 @@ namespace GitUI
             return StartRebaseDialog(owner: null, onto: branch);
         }
 
-        public bool StartFileEditorDialog(string? filename, bool showWarning = false)
+        public bool StartFileEditorDialog(string? filename, bool showWarning = false, int? lineNumber = null)
         {
-            using FormEditor formEditor = new(this, filename, showWarning);
+            using FormEditor formEditor = new(this, filename, showWarning, lineNumber: lineNumber);
             return formEditor.ShowDialog() != DialogResult.Cancel;
         }
 

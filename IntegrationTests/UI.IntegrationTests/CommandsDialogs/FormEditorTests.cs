@@ -64,6 +64,46 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
         }
 
+        [Test]
+        public void Should_set_linenumber_correctly()
+        {
+            string filePath = Path.Combine(_referenceRepository.Module.WorkingDir, Path.GetRandomFileName());
+
+            try
+            {
+                const int lineNumerDefault = 2;
+                File.WriteAllText(filePath, "Hello↔world\nline2\nline3\n\n\n", _commands.Module.FilesEncoding);
+
+                UITest.RunForm<FormEditor>(
+                    () =>
+                    {
+                        using FormEditor formEditor = new(_commands, filePath, showWarning: false, lineNumber: lineNumerDefault);
+                        formEditor.ShowDialog();
+                    },
+                    form =>
+                    {
+                        Assert.False(form.GetTestAccessor().HasChanges);
+
+                        var fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
+                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, isDiff: false);
+
+                        Assert.True(form.GetTestAccessor().HasChanges);
+
+                        form.GetTestAccessor().SaveChanges();
+
+                        Assert.False(form.GetTestAccessor().HasChanges);
+
+                        Assert.AreEqual(lineNumerDefault, fileViewerInternal.CurrentFileLine(false));
+
+                        return Task.CompletedTask;
+                    });
+            }
+            finally
+            {
+                File.Delete(filePath);
+            }
+        }
+
         [Ignore("Unstable UTF8EncodingSealed result")]
         [Test]
         public void Should_preserve_encoding_utf8()
