@@ -32,7 +32,6 @@ namespace GitUI.Editor
         private ContinuousScrollEventManager? _continuousScrollEventManager;
         private BlameAuthorMargin? _authorsAvatarMargin;
         private bool _showGutterAvatars;
-        private int? _initalLineNumber;
 
         public FileViewerInternal()
         {
@@ -283,12 +282,6 @@ namespace GitUI.Editor
                 _shouldScrollToTop = false;
                 _shouldScrollToBottom = false;
             }
-
-            if (_initalLineNumber.HasValue)
-            {
-                GoToLine(_initalLineNumber.Value);
-                _initalLineNumber = null;
-            }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -450,8 +443,6 @@ namespace GitUI.Editor
 
             return TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
         }
-
-        public void SetInitalLineNumber(int? lineNumber) => _initalLineNumber = lineNumber;
 
         public void GoToLine(int lineNumber)
         {

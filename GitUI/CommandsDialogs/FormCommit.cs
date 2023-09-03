@@ -2717,8 +2717,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            int? lineNumber = SelectedDiff.CurrentFileLine;
-            UICommands.StartFileEditorDialog(fileName, lineNumber: lineNumber);
+            UICommands.StartFileEditorDialog(fileName, lineNumber: SelectedDiff.CurrentFileLine);
             UnstagedSelectionChanged(this, EventArgs.Empty);
         }
 

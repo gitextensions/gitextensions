@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
             // for translation form
             if (_fileName is not null)
             {
-                OpenFile(_fileName);
+                OpenFile(_fileName, lineNumber);
             }
 
             fileViewer.TextChanged += (s, e) => HasChanges = true;
@@ -42,7 +42,6 @@ namespace GitUI.CommandsDialogs
             panelMessage.Visible = showWarning;
 
             fileViewer.IsReadOnly = readOnly;
-            fileViewer.SetInitalLineNumber(lineNumber);
         }
 
         private bool HasChanges
@@ -55,11 +54,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void OpenFile(string fileName)
+        private void OpenFile(string fileName, int? line = null)
         {
             try
             {
-                fileViewer.ViewFileAsync(fileName);
+                fileViewer.ViewFileAsync(fileName, line: line);
                 fileViewer.IsReadOnly = false;
                 Text = fileName;
 
