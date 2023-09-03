@@ -406,10 +406,7 @@ namespace GitUI.Editor
             return internalFileViewer.GetLineFromVisualPosY(visualPosY);
         }
 
-        public int? InitalLineNumber
-        {
-            set => internalFileViewer.InitalLineNumber = value;
-        }
+        public void SetInitalLineNumber(int? lineNumber) => internalFileViewer.SetInitalLineNumber(lineNumber);
 
         public int CurrentFileLine => internalFileViewer.CurrentFileLine(IsDiffView(_viewMode));
 

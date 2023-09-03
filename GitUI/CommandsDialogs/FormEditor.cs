@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
             panelMessage.Visible = showWarning;
 
             fileViewer.IsReadOnly = readOnly;
-            fileViewer.InitalLineNumber = lineNumber;
+            fileViewer.SetInitalLineNumber(lineNumber);
         }
 
         private bool HasChanges
