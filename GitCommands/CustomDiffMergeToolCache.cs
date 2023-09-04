@@ -48,6 +48,8 @@ namespace GitCommands
                 return _tools;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             // The command will compete with other resources, avoid delaying startup
             // Do not bother with cancel tokens
             await Task.Delay(delay, cancellationToken);
@@ -64,6 +66,8 @@ namespace GitCommands
                     var toolKey = _isDiff ? SettingKeyString.DiffToolKey : SettingKeyString.MergeToolKey;
                     var defaultTool = module.GetEffectiveSetting(toolKey);
                     string output = module.GetCustomDiffMergeTools(_isDiff, cancellationToken);
+
+                    cancellationToken.ThrowIfCancellationRequested();
                     _tools = ParseCustomDiffMergeTool(output, defaultTool);
                 }
             }

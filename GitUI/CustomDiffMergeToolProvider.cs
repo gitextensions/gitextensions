@@ -46,6 +46,8 @@ namespace GitUI
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // get the tools, possibly with a delay as requesting requires considerable time
                 // cache is shared
                 List<string> tools = (await (isDiff ? CustomDiffMergeToolCache.DiffToolCache : CustomDiffMergeToolCache.MergeToolCache)
@@ -58,13 +60,18 @@ namespace GitUI
                     return;
                 }
 
+                cancellationToken.ThrowIfCancellationRequested();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
                 foreach (var menu in menus)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     menu.MenuItem.DropDown = new ContextMenuStrip(components);
                     foreach (var tool in tools)
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
+
                         ToolStripMenuItem item = new(tool) { Tag = tool };
 
                         item.Click += menu.Click;
@@ -85,6 +92,8 @@ namespace GitUI
 
                     if (isDiff)
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
+
                         // Allow disabling for difftools
                         menu.MenuItem.DropDown.Items.Add(new ToolStripSeparator());
                         ToolStripMenuItem disableItem = new()
