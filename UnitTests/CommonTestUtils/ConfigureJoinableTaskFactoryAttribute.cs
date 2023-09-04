@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
+using System.Text;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;
@@ -208,9 +210,40 @@ namespace CommonTestUtils
                     return;
                 }
 
+                StringBuilder output = new();
+                output.AppendLine();
+                output.AppendLine($"HANG DETECTED: guid {hangId}");
+
+                HangReportContribution report = ((IHangReportContributor)Context).GetHangReport();
+                if (report.ContentName.EndsWith("dgml", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    try
+                    {
+                        string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+                        string reportLocation = Path.GetDirectoryName(assemblyLocation);
+                        string reportFileName = Path.Combine(reportLocation, $"{hangId}.dgml");
+
+                        File.WriteAllText(reportFileName, report.Content);
+                        output.AppendLine($"HANG report: {reportFileName}");
+                    }
+                    catch
+                    {
+                        /* no-op */
+                    }
+                }
+                else
+                {
+                    output.AppendLine(report.ContentName);
+                    output.AppendLine(report.ContentType);
+                    output.AppendLine(report.Content);
+                }
+
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{Environment.NewLine}HANG DETECTED: guid {hangId}{Environment.NewLine}");
+                Console.WriteLine(output.ToString());
                 Console.ResetColor();
+
+                // Allow seeing the output in Release builds
+                Trace.WriteLine(output.ToString());
 
                 if (Environment.GetEnvironmentVariable("GE_TEST_LAUNCH_DEBUGGER_ON_HANG") != "1")
                 {
