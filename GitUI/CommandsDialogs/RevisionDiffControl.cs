@@ -994,7 +994,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Item.Name);
-            UICommands.StartFileEditorDialog(fileName);
+            UICommands.StartLocalFileEditorDialog(fileName);
             RequestRefresh();
         }
 

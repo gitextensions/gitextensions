@@ -1350,6 +1350,8 @@ namespace GitCommands
             set => SetInt("diffverticalrulerposition", value);
         }
 
+        public static ISetting<string> LocalFileEditor => Setting.Create(DetailedSettingsPath, nameof(LocalFileEditor), string.Empty);
+
         [MaybeNull]
         public static string RecentWorkingDir
         {
