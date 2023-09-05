@@ -614,7 +614,8 @@ See the changes in the commit form.");
 
             var fileName = _fullPathResolver.Resolve(gitItem.FileName);
             Validates.NotNull(fileName);
-            UICommands.StartFileEditorDialog(fileName);
+            int? lineNumber = BlameControl.Visible ? BlameControl.CurrentFileLine : FileText.CurrentFileLine;
+            UICommands.StartFileEditorDialog(fileName, lineNumber: lineNumber);
             _refreshGitStatus?.Invoke();
         }
 

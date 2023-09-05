@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormEditor(GitUICommands commands, string? fileName, bool showWarning, bool readOnly = false)
+        public FormEditor(GitUICommands commands, string? fileName, bool showWarning, bool readOnly = false, int? lineNumber = null)
             : base(commands)
         {
             _fileName = fileName;
@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
             // for translation form
             if (_fileName is not null)
             {
-                OpenFile(_fileName);
+                OpenFile(_fileName, lineNumber);
             }
 
             fileViewer.TextChanged += (s, e) => HasChanges = true;
@@ -54,11 +54,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void OpenFile(string fileName)
+        private void OpenFile(string fileName, int? line = null)
         {
             try
             {
-                fileViewer.ViewFileAsync(fileName);
+                fileViewer.ViewFileAsync(fileName, line: line);
                 fileViewer.IsReadOnly = false;
                 Text = fileName;
 
