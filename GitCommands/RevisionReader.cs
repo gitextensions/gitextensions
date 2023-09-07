@@ -33,25 +33,29 @@ namespace GitCommands
 
         private readonly GitModule _module;
         private readonly Encoding _logOutputEncoding;
-        private readonly long _sixMonths;
+        private readonly long _oldestBody;
+        private const int _offsetDaysForOldestBody = 6 * 30; // about 6 months
 
         // reflog selector to identify stashes
         private readonly bool _hasReflogSelector;
 
         private string LogFormat => _hasReflogSelector ? FullFormat.Replace("%B", "%gD%n%B") : FullFormat;
 
-        public RevisionReader(GitModule module, bool hasReflogSelector)
-            : this(module, hasReflogSelector, module.LogOutputEncoding, new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds())
+        public RevisionReader(GitModule module, bool hasReflogSelector, bool allBodies = false)
+            : this(module, hasReflogSelector, module.LogOutputEncoding, allBodies ? 0 : GetUnixTimeForOffset(_offsetDaysForOldestBody))
         {
         }
 
-        private RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long sixMonths)
+        private RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long oldestBody)
         {
             _module = module;
             _hasReflogSelector = hasReflogSelector;
             _logOutputEncoding = logOutputEncoding;
-            _sixMonths = sixMonths;
+            _oldestBody = oldestBody;
         }
+
+        private static long GetUnixTimeForOffset(int days)
+            => new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(days)).ToUnixTimeSeconds();
 
         /// <summary>
         /// Get the git-stash GitRevisions.
@@ -93,6 +97,30 @@ namespace GitCommands
                 string.Join(" ", untracked),
                 ".",
             };
+
+            return GetRevisionsFromArguments(arguments, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the git history in the requested range (boundaries included).
+        /// </summary>
+        /// <param name="olderCommitHash">The first (older) commit hash.</param>
+        /// <param name="newerCommitHash">The last (newer) commit hash.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>The retrieved git history.</returns>
+        public IReadOnlyCollection<GitRevision> GetRevisionsFromRange(string olderCommitHash, string newerCommitHash, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(olderCommitHash) || string.IsNullOrWhiteSpace(newerCommitHash))
+            {
+                return Array.Empty<GitRevision>();
+            }
+
+            GitArgumentBuilder arguments = new("log")
+                {
+                    "-z",
+                    $"--pretty=format:\"{FullFormat}\"",
+                    $"{olderCommitHash}~..{newerCommitHash}"
+                };
 
             return GetRevisionsFromArguments(arguments, cancellationToken);
         }
@@ -321,12 +349,12 @@ namespace GitCommands
             string committer = reader.ReadLine(useStringPool: true);
             string committerEmail = reader.ReadLine(useStringPool: true);
 
-            // reflogSelector are always unique andonly used when listing stashes
+            // reflogSelector are always unique and only used when listing stashes
             string reflogSelector = _hasReflogSelector ? reader.ReadLine(useStringPool: false) : null;
 
-            // We keep a full multiline message body within the last six months.
+            // We keep a full multiline message body within the last six months (by default).
             // Note also that if body and subject are identical (single line), the body never need to be stored
-            bool keepBody = authorUnixTime >= _sixMonths;
+            bool keepBody = authorUnixTime >= _oldestBody;
             reader.PeekSubjectBody(out string? subject, out string? body, out bool hasMultiLineMessage, in keepBody);
 
             if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (keepBody && hasMultiLineMessage && body is null))
