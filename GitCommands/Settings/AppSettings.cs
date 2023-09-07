@@ -32,8 +32,8 @@ namespace GitCommands
 
         public static DistributedSettings SettingsContainer { get; private set; }
 
-        private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
         private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
+        private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
 
         private static Mutex _globalMutex;
 

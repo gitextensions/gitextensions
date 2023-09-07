@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitUI.CommandsDialogs;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
@@ -54,12 +55,7 @@ namespace GitUI.LeftPanel
 
         public bool Checkout()
         {
-            if (!MessageBoxes.ConfirmBranchCheckout(null, FullPath))
-            {
-                return false;
-            }
-
-            return UICommands.StartCheckoutBranch(ParentWindow(), branch: FullPath, remote: false);
+            return MessageBoxes.ConfirmBranchCheckout(ParentWindow(), FullPath) && UICommands.StartCheckoutBranch(ParentWindow(), branch: FullPath, remote: false);
         }
 
         public bool CreateBranch()
