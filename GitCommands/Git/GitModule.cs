@@ -2143,42 +2143,72 @@ namespace GitCommands
 
             List<PatchFile> patchFiles = new();
 
-            if (todoCommits is not null)
+            if (todoCommits is null)
             {
-                string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
+                return patchFiles;
+            }
 
-                string? currentCommitShortHash = File.Exists(CurrentFilePath) ? File.ReadAllText(CurrentFilePath).Trim() : null;
-                var isCurrentFound = false;
-                foreach (string todoCommit in todoCommits)
+            string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
+
+            // Filter comment lines and keep only lines containing at least 3 columns
+            // (action, commit hash and commit subject -- that could contain spaces and be cut in more --)
+            // ex: pick e0d861716540aa1ac83eaa2790ba5e79988b9489 this is the commit subject
+            string[][] todoCommitsInfos = todoCommits.Where(l => !l.StartsWith(commentChar))
+                .Select(l => l.Split(Delimiters.Space))
+                .Where(p => p.Length >= 3)
+                .ToArray();
+
+            string? currentCommitShortHash = File.Exists(CurrentFilePath) ? File.ReadAllText(CurrentFilePath).Trim() : null;
+            bool isCurrentFound = false;
+
+            RevisionReader reader = new(this, hasReflogSelector: false, allBodies: true);
+            Dictionary<string, GitRevision> rebasedCommitsRevisions;
+            try
+            {
+                using CancellationTokenSource cts = new(TimeSpan.FromSeconds(30));
+                rebasedCommitsRevisions = reader.GetRevisionsFromRange(todoCommitsInfos[0][1], todoCommitsInfos[^1][1], cts.Token)
+                    .ToDictionary(r => r.Guid, r => r);
+            }
+            catch (OperationCanceledException)
+            {
+                // If retrieve of commit range failed, fall back on getting data commit by commit
+                rebasedCommitsRevisions = new Dictionary<string, GitRevision>();
+            }
+
+            foreach (string[] parts in todoCommitsInfos)
+            {
+                string commitHash = parts[1];
+                string? error = null;
+                CommitData? data = rebasedCommitsRevisions.TryGetValue(commitHash, out GitRevision commitRevision)
+                    ? _commitDataManager.CreateFromRevision(commitRevision, null)
+                    : _commitDataManager.GetCommitData(commitHash, out error);
+
+                bool isApplying = currentCommitShortHash is not null && commitHash.StartsWith(currentCommitShortHash);
+                isCurrentFound |= isApplying;
+
+                ObjectId objectId;
+                if (data is not null)
                 {
-                    if (todoCommit.StartsWith(commentChar))
-                    {
-                        continue;
-                    }
-
-                    string[] parts = todoCommit.Split(Delimiters.Space);
-
-                    if (parts.Length < 3)
-                    {
-                        continue;
-                    }
-
-                    string commitHash = parts[1];
-                    CommitData? data = _commitDataManager.GetCommitData(commitHash, out var error);
-                    var isApplying = currentCommitShortHash is not null && commitHash.StartsWith(currentCommitShortHash);
-                    isCurrentFound |= isApplying;
-
-                    patchFiles.Add(new PatchFile
-                    {
-                        Author = error ?? data?.Author,
-                        ObjectId = data?.ObjectId,
-                        Subject = error ?? data?.Body,
-                        Action = parts[0],
-                        Date = error ?? data?.CommitDate.LocalDateTime.ToString(),
-                        IsNext = isApplying,
-                        IsApplied = !isCurrentFound,
-                    });
+                    objectId = data.ObjectId;
                 }
+                else
+                {
+                    ObjectId.TryParse(parts[1], out objectId);
+                }
+
+                patchFiles.Add(new PatchFile
+                {
+                    Action = parts[0],
+                    ObjectId = objectId,
+
+                    // During a rebase, "Patch" subject is filled with commit **body** to display it
+                    // packed in the grid and more readable in the cell tooltip
+                    Subject = data?.Body ?? string.Join(' ', parts.Skip(2)),
+                    Author = error ?? data?.Author,
+                    Date = error ?? data?.CommitDate.LocalDateTime.ToString(),
+                    IsNext = isApplying,
+                    IsApplied = !isCurrentFound,
+                });
             }
 
             return patchFiles;
