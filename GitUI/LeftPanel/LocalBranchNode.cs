@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using GitUI.CommandsDialogs;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
 using GitUIPluginInterfaces;

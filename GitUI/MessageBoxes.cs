@@ -132,7 +132,8 @@ namespace GitUI
 
         public static bool ConfirmBranchCheckout(IWin32Window? owner, string branchName)
             => AppSettings.ConfirmBranchCheckout.Value
-            ? Confirm(owner, string.Format(Instance._confirmBranchCheckout.Text, branchName), Instance._confirmBranchCheckoutCaption.Text) : true;
+                ? Confirm(owner, string.Format(Instance._confirmBranchCheckout.Text, branchName), Instance._confirmBranchCheckoutCaption.Text)
+                : true;
 
         public static void ShellNotFound(IWin32Window? owner)
             => ShowError(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text);
