@@ -28,346 +28,383 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblGroupBranches = new System.Windows.Forms.Label();
-            this.lblGroupStashes = new System.Windows.Forms.Label();
-            this.lblGroupConflictResolution = new System.Windows.Forms.Label();
-            this.lblGroupSubmodules = new System.Windows.Forms.Label();
-            this.lblGroupWorktrees = new System.Windows.Forms.Label();
-            this.lblGroupCommits = new System.Windows.Forms.Label();
-            this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
-            this.gbConfirmations = new System.Windows.Forms.GroupBox();
-            this.tlpnlConfirmations = new System.Windows.Forms.TableLayoutPanel();
-            this.chkAmend = new System.Windows.Forms.CheckBox();
-            this.chkUndoLastCommitConfirmation = new System.Windows.Forms.CheckBox();
-            this.chkCommitIfNoBranch = new System.Windows.Forms.CheckBox();
-            this.chkRebaseOnTopOfSelectedCommit = new System.Windows.Forms.CheckBox();
-            this.chkFetchAndPruneAllConfirmation = new System.Windows.Forms.CheckBox();
-            this.chkPushNewBranch = new System.Windows.Forms.CheckBox();
-            this.chkAddTrackingRef = new System.Windows.Forms.CheckBox();
-            this.chkAutoPopStashAfterCheckout = new System.Windows.Forms.CheckBox();
-            this.chkAutoPopStashAfterPull = new System.Windows.Forms.CheckBox();
-            this.chkConfirmStashDrop = new System.Windows.Forms.CheckBox();
-            this.chkResolveConflicts = new System.Windows.Forms.CheckBox();
-            this.chkCommitAfterConflictsResolved = new System.Windows.Forms.CheckBox();
-            this.chkSecondAbortConfirmation = new System.Windows.Forms.CheckBox();
-            this.chkUpdateModules = new System.Windows.Forms.CheckBox();
-            this.chkSwitchWorktree = new System.Windows.Forms.CheckBox();
-            this.chkBranchDeleteUnmerged = new System.Windows.Forms.CheckBox();
-            this.tlpnlMain.SuspendLayout();
-            this.gbConfirmations.SuspendLayout();
-            this.tlpnlConfirmations.SuspendLayout();
-            this.SuspendLayout();
+            lblGroupBranches = new Label();
+            lblGroupStashes = new Label();
+            lblGroupConflictResolution = new Label();
+            lblGroupSubmodules = new Label();
+            lblGroupWorktrees = new Label();
+            lblGroupCommits = new Label();
+            tlpnlMain = new TableLayoutPanel();
+            gbConfirmations = new GroupBox();
+            tlpnlConfirmations = new TableLayoutPanel();
+            chkAmend = new CheckBox();
+            chkUndoLastCommitConfirmation = new CheckBox();
+            chkCommitIfNoBranch = new CheckBox();
+            chkRebaseOnTopOfSelectedCommit = new CheckBox();
+            chkFetchAndPruneAllConfirmation = new CheckBox();
+            chkPushNewBranch = new CheckBox();
+            chkBranchDeleteUnmerged = new CheckBox();
+            chkAddTrackingRef = new CheckBox();
+            chkAutoPopStashAfterCheckout = new CheckBox();
+            chkAutoPopStashAfterPull = new CheckBox();
+            chkConfirmStashDrop = new CheckBox();
+            chkResolveConflicts = new CheckBox();
+            chkCommitAfterConflictsResolved = new CheckBox();
+            chkSecondAbortConfirmation = new CheckBox();
+            chkUpdateModules = new CheckBox();
+            chkSwitchWorktree = new CheckBox();
+            chkBranchCheckoutConfirmation = new CheckBox();
+            tlpnlMain.SuspendLayout();
+            gbConfirmations.SuspendLayout();
+            tlpnlConfirmations.SuspendLayout();
+            SuspendLayout();
             // 
             // lblGroupBranches
             // 
-            this.lblGroupBranches.AutoSize = true;
-            this.lblGroupBranches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGroupBranches.Location = new System.Drawing.Point(3, 127);
-            this.lblGroupBranches.Name = "lblGroupBranches";
-            this.lblGroupBranches.Size = new System.Drawing.Size(1589, 15);
-            this.lblGroupBranches.Text = "Branches:";
+            lblGroupBranches.AutoSize = true;
+            lblGroupBranches.Dock = DockStyle.Fill;
+            lblGroupBranches.Location = new Point(3, 127);
+            lblGroupBranches.Name = "lblGroupBranches";
+            lblGroupBranches.Size = new Size(1385, 15);
+            lblGroupBranches.TabIndex = 0;
+            lblGroupBranches.Text = "Branches:";
             // 
             // lblGroupStashes
             // 
-            this.lblGroupStashes.AutoSize = true;
-            this.lblGroupStashes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGroupStashes.Location = new System.Drawing.Point(3, 254);
-            this.lblGroupStashes.Name = "lblGroupStashes";
-            this.lblGroupStashes.Size = new System.Drawing.Size(1589, 15);
-            this.lblGroupStashes.Text = "Stash:";
+            lblGroupStashes.AutoSize = true;
+            lblGroupStashes.Dock = DockStyle.Fill;
+            lblGroupStashes.Location = new Point(3, 279);
+            lblGroupStashes.Name = "lblGroupStashes";
+            lblGroupStashes.Size = new Size(1385, 15);
+            lblGroupStashes.TabIndex = 0;
+            lblGroupStashes.Text = "Stash:";
             // 
             // lblGroupConflictResolution
             // 
-            this.lblGroupConflictResolution.AutoSize = true;
-            this.lblGroupConflictResolution.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGroupConflictResolution.Location = new System.Drawing.Point(3, 356);
-            this.lblGroupConflictResolution.Name = "lblGroupConflictResolution";
-            this.lblGroupConflictResolution.Size = new System.Drawing.Size(1589, 15);
-            this.lblGroupConflictResolution.Text = "Rebase / conflict resolution:";
+            lblGroupConflictResolution.AutoSize = true;
+            lblGroupConflictResolution.Dock = DockStyle.Fill;
+            lblGroupConflictResolution.Location = new Point(3, 381);
+            lblGroupConflictResolution.Name = "lblGroupConflictResolution";
+            lblGroupConflictResolution.Size = new Size(1385, 15);
+            lblGroupConflictResolution.TabIndex = 0;
+            lblGroupConflictResolution.Text = "Rebase / conflict resolution:";
             // 
             // lblGroupSubmodules
             // 
-            this.lblGroupSubmodules.AutoSize = true;
-            this.lblGroupSubmodules.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGroupSubmodules.Location = new System.Drawing.Point(3, 458);
-            this.lblGroupSubmodules.Name = "lblGroupSubmodules";
-            this.lblGroupSubmodules.Size = new System.Drawing.Size(1589, 15);
-            this.lblGroupSubmodules.Text = "Submodules:";
+            lblGroupSubmodules.AutoSize = true;
+            lblGroupSubmodules.Dock = DockStyle.Fill;
+            lblGroupSubmodules.Location = new Point(3, 483);
+            lblGroupSubmodules.Name = "lblGroupSubmodules";
+            lblGroupSubmodules.Size = new Size(1385, 15);
+            lblGroupSubmodules.TabIndex = 0;
+            lblGroupSubmodules.Text = "Submodules:";
             // 
             // lblGroupWorktrees
             // 
-            this.lblGroupWorktrees.AutoSize = true;
-            this.lblGroupWorktrees.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGroupWorktrees.Location = new System.Drawing.Point(3, 510);
-            this.lblGroupWorktrees.Name = "lblGroupWorktrees";
-            this.lblGroupWorktrees.Size = new System.Drawing.Size(1589, 15);
-            this.lblGroupWorktrees.Text = "Worktrees:";
+            lblGroupWorktrees.AutoSize = true;
+            lblGroupWorktrees.Dock = DockStyle.Fill;
+            lblGroupWorktrees.Location = new Point(3, 535);
+            lblGroupWorktrees.Name = "lblGroupWorktrees";
+            lblGroupWorktrees.Size = new Size(1385, 15);
+            lblGroupWorktrees.TabIndex = 0;
+            lblGroupWorktrees.Text = "Worktrees:";
             // 
             // lblGroupCommits
             // 
-            this.lblGroupCommits.AutoSize = true;
-            this.lblGroupCommits.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGroupCommits.Location = new System.Drawing.Point(3, 0);
-            this.lblGroupCommits.Name = "lblGroupCommits";
-            this.lblGroupCommits.Size = new System.Drawing.Size(1589, 15);
-            this.lblGroupCommits.Text = "Commits:";
+            lblGroupCommits.AutoSize = true;
+            lblGroupCommits.Dock = DockStyle.Fill;
+            lblGroupCommits.Location = new Point(3, 0);
+            lblGroupCommits.Name = "lblGroupCommits";
+            lblGroupCommits.Size = new Size(1385, 15);
+            lblGroupCommits.TabIndex = 0;
+            lblGroupCommits.Text = "Commits:";
             // 
             // tlpnlMain
             // 
-            this.tlpnlMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpnlMain.ColumnCount = 1;
-            this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlMain.Controls.Add(this.gbConfirmations, 0, 0);
-            this.tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlMain.Location = new System.Drawing.Point(8, 8);
-            this.tlpnlMain.Name = "tlpnlMain";
-            this.tlpnlMain.RowCount = 2;
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.Size = new System.Drawing.Size(1617, 1273);
+            tlpnlMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlMain.ColumnCount = 1;
+            tlpnlMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpnlMain.Controls.Add(gbConfirmations, 0, 0);
+            tlpnlMain.Dock = DockStyle.Fill;
+            tlpnlMain.Location = new Point(8, 8);
+            tlpnlMain.Name = "tlpnlMain";
+            tlpnlMain.RowCount = 2;
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.Size = new Size(1413, 742);
+            tlpnlMain.TabIndex = 0;
             // 
             // gbConfirmations
             // 
-            this.gbConfirmations.AutoSize = true;
-            this.gbConfirmations.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbConfirmations.Controls.Add(this.tlpnlConfirmations);
-            this.gbConfirmations.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbConfirmations.Location = new System.Drawing.Point(3, 3);
-            this.gbConfirmations.Name = "gbConfirmations";
-            this.gbConfirmations.Padding = new System.Windows.Forms.Padding(8);
-            this.gbConfirmations.Size = new System.Drawing.Size(1611, 582);
-            this.gbConfirmations.TabStop = false;
-            this.gbConfirmations.Text = "Confirm actions";
+            gbConfirmations.AutoSize = true;
+            gbConfirmations.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gbConfirmations.Controls.Add(tlpnlConfirmations);
+            gbConfirmations.Dock = DockStyle.Fill;
+            gbConfirmations.Location = new Point(3, 3);
+            gbConfirmations.Name = "gbConfirmations";
+            gbConfirmations.Padding = new Padding(8);
+            gbConfirmations.Size = new Size(1407, 607);
+            gbConfirmations.TabIndex = 0;
+            gbConfirmations.TabStop = false;
+            gbConfirmations.Text = "Confirm actions";
             // 
             // tlpnlConfirmations
             // 
-            this.tlpnlConfirmations.AutoSize = true;
-            this.tlpnlConfirmations.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpnlConfirmations.ColumnCount = 1;
-            this.tlpnlConfirmations.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlConfirmations.Controls.Add(this.lblGroupCommits, 0, 0);
-            this.tlpnlConfirmations.Controls.Add(this.chkAmend, 0, 1);
-            this.tlpnlConfirmations.Controls.Add(this.chkUndoLastCommitConfirmation, 0, 2);
-            this.tlpnlConfirmations.Controls.Add(this.chkCommitIfNoBranch, 0, 3);
-            this.tlpnlConfirmations.Controls.Add(this.chkRebaseOnTopOfSelectedCommit, 0, 4);
-            this.tlpnlConfirmations.Controls.Add(this.lblGroupBranches, 0, 6);
-            this.tlpnlConfirmations.Controls.Add(this.chkFetchAndPruneAllConfirmation, 0, 7);
-            this.tlpnlConfirmations.Controls.Add(this.chkPushNewBranch, 0, 8);
-            this.tlpnlConfirmations.Controls.Add(this.chkBranchDeleteUnmerged, 0, 10);
-            this.tlpnlConfirmations.Controls.Add(this.chkAddTrackingRef, 0, 9);
-            this.tlpnlConfirmations.Controls.Add(this.lblGroupStashes, 0, 12);
-            this.tlpnlConfirmations.Controls.Add(this.chkAutoPopStashAfterCheckout, 0, 13);
-            this.tlpnlConfirmations.Controls.Add(this.chkAutoPopStashAfterPull, 0, 14);
-            this.tlpnlConfirmations.Controls.Add(this.chkConfirmStashDrop, 0, 15);
-            this.tlpnlConfirmations.Controls.Add(this.lblGroupConflictResolution, 0, 17);
-            this.tlpnlConfirmations.Controls.Add(this.chkResolveConflicts, 0, 18);
-            this.tlpnlConfirmations.Controls.Add(this.chkCommitAfterConflictsResolved, 0, 19);
-            this.tlpnlConfirmations.Controls.Add(this.chkSecondAbortConfirmation, 0, 20);
-            this.tlpnlConfirmations.Controls.Add(this.lblGroupSubmodules, 0, 22);
-            this.tlpnlConfirmations.Controls.Add(this.chkUpdateModules, 0, 23);
-            this.tlpnlConfirmations.Controls.Add(this.lblGroupWorktrees, 0, 25);
-            this.tlpnlConfirmations.Controls.Add(this.chkSwitchWorktree, 0, 26);
-            this.tlpnlConfirmations.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlConfirmations.Location = new System.Drawing.Point(8, 24);
-            this.tlpnlConfirmations.Name = "tlpnlConfirmations";
-            this.tlpnlConfirmations.RowCount = 27;
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlConfirmations.Size = new System.Drawing.Size(1595, 550);
+            tlpnlConfirmations.AutoSize = true;
+            tlpnlConfirmations.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlConfirmations.ColumnCount = 1;
+            tlpnlConfirmations.ColumnStyles.Add(new ColumnStyle());
+            tlpnlConfirmations.Controls.Add(lblGroupCommits, 0, 0);
+            tlpnlConfirmations.Controls.Add(chkAmend, 0, 1);
+            tlpnlConfirmations.Controls.Add(chkUndoLastCommitConfirmation, 0, 2);
+            tlpnlConfirmations.Controls.Add(chkCommitIfNoBranch, 0, 3);
+            tlpnlConfirmations.Controls.Add(chkRebaseOnTopOfSelectedCommit, 0, 4);
+            tlpnlConfirmations.Controls.Add(lblGroupBranches, 0, 6);
+            tlpnlConfirmations.Controls.Add(chkFetchAndPruneAllConfirmation, 0, 7);
+            tlpnlConfirmations.Controls.Add(chkPushNewBranch, 0, 8);
+            tlpnlConfirmations.Controls.Add(chkBranchDeleteUnmerged, 0, 10);
+            tlpnlConfirmations.Controls.Add(chkAddTrackingRef, 0, 9);
+            tlpnlConfirmations.Controls.Add(lblGroupStashes, 0, 13);
+            tlpnlConfirmations.Controls.Add(chkAutoPopStashAfterCheckout, 0, 14);
+            tlpnlConfirmations.Controls.Add(chkAutoPopStashAfterPull, 0, 15);
+            tlpnlConfirmations.Controls.Add(chkConfirmStashDrop, 0, 16);
+            tlpnlConfirmations.Controls.Add(lblGroupConflictResolution, 0, 18);
+            tlpnlConfirmations.Controls.Add(chkResolveConflicts, 0, 19);
+            tlpnlConfirmations.Controls.Add(chkCommitAfterConflictsResolved, 0, 20);
+            tlpnlConfirmations.Controls.Add(chkSecondAbortConfirmation, 0, 21);
+            tlpnlConfirmations.Controls.Add(lblGroupSubmodules, 0, 23);
+            tlpnlConfirmations.Controls.Add(chkUpdateModules, 0, 24);
+            tlpnlConfirmations.Controls.Add(lblGroupWorktrees, 0, 26);
+            tlpnlConfirmations.Controls.Add(chkSwitchWorktree, 0, 27);
+            tlpnlConfirmations.Controls.Add(chkBranchCheckoutConfirmation, 0, 11);
+            tlpnlConfirmations.Dock = DockStyle.Fill;
+            tlpnlConfirmations.Location = new Point(8, 24);
+            tlpnlConfirmations.Name = "tlpnlConfirmations";
+            tlpnlConfirmations.RowCount = 28;
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle(SizeType.Absolute, 12F));
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle(SizeType.Absolute, 12F));
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle(SizeType.Absolute, 12F));
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle(SizeType.Absolute, 12F));
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle(SizeType.Absolute, 12F));
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.RowStyles.Add(new RowStyle());
+            tlpnlConfirmations.Size = new Size(1391, 575);
+            tlpnlConfirmations.TabIndex = 0;
             // 
             // chkAmend
             // 
-            this.chkAmend.AutoSize = true;
-            this.chkAmend.Location = new System.Drawing.Point(3, 18);
-            this.chkAmend.Name = "chkAmend";
-            this.chkAmend.Size = new System.Drawing.Size(131, 19);
-            this.chkAmend.Text = "Amend last commit";
-            this.chkAmend.UseVisualStyleBackColor = true;
+            chkAmend.AutoSize = true;
+            chkAmend.Location = new Point(3, 18);
+            chkAmend.Name = "chkAmend";
+            chkAmend.Size = new Size(131, 19);
+            chkAmend.TabIndex = 1;
+            chkAmend.Text = "Amend last commit";
+            chkAmend.UseVisualStyleBackColor = true;
             // 
             // chkUndoLastCommitConfirmation
             // 
-            this.chkUndoLastCommitConfirmation.AutoSize = true;
-            this.chkUndoLastCommitConfirmation.Location = new System.Drawing.Point(3, 43);
-            this.chkUndoLastCommitConfirmation.Name = "chkUndoLastCommitConfirmation";
-            this.chkUndoLastCommitConfirmation.Size = new System.Drawing.Size(121, 19);
-            this.chkUndoLastCommitConfirmation.Text = "Undo last commit";
-            this.chkUndoLastCommitConfirmation.ThreeState = true;
-            this.chkUndoLastCommitConfirmation.UseVisualStyleBackColor = true;
+            chkUndoLastCommitConfirmation.AutoSize = true;
+            chkUndoLastCommitConfirmation.Location = new Point(3, 43);
+            chkUndoLastCommitConfirmation.Name = "chkUndoLastCommitConfirmation";
+            chkUndoLastCommitConfirmation.Size = new Size(121, 19);
+            chkUndoLastCommitConfirmation.TabIndex = 2;
+            chkUndoLastCommitConfirmation.Text = "Undo last commit";
+            chkUndoLastCommitConfirmation.ThreeState = true;
+            chkUndoLastCommitConfirmation.UseVisualStyleBackColor = true;
             // 
             // chkCommitIfNoBranch
             // 
-            this.chkCommitIfNoBranch.AutoSize = true;
-            this.chkCommitIfNoBranch.Location = new System.Drawing.Point(3, 68);
-            this.chkCommitIfNoBranch.Name = "chkCommitIfNoBranch";
-            this.chkCommitIfNoBranch.Size = new System.Drawing.Size(372, 19);
-            this.chkCommitIfNoBranch.Text = "Commit when no branch is currently checked out (headless state)";
-            this.chkCommitIfNoBranch.UseVisualStyleBackColor = true;
+            chkCommitIfNoBranch.AutoSize = true;
+            chkCommitIfNoBranch.Location = new Point(3, 68);
+            chkCommitIfNoBranch.Name = "chkCommitIfNoBranch";
+            chkCommitIfNoBranch.Size = new Size(372, 19);
+            chkCommitIfNoBranch.TabIndex = 3;
+            chkCommitIfNoBranch.Text = "Commit when no branch is currently checked out (headless state)";
+            chkCommitIfNoBranch.UseVisualStyleBackColor = true;
             // 
             // chkRebaseOnTopOfSelectedCommit
             // 
-            this.chkRebaseOnTopOfSelectedCommit.AutoSize = true;
-            this.chkRebaseOnTopOfSelectedCommit.Location = new System.Drawing.Point(3, 93);
-            this.chkRebaseOnTopOfSelectedCommit.Name = "chkRebaseOnTopOfSelectedCommit";
-            this.chkRebaseOnTopOfSelectedCommit.Size = new System.Drawing.Size(206, 19);
-            this.chkRebaseOnTopOfSelectedCommit.Text = "Rebase on top of selected commit";
-            this.chkRebaseOnTopOfSelectedCommit.ThreeState = true;
-            this.chkRebaseOnTopOfSelectedCommit.UseVisualStyleBackColor = true;
+            chkRebaseOnTopOfSelectedCommit.AutoSize = true;
+            chkRebaseOnTopOfSelectedCommit.Location = new Point(3, 93);
+            chkRebaseOnTopOfSelectedCommit.Name = "chkRebaseOnTopOfSelectedCommit";
+            chkRebaseOnTopOfSelectedCommit.Size = new Size(206, 19);
+            chkRebaseOnTopOfSelectedCommit.TabIndex = 4;
+            chkRebaseOnTopOfSelectedCommit.Text = "Rebase on top of selected commit";
+            chkRebaseOnTopOfSelectedCommit.ThreeState = true;
+            chkRebaseOnTopOfSelectedCommit.UseVisualStyleBackColor = true;
             // 
             // chkFetchAndPruneAllConfirmation
             // 
-            this.chkFetchAndPruneAllConfirmation.AutoSize = true;
-            this.chkFetchAndPruneAllConfirmation.Location = new System.Drawing.Point(3, 145);
-            this.chkFetchAndPruneAllConfirmation.Name = "chkFetchAndPruneAllConfirmation";
-            this.chkFetchAndPruneAllConfirmation.Size = new System.Drawing.Size(163, 19);
-            this.chkFetchAndPruneAllConfirmation.Text = "Fetch and prune branches";
-            this.chkFetchAndPruneAllConfirmation.UseVisualStyleBackColor = true;
+            chkFetchAndPruneAllConfirmation.AutoSize = true;
+            chkFetchAndPruneAllConfirmation.Location = new Point(3, 145);
+            chkFetchAndPruneAllConfirmation.Name = "chkFetchAndPruneAllConfirmation";
+            chkFetchAndPruneAllConfirmation.Size = new Size(163, 19);
+            chkFetchAndPruneAllConfirmation.TabIndex = 5;
+            chkFetchAndPruneAllConfirmation.Text = "Fetch and prune branches";
+            chkFetchAndPruneAllConfirmation.UseVisualStyleBackColor = true;
             // 
             // chkPushNewBranch
             // 
-            this.chkPushNewBranch.AutoSize = true;
-            this.chkPushNewBranch.Location = new System.Drawing.Point(3, 170);
-            this.chkPushNewBranch.Name = "chkPushNewBranch";
-            this.chkPushNewBranch.Size = new System.Drawing.Size(205, 19);
-            this.chkPushNewBranch.Text = "Push a new branch for the remote";
-            this.chkPushNewBranch.UseVisualStyleBackColor = true;
-            // 
-            // chkAddTrackingRef
-            // 
-            this.chkAddTrackingRef.AutoSize = true;
-            this.chkAddTrackingRef.Location = new System.Drawing.Point(3, 195);
-            this.chkAddTrackingRef.Name = "chkAddTrackingRef";
-            this.chkAddTrackingRef.Size = new System.Drawing.Size(289, 19);
-            this.chkAddTrackingRef.Text = "Add a tracking reference for newly pushed branch";
-            this.chkAddTrackingRef.UseVisualStyleBackColor = true;
-            // 
-            // chkAutoPopStashAfterCheckout
-            // 
-            this.chkAutoPopStashAfterCheckout.AutoSize = true;
-            this.chkAutoPopStashAfterCheckout.Location = new System.Drawing.Point(3, 272);
-            this.chkAutoPopStashAfterCheckout.Name = "chkAutoPopStashAfterCheckout";
-            this.chkAutoPopStashAfterCheckout.Size = new System.Drawing.Size(500, 19);
-            this.chkAutoPopStashAfterCheckout.Text = "Apply stashed changes after successful checkout (else stash will be popped automatically)";
-            this.chkAutoPopStashAfterCheckout.ThreeState = true;
-            this.chkAutoPopStashAfterCheckout.UseVisualStyleBackColor = true;
-            // 
-            // chkAutoPopStashAfterPull
-            // 
-            this.chkAutoPopStashAfterPull.AutoSize = true;
-            this.chkAutoPopStashAfterPull.Location = new System.Drawing.Point(3, 297);
-            this.chkAutoPopStashAfterPull.Name = "chkAutoPopStashAfterPull";
-            this.chkAutoPopStashAfterPull.Size = new System.Drawing.Size(471, 19);
-            this.chkAutoPopStashAfterPull.Text = "Apply stashed changes after successful pull (else stash will be popped automatically)";
-            this.chkAutoPopStashAfterPull.ThreeState = true;
-            this.chkAutoPopStashAfterPull.UseVisualStyleBackColor = true;
-            // 
-            // chkConfirmStashDrop
-            // 
-            this.chkConfirmStashDrop.AutoSize = true;
-            this.chkConfirmStashDrop.Location = new System.Drawing.Point(3, 322);
-            this.chkConfirmStashDrop.Name = "chkConfirmStashDrop";
-            this.chkConfirmStashDrop.Size = new System.Drawing.Size(82, 19);
-            this.chkConfirmStashDrop.Text = "Drop stash";
-            this.chkConfirmStashDrop.UseVisualStyleBackColor = true;
-            // 
-            // chkResolveConflicts
-            // 
-            this.chkResolveConflicts.AutoSize = true;
-            this.chkResolveConflicts.Location = new System.Drawing.Point(3, 374);
-            this.chkResolveConflicts.Name = "chkResolveConflicts";
-            this.chkResolveConflicts.Size = new System.Drawing.Size(114, 19);
-            this.chkResolveConflicts.Text = "Resolve conflicts";
-            this.chkResolveConflicts.ThreeState = true;
-            this.chkResolveConflicts.UseVisualStyleBackColor = true;
-            // 
-            // chkCommitAfterConflictsResolved
-            // 
-            this.chkCommitAfterConflictsResolved.AutoSize = true;
-            this.chkCommitAfterConflictsResolved.Location = new System.Drawing.Point(3, 399);
-            this.chkCommitAfterConflictsResolved.Name = "chkCommitAfterConflictsResolved";
-            this.chkCommitAfterConflictsResolved.Size = new System.Drawing.Size(296, 19);
-            this.chkCommitAfterConflictsResolved.Text = "Commit changes after conflicts have been resolved";
-            this.chkCommitAfterConflictsResolved.ThreeState = true;
-            this.chkCommitAfterConflictsResolved.UseVisualStyleBackColor = true;
-            // 
-            // chkSecondAbortConfirmation
-            // 
-            this.chkSecondAbortConfirmation.AutoSize = true;
-            this.chkSecondAbortConfirmation.Location = new System.Drawing.Point(3, 424);
-            this.chkSecondAbortConfirmation.Name = "chkSecondAbortConfirmation";
-            this.chkSecondAbortConfirmation.Size = new System.Drawing.Size(267, 19);
-            this.chkSecondAbortConfirmation.Text = "Confirm for the second time to abort a merge";
-            this.chkSecondAbortConfirmation.ThreeState = true;
-            this.chkSecondAbortConfirmation.UseVisualStyleBackColor = true;
-            // 
-            // chkUpdateModules
-            // 
-            this.chkUpdateModules.AutoSize = true;
-            this.chkUpdateModules.Location = new System.Drawing.Point(3, 476);
-            this.chkUpdateModules.Name = "chkUpdateModules";
-            this.chkUpdateModules.Size = new System.Drawing.Size(201, 19);
-            this.chkUpdateModules.Text = "Update submodules on checkout";
-            this.chkUpdateModules.ThreeState = true;
-            this.chkUpdateModules.UseVisualStyleBackColor = true;
-            // 
-            // chkSwitchWorktree
-            // 
-            this.chkSwitchWorktree.AutoSize = true;
-            this.chkSwitchWorktree.Location = new System.Drawing.Point(3, 528);
-            this.chkSwitchWorktree.Name = "chkSwitchWorktree";
-            this.chkSwitchWorktree.Size = new System.Drawing.Size(110, 19);
-            this.chkSwitchWorktree.Text = "Switch worktree";
-            this.chkSwitchWorktree.UseVisualStyleBackColor = true;
+            chkPushNewBranch.AutoSize = true;
+            chkPushNewBranch.Location = new Point(3, 170);
+            chkPushNewBranch.Name = "chkPushNewBranch";
+            chkPushNewBranch.Size = new Size(205, 19);
+            chkPushNewBranch.TabIndex = 6;
+            chkPushNewBranch.Text = "Push a new branch for the remote";
+            chkPushNewBranch.UseVisualStyleBackColor = true;
             // 
             // chkBranchDeleteUnmerged
             // 
-            this.chkBranchDeleteUnmerged.AutoSize = true;
-            this.chkBranchDeleteUnmerged.Location = new System.Drawing.Point(3, 220);
-            this.chkBranchDeleteUnmerged.Name = "chkBranchDeleteUnmerged";
-            this.chkBranchDeleteUnmerged.Size = new System.Drawing.Size(168, 19);
-            this.chkBranchDeleteUnmerged.Text = "Delete unmerged branches";
-            this.chkBranchDeleteUnmerged.UseVisualStyleBackColor = true;
+            chkBranchDeleteUnmerged.AutoSize = true;
+            chkBranchDeleteUnmerged.Location = new Point(3, 220);
+            chkBranchDeleteUnmerged.Name = "chkBranchDeleteUnmerged";
+            chkBranchDeleteUnmerged.Size = new Size(168, 19);
+            chkBranchDeleteUnmerged.TabIndex = 8;
+            chkBranchDeleteUnmerged.Text = "Delete unmerged branches";
+            chkBranchDeleteUnmerged.UseVisualStyleBackColor = true;
+            // 
+            // chkAddTrackingRef
+            // 
+            chkAddTrackingRef.AutoSize = true;
+            chkAddTrackingRef.Location = new Point(3, 195);
+            chkAddTrackingRef.Name = "chkAddTrackingRef";
+            chkAddTrackingRef.Size = new Size(289, 19);
+            chkAddTrackingRef.TabIndex = 7;
+            chkAddTrackingRef.Text = "Add a tracking reference for newly pushed branch";
+            chkAddTrackingRef.UseVisualStyleBackColor = true;
+            // 
+            // chkAutoPopStashAfterCheckout
+            // 
+            chkAutoPopStashAfterCheckout.AutoSize = true;
+            chkAutoPopStashAfterCheckout.Location = new Point(3, 297);
+            chkAutoPopStashAfterCheckout.Name = "chkAutoPopStashAfterCheckout";
+            chkAutoPopStashAfterCheckout.Size = new Size(500, 19);
+            chkAutoPopStashAfterCheckout.TabIndex = 10;
+            chkAutoPopStashAfterCheckout.Text = "Apply stashed changes after successful checkout (else stash will be popped automatically)";
+            chkAutoPopStashAfterCheckout.ThreeState = true;
+            chkAutoPopStashAfterCheckout.UseVisualStyleBackColor = true;
+            // 
+            // chkAutoPopStashAfterPull
+            // 
+            chkAutoPopStashAfterPull.AutoSize = true;
+            chkAutoPopStashAfterPull.Location = new Point(3, 322);
+            chkAutoPopStashAfterPull.Name = "chkAutoPopStashAfterPull";
+            chkAutoPopStashAfterPull.Size = new Size(471, 19);
+            chkAutoPopStashAfterPull.TabIndex = 11;
+            chkAutoPopStashAfterPull.Text = "Apply stashed changes after successful pull (else stash will be popped automatically)";
+            chkAutoPopStashAfterPull.ThreeState = true;
+            chkAutoPopStashAfterPull.UseVisualStyleBackColor = true;
+            // 
+            // chkConfirmStashDrop
+            // 
+            chkConfirmStashDrop.AutoSize = true;
+            chkConfirmStashDrop.Location = new Point(3, 347);
+            chkConfirmStashDrop.Name = "chkConfirmStashDrop";
+            chkConfirmStashDrop.Size = new Size(82, 19);
+            chkConfirmStashDrop.TabIndex = 12;
+            chkConfirmStashDrop.Text = "Drop stash";
+            chkConfirmStashDrop.UseVisualStyleBackColor = true;
+            // 
+            // chkResolveConflicts
+            // 
+            chkResolveConflicts.AutoSize = true;
+            chkResolveConflicts.Location = new Point(3, 399);
+            chkResolveConflicts.Name = "chkResolveConflicts";
+            chkResolveConflicts.Size = new Size(114, 19);
+            chkResolveConflicts.TabIndex = 13;
+            chkResolveConflicts.Text = "Resolve conflicts";
+            chkResolveConflicts.ThreeState = true;
+            chkResolveConflicts.UseVisualStyleBackColor = true;
+            // 
+            // chkCommitAfterConflictsResolved
+            // 
+            chkCommitAfterConflictsResolved.AutoSize = true;
+            chkCommitAfterConflictsResolved.Location = new Point(3, 424);
+            chkCommitAfterConflictsResolved.Name = "chkCommitAfterConflictsResolved";
+            chkCommitAfterConflictsResolved.Size = new Size(296, 19);
+            chkCommitAfterConflictsResolved.TabIndex = 14;
+            chkCommitAfterConflictsResolved.Text = "Commit changes after conflicts have been resolved";
+            chkCommitAfterConflictsResolved.ThreeState = true;
+            chkCommitAfterConflictsResolved.UseVisualStyleBackColor = true;
+            // 
+            // chkSecondAbortConfirmation
+            // 
+            chkSecondAbortConfirmation.AutoSize = true;
+            chkSecondAbortConfirmation.Location = new Point(3, 449);
+            chkSecondAbortConfirmation.Name = "chkSecondAbortConfirmation";
+            chkSecondAbortConfirmation.Size = new Size(267, 19);
+            chkSecondAbortConfirmation.TabIndex = 15;
+            chkSecondAbortConfirmation.Text = "Confirm for the second time to abort a merge";
+            chkSecondAbortConfirmation.ThreeState = true;
+            chkSecondAbortConfirmation.UseVisualStyleBackColor = true;
+            // 
+            // chkUpdateModules
+            // 
+            chkUpdateModules.AutoSize = true;
+            chkUpdateModules.Location = new Point(3, 501);
+            chkUpdateModules.Name = "chkUpdateModules";
+            chkUpdateModules.Size = new Size(201, 19);
+            chkUpdateModules.TabIndex = 16;
+            chkUpdateModules.Text = "Update submodules on checkout";
+            chkUpdateModules.ThreeState = true;
+            chkUpdateModules.UseVisualStyleBackColor = true;
+            // 
+            // chkSwitchWorktree
+            // 
+            chkSwitchWorktree.AutoSize = true;
+            chkSwitchWorktree.Location = new Point(3, 553);
+            chkSwitchWorktree.Name = "chkSwitchWorktree";
+            chkSwitchWorktree.Size = new Size(110, 19);
+            chkSwitchWorktree.TabIndex = 17;
+            chkSwitchWorktree.Text = "Switch worktree";
+            chkSwitchWorktree.UseVisualStyleBackColor = true;
+            // 
+            // chkBranchCheckoutConfirmation
+            // 
+            chkBranchCheckoutConfirmation.AutoSize = true;
+            chkBranchCheckoutConfirmation.Location = new Point(3, 245);
+            chkBranchCheckoutConfirmation.Name = "chkBranchCheckoutConfirmation";
+            chkBranchCheckoutConfirmation.Size = new Size(201, 19);
+            chkBranchCheckoutConfirmation.TabIndex = 9;
+            chkBranchCheckoutConfirmation.Text = "Checkout branch using left panel";
+            chkBranchCheckoutConfirmation.UseVisualStyleBackColor = true;
             // 
             // ConfirmationsSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.tlpnlMain);
-            this.Name = "ConfirmationsSettingsPage";
-            this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1633, 1289);
-            this.tlpnlMain.ResumeLayout(false);
-            this.tlpnlMain.PerformLayout();
-            this.gbConfirmations.ResumeLayout(false);
-            this.gbConfirmations.PerformLayout();
-            this.tlpnlConfirmations.ResumeLayout(false);
-            this.tlpnlConfirmations.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(tlpnlMain);
+            Name = "ConfirmationsSettingsPage";
+            Padding = new Padding(8);
+            Size = new Size(1429, 758);
+            tlpnlMain.ResumeLayout(false);
+            tlpnlMain.PerformLayout();
+            gbConfirmations.ResumeLayout(false);
+            gbConfirmations.PerformLayout();
+            tlpnlConfirmations.ResumeLayout(false);
+            tlpnlConfirmations.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -397,5 +434,6 @@
         private System.Windows.Forms.Label lblGroupSubmodules;
         private System.Windows.Forms.Label lblGroupWorktrees;
         private System.Windows.Forms.CheckBox chkBranchDeleteUnmerged;
+        private CheckBox chkBranchCheckoutConfirmation;
     }
 }

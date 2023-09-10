@@ -63,7 +63,7 @@ namespace GitUI.LeftPanel
 
         public bool Checkout()
         {
-            return UICommands.StartCheckoutRemoteBranch(TreeViewNode.TreeView, FullPath);
+            return MessageBoxes.ConfirmBranchCheckout(ParentWindow(), FullPath) && UICommands.StartCheckoutRemoteBranch(TreeViewNode.TreeView, FullPath);
         }
 
         public bool Merge()

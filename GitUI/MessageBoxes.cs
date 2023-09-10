@@ -46,6 +46,9 @@ namespace GitUI
         private readonly TranslationString _cannotOpenSubmoduleCaption = new("Cannot open submodule");
         private readonly TranslationString _cannotOpenGitExtensionsCaption = new("Cannot open Git Extensions");
 
+        private readonly TranslationString _confirmBranchCheckoutCaption = new("Confirm checkout");
+        private readonly TranslationString _confirmBranchCheckout = new(@"Are you sure you want to check out branch ""{0}""?");
+
         // internal for FormTranslate
         internal MessageBoxes()
         {
@@ -126,6 +129,11 @@ namespace GitUI
 
             return result;
         }
+
+        public static bool ConfirmBranchCheckout(IWin32Window? owner, string branchName)
+            => AppSettings.ConfirmBranchCheckout.Value
+                ? Confirm(owner, string.Format(Instance._confirmBranchCheckout.Text, branchName), Instance._confirmBranchCheckoutCaption.Text)
+                : true;
 
         public static void ShellNotFound(IWin32Window? owner)
             => ShowError(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text);

@@ -1041,6 +1041,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkBranchCheckoutConfirmation.Text">
+        <source>Checkout branch using left panel</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkBranchDeleteUnmerged.Text">
         <source>Delete unmerged branches</source>
         <target />
@@ -8187,6 +8191,14 @@ help</source>
       </trans-unit>
       <trans-unit id="_cannotOpenSubmoduleCaption.Text">
         <source>Cannot open submodule</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_confirmBranchCheckout.Text">
+        <source>Are you sure you want to check out branch "{0}"?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_confirmBranchCheckoutCaption.Text">
+        <source>Confirm checkout</source>
         <target />
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
