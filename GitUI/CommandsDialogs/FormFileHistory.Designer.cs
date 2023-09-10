@@ -98,6 +98,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Name = "FileChanges";
             this.RevisionGrid.Size = new System.Drawing.Size(748, 101);
             this.RevisionGrid.TabIndex = 2;
+            this.RevisionGrid.Padding = new Padding(0, 22, 0, 0);
             this.RevisionGrid.DoubleClick += new System.EventHandler(this.FileChangesDoubleClick);
             // 
             // FileHistoryContextMenu
