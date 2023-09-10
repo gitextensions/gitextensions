@@ -1152,11 +1152,7 @@ namespace GitUI
             }
             else
             {
-                string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, isTracked: isTracked, customTool: customTool);
-                if (!string.IsNullOrEmpty(output))
-                {
-                    MessageBox.Show(owner, output, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, isTracked: isTracked, customTool: customTool);
             }
         }
 
@@ -1441,7 +1437,16 @@ namespace GitUI
                 case "commit":      // [--quiet]
                     return Commit(arguments);
                 case "difftool":    // filename
-                    return Module.OpenWithDifftool(args[2]) == "";
+                    try
+                    {
+                        Module.OpenWithDifftool(args[2]);
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+
                 case BlameHistoryCommand:
                 case FileHistoryCommand:
                     // filename [revision [--filter-by-revision]]

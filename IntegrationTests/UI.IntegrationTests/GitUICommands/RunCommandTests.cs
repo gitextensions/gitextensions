@@ -158,10 +158,10 @@ namespace GitUITests.GitUICommandsTests
             => RunCommandBasedOnArgument<FormCommit>(new string[] { "ge.exe", "commit" });
 
         [Test]
-        public void RunCommandBasedOnArgument_difftool_throws()
+        public void RunCommandBasedOnArgument_difftool_returns_false_on_missing_argument()
         {
-            ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "difftool" })))
-                .Should().Throw<ArgumentOutOfRangeException>();
+            _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "difftool" })
+                .Should().BeFalse();
         }
 
         [Test]

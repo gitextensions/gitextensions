@@ -3830,12 +3830,12 @@ namespace GitCommands
             return result.StandardOutput;
         }
 
-        public string OpenWithDifftoolDirDiff(string? firstRevision, string? secondRevision, string? customTool = null)
+        public void OpenWithDifftoolDirDiff(string? firstRevision, string? secondRevision, string? customTool = null)
         {
-            return OpenWithDifftool(null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
+            OpenWithDifftool(null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
         }
 
-        public string OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
+        public void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
         {
             // Use Windows Git if custom tool is selected as the list is native to the application.
             (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : _gitWindowsCommandRunner)
@@ -3848,23 +3848,19 @@ namespace GitCommands
                 extraDiffArguments,
                 _revisionDiffProvider.Get(firstRevision, secondRevision, filename, oldFileName, isTracked)
             });
-
-            // This method is supposed to return an error message, but the detached process is untracked
-            // TODO track the process somehow, so errors can be reported
-            return "";
         }
 
         /// <summary>
         /// Compare two Git commitish; blob or rev:path.
+        /// Does nothing if either input is null or empty.
         /// </summary>
         /// <param name="firstGitCommit">commitish.</param>
         /// <param name="secondGitCommit">commitish.</param>
-        /// <returns>empty string, or null if either input is null.</returns>
-        public string? OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit, string? customTool = null)
+        public void OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit, string? customTool = null)
         {
             if (string.IsNullOrWhiteSpace(firstGitCommit) || string.IsNullOrWhiteSpace(secondGitCommit))
             {
-                return null;
+                return;
             }
 
             // Use Windows Git if custom tool is selected as the list is native to the application.
@@ -3878,8 +3874,6 @@ namespace GitCommands
                 firstGitCommit.QuoteNE(),
                 secondGitCommit.QuoteNE()
             });
-
-            return "";
         }
 
         public ObjectId? RevParse(string? revisionExpression)
