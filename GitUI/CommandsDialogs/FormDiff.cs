@@ -151,14 +151,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 Validates.NotNull(_firstRevision);
-                if (_mergeBase is null)
-                {
-                    revisions = new[] { _secondRevision, _firstRevision };
-                }
-                else
-                {
-                    revisions = new[] { _secondRevision, _mergeBase, _firstRevision };
-                }
+                revisions = new[] { _secondRevision, _firstRevision };
             }
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
