@@ -851,11 +851,11 @@ namespace GitUI
         }
 
         /// <summary>
-        ///  Indicates whether the revision grid can be refreshed, i.e. it is not currently being refreshed
-        ///  or it is not in a middle of reconfiguration process guarded by <see cref="SuspendRefreshRevisions"/>
+        ///  Indicates whether the revision grid can be refreshed,
+        ///  i.e. it is not in a middle of reconfiguration process guarded by <see cref="SuspendRefreshRevisions"/>
         ///  and <see cref="ResumeRefreshRevisions"/>.
         /// </summary>
-        private bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
+        private bool CanRefresh => _updatingFilters == 0;
 
         #region PerformRefreshRevisions
 
@@ -863,15 +863,31 @@ namespace GitUI
         ///  Queries git for the new set of revisions and refreshes the grid.
         /// </summary>
         /// <exception cref="Exception"></exception>
-        /// <param name="forceRefresh">Refresh may be required as references may be changed.</param>
-        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, bool forceRefresh = false)
+        /// <param name="forceRefreshRefs">Refresh may be required as references may be changed.</param>
+        /// <param name="skipIfAlreadyRefreshing">If true and grid is already / yet being refreshed, do not cancel and restart.</param>
+        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, bool forceRefreshRefs = false, bool skipIfAlreadyRefreshing = false)
         {
             ThreadHelper.AssertOnUIThread();
 
             if (!CanRefresh)
             {
-                Trace.WriteLine("Ignoring refresh as RefreshRevisions() is already running.");
+                Trace.WriteLine("Ignoring refresh as RefreshRevisions() is suspended.");
                 return;
+            }
+
+            if (_isRefreshingRevisions)
+            {
+                if (skipIfAlreadyRefreshing)
+                {
+                    Trace.WriteLine("Ignoring refresh as RefreshRevisions() is already running.");
+                    return;
+                }
+
+                Trace.WriteLine("Forcing refresh, cancel already running RefreshRevisions().");
+                if (!_gridView.IsDataLoadComplete)
+                {
+                    _gridView.MarkAsDataLoadingComplete();
+                }
             }
 
             IGitModule capturedModule = Module;
@@ -1081,7 +1097,7 @@ namespace GitUI
                 });
 
                 // Initiate update left panel
-                RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
+                RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefreshRefs));
             }
             catch
             {
@@ -1367,7 +1383,7 @@ namespace GitUI
                         }
 
                         _isRefreshingRevisions = false;
-                        RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
+                        RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefreshRefs));
                     });
                     return;
                 }
@@ -1433,7 +1449,7 @@ namespace GitUI
 
                     SetPage(_gridView);
                     _isRefreshingRevisions = false;
-                    RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
+                    RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefreshRefs));
                     HighlightRevisionsByAuthor(GetSelectedRevisions());
 
                     await TaskScheduler.Default;

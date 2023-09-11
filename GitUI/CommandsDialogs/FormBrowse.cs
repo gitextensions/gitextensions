@@ -640,7 +640,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            RevisionGrid.PerformRefreshRevisions(getRefs, forceRefresh: true);
+            RevisionGrid.PerformRefreshRevisions(getRefs, forceRefreshRefs: true);
 
             InternalInitialize();
             ToolStripFilters.RefreshRevisionFunction(getRefs);
