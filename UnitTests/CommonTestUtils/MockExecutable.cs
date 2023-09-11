@@ -73,7 +73,7 @@ namespace CommonTestUtils
             Encoding outputEncoding,
             bool useShellExecute = false,
             bool throwOnErrorExit = true,
-            CancellationToken? cancellationToken = null)
+            CancellationToken cancellationToken = default)
         {
             System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
 

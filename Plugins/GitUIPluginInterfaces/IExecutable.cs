@@ -33,6 +33,6 @@ namespace GitUIPluginInterfaces
                        Encoding? outputEncoding = null,
                        bool useShellExecute = false,
                        bool throwOnErrorExit = true,
-                       CancellationToken? cancellationToken = null);
+                       CancellationToken cancellationToken = default);
     }
 }

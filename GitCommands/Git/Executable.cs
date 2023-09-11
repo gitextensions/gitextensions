@@ -34,7 +34,7 @@ namespace GitCommands
                               Encoding? outputEncoding = null,
                               bool useShellExecute = false,
                               bool throwOnErrorExit = true,
-                              CancellationToken? cancellationToken = null)
+                              CancellationToken cancellationToken = default)
         {
             // TODO should we set these on the child process only?
             EnvironmentConfiguration.SetEnvironmentVariables();
@@ -58,7 +58,7 @@ namespace GitCommands
             // TODO should this use TaskCreationOptions.RunContinuationsAsynchronously
             private readonly TaskCompletionSource<int> _exitTaskCompletionSource = new();
 
-            private readonly CancellationToken? _cancellationToken;
+            private readonly CancellationToken _cancellationToken;
             private readonly ProcessOperation _logOperation;
             private readonly Process _process;
             private readonly bool _redirectInput;
@@ -79,7 +79,7 @@ namespace GitCommands
                                   Encoding? outputEncoding,
                                   bool useShellExecute,
                                   bool throwOnErrorExit,
-                                  CancellationToken? cancellationToken)
+                                  CancellationToken cancellationToken)
             {
                 Debug.Assert(redirectOutput == (outputEncoding is not null), "redirectOutput == (outputEncoding is not null)");
                 _redirectInput = redirectInput;
@@ -261,7 +261,7 @@ namespace GitCommands
                             {
                                 HandleProcessExit();
                             }
-                            else if (_cancellationToken?.IsCancellationRequested is true)
+                            else if (_cancellationToken.IsCancellationRequested)
                             {
                                 // Directly kill the process because Ctrl+C does not reach the git process how we start it
                                 _process.Kill();
