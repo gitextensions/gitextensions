@@ -2131,42 +2131,38 @@ namespace GitCommands
         private static readonly Regex HeadersMatch = new(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
         private static readonly Regex QuotedText = new(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
 
-        private string RebaseTodoFilePath => GetRebaseDir() + "git-rebase-todo.backup";
+        private string DoneFilePath => GetRebaseDir() + "done";
+        private string RebaseTodoFilePath => GetRebaseDir() + "git-rebase-todo";
         private string CurrentFilePath => GetRebaseDir() + "stopped-sha";
 
         public bool InTheMiddleOfInteractiveRebase() => File.Exists(RebaseTodoFilePath);
 
         public IReadOnlyList<PatchFile> GetInteractiveRebasePatchFiles()
         {
-            string todoFile = RebaseTodoFilePath;
-            string[]? todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries) : null;
-
-            List<PatchFile> patchFiles = new();
-
-            if (todoCommits is null)
-            {
-                return patchFiles;
-            }
-
+            string[] doneCommits = ReadCommitsDataFromRebaseFile(DoneFilePath);
+            string[] todoCommits = ReadCommitsDataFromRebaseFile(RebaseTodoFilePath);
             string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
 
             // Filter comment lines and keep only lines containing at least 3 columns
             // (action, commit hash and commit subject -- that could contain spaces and be cut in more --)
             // ex: pick e0d861716540aa1ac83eaa2790ba5e79988b9489 this is the commit subject
-            string[][] todoCommitsInfos = todoCommits.Where(l => !l.StartsWith(commentChar))
+            string[][] commitsInfos = doneCommits.Concat(todoCommits).Where(l => !l.StartsWith(commentChar))
                 .Select(l => l.Split(Delimiters.Space))
                 .Where(p => p.Length >= 3)
                 .ToArray();
 
-            string? currentCommitShortHash = File.Exists(CurrentFilePath) ? File.ReadAllText(CurrentFilePath).Trim() : null;
-            bool isCurrentFound = false;
+            List<PatchFile> patchFiles = new();
+            if (commitsInfos.Length == 0)
+            {
+                return patchFiles;
+            }
 
             RevisionReader reader = new(this, hasReflogSelector: false, allBodies: true);
             Dictionary<string, GitRevision> rebasedCommitsRevisions;
             try
             {
                 using CancellationTokenSource cts = new(TimeSpan.FromSeconds(30));
-                rebasedCommitsRevisions = reader.GetRevisionsFromRange(todoCommitsInfos[0][1], todoCommitsInfos[^1][1], cts.Token)
+                rebasedCommitsRevisions = reader.GetRevisionsFromRange(commitsInfos[0][1], commitsInfos[^1][1], cts.Token)
                     .ToDictionary(r => r.Guid, r => r);
             }
             catch (OperationCanceledException)
@@ -2175,7 +2171,9 @@ namespace GitCommands
                 rebasedCommitsRevisions = new Dictionary<string, GitRevision>();
             }
 
-            foreach (string[] parts in todoCommitsInfos)
+            string? currentCommitShortHash = File.Exists(CurrentFilePath) ? File.ReadAllText(CurrentFilePath).Trim() : null;
+            bool isCurrentFound = false;
+            foreach (string[] parts in commitsInfos)
             {
                 string commitHash = parts[1];
                 string? error = null;
@@ -2212,6 +2210,11 @@ namespace GitCommands
             }
 
             return patchFiles;
+
+            string[] ReadCommitsDataFromRebaseFile(string filePath) =>
+                File.Exists(filePath)
+                ? File.ReadAllText(filePath).Trim().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                : Array.Empty<string>();
         }
 
         public IReadOnlyList<PatchFile> GetRebasePatchFiles()
