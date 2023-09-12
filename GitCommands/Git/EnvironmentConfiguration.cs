@@ -44,6 +44,12 @@ namespace GitCommands
             // to prevent from leaking processes see issue #1092 for details
             Env.SetEnvironmentVariable("TERM", "msys");
 
+            // Force a non-empty DISPLAY so ssh uses SSH_ASKPASS if it has no terminal
+            if (string.IsNullOrEmpty(Env.GetEnvironmentVariable("DISPLAY")))
+            {
+                Env.SetEnvironmentVariable("DISPLAY", ":");
+            }
+
             // SSH_ASKPASS variable
 
             if (EnvUtils.RunningOnWindows())
@@ -58,6 +64,11 @@ namespace GitCommands
             else if (string.IsNullOrEmpty(Env.GetEnvironmentVariable("SSH_ASKPASS")))
             {
                 Env.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
+            }
+
+            if (!string.IsNullOrEmpty(Env.GetEnvironmentVariable("SSH_ASKPASS")))
+            {
+                Env.SetEnvironmentVariable("SSH_ASKPASS_REQUIRE", "force");
             }
 
             return;
