@@ -1162,12 +1162,13 @@ namespace GitCommands
 
             string submodule = lines[0];
 
-            if (submodule.Length < 43)
+            if (submodule.Length < ObjectId.Sha1CharCount + 3
+                || !ObjectId.TryParse(submodule, 1, out ObjectId objectId))
             {
                 return (' ', null);
             }
 
-            return (submodule[0], ObjectId.Parse(submodule, 1));
+            return (submodule[0], objectId);
         }
 
         public bool ExistsMergeCommit(string? startRev, string? endRev)

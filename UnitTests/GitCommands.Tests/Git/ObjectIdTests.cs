@@ -94,7 +94,7 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 sha1.Substring(offset, 40),
-                ObjectId.Parse(sha1, offset).ToString());
+                ObjectId.Parse(sha1.Substring(offset, 40)).ToString());
         }
 
         [Test]
@@ -238,14 +238,11 @@ namespace GitCommandsTests.Git
         [TestCase(HexAscii, 2, "0102030405060708090a0b0c0d0e0f1011121314")]
         [TestCase(HexAscii, 3, "102030405060708090a0b0c0d0e0f10111213141")]
         [TestCase(HexAscii, 26, "0d0e0f101112131415161718191a1b1c1d1e1f20")]
-        [TestCase(HexAscii, 27, null)]
-        [TestCase(HexAscii, -1, null)]
-        [TestCase(NonHexAscii, 0, null)]
-        public void TryParseAsciiHexBytes_works_as_expected(string source, int offset, [CanBeNull] string expected)
+        public void TryParse_works_as_expected(string source, int offset, [CanBeNull] string expected)
         {
-            var sourceBytes = Encoding.ASCII.GetBytes(source);
+            byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
 
-            Assert.AreEqual(expected is not null, ObjectId.TryParseAsciiHexBytes(sourceBytes, offset, out var id));
+            Assert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id));
 
             if (expected is not null)
             {
@@ -253,24 +250,28 @@ namespace GitCommandsTests.Git
             }
         }
 
-        [Test]
-        public void TryParseAsciiHexBytes_returns_false_when_array_null()
+        [TestCase(NonHexAscii, 0, null)]
+        public void TryParse_bytes_throws_with_illegal_input(string source, int offset, [CanBeNull] string expected)
         {
-            Assert.False(ObjectId.TryParseAsciiHexBytes(default, out ObjectId objectId));
+            byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
+            Assert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id));
+        }
+
+        [Test]
+        public void TryParse_returns_false_when_array_null()
+        {
+            Assert.False(ObjectId.TryParse(default, out ObjectId objectId));
             Assert.Null(objectId);
-            Assert.False(ObjectId.TryParseAsciiHexBytes(default(ArraySegment<byte>), 0, out objectId));
+            Assert.False(ObjectId.TryParse(default(Span<byte>), out objectId));
             Assert.Null(objectId);
         }
 
         [Test]
-        public void TryParseAsciiHexBytes_returns_false_when_bounds_check_fails()
+        public void TryParse_returns_false_when_bounds_check_fails()
         {
-            var bytes = new byte[ObjectId.Sha1CharCount];
-            ArraySegment<byte> segment = new(bytes);
+            byte[] bytes = new byte[ObjectId.Sha1CharCount];
 
-            Assert.False(ObjectId.TryParseAsciiHexBytes(segment, -1, out ObjectId objectId));
-            Assert.Null(objectId);
-            Assert.False(ObjectId.TryParseAsciiHexBytes(segment, 1, out objectId));
+            Assert.False(ObjectId.TryParse(bytes.AsSpan(1), out ObjectId objectId));
             Assert.Null(objectId);
         }
 

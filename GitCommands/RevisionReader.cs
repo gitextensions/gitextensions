@@ -218,8 +218,8 @@ namespace GitCommands
             ReadOnlySpan<byte> array = chunk.AsSpan();
 
             // The first 40 bytes are the revision ID and the tree ID back to back
-            if (!ObjectId.TryParseAsciiHexReadOnlySpan(array[..ObjectId.Sha1CharCount], out ObjectId? objectId) ||
-                !ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out ObjectId? treeId))
+            if (!ObjectId.TryParse(array[..ObjectId.Sha1CharCount], out ObjectId? objectId) ||
+                !ObjectId.TryParse(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out ObjectId? treeId))
             {
                 ParseAssert($"Log parse error, object id: {chunk.Count}({array[..ObjectId.Sha1CharCount].ToString()}");
                 revision = default;
@@ -274,7 +274,7 @@ namespace GitCommands
             {
                 for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
-                    if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
+                    if (!ObjectId.TryParse(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
                     {
                         ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                         revision = default;
