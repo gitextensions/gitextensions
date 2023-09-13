@@ -293,6 +293,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.Push, Keys.Control | Keys.Up),
                     Hk(FormBrowse.Command.QuickFetch, Keys.Control | Keys.Shift | Keys.Down),
                     Hk(FormBrowse.Command.QuickPull, Keys.Control | Keys.Shift | Keys.P),
+                    Hk(FormBrowse.Command.QuickPullOrFetch, Keys.F8),
                     Hk(FormBrowse.Command.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
                     Hk(FormBrowse.Command.Rebase, Keys.Control | Keys.Shift | Keys.E),
                     Hk(FormBrowse.Command.Stash, Keys.Control | Keys.Alt | Keys.Up),

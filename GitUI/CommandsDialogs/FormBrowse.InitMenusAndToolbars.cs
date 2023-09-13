@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Shells;
 using GitUI.UserControls;
@@ -304,6 +305,8 @@ namespace GitUI.CommandsDialogs
                     toolStripButtonPull.ToolTipText = _pullOpenDialog.Text;
                     break;
             }
+
+            toolStripButtonPull.ToolTipText += GetShortcutKeys(Command.QuickPullOrFetch).ToShortcutKeyToolTipString();
         }
 
         private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)

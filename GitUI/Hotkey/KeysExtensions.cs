@@ -80,6 +80,11 @@ namespace GitUI.Hotkey
             return key.ToText();
         }
 
+        public static string ToShortcutKeyToolTipString(this Keys key)
+        {
+            return key == Keys.None ? "" : $" ({key.ToShortcutKeyDisplayString()})";
+        }
+
         private static string? ToCultureSpecificString(this Keys key)
         {
             if (key == Keys.None)
