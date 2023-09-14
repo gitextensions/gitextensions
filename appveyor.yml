@@ -70,9 +70,14 @@ build_script:
     # build VC++
     dotnet build .\scripts\native.proj -c Release --verbosity q --nologo /bl:.\artifacts\log\native.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    dotnet build .\scripts\native.proj -c Release --verbosity q --nologo /p:Arm64Build=true /bl:.\artifacts\log\native.binlog
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 - ps: |
     # build .NET
     $cmd = "dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog $buildArgs"
+    Invoke-Expression $cmd
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    $cmd += " /p:Arm64Build=true"
     Invoke-Expression $cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 - ps: |
