@@ -153,6 +153,8 @@ namespace GitUIPluginInterfaces
         /// <param name="array">The char span to parse.</param>
         /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
         /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
+        [MustUseReturnValue]
+        [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         public static bool TryParse(in ReadOnlySpan<char> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
             if (array.Length != Sha1CharCount)
@@ -161,7 +163,7 @@ namespace GitUIPluginInterfaces
                 return false;
             }
 
-            if (!uint.TryParse(array[..8], NumberStyles.AllowHexSpecifier, provider: null, out uint i1)
+            if (!uint.TryParse(array.Slice(0, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i1)
                 || !uint.TryParse(array.Slice(8, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i2)
                 || !uint.TryParse(array.Slice(16, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i3)
                 || !uint.TryParse(array.Slice(24, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i4)
@@ -187,6 +189,7 @@ namespace GitUIPluginInterfaces
         /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
         /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
         [MustUseReturnValue]
+        [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         public static bool TryParse(in ReadOnlySpan<byte> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
             if (array.Length != Sha1CharCount)
@@ -195,7 +198,7 @@ namespace GitUIPluginInterfaces
                 return false;
             }
 
-            if (!Utf8Parser.TryParse(array[..8], out uint i1, out int _, standardFormat: 'X')
+            if (!Utf8Parser.TryParse(array.Slice(0, 8), out uint i1, out int _, standardFormat: 'X')
                 || !Utf8Parser.TryParse(array.Slice(8, 8), out uint i2, out int _, standardFormat: 'X')
                 || !Utf8Parser.TryParse(array.Slice(16, 8), out uint i3, out int _, standardFormat: 'X')
                 || !Utf8Parser.TryParse(array.Slice(24, 8), out uint i4, out int _, standardFormat: 'X')
