@@ -107,18 +107,16 @@ namespace GitCommands
         {
             List<GitRevision> stashes = new();
 
-            using (IProcess process = _module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
+            using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding);
+            byte[] buffer = new byte[4096];
+
+            foreach (ArraySegment<byte> chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
             {
-                byte[] buffer = new byte[4096];
+                cancellationToken.ThrowIfCancellationRequested();
 
-                foreach (ArraySegment<byte> chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+                if (TryParseRevision(chunk, out GitRevision? revision))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (TryParseRevision(chunk, out GitRevision? revision))
-                    {
-                        stashes.Add(revision);
-                    }
+                    stashes.Add(revision);
                 }
             }
 
@@ -143,36 +141,31 @@ namespace GitCommands
             Stopwatch sw = Stopwatch.StartNew();
 #endif
             ArgumentBuilder arguments = BuildArguments(revisionFilter, pathFilter);
-            using (IProcess process = _module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
-            {
+            using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding);
 #if DEBUG
-                Debug.WriteLine($"git {arguments}");
+            Debug.WriteLine($"git {arguments}");
 #endif
+            cancellationToken.ThrowIfCancellationRequested();
+
+            byte[] buffer = new byte[4096];
+
+            foreach (ArraySegment<byte> chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+            {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                byte[] buffer = new byte[4096];
-
-                foreach (ArraySegment<byte> chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+                if (TryParseRevision(chunk, out GitRevision? revision))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (TryParseRevision(chunk, out GitRevision? revision))
-                    {
 #if DEBUG
-                        revisionCount++;
+                    revisionCount++;
 #endif
-                        subject.OnNext(revision);
-                    }
+                    subject.OnNext(revision);
                 }
+            }
 
 #if DEBUG
-                // TODO Make it possible to explicitly activate Trace printouts like this
-                Debug.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={_noOfParseError}");
+            // TODO Make it possible to explicitly activate Trace printouts like this
+            Debug.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={_noOfParseError}");
 #endif
-
-                // Wait for possible exceptions from the process, which has been started with throwOnErrorExit activated
-                process.WaitForExit();
-            }
 
             if (!cancellationToken.IsCancellationRequested)
             {

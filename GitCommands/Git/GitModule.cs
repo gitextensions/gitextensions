@@ -3778,10 +3778,9 @@ namespace GitCommands
                     "blob",
                     blob
                 };
-                using var process = _gitCommandRunner.RunDetached(args, redirectOutput: true);
+                using IProcess process = _gitCommandRunner.RunDetached(CancellationToken.None, args, redirectOutput: true);
                 MemoryStream stream = new();
                 process.StandardOutput.BaseStream.CopyTo(stream);
-                process.WaitForExit();
                 stream.Position = 0;
                 return stream;
             }

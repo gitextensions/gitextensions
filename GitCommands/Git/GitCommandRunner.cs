@@ -1,5 +1,6 @@
 using System.Text;
 using GitExtUtils;
+using GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -16,6 +17,7 @@ namespace GitCommands
         }
 
         public IProcess RunDetached(
+            CancellationToken cancellationToken,
             ArgumentString arguments = default,
             bool createWindow = false,
             bool redirectInput = false,
@@ -27,7 +29,21 @@ namespace GitCommands
                 outputEncoding = _defaultEncoding();
             }
 
-            return _gitExecutable.Start(arguments, createWindow, redirectInput, redirectOutput, outputEncoding);
+            return _gitExecutable.Start(arguments, createWindow, redirectInput, redirectOutput, outputEncoding, cancellationToken: cancellationToken);
+        }
+
+        public void RunDetached(
+            ArgumentString arguments = default,
+            bool createWindow = false,
+            bool redirectInput = false,
+            bool redirectOutput = false,
+            Encoding? outputEncoding = null)
+        {
+            ThreadHelper.FileAndForget(async () =>
+                {
+                    using IProcess process = RunDetached(CancellationToken.None, arguments, createWindow, redirectInput, redirectOutput, outputEncoding);
+                    await process.WaitForExitAsync();
+                });
         }
     }
 }

@@ -41,6 +41,12 @@ namespace GitUIPluginInterfaces
         StreamReader StandardError { get; }
 
         /// <summary>
+        /// Kill the process at once.
+        /// </summary>
+        /// <param name="entireProcessTree">Specifies whether to kill all child processes, too.</param>
+        void Kill(bool entireProcessTree = false);
+
+        /// <summary>
         /// Blocks the calling thread until the process exits, or when this object is disposed.
         /// </summary>
         /// <returns>The process's exit code, or <c>null</c> if this object was disposed before the process exited.</returns>

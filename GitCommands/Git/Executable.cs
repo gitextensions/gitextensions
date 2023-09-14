@@ -27,14 +27,14 @@ namespace GitCommands
             _prefixArguments = prefixArguments;
         }
 
-        /// <inheritdoc />
         public IProcess Start(ArgumentString arguments = default,
                               bool createWindow = false,
                               bool redirectInput = false,
                               bool redirectOutput = false,
                               Encoding? outputEncoding = null,
                               bool useShellExecute = false,
-                              bool throwOnErrorExit = true)
+                              bool throwOnErrorExit = true,
+                              CancellationToken cancellationToken = default)
         {
             // TODO should we set these on the child process only?
             EnvironmentConfiguration.SetEnvironmentVariables();
@@ -43,7 +43,7 @@ namespace GitCommands
 
             var fileName = _fileNameProvider();
 
-            return new ProcessWrapper(fileName, _prefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit);
+            return new ProcessWrapper(fileName, _prefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
         }
 
         #region ProcessWrapper
@@ -58,14 +58,16 @@ namespace GitCommands
             // TODO should this use TaskCreationOptions.RunContinuationsAsynchronously
             private readonly TaskCompletionSource<int> _exitTaskCompletionSource = new();
 
-            private readonly object _syncRoot = new();
-            private readonly Process _process;
+            private readonly CancellationToken _cancellationToken;
             private readonly ProcessOperation _logOperation;
+            private readonly Process _process;
             private readonly bool _redirectInput;
             private readonly bool _redirectOutput;
+            private readonly object _syncRoot = new();
             private readonly bool _throwOnErrorExit;
 
             private bool _disposed;
+            private bool _exitHandlerRemoved;
 
             public ProcessWrapper(string fileName,
                                   string prefixArguments,
@@ -76,12 +78,14 @@ namespace GitCommands
                                   bool redirectOutput,
                                   Encoding? outputEncoding,
                                   bool useShellExecute,
-                                  bool throwOnErrorExit)
+                                  bool throwOnErrorExit,
+                                  CancellationToken cancellationToken)
             {
                 Debug.Assert(redirectOutput == (outputEncoding is not null), "redirectOutput == (outputEncoding is not null)");
                 _redirectInput = redirectInput;
                 _redirectOutput = redirectOutput;
                 _throwOnErrorExit = throwOnErrorExit;
+                _cancellationToken = cancellationToken;
 
                 Encoding errorEncoding = outputEncoding;
                 if (throwOnErrorExit)
@@ -135,50 +139,56 @@ namespace GitCommands
                 }
             }
 
+            private void HandleProcessExit()
+            {
+                try
+                {
+                    int exitCode = _process.ExitCode;
+                    _logOperation.LogProcessEnd(exitCode);
+
+                    if (_throwOnErrorExit && exitCode != 0)
+                    {
+                        string errorOutput = _process.StandardError.ReadToEnd().Trim();
+                        string errorMessage = errorOutput.Length > 0 ? errorOutput : "External program returned non-zero exit code.";
+                        Exception ex
+                            = new ExternalOperationException(command: _process.StartInfo.FileName,
+                                    _process.StartInfo.Arguments,
+                                    _process.StartInfo.WorkingDirectory,
+                                    exitCode,
+                                    new Exception(errorMessage));
+                        if (exitCode == NativeMethods.STATUS_CONTROL_C_EXIT)
+                        {
+                            ex = new OperationCanceledException("Ctrl+C pressed or console closed", ex);
+                        }
+
+                        _logOperation.LogProcessEnd(ex);
+                        _exitTaskCompletionSource.TrySetException(ex);
+                    }
+
+                    _exitTaskCompletionSource.TrySetResult(exitCode);
+                }
+                catch (Exception ex)
+                {
+                    _logOperation.LogProcessEnd(ex);
+                    _exitTaskCompletionSource.TrySetException(ex);
+                }
+            }
+
             private void OnProcessExit(object sender, EventArgs eventArgs)
             {
                 lock (_syncRoot)
                 {
                     // The Exited event can be raised after the process is disposed, however
                     // if the Process is disposed then reading ExitCode will throw.
-                    if (!_disposed)
+                    if (!_disposed && !_exitHandlerRemoved)
                     {
-                        try
-                        {
-                            int exitCode = _process.ExitCode;
-                            _logOperation.LogProcessEnd(exitCode);
-
-                            if (_throwOnErrorExit && exitCode != 0)
-                            {
-                                string errorOutput = _process.StandardError.ReadToEnd().Trim();
-                                string errorMessage = errorOutput.Length > 0 ? errorOutput : "External program returned non-zero exit code.";
-                                Exception ex
-                                    = new ExternalOperationException(command: _process.StartInfo.FileName,
-                                            _process.StartInfo.Arguments,
-                                            _process.StartInfo.WorkingDirectory,
-                                            exitCode,
-                                            new Exception(errorMessage));
-                                if (exitCode == NativeMethods.STATUS_CONTROL_C_EXIT)
-                                {
-                                    ex = new OperationCanceledException("Ctrl+C pressed or console closed", ex);
-                                }
-
-                                _logOperation.LogProcessEnd(ex);
-                                _exitTaskCompletionSource.TrySetException(ex);
-                            }
-
-                            _exitTaskCompletionSource.TrySetResult(exitCode);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logOperation.LogProcessEnd(ex);
-                            _exitTaskCompletionSource.TrySetException(ex);
-                        }
+                        _process.Exited -= OnProcessExit;
+                        _exitHandlerRemoved = true;
+                        HandleProcessExit();
                     }
                 }
             }
 
-            /// <inheritdoc />
             public StreamWriter StandardInput
             {
                 get
@@ -192,7 +202,6 @@ namespace GitCommands
                 }
             }
 
-            /// <inheritdoc />
             public StreamReader StandardOutput
             {
                 get
@@ -206,7 +215,6 @@ namespace GitCommands
                 }
             }
 
-            /// <inheritdoc />
             public StreamReader StandardError
             {
                 get
@@ -220,19 +228,16 @@ namespace GitCommands
                 }
             }
 
-            /// <inheritdoc />
+            public void Kill(bool entireProcessTree) => _process.Kill(entireProcessTree);
+
             public void WaitForInputIdle() => _process.WaitForInputIdle();
 
-            /// <inheritdoc />
             public Task<int> WaitForExitAsync() => _exitTaskCompletionSource.Task;
 
-            /// <inheritdoc />
             public Task<int> WaitForExitAsync(CancellationToken token) => WaitForExitAsync().WithCancellation(token);
 
-            /// <inheritdoc />
             public int WaitForExit() => ThreadHelper.JoinableTaskFactory.Run(WaitForExitAsync);
 
-            /// <inheritdoc />
             public void Dispose()
             {
                 lock (_syncRoot)
@@ -243,11 +248,39 @@ namespace GitCommands
                     }
 
                     _disposed = true;
+
+                    if (!_exitHandlerRemoved)
+                    {
+                        // HandleProcessExit directly, do not rely on event execution
+                        _process.Exited -= OnProcessExit;
+                        _exitHandlerRemoved = true;
+
+                        try
+                        {
+                            if (_process.HasExited)
+                            {
+                                HandleProcessExit();
+                            }
+                            else if (_cancellationToken.IsCancellationRequested)
+                            {
+                                // Directly kill the process because Ctrl+C does not reach the git process how we start it
+                                _process.Kill();
+
+                                OperationCanceledException ex = new("Process killed");
+                                _logOperation.LogProcessEnd(ex);
+                                _exitTaskCompletionSource.TrySetException(ex);
+                            }
+                            else
+                            {
+                                _exitTaskCompletionSource.TrySetCanceled();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.WriteLine(ex);
+                        }
+                    }
                 }
-
-                _process.Exited -= OnProcessExit;
-
-                _exitTaskCompletionSource.TrySetCanceled();
 
                 _process.Dispose();
 
