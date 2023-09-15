@@ -98,7 +98,7 @@ namespace GitExtensions.UITests
             {
                 if (debug)
                 {
-                    Console.WriteLine($"{DateTime.Now.TimeOfDay} {message}");
+                    Trace.WriteLine($"{DateTime.Now.TimeOfDay} {message}");
                 }
             }
         }

@@ -60,6 +60,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly CancellationTokenSequence _statusSequence = new();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
         private readonly Func<bool> _isMinimized;
+        private bool _disposed;
 
         // Timestamps to schedule status updates, limit the update interval dynamically
         // Note that TickCount wraps after 25 days uptime, always compare diff
@@ -200,6 +201,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public void Dispose()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            _currentStatus = GitStatusMonitorState.Stopped;
             _workTreeWatcher.Dispose();
             _gitDirWatcher.Dispose();
             _timerRefresh.Dispose();
@@ -208,6 +216,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void EnableRaisingEvents()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
             _gitDirWatcher.EnableRaisingEvents = Directory.Exists(_gitDirWatcher.Path)
                     && !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
@@ -428,6 +441,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             lock (_statusSequence)
             {
+                if (_disposed)
+                {
+                    return;
+                }
+
                 if (_commandIsRunningAndNotCancelled)
                 {
                     return;
@@ -448,8 +466,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _commandIsRunningAndNotCancelled = true;
 
                 // Schedule periodic update, even if we don't know that anything changed
-                _nextUpdateTime = commandStartTime
-                    + (PathUtil.IsWslPath(_workTreeWatcher.Path) ? PeriodicUpdateIntervalWSL : PeriodicUpdateInterval);
+                _nextUpdateTime = commandStartTime + (PathUtil.IsWslPath(_workTreeWatcher.Path) ? PeriodicUpdateIntervalWSL : PeriodicUpdateInterval);
                 _nextEarliestTime = commandStartTime + MinUpdateInterval;
                 _isFirstPostRepoChanged = false;
             }
@@ -468,7 +485,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                 string output = result.StandardOutput;
                                 IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
 
-                                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancelToken);
                                 GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(changedFiles));
                             }
 
@@ -567,6 +584,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 _statusSequence.CancelCurrent();
                 _commandIsRunningAndNotCancelled = false;
+
+                if (_disposed)
+                {
+                    return;
+                }
 
                 int ticks = Environment.TickCount;
                 _nextEarliestTime = ticks + MinUpdateInterval;
