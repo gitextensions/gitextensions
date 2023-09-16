@@ -173,6 +173,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             CommandLog.Clear();
         }
 
+        private void mnuCopyCommandLine_Click(object sender, EventArgs e)
+        {
+            CommandLogEntry entry = (CommandLogEntry)LogItems.SelectedItem;
+            string commandLine = $"\"{entry.FileName}\" {entry.Arguments}";
+            Clipboard.SetText(commandLine);
+        }
+
         #region Single instance static members
 
         private static FormGitCommandLog? instance;

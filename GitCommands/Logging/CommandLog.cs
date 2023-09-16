@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using GitUI;
 
 namespace GitCommands.Logging
@@ -89,11 +90,13 @@ namespace GitCommands.Logging
         {
             get
             {
-                var duration = Duration is null
+                string duration = Duration is null
                     ? "running"
                     : $"{((TimeSpan)Duration).TotalMilliseconds:0,0} ms";
 
-                var fileName = FileName;
+                string gitVerb = "";
+
+                string fileName = FileName;
 
                 if (fileName.StartsWith("wsl "))
                 {
@@ -102,29 +105,30 @@ namespace GitCommands.Logging
                 else if (fileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
+                    gitVerb = GitVerb;
                 }
 
-                var exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
-                var ex = Exception is not null ? $"  {Exception.GetType().Name}: {Exception.Message}" : string.Empty;
+                string exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
+                string ex = Exception is not null ? $"  {Exception.GetType().Name}: {Exception.Message}" : string.Empty;
 
-                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {ProcessId,5} {(IsOnMainThread ? "UI" : "  ")} {exit,3} {fileName} {Arguments}{ex}";
+                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {ProcessId,5} {(IsOnMainThread ? "UI" : "  ")} {exit,3} {gitVerb,-12} {fileName} {Arguments}{ex}";
             }
         }
 
         public string FullLine(string sep)
         {
-            var duration = Duration is null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
+            string duration = Duration is null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
 
-            var fileName = FileName;
+            string fileName = FileName;
 
             if (fileName.EndsWith("git.exe"))
             {
                 fileName = "git";
             }
 
-            var exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
-            var ex = Exception is not null ? $"{Environment.NewLine}{Exception}" : string.Empty;
-            var callStack = CallStack is not null ? $"{Environment.NewLine}{CallStack}" : string.Empty;
+            string exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
+            string ex = Exception is not null ? $"{Environment.NewLine}{Exception}" : string.Empty;
+            string callStack = CallStack is not null ? $"{Environment.NewLine}{CallStack}" : string.Empty;
 
             return $"{StartedAt:O}{sep}{duration}{sep}{ProcessId}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}{ex}";
         }
@@ -146,6 +150,15 @@ namespace GitCommands.Logging
                 s.Append("Call stack:  ").Append(CallStack is not null ? $"{Environment.NewLine}{CallStack}" : "not captured");
 
                 return s.ToString();
+            }
+        }
+
+        public string GitVerb
+        {
+            get
+            {
+                Match match = Regex.Match(Arguments, @"(?<!-c)(?:^| )([^-][^ ]*)");
+                return match.Success ? match.Groups[1].Value : "";
             }
         }
     }

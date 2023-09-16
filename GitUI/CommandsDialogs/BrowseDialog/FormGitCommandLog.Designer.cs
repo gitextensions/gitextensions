@@ -37,6 +37,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             LogItems = new ListBox();
             contextMenu = new ContextMenuStrip(components);
             mnuSaveToFile = new ToolStripMenuItem();
+            mnuCopyCommandLine = new ToolStripMenuItem();
             mnuClear = new ToolStripMenuItem();
             LogOutput = new RichTextBox();
             tabPageCommandCache = new TabPage();
@@ -119,24 +120,35 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // 
             // contextMenu
             // 
-            contextMenu.Items.AddRange(new ToolStripItem[] { mnuSaveToFile, mnuClear });
+            contextMenu.Items.AddRange(new ToolStripItem[] { mnuSaveToFile, mnuCopyCommandLine, mnuClear });
             contextMenu.Name = "logContextMenuStrip";
-            contextMenu.Size = new Size(181, 70);
+            contextMenu.Size = new Size(225, 92);
             // 
             // mnuSaveToFile
             // 
             mnuSaveToFile.Image = Properties.Images.SaveAs;
             mnuSaveToFile.Name = "mnuSaveToFile";
-            mnuSaveToFile.Size = new Size(180, 22);
-            mnuSaveToFile.Text = "Save to file";
+            mnuSaveToFile.ShortcutKeys = Keys.Control | Keys.S;
+            mnuSaveToFile.Size = new Size(224, 22);
+            mnuSaveToFile.Text = "&Save to file";
             mnuSaveToFile.Click += mnuSaveToFile_Click;
+            // 
+            // mnuCopyCommandLine
+            // 
+            mnuCopyCommandLine.Image = Properties.Images.CopyToClipboard;
+            mnuCopyCommandLine.Name = "mnuCopyCommandLine";
+            mnuCopyCommandLine.ShortcutKeys = Keys.Control | Keys.C;
+            mnuCopyCommandLine.Size = new Size(224, 22);
+            mnuCopyCommandLine.Text = "&Copy command line";
+            mnuCopyCommandLine.Click += mnuCopyCommandLine_Click;
             // 
             // mnuClear
             // 
             mnuClear.Image = Properties.Images.ClearLog;
             mnuClear.Name = "mnuClear";
-            mnuClear.Size = new Size(180, 22);
-            mnuClear.Text = "Clear";
+            mnuClear.ShortcutKeys = Keys.Control | Keys.L;
+            mnuClear.Size = new Size(224, 22);
+            mnuClear.Text = "C&lear";
             mnuClear.Click += mnuClear_Click;
             // 
             // LogOutput
@@ -285,5 +297,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private CheckBox chkWordWrap;
         private ToolStripMenuItem mnuClear;
         private CheckBox chkCaptureCallStacks;
+        private ToolStripMenuItem mnuCopyCommandLine;
     }
 }
