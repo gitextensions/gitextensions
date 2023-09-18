@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI;

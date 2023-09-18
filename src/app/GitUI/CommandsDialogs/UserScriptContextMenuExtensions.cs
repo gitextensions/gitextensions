@@ -1,6 +1,6 @@
-﻿using GitUI.LeftPanel.ContextMenu;
+﻿using GitExtUtils;
+using GitUI.LeftPanel.ContextMenu;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.Hotkey;
 

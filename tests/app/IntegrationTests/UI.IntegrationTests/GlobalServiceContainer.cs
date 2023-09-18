@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands;
 using GitCommands.Submodules;
+using GitExtUtils;
 using GitUI;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
 

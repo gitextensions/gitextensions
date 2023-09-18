@@ -1,5 +1,5 @@
-﻿using GitUI.Hotkey;
-using GitUIPluginInterfaces;
+﻿using GitExtUtils;
+using GitUI.Hotkey;
 using Microsoft;
 using ResourceManager;
 using ResourceManager.Hotkey;
