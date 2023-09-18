@@ -93,6 +93,9 @@
       <Component Id="BugReporter.runtimeconfig.json" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\BugReporter.runtimeconfig.json" />
       </Component>
+      <Component Id="CommunityToolkit.Mvvm.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\CommunityToolkit.Mvvm.dll" />
+      </Component>
       <Component Id="ConEmuWinForms.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\ConEmuWinForms.dll" />
       </Component>
@@ -643,6 +646,7 @@
       <ComponentRef Id="BugReporter.dll" />
       <ComponentRef Id="BugReporter.exe" />
       <ComponentRef Id="BugReporter.runtimeconfig.json" />
+      <ComponentRef Id="CommunityToolkit.Mvvm.dll" />
       <ComponentRef Id="ConEmuWinForms.dll" />
       <!--
       <ComponentRef Id="EasyHook.dll" />

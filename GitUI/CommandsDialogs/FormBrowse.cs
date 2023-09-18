@@ -32,6 +32,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using Plugins.GitUIPluginInterfaces.ViewModels;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -321,6 +322,7 @@ namespace GitUI.CommandsDialogs
             // Show blame by default if not started from command line
             fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, RefreshGitStatusMonitor, _isFileBlameHistory);
             RevisionGrid.ResumeRefreshRevisions();
+            UICommands.RepoViewModel.PropertyChanged += RepoViewModel_PropertyChanged;
 
             // Application is init, the repo related operations are triggered in OnLoad()
             return;
@@ -440,6 +442,15 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
+                if (_splitterManager is null)
+                {
+                    // UICommands is unset in TranslationApp
+                }
+                else
+                {
+                    UICommands.RepoViewModel.PropertyChanged -= RepoViewModel_PropertyChanged;
+                }
+
                 _repositoryHistoryUIService.GitModuleChanged -= SetGitModule;
 
                 _formBrowseMenus?.Dispose();
@@ -786,8 +797,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
-                            _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-                            RefreshRevisions();
+                            UICommands.RepoViewModel.RefreshRevisions();
                         }
                     };
 
@@ -1014,13 +1024,7 @@ namespace GitUI.CommandsDialogs
                         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
                     };
 
-                    button.Click += delegate
-                    {
-                        if (ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, this, RevisionGrid).NeedsGridRefresh)
-                        {
-                            RefreshRevisions();
-                        }
-                    };
+                    button.Click += (s, e) => ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, this, RevisionGrid);
 
                     // add to toolstrip
                     ToolStripScripts.Items.Add(button);
@@ -2963,6 +2967,15 @@ namespace GitUI.CommandsDialogs
         private void fileToolStripMenuItem_RecentRepositoriesCleared(object sender, EventArgs e)
         {
             _dashboard?.RefreshContent();
+        }
+
+        private void RepoViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(GitRepoViewModel.Revisions))
+            {
+                _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
+                RefreshRevisions();
+            }
         }
     }
 }

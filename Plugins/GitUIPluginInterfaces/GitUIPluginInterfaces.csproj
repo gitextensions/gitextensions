@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="Microsoft.VisualStudio.Composition" />
     <PackageReference Include="System.Reactive.Interfaces" />

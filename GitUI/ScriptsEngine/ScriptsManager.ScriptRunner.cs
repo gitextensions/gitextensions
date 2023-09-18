@@ -87,7 +87,13 @@ namespace GitUI.ScriptsEngine
                             if (string.Equals(plugin.Name, command, StringComparison.CurrentCultureIgnoreCase))
                             {
                                 GitUIEventArgs eventArgs = new(owner, uiCommands);
-                                return new CommandStatus(executed: true, needsGridRefresh: plugin.Execute(eventArgs));
+                                if (plugin.Execute(eventArgs))
+                                {
+                                    uiCommands.RepoViewModel.RefreshRevisions();
+                                    return new CommandStatus(executed: true, needsGridRefresh: true);
+                                }
+
+                                return new CommandStatus(executed: true, needsGridRefresh: false);
                             }
                         }
                     }
@@ -140,7 +146,13 @@ namespace GitUI.ScriptsEngine
                     }
                 }
 
-                return new CommandStatus(executed: true, needsGridRefresh: !script.RunInBackground);
+                bool needsGridRefresh = !script.RunInBackground;
+                if (needsGridRefresh)
+                {
+                    uiCommands.RepoViewModel.RefreshRevisions();
+                }
+
+                return new CommandStatus(executed: true, needsGridRefresh);
             }
 
             private static string ExpandCommandVariables(string originalCommand, IGitModule module)

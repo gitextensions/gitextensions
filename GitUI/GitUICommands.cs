@@ -11,6 +11,7 @@ using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
+using Plugins.GitUIPluginInterfaces.ViewModels;
 using static GitUI.CommandsDialogs.FormBrowse;
 
 namespace GitUI
@@ -34,6 +35,7 @@ namespace GitUI
         public GitModule Module { get; private set; }
         public ILockableNotifier RepoChangedNotifier { get; }
         public IBrowseRepo? BrowseRepo { get; set; }
+        public GitRepoViewModel RepoViewModel { get; } = new GitRepoViewModel();
 
         public GitUICommands(IServiceProvider serviceProvider, GitModule module)
         {
