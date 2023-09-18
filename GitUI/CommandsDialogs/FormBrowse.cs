@@ -786,8 +786,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
-                            _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-                            RefreshRevisions();
+                            UICommands.RepoChangedNotifier.Notify();
                         }
                     };
 
@@ -1014,13 +1013,7 @@ namespace GitUI.CommandsDialogs
                         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
                     };
 
-                    button.Click += delegate
-                    {
-                        if (ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, this, RevisionGrid).NeedsGridRefresh)
-                        {
-                            RefreshRevisions();
-                        }
-                    };
+                    button.Click += (s, e) => ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, this, RevisionGrid);
 
                     // add to toolstrip
                     ToolStripScripts.Items.Add(button);

@@ -87,7 +87,13 @@ namespace GitUI.ScriptsEngine
                             if (string.Equals(plugin.Name, command, StringComparison.CurrentCultureIgnoreCase))
                             {
                                 GitUIEventArgs eventArgs = new(owner, uiCommands);
-                                return new CommandStatus(executed: true, needsGridRefresh: plugin.Execute(eventArgs));
+                                if (plugin.Execute(eventArgs))
+                                {
+                                    uiCommands.RepoChangedNotifier.Notify();
+                                    return new CommandStatus(executed: true, needsGridRefresh: true);
+                                }
+
+                                return new CommandStatus(executed: true, needsGridRefresh: false);
                             }
                         }
                     }
@@ -124,6 +130,8 @@ namespace GitUI.ScriptsEngine
                     {
                         return false;
                     }
+
+                    uiCommands.RepoChangedNotifier.Notify();
                 }
                 else
                 {
