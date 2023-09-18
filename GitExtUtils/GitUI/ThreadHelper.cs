@@ -21,6 +21,9 @@ namespace GitUI
 
         public static JoinableTaskFactory JoinableTaskFactory => _taskManager.JoinableTaskFactory;
 
+        public static ExclusiveTaskRunner CreateExclusiveTaskRunner()
+            => new(_taskManager);
+
         public static TaskManager CreateTaskManager()
             => new(_taskManager.JoinableTaskContext);
 

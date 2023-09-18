@@ -1,15 +1,15 @@
 ﻿using GitCommands;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.LeftPanel
 {
     internal abstract class Tree : NodeBase, IDisposable
     {
         private readonly IGitUICommandsSource _uiCommandsSource;
-        private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new();
+        private readonly ExclusiveTaskRunner _reloadTaskRunner = ThreadHelper.CreateExclusiveTaskRunner();
         private bool _firstReloadNodesSinceModuleChanged = true;
-        protected readonly SemaphoreSlim _updateSemaphore = new(1, 1);
 
         protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
         {
@@ -34,11 +34,10 @@ namespace GitUI.LeftPanel
             };
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Detached();
-            _reloadCancellationTokenSequence.Dispose();
-            _updateSemaphore.Dispose();
+            _reloadTaskRunner.Dispose();
         }
 
         public GitUICommands UICommands => _uiCommandsSource.UICommands;
@@ -63,7 +62,7 @@ namespace GitUI.LeftPanel
 
         public void Detached()
         {
-            _reloadCancellationTokenSequence.CancelCurrent();
+            _reloadTaskRunner.CancelCurrent();
             IsAttached = false;
             OnDetached();
         }
@@ -84,25 +83,29 @@ namespace GitUI.LeftPanel
         // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
         // input async function that should populate Nodes, then fills the tree view with its contents,
         // making sure to disable/enable the control.
-        protected async Task ReloadNodesAsync(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask,
-            Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        protected JoinableTask ReloadNodesDetached(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
-            var token = _reloadCancellationTokenSequence.Next();
+            TreeView treeView = TreeViewNode.TreeView;
 
-            var treeView = TreeViewNode.TreeView;
-
-            if (treeView is null || !IsAttached)
+            return _reloadTaskRunner.RunDetached(async cancellationToken =>
             {
-                return;
-            }
+                if (treeView is null || !IsAttached)
+                {
+                    return;
+                }
 
-            await _updateSemaphore.WaitAsync(token);
-            try
-            {
                 // Module is invalid in Dashboard
-                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(token, getRefs) : new(tree: null);
+                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(cancellationToken, getRefs) : new(tree: null);
 
-                await treeView.SwitchToMainThreadAsync(token);
+                await treeView.SwitchToMainThreadAsync(cancellationToken);
+
+                // Check again after switch to main thread
+                treeView = TreeViewNode.TreeView;
+
+                if (treeView is null || !IsAttached)
+                {
+                    return;
+                }
 
                 // remember multi-selected nodes
                 HashSet<int> multiSelected = GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
@@ -117,14 +120,6 @@ namespace GitUI.LeftPanel
                     {
                         node.IsSelected = true;
                     }
-                }
-
-                // Check again after switch to main thread
-                treeView = TreeViewNode.TreeView;
-
-                if (treeView is null || !IsAttached)
-                {
-                    return;
                 }
 
                 try
@@ -142,11 +137,7 @@ namespace GitUI.LeftPanel
                     ExpandPathToSelectedNode();
                     _firstReloadNodesSinceModuleChanged = false;
                 }
-            }
-            finally
-            {
-                _updateSemaphore?.Release();
-            }
+            });
         }
 
         private void FillTreeViewNode(string? originalSelectedNodeFullNamePath, bool firstTime)

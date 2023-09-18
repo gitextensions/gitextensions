@@ -67,10 +67,7 @@ namespace GitUI.LeftPanel
             // Break the local cache to ensure the data is requeried to reflect the required sort order.
             _loadedRefs = null;
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ReloadNodesAsync(LoadNodesAsync, getRefs);
-            });
+            ReloadNodesDetached(LoadNodesAsync, getRefs);
         }
 
         internal override void UpdateVisibility()
