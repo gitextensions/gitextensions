@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.Design;
 using CommonTestUtils;
 using FluentAssertions;
+using GitExtUtils;
 using GitUI;
 using GitUI.Editor;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using NSubstitute;

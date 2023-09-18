@@ -3,7 +3,7 @@ using System.IO.Abstractions;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
-using GitUIPluginInterfaces;
+using GitExtUtils;
 using ResourceManager;
 
 namespace GitExtensions;
@@ -12,6 +12,8 @@ internal static class ServiceContainerRegistry
 {
     public static void RegisterServices(ServiceContainer serviceContainer)
     {
+        GitExtUtils.ServiceContainerRegistry.RegisterServices(serviceContainer);
+
         FileSystem fileSystem = new();
         GitDirectoryResolver gitDirectoryResolver = new(fileSystem);
         RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
