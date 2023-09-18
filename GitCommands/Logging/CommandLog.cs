@@ -94,24 +94,34 @@ namespace GitCommands.Logging
                     ? "running"
                     : $"{((TimeSpan)Duration).TotalMilliseconds:0,0} ms";
 
-                string gitVerb = "";
-
                 string fileName = FileName;
-
+                string arguments = Arguments;
                 if (fileName.StartsWith("wsl "))
                 {
                     fileName = "wsl";
+                    arguments = GitArgumentsWithoutConfigurationOptions;
                 }
                 else if (fileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
-                    gitVerb = GitVerb;
+                    arguments = GitArgumentsWithoutConfigurationOptions;
                 }
 
                 string exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
                 string ex = Exception is not null ? $"  {Exception.GetType().Name}: {Exception.Message}" : string.Empty;
 
-                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {ProcessId,5} {(IsOnMainThread ? "UI" : "  ")} {exit,3} {gitVerb,-12} {fileName} {Arguments}{ex}";
+                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {ProcessId,7} {(IsOnMainThread ? "UI" : "  ")} {exit,3} {fileName} {arguments}{ex}";
+            }
+        }
+
+        public string CommandLine
+        {
+            get
+            {
+                bool quoteFileName = FileName.Contains(' ') && !FileName.StartsWith('"') && !FileName.StartsWith("wsl ");
+                return quoteFileName
+                    ? $"\"{FileName}\" {Arguments}"
+                    : $"{FileName} {Arguments}";
             }
         }
 
@@ -153,14 +163,7 @@ namespace GitCommands.Logging
             }
         }
 
-        public string GitVerb
-        {
-            get
-            {
-                Match match = Regex.Match(Arguments, @"(?<!-c)(?:^| )([^-][^ ]*)");
-                return match.Success ? match.Groups[1].Value : "";
-            }
-        }
+        public string GitArgumentsWithoutConfigurationOptions => Regex.Replace(Arguments, @"((-c +[^ ]+)|(--no-optional-locks)) *", "");
     }
 
     public static class CommandLog

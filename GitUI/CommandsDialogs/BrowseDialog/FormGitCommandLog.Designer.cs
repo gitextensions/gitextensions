@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             mnuCopyCommandLine.Name = "mnuCopyCommandLine";
             mnuCopyCommandLine.ShortcutKeys = Keys.Control | Keys.C;
             mnuCopyCommandLine.Size = new Size(224, 22);
-            mnuCopyCommandLine.Text = "&Copy command line";
+            mnuCopyCommandLine.Text = "&Copy full command line";
             mnuCopyCommandLine.Click += mnuCopyCommandLine_Click;
             // 
             // mnuClear

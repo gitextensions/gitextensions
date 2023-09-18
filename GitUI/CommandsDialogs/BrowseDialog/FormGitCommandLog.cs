@@ -14,6 +14,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ShowInTaskbar = true;
             InitializeComponent();
             InitializeComplete();
+            ActiveControl = LogItems;
 
             LogItems.DisplayMember = nameof(CommandLogEntry.ColumnLine);
 
@@ -175,9 +176,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void mnuCopyCommandLine_Click(object sender, EventArgs e)
         {
-            CommandLogEntry entry = (CommandLogEntry)LogItems.SelectedItem;
-            string commandLine = $"\"{entry.FileName}\" {entry.Arguments}";
-            Clipboard.SetText(commandLine);
+            if (LogItems.SelectedItem is CommandLogEntry commandLogEntry)
+            {
+                Clipboard.SetText(commandLogEntry.CommandLine);
+            }
         }
 
         #region Single instance static members

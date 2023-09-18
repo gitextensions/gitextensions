@@ -4924,7 +4924,7 @@ command "git help gitattributes"
         <target />
       </trans-unit>
       <trans-unit id="mnuCopyCommandLine.Text">
-        <source>&amp;Copy command line</source>
+        <source>&amp;Copy full command line</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuSaveToFile.Text">
