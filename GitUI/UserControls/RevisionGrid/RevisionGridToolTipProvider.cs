@@ -16,6 +16,11 @@ namespace GitUI
             _gridView = gridView;
         }
 
+        public void Hide()
+        {
+            _toolTip.Active = false;
+        }
+
         public void OnCellMouseEnter()
         {
             _toolTip.Active = false;

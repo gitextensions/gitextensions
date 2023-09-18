@@ -801,17 +801,23 @@ namespace GitUI
 
         public override bool ProcessHotkey(Keys keyData)
         {
-            if (keyData == (Keys.Control | Keys.A))
+            switch (keyData)
             {
-                if (FindForm() is GitExtensionsFormBase form)
-                {
-                    form.ProcessHotkey(keyData);
-                }
+                case Keys.Control | Keys.A:
+                    if (FindForm() is GitExtensionsFormBase form)
+                    {
+                        form.ProcessHotkey(keyData);
+                    }
 
-                return true; // never select all revisions
+                    return true; // never select all revisions
+
+                case Keys.Escape:
+                    _toolTipProvider.Hide();
+                    return true;
+
+                default:
+                    return base.ProcessHotkey(keyData);
             }
-
-            return base.ProcessHotkey(keyData);
         }
 
         public void ReloadHotkeys()
