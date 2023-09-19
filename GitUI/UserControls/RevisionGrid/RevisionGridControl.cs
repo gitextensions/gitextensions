@@ -811,12 +811,15 @@ namespace GitUI
                     return true; // never select all revisions
 
                 case Keys.Escape:
-                    _toolTipProvider.Hide();
-                    return true;
+                    if (_toolTipProvider.Hide())
+                    {
+                        return true;
+                    }
 
-                default:
-                    return base.ProcessHotkey(keyData);
+                    break;
             }
+
+            return base.ProcessHotkey(keyData);
         }
 
         public void ReloadHotkeys()

@@ -17,10 +17,16 @@ namespace GitUI
             _gridView = gridView;
         }
 
-        public void Hide()
+        /// <summary>
+        /// Hides the tooltip.
+        /// </summary>
+        /// <returns>Returns <cref>true</cref> if the tooltip was active.</returns>
+        public bool Hide()
         {
+            bool wasActive = _toolTip.Active;
             _toolTip.Active = false;
             _toolTip.AutoPopDelay = 32767;
+            return wasActive;
         }
 
         public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
