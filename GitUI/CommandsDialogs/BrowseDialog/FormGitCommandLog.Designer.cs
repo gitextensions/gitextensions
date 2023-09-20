@@ -30,263 +30,273 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.TabControl = new GitUI.CommandsDialogs.FullBleedTabControl();
-            this.tabPageCommandLog = new System.Windows.Forms.TabPage();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.LogItems = new System.Windows.Forms.ListBox();
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuSaveToFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.LogOutput = new System.Windows.Forms.RichTextBox();
-            this.tabPageCommandCache = new System.Windows.Forms.TabPage();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.CommandCacheItems = new System.Windows.Forms.ListBox();
-            this.commandCacheOutput = new System.Windows.Forms.RichTextBox();
-            this.chkAlwaysOnTop = new System.Windows.Forms.CheckBox();
-            this.chkWordWrap = new System.Windows.Forms.CheckBox();
-            this.mnuClear = new System.Windows.Forms.ToolStripMenuItem();
-            this.chkCaptureCallStacks = new System.Windows.Forms.CheckBox();
-            this.TabControl.SuspendLayout();
-            this.tabPageCommandLog.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.contextMenu.SuspendLayout();
-            this.tabPageCommandCache.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            TabControl = new FullBleedTabControl();
+            tabPageCommandLog = new TabPage();
+            splitContainer2 = new SplitContainer();
+            LogItems = new ListBox();
+            contextMenu = new ContextMenuStrip(components);
+            mnuSaveToFile = new ToolStripMenuItem();
+            mnuCopyCommandLine = new ToolStripMenuItem();
+            mnuClear = new ToolStripMenuItem();
+            LogOutput = new RichTextBox();
+            tabPageCommandCache = new TabPage();
+            splitContainer1 = new SplitContainer();
+            CommandCacheItems = new ListBox();
+            commandCacheOutput = new RichTextBox();
+            chkAlwaysOnTop = new CheckBox();
+            chkWordWrap = new CheckBox();
+            chkCaptureCallStacks = new CheckBox();
+            TabControl.SuspendLayout();
+            tabPageCommandLog.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
+            splitContainer2.Panel1.SuspendLayout();
+            splitContainer2.Panel2.SuspendLayout();
+            splitContainer2.SuspendLayout();
+            contextMenu.SuspendLayout();
+            tabPageCommandCache.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            SuspendLayout();
             // 
             // TabControl
             // 
-            this.TabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TabControl.Controls.Add(this.tabPageCommandLog);
-            this.TabControl.Controls.Add(this.tabPageCommandCache);
-            this.TabControl.Location = new System.Drawing.Point(0, 3);
-            this.TabControl.Name = "TabControl";
-            this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(659, 442);
-            this.TabControl.TabIndex = 1;
-            this.TabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
+            TabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            TabControl.Controls.Add(tabPageCommandLog);
+            TabControl.Controls.Add(tabPageCommandCache);
+            TabControl.Location = new Point(0, 3);
+            TabControl.Name = "TabControl";
+            TabControl.SelectedIndex = 0;
+            TabControl.Size = new Size(659, 442);
+            TabControl.TabIndex = 1;
+            TabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
             // 
             // tabPageCommandLog
             // 
-            this.tabPageCommandLog.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.tabPageCommandLog.Controls.Add(this.splitContainer2);
-            this.tabPageCommandLog.Location = new System.Drawing.Point(1, 21);
-            this.tabPageCommandLog.Margin = new System.Windows.Forms.Padding(0);
-            this.tabPageCommandLog.Name = "tabPageCommandLog";
-            this.tabPageCommandLog.Size = new System.Drawing.Size(655, 419);
-            this.tabPageCommandLog.TabIndex = 0;
-            this.tabPageCommandLog.Text = "Command log";
+            tabPageCommandLog.BackColor = SystemColors.ControlLight;
+            tabPageCommandLog.Controls.Add(splitContainer2);
+            tabPageCommandLog.Location = new Point(1, 23);
+            tabPageCommandLog.Margin = new Padding(0);
+            tabPageCommandLog.Name = "tabPageCommandLog";
+            tabPageCommandLog.Size = new Size(657, 418);
+            tabPageCommandLog.TabIndex = 0;
+            tabPageCommandLog.Text = "Command log";
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer2.Dock = DockStyle.Fill;
+            splitContainer2.FixedPanel = FixedPanel.Panel2;
+            splitContainer2.Location = new Point(0, 0);
+            splitContainer2.Margin = new Padding(0);
+            splitContainer2.Name = "splitContainer2";
+            splitContainer2.Orientation = Orientation.Horizontal;
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.LogItems);
+            splitContainer2.Panel1.Controls.Add(LogItems);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.LogOutput);
-            this.splitContainer2.Size = new System.Drawing.Size(655, 419);
-            this.splitContainer2.SplitterDistance = 280;
-            this.splitContainer2.TabIndex = 1;
+            splitContainer2.Panel2.Controls.Add(LogOutput);
+            splitContainer2.Size = new Size(657, 418);
+            splitContainer2.SplitterDistance = 279;
+            splitContainer2.TabIndex = 1;
             // 
             // LogItems
             // 
-            this.LogItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogItems.ContextMenuStrip = this.contextMenu;
-            this.LogItems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogItems.FormattingEnabled = true;
-            this.LogItems.Location = new System.Drawing.Point(0, 0);
-            this.LogItems.Margin = new System.Windows.Forms.Padding(0);
-            this.LogItems.Name = "LogItems";
-            this.LogItems.Size = new System.Drawing.Size(655, 280);
-            this.LogItems.TabIndex = 0;
-            this.LogItems.SelectedIndexChanged += new System.EventHandler(this.LogItems_SelectedIndexChanged);
+            LogItems.BorderStyle = BorderStyle.None;
+            LogItems.ContextMenuStrip = contextMenu;
+            LogItems.Dock = DockStyle.Fill;
+            LogItems.FormattingEnabled = true;
+            LogItems.ItemHeight = 15;
+            LogItems.Location = new Point(0, 0);
+            LogItems.Margin = new Padding(0);
+            LogItems.Name = "LogItems";
+            LogItems.Size = new Size(657, 279);
+            LogItems.TabIndex = 0;
+            LogItems.SelectedIndexChanged += LogItems_SelectedIndexChanged;
             // 
             // contextMenu
             // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuSaveToFile,
-            this.mnuClear});
-            this.contextMenu.Name = "logContextMenuStrip";
-            this.contextMenu.Size = new System.Drawing.Size(132, 60);
+            contextMenu.Items.AddRange(new ToolStripItem[] { mnuSaveToFile, mnuCopyCommandLine, mnuClear });
+            contextMenu.Name = "logContextMenuStrip";
+            contextMenu.Size = new Size(225, 92);
             // 
             // mnuSaveToFile
             // 
-            this.mnuSaveToFile.Image = global::GitUI.Properties.Images.SaveAs;
-            this.mnuSaveToFile.Name = "mnuSaveToFile";
-            this.mnuSaveToFile.Size = new System.Drawing.Size(131, 22);
-            this.mnuSaveToFile.Text = "Save to file";
-            this.mnuSaveToFile.Click += mnuSaveToFile_Click;
+            mnuSaveToFile.Image = Properties.Images.SaveAs;
+            mnuSaveToFile.Name = "mnuSaveToFile";
+            mnuSaveToFile.ShortcutKeys = Keys.Control | Keys.S;
+            mnuSaveToFile.Size = new Size(224, 22);
+            mnuSaveToFile.Text = "&Save to file";
+            mnuSaveToFile.Click += mnuSaveToFile_Click;
+            // 
+            // mnuCopyCommandLine
+            // 
+            mnuCopyCommandLine.Image = Properties.Images.CopyToClipboard;
+            mnuCopyCommandLine.Name = "mnuCopyCommandLine";
+            mnuCopyCommandLine.ShortcutKeys = Keys.Control | Keys.C;
+            mnuCopyCommandLine.Size = new Size(224, 22);
+            mnuCopyCommandLine.Text = "&Copy full command line";
+            mnuCopyCommandLine.Click += mnuCopyCommandLine_Click;
             // 
             // mnuClear
             // 
-            this.mnuClear.Image = global::GitUI.Properties.Images.ClearLog;
-            this.mnuClear.Name = "mnuClear";
-            this.mnuClear.Size = new System.Drawing.Size(131, 22);
-            this.mnuClear.Text = "Clear";
-            this.mnuClear.Click += mnuClear_Click;
+            mnuClear.Image = Properties.Images.ClearLog;
+            mnuClear.Name = "mnuClear";
+            mnuClear.ShortcutKeys = Keys.Control | Keys.L;
+            mnuClear.Size = new Size(224, 22);
+            mnuClear.Text = "C&lear";
+            mnuClear.Click += mnuClear_Click;
             // 
             // LogOutput
             // 
-            this.LogOutput.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.LogOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogOutput.Location = new System.Drawing.Point(0, 0);
-            this.LogOutput.Margin = new System.Windows.Forms.Padding(0);
-            this.LogOutput.Name = "LogOutput";
-            this.LogOutput.Size = new System.Drawing.Size(655, 135);
-            this.LogOutput.TabIndex = 0;
-            this.LogOutput.Text = "";
+            LogOutput.BackColor = SystemColors.ControlLight;
+            LogOutput.BorderStyle = BorderStyle.None;
+            LogOutput.Dock = DockStyle.Fill;
+            LogOutput.Location = new Point(0, 0);
+            LogOutput.Margin = new Padding(0);
+            LogOutput.Name = "LogOutput";
+            LogOutput.Size = new Size(657, 135);
+            LogOutput.TabIndex = 0;
+            LogOutput.Text = "";
             // 
             // tabPageCommandCache
             // 
-            this.tabPageCommandCache.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.tabPageCommandCache.Controls.Add(this.splitContainer1);
-            this.tabPageCommandCache.Location = new System.Drawing.Point(1, 21);
-            this.tabPageCommandCache.Margin = new System.Windows.Forms.Padding(0);
-            this.tabPageCommandCache.Name = "tabPageCommandCache";
-            this.tabPageCommandCache.Size = new System.Drawing.Size(655, 419);
-            this.tabPageCommandCache.TabIndex = 1;
-            this.tabPageCommandCache.Text = "Command cache";
+            tabPageCommandCache.BackColor = SystemColors.ControlLight;
+            tabPageCommandCache.Controls.Add(splitContainer1);
+            tabPageCommandCache.Location = new Point(1, 23);
+            tabPageCommandCache.Margin = new Padding(0);
+            tabPageCommandCache.Name = "tabPageCommandCache";
+            tabPageCommandCache.Size = new Size(657, 418);
+            tabPageCommandCache.TabIndex = 1;
+            tabPageCommandCache.Text = "Command cache";
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.CommandCacheItems);
+            splitContainer1.Panel1.Controls.Add(CommandCacheItems);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.commandCacheOutput);
-            this.splitContainer1.Size = new System.Drawing.Size(655, 419);
-            this.splitContainer1.SplitterDistance = 184;
-            this.splitContainer1.TabIndex = 0;
+            splitContainer1.Panel2.Controls.Add(commandCacheOutput);
+            splitContainer1.Size = new Size(657, 418);
+            splitContainer1.SplitterDistance = 183;
+            splitContainer1.TabIndex = 0;
             // 
             // CommandCacheItems
             // 
-            this.CommandCacheItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.CommandCacheItems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommandCacheItems.FormattingEnabled = true;
-            this.CommandCacheItems.Location = new System.Drawing.Point(0, 0);
-            this.CommandCacheItems.Margin = new System.Windows.Forms.Padding(0);
-            this.CommandCacheItems.Name = "CommandCacheItems";
-            this.CommandCacheItems.Size = new System.Drawing.Size(655, 184);
-            this.CommandCacheItems.TabIndex = 0;
-            this.CommandCacheItems.SelectedIndexChanged += new System.EventHandler(this.CommandCacheItems_SelectedIndexChanged);
+            CommandCacheItems.BorderStyle = BorderStyle.None;
+            CommandCacheItems.Dock = DockStyle.Fill;
+            CommandCacheItems.FormattingEnabled = true;
+            CommandCacheItems.ItemHeight = 15;
+            CommandCacheItems.Location = new Point(0, 0);
+            CommandCacheItems.Margin = new Padding(0);
+            CommandCacheItems.Name = "CommandCacheItems";
+            CommandCacheItems.Size = new Size(657, 183);
+            CommandCacheItems.TabIndex = 0;
+            CommandCacheItems.SelectedIndexChanged += CommandCacheItems_SelectedIndexChanged;
             // 
             // commandCacheOutput
             // 
-            this.commandCacheOutput.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.commandCacheOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.commandCacheOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commandCacheOutput.Location = new System.Drawing.Point(0, 0);
-            this.commandCacheOutput.Margin = new System.Windows.Forms.Padding(0);
-            this.commandCacheOutput.Name = "commandCacheOutput";
-            this.commandCacheOutput.Size = new System.Drawing.Size(655, 231);
-            this.commandCacheOutput.TabIndex = 0;
-            this.commandCacheOutput.Text = "";
+            commandCacheOutput.BackColor = SystemColors.ControlLight;
+            commandCacheOutput.BorderStyle = BorderStyle.None;
+            commandCacheOutput.Dock = DockStyle.Fill;
+            commandCacheOutput.Location = new Point(0, 0);
+            commandCacheOutput.Margin = new Padding(0);
+            commandCacheOutput.Name = "commandCacheOutput";
+            commandCacheOutput.Size = new Size(657, 231);
+            commandCacheOutput.TabIndex = 0;
+            commandCacheOutput.Text = "";
             // 
             // chkAlwaysOnTop
             // 
-            this.chkAlwaysOnTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.chkAlwaysOnTop.AutoSize = true;
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(4, 451);
-            this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
-            this.chkAlwaysOnTop.Size = new System.Drawing.Size(94, 17);
-            this.chkAlwaysOnTop.TabIndex = 2;
-            this.chkAlwaysOnTop.Text = "Always on top";
-            this.chkAlwaysOnTop.UseVisualStyleBackColor = true;
-            this.chkAlwaysOnTop.CheckedChanged += new System.EventHandler(this.alwaysOnTopCheckBox_CheckedChanged);
+            chkAlwaysOnTop.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            chkAlwaysOnTop.AutoSize = true;
+            chkAlwaysOnTop.Location = new Point(4, 449);
+            chkAlwaysOnTop.Name = "chkAlwaysOnTop";
+            chkAlwaysOnTop.Size = new Size(101, 19);
+            chkAlwaysOnTop.TabIndex = 2;
+            chkAlwaysOnTop.Text = "Always on top";
+            chkAlwaysOnTop.UseVisualStyleBackColor = true;
+            chkAlwaysOnTop.CheckedChanged += alwaysOnTopCheckBox_CheckedChanged;
             // 
             // chkWordWrap
             // 
-            this.chkWordWrap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.chkWordWrap.AutoSize = true;
-            this.chkWordWrap.Checked = true;
-            this.chkWordWrap.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkWordWrap.Location = new System.Drawing.Point(104, 451);
-            this.chkWordWrap.Name = "chkWordWrap";
-            this.chkWordWrap.Size = new System.Drawing.Size(79, 17);
-            this.chkWordWrap.TabIndex = 3;
-            this.chkWordWrap.Text = "Word wrap";
-            this.chkWordWrap.UseVisualStyleBackColor = true;
+            chkWordWrap.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            chkWordWrap.AutoSize = true;
+            chkWordWrap.Checked = true;
+            chkWordWrap.CheckState = CheckState.Checked;
+            chkWordWrap.Location = new Point(104, 449);
+            chkWordWrap.Name = "chkWordWrap";
+            chkWordWrap.Size = new Size(84, 19);
+            chkWordWrap.TabIndex = 3;
+            chkWordWrap.Text = "Word wrap";
+            chkWordWrap.UseVisualStyleBackColor = true;
             // 
             // chkCaptureCallStacks
             // 
-            this.chkCaptureCallStacks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.chkCaptureCallStacks.AutoSize = true;
-            this.chkCaptureCallStacks.Location = new System.Drawing.Point(191, 450);
-            this.chkCaptureCallStacks.Name = "chkCaptureCallStacks";
-            this.chkCaptureCallStacks.Size = new System.Drawing.Size(122, 17);
-            this.chkCaptureCallStacks.TabIndex = 4;
-            this.chkCaptureCallStacks.Text = "Capture call stacks";
-            this.chkCaptureCallStacks.UseVisualStyleBackColor = true;
+            chkCaptureCallStacks.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            chkCaptureCallStacks.AutoSize = true;
+            chkCaptureCallStacks.Location = new Point(191, 448);
+            chkCaptureCallStacks.Name = "chkCaptureCallStacks";
+            chkCaptureCallStacks.Size = new Size(124, 19);
+            chkCaptureCallStacks.TabIndex = 4;
+            chkCaptureCallStacks.Text = "Capture call stacks";
+            chkCaptureCallStacks.UseVisualStyleBackColor = true;
             // 
             // FormGitCommandLog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(659, 470);
-            this.Controls.Add(this.chkCaptureCallStacks);
-            this.Controls.Add(this.chkWordWrap);
-            this.Controls.Add(this.chkAlwaysOnTop);
-            this.Controls.Add(this.TabControl);
-            this.Name = "FormGitCommandLog";
-            this.Text = "Git Command Log";
-            this.TabControl.ResumeLayout(false);
-            this.tabPageCommandLog.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.contextMenu.ResumeLayout(false);
-            this.tabPageCommandCache.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(659, 470);
+            Controls.Add(chkCaptureCallStacks);
+            Controls.Add(chkWordWrap);
+            Controls.Add(chkAlwaysOnTop);
+            Controls.Add(TabControl);
+            Name = "FormGitCommandLog";
+            Text = "Git Command Log";
+            TabControl.ResumeLayout(false);
+            tabPageCommandLog.ResumeLayout(false);
+            splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
+            splitContainer2.ResumeLayout(false);
+            contextMenu.ResumeLayout(false);
+            tabPageCommandCache.ResumeLayout(false);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private FullBleedTabControl TabControl;
-        private System.Windows.Forms.TabPage tabPageCommandLog;
-        private System.Windows.Forms.TabPage tabPageCommandCache;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.RichTextBox commandCacheOutput;
-        private System.Windows.Forms.ListBox CommandCacheItems;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.ListBox LogItems;
-        private System.Windows.Forms.RichTextBox LogOutput;
+        private TabPage tabPageCommandLog;
+        private TabPage tabPageCommandCache;
+        private SplitContainer splitContainer1;
+        private RichTextBox commandCacheOutput;
+        private ListBox CommandCacheItems;
+        private SplitContainer splitContainer2;
+        private ListBox LogItems;
+        private RichTextBox LogOutput;
         private CheckBox chkAlwaysOnTop;
         private ContextMenuStrip contextMenu;
         private ToolStripMenuItem mnuSaveToFile;
         private CheckBox chkWordWrap;
         private ToolStripMenuItem mnuClear;
         private CheckBox chkCaptureCallStacks;
+        private ToolStripMenuItem mnuCopyCommandLine;
     }
 }

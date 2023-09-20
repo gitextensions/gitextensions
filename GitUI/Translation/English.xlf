@@ -4920,11 +4920,15 @@ command "git help gitattributes"
         <target />
       </trans-unit>
       <trans-unit id="mnuClear.Text">
-        <source>Clear</source>
+        <source>C&amp;lear</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnuCopyCommandLine.Text">
+        <source>&amp;Copy full command line</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuSaveToFile.Text">
-        <source>Save to file</source>
+        <source>&amp;Save to file</source>
         <target />
       </trans-unit>
       <trans-unit id="tabPageCommandCache.Text">

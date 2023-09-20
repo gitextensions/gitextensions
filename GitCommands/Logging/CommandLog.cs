@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using GitUI;
 
 namespace GitCommands.Logging
@@ -89,42 +90,55 @@ namespace GitCommands.Logging
         {
             get
             {
-                var duration = Duration is null
+                string duration = Duration is null
                     ? "running"
                     : $"{((TimeSpan)Duration).TotalMilliseconds:0,0} ms";
 
-                var fileName = FileName;
-
+                string fileName = FileName;
+                string arguments = Arguments;
                 if (fileName.StartsWith("wsl "))
                 {
                     fileName = "wsl";
+                    arguments = GitArgumentsWithoutConfigurationOptions;
                 }
                 else if (fileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
+                    arguments = GitArgumentsWithoutConfigurationOptions;
                 }
 
-                var exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
-                var ex = Exception is not null ? $"  {Exception.GetType().Name}: {Exception.Message}" : string.Empty;
+                string exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
+                string ex = Exception is not null ? $"  {Exception.GetType().Name}: {Exception.Message}" : string.Empty;
 
-                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {ProcessId,5} {(IsOnMainThread ? "UI" : "  ")} {exit,3} {fileName} {Arguments}{ex}";
+                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {ProcessId,7} {(IsOnMainThread ? "UI" : "  ")} {exit,3} {fileName} {arguments}{ex}";
+            }
+        }
+
+        public string CommandLine
+        {
+            get
+            {
+                bool quoteFileName = FileName.Contains(' ') && !FileName.StartsWith('"') && !FileName.StartsWith("wsl ");
+                return quoteFileName
+                    ? $"\"{FileName}\" {Arguments}"
+                    : $"{FileName} {Arguments}";
             }
         }
 
         public string FullLine(string sep)
         {
-            var duration = Duration is null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
+            string duration = Duration is null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
 
-            var fileName = FileName;
+            string fileName = FileName;
 
             if (fileName.EndsWith("git.exe"))
             {
                 fileName = "git";
             }
 
-            var exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
-            var ex = Exception is not null ? $"{Environment.NewLine}{Exception}" : string.Empty;
-            var callStack = CallStack is not null ? $"{Environment.NewLine}{CallStack}" : string.Empty;
+            string exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
+            string ex = Exception is not null ? $"{Environment.NewLine}{Exception}" : string.Empty;
+            string callStack = CallStack is not null ? $"{Environment.NewLine}{CallStack}" : string.Empty;
 
             return $"{StartedAt:O}{sep}{duration}{sep}{ProcessId}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}{ex}";
         }
@@ -148,6 +162,8 @@ namespace GitCommands.Logging
                 return s.ToString();
             }
         }
+
+        public string GitArgumentsWithoutConfigurationOptions => Regex.Replace(Arguments, @"((-c +[^ ]+)|(--no-optional-locks)) *", "");
     }
 
     public static class CommandLog
