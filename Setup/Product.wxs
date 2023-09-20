@@ -378,6 +378,9 @@
       <Component Id="AzureDevOpsIntegration.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.AzureDevOpsIntegration.dll" />
       </Component>
+      <Component Id="GitlabIntegration.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitlabIntegration.dll" />
+      </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginManagerDir">
       <Component Id="GitExtensions.PluginManager.dll" Guid="*">
@@ -755,6 +758,9 @@
         </Feature>
         <Feature Id="AzureDevOpsIntegration" Title="Azure DevOps and TFS &gt;= 2015 integration" Level="1">
           <ComponentRef Id="AzureDevOpsIntegration.dll" />
+        </Feature>
+        <Feature Id="GitlabIntegration" Title="Gitlab integration" Level="1">
+          <ComponentRef Id="GitlabIntegration.dll" />
         </Feature>
         <Feature Id="JiraCommitHintPlugin" Title="Jira Commit Hint Plugin" Level="1">
           <ComponentRef Id="JiraCommitHintPlugin.dll" />
