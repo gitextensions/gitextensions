@@ -78,7 +78,7 @@
             GetProjectIdLink.Location = new Point(82, 54);
             GetProjectIdLink.Name = "GetProjectIdLink";
             GetProjectIdLink.Size = new Size(749, 15);
-            GetProjectIdLink.TabIndex = 9;
+            GetProjectIdLink.TabIndex = 5;
             GetProjectIdLink.TabStop = true;
             GetProjectIdLink.Text = "Get Project ID from server";
             GetProjectIdLink.LinkClicked += GetProjectIdLink_LinkClicked;
@@ -90,7 +90,7 @@
             TokenManagementLink.Location = new Point(82, 116);
             TokenManagementLink.Name = "TokenManagementLink";
             TokenManagementLink.Size = new Size(749, 15);
-            TokenManagementLink.TabIndex = 8;
+            TokenManagementLink.TabIndex = 9;
             TokenManagementLink.TabStop = true;
             TokenManagementLink.Text = "Go to token management page";
             TokenManagementLink.LinkClicked += TokenManagementLink_LinkClicked;
@@ -102,7 +102,7 @@
             ProjectIdTextBox.Margin = new Padding(2);
             ProjectIdTextBox.Name = "ProjectIdTextBox";
             ProjectIdTextBox.Size = new Size(751, 23);
-            ProjectIdTextBox.TabIndex = 6;
+            ProjectIdTextBox.TabIndex = 4;
             // 
             // label1
             // 
@@ -132,7 +132,7 @@
             ApiTokenTextBox.Margin = new Padding(2);
             ApiTokenTextBox.Name = "ApiTokenTextBox";
             ApiTokenTextBox.Size = new Size(751, 23);
-            ApiTokenTextBox.TabIndex = 4;
+            ApiTokenTextBox.TabIndex = 8;
             // 
             // label3
             // 
@@ -142,7 +142,7 @@
             label3.Margin = new Padding(2, 0, 2, 0);
             label3.Name = "label3";
             label3.Size = new Size(58, 15);
-            label3.TabIndex = 5;
+            label3.TabIndex = 3;
             label3.Text = "Project ID";
             // 
             // label2
@@ -164,7 +164,7 @@
             GetProjectIdStatusText.Margin = new Padding(2, 0, 2, 0);
             GetProjectIdStatusText.Name = "GetProjectIdStatusText";
             GetProjectIdStatusText.Size = new Size(468, 15);
-            GetProjectIdStatusText.TabIndex = 10;
+            GetProjectIdStatusText.TabIndex = 6;
             GetProjectIdStatusText.Text = "Failed to obtain project from server. Try to specify valid API token or check instance URL";
             GetProjectIdStatusText.Visible = false;
             // 
