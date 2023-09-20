@@ -1910,6 +1910,7 @@ namespace GitUI.CommandsDialogs
             // Toolbar
             AddNotes = 8,
             FindFileInSelectedCommit = 9,
+            QuickPullOrFetch = 48,
             QuickFetch = 11,
             QuickPull = 12,
             QuickPush = 13,
@@ -2041,6 +2042,7 @@ namespace GitUI.CommandsDialogs
                 case Command.CheckoutBranch: UICommands.StartCheckoutBranch(this); break;
                 case Command.QuickFetch: QuickFetch(); break;
                 case Command.QuickPull: DoPull(pullAction: AppSettings.PullAction.Merge, isSilent: true); break;
+                case Command.QuickPullOrFetch: toolStripButtonPull.PerformButtonClick(); break;
                 case Command.QuickPush: UICommands.StartPushDialog(this, true); break;
                 case Command.CloseRepository: SetWorkingDir(""); break;
                 case Command.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
