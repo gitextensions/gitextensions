@@ -10,34 +10,41 @@ namespace GitCommandsTests
     [TestFixture]
     public sealed class GitModuleTests
     {
+        private ReferenceRepository _refRepo;
+        private GitModule _gitModule;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _refRepo = new();
+            _gitModule = _refRepo.Module;
+            Console.WriteLine("Repo path: " + _gitModule.WorkingDir);
+        }
+
         [Test]
         public void RebasePatchesBuiltAccordingToGitRebaseFiles_EnsureRebaseFileFormatWithGit()
         {
-            ReferenceRepository refRepo = new();
-            var gitModule = refRepo.Module;
-            Console.WriteLine("Repo path: " + gitModule.WorkingDir);
-
             string content = "line1" + Environment.NewLine;
             string mainFile = "main_file.txt";
-            var initialCommit = CreateCommit("main: initial commit", content, mainFile);
+            CommitData initialCommit = CreateCommit("main: initial commit", content, mainFile);
             content += "line2" + Environment.NewLine;
             CreateCommit("main: commit2", content, mainFile);
             content += "line3" + Environment.NewLine;
-            CreateCommit("main: commit3", content, mainFile);
+            CommitData tipOfMainBranchCommit = CreateCommit("main: commit3", content, mainFile);
 
             // Create a branch with contents that will conflict on rebase
-            refRepo.CreateBranch("branch2", initialCommit.Hash);
-            refRepo.CheckoutBranch("branch2");
+            _refRepo.CreateBranch("branch2", initialCommit.Hash);
+            _refRepo.CheckoutBranch("branch2");
             string otherFile = "other_file.txt";
-            var commitDone = CreateCommit("branch2: commit that will apply successfully", "other_line1", otherFile);
-            var commitApplying = CreateCommit("branch2: commit that will fail to rebase", "a content that will create a conflict", mainFile);
-            var commitToDo = CreateCommit("branch2: commit todo", "foobar", otherFile);
+            CommitData commitDone = CreateCommit("branch2: commit that will apply successfully", "other_line1", otherFile);
+            CommitData commitApplying = CreateCommit("branch2: commit that will fail to rebase", "a content that will create a conflict", mainFile);
+            CommitData commitToDo = CreateCommit("branch2: commit todo", "foobar", otherFile);
 
             // Real git rebase to ensure git rebase file format has not changed
-            var execResult = gitModule.GitExecutable.Execute($"rebase master", throwOnErrorExit: false);
+            ExecutionResult execResult = _gitModule.GitExecutable.Execute($"rebase {tipOfMainBranchCommit.Hash}", throwOnErrorExit: false);
             execResult.ExitCode.Should().NotBe(0); // Expecting conflicts!
 
-            var patches = gitModule.GetInteractiveRebasePatchFiles();
+            IReadOnlyList<PatchFile> patches = _gitModule.GetInteractiveRebasePatchFiles();
 
             patches.Count.Should().Be(3);
             VerifyPatch(patches[0], "pick", commitDone, isApplied: true);
@@ -46,7 +53,7 @@ namespace GitCommandsTests
 
             CommitData CreateCommit(string commitMessage, string content, string filename)
             {
-                string hash = refRepo.CreateCommit(commitMessage, content, filename);
+                string hash = _refRepo.CreateCommit(commitMessage, content, filename);
                 return new CommitData(hash, commitMessage, $"{hash} {commitMessage}", ObjectId.Parse(hash));
             }
         }
@@ -54,26 +61,24 @@ namespace GitCommandsTests
         [Test]
         public void RebasePatchesBuiltAccordingToGitRebaseFiles()
         {
-            ReferenceRepository refRepo = new();
-            var commitDonePicked = CreateCommit("commit done: pick");
-            var commitDoneDelete = CreateCommit("commit done: drop");
-            var commitDoneLineRemoved = CreateCommit("commit done: line removed i.e drop");
-            var commitApplying = CreateCommit("commit in progress");
-            var commitToDoPicked = CreateCommit("commit todo: picked");
-            var commitToDoDelete = CreateCommit("commit todo: drop");
-            var commitToDoLineRemoved = CreateCommit("commit todo: line removed i.e drop");
-            var gitModule = refRepo.Module;
+            CommitData commitDonePicked = CreateCommit("commit done: pick");
+            CommitData commitDoneDelete = CreateCommit("commit done: drop");
+            CommitData commitDoneLineRemoved = CreateCommit("commit done: line removed i.e drop");
+            CommitData commitApplying = CreateCommit("commit in progress");
+            CommitData commitToDoPicked = CreateCommit("commit todo: picked");
+            CommitData commitToDoDelete = CreateCommit("commit todo: drop");
+            CommitData commitToDoLineRemoved = CreateCommit("commit todo: line removed i.e drop");
 
             // Carefully crafted git rebase files to test different actions (pick, drop, line moved, line removed)
-            Directory.CreateDirectory(Path.Combine(gitModule.WorkingDirGitDir, "rebase-merge"));
-            refRepo.CreateRepoFile(".git/rebase-merge/done", @$"drop {commitDoneDelete.RebaseLine}
+            Directory.CreateDirectory(Path.Combine(_gitModule.WorkingDirGitDir, "rebase-merge"));
+            _refRepo.CreateRepoFile(".git/rebase-merge/done", @$"drop {commitDoneDelete.RebaseLine}
 pick {commitDonePicked.RebaseLine}
 pick {commitApplying.RebaseLine}");
-            refRepo.CreateRepoFile(".git/rebase-merge/stopped-sha", commitApplying.Hash);
-            refRepo.CreateRepoFile(".git/rebase-merge/git-rebase-todo", @$"drop {commitToDoDelete.RebaseLine}
+            _refRepo.CreateRepoFile(".git/rebase-merge/stopped-sha", commitApplying.Hash);
+            _refRepo.CreateRepoFile(".git/rebase-merge/git-rebase-todo", @$"drop {commitToDoDelete.RebaseLine}
 pick {commitToDoPicked.RebaseLine}");
 
-            var patches = gitModule.GetInteractiveRebasePatchFiles();
+            IReadOnlyList<PatchFile> patches = _gitModule.GetInteractiveRebasePatchFiles();
 
             patches.Count.Should().Be(5);
             VerifyPatch(patches[0], "drop", commitDoneDelete, isApplied: true); // Line moved up "during interactive rebase"
@@ -84,14 +89,14 @@ pick {commitToDoPicked.RebaseLine}");
 
             CommitData CreateCommit(string commitMessage)
             {
-                string hash = refRepo.CreateCommit(commitMessage);
+                string hash = _refRepo.CreateCommit(commitMessage);
                 return new CommitData(hash, commitMessage, $"{hash} {commitMessage}", ObjectId.Parse(hash));
             }
         }
 
         private void VerifyPatch(PatchFile patchFile, string action, CommitData commit, bool isApplied, bool isNext = false)
             => patchFile.Should().BeEquivalentTo(
-                new PatchFile { Action = action, ObjectId = commit.ObjectId, IsApplied = isApplied, IsNext = isNext, Subject = commit.CommitMessage, Author = "GitUITests <unittests@gitextensions.com>" },
+                new PatchFile { Action = action, ObjectId = commit.ObjectId, IsApplied = isApplied, IsNext = isNext, Subject = commit.CommitMessage, Author = ReferenceRepository.AuthorFullIdentity },
                 options => options.Excluding(x => x.Date));
     }
 
