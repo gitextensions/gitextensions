@@ -1,4 +1,5 @@
-﻿using System.Buffers.Text;
+﻿using System.Buffers.Binary;
+using System.Buffers.Text;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -302,9 +303,10 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Returns the first <paramref name="length"/> characters of the SHA-1 hash.
         /// </summary>
-        /// <param name="length">The length of the returned string. Defaults to <c>10</c>.</param>
+        /// <param name="length">The length of the returned string. Defaults to <c>8</c>.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than zero, or more than 40.</exception>
         [Pure]
+        [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         public unsafe string ToShortString(int length = 8)
         {
             if (length < 0)
@@ -317,30 +319,15 @@ namespace GitUIPluginInterfaces
                 throw new ArgumentOutOfRangeException(nameof(length), length, $"Cannot be greater than {Sha1CharCount}.");
             }
 
-            char* buffer = stackalloc char[Sha1CharCount];
-            char* p = buffer;
+            Span<byte> buffer = stackalloc byte[_sha1ByteCount];
 
-            Write(_i1);
-            Write(_i2);
-            Write(_i3);
-            Write(_i4);
-            Write(_i5);
+            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(0, 4), _i1);
+            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(4, 4), _i2);
+            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(8, 4), _i3);
+            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(12, 4), _i4);
+            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i5);
 
-            return new string(buffer, 0, length);
-
-            void Write(uint i)
-            {
-                *p++ = ParseHexDigit(i >> 28);
-                *p++ = ParseHexDigit((i >> 24) & 0xF);
-                *p++ = ParseHexDigit((i >> 20) & 0xF);
-                *p++ = ParseHexDigit((i >> 16) & 0xF);
-                *p++ = ParseHexDigit((i >> 12) & 0xF);
-                *p++ = ParseHexDigit((i >> 8) & 0xF);
-                *p++ = ParseHexDigit((i >> 4) & 0xF);
-                *p++ = ParseHexDigit(i & 0xF);
-            }
-
-            char ParseHexDigit(uint j) => j < 10 ? (char)('0' + j) : (char)(j + 0x57);
+            return Convert.ToHexString(buffer).Substring(0, length).ToLowerInvariant();
         }
 
         #region Equality and hashing
