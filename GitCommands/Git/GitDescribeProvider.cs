@@ -39,7 +39,7 @@ namespace GitCommands.Git
             }
 
             string commitHash = description[(commitHashPos + 2)..];
-            if (commitHash.Length == 0 || !revision.Equals(commitHash))
+            if (commitHash.Length == 0 || revision.ToString() != commitHash)
             {
                 return (description, string.Empty);
             }

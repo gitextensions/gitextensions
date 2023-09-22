@@ -291,22 +291,6 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void Equals_with_string()
-        {
-            for (var i = 0; i < 100; i++)
-            {
-                var objectId = ObjectId.Random();
-                Assert.True(objectId.Equals(objectId.ToString()));
-            }
-
-            Assert.False(ObjectId.Random().Equals((string)null));
-            Assert.False(ObjectId.Random().Equals(""));
-            Assert.False(ObjectId.Random().Equals("gibberish"));
-            Assert.False(ObjectId.Parse("0123456789012345678901234567890123456789").Equals(" 0123456789012345678901234567890123456789 "));
-            Assert.False(ObjectId.Parse("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").Equals("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-        }
-
-        [Test]
         public void Equals_using_operator()
         {
             string objectIdString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";

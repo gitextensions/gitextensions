@@ -356,49 +356,6 @@ namespace GitUIPluginInterfaces
                    _i5 == other._i5;
         }
 
-        /// <summary>
-        /// Gets whether <paramref name="other"/> is equivalent to this <see cref="ObjectId"/>.
-        /// </summary>
-        /// <remarks>
-        /// <para>This method does not allocate.</para>
-        /// <para><paramref name="other"/> must be lower case and not have any surrounding white space.</para>
-        /// </remarks>
-        public bool Equals(string? other)
-        {
-            if (other?.Length is not Sha1CharCount)
-            {
-                return false;
-            }
-
-            int i = 0;
-
-            return
-                TestInt(_i1) &&
-                TestInt(_i2) &&
-                TestInt(_i3) &&
-                TestInt(_i4) &&
-                TestInt(_i5);
-
-            bool TestInt(uint k)
-            {
-                return
-                    TestDigit(k >> 28) &&
-                    TestDigit((k >> 24) & 0xF) &&
-                    TestDigit((k >> 20) & 0xF) &&
-                    TestDigit((k >> 16) & 0xF) &&
-                    TestDigit((k >> 12) & 0xF) &&
-                    TestDigit((k >> 8) & 0xF) &&
-                    TestDigit((k >> 4) & 0xF) &&
-                    TestDigit(k & 0xF);
-
-                bool TestDigit(uint j)
-                {
-                    char c = j < 10 ? (char)('0' + j) : (char)(j + 0x57);
-                    return other[i++] == c;
-                }
-            }
-        }
-
         /// <inheritdoc />
         public override bool Equals(object? obj) => obj is ObjectId id && Equals(id);
 
