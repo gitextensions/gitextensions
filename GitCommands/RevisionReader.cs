@@ -10,10 +10,9 @@ namespace GitCommands
 {
     public sealed class RevisionReader
     {
-        private const string FullFormat =
+        private const string _fullFormat =
 
-            // These header entries can all be decoded from the bytes directly.
-            // Each hash is 20 bytes long.
+            // These header entries can all be decoded from the bytes (ASCII compatible) directly.
 
             /* Object ID       */ "%H" +
             /* Tree ID         */ "%T" +
@@ -21,12 +20,15 @@ namespace GitCommands
             /* Author date     */ "%at%n" +
             /* Commit date     */ "%ct%n" +
 
-            // Items below here must be decoded as strings to support non-ASCII.
+            // Items below here must be decoded
+            /* Reflog selector placeholder */ "{0}" +
             /* Author name     */ "%aN%n" +
             /* Author email    */ "%aE%n" +
             /* Committer name  */ "%cN%n" +
             /* Committer email */ "%cE%n" +
             /* Commit raw body */ "%B";
+
+        private const string _reflogSelectorFormat = "%gD%n";
 
         // Trace info for parse errors
         private int _noOfParseError = 0;
@@ -39,7 +41,7 @@ namespace GitCommands
         // reflog selector to identify stashes
         private readonly bool _hasReflogSelector;
 
-        private string LogFormat => _hasReflogSelector ? FullFormat.Replace("%B", "%gD%n%B") : FullFormat;
+        private string LogFormat => string.Format(_fullFormat, _hasReflogSelector ? _reflogSelectorFormat : "");
 
         public RevisionReader(GitModule module, bool hasReflogSelector, bool allBodies = false)
             : this(module, hasReflogSelector, module.LogOutputEncoding, allBodies ? 0 : GetUnixTimeForOffset(_offsetDaysForOldestBody))
@@ -118,7 +120,7 @@ namespace GitCommands
             GitArgumentBuilder arguments = new("log")
                 {
                     "-z",
-                    $"--pretty=format:\"{FullFormat}\"",
+                    $"--pretty=format:\"{LogFormat}\"",
                     $"{olderCommitHash}~..{newerCommitHash}"
                 };
 
@@ -164,7 +166,7 @@ namespace GitCommands
             string pathFilter,
             CancellationToken cancellationToken)
         {
-#if DEBUG
+#if TRACE_REVISIONREADER
             int revisionCount = 0;
             Stopwatch sw = Stopwatch.StartNew();
 #endif
@@ -183,14 +185,14 @@ namespace GitCommands
 
                 if (TryParseRevision(chunk, out GitRevision? revision))
                 {
-#if DEBUG
+#if TRACE_REVISIONREADER
                     revisionCount++;
 #endif
                     subject.OnNext(revision);
                 }
             }
 
-#if DEBUG
+#if TRACE_REVISIONREADER
             // TODO Make it possible to explicitly activate Trace printouts like this
             Debug.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={_noOfParseError}");
 #endif
@@ -218,6 +220,7 @@ namespace GitCommands
             };
         }
 
+        [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         private bool TryParseRevision(in ArraySegment<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
@@ -239,10 +242,10 @@ namespace GitCommands
             ReadOnlySpan<byte> array = chunk.AsSpan();
 
             // The first 40 bytes are the revision ID and the tree ID back to back
-            if (!ObjectId.TryParse(array[..ObjectId.Sha1CharCount], out ObjectId? objectId) ||
+            if (!ObjectId.TryParse(array.Slice(0, ObjectId.Sha1CharCount), out ObjectId? objectId) ||
                 !ObjectId.TryParse(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out ObjectId? treeId))
             {
-                ParseAssert($"Log parse error, object id: {chunk.Count}({array[..ObjectId.Sha1CharCount].ToString()}");
+                ParseAssert($"Log parse error, object id: {chunk.Count}({array.Slice(0, ObjectId.Sha1CharCount).ToString()}");
                 revision = default;
                 return false;
             }
@@ -251,48 +254,43 @@ namespace GitCommands
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
             int noParents = CountParents(in array, offset);
-            if (noParents < 0)
-            {
-                ParseAssert($"Log parse error, {noParents} no of parents for {objectId}");
-                revision = default;
-                return false;
-            }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             int CountParents(in ReadOnlySpan<byte> array, int baseOffset)
             {
                 int count = 0;
-
                 while (baseOffset < array.Length && array[baseOffset] != '\n')
                 {
-                    // Parse error, not using ParseAssert (or increasing _noOfParseError)
-                    Debug.Assert(count == 0 || array[baseOffset] == ' ', $"Log parse error, unexpected contents in the parent array: {array[baseOffset]}/{count} for {objectId}");
-                    baseOffset += ObjectId.Sha1CharCount;
                     if (count > 0)
                     {
                         // Except for the first parent, advance after the space
                         baseOffset++;
                     }
 
+                    baseOffset += ObjectId.Sha1CharCount;
                     count++;
-                }
 
-                if (baseOffset >= array.Length || array[baseOffset] != '\n')
-                {
-                    return -1;
+                    if (baseOffset >= array.Length || !(array[baseOffset] is (byte)'\n' or (byte)' '))
+                    {
+                        // Parse error, not using ParseAssert (or increasing _noOfParseError)
+                        ParseAssert($"Log parse error, unexpected contents in the parent array: {baseOffset - offset} for {objectId}");
+                        return -1;
+                    }
                 }
 
                 return count;
             }
 
-            ObjectId[] parentIds = new ObjectId[noParents];
-
+            ObjectId[] parentIds;
             if (noParents == 0)
             {
                 offset++;
+                parentIds = Array.Empty<ObjectId>();
             }
             else
             {
+                parentIds = new ObjectId[noParents];
+
                 for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
                     if (!ObjectId.TryParse(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
@@ -339,23 +337,24 @@ namespace GitCommands
 
             #region Encoded string values (names, emails, subject, body)
 
-            // Finally, decode the names, email, subject and body strings using the required text encoding
-            ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).AsSpan();
-            StringLineReader reader = new(in s);
+            // The remaining must be decoded (for above utf8/ascii must work)
+            Span<char> decoded = stackalloc char[_logOutputEncoding.GetMaxByteCount(array.Slice(offset).Length)];
+            _logOutputEncoding.GetChars(array.Slice(offset), decoded);
+            offset = 0;
+
+            // reflogSelector are only used when listing stashes
+            string reflogSelector = _hasReflogSelector ? GetNextLine(decoded, useStringPool: false) : null;
 
             // Authors etc are limited, use a shared string pool
-            string author = reader.ReadLine(useStringPool: true);
-            string authorEmail = reader.ReadLine(useStringPool: true);
-            string committer = reader.ReadLine(useStringPool: true);
-            string committerEmail = reader.ReadLine(useStringPool: true);
+            string author = GetNextLine(decoded, useStringPool: true);
+            string authorEmail = GetNextLine(decoded, useStringPool: true);
+            string committer = GetNextLine(decoded, useStringPool: true);
+            string committerEmail = GetNextLine(decoded, useStringPool: true);
 
-            // reflogSelector are always unique and only used when listing stashes
-            string reflogSelector = _hasReflogSelector ? reader.ReadLine(useStringPool: false) : null;
-
-            // We keep a full multiline message body within the last six months (by default).
+            // Keep a full multiline message body within the last six months (by default).
             // Note also that if body and subject are identical (single line), the body never need to be stored
             bool keepBody = authorUnixTime >= _oldestBody;
-            reader.PeekSubjectBody(out string? subject, out string? body, out bool hasMultiLineMessage, in keepBody);
+            GetSubjectBody(decoded, out string? subject, out string? body, out bool hasMultiLineMessage, in keepBody);
 
             if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (keepBody && hasMultiLineMessage && body is null))
             {
@@ -385,63 +384,38 @@ namespace GitCommands
 
             return true;
 
-            void ParseAssert(string? message)
-            {
-                _noOfParseError++;
-                Debug.Assert(_noOfParseError > 1, message);
-                Trace.WriteLineIf(_noOfParseError < 10, message);
-            }
-        }
-
-        #region Nested type: StringLineReader
-
-        /// <summary>
-        /// Simple type to walk along a string, line by line, without redundant allocations.
-        /// </summary>
-        internal ref struct StringLineReader
-        {
-            private readonly ReadOnlySpan<char> _s;
-            private int _index = 0;
-
-            public StringLineReader(in ReadOnlySpan<char> s)
-            {
-                _s = s;
-            }
-
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public string? ReadLine(in bool useStringPool)
+            string? GetNextLine(ReadOnlySpan<char> s, in bool useStringPool)
             {
-                if (_index >= _s.Length)
+                if (offset >= s.Length)
                 {
                     return null;
                 }
 
-                int lineLength = _s[_index..].IndexOf('\n');
+                int lineLength = s.Slice(offset).IndexOf('\n');
                 if (lineLength == -1)
                 {
                     // A line must be terminated
                     return null;
                 }
 
-                int startIndex = _index;
-                _index += lineLength + 1;
-
-                ReadOnlySpan<char> s = _s.Slice(startIndex, lineLength);
-                return useStringPool ? StringPool.Shared.GetOrAdd(s) : s.ToString();
+                ReadOnlySpan<char> r = s.Slice(offset, lineLength);
+                offset += lineLength + 1;
+                return useStringPool ? StringPool.Shared.GetOrAdd(r) : r.ToString();
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public readonly void PeekSubjectBody(out string? subject, out string? body, out bool hasMultiLineMessage, in bool keepBody)
+            void GetSubjectBody(ReadOnlySpan<char> s, out string? subject, out string? body, out bool hasMultiLineMessage, in bool keepBody)
             {
                 // Empty subject is allowed
-                if (_index > _s.Length)
+                if (offset > s.Length)
                 {
                     subject = body = null;
                     hasMultiLineMessage = false;
                     return;
                 }
 
-                ReadOnlySpan<char> bodySlice = _s[_index..].Trim();
+                ReadOnlySpan<char> bodySlice = s.Slice(offset).Trim();
 
                 // Subject can also be defined as the contents before empty line (%s for --pretty),
                 // this uses the alternative definition of first line in body.
@@ -449,7 +423,7 @@ namespace GitCommands
                 int lengthSubject = bodySlice.IndexOfAny('\n', '\v');
                 hasMultiLineMessage = lengthSubject >= 0;
                 subject = (hasMultiLineMessage
-                    ? bodySlice[..lengthSubject].TrimEnd()
+                    ? bodySlice.Slice(0, lengthSubject).TrimEnd()
                     : bodySlice)
                     .ToString();
 
@@ -459,9 +433,14 @@ namespace GitCommands
                     ? bodySlice.ToString().Replace('\v', '\n')
                     : null;
             }
-        }
 
-        #endregion
+            void ParseAssert(string message)
+            {
+                _noOfParseError++;
+                Debug.Assert(_noOfParseError > 1, message);
+                Trace.WriteLineIf(_noOfParseError < 10, message);
+            }
+        }
 
         internal TestAccessor GetTestAccessor()
             => new(this);

@@ -5,6 +5,12 @@
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);TRACE_REVISIONREADER</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);TRACE_REVISIONREADER</DefineConstants>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\GitExtUtils\Delimiters.cs" Link="Utils\Delimiters.cs" />
