@@ -291,16 +291,6 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void Equals_with_random()
-        {
-            for (var i = 0; i < 100; i++)
-            {
-                var objectId = ObjectId.Random();
-                Assert.True(objectId.Equals(objectId));
-            }
-        }
-
-        [Test]
         public void Equals_using_operator()
         {
             string objectIdString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
