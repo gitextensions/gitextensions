@@ -22,17 +22,17 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
         /// </summary>
-        public static ObjectId WorkTreeId { get; } = new(0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x11111111);
+        public static ObjectId WorkTreeId { get; } = new(0x1111_1111_1111_1111, 0x1111_1111_1111_1111, 0x1111_1111);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent changes staged to the index.
         /// </summary>
-        public static ObjectId IndexId { get; } = new(0x22222222, 0x22222222, 0x22222222, 0x22222222, 0x22222222);
+        public static ObjectId IndexId { get; } = new(0x2222_2222_2222_2222, 0x2222_2222_2222_2222, 0x2222_2222);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent combined diff for merge commits.
         /// </summary>
-        public static ObjectId CombinedDiffId { get; } = new(0x33333333, 0x33333333, 0x33333333, 0x33333333, 0x33333333);
+        public static ObjectId CombinedDiffId { get; } = new(0x3333_3333_3333_3333, 0x3333_3333_3333_3333, 0x3333_3333);
 
         /// <summary>
         /// Produces an <see cref="ObjectId"/> populated with random bytes.
@@ -41,10 +41,8 @@ namespace GitUIPluginInterfaces
         public static ObjectId Random()
         {
             return new ObjectId(
-                unchecked((uint)_random.Next()),
-                unchecked((uint)_random.Next()),
-                unchecked((uint)_random.Next()),
-                unchecked((uint)_random.Next()),
+                unchecked((ulong)_random.NextInt64()),
+                unchecked((ulong)_random.NextInt64()),
                 unchecked((uint)_random.Next()));
         }
 
@@ -164,17 +162,15 @@ namespace GitUIPluginInterfaces
                 return false;
             }
 
-            if (!uint.TryParse(array.Slice(0, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i1)
-                || !uint.TryParse(array.Slice(8, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i2)
-                || !uint.TryParse(array.Slice(16, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i3)
-                || !uint.TryParse(array.Slice(24, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i4)
-                || !uint.TryParse(array.Slice(32, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i5))
+            if (!ulong.TryParse(array.Slice(0, 16), NumberStyles.AllowHexSpecifier, provider: null, out ulong i1)
+                || !ulong.TryParse(array.Slice(16, 16), NumberStyles.AllowHexSpecifier, provider: null, out ulong i2)
+                || !uint.TryParse(array.Slice(32, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i3))
             {
                 objectId = default;
                 return false;
             }
 
-            objectId = new ObjectId(i1, i2, i3, i4, i5);
+            objectId = new ObjectId(i1, i2, i3);
             return true;
         }
 
@@ -199,17 +195,15 @@ namespace GitUIPluginInterfaces
                 return false;
             }
 
-            if (!Utf8Parser.TryParse(array.Slice(0, 8), out uint i1, out int _, standardFormat: 'X')
-                || !Utf8Parser.TryParse(array.Slice(8, 8), out uint i2, out int _, standardFormat: 'X')
-                || !Utf8Parser.TryParse(array.Slice(16, 8), out uint i3, out int _, standardFormat: 'X')
-                || !Utf8Parser.TryParse(array.Slice(24, 8), out uint i4, out int _, standardFormat: 'X')
-                || !Utf8Parser.TryParse(array.Slice(32, 8), out uint i5, out int _, standardFormat: 'X'))
+            if (!Utf8Parser.TryParse(array.Slice(0, 16), out ulong i1, out int _, standardFormat: 'X')
+                || !Utf8Parser.TryParse(array.Slice(16, 16), out ulong i2, out int _, standardFormat: 'X')
+                || !Utf8Parser.TryParse(array.Slice(32, 8), out uint i3, out int _, standardFormat: 'X'))
             {
                 objectId = default;
                 return false;
             }
 
-            objectId = new ObjectId(i1, i2, i3, i4, i5);
+            objectId = new ObjectId(i1, i2, i3);
             return true;
         }
 
@@ -247,47 +241,34 @@ namespace GitUIPluginInterfaces
             return true;
         }
 
-        private readonly uint _i1;
-        private readonly uint _i2;
+        private readonly ulong _i1;
+        private readonly ulong _i2;
         private readonly uint _i3;
-        private readonly uint _i4;
-        private readonly uint _i5;
 
-        private ObjectId(uint i1, uint i2, uint i3, uint i4, uint i5)
+        private ObjectId(ulong i1, ulong i2, uint i3)
         {
             _i1 = i1;
             _i2 = i2;
             _i3 = i3;
-            _i4 = i4;
-            _i5 = i5;
         }
 
         #region IComparable<ObjectId>
 
         public int CompareTo(ObjectId other)
         {
-            int result = 0;
-
-            _ = Compare(_i1, other._i1) ||
-                Compare(_i2, other._i2) ||
-                Compare(_i3, other._i3) ||
-                Compare(_i4, other._i4) ||
-                Compare(_i5, other._i5);
-
-            return result;
-
-            bool Compare(uint i, uint j)
+            int result = _i1.CompareTo(other._i1);
+            if (result != 0)
             {
-                int c = i.CompareTo(j);
-
-                if (c != 0)
-                {
-                    result = c;
-                    return true;
-                }
-
-                return false;
+                return result;
             }
+
+            result = _i2.CompareTo(other._i2);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            return _i3.CompareTo(other._i3);
         }
 
         #endregion
@@ -321,11 +302,9 @@ namespace GitUIPluginInterfaces
 
             Span<byte> buffer = stackalloc byte[_sha1ByteCount];
 
-            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(0, 4), _i1);
-            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(4, 4), _i2);
-            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(8, 4), _i3);
-            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(12, 4), _i4);
-            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i5);
+            BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(0, 8), _i1);
+            BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
+            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
 
             return Convert.ToHexString(buffer).Substring(0, length).ToLowerInvariant();
         }
@@ -338,9 +317,7 @@ namespace GitUIPluginInterfaces
             return other is not null &&
                    _i1 == other._i1 &&
                    _i2 == other._i2 &&
-                   _i3 == other._i3 &&
-                   _i4 == other._i4 &&
-                   _i5 == other._i5;
+                   _i3 == other._i3;
         }
 
         /// <inheritdoc />
