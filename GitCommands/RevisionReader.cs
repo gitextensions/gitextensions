@@ -194,7 +194,7 @@ namespace GitCommands
 
 #if TRACE_REVISIONREADER
             // TODO Make it possible to explicitly activate Trace printouts like this
-            Debug.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={_noOfParseError}");
+            Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={_noOfParseError}");
 #endif
 
             if (!cancellationToken.IsCancellationRequested)
@@ -282,7 +282,7 @@ namespace GitCommands
             }
 
             ObjectId[] parentIds;
-            if (noParents == 0)
+            if (noParents <= 0)
             {
                 offset++;
                 parentIds = Array.Empty<ObjectId>();
@@ -343,7 +343,7 @@ namespace GitCommands
             offset = 0;
 
             // reflogSelector are only used when listing stashes
-            string reflogSelector = _hasReflogSelector ? GetNextLine(decoded, useStringPool: false) : null;
+            string? reflogSelector = _hasReflogSelector ? GetNextLine(decoded, useStringPool: false) : null;
 
             // Authors etc are limited, use a shared string pool
             string author = GetNextLine(decoded, useStringPool: true);
