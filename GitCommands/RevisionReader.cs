@@ -339,7 +339,7 @@ namespace GitCommands
 
             // The remaining must be decoded (for above utf8/ascii must work)
             Span<char> decoded = stackalloc char[_logOutputEncoding.GetMaxByteCount(array.Slice(offset).Length)];
-            _logOutputEncoding.GetChars(array.Slice(offset), decoded);
+            int decodedLength = _logOutputEncoding.GetChars(array.Slice(offset), decoded);
             offset = 0;
 
             // reflogSelector are only used when listing stashes
@@ -354,7 +354,7 @@ namespace GitCommands
             // Keep a full multiline message body within the last six months (by default).
             // Note also that if body and subject are identical (single line), the body never need to be stored
             bool keepBody = authorUnixTime >= _oldestBody;
-            GetSubjectBody(decoded, out string? subject, out string? body, out bool hasMultiLineMessage, in keepBody);
+            GetSubjectBody(decoded[offset..decodedLength].Trim(), out string? subject, out string? body, out bool hasMultiLineMessage, in keepBody);
 
             if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (keepBody && hasMultiLineMessage && body is null))
             {
@@ -405,18 +405,8 @@ namespace GitCommands
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            void GetSubjectBody(ReadOnlySpan<char> s, out string? subject, out string? body, out bool hasMultiLineMessage, in bool keepBody)
+            void GetSubjectBody(ReadOnlySpan<char> bodySlice, out string? subject, out string? body, out bool hasMultiLineMessage, in bool keepBody)
             {
-                // Empty subject is allowed
-                if (offset > s.Length)
-                {
-                    subject = body = null;
-                    hasMultiLineMessage = false;
-                    return;
-                }
-
-                ReadOnlySpan<char> bodySlice = s.Slice(offset).Trim();
-
                 // Subject can also be defined as the contents before empty line (%s for --pretty),
                 // this uses the alternative definition of first line in body.
                 // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
@@ -454,9 +444,11 @@ namespace GitCommands
                 _revisionReader = revisionReader;
             }
 
-            internal static RevisionReader RevisionReader(GitModule module, Encoding logOutputEncoding, long sixMonths)
+            internal static RevisionReader RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long sixMonths)
             {
-                return new RevisionReader(module, logOutputEncoding, sixMonths);
+                RevisionReader reader = new(module, logOutputEncoding, sixMonths);
+                reader._hasReflogSelector = hasReflogSelector;
+                return reader;
             }
 
             internal ArgumentBuilder BuildArguments(string revisionFilter, string pathFilter) =>
