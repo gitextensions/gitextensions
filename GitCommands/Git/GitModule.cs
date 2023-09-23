@@ -2158,7 +2158,7 @@ namespace GitCommands
                 return patchFiles;
             }
 
-            RevisionReader reader = new(this, hasReflogSelector: false, allBodies: true);
+            RevisionReader reader = new(this, allBodies: true);
             Dictionary<string, GitRevision> rebasedCommitsRevisions;
             try
             {

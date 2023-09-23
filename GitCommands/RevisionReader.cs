@@ -39,19 +39,18 @@ namespace GitCommands
         private const int _offsetDaysForOldestBody = 6 * 30; // about 6 months
 
         // reflog selector to identify stashes
-        private readonly bool _hasReflogSelector;
+        private bool _hasReflogSelector;
 
         private string LogFormat => string.Format(_fullFormat, _hasReflogSelector ? _reflogSelectorFormat : "");
 
-        public RevisionReader(GitModule module, bool hasReflogSelector, bool allBodies = false)
-            : this(module, hasReflogSelector, module.LogOutputEncoding, allBodies ? 0 : GetUnixTimeForOffset(_offsetDaysForOldestBody))
+        public RevisionReader(GitModule module, bool allBodies = false)
+            : this(module, module.LogOutputEncoding, allBodies ? 0 : GetUnixTimeForOffset(_offsetDaysForOldestBody))
         {
         }
 
-        private RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long oldestBody)
+        private RevisionReader(GitModule module, Encoding logOutputEncoding, long oldestBody)
         {
             _module = module;
-            _hasReflogSelector = hasReflogSelector;
             _logOutputEncoding = logOutputEncoding;
             _oldestBody = oldestBody;
         }
@@ -66,8 +65,7 @@ namespace GitCommands
         /// <returns>List with GitRevisions.</returns>
         public IReadOnlyCollection<GitRevision> GetStashes(CancellationToken cancellationToken)
         {
-            Debug.Assert(_hasReflogSelector, "_hasReflogSelector must be set to get the reflog selectors (to identify stashes)");
-
+            _hasReflogSelector = true;
             GitArgumentBuilder arguments = new("stash")
             {
                 "list",
@@ -91,6 +89,7 @@ namespace GitCommands
                 return Array.Empty<GitRevision>();
             }
 
+            _hasReflogSelector = false;
             GitArgumentBuilder arguments = new("log")
             {
                 "-z",
@@ -117,6 +116,7 @@ namespace GitCommands
                 return Array.Empty<GitRevision>();
             }
 
+            _hasReflogSelector = false;
             GitArgumentBuilder arguments = new("log")
                 {
                     "-z",
@@ -135,7 +135,7 @@ namespace GitCommands
         /// <returns>List with GitRevisions.</returns>
         private IReadOnlyCollection<GitRevision> GetRevisionsFromArguments(GitArgumentBuilder arguments, CancellationToken cancellationToken)
         {
-            List<GitRevision> stashes = new();
+            List<GitRevision> revisions = new();
 
             using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding);
             byte[] buffer = new byte[4096];
@@ -146,11 +146,11 @@ namespace GitCommands
 
                 if (TryParseRevision(chunk, out GitRevision? revision))
                 {
-                    stashes.Add(revision);
+                    revisions.Add(revision);
                 }
             }
 
-            return stashes;
+            return revisions;
         }
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace GitCommands
             void ParseAssert(string message)
             {
                 _noOfParseError++;
-                Debug.Assert(_noOfParseError > 1, message);
+                Debug.Assert(!Debugger.IsAttached || _noOfParseError > 1, message);
                 Trace.WriteLineIf(_noOfParseError < 10, message);
             }
         }
@@ -454,9 +454,9 @@ namespace GitCommands
                 _revisionReader = revisionReader;
             }
 
-            internal static RevisionReader RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long sixMonths)
+            internal static RevisionReader RevisionReader(GitModule module, Encoding logOutputEncoding, long sixMonths)
             {
-                return new RevisionReader(module, hasReflogSelector, logOutputEncoding, sixMonths);
+                return new RevisionReader(module, logOutputEncoding, sixMonths);
             }
 
             internal ArgumentBuilder BuildArguments(string revisionFilter, string pathFilter) =>
