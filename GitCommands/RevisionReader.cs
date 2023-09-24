@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Buffers.Text;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -317,29 +318,23 @@ namespace GitCommands
 
             #region Timestamps
 
-            // Decimal ASCII seconds since the unix epoch, each terminated by `\n`
-            long authorUnixTime = ParseUnixDateTime(in array);
-            long commitUnixTime = ParseUnixDateTime(in array);
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            long ParseUnixDateTime(in ReadOnlySpan<byte> array)
+            // Decimal ASCII seconds since the unix epoch
+            if (!Utf8Parser.TryParse(array.Slice(offset), out long authorUnixTime, out int bytesConsumed))
             {
-                long unixTime = 0;
-
-                while (offset < array.Length)
-                {
-                    int c = array[offset++];
-
-                    if (c == '\n')
-                    {
-                        break;
-                    }
-
-                    unixTime = (unixTime * 10) + (c - '0');
-                }
-
-                return unixTime;
+                ParseAssert($"Log parse error, not enough data for authortime: {array.Length} {offset} {array.Slice(offset).ToString()}");
+                revision = default;
+                return false;
             }
+
+            offset += bytesConsumed + 1;
+            if (!Utf8Parser.TryParse(array.Slice(offset), out long commitUnixTime, out bytesConsumed))
+            {
+                ParseAssert($"Log parse error, not enough data for committime: {array.Length} {offset} {array.Slice(offset).ToString()}");
+                revision = default;
+                return false;
+            }
+
+            offset += bytesConsumed + 1;
 
             #endregion
 
