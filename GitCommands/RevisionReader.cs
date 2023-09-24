@@ -451,8 +451,10 @@ namespace GitCommands
 
             internal static RevisionReader RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long sixMonths)
             {
-                RevisionReader reader = new(module, logOutputEncoding, sixMonths);
-                reader._hasReflogSelector = hasReflogSelector;
+                RevisionReader reader = new(module, logOutputEncoding, sixMonths)
+                {
+                    _hasReflogSelector = hasReflogSelector
+                };
                 return reader;
             }
 
