@@ -1,4 +1,5 @@
-﻿using GitUI.UserControls.RevisionGrid;
+﻿using System.Diagnostics;
+using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 
 namespace GitUI
@@ -16,10 +17,16 @@ namespace GitUI
             _gridView = gridView;
         }
 
-        public void OnCellMouseEnter()
+        /// <summary>
+        /// Hides the tooltip.
+        /// </summary>
+        /// <returns>Returns <cref>true</cref> if the tooltip was active.</returns>
+        public bool Hide()
         {
+            bool wasActive = _toolTip.Active;
             _toolTip.Active = false;
             _toolTip.AutoPopDelay = 32767;
+            return wasActive;
         }
 
         public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
@@ -31,8 +38,6 @@ namespace GitUI
                 return;
             }
 
-            var oldText = _toolTip.GetToolTip(_gridView);
-
             // Always generated tooltip text of first column (graph) because it **really** depends of the pixel hovered
             if (e.ColumnIndex != 0 && _previousRowIndex == e.RowIndex && _previousColumnIndex == e.ColumnIndex)
             {
@@ -42,9 +47,8 @@ namespace GitUI
             _previousRowIndex = e.RowIndex;
             _previousColumnIndex = e.ColumnIndex;
 
-            var newText = GetToolTipText();
-
-            if (newText != oldText)
+            string newText = GetToolTipText();
+            if (_toolTip.GetToolTip(_gridView) != newText)
             {
                 _toolTip.SetToolTip(_gridView, newText);
             }
@@ -73,9 +77,10 @@ namespace GitUI
                         return _gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue?.ToString() ?? "";
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Ignore exception when fetching tooltip. It's not worth crashing for.
+                    Trace.WriteLine(ex);
                 }
 
                 // no tooltip unless always active or truncated
