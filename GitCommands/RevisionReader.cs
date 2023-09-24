@@ -41,8 +41,6 @@ namespace GitCommands
         // reflog selector to identify stashes
         private bool _hasReflogSelector;
 
-        private string LogFormat => string.Format(_fullFormat, _hasReflogSelector ? _reflogSelectorFormat : "");
-
         public RevisionReader(GitModule module, bool allBodies = false)
             : this(module, module.LogOutputEncoding, allBodies ? 0 : GetUnixTimeForOffset(_offsetDaysForOldestBody))
         {
@@ -55,6 +53,16 @@ namespace GitCommands
             _oldestBody = oldestBody;
         }
 
+        /// <summary>
+        /// Return the git-log format and set the reflogSelector flag
+        /// (used when parsing the buffer).
+        /// </summary>
+        private string LogFormat(bool hasReflogSelector = false)
+        {
+            _hasReflogSelector = hasReflogSelector;
+            return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "");
+        }
+
         private static long GetUnixTimeForOffset(int days)
             => new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(days)).ToUnixTimeSeconds();
 
@@ -65,12 +73,11 @@ namespace GitCommands
         /// <returns>List with GitRevisions.</returns>
         public IReadOnlyCollection<GitRevision> GetStashes(CancellationToken cancellationToken)
         {
-            _hasReflogSelector = true;
             GitArgumentBuilder arguments = new("stash")
             {
                 "list",
                 "-z",
-                $"--pretty=format:\"{LogFormat}\""
+                $"--pretty=format:\"{LogFormat(true)}\""
             };
 
             return GetRevisionsFromArguments(arguments, cancellationToken);
@@ -89,11 +96,10 @@ namespace GitCommands
                 return Array.Empty<GitRevision>();
             }
 
-            _hasReflogSelector = false;
             GitArgumentBuilder arguments = new("log")
             {
                 "-z",
-                $"--pretty=format:\"{LogFormat}\"",
+                $"--pretty=format:\"{LogFormat()}\"",
                 "--dirstat=files",
                 string.Join(" ", untracked),
                 ".",
@@ -116,11 +122,10 @@ namespace GitCommands
                 return Array.Empty<GitRevision>();
             }
 
-            _hasReflogSelector = false;
             GitArgumentBuilder arguments = new("log")
                 {
                     "-z",
-                    $"--pretty=format:\"{LogFormat}\"",
+                    $"--pretty=format:\"{LogFormat()}\"",
                     $"{olderCommitHash}~..{newerCommitHash}"
                 };
 
@@ -208,7 +213,7 @@ namespace GitCommands
             return new GitArgumentBuilder("log")
             {
                 "-z",
-                $"--pretty=format:\"{LogFormat}\"",
+                $"--pretty=format:\"{LogFormat()}\"",
 
                 // sorting
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
