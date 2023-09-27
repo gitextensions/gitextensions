@@ -285,16 +285,6 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString CheckoutCmd(string branchOrRevisionName, LocalChangesAction changesAction)
-        {
-            return new GitArgumentBuilder("checkout")
-            {
-                { changesAction == LocalChangesAction.Merge, "--merge" },
-                { changesAction == LocalChangesAction.Reset, "--force" },
-                branchOrRevisionName.Quote()
-            };
-        }
-
         /// <summary>Create a new orphan branch from <paramref name="startPoint"/> and switch to it.</summary>
         public static ArgumentString CreateOrphanCmd(string newBranchName, ObjectId? startPoint = null)
         {

@@ -6,64 +6,38 @@ namespace GitCommandsTests.Git.Commands
     [TestFixture]
     public sealed class GitCheckoutBranchCmdTest
     {
-        [Test]
-        public void TestConstructor()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TestConstructor(bool isRemote)
         {
-            GitCheckoutBranchCmd cmd = new("branchName", true);
+            GitCheckoutBranchCmd cmd = new("branchName", isRemote);
 
-            Assert.IsNotNull(cmd);
-            Assert.AreEqual(cmd.BranchName, "branchName");
-            Assert.IsTrue(cmd.Remote);
-        }
-
-        [Test]
-        public void TestConstructorRemoteIsFalse()
-        {
-            GitCheckoutBranchCmd cmd = new("branchName", false);
-
-            Assert.IsNotNull(cmd);
-            Assert.AreEqual(cmd.BranchName, "branchName");
-            Assert.IsFalse(cmd.Remote);
-        }
-
-        [Test]
-        public void TestAccessesRemoteIsFalse()
-        {
-            GitCheckoutBranchCmd cmd = new("branchName", true);
-
+            Assert.AreEqual("branchName", cmd.BranchName);
+            Assert.AreEqual(isRemote, cmd.Remote);
+            Assert.AreEqual(LocalChangesAction.DontChange, cmd.LocalChanges);
+            Assert.AreEqual(CheckoutNewBranchMode.DontCreate, cmd.NewBranchMode);
             Assert.IsFalse(cmd.AccessesRemote);
+            Assert.IsTrue(cmd.ChangesRepoState);
         }
 
-        [Test]
-        public void TestCollectArgumentsMergeReset()
+        [TestCase(LocalChangesAction.DontChange, "checkout \"branch\"")]
+        [TestCase(LocalChangesAction.Merge, "checkout --merge \"branch\"")]
+        [TestCase(LocalChangesAction.Reset, "checkout --force \"branch\"")]
+        [TestCase(LocalChangesAction.Stash, "checkout \"branch\"")]
+        public void Assert_local_action(LocalChangesAction action, string expected)
         {
-            // Merge
+            Assert.AreEqual(expected, new GitCheckoutBranchCmd("branch", remote: false, action, CheckoutNewBranchMode.Create).Arguments);
+        }
 
-            Assert.AreEqual(
-                "checkout --merge \"branchName\"",
-                new GitCheckoutBranchCmd("branchName", false, LocalChangesAction.Merge).Arguments);
-
-            Assert.AreEqual(
-                "checkout --merge -b \"newBranchName\" \"branchName\"",
-                new GitCheckoutBranchCmd("branchName", true, LocalChangesAction.Merge, CheckoutNewBranchMode.Create, "newBranchName").Arguments);
-
-            Assert.AreEqual(
-                "checkout --merge -B \"newBranchName\" \"branchName\"",
-                new GitCheckoutBranchCmd("branchName", true, LocalChangesAction.Merge, CheckoutNewBranchMode.Reset, "newBranchName").Arguments);
-
-            // Reset
-
-            Assert.AreEqual(
-                "checkout --force \"branchName\"",
-                new GitCheckoutBranchCmd("branchName", false, LocalChangesAction.Reset).Arguments);
-
-            Assert.AreEqual(
-                "checkout --force -b \"newBranchName\" \"branchName\"",
-                new GitCheckoutBranchCmd("branchName", true, LocalChangesAction.Reset, CheckoutNewBranchMode.Create, "newBranchName").Arguments);
-
-            Assert.AreEqual(
-                "checkout --force -B \"newBranchName\" \"branchName\"",
-                new GitCheckoutBranchCmd("branchName", true, LocalChangesAction.Reset, CheckoutNewBranchMode.Reset, "newBranchName").Arguments);
+        [TestCase(LocalChangesAction.Merge, CheckoutNewBranchMode.DontCreate, "checkout --merge \"branchName\"")]
+        [TestCase(LocalChangesAction.Merge, CheckoutNewBranchMode.Create, "checkout --merge -b \"newBranchName\" \"branchName\"")]
+        [TestCase(LocalChangesAction.Merge, CheckoutNewBranchMode.Reset, "checkout --merge -B \"newBranchName\" \"branchName\"")]
+        [TestCase(LocalChangesAction.Reset, CheckoutNewBranchMode.DontCreate, "checkout --force \"branchName\"")]
+        [TestCase(LocalChangesAction.Reset, CheckoutNewBranchMode.Create, "checkout --force -b \"newBranchName\" \"branchName\"")]
+        [TestCase(LocalChangesAction.Reset, CheckoutNewBranchMode.Reset, "checkout --force -B \"newBranchName\" \"branchName\"")]
+        public void Assert_remote_action(LocalChangesAction action, CheckoutNewBranchMode checkoutMode, string expected)
+        {
+            Assert.AreEqual(expected, new GitCheckoutBranchCmd("branchName", remote: true, action, checkoutMode, "newBranchName").Arguments);
         }
     }
 }

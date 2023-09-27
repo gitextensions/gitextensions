@@ -253,23 +253,6 @@ namespace GitCommandsTests.Git.Commands
         }
 
         [Test]
-        public void CheckoutCmd()
-        {
-            Assert.AreEqual(
-                "checkout \"branch\"",
-                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.DontChange).Arguments);
-            Assert.AreEqual(
-                "checkout --merge \"branch\"",
-                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Merge).Arguments);
-            Assert.AreEqual(
-                "checkout --force \"branch\"",
-                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Reset).Arguments);
-            Assert.AreEqual(
-                "checkout \"branch\"",
-                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Stash).Arguments);
-        }
-
-        [Test]
         public void RemoveCmd()
         {
             // TODO file names should be quoted

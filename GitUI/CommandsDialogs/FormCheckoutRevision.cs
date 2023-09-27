@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git.Commands;
 using GitUI.HelperDialogs;
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                string command = GitCommandHelpers.CheckoutCmd(selectedObjectId.ToString(), Force.Checked ? LocalChangesAction.Reset : 0);
+                string command = new GitCheckoutRevisionCmd(selectedObjectId, Force.Checked ? LocalChangesAction.Reset : 0).Arguments;
                 success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (success)
                 {

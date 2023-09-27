@@ -11,12 +11,6 @@ namespace GitCommands.Git.Commands
 
     public sealed class GitCheckoutBranchCmd : GitCommand
     {
-        public string BranchName { get; }
-        public bool Remote { get; }
-        public LocalChangesAction LocalChanges { get; }
-        public string? NewBranchName { get; }
-        public CheckoutNewBranchMode NewBranchMode { get; }
-
         public GitCheckoutBranchCmd(
             string branchName,
             bool remote,
@@ -32,7 +26,12 @@ namespace GitCommands.Git.Commands
         }
 
         public override bool AccessesRemote => false;
+        public string BranchName { get; }
         public override bool ChangesRepoState => true;
+        public LocalChangesAction LocalChanges { get; }
+        public CheckoutNewBranchMode NewBranchMode { get; }
+        public string? NewBranchName { get; }
+        public bool Remote { get; }
 
         protected override ArgumentString BuildArguments()
         {
