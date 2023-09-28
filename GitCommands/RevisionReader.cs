@@ -61,7 +61,7 @@ namespace GitCommands
         /// Return the git-log format and set the reflogSelector flag
         /// (used when parsing the buffer).
         /// </summary>
-        private string LogFormat(bool hasReflogSelector = false)
+        private string GetLogFormat(bool hasReflogSelector = false)
         {
             _hasReflogSelector = hasReflogSelector;
             return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "");
@@ -81,7 +81,7 @@ namespace GitCommands
             {
                 "list",
                 "-z",
-                $"--pretty=format:\"{LogFormat(true)}\""
+                $"--pretty=format:\"{GetLogFormat(hasReflogSelector: true)}\""
             };
 
             return GetRevisionsFromArguments(arguments, cancellationToken);
@@ -103,7 +103,7 @@ namespace GitCommands
             GitArgumentBuilder arguments = new("log")
             {
                 "-z",
-                $"--pretty=format:\"{LogFormat()}\"",
+                $"--pretty=format:\"{GetLogFormat()}\"",
                 "--dirstat=files",
                 string.Join(" ", untracked),
                 ".",
@@ -129,7 +129,7 @@ namespace GitCommands
             GitArgumentBuilder arguments = new("log")
                 {
                     "-z",
-                    $"--pretty=format:\"{LogFormat()}\"",
+                    $"--pretty=format:\"{GetLogFormat()}\"",
                     $"{olderCommitHash}~..{newerCommitHash}"
                 };
 
@@ -213,7 +213,7 @@ namespace GitCommands
             return new GitArgumentBuilder("log")
             {
                 "-z",
-                $"--pretty=format:\"{LogFormat()}\"",
+                $"--pretty=format:\"{GetLogFormat()}\"",
 
                 // sorting
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
@@ -273,7 +273,7 @@ namespace GitCommands
                     baseOffset += ObjectId.Sha1CharCount;
                     count++;
 
-                    if (baseOffset >= array.Length || !(array[baseOffset] is (byte)'\n' or (byte)' '))
+                    if (baseOffset >= array.Length || ((char)array[baseOffset] is not ('\n' or ' ')))
                     {
                         // Parse error, not using ParseAssert (or increasing _noOfParseError)
                         ParseAssert($"Log parse error, unexpected contents in the parent array: {baseOffset - offset} for {objectId}");
@@ -369,7 +369,6 @@ namespace GitCommands
 
             int decodedLength = _logOutputEncoding.GetChars(buffer.Slice(offset), _decodeBuffer);
             offset = 0;
-            bool keepBody = authorUnixTime >= _oldestBody;
 
             // reflogSelector are only used when listing stashes
             if (_hasReflogSelector)
@@ -377,8 +376,9 @@ namespace GitCommands
                 revision.ReflogSelector = GetReflogSelector(_decodeBuffer);
             }
 
-            // Keep a full multiline message body within the last six months (by default).
+            // Keep a full multi-line message body within the last six months (by default).
             // Note also that if body and subject are identical (single line), the body never need to be stored
+            bool keepBody = authorUnixTime >= _oldestBody;
             revision.Subject = GetSubjectBody(_decodeBuffer.AsSpan(offset..decodedLength).Trim(), out string? body, out bool hasMultiLineMessage, in keepBody);
 
             if (hasMultiLineMessage)
