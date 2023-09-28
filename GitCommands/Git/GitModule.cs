@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -2504,10 +2503,68 @@ namespace GitCommands
             return EffectiveConfigFile.GetValue(setting);
         }
 
-        public string GetEffectiveGitSetting(string setting, bool cache = true)
+        public GitConfigGetResult GetEffectiveGitSetting(string setting, bool cache = true)
         {
-            GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
-            return GitExecutable.GetOutput(args, cache: cache ? GitCommandCache : null).Trim();
+            GitArgumentBuilder args = new("config")
+            {
+                "--includes",
+                "--get",
+                "-z",
+                "--show-scope",
+                "--show-origin",
+                setting
+            };
+            ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false); // Result codes are handled below
+
+            if (!result.ExitCode.HasValue)
+            {
+                // unlikely , but possible and allows for use of ExitCode.Value since we know HasValue is true
+                throw new ExternalOperationException("git config", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException("Exit code had no value"));
+            }
+
+            ReadOnlySpan<char> scope, filename, actualValue;
+            GetConfigResult(result, out scope, out filename, out actualValue);
+
+            int resultCode = result.ExitCode.Value;
+
+            GitConfigGetResult output = (
+                Enum.IsDefined(typeof(GitConfigStatus), resultCode) ? (GitConfigStatus)resultCode : (GitConfigStatus?)null,
+                setting,
+                actualValue.ToString(),
+                DateTimeOffset.Now,
+                scope.ToString(),
+                filename.ToString()?.Replace("file:", "").ToNativePath(),
+                result.StandardError?.Trim() ?? "");
+
+            switch (output.Status)
+            {
+                case GitConfigStatus.Success:
+                case GitConfigStatus.ConfigKeyInvalidOrNotSet:
+                    return output;
+                default:
+                    throw new ExternalOperationException("git config", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException(output.ErrorMessage));
+            }
+        }
+
+        private static void GetConfigResult(ExecutionResult result, out ReadOnlySpan<char> scope, out ReadOnlySpan<char> filename, out ReadOnlySpan<char> actualValue)
+        {
+            string standard = result.StandardOutput?.Trim();
+            string value = string.IsNullOrEmpty(standard) ? "\0\0" : standard; // Replace with nulls to still be able to split 3 empty fields.
+
+            // Scope, file, value split by null.
+
+            ReadOnlySpan<char> settingValueSpan = value.AsSpan();
+            ReadOnlySpan<char> delimiter = Delimiters.Null.AsSpan();
+
+            int nullIndex = settingValueSpan.IndexOf(delimiter);
+            scope = settingValueSpan.Slice(0, nullIndex);
+            settingValueSpan = settingValueSpan.Slice(nullIndex + 1);
+
+            nullIndex = settingValueSpan.IndexOf(delimiter);
+            filename = settingValueSpan.Slice(0, nullIndex);
+            settingValueSpan = settingValueSpan.Slice(nullIndex + 1);
+
+            actualValue = settingValueSpan;
         }
 
         public void UnsetSetting(string setting)
