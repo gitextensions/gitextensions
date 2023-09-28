@@ -515,16 +515,21 @@ namespace GitCommandsTests.Git.Commands
             Assert.AreEqual(expected, GitCommandHelpers.CleanCmd(mode, dryRun, directories, paths, excludes).Arguments);
         }
 
-        [TestCase(CleanMode.OnlyNonIgnored, true, false, null, "clean --dry-run")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "clean -f")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, true, null, "clean -d -f")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, "paths", "clean -f paths")]
-        [TestCase(CleanMode.OnlyIgnored, false, false, null, "clean -X -f")]
-        [TestCase(CleanMode.All, false, false, null, "clean -x -f")]
-        public void CleanupSubmoduleCommand(CleanMode mode, bool dryRun, bool directories, string paths, string expected)
+        [TestCase(CleanMode.OnlyNonIgnored, true, false, null, null, "clean --dry-run")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, null, "clean -f")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, true, null, null, "clean -d -f")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\"", null, "clean -f \"path1\"")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\"", "--exclude=excludes", "clean -f \"path1\" --exclude=excludes")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "excludes", "clean -f excludes")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\" \"path2\"", null, "clean -f \"path1\" \"path2\"")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\" \"path2\"", "--exclude=exclude1 --exclude=exclude2", "clean -f \"path1\" \"path2\" --exclude=exclude1 --exclude=exclude2")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "--exclude=exclude1 --exclude=exclude2", "clean -f --exclude=exclude1 --exclude=exclude2")]
+        [TestCase(CleanMode.OnlyIgnored, false, false, null, null, "clean -X -f")]
+        [TestCase(CleanMode.All, false, false, null, null, "clean -x -f")]
+        public void CleanupSubmoduleCommand(CleanMode mode, bool dryRun, bool directories, string paths, string excludes, string expected)
         {
             string subExpected = "submodule foreach --recursive git " + expected;
-            Assert.AreEqual(subExpected, GitCommandHelpers.CleanSubmodules(mode, dryRun, directories, paths).Arguments);
+            Assert.AreEqual(subExpected, GitCommandHelpers.CleanSubmodules(mode, dryRun, directories, paths, excludes).Arguments);
         }
 
         [TestCase(null)]

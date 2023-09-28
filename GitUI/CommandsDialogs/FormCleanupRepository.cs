@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Collections.Generic;
+using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitExtUtils;
@@ -63,7 +64,7 @@ namespace GitUI.CommandsDialogs
 
             if (CleanSubmodules.Checked)
             {
-                ArgumentString cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument);
+                ArgumentString cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument, excludes: excludePathArguments);
                 cmdOutput = FormProcess.ReadDialog(this, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
             }
@@ -164,9 +165,27 @@ namespace GitUI.CommandsDialogs
 
             if (path is not null)
             {
-                path = path.Replace(Module.WorkingDir, "");
+                path = MakePathRelativeToModule(path);
                 textBoxExcludePaths.Text += path;
             }
+        }
+
+        private string MakePathRelativeToModule(string targetPath)
+        {
+            targetPath = targetPath.Replace(Module.WorkingDir, "").ToPosixPath();
+            IReadOnlyList<string> submodulePaths = Module.GetSubmodulesLocalPaths();
+
+            string? nearestSubmodule = submodulePaths
+                .Where(submodulePath => targetPath.StartsWith(submodulePath))
+                .OrderByDescending(submodulePath => submodulePath.Length)
+                .FirstOrDefault();
+
+            if (nearestSubmodule is null)
+            {
+                return targetPath;
+            }
+
+            return targetPath[(nearestSubmodule.Length + 1)..];
         }
 
         private string? RequestUserFolderPath()
