@@ -11,13 +11,13 @@ namespace GitCommandsTests.Git.Commands
         [Test]
         public void ctor_should_throw_if_branches_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new GitDeleteBranchCmd(branches: null, force: false));
+            Assert.Throws<ArgumentNullException>(() => GitCmd.DeleteBranch(branches: null, force: false));
         }
 
         [Test]
         public void ctor_should_throw_if_branches_is_empty()
         {
-            Assert.Throws<ArgumentException>(() => new GitDeleteBranchCmd(Array.Empty<IGitRef>(), force: false));
+            Assert.Throws<ArgumentException>(() => GitCmd.DeleteBranch(Array.Empty<IGitRef>(), force: false));
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace GitCommandsTests.Git.Commands
             string completeName = $"refs/remotes/{remoteName}/branch_name";
             GitRef remoteBranchRef = SetupRawRemoteRef(remoteName, completeName);
 
-            GitDeleteBranchCmd cmd = new(new IGitRef[] { remoteBranchRef }, force: false);
+            IGitCommand cmd = GitCmd.DeleteBranch(new IGitRef[] { remoteBranchRef }, force: false);
 
             Assert.IsFalse(cmd.AccessesRemote);
             Assert.IsTrue(cmd.ChangesRepoState);
@@ -77,7 +77,7 @@ namespace GitCommandsTests.Git.Commands
         [TestCaseSource(nameof(GetRefsCommandTestData))]
         public void Arguments_are_Expected(IReadOnlyCollection<IGitRef> branches, bool force, string expected)
         {
-            GitDeleteBranchCmd cmd = new(branches, force);
+            IGitCommand cmd = GitCmd.DeleteBranch(branches, force);
             Assert.AreEqual(expected, cmd.Arguments);
         }
 

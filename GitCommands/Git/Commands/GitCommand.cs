@@ -4,36 +4,27 @@ using GitUIPluginInterfaces;
 namespace GitCommands.Git.Commands
 {
     /// <summary>
-    /// Base class for structured git command
-    /// here we can introduce methods which can operate on command structure
-    /// instead of command string
+    /// Base class for structured git command.
     /// </summary>
-    public abstract class GitCommand : IGitCommand
+    /// Here we can introduce methods which can operate on command structure instead of command string.
+    public class GitCommand : IGitCommand
     {
-        public string Arguments
-        {
-            get
-            {
-                Validate();
-                return BuildArguments().ToString();
-            }
-        }
-
-        protected abstract ArgumentString BuildArguments();
-
         /// <value>Gets whether this command accesses a remote repository.</value>
-        public abstract bool AccessesRemote { get; }
+        public bool AccessesRemote { get; }
+
+        /// <value>The arguments for the git command.</value>
+        public string Arguments { get; }
 
         /// <value>Gets whether executing this command will change the repo state.</value>
-        public abstract bool ChangesRepoState { get; }
+        public bool ChangesRepoState { get; }
 
-        public override string ToString() => BuildArguments().ToString();
-
-        /// <summary>
-        /// Validates if the supplied arguments are correct.
-        /// </summary>
-        public virtual void Validate()
+        public GitCommand(bool accessesRemote, bool changesRepoState, GitArgumentBuilder arguments)
         {
+            AccessesRemote = accessesRemote;
+            Arguments = arguments.ToString();
+            ChangesRepoState = changesRepoState;
         }
+
+        public override string ToString() => Arguments;
     }
 }
