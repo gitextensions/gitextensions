@@ -368,29 +368,51 @@ namespace GitCommands
             }
 
             int decodedLength = _logOutputEncoding.GetChars(buffer.Slice(offset), _decodeBuffer);
-            offset = 0;
+            Span<char> decoded = _decodeBuffer.AsSpan(0, decodedLength);
 
             // reflogSelector are only used when listing stashes
             if (_hasReflogSelector)
             {
-                revision.ReflogSelector = GetReflogSelector(_decodeBuffer);
+                int lineLength = decoded.IndexOf('\n');
+                if (lineLength == -1)
+                {
+                    ParseAssert($"Log parse error, parent no reflogselector for {objectId}");
+                    revision = default;
+                    return false;
+                }
+
+                revision.ReflogSelector = decoded.Slice(0, lineLength).ToString();
+                decoded = decoded.Slice(lineLength + 1);
             }
 
             // Keep a full multi-line message body within the last six months (by default).
             // Note also that if body and subject are identical (single line), the body never need to be stored
             bool keepBody = authorUnixTime >= _oldestBody;
-            revision.Subject = GetSubjectBody(_decodeBuffer.AsSpan(offset..decodedLength).Trim(), out string? body, out bool hasMultiLineMessage, in keepBody);
+            decoded = decoded.TrimEnd();
 
-            if (hasMultiLineMessage)
+            // Subject can also be defined as the contents before empty line (%s for --pretty),
+            // this uses the alternative definition of first line in body.
+            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
+            int lengthSubject = decoded.IndexOfAny('\n', '\v');
+            revision.HasMultiLineMessage = lengthSubject >= 0;
+            revision.Subject = (revision.HasMultiLineMessage
+                ? decoded.Slice(0, lengthSubject).TrimEnd()
+                : decoded)
+                .ToString();
+
+            if (keepBody && revision.HasMultiLineMessage)
             {
-                revision.HasMultiLineMessage = hasMultiLineMessage;
-                revision.Body = body;
+                // Only allocate additional string if \v exists,
+                // (If Span.Replace() is added, this can be improved).
+                revision.Body = decoded.Contains('\v')
+                    ? decoded.ToString().Replace('\v', '\n')
+                    : decoded.ToString();
             }
 
 #if DEBUG
-            if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && hasMultiLineMessage && body is null))
+            if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && revision.HasMultiLineMessage && revision.Body is null))
             {
-                ParseAssert($"Log parse error, decoded fields ({revision.Subject}::{body}) for {objectId}");
+                ParseAssert($"Log parse error, decoded fields ({revision.Subject}::{revision.Body}) for {objectId}");
                 revision = default;
                 return false;
             }
@@ -419,47 +441,6 @@ namespace GitCommands
                 ReadOnlySpan<byte> r = s.Slice(offset, lineLength);
                 offset += lineLength + 1;
                 return StringPool.Shared.GetOrAdd(r, _logOutputEncoding);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            string? GetReflogSelector(in ReadOnlySpan<char> s)
-            {
-                if (offset >= s.Length)
-                {
-                    return null;
-                }
-
-                int lineLength = s.Slice(offset).IndexOf('\n');
-                if (lineLength == -1)
-                {
-                    // A line must be terminated
-                    return null;
-                }
-
-                ReadOnlySpan<char> r = s.Slice(offset, lineLength);
-                offset += lineLength + 1;
-                return r.ToString();
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            string GetSubjectBody(in ReadOnlySpan<char> bodySlice, out string? body, out bool hasMultiLineMessage, in bool keepBody)
-            {
-                // Subject can also be defined as the contents before empty line (%s for --pretty),
-                // this uses the alternative definition of first line in body.
-                // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
-                int lengthSubject = bodySlice.IndexOfAny('\n', '\v');
-                hasMultiLineMessage = lengthSubject >= 0;
-
-                // See caller for reasoning when message body can be omitted
-                // (String interning makes hasMultiLineMessage check only for clarity)
-                body = keepBody && hasMultiLineMessage
-                    ? bodySlice.ToString().Replace('\v', '\n')
-                    : null;
-
-                return (hasMultiLineMessage
-                    ? bodySlice.Slice(0, lengthSubject).TrimEnd()
-                    : bodySlice)
-                    .ToString();
             }
 
             void ParseAssert(string message)
