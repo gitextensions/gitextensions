@@ -90,6 +90,7 @@
             label2.Size = new Size(124, 27);
             label2.TabIndex = 0;
             label2.Text = "Checkout this &revision";
+            label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Force
             // 
@@ -124,6 +125,8 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(481, 131);
+            MaximizeBox = false;
+            MinimizeBox = false;
             MinimumSize = new Size(460, 125);
             Name = "FormCheckoutRevision";
             StartPosition = FormStartPosition.CenterParent;

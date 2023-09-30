@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCheckoutRevision(GitUICommands commands)
-            : base(commands, enablePositionRestore: true)
+            : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
             InitializeComplete();
