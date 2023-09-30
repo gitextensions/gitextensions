@@ -13,6 +13,9 @@ namespace CommonTestUtils
         public const string AuthorFullIdentity = $"{AuthorName} <{AuthorEmail}>";
         private readonly GitModuleTestHelper _moduleTestHelper = new();
 
+        // We don't expect any failures so that we won't be switching to the main thread or showing messages
+        public static Control DummyOwner { get; } = new();
+
         public ReferenceRepository()
         {
             CreateCommit("A commit message", "A");
@@ -177,8 +180,7 @@ namespace CommonTestUtils
                 repository.Config.Set(SettingKeyString.UserEmail, "author@mail.com");
             }
 
-            // We don't expect any failures so that we won't be switching to the main thread or showing messages
-            CommitMessageManager commitMessageManager = new(owner: null!, Module.WorkingDirGitDir, Module.CommitEncoding);
+            CommitMessageManager commitMessageManager = new(DummyOwner, Module.WorkingDirGitDir, Module.CommitEncoding);
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
             commitMessageManager.ResetCommitMessageAsync().GetAwaiter().GetResult();
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
