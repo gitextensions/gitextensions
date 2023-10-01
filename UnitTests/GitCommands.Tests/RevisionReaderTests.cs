@@ -50,7 +50,7 @@ namespace GitCommandsTests
         [TestCase("bad_parentid_length", false)]
         [TestCase("bad_sha", false)]
         [TestCase("empty", false)]
-        [TestCase("illegal_timestamp", false, false)]
+        [TestCase("illegal_timestamp", false)]
         [TestCase("multi_pathfilter", true)]
         [TestCase("no_subject", true)]
         [TestCase("normal", true)]
@@ -58,8 +58,9 @@ namespace GitCommandsTests
         [TestCase("simple_pathfilter", true)]
         [TestCase("subject_no_body", true)]
         [TestCase("empty_commit", true)]
-        [TestCase("reflogselector", true, true)]
-        public async Task TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false)
+        [TestCase("reflogselector", true, true, false)]
+        [TestCase("reflogselector_empty", true, true)]
+        public async Task TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false, bool hasEmptyReflogSelector = true)
         {
             string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
             ArraySegment<byte> chunk = File.ReadAllBytes(path);
@@ -69,9 +70,10 @@ namespace GitCommandsTests
             reader.GetTestAccessor().NoOfParseError = 100;
             reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision rev)
                 .Should().Be(expectedReturn);
-            if (hasReflogSelector)
+
+            if (!expectedReturn)
             {
-                rev.ReflogSelector.Should().NotBeNull();
+                return;
             }
 
             // No LocalTime for the time stamps
@@ -80,11 +82,17 @@ namespace GitCommandsTests
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc
             };
 
-            if (expectedReturn)
+            if (hasEmptyReflogSelector)
             {
-                await Verifier.VerifyJson(JsonConvert.SerializeObject(rev, timeZoneSettings))
-                    .UseParameters(testName);
+                rev.ReflogSelector.Should().BeNull();
             }
+            else
+            {
+                rev.ReflogSelector.Should().NotBeNull();
+            }
+
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(rev, timeZoneSettings))
+                .UseParameters(testName);
         }
     }
 }
