@@ -381,7 +381,8 @@ namespace GitCommands
                     return false;
                 }
 
-                revision.ReflogSelector = decoded.Slice(0, lineLength).ToString();
+                // No reflogselector for notes and such
+                revision.ReflogSelector = lineLength > 0 ? decoded.Slice(0, lineLength).ToString() : null;
                 decoded = decoded.Slice(lineLength + 1);
             }
 
