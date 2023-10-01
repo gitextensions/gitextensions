@@ -90,7 +90,7 @@ namespace GitCommands
 
         internal CommitMessageManager(Control owner, string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string? overriddenCommitMessage = null)
         {
-            ArgumentNullException.ThrowIfNull(nameof(owner));
+            ArgumentNullException.ThrowIfNull(owner);
 
             _owner = owner;
             _fileSystem = fileSystem;

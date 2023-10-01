@@ -33,7 +33,7 @@ namespace GitCommandsTests
         private CommitMessageManager _manager;
 
         // We don't expect any failures so that we won't be switching to the main thread or showing messages
-        private readonly Control? _owner = null!;
+        private readonly Control _owner = ReferenceRepository.DummyOwner;
 
         public CommitMessageManagerTests()
         {
