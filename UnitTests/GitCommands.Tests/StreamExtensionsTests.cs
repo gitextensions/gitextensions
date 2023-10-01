@@ -44,25 +44,22 @@ namespace GitCommandsTests
             MemoryStream stream = new(input);
 
             // Run the test at multiple buffer sizes to test boundary conditions thoroughly
-            for (var bufferSize = 1; bufferSize < input.Length + 2; bufferSize++)
+            for (int bufferSize = 1; bufferSize < input.Length + 2; bufferSize++)
             {
-                // Test overload that uses external buffer
-                var buffer = new byte[bufferSize];
-
                 stream.Position = 0;
 
-                using var e = stream.ReadNullTerminatedChunks(ref buffer).GetEnumerator();
-                for (var chunkIndex = 0; chunkIndex < expectedChunks.Length; chunkIndex++)
+                using IEnumerator<ReadOnlyMemory<byte>> e = stream.SplitLogOutput(bufferSize).GetEnumerator();
+                for (int chunkIndex = 0; chunkIndex < expectedChunks.Length; chunkIndex++)
                 {
-                    var expected = expectedChunks[chunkIndex];
+                    byte[] expected = expectedChunks[chunkIndex];
                     Assert.IsTrue(e.MoveNext());
                     Assert.AreEqual(
                         expected,
                         e.Current.ToArray(),
-                        "input=[{0}] chunkIndex={1} bufferSize={2}", string.Join(",", expected), chunkIndex, bufferSize);
+                        $"input=[{string.Join(",", expected)}] chunkIndex={chunkIndex} bufferSize={{bufferSize}}");
                 }
 
-                Assert.IsFalse(e.MoveNext(), "bufferSize={0}", bufferSize);
+                Assert.IsFalse(e.MoveNext(), $"bufferSize={bufferSize}");
             }
         }
     }

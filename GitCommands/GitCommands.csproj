@@ -5,6 +5,10 @@
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- To be limited to Debug after initial usage -->
+    <DefineConstants>$(DefineConstants);TRACE_REVISIONREADER</DefineConstants>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\GitExtUtils\Delimiters.cs" Link="Utils\Delimiters.cs" />

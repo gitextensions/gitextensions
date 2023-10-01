@@ -911,7 +911,7 @@ namespace GitUI
             Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                 !AppSettings.ShowStashes
                 ? Array.Empty<GitRevision>()
-                : new RevisionReader(capturedModule, hasReflogSelector: true).GetStashes(cancellationToken));
+                : new RevisionReader(capturedModule).GetStashes(cancellationToken));
 
             try
             {
@@ -1035,7 +1035,7 @@ namespace GitUI
                     Dictionary<ObjectId, ObjectId> untrackedChildIds = getStashRevs.Value.Where(stash => stash.ParentIds.Count >= 3)
                         .Take(AppSettings.MaxStashesWithUntrackedFiles)
                         .ToDictionary(stash => stash.ParentIds[2], stash => stash.ObjectId);
-                    IReadOnlyCollection<GitRevision> untrackedRevs = new RevisionReader(capturedModule, hasReflogSelector: false)
+                    IReadOnlyCollection<GitRevision> untrackedRevs = new RevisionReader(capturedModule)
                         .GetRevisionsFromList(untrackedChildIds.Keys.ToList(), cancellationToken);
                     untrackedByStashId = untrackedRevs.ToDictionary(r => untrackedChildIds[r.ObjectId]);
 
@@ -1061,7 +1061,7 @@ namespace GitUI
                 {
                     TaskManager.HandleExceptions(() =>
                     {
-                        RevisionReader reader = new(capturedModule, hasReflogSelector: false);
+                        RevisionReader reader = new(capturedModule);
                         string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
                         ParentsAreRewritten = _filterInfo.HasRevisionFilter;
 

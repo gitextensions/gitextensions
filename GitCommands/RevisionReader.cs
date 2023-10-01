@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Buffers.Text;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -10,10 +11,9 @@ namespace GitCommands
 {
     public sealed class RevisionReader
     {
-        private const string FullFormat =
+        private const string _fullFormat =
 
-            // These header entries can all be decoded from the bytes directly.
-            // Each hash is 20 bytes long.
+            // These header entries can all be decoded from the bytes (ASCII compatible) directly.
 
             /* Object ID       */ "%H" +
             /* Tree ID         */ "%T" +
@@ -21,12 +21,15 @@ namespace GitCommands
             /* Author date     */ "%at%n" +
             /* Commit date     */ "%ct%n" +
 
-            // Items below here must be decoded as strings to support non-ASCII.
+            // Items below here must be decoded
             /* Author name     */ "%aN%n" +
             /* Author email    */ "%aE%n" +
             /* Committer name  */ "%cN%n" +
             /* Committer email */ "%cE%n" +
+            /* Reflog selector placeholder */ "{0}" +
             /* Commit raw body */ "%B";
+
+        private const string _reflogSelectorFormat = "%gD%n";
 
         // Trace info for parse errors
         private int _noOfParseError = 0;
@@ -37,21 +40,31 @@ namespace GitCommands
         private const int _offsetDaysForOldestBody = 6 * 30; // about 6 months
 
         // reflog selector to identify stashes
-        private readonly bool _hasReflogSelector;
+        private bool _hasReflogSelector;
 
-        private string LogFormat => _hasReflogSelector ? FullFormat.Replace("%B", "%gD%n%B") : FullFormat;
+        // Buffer to decode subject
+        private char[] _decodeBuffer = new char[4096];
 
-        public RevisionReader(GitModule module, bool hasReflogSelector, bool allBodies = false)
-            : this(module, hasReflogSelector, module.LogOutputEncoding, allBodies ? 0 : GetUnixTimeForOffset(_offsetDaysForOldestBody))
+        public RevisionReader(GitModule module, bool allBodies = false)
+            : this(module, module.LogOutputEncoding, allBodies ? 0 : GetUnixTimeForOffset(_offsetDaysForOldestBody))
         {
         }
 
-        private RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long oldestBody)
+        private RevisionReader(GitModule module, Encoding logOutputEncoding, long oldestBody)
         {
             _module = module;
-            _hasReflogSelector = hasReflogSelector;
             _logOutputEncoding = logOutputEncoding;
             _oldestBody = oldestBody;
+        }
+
+        /// <summary>
+        /// Return the git-log format and set the reflogSelector flag
+        /// (used when parsing the buffer).
+        /// </summary>
+        private string GetLogFormat(bool hasReflogSelector = false)
+        {
+            _hasReflogSelector = hasReflogSelector;
+            return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "");
         }
 
         private static long GetUnixTimeForOffset(int days)
@@ -64,13 +77,11 @@ namespace GitCommands
         /// <returns>List with GitRevisions.</returns>
         public IReadOnlyCollection<GitRevision> GetStashes(CancellationToken cancellationToken)
         {
-            Debug.Assert(_hasReflogSelector, "_hasReflogSelector must be set to get the reflog selectors (to identify stashes)");
-
             GitArgumentBuilder arguments = new("stash")
             {
                 "list",
                 "-z",
-                $"--pretty=format:\"{LogFormat}\""
+                $"--pretty=format:\"{GetLogFormat(hasReflogSelector: true)}\""
             };
 
             return GetRevisionsFromArguments(arguments, cancellationToken);
@@ -92,7 +103,7 @@ namespace GitCommands
             GitArgumentBuilder arguments = new("log")
             {
                 "-z",
-                $"--pretty=format:\"{LogFormat}\"",
+                $"--pretty=format:\"{GetLogFormat()}\"",
                 "--dirstat=files",
                 string.Join(" ", untracked),
                 ".",
@@ -118,7 +129,7 @@ namespace GitCommands
             GitArgumentBuilder arguments = new("log")
                 {
                     "-z",
-                    $"--pretty=format:\"{FullFormat}\"",
+                    $"--pretty=format:\"{GetLogFormat()}\"",
                     $"{olderCommitHash}~..{newerCommitHash}"
                 };
 
@@ -133,22 +144,20 @@ namespace GitCommands
         /// <returns>List with GitRevisions.</returns>
         private IReadOnlyCollection<GitRevision> GetRevisionsFromArguments(GitArgumentBuilder arguments, CancellationToken cancellationToken)
         {
-            List<GitRevision> stashes = new();
+            List<GitRevision> revisions = new();
 
             using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding);
-            byte[] buffer = new byte[4096];
-
-            foreach (ArraySegment<byte> chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+            foreach (ReadOnlyMemory<byte> chunk in process.StandardOutput.BaseStream.SplitLogOutput())
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (TryParseRevision(chunk, out GitRevision? revision))
+                if (TryParseRevision(chunk.Span, out GitRevision? revision))
                 {
-                    stashes.Add(revision);
+                    revisions.Add(revision);
                 }
             }
 
-            return stashes;
+            return revisions;
         }
 
         /// <summary>
@@ -164,35 +173,33 @@ namespace GitCommands
             string pathFilter,
             CancellationToken cancellationToken)
         {
-#if DEBUG
+#if TRACE_REVISIONREADER
             int revisionCount = 0;
             Stopwatch sw = Stopwatch.StartNew();
 #endif
             ArgumentBuilder arguments = BuildArguments(revisionFilter, pathFilter);
-            using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding);
 #if DEBUG
             Debug.WriteLine($"git {arguments}");
 #endif
+            using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding);
             cancellationToken.ThrowIfCancellationRequested();
 
-            byte[] buffer = new byte[4096];
-
-            foreach (ArraySegment<byte> chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+            foreach (ReadOnlyMemory<byte> chunk in process.StandardOutput.BaseStream.SplitLogOutput())
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (TryParseRevision(chunk, out GitRevision? revision))
+                if (TryParseRevision(chunk.Span, out GitRevision? revision))
                 {
-#if DEBUG
+#if TRACE_REVISIONREADER
                     revisionCount++;
 #endif
                     subject.OnNext(revision);
                 }
             }
 
-#if DEBUG
+#if TRACE_REVISIONREADER
             // TODO Make it possible to explicitly activate Trace printouts like this
-            Debug.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={_noOfParseError}");
+            Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. parseErrors={_noOfParseError}");
 #endif
 
             if (!cancellationToken.IsCancellationRequested)
@@ -206,7 +213,7 @@ namespace GitCommands
             return new GitArgumentBuilder("log")
             {
                 "-z",
-                $"--pretty=format:\"{LogFormat}\"",
+                $"--pretty=format:\"{GetLogFormat()}\"",
 
                 // sorting
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
@@ -218,7 +225,8 @@ namespace GitCommands
             };
         }
 
-        private bool TryParseRevision(in ArraySegment<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision)
+        [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
+        private bool TryParseRevision(in ReadOnlySpan<byte> buffer, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -227,22 +235,20 @@ namespace GitCommands
             // at the beginning of the chunk. The latter part of the chunk will require
             // decoding as a string.
 
-            if (chunk.Count < ObjectId.Sha1CharCount * 2)
+            if (buffer.Length < ObjectId.Sha1CharCount * 2)
             {
-                ParseAssert($"Log parse error, not enough data: {chunk.Count}");
+                ParseAssert($"Log parse error, not enough data: {buffer.Length}");
                 revision = default;
                 return false;
             }
 
             #region Object ID, Tree ID, Parent IDs
 
-            ReadOnlySpan<byte> array = chunk.AsSpan();
-
             // The first 40 bytes are the revision ID and the tree ID back to back
-            if (!ObjectId.TryParse(array[..ObjectId.Sha1CharCount], out ObjectId? objectId) ||
-                !ObjectId.TryParse(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out ObjectId? treeId))
+            if (!ObjectId.TryParse(buffer.Slice(0, ObjectId.Sha1CharCount), out ObjectId? objectId) ||
+                !ObjectId.TryParse(buffer.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out ObjectId? treeId))
             {
-                ParseAssert($"Log parse error, object id: {chunk.Count}({array[..ObjectId.Sha1CharCount].ToString()}");
+                ParseAssert($"Log parse error, object id: {buffer.Length}({buffer.Slice(0, ObjectId.Sha1CharCount).ToString()}");
                 revision = default;
                 return false;
             }
@@ -250,52 +256,47 @@ namespace GitCommands
             int offset = ObjectId.Sha1CharCount * 2;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
-            int noParents = CountParents(in array, offset);
-            if (noParents < 0)
-            {
-                ParseAssert($"Log parse error, {noParents} no of parents for {objectId}");
-                revision = default;
-                return false;
-            }
+            int noParents = CountParents(in buffer, offset);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             int CountParents(in ReadOnlySpan<byte> array, int baseOffset)
             {
                 int count = 0;
-
                 while (baseOffset < array.Length && array[baseOffset] != '\n')
                 {
-                    // Parse error, not using ParseAssert (or increasing _noOfParseError)
-                    Debug.Assert(count == 0 || array[baseOffset] == ' ', $"Log parse error, unexpected contents in the parent array: {array[baseOffset]}/{count} for {objectId}");
-                    baseOffset += ObjectId.Sha1CharCount;
                     if (count > 0)
                     {
                         // Except for the first parent, advance after the space
                         baseOffset++;
                     }
 
+                    baseOffset += ObjectId.Sha1CharCount;
                     count++;
-                }
 
-                if (baseOffset >= array.Length || array[baseOffset] != '\n')
-                {
-                    return -1;
+                    if (baseOffset >= array.Length || ((char)array[baseOffset] is not ('\n' or ' ')))
+                    {
+                        // Parse error, not using ParseAssert (or increasing _noOfParseError)
+                        ParseAssert($"Log parse error, unexpected contents in the parent array: {baseOffset - offset} for {objectId}");
+                        return -1;
+                    }
                 }
 
                 return count;
             }
 
-            ObjectId[] parentIds = new ObjectId[noParents];
-
-            if (noParents == 0)
+            ObjectId[] parentIds;
+            if (noParents <= 0)
             {
                 offset++;
+                parentIds = Array.Empty<ObjectId>();
             }
             else
             {
+                parentIds = new ObjectId[noParents];
+
                 for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
-                    if (!ObjectId.TryParse(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
+                    if (!ObjectId.TryParse(buffer.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
                     {
                         ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                         revision = default;
@@ -311,157 +312,144 @@ namespace GitCommands
 
             #region Timestamps
 
-            // Decimal ASCII seconds since the unix epoch, each terminated by `\n`
-            long authorUnixTime = ParseUnixDateTime(in array);
-            long commitUnixTime = ParseUnixDateTime(in array);
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            long ParseUnixDateTime(in ReadOnlySpan<byte> array)
+            // Decimal ASCII seconds since the unix epoch
+            if (!Utf8Parser.TryParse(buffer.Slice(offset), out long authorUnixTime, out int bytesConsumed))
             {
-                long unixTime = 0;
-
-                while (offset < array.Length)
-                {
-                    int c = array[offset++];
-
-                    if (c == '\n')
-                    {
-                        break;
-                    }
-
-                    unixTime = (unixTime * 10) + (c - '0');
-                }
-
-                return unixTime;
+                ParseAssert($"Log parse error, not enough data for authortime: {buffer.Length} {offset} {buffer.Slice(offset).ToString()}");
+                revision = default;
+                return false;
             }
+
+            offset += bytesConsumed + 1;
+            if (!Utf8Parser.TryParse(buffer.Slice(offset), out long commitUnixTime, out bytesConsumed))
+            {
+                ParseAssert($"Log parse error, not enough data for committime: {buffer.Length} {offset} {buffer.Slice(offset).ToString()}");
+                revision = default;
+                return false;
+            }
+
+            offset += bytesConsumed + 1;
 
             #endregion
 
             #region Encoded string values (names, emails, subject, body)
 
-            // Finally, decode the names, email, subject and body strings using the required text encoding
-            ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).AsSpan();
-            StringLineReader reader = new(in s);
-
-            // Authors etc are limited, use a shared string pool
-            string author = reader.ReadLine(useStringPool: true);
-            string authorEmail = reader.ReadLine(useStringPool: true);
-            string committer = reader.ReadLine(useStringPool: true);
-            string committerEmail = reader.ReadLine(useStringPool: true);
-
-            // reflogSelector are always unique and only used when listing stashes
-            string reflogSelector = _hasReflogSelector ? reader.ReadLine(useStringPool: false) : null;
-
-            // We keep a full multiline message body within the last six months (by default).
-            // Note also that if body and subject are identical (single line), the body never need to be stored
-            bool keepBody = authorUnixTime >= _oldestBody;
-            reader.PeekSubjectBody(out string? subject, out string? body, out bool hasMultiLineMessage, in keepBody);
-
-            if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (keepBody && hasMultiLineMessage && body is null))
-            {
-                ParseAssert($"Log parse error, decoded fields ({subject}::{body}) for {objectId}");
-                revision = default;
-                return false;
-            }
-
-            #endregion
-
+            // The remaining must be decoded (for above utf8/ascii must work)
+            // First records are decoded on the stack
+            // The attributes are decoded in the order they are defined in the format string
             revision = new GitRevision(objectId)
             {
                 ParentIds = parentIds,
                 TreeGuid = treeId,
-                Author = author,
-                AuthorEmail = authorEmail,
+
+                Author = GetNextLine(buffer),
+                AuthorEmail = GetNextLine(buffer),
                 AuthorUnixTime = authorUnixTime,
-                Committer = committer,
-                CommitterEmail = committerEmail,
+                Committer = GetNextLine(buffer),
+                CommitterEmail = GetNextLine(buffer),
                 CommitUnixTime = commitUnixTime,
-                Subject = subject,
-                Body = body,
-                HasMultiLineMessage = hasMultiLineMessage,
-                HasNotes = false,
-                ReflogSelector = reflogSelector,
+                HasNotes = false
             };
+
+            // Body is occasionally big, like linux repo has 35K bytes, the buffer is over 100K
+            // Use a backing buffer on the heap
+            int maxChars = _logOutputEncoding.GetMaxByteCount(buffer.Slice(offset).Length);
+            if (maxChars > _decodeBuffer.Length)
+            {
+                // Default should be sufficient for most repos, Linux though has
+                // unencoded of 36K, which results in maxChars being greater than 100K
+                int newSize = _decodeBuffer.Length;
+                while (newSize < maxChars)
+                {
+                    newSize *= 2;
+                }
+
+                _decodeBuffer = new char[newSize];
+            }
+
+            int decodedLength = _logOutputEncoding.GetChars(buffer.Slice(offset), _decodeBuffer);
+            Span<char> decoded = _decodeBuffer.AsSpan(0, decodedLength);
+
+            // reflogSelector are only used when listing stashes
+            if (_hasReflogSelector)
+            {
+                int lineLength = decoded.IndexOf('\n');
+                if (lineLength == -1)
+                {
+                    ParseAssert($"Log parse error, parent no reflogselector for {objectId}");
+                    revision = default;
+                    return false;
+                }
+
+                revision.ReflogSelector = decoded.Slice(0, lineLength).ToString();
+                decoded = decoded.Slice(lineLength + 1);
+            }
+
+            // Keep a full multi-line message body within the last six months (by default).
+            // Note also that if body and subject are identical (single line), the body never need to be stored
+            bool keepBody = authorUnixTime >= _oldestBody;
+            decoded = decoded.TrimEnd();
+
+            // Subject can also be defined as the contents before empty line (%s for --pretty),
+            // this uses the alternative definition of first line in body.
+            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
+            int lengthSubject = decoded.IndexOfAny('\n', '\v');
+            revision.HasMultiLineMessage = lengthSubject >= 0;
+            revision.Subject = (revision.HasMultiLineMessage
+                ? decoded.Slice(0, lengthSubject).TrimEnd()
+                : decoded)
+                .ToString();
+
+            if (keepBody && revision.HasMultiLineMessage)
+            {
+                // Only allocate additional string if \v exists,
+                // (If Span.Replace() is added, this can be improved).
+                revision.Body = decoded.Contains('\v')
+                    ? decoded.ToString().Replace('\v', '\n')
+                    : decoded.ToString();
+            }
+
+#if DEBUG
+            if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && revision.HasMultiLineMessage && revision.Body is null))
+            {
+                ParseAssert($"Log parse error, decoded fields ({revision.Subject}::{revision.Body}) for {objectId}");
+                revision = default;
+                return false;
+            }
+#endif
+
+            #endregion
 
             return true;
 
-            void ParseAssert(string? message)
-            {
-                _noOfParseError++;
-                Debug.Assert(_noOfParseError > 1, message);
-                Trace.WriteLineIf(_noOfParseError < 10, message);
-            }
-        }
-
-        #region Nested type: StringLineReader
-
-        /// <summary>
-        /// Simple type to walk along a string, line by line, without redundant allocations.
-        /// </summary>
-        internal ref struct StringLineReader
-        {
-            private readonly ReadOnlySpan<char> _s;
-            private int _index = 0;
-
-            public StringLineReader(in ReadOnlySpan<char> s)
-            {
-                _s = s;
-            }
-
+            // Authors etc are limited, use a shared string pool
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public string? ReadLine(in bool useStringPool)
+            string? GetNextLine(in ReadOnlySpan<byte> s)
             {
-                if (_index >= _s.Length)
+                if (offset >= s.Length)
                 {
                     return null;
                 }
 
-                int lineLength = _s[_index..].IndexOf('\n');
+                int lineLength = s.Slice(offset).IndexOf((byte)'\n');
                 if (lineLength == -1)
                 {
                     // A line must be terminated
                     return null;
                 }
 
-                int startIndex = _index;
-                _index += lineLength + 1;
-
-                ReadOnlySpan<char> s = _s.Slice(startIndex, lineLength);
-                return useStringPool ? StringPool.Shared.GetOrAdd(s) : s.ToString();
+                ReadOnlySpan<byte> r = s.Slice(offset, lineLength);
+                offset += lineLength + 1;
+                return StringPool.Shared.GetOrAdd(r, _logOutputEncoding);
             }
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public readonly void PeekSubjectBody(out string? subject, out string? body, out bool hasMultiLineMessage, in bool keepBody)
+            void ParseAssert(string message)
             {
-                // Empty subject is allowed
-                if (_index > _s.Length)
-                {
-                    subject = body = null;
-                    hasMultiLineMessage = false;
-                    return;
-                }
-
-                ReadOnlySpan<char> bodySlice = _s[_index..].Trim();
-
-                // Subject can also be defined as the contents before empty line (%s for --pretty),
-                // this uses the alternative definition of first line in body.
-                // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
-                int lengthSubject = bodySlice.IndexOfAny('\n', '\v');
-                hasMultiLineMessage = lengthSubject >= 0;
-                subject = (hasMultiLineMessage
-                    ? bodySlice[..lengthSubject].TrimEnd()
-                    : bodySlice)
-                    .ToString();
-
-                // See caller for reasoning when message body can be omitted
-                // (String interning makes hasMultiLineMessage check only for clarity)
-                body = keepBody && hasMultiLineMessage
-                    ? bodySlice.ToString().Replace('\v', '\n')
-                    : null;
+                _noOfParseError++;
+                Debug.Assert(!Debugger.IsAttached || _noOfParseError > 1, message);
+                Trace.WriteLineIf(_noOfParseError < 10, message);
             }
         }
-
-        #endregion
 
         internal TestAccessor GetTestAccessor()
             => new(this);
@@ -477,13 +465,17 @@ namespace GitCommands
 
             internal static RevisionReader RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long sixMonths)
             {
-                return new RevisionReader(module, hasReflogSelector, logOutputEncoding, sixMonths);
+                RevisionReader reader = new(module, logOutputEncoding, sixMonths)
+                {
+                    _hasReflogSelector = hasReflogSelector
+                };
+                return reader;
             }
 
             internal ArgumentBuilder BuildArguments(string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(revisionFilter, pathFilter);
 
-            internal bool TryParseRevision(ArraySegment<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
+            internal bool TryParseRevision(ReadOnlySpan<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
                 _revisionReader.TryParseRevision(chunk, out revision);
 
             internal int NoOfParseError

@@ -2744,7 +2744,7 @@ namespace GitUI.CommandsDialogs
                 Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                     !AppSettings.ShowStashes
                     ? Array.Empty<GitRevision>()
-                    : new RevisionReader(new(UICommands.GitModule.WorkingDir), hasReflogSelector: true).GetStashes(CancellationToken.None));
+                    : new RevisionReader(new(UICommands.GitModule.WorkingDir)).GetStashes(CancellationToken.None));
 
                 RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs, getStashRevs, forceRefresh: true);
                 repoObjectsTree.RefreshRevisionsLoaded();

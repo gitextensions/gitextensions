@@ -5,108 +5,88 @@ namespace GitCommands
     public static class StreamExtensions
     {
         [MustUseReturnValue]
-        public static IEnumerable<ArraySegment<byte>> ReadNullTerminatedChunks(this Stream stream, ref byte[] buffer)
+        public static IEnumerable<ReadOnlyMemory<byte>> SplitLogOutput(this Stream stream, int initialBufferSize = 4096)
         {
-            // Work around generator functions and ref parameters
-            var buf = buffer;
-            var chunks = Run();
-            buffer = buf;
-            return chunks;
+            byte[] buffer = new byte[initialBufferSize];
 
-            IEnumerable<ArraySegment<byte>> Run()
+            int yieldFromIndex = 0;
+            int writeToIndex = 0;
+
+            while (true)
             {
-                var yieldFromIndex = 0;
-                var writeToIndex = 0;
+                // Fill the buffer with data
+                int bytesRead = stream.Read(buffer, writeToIndex, buffer.Length - writeToIndex);
 
-                while (true)
+                if (bytesRead == 0)
                 {
-                    // Fill the buffer with data
-                    var bytesRead = stream.Read(buf, writeToIndex, buf.Length - writeToIndex);
-
-                    if (bytesRead == 0)
+                    // End of stream, just yield the remaining data (no null terminator for last commit)
+                    if (writeToIndex != 0 && writeToIndex != yieldFromIndex)
                     {
-                        if (writeToIndex != 0 && writeToIndex != yieldFromIndex)
-                        {
-                            yield return new ArraySegment<byte>(buf, yieldFromIndex, writeToIndex - yieldFromIndex);
-                        }
-
-                        yield break;
+                        yield return new ReadOnlyMemory<byte>(buffer, yieldFromIndex, writeToIndex - yieldFromIndex);
                     }
 
-                    var dataUntilIndex = writeToIndex + bytesRead;
+                    yield break;
+                }
 
-                    var searchFromIndex = writeToIndex;
-                    writeToIndex += bytesRead;
-                    var searchBeforeIndex = writeToIndex;
+                int dataUntilIndex = writeToIndex + bytesRead;
 
-                    while (searchFromIndex < searchBeforeIndex)
+                int searchFromIndex = writeToIndex;
+                writeToIndex += bytesRead;
+                int searchBeforeIndex = writeToIndex;
+
+                while (searchFromIndex < searchBeforeIndex)
+                {
+                    int nullIndex = Array.IndexOf<byte>(buffer, 0, searchFromIndex, searchBeforeIndex - searchFromIndex);
+
+                    if (nullIndex == -1)
                     {
-                        var nullIndex = Array.IndexOf<byte>(buf, 0, searchFromIndex, searchBeforeIndex - searchFromIndex);
-
-                        if (nullIndex == -1)
+                        // null not found in the data available to process
+                        if (searchBeforeIndex == buffer.Length)
                         {
-                            // We didn't find a null in the data we have available to process
-                            if (searchBeforeIndex == buf.Length)
+                            // end of the buffer
+                            if (yieldFromIndex != 0)
                             {
-                                // We are at the end of the buffer
-                                if (yieldFromIndex != 0)
-                                {
-                                    // There is free space earlier in the buffer, so shift this chunk to the beginning
+                                // Shift unprocessed to the beginning
+                                int unprocessedByteCount = buffer.Length - yieldFromIndex;
+                                Array.Copy(buffer, yieldFromIndex, buffer, 0, unprocessedByteCount);
 
-                                    var unprocessedByteCount = buf.Length - yieldFromIndex;
-
-                                    // Move unprocessed bytes from the end to the start of the buffer.
-                                    Array.Copy(buf, yieldFromIndex, buf, 0, unprocessedByteCount);
-
-                                    // Restart loop
-                                    yieldFromIndex = 0;
-                                    writeToIndex = unprocessedByteCount;
-                                }
-                                else
-                                {
-                                    // The buffer is full, with no nulls, so allocate a larger buffer
-
-                                    // Allocate new buffer with twice the size
-                                    var newBuffer = new byte[buf.Length * 2];
-
-                                    // Copy old to new buffers
-                                    Array.Copy(buf, newBuffer, buf.Length);
-
-                                    // Restart loop
-                                    writeToIndex = buf.Length;
-
-                                    // Writeback
-                                    buf = newBuffer;
-                                }
+                                // Restart loop
+                                yieldFromIndex = 0;
+                                writeToIndex = unprocessedByteCount;
                             }
+                            else
+                            {
+                                // The buffer is full, with no nulls, so allocate a larger buffer
 
-                            break;
+                                // Allocate new buffer with twice the size and copy
+                                byte[] newBuffer = new byte[buffer.Length * 2];
+                                Array.Copy(buffer, newBuffer, buffer.Length);
+
+                                // Restart loop (yieldFromIndex is unchanged)
+                                writeToIndex = buffer.Length;
+
+                                // Writeback
+                                buffer = newBuffer;
+                            }
                         }
 
-                        // yield any inner chunks
-                        yield return new ArraySegment<byte>(buf, yieldFromIndex, nullIndex - yieldFromIndex);
-
-                        if (nullIndex + 1 == dataUntilIndex)
-                        {
-                            yieldFromIndex = writeToIndex = 0;
-                            break;
-                        }
-                        else
-                        {
-                            searchFromIndex = yieldFromIndex = nullIndex + 1;
-                        }
+                        break;
                     }
+
+                    // yield any inner chunks
+                    yield return new ReadOnlyMemory<byte>(buffer, yieldFromIndex, nullIndex - yieldFromIndex);
+
+                    if (nullIndex + 1 == dataUntilIndex)
+                    {
+                        // all data in the buffer processed
+                        yieldFromIndex = writeToIndex = 0;
+                        break;
+                    }
+
+                    // process the remaining (possibly partial) commits
+                    searchFromIndex = yieldFromIndex = nullIndex + 1;
                 }
             }
-        }
-
-        [MustUseReturnValue]
-        public static byte[] ReadAllBytes(this Stream stream)
-        {
-            // NOTE no need to dispose MemoryStream
-            MemoryStream memoryStream = new();
-            stream.CopyTo(memoryStream);
-            return memoryStream.ToArray();
         }
     }
 }

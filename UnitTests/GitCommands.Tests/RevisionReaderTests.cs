@@ -50,7 +50,7 @@ namespace GitCommandsTests
         [TestCase("bad_parentid_length", false)]
         [TestCase("bad_sha", false)]
         [TestCase("empty", false)]
-        [TestCase("illegal_timestamp", true, false, true)]
+        [TestCase("illegal_timestamp", false, false)]
         [TestCase("multi_pathfilter", true)]
         [TestCase("no_subject", true)]
         [TestCase("normal", true)]
@@ -59,7 +59,7 @@ namespace GitCommandsTests
         [TestCase("subject_no_body", true)]
         [TestCase("empty_commit", true)]
         [TestCase("reflogselector", true, true)]
-        public async Task TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false, bool serialThrows = false)
+        public async Task TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false)
         {
             string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
             ArraySegment<byte> chunk = File.ReadAllBytes(path);
@@ -80,12 +80,7 @@ namespace GitCommandsTests
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc
             };
 
-            if (serialThrows)
-            {
-                Action act = () => JsonConvert.SerializeObject(rev);
-                act.Should().Throw<JsonSerializationException>();
-            }
-            else if (expectedReturn)
+            if (expectedReturn)
             {
                 await Verifier.VerifyJson(JsonConvert.SerializeObject(rev, timeZoneSettings))
                     .UseParameters(testName);
