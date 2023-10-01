@@ -394,6 +394,8 @@ namespace GitUI.CommandsDialogs
                         }
                     });
 
+            UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+
             return;
 
             void ConfigureMessageBox()
@@ -420,6 +422,11 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
+                if (!IsDesignMode && !IsUnitTestActive)
+                {
+                    UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
+                }
+
                 _unstagedLoader.Dispose();
                 _customDiffToolsSequence.Dispose();
                 _interactiveAddSequence.Dispose();
@@ -593,6 +600,20 @@ namespace GitUI.CommandsDialogs
             base.OnKeyUp(e);
 
             return;
+        }
+
+        protected override void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
+        {
+            GitUICommands oldCommands = e.OldCommands;
+
+            if (oldCommands is not null)
+            {
+                oldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
+            }
+
+            UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+
+            base.OnUICommandsChanged(e);
         }
 
         public override bool ProcessHotkey(Keys keyData)
@@ -882,6 +903,11 @@ namespace GitUI.CommandsDialogs
                 case Command.SelectPrevious_AlternativeHotkey2: MoveSelection(-1); return true;
                 default: return base.ExecuteCommand(cmd);
             }
+        }
+
+        public override IScriptOptionsProvider? GetScriptOptionsProvider()
+        {
+            return new ScriptOptionsProvider(_currentFilesList, () => _fullPathResolver, () => SelectedDiff.CurrentFileLine);
         }
 
         #endregion
@@ -1642,6 +1668,8 @@ namespace GitUI.CommandsDialogs
             openWithToolStripMenuItem.Enabled = !isAnyDeleted;
             deleteFileToolStripMenuItem.Enabled = !isAnyDeleted;
             openContainingFolderToolStripMenuItem.Enabled = !isAnyDeleted;
+
+            UnstagedFileContext.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1661,6 +1689,8 @@ namespace GitUI.CommandsDialogs
             stagedOpenToolStripMenuItem7.Enabled = !isAnyDeleted;
             stagedOpenWithToolStripMenuItem8.Enabled = !isAnyDeleted;
             stagedOpenFolderToolStripMenuItem10.Enabled = !isAnyDeleted;
+
+            StagedFileContext.AddUserScripts(stagedRunScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void UnstagedSubmoduleContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -3300,6 +3330,18 @@ namespace GitUI.CommandsDialogs
             CommitAndPush.Text = PushForced ? _commitAndForcePush.Text
                 : btnResetAllChanges.Enabled || Amend.Checked ? _commitAndPush.Text
                 : TranslatedStrings.ButtonPush;
+        }
+
+        private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
+        {
+            if (!_skipUpdate && !_bypassActivatedEventHandler)
+            {
+                ThreadHelper.FileAndForget(async () =>
+                    {
+                        await this.SwitchToMainThreadAsync();
+                        RescanChanges();
+                    });
+            }
         }
 
         internal TestAccessor GetTestAccessor()

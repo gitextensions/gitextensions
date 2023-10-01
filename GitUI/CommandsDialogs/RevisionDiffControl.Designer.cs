@@ -60,6 +60,8 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem = new ToolStripMenuItem();
             blameToolStripMenuItem = new ToolStripMenuItem();
             findInDiffToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparatorScript = new ToolStripSeparator();
+            runScriptToolStripMenuItem = new ToolStripMenuItem();
             DiffText = new GitUI.Editor.FileViewer();
             BlameControl = new Blame.BlameControl();
             saveToolStripMenuItem = new ToolStripMenuItem();
@@ -145,7 +147,9 @@ namespace GitUI.CommandsDialogs
             diffFilterFileInGridToolStripMenuItem,
             fileHistoryDiffToolstripMenuItem,
             blameToolStripMenuItem,
-            findInDiffToolStripMenuItem});
+            findInDiffToolStripMenuItem,
+            toolStripSeparatorScript,
+            runScriptToolStripMenuItem});
             DiffContextMenu.Name = "DiffContextMenu";
             DiffContextMenu.Size = new Size(263, 534);
             DiffContextMenu.Opening += DiffContextMenu_Opening;
@@ -436,6 +440,18 @@ namespace GitUI.CommandsDialogs
             findInDiffToolStripMenuItem.Text = "&Find";
             findInDiffToolStripMenuItem.Click += findInDiffToolStripMenuItem_Click;
             // 
+            // toolStripSeparatorScript
+            // 
+            toolStripSeparatorScript.Name = "toolStripSeparatorScript";
+            toolStripSeparatorScript.Size = new Size(259, 6);
+            // 
+            // runScriptToolStripMenuItem
+            // 
+            runScriptToolStripMenuItem.Image = Properties.Images.Console;
+            runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
+            runScriptToolStripMenuItem.Size = new Size(262, 22);
+            runScriptToolStripMenuItem.Text = "Run script";
+            // 
             // DiffText
             // 
             DiffText.Dock = DockStyle.Fill;
@@ -517,5 +533,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem diffOpenWorkingDirectoryFileWithToolStripMenuItem;
         private ToolStripMenuItem diffOpenRevisionFileToolStripMenuItem;
         private ToolStripMenuItem diffOpenRevisionFileWithToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparatorScript;
+        private ToolStripMenuItem runScriptToolStripMenuItem;
     }
 }

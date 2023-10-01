@@ -8,6 +8,7 @@ using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -289,6 +290,21 @@ See the changes in the commit form.");
             }
 
             return true;
+        }
+
+        protected override IScriptOptionsProvider? GetScriptOptionsProvider()
+        {
+            return new ScriptOptionsProvider(() =>
+                {
+                    if (tvGitTree.SelectedNode?.Tag is not GitItem gitItem || gitItem.ObjectType != GitObjectType.Blob)
+                    {
+                        return Array.Empty<string>();
+                    }
+
+                    return new string[] { gitItem.FileName };
+                },
+                () => _fullPathResolver,
+                () => BlameControl.Visible ? BlameControl.CurrentFileLine : FileText.CurrentFileLine);
         }
 
         public override bool ProcessHotkey(Keys keyData)
@@ -740,6 +756,8 @@ See the changes in the commit form.");
             findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count > 0;
             expandToolStripMenuItem.Visible = isFolder;
             collapseAllToolStripMenuItem.Visible = isFolder;
+
+            FileTreeContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)

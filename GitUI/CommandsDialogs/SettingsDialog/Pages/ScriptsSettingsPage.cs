@@ -67,7 +67,11 @@ Currently checked out revision:
 {cCommitDate}
 {cDefaultRemote}
 {cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}");
+{cDefaultRemotePathFromUrl}
+
+File(s):
+{SelectedFiles}
+{LineNumber}");
 
         private static readonly string[] WatchedProxyProperties = new string[]
         {

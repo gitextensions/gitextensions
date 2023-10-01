@@ -2026,7 +2026,7 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, UICommands);
+            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.AddToRevisionGridContextMenu, UICommands);
 
             UpdateSeparators();
 

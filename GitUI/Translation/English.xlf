@@ -3902,6 +3902,10 @@ You can unset the template:
         <source>Reset submodule changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="runScriptToolStripMenuItem.Text">
+        <source>Run script</source>
+        <target />
+      </trans-unit>
       <trans-unit id="selectionFilterToolStripMenuItem.Text">
         <source>Selection filter</source>
         <target />
@@ -3960,6 +3964,10 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="stagedResetChanges.Text">
         <source>Reset file or directory changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stagedRunScriptToolStripMenuItem.Text">
+        <source>Run script</source>
         <target />
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
@@ -8833,6 +8841,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>&amp;Reset file(s) to</source>
         <target />
       </trans-unit>
+      <trans-unit id="runScriptToolStripMenuItem.Text">
+        <source>Run script</source>
+        <target />
+      </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem1.Text">
         <source>S&amp;ave selected as...</source>
         <target />
@@ -8997,6 +9009,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
         <source>Reset to selected revision</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="runScriptToolStripMenuItem.Text">
+        <source>Run script</source>
         <target />
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
@@ -9624,7 +9640,11 @@ Currently checked out revision:
 {cCommitDate}
 {cDefaultRemote}
 {cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</source>
+{cDefaultRemotePathFromUrl}
+
+File(s):
+{SelectedFiles}
+{LineNumber}</source>
         <target />
       </trans-unit>
       <trans-unit id="chdrCommand.Text">
