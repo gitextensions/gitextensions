@@ -3,6 +3,7 @@ using System.Text;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Settings;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
@@ -137,11 +138,12 @@ namespace CommonTestUtils
         /// </summary>
         private static void SetRepoConfig(GitModule module)
         {
-            module.LocalConfigFile.SetString(SettingKeyString.UserName, "author");
-            module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
-            module.LocalConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-            module.LocalConfigFile.SetString(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
-            module.LocalConfigFile.Save();
+            ConfigFileSettings localConfigFile = (ConfigFileSettings)module.LocalConfigFile;
+            localConfigFile.SetString(SettingKeyString.UserName, "author");
+            localConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
+            localConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            localConfigFile.SetString(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
+            localConfigFile.Save();
         }
 
         /// <summary>
@@ -194,7 +196,7 @@ namespace CommonTestUtils
                 // we want to delete, so we need to make sure the timers that will try to auto-save there
                 // are stopped before actually deleting, else the timers will throw on a background thread.
                 // Note that the intermittent failures mentioned below are likely related too.
-                Module.EffectiveConfigFile.SettingsCache.Dispose();
+                ((ConfigFileSettings)Module.EffectiveConfigFile).SettingsCache.Dispose();
                 Module.EffectiveSettings.SettingsCache.Dispose();
 
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders

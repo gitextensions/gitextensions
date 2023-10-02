@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Patches;
@@ -80,7 +81,7 @@ namespace ResourceManager
             StringBuilder sb = new();
             sb.AppendLine("Submodule " + name);
             sb.AppendLine();
-            GitModule module = superproject.GetSubmodule(name);
+            IGitModule module = superproject.GetSubmodule(name);
 
             // Submodule directory must exist to run commands, unknown otherwise
             if (module.IsValidGitWorkingDir())
@@ -207,7 +208,7 @@ namespace ResourceManager
             }
 
             sb.AppendLine();
-            SubmoduleStatus submoduleStatus = gitModule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
+            SubmoduleStatus submoduleStatus = gitModule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData, loadData: false);
             sb.Append("Type: ");
             switch (submoduleStatus)
             {
@@ -283,7 +284,7 @@ namespace ResourceManager
 
                 if (gitModule.IsValidGitWorkingDir())
                 {
-                    ExecutionResult exec = gitModule.GetDiffFiles(status.OldCommit.ToString(), status.Commit.ToString(), nullSeparated: false);
+                    ExecutionResult exec = gitModule.GetDiffFiles(status.OldCommit.ToString(), status.Commit.ToString(), noCache: false, nullSeparated: false, cancellationToken: default);
                     if (exec.ExitedSuccessfully)
                     {
                         string diffs = exec.StandardOutput;

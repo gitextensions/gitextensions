@@ -232,7 +232,7 @@ namespace GitCommands
             return _submoduleStatus?.JoinAsync();
         }
 
-        internal void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus?> status)
+        public void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus?> status)
         {
             _submoduleStatus = status;
         }

@@ -24,7 +24,7 @@ namespace BugReporter
             string? gitVer;
             try
             {
-                gitVer = GitVersion.Current?.Full;
+                gitVer = GitVersion.Current?.ToString();
             }
             catch (Exception)
             {

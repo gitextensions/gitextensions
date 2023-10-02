@@ -93,7 +93,7 @@ Do you want to register the host's fingerprint and restart the process?");
                         if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
                             string.IsNullOrEmpty(Commands.Module.GetSetting("remote.{0}.puttykeyfile")))
                         {
-                            Commands.Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
+                            Commands.Module.LocalConfigFile.SetPathValue(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
                         }
 
                         // Retry the command.

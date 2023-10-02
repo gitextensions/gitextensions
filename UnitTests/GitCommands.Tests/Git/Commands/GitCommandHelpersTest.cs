@@ -1,4 +1,9 @@
 ﻿using GitCommands;
+using GitCommands.Git;
+using GitCommands.Settings;
+using GitCommands.Utils;
+using GitExtUtils;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitCommandsTests.Git_Commands
@@ -64,8 +69,9 @@ namespace GitCommandsTests.Git_Commands
         {
             // TODO produce a valid working directory
             GitModule module = new(Path.GetTempPath());
-            module.LocalConfigFile.SetString("fetch.parallel", null);
-            module.LocalConfigFile.SetString("submodule.fetchJobs", null);
+            ConfigFileSettings localConfigFile = (ConfigFileSettings)module.LocalConfigFile;
+            localConfigFile.SetString("fetch.parallel", null);
+            localConfigFile.SetString("submodule.fetchJobs", null);
             {
                 // Specifying a remote and a local branch creates a local branch
                 string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
@@ -115,28 +121,28 @@ namespace GitCommandsTests.Git_Commands
 
             {
                 // Config test fetch.parallel
-                module.LocalConfigFile.SetString("fetch.parallel", "1");
+                localConfigFile.SetString("fetch.parallel", "1");
                 string fetchCmd = module.FetchCmd("fetch.parallel", "some-branch", "local").Arguments;
                 Assert.AreEqual("-c submodule.fetchJobs=0 fetch --progress \"fetch.parallel\" +some-branch:refs/heads/local --no-tags", fetchCmd);
-                module.LocalConfigFile.SetString("fetch.parallel", null);
+                localConfigFile.SetString("fetch.parallel", null);
             }
 
             {
                 // Config test submodule.fetchJobs
-                module.LocalConfigFile.SetString("submodule.fetchJobs", "0");
+                localConfigFile.SetString("submodule.fetchJobs", "0");
                 string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
-                module.LocalConfigFile.SetString("submodule.fetchJobs", null);
+                localConfigFile.SetString("submodule.fetchJobs", null);
             }
 
             {
                 // Config test fetch.parallel and submodule.fetchJobs
-                module.LocalConfigFile.SetString("fetch.parallel", "8");
-                module.LocalConfigFile.SetString("submodule.fetchJobs", "99");
+                localConfigFile.SetString("fetch.parallel", "8");
+                localConfigFile.SetString("submodule.fetchJobs", "99");
                 string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
-                module.LocalConfigFile.SetString("fetch.parallel", null);
-                module.LocalConfigFile.SetString("submodule.fetchJobs", null);
+                localConfigFile.SetString("fetch.parallel", null);
+                localConfigFile.SetString("submodule.fetchJobs", null);
             }
         }
 

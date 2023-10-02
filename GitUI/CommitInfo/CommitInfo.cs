@@ -319,7 +319,14 @@ namespace GitUI.CommitInfo
 
             if (_revision is not null && !_revision.IsArtificial)
             {
-                StartAsyncDataLoad(Module.EffectiveSettings);
+                if (Module.GetEffectiveSettings() is DistributedSettings distributedSettings)
+                {
+                    StartAsyncDataLoad(distributedSettings);
+                }
+                else
+                {
+                    DebugHelpers.Fail($"{nameof(Module.GetEffectiveSettings)} have unexpected type.");
+                }
             }
             else
             {

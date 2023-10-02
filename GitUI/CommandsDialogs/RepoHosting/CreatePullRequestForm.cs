@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (_prevTitle == _titleTB.Text && !string.IsNullOrWhiteSpace(_yourBranchesCB.Text) && MyRemote is not null)
             {
-                string lastMsg = Module.GetPreviousCommitMessages(1, MyRemote.Name.Combine("/", _yourBranchesCB.Text)!).FirstOrDefault();
+                string lastMsg = Module.GetPreviousCommitMessages(count: 1, revision: MyRemote.Name.Combine("/", _yourBranchesCB.Text)!, authorPattern: string.Empty).FirstOrDefault();
                 _titleTB.Text = lastMsg?.SubstringUntil('\n');
                 _prevTitle = _titleTB.Text;
             }

@@ -45,7 +45,7 @@ namespace GitExtensions.Plugins.Bitbucket
             {
                 string repoUrl = _NO_TRANSLATE_RepoUrl = string.Format(_NO_TRANSLATE_RepoUrl,
                                           _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
-                string branch = GitCommands.GitRefName.GetFullBranchName(module.GetSelectedBranch());
+                string branch = GitRefName.GetFullBranchName(module.GetSelectedBranch());
 
                 _NO_TRANSLATE_lblLinkCreatePull.Text = repoUrl +
                     ((string.IsNullOrEmpty(branch) || branch.Equals(DetachedHeadParser.DetachedBranch)) ?

@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Threading;
+using GitCommands;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -148,7 +149,9 @@ namespace GitUI.CommandsDialogs
             else if (checkboxRevisionFilter.Checked)
             {
                 // 1. get all changed (and not deleted files) from selected to current revision
-                IEnumerable<GitItemStatus> files = UICommands.Module.GetDiffFilesWithUntracked(DiffSelectedRevision?.Guid, SelectedRevision?.Guid, StagedStatus.None).Where(f => !f.IsDeleted);
+                IEnumerable<GitItemStatus> files = UICommands.Module
+                                    .GetDiffFilesWithUntracked(DiffSelectedRevision?.Guid, SelectedRevision?.Guid, StagedStatus.None, noCache: false, cancellationToken: default)
+                                    .Where(f => !f.IsDeleted);
 
                 // 2. wrap file names with ""
                 // 3. join together with space as separator

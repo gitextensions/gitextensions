@@ -893,7 +893,8 @@ namespace GitUI.CommandsDialogs
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     !showAssumeUnchangedFilesToolStripMenuItem.Checked,
                     !showSkipWorktreeFilesToolStripMenuItem.Checked,
-                    showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
+                    showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No,
+                    cancellationToken: default);
             }
 
             if (doAsync)
@@ -2324,10 +2325,10 @@ namespace GitUI.CommandsDialogs
         {
             IEnumerable<GitItemStatus> stagedFiles = Staged.AllItems.Select(i => i.Item);
 
-            ConfigFile configFile;
+            ISubmodulesConfigFile configFile;
             try
             {
-                configFile = Module.GetSubmoduleConfigFile();
+                configFile = Module.GetSubmodulesConfigFile();
             }
             catch (GitConfigurationException ex)
             {
@@ -3206,7 +3207,7 @@ namespace GitUI.CommandsDialogs
 
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
-                ReplaceMessage(Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim());
+                ReplaceMessage(Module.GetPreviousCommitMessages(count: 1, revision: "HEAD", authorPattern: string.Empty).FirstOrDefault()?.Trim());
             }
 
             if (AppSettings.CommitAndPushForcedWhenAmend)

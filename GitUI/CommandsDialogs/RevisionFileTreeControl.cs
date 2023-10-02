@@ -812,7 +812,7 @@ See the changes in the commit form.");
                 _rememberFileContextMenuController.RememberedDiffFileItem, isSecondRevision: true);
             string second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, fsi, isSecondRevision: true);
 
-            Module.OpenFilesWithDifftool(first, second);
+            Module.OpenFilesWithDifftool(first, second, customTool: null);
         }
 
         private void rememberFileToolStripMenuItem_Click(object sender, EventArgs e)

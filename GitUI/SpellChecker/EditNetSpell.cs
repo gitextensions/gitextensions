@@ -198,7 +198,7 @@ namespace GitUI.SpellChecker
             }
         }
 
-        protected DistributedSettings Settings => Module.EffectiveSettings ?? AppSettings.SettingsContainer;
+        protected DistributedSettings Settings => Module.GetEffectiveSettings() as DistributedSettings ?? AppSettings.SettingsContainer;
 
         public void SelectAll()
         {
@@ -590,7 +590,7 @@ namespace GitUI.SpellChecker
             // if a Module is available, then always change the "repository local" setting
             // it will set a dictionary only for this Module (repository) locally
 
-            DistributedSettings settings = Module.LocalSettings ?? Settings;
+            DistributedSettings settings = Module.GetLocalSettings() as DistributedSettings ?? Settings;
             IDetachedSettings detachedSettings = settings.Detached();
 
             detachedSettings.Dictionary = ((ToolStripItem)sender).Text;

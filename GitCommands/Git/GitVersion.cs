@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public class GitVersion : IComparable<GitVersion>
+    public class GitVersion : IComparable<GitVersion>, IGitVersion
     {
         private static readonly GitVersion v2_19_0 = new("2.19.0");
         private static readonly GitVersion v2_20_0 = new("2.20.0");
@@ -33,14 +33,14 @@ namespace GitCommands
         /// <summary>
         /// GitVersion for the native ("Windows") Git
         /// </summary>
-        public static GitVersion Current => CurrentVersion();
+        public static IGitVersion Current => CurrentVersion();
 
         /// <summary>
         /// The GitVersion for the gitIdentifiable
         /// </summary>
         /// <param name="gitIdentifiable">The unique identification of the Git executable</param>
         /// <returns>The GitVersion</returns>
-        public static GitVersion CurrentVersion(IExecutable gitExec = null, string gitIdentifiable = "")
+        public static IGitVersion CurrentVersion(IExecutable gitExec = null, string gitIdentifiable = "")
         {
             if (!_current.ContainsKey(gitIdentifiable) || _current[gitIdentifiable] is null || _current[gitIdentifiable].IsUnknown)
             {
@@ -62,7 +62,7 @@ namespace GitCommands
             _current.Clear();
         }
 
-        public readonly string Full;
+        private readonly string _fullVersionMoniker;
         private readonly int _a;
         private readonly int _b;
         private readonly int _c;
@@ -70,7 +70,7 @@ namespace GitCommands
 
         public GitVersion(string? version)
         {
-            Full = Fix();
+            _fullVersionMoniker = Fix();
 
             IReadOnlyList<int> numbers = GetNumbers();
             _a = Get(numbers, 0);
@@ -101,7 +101,7 @@ namespace GitCommands
 
                 IEnumerable<int> ParseNumbers()
                 {
-                    foreach (string number in Full.LazySplit('.'))
+                    foreach (string number in _fullVersionMoniker.LazySplit('.'))
                     {
                         if (int.TryParse(number, out int value))
                         {
@@ -127,7 +127,7 @@ namespace GitCommands
 
         public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
 
-        private static int Compare(GitVersion left, GitVersion right)
+        private static int Compare(GitVersion? left, GitVersion? right)
         {
             if (left is null && right is null)
             {
@@ -165,7 +165,9 @@ namespace GitCommands
             return left._d.CompareTo(right._d);
         }
 
-        public int CompareTo(GitVersion other) => Compare(this, other);
+        public int CompareTo(GitVersion? other) => Compare(this, other);
+
+        public int CompareTo(IGitVersion? other) => Compare(this, other as GitVersion);
 
         public static bool operator >(GitVersion left, GitVersion right) => Compare(left, right) > 0;
         public static bool operator <(GitVersion left, GitVersion right) => Compare(left, right) < 0;
@@ -174,7 +176,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            return Full;
+            return _fullVersionMoniker;
         }
     }
 }
