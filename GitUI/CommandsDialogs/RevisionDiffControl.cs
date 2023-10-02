@@ -1306,7 +1306,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (string name in submodules)
             {
-                GitModule module = Module.GetSubmodule(name);
+                IGitModule module = Module.GetSubmodule(name);
                 module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
             }
 

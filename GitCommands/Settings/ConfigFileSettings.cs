@@ -14,19 +14,19 @@ namespace GitCommands.Settings
             SettingLevel = settingLevel;
         }
 
-        public static ConfigFileSettings CreateEffective(GitModule module)
+        public static ConfigFileSettings CreateEffective(IGitModule module)
         {
             return CreateLocal(module,
                 CreateGlobal(CreateSystemWide()),
                 SettingLevel.Effective);
         }
 
-        public static ConfigFileSettings CreateLocal(GitModule module, bool useSharedCache = true)
+        public static ConfigFileSettings CreateLocal(IGitModule module, bool useSharedCache = true)
         {
             return CreateLocal(module, lowerPriority: null, SettingLevel.Local, useSharedCache);
         }
 
-        private static ConfigFileSettings CreateLocal(GitModule module, ConfigFileSettings? lowerPriority, SettingLevel settingLevel, bool useSharedCache = true)
+        private static ConfigFileSettings CreateLocal(IGitModule module, ConfigFileSettings? lowerPriority, SettingLevel settingLevel, bool useSharedCache = true)
         {
             return new ConfigFileSettings(lowerPriority,
                 ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), useSharedCache),

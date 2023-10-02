@@ -616,7 +616,7 @@ namespace GitCommandsTests
 
             // Add and init the submodule
             moduleTestHelperSuper.AddSubmodule(moduleTestHelperSub, "sub repo");
-            GitModule moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
+            IGitModule moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
 
             // Commit in submodule
             moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");

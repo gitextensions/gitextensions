@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -20,7 +21,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private GitUICommands UICommands => _uICommandsSource.UICommands;
 
-        private GitModule Module => UICommands.Module;
+        private IGitModule Module => UICommands.Module;
 
         public IndexWatcher(IGitUICommandsSource uiCommandsSource)
         {

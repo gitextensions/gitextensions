@@ -572,7 +572,7 @@ namespace GitCommands
                 _revisionReader = revisionReader;
             }
 
-            internal static RevisionReader RevisionReader(GitModule module, Encoding logOutputEncoding, long sixMonths)
+            internal static RevisionReader RevisionReader(IGitModule module, Encoding logOutputEncoding, long sixMonths)
             {
                 RevisionReader reader = new(module, logOutputEncoding, sixMonths);
                 return reader;

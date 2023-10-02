@@ -32,7 +32,7 @@ namespace GitCommandsTests
         public void TryParseRevisionshould_return_false_if_argument_is_invalid()
         {
             ArraySegment<byte> chunk = null;
-            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new(""), _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
 
             // Set to a high value so Debug.Assert do not raise exceptions
             reader.GetTestAccessor().NoOfParseError = 100;

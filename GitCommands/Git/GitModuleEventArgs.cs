@@ -1,12 +1,14 @@
+using GitUIPluginInterfaces;
+
 namespace GitCommands.Git
 {
     public sealed class GitModuleEventArgs : EventArgs
     {
-        public GitModuleEventArgs(GitModule gitModule)
+        public GitModuleEventArgs(IGitModule gitModule)
         {
             GitModule = gitModule;
         }
 
-        public GitModule GitModule { get; }
+        public IGitModule GitModule { get; }
     }
 }

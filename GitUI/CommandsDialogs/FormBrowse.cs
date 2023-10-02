@@ -2161,7 +2161,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        public static void OpenContainingFolder(FileStatusList diffFiles, GitModule module)
+        public static void OpenContainingFolder(FileStatusList diffFiles, IGitModule module)
         {
             if (!diffFiles.SelectedItems.Any())
             {

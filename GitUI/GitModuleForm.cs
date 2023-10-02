@@ -64,9 +64,11 @@ namespace GitUI
             }
         }
 
-        /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
+        /// <summary>
+        ///  Gets the current instance of the git module.
+        /// </summary>
         [Browsable(false)]
-        public GitModule Module => UICommands.Module;
+        public IGitModule Module => UICommands.Module;
 
         IGitUICommands IGitModuleForm.UICommands => UICommands;
 

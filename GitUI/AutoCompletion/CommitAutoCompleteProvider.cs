@@ -153,7 +153,7 @@ namespace GitUI.AutoCompletion
             return regexes;
         }
 
-        private static async Task<string?> GetChangedFileTextAsync(GitModule module, GitItemStatus file)
+        private static async Task<string?> GetChangedFileTextAsync(IGitModule module, GitItemStatus file)
         {
             if (file.IsTracked)
             {

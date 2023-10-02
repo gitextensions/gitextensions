@@ -2,6 +2,7 @@
 using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.CommandsDialogs
@@ -65,7 +66,7 @@ namespace GitUITests.CommandsDialogs
             string path = Path.GetTempPath();
             path[^1].Should().Be(Path.DirectorySeparatorChar);
 
-            GitCommands.GitModule module = FormOpenDirectory.TestAccessor.OpenGitRepository(_referenceRepository.Module.WorkingDir, _localRepositoryManager);
+            IGitModule module = FormOpenDirectory.TestAccessor.OpenGitRepository(_referenceRepository.Module.WorkingDir, _localRepositoryManager);
 
             module.Should().NotBeNull();
             module.WorkingDir.Should().Be(_referenceRepository.Module.WorkingDir);

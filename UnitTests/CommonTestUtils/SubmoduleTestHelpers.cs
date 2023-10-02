@@ -1,11 +1,12 @@
 using GitCommands;
 using GitCommands.Submodules;
+using GitUIPluginInterfaces;
 
 namespace CommonTestUtils
 {
     public class SubmoduleTestHelpers
     {
-        public static async Task<SubmoduleInfoResult> UpdateSubmoduleStructureAndWaitForResultAsync(ISubmoduleStatusProvider provider, GitModule module, bool updateStatus = true)
+        public static async Task<SubmoduleInfoResult> UpdateSubmoduleStructureAndWaitForResultAsync(ISubmoduleStatusProvider provider, IGitModule module, bool updateStatus = true)
         {
             SubmoduleInfoResult result = null;
             provider.StatusUpdated += ProviderStatusUpdated;
@@ -31,7 +32,7 @@ namespace CommonTestUtils
             }
         }
 
-        public static async Task UpdateSubmoduleStatusAndWaitForResultAsync(ISubmoduleStatusProvider provider, GitModule module, IReadOnlyList<GitItemStatus> gitStatus, bool forceUpdate = true)
+        public static async Task UpdateSubmoduleStatusAndWaitForResultAsync(ISubmoduleStatusProvider provider, IGitModule module, IReadOnlyList<GitItemStatus> gitStatus, bool forceUpdate = true)
         {
             provider.StatusUpdated += Provider_StatusUpdated;
 

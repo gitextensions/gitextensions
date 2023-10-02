@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 
@@ -12,7 +11,7 @@ namespace GitExtensions.Plugins.Bitbucket
         private const string BitbucketSshRegex =
             @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([^\/]+))\/(?<repo>(.*?)).git";
 
-        public static Settings? Parse(IGitModule gitModule, ISettingsSource settings, BitbucketPlugin plugin)
+        public static Settings? Parse(IGitModule module, ISettingsSource settings, BitbucketPlugin plugin)
         {
             Settings result = new()
             {
@@ -21,8 +20,6 @@ namespace GitExtensions.Plugins.Bitbucket
                 BitbucketUrl = plugin.BitbucketBaseUrl.ValueOrDefault(settings),
                 DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
             };
-
-            GitModule module = (GitModule)gitModule;
 
             string[] remotes = module.GetRemoteNames()
                 .Where(s => !string.IsNullOrWhiteSpace(s))

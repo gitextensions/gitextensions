@@ -1,13 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Patches
 {
     public static class PatchManager
     {
-        public static byte[]? GetResetWorkTreeLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
+        public static byte[]? GetResetWorkTreeLinesAsPatch(string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
         {
             IReadOnlyList<Chunk> selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out string? header);
 
@@ -154,7 +155,7 @@ namespace GitCommands.Patches
             return sb.ToString();
         }
 
-        public static byte[]? GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] filePreamble, string? treeGuid)
+        public static byte[]? GetSelectedLinesAsNewPatch(IGitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] filePreamble, string? treeGuid)
         {
             IReadOnlyList<Chunk> selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
             bool isTracked = treeGuid is not null;
@@ -249,7 +250,7 @@ namespace GitCommands.Patches
             return selectedChunks;
         }
 
-        private static IReadOnlyList<Chunk> FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] filePreamble, Encoding fileContentEncoding)
+        private static IReadOnlyList<Chunk> FromNewFile(IGitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] filePreamble, Encoding fileContentEncoding)
         {
             return new[] { Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding) };
         }
@@ -645,7 +646,7 @@ namespace GitCommands.Patches
             return result;
         }
 
-        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreamble, Encoding fileContentEncoding)
+        public static Chunk FromNewFile(IGitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreamble, Encoding fileContentEncoding)
         {
             Chunk result = new() { _startLine = 0 };
 

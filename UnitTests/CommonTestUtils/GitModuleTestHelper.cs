@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitExtUtils;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace CommonTestUtils
@@ -170,7 +171,7 @@ namespace CommonTestUtils
         /// Updates and inits submodules recursively, returning all submodule Modules
         /// </summary>
         /// <returns>All submodule Modules</returns>
-        public IEnumerable<GitModule> GetSubmodulesRecursive()
+        public IEnumerable<IGitModule> GetSubmodulesRecursive()
         {
             IEnumerable<GitConfigItem> configs = Commands.GetAllowFileConfig();
             ArgumentString args = Commands.SubmoduleUpdate(name: null, configs: configs);

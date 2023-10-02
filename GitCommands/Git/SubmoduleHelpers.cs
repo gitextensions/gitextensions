@@ -8,7 +8,7 @@ namespace GitCommands.Git
 {
     public static class SubmoduleHelpers
     {
-        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(GitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
+        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
         {
             (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true).ConfigureAwait(false);
             return patch is null
@@ -16,23 +16,23 @@ namespace GitCommands.Git
                 : ParseSubmodulePatchStatus(patch, module, fileName);
         }
 
-        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(GitModule module, string? fileName, string? oldFileName, bool staged, bool noLocks = false)
+        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, bool staged, bool noLocks = false)
         {
             Patch? patch = await module.GetCurrentChangesAsync(fileName, oldFileName, staged, "", noLocks: noLocks).ConfigureAwait(false);
             return ParseSubmodulePatchStatus(patch, module, fileName);
         }
 
-        public static Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(GitModule module, string submodule, bool noLocks = false)
+        public static Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string submodule, bool noLocks = false)
         {
             return GetCurrentSubmoduleChangesAsync(module, submodule, submodule, false, noLocks: noLocks);
         }
 
-        private static GitSubmoduleStatus? ParseSubmodulePatchStatus(Patch? patch, GitModule module, string? fileName)
+        private static GitSubmoduleStatus? ParseSubmodulePatchStatus(Patch? patch, IGitModule module, string? fileName)
         {
             GitSubmoduleStatus? submoduleStatus = ParseSubmoduleStatus(patch?.Text, module, fileName);
             if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
             {
-                GitModule submodule = submoduleStatus.GetSubmodule(module);
+                IGitModule submodule = submoduleStatus.GetSubmodule(module);
                 submoduleStatus.CheckSubmoduleStatus(submodule);
             }
 
@@ -40,7 +40,7 @@ namespace GitCommands.Git
         }
 
         [return: NotNullIfNotNull("text")]
-        public static GitSubmoduleStatus? ParseSubmoduleStatus(string? text, GitModule module, string? fileName)
+        public static GitSubmoduleStatus? ParseSubmoduleStatus(string? text, IGitModule module, string? fileName)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -124,7 +124,7 @@ namespace GitCommands.Git
                 }
                 else
                 {
-                    GitModule submodule = module.GetSubmodule(fileName);
+                    IGitModule submodule = module.GetSubmodule(fileName);
                     if (submodule.IsValidGitWorkingDir())
                     {
                         addedCommits = submodule.GetCommitCount(commitId.ToString(), oldCommitId.ToString(), cache: true, throwOnErrorExit: false);

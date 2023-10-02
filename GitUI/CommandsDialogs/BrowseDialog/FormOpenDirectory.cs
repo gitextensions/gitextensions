@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -9,9 +10,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     {
         private readonly TranslationString _warningOpenFailed = new("The selected directory is not a valid git repository.");
 
-        private GitModule? _chosenModule;
+        private IGitModule? _chosenModule;
 
-        public FormOpenDirectory(GitModule? currentModule)
+        public FormOpenDirectory(IGitModule? currentModule)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -34,7 +35,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             MinimumSize = DpiUtil.Scale(new Size(450, 116));
         }
 
-        private static IReadOnlyList<string> GetDirectories(GitModule? currentModule, IEnumerable<Repository> repositoryHistory)
+        private static IReadOnlyList<string> GetDirectories(IGitModule? currentModule, IEnumerable<Repository> repositoryHistory)
         {
             List<string> directories = new();
 
@@ -71,7 +72,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             return directories.Distinct().ToList();
         }
 
-        public static GitModule? OpenModule(IWin32Window owner, GitModule? currentModule)
+        public static IGitModule? OpenModule(IWin32Window owner, IGitModule? currentModule)
         {
             using FormOpenDirectory open = new(currentModule);
             open.ShowDialog(owner);
@@ -145,7 +146,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private static GitModule? OpenGitRepository(string path, ILocalRepositoryManager localRepositoryManager)
+        private static IGitModule? OpenGitRepository(string path, ILocalRepositoryManager localRepositoryManager)
         {
             if (!Directory.Exists(path))
             {
@@ -174,7 +175,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _form = form;
             }
 
-            public static GitModule? OpenGitRepository(string path, ILocalRepositoryManager localRepositoryManager)
+            public static IGitModule? OpenGitRepository(string path, ILocalRepositoryManager localRepositoryManager)
                 => FormOpenDirectory.OpenGitRepository(path, localRepositoryManager);
         }
     }

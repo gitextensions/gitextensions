@@ -1091,7 +1091,7 @@ namespace GitUI
 
             return;
 
-            static void UpdateSelectedRef(GitModule module, IReadOnlyList<IGitRef> gitRefs, IGitRef? selectedRef)
+            static void UpdateSelectedRef(IGitModule module, IReadOnlyList<IGitRef> gitRefs, IGitRef? selectedRef)
             {
                 if (selectedRef is null)
                 {
@@ -1445,7 +1445,7 @@ namespace GitUI
                 });
             }
 
-            static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(GitModule gitModule, bool noLocks = false)
+            static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(IGitModule gitModule, bool noLocks = false)
             {
                 if (gitModule.SuperprojectModule is null)
                 {
@@ -1516,7 +1516,7 @@ namespace GitUI
                         : new ObjectId[] { currentCheckout };
             }
 
-            static IEnumerable<ObjectId> TryGetParents(GitModule module, FilterInfo filterInfo, ObjectId objectId)
+            static IEnumerable<ObjectId> TryGetParents(IGitModule module, FilterInfo filterInfo, ObjectId objectId)
             {
                 // Limit the search to decrease command time (this may add seconds in big repos)
                 // It is only the first that are considered interesting to select.

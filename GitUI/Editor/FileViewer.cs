@@ -1544,7 +1544,6 @@ namespace GitUI.Editor
             else
             {
                 patch = PatchManager.GetResetWorkTreeLinesAsPatch(
-                    Module,
                     GetText(),
                     GetSelectionPosition(),
                     GetSelectionLength(),
@@ -1617,7 +1616,6 @@ namespace GitUI.Editor
             else
             {
                 patch = PatchManager.GetResetWorkTreeLinesAsPatch(
-                    Module,
                     GetText(),
                     selectionStart,
                     selectionLength,

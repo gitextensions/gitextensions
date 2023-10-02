@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -13,7 +14,7 @@ namespace GitUI.Editor
         private readonly TextMarker _markerSummaryTooLong = new(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "Summary line is too long." };
         private readonly TextMarker _markerSpacerNeeded = new(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "There must be a blank line after the summary." };
 
-        public CommitMessageHighlightingStrategy(GitModule module)
+        public CommitMessageHighlightingStrategy(IGitModule module)
             : base("GitCommitMessage", module)
         {
         }

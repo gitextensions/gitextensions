@@ -2,6 +2,7 @@
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.Menus
@@ -63,7 +64,7 @@ namespace GitUI.CommandsDialogs.Menus
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitModule? module = FormOpenDirectory.OpenModule(OwnerForm, UICommands.Module);
+            IGitModule? module = FormOpenDirectory.OpenModule(OwnerForm, UICommands.Module);
             if (module is not null)
             {
                 GitModuleChanged?.Invoke(OwnerForm, new GitModuleEventArgs(module));
