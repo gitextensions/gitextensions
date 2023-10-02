@@ -16,12 +16,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private readonly RevisionGridControl _grid;
         private readonly RevisionDataGridView _gridView;
-        private readonly Func<GitModule> _module;
+        private readonly Func<IGitModule> _module;
 
         // Increase contrast to selected rows
         private readonly Color _lightBlue = Color.FromArgb(130, 180, 240);
 
-        public BuildStatusColumnProvider(RevisionGridControl grid, RevisionDataGridView gridView, Func<GitModule> module)
+        public BuildStatusColumnProvider(RevisionGridControl grid, RevisionDataGridView gridView, Func<IGitModule> module)
             : base("Build Status")
         {
             _grid = grid;

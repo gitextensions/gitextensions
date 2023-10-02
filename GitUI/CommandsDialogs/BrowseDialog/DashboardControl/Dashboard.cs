@@ -3,6 +3,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -215,7 +216,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            GitModule? module = FormOpenDirectory.OpenModule(this, currentModule: null);
+            IGitModule? module = FormOpenDirectory.OpenModule(this, currentModule: null);
             if (module is not null)
             {
                 OnModuleChanged(this, new GitModuleEventArgs(module));

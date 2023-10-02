@@ -3022,7 +3022,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (GitItemStatus item in unstagedFiles.Where(it => it.IsSubmodule))
             {
-                GitModule module = Module.GetSubmodule(item.Name);
+                IGitModule module = Module.GetSubmodule(item.Name);
                 module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
             }
 

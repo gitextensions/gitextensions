@@ -30,7 +30,7 @@ namespace GitUI.BuildServerIntegration
         private readonly RevisionGridControl _revisionGrid;
         private readonly RevisionDataGridView _revisionGridView;
         private readonly IRevisionGridInfo _revisionGridInfo;
-        private readonly Func<GitModule> _module;
+        private readonly Func<IGitModule> _module;
         private readonly IRepoNameExtractor _repoNameExtractor;
         private IDisposable? _buildStatusCancellationToken;
         private IBuildServerAdapter? _buildServerAdapter;
@@ -38,7 +38,7 @@ namespace GitUI.BuildServerIntegration
 
         internal BuildStatusColumnProvider ColumnProvider { get; }
 
-        public BuildServerWatcher(RevisionGridControl revisionGrid, RevisionDataGridView revisionGridView, IRevisionGridInfo revisionGridInfo, Func<GitModule> module)
+        public BuildServerWatcher(RevisionGridControl revisionGrid, RevisionDataGridView revisionGridView, IRevisionGridInfo revisionGridInfo, Func<IGitModule> module)
         {
             _revisionGrid = revisionGrid;
             _revisionGridView = revisionGridView;

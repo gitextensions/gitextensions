@@ -101,7 +101,7 @@ namespace GitCommands.Submodules
                 // (The structure below the current module could have been updated from git-status but the current module
                 // must be updated from its super project to set the ahead/behind information)
                 // Further git-status updates only the current module and below
-                GitModule topModule = currentModule.GetTopModule();
+                IGitModule topModule = currentModule.GetTopModule();
                 await GetSubmoduleDetailedStatusAsync(topModule, cancelToken);
 
                 // Set status for top module from submodules
@@ -176,7 +176,7 @@ namespace GitCommands.Submodules
         /// </summary>
         /// <param name="currentModule">The current module.</param>
         /// <param name="noBranchText">text with no branches.</param>
-        private static SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(GitModule currentModule, string noBranchText)
+        private static SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(IGitModule currentModule, string noBranchText)
         {
             SubmoduleInfoResult result = new() { Module = currentModule, CurrentSubmoduleStatus = null };
 
@@ -210,7 +210,7 @@ namespace GitCommands.Submodules
             result.TopProject = new SubmoduleInfo(text: name, path, bold: isCurrentTopProject);
         }
 
-        private static void SetSubmoduleData(GitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
+        private static void SetSubmoduleData(IGitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
         {
             string[] submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
             if (!submodules.Any())
@@ -287,7 +287,7 @@ namespace GitCommands.Submodules
         /// <param name="gitStatus">git status.</param>
         /// <param name="cancelToken">Cancellation token.</param>
         /// <returns>The task.</returns>
-        private async Task UpdateSubmodulesStatusAsync(GitModule module, IReadOnlyList<GitItemStatus>? gitStatus, CancellationToken cancelToken)
+        private async Task UpdateSubmodulesStatusAsync(IGitModule module, IReadOnlyList<GitItemStatus>? gitStatus, CancellationToken cancelToken)
         {
             _previousSubmoduleUpdateTime = DateTime.Now;
             await TaskScheduler.Default;
@@ -342,7 +342,7 @@ namespace GitCommands.Submodules
         /// If status is already set, use that (so no change from changed commits to dirty).
         /// </summary>
         /// <param name="module">the submodule</param>
-        private void SetModuleAsDirty(GitModule module)
+        private void SetModuleAsDirty(IGitModule module)
         {
             string path = module.WorkingDir;
             if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
@@ -368,7 +368,7 @@ namespace GitCommands.Submodules
         /// Set the status to 'dirty' recursively to super projects.
         /// </summary>
         /// <param name="module">module.</param>
-        private void SetModuleAsDirtyUpwards(GitModule? module)
+        private void SetModuleAsDirtyUpwards(IGitModule? module)
         {
             while (module is not null)
             {
@@ -384,7 +384,7 @@ namespace GitCommands.Submodules
         /// <param name="module">Module to compare to.</param>
         /// <param name="cancelToken">Cancellation token.</param>
         /// <returns>The task.</returns>
-        private async Task GetSubmoduleDetailedStatusAsync(GitModule module, CancellationToken cancelToken)
+        private async Task GetSubmoduleDetailedStatusAsync(IGitModule module, CancellationToken cancelToken)
         {
             if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] is null)
             {
@@ -406,7 +406,7 @@ namespace GitCommands.Submodules
         /// <param name="submoduleName">Name of the submodule.</param>
         /// <param name="cancelToken">Cancellation token.</param>
         /// <returns>the task.</returns>
-        private async Task GetSubmoduleDetailedStatusAsync(GitModule? superModule, string? submoduleName, CancellationToken cancelToken)
+        private async Task GetSubmoduleDetailedStatusAsync(IGitModule? superModule, string? submoduleName, CancellationToken cancelToken)
         {
             if (superModule is null || string.IsNullOrWhiteSpace(submoduleName))
             {
@@ -454,7 +454,7 @@ namespace GitCommands.Submodules
         /// </summary>
         /// <param name="superModule">The module to compare to.</param>
         /// <param name="submoduleName">Name of the submodule.</param>
-        private void SetSubmoduleEmptyDetailedStatus(GitModule superModule, string submoduleName)
+        private void SetSubmoduleEmptyDetailedStatus(IGitModule superModule, string submoduleName)
         {
             if (superModule is null || string.IsNullOrEmpty(submoduleName))
             {

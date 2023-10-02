@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
                     Module.UnstageFile(".gitmodules");
                 }
 
-                GitCommands.Settings.ConfigFileSettings configFile = Module.LocalConfigFile;
+                IConfigFileSettings configFile = Module.LocalConfigFile;
                 configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
                 configFile.Save();
 
@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs
 
         private void Pull_Click(object sender, EventArgs e)
         {
-            GitModule submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
+            IGitModule submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
 
             UICommands.WithGitModule(submodule).StartPullDialog(this);
 

@@ -154,7 +154,7 @@ namespace GitUI
                     : patch?.Text ?? errorMessage;
 
                 static async Task<(Patch? patch, string? errorMessage)> GetItemPatchAsync(
-                    GitModule module,
+                    IGitModule module,
                     GitItemStatus file,
                     ObjectId? firstId,
                     ObjectId? secondId,

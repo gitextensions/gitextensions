@@ -349,7 +349,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 newCommands.PostCheckoutRevision += GitUICommands_PostCheckout;
                 newCommands.PostRepositoryChanged += GitUICommands_PostRepositoryChanged;
 
-                GitModule module = newCommands.Module;
+                IGitModule module = newCommands.Module;
                 StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
             }
 

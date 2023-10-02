@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUIPluginInterfaces;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -8,7 +9,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public class CheckSettingsLogic
     {
         public readonly CommonLogic CommonLogic;
-        private GitModule? Module => CommonLogic.Module;
+        private IGitModule? Module => CommonLogic.Module;
 
         public CheckSettingsLogic(CommonLogic commonLogic)
         {

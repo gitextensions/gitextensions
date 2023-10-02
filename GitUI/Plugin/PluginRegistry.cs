@@ -49,7 +49,7 @@ namespace GitUI
             }
         }
 
-        public static IRepositoryHostPlugin? TryGetGitHosterForModule(GitModule module)
+        public static IRepositoryHostPlugin? TryGetGitHosterForModule(IGitModule module)
         {
             if (!module.IsValidGitWorkingDir())
             {

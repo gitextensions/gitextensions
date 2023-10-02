@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs
                 ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
             }
 
-            public static LostObject? TryParse(GitModule module, string raw)
+            public static LostObject? TryParse(IGitModule module, string raw)
             {
                 if (string.IsNullOrEmpty(raw))
                 {

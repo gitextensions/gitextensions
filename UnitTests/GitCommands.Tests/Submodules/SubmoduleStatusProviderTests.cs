@@ -50,7 +50,7 @@ namespace GitCommandsTests.Submodules
 
             _repo2.AddSubmodule(_repo3, "repo3");
             _repo1.AddSubmodule(_repo2, "repo2");
-            IEnumerable<GitModule> submodules = _repo1.GetSubmodulesRecursive();
+            IEnumerable<IGitModule> submodules = _repo1.GetSubmodulesRecursive();
 
             _repo1Module = _repo1.Module;
             _repo2Module = submodules.ElementAt(0);
@@ -129,7 +129,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_change()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -162,7 +162,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_commit()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -196,7 +196,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_change_commit()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -232,7 +232,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_second_nested_module_change()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -267,7 +267,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_commit_second_nested_module_change()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -315,7 +315,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_second_nested_module_commit()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -350,7 +350,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_top_module_change()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -383,7 +383,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_top_module_commit()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -414,7 +414,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_top_module_changes()
         {
-            GitModule currentModule = _repo2Module;
+            IGitModule currentModule = _repo2Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -445,7 +445,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_second_nested_module_changes()
         {
-            GitModule currentModule = _repo2Module;
+            IGitModule currentModule = _repo2Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -479,7 +479,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_second_nested_module_commit()
         {
-            GitModule currentModule = _repo2Module;
+            IGitModule currentModule = _repo2Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -513,7 +513,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_second_nested_module_changes()
         {
-            GitModule currentModule = _repo3Module;
+            IGitModule currentModule = _repo3Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -545,7 +545,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_second_nested_module_commit()
         {
-            GitModule currentModule = _repo3Module;
+            IGitModule currentModule = _repo3Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -574,7 +574,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_commit()
         {
-            GitModule currentModule = _repo3Module;
+            IGitModule currentModule = _repo3Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -604,7 +604,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_no_forced_changes()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
 
             result.Should().NotBeNull();
@@ -639,7 +639,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_top_module_changes()
         {
-            GitModule currentModule = _repo1Module;
+            IGitModule currentModule = _repo1Module;
             _repo1.CreateFile(_repo1Module.WorkingDir, "test.txt", "test");
 
             SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule);
@@ -668,7 +668,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_prechanges()
         {
-            GitModule currentModule = _repo3Module;
+            IGitModule currentModule = _repo3Module;
 
             // Update commit in repo2, will check status
             _repo2Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
@@ -691,7 +691,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_prechanges_noupdate()
         {
-            GitModule currentModule = _repo3Module;
+            IGitModule currentModule = _repo3Module;
 
             // Update repos
             _repo1.CreateFile(_repo1Module.WorkingDir, "test.txt", "test");
@@ -723,7 +723,7 @@ namespace GitCommandsTests.Submodules
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_precommit()
         {
-            GitModule currentModule = _repo3Module;
+            IGitModule currentModule = _repo3Module;
 
             // Update commit in repo2, will check status
             _repo2Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");

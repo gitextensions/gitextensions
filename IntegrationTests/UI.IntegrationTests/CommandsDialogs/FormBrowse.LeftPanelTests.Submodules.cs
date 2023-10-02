@@ -64,7 +64,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             _repo2.AddSubmodule(_repo3, "repo3");
             _repo1.AddSubmodule(_repo2, "repo2");
-            IEnumerable<GitModule> submodules = _repo1.GetSubmodulesRecursive();
+            IEnumerable<IGitModule> submodules = _repo1.GetSubmodulesRecursive();
 
             _repo1Module = _repo1.Module;
             _repo2Module = submodules.ElementAt(0);

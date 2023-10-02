@@ -47,7 +47,7 @@ namespace GitUI.LeftPanel
         /// must not trigger the event handling sequence.
         /// </summary>
         public bool IgnoreSelectionChangedEvent { get; set; }
-        protected GitModule Module => UICommands.Module;
+        protected IGitModule Module => UICommands.Module;
         protected bool IsAttached { get; private set; }
 
         public void Attached()

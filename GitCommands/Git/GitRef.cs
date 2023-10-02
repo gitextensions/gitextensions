@@ -179,7 +179,7 @@ namespace GitCommands
             return configFile.GetValue(_mergeSettingName).RemovePrefix(GitRefName.RefsHeadsPrefix);
         }
 
-        public static GitRef NoHead(GitModule module)
+        public static GitRef NoHead(IGitModule module)
         {
             return new GitRef(module, null, "");
         }

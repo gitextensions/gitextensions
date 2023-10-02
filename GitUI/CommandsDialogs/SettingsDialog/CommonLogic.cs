@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public readonly DistributedSettingsSet DistributedSettingsSet;
         public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
-        public readonly GitModule Module;
+        public readonly IGitModule Module;
 
         private CommonLogic()
         {
@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             Module = null!;
         }
 
-        public CommonLogic(GitModule module)
+        public CommonLogic(IGitModule module)
         {
             Requires.NotNull(module, nameof(module));
 

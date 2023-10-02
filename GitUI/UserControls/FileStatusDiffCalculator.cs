@@ -6,7 +6,7 @@ namespace GitUI
 {
     public sealed partial class FileStatusDiffCalculator
     {
-        private readonly Func<GitModule> _getModule;
+        private readonly Func<IGitModule> _getModule;
 
         // Currently bound revisions etc. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
         private FileStatusDiffCalculatorInfo _fileStatusDiffCalculatorInfo = new();
@@ -15,7 +15,7 @@ namespace GitUI
         public Func<ObjectId, string>? DescribeRevision { get; set; }
         public Func<GitRevision, GitRevision>? GetActualRevision { get; set; }
 
-        public FileStatusDiffCalculator(Func<GitModule> getModule)
+        public FileStatusDiffCalculator(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
@@ -39,7 +39,7 @@ namespace GitUI
                 return Array.Empty<FileStatusWithDescription>();
             }
 
-            GitModule module = GetModule();
+            IGitModule module = GetModule();
             List<FileStatusWithDescription> fileStatusDescs = [];
             if (revisions.Count == 1)
             {
@@ -274,13 +274,13 @@ namespace GitUI
                 => GetActualRevision is not null ? GetActualRevision(revision) : revision;
         }
 
-        private GitModule GetModule()
+        private IGitModule GetModule()
         {
-            GitModule module = _getModule();
+            IGitModule module = _getModule();
 
             if (module is null)
             {
-                throw new ArgumentException($"Require a valid instance of {nameof(GitModule)}");
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
 
             return module;

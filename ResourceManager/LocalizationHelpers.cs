@@ -75,7 +75,7 @@ namespace ResourceManager
             return datetime.LocalDateTime.ToString("G");
         }
 
-        public static string GetSubmoduleText(GitModule superproject, string name, string hash, bool cache)
+        public static string GetSubmoduleText(IGitModule superproject, string name, string hash, bool cache)
         {
             StringBuilder sb = new();
             sb.AppendLine("Submodule " + name);
@@ -108,7 +108,7 @@ namespace ResourceManager
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, string fileName, Patch? patch)
+        public static string ProcessSubmodulePatch(IGitModule module, string fileName, Patch? patch)
         {
             GitSubmoduleStatus status = SubmoduleHelpers.ParseSubmoduleStatus(patch?.Text, module, fileName);
             if (status is null)
@@ -119,7 +119,7 @@ namespace ResourceManager
             return ProcessSubmoduleStatus(module, status);
         }
 
-        public static string ProcessSubmoduleStatus(GitModule module, GitSubmoduleStatus status, bool moduleIsParent = true, bool limitOutput = false)
+        public static string ProcessSubmoduleStatus(IGitModule module, GitSubmoduleStatus status, bool moduleIsParent = true, bool limitOutput = false)
         {
             if (module is null)
             {
@@ -131,7 +131,7 @@ namespace ResourceManager
                 throw new ArgumentNullException(nameof(status));
             }
 
-            GitModule gitModule = moduleIsParent ? module.GetSubmodule(status.Name) : module;
+            IGitModule gitModule = moduleIsParent ? module.GetSubmodule(status.Name) : module;
             StringBuilder sb = new();
             sb.AppendLine("Submodule " + status.Name + " Change");
 

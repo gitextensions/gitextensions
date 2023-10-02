@@ -8,7 +8,7 @@ using ResourceManager;
 namespace GitUI
 {
     /// <summary>
-    /// Base class for a <see cref="UserControl"/> requiring <see cref="GitModule"/> and <see cref="GitUICommands"/>.
+    /// Base class for a <see cref="UserControl"/> requiring <see cref="IGitModule"/> and <see cref="GitUICommands"/>.
     /// </summary>
     public class GitModuleControl : GitExtensionsControl, IGitModuleControl
     {
@@ -90,10 +90,10 @@ namespace GitUI
             return commands is not null;
         }
 
-        /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
+        /// <summary>Gets the <see cref="UICommands"/>' <see cref="IGitModule"/> reference.</summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public GitModule Module => UICommands.Module;
+        public IGitModule Module => UICommands.Module;
 
         protected GitModuleControl()
         {

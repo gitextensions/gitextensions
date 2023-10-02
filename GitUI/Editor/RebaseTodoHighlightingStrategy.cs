@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -28,7 +29,7 @@ namespace GitUI.Editor
             { 'd', ("drop", new HighlightColor(Color.Red, bold: true, italic: false), Array.Empty<string>()) }
         };
 
-        public RebaseTodoHighlightingStrategy(GitModule module)
+        public RebaseTodoHighlightingStrategy(IGitModule module)
             : base("GitRebaseTodo", module)
         {
         }

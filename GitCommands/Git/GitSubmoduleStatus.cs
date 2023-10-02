@@ -26,12 +26,12 @@ namespace GitCommands
             RemovedCommits = removedCommits;
         }
 
-        public GitModule GetSubmodule(GitModule module)
+        public IGitModule GetSubmodule(IGitModule module)
         {
             return module.GetSubmodule(Name);
         }
 
-        public void CheckSubmoduleStatus(GitModule? submodule)
+        public void CheckSubmoduleStatus(IGitModule? submodule)
         {
             if (submodule is null)
             {

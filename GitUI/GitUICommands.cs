@@ -31,16 +31,17 @@ namespace GitUI
 
         public static IServiceProvider EmptyServiceProvider = new ServiceContainer();
 
-        public GitModule Module { get; private set; }
+        public IGitModule Module { get; private set; }
         public ILockableNotifier RepoChangedNotifier { get; }
         public IBrowseRepo? BrowseRepo { get; set; }
 
-        public GitUICommands(IServiceProvider serviceProvider, GitModule module)
+        public GitUICommands(IServiceProvider serviceProvider, IGitModule module)
         {
             ArgumentNullException.ThrowIfNull(serviceProvider);
-            _serviceProvider = serviceProvider;
+            ArgumentNullException.ThrowIfNull(module);
 
-            Module = module ?? throw new ArgumentNullException(nameof(module));
+            _serviceProvider = serviceProvider;
+            Module = module;
 
             _commitTemplateManager = new CommitTemplateManager(() => module);
             RepoChangedNotifier = new ActionNotifier(
@@ -1915,7 +1916,7 @@ namespace GitUI
         /// </summary>
         /// <param name="module">The git repository.</param>
         /// <returns>A new instance of <see cref="GitUICommands"/>.</returns>
-        public GitUICommands WithGitModule(GitModule module) => new(_serviceProvider, module);
+        public GitUICommands WithGitModule(IGitModule module) => new(_serviceProvider, module);
 
         /// <summary>
         ///  Creates a new instance of <see cref="GitUICommands"/> for a git repository specified by <paramref name="workingDirectory"/>.

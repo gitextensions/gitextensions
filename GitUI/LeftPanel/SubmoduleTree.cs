@@ -3,6 +3,7 @@ using GitCommands;
 using GitCommands.Submodules;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
@@ -204,14 +205,14 @@ namespace GitUI.LeftPanel
             return nodes;
         }
 
-        private void CreateSubmoduleNodes(SubmoduleInfoResult result, GitModule threadModule, ref List<SubmoduleNode> nodes)
+        private void CreateSubmoduleNodes(SubmoduleInfoResult result, IGitModule threadModule, ref List<SubmoduleNode> nodes)
         {
             // result.OurSubmodules/AllSubmodules contain a recursive list of submodules, but don't provide info about the super
             // project path. So we deduce these by substring matching paths against an ordered list of all paths.
             List<string> modulePaths = result.AllSubmodules.Select(info => info.Path).ToList();
 
             // Add current and parent module paths
-            GitModule parentModule = threadModule;
+            IGitModule parentModule = threadModule;
 
             while (parentModule is not null)
             {
@@ -250,7 +251,7 @@ namespace GitUI.LeftPanel
                 modulePaths.Find(path => submodulePath != path && submodulePath.Contains(path));
         }
 
-        private static string GetNodeRelativePath(GitModule topModule, SubmoduleNode node)
+        private static string GetNodeRelativePath(IGitModule topModule, SubmoduleNode node)
         {
             return node.SuperPath.SubstringAfter(topModule.WorkingDir).ToPosixPath() + node.LocalPath;
         }
@@ -258,7 +259,7 @@ namespace GitUI.LeftPanel
         private void AddTopAndNodesToTree(
             ref Nodes nodes,
             List<SubmoduleNode> submoduleNodes,
-            GitModule threadModule,
+            IGitModule threadModule,
             SubmoduleInfoResult result)
         {
             // Create tree of SubmoduleFolderNode for each path directory and add input SubmoduleNodes as leaves.
@@ -288,7 +289,7 @@ namespace GitUI.LeftPanel
             // Input 'nodes' is an array of SubmoduleNodes for all the submodules; now we need to create SubmoduleFolderNodes
             // and insert everything into a tree.
 
-            GitModule topModule = threadModule.GetTopModule();
+            IGitModule topModule = threadModule.GetTopModule();
 
             // Build a mapping of top-module-relative path to node
             Dictionary<string, Node> pathToNodes = [];

@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitUI.Hotkey;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.Menus
@@ -17,8 +18,7 @@ namespace GitUI.CommandsDialogs.Menus
         /// <summary>
         ///  Gets the current instance of the git module.
         /// </summary>
-        protected GitModule Module
-            => UICommands.Module;
+        protected IGitModule Module => UICommands.Module;
 
         /// <summary>
         ///  Gets the form that is displaying the menu item.

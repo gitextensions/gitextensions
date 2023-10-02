@@ -207,13 +207,13 @@ namespace GitCommands
         /// If this module is a submodule, returns its superproject <see cref="GitModule"/>, otherwise <c>null</c>.
         /// </summary>
         /// TODO: Add to IGitModule and return IGitModule
-        public GitModule? SuperprojectModule { get; }
+        public IGitModule? SuperprojectModule { get; }
 
         /// <summary>
         /// If this module is a submodule, returns the top-most parent module, otherwise it returns itself.
         /// </summary>
         /// TODO: Add to IGitModule and return IGitModule
-        public GitModule GetTopModule()
+        public IGitModule GetTopModule()
         {
             GitModule topModule = this;
             while (topModule.SuperprojectModule is not null)
@@ -1141,7 +1141,7 @@ namespace GitCommands
             return Path.GetFullPath(dir); // fix slashes
         }
 
-        public GitModule GetSubmodule(string? localPath)
+        public IGitModule GetSubmodule(string? localPath)
         {
             return new GitModule(GetSubmoduleFullPath(localPath));
         }

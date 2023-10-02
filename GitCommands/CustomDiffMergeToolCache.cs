@@ -1,5 +1,6 @@
 ﻿using GitCommands.Config;
 using GitExtUtils;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
@@ -41,7 +42,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="module">The Git module</param>
         /// <param name="delay">The delay before starting the operation</param>
-        public async Task<IEnumerable<string>> GetToolsAsync(GitModule module, int delay, CancellationToken cancellationToken)
+        public async Task<IEnumerable<string>> GetToolsAsync(IGitModule module, int delay, CancellationToken cancellationToken)
         {
             if (_tools is not null)
             {

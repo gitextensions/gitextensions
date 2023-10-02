@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
@@ -35,7 +36,7 @@ namespace GitUI
         /// <param name="components">The calling Form components, to dispose correctly.</param>
         /// <param name="isDiff">True if diff, false if merge.</param>
         /// <param name="delay">The delay before starting the operation.</param>
-        public void LoadCustomDiffMergeTools(GitModule module, IList<CustomDiffMergeTool> menus, IContainer components, bool isDiff, int delay = FormBrowseToolDelay, CancellationToken cancellationToken = default)
+        public void LoadCustomDiffMergeTools(IGitModule module, IList<CustomDiffMergeTool> menus, IContainer components, bool isDiff, int delay = FormBrowseToolDelay, CancellationToken cancellationToken = default)
         {
             InitMenus(menus);
 
