@@ -154,10 +154,10 @@ namespace GitUI.CommandsDialogs
             {
                 Module.UnstageFile(SubModuleLocalPath.Text);
 
-                ConfigFile submoduleConfigFile;
+                ISubmodulesConfigFile submoduleConfigFile;
                 try
                 {
-                    submoduleConfigFile = Module.GetSubmoduleConfigFile();
+                    submoduleConfigFile = Module.GetSubmodulesConfigFile();
                 }
                 catch (GitConfigurationException ex)
                 {

@@ -81,7 +81,7 @@ namespace GitUI
                 bool isMergeCommit = (selectedRev.ParentIds?.Count ?? 0) > 1;
                 if (isMergeCommit && AppSettings.ShowDiffForAllParents)
                 {
-                    IReadOnlyList<GitItemStatus> conflicts = module.GetCombinedDiffFileList(selectedRev.Guid);
+                    IReadOnlyList<GitItemStatus> conflicts = module.GetCombinedDiffFileList(selectedRev.ObjectId);
                     if (conflicts.Count != 0)
                     {
                         // Create an artificial commit

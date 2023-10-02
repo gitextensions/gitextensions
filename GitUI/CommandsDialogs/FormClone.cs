@@ -2,6 +2,7 @@
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -24,6 +25,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly bool _openedFromProtocolHandler;
         private readonly string? _url;
+        private readonly CancellationTokenSequence _branchLoaderSequence = new();
         private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
         private readonly IReadOnlyList<string> _defaultBranchItems;
         private string? _puttySshKey;
@@ -153,7 +155,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 Cursor = Cursors.Default;
-                _branchListLoader.Cancel();
+                _branchLoaderSequence.CancelCurrent();
 
                 // validate if destination path is supplied
                 string destination = _NO_TRANSLATE_To.Text;
@@ -363,8 +365,6 @@ namespace GitUI.CommandsDialogs
             ToTextUpdate(sender, e);
         }
 
-        private readonly AsyncLoader _branchListLoader = new();
-
         private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
         {
             Cursor = Cursors.Default;
@@ -401,7 +401,38 @@ namespace GitUI.CommandsDialogs
         {
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            _branchListLoader.LoadAsync(() => Module.GetRemoteServerRefs(from, false, true), UpdateBranches);
+
+            CancellationToken cancellationToken = _branchLoaderSequence.Next();
+            ThreadHelper.FileAndForget(async () =>
+            {
+                RemoteActionResult<IReadOnlyList<IGitRef>> branchList;
+
+                IReadOnlyList<IGitRef> refs = Module.GetRemoteServerRefs(from, false, true, out string? errorOutput, cancellationToken);
+
+                if (string.IsNullOrEmpty(errorOutput))
+                {
+                    branchList = new(result: refs, authenticationFail: false, hostKeyFail: false);
+                }
+                else if (errorOutput.Contains("FATAL ERROR") && errorOutput.Contains("authentication"))
+                {
+                    // If the authentication failed because of a missing key, ask the user to supply one.
+                    branchList = new(result: null, authenticationFail: true, hostKeyFail: false);
+                }
+                else if (errorOutput.Contains("the server's host key is not cached in the registry", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    branchList = new(result: null, authenticationFail: false, hostKeyFail: true);
+                }
+                else
+                {
+                    throw new ExternalOperationException(workingDirectory: Module.WorkingDir, innerException: new Exception(errorOutput));
+                }
+
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    UpdateBranches(branchList);
+                }
+            });
         }
 
         private void Branches_DropDown(object sender, EventArgs e)
@@ -417,7 +448,7 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                _branchListLoader.Dispose();
+                _branchLoaderSequence.Dispose();
 
                 components?.Dispose();
             }

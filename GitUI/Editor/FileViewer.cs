@@ -819,7 +819,7 @@ namespace GitUI.Editor
                 code = string.Join("\n", lines);
             }
 
-            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.ByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
+            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSettingsByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
         }
 
         private StagedStatus ViewItemStagedStatus()
@@ -1709,7 +1709,7 @@ namespace GitUI.Editor
                 }
             }
 
-            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.EffectiveConfigFile.ByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
+            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSettingsByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
 
             return;
 

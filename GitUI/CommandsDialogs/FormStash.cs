@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
-            List<GitStash> stashedItems = Module.GetStashes().ToList();
+            List<GitStash> stashedItems = Module.GetStashes(noLocks: false).ToList();
 
             _currentWorkingDirStashItem = new GitStash(-1, _currentWorkingDirChanges.Text);
 

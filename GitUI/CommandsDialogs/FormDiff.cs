@@ -268,7 +268,7 @@ namespace GitUI.CommandsDialogs
             GitRevision? firstRevision = ckCompareToMergeBase.Checked ? _mergeBase : _firstRevision;
             Validates.NotNull(firstRevision);
             Validates.NotNull(_secondRevision);
-            Module.OpenWithDifftoolDirDiff(firstRevision.Guid, _secondRevision.Guid);
+            Module.OpenWithDifftoolDirDiff(firstRevision.Guid, _secondRevision.Guid, customTool: null);
         }
 
         private void btnPickAnotherFirstBranch_Click(object sender, EventArgs e)

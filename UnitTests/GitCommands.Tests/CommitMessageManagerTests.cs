@@ -4,6 +4,7 @@ using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitCommands.Settings;
 using NSubstitute;
 
 namespace GitCommandsTests
@@ -227,8 +228,9 @@ namespace GitCommandsTests
         [TestCase("UTF-8")]
         public async Task WriteCommitMessageToFileAsync_no_bom(string encodingName)
         {
-            _referenceRepository.Module.EffectiveConfigFile.SetString("i18n.commitEncoding", encodingName);
-            _referenceRepository.Module.CommitEncoding.Preamble.Length.Should().Be(0);
+            GitModule module = _referenceRepository.Module;
+            ((ConfigFileSettings)module.EffectiveConfigFile).SetString("i18n.commitEncoding", encodingName);
+            module.CommitEncoding.Preamble.Length.Should().Be(0);
             CommitMessageManager manager = new(_owner, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding);
 
             File.Exists(manager.CommitMessagePath).Should().BeFalse();

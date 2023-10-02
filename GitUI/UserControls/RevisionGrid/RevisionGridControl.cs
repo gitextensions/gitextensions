@@ -874,7 +874,7 @@ namespace GitUI
                 return;
             }
 
-            GitModule capturedModule = Module;
+            IGitModule capturedModule = Module;
 
             // Reset the "cache" for current branch
             CurrentBranch = new(() => Module.IsValidGitWorkingDir()
@@ -1100,7 +1100,7 @@ namespace GitUI
 
                 selectedRef.IsSelected = true;
 
-                GitCommands.Settings.ConfigFileSettings localConfigFile = module.LocalConfigFile;
+                IConfigFileSettings localConfigFile = module.LocalConfigFile;
                 string selectedRemote = selectedRef.GetTrackingRemote(localConfigFile);
                 string selectedMerge = selectedRef.GetMergeWith(localConfigFile);
                 IGitRef selectedHeadMergeSource = gitRefs.FirstOrDefault(

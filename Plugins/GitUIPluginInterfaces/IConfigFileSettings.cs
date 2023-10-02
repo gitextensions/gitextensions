@@ -1,6 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GitUIPluginInterfaces
 {
-    public interface IConfigFileSettings : ISettingsValueGetter
+    public interface IConfigFileSettings : IConfigValueStore
     {
         /// <summary>
         /// Adds the specific configuration section to the .git/config file.
@@ -12,6 +14,9 @@ namespace GitUIPluginInterfaces
         /// Retrieves configuration sections the .git/config file.
         /// </summary>
         IReadOnlyList<IConfigSection> GetConfigSections();
+
+        [return: NotNullIfNotNull("defaultValue")]
+        string? GetString(string name, string? defaultValue);
 
         /// <summary>
         /// Removes the specific configuration section from the .git/config file.

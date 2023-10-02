@@ -174,7 +174,7 @@ namespace GitCommands
         /// <summary>
         /// GitVersion for the default GitExecutable.
         /// </summary>
-        public GitVersion GitVersion => GitVersion.CurrentVersion(GitExecutable, _wslDistro);
+        public IGitVersion GitVersion => GitCommands.GitVersion.CurrentVersion(GitExecutable, _wslDistro);
 
         /// <inherit/>
         public IExecutable GitExecutable => _gitExecutable;
@@ -196,26 +196,16 @@ namespace GitCommands
         /// <summary>
         /// If this module is a submodule, returns its name, otherwise <c>null</c>.
         /// </summary>
-        public string? SubmoduleName { get; }
+        // TODO: remove?
+        private string? SubmoduleName { get; }
 
-        /// <summary>
-        /// If this module is a submodule, returns its path, otherwise <c>null</c>.
-        /// </summary>
         public string? SubmodulePath { get; }
 
-        /// <summary>
-        /// If this module is a submodule, returns its superproject <see cref="GitModule"/>, otherwise <c>null</c>.
-        /// </summary>
-        /// TODO: Add to IGitModule and return IGitModule
         public IGitModule? SuperprojectModule { get; }
 
-        /// <summary>
-        /// If this module is a submodule, returns the top-most parent module, otherwise it returns itself.
-        /// </summary>
-        /// TODO: Add to IGitModule and return IGitModule
         public IGitModule GetTopModule()
         {
-            GitModule topModule = this;
+            IGitModule topModule = this;
             while (topModule.SuperprojectModule is not null)
             {
                 topModule = topModule.SuperprojectModule;
@@ -247,6 +237,11 @@ namespace GitCommands
             return EffectiveSettings;
         }
 
+        public ISettingsSource GetLocalSettings()
+        {
+            return LocalSettings;
+        }
+
         private DistributedSettings? _localSettings;
 
         public DistributedSettings LocalSettings
@@ -267,7 +262,7 @@ namespace GitCommands
 
         private ConfigFileSettings? _effectiveConfigFile;
 
-        public ConfigFileSettings EffectiveConfigFile
+        public IConfigFileSettings EffectiveConfigFile
         {
             get
             {
@@ -283,7 +278,8 @@ namespace GitCommands
             }
         }
 
-        public ConfigFileSettings LocalConfigFile => new(lowerPriority: null, EffectiveConfigFile.SettingsCache, SettingLevel.Local);
+        public IConfigFileSettings LocalConfigFile
+            => new ConfigFileSettings(lowerPriority: null, ((ConfigFileSettings)EffectiveConfigFile).SettingsCache, SettingLevel.Local);
 
         IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
 
@@ -303,14 +299,11 @@ namespace GitCommands
         // 4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
 
-        public Encoding FilesEncoding => EffectiveConfigFile.FilesEncoding ?? new UTF8Encoding(false);
+        public Encoding FilesEncoding => ((ConfigFileSettings)EffectiveConfigFile).FilesEncoding ?? new UTF8Encoding(false);
 
-        public Encoding CommitEncoding => EffectiveConfigFile.CommitEncoding ?? new UTF8Encoding(false);
+        public Encoding CommitEncoding => ((ConfigFileSettings)EffectiveConfigFile).CommitEncoding ?? new UTF8Encoding(false);
 
-        /// <summary>
-        /// Encoding for commit header (message, notes, author, committer, emails).
-        /// </summary>
-        public Encoding LogOutputEncoding => EffectiveConfigFile.LogOutputEncoding ?? CommitEncoding;
+        public Encoding LogOutputEncoding => ((ConfigFileSettings)EffectiveConfigFile).LogOutputEncoding ?? CommitEncoding;
 
         /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool IsValidGitWorkingDir()
@@ -466,7 +459,7 @@ namespace GitCommands
 
             return localPaths;
 
-            void DoGetSubmodulesLocalPaths(GitModule module, string parentPath, List<string> paths, bool recurse)
+            void DoGetSubmodulesLocalPaths(IGitModule module, string parentPath, List<string> paths, bool recurse)
             {
                 List<string> submodulePaths = GetSubmodulePaths(module)
                     .Select(p => Path.Combine(parentPath, p).ToPosixPath())
@@ -483,10 +476,9 @@ namespace GitCommands
                 }
             }
 
-            IEnumerable<string> GetSubmodulePaths(GitModule module)
+            IEnumerable<string> GetSubmodulePaths(IGitModule module)
             {
-                ConfigFile configFile = module.GetSubmoduleConfigFile();
-
+                ISubmodulesConfigFile configFile = module.GetSubmodulesConfigFile();
                 return configFile.ConfigSections
                     .Select(section => section.GetValue("path").Trim()).Where(path => !string.IsNullOrWhiteSpace(path));
             }
@@ -639,7 +631,7 @@ namespace GitCommands
             }
 
             byte[] blobData = blobStream.ToArray();
-            if (EffectiveConfigFile.ByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf") is AutoCRLFType.@true)
+            if (((ConfigFileSettings)EffectiveConfigFile).ByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf") is AutoCRLFType.@true)
             {
                 if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                 {
@@ -932,7 +924,7 @@ namespace GitCommands
         {
             // Use Windows Git if custom tool is selected as the list is native to the application.
             bool isWindowsGit = !string.IsNullOrWhiteSpace(customTool);
-            string gui = (isWindowsGit ? GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
+            string gui = (isWindowsGit ? GitCommands.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
             GitArgumentBuilder args = new("mergetool")
             {
                 { string.IsNullOrWhiteSpace(customTool), gui, $"--tool={customTool}" },
@@ -998,9 +990,9 @@ namespace GitCommands
                 .ToList();
         }
 
-        public IReadOnlyList<GitRevision> GetParentRevisions(ObjectId commitId)
+        public IReadOnlyList<GitRevision> GetParentRevisions(ObjectId objectId)
         {
-            return GetParents(commitId)
+            return GetParents(objectId)
                 .Select(parent => GetRevision(parent, shortFormat: true))
                 .ToList();
         }
@@ -1061,7 +1053,7 @@ namespace GitCommands
             return false;
         }
 
-        public async Task<(char code, ObjectId? currentCommitId)> GetSuperprojectCurrentCheckoutAsync()
+        public async Task<(char code, ObjectId? commitId)> GetSuperprojectCurrentCheckoutAsync()
         {
             if (SuperprojectModule is null)
             {
@@ -1085,12 +1077,12 @@ namespace GitCommands
             string submodule = lines[0];
 
             if (submodule.Length < ObjectId.Sha1CharCount + 3
-                || !ObjectId.TryParse(submodule, 1, out ObjectId currentCommitId))
+                || !ObjectId.TryParse(submodule, 1, out ObjectId commitId))
             {
                 return (' ', null);
             }
 
-            return (submodule[0], currentCommitId);
+            return (submodule[0], commitId);
         }
 
         public bool ExistsMergeCommit(string? startRev, string? endRev)
@@ -1113,8 +1105,7 @@ namespace GitCommands
             return !string.IsNullOrWhiteSpace(mergeCommitsOutput);
         }
 
-        public ConfigFile GetSubmoduleConfigFile()
-            => new(WorkingDir + ".gitmodules");
+        public ISubmodulesConfigFile GetSubmodulesConfigFile() => new ConfigFile($"{WorkingDir}.gitmodules");
 
         public string? GetCurrentSubmoduleLocalPath()
         {
@@ -1153,10 +1144,10 @@ namespace GitCommands
 
         public IEnumerable<IGitSubmoduleInfo?> GetSubmodulesInfo()
         {
-            ConfigFile? configFile;
+            ISubmodulesConfigFile? configFile;
             try
             {
-                configFile = GetSubmoduleConfigFile();
+                configFile = GetSubmodulesConfigFile();
             }
             catch (GitConfigurationException)
             {
@@ -1465,12 +1456,6 @@ namespace GitCommands
                 });
         }
 
-        /// <summary>
-        /// git-checkout files
-        /// </summary>
-        /// <param name="files">List of files to checkout.</param>
-        /// <param name="revision">Commit to checkout, null is handled as HEAD.</param>
-        /// <param name="force">Force checkout.</param>
         public string CheckoutFiles(IReadOnlyList<string> files, ObjectId? revision, bool force)
         {
             if (files.Count == 0 || (revision?.IsArtificial is true && revision != ObjectId.IndexId))
@@ -1510,8 +1495,6 @@ namespace GitCommands
                     .BuildBatchArgumentsForFiles(files));
         }
 
-        /// <summary>Tries to start Pageant for the specified remote repo (using the remote's PuTTY key file).</summary>
-        /// <returns>true if the remote has a PuTTY key file; otherwise, false.</returns>
         public string GetPuttyKeyFileForRemote(string? remote)
         {
             if (string.IsNullOrEmpty(remote) ||
@@ -1617,9 +1600,9 @@ namespace GitCommands
             return "";
         }
 
-        public string ApplyPatch(string dir, ArgumentString amCommand)
+        public string ApplyPatch(string dir, ArgumentString arguments)
         {
-            using IProcess process = _gitExecutable.Start(amCommand, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding);
+            using IProcess process = _gitExecutable.Start(arguments, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding);
             string[] files = Directory.GetFiles(dir);
 
             if (files.Length == 0)
@@ -1641,13 +1624,6 @@ namespace GitCommands
 
         #region Stage/Unstage
 
-        /// <summary>
-        /// Set/unset whether given items are assumed unchanged by git-status.
-        /// </summary>
-        /// <param name="files">The files to set the status for.</param>
-        /// <param name="assumeUnchanged">The status value.</param>
-        /// <param name="allOutput">stdout and stderr output.</param>
-        /// <returns><see langword="true"/> if no errors occurred; otherwise, <see langword="false"/>.</returns>
         public bool AssumeUnchangedFiles(IReadOnlyList<GitItemStatus> files, bool assumeUnchanged, out string allOutput)
         {
             files = files.Where(file => file.IsAssumeUnchanged != assumeUnchanged).ToList();
@@ -1678,13 +1654,6 @@ namespace GitCommands
             return execution.ExitedSuccessfully;
         }
 
-        /// <summary>
-        /// Set/unset whether given items are not flagged as changed by git-status.
-        /// </summary>
-        /// <param name="files">The files to set the status for.</param>
-        /// <param name="skipWorktree">The status value.</param>
-        /// <param name="allOutput">stdout and stderr output.</param>
-        /// <returns><see langword="true"/> if no errors occurred; otherwise, <see langword="false"/>.</returns>
         public bool SkipWorktreeFiles(IReadOnlyList<GitItemStatus> files, bool skipWorktree, out string allOutput)
         {
             files = files.Where(file => file.IsSkipWorktree != skipWorktree).ToList();
@@ -1845,18 +1814,12 @@ namespace GitCommands
             return !wereErrors;
         }
 
-        /// <summary>
-        /// Batch unstage files using <see cref="ExecutableExtensions.RunBatchCommand(IExecutable, ICollection{BatchArgumentItem}, Action{BatchProgressEventArgs}, Action{StreamWriter})"/>.
-        /// </summary>
-        /// <param name="selectedItems">Selected file items.</param>
-        /// <param name="action">Progress update callback.</param>
-        /// <returns><see langword="true" /> if changes should be rescanned; otherwise <see langword="false" />.</returns>.
-        public bool BatchUnstageFiles(IEnumerable<GitItemStatus> selectedItems, Action<BatchProgressEventArgs>? action = null)
+        public bool BatchUnstageFiles(IEnumerable<GitItemStatus> files, Action<BatchProgressEventArgs>? progressCallback = null)
         {
-            List<GitItemStatus> files = [];
+            List<GitItemStatus> filesToUnstage = [];
             List<string> filesToRemove = [];
             bool shouldRescanChanges = false;
-            foreach (GitItemStatus item in selectedItems)
+            foreach (GitItemStatus item in files)
             {
                 if (!item.IsNew)
                 {
@@ -1877,7 +1840,7 @@ namespace GitCommands
                 }
                 else
                 {
-                    files.Add(item);
+                    filesToUnstage.Add(item);
                 }
             }
 
@@ -1886,10 +1849,10 @@ namespace GitCommands
                 ArgumentString args = Commands.Reset(ResetMode.ResetIndex, "HEAD");
                 _gitExecutable.RunBatchCommand(new ArgumentBuilder() { args }
                     .BuildBatchArgumentsForFiles(filesToRemove),
-                    action);
+                    progressCallback);
             }
 
-            UnstageFiles(files, out _);
+            UnstageFiles(filesToUnstage, out _);
 
             return shouldRescanChanges;
         }
@@ -2123,7 +2086,7 @@ namespace GitCommands
 
         public IEnumerable<string> GetSettings(string setting)
         {
-            return LocalConfigFile.GetValues(setting);
+            return ((ConfigFileSettings)LocalConfigFile).GetValues(setting);
         }
 
         public string GetSetting(string setting)
@@ -2134,6 +2097,11 @@ namespace GitCommands
         public string GetEffectiveSetting(string setting)
         {
             return EffectiveConfigFile.GetValue(setting);
+        }
+
+        public ISettingsSource GetEffectiveSettingsByPath(string path)
+        {
+            return ((ConfigFileSettings)EffectiveConfigFile).ByPath(path);
         }
 
         public string? GetEffectiveGitSetting(string setting, bool cache = true)
@@ -2158,13 +2126,7 @@ namespace GitCommands
 
         public void SetSetting(string setting, string? value)
         {
-            LocalConfigFile.SetValue(setting, value);
-        }
-
-        // TODO: remove
-        public void SetPathSetting(string setting, string value)
-        {
-            LocalConfigFile.SetPathValue(setting, value);
+            ((ConfigFileSettings)LocalConfigFile).SetValue(setting, value);
         }
 
         internal GitArgumentBuilder GetStashesCmd(bool noLocks)
@@ -2537,9 +2499,11 @@ namespace GitCommands
             }
         }
 
-        public IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true,
-            bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
-            UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default, CancellationToken cancellationToken = default)
+        public IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(CancellationToken cancellationToken = default)
+            => GetAllChangedFilesWithSubmodulesStatus(excludeIgnoredFiles: true, excludeAssumeUnchangedFiles: true, excludeSkipWorktreeFiles: true, untrackedFiles: UntrackedFilesMode.Default, cancellationToken);
+
+        public IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool excludeAssumeUnchangedFiles, bool excludeSkipWorktreeFiles,
+            UntrackedFilesMode untrackedFiles, CancellationToken cancellationToken)
         {
             IReadOnlyList<GitItemStatus> status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, excludeSkipWorktreeFiles, untrackedFiles, cancellationToken);
             GetCurrentSubmoduleStatus(status);
@@ -2796,7 +2760,6 @@ namespace GitCommands
             return remote;
         }
 
-        /// <summary>Gets the remote branch of the specified local branch; or "" if none is configured.</summary>
         public string GetRemoteBranch(string branch)
         {
             string remote = GetSetting(string.Format(SettingKeyString.BranchRemote, branch));
@@ -2815,15 +2778,8 @@ namespace GitCommands
             return GetRefs(RefsFilter.Remotes);
         }
 
-        public RemoteActionResult<IReadOnlyList<IGitRef>> GetRemoteServerRefs(string remote, bool tags, bool branches)
+        public IReadOnlyList<IGitRef> GetRemoteServerRefs(string remote, bool tags, bool branches, out string? errorOutput, CancellationToken cancellationToken)
         {
-            RemoteActionResult<IReadOnlyList<IGitRef>> result = new()
-            {
-                AuthenticationFail = false,
-                HostKeyFail = false,
-                Result = null
-            };
-
             ExecutionResult executionResult = !tags && !branches
                 ? new() // TODO is this an error?
                 : _gitExecutable.Execute(new GitArgumentBuilder("ls-remote")
@@ -2832,26 +2788,20 @@ namespace GitCommands
                         { branches, "--heads" },
                         remote.ToPosixPath().QuoteNE()
                     },
-                    throwOnErrorExit: false);
+                    throwOnErrorExit: false,
+                    cancellationToken: cancellationToken);
 
             // TODO AllOutput is parsed at errors, can this be detected better?
             string output = executionResult.AllOutput;
 
             if (executionResult.ExitedSuccessfully)
             {
-                result.Result = ParseRefs(executionResult.StandardOutput);
-            }
-            else if (output.Contains("FATAL ERROR") && output.Contains("authentication"))
-            {
-                // If the authentication failed because of a missing key, ask the user to supply one.
-                result.AuthenticationFail = true;
-            }
-            else if (output.Contains("the server's host key is not cached in the registry", StringComparison.InvariantCultureIgnoreCase))
-            {
-                result.HostKeyFail = true;
+                errorOutput = null;
+                return ParseRefs(executionResult.StandardOutput);
             }
 
-            return result;
+            errorOutput = output;
+            return Array.Empty<IGitRef>();
         }
 
         /// <summary>
@@ -2947,14 +2897,6 @@ namespace GitCommands
             return gitRefs;
         }
 
-        /// <summary>
-        /// Gets branches which contain the given commit.
-        /// If both local and remote branches are requested, remote branches are prefixed with "remotes/"
-        /// (as returned by git branch -a).
-        /// </summary>
-        /// <param name="objectId">The sha1.</param>
-        /// <param name="getLocal">Pass true to include local branches.</param>
-        /// <param name="getRemote">Pass true to include remote branches.</param>
         public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote)
         {
             if (!getLocal && !getRemote)
@@ -3004,10 +2946,6 @@ namespace GitCommands
             return result;
         }
 
-        /// <summary>
-        /// Gets all tags which contain the given commit.
-        /// </summary>
-        /// <param name="objectId">The sha1.</param>
         public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId)
         {
             ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false);
@@ -3020,10 +2958,6 @@ namespace GitCommands
             return exec.StandardOutput.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        /// <summary>
-        /// Returns tag's message. If the lightweight tag is passed, corresponding commit message
-        /// is returned.
-        /// </summary>
         public string? GetTagMessage(string? tag)
         {
             if (string.IsNullOrWhiteSpace(tag))
@@ -3458,7 +3392,7 @@ namespace GitCommands
             }
         }
 
-        public IEnumerable<string?> GetPreviousCommitMessages(int count, string revision = "HEAD", string authorPattern = "")
+        public IEnumerable<string?> GetPreviousCommitMessages(int count, string revision, string authorPattern)
         {
             GitArgumentBuilder args = new("log")
             {
@@ -3481,12 +3415,6 @@ namespace GitCommands
                 : messages.Select(ReEncodeCommitMessage);
         }
 
-        /// <summary>
-        /// Get a list of diff/merge tools known by Git.
-        /// This normally requires long time (up to tenths of seconds)
-        /// </summary>
-        /// <param name="isDiff">diff or merge.</param>
-        /// <returns>the Git output.</returns>
         public string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken)
         {
             // Use a global list of custom tools, always use Windows tools (native paths for the app).
@@ -3498,7 +3426,7 @@ namespace GitCommands
 
         public void OpenWithDifftoolDirDiff(string? firstRevision, string? secondRevision, string? customTool = null)
         {
-            OpenWithDifftool(null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
+            OpenWithDifftool(null, firstRevision, secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
         }
 
         public void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
@@ -3587,7 +3515,7 @@ namespace GitCommands
                 : null;
         }
 
-        public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData = false)
+        public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData)
         {
             // Submodule directory must exist to run commands, unknown otherwise
             if (!IsValidGitWorkingDir() || oldCommit is null)
@@ -3658,16 +3586,6 @@ namespace GitCommands
             return SubmoduleStatus.Unknown;
         }
 
-        public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit)
-        {
-            return CheckSubmoduleStatus(commit, oldCommit, null, null, true);
-        }
-
-        /// <summary>
-        /// Uses check-ref-format to ensure that a branch name is well formed.
-        /// </summary>
-        /// <param name="branchName">Branch name to test.</param>
-        /// <returns>true if <paramref name="branchName"/> is valid reference name, otherwise false.</returns>
         public bool CheckBranchFormat(string branchName)
         {
             if (branchName is null)
@@ -3689,12 +3607,7 @@ namespace GitCommands
             return _gitExecutable.RunCommand(args);
         }
 
-        /// <summary>
-        /// Format branch name, check if name is valid for repository.
-        /// </summary>
-        /// <param name="branchName">Branch name to test.</param>
-        /// <returns>Well formed branch name.</returns>
-        public string? FormatBranchName(string branchName)
+        public string FormatBranchName(string branchName)
         {
             ArgumentNullException.ThrowIfNull(branchName);
 
@@ -3905,7 +3818,7 @@ namespace GitCommands
             return branchName;
         }
 
-        public IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(string shaOfMergeCommit)
+        public IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(ObjectId mergeCommitObjectId)
         {
             GitArgumentBuilder args = new("diff-tree")
             {
@@ -3913,7 +3826,7 @@ namespace GitCommands
                 "-z",
                 "--cc",
                 "--no-commit-id",
-                shaOfMergeCommit
+                mergeCommitObjectId
             };
 
             string fileList = _gitExecutable.GetOutput(args);

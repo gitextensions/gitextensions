@@ -748,17 +748,17 @@ namespace GitUI
                 // Reset all changes.
                 if (string.IsNullOrWhiteSpace(fileName))
                 {
-                    return Module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
+                    return Module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete, onlyWorkTree: false);
                 }
 
                 string filePath = Path.GetRelativePath(Module.WorkingDir, fileName).ToPosixPath();
-                List<GitItemStatus> selectedItems = Module.GetAllChangedFilesWithSubmodulesStatus().Where(item => item.Name == filePath).ToList();
+                List<GitItemStatus> selectedItems = Module.GetAllChangedFilesWithSubmodulesStatus(cancellationToken: default).Where(item => item.Name == filePath).ToList();
                 if (selectedItems.Count < 1)
                 {
                     return false;
                 }
 
-                Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output);
+                Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: null);
                 if (output.Length > 0)
                 {
                     MessageBox.Show(null, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1612,7 +1612,7 @@ namespace GitUI
             Console.Error.WriteLine($"No commit found matching: {arg}");
             return false;
 
-            static bool TryGetObjectIds(string arg, GitModule module, out ObjectId? selectedId, out ObjectId? firstId)
+            static bool TryGetObjectIds(string arg, IGitModule module, out ObjectId? selectedId, out ObjectId? firstId)
             {
                 selectedId = null;
                 firstId = null;

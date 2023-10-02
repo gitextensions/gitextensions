@@ -4,7 +4,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Config
 {
-    public class ConfigFile
+    public class ConfigFile : IConfigFile
     {
         private static Encoding GetEncoding() => GitModule.SystemEncoding;
         public static readonly char[] CommentChars = { ';', '#' };

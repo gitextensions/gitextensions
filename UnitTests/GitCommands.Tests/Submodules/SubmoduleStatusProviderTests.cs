@@ -22,9 +22,9 @@ namespace GitCommandsTests.Submodules
         // Note that _repo2Module and _repo3Module point to the submodules under _repo1Module,
         // not the 'origin' _repo2.Module and _repo3.Module respectively. In general, the tests should here
         // should interact with these modules, not with _repo2 and _repo3.
-        private GitModule _repo1Module;
-        private GitModule _repo2Module;
-        private GitModule _repo3Module;
+        private IGitModule _repo1Module;
+        private IGitModule _repo2Module;
+        private IGitModule _repo3Module;
 
         private ISubmoduleStatusProvider _provider;
         private bool _isInit = false;
@@ -56,7 +56,7 @@ namespace GitCommandsTests.Submodules
             _repo2Module = submodules.ElementAt(0);
             _repo3Module = submodules.ElementAt(1);
 
-            GitModule[] actualModules = new GitModule[]
+            IGitModule[] actualModules = new[]
             {
                 _repo1Module,
                 _repo2Module,
