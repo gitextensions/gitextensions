@@ -18,12 +18,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         public bool ShouldRefreshRevisionGrid { get; private set; }
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormManageWorktree()
-        {
-            InitializeComponent();
-        }
-
         public FormManageWorktree(GitUICommands commands)
             : base(commands, enablePositionRestore: false)
         {

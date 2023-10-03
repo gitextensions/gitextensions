@@ -45,12 +45,6 @@ namespace GitUI.CommandsDialogs
 
         private static readonly List<PatchFile> Skipped = new();
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormApplyPatch()
-        {
-            InitializeComponent();
-        }
-
         public FormApplyPatch(GitUICommands commands)
             : base(commands)
         {

@@ -14,14 +14,6 @@ namespace GitUI.CommandsDialogs
 
         private bool _isMerge;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormRevertCommit()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public FormRevertCommit(GitUICommands commands, GitRevision revision)
             : base(commands)
         {

@@ -33,14 +33,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _btnSwapTooltip = new("Swap BASE and Compare commits");
         private readonly TranslationString _ckCompareToMergeBase = new("Compare to merge &base");
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormDiff()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public FormDiff(
             GitUICommands commands,
             ObjectId firstId,

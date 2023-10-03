@@ -20,12 +20,6 @@ namespace GitUI.CommandsDialogs
         public bool UserAbleToChangeRevision { get; set; } = true;
         public bool CouldBeOrphan { get; set; } = true;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormCreateBranch()
-        {
-            InitializeComponent();
-        }
-
         public FormCreateBranch(GitUICommands commands, ObjectId? objectId, string? newBranchNamePrefix = null)
             : base(commands, enablePositionRestore: false)
         {

@@ -29,14 +29,6 @@ namespace GitUI.CommandsDialogs
 
         private string FileName { get; set; }
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormFileHistory()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         /// <summary>
         /// Open FileHistory form.
         /// </summary>

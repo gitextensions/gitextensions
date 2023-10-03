@@ -120,14 +120,6 @@ namespace GitUI.CommandsDialogs
         private int _conflictItemsCount;
         private readonly CancellationTokenSequence _customDiffToolsSequence = new();
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormResolveConflicts()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public FormResolveConflicts(GitUICommands commands, bool offerCommit = true)
             : base(commands)
         {

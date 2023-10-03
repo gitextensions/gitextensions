@@ -26,14 +26,6 @@ namespace GitUI.CommandsDialogs
         private SettingsPageReference? _initialPage;
         private bool _saved = false;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormSettings()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public FormSettings(GitUICommands commands, SettingsPageReference? initialPage = null)
             : base(commands)
         {

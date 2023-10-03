@@ -29,14 +29,6 @@ namespace GitUI.CommandsDialogs
         private readonly IReadOnlyList<string> _defaultBranchItems;
         private string? _puttySshKey;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormClone()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public FormClone(GitUICommands commands, string? url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs>? gitModuleChanged)
             : base(commands, enablePositionRestore: false)
         {

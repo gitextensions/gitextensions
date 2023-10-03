@@ -94,14 +94,6 @@ Inactive remote is completely invisible to git.");
             new("An inactive remote named \"{0}\" already exists.");
         #endregion
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormRemotes()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public FormRemotes(GitUICommands commands)
             : base(commands)
         {

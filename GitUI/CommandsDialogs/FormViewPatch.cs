@@ -21,12 +21,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _patchFileFilterString = new("Patch file (*.Patch)");
         private readonly TranslationString _patchFileFilterTitle = new("Select patch file");
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormViewPatch()
-        {
-            InitializeComponent();
-        }
-
         public FormViewPatch(GitUICommands commands)
             : base(commands)
         {

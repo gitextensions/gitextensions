@@ -10,7 +10,7 @@ namespace GitUI.HelperDialogs
     /// <returns>if handled.</returns>
     public delegate bool HandleOnExit(ref bool isError, FormProcess form);
 
-    public class FormProcess : FormStatus
+    public partial class FormProcess : FormStatus
     {
         public string Remote { get; set; }
         public string ProcessString { get; }
@@ -19,14 +19,6 @@ namespace GitUI.HelperDialogs
         public readonly string WorkingDirectory;
         public HandleOnExit? HandleOnExitCallback { get; set; }
         public readonly Dictionary<string, string> ProcessEnvVariables = new();
-
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private protected FormProcess()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-            : base()
-        {
-        }
 
         private FormProcess(GitUICommands? commands, ConsoleOutputControl? outputControl, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process)
             : base(commands, outputControl, useDialogSettings)

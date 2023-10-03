@@ -26,14 +26,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly AsyncLoader _remoteLoader = new();
         private bool _ignoreFirstRemoteLoading = true;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private CreatePullRequestForm()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public CreatePullRequestForm(GitUICommands commands, IRepositoryHostPlugin repoHost, string? chooseRemote, string? chooseBranch)
             : base(commands)
         {

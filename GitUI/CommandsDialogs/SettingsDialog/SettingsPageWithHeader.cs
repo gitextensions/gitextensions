@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public class SettingsPageWithHeader : SettingsPageBase, IGlobalSettingsPage
+    public partial class SettingsPageWithHeader : SettingsPageBase, IGlobalSettingsPage
     {
         private SettingsPageHeader? _header;
 

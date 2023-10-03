@@ -52,12 +52,6 @@ namespace GitUI.CommandsDialogs
         private readonly string? _defaultToBranch;
         private readonly bool _startRebaseImmediately;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormRebase()
-        {
-            InitializeComponent();
-        }
-
         public FormRebase(GitUICommands commands, string? defaultBranch)
             : base(commands, enablePositionRestore: false)
         {

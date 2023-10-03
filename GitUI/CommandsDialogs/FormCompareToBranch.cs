@@ -4,12 +4,6 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormCompareToBranch : GitModuleForm
     {
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormCompareToBranch()
-        {
-            InitializeComponent();
-        }
-
         public FormCompareToBranch(GitUICommands commands, ObjectId? selectedCommit)
             : base(commands)
         {
