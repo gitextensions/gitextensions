@@ -2845,53 +2845,54 @@ namespace GitCommands
             }
 
             return result;
-        }
 
-        private static IReadOnlyList<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
-        {
-            List<GitItemStatus> result = new();
-
-            foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
+            static IReadOnlyList<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
             {
-                char statusCharacter = line[0];
-                if (char.IsUpper(statusCharacter))
+                List<GitItemStatus> result = new();
+
+                foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
                 {
-                    // git-ls-files -v will return lowercase status characters for assume unchanged files
-                    continue;
+                    char statusCharacter = line[0];
+                    if (char.IsUpper(statusCharacter))
+                    {
+                        // git-ls-files -v will return lowercase status characters for assume unchanged files
+                        continue;
+                    }
+
+                    // Get a default status object, then set AssumeUnchanged
+                    string fileName = line.SubstringAfter(' ');
+                    GitItemStatus gitItemStatus = GitItemStatus.GetDefaultStatus(fileName);
+                    gitItemStatus.IsAssumeUnchanged = true;
+                    result.Add(gitItemStatus);
                 }
 
-                // Get a default status object, then set AssumeUnchanged
-                string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatus.GetDefaultStatus(fileName);
-                gitItemStatus.IsAssumeUnchanged = true;
-                result.Add(gitItemStatus);
+                return result;
             }
 
-            return result;
-        }
-
-        private static IReadOnlyList<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
-        {
-            List<GitItemStatus> result = new();
-
-            foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
+            static IReadOnlyList<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
             {
-                char statusCharacter = line[0];
-                const char SkippedStatus = 'S';
-                const char SkippedStatusAssumeUnchanged = 's';
-                if (statusCharacter is not SkippedStatus or SkippedStatusAssumeUnchanged)
+                List<GitItemStatus> result = new();
+
+                foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
                 {
-                    continue;
+                    // Both AssumeUnchange and SkipWorktree will use 's',
+                    // already handled in GetAssumeUnchangedFilesFromString()
+                    char statusCharacter = line[0];
+                    const char SkippedStatus = 'S';
+                    if (statusCharacter is not SkippedStatus)
+                    {
+                        continue;
+                    }
+
+                    // Get a default status object, then set SkipWorktree
+                    string fileName = line.SubstringAfter(' ');
+                    GitItemStatus gitItemStatus = GitItemStatus.GetDefaultStatus(fileName);
+                    gitItemStatus.IsSkipWorktree = true;
+                    result.Add(gitItemStatus);
                 }
 
-                // Get a default status object, then set SkipWorktree
-                string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatus.GetDefaultStatus(fileName);
-                gitItemStatus.IsSkipWorktree = true;
-                result.Add(gitItemStatus);
+                return result;
             }
-
-            return result;
         }
 
         public IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true,
