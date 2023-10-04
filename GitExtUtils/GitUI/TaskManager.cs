@@ -135,7 +135,7 @@ namespace GitUI
         /// <summary>
         /// Forward the exception <paramref name="ex"/> to <see cref="Application.OnThreadException"/> on the main thread.
         /// </summary>
-        /// The readability of the callstack is improved by calling <see cref="ExceptionExtensions.Demystify"/>.
+        /// The readability of the callstack is improved by calling <c>ExceptionExtensions.Demystify</c>.
         internal async Task ReportExceptionOnMainThreadAsync(Exception ex)
         {
             try

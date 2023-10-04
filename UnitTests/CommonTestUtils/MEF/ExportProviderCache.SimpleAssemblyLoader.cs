@@ -22,7 +22,9 @@ namespace CommonTestUtils.MEF
                 AssemblyName assemblyName = new(assemblyFullName);
                 if (!string.IsNullOrEmpty(codeBasePath))
                 {
+#pragma warning disable SYSLIB0044 // 'AssemblyName.CodeBase' is obsolete: 'AssemblyName.CodeBase and AssemblyName.EscapedCodeBase are obsolete. Using them for loading an assembly is not supported.'
                     assemblyName.CodeBase = codeBasePath;
+#pragma warning restore SYSLIB0044
                 }
 
                 return LoadAssembly(assemblyName);

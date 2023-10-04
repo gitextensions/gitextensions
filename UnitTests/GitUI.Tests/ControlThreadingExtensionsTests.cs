@@ -90,7 +90,7 @@ namespace GitUITests
         {
             Form form = new();
             CancellationTokenSource cancellationTokenSource = new();
-            cancellationTokenSource.Cancel();
+            await cancellationTokenSource.CancelAsync();
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
@@ -102,7 +102,7 @@ namespace GitUITests
             Form form = new();
             form.Dispose();
             CancellationTokenSource cancellationTokenSource = new();
-            cancellationTokenSource.Cancel();
+            await cancellationTokenSource.CancelAsync();
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             OperationCanceledException exception = await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
@@ -132,7 +132,7 @@ namespace GitUITests
 
             ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 
-            cancellationTokenSource.Cancel();
+            await cancellationTokenSource.CancelAsync();
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await awaitable);
@@ -158,7 +158,7 @@ namespace GitUITests
             await TaskScheduler.Default;
 
             CancellationTokenSource cancellationTokenSource = new();
-            cancellationTokenSource.Cancel();
+            await cancellationTokenSource.CancelAsync();
 
             Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
@@ -197,7 +197,7 @@ namespace GitUITests
 
             ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 
-            cancellationTokenSource.Cancel();
+            await cancellationTokenSource.CancelAsync();
 
             Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await awaitable);

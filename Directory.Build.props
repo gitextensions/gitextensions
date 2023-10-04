@@ -11,9 +11,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWindowsForms>true</UseWindowsForms>
     <TargetFramework>$(SolutionTargetFramework)</TargetFramework>
-    <Prefer32Bit>false</Prefer32Bit>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)GitExtensions.ruleset</CodeAnalysisRuleSet>
+
+    <!-- More information: https://aka.ms/msbuild/net8-binaryformatter -->
+    <GenerateResourceWarnOnBinaryFormatterUse>false</GenerateResourceWarnOnBinaryFormatterUse>
 
     <!-- SourceLink: https://github.com/dotnet/sourcelink -->
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

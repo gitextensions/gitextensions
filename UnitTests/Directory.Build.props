@@ -5,7 +5,6 @@
     <RootNamespace>$([System.String]::Copy('$(MSBuildProjectName)').Replace('.Tests', 'Tests'))</RootNamespace>
     
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <Prefer32Bit>false</Prefer32Bit>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugType>full</DebugType>
 

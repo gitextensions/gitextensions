@@ -121,7 +121,7 @@ namespace GitUITests
 
             List<Task> tasks = Enumerable
                 .Range(0, threadCount)
-                .Select(i => Task.Run(() => ThreadMethod(i)))
+                .Select(i => Task.Run(() => ThreadMethodAsync(i)))
                 .ToList();
 
             Assert.True(
@@ -142,7 +142,7 @@ namespace GitUITests
 
             return;
 
-            void ThreadMethod(int i)
+            async Task ThreadMethodAsync(int i)
             {
                 while (true)
                 {
@@ -165,7 +165,7 @@ namespace GitUITests
 
                     if (countdown.Signal())
                     {
-                        completionTokenSource.Cancel();
+                        await completionTokenSource.CancelAsync();
                     }
                 }
             }

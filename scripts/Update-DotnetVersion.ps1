@@ -1,4 +1,4 @@
-param ( [string]$version = "6.0")
+param ( [string]$version = "8.0")
 
 $encoding = [System.Text.UTF8Encoding]::new($false)
 

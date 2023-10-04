@@ -70,7 +70,9 @@ namespace BugReporter.Serialization
                 writer.WriteStartElement(key.ToString().Replace(" ", ""));
 
                 // Check to see if we can actually serialize element
+#pragma warning disable SYSLIB0050 // 'Type.IsSerializable' is obsolete: 'Formatter-based serialization is obsolete and should not be used.'
                 if (this[key].GetType().IsSerializable)
+#pragma warning restore SYSLIB0050
                 {
                     // if it's Serializable doesn't mean serialization will succeed (IE. GUID and SQLError types)
                     try

@@ -36,7 +36,7 @@ namespace GitCommandsTests
 
             // cancel after delay
             await Task.Delay(cancelDelay);
-            cts.Cancel();
+            await cts.CancelAsync();
 
             // the process is killed on dispose but not before
             using (CancellationTokenSource ctsWaitExit = new())
@@ -125,7 +125,7 @@ namespace GitCommandsTests
             _ = ThreadHelper.JoinableTaskFactory.RunAsync(ExecuteAsync, JoinableTaskCreationOptions.LongRunning);
 
             await Task.Delay(cancelDelay);
-            cancellationTokenSource.Cancel();
+            await cancellationTokenSource.CancelAsync();
             await Task.Delay(exitDelay);
 
             exception.Should().NotBeNull();

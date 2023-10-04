@@ -3,6 +3,7 @@
   <PropertyGroup>
     <UseWindowsForms>true</UseWindowsForms>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
 
     <_SuppressSdkImports>true</_SuppressSdkImports>
     <DeterministicSourcePaths>false</DeterministicSourcePaths>

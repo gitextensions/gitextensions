@@ -10,8 +10,6 @@
     <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <StartupObject />
 
-    <Prefer32bit>true</Prefer32bit>
-
     <IsPublishable>true</IsPublishable>
     <PublishDir Condition="'$(IsPublishable)' == 'true'">$(AppPublishDir)</PublishDir>
     <ApplicationManifest>app.manifest</ApplicationManifest>

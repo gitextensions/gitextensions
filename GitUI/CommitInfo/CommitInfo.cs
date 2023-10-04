@@ -663,7 +663,7 @@ namespace GitUI.CommitInfo
 
         private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClipboardUtil.TrySetText((string)copyLinkToolStripMenuItem.Tag);
+            ClipboardUtil.TrySetText((string)copyLinkToolStripMenuItem.Tag!);
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
