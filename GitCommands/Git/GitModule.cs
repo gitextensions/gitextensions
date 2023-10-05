@@ -2840,7 +2840,7 @@ namespace GitCommands
 
                 if (!excludeSkipWorktreeFiles)
                 {
-                    result.AddRange(GetSkipWorktreeFilesFromString(lsOutput));
+                    result.AddRange(GetSkipWorktreeFilesFromString(lsOutput, excludeAssumeUnchangedFiles));
                 }
             }
 
@@ -2869,17 +2869,18 @@ namespace GitCommands
                 return result;
             }
 
-            static IReadOnlyList<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
+            static IReadOnlyList<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString, bool excludeAssumeUnchangedFiles)
             {
                 List<GitItemStatus> result = new();
 
                 foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
                 {
-                    // Both AssumeUnchange and SkipWorktree will use 's',
+                    // If both AssumeUnchange and SkipWorktree is set, status will be 's',
                     // already handled in GetAssumeUnchangedFilesFromString()
                     char statusCharacter = line[0];
                     const char SkippedStatus = 'S';
-                    if (statusCharacter is not SkippedStatus)
+                    const char SkippedStatusAssumeUnchanged = 's';
+                    if (statusCharacter is not SkippedStatus && (!excludeAssumeUnchangedFiles || statusCharacter is not SkippedStatusAssumeUnchanged))
                     {
                         continue;
                     }
