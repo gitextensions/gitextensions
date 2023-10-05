@@ -11,8 +11,8 @@ namespace GitCommandsTests
     [TestFixture]
     public sealed class RevisionReaderTests
     {
-        private Encoding _logOutputEncoding = Encoding.UTF8;
-        private long _sixMonths = new DateTimeOffset(new DateTime(2021, 01, 01)).ToUnixTimeSeconds();
+        private readonly Encoding _logOutputEncoding = Encoding.UTF8;
+        private readonly long _sixMonths = new DateTimeOffset(new DateTime(2021, 01, 01)).ToUnixTimeSeconds();
 
         [SetUp]
         public void Setup()
@@ -22,7 +22,7 @@ namespace GitCommandsTests
         [Test]
         public void BuildArguments_should_be_NUL_terminated()
         {
-            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector: false, _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
             ArgumentBuilder args = reader.GetTestAccessor().BuildArguments("", "");
 
             args.ToString().Should().Contain(" log -z ");
@@ -32,7 +32,7 @@ namespace GitCommandsTests
         public void TryParseRevisionshould_return_false_if_argument_is_invalid()
         {
             ArraySegment<byte> chunk = null;
-            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new(""), hasReflogSelector: false, _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new(""), _logOutputEncoding, _sixMonths);
 
             // Set to a high value so Debug.Assert do not raise exceptions
             reader.GetTestAccessor().NoOfParseError = 100;
@@ -58,13 +58,17 @@ namespace GitCommandsTests
         [TestCase("simple_pathfilter", true)]
         [TestCase("subject_no_body", true)]
         [TestCase("empty_commit", true)]
+        [TestCase("vertical_tab", true)]
         [TestCase("reflogselector", true, true, false)]
         [TestCase("reflogselector_empty", true, true)]
-        public async Task TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false, bool hasEmptyReflogSelector = true)
+        [TestCase("notes_data", true, false, true, true)]
+        [TestCase("notes_empty", true, false, true, true)]
+        public async Task TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false, bool hasEmptyReflogSelector = true, bool hasNotes = false)
         {
             string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
             ArraySegment<byte> chunk = File.ReadAllBytes(path);
-            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector, _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+            reader.GetTestAccessor().SetParserAttributes(hasReflogSelector, hasNotes);
 
             // Set to a high value so Debug.Assert do not raise exceptions
             reader.GetTestAccessor().NoOfParseError = 100;

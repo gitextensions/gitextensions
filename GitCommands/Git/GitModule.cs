@@ -956,66 +956,7 @@ namespace GitCommands
 
         public GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false)
         {
-            const string formatString =
-                /* Hash           */ "%H%n" +
-                /* Tree           */ "%T%n" +
-                /* Parents        */ "%P%n" +
-                /* Author Name    */ "%aN%n" +
-                /* Author EMail   */ "%aE%n" +
-                /* Author Date    */ "%at%n" +
-                /* Committer Name */ "%cN%n" +
-                /* Committer EMail*/ "%cE%n" +
-                /* Committer Date */ "%ct%n";
-
-            string format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
-
-            GitArgumentBuilder args = new("log")
-            {
-                "-n1",
-                $"--pretty=format:{format}",
-                objectId
-            };
-
-            // cache output only if revision is specified
-            CommandCache? cache = objectId is null ? null : GitCommandCache;
-
-            string revInfo = _gitExecutable.GetOutput(args, cache: cache, outputEncoding: LosslessEncoding);
-
-            // TODO improve parsing to reduce temporary string (see similar code in RevisionReader)
-            string[] lines = revInfo.Split(Delimiters.LineFeed);
-
-            GitRevision revision = new(ObjectId.Parse(lines[0]))
-            {
-                TreeGuid = ObjectId.Parse(lines[1]),
-                ParentIds = lines[2].LazySplit(' ', StringSplitOptions.RemoveEmptyEntries).Select(line => ObjectId.Parse(line)).ToList(),
-                Author = ReEncodeStringFromLossless(lines[3]),
-                AuthorEmail = ReEncodeStringFromLossless(lines[4]),
-                Committer = ReEncodeStringFromLossless(lines[6]),
-                CommitterEmail = ReEncodeStringFromLossless(lines[7]),
-                AuthorUnixTime = long.Parse(lines[5]),
-                CommitUnixTime = long.Parse(lines[8]),
-                HasNotes = !shortFormat
-            };
-            if (shortFormat)
-            {
-                revision.Subject = ReEncodeCommitMessage(lines[9]) ?? "";
-            }
-            else
-            {
-                string message = ProcessDiffNotes(startIndex: 9);
-
-                // commit message is not re-encoded by git when format is given
-                // See also RevisionReader for parsing commit body
-                string body = ReEncodeCommitMessage(message ?? "").Replace('\v', '\n');
-                revision.Body = body;
-
-                ReadOnlySpan<char> span = body.AsSpan();
-                int endSubjectIndex = span.IndexOf('\n');
-                revision.HasMultiLineMessage = endSubjectIndex >= 0;
-                revision.Subject = revision.HasMultiLineMessage
-                    ? span[..endSubjectIndex].TrimEnd().ToString()
-                    : body;
-            }
+            GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId.ToString(), hasNotes: !shortFormat, cancellationToken: default);
 
             if (loadRefs)
             {
@@ -1025,36 +966,6 @@ namespace GitCommands
             }
 
             return revision;
-
-            string ProcessDiffNotes(int startIndex)
-            {
-                var endIndex = lines.Length - 1;
-
-                if (lines[endIndex] == "Notes:")
-                {
-                    endIndex--;
-                }
-
-                StringBuilder message = new();
-                var inNoteSection = false;
-
-                for (var i = startIndex; i <= endIndex; i++)
-                {
-                    if (inNoteSection)
-                    {
-                        message.Append("    ");
-                    }
-
-                    message.AppendLine(lines[i]);
-
-                    if (lines[i] == "Notes:")
-                    {
-                        inNoteSection = true;
-                    }
-                }
-
-                return message.ToString();
-            }
         }
 
         public IReadOnlyList<ObjectId> GetParents(ObjectId objectId)

@@ -195,18 +195,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
         /// <summary>
-        /// Set HasNotes for all GitRevisions (marking Notes as fetched).
-        /// This is used when no Git Notes at all exist and notes never need to be retrieved.
-        /// </summary>
-        public void SetHasNotesForRevisions()
-        {
-            foreach (RevisionGraphRevision revision in _nodes)
-            {
-                revision.GitRevision.HasNotes = true;
-            }
-        }
-
-        /// <summary>
         /// Add a single revision from the git log to the graph, including segments to parents.
         /// </summary>
         /// <param name="revision">The revision to add.</param>
