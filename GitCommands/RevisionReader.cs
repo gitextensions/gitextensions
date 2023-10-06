@@ -436,7 +436,6 @@ namespace GitCommands
                     return false;
                 }
 
-                // No reflogselector for notes and such
                 revision.ReflogSelector = lineLength > 0 ? decoded.Slice(0, lineLength).ToString() : null;
                 decoded = decoded.Slice(lineLength + 1);
             }
@@ -449,9 +448,7 @@ namespace GitCommands
             // this uses the alternative definition of first line in body.
             int lengthSubject = decoded.IndexOfAny(Delimiters.LineAndVerticalFeed);
             revision.HasMultiLineMessage = _hasNotes
-
-                // Notes must always include the notes marker
-                ? decoded.Length != lengthSubject + _notesMarker.Length + 1
+                ? decoded.Length != lengthSubject + _notesMarker.Length + 1 // Notes must always include the notes marker
                 : lengthSubject >= 0;
 
             revision.Subject = (lengthSubject >= 0
@@ -471,20 +468,19 @@ namespace GitCommands
                     currentOffset++;
                 }
 
-                // Removes empty Notes markers
-                // This is the most common case
-                bool hasNotes = _hasNotes;
-                if (hasNotes)
+                // Removes empty Notes markers (this is the most common case)
+                bool hasNonEmptyNotes = _hasNotes;
+                if (hasNonEmptyNotes)
                 {
                     if (decoded.EndsWith(_notesMarker))
                     {
                         // Remove the empty marker
                         decoded = decoded[..^_notesMarker.Length].TrimEnd();
-                        hasNotes = false;
+                        hasNonEmptyNotes = false;
                     }
                 }
 
-                if (hasNotes)
+                if (hasNonEmptyNotes)
                 {
                     // Format Notes, add indentation
                     int notesStartIndex = ((ReadOnlySpan<char>)decoded).IndexOf(_notesMarker, StringComparison.Ordinal);
