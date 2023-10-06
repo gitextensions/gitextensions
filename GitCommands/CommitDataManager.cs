@@ -25,9 +25,8 @@ namespace GitCommands
         /// Gets <see cref="CommitData"/> for the specified <paramref name="commitId"/>.
         /// </summary>
         /// <param name="commitId">The sha or Git reference.</param>
-        /// <param name="error">error message for the Git command</param>
         /// <param name="cache">Allow caching of the Git command, should only be used if commitId is a sha and Notes are not used.</param>
-        CommitData? GetCommitData(string commitId, out string? error, bool cache = false);
+        CommitData? GetCommitData(string commitId, bool cache = false);
 
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
@@ -72,10 +71,9 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public CommitData? GetCommitData(string commitId, [NotNullWhen(true)] out string? error, bool includeNotes = false)
+        public CommitData? GetCommitData(string commitId, bool includeNotes = false)
         {
             GitRevision revision = new RevisionReader(GetModule(), allBodies: true).GetRevision(commitId, hasNotes: includeNotes, cancellationToken: default);
-            error = "";
             return revision is not null
                 ? CreateFromRevision(revision, null)
                 : null;

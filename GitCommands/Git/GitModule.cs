@@ -956,7 +956,7 @@ namespace GitCommands
 
         public GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false)
         {
-            GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId.ToString(), hasNotes: !shortFormat, cancellationToken: default);
+            GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId?.ToString(), hasNotes: !shortFormat, cancellationToken: default);
 
             if (loadRefs)
             {
@@ -2088,10 +2088,9 @@ namespace GitCommands
             foreach (string[] parts in commitsInfos)
             {
                 string commitHash = parts[1];
-                string? error = null;
                 CommitData? data = rebasedCommitsRevisions.TryGetValue(commitHash, out GitRevision commitRevision)
                     ? _commitDataManager.CreateFromRevision(commitRevision, null)
-                    : _commitDataManager.GetCommitData(commitHash, out error);
+                    : _commitDataManager.GetCommitData(commitHash);
 
                 bool isApplying = currentCommitShortHash is not null && commitHash.StartsWith(currentCommitShortHash);
                 isCurrentFound |= isApplying;
@@ -2114,8 +2113,8 @@ namespace GitCommands
                     // During a rebase, "Patch" subject is filled with commit **body** to display it
                     // packed in the grid and more readable in the cell tooltip
                     Subject = data?.Body ?? string.Join(' ', parts.Skip(2)),
-                    Author = error ?? data?.Author,
-                    Date = error ?? data?.CommitDate.LocalDateTime.ToString(),
+                    Author = data?.Author,
+                    Date = data?.CommitDate.LocalDateTime.ToString(),
                     IsNext = isApplying,
                     IsApplied = !isCurrentFound,
                 });
@@ -3902,7 +3901,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), out _, cache: true);
+                oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), cache: true);
             }
 
             if (oldData is null)
@@ -3912,7 +3911,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                data = _commitDataManager.GetCommitData(commit.ToString(), out _, cache: true);
+                data = _commitDataManager.GetCommitData(commit.ToString(), cache: true);
             }
 
             if (data is null)

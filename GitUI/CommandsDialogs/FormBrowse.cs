@@ -2357,7 +2357,7 @@ namespace GitUI.CommandsDialogs
                 case "gotobranch":
                 case "gototag":
                     Validates.NotNull(e.Data);
-                    CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
+                    CommitData? commit = _commitDataManager.GetCommitData(e.Data);
                     if (commit is null)
                     {
                         break;
