@@ -52,4 +52,15 @@ public static class ServiceProviderExtensions
 
         return (T)service;
     }
+
+    /// <summary>
+    /// Removes the specified service of type <typeparamref name="T"/> from the <see cref="IServiceContainer"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of service object to add.</typeparam>
+    public static void RemoveService<T>(this IServiceContainer container) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(container);
+
+        container.RemoveService(typeof(T));
+    }
 }

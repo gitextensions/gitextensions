@@ -5,6 +5,7 @@ using GitCommands;
 using GitCommands.Remotes;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Script;
 using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs
@@ -57,12 +58,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 _referenceRepository.Module.AddRemote(name, $"http://localhost/remotes/{name}.git");
             }
 
-            ServiceContainer serviceContainer = new();
-            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
-            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
-            serviceContainer.AddService(Substitute.For<ResourceManager.ILinkFactory>());
-
-            _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
+            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
             _remotesManager = new ConfigFileRemoteSettingsManager(() => _referenceRepository.Module);
         }
 

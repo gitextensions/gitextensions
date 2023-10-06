@@ -1,4 +1,6 @@
 ﻿using GitUI.Hotkey;
+using GitUI.Script;
+using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 
@@ -57,15 +59,28 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cmbSettings.DisplayMember = nameof(HotkeySettings.Name);
         }
 
+        private IScriptsManager ScriptsManager
+        {
+            get
+            {
+                if (!TryGetUICommands(out IGitUICommands commands))
+                {
+                    throw new InvalidOperationException("IGitUICommands should have been assigned");
+                }
+
+                return commands.GetRequiredService<IScriptsManager>();
+            }
+        }
+
         public void SaveSettings()
         {
             Validates.NotNull(Settings);
             HotkeySettingsManager.SaveSettings(Settings);
         }
 
-        public void ReloadSettings()
+        public void ReloadSettings(IScriptsManager scriptsManager)
         {
-            Settings = HotkeySettingsManager.LoadSettings();
+            Settings = HotkeySettingsManager.LoadSettings(scriptsManager);
         }
 
         private void UpdateCombobox(HotkeySettings[]? settings)
@@ -115,7 +130,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            ReloadSettings();
+            ReloadSettings(ScriptsManager);
         }
 
         private void cmbSettings_SelectedIndexChanged(object sender, EventArgs e)
@@ -162,7 +177,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void bResetToDefaults_Click(object sender, EventArgs e)
         {
-            Settings = HotkeySettingsManager.CreateDefaultSettings();
+            Settings = HotkeySettingsManager.CreateDefaultSettings(ScriptsManager);
         }
     }
 }

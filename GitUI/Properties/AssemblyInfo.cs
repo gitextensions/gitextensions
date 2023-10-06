@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyDescription("GitExtensions UI")]
 
+[assembly: InternalsVisibleTo("GitExtensions")]
 [assembly: InternalsVisibleTo("GitUI.Tests")]
 [assembly: InternalsVisibleTo("UI.IntegrationTests")]
 [assembly: InternalsVisibleTo("TranslationApp")]

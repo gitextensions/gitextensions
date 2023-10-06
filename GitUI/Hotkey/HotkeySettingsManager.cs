@@ -30,11 +30,11 @@ namespace GitUI.Hotkey
             return _usedKeys.Contains(keyData);
         }
 
-        public static HotkeyCommand[] LoadHotkeys(string name)
+        public static HotkeyCommand[] LoadHotkeys(string name, IScriptsManager scriptsManager)
         {
             HotkeySettings settings = new();
             HotkeySettings scriptKeys = new();
-            var allSettings = LoadSettings();
+            var allSettings = LoadSettings(scriptsManager);
 
             UpdateUsedKeys(allSettings);
 
@@ -61,10 +61,10 @@ namespace GitUI.Hotkey
             return allKeys;
         }
 
-        public static HotkeySettings[] LoadSettings()
+        public static HotkeySettings[] LoadSettings(IScriptsManager scriptsManager)
         {
             // Get the default settings
-            var defaultSettings = CreateDefaultSettings();
+            var defaultSettings = CreateDefaultSettings(scriptsManager);
             var loadedSettings = LoadSerializedSettings();
 
             MergeIntoDefaultSettings(defaultSettings, loadedSettings);
@@ -208,7 +208,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        public static HotkeySettings[] CreateDefaultSettings()
+        public static HotkeySettings[] CreateDefaultSettings(IScriptsManager scriptsManager)
         {
             HotkeyCommand Hk(object en, Keys k) => new((int)en, en.ToString()) { KeyData = k };
 
@@ -425,7 +425,7 @@ namespace GitUI.Hotkey
                  * these integers are never matched in the 'switch' routine on a form and
                  * therefore execute the 'default' action
                  */
-                return ScriptManager
+                return scriptsManager
                     .GetScripts()
                     .Where(s => !string.IsNullOrEmpty(s.Name))
                     .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name!) { KeyData = Keys.None })

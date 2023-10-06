@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs
             merge.Select();
 
             HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, ScriptsManager);
         }
 
         protected override void Dispose(bool disposing)

@@ -1,4 +1,7 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitUI.Script;
+using GitUIPluginInterfaces;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class HotkeysSettingsPage : SettingsPageWithHeader
     {
@@ -9,9 +12,22 @@
             InitializeComplete();
         }
 
+        private IScriptsManager ScriptsManager
+        {
+            get
+            {
+                if (!TryGetUICommands(out IGitUICommands commands))
+                {
+                    throw new InvalidOperationException("IGitUICommands should have been assigned");
+                }
+
+                return commands.GetRequiredService<IScriptsManager>();
+            }
+        }
+
         protected override void SettingsToPage()
         {
-            controlHotkeys.ReloadSettings();
+            controlHotkeys.ReloadSettings(ScriptsManager);
 
             base.SettingsToPage();
         }

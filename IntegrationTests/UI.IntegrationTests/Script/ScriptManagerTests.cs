@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitUI.Script;
 
 namespace GitExtensions.UITests.Script
@@ -13,9 +14,11 @@ namespace GitExtensions.UITests.Script
 
             try
             {
+                ScriptsManager scriptsManager = new();
+
                 AppSettings.OwnScripts = "<ArrayOfScriptInfo />";
 
-                var scripts = ScriptManager.GetScripts();
+                BindingList<ScriptInfo> scripts = scriptsManager.GetScripts();
 
                 scripts.Add(new ScriptInfo()
                 {
@@ -24,7 +27,7 @@ namespace GitExtensions.UITests.Script
                     Arguments = "args"
                 });
 
-                string? xml = ScriptManager.SerializeIntoXml();
+                string? xml = scriptsManager.SerializeIntoXml();
 
                 // Verify as a string, as the xml verifier ignores line breaks.
                 await Verifier.VerifyXml(xml);
@@ -32,7 +35,6 @@ namespace GitExtensions.UITests.Script
             finally
             {
                 AppSettings.OwnScripts = originalScripts;
-                ScriptManager.TestAccessor.Reset();
             }
         }
     }

@@ -7,6 +7,7 @@ using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
+using GitUI.Script;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -188,9 +189,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void ReloadHotkeys()
+        public void ReloadHotkeys(IScriptsManager scriptsManager)
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
             diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
             fileHistoryDiffToolstripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             blameToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
@@ -208,7 +209,7 @@ namespace GitUI.CommandsDialogs
             diffFilterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
             findInDiffToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
 
-            DiffText.ReloadHotkeys();
+            DiffText.ReloadHotkeys(scriptsManager);
         }
 
         public void LoadCustomDifftools()
@@ -323,12 +324,18 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad()
         {
+            base.OnRuntimeLoad();
+
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.FixedWidthFont;
-            ReloadHotkeys();
-            LoadCustomDifftools();
+        }
 
-            base.OnRuntimeLoad();
+        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
+        {
+            base.OnUICommandsSourceSet(source);
+
+            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
+            LoadCustomDifftools();
         }
 
         /// <summary>

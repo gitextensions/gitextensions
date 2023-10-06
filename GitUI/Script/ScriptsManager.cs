@@ -3,44 +3,47 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
+using GitExtUtils;
+using GitUI.NBugReports;
+using ResourceManager;
 
 namespace GitUI.Script
 {
-    public static class ScriptManager
+    internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
     {
         internal const int MinimumUserScriptID = 9000;
         private static readonly XmlSerializer _serializer = new(typeof(BindingList<ScriptInfo>));
-        private static BindingList<ScriptInfo>? _scripts;
+        private BindingList<ScriptInfo>? _scripts;
 
-        public static BindingList<ScriptInfo> GetScripts()
+        public BindingList<ScriptInfo> GetScripts()
         {
             if (_scripts is null)
             {
                 _scripts = DeserializeFromXml(AppSettings.OwnScripts);
-                FixAmbiguousHotkeyCommandIdentifiers();
+                FixAmbiguousHotkeyCommandIdentifiers(_scripts);
             }
 
             return _scripts;
 
-            static void FixAmbiguousHotkeyCommandIdentifiers()
+            static void FixAmbiguousHotkeyCommandIdentifiers(BindingList<ScriptInfo> loadedScripts)
             {
                 HashSet<int> ids = new();
 
-                foreach (var script in _scripts!)
+                foreach (ScriptInfo script in loadedScripts)
                 {
                     if (!ids.Add(script.HotkeyCommandIdentifier))
                     {
-                        script.HotkeyCommandIdentifier = NextHotkeyCommandIdentifier();
+                        script.HotkeyCommandIdentifier = NextHotkeyCommandIdentifier(loadedScripts);
                     }
                 }
             }
         }
 
-        public static ScriptInfo? GetScript(string key)
+        public ScriptInfo? GetScript(int scriptId)
         {
-            foreach (var script in GetScripts())
+            foreach (ScriptInfo script in GetScripts())
             {
-                if (StringComparer.CurrentCultureIgnoreCase.Equals(script.Name, key))
+                if (script.HotkeyCommandIdentifier == scriptId)
                 {
                     return script;
                 }
@@ -49,11 +52,12 @@ namespace GitUI.Script
             return null;
         }
 
-        public static bool RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
+        public bool RunEventScripts<THostForm>(ScriptEvent scriptEvent, THostForm form)
+            where THostForm : IGitModuleForm, IWin32Window
         {
-            foreach (var script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
+            foreach (ScriptInfo script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                var result = ScriptRunner.RunScript(form, form.Module, script.Name, form.UICommands, revisionGrid: null);
+                CommandStatus result = ScriptRunner.RunScript(script, form, revisionGrid: null);
                 if (!result.Executed)
                 {
                     return false;
@@ -63,7 +67,20 @@ namespace GitUI.Script
             return true;
         }
 
-        public static string? SerializeIntoXml()
+        public CommandStatus RunScript<THostForm>(int scriptId, THostForm form, RevisionGridControl? revisionGrid = null)
+            where THostForm : IGitModuleForm, IWin32Window
+        {
+            ScriptInfo? scriptInfo = GetScript(scriptId);
+            if (scriptInfo is null)
+            {
+                throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorCantFind}: '{scriptId}'",
+                    new ExternalOperationException(workingDirectory: form.UICommands.GitModule.WorkingDir));
+            }
+
+            return ScriptRunner.RunScript(scriptInfo, form, revisionGrid);
+        }
+
+        public string? SerializeIntoXml()
         {
             try
             {
@@ -196,14 +213,9 @@ namespace GitUI.Script
             }
         }
 
-        internal static int NextHotkeyCommandIdentifier()
+        internal static int NextHotkeyCommandIdentifier(BindingList<ScriptInfo> scripts)
         {
-            return GetScripts().Select(s => s.HotkeyCommandIdentifier).Max() + 1;
-        }
-
-        internal struct TestAccessor
-        {
-            public static void Reset() => _scripts = null;
+            return scripts.Select(s => s.HotkeyCommandIdentifier).Max() + 1;
         }
     }
 }

@@ -61,7 +61,6 @@ namespace GitUI.LeftPanel
             mnubtnPullFromRemoteBranch.AdaptImageLightness();
             InitializeComplete();
 
-            ReloadHotkeys();
             HotkeysEnabled = true;
 
             RegisterContextActions();
@@ -279,9 +278,9 @@ namespace GitUI.LeftPanel
             _tagTree.UpdateVisibility();
         }
 
-        public void ReloadHotkeys()
+        public void ReloadHotkeys(IScriptsManager scriptsManager)
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
         }
 
         public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)
@@ -347,6 +346,8 @@ namespace GitUI.LeftPanel
             _selectionCancellationTokenSequence.CancelCurrent();
 
             base.OnUICommandsSourceSet(source);
+
+            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
 
             CreateBranches();
             CreateRemotes();

@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs
             stashedItems.Insert(0, _currentWorkingDirStashItem);
 
             HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, ScriptsManager);
 
             Stashes.Text = "";
             StashMessage.Text = "";

@@ -15,7 +15,6 @@ namespace GitExtensions.UITests.CommandsDialogs
     {
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;
-        private ServiceContainer _serviceContainer;
 
         // Created once for each test
         private GitUICommands _commands;
@@ -36,11 +35,6 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
             AppSettings.ShowAuthorAvatarColumn = false;
-
-            _serviceContainer = new();
-            _serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
-            _serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
-            _serviceContainer.AddService(Substitute.For<ILinkFactory>());
         }
 
         [OneTimeTearDown]
@@ -57,7 +51,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             ReferenceRepository.ResetRepo(ref _referenceRepository);
 
-            _commands = new GitUICommands(_serviceContainer, _referenceRepository.Module);
+            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
         }
 
 #if !DEBUG
@@ -167,7 +161,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void File_history_should_behave_as_expected(string fileRelativePath, string fileName)
         {
             using ReferenceRepository referenceRepository = new();
-            GitUICommands commands = new(_serviceContainer, referenceRepository.Module);
+            GitUICommands commands = new(GlobalServiceContainer.CreateDefaultMockServiceContainer(), referenceRepository.Module);
 
             string revision1 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Create '{fileName}' in directory '{fileRelativePath}'");
             string revision2 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Update '{fileName}' in directory '{fileRelativePath}'");
@@ -202,7 +196,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void ShowStashes_starting_disabled_should_filter_as_expected()
         {
             using ReferenceRepository referenceRepository = new();
-            GitUICommands commands = new(_serviceContainer, referenceRepository.Module);
+            GitUICommands commands = new(GlobalServiceContainer.CreateDefaultMockServiceContainer(), referenceRepository.Module);
 
             referenceRepository.CreateCommit("Commit1");
             referenceRepository.Stash("Stash1");
@@ -251,7 +245,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void ShowStashes_starting_enabled_should_filter_as_expected()
         {
             using ReferenceRepository referenceRepository = new();
-            GitUICommands commands = new(_serviceContainer, referenceRepository.Module);
+            GitUICommands commands = new(GlobalServiceContainer.CreateDefaultMockServiceContainer(), referenceRepository.Module);
 
             referenceRepository.CreateCommit("Commit1");
             referenceRepository.Stash("Stash1");

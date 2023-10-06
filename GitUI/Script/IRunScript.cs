@@ -1,7 +1,8 @@
 ﻿namespace GitUI.Script
 {
+    // TODO: deprecate
     public interface IRunScript
     {
-        void Execute(string name);
+        void Execute(int scriptId);
     }
 }

@@ -8,6 +8,7 @@ using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -299,9 +300,9 @@ See the changes in the commit form.");
                         || (BlameControl.Visible && BlameControl.ProcessHotkey(keyData))));
         }
 
-        public void ReloadHotkeys()
+        public void ReloadHotkeys(IScriptsManager scriptsManager)
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
             fileHistoryToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             blameToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
             openWithDifftoolToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftool);
@@ -311,7 +312,7 @@ See the changes in the commit form.");
             editCheckedOutFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
             filterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
-            FileText.ReloadHotkeys();
+            FileText.ReloadHotkeys(scriptsManager);
         }
 
         private string GetShortcutKeyDisplayString(Command cmd)
@@ -350,9 +351,14 @@ See the changes in the commit form.");
                 }
             };
 
-            ReloadHotkeys();
-
             base.OnRuntimeLoad();
+        }
+
+        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
+        {
+            base.OnUICommandsSourceSet(source);
+
+            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
         }
 
         private IEnumerable<string> FindFileMatches(string name)

@@ -1,6 +1,5 @@
 ﻿using GitCommands.Git;
 using GitUI.CommandDialogs;
-using GitUI.Script;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft;

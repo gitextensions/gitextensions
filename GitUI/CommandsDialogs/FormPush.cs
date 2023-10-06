@@ -436,7 +436,7 @@ namespace GitUI.CommandsDialogs
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
-            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
             if (!success)
             {
                 return false;
@@ -459,7 +459,7 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
             {
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
                 if (_createPullRequestCB.Checked)
                 {
                     UICommands.StartCreatePullRequest(owner);

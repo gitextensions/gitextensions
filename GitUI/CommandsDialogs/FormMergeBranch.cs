@@ -84,7 +84,7 @@ namespace GitUI.CommandsDialogs
             detachedSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
 
-            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeMerge, this);
             if (!success)
             {
                 return;
@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
 
             if (success || wasConflict)
             {
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterMerge);
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterMerge, this);
                 UICommands.RepoChangedNotifier.Notify();
                 Close();
             }

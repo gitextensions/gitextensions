@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs
             {
                 EnsurePageant(remote);
 
-                bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+                bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
                 if (!success)
                 {
                     return;
@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!form.ErrorOccurred() && !Module.InTheMiddleOfAction())
                 {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                    ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
                 }
             }
 

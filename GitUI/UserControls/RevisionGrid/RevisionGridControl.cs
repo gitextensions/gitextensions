@@ -27,6 +27,7 @@ using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using static GitUI.Script.ScriptsManager;
 using TaskDialog = System.Windows.Forms.TaskDialog;
 using TaskDialogButton = System.Windows.Forms.TaskDialogButton;
 
@@ -208,7 +209,6 @@ namespace GitUI
             copyToClipboardToolStripMenuItem.SetRevisionFunc(() => GetSelectedRevisions());
 
             MenuCommands = new RevisionGridMenuCommands(this);
-            ReloadHotkeys();
             HotkeysEnabled = true;
 
             // fill View context menu from MenuCommands
@@ -543,9 +543,11 @@ namespace GitUI
             ShowLoading();
         }
 
-        protected override void OnRuntimeLoad()
+        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
         {
-            base.OnRuntimeLoad();
+            base.OnUICommandsSourceSet(source);
+
+            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
             LoadCustomDifftools();
         }
 
@@ -553,10 +555,8 @@ namespace GitUI
         {
             if (!DesignMode)
             {
-                ReloadHotkeys();
+                PerformRefreshRevisions();
             }
-
-            PerformRefreshRevisions();
         }
 
         public void LoadCustomDifftools()
@@ -822,9 +822,9 @@ namespace GitUI
             return base.ProcessHotkey(keyData);
         }
 
-        public void ReloadHotkeys()
+        public void ReloadHotkeys(IScriptsManager scriptsManager)
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
             MenuCommands.CreateOrUpdateMenuCommands();
         }
 
@@ -2012,7 +2012,7 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ((IRunScript)this).Execute);
+            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ((IRunScript)this).Execute, UICommands);
 
             UpdateSeparators();
 
@@ -3110,9 +3110,11 @@ namespace GitUI
 
         bool ICheckRefs.Contains(ObjectId objectId) => _gridView.Contains(objectId);
 
-        void IRunScript.Execute(string name)
+        // TODO: refactor out
+        void IRunScript.Execute(int scriptId)
         {
-            if (ScriptRunner.RunScript(this, Module, name, UICommands, this).NeedsGridRefresh)
+            var scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
+            if (scriptsRunner.RunScript(scriptId, FindForm() as GitModuleForm, this).NeedsGridRefresh)
             {
                 PerformRefreshRevisions();
             }

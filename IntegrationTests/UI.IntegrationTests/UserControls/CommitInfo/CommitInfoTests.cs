@@ -27,7 +27,8 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         public void SetUp()
         {
             _mockLinkFactory = new();
-            ServiceContainer serviceContainer = new();
+            ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
+            serviceContainer.RemoveService<ILinkFactory>();
             serviceContainer.AddService<ILinkFactory>(_mockLinkFactory);
 
             AppSettings.ShowGitNotes = false;
