@@ -345,7 +345,7 @@ namespace GitUI.CommandsDialogs
 
             var originalId = Module.GetCurrentCheckout();
 
-            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, this);
             if (!success)
             {
                 return DialogResult.Cancel;
@@ -392,7 +392,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.UpdateSubmodules(this);
                 }
 
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterCheckout, this);
 
                 return DialogResult.OK;
             }

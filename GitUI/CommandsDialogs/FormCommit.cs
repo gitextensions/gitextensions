@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs
             ConfigureMessageBox();
 
             HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, ScriptsManager);
 
             stageToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
             openToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFile);
@@ -1369,7 +1369,7 @@ namespace GitUI.CommandsDialogs
                                                                                       ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty));
                     }
 
-                    bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
+                    bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCommit, this);
 
                     if (!success)
                     {
@@ -1396,7 +1396,7 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
+                    ScriptsRunner.RunEventScripts(ScriptEvent.AfterCommit, this);
 
                     // Message.Text has been used and stored
                     ThreadHelper.JoinableTaskFactory.Run(_commitMessageManager.ResetCommitMessageAsync);

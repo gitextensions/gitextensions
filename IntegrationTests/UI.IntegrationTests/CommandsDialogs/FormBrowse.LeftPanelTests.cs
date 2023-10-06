@@ -63,12 +63,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.Module.AddRemote(RemoteName, _remoteReferenceRepository.Module.WorkingDir);
             _referenceRepository.Fetch(RemoteName);
 
-            ServiceContainer serviceContainer = new();
-            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
-            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
-            serviceContainer.AddService(Substitute.For<ResourceManager.ILinkFactory>());
-
-            _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
+            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
 
             _referenceRepository.CreateCommit("Commit1", "Commit1");
             _referenceRepository.CreateBranch("Branch1", _referenceRepository.CommitHash);

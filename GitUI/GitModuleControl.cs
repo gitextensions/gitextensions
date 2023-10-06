@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
+using GitUI.Script;
 using ResourceManager;
 
 namespace GitUI
@@ -21,8 +22,8 @@ namespace GitUI
     public class GitModuleControl : GitExtensionsControl
     {
         private readonly object _lock = new();
-
         private int _isDisposed;
+        private IGitUICommandsSource? _uiCommandsSource;
 
         /// <summary>
         /// Occurs after the <see cref="UICommandsSource"/> is set.
@@ -30,8 +31,6 @@ namespace GitUI
         /// </summary>
         [Browsable(false)]
         public event EventHandler<GitUICommandsSourceEventArgs>? UICommandsSourceSet;
-
-        private IGitUICommandsSource? _uiCommandsSource;
 
         /// <summary>
         /// Gets a <see cref="IGitUICommandsSource"/> for this control.
@@ -69,10 +68,12 @@ namespace GitUI
             {
                 if (_uiCommandsSource is not null)
                 {
-                    throw new ArgumentException($"{nameof(UICommandsSource)} is already set.");
+                    throw new InvalidOperationException($"{nameof(UICommandsSource)} is already set.");
                 }
 
-                _uiCommandsSource = value ?? throw new ArgumentException($"Can not assign null value to {nameof(UICommandsSource)}.");
+                ArgumentNullException.ThrowIfNull(value);
+                _uiCommandsSource = value;
+
                 OnUICommandsSourceSet(_uiCommandsSource);
             }
         }
@@ -149,7 +150,8 @@ namespace GitUI
                     revisionGridControl = (FindForm() as GitModuleForm)?.RevisionGridControl;
                 }
 
-                return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, UICommands, revisionGridControl);
+                var scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
+                return scriptsRunner.RunScript(command, FindForm() as GitModuleForm, revisionGridControl);
             }
         }
 

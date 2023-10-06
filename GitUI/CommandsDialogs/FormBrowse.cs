@@ -31,7 +31,6 @@ using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
-using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
@@ -294,7 +293,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, ScriptsManager);
 
             UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             UICommands.BrowseRepo = this;
@@ -982,7 +981,7 @@ namespace GitUI.CommandsDialogs
 
             void LoadUserMenu()
             {
-                var scripts = ScriptManager.GetScripts()
+                var scripts = ScriptsManager.GetScripts()
                     .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
                     .ToList();
 
@@ -1016,7 +1015,7 @@ namespace GitUI.CommandsDialogs
 
                     button.Click += delegate
                     {
-                        if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
+                        if (ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, this, RevisionGrid).NeedsGridRefresh)
                         {
                             RefreshRevisions();
                         }
@@ -1416,12 +1415,13 @@ namespace GitUI.CommandsDialogs
                 LayoutRevisionInfo();
             }
 
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            RevisionGrid.ReloadHotkeys();
+            IScriptsManager scriptsManager = ScriptsManager;
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
+            RevisionGrid.ReloadHotkeys(scriptsManager);
             RevisionGrid.ReloadTranslation();
-            fileTree.ReloadHotkeys();
-            revisionDiff.ReloadHotkeys();
-            repoObjectsTree.ReloadHotkeys();
+            fileTree.ReloadHotkeys(scriptsManager);
+            revisionDiff.ReloadHotkeys(scriptsManager);
+            repoObjectsTree.ReloadHotkeys(scriptsManager);
             SetShortcutKeyDisplayStringsFromHotkeySettings();
 
             // Clear the separate caches for diff/merge tools
@@ -1964,7 +1964,7 @@ namespace GitUI.CommandsDialogs
 
         private void QuickFetch()
         {
-            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeFetch, this);
             if (!success)
             {
                 return;
@@ -1976,7 +1976,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, this);
             RefreshRevisions();
         }
 

@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.ComponentModel;
 using System.Diagnostics;
@@ -17,6 +17,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
+using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -108,7 +109,6 @@ namespace GitUI.CommitInfo
             rtbxCommitMessage.Font = AppSettings.CommitFont;
             RevisionInfo.Font = AppSettings.Font;
 
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
             addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Command.AddNotes).ToShortcutKeyDisplayString();
 
             _commitMessageResizedSubscription = subscribeToContentsResized(rtbxCommitMessage, CommitMessage_ContentsResized);
@@ -157,12 +157,15 @@ namespace GitUI.CommitInfo
                 _linkFactory = null;
                 _commitDataBodyRenderer = null;
                 _refsFormatter = null;
+                Hotkeys = null;
             }
             else
             {
                 _linkFactory = source.UICommands.GetRequiredService<ILinkFactory>();
                 _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
                 _refsFormatter = new RefsFormatter(_linkFactory);
+
+                Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName, source.UICommands.GetRequiredService<IScriptsManager>());
 
                 source.UICommandsChanged += delegate { RefreshSortedTags(); };
 

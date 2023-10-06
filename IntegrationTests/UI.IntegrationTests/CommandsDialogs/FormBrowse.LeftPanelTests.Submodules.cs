@@ -5,6 +5,7 @@ using GitCommands;
 using GitCommands.Submodules;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Script;
 using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs
@@ -72,12 +73,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             // Use the singleton provider, which is also used by the left panel, so we can synchronize on updates
             _provider = SubmoduleStatusProvider.Default;
 
-            ServiceContainer serviceContainer = new();
-            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
-            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
-            serviceContainer.AddService(Substitute.For<ResourceManager.ILinkFactory>());
-
-            _commands = new GitUICommands(serviceContainer, _repo1Module);
+            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _repo1Module);
         }
 
         [TearDown]

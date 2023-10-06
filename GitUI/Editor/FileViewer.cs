@@ -15,6 +15,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -337,9 +338,9 @@ namespace GitUI.Editor
             internalFileViewer.ShowGutterAvatars = false;
         }
 
-        public void ReloadHotkeys()
+        public void ReloadHotkeys(IScriptsManager scriptsManager)
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
             stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageLines);
             unstageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnstageLines);
@@ -746,12 +747,18 @@ namespace GitUI.Editor
 
         protected override void OnRuntimeLoad()
         {
-            ReloadHotkeys();
             Font = AppSettings.FixedWidthFont;
 
             var encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
             encodingToolStripComboBox.Items.AddRange(encodings);
             encodingToolStripComboBox.ResizeDropDownWidth(50, 250);
+        }
+
+        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
+        {
+            base.OnUICommandsSourceSet(source);
+
+            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
         }
 
         // Private methods

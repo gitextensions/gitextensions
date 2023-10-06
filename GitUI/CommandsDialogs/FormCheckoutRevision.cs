@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
 
                 Debug.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 
-                bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+                bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, this);
                 if (!success)
                 {
                     return;
@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterCheckout, this);
 
                 DialogResult = DialogResult.OK;
                 Close();

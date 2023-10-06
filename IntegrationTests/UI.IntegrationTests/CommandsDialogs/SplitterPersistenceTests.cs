@@ -44,12 +44,8 @@ namespace GitExtensions.UITests.CommandsDialogs
             _windowPositionManager = Substitute.For<IWindowPositionManager>();
 
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            ServiceContainer serviceContainer = new();
-            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
-            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
-            serviceContainer.AddService(Substitute.For<ILinkFactory>());
 
-            _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
+            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
         }
 
         [TearDown]

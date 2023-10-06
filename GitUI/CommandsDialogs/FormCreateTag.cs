@@ -105,7 +105,7 @@ namespace GitUI.CommandsDialogs
         {
             var pushCmd = GitCommandHelpers.PushTagCmd(_currentRemote, tagName, false);
 
-            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
             if (!success)
             {
                 return;
@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
             {
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
             }
         }
 

@@ -3,14 +3,20 @@ using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.Script;
+using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitUI
 {
     // NOTE do not make this class abstract as it breaks the WinForms designer in VS
 
     /// <summary>Base <see cref="Form"/> that provides access to <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
-    public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
+    public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModuleForm
     {
+        private IScriptsManager? _scriptsManager;
+        private IScriptsRunner? _scriptsRunner;
+        private GitUICommands? _uiCommands;
+
         /// <inheritdoc />
         public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged;
 
@@ -19,9 +25,19 @@ namespace GitUI
         /// </summary>
         internal static bool IsUnitTestActive { get; set; }
 
-        public virtual RevisionGridControl? RevisionGridControl { get => null; }
+        public virtual RevisionGridControl? RevisionGridControl { get; }
 
-        private GitUICommands? _uiCommands;
+        public IScriptsManager ScriptsManager
+        {
+            get => _scriptsManager ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
+            private set => _scriptsManager = value;
+        }
+
+        public IScriptsRunner ScriptsRunner
+        {
+            get => _scriptsRunner ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
+            private set => _scriptsRunner = value;
+        }
 
         /// <inheritdoc />
         [Browsable(false)]
@@ -38,8 +54,14 @@ namespace GitUI
             }
             protected set
             {
-                var oldCommands = _uiCommands;
-                _uiCommands = value ?? throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
+
+                GitUICommands oldCommands = _uiCommands;
+                _uiCommands = value;
+
+                _scriptsManager ??= _uiCommands.GetRequiredService<IScriptsManager>();
+                _scriptsRunner ??= _uiCommands.GetRequiredService<IScriptsRunner>();
+
                 OnUICommandsChanged(new GitUICommandsChangedEventArgs(oldCommands));
             }
         }
@@ -47,6 +69,8 @@ namespace GitUI
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
         public GitModule Module => UICommands.Module;
+
+        IGitUICommands IGitModuleForm.UICommands => UICommands;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         protected GitModuleForm()
@@ -81,7 +105,8 @@ namespace GitUI
 
         protected override CommandStatus ExecuteCommand(int command)
         {
-            CommandStatus result = ScriptRunner.ExecuteScriptCommand(this, Module, command, UICommands, RevisionGridControl);
+            CommandStatus result = ScriptsRunner.RunScript(command, this, RevisionGridControl);
+
             if (!result.Executed)
             {
                 result = base.ExecuteCommand(command);

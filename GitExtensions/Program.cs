@@ -12,6 +12,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.NBugReports;
+using GitUI.Script;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -377,6 +378,7 @@ namespace GitExtensions
             FileSystem fileSystem = new();
             GitDirectoryResolver gitDirectoryResolver = new(fileSystem);
             RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
+            ScriptsManager scriptsManager = new();
 
             serviceContainer.AddService<IFileSystem>(fileSystem);
             serviceContainer.AddService<IGitDirectoryResolver>(gitDirectoryResolver);
@@ -384,6 +386,8 @@ namespace GitExtensions
             serviceContainer.AddService<IAppTitleGenerator>(new AppTitleGenerator(repositoryDescriptionProvider));
             serviceContainer.AddService<IWindowsJumpListManager>(new WindowsJumpListManager(repositoryDescriptionProvider));
             serviceContainer.AddService<ILinkFactory>(new LinkFactory());
+            serviceContainer.AddService<IScriptsManager>(scriptsManager);
+            serviceContainer.AddService<IScriptsRunner>(scriptsManager);
         }
     }
 }

@@ -1,5 +1,7 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using GitExtUtils.GitUI.Theming;
+using GitUIPluginInterfaces;
 
 namespace ResourceManager
 {
@@ -67,6 +69,18 @@ namespace ResourceManager
             TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
 
+        public bool TryGetUICommands([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
+        {
+            if (FindForm() is not IGitModuleForm form)
+            {
+                commands = null;
+                return false;
+            }
+
+            commands = form.UICommands;
+            return commands is not null;
+        }
+
         #region Hotkeys
 
         /// <summary>
@@ -90,7 +104,7 @@ namespace ResourceManager
         protected bool HotkeysEnabled { get; set; }
 
         /// <summary>Gets or sets the hotkeys</summary>
-        protected IEnumerable<HotkeyCommand>? Hotkeys { get; set; }
+        protected IReadOnlyList<HotkeyCommand>? Hotkeys { get; set; }
 
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

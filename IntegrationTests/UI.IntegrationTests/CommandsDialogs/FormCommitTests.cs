@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel.Design;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -6,9 +7,11 @@ using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
+using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {
@@ -29,7 +32,15 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void SetUp()
         {
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
+
+            ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
+            serviceContainer.RemoveService<IScriptsRunner>();
+
+            IScriptsRunner scriptsRunner = Substitute.For<IScriptsRunner>();
+            scriptsRunner.RunEventScripts(Arg.Any<ScriptEvent>(), Arg.Any<FormCommit>()).Returns(true);
+            serviceContainer.AddService(scriptsRunner);
+
+            _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
         }
 
         [OneTimeSetUp]

@@ -600,24 +600,24 @@ namespace GitUI.CommandsDialogs
                 // Request to pull/merge in addition to the fetch
                 if (!Fetch.Checked)
                 {
-                    bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+                    bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePull, this);
                     if (!success)
                     {
                         return false;
                     }
                 }
 
-                return ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
+                return ScriptsRunner.RunEventScripts(ScriptEvent.BeforeFetch, this);
             }
 
             void executeAfterScripts()
             {
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, this);
 
                 // Request to pull/merge in addition to the fetch
                 if (!Fetch.Checked)
                 {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
+                    ScriptsRunner.RunEventScripts(ScriptEvent.AfterPull, this);
                 }
             }
         }

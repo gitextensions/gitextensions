@@ -6,6 +6,7 @@ using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
+using GitUI.Script;
 using NSubstitute;
 using ResourceManager;
 
@@ -70,12 +71,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             _repo1 = new GitModuleTestHelper("repo1");
 
-            ServiceContainer serviceContainer = new();
-            serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
-            serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
-            serviceContainer.AddService(Substitute.For<ILinkFactory>());
-
-            _commands = new GitUICommands(serviceContainer, _repo1.Module);
+            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _repo1.Module);
         }
 
         [TearDown]

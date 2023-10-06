@@ -9,9 +9,6 @@ namespace GitUI.CommandsDialogs
     {
         private const string ScriptNameSuffix = "_ownScript";
 
-        private static readonly Lazy<IEnumerable<HotkeyCommand>> Hotkeys = new(()
-            => HotkeySettingsManager.LoadHotkeys(FormSettings.HotkeySettingsName));
-
         /// <summary>
         ///  Adds user scripts to the <paramref name="contextMenu"/>, or under <paramref name="hostMenuItem"/>,
         ///  if scripts are not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
@@ -19,34 +16,35 @@ namespace GitUI.CommandsDialogs
         /// <param name="contextMenu">The context menu to add user scripts to.</param>
         /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
         /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
-        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Action<string> scriptInvoker)
+        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Action<int> scriptInvoker, IServiceProvider serviceProvider)
         {
-            contextMenu = contextMenu ?? throw new ArgumentNullException(nameof(contextMenu));
-            hostMenuItem = hostMenuItem ?? throw new ArgumentNullException(nameof(hostMenuItem));
-            scriptInvoker = scriptInvoker ?? throw new ArgumentNullException(nameof(scriptInvoker));
+            ArgumentNullException.ThrowIfNull(contextMenu);
+            ArgumentNullException.ThrowIfNull(hostMenuItem);
+            ArgumentNullException.ThrowIfNull(scriptInvoker);
 
             RemoveOwnScripts(contextMenu, hostMenuItem);
-            var hostItemIndex = contextMenu.Items.IndexOf(hostMenuItem);
-            var lastScriptItemIndex = hostItemIndex;
+            int hostItemIndex = contextMenu.Items.IndexOf(hostMenuItem);
+            int lastScriptItemIndex = hostItemIndex;
 
-            foreach (ScriptInfo script in ScriptManager.GetScripts().Where(x => x.Enabled))
+            IScriptsManager scriptsManager = serviceProvider.GetRequiredService<IScriptsManager>();
+            IEnumerable<ScriptInfo> scripts = scriptsManager.GetScripts().Where(x => x.Enabled);
+
+            IEnumerable<HotkeyCommand> hotkeys = HotkeySettingsManager.LoadHotkeys(FormSettings.HotkeySettingsName, scriptsManager);
+
+            foreach (ScriptInfo script in scripts)
             {
                 ToolStripMenuItem item = new()
                 {
                     Text = script.Name,
-                    Name = script.Name + ScriptNameSuffix,
+                    Name = $"{script.Name}{ScriptNameSuffix}",
                     Image = script.GetIcon(),
-                    ShortcutKeyDisplayString = Hotkeys.Value?.FirstOrDefault(h => h.Name == script.Name)?.KeyData.ToShortcutKeyDisplayString()
+                    ShortcutKeyDisplayString = hotkeys.FirstOrDefault(h => h.Name == script.Name)?.KeyData.ToShortcutKeyDisplayString()
                 };
 
                 item.Click += (s, e) =>
                 {
-                    string? scriptKey = script.Name;
-
-                    if (scriptKey is not null)
-                    {
-                        scriptInvoker(scriptKey);
-                    }
+                    int scriptId = script.HotkeyCommandIdentifier;
+                    scriptInvoker(scriptId);
                 };
 
                 if (script.AddToRevisionGridContextMenu)
@@ -70,8 +68,8 @@ namespace GitUI.CommandsDialogs
         /// <param name="hostMenuItem">The menu item from which to remove user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
         public static void RemoveUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem)
         {
-            contextMenu = contextMenu ?? throw new ArgumentNullException(nameof(contextMenu));
-            hostMenuItem = hostMenuItem ?? throw new ArgumentNullException(nameof(hostMenuItem));
+            ArgumentNullException.ThrowIfNull(contextMenu);
+            ArgumentNullException.ThrowIfNull(hostMenuItem);
 
             RemoveOwnScripts(contextMenu, hostMenuItem);
         }
@@ -81,11 +79,11 @@ namespace GitUI.CommandsDialogs
             hostMenuItem.DropDown.Items.Clear();
             hostMenuItem.Enable(false);
 
-            var list = contextMenu.Items.Cast<ToolStripItem>()
+            List<ToolStripItem> list = contextMenu.Items.Cast<ToolStripItem>()
                 .Where(x => x.Name.EndsWith(ScriptNameSuffix))
                 .ToList();
 
-            foreach (var item in list)
+            foreach (ToolStripItem item in list)
             {
                 contextMenu.Items.Remove(item);
             }

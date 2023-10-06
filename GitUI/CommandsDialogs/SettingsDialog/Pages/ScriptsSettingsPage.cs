@@ -7,6 +7,7 @@ using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Script;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -114,6 +115,19 @@ Current Branch:
             };
         }
 
+        private IScriptsManager ScriptsManager
+        {
+            get
+            {
+                if (!TryGetUICommands(out IGitUICommands commands))
+                {
+                    throw new InvalidOperationException("IGitUICommands should have been assigned");
+                }
+
+                return commands.GetRequiredService<IScriptsManager>();
+            }
+        }
+
         private ScriptInfoProxy? SelectedScript { get; set; }
 
         protected override void OnParentChanged(EventArgs e)
@@ -160,7 +174,7 @@ Current Branch:
         {
             _scripts.Clear();
 
-            foreach (var script in ScriptManager.GetScripts())
+            foreach (var script in ScriptsManager.GetScripts())
             {
                 _scripts.Add(script);
             }
@@ -177,7 +191,7 @@ Current Branch:
         {
             // TODO: this is an abomination, the whole script persistence must be scorched and rewritten
 
-            BindingList<ScriptInfo> scripts = ScriptManager.GetScripts();
+            List<ScriptInfo> scripts = new(ScriptsManager.GetScripts());
             scripts.Clear();
 
             foreach (ScriptInfoProxy proxy in _scripts)
@@ -185,7 +199,7 @@ Current Branch:
                 scripts.Add(proxy);
             }
 
-            AppSettings.OwnScripts = ScriptManager.SerializeIntoXml();
+            AppSettings.OwnScripts = ScriptsManager.SerializeIntoXml();
 
             base.PageToSettings();
         }
@@ -256,7 +270,7 @@ Current Branch:
         private void btnAdd_Click(object sender, EventArgs e)
         {
             ScriptInfoProxy script = _scripts.AddNew();
-            script.HotkeyCommandIdentifier = Math.Max(ScriptManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
+            script.HotkeyCommandIdentifier = Math.Max(GitUI.Script.ScriptsManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
             script.Name = "<New Script>";
             script.Enabled = true;
 
