@@ -6,7 +6,7 @@ using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using NSubstitute;
 using ResourceManager;
 

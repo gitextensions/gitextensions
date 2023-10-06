@@ -18,7 +18,7 @@ using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUI.SpellChecker;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;

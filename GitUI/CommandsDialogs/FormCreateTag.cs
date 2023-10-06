@@ -2,7 +2,7 @@
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
 using GitUI.HelperDialogs;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

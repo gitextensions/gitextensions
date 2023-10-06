@@ -3,7 +3,7 @@ using GitCommands.Git.Commands;
 using GitCommands.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Settings;
 using ResourceManager;

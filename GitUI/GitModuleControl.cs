@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using ResourceManager;
 
 namespace GitUI

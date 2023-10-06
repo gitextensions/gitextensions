@@ -12,7 +12,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
 using GitUI.Properties;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

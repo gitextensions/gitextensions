@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs

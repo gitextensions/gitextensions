@@ -4,7 +4,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
 using GitUI;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using NSubstitute;
 

@@ -27,7 +27,7 @@ using ContentAlignment = System.Drawing.ContentAlignment;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     public class SplitButton : Button
     {

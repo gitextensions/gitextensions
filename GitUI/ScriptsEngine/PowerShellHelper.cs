@@ -1,7 +1,7 @@
 ﻿using GitCommands;
 using GitUIPluginInterfaces;
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     public static class PowerShellHelper
     {

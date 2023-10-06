@@ -5,7 +5,7 @@ using GitCommands;
 using GitCommands.Submodules;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs

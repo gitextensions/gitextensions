@@ -5,7 +5,7 @@ using GitUI.NBugReports;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     partial class ScriptsManager
     {

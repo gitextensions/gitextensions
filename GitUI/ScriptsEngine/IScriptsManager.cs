@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     public interface IScriptsManager
     {

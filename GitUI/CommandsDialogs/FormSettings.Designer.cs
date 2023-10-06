@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
             //
             // scriptInfoBindingSource
             //
-            this.scriptInfoBindingSource.DataSource = typeof(GitUI.Script.ScriptInfo);
+            this.scriptInfoBindingSource.DataSource = typeof(GitUI.ScriptsEngine.ScriptInfo);
             //
             // buttonOk
             //

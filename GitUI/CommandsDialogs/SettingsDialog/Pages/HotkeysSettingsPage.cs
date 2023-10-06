@@ -1,4 +1,4 @@
-﻿using GitUI.Script;
+﻿using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

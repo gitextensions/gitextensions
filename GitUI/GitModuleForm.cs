@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitUI.Infrastructure.Telemetry;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

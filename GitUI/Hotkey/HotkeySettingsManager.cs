@@ -4,7 +4,7 @@ using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.LeftPanel;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using Microsoft;
 using ResourceManager;
 

@@ -17,7 +17,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;

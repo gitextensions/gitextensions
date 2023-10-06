@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using GitCommands;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 
-namespace GitExtensions.UITests.Script
+namespace GitExtensions.UITests.ScriptEngine
 {
     [TestFixture]
     public class ScriptManagerTests

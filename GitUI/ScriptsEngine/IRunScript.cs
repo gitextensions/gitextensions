@@ -1,4 +1,4 @@
-﻿namespace GitUI.Script
+﻿namespace GitUI.ScriptsEngine
 {
     // TODO: deprecate
     public interface IRunScript
