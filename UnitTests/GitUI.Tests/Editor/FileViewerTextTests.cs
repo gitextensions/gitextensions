@@ -4,7 +4,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitUI;
 using GitUI.Editor;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using NSubstitute;

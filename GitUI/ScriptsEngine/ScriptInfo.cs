@@ -1,4 +1,4 @@
-﻿namespace GitUI.Script
+﻿namespace GitUI.ScriptsEngine
 {
     // WARNING: This class is serialized to XML!
     public class ScriptInfo

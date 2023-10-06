@@ -2,7 +2,7 @@
 using GitExtUtils.GitUI;
 using ResourceManager;
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     public partial class FormFilePrompt : GitExtensionsForm
     {

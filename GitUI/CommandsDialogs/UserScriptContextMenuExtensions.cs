@@ -1,6 +1,6 @@
 ﻿using GitUI.Hotkey;
 using GitUI.LeftPanel.ContextMenu;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

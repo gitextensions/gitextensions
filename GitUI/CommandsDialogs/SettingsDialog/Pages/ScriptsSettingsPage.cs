@@ -6,7 +6,7 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -270,7 +270,7 @@ Current Branch:
         private void btnAdd_Click(object sender, EventArgs e)
         {
             ScriptInfoProxy script = _scripts.AddNew();
-            script.HotkeyCommandIdentifier = Math.Max(GitUI.Script.ScriptsManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
+            script.HotkeyCommandIdentifier = Math.Max(GitUI.ScriptsEngine.ScriptsManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
             script.Name = "<New Script>";
             script.Enabled = true;
 

@@ -24,7 +24,7 @@ using GitUI.Infrastructure.Telemetry;
 using GitUI.LeftPanel;
 using GitUI.NBugReports;
 using GitUI.Properties;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUI.Shells;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;

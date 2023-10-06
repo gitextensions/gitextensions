@@ -2,7 +2,7 @@
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitExtUtils.GitUI;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;

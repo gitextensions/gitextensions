@@ -9,7 +9,7 @@ using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;

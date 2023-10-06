@@ -6,12 +6,12 @@ using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.NBugReports;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
 
-namespace GitExtensions.UITests.Script
+namespace GitExtensions.UITests.ScriptEngine
 {
     [TestFixture]
     [Apartment(ApartmentState.STA)]

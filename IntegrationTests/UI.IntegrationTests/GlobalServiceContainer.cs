@@ -2,7 +2,7 @@
 using System.ComponentModel.Design;
 using GitCommands;
 using GitUI;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 using NSubstitute;
 using ResourceManager;
 

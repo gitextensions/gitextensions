@@ -1,7 +1,7 @@
 ﻿using GitCommands;
 using ResourceManager;
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     public interface IScriptsRunner
     {

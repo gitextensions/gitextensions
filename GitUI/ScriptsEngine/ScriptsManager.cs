@@ -7,7 +7,7 @@ using GitExtUtils;
 using GitUI.NBugReports;
 using ResourceManager;
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
     {

@@ -1,6 +1,6 @@
 ﻿using GitUIPluginInterfaces;
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     public interface IScriptHostControl
     {

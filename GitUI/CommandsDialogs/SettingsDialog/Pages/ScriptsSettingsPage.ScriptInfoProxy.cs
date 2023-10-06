@@ -3,7 +3,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
 using GitUI.Design;
-using GitUI.Script;
+using GitUI.ScriptsEngine;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

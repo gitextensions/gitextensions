@@ -42,7 +42,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.chkUseSystemVisualStyle = new System.Windows.Forms.CheckBox();
             this.chkColorblind = new System.Windows.Forms.CheckBox();
-            this.sbOpenThemeFolder = new GitUI.Script.SplitButton();
+            this.sbOpenThemeFolder = new GitUI.ScriptsEngine.SplitButton();
             this.cmsOpenThemeFolders = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiApplicationFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiUserFolder = new System.Windows.Forms.ToolStripMenuItem();
@@ -344,7 +344,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.CheckBox chkUseSystemVisualStyle;
         private System.Windows.Forms.CheckBox chkColorblind;
-        private Script.SplitButton sbOpenThemeFolder;
+        private GitUI.ScriptsEngine.SplitButton sbOpenThemeFolder;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_cbSelectTheme;
         private System.Windows.Forms.Label lblRestartNeeded;
         private System.Windows.Forms.CheckBox chkFillRefLabels;

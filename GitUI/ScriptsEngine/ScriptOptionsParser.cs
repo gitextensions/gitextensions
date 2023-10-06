@@ -4,7 +4,7 @@ using GitCommands.UserRepositoryHistory;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
-namespace GitUI.Script
+namespace GitUI.ScriptsEngine
 {
     public sealed class ScriptOptionsParser
     {
