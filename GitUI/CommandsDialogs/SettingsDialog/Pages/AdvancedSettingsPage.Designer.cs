@@ -375,6 +375,7 @@
             this.Name = "AdvancedSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1616, 769);
+            this.Text = "Advanced";
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.grpUpdates.ResumeLayout(false);

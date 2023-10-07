@@ -15,10 +15,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly GitConfigSettingsPageController _controller;
         private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
-        public GitConfigSettingsPage()
+        public GitConfigSettingsPage(IServiceProvider serviceProvider)
+           : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Config";
 
             txtDiffToolPath.Enabled =
                 btnDiffToolBrowse.Enabled =

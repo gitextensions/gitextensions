@@ -398,6 +398,7 @@
             Name = "ConfirmationsSettingsPage";
             Padding = new Padding(8);
             Size = new Size(1429, 758);
+            Text = "Confirmations";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             gbConfirmations.ResumeLayout(false);

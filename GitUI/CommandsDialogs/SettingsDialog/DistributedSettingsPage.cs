@@ -6,6 +6,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public partial class DistributedSettingsPage : SettingsPageWithHeader, IDistributedSettingsPage
     {
+        public DistributedSettingsPage(IServiceProvider serviceProvider)
+           : base(serviceProvider)
+        {
+        }
+
         protected DistributedSettingsSet DistributedSettingsSet => CommonLogic.DistributedSettingsSet;
         protected DistributedSettings? CurrentSettings { get; private set; }
 

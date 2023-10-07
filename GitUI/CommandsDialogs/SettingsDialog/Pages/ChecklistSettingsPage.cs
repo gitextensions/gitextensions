@@ -133,10 +133,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         public SshSettingsPage? SshSettingsPage { get; set; }
 
-        public ChecklistSettingsPage()
+        public ChecklistSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Checklist";
             InitializeComplete();
         }
 

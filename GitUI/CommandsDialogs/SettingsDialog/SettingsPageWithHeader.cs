@@ -7,6 +7,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         private SettingsPageHeader? _header;
 
+        public SettingsPageWithHeader(IServiceProvider serviceProvider)
+            : base(serviceProvider)
+        {
+        }
+
         public override Control GuiControl => _header ??= new SettingsPageHeader(this);
 
         public virtual void SetGlobalSettings()

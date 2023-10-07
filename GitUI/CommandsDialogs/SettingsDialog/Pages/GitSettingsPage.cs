@@ -7,10 +7,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _homeIsSetToString = new("HOME is set to:");
 
-        public GitSettingsPage()
+        public GitSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Paths";
             InitializeComplete();
         }
 

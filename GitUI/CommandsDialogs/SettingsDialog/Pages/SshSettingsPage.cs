@@ -7,10 +7,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class SshSettingsPage : SettingsPageWithHeader
     {
-        public SshSettingsPage()
+        public SshSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "SSH";
             InitializeComplete();
 
             label18.SetForeColorForBackColor();

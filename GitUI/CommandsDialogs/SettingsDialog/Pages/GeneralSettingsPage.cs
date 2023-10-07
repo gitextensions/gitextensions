@@ -14,12 +14,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _fetchAll = new("Fetch all");
         private readonly TranslationString _fetchAndPruneAll = new("Fetch and prune all");
 
-        public GeneralSettingsPage()
+        public GeneralSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
             InitializeComponent();
-            Text = "General";
             InitializeComplete();
 
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime || GitModuleForm.IsUnitTestActive)

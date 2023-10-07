@@ -509,6 +509,7 @@
             this.MinimumSize = new System.Drawing.Size(680, 460);
             this.Name = "ChecklistSettingsPage";
             this.Size = new System.Drawing.Size(1015, 608);
+            this.Text = "Checklist";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);

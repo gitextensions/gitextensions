@@ -492,6 +492,7 @@
             this.Controls.Add(this.tableLayoutPanelGitConfig);
             this.Name = "GitConfigSettingsPage";
             this.Size = new System.Drawing.Size(1277, 715);
+            this.Text = "Config";
             this.InvalidGitPathGlobal.ResumeLayout(false);
             this.InvalidGitPathGlobal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

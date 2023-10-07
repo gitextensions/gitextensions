@@ -85,10 +85,10 @@ Current Branch:
         // we need to track that so we load images before we bind the list
         private bool _imagsLoaded;
 
-        public ScriptsSettingsPage()
+        public ScriptsSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Scripts";
 
             // stop the localisation of the propertygrid
             propertyGrid1.Text = string.Empty;

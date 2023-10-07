@@ -278,6 +278,7 @@
             this.Name = "GitSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(647, 614);
+            this.Text = "Paths";
             tlpnlEnvironment.ResumeLayout(false);
             tlpnlEnvironment.PerformLayout();
             tlpnlGitPaths.ResumeLayout(false);

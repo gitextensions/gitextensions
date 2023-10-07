@@ -133,10 +133,6 @@ This action will be performed without warning while checking out branch.</source
         <source>Appearance</source>
         <target />
       </trans-unit>
-      <trans-unit id="AvatarProvider.Text">
-        <source>Default</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target />
@@ -1376,20 +1372,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE), show the difference
-between the commits as well as the difference from BASE to the selected commits.
-See documentation for more details about icons and range diffs.
-- For multiple selected commits (up to four), show the difference for
-all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to
-the last selected commit.</source>
         <target />
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -9701,12 +9683,6 @@ Current Branch:
       </trans-unit>
       <trans-unit id="lblMenuEntries.Text">
         <source>Configuration of items in the context menu</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="menuHelp.toolTip1">
-        <source>* Checked: at top level for direct access
-* Intermediate: in a cascaded context menu
-* Unchecked: not added to the menu</source>
         <target />
       </trans-unit>
     </body>

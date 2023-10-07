@@ -170,7 +170,7 @@ namespace GitExtensions
                     {
                         CheckSettingsLogic checkSettingsLogic = new(commonLogic);
                         SettingsPageHostMock fakePageHost = new(checkSettingsLogic);
-                        using var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost);
+                        using var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost, _serviceContainer);
                         if (!checklistSettingsPage.CheckSettings())
                         {
                             if (!checkSettingsLogic.AutoSolveAllSettings() || !checklistSettingsPage.CheckSettings())

@@ -4,10 +4,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
     {
-        public ConfirmationsSettingsPage()
+        public ConfirmationsSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Confirmations";
             InitializeComplete();
         }
 

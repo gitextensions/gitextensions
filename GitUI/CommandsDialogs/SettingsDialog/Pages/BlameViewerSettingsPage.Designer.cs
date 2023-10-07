@@ -225,6 +225,7 @@
             this.Controls.Add(this.groupBoxBlameSettings);
             this.Name = "BlameViewerSettingsPage";
             this.Size = new System.Drawing.Size(341, 272);
+            this.Text = "Blame viewer";
             this.groupBoxBlameSettings.ResumeLayout(false);
             this.groupBoxBlameSettings.PerformLayout();
             this.tableLayoutPanelBlameSettings.ResumeLayout(false);

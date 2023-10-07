@@ -5,10 +5,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitRootIntroductionPage : SettingsPageBase
     {
-        public GitRootIntroductionPage()
+        public GitRootIntroductionPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Git Settings";
             InitializeComplete();
         }
 

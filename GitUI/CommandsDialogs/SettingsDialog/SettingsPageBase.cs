@@ -13,11 +13,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public abstract partial class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
         private readonly List<ISettingControlBinding> _controlBindings = new();
+        private IReadOnlyList<string>? _childrenText;
         private ISettingsPageHost? _pageHost;
 
-        protected SettingsPageBase()
+        protected SettingsPageBase(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            ServiceProvider = serviceProvider;
         }
 
         protected ISettingsPageHost PageHost
@@ -37,7 +39,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected CommonLogic CommonLogic => CheckSettingsLogic.CommonLogic;
 
+        public virtual Control GuiControl => this;
+
+        public virtual bool IsInstantSavePage => false;
+
         protected GitModule? Module => CommonLogic.Module;
+
+        public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
+
+        protected internal IServiceProvider ServiceProvider { get; }
 
         protected ToolTip ToolTip => toolTip1;
 
@@ -46,9 +56,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             _pageHost = pageHost;
         }
 
-        public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost) where T : SettingsPageBase, new()
+        public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost, IServiceProvider serviceProvider) where T : SettingsPageBase
         {
-            T result = new();
+            T result = (T)Activator.CreateInstance(typeof(T), serviceProvider);
 
             result.AdjustForDpiScaling();
             result.EnableRemoveWordHotkey();
@@ -62,8 +72,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             return Text;
         }
-
-        public virtual Control GuiControl => this;
 
         /// <summary>
         /// Called when SettingsPage is shown (again);
@@ -152,8 +160,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        private IReadOnlyList<string>? _childrenText;
-
         /// <summary>
         /// override to provide search keywords.
         /// </summary>
@@ -200,10 +206,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             return texts;
         }
-
-        public virtual bool IsInstantSavePage => false;
-
-        public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
     }
 
     public class BoolCheckBoxAdapter : BoolSetting

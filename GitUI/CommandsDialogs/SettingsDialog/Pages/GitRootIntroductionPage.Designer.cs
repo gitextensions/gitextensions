@@ -47,6 +47,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.Controls.Add(this.label1);
             this.Name = "GitRootIntroductionPage";
             this.Size = new System.Drawing.Size(473, 229);
+            this.Text = "Git Settings";
             this.ResumeLayout(false);
 
         }

@@ -16,10 +16,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             "The remotes matching the pattern will be shown before the others.\n" +
             "Separate the priorities with ';'.");
 
-        public SortingSettingsPage()
+        public SortingSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Sorting";
             InitializeComplete();
 
             FillComboBoxWithEnumValues<RevisionSortOrder>(_NO_TRANSLATE_cmbRevisionsSortBy);

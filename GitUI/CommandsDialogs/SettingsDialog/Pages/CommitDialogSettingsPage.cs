@@ -4,10 +4,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class CommitDialogSettingsPage : SettingsPageWithHeader
     {
-        public CommitDialogSettingsPage()
+        public CommitDialogSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Commit dialog";
             InitializeComplete();
         }
 

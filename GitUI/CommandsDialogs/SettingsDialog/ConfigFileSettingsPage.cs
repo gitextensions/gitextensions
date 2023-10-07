@@ -6,6 +6,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public partial class ConfigFileSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
     {
+        public ConfigFileSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
+        {
+        }
+
         protected ConfigFileSettingsSet ConfigFileSettingsSet => CommonLogic.ConfigFileSettingsSet;
         protected ConfigFileSettings? CurrentSettings { get; private set; }
 

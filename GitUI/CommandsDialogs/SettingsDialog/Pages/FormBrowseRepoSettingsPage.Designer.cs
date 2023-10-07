@@ -136,6 +136,7 @@
             this.Name = "FormBrowseRepoSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(457, 215);
+            this.Text = "Browse repository window";
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
             this.gbTabs.ResumeLayout(false);

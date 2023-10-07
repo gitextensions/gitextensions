@@ -7,6 +7,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         private ISettingsLayout? _settingsLayout;
 
+        public AutoLayoutSettingsPage(IServiceProvider serviceProvider)
+           : base(serviceProvider)
+        {
+        }
+
         protected virtual ISettingsLayout GetSettingsLayout()
         {
             if (_settingsLayout is null)

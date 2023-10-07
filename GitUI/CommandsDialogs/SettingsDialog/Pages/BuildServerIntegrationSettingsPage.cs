@@ -15,10 +15,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private IConfigFileRemoteSettingsManager? _remotesManager;
         private JoinableTask<object>? _populateBuildServerTypeTask;
 
-        public BuildServerIntegrationSettingsPage()
+        public BuildServerIntegrationSettingsPage(IServiceProvider serviceProvider)
+           : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Build server integration";
             InitializeComplete();
         }
 

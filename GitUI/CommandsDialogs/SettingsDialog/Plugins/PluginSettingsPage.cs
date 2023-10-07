@@ -8,7 +8,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         private IGitPlugin? _gitPlugin;
         private GitPluginSettingsContainer? _settingsContainer;
 
-        public PluginSettingsPage()
+        public PluginSettingsPage(IServiceProvider serviceProvider)
+           : base(serviceProvider)
         {
             InitializeComponent();
         }
@@ -35,9 +36,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             InitializeComplete();
         }
 
-        public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost pageHost, IGitPlugin gitPlugin)
+        public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost pageHost, IGitPlugin gitPlugin, IServiceProvider serviceProvider)
         {
-            var result = Create<PluginSettingsPage>(pageHost);
+            var result = Create<PluginSettingsPage>(pageHost, serviceProvider);
             result.Init(gitPlugin);
             return result;
         }

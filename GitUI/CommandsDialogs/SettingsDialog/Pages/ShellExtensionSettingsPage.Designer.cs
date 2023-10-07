@@ -267,6 +267,7 @@
             this.Name = "ShellExtensionSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1502, 331);
+            this.Text = "Shell extension";
             panel1.ResumeLayout(false);
             this.tlpnlMain.ResumeLayout(false);
             this.tlpnlMain.PerformLayout();

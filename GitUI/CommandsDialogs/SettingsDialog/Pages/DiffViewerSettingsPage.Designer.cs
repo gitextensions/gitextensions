@@ -93,7 +93,8 @@
             this.chkRememberIgnoreWhiteSpacePreference.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkRememberIgnoreWhiteSpacePreference.Location = new System.Drawing.Point(3, 3);
             this.chkRememberIgnoreWhiteSpacePreference.Name = "chkRememberIgnoreWhiteSpacePreference";
-            this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(325, 19);            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the \'Ignore whitespaces\' preference";
+            this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(325, 19);
+            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the \'Ignore whitespaces\' preference";
             this.chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
             // 
             // chkRememberShowNonPrintingCharsPreference
@@ -251,6 +252,7 @@
             this.Name = "DiffViewerSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1763, 1325);
+            this.Text = "Diff viewer";
             this.tlpnlGeneral.ResumeLayout(false);
             this.tlpnlGeneral.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.VerticalRulerPosition)).EndInit();
