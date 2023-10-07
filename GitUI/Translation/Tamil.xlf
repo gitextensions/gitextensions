@@ -81,7 +81,7 @@ Turn off if you experience problems with the console emulator.</source>
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
-        <target>கடைசியாகத் தேர்ந்தெடுத்த &quot;உள்ளூர் மாற்றங்கள்&quot; செயலை இயல்புச் செயலாகப் பயன்படுத்தவும்.
+        <target>கடைசியாகத் தேர்ந்தெடுத்த &quot;உள்ளக மாற்றங்கள்&quot; செயலை இயல்புச் செயலாகப் பயன்படுத்தவும்.
 கிளையைச் சரிபார்க்கும்போது இந்த நடவடிக்கை முன்ன்றிவிப்பின்றி செய்யப்படும்.</target>
         
       </trans-unit>
@@ -248,18 +248,15 @@ Click this info icon for more details.</source>
         
       </trans-unit>
       <trans-unit id="gbAuthorImages.Text">
-        <source>Author images</source>
-        <target>ஆசிரியர் படங்கள்</target>
+        <source>&amp;Author images</source>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
-        <source>General</source>
-        <target>பொது</target>
+        <source>&amp;General</source>
         
       </trans-unit>
       <trans-unit id="gbLanguages.Text">
-        <source>Language</source>
-        <target>மொழி</target>
+        <source>&amp;Language</source>
         
       </trans-unit>
       <trans-unit id="helpTranslate.Text">
@@ -479,7 +476,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="CreateTooltip.Text">
         <source>Create a local branch from this branch</source>
-        <target>இந்தக் கிளையிலிருந்து உள்ளூர் கிளையை உருவாக்கவும்</target>
+        <target>இந்தக் கிளையிலிருந்து உள்ளக கிளையை உருவாக்கவும்</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
@@ -518,7 +515,7 @@ Click this info icon for more details.</source>
     <body>
       <trans-unit id="LocalBranch.Text">
         <source>Local branch</source>
-        <target>உள்ளூர் கிளை</target>
+        <target>உள்ளக கிளை</target>
         
       </trans-unit>
       <trans-unit id="Remotebranch.Text">
@@ -550,12 +547,7 @@ Click this info icon for more details.</source>
 
 Because of this, make sure to fill in all the fields in the report template please.
 
-Send report anyway?</source>
-        <target>இந்தச் சிக்கலைத் தீர்க்க உருவாக்குபவர்களுக்கு உதவ முடிந்தவரை தகவலை வழங்கவும். இல்லையெனில், உருவாக்குபவர்களிடமிருந்து எந்தப் பின்னூட்டமும் இல்லாமல் உங்கள் விநியோக சீட்டு மூடப்படலாம்.
-
-இதன் காரணமாக, அறிக்கை வார்ப்புருவில் உள்ள அனைத்து புலங்களையும் நிரப்புவதை உறுதிமொழிப்படுத்தவும்.
-
-எப்படியும் அறிக்கை அனுப்பவா?</target>
+Send report?</source>
         
       </trans-unit>
       <trans-unit id="_title.Text">
@@ -1195,7 +1187,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Text">
         <source>Show remote branches only when no local branch contains this commit</source>
-        <target>எந்த ஒரு உள்ளூர் கிளையிலும் இந்தக் உறுதிமொழி இல்லாதபோது மட்டும் தொலைக் கிளைகளைக் காட்டவும்</target>
+        <target>எந்த ஒரு உள்ளக கிளையிலும் இந்தக் உறுதிமொழி இல்லாதபோது மட்டும் தொலைக் கிளைகளைக் காட்டவும்</target>
         
       </trans-unit>
       <trans-unit id="showContainedInBranchesRemoteToolStripMenuItem.Text">
@@ -1205,7 +1197,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="showContainedInBranchesToolStripMenuItem.Text">
         <source>Show local branches containing this commit</source>
-        <target>இந்த உறுதிமொழியைக் கொண்ட உள்ளூர் கிளைகளைக் காட்டு</target>
+        <target>இந்த உறுதிமொழியைக் கொண்ட உள்ளக கிளைகளைக் காட்டு</target>
         
       </trans-unit>
       <trans-unit id="showContainedInTagsToolStripMenuItem.Text">
@@ -1298,6 +1290,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
       <trans-unit id="chkAutoPopStashAfterPull.Text">
         <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
         <target>வெற்றிகரமான இழுத்தலுக்குப் பிறகு பதுக்கிவைகப்பட்ட மாற்றங்களை இடவும் (இல்லையெனில் பதுக்கல் தானாகவே மேலேடுக்கப்படும்)</target>
+        
+      </trans-unit>
+      <trans-unit id="chkBranchCheckoutConfirmation.Text">
+        <source>Checkout branch using left panel</source>
         
       </trans-unit>
       <trans-unit id="chkBranchDeleteUnmerged.Text">
@@ -2429,7 +2425,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="_remoteAndLocalPathRequired.Text">
         <source>A remote path and local path are required</source>
-        <target>ஒரு தொலை பாதை மற்றும் உள்ளூர் பாதை தேவை</target>
+        <target>ஒரு தொலை பாதை மற்றும் உள்ளக பாதை தேவை</target>
         
       </trans-unit>
       <trans-unit id="chkForce.Text">
@@ -2444,7 +2440,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Local path</source>
-        <target>உள்ளூர் பாதை</target>
+        <target>உள்ளக பாதை</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -3560,7 +3556,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="tsmiBranchLocal.Text">
         <source>&amp;Local</source>
-        <target>&amp;உள்ளூர்</target>
+        <target>&amp;உள்ளகம்</target>
         
       </trans-unit>
       <trans-unit id="tsmiBranchRemote.Text">
@@ -3752,7 +3748,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="LocalBranch.Text">
         <source>Local &amp;branch</source>
-        <target>உள்ளூர் கிளை </target>
+        <target>உள்ளக கிளை </target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -3777,7 +3773,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_createBranch.Text">
         <source>Cr&amp;eate local branch with the name:</source>
-        <target>&amp;இந்த பெயருடன் உள்ளூர் கிளை உருவாக்கு:</target>
+        <target>&amp;இந்த பெயருடன் உள்ளக கிளை உருவாக்கு:</target>
         
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -3825,12 +3821,12 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="localChangesGB.Text">
         <source>Local changes</source>
-        <target>உள்ளூர் மாற்றங்கள்</target>
+        <target>உள்ளக மாற்றங்கள்</target>
         
       </trans-unit>
       <trans-unit id="rbCreateBranchWithCustomName.Text">
         <source>Cr&amp;eate local branch with custom name:</source>
-        <target>தனிப் பெயருடன் உள்ளூர் கிளை உருவாக்கு:</target>
+        <target>தனிப் பெயருடன் உள்ளக கிளை உருவாக்கு:</target>
         
       </trans-unit>
       <trans-unit id="rbDontChange.Text">
@@ -3855,7 +3851,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="rbResetBranch.Text">
         <source>R&amp;eset local branch with the name:</source>
-        <target>&amp;இந்த பெயருடன் உள்ளூர் கிளை மீட்டமை:</target>
+        <target>&amp;இந்த பெயருடன் உள்ளக கிளை மீட்டமை:</target>
         
       </trans-unit>
       <trans-unit id="rbStash.Text">
@@ -3874,7 +3870,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="Force.Text">
         <source>&amp;Force (reset local changes)</source>
-        <target>&amp;கட்டாயப்படுத்து (உள்ளூர் மாற்றங்களை மீட்டமை)    </target>
+        <target>&amp;கட்டாயப்படுத்து (உள்ளக மாற்றங்களை மீட்டமை)    </target>
         
       </trans-unit>
       <trans-unit id="OkCheckout.Text">
@@ -3906,34 +3902,25 @@ Are you sure?</source>
         <target>சிவந்தகனி எடு உறுதிமொழி</target>
         
       </trans-unit>
-      <trans-unit id="AutoCommit.Text">
-        <source>&amp;Automatically create a commit</source>
-        <target>&amp;தானாக ஒரு உறுதிமொழியை உருவாக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="BranchInfo.Text">
-        <source>Cherry pick this commit:</source>
-        <target>சிவந்தகனி எடு இந்த உறுதிமொழி:</target>
-        
-      </trans-unit>
-      <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select &amp;parent:</source>
-        <target>இந்த உறுதிமொழி ஒரு ஒன்றிணைப்பு, &amp;பெற்றோரைத் தேர்ந்தெடு:</target>
-        
-      </trans-unit>
-      <trans-unit id="Pick.Text">
-        <source>&amp;Cherry pick</source>
-        <target>சிவந்தகனி எடு</target>
-        
-      </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>பெற்றோர் யாரும் தேர்ந்தெடுக்கப்படவில்லை!</target>
         
       </trans-unit>
-      <trans-unit id="checkAddReference.Text">
+      <trans-unit id="btnAbort.Text">
+        <source>A&amp;bort</source>
+        
+      </trans-unit>
+      <trans-unit id="btnPick.Text">
+        <source>&amp;Cherry pick</source>
+        
+      </trans-unit>
+      <trans-unit id="cbxAddReference.Text">
         <source>A&amp;dd commit reference to commit message</source>
-        <target>உறுதிமொழி செய்திக்கு உறுதிமொழி குறிப்பு சேர்</target>
+        
+      </trans-unit>
+      <trans-unit id="cbxAutoCommit.Text">
+        <source>&amp;Automatically create a commit</source>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -3956,11 +3943,12 @@ Are you sure?</source>
         <target>தேதி</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>C&amp;hoose another
-revision:</source>
-        <target>மற்றொரு மீள்திருத்தத்தை
-தேர்ந்தெடு:</target>
+      <trans-unit id="lblBranchInfo.Text">
+        <source>Cherry pick this commit:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblParents.Text">
+        <source>This commit is a merge, select &amp;parent:</source>
         
       </trans-unit>
     </body>
@@ -4030,9 +4018,16 @@ revision:</source>
         <target>செயல்படும் கோப்பகத்தை சுத்தம் செய்</target>
         
       </trans-unit>
-      <trans-unit id="AddPath.Text">
+      <trans-unit id="AddExclusivePath.Text">
         <source>Add a path...</source>
-        <target>பாதையைச் சேர்...</target>
+        
+      </trans-unit>
+      <trans-unit id="AddInclusivePath.Text">
+        <source>Add a path...</source>
+        
+      </trans-unit>
+      <trans-unit id="CleanSubmodules.Text">
+        <source>Clean submodules recursively</source>
         
       </trans-unit>
       <trans-unit id="Cleanup.Text">
@@ -4075,9 +4070,12 @@ revision:</source>
         <target>சுத்தம்செய்</target>
         
       </trans-unit>
-      <trans-unit id="checkBoxPathFilter.Text">
-        <source>Affect the following path(s) only:</source>
-        <target>பின்வரும் பாதை(களை) மட்டும் பாதிக்கும்:</target>
+      <trans-unit id="checkBoxExcludePathFilter.Text">
+        <source>Exclude the following file path(s):</source>
+        
+      </trans-unit>
+      <trans-unit id="checkBoxIncludePathFilter.Text">
+        <source>Affect the following directory path(s) only:</source>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -4090,9 +4088,12 @@ revision:</source>
         <target>பதிவு:</target>
         
       </trans-unit>
-      <trans-unit id="labelPathHint.Text">
+      <trans-unit id="labelPathHintExclude.Text">
         <source>(one path per line)</source>
-        <target>(ஒரு வரிக்கு ஒரு பாதை)</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPathHintInclude.Text">
+        <source>(one path per line)</source>
         
       </trans-unit>
     </body>
@@ -5441,7 +5442,7 @@ Deleting a branch can cause commits to be deleted too!</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>This will delete the selected tag from the (local) repository.</source>
-        <target>இது (உள்ளூர்) களஞ்சியத்திலிருந்து தேர்ந்தெடுக்கப்பட்ட குறிச்சொல்லை நீக்கும்.</target>
+        <target>இது (உள்ளக) களஞ்சியத்திலிருந்து தேர்ந்தெடுக்கப்பட்ட குறிச்சொல்லை நீக்கும்.</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -5688,7 +5689,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="diffToolRemoteLocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
-        <target>வேறுபாடுகருவி தேர்ந்தெடுக்கப்பட்டது &lt; - &gt; உள்ளூர்</target>
+        <target>வேறுபாடுகருவி தேர்ந்தெடுக்கப்பட்டது &lt; - &gt; உள்ளகம்</target>
         
       </trans-unit>
       <trans-unit id="displayAuthorFirstToolStripMenuItem.Text">
@@ -6131,13 +6132,15 @@ sln கோப்புகளை இருமம்யாகக் குறி�
         
       </trans-unit>
       <trans-unit id="mnuClear.Text">
-        <source>Clear</source>
-        <target>துடை</target>
+        <source>C&amp;lear</source>
+        
+      </trans-unit>
+      <trans-unit id="mnuCopyCommandLine.Text">
+        <source>&amp;Copy full command line</source>
         
       </trans-unit>
       <trans-unit id="mnuSaveToFile.Text">
-        <source>Save to file</source>
-        <target>கோப்பில் சேமி</target>
+        <source>&amp;Save to file</source>
         
       </trans-unit>
       <trans-unit id="tabPageCommandCache.Text">
@@ -6659,7 +6662,7 @@ command &quot;git help shortlog&quot;</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Local:</source>
-        <target>உள்ளூர்:</target>
+        <target>உள்ளகம்:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
@@ -6683,7 +6686,7 @@ command &quot;git help shortlog&quot;</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Open local repository</source>
-        <target>உள்ளூர் களஞ்சியத்தைத் திற</target>
+        <target>உள்ளக களஞ்சியத்தைத் திற</target>
         
       </trans-unit>
       <trans-unit id="Load.Text">
@@ -6803,7 +6806,7 @@ Actual command line (if checked): --prune --force
       </trans-unit>
       <trans-unit id="PruneTags.Tooltip">
         <source>Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.</source>
-        <target>பெறுவதற்கு முன், --கத்தரி இயக்கப்பட்டிருந்தால், தொலையில் இல்லாத உள்ளூர் குறிச்சொற்களை அகற்றவும்.</target>
+        <target>பெறுவதற்கு முன், --கத்தரி இயக்கப்பட்டிருந்தால், தொலையில் இல்லாத உள்ளக குறிச்சொற்களை அகற்றவும்.</target>
         
       </trans-unit>
       <trans-unit id="Pull.Text">
@@ -6953,7 +6956,7 @@ Because this is not the default configured remote for your local branch,
 you must specify a remote branch.</source>
         <target>நீங்கள் '{0}' தொலையிலிருந்து இழுக்கச் சொன்னீர்கள்,
 ஆனால் தொலை கிளையைக் குறிப்பிடவில்லை.
-ஏனெனில் இது உங்கள் உள்ளூர் கிளைக்கான இயல்புநிலையாக உள்ளமைக்கப்பட்ட தொலை அல்ல,
+ஏனெனில் இது உங்கள் உள்ளக கிளைக்கான இயல்புநிலையாக உள்ளமைக்கப்பட்ட தொலை அல்ல,
 தொலை கிளையை நீங்கள் குறிப்பிட வேண்டும்.</target>
         
       </trans-unit>
@@ -7017,12 +7020,12 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="lblLocalBranch.Text">
         <source>&amp;Local branch</source>
-        <target>&amp;உள்ளூர் கிளை</target>
+        <target>&amp;உள்ளக கிளை</target>
         
       </trans-unit>
       <trans-unit id="lblLocalBranch.Tooltip">
         <source>Local branch to create or reset to the remote branch selected.</source>
-        <target>தேர்ந்தெடுக்கப்பட்ட தொலை கிளையை உருவாக்க அல்லது மீட்டமைக்க உள்ளூர் கிளை.</target>
+        <target>தேர்ந்தெடுக்கப்பட்ட தொலை கிளையை உருவாக்க அல்லது மீட்டமைக்க உள்ளக கிளை.</target>
         
       </trans-unit>
       <trans-unit id="lblRemoteBranch.Text">
@@ -7086,7 +7089,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="LocalColumn.HeaderText">
         <source>Local Branch</source>
-        <target>உள்ளூர் கிளை</target>
+        <target>உள்ளக கிளை</target>
         
       </trans-unit>
       <trans-unit id="MultipleBranchTab.Text">
@@ -7195,7 +7198,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_forceWithLeaseTooltips.Text">
         <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
-        <target>குத்தகையுடன் கட்டாயப்படுத்தி தள்ளு என்பது வலுக்கட்டாயமாகத் தள்ளுவதற்கான பாதுகாப்பான வழியாகும். உங்கள் உள்ளூர் களஞ்சியத்தில் நீங்கள் பார்த்த வேலையை மட்டுமே மேலெழுத இது உறுதி செய்கிறது</target>
+        <target>குத்தகையுடன் கட்டாயப்படுத்தி தள்ளு என்பது வலுக்கட்டாயமாகத் தள்ளுவதற்கான பாதுகாப்பான வழியாகும். உங்கள் உள்ளக களஞ்சியத்தில் நீங்கள் பார்த்த வேலையை மட்டுமே மேலெழுத இது உறுதி செய்கிறது</target>
         
       </trans-unit>
       <trans-unit id="_noCurrentBranch.Text">
@@ -7408,12 +7411,12 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="lbxRefs.Item0">
         <source>local1 (ref)</source>
-        <target>உள்ளூர்1 (குறி)</target>
+        <target>உள்ளகம்1 (குறி)</target>
         
       </trans-unit>
       <trans-unit id="lbxRefs.Item1">
         <source>local2 (ref)</source>
-        <target>உள்ளூர்2 (குறி)</target>
+        <target>உள்ளகம்2 (குறி)</target>
         
       </trans-unit>
       <trans-unit id="lbxRefs.Item2">
@@ -7854,7 +7857,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="BranchName.HeaderText">
         <source>Local branch name</source>
-        <target>உள்ளூர் கிளை பெயர்</target>
+        <target>உள்ளக கிளை பெயர்</target>
         
       </trans-unit>
       <trans-unit id="Delete.toolTip1">
@@ -8040,7 +8043,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>Local branch name</source>
-        <target>உள்ளூர் கிளை பெயர்</target>
+        <target>உள்ளக கிளை பெயர்</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -8118,7 +8121,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
         <source>Reset local &amp;branch:</source>
-        <target>உள்ளூர் &amp;கிளையை மீட்டமை:</target>
+        <target>உள்ளக &amp;கிளையை மீட்டமை:</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -8138,7 +8141,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_localRefInvalid.Text">
         <source>The entered value '{0}' is not the name of an existing local branch.</source>
-        <target>உள்ளீடு செய்யப்பட்ட மதிப்பு '{0}' என்பது ஏற்கனவே உள்ள உள்ளூர் கிளையின் பெயர் அல்ல.</target>
+        <target>உள்ளீடு செய்யப்பட்ட மதிப்பு '{0}' என்பது ஏற்கனவே உள்ள உள்ளக கிளையின் பெயர் அல்ல.</target>
         
       </trans-unit>
       <trans-unit id="labelResetBranchWarning.Text">
@@ -8200,19 +8203,19 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <source>&amp;Hard: reset working directory and index
 (discard ALL local changes, even uncommitted changes)</source>
         <target>&amp;கடினமானது: பணி அடைவு மற்றும் குறியீட்டை மீட்டமைக்கவும்
-(எல்லா உள்ளூர் மாற்றங்களையும் நிராகரிக்கவும், உறுதியற்ற மாற்றங்களையும் கூட)</target>
+(எல்லா உள்ளக மாற்றங்களையும் நிராகரிக்கவும், உறுதியற்ற மாற்றங்களையும் கூட)</target>
         
       </trans-unit>
       <trans-unit id="Keep.Text">
         <source>&amp;Keep: update working directory to the commit 
 (abort if there are local changes), reset index</source>
-        <target> வைத்திருங்கள்: வேலை செய்யும் கோப்பகத்தை உறுதிமொழிக்குப் புதுப்பிக்கவும் (உள்ளூர் மாற்றங்கள் இருந்தால் நிறுத்தவும்), குறியீட்டை மீட்டமைக்கவும்</target>
+        <target> வைத்திருங்கள்: வேலை செய்யும் கோப்பகத்தை உறுதிமொழிக்குப் புதுப்பிக்கவும் (உள்ளக மாற்றங்கள் இருந்தால் நிறுத்தவும்), குறியீட்டை மீட்டமைக்கவும்</target>
         
       </trans-unit>
       <trans-unit id="Merge.Text">
         <source>&amp;Merge: update working directory to the commit and keep local changes 
 (abort if there are conflicts), reset index</source>
-        <target>ஒன்றிணை:வேலை செய்யும் கோப்பகத்தை உறுதிமொழியுடன் புதுப்பித்து, உள்ளூர் மாற்றங்களை வைத்திருக்கவும் (மோதல்கள் இருந்தால் நிறுத்தவும்), குறியீட்டை மீட்டமைக்கவும் </target>
+        <target>ஒன்றிணை:வேலை செய்யும் கோப்பகத்தை உறுதிமொழியுடன் புதுப்பித்து, உள்ளக மாற்றங்களை வைத்திருக்கவும் (மோதல்கள் இருந்தால் நிறுத்தவும்), குறியீட்டை மீட்டமைக்கவும் </target>
         
       </trans-unit>
       <trans-unit id="Mixed.Text">
@@ -8242,7 +8245,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="_resetHardWarning.Text">
         <source>You are about to discard ALL local changes, are you sure?</source>
-        <target>அனைத்து உள்ளூர் மாற்றங்களையும் நிராகரிக்க உள்ளீர்கள், உறுதியாக இருக்கிறீர்களா?</target>
+        <target>அனைத்து உள்ளக மாற்றங்களையும் நிராகரிக்க உள்ளீர்கள், உறுதியாக இருக்கிறீர்களா?</target>
         
       </trans-unit>
     </body>
@@ -8281,7 +8284,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="ContextOpenLocalWith.Text">
         <source>Open local with</source>
-        <target>இதனுடன் உள்ளூர்த் திற</target>
+        <target>உள்ளகத்தை இதனுடன் திற</target>
         
       </trans-unit>
       <trans-unit id="ContextOpenRemoteWith.Text">
@@ -8404,7 +8407,7 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_chooseLocalFileFailedText.Text">
         <source>Choose local file failed.</source>
-        <target>உள்ளூர் கோப்பைத் தேர்வுசெய்ய முடியவில்லை.</target>
+        <target>உள்ளக கோப்பைத் தேர்வுசெய்ய முடியவில்லை.</target>
         
       </trans-unit>
       <trans-unit id="_chooseRemoteButtonText.Text">
@@ -8429,7 +8432,7 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_contextChooseLocalRebaseText.Text">
         <source>Choose local (theirs)</source>
-        <target>உள்ளூர் (அவர்களின்) என்பதைத் தேர்ந்தெடுக்கவும்</target>
+        <target>உள்ளக (அவர்களின்) என்பதைத் தேர்ந்தெடுக்கவும்</target>
         
       </trans-unit>
       <trans-unit id="_contextChooseRemoteMergeText.Text">
@@ -8476,7 +8479,7 @@ Is the merge conflict solved?</source>
         <source>File ({0}) appears to be a binary file.
 Choose to keep the local ({1}), remote ({2}) or base file.</source>
         <target>கோப்பு ({0}) இரும கோப்பாகத் தோன்றுகிறது.
-உள்ளூர் ({1}), தொலை ({2}) அல்லது அடிப்படைக் கோப்பை வைத்திருக்கத் தேர்வு செய்யவும்.</target>
+உள்ளக ({1}), தொலை ({2}) அல்லது அடிப்படைக் கோப்பை வைத்திருக்கத் தேர்வு செய்யவும்.</target>
         
       </trans-unit>
       <trans-unit id="_fileChangeLocallyAndRemotely.Text">
@@ -8510,8 +8513,8 @@ Choose the file you want to keep, merge the files or delete the file?</source>
 The file has been deleted locally ({1}) but modified remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
-        <target>கோப்பு {0} இல் உள்ளூர் திருத்தம் இல்லை.
-கோப்பு உள்ளூரில் நீக்கப்பட்டது ({1}) ஆனால் தொலைநிலையில் ({2}) மாற்றப்பட்டது.
+        <target>கோப்பு {0} இல் உள்ளக திருத்தம் இல்லை.
+கோப்பு உள்ளகத்தில் நீக்கப்பட்டது ({1}) ஆனால் தொலைநிலையில் ({2}) மாற்றப்பட்டது.
 
 கோப்பை நீக்க அல்லது மாற்றியமைக்கப்பட்ட பதிப்பை வைத்திருக்கத் தேர்வு செய்யவும்.</target>
         
@@ -8553,8 +8556,8 @@ The merge conflict will not be marked as solved. Please try again.</source>
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
-        <target>{0} மற்றும் {1} மற்ற  {2} இல் தேர்ந்தெடுக்கப்பட்ட கோப்புகள் உள்ளூர் திருத்தம் இல்லை.
-கோப்புகள் உள்நாட்டில் நீக்கப்பட்டன, ஆனால் தொலைவிலிருந்து  மாற்றப்பட்டன.
+        <target>{0} மற்றும் {1} மற்ற  {2} இல் தேர்ந்தெடுக்கப்பட்ட கோப்புகள் உள்ளக திருத்தம் இல்லை.
+கோப்புகள் உள்ளகத்தில் நீக்கப்பட்டன, ஆனால் தொலைவிலிருந்து  மாற்றப்பட்டன.
 
 கோப்புகளை நீக்க அல்லது மாற்றியமைக்கப்பட்ட பதிப்புகளை வைத்திருக்கத் தேர்வு செய்யவும்.</target>
         
@@ -8564,8 +8567,8 @@ Choose to delete the files or keep the modified versions.</source>
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
-        <target>{0} மற்றும் {1} தேர்ந்தெடுக்கப்பட்ட கோப்பு(கள்) உள்ளூர் திருத்தம் இல்லை.
-கோப்புகள் உள்நாட்டில் நீக்கப்பட்டன, ஆனால் தொலைவிலிருந்து  மாற்றப்பட்டன.
+        <target>{0} மற்றும் {1} தேர்ந்தெடுக்கப்பட்ட கோப்பு(கள்) உள்ளக திருத்தம் இல்லை.
+கோப்புகள் உள்ளகத்தில் நீக்கப்பட்டன, ஆனால் தொலைவிலிருந்து  மாற்றப்பட்டன.
 
 கோப்புகளை நீக்க அல்லது மாற்றியமைக்கப்பட்ட பதிப்புகளை வைத்திருக்கத் தேர்வு செய்யவும்.</target>
         
@@ -8714,7 +8717,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>Local</source>
-        <target>உள்ளூர்</target>
+        <target>உள்ளகம்</target>
         
       </trans-unit>
       <trans-unit id="merge.Text">
@@ -8820,14 +8823,13 @@ Do you want to use this custom merge script?</source>
         <target>முழு &amp;வரலாறு</target>
         
       </trans-unit>
+      <trans-unit id="HideMergeCommitsCheck.Text">
+        <source>Hide merge commi&amp;ts</source>
+        
+      </trans-unit>
       <trans-unit id="IgnoreCase.Text">
         <source>&amp;Ignore case</source>
         <target>&amp;வழக்கைப் புறக்கணிக்கவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="MergeCommitsCheck.Text">
-        <source>Merge commi&amp;ts</source>
-        <target>உறுதிமொழிகளை ஒன்றிணைக்கவும்</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -8836,8 +8838,7 @@ Do you want to use this custom merge script?</source>
         
       </trans-unit>
       <trans-unit id="OnlyFirstParentCheck.Text">
-        <source>Only &amp;first parent</source>
-        <target>&amp;முதல் பெற்றோர் மட்டும்</target>
+        <source>Show only &amp;first parent</source>
         
       </trans-unit>
       <trans-unit id="ReflogCheck.Text">
@@ -9012,7 +9013,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="Stash.toolTip">
         <source>Save local changes to a new stash, then revert local changes</source>
-        <target>உள்ளூர் மாற்றங்களைப் புதிய பதுக்கலில் சேமித்து, பின்னர் உள்ளூர் மாற்றங்களை மாற்றவும்</target>
+        <target>உள்ளக மாற்றங்களைப் புதிய பதுக்கலில் சேமித்து, பின்னர் உள்ளக மாற்றங்களை மாற்றவும்</target>
         
       </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
@@ -9165,7 +9166,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Local path</source>
-        <target>உள்ளூர் பாதை</target>
+        <target>உள்ளக பாதை</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
@@ -9636,7 +9637,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="checkBoxPullRebase.Text">
         <source>Rebase local branch when pulling (instead of merge)</source>
-        <target>இழுக்கும்போது உள்ளூர் கிளையை மறுதளம் செய்யுங்கள் (ஒன்றிணைவதற்குப் பதிலாக)</target>
+        <target>இழுக்கும்போது உள்ளக கிளையை மறுதளம் செய்யுங்கள் (ஒன்றிணைவதற்குப் பதிலாக)</target>
         
       </trans-unit>
       <trans-unit id="checkBoxRebaseAutosquash.Text">
@@ -10067,12 +10068,12 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToFalseForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to False for the local repository.</source>
-        <target>உள்ளூர் களஞ்சியத்திற்கான அறிவிலி பண்பு “{0}” ஐ பொய் என அமைக்கிறது.</target>
+        <target>உள்ளக களஞ்சியத்திற்கான அறிவிலி பண்பு “{0}” ஐ பொய் என அமைக்கிறது.</target>
         
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToTrueForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to True for the local repository.</source>
-        <target>உள்ளூர் களஞ்சியத்திற்கான அறிவிலி பண்பு “{0}” ஐ உண்மையென அமைக்கிறது.</target>
+        <target>உள்ளக களஞ்சியத்திற்கான அறிவிலி பண்பு “{0}” ஐ உண்மையென அமைக்கிறது.</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopy.Text">
@@ -10277,6 +10278,14 @@ help</source>
       <trans-unit id="_cannotOpenSubmoduleCaption.Text">
         <source>Cannot open submodule</source>
         <target>துணைத் தொகுதியைத் திறக்க முடியாது</target>
+        
+      </trans-unit>
+      <trans-unit id="_confirmBranchCheckout.Text">
+        <source>Are you sure you want to check out branch &quot;{0}&quot;?</source>
+        
+      </trans-unit>
+      <trans-unit id="_confirmBranchCheckoutCaption.Text">
+        <source>Confirm checkout</source>
         
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
@@ -10602,7 +10611,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnCreateBranch.ToolTipText">
         <source>Create a local branch</source>
-        <target>ஒரு உள்ளூர் கிளையை உருவாக்கு</target>
+        <target>ஒரு உள்ளக கிளையை உருவாக்கு</target>
         
       </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
@@ -10662,7 +10671,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnFetchCreateBranch.ToolTipText">
         <source>Fetch then create a local branch from the remote branch</source>
-        <target>பெற்று பின்னர் தொலை கிளையிலிருந்து உள்ளூர் கிளையை உருவாக்கவும்</target>
+        <target>பெற்று பின்னர் தொலை கிளையிலிருந்து உள்ளக கிளையை உருவாக்கவும்</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchOneBranch.Text">
@@ -11873,7 +11882,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="LocalBranchChx.Text">
         <source>Local branch name</source>
-        <target>உள்ளூர் கிளை பெயர்</target>
+        <target>உள்ளக கிளை பெயர்</target>
         
       </trans-unit>
       <trans-unit id="MessageChx.Text">
@@ -12117,7 +12126,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="LocalRB.Text">
         <source>Local for current repository</source>
-        <target>தற்போதைய களஞ்சியத்திற்கான உள்ளூர்</target>
+        <target>தற்போதைய களஞ்சியத்திற்கான உள்ளகம்</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -12355,7 +12364,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="CreateTooltip.Text">
         <source>Create a local branch from this tag</source>
-        <target>இந்தக் குறிச்சொல்லிலிருந்து உள்ளூர் கிளையை உருவாக்கவும்</target>
+        <target>இந்தக் குறிச்சொல்லிலிருந்து உள்ளக கிளையை உருவாக்கவும்</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
@@ -12688,6 +12697,22 @@ Select this commit to populate the full message.</source>
         <target>வெளியேறு குறியீடு</target>
         
       </trans-unit>
+      <trans-unit id="_externalErrorDescription.Text">
+        <source>error from git or from other external application</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadAnAssembly.Text">
+        <source>Failed to load an assembly</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
+        <source>Could not load file or assembly '{0}'.</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
+        <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
+        
+      </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
         <source>Filter file in &amp;grid</source>
         <target> &amp;கட்டத்திலிருந்து கோப்பை வடிகட்டவும்</target>
@@ -12786,6 +12811,10 @@ following command.
         <target>அறிவிலி பாதுகாப்பு பிழை</target>
         
       </trans-unit>
+      <trans-unit id="_hideErrorMessage.Text">
+        <source>Hide error message...</source>
+        
+      </trans-unit>
       <trans-unit id="_hoursAgo.Text">
         <source>{0} {1:hour|hours} ago</source>
         <target>{0} {1:மணி|மணி} முன்பு</target>
@@ -12818,7 +12847,7 @@ following command.
       </trans-unit>
       <trans-unit id="_local.Text">
         <source>Local</source>
-        <target>உள்ளூர்</target>
+        <target>உள்ளகம்</target>
         
       </trans-unit>
       <trans-unit id="_mainInstructionNotOnBranch.Text">
@@ -12955,6 +12984,18 @@ Remote: {1}</source>
         <target>இது அறிவிலி நீட்டிப்புகளால் ஏற்பட்டதாக நீங்கள் நினைத்தால், குழு விசாரணை செய்ய ஒரு பிழையைப் புகாரளிக்கலாம்.</target>
         
       </trans-unit>
+      <trans-unit id="_reportIssue.Text">
+        <source>Report the issue</source>
+        
+      </trans-unit>
+      <trans-unit id="_reportIssueDescription.Text">
+        <source>for the team to investigate - if you think this was caused by Git Extensions</source>
+        
+      </trans-unit>
+      <trans-unit id="_reportReproducedIssueDescription.Text">
+        <source>If you can consistently reproduce the issue, please report it.</source>
+        
+      </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
         <source>Reset changes</source>
         <target>மாற்றங்களை மீட்டமை</target>
@@ -12968,6 +13009,15 @@ Remote: {1}</source>
       <trans-unit id="_resetSelectedLinesConfirmation.Text">
         <source>Are you sure you want to reset the changes to the selected lines?</source>
         <target>தேர்ந்தெடுக்கப்பட்ட வரிகளுக்கு மாற்றங்களை மீட்டமைக்க விரும்புகிறீர்களா?</target>
+        
+      </trans-unit>
+      <trans-unit id="_restartApplication.Text">
+        <source>Restart Git Extensions</source>
+        
+      </trans-unit>
+      <trans-unit id="_restartApplicationDescription.Text">
+        <source>Usually restarting the application solves the issue.
+Sometimes Windows may need to be restarted too.</source>
         
       </trans-unit>
       <trans-unit id="_rotInactive.Text">
@@ -13014,6 +13064,10 @@ Remote: {1}</source>
       <trans-unit id="_secondsAgo.Text">
         <source>{0} {1:second|seconds} ago</source>
         <target>{0} {1:வினாடி|வினாடிகளுக்கு} முன்பு</target>
+        
+      </trans-unit>
+      <trans-unit id="_seeErrorMessage.Text">
+        <source>See error message...</source>
         
       </trans-unit>
       <trans-unit id="_settingsTypeToFind.Text">

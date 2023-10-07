@@ -321,7 +321,7 @@
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -364,12 +364,13 @@
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
         <target>¡ACCIÓN PELIGROSA!
-Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. ¿Está seguro de que desea continuar?</target>
+Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. 
+¿Está seguro de que desea continuar?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -527,7 +528,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -537,7 +538,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
@@ -547,7 +548,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -938,6 +939,34 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="es">
     <body>
       <trans-unit id="Description.Text">
@@ -1156,6 +1185,10 @@ Do you want to reset the configured path?</source>
         <target>Incapaz de abrir el ayudante de consultas</target>
         
       </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        
+      </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
         <target>Credenciales de Jira</target>
@@ -1270,7 +1303,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Log de commit desde '{0}' a '{1}' ({2}):</target>
+        <target>Log de commit desde '{0}' hasta '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
@@ -1498,7 +1531,7 @@ Por favor, verifique la url del servidor.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>¡La expresión regular &quot;Build Id Filter no es valido y no será guardada!</target>
+        <target>¡La expresión regular &quot;Build Id Filter&quot; no es válida y no será guardada!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">

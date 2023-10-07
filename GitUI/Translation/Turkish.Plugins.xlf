@@ -12,6 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>Alt modülleri otomatik olarak derle</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -269,7 +270,7 @@
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Çekme İsteklerini Görüntüleme</target>
+        <target>Çekme İsteklerini Görüntüle</target>
         
       </trans-unit>
     </body>
@@ -356,7 +357,7 @@
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>Silmek için dalları seçin. Yalnızca '{0} ' ile tamamen birleştirilen dallar silinebilir.</target>
+        <target>Silmek için dalları seç. Yalnızca '{0}' ile tamamen birleştirilen dallar silinebilir.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
@@ -400,7 +401,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' sütunundaki onay kutularını kullanarak, silmek istediğiniz dalları seçin.</target>
+        <target>'{0}' sütunundaki onay kutularını kullanarak, silmek istediğin dalları seç.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -651,7 +652,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>Yorum satır sayısı: {0:N0}. ({1:P1})</target>
+        <target>Yorum satırı sayısı: {0:N0}. ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
@@ -754,7 +755,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
-        <target>Git ile projeniz için iyi bir dal modeli...</target>
+        <target>Git ile projen için iyi bir dal modeli...</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -864,7 +865,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
-        <target>Git ile projeniz için iyi bir dal modeli...</target>
+        <target>Git ile projen için iyi bir dal modeli...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -912,6 +913,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>Not: Jetonun geçmesi için Git Uzantılarının yeniden başlatılması gerekir.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -936,6 +938,40 @@ Devam etmek istediğine emin misin?</target>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>Katkı Grafiği</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        <target>Sunucudan Proje ID'sini getir</target>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>Sunucudan proje alınamadı. Geçerli API jetonu (tokenu) veya örnek URL'sini kontrol et.</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Jeton (token) yönetim sayfasına git</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        <target>Örnek URL</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        <target>API Jetonu (Token)</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
+        <target>Proje ID'si</target>
         
       </trans-unit>
     </body>
@@ -1107,7 +1143,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>Proje Adı</target>
+        <target>Proje adı</target>
         
       </trans-unit>
     </body>
@@ -1157,6 +1193,11 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
         <target>Jira sorgu yardımcısı (query helper) açılamıyor</target>
+        
+      </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        <target>Kimlik doğrulama türü</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
@@ -1430,7 +1471,7 @@ Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
         <target>Url'den derleme tanım bilgisi alınmaya çalışılırken hata oluştu.
 
-Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bilgilerine erişiminizin olduğuna emin olun.</target>
+Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bilgilerine erişimin olduğuna emin ol.</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
@@ -1444,16 +1485,16 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
         <target>Örnekler:
- - https://dev.azure.com/sizinorganizasyonunuz/projeadi/
- - https://sizinsunucunuz:8080/tfs/koleksiyonadi/projeadi/
- - https://sizinorganizasyonunuz.visualstudio.com/projeadi/</target>
+- https://dev.azure.com/seninnorganizasyonun/projeadi/
+- https://seninsunucun:8080/tfs/koleksiyonadi/projeadi/
+- https://seninorganizasyonun.visualstudio.com/projeadi/</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
  - 'Build (read)'
  - 'Project and team (read)'</source>
-        <target>Aşağıdaki kapsamlara sahip bir jeton (token) oluşturmanız gerekiyor:
+        <target>Aşağıdaki kapsamlara sahip bir jeton (token) oluşturman gerekiyor:
  - 'Build (read)' Derle (oku)
  - 'Project and team (read)' Proje ve takım (oku)</target>
         
@@ -1502,7 +1543,7 @@ Lütfen, sunucu URL'sini doğrulayın.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; normal ifadesi geçerli değil ve kaydedilmeyecek!</target>
+        <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; düzenli(kurallı) ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">

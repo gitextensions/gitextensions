@@ -12,6 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>Автоматическая сборка субмодулей</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -415,7 +416,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Включить не слитые ветки</target>
+        <target>Включить неслитые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -543,7 +544,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>Количество коммитов</target>
+        <target>Кол-во комитов</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
@@ -804,12 +805,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
-        <target>Отправить после окончания</target>
+        <target>Отправить после завершения</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
-        <target>Объединить</target>
+        <target>Squash</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
@@ -819,7 +820,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
-        <target>Начальная ветка:</target>
+        <target>Начать ветку:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -864,11 +865,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
+        <target>Хороший модель ветвления для проекта с Git ...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
-        <target>Результат запуска команды git flow</target>
+        <target>Результат выполнения команды git flow</target>
         
       </trans-unit>
     </body>
@@ -911,6 +913,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>Внимание: Требуется перезапустить Git Extensions для использования токена.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -935,6 +938,34 @@ Are you sure you want to continue?</source>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>Граф воздействия</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
         
       </trans-unit>
     </body>
@@ -978,8 +1009,8 @@ Are you sure you want to continue?</source>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Не удаётся найти Gource.
-Пожалуйста, загрузите Gource и установите путь в окне настроек плагинов.</target>
+        <target>Не могу найти Gource.
+Пожалуйста загрузите Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1009,7 +1040,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Скачивание не удалось.
-Пожалуйста, скачайте Gource и установите путь в окне настроек плагинов.</target>
+Пожалуйста скачайте Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1082,7 +1113,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Gource проект</target>
+        <target>Проект Gource</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
@@ -1156,6 +1187,11 @@ Do you want to reset the configured path?</source>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
         <target>Невозможно открыть помощник запросов Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        <target>Тип аутентификации</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
@@ -1481,10 +1517,10 @@ l.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>Буфер обмена не содержит допустимого адреса сборки.
+        <target>Буфер не содержит валидного адреса сборки.
 
-Пожалуйста, скопируйте адрес сборки перед очередной попыткой.
-(Как минимум должен содержаться параметр &quot;buildTypeId&quot;)</target>
+Пожалуйста скопируйте адрес сборки перед очередной попыткой.
+(Должен содержать &quot;buildTypeId&quot; параметр)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1496,7 +1532,7 @@ Please copy in the clipboard the url of the build before retrying.
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
         <target>Неудачная загрузка проектов и списка сборки.
-Пожалуйста, проверьте адрес сервера.</target>
+Пожалуйста проверьте url сервера.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
