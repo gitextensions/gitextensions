@@ -4,10 +4,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class DiffViewerSettingsPage : SettingsPageWithHeader
     {
-        public DiffViewerSettingsPage()
+        public DiffViewerSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Diff viewer";
             InitializeComplete();
 
             chkShowDiffForAllParents.Text = TranslatedStrings.ShowDiffForAllParentsText;

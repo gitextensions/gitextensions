@@ -200,6 +200,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "ScriptsSettingsPage";
             this.Size = new System.Drawing.Size(1335, 885);
+            this.Text = "Scripts";
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panelButtons.ResumeLayout(false);
@@ -210,6 +211,7 @@
         }
 
         #endregion
+    
         private System.Windows.Forms.Button btnMoveUp;
         private System.Windows.Forms.Button btnMoveDown;
         private System.Windows.Forms.Button btnArgumentsHelp;

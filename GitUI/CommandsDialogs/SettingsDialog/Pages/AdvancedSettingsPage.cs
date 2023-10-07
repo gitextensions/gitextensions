@@ -4,10 +4,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AdvancedSettingsPage : SettingsPageWithHeader
     {
-        public AdvancedSettingsPage()
+        public AdvancedSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Advanced";
             InitializeComplete();
 
             var autoNormaliseSymbols = new[]

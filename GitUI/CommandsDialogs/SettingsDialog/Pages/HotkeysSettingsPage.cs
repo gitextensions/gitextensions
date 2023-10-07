@@ -2,10 +2,10 @@
 {
     public partial class HotkeysSettingsPage : SettingsPageWithHeader
     {
-        public HotkeysSettingsPage()
+        public HotkeysSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Hotkeys";
             InitializeComplete();
         }
 

@@ -272,6 +272,7 @@
             this.Name = "DetailedSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1340, 889);
+            this.Text = "Detailed";
             this.PushWindowGB.ResumeLayout(false);
             this.PushWindowGB.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);

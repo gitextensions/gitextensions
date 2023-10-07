@@ -4,10 +4,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class BlameViewerSettingsPage : SettingsPageWithHeader
     {
-        public BlameViewerSettingsPage()
+        public BlameViewerSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Blame viewer";
             InitializeComplete();
         }
 

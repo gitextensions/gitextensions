@@ -136,6 +136,7 @@
             this.Controls.Add(this.groupBoxConsoleSettings);
             this.Name = "ConsoleStyleSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
+            this.Text = "Console style";
             this.groupBoxConsoleSettings.ResumeLayout(false);
             this.groupBoxConsoleSettings.PerformLayout();
             this.ResumeLayout(false);

@@ -5,10 +5,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class DetailedSettingsPage : DistributedSettingsPage
     {
-        public DetailedSettingsPage()
+        public DetailedSettingsPage(IServiceProvider serviceProvider)
+           : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Detailed";
             InitializeComplete();
         }
 

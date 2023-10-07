@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.chkEnsureCommitMessageSecondLineEmpty = new System.Windows.Forms.CheckBox();
             this.groupBoxBehaviour.SuspendLayout();
             this.tableLayoutPanelBehaviour.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize) (this
+            ((System.ComponentModel.ISupportInitialize)(this
                 ._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).BeginInit();
             this.grpAdditionalButtons.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -122,16 +122,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Location =
                 new System.Drawing.Point(360, 118);
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Maximum =
-                new decimal(new int[] {999, 0, 0, 0});
+                new decimal(new int[] { 999, 0, 0, 0 });
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Minimum =
-                new decimal(new int[] {1, 0, 0, 0});
+                new decimal(new int[] { 1, 0, 0, 0 });
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Name =
                 "_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages";
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Size =
                 new System.Drawing.Size(123, 23);
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.TabIndex = 4;
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value =
-                new decimal(new int[] {1, 0, 0, 0});
+                new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // lblCommitDialogNumberOfPreviousMessages
             // 
@@ -248,11 +248,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.Controls.Add(this.groupBoxBehaviour);
             this.Name = "CommitDialogSettingsPage";
             this.Size = new System.Drawing.Size(1014, 950);
+            this.Text = "Commit dialog";
             this.groupBoxBehaviour.ResumeLayout(false);
             this.groupBoxBehaviour.PerformLayout();
             this.tableLayoutPanelBehaviour.ResumeLayout(false);
             this.tableLayoutPanelBehaviour.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize) (this
+            ((System.ComponentModel.ISupportInitialize)(this
                 ._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).EndInit();
             this.grpAdditionalButtons.ResumeLayout(false);
             this.grpAdditionalButtons.PerformLayout();

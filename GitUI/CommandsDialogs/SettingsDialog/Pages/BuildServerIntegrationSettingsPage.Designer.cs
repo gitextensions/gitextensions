@@ -137,6 +137,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.MinimumSize = new System.Drawing.Size(454, 286);
             this.Name = "BuildServerIntegrationSettingsPage";
             this.Size = new System.Drawing.Size(1552, 894);
+            this.Text = "Build server integration";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

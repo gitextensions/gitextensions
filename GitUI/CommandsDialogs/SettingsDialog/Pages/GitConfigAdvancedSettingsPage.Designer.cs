@@ -96,6 +96,7 @@
             this.Controls.Add(this.checkBoxRebaseAutosquash);
             this.Name = "GitConfigAdvancedSettingsPage";
             this.Size = new System.Drawing.Size(1439, 516);
+            this.Text = "Advanced";
             this.ResumeLayout(false);
             this.PerformLayout();
 

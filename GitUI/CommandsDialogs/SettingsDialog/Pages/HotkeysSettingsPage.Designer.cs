@@ -48,6 +48,7 @@
             this.MinimumSize = new System.Drawing.Size(670, 330);
             this.Name = "HotkeysSettingsPage";
             this.Size = new System.Drawing.Size(670, 330);
+            this.Text = "Hotkeys";
             this.ResumeLayout(false);
 
         }

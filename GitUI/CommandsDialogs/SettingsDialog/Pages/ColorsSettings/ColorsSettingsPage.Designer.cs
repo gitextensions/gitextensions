@@ -313,6 +313,7 @@
             this.Name = "ColorsSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1527, 599);
+            this.Text = "Colors";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbRevisionGraph.ResumeLayout(false);
@@ -330,6 +331,7 @@
         }
 
         #endregion
+    
         private System.Windows.Forms.GroupBox gbRevisionGraph;
         private System.Windows.Forms.CheckBox DrawNonRelativesTextGray;
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;

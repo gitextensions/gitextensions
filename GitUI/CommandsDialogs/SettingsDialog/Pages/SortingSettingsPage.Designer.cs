@@ -252,6 +252,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Name = "SortingSettingsPage";
             Padding = new Padding(8);
             Size = new Size(1527, 685);
+            Text = "Sorting";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             gbGeneral.ResumeLayout(false);

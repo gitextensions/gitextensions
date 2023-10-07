@@ -530,6 +530,7 @@
             Name = "AppearanceSettingsPage";
             Padding = new Padding(8);
             Size = new Size(1502, 599);
+            Text = "Appearance";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             gbGeneral.ResumeLayout(false);

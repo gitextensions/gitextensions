@@ -8,10 +8,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly ShellProvider _shellProvider = new();
         private int _cboTerminalPreviousIndex = -1;
 
-        public FormBrowseRepoSettingsPage()
+        public FormBrowseRepoSettingsPage(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            Text = "Browse repository window";
             cboTerminal.DisplayMember = "Name";
             InitializeComplete();
         }

@@ -12,12 +12,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _addTemplate = new("Add {0} templates");
         private ExternalLinksManager? _externalLinksManager;
 
-        public RevisionLinksSettingsPage()
+        public RevisionLinksSettingsPage(IServiceProvider serviceProvider)
+           : base(serviceProvider)
         {
             InitializeComponent();
             CaptionCol.Width = DpiUtil.Scale(150);
             splitContainer1.Panel1MinSize = toolStripManageCategories.Width;
-            Text = "Revision links";
             InitializeComplete();
             LinksGrid.AutoGenerateColumns = false;
             CaptionCol.DataPropertyName = nameof(ExternalLinkFormat.Caption);

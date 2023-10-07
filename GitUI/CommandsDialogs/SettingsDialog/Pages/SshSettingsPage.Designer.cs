@@ -333,6 +333,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "SshSettingsPage";
             this.Size = new System.Drawing.Size(899, 633);
+            this.Text = "SSH";
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);

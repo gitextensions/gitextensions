@@ -537,6 +537,7 @@
             this.Name = "GeneralSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1279, 523);
+            this.Text = "General";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.groupBoxTelemetry.ResumeLayout(false);

@@ -48,6 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.Controls.Add(this.label1);
             this.Name = "PluginRootIntroductionPage";
             this.Size = new System.Drawing.Size(473, 229);
+            this.Text = "Plugins Settings";
             this.ResumeLayout(false);
 
         }

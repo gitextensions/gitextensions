@@ -226,6 +226,7 @@
             this.Name = "AppearanceFontsSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(2148, 1371);
+            this.Text = "Fonts";
             this.gbFonts.ResumeLayout(false);
             this.gbFonts.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -236,6 +237,7 @@
         }
 
         #endregion
+
         private System.Windows.Forms.GroupBox gbFonts;
         private System.Windows.Forms.Button diffFontChangeButton;
         private System.Windows.Forms.Button applicationFontChangeButton;

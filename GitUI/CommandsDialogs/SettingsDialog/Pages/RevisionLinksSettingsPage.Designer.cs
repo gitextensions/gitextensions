@@ -643,6 +643,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "RevisionLinksSettingsPage";
             this.Size = new System.Drawing.Size(1174, 549);
+            this.Text = "Revision links";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
