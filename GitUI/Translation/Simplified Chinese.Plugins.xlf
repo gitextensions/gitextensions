@@ -12,6 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>自动编译子模块</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -209,7 +210,7 @@
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
@@ -224,12 +225,12 @@
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
@@ -264,7 +265,7 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>创建推送请求</target>
+        <target>创建拉取请求</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
@@ -749,7 +750,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
-        <target>Git工作流</target>
+        <target>GitFlow</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
@@ -864,6 +865,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
+        <target>在使用 Git 管理儲存庫時，一個良好的分支模型對於你的專案至關重要...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -911,6 +913,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>註：需要重新啟動 Git Extensions 以使令牌生效。</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -935,6 +938,34 @@ Are you sure you want to continue?</source>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>影响图形</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="zh-Hans">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
         
       </trans-unit>
     </body>
@@ -1077,7 +1108,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
@@ -1156,6 +1187,11 @@ Do you want to reset the configured path?</source>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
         <target>无法打开 Jira 查询助手</target>
+        
+      </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        <target>認證類型</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

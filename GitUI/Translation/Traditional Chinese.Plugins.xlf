@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>在每个构建结果的构建状态摘要中显示测试结果（会大量使用网络！）</target>
+        <target>在每個建置結果的建置狀態摘要中顯示測試結果 (需使用大量網路資源！)</target>
         
       </trans-unit>
     </body>
@@ -12,13 +12,14 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>自动编译子模块</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>你要构建 {0} 吗?
+        <target>你要构建 {0}吗?
 
 {1}</target>
         
@@ -30,18 +31,17 @@
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe 引數
-</target>
+        <target>msbuild.exe 参数</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>啟用</target>
+        <target>已启用</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>msbuild.exe 的路径</target>
+        <target>msbuild.exe 路径</target>
         
       </trans-unit>
     </body>
@@ -84,19 +84,17 @@
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
         <source>Disable SSL verification</source>
-        <target>禁用SSL驗證
-</target>
+        <target>禁用 SSL 验证</target>
         
       </trans-unit>
       <trans-unit id="BitbucketPassword.Caption">
         <source>Bitbucket Password</source>
-        <target>Bitbucket 密碼</target>
+        <target>Bitbucket 密码</target>
         
       </trans-unit>
       <trans-unit id="BitbucketUsername.Caption">
         <source>Bitbucket Username</source>
-        <target>Bitbucket 使用名稱
-</target>
+        <target>Bitbucket 用户名</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
@@ -106,8 +104,7 @@
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>你的檔案庫未被Bitbucket 伺服器託管
-</target>
+        <target>您的版本库没有托管在 Bitbucket 上。</target>
         
       </trans-unit>
     </body>
@@ -116,24 +113,24 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket 伺服器</target>
+        <target>Bitbucket 服务器</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
-        <target>提交</target>
+        <target>{0} 提交
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>錯誤</target>
+        <target>错误</target>
         
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
-        <target>右鍵複製連結
-</target>
+        <target>右键复制链接</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -148,12 +145,12 @@
       </trans-unit>
       <trans-unit id="btnCreate.Text">
         <source>Create</source>
-        <target>建立</target>
+        <target>创建</target>
         
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>合併</target>
+        <target>合并</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
@@ -173,22 +170,22 @@
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
         <source>Source</source>
-        <target>來源</target>
+        <target>源</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSourceRepoView.Text">
         <source>Source</source>
-        <target>來源</target>
+        <target>源</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTarget.Text">
         <source>Target</source>
-        <target>目標</target>
+        <target>目标</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTargetRepoView.Text">
         <source>Target</source>
-        <target>目標</target>
+        <target>目标</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -203,23 +200,22 @@
       </trans-unit>
       <trans-unit id="lblDescription.Text">
         <source>Description</source>
-        <target>說明</target>
+        <target>描述</target>
         
       </trans-unit>
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
-        <target>說明</target>
+        <target>描述</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
         <source>Reviewer (approved)</source>
-        <target>檢視者(核准)</target>
+        <target>审阅者(核准)</target>
         
       </trans-unit>
       <trans-unit id="lblSourceBranch.Text">
@@ -229,19 +225,17 @@
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
         <source>State</source>
-        <target>狀態</target>
+        <target>状态</target>
         
       </trans-unit>
       <trans-unit id="lblTargetBranch.Text">
@@ -256,28 +250,27 @@
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
         <source>Title</source>
-        <target>標題</target>
+        <target>标题</target>
         
       </trans-unit>
       <trans-unit id="lblTitleView.Text">
         <source>Title</source>
-        <target>標題</target>
+        <target>标题</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>建立拉取請求</target>
+        <target>创建拉取请求</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>檢視拉取請求</target>
+        <target>查看推送请求</target>
         
       </trans-unit>
     </body>
@@ -324,12 +317,12 @@
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>關閉</target>
+        <target>关闭</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>刪除</target>
+        <target>删除</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -378,7 +371,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>刪除</target>
+        <target>删除</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -393,7 +386,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>正在載入...</target>
+        <target>载入...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
@@ -413,7 +406,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>設定</target>
+        <target>设置</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
@@ -438,7 +431,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>名稱</target>
+        <target>名称</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
@@ -614,22 +607,22 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>正在載入...</target>
+        <target>载入...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>正在載入...</target>
+        <target>载入...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>正在載入...</target>
+        <target>载入...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>正在載入...</target>
+        <target>载入...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
@@ -872,6 +865,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
+        <target>在使用 Git 管理儲存庫時，一個良好的分支模型對於你的專案至關重要...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -919,6 +913,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>註：需要重新啟動 Git Extensions 以使令牌生效。</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -943,6 +938,34 @@ Are you sure you want to continue?</source>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>影响图形</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
         
       </trans-unit>
     </body>
@@ -994,9 +1017,9 @@ Please download Gource and set the path in the plugins settings dialog.</source>
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>当前目录不是有效的 git 档案库。
+        <target>当前目录不是有效的git档案库。
 
-Gource 只能从有效的 git 档案库启动。</target>
+Gource只能从有效的git档案库启动。</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
@@ -1065,12 +1088,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>瀏覽</target>
+        <target>流覽</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>瀏覽</target>
+        <target>流覽</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
@@ -1110,12 +1133,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>Jenkins伺服器位址</target>
+        <target>Jenkins服务器地址</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>專案名稱</target>
+        <target>工程名</target>
         
       </trans-unit>
     </body>
@@ -1167,6 +1190,11 @@ Do you want to reset the configured path?</source>
         <target>无法打开 Jira 查询助手</target>
         
       </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        <target>認證類型</target>
+        
+      </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
         <target>Jira 登录凭证</target>
@@ -1203,7 +1231,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>套用到全域</target>
+        <target>应用于全局</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
@@ -1228,7 +1256,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>沒有設定proxy. 請在插件中設定proxy host.</target>
+        <target>没有代理配置。请在插件设置中设置代理服务器。</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
@@ -1262,7 +1290,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>使用者</target>
+        <target>用户名</target>
         
       </trans-unit>
     </body>
@@ -1326,7 +1354,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>複製到剪貼簿</target>
+        <target>复制到剪贴板</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
