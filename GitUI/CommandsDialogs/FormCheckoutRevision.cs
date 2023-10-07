@@ -7,7 +7,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormCheckoutRevision : GitModuleForm
+    public partial class FormCheckoutRevision : GitExtensionsDialog
     {
         private readonly TranslationString _noRevisionSelectedMsgBox = new("Select 1 revision to checkout.");
         private readonly TranslationString _noRevisionSelectedMsgBoxCaption = new("Checkout");
@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCheckoutRevision(GitUICommands commands)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
             InitializeComplete();
