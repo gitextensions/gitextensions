@@ -12,14 +12,6 @@ namespace GitUI
     {
         private static readonly Pen FooterDividerPen = new(KnownColor.ControlLight.MakeBackgroundDarkerBy(0.04));
 
-        /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        protected GitExtensionsDialog()
-            : base()
-        {
-            InitializeComponent();
-        }
-
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> indicating position restore.</summary>
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>

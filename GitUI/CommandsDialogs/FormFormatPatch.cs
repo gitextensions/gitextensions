@@ -34,12 +34,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _failCreatePatch =
             new("Unable to create patch file(s)");
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormFormatPatch()
-        {
-            InitializeComponent();
-        }
-
         public FormFormatPatch(GitUICommands commands)
             : base(commands)
         {

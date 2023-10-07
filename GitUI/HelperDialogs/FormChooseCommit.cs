@@ -5,12 +5,6 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormChooseCommit : GitModuleForm
     {
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormChooseCommit()
-        {
-            InitializeComponent();
-        }
-
         private FormChooseCommit(GitUICommands commands)
             : base(commands)
         {

@@ -18,12 +18,6 @@ namespace GitUI.CommandsDialogs
 
         public GitRevision? Revision { get; set; }
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormCherryPick()
-        {
-            InitializeComponent();
-        }
-
         public FormCherryPick(GitUICommands commands, GitRevision? revision)
             : base(commands, enablePositionRestore: false)
         {

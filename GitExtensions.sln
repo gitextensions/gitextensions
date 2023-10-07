@@ -212,7 +212,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugReporter.IntegrationTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.GitlabIntegration", "Plugins\BuildServerIntegration\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.csproj", "{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitlabIntegration.Tests", "UnitTests\Plugins\BuildServerIntegration\GitlabIntegration.Tests\GitlabIntegration.Tests.csproj", "{12A695E2-0AF3-43A1-B09B-CFA433AAC01C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitlabIntegration.Tests", "UnitTests\Plugins\BuildServerIntegration\GitlabIntegration.Tests\GitlabIntegration.Tests.csproj", "{12A695E2-0AF3-43A1-B09B-CFA433AAC01C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "analyzers", "analyzers", "{AA402478-7729-4C65-8A99-D07CFB118C0B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Analyzers.CSharp", "GitExtensions.Analyzers.CSharp\GitExtensions.Analyzers.CSharp.csproj", "{4CC94A8B-133E-4316-913C-05126D88D646}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -402,6 +406,10 @@ Global
 		{12A695E2-0AF3-43A1-B09B-CFA433AAC01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12A695E2-0AF3-43A1-B09B-CFA433AAC01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12A695E2-0AF3-43A1-B09B-CFA433AAC01C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CC94A8B-133E-4316-913C-05126D88D646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CC94A8B-133E-4316-913C-05126D88D646}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CC94A8B-133E-4316-913C-05126D88D646}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CC94A8B-133E-4316-913C-05126D88D646}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -464,6 +472,7 @@ Global
 		{7695AF7E-99B3-4B3A-8588-AC9ABD378293} = {958D7C09-1FA5-4438-A6A0-B3E8BD96E291}
 		{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
 		{12A695E2-0AF3-43A1-B09B-CFA433AAC01C} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
+		{4CC94A8B-133E-4316-913C-05126D88D646} = {AA402478-7729-4C65-8A99-D07CFB118C0B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

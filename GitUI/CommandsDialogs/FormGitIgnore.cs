@@ -59,14 +59,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly IGitIgnoreDialogModel _dialogModel;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormGitIgnore()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public FormGitIgnore(GitUICommands commands, bool localExclude)
             : base(commands)
         {

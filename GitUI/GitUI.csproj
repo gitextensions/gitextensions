@@ -1,10 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
+
+    <!--
+    For debug purposes uncomment these lines:
+    
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+    -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +39,10 @@
     <ProjectReference Include="..\Externals\NetSpell.SpellChecker\SpellChecker.csproj" />
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\GitExtensions.Analyzers.CSharp\GitExtensions.Analyzers.CSharp.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer"  />
   </ItemGroup>
 
   <ItemGroup>

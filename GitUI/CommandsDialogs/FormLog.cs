@@ -4,12 +4,6 @@
     {
         private readonly CancellationTokenSequence _viewChangesSequence = new();
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormLog()
-        {
-            InitializeComponent();
-        }
-
         public FormLog(GitUICommands commands)
             : base(commands)
         {

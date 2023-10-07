@@ -31,6 +31,10 @@
     <PackageReference Update="System.Reactive.Interfaces" Version="5.0.0" />
     <PackageReference Update="System.ValueTuple" Version="4.5.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
 
+    <!-- Analyzers -->
+    <PackageReference Update="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0-beta1.23364.2" PrivateAssets="all" />
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
+
     <!-- Setup infra -->
     <PackageReference Update="NETStandard.Library" Version="2.0.0" />
     <PackageReference Update="vswhere" Version="2.8.4" />

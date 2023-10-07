@@ -4,7 +4,7 @@ using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public class ConfigFileSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
+    public partial class ConfigFileSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
     {
         protected ConfigFileSettingsSet ConfigFileSettingsSet => CommonLogic.ConfigFileSettingsSet;
         protected ConfigFileSettings? CurrentSettings { get; private set; }

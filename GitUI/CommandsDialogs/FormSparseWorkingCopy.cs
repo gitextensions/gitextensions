@@ -6,14 +6,9 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed class FormSparseWorkingCopy : GitModuleForm
+    public sealed partial class FormSparseWorkingCopy : GitModuleForm
     {
         private IDisposable? _disposable1;
-
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormSparseWorkingCopy()
-        {
-        }
 
         public FormSparseWorkingCopy(GitUICommands commands)
             : base(commands)

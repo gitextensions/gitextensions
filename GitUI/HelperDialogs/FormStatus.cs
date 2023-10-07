@@ -13,12 +13,6 @@ namespace GitUI.HelperDialogs
         private protected Action<FormStatus>? ProcessCallback;
         private protected Action<FormStatus>? AbortCallback;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private protected FormStatus()
-            : this(commands: null, consoleOutput: null, useDialogSettings: true)
-        {
-        }
-
         public FormStatus(GitUICommands? commands, ConsoleOutputControl? consoleOutput, bool useDialogSettings)
             : base(commands, enablePositionRestore: true)
         {

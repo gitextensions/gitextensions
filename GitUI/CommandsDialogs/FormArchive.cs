@@ -82,12 +82,6 @@ namespace GitUI.CommandsDialogs
             Tar
         }
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormArchive()
-        {
-            InitializeComponent();
-        }
-
         public FormArchive(GitUICommands commands)
             : base(commands)
         {

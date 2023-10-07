@@ -8,12 +8,6 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormDeleteTag : GitModuleForm
     {
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-        private FormDeleteTag()
-        {
-            InitializeComponent();
-        }
-
         public FormDeleteTag(GitUICommands commands, string? tag)
             : base(commands)
         {

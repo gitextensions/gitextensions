@@ -44,14 +44,6 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<IGitRef>? _localBranches;
         private IReadOnlyList<IGitRef>? _remoteBranches;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormCheckoutBranch()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId>? containRevisions = null)
             : base(commands, true)
         {

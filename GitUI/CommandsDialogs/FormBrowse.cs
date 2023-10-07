@@ -231,15 +231,6 @@ namespace GitUI.CommandsDialogs
 
         public override RevisionGridControl RevisionGridControl { get => RevisionGrid; }
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormBrowse()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-            InitializeComplete();
-        }
-
         /// <summary>
         /// Open Browse - main GUI including dashboard.
         /// </summary>

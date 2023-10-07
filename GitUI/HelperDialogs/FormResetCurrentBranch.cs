@@ -24,14 +24,6 @@ namespace GitUI.HelperDialogs
         public static FormResetCurrentBranch Create(GitUICommands commands, GitRevision revision, ResetType resetType = ResetType.Soft)
             => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision), resetType);
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormResetCurrentBranch()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         private FormResetCurrentBranch(GitUICommands commands, GitRevision revision, ResetType resetType)
             : base(commands)
         {

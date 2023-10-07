@@ -28,15 +28,6 @@ Do you want to register the host's fingerprint and restart the process?");
         private bool _restart;
         private string _urlTryingToConnect = string.Empty;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormRemoteProcess()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-            : base()
-        {
-            InitializeComponent();
-        }
-
         public FormRemoteProcess(GitUICommands commands, ArgumentString arguments)
             : base(commands, arguments, commands.Module.WorkingDir, input: null, useDialogSettings: true)
         {

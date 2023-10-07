@@ -17,14 +17,6 @@ namespace GitUI.CommandsDialogs
         private readonly string? _defaultBranch;
         private ICommitMessageManager _commitMessageManager;
 
-        [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormMergeBranch()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        {
-            InitializeComponent();
-        }
-
         /// <summary>Initializes <see cref="FormMergeBranch"/>.</summary>
         /// <param name="defaultBranch">Branch to merge into the current branch.</param>
         public FormMergeBranch(GitUICommands commands, string? defaultBranch)
