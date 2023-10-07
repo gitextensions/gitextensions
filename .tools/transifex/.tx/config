@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[o:git-extensions:p:git-extensions:r:gitui-translation-english-plugins-xlf--master]
+[o:git-extensions:p:git-extensions-v4:r:gitui-translation-english-plugins-xlf--release-4-0]
 file_filter   = <lang>.Plugins.xlf
 source_file   = English.Plugins.xlf
 source_lang   = en
@@ -22,12 +22,11 @@ trans.pt      = Portuguese.Plugins.xlf
 trans.pt_BR   = Portuguese (Brazil).Plugins.xlf
 trans.ro      = Romanian.Plugins.xlf
 trans.ru      = Russian.Plugins.xlf
-trans.ta      = Tamil.Plugins.xlf
 trans.tr      = Turkish.Plugins.xlf
 trans.zh-Hans = Simplified Chinese.Plugins.xlf
 trans.zh-Hant = Traditional Chinese.Plugins.xlf
 
-[o:git-extensions:p:git-extensions:r:gitui-translation-english-xlf--master]
+[o:git-extensions:p:git-extensions-v4:r:gitui-translation-english-xlf--release-4-0]
 file_filter   = <lang>.xlf
 source_file   = English.xlf
 source_lang   = en
@@ -48,7 +47,6 @@ trans.pt      = Portuguese.xlf
 trans.pt_BR   = Portuguese (Brazil).xlf
 trans.ro      = Romanian.xlf
 trans.ru      = Russian.xlf
-trans.ta      = Tamil.xlf
 trans.tr      = Turkish.xlf
 trans.zh-Hans = Simplified Chinese.xlf
 trans.zh-Hant = Traditional Chinese.xlf
