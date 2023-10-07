@@ -30,7 +30,7 @@ if __name__ == '__main__':
     verData = ["0"] * 4
     verSplitted = args.version.split('.')
     for i in range(len(verSplitted)):
-        verData[i] = verSplitted[i]
+        verData[i] = re.sub(r'(\d*).*', r'\1', verSplitted[i])
 
     if not args.text:
       args.text = args.version
@@ -47,7 +47,7 @@ if __name__ == '__main__':
             if line.find("[assembly: Assembly") != -1:
                 if line.find("AssemblyVersion(") != -1 or line.find("AssemblyFileVersion(") != -1:
                     data = line.split('"')
-                    data[1] = args.version
+                    data[1] = '.'.join(verData)
                     line = '"'.join(data)
                 elif line.find("AssemblyInformationalVersion(") != -1:
                     data = line.split('"')
