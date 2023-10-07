@@ -2357,7 +2357,7 @@ namespace GitUI.CommandsDialogs
                 case "gotobranch":
                 case "gototag":
                     Validates.NotNull(e.Data);
-                    CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
+                    CommitData? commit = _commitDataManager.GetCommitData(e.Data);
                     if (commit is null)
                     {
                         break;
@@ -2744,7 +2744,7 @@ namespace GitUI.CommandsDialogs
                 Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                     !AppSettings.ShowStashes
                     ? Array.Empty<GitRevision>()
-                    : new RevisionReader(new(UICommands.GitModule.WorkingDir)).GetStashes(CancellationToken.None));
+                    : new RevisionReader(new GitModule(UICommands.GitModule.WorkingDir)).GetStashes(CancellationToken.None));
 
                 RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs, getStashRevs, forceRefresh: true);
                 repoObjectsTree.RefreshRevisionsLoaded();

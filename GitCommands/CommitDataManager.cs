@@ -25,9 +25,8 @@ namespace GitCommands
         /// Gets <see cref="CommitData"/> for the specified <paramref name="commitId"/>.
         /// </summary>
         /// <param name="commitId">The sha or Git reference.</param>
-        /// <param name="error">error message for the Git command</param>
         /// <param name="cache">Allow caching of the Git command, should only be used if commitId is a sha and Notes are not used.</param>
-        CommitData? GetCommitData(string commitId, out string? error, bool cache = false);
+        CommitData? GetCommitData(string commitId, bool cache = false);
 
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
@@ -37,11 +36,6 @@ namespace GitCommands
 
     public sealed class CommitDataManager : ICommitDataManager
     {
-        private const string CommitDataFormat = "%H%n%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B";
-        private const string CommitDataWithNotesFormat = "%H%n%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
-        private const string BodyAndNotesFormat = "%B%nNotes:%n%-N";
-        private const string NotesFormat = "%-N";
-
         private readonly Func<IGitModule> _getModule;
 
         public CommitDataManager(Func<IGitModule> getModule)
@@ -52,7 +46,10 @@ namespace GitCommands
         /// <inheritdoc />
         public void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error)
         {
-            if (!TryGetCommitLog(commitData.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out error, out var data, cache: false))
+            const string BodyAndNotesFormat = "%B%nNotes:%n%-N";
+            const string NotesFormat = "%-N";
+
+            if (!TryGetCommitLog(commitData.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out error, out string? data, cache: false))
             {
                 return;
             }
@@ -61,85 +58,25 @@ namespace GitCommands
             {
                 if (!string.IsNullOrWhiteSpace(data))
                 {
-                    commitData.Body += $"\nNotes:\n    {GetModule().ReEncodeCommitMessage(data)}";
+                    commitData.Body += $"\nNotes:\n    {GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'))}";
                 }
             }
             else
             {
-                string[] lines = data.Split(Delimiters.LineFeed);
+                string[] lines = data.Split(Delimiters.LineAndVerticalFeed);
 
                 // Commit message is not re-encoded by Git when format is given
-                commitData.Body = GetModule().ReEncodeCommitMessage(ProcessDiffNotes(startIndex: 0, lines)).Replace('\v', '\n');
+                commitData.Body = GetModule().ReEncodeCommitMessage(ProcessDiffNotes(startIndex: 0, lines));
             }
         }
 
         /// <inheritdoc />
-        public CommitData? GetCommitData(string commitId, [NotNullWhen(true)] out string? error, bool cache = false)
+        public CommitData? GetCommitData(string commitId, bool includeNotes = false)
         {
-            return TryGetCommitLog(commitId, cache ? CommitDataFormat : CommitDataWithNotesFormat, out error, out var info, cache)
-                ? CreateFromFormattedData(info)
+            GitRevision revision = new RevisionReader(GetModule(), allBodies: true).GetRevision(commitId, hasNotes: includeNotes, cancellationToken: default);
+            return revision is not null
+                ? CreateFromRevision(revision, null)
                 : null;
-        }
-
-        /// <summary>
-        /// Parses <paramref name="data"/> into a <see cref="CommitData"/> object.
-        /// </summary>
-        /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
-        /// was provided the string <see cref="CommitDataFormat"/>.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
-        internal CommitData CreateFromFormattedData(string data)
-        {
-            if (data is null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
-            var module = GetModule();
-
-            // $ git log --pretty="format:%H%n%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N" -1
-            // 4bc1049fc3b9191dbd390e1ae6885aedd1a4e34b
-            // (comment: used to contain %T, kept newline)
-            // 8e3873685d89f8cb543657d1b9e66e516cae7e1d dfd353d3b02d24a0d98855f6a1848c51d9ba4d6b
-            // RussKie <RussKie@users.noreply.github.com>
-            // 1521115435
-            // GitHub <noreply@github.com>
-            // 1521115435
-            // Merge pull request #4615 from drewnoakes/modernise-3
-            //
-            // New language features
-            // Notes:
-
-            // commit id
-            // tree id
-            // parent ids (separated by spaces)
-            // author
-            // authored date (unix time)
-            // committer
-            // committed date (unix time)
-            // diff notes
-            // ...
-
-            var lines = data.Split(Delimiters.LineFeed);
-
-            var guid = ObjectId.Parse(lines[0]);
-
-            // lines[1] is empty (contained the optional treeGuid)
-
-            // TODO: we can use this to add more relationship info like gitk does if wanted
-            var parentIds = lines[2].LazySplit(' ').Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => ObjectId.Parse(id)).ToList();
-            var author = module.ReEncodeStringFromLossless(lines[3]);
-            var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
-            var committer = module.ReEncodeStringFromLossless(lines[5]);
-            var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
-            var message = ProcessDiffNotes(startIndex: 7, lines);
-
-            // commit message is not re-encoded by git when format is given
-            var body = module.ReEncodeCommitMessage(message).Replace('\v', '\n');
-
-            Validates.NotNull(author);
-            Validates.NotNull(committer);
-
-            return new CommitData(guid, parentIds, author, authorDate, committer, commitDate, body);
         }
 
         /// <inheritdoc />

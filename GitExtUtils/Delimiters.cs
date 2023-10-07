@@ -10,6 +10,7 @@ namespace System
     internal static class Delimiters
     {
         public static readonly char[] LineFeed = { '\n' };
+        public static readonly char[] LineAndVerticalFeed = { '\n', '\v' };
         public static readonly char[] Space = { ' ' };
         public static readonly char[] Tab = { '\t' };
         public static readonly char[] Null = { '\0' };

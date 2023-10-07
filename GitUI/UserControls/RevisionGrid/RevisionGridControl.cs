@@ -1070,6 +1070,7 @@ namespace GitUI
                             observeRevisions,
                             _filterInfo.GetRevisionFilter(currentCheckout),
                             pathFilter,
+                            AppSettings.ShowGitNotes,
                             cancellationToken);
                     },
                     ex => observeRevisions.OnError(ex));
@@ -1424,15 +1425,6 @@ namespace GitUI
                     HighlightRevisionsByAuthor(GetSelectedRevisions());
 
                     await TaskScheduler.Default;
-
-                    // optimize for no notes at all in repo
-                    // Improvement: set .HasNotes for commits not included in git-notes
-                    bool hasAnyNotes = AppSettings.ShowGitNotes && getUnfilteredRefs.Value.Any(i => i.CompleteName == GitRefName.RefsNotesPrefix);
-                    if (!hasAnyNotes)
-                    {
-                        // No notes at all in this repo
-                        _gridView._revisionGraph.SetHasNotesForRevisions();
-                    }
 
                     if (ShowBuildServerInfo)
                     {

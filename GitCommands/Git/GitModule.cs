@@ -956,66 +956,7 @@ namespace GitCommands
 
         public GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false)
         {
-            const string formatString =
-                /* Hash           */ "%H%n" +
-                /* Tree           */ "%T%n" +
-                /* Parents        */ "%P%n" +
-                /* Author Name    */ "%aN%n" +
-                /* Author EMail   */ "%aE%n" +
-                /* Author Date    */ "%at%n" +
-                /* Committer Name */ "%cN%n" +
-                /* Committer EMail*/ "%cE%n" +
-                /* Committer Date */ "%ct%n";
-
-            string format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
-
-            GitArgumentBuilder args = new("log")
-            {
-                "-n1",
-                $"--pretty=format:{format}",
-                objectId
-            };
-
-            // cache output only if revision is specified
-            CommandCache? cache = objectId is null ? null : GitCommandCache;
-
-            string revInfo = _gitExecutable.GetOutput(args, cache: cache, outputEncoding: LosslessEncoding);
-
-            // TODO improve parsing to reduce temporary string (see similar code in RevisionReader)
-            string[] lines = revInfo.Split(Delimiters.LineFeed);
-
-            GitRevision revision = new(ObjectId.Parse(lines[0]))
-            {
-                TreeGuid = ObjectId.Parse(lines[1]),
-                ParentIds = lines[2].LazySplit(' ', StringSplitOptions.RemoveEmptyEntries).Select(line => ObjectId.Parse(line)).ToList(),
-                Author = ReEncodeStringFromLossless(lines[3]),
-                AuthorEmail = ReEncodeStringFromLossless(lines[4]),
-                Committer = ReEncodeStringFromLossless(lines[6]),
-                CommitterEmail = ReEncodeStringFromLossless(lines[7]),
-                AuthorUnixTime = long.Parse(lines[5]),
-                CommitUnixTime = long.Parse(lines[8]),
-                HasNotes = !shortFormat
-            };
-            if (shortFormat)
-            {
-                revision.Subject = ReEncodeCommitMessage(lines[9]) ?? "";
-            }
-            else
-            {
-                string message = ProcessDiffNotes(startIndex: 9);
-
-                // commit message is not re-encoded by git when format is given
-                // See also RevisionReader for parsing commit body
-                string body = ReEncodeCommitMessage(message ?? "").Replace('\v', '\n');
-                revision.Body = body;
-
-                ReadOnlySpan<char> span = body.AsSpan();
-                int endSubjectIndex = span.IndexOf('\n');
-                revision.HasMultiLineMessage = endSubjectIndex >= 0;
-                revision.Subject = revision.HasMultiLineMessage
-                    ? span[..endSubjectIndex].TrimEnd().ToString()
-                    : body;
-            }
+            GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId?.ToString(), hasNotes: !shortFormat, cancellationToken: default);
 
             if (loadRefs)
             {
@@ -1025,36 +966,6 @@ namespace GitCommands
             }
 
             return revision;
-
-            string ProcessDiffNotes(int startIndex)
-            {
-                var endIndex = lines.Length - 1;
-
-                if (lines[endIndex] == "Notes:")
-                {
-                    endIndex--;
-                }
-
-                StringBuilder message = new();
-                var inNoteSection = false;
-
-                for (var i = startIndex; i <= endIndex; i++)
-                {
-                    if (inNoteSection)
-                    {
-                        message.Append("    ");
-                    }
-
-                    message.AppendLine(lines[i]);
-
-                    if (lines[i] == "Notes:")
-                    {
-                        inNoteSection = true;
-                    }
-                }
-
-                return message.ToString();
-            }
         }
 
         public IReadOnlyList<ObjectId> GetParents(ObjectId objectId)
@@ -2177,10 +2088,9 @@ namespace GitCommands
             foreach (string[] parts in commitsInfos)
             {
                 string commitHash = parts[1];
-                string? error = null;
                 CommitData? data = rebasedCommitsRevisions.TryGetValue(commitHash, out GitRevision commitRevision)
                     ? _commitDataManager.CreateFromRevision(commitRevision, null)
-                    : _commitDataManager.GetCommitData(commitHash, out error);
+                    : _commitDataManager.GetCommitData(commitHash);
 
                 bool isApplying = currentCommitShortHash is not null && commitHash.StartsWith(currentCommitShortHash);
                 isCurrentFound |= isApplying;
@@ -2203,8 +2113,8 @@ namespace GitCommands
                     // During a rebase, "Patch" subject is filled with commit **body** to display it
                     // packed in the grid and more readable in the cell tooltip
                     Subject = data?.Body ?? string.Join(' ', parts.Skip(2)),
-                    Author = error ?? data?.Author,
-                    Date = error ?? data?.CommitDate.LocalDateTime.ToString(),
+                    Author = data?.Author,
+                    Date = data?.CommitDate.LocalDateTime.ToString(),
                     IsNext = isApplying,
                     IsApplied = !isCurrentFound,
                 });
@@ -3993,7 +3903,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), out _, cache: true);
+                oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), cache: true);
             }
 
             if (oldData is null)
@@ -4003,7 +3913,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                data = _commitDataManager.GetCommitData(commit.ToString(), out _, cache: true);
+                data = _commitDataManager.GetCommitData(commit.ToString(), cache: true);
             }
 
             if (data is null)

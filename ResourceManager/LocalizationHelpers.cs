@@ -88,7 +88,7 @@ namespace ResourceManager
                 // TEMP, will be moved in the follow up refactor
                 ICommitDataManager commitDataManager = new CommitDataManager(() => module);
 
-                CommitData? data = commitDataManager.GetCommitData(hash, out _, cache);
+                CommitData? data = commitDataManager.GetCommitData(hash, cache);
                 if (data is null)
                 {
                     sb.AppendLine("Commit hash:\t" + hash);
@@ -149,7 +149,7 @@ namespace ResourceManager
                 {
                     if (status.OldCommit is not null)
                     {
-                        oldCommitData = commitDataManager.GetCommitData(status.OldCommit.ToString(), out _, cache: true);
+                        oldCommitData = commitDataManager.GetCommitData(status.OldCommit.ToString(), cache: true);
                     }
 
                     if (oldCommitData is not null)
@@ -181,7 +181,7 @@ namespace ResourceManager
             {
                 if (status.Commit is not null)
                 {
-                    commitData = commitDataManager.GetCommitData(status.Commit.ToString(), out _, cache: true);
+                    commitData = commitDataManager.GetCommitData(status.Commit.ToString(), cache: true);
                 }
 
                 if (commitData is not null)

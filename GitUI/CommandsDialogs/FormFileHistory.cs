@@ -557,7 +557,7 @@ namespace GitUI.CommandsDialogs
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 Validates.NotNull(e.Data);
-                CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
+                CommitData? commit = _commitDataManager.GetCommitData(e.Data);
                 if (commit is not null)
                 {
                     if (!RevisionGrid.SetSelectedRevision(commit.ObjectId))

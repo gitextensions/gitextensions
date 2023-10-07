@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace GitUIPluginInterfaces
 {
@@ -136,6 +137,11 @@ namespace GitUIPluginInterfaces
         bool IsRunningGitProcess();
 
         ISettingsSource GetEffectiveSettings();
+
+        /// <summary>
+        /// Encoding for commit header (message, notes, author, committer, emails).
+        /// </summary>
+        Encoding LogOutputEncoding { get; }
 
         string? ReEncodeStringFromLossless(string? s);
 
