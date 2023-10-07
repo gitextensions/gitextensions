@@ -941,6 +941,40 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="ja">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        <target>プロジェクト ID をサーバーから取得</target>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>プロジェクトをサーバーから取得できませんでした。有効な API トークンを指定するか、インスタンスの URL を確認してみてください</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>トークン管理ページに移動</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        <target>インスタンスの URL</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        <target>API トークン</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
+        <target>プロジェクト ID</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ja">
     <body>
       <trans-unit id="Description.Text">
@@ -1158,6 +1192,11 @@ Do you want to reset the configured path?</source>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
         <target>Jiraクエリヘルパーを開くことができません</target>
+        
+      </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        <target>認証の種類</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

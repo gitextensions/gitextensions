@@ -128,6 +128,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="gbFonts.Text">
         <source>Fonts (restart required)</source>
+        <target>폰트(재시작 필요)</target>
         
       </trans-unit>
       <trans-unit id="label26.Text">
@@ -244,18 +245,15 @@ Click this info icon for more details.</source>
         
       </trans-unit>
       <trans-unit id="gbAuthorImages.Text">
-        <source>Author images</source>
-        <target>작성자 대표 이미지</target>
+        <source>&amp;Author images</source>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
-        <source>General</source>
-        <target>일반설정</target>
+        <source>&amp;General</source>
         
       </trans-unit>
       <trans-unit id="gbLanguages.Text">
-        <source>Language</source>
-        <target>언어</target>
+        <source>&amp;Language</source>
         
       </trans-unit>
       <trans-unit id="helpTranslate.Text">
@@ -445,6 +443,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="groupBoxDisplayResult.Text">
         <source>Display result settings</source>
+        <target>결과 설정값 보기</target>
         
       </trans-unit>
     </body>
@@ -476,6 +475,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>&amp;Delete branch...</source>
+        <target>브랜치 삭제(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="MergeTooltip.Text">
@@ -539,12 +539,7 @@ Click this info icon for more details.</source>
 
 Because of this, make sure to fill in all the fields in the report template please.
 
-Send report anyway?</source>
-        <target>개발자가 이 문제를 해결할 수 있도록 가능한 한 많은 정보를 제공하십시오. 그렇지 않으면, 개발자의 후속 조치 없이 귀하의 이슈 티켓이 종료될 수 있습니다.
-
-이러한 이유로 보고서 템플릿의 모든 필드를 입력하십시오.
-
-보고서를 제출하시겠습니까?</target>
+Send report?</source>
         
       </trans-unit>
       <trans-unit id="_title.Text">
@@ -1281,6 +1276,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
       <trans-unit id="chkAutoPopStashAfterPull.Text">
         <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
         <target>Pull이 성공한 뒤, Stash 파일 자동 적용 (Stash 파일을 자동으로 표시해줌)</target>
+        
+      </trans-unit>
+      <trans-unit id="chkBranchCheckoutConfirmation.Text">
+        <source>Checkout branch using left panel</source>
         
       </trans-unit>
       <trans-unit id="chkBranchDeleteUnmerged.Text">
@@ -2817,6 +2816,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_closeAll.Text">
         <source>Close all windows</source>
+        <target>모든 창 닫기</target>
         
       </trans-unit>
       <trans-unit id="_commitButtonText.Text">
@@ -3055,22 +3055,27 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="copyFullPathsCygwinToolStripMenuItem.Text">
         <source>Copy full path(s) - &amp;Cygwin</source>
+        <target>전체경로(들) 복사 - &amp;Cygwin</target>
         
       </trans-unit>
       <trans-unit id="copyFullPathsNativeToolStripMenuItem.Text">
         <source>Copy &amp;full path(s) - native</source>
+        <target>전체경로(들) 복사 - native</target>
         
       </trans-unit>
       <trans-unit id="copyFullPathsWslToolStripMenuItem.Text">
         <source>Copy full path(s) - &amp;WSL</source>
+        <target>전체경로(들) 복사 - &amp;WSL</target>
         
       </trans-unit>
       <trans-unit id="copyRelativePathsNativeToolStripMenuItem.Text">
         <source>Copy relative path(s) - &amp;native</source>
+        <target>상대경로(들) 복사 - &amp;native</target>
         
       </trans-unit>
       <trans-unit id="copyRelativePathsPosixToolStripMenuItem.Text">
         <source>Copy relative path(s) - &amp;POSIX</source>
+        <target>상대경로(들) 복사 - &amp;POSIX</target>
         
       </trans-unit>
       <trans-unit id="createAStashToolStripMenuItem.Text">
@@ -3854,34 +3859,25 @@ Are you sure?</source>
         <target>체리픽 커밋</target>
         
       </trans-unit>
-      <trans-unit id="AutoCommit.Text">
-        <source>&amp;Automatically create a commit</source>
-        <target>&amp;자동으로 커밋 생성</target>
-        
-      </trans-unit>
-      <trans-unit id="BranchInfo.Text">
-        <source>Cherry pick this commit:</source>
-        <target>체리 픽 대상 리비전:</target>
-        
-      </trans-unit>
-      <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select &amp;parent:</source>
-        <target>병합합니다, &amp;부모노드 선택:</target>
-        
-      </trans-unit>
-      <trans-unit id="Pick.Text">
-        <source>&amp;Cherry pick</source>
-        <target>&amp;체리픽</target>
-        
-      </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>부모노드가 선택되지 않았습니다!</target>
         
       </trans-unit>
-      <trans-unit id="checkAddReference.Text">
+      <trans-unit id="btnAbort.Text">
+        <source>A&amp;bort</source>
+        
+      </trans-unit>
+      <trans-unit id="btnPick.Text">
+        <source>&amp;Cherry pick</source>
+        
+      </trans-unit>
+      <trans-unit id="cbxAddReference.Text">
         <source>A&amp;dd commit reference to commit message</source>
-        <target>&amp;커밋 참조 메시지 추가</target>
+        
+      </trans-unit>
+      <trans-unit id="cbxAutoCommit.Text">
+        <source>&amp;Automatically create a commit</source>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -3904,11 +3900,12 @@ Are you sure?</source>
         <target>날짜</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>C&amp;hoose another
-revision:</source>
-        <target>&amp;리비전 변경
-리비전:</target>
+      <trans-unit id="lblBranchInfo.Text">
+        <source>Cherry pick this commit:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblParents.Text">
+        <source>This commit is a merge, select &amp;parent:</source>
         
       </trans-unit>
     </body>
@@ -3978,9 +3975,16 @@ revision:</source>
         <target>작업 폴더 정리</target>
         
       </trans-unit>
-      <trans-unit id="AddPath.Text">
+      <trans-unit id="AddExclusivePath.Text">
         <source>Add a path...</source>
-        <target>패스(path) 추가하기</target>
+        
+      </trans-unit>
+      <trans-unit id="AddInclusivePath.Text">
+        <source>Add a path...</source>
+        
+      </trans-unit>
+      <trans-unit id="CleanSubmodules.Text">
+        <source>Clean submodules recursively</source>
         
       </trans-unit>
       <trans-unit id="Cleanup.Text">
@@ -4023,9 +4027,12 @@ revision:</source>
         <target>모두 비우기</target>
         
       </trans-unit>
-      <trans-unit id="checkBoxPathFilter.Text">
-        <source>Affect the following path(s) only:</source>
-        <target>다음 경로(들)에만 영향을 줍니다.</target>
+      <trans-unit id="checkBoxExcludePathFilter.Text">
+        <source>Exclude the following file path(s):</source>
+        
+      </trans-unit>
+      <trans-unit id="checkBoxIncludePathFilter.Text">
+        <source>Affect the following directory path(s) only:</source>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -4038,9 +4045,12 @@ revision:</source>
         <target>로그:</target>
         
       </trans-unit>
-      <trans-unit id="labelPathHint.Text">
+      <trans-unit id="labelPathHintExclude.Text">
         <source>(one path per line)</source>
-        <target>(한 줄당 경로 1개)</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPathHintInclude.Text">
+        <source>(one path per line)</source>
         
       </trans-unit>
     </body>
@@ -4702,11 +4712,6 @@ You can unset the template:
         <target>파일 삭제</target>
         
       </trans-unit>
-      <trans-unit id="deleteSelectedFilesToolStripMenuItem.Text">
-        <source>Delete selected files</source>
-        <target>선택된 파일 삭제</target>
-        
-      </trans-unit>
       <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
         <source>Do not assume unchanged</source>
         <target>'수정사항 무시하기' 옵션을 사용하지 마십시오.</target>
@@ -4792,11 +4797,6 @@ You can unset the template:
         <target>(원격 저장소 이름)</target>
         
       </trans-unit>
-      <trans-unit id="resetAllTrackedChangesToolStripMenuItem.Text">
-        <source>Reset all (tracked) changes</source>
-        <target>모든 변경사항 원복</target>
-        
-      </trans-unit>
       <trans-unit id="resetChanges.Text">
         <source>Reset file or directory changes</source>
         <target>파일 또는 디렉토리 변경사항 원복</target>
@@ -4807,19 +4807,9 @@ You can unset the template:
         <target>파일 원복</target>
         
       </trans-unit>
-      <trans-unit id="resetSelectedFilesToolStripMenuItem.Text">
-        <source>Reset selected files</source>
-        <target>선택된 파일 원복</target>
-        
-      </trans-unit>
       <trans-unit id="resetSubmoduleChanges.Text">
         <source>Reset submodule changes</source>
         <target>서브모듈 변경사항 원복</target>
-        
-      </trans-unit>
-      <trans-unit id="resetUnstagedChangesToolStripMenuItem.Text">
-        <source>Reset unstaged changes</source>
-        <target>Unstaged 초기화</target>
         
       </trans-unit>
       <trans-unit id="selectionFilterToolStripMenuItem.Text">
@@ -6071,13 +6061,15 @@ weirdchars.txt text
         
       </trans-unit>
       <trans-unit id="mnuClear.Text">
-        <source>Clear</source>
-        <target>비우기</target>
+        <source>C&amp;lear</source>
+        
+      </trans-unit>
+      <trans-unit id="mnuCopyCommandLine.Text">
+        <source>&amp;Copy full command line</source>
         
       </trans-unit>
       <trans-unit id="mnuSaveToFile.Text">
-        <source>Save to file</source>
-        <target>파일 저장</target>
+        <source>&amp;Save to file</source>
         
       </trans-unit>
       <trans-unit id="tabPageCommandCache.Text">
@@ -8703,12 +8695,12 @@ Do you want to use this custom merge script?</source>
         <source>Full &amp;history</source>
         
       </trans-unit>
-      <trans-unit id="IgnoreCase.Text">
-        <source>&amp;Ignore case</source>
+      <trans-unit id="HideMergeCommitsCheck.Text">
+        <source>Hide merge commi&amp;ts</source>
         
       </trans-unit>
-      <trans-unit id="MergeCommitsCheck.Text">
-        <source>Merge commi&amp;ts</source>
+      <trans-unit id="IgnoreCase.Text">
+        <source>&amp;Ignore case</source>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -8717,7 +8709,7 @@ Do you want to use this custom merge script?</source>
         
       </trans-unit>
       <trans-unit id="OnlyFirstParentCheck.Text">
-        <source>Only &amp;first parent</source>
+        <source>Show only &amp;first parent</source>
         
       </trans-unit>
       <trans-unit id="ReflogCheck.Text">
@@ -9771,14 +9763,13 @@ Check if file is accessible.</source>
         <target>경로</target>
         
       </trans-unit>
-      <trans-unit id="BrowseGitBinPath.Text">
+      <trans-unit id="BrowseGitPath.Text">
         <source>Browse</source>
         <target>찾기</target>
         
       </trans-unit>
-      <trans-unit id="BrowseGitPath.Text">
+      <trans-unit id="BrowseLinuxToolsDir.Text">
         <source>Browse</source>
-        <target>찾기</target>
         
       </trans-unit>
       <trans-unit id="ChangeHomeButton.Text">
@@ -10129,6 +10120,14 @@ help</source>
       <trans-unit id="_cannotOpenSubmoduleCaption.Text">
         <source>Cannot open submodule</source>
         <target>Submodule을 열 수 없습니다</target>
+        
+      </trans-unit>
+      <trans-unit id="_confirmBranchCheckout.Text">
+        <source>Are you sure you want to check out branch &quot;{0}&quot;?</source>
+        
+      </trans-unit>
+      <trans-unit id="_confirmBranchCheckoutCaption.Text">
+        <source>Confirm checkout</source>
         
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
@@ -12453,6 +12452,22 @@ Select this commit to populate the full message.</source>
         <target>코드 종료</target>
         
       </trans-unit>
+      <trans-unit id="_externalErrorDescription.Text">
+        <source>error from git or from other external application</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadAnAssembly.Text">
+        <source>Failed to load an assembly</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
+        <source>Could not load file or assembly '{0}'.</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
+        <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
+        
+      </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
         <source>Filter file in &amp;grid</source>
         <target>그리드의 필터 파일</target>
@@ -12530,6 +12545,10 @@ following command.
       </trans-unit>
       <trans-unit id="_gitSecurityError.Text">
         <source>Git security error</source>
+        
+      </trans-unit>
+      <trans-unit id="_hideErrorMessage.Text">
+        <source>Hide error message...</source>
         
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">
@@ -12699,6 +12718,18 @@ Remote: {1}</target>
         <target>Git Extensions에 의해서 오류가 발생했다고 생각되면 버그를 리포트 해 주십시오. </target>
         
       </trans-unit>
+      <trans-unit id="_reportIssue.Text">
+        <source>Report the issue</source>
+        
+      </trans-unit>
+      <trans-unit id="_reportIssueDescription.Text">
+        <source>for the team to investigate - if you think this was caused by Git Extensions</source>
+        
+      </trans-unit>
+      <trans-unit id="_reportReproducedIssueDescription.Text">
+        <source>If you can consistently reproduce the issue, please report it.</source>
+        
+      </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
         <source>Reset changes</source>
         <target>초기화</target>
@@ -12712,6 +12743,15 @@ Remote: {1}</target>
       <trans-unit id="_resetSelectedLinesConfirmation.Text">
         <source>Are you sure you want to reset the changes to the selected lines?</source>
         <target>선택된 라인을 리셋하시겠습니까?</target>
+        
+      </trans-unit>
+      <trans-unit id="_restartApplication.Text">
+        <source>Restart Git Extensions</source>
+        
+      </trans-unit>
+      <trans-unit id="_restartApplicationDescription.Text">
+        <source>Usually restarting the application solves the issue.
+Sometimes Windows may need to be restarted too.</source>
         
       </trans-unit>
       <trans-unit id="_rotInactive.Text">
@@ -12757,6 +12797,10 @@ Remote: {1}</target>
       <trans-unit id="_secondsAgo.Text">
         <source>{0} {1:second|seconds} ago</source>
         <target>{0}{1: 초} 전</target>
+        
+      </trans-unit>
+      <trans-unit id="_seeErrorMessage.Text">
+        <source>See error message...</source>
         
       </trans-unit>
       <trans-unit id="_settingsTypeToFind.Text">

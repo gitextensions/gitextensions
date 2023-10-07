@@ -12,6 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>Untermodule automatisch kompilieren</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -30,7 +31,7 @@
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe Argumente</target>
+        <target>msbuild.exe-Argumente</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
@@ -78,7 +79,7 @@
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
-        <target>Geben Sie die Bitbucket Basis-URL an</target>
+        <target>Geben Sie die Bitbucket-Basis-URL an</target>
         
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
@@ -103,7 +104,7 @@
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>Ihr Repository ist nicht in Bitbucket Server gehostet.</target>
+        <target>Ihr Repository ist nicht in Bitbucket-Server gehostet.</target>
         
       </trans-unit>
     </body>
@@ -154,7 +155,7 @@
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
-        <target>Pull Request Information</target>
+        <target>Pull-Request-Information</target>
         
       </trans-unit>
       <trans-unit id="groupBoxInformation.Text">
@@ -164,7 +165,7 @@
       </trans-unit>
       <trans-unit id="groupBoxPullRequestInfo.Text">
         <source>Pull Request Info</source>
-        <target>Pull Request Information</target>
+        <target>Pull-Request-Information</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
@@ -450,7 +451,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>Benutze reguläre Ausdrücke zum Filtern von Branches</target>
+        <target>Benutze Regex zum Filtern von Branches</target>
         
       </trans-unit>
     </body>
@@ -484,12 +485,12 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>Berücksichtigt der Regex Filter Groß-/Kleinschreibung?</target>
+        <target>Berücksichtigt der Regex-Filter Groß-/Kleinschreibung?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>Regex Filter zum Löschen von Branches</target>
+        <target>Regex-Filter zum Löschen von Branches</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
@@ -864,6 +865,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
+        <target>Ein gutes Branch-Model für Ihr Projekt mit Git...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -911,6 +913,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>Hinweis: Git Extensions muss neugestartet werden, damit der Token berücksichtigt wird.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -920,6 +923,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
+        <target>Sie haben bereits einen persönlichen Zugriffstoken. Um einen neuen zu erhalten, löschen Sie zuerst den alten in Plugins &gt; Plugin-Einstellungen.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -934,6 +938,34 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>Darstellung der Abhängigkeiten</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
         
       </trans-unit>
     </body>
@@ -978,7 +1010,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Gource wurde nicht gefunden.
-Bitte laden Sie Gource herunter und konfigurieren Sie den Pfad im Dialog mit den Plugin Einstellungen.</target>
+Bitte laden Sie Gource herunter und konfigurieren Sie den Pfad im Dialog mit den Plugin-Einstellungen.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1155,6 +1187,11 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
         <target>Konnte den JIRA Query Helper nicht öffnen</target>
+        
+      </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        <target>Authentifizierungsart</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

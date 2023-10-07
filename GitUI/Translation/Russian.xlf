@@ -247,17 +247,17 @@ Click this info icon for more details.</source>
         
       </trans-unit>
       <trans-unit id="gbAuthorImages.Text">
-        <source>Author images</source>
+        <source>&amp;Author images</source>
         <target>Картинки авторов</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
-        <source>General</source>
+        <source>&amp;General</source>
         <target>Общие</target>
         
       </trans-unit>
       <trans-unit id="gbLanguages.Text">
-        <source>Language</source>
+        <source>&amp;Language</source>
         <target>Язык</target>
         
       </trans-unit>
@@ -390,6 +390,7 @@ Click this info icon for more details.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Blame viewer</source>
+        <target>Просмотр авторства</target>
         
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
@@ -548,12 +549,7 @@ Click this info icon for more details.</source>
 
 Because of this, make sure to fill in all the fields in the report template please.
 
-Send report anyway?</source>
-        <target>Сообщите как можно больше информации, чтобы помочь разработчикам решить эту проблему. В противном случае ваша заявка может быть закрыта без каких-либо дополнительных действий со стороны разработчиков.
-
-Поэтому обязательно заполните все поля в шаблоне отчета.
-
-Отправить отчет в любом случае?</target>
+Send report?</source>
         
       </trans-unit>
       <trans-unit id="_title.Text">
@@ -1298,6 +1294,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>Применить спрятанные изменения после успешного получения (иначе дилог откроется автоматически)</target>
         
       </trans-unit>
+      <trans-unit id="chkBranchCheckoutConfirmation.Text">
+        <source>Checkout branch using left panel</source>
+        
+      </trans-unit>
       <trans-unit id="chkBranchDeleteUnmerged.Text">
         <source>Delete unmerged branches</source>
         <target>Удалить неслитые ветки</target>
@@ -1649,6 +1649,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
     <body>
       <trans-unit id="$this.Text">
         <source>Diff viewer</source>
+        <target>Просмотр изменений</target>
         
       </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
@@ -3449,6 +3450,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
+        <target>Переключить левую панель</target>
         
       </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
@@ -3904,34 +3906,29 @@ Are you sure?</source>
         <target>Забрать коммит</target>
         
       </trans-unit>
-      <trans-unit id="AutoCommit.Text">
-        <source>&amp;Automatically create a commit</source>
-        <target>Автоматически создавать коммит</target>
-        
-      </trans-unit>
-      <trans-unit id="BranchInfo.Text">
-        <source>Cherry pick this commit:</source>
-        <target>Забрать этот коммит:</target>
-        
-      </trans-unit>
-      <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select &amp;parent:</source>
-        <target>Этот коммит является результатом слияния, выберите родителя:</target>
-        
-      </trans-unit>
-      <trans-unit id="Pick.Text">
-        <source>&amp;Cherry pick</source>
-        <target>Забрать коммит</target>
-        
-      </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
         <target>Не выбран родитель.</target>
         
       </trans-unit>
-      <trans-unit id="checkAddReference.Text">
+      <trans-unit id="btnAbort.Text">
+        <source>A&amp;bort</source>
+        <target>Прервать</target>
+        
+      </trans-unit>
+      <trans-unit id="btnPick.Text">
+        <source>&amp;Cherry pick</source>
+        <target>Забрать коммит</target>
+        
+      </trans-unit>
+      <trans-unit id="cbxAddReference.Text">
         <source>A&amp;dd commit reference to commit message</source>
         <target>Добавить к сообщению коммита строку со ссылкой на исходный коммит</target>
+        
+      </trans-unit>
+      <trans-unit id="cbxAutoCommit.Text">
+        <source>&amp;Automatically create a commit</source>
+        <target>Автоматически создавать коммит</target>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -3954,11 +3951,14 @@ Are you sure?</source>
         <target>Дата</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>C&amp;hoose another
-revision:</source>
-        <target>Выберите другую
-ревизию:</target>
+      <trans-unit id="lblBranchInfo.Text">
+        <source>Cherry pick this commit:</source>
+        <target>Забрать этот коммит:</target>
+        
+      </trans-unit>
+      <trans-unit id="lblParents.Text">
+        <source>This commit is a merge, select &amp;parent:</source>
+        <target>Этот коммит является результатом слияния, выберите родителя:</target>
         
       </trans-unit>
     </body>
@@ -4028,9 +4028,19 @@ revision:</source>
         <target>Очистить рабочий каталог</target>
         
       </trans-unit>
-      <trans-unit id="AddPath.Text">
+      <trans-unit id="AddExclusivePath.Text">
         <source>Add a path...</source>
         <target>Добавить путь...</target>
+        
+      </trans-unit>
+      <trans-unit id="AddInclusivePath.Text">
+        <source>Add a path...</source>
+        <target>Добавить путь...</target>
+        
+      </trans-unit>
+      <trans-unit id="CleanSubmodules.Text">
+        <source>Clean submodules recursively</source>
+        <target>Очистить субмодули рекурсивно</target>
         
       </trans-unit>
       <trans-unit id="Cleanup.Text">
@@ -4073,9 +4083,14 @@ revision:</source>
         <target>Очистка</target>
         
       </trans-unit>
-      <trans-unit id="checkBoxPathFilter.Text">
-        <source>Affect the following path(s) only:</source>
-        <target>Влияет только на следующие путь(и):</target>
+      <trans-unit id="checkBoxExcludePathFilter.Text">
+        <source>Exclude the following file path(s):</source>
+        <target>Исключить следующие файловые пути:</target>
+        
+      </trans-unit>
+      <trans-unit id="checkBoxIncludePathFilter.Text">
+        <source>Affect the following directory path(s) only:</source>
+        <target>Влияет только на следующие пути:</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -4088,7 +4103,12 @@ revision:</source>
         <target>Журнал:</target>
         
       </trans-unit>
-      <trans-unit id="labelPathHint.Text">
+      <trans-unit id="labelPathHintExclude.Text">
+        <source>(one path per line)</source>
+        <target>(один путь на строку)</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPathHintInclude.Text">
         <source>(one path per line)</source>
         <target>(один путь на строку)</target>
         
@@ -4767,11 +4787,6 @@ $ git config --unset commit.template</target>
         <target>Удалить файл</target>
         
       </trans-unit>
-      <trans-unit id="deleteSelectedFilesToolStripMenuItem.Text">
-        <source>Delete selected files</source>
-        <target>Удалить выбранные файлы</target>
-        
-      </trans-unit>
       <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
         <source>Do not assume unchanged</source>
         <target>Не предполагать неизменямым</target>
@@ -4857,11 +4872,6 @@ $ git config --unset commit.template</target>
         <target>(Внешнее имя)</target>
         
       </trans-unit>
-      <trans-unit id="resetAllTrackedChangesToolStripMenuItem.Text">
-        <source>Reset all (tracked) changes</source>
-        <target>Сбросить все (отслеживаемые) изменения</target>
-        
-      </trans-unit>
       <trans-unit id="resetChanges.Text">
         <source>Reset file or directory changes</source>
         <target>Сбросить изменения</target>
@@ -4872,19 +4882,9 @@ $ git config --unset commit.template</target>
         <target>Сбросить часть файла</target>
         
       </trans-unit>
-      <trans-unit id="resetSelectedFilesToolStripMenuItem.Text">
-        <source>Reset selected files</source>
-        <target>Сбросить выбранные файлы</target>
-        
-      </trans-unit>
       <trans-unit id="resetSubmoduleChanges.Text">
         <source>Reset submodule changes</source>
         <target>Сбросить изменения субмодуля</target>
-        
-      </trans-unit>
-      <trans-unit id="resetUnstagedChangesToolStripMenuItem.Text">
-        <source>Reset unstaged changes</source>
-        <target>Отмена неиндексир.-ых</target>
         
       </trans-unit>
       <trans-unit id="selectionFilterToolStripMenuItem.Text">
@@ -6145,13 +6145,15 @@ weirdchars.txt text
         
       </trans-unit>
       <trans-unit id="mnuClear.Text">
-        <source>Clear</source>
-        <target>Очистить</target>
+        <source>C&amp;lear</source>
+        
+      </trans-unit>
+      <trans-unit id="mnuCopyCommandLine.Text">
+        <source>&amp;Copy full command line</source>
         
       </trans-unit>
       <trans-unit id="mnuSaveToFile.Text">
-        <source>Save to file</source>
-        <target>Сохранить в файл</target>
+        <source>&amp;Save to file</source>
         
       </trans-unit>
       <trans-unit id="tabPageCommandCache.Text">
@@ -7029,6 +7031,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="lblLocalBranch.Tooltip">
         <source>Local branch to create or reset to the remote branch selected.</source>
+        <target>Локальная ветка для создания или сброса к выбранной внешней ветке.</target>
         
       </trans-unit>
       <trans-unit id="lblRemoteBranch.Text">
@@ -8010,6 +8013,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="btnToggleState.toolTip1">
         <source>Enable or disable the selected remote</source>
+        <target>Включить или выключить выбранный внешний репозиторий</target>
         
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
@@ -8822,14 +8826,14 @@ Do you want to use this custom merge script?</source>
         <target>Вся исто&amp;рия</target>
         
       </trans-unit>
+      <trans-unit id="HideMergeCommitsCheck.Text">
+        <source>Hide merge commi&amp;ts</source>
+        <target>Скрыть коммиты слияния</target>
+        
+      </trans-unit>
       <trans-unit id="IgnoreCase.Text">
         <source>&amp;Ignore case</source>
         <target>И&amp;гнорировать регистр</target>
-        
-      </trans-unit>
-      <trans-unit id="MergeCommitsCheck.Text">
-        <source>Merge commi&amp;ts</source>
-        <target>Слить &amp;коммиты</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -8838,8 +8842,8 @@ Do you want to use this custom merge script?</source>
         
       </trans-unit>
       <trans-unit id="OnlyFirstParentCheck.Text">
-        <source>Only &amp;first parent</source>
-        <target>Только &amp;первый родитель</target>
+        <source>Show only &amp;first parent</source>
+        <target>Показать только первого родителя</target>
         
       </trans-unit>
       <trans-unit id="ReflogCheck.Text">
@@ -9001,6 +9005,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="Clear.toolTip">
         <source>Remove the selected stash from the list</source>
+        <target>Удалить выбранные спрятанных изменений из списка</target>
         
       </trans-unit>
       <trans-unit id="Stash.Text">
@@ -9516,6 +9521,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
         <source>Follow renames in file history</source>
+        <target>Показывать переименования в истории файла</target>
         
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
@@ -9915,12 +9921,12 @@ Check if file is accessible.</source>
         <target>Пути</target>
         
       </trans-unit>
-      <trans-unit id="BrowseGitBinPath.Text">
+      <trans-unit id="BrowseGitPath.Text">
         <source>Browse</source>
         <target>Обзор</target>
         
       </trans-unit>
-      <trans-unit id="BrowseGitPath.Text">
+      <trans-unit id="BrowseLinuxToolsDir.Text">
         <source>Browse</source>
         <target>Обзор</target>
         
@@ -10279,6 +10285,14 @@ help</source>
       <trans-unit id="_cannotOpenSubmoduleCaption.Text">
         <source>Cannot open submodule</source>
         <target>Не удаётся открыть субмодуль</target>
+        
+      </trans-unit>
+      <trans-unit id="_confirmBranchCheckout.Text">
+        <source>Are you sure you want to check out branch &quot;{0}&quot;?</source>
+        
+      </trans-unit>
+      <trans-unit id="_confirmBranchCheckoutCaption.Text">
+        <source>Confirm checkout</source>
         
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
@@ -10779,6 +10793,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.ToolTipText">
         <source>Fetch then merge this remote branch into current branch</source>
+        <target>Получить и объединить внешнюю ветку с текущей</target>
         
       </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.Text">
@@ -10788,6 +10803,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.ToolTipText">
         <source>Fetch then checkout this remote branch</source>
+        <target>Получить и переключиться на внешнюю ветку</target>
         
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.Text">
@@ -11619,6 +11635,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="amendCommitToolStripMenuItem.Text">
         <source>Create an &amp;amend commit...</source>
+        <target>Создать коммит с исправлениями...</target>
         
       </trans-unit>
       <trans-unit id="applyStashToolStripMenuItem.Text">
@@ -12151,6 +12168,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="_noItems.Text">
         <source>no items</source>
+        <target>нет элементов</target>
         
       </trans-unit>
       <trans-unit id="cbAlwaysShowAllCommands.Text">
@@ -12160,6 +12178,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="gbCascadingMenu.Text">
         <source>Cascaded context menu</source>
+        <target>Каскадное контекстное меню</target>
         
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
@@ -12378,6 +12397,7 @@ When OpenSSH is used, command line dialogs are shown!
     <body>
       <trans-unit id="_addUpstreamRemote.Text">
         <source>Add upstream remote</source>
+        <target>Добавить внешний репозиторий</target>
         
       </trans-unit>
       <trans-unit id="_areYouSure.Text">
@@ -12671,6 +12691,22 @@ Select this commit to populate the full message.</source>
         <target>Вод возврата</target>
         
       </trans-unit>
+      <trans-unit id="_externalErrorDescription.Text">
+        <source>error from git or from other external application</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadAnAssembly.Text">
+        <source>Failed to load an assembly</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
+        <source>Could not load file or assembly '{0}'.</source>
+        
+      </trans-unit>
+      <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
+        <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
+        
+      </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
         <source>Filter file in &amp;grid</source>
         <target>Фильтр файла в &amp;таблице</target>
@@ -12770,6 +12806,11 @@ following command.
         <target>Ошибка безопасности git</target>
         
       </trans-unit>
+      <trans-unit id="_hideErrorMessage.Text">
+        <source>Hide error message...</source>
+        <target>Скрыть сообщение об ошибке...</target>
+        
+      </trans-unit>
       <trans-unit id="_hoursAgo.Text">
         <source>{0} {1:hour|hours} ago</source>
         <target>{0} {1:час|часа|часов} назад</target>
@@ -12777,6 +12818,7 @@ following command.
       </trans-unit>
       <trans-unit id="_ignoringReference.Text">
         <source>&quot;{0}&quot; is not a Git revision and will be ignored.</source>
+        <target>&quot;{0}&quot; не является ревизией Git и будет игнорироваться.</target>
         
       </trans-unit>
       <trans-unit id="_indexText.Text">
@@ -12938,6 +12980,19 @@ Remote: {1}</source>
         <target>Если вы считаете, что это было вызвано Git Extensions, вы можете сообщить об ошибке, чтобы команда исследовала ее.</target>
         
       </trans-unit>
+      <trans-unit id="_reportIssue.Text">
+        <source>Report the issue</source>
+        <target>Сообщить о проблеме</target>
+        
+      </trans-unit>
+      <trans-unit id="_reportIssueDescription.Text">
+        <source>for the team to investigate - if you think this was caused by Git Extensions</source>
+        
+      </trans-unit>
+      <trans-unit id="_reportReproducedIssueDescription.Text">
+        <source>If you can consistently reproduce the issue, please report it.</source>
+        
+      </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
         <source>Reset changes</source>
         <target>Сбросить изменения</target>
@@ -12951,6 +13006,16 @@ Remote: {1}</source>
       <trans-unit id="_resetSelectedLinesConfirmation.Text">
         <source>Are you sure you want to reset the changes to the selected lines?</source>
         <target>Вы уверены, что хотите сбросить изменения в выбранных строках?</target>
+        
+      </trans-unit>
+      <trans-unit id="_restartApplication.Text">
+        <source>Restart Git Extensions</source>
+        <target>Перезапустить Git Extensions</target>
+        
+      </trans-unit>
+      <trans-unit id="_restartApplicationDescription.Text">
+        <source>Usually restarting the application solves the issue.
+Sometimes Windows may need to be restarted too.</source>
         
       </trans-unit>
       <trans-unit id="_rotInactive.Text">
@@ -12996,6 +13061,11 @@ Remote: {1}</source>
       <trans-unit id="_secondsAgo.Text">
         <source>{0} {1:second|seconds} ago</source>
         <target>{0} {1:секунда|секунды|секунд} назад</target>
+        
+      </trans-unit>
+      <trans-unit id="_seeErrorMessage.Text">
+        <source>See error message...</source>
+        <target>См. сообщение об ошибке...</target>
         
       </trans-unit>
       <trans-unit id="_settingsTypeToFind.Text">

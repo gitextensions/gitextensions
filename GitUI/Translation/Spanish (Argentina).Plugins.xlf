@@ -939,6 +939,34 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="es-AR">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Description.Text">
@@ -1155,6 +1183,10 @@ Do you want to reset the configured path?</source>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
         <target>Incapaz de abrir el ayudante de consultas</target>
+        
+      </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
