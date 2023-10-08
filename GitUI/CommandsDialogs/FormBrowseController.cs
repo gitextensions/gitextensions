@@ -1,5 +1,5 @@
 ﻿using GitCommands;
-using GitCommands.Gpg;
+using GitCommands.Git.Gpg;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 

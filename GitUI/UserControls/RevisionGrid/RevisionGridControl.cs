@@ -8,6 +8,8 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitCommands.Git.Gpg;
+using GitCommands.Gpg;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
@@ -2951,9 +2953,20 @@ namespace GitUI
                 return;
             }
 
-            string rebaseCmd = GitCommandHelpers.RebaseCmd(
-                GetActualRevision(LatestSelectedRevision)?.FirstParentId?.ToString(), interactive: true, preserveMerges: false,
-                autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: Module.GitVersion.SupportRebaseMerges);
+            IGitGpgController gpg = new GitGpgController(() => Module, new GpgSecretKeysParser());
+            string defaultKey = gpg.GetDefaultKey();
+            bool commitSign = gpg.AreCommitSignedByDefault();
+
+            string rebaseCmd = GitCommandHelpers.RebaseCmd(GetActualRevision(LatestSelectedRevision)?.FirstParentId?.ToString(),
+                                                           interactive: true,
+                                                           preserveMerges: false,
+                                                           autosquash: false,
+                                                           autoStash: true,
+                                                           ignoreDate: false,
+                                                           committerDateIsAuthorDate: false,
+                                                           supportRebaseMerges: Module.GitVersion.SupportRebaseMerges,
+                                                           gpgSign: commitSign && !string.IsNullOrEmpty(defaultKey),
+                                                           supportNoGpgSign: Module.GitVersion.SupportNoGpgSign);
 
             using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
             formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));

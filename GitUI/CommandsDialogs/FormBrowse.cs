@@ -8,6 +8,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitCommands.Git.Gpg;
 using GitCommands.Gpg;
 using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
@@ -221,6 +222,7 @@ namespace GitUI.CommandsDialogs
         private Dashboard? _dashboard;
         private bool _isFileBlameHistory;
         private bool _fileBlameHistoryLeftPanelStartupState;
+        private readonly IGPGSecretKeysParser _secretKeysParser;
 
         private TabPage? _consoleTabPage;
 
@@ -298,7 +300,8 @@ namespace GitUI.CommandsDialogs
             UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             UICommands.BrowseRepo = this;
 
-            _controller = new FormBrowseController(new GitGpgController(() => Module));
+            _secretKeysParser = new GpgSecretKeysParser();
+            _controller = new FormBrowseController(new GitGpgController(() => Module, _secretKeysParser));
             _commitDataManager = new CommitDataManager(() => Module);
 
             _submoduleStatusProvider = SubmoduleStatusProvider.Default;
@@ -1691,6 +1694,9 @@ namespace GitUI.CommandsDialogs
 
                 RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
                 RevisionGrid.ResumeRefreshRevisions();
+
+                // Force keys to be fetched again
+                GitGpgController.ClearKeyCache();
 
                 RefreshRevisions();
             }

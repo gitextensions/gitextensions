@@ -426,8 +426,19 @@ namespace GitCommands.Git.Commands
             return new GitArgumentBuilder("bisect") { "reset" };
         }
 
-        public static ArgumentString RebaseCmd(
-            string? branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string? from = null, string? onto = null, bool supportRebaseMerges = true)
+        public static ArgumentString RebaseCmd(string? branch,
+                                               bool interactive,
+                                               bool preserveMerges,
+                                               bool autosquash,
+                                               bool autoStash,
+                                               bool ignoreDate,
+                                               bool committerDateIsAuthorDate,
+                                               string? from = null,
+                                               string? onto = null,
+                                               bool supportRebaseMerges = true,
+                                               bool gpgSign = false,
+                                               string? gpgKeyId = null,
+                                               bool supportNoGpgSign = true)
         {
             // TODO-NULLABLE does it make sense for 'branch' to be null here?
 
@@ -436,7 +447,18 @@ namespace GitCommands.Git.Commands
                 throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
             }
 
-            GitArgumentBuilder builder = new("rebase");
+            GitArgumentBuilder builder = new("rebase")
+            {
+                { gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
+                { gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
+                { !gpgSign && supportNoGpgSign, "--no-gpg-sign" },
+            };
+
+            if (!gpgSign && !supportNoGpgSign)
+            {
+                builder.Add(new GitConfigItem(SettingKeyString.CommitGPGSign, "false"));
+            }
+
             if (ignoreDate)
             {
                 builder.Add("--ignore-date");
@@ -581,9 +603,19 @@ namespace GitCommands.Git.Commands
             return args;
         }
 
-        public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, int? log)
+        public static ArgumentString MergeBranchCmd(string branch,
+                                                    bool allowFastForward,
+                                                    bool squash,
+                                                    bool noCommit,
+                                                    string strategy,
+                                                    bool allowUnrelatedHistories,
+                                                    string? mergeCommitFilePath,
+                                                    int? log,
+                                                    bool gpgSign = false,
+                                                    string? gpgKeyId = "",
+                                                    bool suportNoGpgSign = true)
         {
-            return new GitArgumentBuilder("merge")
+            GitArgumentBuilder args = new("merge")
             {
                 { !allowFastForward, "--no-ff" },
                 { !string.IsNullOrEmpty(strategy), $"--strategy={strategy}" },
@@ -591,11 +623,23 @@ namespace GitCommands.Git.Commands
                 { noCommit, "--no-commit" },
                 { allowUnrelatedHistories, "--allow-unrelated-histories" },
 
+                // if commiting set commit sign options
+                { !noCommit && !gpgSign && suportNoGpgSign, "--no-gpg-sign" },
+                { !noCommit && gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
+                { !noCommit && gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
+
                  // let git fail, if the file doesn't exist
                 { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F \"{mergeCommitFilePath}\"" },
                 { log is not null && log.Value > 0, $"--log={log}" },
                 branch
             };
+
+            if (!noCommit && !gpgSign && !suportNoGpgSign)
+            {
+                args.Add(new GitConfigItem(SettingKeyString.CommitGPGSign, "false"));
+            }
+
+            return args;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace GitCommands
         private static readonly GitVersion v2_20_0 = new("2.20.0");
         private static readonly GitVersion v2_32_0 = new("2.32.0");
         private static readonly GitVersion v2_35_0 = new("2.35.0");
+        private static readonly GitVersion v2_30_0 = new("2.30.0");
         private static readonly GitVersion v2_38_0 = new("2.38.0");
 
         /// <summary>
@@ -124,6 +125,8 @@ namespace GitCommands
         public bool SupportUpdateRefs => this >= v2_38_0;
         public bool SupportRangeDiffPath => this >= v2_38_0;
         public bool SupportAmendCommits => this >= v2_32_0;
+
+        public bool SupportNoGpgSign => this >= v2_30_0;
 
         public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
 

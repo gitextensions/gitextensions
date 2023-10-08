@@ -48,6 +48,11 @@ namespace GitUIPluginInterfaces
         IExecutable GitExecutable { get; }
 
         /// <summary>
+        /// Gets the access to the current GPG executable associated with this module.
+        /// </summary>
+        IExecutable GpgExecutable { get; }
+
+        /// <summary>
         /// Gets the access to the current git executable associated with this module.
         /// This commandrunner can be non-native (i.e. WSL).
         /// </summary>
@@ -126,7 +131,7 @@ namespace GitUIPluginInterfaces
 
         string GetSetting(string setting);
         string GetEffectiveSetting(string setting);
-        string GetEffectiveGitSetting(string setting, bool cache = true);
+        EffectiveGitSetting GetEffectiveGitSetting(string setting, bool cache = true);
 
         /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
         string GetSelectedBranch();

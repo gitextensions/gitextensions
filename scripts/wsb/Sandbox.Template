@@ -1,0 +1,24 @@
+<Configuration>
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>..\wsb</HostFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+    <MappedFolder>
+      <HostFolder>.\TestResults</HostFolder>
+      <ReadOnly>false</ReadOnly>
+    </MappedFolder>
+    <MappedFolder>
+      <HostFolder>..\..\artifacts</HostFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+    <MappedFolder>
+      <HostFolder>..\..\Bin</HostFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+  <LogonCommand>
+    <Command>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Unrestricted -Command "start powershell { -NoExit -Command \"&amp; { cd $env:USERPROFILE\desktop; .\wsb\setup.ps1 2>"&amp;1 |Tee-Object -FilePath .\setup.log }\" }"</Command>
+  </LogonCommand>
+  <vGPU>Enable</vGPU>
+</Configuration>

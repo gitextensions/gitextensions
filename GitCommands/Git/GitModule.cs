@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -66,12 +65,16 @@ namespace GitCommands
         /// </summary>
         private readonly string _wslDistro;
 
+        /// <inherit/>
+        private IExecutable _gpgExecutable;
+
         public GitModule(string? workingDir)
         {
             WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
+
             _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
             _gitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
             _gitWindowsCommandRunner = new GitCommandRunner(_gitWindowsExecutable, () => SystemEncoding);
@@ -168,6 +171,28 @@ namespace GitCommands
 
         /// <inherit/>
         public IExecutable GitExecutable => _gitExecutable;
+
+        /// <summary>
+        /// Gets the access to the current GPG executable associated with this module.
+        /// </summary>
+        public IExecutable GpgExecutable
+        {
+            get
+            {
+                if (_gpgExecutable is null)
+                {
+                    _gpgExecutable = new Executable(() =>
+                    {
+                        string gpgProgram = GetEffectiveGitSetting(SettingKeyString.GPGProgram).Value;
+                        return string.IsNullOrEmpty(gpgProgram)
+                                                ? Path.Combine(AppSettings.LinuxToolsDir, "gpg.exe")
+                                                : gpgProgram;
+                    }, WorkingDir);
+                }
+
+                return _gpgExecutable;
+            }
+        }
 
         /// <inherit/>
         public IGitCommandRunner GitCommandRunner => _gitCommandRunner;
@@ -2247,9 +2272,18 @@ namespace GitCommands
             }
         }
 
-        public ArgumentString CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
+        public ArgumentString CommitCmd(bool amend,
+                                        bool signOff = false,
+                                        string author = "",
+                                        bool useExplicitCommitMessage = true,
+                                        bool noVerify = false,
+                                        bool gpgSign = false,
+                                        string gpgKeyId = "",
+                                        bool allowEmpty = false,
+                                        bool resetAuthor = false,
+                                        bool supportNoGPGSign = true)
         {
-            return new GitArgumentBuilder("commit")
+            GitArgumentBuilder args = new("commit")
             {
                 { amend, "--amend" },
                 { noVerify, "--no-verify" },
@@ -2257,10 +2291,17 @@ namespace GitCommands
                 { !string.IsNullOrEmpty(author), $"--author=\"{author?.Trim().Trim('"')}\"" },
                 { gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
                 { gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
+                { !gpgSign && supportNoGPGSign, "--no-gpg-sign" },
                 { useExplicitCommitMessage, $"-F \"{GetGitExecPath(Path.Combine(GetGitDirectory(), "COMMITMESSAGE"))}\"" },
                 { allowEmpty, "--allow-empty" },
                 { resetAuthor && amend, "--reset-author" }
             };
+            if (!gpgSign && !supportNoGPGSign)
+            {
+                args.Add(new GitConfigItem(SettingKeyString.CommitGPGSign, "false"));
+            }
+
+            return args;
         }
 
         public string RemoveRemote(string remoteName)
@@ -2414,10 +2455,14 @@ namespace GitCommands
             return EffectiveConfigFile.GetValue(setting);
         }
 
-        public string GetEffectiveGitSetting(string setting, bool cache = true)
+        public EffectiveGitSetting GetEffectiveGitSetting(string setting, bool cache = true)
         {
             GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
-            return GitExecutable.GetOutput(args, cache: cache ? GitCommandCache : null).Trim();
+            ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
+
+            int resultCode = result.ExitCode ?? 0;
+
+            return (Enum.IsDefined(typeof(GitConfigStatus), resultCode) ? (GitConfigStatus)resultCode : null, result.StandardOutput?.Trim() ?? "");
         }
 
         public void UnsetSetting(string setting)

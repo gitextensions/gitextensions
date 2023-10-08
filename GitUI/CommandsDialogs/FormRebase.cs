@@ -1,8 +1,10 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git.Commands;
+using GitCommands.Gpg;
 using GitCommands.Patches;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
+using GitUI.UserControls.GPGKeys;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -44,6 +46,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _branchUpToDateCaption = new("Rebase");
 
         private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
+
+        private TranslationString _invalidSignCaption = new("Commit Signing Options");
         #endregion
 
         private static readonly List<PatchFile> Skipped = new();
@@ -70,6 +74,8 @@ namespace GitUI.CommandsDialogs
             {
                 ShowOptions_LinkClicked(this, null!);
             }
+
+            cboGpgSecretKeys.Initilize(this, new GpgSecretKeysParser());
 
             InitializeComplete();
         }
@@ -120,6 +126,16 @@ namespace GitUI.CommandsDialogs
             cboTo.Text = _defaultToBranch ?? selectedHead;
 
             rebasePanel.Visible = !Module.InTheMiddleOfRebase();
+            flpnlGPG.Visible = !_startRebaseImmediately && !Module.InTheMiddleOfRebase();
+
+            // If not changed, by default show "no sign commit"
+            if (cboGpgAction.SelectedIndex == -1)
+            {
+                var gpg = cboGpgSecretKeys.KeysUIController;
+                bool commitSign = gpg.AreCommitSignedByDefault();
+                cboGpgAction.SelectedIndex = commitSign ? 1 : 0;
+            }
+
             EnableButtons();
 
             // Honor the rebase.autosquash configuration.
@@ -317,6 +333,19 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
+                GPGKeysUIController gpg = cboGpgSecretKeys.KeysUIController;
+                if (!gpg.ValidateCommitSign(cboGpgAction.SelectedIndex > 0, cboGpgSecretKeys.KeyID))
+                {
+                    MessageBox.Show(this, TranslatedStrings.InvalidGpgSignOptions, _invalidSignCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    if (!Module.InTheMiddleOfRebase())
+                    {
+                        flpnlGPG.Visible = true;
+                        cboGpgAction.Focus();
+                    }
+
+                    return;
+                }
+
                 AppSettings.RebaseAutoStash = chkStash.Checked;
 
                 Skipped.Clear();
@@ -324,15 +353,33 @@ namespace GitUI.CommandsDialogs
                 string rebaseCmd;
                 if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
                 {
-                    rebaseCmd = GitCommandHelpers.RebaseCmd(
-                        cboTo.Text, chkInteractive.Checked, chkPreserveMerges.Checked,
-                        chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, cboBranches.Text);
+                    rebaseCmd = GitCommandHelpers.RebaseCmd(cboTo.Text,
+                                                            chkInteractive.Checked,
+                                                            chkPreserveMerges.Checked,
+                                                            chkAutosquash.Checked,
+                                                            chkStash.Checked,
+                                                            chkIgnoreDate.Checked,
+                                                            chkCommitterDateIsAuthorDate.Checked,
+                                                            txtFrom.Text,
+                                                            cboBranches.Text,
+                                                            supportRebaseMerges: Module.GitVersion.SupportRebaseMerges,
+                                                            gpgSign: cboGpgAction.SelectedIndex > 0,
+                                                            gpgKeyId: cboGpgAction.SelectedIndex == 2 ? cboGpgSecretKeys.KeyID : "",
+                                                            supportNoGpgSign: Module.GitVersion.SupportNoGpgSign);
                 }
                 else
                 {
-                    rebaseCmd = GitCommandHelpers.RebaseCmd(
-                        cboBranches.Text, chkInteractive.Checked,
-                        chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked);
+                    rebaseCmd = GitCommandHelpers.RebaseCmd(cboBranches.Text,
+                                                             chkInteractive.Checked,
+                                                             chkPreserveMerges.Checked,
+                                                             chkAutosquash.Checked,
+                                                             chkStash.Checked,
+                                                             chkIgnoreDate.Checked,
+                                                             chkCommitterDateIsAuthorDate.Checked,
+                                                             supportRebaseMerges: Module.GitVersion.SupportRebaseMerges,
+                                                             gpgSign: cboGpgAction.SelectedIndex > 0,
+                                                             gpgKeyId: cboGpgAction.SelectedIndex == 2 ? cboGpgSecretKeys.KeyID : "",
+                                                             supportNoGpgSign: Module.GitVersion.SupportNoGpgSign);
                 }
 
                 string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
@@ -404,7 +451,39 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
         }
 
+        private void cboGpgAction_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cboGpgSecretKeys.Enabled = cboGpgAction.SelectedIndex == 2;
+            UpdateKeyStatus();
+        }
+
+        private void UpdateKeyStatus()
+        {
+            // Select default or empty key based on sign option selected. Provides info to user if the default key is set.
+            switch (cboGpgAction.SelectedIndex)
+            {
+                case 0: // Do not sign
+                    cboGpgSecretKeys.KeyID = "";
+                    break;
+                case 1: // Sign with default key
+                    cboGpgSecretKeys.SelectDefaultKey();
+                    break;
+                case 2: // Sign with specific key
+                    if (cboGpgSecretKeys.KeyID == "")
+                    {
+                        cboGpgSecretKeys.SelectDefaultKey();
+                    }
+
+                    break;
+            }
+        }
+
         internal TestAccessor GetTestAccessor() => new(this);
+
+        private void cboGpgSecretKeys_KeysLoaded(object sender, EventArgs e)
+        {
+            UpdateKeyStatus();
+        }
 
         internal readonly struct TestAccessor
         {
@@ -421,6 +500,9 @@ namespace GitUI.CommandsDialogs
             public CheckBox chkStash => _form.chkStash;
             public CheckBox chkIgnoreDate => _form.chkIgnoreDate;
             public CheckBox chkCommitterDateIsAuthorDate => _form.chkCommitterDateIsAuthorDate;
+            public ComboBox cboGpgAction => _form.cboGpgAction;
+            public GpgSecretKeysSelector cboGpgSecretKeys => _form.cboGpgSecretKeys;
+            public FlowLayoutPanel flpnlGPG => _form.flpnlGPG;
         }
     }
 }

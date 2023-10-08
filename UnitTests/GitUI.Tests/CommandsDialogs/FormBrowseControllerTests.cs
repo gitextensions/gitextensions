@@ -1,4 +1,4 @@
-﻿using GitCommands.Gpg;
+﻿using GitCommands.Git.Gpg;
 using GitUI.CommandsDialogs;
 using NSubstitute;
 

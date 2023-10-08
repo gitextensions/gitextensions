@@ -37,29 +37,43 @@ namespace GitCommandsTests
             _executable.Verify();
         }
 
-        [TestCase(@"  ""author <author@mail.com>""  ", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
-        [TestCase(@"""author <author@mail.com>""", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
-        [TestCase(@"author <author@mail.com>", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
-        public void CommitCmdShouldTrimAuthor(string input, string expected)
+        [TestCase(@"  ""author <author@mail.com>""  ", @"commit --author=""author <author@mail.com>"" --no-gpg-sign -F ""COMMITMESSAGE""", true)]
+        [TestCase(@"""author <author@mail.com>""", @"commit --author=""author <author@mail.com>"" --no-gpg-sign -F ""COMMITMESSAGE""", true)]
+        [TestCase(@"author <author@mail.com>", @"commit --author=""author <author@mail.com>"" --no-gpg-sign -F ""COMMITMESSAGE""", true)]
+        [TestCase(@"  ""author <author@mail.com>""  ", @"-c commit.gpgSign=false commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""", false)]
+        [TestCase(@"""author <author@mail.com>""", @"-c commit.gpgSign=false commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""", false)]
+        [TestCase(@"author <author@mail.com>", @"-c commit.gpgSign=false commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""", false)]
+        public void CommitCmdShouldTrimAuthor(string input, string expected, bool supportNoGpgSign)
         {
-            var actual = _gitModule.CommitCmd(false, author: input);
+            var actual = _gitModule.CommitCmd(false, author: input, supportNoGPGSign: supportNoGpgSign);
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
-        [TestCase(false, false, @"", false, false, false, @"", @"commit")]
-        [TestCase(true, false, @"", false, false, false, @"", @"commit --amend")]
-        [TestCase(false, true, @"", false, false, false, @"", @"commit --signoff")]
-        [TestCase(false, false, @"", true, false, false, @"", @"commit -F ""COMMITMESSAGE""")]
-        [TestCase(false, false, @"", false, true, false, @"", @"commit --no-verify")]
-        [TestCase(false, false, @"", false, false, false, @"12345678", @"commit")]
-        [TestCase(false, false, @"", false, false, true, @"", @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, @"      ", @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, null, @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, @"12345678", @"commit -S12345678")]
-        [TestCase(true, true, @"", true, true, true, @"12345678", @"commit --amend --no-verify --signoff -S12345678 -F ""COMMITMESSAGE""")]
-        public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool gpgSign, string gpgKeyId, string expected)
+        [TestCase(false, false, @"", false, false, false, @"", false, @"-c commit.gpgSign=false commit")]
+        [TestCase(true, false, @"", false, false, false, @"", false, @"-c commit.gpgSign=false commit --amend")]
+        [TestCase(false, true, @"", false, false, false, @"", false, @"-c commit.gpgSign=false commit --signoff")]
+        [TestCase(false, false, @"", true, false, false, @"", false, @"-c commit.gpgSign=false commit -F ""COMMITMESSAGE""")]
+        [TestCase(false, false, @"", false, true, false, @"", false, @"-c commit.gpgSign=false commit --no-verify")]
+        [TestCase(false, false, @"", false, false, false, @"12345678", false, @"-c commit.gpgSign=false commit")]
+        [TestCase(false, false, @"", false, false, true, @"", false, @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, @"      ", false, @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, null, false, @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, @"12345678", false, @"commit -S12345678")]
+        [TestCase(true, true, @"", true, true, true, @"12345678", false, @"commit --amend --no-verify --signoff -S12345678 -F ""COMMITMESSAGE""")]
+        [TestCase(false, false, @"", false, false, false, @"", true, @"commit --no-gpg-sign")]
+        [TestCase(true, false, @"", false, false, false, @"", true, @"commit --amend --no-gpg-sign")]
+        [TestCase(false, true, @"", false, false, false, @"", true, @"commit --signoff --no-gpg-sign")]
+        [TestCase(false, false, @"", true, false, false, @"", true, @"commit --no-gpg-sign -F ""COMMITMESSAGE""")]
+        [TestCase(false, false, @"", false, true, false, @"", true, @"commit --no-verify --no-gpg-sign")]
+        [TestCase(false, false, @"", false, false, false, @"12345678", true, @"commit --no-gpg-sign")]
+        [TestCase(false, false, @"", false, false, true, @"", true, @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, @"      ", true, @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, null, true, @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, @"12345678", true, @"commit -S12345678")]
+        [TestCase(true, true, @"", true, true, true, @"12345678", true, @"commit --amend --no-verify --signoff -S12345678 -F ""COMMITMESSAGE""")]
+        public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool gpgSign, string gpgKeyId, bool suportNoGpgpSign, string expected)
         {
-            var actual = _gitModule.CommitCmd(amend, signOff, author, useExplicitCommitMessage, noVerify, gpgSign, gpgKeyId);
+            var actual = _gitModule.CommitCmd(amend, signOff, author, useExplicitCommitMessage, noVerify, gpgSign, gpgKeyId, supportNoGPGSign: suportNoGpgpSign);
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
@@ -228,32 +242,33 @@ namespace GitCommandsTests
             }
         }
 
-        [Test]
-        public void CommitCmd()
+        [TestCase(false, "", $"-c commit.gpgSign=false ")]
+        [TestCase(true, " --no-gpg-sign", "")]
+        public void CommitCmd(bool supportsNoGPGSign, string noGpgSignArg, string noGpgSignConfig)
         {
             Assert.AreEqual(
-                "commit -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false).Arguments);
+                $"{noGpgSignConfig}commit{noGpgSignArg} -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, supportNoGPGSign: supportsNoGPGSign).Arguments);
             Assert.AreEqual(
-                "commit --amend -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: true).Arguments);
+                $"{noGpgSignConfig}commit --amend{noGpgSignArg} -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: true, supportNoGPGSign: supportsNoGPGSign).Arguments);
             Assert.AreEqual(
-                "commit --signoff -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false, signOff: true).Arguments);
+                $"{noGpgSignConfig}commit --signoff{noGpgSignArg} -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, signOff: true, supportNoGPGSign: supportsNoGPGSign).Arguments);
             Assert.AreEqual(
-                "commit --author=\"foo\" -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false, author: "foo").Arguments);
+                $"{noGpgSignConfig}commit --author=\"foo\"{noGpgSignArg} -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, author: "foo", supportNoGPGSign: supportsNoGPGSign).Arguments);
             Assert.AreEqual(
-                "commit",
-                _gitModule.CommitCmd(amend: false, useExplicitCommitMessage: false).Arguments);
+                $"{noGpgSignConfig}commit{noGpgSignArg}",
+                _gitModule.CommitCmd(amend: false, useExplicitCommitMessage: false, supportNoGPGSign: supportsNoGPGSign).Arguments);
             Assert.AreEqual(
-                "commit --no-verify -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false, noVerify: true).Arguments);
+                $"{noGpgSignConfig}commit --no-verify{noGpgSignArg} -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, noVerify: true, supportNoGPGSign: supportsNoGPGSign).Arguments);
             Assert.AreEqual(
-                "commit -S -F \"COMMITMESSAGE\"",
+                $"commit -S -F \"COMMITMESSAGE\"",
                 _gitModule.CommitCmd(amend: false, gpgSign: true).Arguments);
             Assert.AreEqual(
-                "commit -Skey -F \"COMMITMESSAGE\"",
+                $"commit -Skey -F \"COMMITMESSAGE\"",
                 _gitModule.CommitCmd(amend: false, gpgSign: true, gpgKeyId: "key").Arguments);
         }
 

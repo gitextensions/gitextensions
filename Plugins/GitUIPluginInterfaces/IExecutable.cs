@@ -9,6 +9,13 @@ namespace GitUIPluginInterfaces
     /// </summary>
     public interface IExecutable
     {
+#if DEBUG
+        /// <summary>
+        /// Gets the path of the executable file. This is updated when the executable is started if FileNameProvider was passed in the constructor. This is only used for debugging purposes.
+        /// </summary>
+        string? ExecutableFileName { get; }
+#endif
+
         /// <summary>
         /// Starts a process of this executable.
         /// </summary>

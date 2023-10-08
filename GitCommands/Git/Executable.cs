@@ -14,12 +14,20 @@ namespace GitCommands
         private readonly string _workingDir;
         private readonly Func<string> _fileNameProvider;
         private readonly string _prefixArguments;
+        private string? _executableFileName;
 
         public Executable(string fileName, string workingDir = "")
             : this(() => fileName, workingDir)
         {
         }
 
+        /// <summary>
+        /// Creates a new Executable instance.
+        /// </summary>
+        /// <param name="fileNameProvider">This is used to allow dynamic file path of the executable to run at the time of running.
+        /// Ex: Allowing fetching of gpg.Program git config at the time of run for the gpgExecutable</param>
+        /// <param name="workingDir">Sets the working directory to start with when starting the process</param>
+        /// <param name="prefixArguments">Sets any arguments that go before any arguments being passed in when Start is called </param>
         public Executable(Func<string> fileNameProvider, string workingDir = "", string prefixArguments = "")
         {
             _workingDir = workingDir;
@@ -27,6 +35,12 @@ namespace GitCommands
             _prefixArguments = prefixArguments;
         }
 
+#if DEBUG
+        /// <inheritdoc />
+        public string? ExecutableFileName => _executableFileName;
+#endif
+
+        /// <inheritdoc />
         public IProcess Start(ArgumentString arguments = default,
                               bool createWindow = false,
                               bool redirectInput = false,
@@ -41,9 +55,18 @@ namespace GitCommands
 
             var args = (arguments.Arguments ?? "").Replace("$QUOTE$", "\\\"");
 
-            var fileName = _fileNameProvider();
-
-            return new ProcessWrapper(fileName, _prefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
+            _executableFileName = _fileNameProvider();
+            return new ProcessWrapper(_executableFileName,
+                       _prefixArguments,
+                       args,
+                       _workingDir,
+                       createWindow,
+                       redirectInput,
+                       redirectOutput,
+                       outputEncoding,
+                       useShellExecute,
+                       throwOnErrorExit,
+                       cancellationToken);
         }
 
         #region ProcessWrapper

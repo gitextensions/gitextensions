@@ -21,6 +21,7 @@ using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.SpellChecker;
 using GitUI.UserControls;
+using GitUI.UserControls.GPGKeys;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -151,6 +152,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _statusBarBranchWithoutRemote = new("(remote not configured)");
         private readonly TranslationString _untrackedRemote = new("(untracked)");
+
+        private TranslationString _invalidSignCaption = new("Commit Signing Options");
         #endregion
 
         private event Action? OnStageAreaLoaded;
@@ -288,12 +291,6 @@ namespace GitUI.CommandsDialogs
             };
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
-            /* If not changed, by default show "no sign commit" */
-            if (gpgSignCommitToolStripComboBox.SelectedIndex == -1)
-            {
-                gpgSignCommitToolStripComboBox.SelectedIndex = 0;
-            }
-
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowImageMargin = true;
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowCheckMargin = false;
 
@@ -422,6 +419,7 @@ namespace GitUI.CommandsDialogs
                 _customDiffToolsSequence.Dispose();
                 _interactiveAddSequence.Dispose();
                 _viewChangesSequence.Dispose();
+                toolStripGPGSecretKeysSelector.Dispose();
                 components?.Dispose();
             }
 
@@ -999,6 +997,17 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize(bool loadUnstaged = true)
         {
+            if (!_initialized)
+            {
+                // If not changed, by default show "no sign commit"
+
+                toolStripGPGSecretKeysSelector.Initialize(this);
+
+                GPGKeysUIController gpg = toolStripGPGSecretKeysSelector.KeysUIController;
+                bool commitSign = gpg.AreCommitSignedByDefault();
+                gpgSignCommitToolStripComboBox.SelectedIndex = commitSign ? 1 : 0;
+            }
+
             _initialized = true;
 
             ThreadHelper.FileAndForget(UpdateBranchNameDisplayAsync);
@@ -1304,6 +1313,16 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
+                GPGKeysUIController gpg = toolStripGPGSecretKeysSelector.KeysUIController;
+                if (!gpg.ValidateCommitSign(gpgSignCommitToolStripComboBox.SelectedIndex > 0, toolStripGPGSecretKeysSelector.KeyID))
+                {
+                    MessageBox.Show(this, TranslatedStrings.InvalidGpgSignOptions, _invalidSignCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    toolStripMenuItem3.ShowDropDown();
+                    gpgSignCommitToolStripComboBox.Focus();
+
+                    return;
+                }
+
                 if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
                 {
                     MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -1383,9 +1402,10 @@ namespace GitUI.CommandsDialogs
                         _useFormCommitMessage,
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
-                        toolStripGpgKeyTextBox.Text,
+                        gpgSignCommitToolStripComboBox.SelectedIndex == 2 ? toolStripGPGSecretKeysSelector.KeyID : "",
                         Staged.IsEmpty,
-                        resetAuthor);
+                        resetAuthor,
+                        Module.GitVersion.SupportNoGpgSign);
 
                     success = FormProcess.ShowDialog(this, UICommands, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 
@@ -2714,8 +2734,8 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.FileAndForget(async () =>
                 {
                     // Do not cache results in order to update the info on FormActivate
-                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false);
-                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false);
+                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false).Value;
+                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false).Value;
                     string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
 
                     await this.SwitchToMainThreadAsync();
@@ -2968,6 +2988,11 @@ namespace GitUI.CommandsDialogs
             UpdateAuthorInfo();
         }
 
+        private void toolStripGpgKeyComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            toolStripGPGSecretKeysSelector.ToolTipText = toolStripGPGSecretKeysSelector.Text;
+        }
+
         private void gpgSignCommitChanged(object sender, EventArgs e)
         {
             // Change the icon for commit button
@@ -2975,7 +3000,25 @@ namespace GitUI.CommandsDialogs
                 ? Images.Key
                 : Images.RepoStateClean;
 
-            toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
+            toolStripGPGSecretKeysSelector.Enabled = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
+
+            // Select default or empty key based on sign option selected. Provides info to user if the default key is set.
+            switch (gpgSignCommitToolStripComboBox.SelectedIndex)
+            {
+                case 0: // Do not sign
+                    toolStripGPGSecretKeysSelector.KeyID = "";
+                    break;
+                case 1: // Sign with default key
+                    toolStripGPGSecretKeysSelector.SelectDefaultKey();
+                    break;
+                case 2: // Sign with specific key
+                    if (toolStripGPGSecretKeysSelector.KeyID == "")
+                    {
+                        toolStripGPGSecretKeysSelector.SelectDefaultKey();
+                    }
+
+                    break;
+            }
         }
 
         #region Selection filtering
@@ -3312,6 +3355,14 @@ namespace GitUI.CommandsDialogs
         internal TestAccessor GetTestAccessor()
             => new(this);
 
+        private void toolStripGpgKeyComboBox_KeysLoaded(object sender, EventArgs e)
+        {
+            if (gpgSignCommitToolStripComboBox.SelectedIndex > 0 && toolStripGPGSecretKeysSelector.SelectedIndex < 1)
+            {
+                toolStripGPGSecretKeysSelector.SelectDefaultKey();
+            }
+        }
+
         internal readonly struct TestAccessor
         {
             private readonly FormCommit _formCommit;
@@ -3358,6 +3409,10 @@ namespace GitUI.CommandsDialogs
             internal string CommitAndForcePushText => _formCommit._commitAndForcePush.Text;
 
             internal Button ResetSoft => _formCommit.ResetSoft;
+
+            internal ToolStripComboBox gpgSignCommitToolStripComboBox => _formCommit.gpgSignCommitToolStripComboBox;
+
+            internal ToolStripGPGSecretKeysSelector toolStripGpgKeyComboBox => _formCommit.toolStripGPGSecretKeysSelector;
 
             internal void RescanChanges() => _formCommit.RescanChanges();
         }

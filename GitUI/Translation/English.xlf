@@ -3607,6 +3607,10 @@ Do you want to continue?</source>
         <source>Commit to {0} ({1})</source>
         <target />
       </trans-unit>
+      <trans-unit id="_invalidSignCaption.Text">
+        <source>Commit Signing Options</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_mergeConflicts.Text">
         <source>There are unresolved merge conflicts, solve merge conflicts before committing.</source>
         <target />
@@ -5226,6 +5230,10 @@ command "git help shortlog"</source>
         <source>Hover to see scenario when fast forward is possible.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_invalidSignCaption.Text">
+        <source>Commit Signing Options</source>
+        <target />
+      </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
         <target />
@@ -5242,6 +5250,18 @@ command "git help shortlog"</source>
         <source>Allow unrelated histories</source>
         <target />
       </trans-unit>
+      <trans-unit id="comboboxGpgSignType.Item0">
+        <source>Do not sign commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="comboboxGpgSignType.Item1">
+        <source>Sign with default GPG</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="comboboxGpgSignType.Item2">
+        <source>Sign with specific GPG</source>
+        <target />
+      </trans-unit>
       <trans-unit id="fastForward.Text">
         <source>Keep a single branch line if possible (fast forward)</source>
         <target />
@@ -5250,8 +5270,16 @@ command "git help shortlog"</source>
         <source>Merge</source>
         <target />
       </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>GPG Signing Action</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label2.Text">
         <source>Merge branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>GPG Signing Key</source>
         <target />
       </trans-unit>
       <trans-unit id="noCommit.Text">
@@ -5944,6 +5972,10 @@ Nothing to rebase.</source>
         <source>Hover to see scenario when fast forward is possible.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_invalidSignCaption.Text">
+        <source>Commit Signing Options</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noBranchSelectedText.Text">
         <source>Please select a branch</source>
         <target />
@@ -5991,6 +6023,18 @@ Nothing to rebase.</source>
       <trans-unit id="btnSolveMergeconflicts.Text">
         <source>There are unresolved merge conflicts
 </source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboGpgAction.Item0">
+        <source>Do not sign commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboGpgAction.Item1">
+        <source>Sign with default GPG</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboGpgAction.Item2">
+        <source>Sign with specific GPG</source>
         <target />
       </trans-unit>
       <trans-unit id="chkAutosquash.Text">
@@ -6041,6 +6085,14 @@ commit date), ignoring the original author date.</source>
       </trans-unit>
       <trans-unit id="lblCurrent.Text">
         <source>Current branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGpgAction.Text">
+        <source>GPG Signing Action</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGpgKey.Text">
+        <source>GPG Signing Key</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRangeFrom.Text">
@@ -8060,6 +8112,14 @@ Would you like to save them?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GpgSecretKeysSelector" source-language="en">
+    <body>
+      <trans-unit id="refreshToolStripMenuItem.Text">
+        <source>&amp;Refresh</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="HelpImageDisplayUserControl" source-language="en">
     <body>
       <trans-unit id="linkLabelHide.Text">
@@ -9844,6 +9904,10 @@ When OpenSSH is used, command line dialogs are shown!
   </file>
   <file datatype="plaintext" original="TranslatedStrings" source-language="en">
     <body>
+      <trans-unit id="__noKeySelected.Text">
+        <source>No key selected</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_addUpstreamRemote.Text">
         <source>Add upstream remote</source>
         <target />
@@ -10186,6 +10250,10 @@ following command.
       </trans-unit>
       <trans-unit id="_installGitInstructions.Text">
         <source>Install git...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_invalidGpgSignOptions.Text">
+        <source>The selected signing option and selected key are invalid. Verify you have selected a key or set a default key in git config (user.signingKey).</source>
         <target />
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">

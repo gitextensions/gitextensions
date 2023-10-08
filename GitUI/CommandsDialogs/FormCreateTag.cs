@@ -1,8 +1,11 @@
-﻿using GitCommands.Git.Commands;
+using GitCommands.Config;
+using GitCommands.Git.Commands;
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
+using GitCommands.Gpg;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
+using GitUI.UserControls.GPGKeys;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -20,7 +23,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
-
         public FormCreateTag(GitUICommands commands, ObjectId? objectId)
             : base(commands)
         {
@@ -44,6 +46,7 @@ namespace GitUI.CommandsDialogs
             }
 
             _gitTagController = new GitTagController(commands);
+            gpgSecretKeysCombobox.Initilize(this, new GpgSecretKeysParser());
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)
@@ -56,6 +59,13 @@ namespace GitUI.CommandsDialogs
             }
 
             pushTag.Text = string.Format(_pushToCaption.Text, _currentRemote);
+
+            var gpg = gpgSecretKeysCombobox.KeysUIController;
+            bool tagSign = gpg.AreTagsSignedByDefault();
+            if (tagSign)
+            {
+                annotate.SelectedIndex = 2;
+            }
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -85,11 +95,22 @@ namespace GitUI.CommandsDialogs
                 return "";
             }
 
+            TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
+            bool useKey = tagOperation == TagOperation.SignWithSpecificKey;
+
+            GPGKeysUIController gpg = gpgSecretKeysCombobox.KeysUIController;
+
+            if (!gpg.ValidateTagSign(tagOperation, gpgSecretKeysCombobox.KeyID))
+            {
+                MessageBox.Show(this, TranslatedStrings.InvalidGpgSignOptions, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return "";
+            }
+
             GitCreateTagArgs createTagArgs = new(textBoxTagName.Text,
                                                      objectId,
-                                                     GetSelectedOperation(annotate.SelectedIndex),
+                                                     tagOperation,
                                                      tagMessage.Text,
-                                                     textBoxGpgKey.Text,
+                                                     useKey ? gpgSecretKeysCombobox.KeyID : "",
                                                      ForceTag.Checked);
             var success = _gitTagController.CreateTag(createTagArgs, this);
             if (!success)
@@ -127,11 +148,29 @@ namespace GitUI.CommandsDialogs
         private void AnnotateDropDownChanged(object sender, EventArgs e)
         {
             TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
-            textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
+            gpgSecretKeysCombobox.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
             keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
+            UpdateKeySelection(tagOperation);
+
             bool providesMessage = tagOperation.CanProvideMessage();
             tagMessage.Enabled = providesMessage;
             tagMessage.BorderStyle = providesMessage ? BorderStyle.FixedSingle : BorderStyle.None;
+        }
+
+        private void UpdateKeySelection(TagOperation tagOperation)
+        {
+            // Select default or empty key based on tagOperation value. Provides info to user if the default key is set.
+            if (tagOperation == TagOperation.SignWithDefaultKey || tagOperation == TagOperation.Annotate || tagOperation == TagOperation.Lightweight)
+            {
+                gpgSecretKeysCombobox.SelectDefaultKey();
+            }
+            else if (tagOperation == TagOperation.SignWithSpecificKey)
+            {
+                if (gpgSecretKeysCombobox.KeyID == "")
+                {
+                    gpgSecretKeysCombobox.SelectDefaultKey();
+                }
+            }
         }
 
         private static TagOperation GetSelectedOperation(int dropdownSelection)
@@ -144,6 +183,12 @@ namespace GitUI.CommandsDialogs
                 3 => TagOperation.SignWithSpecificKey,
                 _ => throw new NotSupportedException("Invalid dropdownSelection")
             };
+        }
+
+        private void gpgSecretKeysCombobox_KeysLoaded(object sender, EventArgs e)
+        {
+            TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
+            UpdateKeySelection(tagOperation);
         }
     }
 }

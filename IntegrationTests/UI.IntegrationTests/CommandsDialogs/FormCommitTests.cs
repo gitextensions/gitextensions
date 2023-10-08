@@ -562,6 +562,44 @@ namespace GitExtensions.UITests.CommandsDialogs
                 (bounds1, bounds2) => bounds2.Should().Be(bounds1));
         }
 
+        [Test]
+        public void GpgAction_Not_Unselected()
+        {
+            RunFormTest(async form =>
+            {
+                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
+
+                var accessor = form.GetTestAccessor();
+                accessor.gpgSignCommitToolStripComboBox.SelectedIndex.Should().NotBe(-1);
+            });
+        }
+
+        [Test(Description = "Used to verify appveyor build has a gpg key.  This test will fail if you run locally and have no secret keys in gpg.")]
+        public void StartCommitDialog_HasGpgKeys()
+        {
+            RunFormTest(async form =>
+            {
+                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
+                }
+
+                var accessor = form.GetTestAccessor();
+                var keys = accessor.toolStripGpgKeyComboBox.CurrentKeys
+                       .Skip(1) // Ignore the "No key selected" entry
+                       .ToList();
+                foreach (var k in keys)
+                {
+                    Console.WriteLine(k.Caption);
+                }
+
+                keys.Any().Should().BeTrue();
+            });
+        }
+
         private void TestAddSelectionToCommitMessage(
             bool focusSelectedDiff,
             string selectedText,

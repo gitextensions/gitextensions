@@ -1,4 +1,4 @@
-﻿using GitCommands.Gpg;
+﻿using GitCommands.Git.Gpg;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
