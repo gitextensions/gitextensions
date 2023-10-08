@@ -706,9 +706,9 @@ namespace GitCommandsTests
 
                 // Init all modules of root
                 var root = moduleTestHelpers[0];
-                IEnumerable<GitConfigItem> cfgs = GitCommandHelpers.GetAllowFileConfig();
+                IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();
 
-                root.Module.GitExecutable.Execute(GitCommandHelpers.SubmoduleUpdateCmd(name: null, cfgs));
+                root.Module.GitExecutable.Execute(Commands.SubmoduleUpdate(name: null, cfgs));
 
                 var paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
                 Assert.AreEqual(new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" }, paths, $"Modules: {string.Join(" ", paths)}");

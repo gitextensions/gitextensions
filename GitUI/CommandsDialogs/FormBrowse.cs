@@ -1563,7 +1563,7 @@ namespace GitUI.CommandsDialogs
             {
                 var submodule = toolStripMenuItem.Tag as string;
                 Validates.NotNull(Module.SuperprojectModule);
-                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodule), Module.SuperprojectModule.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: Commands.SubmoduleUpdate(submodule), Module.SuperprojectModule.WorkingDir, input: null, useDialogSettings: true);
             }
 
             RefreshRevisions();
@@ -2869,7 +2869,7 @@ namespace GitUI.CommandsDialogs
         {
             if (AppSettings.DontConfirmUndoLastCommit || MessageBox.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                var args = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
+                var args = Commands.Reset(ResetMode.Soft, "HEAD~1");
                 Module.GitExecutable.GetOutput(args);
                 refreshToolStripMenuItem.PerformClick();
                 RefreshGitStatusMonitor();

@@ -210,7 +210,7 @@ namespace GitUI.CommandsDialogs
                 string sourceRepo = PathUtil.IsLocalFile(_NO_TRANSLATE_From.Text)
                     ? UICommands.Module.GetGitExecPath(_NO_TRANSLATE_From.Text)
                     : _NO_TRANSLATE_From.Text;
-                var cloneCmd = GitCommandHelpers.CloneCmd(sourceRepo,
+                var cloneCmd = Commands.Clone(sourceRepo,
                     UICommands.Module.GetGitExecPath(dirTo),
                     CentralRepository.Checked,
                     cbIntializeAllSubmodules.Checked,

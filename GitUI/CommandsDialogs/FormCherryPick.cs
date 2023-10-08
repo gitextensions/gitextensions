@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs
 
             if (canExecute && Revision is not null)
             {
-                var command = GitCommandHelpers.CherryPickCmd(Revision.ObjectId, cbxAutoCommit.Checked, args.ToString());
+                var command = Commands.CherryPick(Revision.ObjectId, cbxAutoCommit.Checked, args.ToString());
 
                 // Don't verify whether the command is successful.
                 // If it fails, likely there is a conflict that needs to be resolved.

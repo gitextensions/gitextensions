@@ -4,7 +4,7 @@ using GitUIPluginInterfaces;
 namespace GitCommands.Git
 {
     /// <summary>
-    /// Provides a parser for output of <see cref="GitCommandHelpers.GetAllChangedFilesCmd"/> command.
+    /// Provides a parser for output of <see cref="Commands.GetAllChangedFiles"/> command.
     /// </summary>
     public class GetAllChangedFilesOutputParser
     {
@@ -19,7 +19,7 @@ namespace GitCommands.Git
         /// Parse the output from git-status --porcelain=2 -z
         /// Note that the caller should check for fatal errors in the Git output.
         /// </summary>
-        /// <param name="getAllChangedFilesCommandOutput">An output of <see cref="GitCommandHelpers.GetAllChangedFilesCmd"/> command.</param>
+        /// <param name="getAllChangedFilesCommandOutput">An output of <see cref="Commands.GetAllChangedFiles"/> command.</param>
         /// <returns>list with the parsed GitItemStatus.</returns>
         /// <seealso href="https://git-scm.com/docs/git-status"/>
         public IReadOnlyList<GitItemStatus> Parse(string getAllChangedFilesCommandOutput)
@@ -31,7 +31,7 @@ namespace GitCommands.Git
         /// Parse git-status --porcelain=1 and git-diff --name-status
         /// Outputs are similar, except that git-status has status for both worktree and index.
         /// </summary>
-        /// <param name="getAllChangedFilesCommandOutput">An output of <see cref="GitCommandHelpers.GetAllChangedFilesCmd"/> command.</param>
+        /// <param name="getAllChangedFilesCommandOutput">An output of <see cref="Commands.GetAllChangedFiles"/> command.</param>
         /// <param name="fromDiff">Parse git-diff.</param>
         /// <param name="staged">The staged status <see cref="GitItemStatus"/>, only relevant for git-diff (parsed for git-status).</param>
         /// <returns>list with the git items.</returns>

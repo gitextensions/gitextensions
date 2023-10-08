@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
 
         private void PushTag(string tagName)
         {
-            var pushCmd = GitCommandHelpers.PushTagCmd(_currentRemote, tagName, false);
+            var pushCmd = Commands.PushTag(_currentRemote, tagName, false);
 
             bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
             if (!success)

@@ -81,7 +81,7 @@ namespace GitUI.HelperDialogs
                 return;
             }
 
-            var command = GitCommandHelpers.PushLocalCmd(gitRefToReset.CompleteName, _revision.ObjectId, Module.GetGitExecPath(Module.WorkingDir), ForceReset.Checked);
+            var command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.GetGitExecPath(Module.WorkingDir), ForceReset.Checked);
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {

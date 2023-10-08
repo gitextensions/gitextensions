@@ -102,7 +102,7 @@ namespace GitUI.CommandsDialogs
                 mergeMessagePath = _commitMessageManager.MergeMessagePath;
             }
 
-            var command = GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
+            var command = Commands.MergeBranch(Branches.GetSelectedText(),
                                                             fastForward.Checked,
                                                             squash.Checked,
                                                             noCommit.Checked,

@@ -506,7 +506,7 @@ namespace GitCommands
         public ExecutionResult Clean(CleanMode mode, bool dryRun = false, bool directories = false, string? paths = null)
         {
             return _gitExecutable.Execute(
-                GitCommandHelpers.CleanCmd(mode, dryRun, directories, paths));
+                Commands.Clean(mode, dryRun, directories, paths));
         }
 
         public bool EditNotes(ObjectId commitId)
@@ -789,7 +789,7 @@ namespace GitCommands
                 return new Dictionary<IGitRef, IGitItem?>();
             }
 
-            string? command = GitCommandHelpers.GetRefsCmd(refsFilter, noLocks: noLocks, GitRefsSortBy.committerdate, GitRefsSortOrder.Descending, maxSuperRefCount);
+            string? command = Commands.GetRefs(refsFilter, noLocks: noLocks, GitRefsSortBy.committerdate, GitRefsSortOrder.Descending, maxSuperRefCount);
             var refList = await _gitExecutable.GetOutputAsync(command).ConfigureAwait(false);
             var refs = ParseRefs(refList);
 
@@ -1279,7 +1279,7 @@ namespace GitCommands
 
         public void Reset(ResetMode mode, string? file = null)
         {
-            _gitExecutable.RunCommand(GitCommandHelpers.ResetCmd(mode, commit: null, file));
+            _gitExecutable.RunCommand(Commands.Reset(mode, commit: null, file));
         }
 
         /// <summary>
@@ -1928,7 +1928,7 @@ namespace GitCommands
 
             if (filesToRemove.Count > 0)
             {
-                var args = GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, "HEAD");
+                var args = Commands.Reset(ResetMode.ResetIndex, "HEAD");
                 _gitExecutable.RunBatchCommand(new ArgumentBuilder() { args }
                     .BuildBatchArgumentsForFiles(filesToRemove),
                     action);
@@ -2729,7 +2729,7 @@ namespace GitCommands
             bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
             UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default, CancellationToken cancellationToken = default)
         {
-            ExecutionResult exec = _gitExecutable.Execute(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false, cancellationToken: cancellationToken);
+            ExecutionResult exec = _gitExecutable.Execute(Commands.GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false, cancellationToken: cancellationToken);
             List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
             if (!exec.ExitedSuccessfully)
             {
@@ -2862,7 +2862,7 @@ namespace GitCommands
             }
 
             // This command is a little more expensive because it will return both staged and unstaged files
-            ArgumentString command = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No);
+            ArgumentString command = Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No);
             exec = _gitExecutable.Execute(command, throwOnErrorExit: false);
             List<GitItemStatus> res = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)
                                             .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
@@ -2900,7 +2900,7 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None)
         {
-            ArgumentString args = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
+            ArgumentString args = Commands.GetAllChangedFiles(true, untrackedFilesMode, ignoreSubmodulesMode);
             ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
             List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
             if (!exec.ExitedSuccessfully)
@@ -2921,7 +2921,7 @@ namespace GitCommands
 
         public async Task<Patch?> GetCurrentChangesAsync(string? fileName, string? oldFileName, bool staged, string extraDiffArguments, Encoding? encoding = null, bool noLocks = false)
         {
-            var output = await _gitExecutable.GetOutputAsync(GitCommandHelpers.GetCurrentChangesCmd(fileName, oldFileName, staged, extraDiffArguments, noLocks),
+            var output = await _gitExecutable.GetOutputAsync(Commands.GetCurrentChanges(fileName, oldFileName, staged, extraDiffArguments, noLocks),
                 outputEncoding: LosslessEncoding).ConfigureAwait(false);
 
             IReadOnlyList<Patch> patches = PatchProcessor.CreatePatchesFromString(output, new Lazy<Encoding>(() => encoding ?? FilesEncoding)).ToList();
@@ -2983,7 +2983,7 @@ namespace GitCommands
 
         public void UnstageFileToRemove(string file)
         {
-            var args = GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, "HEAD", file);
+            var args = Commands.Reset(ResetMode.ResetIndex, "HEAD", file);
             _gitExecutable.RunCommand(args);
         }
 
@@ -3146,7 +3146,7 @@ namespace GitCommands
             // Assume that all GetRefs() are done in the background, which may not be correct in the future.
             const bool noLocks = true;
 
-            ArgumentString cmd = GitCommandHelpers.GetRefsCmd(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
+            ArgumentString cmd = Commands.GetRefs(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
             ExecutionResult result = _gitExecutable.Execute(cmd, throwOnErrorExit: false);
             return result.ExitedSuccessfully
                 ? ParseRefs(result.StandardOutput)
@@ -3156,7 +3156,7 @@ namespace GitCommands
         public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string? commit = null)
         {
             ExecutionResult result = await _gitExecutable
-                .ExecuteAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit), throwOnErrorExit: false)
+                .ExecuteAsync(Commands.MergedBranches(includeRemote, fullRefname, commit), throwOnErrorExit: false)
                 .ConfigureAwait(false);
             ////TODO: Handle non-empty result.StandardError
             return result.StandardOutput.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
@@ -3165,7 +3165,7 @@ namespace GitCommands
         public IEnumerable<string> GetMergedBranches(bool includeRemote = false)
         {
             return _gitExecutable
-                .GetOutput(GitCommandHelpers.MergedBranchesCmd(includeRemote))
+                .GetOutput(Commands.MergedBranches(includeRemote))
                 .LazySplit('\n', StringSplitOptions.RemoveEmptyEntries);
         }
 
@@ -3175,7 +3175,7 @@ namespace GitCommands
             const string refsPrefix = "refs/";
 
             var remotes = GetRemoteNames();
-            ExecutionResult result = _gitExecutable.Execute(GitCommandHelpers.MergedBranchesCmd(includeRemote: true));
+            ExecutionResult result = _gitExecutable.Execute(Commands.MergedBranches(includeRemote: true));
             var lines = result.StandardOutput.LazySplit('\n');
 
             return lines
@@ -4092,7 +4092,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Re-encodes string from GitCommandHelpers.LosslessEncoding to toEncoding.
+        /// Re-encodes string from Commands.LosslessEncoding to toEncoding.
         /// </summary>
         [return: NotNullIfNotNull("s")]
         public static string? ReEncodeStringFromLossless(string? s, Encoding? toEncoding)

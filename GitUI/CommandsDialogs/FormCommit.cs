@@ -2146,7 +2146,7 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                ArgumentString cmd = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
+                ArgumentString cmd = Commands.Reset(ResetMode.Soft, "HEAD~1");
                 Module.GitExecutable.RunCommand(cmd);
                 Amend.Enabled = false;
                 Amend.Checked = false;
@@ -3047,7 +3047,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
-                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.SubmoduleUpdateCmd(item.Name), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: Commands.SubmoduleUpdate(item.Name), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             Initialize();

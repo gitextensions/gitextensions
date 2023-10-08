@@ -374,7 +374,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ? uiCommands.Module.GetGitExecPath(repo.CloneUrl)
                 : repo.CloneUrl;
 
-            var cmd = GitCommandHelpers.CloneCmd(repoSrc, uiCommands.Module.GetGitExecPath(targetDir), depth: GetDepth());
+            var cmd = Commands.Clone(repoSrc, uiCommands.Module.GetGitExecPath(targetDir), depth: GetDepth());
 
             FormRemoteProcess formRemoteProcess = new(uiCommands, cmd)
             {

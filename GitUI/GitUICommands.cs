@@ -189,7 +189,7 @@ namespace GitUI
         {
             bool Action()
             {
-                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message, selectedFiles);
+                var arguments = Commands.StashSave(includeUntrackedFiles, keepIndex, message, selectedFiles);
                 FormProcess.ShowDialog(owner, this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
@@ -1059,7 +1059,7 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), Module.WorkingDir, input: null, useDialogSettings: true);
+                return FormProcess.ShowDialog(owner, this, arguments: Commands.SubmoduleUpdate(submoduleLocalPath), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
@@ -1070,7 +1070,7 @@ namespace GitUI
             bool Action()
             {
                 // Execute the submodule update comment from the submodule's parent directory
-                return FormProcess.ShowDialog(owner, this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), submoduleParentPath, null, true);
+                return FormProcess.ShowDialog(owner, this, arguments: Commands.SubmoduleUpdate(submoduleLocalPath), submoduleParentPath, null, true);
             }
 
             return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
@@ -1080,7 +1080,7 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, this, arguments: GitCommandHelpers.SubmoduleSyncCmd(""), Module.WorkingDir, input: null, useDialogSettings: true);
+                return FormProcess.ShowDialog(owner, this, arguments: Commands.SubmoduleSync(""), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, Action);

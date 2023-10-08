@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs
             string includePathArgument = GetInclusivePathArgumentFromGui();
             string excludePathArguments = GetExclusivePathArgumentFromGui();
             CleanMode mode = GetCleanMode();
-            ArgumentString cleanUpCmd = GitCommandHelpers.CleanCmd(mode, dryRun, directories: RemoveDirectories.Checked,
+            ArgumentString cleanUpCmd = Commands.Clean(mode, dryRun, directories: RemoveDirectories.Checked,
                 paths: includePathArgument, excludes: excludePathArguments);
 
             string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
 
             if (CleanSubmodules.Checked)
             {
-                ArgumentString cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument);
+                ArgumentString cleanSubmodulesCmd = Commands.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument);
                 cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
             }

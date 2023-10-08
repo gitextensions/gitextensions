@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs
 
             string existingCommitMessage = ThreadHelper.JoinableTaskFactory.Run(() => commitMessageManager.GetMergeOrCommitMessageAsync());
 
-            ArgumentString command = GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex);
+            ArgumentString command = Commands.Revert(Revision.ObjectId, AutoCommit.Checked, parentIndex);
 
             // Don't verify whether the command is successful.
             // If it fails, likely there is a conflict that needs to be resolved.

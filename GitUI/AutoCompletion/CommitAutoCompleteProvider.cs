@@ -28,7 +28,7 @@ namespace GitUI.AutoCompletion
             HashSet<string> autoCompleteWords = new();
 
             IGitModule module = GetModule();
-            ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
+            ArgumentString cmd = Commands.GetAllChangedFiles(true, UntrackedFilesMode.Default, noLocks: true);
             ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!result.ExitedSuccessfully)
             {

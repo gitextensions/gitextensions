@@ -1323,7 +1323,7 @@ namespace GitUI.CommandsDialogs
         {
             var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
-            FormProcess.ShowDialog(FindForm() as FormBrowse, UICommands, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(FindForm() as FormBrowse, UICommands, arguments: Commands.SubmoduleUpdate(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
             RequestRefresh();
         }
 

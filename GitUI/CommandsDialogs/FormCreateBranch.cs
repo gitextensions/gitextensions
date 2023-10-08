@@ -123,14 +123,14 @@ namespace GitUI.CommandsDialogs
                 var originalHash = Module.GetCurrentCheckout();
 
                 var command = Orphan.Checked
-                    ? GitCommandHelpers.CreateOrphanCmd(branchName, objectId)
-                    : GitCommandHelpers.BranchCmd(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
+                    ? Commands.CreateOrphan(branchName, objectId)
+                    : Commands.Branch(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 
                 bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (Orphan.Checked && success && ClearOrphan.Checked)
                 {
                     // orphan AND orphan creation success AND clear
-                    FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.RemoveCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(this, UICommands, arguments: Commands.Remove(), Module.WorkingDir, input: null, useDialogSettings: true);
                 }
 
                 if (success && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)

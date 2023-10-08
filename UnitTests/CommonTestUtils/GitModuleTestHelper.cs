@@ -158,9 +158,9 @@ namespace CommonTestUtils
             Assert.That(fileEnabled == "always");
 
             // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
-            IEnumerable<GitConfigItem> cfgs = GitCommandHelpers.GetAllowFileConfig();
+            IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();
 
-            var result = Module.GitExecutable.Execute(GitCommandHelpers.AddSubmoduleCmd(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true, cfgs));
+            var result = Module.GitExecutable.Execute(Commands.AddSubmodule(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true, cfgs));
             Debug.WriteLine(result.AllOutput);
 
             Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
@@ -172,8 +172,8 @@ namespace CommonTestUtils
         /// <returns>All submodule Modules</returns>
         public IEnumerable<GitModule> GetSubmodulesRecursive()
         {
-            IEnumerable<GitConfigItem> configs = GitCommandHelpers.GetAllowFileConfig();
-            ArgumentString args = GitCommandHelpers.SubmoduleUpdateCmd(name: null, configs: configs);
+            IEnumerable<GitConfigItem> configs = Commands.GetAllowFileConfig();
+            ArgumentString args = Commands.SubmoduleUpdate(name: null, configs: configs);
 
             Module.GitExecutable.Execute(args);
             var paths = Module.GetSubmodulesLocalPaths(recursive: true);

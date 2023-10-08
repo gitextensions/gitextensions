@@ -2449,14 +2449,14 @@ namespace GitUI
                 return;
             }
 
-            string? command = GitCommandHelpers.ContinueBisectCmd(bisectOption, LatestSelectedRevision.ObjectId);
+            string? command = Commands.ContinueBisect(bisectOption, LatestSelectedRevision.ObjectId);
             FormProcess.ShowDialog(ParentForm, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: false);
             PerformRefreshRevisions();
         }
 
         private void StopBisectToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(ParentForm, UICommands, arguments: GitCommandHelpers.StopBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(ParentForm, UICommands, arguments: Commands.StopBisect(), Module.WorkingDir, input: null, useDialogSettings: true);
             PerformRefreshRevisions();
         }
 
@@ -2950,7 +2950,7 @@ namespace GitUI
                 return;
             }
 
-            string rebaseCmd = GitCommandHelpers.RebaseCmd(
+            string rebaseCmd = Commands.Rebase(
                 GetActualRevision(LatestSelectedRevision)?.FirstParentId?.ToString(), interactive: true, preserveMerges: false,
                 autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: Module.GitVersion.SupportRebaseMerges);
 

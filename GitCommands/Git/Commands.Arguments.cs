@@ -6,9 +6,9 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {
-    public static class GitCommandHelpers
+    public static partial class Commands
     {
-        public static ArgumentString CherryPickCmd(ObjectId commitId, bool commit, string arguments)
+        public static ArgumentString CherryPick(ObjectId commitId, bool commit, string arguments)
         {
             return new GitArgumentBuilder("cherry-pick")
             {
@@ -18,12 +18,12 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString SubmoduleUpdateCmd(string? name, IEnumerable<GitConfigItem>? configs = null)
+        public static ArgumentString SubmoduleUpdate(string? name, IEnumerable<GitConfigItem>? configs = null)
         {
             return SubmoduleUpdateCommand((name ?? "").Trim().QuoteNE(), configs);
         }
 
-        public static ArgumentString SubmoduleUpdateCmd(IEnumerable<string> submodules, IEnumerable<GitConfigItem>? configs = null)
+        public static ArgumentString SubmoduleUpdate(IEnumerable<string> submodules, IEnumerable<GitConfigItem>? configs = null)
         {
             string submodulesQuoted = string.Join(" ", submodules.Select(s => s.Trim().QuoteNE()));
             return SubmoduleUpdateCommand(submodulesQuoted, configs);
@@ -50,7 +50,7 @@ namespace GitCommands.Git
             return args;
         }
 
-        public static ArgumentString SubmoduleSyncCmd(string? name)
+        public static ArgumentString SubmoduleSync(string? name)
         {
             return new GitArgumentBuilder("submodule")
             {
@@ -59,7 +59,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force, IEnumerable<GitConfigItem> configs = null)
+        public static ArgumentString AddSubmodule(string remotePath, string localPath, string branch, bool force, IEnumerable<GitConfigItem> configs = null)
         {
             GitArgumentBuilder argsBuilder = new("submodule")
             {
@@ -91,7 +91,7 @@ namespace GitCommands.Git
             yield return new GitConfigItem(SettingKeyString.AllowFileProtocol, "always");
         }
 
-        public static ArgumentString GetCurrentChangesCmd(string? fileName, string? oldFileName, bool staged,
+        public static ArgumentString GetCurrentChanges(string? fileName, string? oldFileName, bool staged,
             string extraDiffArguments, bool noLocks)
         {
             return new GitArgumentBuilder("diff", gitOptions: noLocks ? (ArgumentString)"--no-optional-locks" : default)
@@ -107,7 +107,7 @@ namespace GitCommands.Git
                 };
         }
 
-        public static ArgumentString GetRefsCmd(RefsFilter getRef, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, int count = 0)
+        public static ArgumentString GetRefs(RefsFilter getRef, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, int count = 0)
         {
             bool hasTags = (getRef == RefsFilter.NoFilter) || (getRef & RefsFilter.Tags) != 0;
 
@@ -190,7 +190,7 @@ namespace GitCommands.Git
             }
         }
 
-        public static ArgumentString RevertCmd(ObjectId commitId, bool autoCommit, int parentIndex)
+        public static ArgumentString Revert(ObjectId commitId, bool autoCommit, int parentIndex)
         {
             return new GitArgumentBuilder("revert")
             {
@@ -207,7 +207,7 @@ namespace GitCommands.Git
         /// <param name="commit">Optional commit-ish (for reset-index this is tree-ish and mandatory).</param>
         /// <param name="file">Optional file to reset.</param>
         /// <returns>Argument string.</returns>
-        public static ArgumentString ResetCmd(ResetMode mode, string? commit = null, string? file = null)
+        public static ArgumentString Reset(ResetMode mode, string? commit = null, string? file = null)
         {
             if (mode == ResetMode.ResetIndex && string.IsNullOrWhiteSpace(commit))
             {
@@ -232,7 +232,7 @@ namespace GitCommands.Git
         /// <param name="repoDir">Directory to the current repo in Posix format.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
         /// <returns>The Git command to execute.</returns>
-        public static ArgumentString PushLocalCmd(string gitRef, ObjectId targetId, string repoDir, bool force = false)
+        public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, bool force = false)
         {
             Debug.Assert(!EnvUtils.RunningOnWindows() || repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                 $"'PushLocalCmd' must be called with 'repoDir' in Posix format");
@@ -262,7 +262,7 @@ namespace GitCommands.Git
         /// <para><c>False</c>: --no-single-branch.</para>
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
-        public static ArgumentString CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
+        public static ArgumentString Clone(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
         {
             Debug.Assert(!EnvUtils.RunningOnWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                $"'CloneCmd' must be called with 'fromPath' in Posix format");
@@ -285,7 +285,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString CheckoutCmd(string branchOrRevisionName, LocalChangesAction changesAction)
+        public static ArgumentString Checkout(string branchOrRevisionName, LocalChangesAction changesAction)
         {
             return new GitArgumentBuilder("checkout")
             {
@@ -296,7 +296,7 @@ namespace GitCommands.Git
         }
 
         /// <summary>Create a new orphan branch from <paramref name="startPoint"/> and switch to it.</summary>
-        public static ArgumentString CreateOrphanCmd(string newBranchName, ObjectId? startPoint = null)
+        public static ArgumentString CreateOrphan(string newBranchName, ObjectId? startPoint = null)
         {
             return new GitArgumentBuilder("checkout")
             {
@@ -310,7 +310,7 @@ namespace GitCommands.Git
         /// <param name="force">Override the up-to-date check.</param>
         /// <param name="isRecursive">Allow recursive removal when a leading directory name is given.</param>
         /// <param name="files">Files to remove. File globs can be given to remove matching files.</param>
-        public static ArgumentString RemoveCmd(bool force = true, bool isRecursive = true, params string[] files)
+        public static ArgumentString Remove(bool force = true, bool isRecursive = true, params string[] files)
         {
             return new GitArgumentBuilder("rm")
             {
@@ -321,7 +321,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString BranchCmd(string branchName, string revision, bool checkout)
+        public static ArgumentString Branch(string branchName, string revision, bool checkout)
         {
             return new GitArgumentBuilder(checkout ? "checkout" : "branch")
             {
@@ -331,7 +331,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString MergedBranchesCmd(bool includeRemote = false, bool fullRefname = false, string? commit = null)
+        public static ArgumentString MergedBranches(bool includeRemote = false, bool fullRefname = false, string? commit = null)
         {
             return new GitArgumentBuilder("branch")
             {
@@ -343,7 +343,7 @@ namespace GitCommands.Git
         }
 
         /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
-        public static ArgumentString PushMultipleCmd(string remote, IEnumerable<GitPushAction> pushActions)
+        public static ArgumentString PushMultiple(string remote, IEnumerable<GitPushAction> pushActions)
         {
             return new GitPush(remote.ToPosixPath(), pushActions)
             {
@@ -351,7 +351,7 @@ namespace GitCommands.Git
             }.ToString();
         }
 
-        public static ArgumentString PushTagCmd(string path, string tag, bool all, ForcePushOptions force = ForcePushOptions.DoNotForce)
+        public static ArgumentString PushTag(string path, string tag, bool all, ForcePushOptions force = ForcePushOptions.DoNotForce)
         {
             if (!all && string.IsNullOrWhiteSpace(tag))
             {
@@ -369,7 +369,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string>? selectedFiles)
+        public static ArgumentString StashSave(bool untracked, bool keepIndex, string message, IReadOnlyList<string>? selectedFiles)
         {
             selectedFiles ??= Array.Empty<string>();
 
@@ -387,32 +387,32 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString ContinueRebaseCmd()
+        public static ArgumentString ContinueRebase()
         {
             return new GitArgumentBuilder("rebase") { "--continue" };
         }
 
-        public static ArgumentString SkipRebaseCmd()
+        public static ArgumentString SkipRebase()
         {
             return new GitArgumentBuilder("rebase") { "--skip" };
         }
 
-        public static ArgumentString ContinueMergeCmd()
+        public static ArgumentString ContinueMerge()
         {
             return new GitArgumentBuilder("merge") { "--continue" };
         }
 
-        public static ArgumentString AbortMergeCmd()
+        public static ArgumentString AbortMerge()
         {
             return new GitArgumentBuilder("merge") { "--abort" };
         }
 
-        public static ArgumentString StartBisectCmd()
+        public static ArgumentString StartBisect()
         {
             return new GitArgumentBuilder("bisect") { "start" };
         }
 
-        public static ArgumentString ContinueBisectCmd(GitBisectOption bisectOption, params ObjectId[] revisions)
+        public static ArgumentString ContinueBisect(GitBisectOption bisectOption, params ObjectId[] revisions)
         {
             return new GitArgumentBuilder("bisect")
             {
@@ -421,12 +421,12 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString StopBisectCmd()
+        public static ArgumentString StopBisect()
         {
             return new GitArgumentBuilder("bisect") { "reset" };
         }
 
-        public static ArgumentString RebaseCmd(
+        public static ArgumentString Rebase(
             string? branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string? from = null, string? onto = null, bool supportRebaseMerges = true)
         {
             // TODO-NULLABLE does it make sense for 'branch' to be null here?
@@ -467,17 +467,17 @@ namespace GitCommands.Git
             return builder;
         }
 
-        public static ArgumentString AbortRebaseCmd()
+        public static ArgumentString AbortRebase()
         {
             return new GitArgumentBuilder("rebase") { "--abort" };
         }
 
-        public static ArgumentString EditTodoRebaseCmd()
+        public static ArgumentString EditTodoRebase()
         {
             return new GitArgumentBuilder("rebase") { "--edit-todo" };
         }
 
-        public static ArgumentString ResolvedCmd()
+        public static ArgumentString Resolved()
         {
             return new GitArgumentBuilder("am")
             {
@@ -486,7 +486,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString SkipCmd()
+        public static ArgumentString Skip()
         {
             return new GitArgumentBuilder("am")
             {
@@ -495,7 +495,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString AbortCmd()
+        public static ArgumentString Abort()
         {
             return new GitArgumentBuilder("am")
             {
@@ -504,7 +504,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString ApplyMailboxPatchCmd(bool signOff, bool ignoreWhiteSpace, string? patchFile = null)
+        public static ArgumentString ApplyMailboxPatch(bool signOff, bool ignoreWhiteSpace, string? patchFile = null)
         {
             return new GitArgumentBuilder("am")
             {
@@ -515,7 +515,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString ApplyDiffPatchCmd(bool ignoreWhiteSpace, string patchFile)
+        public static ArgumentString ApplyDiffPatch(bool ignoreWhiteSpace, string patchFile)
         {
             return new GitArgumentBuilder("apply")
             {
@@ -532,7 +532,7 @@ namespace GitCommands.Git
         /// <param name="directories">Delete untracked directories too.</param>
         /// <param name="paths">Limit to specific paths.</param>
         /// <param name="excludes">Exclude certain files.</param>
-        public static ArgumentString CleanCmd(CleanMode mode, bool dryRun, bool directories, string? paths = null, string? excludes = null)
+        public static ArgumentString Clean(CleanMode mode, bool dryRun, bool directories, string? paths = null, string? excludes = null)
         {
             return new GitArgumentBuilder("clean")
             {
@@ -563,7 +563,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
+        public static ArgumentString GetAllChangedFiles(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
             GitArgumentBuilder args = new("status", gitOptions: noLocks ? (ArgumentString)"--no-optional-locks" : default)
             {
@@ -581,7 +581,7 @@ namespace GitCommands.Git
             return args;
         }
 
-        public static ArgumentString MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, int? log)
+        public static ArgumentString MergeBranch(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, int? log)
         {
             return new GitArgumentBuilder("merge")
             {

@@ -771,7 +771,7 @@ namespace GitCommandsTests.Submodules
 
         private static IReadOnlyList<GitItemStatus> GetStatusChangedFiles(IGitModule module)
         {
-            var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
+            var cmd = Commands.GetAllChangedFiles(true, UntrackedFilesMode.Default, noLocks: true);
             var output = module.GitExecutable.GetOutput(cmd);
             return new GetAllChangedFilesOutputParser(() => module).Parse(output);
         }

@@ -474,7 +474,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     {
                         try
                         {
-                            GitExtUtils.ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, noLocks: noLocks);
+                            GitExtUtils.ArgumentString cmd = Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, noLocks: noLocks);
                             ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken);
 
                             if (result.ExitedSuccessfully && !ModuleHasChanged())

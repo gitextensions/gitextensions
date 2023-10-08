@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.ContinueRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: Commands.ContinueRebase(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -260,7 +260,7 @@ namespace GitUI.CommandsDialogs
                     Skipped.Add(applyingPatch);
                 }
 
-                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.SkipRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: Commands.SkipRebase(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: Commands.AbortRebase(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -294,7 +294,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.EditTodoRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: Commands.EditTodoRebase(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -324,13 +324,13 @@ namespace GitUI.CommandsDialogs
                 string rebaseCmd;
                 if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
                 {
-                    rebaseCmd = GitCommandHelpers.RebaseCmd(
+                    rebaseCmd = Commands.Rebase(
                         cboTo.Text, chkInteractive.Checked, chkPreserveMerges.Checked,
                         chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, cboBranches.Text);
                 }
                 else
                 {
-                    rebaseCmd = GitCommandHelpers.RebaseCmd(
+                    rebaseCmd = Commands.Rebase(
                         cboBranches.Text, chkInteractive.Checked,
                         chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked);
                 }

@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Start_Click(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.StartBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.StartBisect(), Module.WorkingDir, input: null, useDialogSettings: true);
 
             UpdateButtonsState();
 
@@ -53,14 +53,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void BisectRange(ObjectId startRevision, ObjectId endRevision)
             {
-                var command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, startRevision);
+                var command = Commands.ContinueBisect(GitBisectOption.Good, startRevision);
                 bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (!success)
                 {
                     return;
                 }
 
-                command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad, endRevision);
+                command = Commands.ContinueBisect(GitBisectOption.Bad, endRevision);
                 FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             }
         }
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.StopBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: false);
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.StopBisect(), Module.WorkingDir, input: null, useDialogSettings: false);
             Close();
         }
 
@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void ContinueBisect(GitBisectOption bisectOption)
         {
-            FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.ContinueBisectCmd(bisectOption), Module.WorkingDir, input: null, useDialogSettings: false);
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.ContinueBisect(bisectOption), Module.WorkingDir, input: null, useDialogSettings: false);
             Close();
         }
     }

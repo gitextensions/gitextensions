@@ -398,7 +398,7 @@ namespace GitUI.CommandsDialogs
                     pushAllTags = true;
                 }
 
-                pushCmd = GitCommandHelpers.PushTagCmd(destination, tag, pushAllTags, GetForcePushOption());
+                pushCmd = Commands.PushTag(destination, tag, pushAllTags, GetForcePushOption());
             }
             else
             {
@@ -432,7 +432,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
+                pushCmd = Commands.PushMultiple(destination, pushActions);
             }
 
             bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
