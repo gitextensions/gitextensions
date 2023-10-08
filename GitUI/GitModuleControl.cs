@@ -82,21 +82,6 @@ namespace GitUI
         [Browsable(false)]
         public GitUICommands UICommands => UICommandsSource.UICommands;
 
-        /// <summary>
-        /// Gets the UI commands, if they've initialised.
-        /// </summary>
-        /// <remarks>
-        /// <para>This method will not attempt to initialise the commands if they have not
-        /// yet been initialised.</para>
-        /// <para>By contrast, the <see cref="UICommands"/> property attempts to initialise
-        /// the value if not previously initialised.</para>
-        /// </remarks>
-        public bool TryGetUICommands([NotNullWhen(returnValue: true)] out GitUICommands? commands)
-        {
-            commands = _uiCommandsSource?.UICommands;
-            return commands is not null;
-        }
-
         /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]

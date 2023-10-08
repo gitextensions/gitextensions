@@ -78,7 +78,9 @@ Current Branch:
         {
             ColorDepth = ColorDepth.Depth32Bit
         };
+
         private readonly BindingList<ScriptInfoProxy> _scripts = new();
+        private readonly IScriptsManager _scriptsManager;
         private SimpleHelpDisplayDialog? _argumentsCheatSheet;
         private bool _handlingCheck;
 
@@ -89,6 +91,8 @@ Current Branch:
         public ScriptsSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
+            _scriptsManager = serviceProvider.GetRequiredService<IScriptsManager>();
+
             InitializeComponent();
 
             // stop the localisation of the propertygrid
@@ -113,19 +117,6 @@ Current Branch:
                     propertyGrid1.Focus();
                 }
             };
-        }
-
-        private IScriptsManager ScriptsManager
-        {
-            get
-            {
-                if (!TryGetUICommands(out IGitUICommands commands))
-                {
-                    throw new InvalidOperationException("IGitUICommands should have been assigned");
-                }
-
-                return commands.GetRequiredService<IScriptsManager>();
-            }
         }
 
         private ScriptInfoProxy? SelectedScript { get; set; }
@@ -174,7 +165,7 @@ Current Branch:
         {
             _scripts.Clear();
 
-            foreach (var script in ScriptsManager.GetScripts())
+            foreach (var script in _scriptsManager.GetScripts())
             {
                 _scripts.Add(script);
             }
@@ -191,7 +182,7 @@ Current Branch:
         {
             // TODO: this is an abomination, the whole script persistence must be scorched and rewritten
 
-            List<ScriptInfo> scripts = new(ScriptsManager.GetScripts());
+            BindingList<ScriptInfo> scripts = _scriptsManager.GetScripts();
             scripts.Clear();
 
             foreach (ScriptInfoProxy proxy in _scripts)
@@ -199,7 +190,7 @@ Current Branch:
                 scripts.Add(proxy);
             }
 
-            AppSettings.OwnScripts = ScriptsManager.SerializeIntoXml();
+            AppSettings.OwnScripts = _scriptsManager.SerializeIntoXml();
 
             base.PageToSettings();
         }

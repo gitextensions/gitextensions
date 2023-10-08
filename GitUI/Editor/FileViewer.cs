@@ -730,7 +730,8 @@ namespace GitUI.Editor
                 _async.Dispose();
                 components?.Dispose();
 
-                if (TryGetUICommands(out var uiCommands))
+                GitUICommands? uiCommands = UICommandsSource?.UICommands;
+                if (uiCommands is not null)
                 {
                     uiCommands.PostSettings -= UICommands_PostSettings;
                 }
