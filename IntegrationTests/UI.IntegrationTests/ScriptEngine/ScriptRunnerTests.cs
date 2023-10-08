@@ -26,9 +26,9 @@ namespace GitExtensions.UITests.ScriptEngine
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;
 
-        // perf optimisation: get hold of the static ScriptsManager.ScriptRunner.RunScript method for test invocations
+        // perf optimisation: get hold of the static DistributedScriptsManager.ScriptRunner.RunScript method for test invocations
         // we could have used TestAccessor, but it would involve more code.
-        private static readonly MethodInfo _miRunScript = typeof(ScriptsManager.ScriptRunner).GetMethod("RunScriptInternal", BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo _miRunScript = typeof(DistributedScriptsManager.ScriptRunner).GetMethod("RunScriptInternal", BindingFlags.NonPublic | BindingFlags.Static);
 
         // Created once for each test
         private GitUICommands _uiCommands;
@@ -40,7 +40,7 @@ namespace GitExtensions.UITests.ScriptEngine
         [SetUp]
         public void Setup()
         {
-            ScriptsManager scriptsManager = new();
+            DistributedScriptsManager scriptsManager = new(Substitute.For<IUserScriptsStorage>());
             scriptsManager.GetScripts();
 
             ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
@@ -82,7 +82,7 @@ namespace GitExtensions.UITests.ScriptEngine
         {
             _exampleScript.Command = command;
 
-            var result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            var result = DistributedScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
             result.Executed.Should().BeFalse();
         }
@@ -93,7 +93,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "";
 
-            var result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            var result = DistributedScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
         }
@@ -104,7 +104,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "--version";
 
-            var result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            var result = DistributedScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
         }
@@ -118,7 +118,7 @@ namespace GitExtensions.UITests.ScriptEngine
             GitRevision revision = new(ObjectId.IndexId);
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-            var result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            var result = DistributedScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
         }
