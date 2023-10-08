@@ -53,6 +53,7 @@
             comboBoxKeys.ValueMember = "KeyID";
             comboBoxKeys.DropDown += GPGSecretKeysCombobox_DropDown;
             comboBoxKeys.SelectedIndexChanged += GPGSecretKeysCombobox_SelectedIndexChanged;
+            comboBoxKeys.DropDownClosed += comboBoxKeys_DropDownClosed;
             comboBoxKeys.MouseHover += GPGSecretKeysCombobox_MouseHover;
             // 
             // ContextMenuActions
@@ -61,6 +62,9 @@
             ContextMenuActions.Name = "ContextMenuActions";
             ContextMenuActions.ShowImageMargin = false;
             ContextMenuActions.Size = new Size(89, 26);
+            ContextMenuActions.Closing += ContextMenuActions_Closing;
+            ContextMenuActions.Opening += ContextMenuActions_Opening;
+            ContextMenuActions.Click += ContextMenuActions_Click;
             // 
             // refreshToolStripMenuItem
             // 

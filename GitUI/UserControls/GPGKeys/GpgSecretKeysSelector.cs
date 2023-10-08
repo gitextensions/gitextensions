@@ -55,6 +55,7 @@ namespace GitUI.UserControls.GPGKeys
         }
 
         private bool _isLoadingKeys;
+
         private async Task LoadKeysAsync(bool selectKey = false)
         {
             if (_isLoadingKeys)
@@ -113,10 +114,73 @@ namespace GitUI.UserControls.GPGKeys
 
         private void GPGSecretKeysCombobox_DropDown(object sender, EventArgs e)
         {
+            if (Parent != null)
+            {
+                var dropDownHost = Parent as ToolStripDropDown; // recursive instead?
+                if (dropDownHost != null)
+                {
+                    // ensure that our parent doesn't close while the dropdown is open
+                    dropDownHost.AutoClose = false;
+                }
+            }
+
             if (_loadedKeys)
             {
                 LoadKeysAsync().FileAndForget();
             }
+        }
+
+        private void comboBoxKeys_DropDownClosed(object sender, EventArgs e)
+        {
+            if (Parent != null)
+            {
+                var dropDownHost = Parent as ToolStripDropDown; // recursive instead?
+                if (dropDownHost != null)
+                {
+                    dropDownHost.AutoClose = true; // restore the parent's AutoClose preference
+                }
+            }
+        }
+
+        private void ContextMenuActions_Opening(object sender, CancelEventArgs e)
+        {
+            if (Parent != null)
+            {
+                var dropDownHost = Parent as ToolStripDropDown; // recursive instead?
+                if (dropDownHost != null)
+                {
+                    // ensure that our parent doesn't close while the dropdown is open
+                    dropDownHost.AutoClose = false;
+                }
+            }
+        }
+
+        private void ContextMenuActions_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            if (Parent != null)
+            {
+                var dropDownHost = Parent as ToolStripDropDown; // recursive instead?
+                if (dropDownHost != null)
+                {
+                    dropDownHost.AutoClose = true; // restore the parent's AutoClose preference
+                    Focus();
+                }
+            }
+        }
+
+        private void ContextMenuActions_Click(object sender, EventArgs e)
+        {
+            /*
+            if (Parent != null)
+            {
+                var dropDownHost = Parent as ToolStripDropDown; // recursive instead?
+                if (dropDownHost != null)
+                {
+                    dropDownHost.AutoClose = true; // restore the parent's AutoClose preference
+                    Focus();
+                }
+            }
+            */
         }
 
         public void SelectDefaultKey()
@@ -168,6 +232,16 @@ namespace GitUI.UserControls.GPGKeys
         {
             GitGpgController.ClearKeyCache();
             LoadKeysAsync().FileAndForget();
+
+            if (Parent != null)
+            {
+                var dropDownHost = Parent as ToolStripDropDown; // recursive instead?
+                if (dropDownHost != null)
+                {
+                    dropDownHost.AutoClose = true; // restore the parent's AutoClose preference
+                    Focus();
+                }
+            }
         }
 
         public event EventHandler SelectedIndexChanged;
