@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Text;
 using GitCommands;
 using GitCommands.Git;
-using GitCommands.Git.Commands;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;

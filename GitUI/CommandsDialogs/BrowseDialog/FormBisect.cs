@@ -1,5 +1,4 @@
 ﻿using GitCommands.Git;
-using GitCommands.Git.Commands;
 using GitUI.CommandDialogs;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;

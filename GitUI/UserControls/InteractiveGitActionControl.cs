@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using GitCommands.Git.Commands;
+using GitCommands.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;

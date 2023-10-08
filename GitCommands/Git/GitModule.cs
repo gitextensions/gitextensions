@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.Git;
-using GitCommands.Git.Commands;
 using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Settings;

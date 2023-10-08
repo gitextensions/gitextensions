@@ -1,6 +1,5 @@
 ﻿using GitCommands;
 using GitCommands.Git;
-using GitCommands.Git.Commands;
 using GitExtUtils.GitUI;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;

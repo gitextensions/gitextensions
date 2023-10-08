@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using GitCommands;
-using GitCommands.Git.Commands;
+using GitCommands.Git;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
 using ResourceManager;

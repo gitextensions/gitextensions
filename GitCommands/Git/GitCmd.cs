@@ -3,7 +3,7 @@ using GitCommands.Git.Tag;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
-namespace GitCommands.Git.Commands;
+namespace GitCommands.Git;
 
 public static class GitCmd
 {

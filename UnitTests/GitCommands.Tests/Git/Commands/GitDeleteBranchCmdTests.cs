@@ -1,5 +1,5 @@
 using GitCommands;
-using GitCommands.Git.Commands;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using NSubstitute;
 

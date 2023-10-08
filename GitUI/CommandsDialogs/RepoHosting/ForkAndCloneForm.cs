@@ -1,6 +1,5 @@
 using GitCommands;
 using GitCommands.Git;
-using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;

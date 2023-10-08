@@ -1,5 +1,5 @@
 ﻿using GitCommands;
-using GitCommands.Git.Commands;
+using GitCommands.Git;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;

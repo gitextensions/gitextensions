@@ -1,4 +1,4 @@
-﻿namespace GitCommands.Git.Commands;
+﻿namespace GitCommands.Git;
 
 public enum CheckoutNewBranchMode
 {

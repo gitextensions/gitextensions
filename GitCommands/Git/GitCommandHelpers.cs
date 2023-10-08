@@ -4,7 +4,7 @@ using GitCommands.Utils;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
-namespace GitCommands.Git.Commands
+namespace GitCommands.Git
 {
     public static class GitCommandHelpers
     {

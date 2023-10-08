@@ -2,7 +2,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
-using GitCommands.Git.Commands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using Microsoft;

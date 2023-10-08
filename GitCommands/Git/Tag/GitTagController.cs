@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using GitCommands.Git.Commands;
 using GitCommands.Git.Extensions;
 using GitUIPluginInterfaces;
 

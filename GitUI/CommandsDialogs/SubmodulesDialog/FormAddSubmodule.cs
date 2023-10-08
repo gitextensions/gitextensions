@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using GitCommands;
-using GitCommands.Git.Commands;
+using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
 using GitUI.HelperDialogs;

@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Git.Commands;
+using GitCommands.Git;
 using GitExtUtils;
 using NUnit.Framework;
 
