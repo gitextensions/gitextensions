@@ -1,13 +1,15 @@
 ﻿using GitExtUtils;
 using GitUIPluginInterfaces;
 
-namespace GitCommands.Git
+namespace GitCommands.Git;
+
+public static partial class Commands
 {
     /// <summary>
     /// Base class for structured git command.
     /// </summary>
     /// Here we can introduce methods which can operate on command structure instead of command string.
-    public class GitCommand : IGitCommand
+    private sealed class GitCommand : IGitCommand
     {
         /// <value>Gets whether this command accesses a remote repository.</value>
         public bool AccessesRemote { get; }

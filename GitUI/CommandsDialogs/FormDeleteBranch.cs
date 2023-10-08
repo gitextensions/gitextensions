@@ -106,7 +106,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            IGitCommand cmd = GitCmd.DeleteBranch(selectedBranches, force: true);
+            IGitCommand cmd = Commands.DeleteBranch(selectedBranches, force: true);
             bool success = UICommands.StartCommandLineProcessDialog(Owner, cmd);
             if (success)
             {

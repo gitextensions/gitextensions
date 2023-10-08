@@ -5,7 +5,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Git;
 
-public static class GitCmd
+public static partial class Commands
 {
     public static IGitCommand CheckoutBranch(
         string branchName,

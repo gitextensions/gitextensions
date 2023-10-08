@@ -5,7 +5,7 @@ using GitExtUtils;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace GitCommandsTests.Git.Commands
+namespace GitCommandsTests.Git_Commands
 {
     [TestFixture]
     public class GitCommandsHelperTest
