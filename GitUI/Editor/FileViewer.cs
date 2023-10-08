@@ -338,9 +338,9 @@ namespace GitUI.Editor
             internalFileViewer.ShowGutterAvatars = false;
         }
 
-        public void ReloadHotkeys(IScriptsManager scriptsManager)
+        public void ReloadHotkeys()
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
+            LoadHotkeys(HotkeySettingsName);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
             stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageLines);
             unstageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnstageLines);
@@ -747,6 +747,8 @@ namespace GitUI.Editor
 
         protected override void OnRuntimeLoad()
         {
+            base.OnRuntimeLoad();
+
             Font = AppSettings.FixedWidthFont;
 
             var encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
@@ -758,7 +760,7 @@ namespace GitUI.Editor
         {
             base.OnUICommandsSourceSet(source);
 
-            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
+            ReloadHotkeys();
         }
 
         // Private methods

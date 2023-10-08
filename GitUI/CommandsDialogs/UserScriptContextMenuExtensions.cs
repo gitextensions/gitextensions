@@ -26,10 +26,11 @@ namespace GitUI.CommandsDialogs
             int hostItemIndex = contextMenu.Items.IndexOf(hostMenuItem);
             int lastScriptItemIndex = hostItemIndex;
 
-            IScriptsManager scriptsManager = serviceProvider.GetRequiredService<IScriptsManager>();
+            var scriptsManager = serviceProvider.GetRequiredService<IScriptsManager>();
             IEnumerable<ScriptInfo> scripts = scriptsManager.GetScripts().Where(x => x.Enabled);
 
-            IEnumerable<HotkeyCommand> hotkeys = HotkeySettingsManager.LoadHotkeys(FormSettings.HotkeySettingsName, scriptsManager);
+            var hotkeySettingsReader = serviceProvider.GetRequiredService<IHotkeySettingsReader>();
+            HotkeyCommand[] hotkeys = hotkeySettingsReader.LoadHotkeys(FormSettings.HotkeySettingsName);
 
             foreach (ScriptInfo script in scripts)
             {

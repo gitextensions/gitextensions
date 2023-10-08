@@ -211,6 +211,7 @@ namespace GitUI.CommandsDialogs
         private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
         private readonly IWindowsJumpListManager _windowsJumpListManager;
         private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
+        private readonly IScriptsManager _scriptsManager;
         private List<ToolStripItem>? _currentSubmoduleMenuItems;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         private BuildReportTabPageExtension? _buildReportTabPageExtension;
@@ -264,6 +265,7 @@ namespace GitUI.CommandsDialogs
 
             _appTitleGenerator = commands.GetRequiredService<IAppTitleGenerator>();
             _windowsJumpListManager = commands.GetRequiredService<IWindowsJumpListManager>();
+            _scriptsManager = commands.GetRequiredService<IScriptsManager>();
 
             _formBrowseDiagnosticsReporter = new FormBrowseDiagnosticsReporter(this);
 
@@ -292,7 +294,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, ScriptsManager);
+            LoadHotkeys(HotkeySettingsName);
 
             UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             UICommands.BrowseRepo = this;
@@ -980,7 +982,7 @@ namespace GitUI.CommandsDialogs
 
             void LoadUserMenu()
             {
-                var scripts = ScriptsManager.GetScripts()
+                var scripts = _scriptsManager.GetScripts()
                     .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
                     .ToList();
 
@@ -1414,13 +1416,12 @@ namespace GitUI.CommandsDialogs
                 LayoutRevisionInfo();
             }
 
-            IScriptsManager scriptsManager = ScriptsManager;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
-            RevisionGrid.ReloadHotkeys(scriptsManager);
+            LoadHotkeys(HotkeySettingsName);
+            RevisionGrid.ReloadHotkeys();
             RevisionGrid.ReloadTranslation();
-            fileTree.ReloadHotkeys(scriptsManager);
-            revisionDiff.ReloadHotkeys(scriptsManager);
-            repoObjectsTree.ReloadHotkeys(scriptsManager);
+            fileTree.ReloadHotkeys();
+            revisionDiff.ReloadHotkeys();
+            repoObjectsTree.ReloadHotkeys();
             SetShortcutKeyDisplayStringsFromHotkeySettings();
 
             // Clear the separate caches for diff/merge tools

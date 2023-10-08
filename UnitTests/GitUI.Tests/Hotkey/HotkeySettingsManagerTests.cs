@@ -1,6 +1,9 @@
-﻿using FluentAssertions;
+﻿using System.ComponentModel;
+using FluentAssertions;
 using GitCommands;
 using GitUI.Hotkey;
+using GitUI.ScriptsEngine;
+using NSubstitute;
 using ResourceManager;
 
 namespace GitUITests.Hotkey
@@ -8,24 +11,35 @@ namespace GitUITests.Hotkey
     [TestFixture]
     public class HotkeySettingsManagerTests
     {
+        private HotkeySettingsManager _settingsManager;
+
+        [SetUp]
+        public void SetUp()
+        {
+            IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
+            scriptsManager.GetScripts().Returns(new BindingList<ScriptInfo>());
+
+            _settingsManager = new(scriptsManager);
+        }
+
         [Test]
         public void MergeEqualSettings()
         {
             // arrange
 
-            var defaultHotkeySettingsArray = CreateHotkeySettings(2);
-            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] defaultHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] loadedHotkeySettingsArray = CreateHotkeySettings(2);
 
             HotkeySettingsManager.MergeIntoDefaultSettings(defaultHotkeySettingsArray, loadedHotkeySettingsArray);
-            var expected = CreateHotkeySettings(2);
+            HotkeySettings[] expected = CreateHotkeySettings(2);
 
             defaultHotkeySettingsArray.SequenceEqual(expected).Should().BeTrue();
         }
 
         public void SequenceEqualOnDifferentSettings()
         {
-            var defaultHotkeySettingsArray = CreateHotkeySettings(2);
-            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] defaultHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] loadedHotkeySettingsArray = CreateHotkeySettings(2);
             loadedHotkeySettingsArray[0].Commands[0].KeyData = Keys.C;
 
             defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeFalse();
@@ -34,8 +48,8 @@ namespace GitUITests.Hotkey
         [Test]
         public void SequenceEqualOnEqualSettings()
         {
-            var defaultHotkeySettingsArray = CreateHotkeySettings(2);
-            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] defaultHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] loadedHotkeySettingsArray = CreateHotkeySettings(2);
 
             defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeTrue();
         }
@@ -45,8 +59,8 @@ namespace GitUITests.Hotkey
         {
             // arrange
 
-            var defaultHotkeySettingsArray = CreateHotkeySettings(2);
-            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] defaultHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] loadedHotkeySettingsArray = CreateHotkeySettings(2);
             loadedHotkeySettingsArray[0].Commands[0].KeyData = Keys.C;
 
             HotkeySettingsManager.MergeIntoDefaultSettings(defaultHotkeySettingsArray, loadedHotkeySettingsArray);
@@ -59,12 +73,12 @@ namespace GitUITests.Hotkey
         {
             // arrange
 
-            var defaultHotkeySettingsArray = CreateHotkeySettings(3);
-            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+            HotkeySettings[] defaultHotkeySettingsArray = CreateHotkeySettings(3);
+            HotkeySettings[] loadedHotkeySettingsArray = CreateHotkeySettings(2);
             loadedHotkeySettingsArray[1].Commands[1].KeyData = Keys.C;
 
             HotkeySettingsManager.MergeIntoDefaultSettings(defaultHotkeySettingsArray, loadedHotkeySettingsArray);
-            var expected = CreateHotkeySettings(3);
+            HotkeySettings[] expected = CreateHotkeySettings(3);
             expected[1].Commands[1].KeyData = loadedHotkeySettingsArray[1].Commands[1].KeyData;
 
             defaultHotkeySettingsArray.SequenceEqual(expected).Should().BeTrue();
@@ -77,7 +91,7 @@ namespace GitUITests.Hotkey
 
             try
             {
-                HotkeySettingsManager.SaveSettings(CreateHotkeySettings(2));
+                _settingsManager.SaveSettings(CreateHotkeySettings(2));
 
                 // Verify as a string, as the xml verifier ignores line breaks.
                 await Verifier.Verify(AppSettings.SerializedHotkeys);

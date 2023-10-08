@@ -545,7 +545,7 @@ namespace GitUI
         {
             base.OnUICommandsSourceSet(source);
 
-            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
+            ReloadHotkeys();
             LoadCustomDifftools();
         }
 
@@ -820,9 +820,9 @@ namespace GitUI
             return base.ProcessHotkey(keyData);
         }
 
-        public void ReloadHotkeys(IScriptsManager scriptsManager)
+        public void ReloadHotkeys()
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
+            LoadHotkeys(HotkeySettingsName);
             MenuCommands.CreateOrUpdateMenuCommands();
         }
 

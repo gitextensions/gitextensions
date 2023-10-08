@@ -7,7 +7,6 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
-using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
@@ -278,9 +277,9 @@ namespace GitUI.LeftPanel
             _tagTree.UpdateVisibility();
         }
 
-        public void ReloadHotkeys(IScriptsManager scriptsManager)
+        public void ReloadHotkeys()
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
+            LoadHotkeys(HotkeySettingsName);
         }
 
         public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)
@@ -347,7 +346,7 @@ namespace GitUI.LeftPanel
 
             base.OnUICommandsSourceSet(source);
 
-            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
+            ReloadHotkeys();
 
             CreateBranches();
             CreateRemotes();

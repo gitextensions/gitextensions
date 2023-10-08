@@ -8,6 +8,7 @@ using GitUI.ScriptsEngine;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using NSubstitute;
+using ResourceManager;
 
 namespace GitUITests.Editor
 {
@@ -26,6 +27,7 @@ namespace GitUITests.Editor
             IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
             scriptsManager.GetScripts().Returns(new BindingList<ScriptInfo>());
             serviceContainer.AddService(scriptsManager);
+            serviceContainer.AddService(Substitute.For<IHotkeySettingsReader>());
             _serviceProvider = serviceContainer;
 
             _uiCommandsSource = Substitute.For<IGitUICommandsSource>();
@@ -166,8 +168,7 @@ Binary files a/binaryfile.bin and b/binaryfile.bin differ";
             // assert
             testAccessor.FileViewerInternal.GetTestAccessor().TextEditor.Document.HighlightingStrategy.Should().Be(HighlightingManager.Manager.DefaultHighlighting);
 
-            const string sampleRandomText =
-            @"fldaksjflkdsjlfj";
+            const string sampleRandomText = @"fldaksjflkdsjlfj";
 
             // act
             testAccessor.ViewPatch(null, sampleRandomText, null);

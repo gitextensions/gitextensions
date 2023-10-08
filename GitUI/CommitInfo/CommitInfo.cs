@@ -108,7 +108,6 @@ namespace GitUI.CommitInfo
 
             rtbxCommitMessage.Font = AppSettings.CommitFont;
             RevisionInfo.Font = AppSettings.Font;
-
             addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Command.AddNotes).ToShortcutKeyDisplayString();
 
             _commitMessageResizedSubscription = subscribeToContentsResized(rtbxCommitMessage, CommitMessage_ContentsResized);
@@ -157,7 +156,6 @@ namespace GitUI.CommitInfo
                 _linkFactory = null;
                 _commitDataBodyRenderer = null;
                 _refsFormatter = null;
-                Hotkeys = null;
             }
             else
             {
@@ -165,7 +163,7 @@ namespace GitUI.CommitInfo
                 _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
                 _refsFormatter = new RefsFormatter(_linkFactory);
 
-                Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName, source.UICommands.GetRequiredService<IScriptsManager>());
+                LoadHotkeys(FormBrowse.HotkeySettingsName);
 
                 source.UICommandsChanged += delegate { RefreshSortedTags(); };
 

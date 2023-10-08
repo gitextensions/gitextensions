@@ -13,7 +13,7 @@ namespace GitUI
     /// <summary>Base <see cref="Form"/> that provides access to <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModuleForm
     {
-        private IScriptsManager? _scriptsManager;
+        private IHotkeySettingsReader? _hotkeySettingsReader;
         private IScriptsRunner? _scriptsRunner;
         private GitUICommands? _uiCommands;
 
@@ -27,10 +27,10 @@ namespace GitUI
 
         public virtual RevisionGridControl? RevisionGridControl { get; }
 
-        public IScriptsManager ScriptsManager
+        public IHotkeySettingsReader HotkeySettingsReader
         {
-            get => _scriptsManager ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
-            private set => _scriptsManager = value;
+            get => _hotkeySettingsReader ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
+            private set => _hotkeySettingsReader = value;
         }
 
         public IScriptsRunner ScriptsRunner
@@ -59,8 +59,8 @@ namespace GitUI
                 GitUICommands oldCommands = _uiCommands;
                 _uiCommands = value;
 
-                _scriptsManager ??= _uiCommands.GetRequiredService<IScriptsManager>();
-                _scriptsRunner ??= _uiCommands.GetRequiredService<IScriptsRunner>();
+                _hotkeySettingsReader = _uiCommands.GetRequiredService<IHotkeySettingsReader>();
+                _scriptsRunner = _uiCommands.GetRequiredService<IScriptsRunner>();
 
                 OnUICommandsChanged(new GitUICommandsChangedEventArgs(oldCommands));
             }
@@ -106,7 +106,6 @@ namespace GitUI
         protected override CommandStatus ExecuteCommand(int command)
         {
             CommandStatus result = ScriptsRunner.RunScript(command, this, RevisionGridControl);
-
             if (!result.Executed)
             {
                 result = base.ExecuteCommand(command);

@@ -1,6 +1,4 @@
 ﻿using GitUI.Hotkey;
-using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 
@@ -9,7 +7,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     /// <summary>
     /// ControlHotkeys enables editing of HotkeySettings.
     /// </summary>
-    public partial class ControlHotkeys : GitExtensionsControl
+    internal partial class ControlHotkeys : GitExtensionsControl
     {
         #region Settings
         private HotkeySettings[]? _settings;
@@ -59,28 +57,29 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cmbSettings.DisplayMember = nameof(HotkeySettings.Name);
         }
 
-        private IScriptsManager ScriptsManager
+        private IHotkeySettingsManager HotkeySettingsManager
         {
             get
             {
-                if (!TryGetUICommands(out IGitUICommands commands))
+                if (this.FindAncestors().OfType<SettingsPageBase>().FirstOrDefault() is not SettingsPageBase settingsPage)
                 {
-                    throw new InvalidOperationException("IGitUICommands should have been assigned");
+                    throw new InvalidOperationException($"{GetType().Name} must be sited on a {typeof(SettingsPageBase)} control");
                 }
 
-                return commands.GetRequiredService<IScriptsManager>();
+                return settingsPage.ServiceProvider.GetRequiredService<IHotkeySettingsManager>();
             }
         }
 
         public void SaveSettings()
         {
             Validates.NotNull(Settings);
+
             HotkeySettingsManager.SaveSettings(Settings);
         }
 
-        public void ReloadSettings(IScriptsManager scriptsManager)
+        public void ReloadSettings()
         {
-            Settings = HotkeySettingsManager.LoadSettings(scriptsManager);
+            Settings = HotkeySettingsManager.LoadSettings();
         }
 
         private void UpdateCombobox(HotkeySettings[]? settings)
@@ -90,7 +89,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cmbSettings.Items.Clear();
             if (settings is not null)
             {
-                foreach (var setting in settings)
+                foreach (HotkeySettings setting in settings)
                 {
                     cmbSettings.Items.Add(setting);
                 }
@@ -104,7 +103,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             listMappings.Items.Clear();
             if (setting?.Commands is not null)
             {
-                foreach (var cmd in setting.Commands)
+                foreach (HotkeyCommand cmd in setting.Commands)
                 {
                     if (cmd is not null)
                     {
@@ -130,7 +129,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            ReloadSettings(ScriptsManager);
+            ReloadSettings();
         }
 
         private void cmbSettings_SelectedIndexChanged(object sender, EventArgs e)
@@ -140,17 +139,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void listMappings_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var lvi = listMappings.SelectedItems.Count > 0 ? listMappings.SelectedItems[0] : null;
+            ListViewItem lvi = listMappings.SelectedItems.Count > 0 ? listMappings.SelectedItems[0] : null;
             if (lvi is not null)
             {
-                var hotkey = lvi.Tag as HotkeyCommand;
+                HotkeyCommand hotkey = lvi.Tag as HotkeyCommand;
                 SelectedHotkeyCommand = hotkey;
             }
         }
 
         private void bApply_Click(object sender, EventArgs e)
         {
-            var hotkey = SelectedHotkeyCommand;
+            HotkeyCommand hotkey = SelectedHotkeyCommand;
             if (hotkey is not null)
             {
                 // Update the KeyData with the chosen one
@@ -163,7 +162,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void bClear_Click(object sender, EventArgs e)
         {
-            var hotkey = SelectedHotkeyCommand;
+            HotkeyCommand hotkey = SelectedHotkeyCommand;
             if (hotkey is not null)
             {
                 // Update the KeyData with the chosen one
@@ -177,7 +176,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void bResetToDefaults_Click(object sender, EventArgs e)
         {
-            Settings = HotkeySettingsManager.CreateDefaultSettings(ScriptsManager);
+            Settings = HotkeySettingsManager.CreateDefaultSettings();
         }
     }
 }

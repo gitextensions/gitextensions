@@ -1,7 +1,6 @@
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
-using GitUI.Hotkey;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
@@ -125,7 +124,7 @@ namespace GitUI.CommandsDialogs
             stashedItems.Insert(0, _currentWorkingDirStashItem);
 
             HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, ScriptsManager);
+            LoadHotkeys(HotkeySettingsName);
 
             Stashes.Text = "";
             StashMessage.Text = "";

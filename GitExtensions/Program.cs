@@ -1,10 +1,7 @@
 using System.ComponentModel.Design;
 using System.Configuration;
 using System.Diagnostics;
-using System.IO.Abstractions;
 using GitCommands;
-using GitCommands.Git;
-using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI;
@@ -12,11 +9,9 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.NBugReports;
-using GitUI.ScriptsEngine;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
 
 namespace GitExtensions
 {
@@ -55,7 +50,7 @@ namespace GitExtensions
 
             Control.CheckForIllegalCrossThreadCalls = checkForIllegalCrossThreadCalls;
 
-            RegisterServices(_serviceContainer);
+            ServiceContainerRegistry.RegisterServices(_serviceContainer);
 
             // If an error happens before we had a chance to init the environment information
             // the call to GetInformation() from BugReporter.ShowNBug() will fail.
@@ -371,23 +366,6 @@ namespace GitExtensions
             }
 
             return false;
-        }
-
-        private static void RegisterServices(ServiceContainer serviceContainer)
-        {
-            FileSystem fileSystem = new();
-            GitDirectoryResolver gitDirectoryResolver = new(fileSystem);
-            RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
-            ScriptsManager scriptsManager = new();
-
-            serviceContainer.AddService<IFileSystem>(fileSystem);
-            serviceContainer.AddService<IGitDirectoryResolver>(gitDirectoryResolver);
-            serviceContainer.AddService<IRepositoryDescriptionProvider>(repositoryDescriptionProvider);
-            serviceContainer.AddService<IAppTitleGenerator>(new AppTitleGenerator(repositoryDescriptionProvider));
-            serviceContainer.AddService<IWindowsJumpListManager>(new WindowsJumpListManager(repositoryDescriptionProvider));
-            serviceContainer.AddService<ILinkFactory>(new LinkFactory());
-            serviceContainer.AddService<IScriptsManager>(scriptsManager);
-            serviceContainer.AddService<IScriptsRunner>(scriptsManager);
         }
     }
 }
