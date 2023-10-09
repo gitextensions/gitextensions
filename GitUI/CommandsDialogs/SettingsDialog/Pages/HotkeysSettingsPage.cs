@@ -5,29 +5,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class HotkeysSettingsPage : SettingsPageWithHeader
     {
+        private readonly IScriptsManager _scriptsManager;
+
         public HotkeysSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
+            _scriptsManager = serviceProvider.GetRequiredService<IScriptsManager>();
+
             InitializeComponent();
             InitializeComplete();
         }
 
-        private IScriptsManager ScriptsManager
-        {
-            get
-            {
-                if (!TryGetUICommands(out IGitUICommands commands))
-                {
-                    throw new InvalidOperationException("IGitUICommands should have been assigned");
-                }
-
-                return commands.GetRequiredService<IScriptsManager>();
-            }
-        }
-
         protected override void SettingsToPage()
         {
-            controlHotkeys.ReloadSettings(ScriptsManager);
+            controlHotkeys.ReloadSettings(_scriptsManager);
 
             base.SettingsToPage();
         }

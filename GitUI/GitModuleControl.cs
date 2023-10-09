@@ -91,7 +91,7 @@ namespace GitUI
         /// <para>By contrast, the <see cref="UICommands"/> property attempts to initialise
         /// the value if not previously initialised.</para>
         /// </remarks>
-        public bool TryGetUICommands([NotNullWhen(returnValue: true)] out GitUICommands? commands)
+        internal bool TryGetUICommandsDirect([NotNullWhen(returnValue: true)] out GitUICommands? commands)
         {
             commands = _uiCommandsSource?.UICommands;
             return commands is not null;
