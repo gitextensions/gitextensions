@@ -59,6 +59,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly IUserRepositoriesListController _controller = new UserRepositoriesListController(RepositoryHistoryManager.Locals, new InvalidRepositoryRemover());
         private bool _hasInvalidRepos;
         private ListViewItem? _rightClickedItem;
+        private bool _tilesMode = true;
 
         public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
 
@@ -82,6 +83,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             lblRecentRepositories.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
 
             textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
+            comboChooseView.SelectedIndex = 0;
 
             listViewRecentRepositories.Items.Clear();
             listViewRecentRepositories.Groups.Clear();
@@ -723,11 +725,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
         }
 
-        private void TextBoxSearch_TextChanged(object sender, EventArgs e)
-        {
-            ShowRecentRepositories(reloadData: false);
-        }
-
         private void TextBoxSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -815,7 +812,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void RecentRepositoriesList_Load(object sender, EventArgs e)
         {
-            if (!(Parent.FindForm() is FormBrowse form))
+            if (Parent == null || !(Parent.FindForm() is FormBrowse form))
             {
                 return;
             }
@@ -1068,6 +1065,31 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             listViewFavouriteRepositories.Height = height - listViewFavouriteRepositories.Margin.Top - listViewFavouriteRepositories.Margin.Bottom;
 
             flowLayoutPanel.SetFlowBreak(listViewFavouriteRepositories, false);
+        }
+
+        private void comboChooseView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboChooseView.SelectedIndex == 0)
+            {
+                _tilesMode = true;
+            }
+            else if (comboChooseView.SelectedIndex == 1)
+            {
+                _tilesMode = false;
+            }
+
+            if (_tilesMode)
+            {
+                listViewFavouriteRepositories.View = View.Tile;
+                listViewRecentRepositories.View = View.Tile;
+            }
+            else
+            {
+                listViewFavouriteRepositories.View = View.Details;
+                listViewRecentRepositories.View = View.Details;
+            }
+
+            ShowRecentRepositories();
         }
     }
 }
