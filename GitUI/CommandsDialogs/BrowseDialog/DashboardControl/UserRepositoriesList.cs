@@ -190,7 +190,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 _headerBackColor = value;
                 pnlHeader.BackColor = value;
+                flowLayoutPanel.BackColor = value;
                 pnlHeader.Invalidate();
+                flowLayoutPanel.Invalidate();
             }
         }
 
@@ -1044,6 +1046,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 if (width < 1000)
                 {
                     // If 30% of width is less than 500px and overall width is less than 1000px, then arrange panes vertically.
+                    listViewRecentRepositories.Margin = new Padding(0, 0, 0, 10);
                     listViewRecentRepositories.Width = width - listViewRecentRepositories.Margin.Left - listViewRecentRepositories.Margin.Right;
                     listViewFavouriteRepositories.Width = width - listViewFavouriteRepositories.Margin.Left - listViewFavouriteRepositories.Margin.Right;
                     flowLayoutPanel.SetFlowBreak(listViewFavouriteRepositories, true);
@@ -1058,6 +1061,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 }
             }
 
+            listViewRecentRepositories.Margin = new Padding(0, 0, 10, 0);
             listViewRecentRepositories.Width = w30 - listViewRecentRepositories.Margin.Left - listViewRecentRepositories.Margin.Right;
             listViewFavouriteRepositories.Width = width - w30 - listViewFavouriteRepositories.Margin.Left - listViewFavouriteRepositories.Margin.Right;
             listViewRecentRepositories.Height = height - listViewRecentRepositories.Margin.Top - listViewRecentRepositories.Margin.Bottom;
