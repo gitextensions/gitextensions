@@ -21,7 +21,7 @@ namespace GitUI.Hotkey
     internal class HotkeySettingsManager : IHotkeySettingsManager
     {
         private static XmlSerializer? _serializer;
-        private static readonly HashSet<Keys> _usedKeys = new();
+        private readonly HashSet<Keys> _usedKeys = new();
         private readonly IScriptsManager _scriptsManager;
 
         public HotkeySettingsManager(IScriptsManager scriptsManager)
@@ -82,7 +82,7 @@ namespace GitUI.Hotkey
             return defaultSettings;
         }
 
-        private static void UpdateUsedKeys(HotkeySettings[] settings)
+        private void UpdateUsedKeys(HotkeySettings[] settings)
         {
             _usedKeys.Clear();
 
