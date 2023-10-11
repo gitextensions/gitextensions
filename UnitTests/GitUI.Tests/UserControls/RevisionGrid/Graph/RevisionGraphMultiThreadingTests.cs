@@ -40,6 +40,8 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             for (int i = 0; i < _numberOfRepeats; i++)
             {
+                _revisionGraph.Clear();
+
                 // Simulate thread that loads revisions from git
                 Task loadRevisionsTask = new(() => LoadRandomRevisions());
 
@@ -74,10 +76,18 @@ namespace GitUITests.UserControls.RevisionGrid
                 GitRevision revision = new(ObjectId.Random());
                 if (randomRevisions.Count > 1)
                 {
-                    GitRevision randomRevision1 = randomRevisions[_random.Next(randomRevisions.Count - 1)];
-                    GitRevision randomRevision2 = randomRevisions[_random.Next(randomRevisions.Count - 1)];
-
-                    revision.ParentIds = new ObjectId[] { randomRevision1.ObjectId, randomRevision2.ObjectId };
+                    int rnd1 = _random.Next(randomRevisions.Count - 1);
+                    int rnd2 = _random.Next(randomRevisions.Count - 1);
+                    GitRevision randomRevision1 = randomRevisions[rnd1];
+                    if (rnd1 == rnd2)
+                    {
+                        revision.ParentIds = new ObjectId[] { randomRevision1.ObjectId };
+                    }
+                    else
+                    {
+                        GitRevision randomRevision2 = randomRevisions[rnd2];
+                        revision.ParentIds = new ObjectId[] { randomRevision1.ObjectId, randomRevision2.ObjectId };
+                    }
                 }
 
                 _revisionGraph.Add(revision);

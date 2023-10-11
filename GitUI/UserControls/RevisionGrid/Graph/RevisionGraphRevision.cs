@@ -38,11 +38,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public int Score { get; private set; }
 
         /// <summary>
-        /// Offset the score for the revision.
-        /// If negative decreasing the score, i.e. increasing priority.
+        /// Override the score for the revision.
         /// </summary>
-        /// <param name="offset">The offset to the current score.</param>
-        public void OffsetScore(int offset) => Score += offset;
+        /// <param name="score">The new score.</param>
+        public void OverrideScore(int score) => Score = score;
 
         // This method is called to ensure that the score is higher than a given score.
         // E.g. the score needs to be higher that the score of its children.
@@ -131,7 +130,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        public void AddParent(RevisionGraphRevision parent, out int maxScore)
+        public int AddParent(RevisionGraphRevision parent, int checkScore)
         {
             if (IsRelative)
             {
@@ -141,9 +140,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             ImmutableInterlocked.Push(ref _parents, parent);
             parent.AddChild(this);
 
-            maxScore = parent.EnsureScoreIsAbove(Score + 1);
+            int maxScore = parent.EnsureScoreIsAbove(checkScore);
 
             _startSegments.Enqueue(new RevisionGraphSegment(parent, this));
+
+            return maxScore;
         }
 
         private void AddChild(RevisionGraphRevision child)

@@ -309,48 +309,49 @@ namespace GitUI.UserControls.RevisionGrid
         /// Update visible rows if needed.
         /// </summary>
         /// <param name="revision">The revision to add.</param>
-        /// <param name="insertWithMatch">Insert the (artificial) revision with the first match in headParents or first if no match found (or headParents is null).</param>
-        /// <param name="insertRange">Number of scores "reserved" in the list when inserting.</param>
-        /// <param name="parents">Parent ids for the revision to find (and insert before).</param>
-        public void Add(GitRevision revision, bool insertWithMatch = false, int insertRange = 0, IReadOnlyList<ObjectId>? parents = null)
+        public void Add(GitRevision revision)
         {
-            // Where to insert the revision, null is last
-            int? insertScore = null;
-            if (insertWithMatch)
-            {
-                if (_loadedToBeSelectedRevisionsCount == 0
-                    && ToBeSelectedObjectIds.Count == 0
-                    && SelectedRows?.Count is > 0)
-                {
-                    // (GraphIndex) selection in grid was 'premature'
-                    ToBeSelectedObjectIds = SelectedObjectIds ?? Array.Empty<ObjectId>();
-                    _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
-                    ResetGraphIndices();
-                }
-
-                // Insert first by default (if HEAD not found)
-                // Actual value is ignored if insertRange is 0
-                // (Used when child (like WorkTree) is already inserted when adding parent (like Index))
-                insertScore = -1;
-                if (insertRange > 0 && parents is not null)
-                {
-                    foreach (ObjectId parentId in parents)
-                    {
-                        if (_revisionGraph.TryGetNode(parentId, out RevisionGraphRevision? parentRev))
-                        {
-                            insertScore = parentRev.Score;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            _revisionGraph.Add(revision, insertScore, insertRange);
+            _revisionGraph.Add(revision);
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
                 ++_loadedToBeSelectedRevisionsCount;
             }
 
+            UpdateVisibleRowRange();
+        }
+
+        /// <summary>
+        /// Insert workTree and index revisions to the graph, offset existing revisions.
+        /// </summary>
+        /// <param name="workTreeRev">The workTree revision to add.</param>
+        /// <param name="indexRev">The index revision to add.</param>
+        /// <param name="parents">Parent ids for the revision to find (and insert before).</param>
+        public void Insert(GitRevision workTreeRev, GitRevision indexRev, IReadOnlyList<ObjectId> parents)
+        {
+            if (_loadedToBeSelectedRevisionsCount == 0
+                && ToBeSelectedObjectIds.Count == 0
+                && SelectedRows?.Count is > 0)
+            {
+                // (GraphIndex) selection in grid was 'premature'
+                ToBeSelectedObjectIds = SelectedObjectIds ?? Array.Empty<ObjectId>();
+                _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
+                ResetGraphIndices();
+            }
+
+            // Insert at matching parent.
+            _revisionGraph.Insert(workTreeRev, indexRev, parents);
+
+            if (ToBeSelectedObjectIds.Contains(workTreeRev.ObjectId))
+            {
+                ++_loadedToBeSelectedRevisionsCount;
+            }
+
+            if (ToBeSelectedObjectIds.Contains(indexRev.ObjectId))
+            {
+                ++_loadedToBeSelectedRevisionsCount;
+            }
+
+            _revisionGraph.InvalidateCacheAndRebuild();
             UpdateVisibleRowRange();
         }
 
