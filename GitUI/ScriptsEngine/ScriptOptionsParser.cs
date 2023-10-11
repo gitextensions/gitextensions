@@ -53,8 +53,6 @@ namespace GitUI.ScriptsEngine
             "cDefaultRemoteUrl",
             "cDefaultRemotePathFromUrl",
             "RepoName",
-            "UserInput",
-            "UserFiles",
             "WorkingDir"
         };
 
@@ -470,28 +468,6 @@ namespace GitUI.ScriptsEngine
                     newString = uiCommands.GetRequiredService<IRepositoryDescriptionProvider>().Get(uiCommands.GitModule.WorkingDir);
                     break;
 
-                case "UserInput":
-                    using (SimplePrompt prompt = new())
-                    {
-                        prompt.ShowDialog();
-                        newString = prompt.UserInput;
-                    }
-
-                    break;
-
-                case "UserFiles":
-                    using (FormFilePrompt prompt = new())
-                    {
-                        if (prompt.ShowDialog(owner) != DialogResult.OK)
-                        {
-                            // abort parsing as the user chose to abort
-                            return null;
-                        }
-
-                        newString = prompt.FileInput;
-                        break;
-                    }
-
                 case "WorkingDir":
                     newString = uiCommands.GitModule.WorkingDir;
                     break;
@@ -501,6 +477,17 @@ namespace GitUI.ScriptsEngine
                     break;
             }
 
+            return ReplaceOption(option, arguments, newString);
+
+            static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
+
+            string SelectOneRef(IList<IGitRef> refs) => SelectOne(refs, uiCommands, owner);
+
+            string SelectOneString(IList<string> strings) => SelectOne(strings, uiCommands, owner);
+        }
+
+        public static string ReplaceOption(string option, string arguments, string newString)
+        {
             if (newString is not null)
             {
                 string newStringQuoted = Regex.Replace(newString, @"(?<!\\)""", "\\\"");
@@ -517,12 +504,6 @@ namespace GitUI.ScriptsEngine
             }
 
             return arguments;
-
-            static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
-
-            string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, uiCommands, owner);
-
-            string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, uiCommands, owner);
         }
 
         private static string SelectOne(IList<IGitRef> refs, IGitUICommands uiCommands, IWin32Window owner)

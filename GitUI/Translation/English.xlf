@@ -9573,6 +9573,9 @@ Use {{option}} for quoted replacement.
 
 User inputs:
 {UserInput}
+{UserInput:a popup label}
+{UserInput:a popup label=a default value}
+{UserInput:a popup label=a default value using {sLocalBranch}}
 {UserFiles}
 
 Working directory:
@@ -10386,6 +10389,14 @@ Sometimes Windows may need to be restarted too.</source>
       </trans-unit>
       <trans-unit id="_scriptText.Text">
         <source>Script</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_scriptUserCanceledRun.Text">
+        <source>Script not started.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_scriptUserInputCaption.Text">
+        <source>User input for script '{0}'</source>
         <target />
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

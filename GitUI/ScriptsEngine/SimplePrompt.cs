@@ -1,23 +1,52 @@
-﻿namespace GitUI.ScriptsEngine
+﻿using System.Runtime.CompilerServices;
+
+namespace GitUI.ScriptsEngine;
+
+internal partial class SimplePrompt : Form, IUserInputPrompt
 {
-    public partial class SimplePrompt : Form
+    public string UserInput { get; private set; } = "";
+
+    public SimplePrompt(string title, string label, string defaultValue)
     {
-        public string UserInput { get; private set; } = "";
+        InitializeComponent();
+        txtUserInput.Text = defaultValue;
 
-        public SimplePrompt()
+        if (!string.IsNullOrWhiteSpace(title))
         {
-            InitializeComponent();
+            Text = title;
         }
 
-        private void btn_OK_Click(object sender, EventArgs e)
+        if (!string.IsNullOrWhiteSpace(label))
         {
-            UserInput = txt_UserInput.Text;
-            Close();
+            labelInput.Text = label + ":";
         }
+    }
 
-        private void SimplePrompt_Shown(object sender, EventArgs e)
+    private void btnOk_Click(object sender, EventArgs e)
+    {
+        UserInput = txtUserInput.Text;
+        Close();
+    }
+
+    private void SimplePrompt_Shown(object sender, EventArgs e)
+    {
+        txtUserInput.Focus();
+    }
+
+    private void txtUserInput_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        if (e.KeyChar == (char)Keys.Escape)
         {
-            txt_UserInput.Focus();
+            if (txtUserInput.SelectionLength == 0)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else
+            {
+                txtUserInput.SelectionLength = 0;
+            }
+
+            e.Handled = true;
         }
     }
 }

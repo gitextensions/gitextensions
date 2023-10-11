@@ -4,9 +4,9 @@ using ResourceManager;
 
 namespace GitUI.ScriptsEngine
 {
-    public partial class FormFilePrompt : GitExtensionsForm
+    internal partial class FormFilePrompt : GitExtensionsForm, IUserInputPrompt
     {
-        public string FileInput { get; private set; } = string.Empty;
+        public string UserInput { get; private set; } = string.Empty;
 
         public FormFilePrompt()
         {
@@ -48,7 +48,7 @@ namespace GitUI.ScriptsEngine
         {
             if (!string.IsNullOrEmpty(txtFilePath.Text))
             {
-                FileInput = txtFilePath.Text;
+                UserInput = txtFilePath.Text;
                 DialogResult = DialogResult.OK;
             }
             else

@@ -28,59 +28,61 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimplePrompt));
-            btn_OK = new Button();
-            txt_UserInput = new TextBox();
-            label1 = new Label();
+            btnOk = new Button();
+            txtUserInput = new TextBox();
+            labelInput = new Label();
             SuspendLayout();
             // 
-            // btn_OK
+            // btnOk
             // 
-            btn_OK.Location = new Point(194, 47);
-            btn_OK.Name = "btn_OK";
-            btn_OK.Size = new Size(75, 23);
-            btn_OK.TabIndex = 0;
-            btn_OK.Text = "&OK";
-            btn_OK.UseVisualStyleBackColor = true;
-            btn_OK.Click += btn_OK_Click;
+            btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnOk.DialogResult = DialogResult.OK;
+            btnOk.Location = new Point(247, 50);
+            btnOk.Name = "btnOk";
+            btnOk.Size = new Size(75, 23);
+            btnOk.TabIndex = 0;
+            btnOk.Text = "&OK";
+            btnOk.UseVisualStyleBackColor = true;
+            btnOk.Click += btnOk_Click;
             // 
-            // txt_UserInput
+            // txtUserInput
             // 
-            txt_UserInput.Location = new Point(12, 21);
-            txt_UserInput.Name = "txt_UserInput";
-            txt_UserInput.Size = new Size(257, 20);
-            txt_UserInput.TabIndex = 1;
+            txtUserInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtUserInput.Location = new Point(12, 21);
+            txtUserInput.Name = "txtUserInput";
+            txtUserInput.Size = new Size(310, 23);
+            txtUserInput.TabIndex = 1;
+            txtUserInput.KeyPress += txtUserInput_KeyPress;
             // 
-            // label1
+            // labelInput
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(10, 5);
-            label1.Name = "label1";
-            label1.Size = new Size(127, 13);
-            label1.TabIndex = 2;
-            label1.Text = "Please specify your input:";
+            labelInput.AutoSize = true;
+            labelInput.Location = new Point(10, 5);
+            labelInput.Name = "labelInput";
+            labelInput.Size = new Size(141, 15);
+            labelInput.TabIndex = 2;
+            labelInput.Text = "Please specify your input:";
             // 
             // SimplePrompt
             // 
-            AcceptButton = btn_OK;
+            AcceptButton = btnOk;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(281, 73);
-            Controls.Add(label1);
-            Controls.Add(txt_UserInput);
-            Controls.Add(btn_OK);
+            ClientSize = new Size(334, 76);
+            Controls.Add(labelInput);
+            Controls.Add(txtUserInput);
+            Controls.Add(btnOk);
             Name = "SimplePrompt";
-            Text = "SimplePrompt";
+            Text = "User input";
             Shown += SimplePrompt_Shown;
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
 
-        private Button btn_OK;
-        private TextBox txt_UserInput;
-        private Label label1;
+        private Button btnOk;
+        private TextBox txtUserInput;
+        private Label labelInput;
     }
 }
