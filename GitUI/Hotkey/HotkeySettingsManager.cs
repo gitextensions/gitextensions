@@ -27,6 +27,7 @@ namespace GitUI.Hotkey
         public HotkeySettingsManager(IScriptsManager scriptsManager)
         {
             _scriptsManager = scriptsManager;
+            MigrateSettings();
         }
 
         /// <summary>Lazy-loaded Serializer for HotkeySettings[].</summary>
@@ -75,7 +76,7 @@ namespace GitUI.Hotkey
         {
             // Get the default settings
             HotkeySettings[] defaultSettings = CreateDefaultSettings();
-            HotkeySettings[] loadedSettings = LoadSerializedSettings(this);
+            HotkeySettings[] loadedSettings = LoadSerializedSettings();
 
             MergeIntoDefaultSettings(defaultSettings, loadedSettings);
 
@@ -169,10 +170,8 @@ namespace GitUI.Hotkey
             string CalcDictionaryKey(string settingName, int commandCode) => settingName + ":" + commandCode;
         }
 
-        private static HotkeySettings[]? LoadSerializedSettings(HotkeySettingsManager hotkeySettingsManager)
+        private static HotkeySettings[]? LoadSerializedSettings()
         {
-            MigrateSettings(hotkeySettingsManager);
-
             if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
             {
                 return LoadSerializedSettings(AppSettings.SerializedHotkeys);
@@ -194,7 +193,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        private static void MigrateSettings(HotkeySettingsManager hotkeySettingsManager)
+        private void MigrateSettings()
         {
             if (AppSettings.SerializedHotkeys is null)
             {
@@ -208,7 +207,7 @@ namespace GitUI.Hotkey
                     }
                     else
                     {
-                        hotkeySettingsManager.SaveSettings(settings);
+                        SaveSettings(settings);
                     }
                 }
                 else
