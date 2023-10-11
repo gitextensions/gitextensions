@@ -312,7 +312,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// <param name="insertWithMatch">Insert the (artificial) revision with the first match in headParents or first if no match found (or headParents is null).</param>
         /// <param name="insertRange">Number of scores "reserved" in the list when inserting.</param>
         /// <param name="parents">Parent ids for the revision to find (and insert before).</param>
-        public void Add(GitRevision revision, bool insertWithMatch = false, int insertRange = 0, IEnumerable<ObjectId>? parents = null)
+        public void Add(GitRevision revision, bool insertWithMatch = false, int insertRange = 0, IReadOnlyList<ObjectId>? parents = null)
         {
             // Where to insert the revision, null is last
             int? insertScore = null;

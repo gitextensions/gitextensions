@@ -1274,7 +1274,8 @@ namespace GitUI
                     && !Module.IsBareRepository();
             }
 
-            bool AddArtificialRevisions(IEnumerable<ObjectId> headParents = null)
+            // Add artificial revisions to the graph.
+            bool AddArtificialRevisions(IReadOnlyList<ObjectId>? headParents = null)
             {
                 if (!ShowArtificialRevisions())
                 {
@@ -1367,19 +1368,19 @@ namespace GitUI
                         await semaphoreUpdateGrid.WaitAsync(cancellationToken);
                     }
 
-                    IEnumerable<ObjectId> headParents = null;
+                    IReadOnlyList<ObjectId>? headParents = null;
                     bool refresh = false;
                     if (!headIsHandled && ShowArtificialRevisions())
                     {
                         if (CurrentCheckout is not null)
                         {
                             // Not found, so search for its parents
-                            headParents = TryGetParents(Module, _filterInfo, CurrentCheckout);
+                            headParents = TryGetParents(Module, _filterInfo, CurrentCheckout).ToList();
                         }
 
                         // If parents are rewritten HEAD may not be included
                         // Insert the artificial commits where relevant if possible, otherwise first
-                        refresh = AddArtificialRevisions(headParents);
+                        refresh = AddArtificialRevisions(headParents ?? Enumerable.Empty<ObjectId>().ToList());
                     }
 
                     // All revisions are loaded (but maybe not yet the grid)
@@ -1389,7 +1390,7 @@ namespace GitUI
                         _gridView.ToBeSelectedObjectIds.Count > 0)
                     {
                         ObjectId notSelectedId = _gridView.ToBeSelectedObjectIds[0];
-                        IEnumerable<ObjectId> parents = null;
+                        IReadOnlyList<ObjectId> parents = null;
 
                         // Try to reuse headParents for parents to the commit to be selected
                         if (headParents is not null && notSelectedId == CurrentCheckout)
@@ -1403,7 +1404,7 @@ namespace GitUI
                         else if (!notSelectedId.IsArtificial)
                         {
                             // Ignore if the not selected is artificial, it is likely that the settings was changed
-                            parents = TryGetParents(Module, _filterInfo, notSelectedId);
+                            parents = TryGetParents(Module, _filterInfo, notSelectedId).ToList();
                         }
 
                         // Try to select the first of the parents
@@ -1504,14 +1505,16 @@ namespace GitUI
 
             static IEnumerable<ObjectId> TryGetParents(GitModule module, FilterInfo filterInfo, ObjectId objectId)
             {
+                // Limit the search to decrease command time (this may add seconds in big repos)
+                // It is only the first that are considered interesting to select.
                 GitArgumentBuilder args = new("rev-list")
                 {
-                    { filterInfo.HasCommitsLimit, $"--max-count={filterInfo.CommitsLimit}" },
+                    $"--max-count=50",
                     objectId
                 };
 
                 ExecutionResult result = module.GitExecutable.Execute(args, throwOnErrorExit: false);
-                foreach (var line in result.StandardOutput.LazySplit('\n'))
+                foreach (string line in result.StandardOutput.LazySplit('\n'))
                 {
                     if (ObjectId.TryParse(line, out var parentId))
                     {
