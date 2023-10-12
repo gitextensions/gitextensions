@@ -13,7 +13,7 @@ namespace GitUI
     /// <summary>Base <see cref="Form"/> that provides access to <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModuleForm
     {
-        private IHotkeySettingsReader? _hotkeySettingsReader;
+        private IHotkeySettingsLoader? _hotkeySettingsLoader;
         private IScriptsRunner? _scriptsRunner;
         private GitUICommands? _uiCommands;
 
@@ -27,10 +27,10 @@ namespace GitUI
 
         public virtual RevisionGridControl? RevisionGridControl { get; }
 
-        public IHotkeySettingsReader HotkeySettingsReader
+        public IHotkeySettingsLoader HotkeySettingsReader
         {
-            get => _hotkeySettingsReader ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
-            private set => _hotkeySettingsReader = value;
+            get => _hotkeySettingsLoader ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
+            private set => _hotkeySettingsLoader = value;
         }
 
         public IScriptsRunner ScriptsRunner
@@ -59,7 +59,7 @@ namespace GitUI
                 GitUICommands oldCommands = _uiCommands;
                 _uiCommands = value;
 
-                _hotkeySettingsReader = _uiCommands.GetRequiredService<IHotkeySettingsReader>();
+                _hotkeySettingsLoader = _uiCommands.GetRequiredService<IHotkeySettingsLoader>();
                 _scriptsRunner = _uiCommands.GetRequiredService<IScriptsRunner>();
 
                 OnUICommandsChanged(new GitUICommandsChangedEventArgs(oldCommands));

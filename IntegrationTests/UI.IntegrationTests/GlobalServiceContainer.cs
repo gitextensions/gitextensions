@@ -25,7 +25,7 @@ namespace GitExtensions.UITests
             serviceContainer.AddService(Substitute.For<IScriptsRunner>());
 
             serviceContainer.AddService(Substitute.For<IHotkeySettingsManager>());
-            serviceContainer.AddService(Substitute.For<IHotkeySettingsReader>());
+            serviceContainer.AddService(Substitute.For<IHotkeySettingsLoader>());
 
             return serviceContainer;
         }

@@ -10,17 +10,39 @@ using ResourceManager;
 
 namespace GitUI.Hotkey
 {
-    public interface IHotkeySettingsManager : IHotkeySettingsReader
-{
-        HotkeySettings[] CreateDefaultSettings();
+    /// <summary>
+    ///  Provides the ability to manage hotkeys settings.
+    /// </summary>
+    public interface IHotkeySettingsManager : IHotkeySettingsLoader
+    {
+        /// <summary>
+        ///  Generates the list of preset hotkeys.
+        /// </summary>
+        /// <returns>The list of preset hotkeys.</returns>
+        IReadOnlyList<HotkeySettings> CreateDefaultSettings();
+
+        /// <summary>
+        ///  Determines whether the hotkey is already assigned.
+        /// </summary>
+        /// <returns><see langword="true"/> if the hotkey is available; otherwise, <see langword="false"/>.</returns>
         bool IsUniqueKey(Keys keyData);
-        HotkeySettings[] LoadSettings();
-        void SaveSettings(HotkeySettings[] settings);
+
+        /// <summary>
+        ///  Loads all preset and user-configured hotkeys.
+        /// </summary>
+        /// <returns>The union of preset and user-configured hotkeys.</returns>
+        IReadOnlyList<HotkeySettings> LoadSettings();
+
+        /// <summary>
+        ///  Saves the user-configured hotkeys.
+        /// </summary>
+        /// <param name="settings">The user-configured hotkeys.</param>
+        void SaveSettings(IEnumerable<HotkeySettings> settings);
     }
 
     internal class HotkeySettingsManager : IHotkeySettingsManager
     {
-        private static XmlSerializer? _serializer;
+        private static readonly XmlSerializer? _serializer = new(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
         private readonly HashSet<Keys> _usedKeys = new();
         private readonly IScriptsManager _scriptsManager;
 
@@ -30,60 +52,20 @@ namespace GitUI.Hotkey
             MigrateSettings();
         }
 
-        /// <summary>Lazy-loaded Serializer for HotkeySettings[].</summary>
-        private static XmlSerializer Serializer => _serializer ??= new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
+        public bool IsUniqueKey(Keys keyData) => _usedKeys.Contains(keyData);
 
-        /// <summary>
-        /// Returns whether the hotkey is already assigned.
-        /// </summary>
-        public bool IsUniqueKey(Keys keyData)
-        {
-            return _usedKeys.Contains(keyData);
-        }
-
-        public HotkeyCommand[] LoadHotkeys(string hotkeySettingsName)
-        {
-            HotkeySettings settings = new();
-            HotkeySettings scriptKeys = new();
-            HotkeySettings[] allSettings = LoadSettings();
-
-            UpdateUsedKeys(allSettings);
-
-            foreach (HotkeySettings setting in allSettings)
-            {
-                if (setting.Name == hotkeySettingsName)
-                {
-                    settings = setting;
-                }
-
-                if (setting.Name == "Scripts")
-                {
-                    scriptKeys = setting;
-                }
-            }
-
-            // append general hotkeys to every form
-            Validates.NotNull(settings.Commands);
-            Validates.NotNull(scriptKeys.Commands);
-            HotkeyCommand[] allKeys = new HotkeyCommand[settings.Commands.Length + scriptKeys.Commands.Length];
-            settings.Commands.CopyTo(allKeys, 0);
-            scriptKeys.Commands.CopyTo(allKeys, settings.Commands.Length);
-
-            return allKeys;
-        }
-
-        public HotkeySettings[] LoadSettings()
+        public IReadOnlyList<HotkeySettings> LoadSettings()
         {
             // Get the default settings
-            HotkeySettings[] defaultSettings = CreateDefaultSettings();
-            HotkeySettings[] loadedSettings = LoadSerializedSettings();
+            var defaultSettings = CreateDefaultSettings();
+            var loadedSettings = LoadSerializedSettings();
 
             MergeIntoDefaultSettings(defaultSettings, loadedSettings);
 
             return defaultSettings;
         }
 
-        private void UpdateUsedKeys(HotkeySettings[] settings)
+        private void UpdateUsedKeys(IEnumerable<HotkeySettings> settings)
         {
             _usedKeys.Clear();
 
@@ -100,7 +82,7 @@ namespace GitUI.Hotkey
         }
 
         /// <summary>Serializes and saves the supplied settings.</summary>
-        public void SaveSettings(HotkeySettings[] settings)
+        public void SaveSettings(IEnumerable<HotkeySettings> settings)
         {
             try
             {
@@ -113,7 +95,7 @@ namespace GitUI.Hotkey
                 using StringWriter sw = new();
                 using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
 
-                Serializer.Serialize(xmlWriter, settings);
+                _serializer.Serialize(xmlWriter, settings.ToArray());
                 AppSettings.SerializedHotkeys = sw.ToString();
             }
             catch
@@ -122,7 +104,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[]? loadedSettings)
+        internal static void MergeIntoDefaultSettings(IEnumerable<HotkeySettings> defaultSettings, IEnumerable<HotkeySettings>? loadedSettings)
         {
             if (loadedSettings is null)
             {
@@ -185,7 +167,7 @@ namespace GitUI.Hotkey
             try
             {
                 using StringReader reader = new(serializedHotkeys);
-                return (HotkeySettings[])Serializer.Deserialize(reader);
+                return (HotkeySettings[])_serializer.Deserialize(reader);
             }
             catch
             {
@@ -217,7 +199,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        public HotkeySettings[] CreateDefaultSettings()
+        public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
         {
             HotkeyCommand Hk(object en, Keys k) => new((int)en, en.ToString()) { KeyData = k };
 
@@ -440,6 +422,37 @@ namespace GitUI.Hotkey
                     .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name!) { KeyData = Keys.None })
                     .ToArray();
             }
+        }
+
+        IReadOnlyList<HotkeyCommand> IHotkeySettingsLoader.LoadHotkeys(string hotkeySettingsName)
+        {
+            HotkeySettings settings = new();
+            HotkeySettings scriptKeys = new();
+            IEnumerable<HotkeySettings> allSettings = LoadSettings();
+
+            UpdateUsedKeys(allSettings);
+
+            foreach (HotkeySettings setting in allSettings)
+            {
+                if (setting.Name == hotkeySettingsName)
+                {
+                    settings = setting;
+                }
+
+                if (setting.Name == "Scripts")
+                {
+                    scriptKeys = setting;
+                }
+            }
+
+            // append general hotkeys to every form
+            Validates.NotNull(settings.Commands);
+            Validates.NotNull(scriptKeys.Commands);
+            HotkeyCommand[] allKeys = new HotkeyCommand[settings.Commands.Length + scriptKeys.Commands.Length];
+            settings.Commands.CopyTo(allKeys, 0);
+            scriptKeys.Commands.CopyTo(allKeys, settings.Commands.Length);
+
+            return allKeys;
         }
     }
 }

@@ -9,9 +9,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     /// </summary>
     internal partial class ControlHotkeys : GitExtensionsControl
     {
-        #region Settings
-        private HotkeySettings[]? _settings;
-        private HotkeySettings[]? Settings
+        private IReadOnlyList<HotkeySettings>? _settings;
+
+        private IReadOnlyList<HotkeySettings>? Settings
         {
             get { return _settings; }
             set
@@ -20,7 +20,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 UpdateCombobox(value);
             }
         }
-        #endregion
 
         #region SelectedHotkeySettings
         private HotkeySettings? _selectedHotkeySettings;
@@ -82,7 +81,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Settings = HotkeySettingsManager.LoadSettings();
         }
 
-        private void UpdateCombobox(HotkeySettings[]? settings)
+        private void UpdateCombobox(IReadOnlyList<HotkeySettings>? settings)
         {
             SelectedHotkeySettings = null;
 

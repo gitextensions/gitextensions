@@ -98,7 +98,7 @@ namespace ResourceManager
                 return;
             }
 
-            _hotkeys = commands.GetRequiredService<IHotkeySettingsReader>().LoadHotkeys(hotkeySettingsName);
+            _hotkeys = commands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
         }
 
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>

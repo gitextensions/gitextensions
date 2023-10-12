@@ -17,6 +17,6 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IScriptsManager>(scriptsManager);
         serviceContainer.AddService<IScriptsRunner>(scriptsManager);
         serviceContainer.AddService<IHotkeySettingsManager>(hotkeySettingsManager);
-        serviceContainer.AddService<IHotkeySettingsReader>(hotkeySettingsManager);
+        serviceContainer.AddService<IHotkeySettingsLoader>(hotkeySettingsManager);
     }
 }

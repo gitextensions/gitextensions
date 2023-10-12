@@ -29,8 +29,8 @@ namespace GitUI.CommandsDialogs
             var scriptsManager = serviceProvider.GetRequiredService<IScriptsManager>();
             IEnumerable<ScriptInfo> scripts = scriptsManager.GetScripts().Where(x => x.Enabled);
 
-            var hotkeySettingsReader = serviceProvider.GetRequiredService<IHotkeySettingsReader>();
-            HotkeyCommand[] hotkeys = hotkeySettingsReader.LoadHotkeys(FormSettings.HotkeySettingsName);
+            var hotkeySettingsLoader = serviceProvider.GetRequiredService<IHotkeySettingsLoader>();
+            IReadOnlyList<HotkeyCommand> hotkeys = hotkeySettingsLoader.LoadHotkeys(FormSettings.HotkeySettingsName);
 
             foreach (ScriptInfo script in scripts)
             {
