@@ -881,7 +881,7 @@ namespace GitUI
 
             // Reset the "cache" for current branch
             CurrentBranch = new(() => Module.IsValidGitWorkingDir()
-                      ? Module.GetSelectedBranch(setDefaultIfEmpty: false)
+                      ? Module.GetSelectedBranch(emptyIfDetached: true)
                       : "");
 
             // Revision info is read in three parallel steps:

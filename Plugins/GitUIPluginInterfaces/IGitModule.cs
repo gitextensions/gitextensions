@@ -128,8 +128,14 @@ namespace GitUIPluginInterfaces
         string GetEffectiveSetting(string setting);
         string GetEffectiveGitSetting(string setting, bool cache = true);
 
-        /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
-        string GetSelectedBranch();
+        /// <summary>
+        /// Gets the name of the currently checked out branch.
+        /// </summary>
+        /// <param name="emptyIfDetached">Defines the value returned if HEAD is detached. <see langword="true"/> to return <see cref="string.Empty"/>; <see langword="false"/> to return "(no branch)".</param>
+        /// <returns>
+        /// The name of the branch (for example: "main"); the value requested by <paramref name="emptyIfDetached"/>, if HEAD is detached.
+        /// </returns>
+        string GetSelectedBranch(bool emptyIfDetached = false);
 
         /// <summary>true if ".git" directory does NOT exist.</summary>
         bool IsBareRepository();
