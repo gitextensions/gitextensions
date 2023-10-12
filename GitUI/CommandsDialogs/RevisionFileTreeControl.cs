@@ -8,7 +8,6 @@ using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -300,9 +299,9 @@ See the changes in the commit form.");
                         || (BlameControl.Visible && BlameControl.ProcessHotkey(keyData))));
         }
 
-        public void ReloadHotkeys(IScriptsManager scriptsManager)
+        public void ReloadHotkeys()
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
+            LoadHotkeys(HotkeySettingsName);
             fileHistoryToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             blameToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
             openWithDifftoolToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftool);
@@ -312,7 +311,7 @@ See the changes in the commit form.");
             editCheckedOutFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
             filterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
-            FileText.ReloadHotkeys(scriptsManager);
+            FileText.ReloadHotkeys();
         }
 
         private string GetShortcutKeyDisplayString(Command cmd)
@@ -339,6 +338,8 @@ See the changes in the commit form.");
 
         protected override void OnRuntimeLoad()
         {
+            base.OnRuntimeLoad();
+
             tvGitTree.ImageList = new ImageList(components)
             {
                 ColorDepth = ColorDepth.Depth32Bit,
@@ -350,15 +351,13 @@ See the changes in the commit form.");
                     Images.FolderSubmodule // Submodule
                 }
             };
-
-            base.OnRuntimeLoad();
         }
 
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
         {
             base.OnUICommandsSourceSet(source);
 
-            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
+            ReloadHotkeys();
         }
 
         private IEnumerable<string> FindFileMatches(string name)

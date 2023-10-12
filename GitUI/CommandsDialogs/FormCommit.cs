@@ -244,7 +244,7 @@ namespace GitUI.CommandsDialogs
             ConfigureMessageBox();
 
             HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, ScriptsManager);
+            LoadHotkeys(HotkeySettingsName);
 
             stageToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
             openToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFile);

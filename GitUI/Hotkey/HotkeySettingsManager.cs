@@ -10,61 +10,54 @@ using ResourceManager;
 
 namespace GitUI.Hotkey
 {
-    internal static class HotkeySettingsManager
+    /// <summary>
+    ///  Provides the ability to manage hotkeys settings.
+    /// </summary>
+    public interface IHotkeySettingsManager : IHotkeySettingsLoader
     {
-        #region Serializer
-        private static XmlSerializer? _serializer;
-
-        /// <summary>Lazy-loaded Serializer for HotkeySettings[].</summary>
-        private static XmlSerializer Serializer => _serializer ??= new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
-
-        #endregion
-
-        private static readonly HashSet<Keys> _usedKeys = new();
+        /// <summary>
+        ///  Generates the list of preset hotkeys.
+        /// </summary>
+        /// <returns>The list of preset hotkeys.</returns>
+        IReadOnlyList<HotkeySettings> CreateDefaultSettings();
 
         /// <summary>
-        /// Returns whether the hotkey is already assigned.
+        ///  Determines whether the hotkey is already assigned.
         /// </summary>
-        public static bool IsUniqueKey(Keys keyData)
+        /// <returns><see langword="true"/> if the hotkey is available; otherwise, <see langword="false"/>.</returns>
+        bool IsUniqueKey(Keys keyData);
+
+        /// <summary>
+        ///  Loads all preset and user-configured hotkeys.
+        /// </summary>
+        /// <returns>The union of preset and user-configured hotkeys.</returns>
+        IReadOnlyList<HotkeySettings> LoadSettings();
+
+        /// <summary>
+        ///  Saves the user-configured hotkeys.
+        /// </summary>
+        /// <param name="settings">The user-configured hotkeys.</param>
+        void SaveSettings(IEnumerable<HotkeySettings> settings);
+    }
+
+    internal class HotkeySettingsManager : IHotkeySettingsManager
+    {
+        private static readonly XmlSerializer? _serializer = new(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
+        private readonly HashSet<Keys> _usedKeys = new();
+        private readonly IScriptsManager _scriptsManager;
+
+        public HotkeySettingsManager(IScriptsManager scriptsManager)
         {
-            return _usedKeys.Contains(keyData);
+            _scriptsManager = scriptsManager;
+            MigrateSettings();
         }
 
-        public static HotkeyCommand[] LoadHotkeys(string name, IScriptsManager scriptsManager)
-        {
-            HotkeySettings settings = new();
-            HotkeySettings scriptKeys = new();
-            var allSettings = LoadSettings(scriptsManager);
+        public bool IsUniqueKey(Keys keyData) => _usedKeys.Contains(keyData);
 
-            UpdateUsedKeys(allSettings);
-
-            foreach (var setting in allSettings)
-            {
-                if (setting.Name == name)
-                {
-                    settings = setting;
-                }
-
-                if (setting.Name == "Scripts")
-                {
-                    scriptKeys = setting;
-                }
-            }
-
-            // append general hotkeys to every form
-            Validates.NotNull(settings.Commands);
-            Validates.NotNull(scriptKeys.Commands);
-            var allKeys = new HotkeyCommand[settings.Commands.Length + scriptKeys.Commands.Length];
-            settings.Commands.CopyTo(allKeys, 0);
-            scriptKeys.Commands.CopyTo(allKeys, settings.Commands.Length);
-
-            return allKeys;
-        }
-
-        public static HotkeySettings[] LoadSettings(IScriptsManager scriptsManager)
+        public IReadOnlyList<HotkeySettings> LoadSettings()
         {
             // Get the default settings
-            var defaultSettings = CreateDefaultSettings(scriptsManager);
+            var defaultSettings = CreateDefaultSettings();
             var loadedSettings = LoadSerializedSettings();
 
             MergeIntoDefaultSettings(defaultSettings, loadedSettings);
@@ -72,15 +65,15 @@ namespace GitUI.Hotkey
             return defaultSettings;
         }
 
-        private static void UpdateUsedKeys(HotkeySettings[] settings)
+        private void UpdateUsedKeys(IEnumerable<HotkeySettings> settings)
         {
             _usedKeys.Clear();
 
-            foreach (var setting in settings)
+            foreach (HotkeySettings setting in settings)
             {
                 if (setting.Commands is not null)
                 {
-                    foreach (var command in setting.Commands)
+                    foreach (HotkeyCommand command in setting.Commands)
                     {
                         _usedKeys.Add(command.KeyData);
                     }
@@ -89,7 +82,7 @@ namespace GitUI.Hotkey
         }
 
         /// <summary>Serializes and saves the supplied settings.</summary>
-        public static void SaveSettings(HotkeySettings[] settings)
+        public void SaveSettings(IEnumerable<HotkeySettings> settings)
         {
             try
             {
@@ -102,7 +95,7 @@ namespace GitUI.Hotkey
                 using StringWriter sw = new();
                 using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
 
-                Serializer.Serialize(xmlWriter, settings);
+                _serializer.Serialize(xmlWriter, settings.ToArray());
                 AppSettings.SerializedHotkeys = sw.ToString();
             }
             catch
@@ -111,7 +104,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[]? loadedSettings)
+        internal static void MergeIntoDefaultSettings(IEnumerable<HotkeySettings> defaultSettings, IEnumerable<HotkeySettings>? loadedSettings)
         {
             if (loadedSettings is null)
             {
@@ -125,14 +118,14 @@ namespace GitUI.Hotkey
 
             void AssignHotkeysFromLoaded()
             {
-                foreach (var setting in loadedSettings)
+                foreach (HotkeySettings setting in loadedSettings)
                 {
                     if (setting.Commands is not null && setting.Name is not null)
                     {
-                        foreach (var command in setting.Commands)
+                        foreach (HotkeyCommand command in setting.Commands)
                         {
                             string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                            if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
+                            if (defaultCommands.TryGetValue(dictKey, out HotkeyCommand defaultCommand))
                             {
                                 defaultCommand.KeyData = command.KeyData;
                             }
@@ -143,11 +136,11 @@ namespace GitUI.Hotkey
 
             void FillDictionaryWithCommands()
             {
-                foreach (var setting in defaultSettings)
+                foreach (HotkeySettings setting in defaultSettings)
                 {
                     if (setting.Commands is not null && setting.Name is not null)
                     {
-                        foreach (var command in setting.Commands)
+                        foreach (HotkeyCommand command in setting.Commands)
                         {
                             string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
                             defaultCommands.Add(dictKey, command);
@@ -161,8 +154,6 @@ namespace GitUI.Hotkey
 
         private static HotkeySettings[]? LoadSerializedSettings()
         {
-            MigrateSettings();
-
             if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
             {
                 return LoadSerializedSettings(AppSettings.SerializedHotkeys);
@@ -176,7 +167,7 @@ namespace GitUI.Hotkey
             try
             {
                 using StringReader reader = new(serializedHotkeys);
-                return (HotkeySettings[])Serializer.Deserialize(reader);
+                return (HotkeySettings[])_serializer.Deserialize(reader);
             }
             catch
             {
@@ -184,7 +175,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        private static void MigrateSettings()
+        private void MigrateSettings()
         {
             if (AppSettings.SerializedHotkeys is null)
             {
@@ -208,7 +199,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        public static HotkeySettings[] CreateDefaultSettings(IScriptsManager scriptsManager)
+        public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
         {
             HotkeyCommand Hk(object en, Keys k) => new((int)en, en.ToString()) { KeyData = k };
 
@@ -425,12 +416,43 @@ namespace GitUI.Hotkey
                  * these integers are never matched in the 'switch' routine on a form and
                  * therefore execute the 'default' action
                  */
-                return scriptsManager
+                return _scriptsManager
                     .GetScripts()
                     .Where(s => !string.IsNullOrEmpty(s.Name))
                     .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name!) { KeyData = Keys.None })
                     .ToArray();
             }
+        }
+
+        IReadOnlyList<HotkeyCommand> IHotkeySettingsLoader.LoadHotkeys(string hotkeySettingsName)
+        {
+            HotkeySettings settings = new();
+            HotkeySettings scriptKeys = new();
+            IEnumerable<HotkeySettings> allSettings = LoadSettings();
+
+            UpdateUsedKeys(allSettings);
+
+            foreach (HotkeySettings setting in allSettings)
+            {
+                if (setting.Name == hotkeySettingsName)
+                {
+                    settings = setting;
+                }
+
+                if (setting.Name == "Scripts")
+                {
+                    scriptKeys = setting;
+                }
+            }
+
+            // append general hotkeys to every form
+            Validates.NotNull(settings.Commands);
+            Validates.NotNull(scriptKeys.Commands);
+            HotkeyCommand[] allKeys = new HotkeyCommand[settings.Commands.Length + scriptKeys.Commands.Length];
+            settings.Commands.CopyTo(allKeys, 0);
+            scriptKeys.Commands.CopyTo(allKeys, settings.Commands.Length);
+
+            return allKeys;
         }
     }
 }

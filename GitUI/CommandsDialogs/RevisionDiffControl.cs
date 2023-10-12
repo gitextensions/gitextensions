@@ -6,7 +6,6 @@ using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
-using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -188,9 +187,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void ReloadHotkeys(IScriptsManager scriptsManager)
+        public void ReloadHotkeys()
         {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, scriptsManager);
+            LoadHotkeys(HotkeySettingsName);
             diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
             fileHistoryDiffToolstripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             blameToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
@@ -208,7 +207,7 @@ namespace GitUI.CommandsDialogs
             diffFilterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
             findInDiffToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
 
-            DiffText.ReloadHotkeys(scriptsManager);
+            DiffText.ReloadHotkeys();
         }
 
         public void LoadCustomDifftools()
@@ -333,7 +332,7 @@ namespace GitUI.CommandsDialogs
         {
             base.OnUICommandsSourceSet(source);
 
-            ReloadHotkeys(UICommands.GetRequiredService<IScriptsManager>());
+            ReloadHotkeys();
             LoadCustomDifftools();
         }
 

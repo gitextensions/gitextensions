@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
@@ -11,6 +12,7 @@ namespace ResourceManager
     public class GitExtensionsControl : UserControl, ITranslate
     {
         private readonly GitExtensionsControlInitialiser _initialiser;
+        private IReadOnlyList<HotkeyCommand>? _hotkeys;
 
         protected GitExtensionsControl()
         {
@@ -69,16 +71,33 @@ namespace ResourceManager
             TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
 
+        /// <summary>
+        ///  Attempts to find an instance of <see cref="IGitUICommands"/>.
+        /// </summary>
+        /// <param name="commands">
+        ///  The instance of <see cref="IGitUICommands"/> either directly assigned to the control
+        ///  (if the control implements <see cref="IGitModuleControl"/>) or to the parent form
+        ///  (if the form implements <see cref="IGitModuleForm"/>); <see langword="null"/>, otherwise.
+        /// </param>
+        /// <returns>
+        ///  <see langword="true"/>, if an instance of <see cref="IGitUICommands"/> is found; <see langword="false"/>, otherwise.
+        /// </returns>
         public bool TryGetUICommands([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
         {
-            if (FindForm() is not IGitModuleForm form)
+            if (this is IGitModuleControl control)
             {
-                commands = null;
-                return false;
+                commands = control.UICommands;
+                return commands is not null;
             }
 
-            commands = form.UICommands;
-            return commands is not null;
+            if (FindForm() is IGitModuleForm form)
+            {
+                commands = form.UICommands;
+                return commands is not null;
+            }
+
+            commands = null;
+            return false;
         }
 
         #region Hotkeys
@@ -96,15 +115,46 @@ namespace ResourceManager
                 return false;
             }
 
-            HotkeyCommand? hotkey = Hotkeys?.FirstOrDefault(hotkey => hotkey?.KeyData == keyData);
+            HotkeyCommand? hotkey = _hotkeys?.FirstOrDefault(hotkey => hotkey?.KeyData == keyData);
             return hotkey is not null && ExecuteCommand(hotkey.CommandCode).Executed;
         }
 
-        /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
+        /// <summary>
+        ///  Gets the currently loaded hotkeys.
+        /// </summary>
         protected bool HotkeysEnabled { get; set; }
 
-        /// <summary>Gets or sets the hotkeys</summary>
-        protected IReadOnlyList<HotkeyCommand>? Hotkeys { get; set; }
+        /// <summary>
+        ///  Loads hotkeys for the specified configuration setting.
+        /// </summary>
+        /// <param name="hotkeySettingsName">The setting name.</param>
+        protected void LoadHotkeys(string hotkeySettingsName)
+        {
+            _hotkeys = null;
+
+            if (!HotkeysEnabled)
+            {
+                return;
+            }
+
+            if (!TryGetUICommands(out IGitUICommands commands))
+            {
+#if DEBUG
+                if (Debugger.IsAttached)
+                {
+                    Debug.Fail($"{GetType().FullName}: service provider is unavailable.");
+                }
+                else
+                {
+                    throw new InvalidOperationException($"{GetType().FullName}: service provider is unavailable.");
+                }
+#endif
+
+                return;
+            }
+
+            _hotkeys = commands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
+        }
 
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -119,7 +169,7 @@ namespace ResourceManager
 
         private HotkeyCommand? GetHotkeyCommand(int commandCode)
         {
-            return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
+            return _hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
         /// <summary>

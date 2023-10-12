@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using GitCommands;
 using GitUI;
+using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
 using NSubstitute;
 using ResourceManager;
@@ -22,6 +23,9 @@ namespace GitExtensions.UITests
             serviceContainer.AddService(scriptsManager);
 
             serviceContainer.AddService(Substitute.For<IScriptsRunner>());
+
+            serviceContainer.AddService(Substitute.For<IHotkeySettingsManager>());
+            serviceContainer.AddService(Substitute.For<IHotkeySettingsLoader>());
 
             return serviceContainer;
         }

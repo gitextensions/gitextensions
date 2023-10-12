@@ -5,7 +5,6 @@ using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitUI.HelperDialogs;
-using GitUI.Hotkey;
 using Microsoft;
 using ResourceManager;
 
@@ -128,6 +127,7 @@ namespace GitUI.CommandsDialogs
             _offerCommit = offerCommit;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
+            HotkeysEnabled = true;
             FileName.DataPropertyName = nameof(ConflictData.Filename);
             authorDataGridViewTextBoxColumn1.DataPropertyName = "Author"; // TODO this property does not exist on the target type
         }
@@ -139,8 +139,7 @@ namespace GitUI.CommandsDialogs
             merge.Focus();
             merge.Select();
 
-            HotkeysEnabled = true;
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName, ScriptsManager);
+            LoadHotkeys(HotkeySettingsName);
         }
 
         protected override void Dispose(bool disposing)

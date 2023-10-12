@@ -2,24 +2,15 @@
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitUI.ScriptsEngine;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI
 {
-    public sealed class GitUICommandsSourceEventArgs : EventArgs
-    {
-        public GitUICommandsSourceEventArgs(IGitUICommandsSource gitUiCommandsSource)
-        {
-            GitUICommandsSource = gitUiCommandsSource;
-        }
-
-        public IGitUICommandsSource GitUICommandsSource { get; }
-    }
-
     /// <summary>
     /// Base class for a <see cref="UserControl"/> requiring <see cref="GitModule"/> and <see cref="GitUICommands"/>.
     /// </summary>
-    public class GitModuleControl : GitExtensionsControl
+    public class GitModuleControl : GitExtensionsControl, IGitModuleControl
     {
         private readonly object _lock = new();
         private int _isDisposed;
@@ -81,6 +72,8 @@ namespace GitUI
         /// <summary>Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.</summary>
         [Browsable(false)]
         public GitUICommands UICommands => UICommandsSource.UICommands;
+
+        IGitUICommands IGitModuleControl.UICommands => UICommandsSource.UICommands;
 
         /// <summary>
         /// Gets the UI commands, if they've initialised.

@@ -1,30 +1,46 @@
 ﻿using GitUI.Hotkey;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public class TextboxHotkey : TextBox
     {
-        private readonly TranslationString _hotkeyNotSet =
-            new("None");
-
-        #region Key
         private Keys _keyData;
+
+        private IHotkeySettingsManager HotkeySettingsManager
+        {
+            get
+            {
+                if (this.FindAncestors().OfType<SettingsPageBase>().FirstOrDefault() is not SettingsPageBase settingsPage)
+                {
+                    throw new InvalidOperationException($"{GetType().Name} must be sited on a {typeof(SettingsPageBase)} control");
+                }
+
+                return settingsPage.ServiceProvider.GetRequiredService<IHotkeySettingsManager>();
+            }
+        }
 
         /// <summary>Gets or sets the KeyData.</summary>
         public Keys KeyData
         {
-            get { return _keyData; }
+            get => _keyData;
             set
             {
+                if (_keyData == value)
+                {
+                    return;
+                }
+
                 _keyData = value;
 
-                // TODO: do not change text color on already assigned keys, which occur only once
-                ForeColor = HotkeySettingsManager.IsUniqueKey(_keyData) ? System.Drawing.Color.Red : System.Drawing.SystemColors.WindowText;
+                if (_keyData != Keys.None)
+                {
+                    // TODO: do not change text color on already assigned keys, which occur only once
+                    ForeColor = HotkeySettingsManager.IsUniqueKey(_keyData) ? Color.Red : SystemColors.WindowText;
+                }
+
                 Text = _keyData.ToText();
             }
         }
-        #endregion
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {

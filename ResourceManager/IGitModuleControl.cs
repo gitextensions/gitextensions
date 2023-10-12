@@ -1,8 +1,8 @@
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 
 namespace ResourceManager;
 
-public interface IGitModuleForm
+public interface IGitModuleControl
 {
     /// <summary>
     ///  Gets the currently assigned <see cref="IGitUICommands"/> instance.
