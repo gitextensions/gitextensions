@@ -1380,7 +1380,7 @@ namespace GitUI
 
                         // If parents are rewritten HEAD may not be included
                         // Insert the artificial commits where relevant if possible, otherwise first
-                        refresh = AddArtificialRevisions(headParents ?? Enumerable.Empty<ObjectId>().ToList());
+                        refresh = AddArtificialRevisions(headParents ?? new List<ObjectId>());
                     }
 
                     // All revisions are loaded (but maybe not yet the grid)
