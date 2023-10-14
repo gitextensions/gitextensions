@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using GitExtUtils;
 
 namespace GitUI.LeftPanel.ContextMenu
 {
@@ -9,7 +9,7 @@ namespace GitUI.LeftPanel.ContextMenu
         internal static void InsertItems(this ContextMenuStrip menu, IEnumerable<ToolStripItem> items,
             ToolStripItem? before = null, ToolStripItem? after = null)
         {
-            Debug.Assert(after is null || before is null, $"Only {nameof(before)} or {nameof(after)} is allowed, not both.");
+            DebugHelpers.Assert(after is null || before is null, $"Only {nameof(before)} or {nameof(after)} is allowed, not both.");
 
             menu.SuspendLayout();
             int index;

@@ -128,7 +128,7 @@ namespace GitExtUtils
                 str.Append(' ').Append(arguments);
             }
 
-            Debug.Assert(str.Capacity == capacity, $"Did not allocate enough capacity for string buffer. Allocated {capacity} but final capacity was {str.Capacity}.");
+            DebugHelpers.Assert(str.Capacity == capacity, $"Did not allocate enough capacity for string buffer. Allocated {capacity} but final capacity was {str.Capacity}.");
 
             return str.ToString();
         }

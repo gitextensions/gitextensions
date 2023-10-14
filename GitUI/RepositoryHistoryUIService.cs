@@ -2,7 +2,6 @@
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitUI.CommandsDialogs;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
 {

@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using GitCommands;
+﻿using GitCommands;
+using GitExtUtils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using Microsoft;
 using ResourceManager;
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (ToolStrip toolStrip in toolStrips)
             {
-                Debug.Assert(!string.IsNullOrEmpty(toolStrip.Text), "Toolstrip must specify its name via Text property.");
+                DebugHelpers.Assert(!string.IsNullOrEmpty(toolStrip.Text), "Toolstrip must specify its name via Text property.");
 
                 _toolStripContextMenu.Items.Add(CreateItem(toolStrip));
                 _toolbarsMenuItem.DropDownItems.Add(CreateItem(toolStrip));
@@ -452,7 +452,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (ToolStripMenuItem item in toolStripItems)
             {
-                Debug.Assert(item.Tag is ToolStrip, "Toolbars context menu items must reference Toolstrips via Tag property.");
+                DebugHelpers.Assert(item.Tag is ToolStrip, "Toolbars context menu items must reference Toolstrips via Tag property.");
                 item.Checked = ((ToolStrip)item.Tag).Visible;
             }
         }

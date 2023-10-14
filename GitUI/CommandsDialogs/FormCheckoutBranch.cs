@@ -4,7 +4,6 @@ using GitExtUtils.GitUI;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft;
-using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

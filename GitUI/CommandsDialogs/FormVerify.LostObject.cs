@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
@@ -88,7 +87,7 @@ namespace GitUI.CommandsDialogs
                 // if you get this message,
                 //     you can implement this format parsing
                 //     or post an issue to https://github.com/gitextensions/gitextensions/issues
-                Debug.Assert(patternMatch.Success, "Lost object's extracted diagnostics format not implemented", raw);
+                DebugHelpers.Assert(patternMatch.Success, "Lost object's extracted diagnostics format not implemented");
 
                 // skip unsupported raw data format (for end users)
                 if (!patternMatch.Success)

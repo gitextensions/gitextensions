@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using GitExtUtils;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using Microsoft;
@@ -609,7 +609,7 @@ namespace GitUI
 
         private TextRange? FindNextIn(int offset1, int offset2, bool searchBackward)
         {
-            Debug.Assert(offset2 >= offset1, "offset2 >= offset1");
+            DebugHelpers.Assert(offset2 >= offset1, "offset2 >= offset1");
             Validates.NotNull(LookFor);
             Validates.NotNull(_lookFor2);
             Validates.NotNull(_document);
@@ -745,7 +745,7 @@ namespace GitUI
     {
         public static int InRange(int x, int lo, int hi)
         {
-            Debug.Assert(lo <= hi, "lo <= hi");
+            DebugHelpers.Assert(lo <= hi, "lo <= hi");
             return x < lo ? lo : (x > hi ? hi : x);
         }
 

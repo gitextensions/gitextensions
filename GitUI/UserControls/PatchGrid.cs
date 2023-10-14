@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
@@ -301,7 +302,7 @@ namespace GitUI
                     return str1 + str2;
                 }
 
-                Debug.Assert(m1.Groups[1].Value == m2.Groups[1].Value, "m1.Groups[1].Value == m2.Groups[1].Value");
+                DebugHelpers.Assert(m1.Groups[1].Value == m2.Groups[1].Value, "m1.Groups[1].Value == m2.Groups[1].Value");
                 return str1[..^2] + m2.Groups[2].Value + "?=";
             }
         }

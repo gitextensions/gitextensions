@@ -1,5 +1,4 @@
-﻿using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 
 namespace GitUI.CommandDialogs
 {

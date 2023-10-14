@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
@@ -7,6 +6,7 @@ using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.Settings;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
@@ -524,7 +524,7 @@ namespace GitUI.CommandsDialogs
             Match match = isRejected.Match(form.GetOutputString());
             if (match.Success && !Module.IsBareRepository())
             {
-                Debug.Assert(form.Visible, "The progress dialog must be visible.");
+                DebugHelpers.Assert(form.Visible, "The progress dialog must be visible.");
 
                 (AppSettings.PullAction onRejectedPullAction, bool forcePush) = AskForAutoPullOnPushRejectedAction(form, match.Groups["currBranch"].Success);
 
@@ -534,7 +534,7 @@ namespace GitUI.CommandsDialogs
                     {
                         // Note that WSL may add other arguments prior to the actual command so "push" may not be first.
                         int pos = form.ProcessArguments.IndexOf("push ");
-                        Debug.Assert(pos >= 0, "Arguments should start with 'push' command");
+                        DebugHelpers.Assert(pos >= 0, "Arguments should start with 'push' command");
 
                         form.ProcessArguments = form.ProcessArguments.Insert(pos + "push ".Length, "--force-with-lease ");
                     }
@@ -572,7 +572,7 @@ namespace GitUI.CommandsDialogs
 
                 Validates.NotNull(_selectedRemote);
 
-                Debug.Assert(form.Visible, "The progress dialog must be visible.");
+                DebugHelpers.Assert(form.Visible, "The progress dialog must be visible.");
                 UICommands.StartPullDialogAndPullImmediately(
                     out bool pullCompleted,
                     form,
@@ -643,7 +643,7 @@ namespace GitUI.CommandsDialogs
 
                 page.Buttons.Add(btnPushForce);
 
-                Debug.Assert(owner is not null, "The dialog must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
+                DebugHelpers.Assert(owner is not null, "The dialog must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
                 TaskDialogButton result = TaskDialog.ShowDialog(owner, page);
                 if (result == TaskDialogButton.Cancel)
                 {

@@ -2916,7 +2916,7 @@ namespace GitUI.CommandsDialogs
                 // line not formatted yet
                 if (_formattedLines.Count <= lineNumber)
                 {
-                    Debug.Assert(_formattedLines.Count == lineNumber, $"{_formattedLines.Count}:{lineNumber}");
+                    DebugHelpers.Assert(_formattedLines.Count == lineNumber, $"{_formattedLines.Count}:{lineNumber}");
                     _formattedLines.Add(Message.Line(lineNumber));
                 }
                 else

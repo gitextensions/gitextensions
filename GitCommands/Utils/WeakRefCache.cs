@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Timers;
+using GitExtUtils;
 using Timer = System.Timers.Timer;
 
 namespace GitCommands.Utils
@@ -44,7 +45,7 @@ namespace GitCommands.Utils
                 }
             }
 
-            Debug.Assert(cached is not null, "cached is not null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
+            DebugHelpers.Assert(cached is not null, "cached is not null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
 
             return (T)cached!;
         }

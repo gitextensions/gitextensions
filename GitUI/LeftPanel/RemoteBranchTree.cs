@@ -4,7 +4,6 @@ using GitCommands.Remotes;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.LeftPanel
 {

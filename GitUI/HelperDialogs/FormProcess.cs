@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using GitCommands;
 using GitExtUtils;
 using GitUI.UserControls;
@@ -62,7 +61,7 @@ namespace GitUI.HelperDialogs
 
         public static bool ShowDialog(IWin32Window? owner, GitUICommands? commands, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process = null)
         {
-            Debug.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
+            DebugHelpers.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
 
             using FormProcess formProcess = new(commands, arguments, workingDirectory, input, useDialogSettings, process);
             formProcess.ShowDialog(owner);
@@ -71,7 +70,7 @@ namespace GitUI.HelperDialogs
 
         public static string ReadDialog(IWin32Window? owner, GitUICommands? commands, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings)
         {
-            Debug.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
+            DebugHelpers.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
 
             using FormProcess formProcess = new(commands, arguments, workingDirectory, input, useDialogSettings);
             formProcess.ShowDialog(owner);

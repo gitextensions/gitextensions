@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Theming;
@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    Debug.Assert(sender == firstToSelectedToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
+                    DebugHelpers.Assert(sender == firstToSelectedToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
                     return RevisionDiffKind.DiffAB;
                 }
             }

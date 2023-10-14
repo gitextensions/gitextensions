@@ -480,7 +480,7 @@ namespace GitUI
         internal void ResumeRefreshRevisions()
         {
             --_updatingFilters;
-            Debug.Assert(_updatingFilters >= 0, $"{nameof(ResumeRefreshRevisions)} was called without matching {nameof(SuspendRefreshRevisions)}!");
+            DebugHelpers.Assert(_updatingFilters >= 0, $"{nameof(ResumeRefreshRevisions)} was called without matching {nameof(SuspendRefreshRevisions)}!");
         }
 
         public void SetAndApplyBranchFilter(string filter)
@@ -2411,7 +2411,7 @@ namespace GitUI
 
             void UpdateChangeCount(ObjectId objectId, IReadOnlyList<GitItemStatus>? status)
             {
-                Debug.Assert(objectId == ObjectId.WorkTreeId || objectId == ObjectId.IndexId,
+                DebugHelpers.Assert(objectId == ObjectId.WorkTreeId || objectId == ObjectId.IndexId,
                     $"Unexpected Git object id {objectId}");
                 ArtificialCommitChangeCount changeCount = GetChangeCount(objectId);
                 Validates.NotNull(changeCount);

@@ -234,7 +234,7 @@ namespace GitCommands.Git
         /// <returns>The Git command to execute.</returns>
         public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, bool force = false)
         {
-            Debug.Assert(!EnvUtils.RunningOnWindows() || repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
+            DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                 $"'PushLocalCmd' must be called with 'repoDir' in Posix format");
 
             return new GitArgumentBuilder("push")
@@ -264,9 +264,9 @@ namespace GitCommands.Git
         /// </param>
         public static ArgumentString Clone(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
         {
-            Debug.Assert(!EnvUtils.RunningOnWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
+            DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                $"'CloneCmd' must be called with 'fromPath' in Posix format");
-            Debug.Assert(!EnvUtils.RunningOnWindows() || toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
+            DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                $"'CloneCmd' must be called with 'toPath' in Posix format");
 
             return new GitArgumentBuilder("clone")

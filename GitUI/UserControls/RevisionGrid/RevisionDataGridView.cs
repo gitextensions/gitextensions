@@ -120,7 +120,7 @@ namespace GitUI.UserControls.RevisionGrid
                 // need in order to re-draw the graph.
                 this.InvokeAndForget(() =>
                     {
-                        Debug.Assert(_rowHeight != 0, "_rowHeight != 0");
+                        DebugHelpers.Assert(_rowHeight != 0, "_rowHeight != 0");
 
                         // Refresh column providers
                         foreach (ColumnProvider columnProvider in _columnProviders)
@@ -277,7 +277,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             _lastRepaint.Restart();
 
-            Debug.Assert(_rowHeight != 0, "_rowHeight != 0");
+            DebugHelpers.Assert(_rowHeight != 0, "_rowHeight != 0");
 
             GitRevision? revision = GetRevision(e.RowIndex);
 
@@ -487,13 +487,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void MarkAsDataLoadingComplete()
         {
-            Debug.Assert(!IsDataLoadComplete, "The grid is already marked as 'data load complete'.");
+            DebugHelpers.Assert(!IsDataLoadComplete, "The grid is already marked as 'data load complete'.");
             IsDataLoadComplete = true;
         }
 
         public void MarkAsDataLoading()
         {
-            Debug.Assert(IsDataLoadComplete, "The grid is already marked as 'data load in process'.");
+            DebugHelpers.Assert(IsDataLoadComplete, "The grid is already marked as 'data load in process'.");
             IsDataLoadComplete = false;
         }
 
@@ -565,7 +565,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         private IList<int> CalculateGraphIndices()
         {
-            Debug.Assert(_loadedToBeSelectedRevisionsCount == ToBeSelectedObjectIds.Count,
+            DebugHelpers.Assert(_loadedToBeSelectedRevisionsCount == ToBeSelectedObjectIds.Count,
                 $"{nameof(CalculateGraphIndices)}() was called before all expected revisions were loaded.");
 
             List<int> toBeSelectedGraphIndexes = new();

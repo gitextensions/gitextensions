@@ -73,7 +73,7 @@ namespace GitCommands.Git
             // Note: As artificial are options, diff unstage..unstage and
             // stage..stage will show output, different from e.g. HEAD..HEAD
             // Diff-to-itself is not always disabled or is transient why this is not handled as error in release builds
-            Debug.Assert(!(firstRevision == secondRevision && (string.IsNullOrEmpty(firstRevision) || firstRevision == StagedOpt)),
+            DebugHelpers.Assert(!(firstRevision == secondRevision && (string.IsNullOrEmpty(firstRevision) || firstRevision == StagedOpt)),
                 "Unexpectedly two identical artificial revisions to diff: " + firstRevision +
                 ". This will be displayed as diff to HEAD, not an identical diff.");
 

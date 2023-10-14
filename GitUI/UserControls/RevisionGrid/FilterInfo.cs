@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 using GitCommands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
@@ -224,7 +223,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             if (IsRaw)
             {
-                Debug.Fail("Not supported");
+                DebugHelpers.Fail("Not supported");
             }
 
             bool searchParametersChanged = filter.FilterByAuthor != ByAuthor
@@ -295,7 +294,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             if (IsRaw)
             {
-                Debug.Fail("Not supported");
+                DebugHelpers.Fail("Not supported");
             }
 
             ArgumentBuilder filter = new();

@@ -22,7 +22,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
         ///    string html = "<b>Hello!</b>";
         ///    HtmlFragment.CopyToClipboard(html);
         ///    HtmlFragment html2 = HtmlFragment.FromClipboard();
-        ///    Debug.Assert(html2.Fragment == html);
+        ///    DebugHelpers.Assert(html2.Fragment == html);
         /// </example>
         public static HtmlFragment FromClipboard()
         {

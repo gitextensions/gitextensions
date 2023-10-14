@@ -15,7 +15,6 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -615,7 +614,7 @@ namespace GitUI.Editor
         {
             string? fullPath = _fullPathResolver.Resolve(fileName);
             Validates.NotNull(fullPath);
-            Debug.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
+            DebugHelpers.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
 
             if (!isSubmodule)
             {
@@ -892,7 +891,7 @@ namespace GitUI.Editor
             {
                 try
                 {
-                    Debug.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
+                    DebugHelpers.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
                     if (File.Exists(fullPath))
                     {
                         return new FileInfo(fullPath).Length;

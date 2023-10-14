@@ -81,7 +81,7 @@ namespace GitCommands
                                   bool throwOnErrorExit,
                                   CancellationToken cancellationToken)
             {
-                Debug.Assert(redirectOutput == (outputEncoding is not null), "redirectOutput == (outputEncoding is not null)");
+                DebugHelpers.Assert(redirectOutput == (outputEncoding is not null), "redirectOutput == (outputEncoding is not null)");
                 _redirectInput = redirectInput;
                 _redirectOutput = redirectOutput;
                 _throwOnErrorExit = throwOnErrorExit;

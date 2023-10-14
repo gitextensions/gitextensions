@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -250,7 +251,7 @@ namespace JenkinsIntegration
                 {
                     if (build.Task.IsFaulted)
                     {
-                        Debug.Assert(build.Task.Exception is not null, "build.Task.Exception is not null");
+                        DebugHelpers.Assert(build.Task.Exception is not null, "build.Task.Exception is not null");
 
                         observer.OnError(build.Task.Exception);
                         continue;

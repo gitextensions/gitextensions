@@ -1,7 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {

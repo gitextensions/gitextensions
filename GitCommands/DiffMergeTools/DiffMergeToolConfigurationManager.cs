@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using GitCommands.Config;
+﻿using GitCommands.Config;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.DiffMergeTools
@@ -61,7 +61,7 @@ namespace GitCommands.DiffMergeTools
         {
             if (string.IsNullOrWhiteSpace(toolName))
             {
-                Debug.Fail("Diff/merge tool is required");
+                DebugHelpers.Fail("Diff/merge tool is required");
                 return;
             }
 
