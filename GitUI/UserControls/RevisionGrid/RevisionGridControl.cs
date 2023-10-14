@@ -1378,8 +1378,10 @@ namespace GitUI
                             headParents = TryGetParents(Module, _filterInfo, CurrentCheckout).ToList();
                         }
 
-                        // If parents are rewritten HEAD may not be included
-                        // Insert the artificial commits where relevant if possible, otherwise first
+                        // HEAD where to insert the artificial was not found
+                        // (can occur when filtering or limiting number of loaded commits)
+                        // Try to find the revision where to attach the artificial, first is not found
+                        // null means that no matching should be done (just add), so use an empty list if no parents were found
                         refresh = AddArtificialRevisions(headParents ?? new List<ObjectId>());
                     }
 
@@ -1390,7 +1392,7 @@ namespace GitUI
                         _gridView.ToBeSelectedObjectIds.Count > 0)
                     {
                         ObjectId notSelectedId = _gridView.ToBeSelectedObjectIds[0];
-                        IReadOnlyList<ObjectId> parents = null;
+                        IReadOnlyList<ObjectId>? parents = null;
 
                         // Try to reuse headParents for parents to the commit to be selected
                         if (headParents is not null && notSelectedId == CurrentCheckout)
