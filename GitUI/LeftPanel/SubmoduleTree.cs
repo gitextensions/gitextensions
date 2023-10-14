@@ -9,14 +9,24 @@ namespace GitUI.LeftPanel
 {
     internal sealed class SubmoduleTree : Tree
     {
+        private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
         private SubmoduleStatusEventArgs? _currentSubmoduleInfo;
         private Nodes? _currentNodes = null;
 
-        public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
-            : base(treeNode, uiCommands)
+        public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource commandsSource)
+            : base(treeNode, commandsSource)
         {
-            SubmoduleStatusProvider.Default.StatusUpdating += Provider_StatusUpdating;
-            SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
+            _submoduleStatusProvider = UICommands.GetRequiredService<ISubmoduleStatusProvider>();
+            _submoduleStatusProvider.StatusUpdating += Provider_StatusUpdating;
+            _submoduleStatusProvider.StatusUpdated += Provider_StatusUpdated;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _submoduleStatusProvider.StatusUpdating -= Provider_StatusUpdating;
+            _submoduleStatusProvider.StatusUpdated -= Provider_StatusUpdated;
         }
 
         private void Provider_StatusUpdating(object sender, EventArgs e)

@@ -21,6 +21,7 @@ internal static class ServiceContainerRegistry
         serviceContainer.AddService<IAppTitleGenerator>(new AppTitleGenerator(repositoryDescriptionProvider));
         serviceContainer.AddService<ILinkFactory>(new LinkFactory());
 
+        GitCommands.ServiceContainerRegistry.RegisterServices(serviceContainer);
         GitUI.ServiceContainerRegistry.RegisterServices(serviceContainer);
     }
 }

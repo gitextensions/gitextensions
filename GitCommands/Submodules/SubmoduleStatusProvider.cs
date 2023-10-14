@@ -12,6 +12,7 @@ namespace GitCommands.Submodules
     {
         event EventHandler StatusUpdating;
         event EventHandler<SubmoduleStatusEventArgs> StatusUpdated;
+
         void Init();
 
         /// <summary>
@@ -31,19 +32,16 @@ namespace GitCommands.Submodules
         Task UpdateSubmodulesStatusAsync(string workingDirectory, IReadOnlyList<GitItemStatus>? gitStatus, bool forceUpdate = false);
     }
 
-    public sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
+    internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     {
         // Throttle updates triggered from status updates
         private const int MinRefreshInterval = 15;
 
         private readonly CancellationTokenSequence _submodulesStructureSequence = new();
         private readonly CancellationTokenSequence _submodulesStatusSequence = new();
+        private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = new();
         private DateTime _previousSubmoduleUpdateTime;
         private SubmoduleInfoResult? _submoduleInfoResult;
-        private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = new();
-
-        // Singleton accessor
-        public static SubmoduleStatusProvider Default { get; } = new();
 
         // Invoked when status update is requested (use to clear/lock UI)
         public event EventHandler? StatusUpdating;

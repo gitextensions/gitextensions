@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.Design;
 using GitCommands;
+using GitCommands.Submodules;
 using GitUI;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
@@ -26,6 +27,8 @@ namespace GitExtensions.UITests
 
             serviceContainer.AddService(Substitute.For<IHotkeySettingsManager>());
             serviceContainer.AddService(Substitute.For<IHotkeySettingsLoader>());
+
+            serviceContainer.AddService(Substitute.For<ISubmoduleStatusProvider>());
 
             return serviceContainer;
         }
