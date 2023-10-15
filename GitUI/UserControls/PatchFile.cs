@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using GitUIPluginInterfaces;
 
-namespace GitCommands.Patches
+namespace GitUI
 {
     [DebuggerDisplay("PatchFile( {" + nameof(Subject) + "} )")]
-    public class PatchFile
+    public sealed class PatchFile
     {
         public string? FullName { get; set; }
 

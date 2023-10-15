@@ -73,7 +73,7 @@
             // 
             // patchFileBindingSource
             // 
-            this.patchFileBindingSource.DataSource = typeof(GitCommands.Patches.PatchFile);
+            this.patchFileBindingSource.DataSource = typeof(GitUI.PatchFile);
             // 
             // FileName
             // 
