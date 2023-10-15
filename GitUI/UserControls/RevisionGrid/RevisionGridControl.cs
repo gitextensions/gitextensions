@@ -1382,7 +1382,7 @@ namespace GitUI
                         // (can occur when filtering or limiting number of loaded commits)
                         // Try to find the revision where to attach the artificial, first is not found
                         // null means that no matching should be done (just add), so use an empty list if no parents were found
-                        refresh = AddArtificialRevisions(headParents ?? new List<ObjectId>());
+                        refresh = AddArtificialRevisions(headParents ?? Array.Empty<ObjectId>());
                     }
 
                     // All revisions are loaded (but maybe not yet the grid)
