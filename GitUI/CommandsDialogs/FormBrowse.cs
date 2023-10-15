@@ -315,7 +315,7 @@ namespace GitUI.CommandsDialogs
 
             _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
             toolStripButtonPush.Initialize(_aheadBehindDataProvider);
-            repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid, scriptRunner: RevisionGrid);
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid, scriptHostControl: RevisionGrid);
             revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
 
             // Show blame by default if not started from command line
