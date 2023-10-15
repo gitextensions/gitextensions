@@ -9,24 +9,9 @@ namespace GitUI
 {
     public partial class PatchGrid : GitModuleControl
     {
-        private sealed class SortablePatchFilesList : SortableBindingList<PatchFile>
-        {
-            static SortablePatchFilesList()
-            {
-                AddSortableProperty(patchFile => patchFile.Status, (x, y) => string.Compare(x.Status, y.Status, StringComparison.CurrentCulture));
-                AddSortableProperty(patchFile => patchFile.Name, (x, y) => string.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
-                AddSortableProperty(patchFile => patchFile.Subject, (x, y) => string.Compare(x.Subject, y.Subject, StringComparison.CurrentCulture));
-                AddSortableProperty(patchFile => patchFile.Author, (x, y) => string.Compare(x.Author, y.Author, StringComparison.CurrentCulture));
-                AddSortableProperty(patchFile => patchFile.Date, (x, y) => string.Compare(x.Date, y.Date, StringComparison.CurrentCulture));
-            }
-        }
-
         private readonly TranslationString _unableToShowPatchDetails = new("Unable to show details of patch file.");
-
         private List<PatchFile>? _skipped;
         private bool _isManagingRebase;
-
-        public IReadOnlyList<PatchFile>? PatchFiles { get; private set; }
 
         public PatchGrid()
         {
@@ -47,15 +32,9 @@ namespace GitUI
             Patches.RowTemplate.MinimumHeight = Patches.ColumnHeadersHeight;
         }
 
-        private void UpdateState(bool isManagingRebase)
-        {
-            Action.Visible = isManagingRebase;
-            FileName.Visible = !isManagingRebase;
-            CommitHash.Visible = isManagingRebase;
-            dateDataGridViewTextBoxColumn.Width = isManagingRebase ? DpiUtil.Scale(110) : DpiUtil.Scale(160);
-        }
-
-        [Category("Behavior"), Description("Should it be used to display commit to rebase (otherwise patches)."), DefaultValue(true)]
+        [Category("Behavior")]
+        [Description("Should it be used to display commit to rebase (otherwise patches).")]
+        [DefaultValue(true)]
         public bool IsManagingRebase
         {
             get => _isManagingRebase;
@@ -66,23 +45,23 @@ namespace GitUI
             }
         }
 
-        protected override void OnRuntimeLoad()
+        public IReadOnlyList<PatchFile>? PatchFiles { get; private set; }
+
+        private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)
         {
-            Initialize();
-        }
+            PatchFiles = patchFiles;
+            SortablePatchFilesList patchFilesList = new();
+            patchFilesList.AddRange(patchFiles);
+            Patches.DataSource = patchFilesList;
 
-        public void RefreshGrid()
-        {
-            Validates.NotNull(PatchFiles);
-
-            var updatedPatches = GetPatches();
-
-            for (int i = 0; i < updatedPatches.Count; i++)
+            if (patchFiles.Any())
             {
-                updatedPatches[i].IsSkipped = PatchFiles[i].IsSkipped;
+                int rowsInView = Patches.DisplayedRowCount(false);
+                int currentPatchFileIndex = patchFiles.TakeWhile(pf => !pf.IsNext).Count() - 1;
+                Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, currentPatchFileIndex - (rowsInView / 2));
             }
 
-            DisplayPatches(updatedPatches);
+            SelectCurrentlyApplyingPatch();
         }
 
         private IReadOnlyList<PatchFile> GetPatches()
@@ -119,21 +98,54 @@ namespace GitUI
             DisplayPatches(GetPatches());
         }
 
-        private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)
+        protected override void OnRuntimeLoad()
         {
-            PatchFiles = patchFiles;
-            SortablePatchFilesList patchFilesList = new();
-            patchFilesList.AddRange(patchFiles);
-            Patches.DataSource = patchFilesList;
+            Initialize();
+        }
 
-            if (patchFiles.Any())
+        public void RefreshGrid()
+        {
+            Validates.NotNull(PatchFiles);
+
+            var updatedPatches = GetPatches();
+
+            for (int i = 0; i < updatedPatches.Count; i++)
             {
-                int rowsInView = Patches.DisplayedRowCount(false);
-                int currentPatchFileIndex = patchFiles.TakeWhile(pf => !pf.IsNext).Count() - 1;
-                Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, currentPatchFileIndex - (rowsInView / 2));
+                updatedPatches[i].IsSkipped = PatchFiles[i].IsSkipped;
             }
 
-            SelectCurrentlyApplyingPatch();
+            DisplayPatches(updatedPatches);
+        }
+
+        public void SelectCurrentlyApplyingPatch()
+        {
+            if (PatchFiles?.Count is not > 0)
+            {
+                return;
+            }
+
+            var shouldSelectIndex = PatchFiles.IndexOf(p => p.IsNext);
+
+            if (shouldSelectIndex >= 0)
+            {
+                Patches.ClearSelection();
+                DataGridViewRow dataGridViewRow = Patches.Rows[shouldSelectIndex];
+                dataGridViewRow.DefaultCellStyle.ForeColor = Color.OrangeRed.AdaptTextColor();
+                dataGridViewRow.Selected = true;
+            }
+        }
+
+        public void SetSkipped(List<PatchFile> skipped)
+        {
+            _skipped = skipped;
+        }
+
+        private void UpdateState(bool isManagingRebase)
+        {
+            Action.Visible = isManagingRebase;
+            FileName.Visible = !isManagingRebase;
+            CommitHash.Visible = isManagingRebase;
+            dateDataGridViewTextBoxColumn.Width = isManagingRebase ? DpiUtil.Scale(110) : DpiUtil.Scale(160);
         }
 
         private void Patches_DoubleClick(object sender, EventArgs e)
@@ -161,27 +173,16 @@ namespace GitUI
             UICommands.StartViewPatchDialog(patchFile.FullName);
         }
 
-        public void SelectCurrentlyApplyingPatch()
+        private sealed class SortablePatchFilesList : SortableBindingList<PatchFile>
         {
-            if (PatchFiles?.Count is not > 0)
+            static SortablePatchFilesList()
             {
-                return;
+                AddSortableProperty(patchFile => patchFile.Status, (x, y) => string.Compare(x.Status, y.Status, StringComparison.CurrentCulture));
+                AddSortableProperty(patchFile => patchFile.Name, (x, y) => string.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
+                AddSortableProperty(patchFile => patchFile.Subject, (x, y) => string.Compare(x.Subject, y.Subject, StringComparison.CurrentCulture));
+                AddSortableProperty(patchFile => patchFile.Author, (x, y) => string.Compare(x.Author, y.Author, StringComparison.CurrentCulture));
+                AddSortableProperty(patchFile => patchFile.Date, (x, y) => string.Compare(x.Date, y.Date, StringComparison.CurrentCulture));
             }
-
-            var shouldSelectIndex = PatchFiles.IndexOf(p => p.IsNext);
-
-            if (shouldSelectIndex >= 0)
-            {
-                Patches.ClearSelection();
-                DataGridViewRow dataGridViewRow = Patches.Rows[shouldSelectIndex];
-                dataGridViewRow.DefaultCellStyle.ForeColor = Color.OrangeRed.AdaptTextColor();
-                dataGridViewRow.Selected = true;
-            }
-        }
-
-        public void SetSkipped(List<PatchFile> skipped)
-        {
-            _skipped = skipped;
         }
     }
 }
