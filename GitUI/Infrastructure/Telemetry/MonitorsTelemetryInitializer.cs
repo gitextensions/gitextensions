@@ -8,15 +8,15 @@ namespace GitUI.Infrastructure.Telemetry
     {
         public void Initialize(ITelemetry telemetry)
         {
-            var properties = telemetry.Context.GlobalProperties;
+            IDictionary<string, string> properties = telemetry.Context.GlobalProperties;
             properties["Monitor count"] = Screen.AllScreens.Length.ToString();
             properties["Monitor primary DPI"] = DpiUtil.DpiX.ToString();
 
             for (int i = 0; i < Screen.AllScreens.Length; i++)
             {
-                var key = Screen.AllScreens[i].Primary ? "primary" : $"secondary{i}";
+                string key = Screen.AllScreens[i].Primary ? "primary" : $"secondary{i}";
 
-                var bounds = Screen.AllScreens[i].Bounds;
+                Rectangle bounds = Screen.AllScreens[i].Bounds;
                 properties[$"Monitor {key} resolution"] = $"{bounds.Width}x{bounds.Height}";
             }
         }

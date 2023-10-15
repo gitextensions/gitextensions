@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             PageantPath.Text = AppSettings.Pageant;
             AutostartPageant.Checked = AppSettings.AutoStartPageant;
 
-            var sshPath = AppSettings.SshPath;
+            string sshPath = AppSettings.SshPath;
             if (string.IsNullOrEmpty(sshPath))
             {
                 OpenSSH.Checked = true;

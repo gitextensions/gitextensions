@@ -18,9 +18,9 @@ namespace GitUI.SpellChecker
                 return tb.Font.Height;
             }
 
-            var lineNumber = rtb.GetLineFromCharIndex(index);
-            var lineIndex = NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_LINEINDEX, (IntPtr)lineNumber, IntPtr.Zero).ToInt32();
-            var lineLength = NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_LINELENGTH, (IntPtr)index, IntPtr.Zero).ToInt32();
+            int lineNumber = rtb.GetLineFromCharIndex(index);
+            int lineIndex = NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_LINEINDEX, (IntPtr)lineNumber, IntPtr.Zero).ToInt32();
+            int lineLength = NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_LINELENGTH, (IntPtr)index, IntPtr.Zero).ToInt32();
 
             NativeMethods.CHARRANGE charRange = new()
             {
@@ -44,8 +44,8 @@ namespace GitUI.SpellChecker
                 right = 10000000 ////(int)(rtb.Width * anInch + 20);
             };
 
-            var canvas = Graphics.FromHwnd(rtb.Handle);
-            var canvasHdc = canvas.GetHdc();
+            Graphics canvas = Graphics.FromHwnd(rtb.Handle);
+            IntPtr canvasHdc = canvas.GetHdc();
 
             NativeMethods.FORMATRANGE formatRange = new()
             {

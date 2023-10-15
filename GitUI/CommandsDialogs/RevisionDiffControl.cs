@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Validates.NotNull(_revisionGridInfo);
-            var revisions = _revisionGridInfo.GetSelectedRevisions();
+            IReadOnlyList<GitRevision> revisions = _revisionGridInfo.GetSelectedRevisions();
             if (!revisions.Any(r => r.IsArtificial))
             {
                 return;
@@ -363,7 +363,7 @@ namespace GitUI.CommandsDialogs
 
             Validates.NotNull(_revisionGridInfo);
 
-            var revision = _revisionGridInfo.GetRevision(objectId);
+            GitRevision revision = _revisionGridInfo.GetRevision(objectId);
 
             if (revision is null)
             {
@@ -421,14 +421,14 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuSelectionInfo GetSelectionInfo()
         {
-            var selectedItems = DiffFiles.SelectedItems.ToList();
+            List<FileStatusItem> selectedItems = DiffFiles.SelectedItems.ToList();
 
             // Some items are not supported if more than one revision is selected
-            var revisions = selectedItems.SecondRevs().ToList();
+            List<GitRevision> revisions = selectedItems.SecondRevs().ToList();
             GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
 
             // First (A) is parent if one revision selected or if parent, then selected
-            var parentIds = selectedItems.FirstIds().ToList();
+            List<ObjectId> parentIds = selectedItems.FirstIds().ToList();
 
             // Combined diff, range diff etc are for display only, no manipulations
             bool isStatusOnly = selectedItems.Any(item => item.Item.IsRangeDiff || item.Item.IsStatusOnly);
@@ -467,14 +467,14 @@ namespace GitUI.CommandsDialogs
                 bool allFilesExist = items.Any();
                 bool allDirectoriesExist = allFilesExist;
                 bool allFilesOrUntrackedDirectoriesExist = allFilesExist;
-                foreach (var item in items)
+                foreach (FileStatusItem item in items)
                 {
-                    var path = fullPathResolver.Resolve(item.Item.Name);
-                    var fileExists = File.Exists(path);
-                    var directoryExists = Directory.Exists(path);
+                    string path = fullPathResolver.Resolve(item.Item.Name);
+                    bool fileExists = File.Exists(path);
+                    bool directoryExists = Directory.Exists(path);
                     allFilesExist &= fileExists;
                     allDirectoriesExist &= directoryExists;
-                    var fileOrUntrackedDirectoryExists = fileExists || (!item.Item.IsTracked && allDirectoriesExist);
+                    bool fileOrUntrackedDirectoryExists = fileExists || (!item.Item.IsTracked && allDirectoriesExist);
                     allFilesOrUntrackedDirectoriesExist &= fileOrUntrackedDirectoryExists;
 
                     if (!allFilesExist && !allDirectoriesExist && !allFilesOrUntrackedDirectoriesExist)
@@ -685,7 +685,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateStatusOfMenuItems()
         {
-            var selectionInfo = GetSelectionInfo();
+            ContextMenuSelectionInfo selectionInfo = GetSelectionInfo();
 
             // Many options have no meaning for artificial commits or submodules
             // Hide the obviously no action options when single selected, handle them in actions if multi select
@@ -732,7 +732,7 @@ namespace GitUI.CommandsDialogs
             copyPathsToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuCopyFileName(selectionInfo);
             openContainingFolderToolStripMenuItem.Enabled = false;
 
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (FileStatusItem item in DiffFiles.SelectedItems)
             {
                 string? filePath = _fullPathResolver.Resolve(item.Item.Name);
                 if (filePath is not null && FormBrowseUtil.FileOrParentDirectoryExists(filePath))
@@ -803,7 +803,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageFiles()
         {
-            var files = DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.WorkTree).Select(i => i.Item).ToList();
+            List<GitItemStatus> files = DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.WorkTree).Select(i => i.Item).ToList();
 
             Module.StageFiles(files, out _);
             RequestRefresh();
@@ -827,16 +827,16 @@ namespace GitUI.CommandsDialogs
 
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var candidates = DiffFiles.GitItemStatuses;
+            IReadOnlyList<GitItemStatus> candidates = DiffFiles.GitItemStatuses;
 
             IEnumerable<GitItemStatus> FindDiffFilesMatches(string name)
             {
-                var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
+                Func<string?, bool> predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item => predicate(item.Name) || predicate(item.OldName));
             }
 
             GitItemStatus? selectedItem;
-            using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
+            using (SearchWindow<GitItemStatus> searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
             {
                 Owner = FindForm()
             })
@@ -884,7 +884,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object sender)
         {
-            var item = sender as ToolStripMenuItem;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item?.DropDownItems != null)
             {
                 // "main menu" clicked, cancel dropdown manually, invoke default mergetool
@@ -892,7 +892,7 @@ namespace GitUI.CommandsDialogs
                 item.Owner.Hide();
             }
 
-            var toolName = item?.Tag as string;
+            string toolName = item?.Tag as string;
             OpenFilesWithDiffTool(diffKind, toolName);
         }
 
@@ -900,7 +900,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                foreach (var item in DiffFiles.SelectedItems)
+                foreach (FileStatusItem item in DiffFiles.SelectedItems)
                 {
                     if (item.FirstRevision?.ObjectId == ObjectId.CombinedDiffId)
                     {
@@ -918,35 +918,35 @@ namespace GitUI.CommandsDialogs
 
         private void diffTwoSelectedDiffToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var item = sender as ToolStripMenuItem;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item?.DropDownItems != null)
             {
                 // "main menu" clicked, cancel dropdown manually, invoke default difftool
                 item.HideDropDown();
             }
 
-            var toolName = item?.Tag as string;
-            var diffFiles = DiffFiles.SelectedItems.ToList();
+            string toolName = item?.Tag as string;
+            List<FileStatusItem> diffFiles = DiffFiles.SelectedItems.ToList();
             if (diffFiles.Count != 2)
             {
                 return;
             }
 
             // The order is always the order in the list, not clicked order, but the (last) selected is known
-            var firstIndex = DiffFiles.SelectedItem == diffFiles[0] ? 1 : 0;
+            int firstIndex = DiffFiles.SelectedItem == diffFiles[0] ? 1 : 0;
 
             // Fallback to first revision if second revision cannot be used
-            var isFirstItemSecondRev = _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[firstIndex], isSecondRevision: true);
-            var first = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, diffFiles[firstIndex], isSecondRevision: isFirstItemSecondRev);
-            var isSecondItemSecondRev = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(DiffFiles.SelectedItem, isSecondRevision: true);
-            var second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, DiffFiles.SelectedItem, isSecondRevision: isSecondItemSecondRev);
+            bool isFirstItemSecondRev = _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[firstIndex], isSecondRevision: true);
+            string first = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, diffFiles[firstIndex], isSecondRevision: isFirstItemSecondRev);
+            bool isSecondItemSecondRev = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(DiffFiles.SelectedItem, isSecondRevision: true);
+            string second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, DiffFiles.SelectedItem, isSecondRevision: isSecondItemSecondRev);
 
             Module.OpenFilesWithDifftool(first, second, customTool: toolName);
         }
 
         private void diffWithRememberedDiffToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var item = sender as ToolStripMenuItem;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item?.DropDownItems != null)
             {
                 // "main menu" clicked, cancel dropdown manually, invoke default difftool
@@ -956,12 +956,12 @@ namespace GitUI.CommandsDialogs
             string? toolName = item?.Tag as string;
 
             // For first item, the second revision is explicitly remembered
-            var first = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash,
+            string first = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash,
                 _rememberFileContextMenuController.RememberedDiffFileItem, isSecondRevision: true);
 
             // Fallback to first revision if second cannot be used
-            var isSecond = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(DiffFiles.SelectedItem, isSecondRevision: true);
-            var second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, DiffFiles.SelectedItem, isSecondRevision: isSecond);
+            bool isSecond = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(DiffFiles.SelectedItem, isSecondRevision: true);
+            string second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, DiffFiles.SelectedItem, isSecondRevision: isSecond);
 
             Module.OpenFilesWithDifftool(first, second, customTool: toolName);
         }
@@ -984,7 +984,7 @@ namespace GitUI.CommandsDialogs
                 item: DiffFiles.SelectedItem.Item);
             if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItem.Item.OldName))
             {
-                var name = DiffFiles.SelectedItem.Item.OldName;
+                string name = DiffFiles.SelectedItem.Item.OldName;
                 DiffFiles.SelectedItem.Item.OldName = DiffFiles.SelectedItem.Item.Name;
                 DiffFiles.SelectedItem.Item.Name = name;
             }
@@ -1012,7 +1012,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Item.Name);
+            string fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Item.Name);
 
             if (fileName is not null)
             {
@@ -1032,7 +1032,7 @@ namespace GitUI.CommandsDialogs
 
         private void SaveSelectedItemToTempFile(Action<string> onSaved)
         {
-            var item = DiffFiles.SelectedItem;
+            FileStatusItem item = DiffFiles.SelectedItem;
             if (item?.Item.Name is null)
             {
                 return;
@@ -1080,7 +1080,7 @@ namespace GitUI.CommandsDialogs
         private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
-            var revisions = DiffFiles.SelectedItems.SecondRevs().ToList();
+            List<GitRevision> revisions = DiffFiles.SelectedItems.SecondRevs().ToList();
 
             if (revisions.Any())
             {
@@ -1103,11 +1103,11 @@ namespace GitUI.CommandsDialogs
             firstToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo);
             selectedToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo);
 
-            var diffFiles = DiffFiles.SelectedItems.ToList();
+            List<FileStatusItem> diffFiles = DiffFiles.SelectedItems.ToList();
             diffRememberStripSeparator.Visible = diffFiles.Count == 1 || diffFiles.Count == 2;
 
             // The order is always the order in the list, not clicked order, but the (last) selected is known
-            var firstIndex = diffFiles.Count == 2 && DiffFiles.SelectedItem == diffFiles[0] ? 1 : 0;
+            int firstIndex = diffFiles.Count == 2 && DiffFiles.SelectedItem == diffFiles[0] ? 1 : 0;
 
             diffTwoSelectedDifftoolToolStripMenuItem.Visible = diffFiles.Count == 2;
             diffTwoSelectedDifftoolToolStripMenuItem.Enabled =
@@ -1230,7 +1230,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var selected = DiffFiles.SelectedItem;
+                FileStatusItem selected = DiffFiles.SelectedItem;
                 if (selected is null || !selected.SecondRevision.IsArtificial ||
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo,
                         MessageBoxIcon.Warning) !=
@@ -1287,9 +1287,9 @@ namespace GitUI.CommandsDialogs
 
         private void diffCommitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
+            List<string> submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
-            foreach (var name in submodules)
+            foreach (string name in submodules)
             {
                 GitUICommands submodulCommands = UICommands.WithWorkingDirectory(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                 submodulCommands.StartCommitDialog(this);
@@ -1300,7 +1300,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffResetSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
+            List<string> submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, true, true);
@@ -1309,7 +1309,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            foreach (var name in submodules)
+            foreach (string name in submodules)
             {
                 GitModule module = Module.GetSubmodule(name);
                 module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
@@ -1320,7 +1320,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
-            var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
+            List<string> submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
             FormProcess.ShowDialog(FindForm() as FormBrowse, UICommands, arguments: Commands.SubmoduleUpdate(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
             RequestRefresh();
@@ -1328,9 +1328,9 @@ namespace GitUI.CommandsDialogs
 
         private void diffStashSubmoduleChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
+            List<string> submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
-            foreach (var name in submodules)
+            foreach (string name in submodules)
             {
                 GitUICommands uiCmds = UICommands.WithGitModule(Module.GetSubmodule(name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);

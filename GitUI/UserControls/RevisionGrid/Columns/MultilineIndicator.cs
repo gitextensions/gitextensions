@@ -65,10 +65,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             _e.Graphics.FillRectangle(_indicatorBackBrush, indicatorRect);
 
-            var x = indicatorRect.X + paddingX;
-            var y = indicatorRect.Y + paddingTop;
+            int x = indicatorRect.X + paddingX;
+            int y = indicatorRect.Y + paddingTop;
 
-            for (var i = 0; i < DotCount; i++)
+            for (int i = 0; i < DotCount; i++)
             {
                 _e.Graphics.FillRectangle(_indicatorForeBrush, x, y, dotSize, dotSize);
                 x += dotSize + dotSpacing;

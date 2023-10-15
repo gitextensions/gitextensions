@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.KeyCode == Keys.Escape && e.Modifiers == Keys.None)
             {
-                var focusedControl = this.FindFocusedControl();
+                Control focusedControl = this.FindFocusedControl();
 
                 switch (focusedControl)
                 {
@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
-            var stashedItems = Module.GetStashes().ToList();
+            List<GitStash> stashedItems = Module.GetStashes().ToList();
 
             _currentWorkingDirStashItem = new GitStash(-1, _currentWorkingDirChanges.Text);
 
@@ -263,17 +263,17 @@ namespace GitUI.CommandsDialogs
                     {
                         ParentIds = new[] { headId }
                     };
-                    var indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
-                    var workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
+                    List<GitItemStatus> indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
+                    List<GitItemStatus> workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
                     Stashed.SetStashDiffs(headRev, indexRev, ResourceManager.TranslatedStrings.Index, indexItems, workTreeRev, ResourceManager.TranslatedStrings.Workspace, workTreeItems);
                 }
             }
             else
             {
-                var firstId = Module.RevParse(gitStash.Name + "^");
-                var firstRev = firstId is null ? null : new GitRevision(firstId);
+                ObjectId firstId = Module.RevParse(gitStash.Name + "^");
+                GitRevision firstRev = firstId is null ? null : new GitRevision(firstId);
 
-                var selectedId = Module.RevParse(gitStash.Name);
+                ObjectId selectedId = Module.RevParse(gitStash.Name);
                 Validates.NotNull(selectedId);
                 GitRevision secondRev = new(selectedId);
                 if (firstId is not null)
@@ -306,7 +306,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
+                string msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
                 UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg);
                 Initialize();
             }
@@ -316,7 +316,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
+                string msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
                 UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg, Stashed.SelectedItems.Select(i => i.Item.Name).ToList());
                 Initialize();
             }
@@ -326,7 +326,7 @@ namespace GitUI.CommandsDialogs
         {
             using (new WaitCursorScope())
             {
-                var stashName = GetStashName();
+                string stashName = GetStashName();
                 if (!AppSettings.DontConfirmStashDrop)
                 {
                     TaskDialogPage page = new()

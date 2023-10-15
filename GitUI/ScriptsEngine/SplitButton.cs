@@ -359,7 +359,7 @@ namespace GitUI.ScriptsEngine
         {
             // Figure out where our text and image should go
 
-            CalculateButtonTextAndImageLayout(ref bounds, out var text_rectangle, out var image_rectangle);
+            CalculateButtonTextAndImageLayout(ref bounds, out Rectangle text_rectangle, out Rectangle image_rectangle);
 
             // draw the image
             if (Image is not null)
@@ -407,7 +407,7 @@ namespace GitUI.ScriptsEngine
 
             Point[] arrow = { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
 
-            var brush = Enabled
+            Brush brush = Enabled
                 ? SystemBrushes.ControlText
                 : SystemBrushes.ButtonShadow;
 

@@ -8,10 +8,10 @@
 #pragma warning disable SA1305 // Field names should not use Hungarian notation
         static FontUtil()
         {
-            var hTheme = NativeMethods.OpenThemeData(IntPtr.Zero, "TEXTSTYLE");
+            IntPtr hTheme = NativeMethods.OpenThemeData(IntPtr.Zero, "TEXTSTYLE");
             if (hTheme != IntPtr.Zero)
             {
-                NativeMethods.GetThemeFont(hTheme, IntPtr.Zero, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_FONT, out var pFont);
+                NativeMethods.GetThemeFont(hTheme, IntPtr.Zero, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_FONT, out NativeMethods.LOGFONT pFont);
 
                 MainInstructionFont = Font.FromLogFont(pFont);
 

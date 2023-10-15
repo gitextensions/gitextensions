@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 userRepositoriesList.HoverColor = selectedTheme.PrimaryLight;
                 userRepositoriesList.MainBackColor = selectedTheme.Primary;
 
-                foreach (var item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
+                foreach (LinkLabel item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
                 {
                     item.LinkColor = selectedTheme.PrimaryText;
                 }
@@ -100,12 +100,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                             CreateLink(panel, _develop.Text, Images.Develop.AdaptLightness(), GitHubItem_Click);
                             CreateLink(panel, _donate.Text, Images.DollarSign, DonateItem_Click);
                             CreateLink(panel, _translate.Text, Images.Translate.AdaptLightness(), TranslateItem_Click);
-                            var lastControl = CreateLink(panel, _issues.Text, Images.Bug, IssuesItem_Click);
+                            Control lastControl = CreateLink(panel, _issues.Text, Images.Bug, IssuesItem_Click);
                             return lastControl;
                         },
                         (panel, lastControl) =>
                         {
-                            var height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
+                            int height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
                             panel.Height = height;
                             panel.MinimumSize = new Size(0, height);
                         });
@@ -115,9 +115,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         {
                             CreateLink(panel, _createRepository.Text, Images.RepoCreate, createItem_Click);
                             CreateLink(panel, _openRepository.Text, Images.RepoOpen, openItem_Click);
-                            var lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
+                            Control lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
 
-                            foreach (var gitHoster in PluginRegistry.GitHosters)
+                            foreach (GitUIPluginInterfaces.RepositoryHosts.IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
                             {
                                 lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Name), Images.CloneRepoGitHub,
                                     (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
@@ -127,7 +127,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         },
                         (panel, lastControl) =>
                         {
-                            var height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
+                            int height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
                             panel.MinimumSize = new Size(0, height);
                         });
                 }
@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     panel.SuspendLayout();
                     panel.Controls.Clear();
 
-                    var lastControl = addLinks(panel);
+                    Control lastControl = addLinks(panel);
 
                     panel.ResumeLayout(false);
                     panel.PerformLayout();
@@ -153,8 +153,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 Control CreateLink(Control container, string text, Image icon, EventHandler handler)
                 {
-                    var padding24 = DpiUtil.Scale(24);
-                    var padding3 = DpiUtil.Scale(3);
+                    int padding24 = DpiUtil.Scale(24);
+                    int padding3 = DpiUtil.Scale(3);
                     LinkLabel linkLabel = new()
                     {
                         AutoSize = true,
@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         protected virtual void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            var handler = GitModuleChanged;
+            EventHandler<GitModuleEventArgs> handler = GitModuleChanged;
             handler?.Invoke(this, e);
         }
 

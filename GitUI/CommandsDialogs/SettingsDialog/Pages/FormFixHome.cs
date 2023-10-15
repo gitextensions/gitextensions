@@ -155,7 +155,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             try
             {
-                var path = Environment.GetEnvironmentVariable("HOMEDRIVE") +
+                string path = Environment.GetEnvironmentVariable("HOMEDRIVE") +
                            Environment.GetEnvironmentVariable("HOMEPATH");
                 if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
@@ -173,7 +173,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             try
             {
-                var path = Environment.GetEnvironmentVariable("USERPROFILE");
+                string path = Environment.GetEnvironmentVariable("USERPROFILE");
                 if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -190,7 +190,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             try
             {
-                var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)),
@@ -240,7 +240,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void otherHomeBrowse_Click(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this, Environment.GetEnvironmentVariable("USERPROFILE"));
+            string userSelectedPath = OsShellUtil.PickFolder(this, Environment.GetEnvironmentVariable("USERPROFILE"));
 
             if (userSelectedPath is not null)
             {

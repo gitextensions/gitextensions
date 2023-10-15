@@ -16,9 +16,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         private void CreateSettingsControls()
         {
-            var settings = GetSettings();
+            IEnumerable<ISetting> settings = GetSettings();
 
-            foreach (var setting in settings)
+            foreach (ISetting setting in settings)
             {
                 AddSettingControl(setting.CreateControlBinding());
             }
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost pageHost, IGitPlugin gitPlugin, IServiceProvider serviceProvider)
         {
-            var result = Create<PluginSettingsPage>(pageHost, serviceProvider);
+            PluginSettingsPage result = Create<PluginSettingsPage>(pageHost, serviceProvider);
             result.Init(gitPlugin);
             return result;
         }
@@ -82,7 +82,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
             labelNoSettings.Visible = !_gitPlugin.HasSettings;
 
-            var layout = base.CreateSettingsLayout();
+            ISettingsLayout layout = base.CreateSettingsLayout();
 
             tableLayoutPanel1.Controls.Add(layout.GetControl(), 0, 1);
 

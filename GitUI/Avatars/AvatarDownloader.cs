@@ -30,11 +30,11 @@ namespace GitUI.Avatars
 
             ClearOldCacheEntries();
 
-            var errorCount = 0;
+            int errorCount = 0;
 
             while (true)
             {
-                var (_, task) = _downloads.GetOrAdd(imageUrl, _ => (DateTime.UtcNow, DownloadAsync(imageUrl)));
+                (DateTime _, Task<Image?> task) = _downloads.GetOrAdd(imageUrl, _ => (DateTime.UtcNow, DownloadAsync(imageUrl)));
 
                 // If we discover a faulted task, remove it and try again
                 if (task.IsFaulted || task.IsCanceled)
@@ -82,9 +82,9 @@ namespace GitUI.Avatars
 
         private void ClearOldCacheEntries()
         {
-            var now = DateTime.UtcNow;
+            DateTime now = DateTime.UtcNow;
 
-            foreach ((var key, (DateTime time, Task<Image?> _)) in _downloads)
+            foreach ((Uri key, (DateTime time, Task<Image?> _)) in _downloads)
             {
                 if (now - time > TimeSpan.FromSeconds(30))
                 {

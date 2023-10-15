@@ -93,7 +93,7 @@ namespace GitUI
             List<RecentRepoInfo> pinnedRepos = new();
             List<RecentRepoInfo> allRecentRepos = new();
 
-            using (var graphics = OwnerForm.CreateGraphics())
+            using (Graphics graphics = OwnerForm.CreateGraphics())
             {
                 RecentRepoSplitter splitter = new()
                 {
@@ -104,7 +104,7 @@ namespace GitUI
                 splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
             }
 
-            foreach (var repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
+            foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
             {
                 AddFavouriteRepositories(repo.Key, repo.ToList());
             }
@@ -123,7 +123,7 @@ namespace GitUI
                 }
 
                 menuItemCategory.DropDown.SuspendLayout();
-                foreach (var r in repos)
+                foreach (RecentRepoInfo r in repos)
                 {
                     AddRecentRepositories(menuItemCategory, r.Repo, r.Caption);
                 }
@@ -143,7 +143,7 @@ namespace GitUI
                 return;
             }
 
-            using (var graphics = OwnerForm.CreateGraphics())
+            using (Graphics graphics = OwnerForm.CreateGraphics())
             {
                 RecentRepoSplitter splitter = new()
                 {
@@ -154,7 +154,7 @@ namespace GitUI
                 splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
             }
 
-            foreach (var repo in pinnedRepos)
+            foreach (RecentRepoInfo repo in pinnedRepos)
             {
                 AddRecentRepositories(container, repo.Repo, repo.Caption);
             }
@@ -166,7 +166,7 @@ namespace GitUI
                     container.DropDownItems.Add(new ToolStripSeparator());
                 }
 
-                foreach (var repo in allRecentRepos)
+                foreach (RecentRepoInfo repo in allRecentRepos)
                 {
                     AddRecentRepositories(container, repo.Repo, repo.Caption);
                 }

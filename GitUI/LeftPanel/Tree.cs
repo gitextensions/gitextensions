@@ -144,14 +144,14 @@ namespace GitUI.LeftPanel
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            var expandedNodesState = firstTime ? new HashSet<string>() : TreeViewNode.GetExpandedNodesState();
+            HashSet<string> expandedNodesState = firstTime ? new HashSet<string>() : TreeViewNode.GetExpandedNodesState();
             Nodes.FillTreeViewNode(TreeViewNode);
 
-            var selectedNode = TreeViewNode.TreeView.SelectedNode;
+            TreeNode selectedNode = TreeViewNode.TreeView.SelectedNode;
 
             if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
             {
-                var node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
+                TreeNode node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
 
                 if (node is not null)
                 {

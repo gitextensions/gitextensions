@@ -16,13 +16,13 @@ namespace GitUI.LeftPanel.ContextMenu
             Image = Images.SortBy;
             Text = TranslatedStrings.SortBy;
 
-            foreach (var option in EnumHelper.GetValues<GitRefsSortBy>().Select(e => (Text: e.GetDescription(), Value: e)))
+            foreach ((string text, GitRefsSortBy value) option in EnumHelper.GetValues<GitRefsSortBy>().Select(e => (Text: e.GetDescription(), Value: e)))
             {
                 ToolStripMenuItem item = new()
                 {
-                    Text = option.Text,
+                    Text = option.text,
                     Image = null,
-                    Tag = option.Value
+                    Tag = option.value
                 };
 
                 item.Click += Item_Click;
@@ -35,7 +35,7 @@ namespace GitUI.LeftPanel.ContextMenu
 
         private void RequerySortingMethod()
         {
-            var currentSort = AppSettings.RefsSortBy;
+            GitRefsSortBy currentSort = AppSettings.RefsSortBy;
             foreach (ToolStripMenuItem item in DropDownItems)
             {
                 item.Checked = currentSort.Equals(item.Tag);
@@ -46,7 +46,7 @@ namespace GitUI.LeftPanel.ContextMenu
         {
             if (sender is ToolStripMenuItem item)
             {
-                var sortingType = (GitRefsSortBy)item.Tag;
+                GitRefsSortBy sortingType = (GitRefsSortBy)item.Tag;
                 AppSettings.RefsSortBy = sortingType;
 
                 _onSortByChanged?.Invoke();

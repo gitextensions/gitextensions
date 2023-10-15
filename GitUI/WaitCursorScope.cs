@@ -25,7 +25,7 @@
         /// </summary>
         public static WaitCursorScope Enter(Cursor? cursor = null)
         {
-            var cursorAtStartOfScope = Cursor.Current;
+            Cursor cursorAtStartOfScope = Cursor.Current;
 
             Cursor.Current = cursor ?? Cursors.WaitCursor;
 

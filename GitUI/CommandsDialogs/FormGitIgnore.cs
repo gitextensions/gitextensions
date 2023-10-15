@@ -137,7 +137,7 @@ namespace GitUI.CommandsDialogs
                         ExcludeFile,
                         x =>
                         {
-                            var fileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+                            string fileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
                             if (!fileContent.EndsWith(Environment.NewLine))
                             {
                                 fileContent += Environment.NewLine;
@@ -190,10 +190,10 @@ namespace GitUI.CommandsDialogs
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
-            var defaultIgnorePatterns = File.Exists(DefaultIgnorePatternsFile) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
+            string[] defaultIgnorePatterns = File.Exists(DefaultIgnorePatternsFile) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
 
-            var currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
-            var patternsToAdd = defaultIgnorePatterns
+            string currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
+            string[] patternsToAdd = defaultIgnorePatterns
                 .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 .ToArray();
             if (patternsToAdd.Length == 0)

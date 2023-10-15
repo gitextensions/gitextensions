@@ -26,7 +26,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             Validates.NotNull(node.GitRevision);
 
-            foreach (var gitReference in node.GitRevision.Refs)
+            foreach (GitUIPluginInterfaces.IGitRef gitReference in node.GitRevision.Refs)
             {
                 if (gitReference.IsHead || gitReference.IsRemote || gitReference.IsStash)
                 {
@@ -74,12 +74,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             string? into = null;
             string? with = null;
-            var match = MergeRegex.Match(commitSubject);
+            Match match = MergeRegex.Match(commitSubject);
             if (match.Success)
             {
-                var matchPullRequest = match.Groups[2];
-                var matchWith = match.Groups[4];
-                var matchInto = match.Groups[7];
+                Group matchPullRequest = match.Groups[2];
+                Group matchWith = match.Groups[4];
+                Group matchInto = match.Groups[7];
                 into = matchInto.Success ? matchInto.Value : "master";
                 with = matchWith.Success ? matchWith.Value : "?";
                 if (appendPullRequest && matchPullRequest.Success)

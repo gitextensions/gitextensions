@@ -64,7 +64,7 @@ namespace GitUI.Theming
         /// <param name="hwnd">win32 window handle.</param>
         public void AddThemeData(IntPtr hwnd)
         {
-            var htheme = NativeMethods.OpenThemeData(hwnd, Clsid);
+            IntPtr htheme = NativeMethods.OpenThemeData(hwnd, Clsid);
             _themeDataHandles.Add(htheme);
         }
 
@@ -73,7 +73,7 @@ namespace GitUI.Theming
 
         public void Dispose()
         {
-            foreach (var htheme in _themeDataHandles)
+            foreach (IntPtr htheme in _themeDataHandles)
             {
                 NativeMethods.CloseThemeData(htheme);
             }
@@ -102,7 +102,7 @@ namespace GitUI.Theming
 
             private Graphics CreateGraphics()
             {
-                var graphics = Graphics.FromHdcInternal(_hdc);
+                Graphics graphics = Graphics.FromHdcInternal(_hdc);
                 _originalClip = graphics.Clip;
                 if (_clip is not null)
                 {

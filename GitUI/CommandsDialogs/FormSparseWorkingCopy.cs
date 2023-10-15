@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
 
             Panel panelHeader = CreateViewHeader();
 
-            Panel panelFooter = CreateViewFooter(sparse, tooltip, out var btnSave, out var btnCancel);
+            Panel panelFooter = CreateViewFooter(sparse, tooltip, out Button btnSave, out Button btnCancel);
 
             Control panelOnOff = CreateViewOnOff(sparse, tooltip);
 

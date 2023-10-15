@@ -326,7 +326,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void commandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
             {
-                var oldCommands = e.OldCommands;
+                GitUICommands oldCommands = e.OldCommands;
                 if (oldCommands is not null)
                 {
                     oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
@@ -341,14 +341,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void commandsSource_activate(IGitUICommandsSource sender)
             {
-                var newCommands = sender.UICommands;
+                GitUICommands newCommands = sender.UICommands;
                 newCommands.PreCheckoutBranch += GitUICommands_PreCheckout;
                 newCommands.PreCheckoutRevision += GitUICommands_PreCheckout;
                 newCommands.PostCheckoutBranch += GitUICommands_PostCheckout;
                 newCommands.PostCheckoutRevision += GitUICommands_PostCheckout;
                 newCommands.PostRepositoryChanged += GitUICommands_PostRepositoryChanged;
 
-                var module = newCommands.Module;
+                GitModule module = newCommands.Module;
                 StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
             }
 

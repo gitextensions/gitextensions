@@ -131,12 +131,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     splitter.Graphics.Dispose();
                 }
 
-                foreach (var repo in pinnedRepos)
+                foreach (RecentRepoInfo repo in pinnedRepos)
                 {
                     PinnedLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned));
                 }
 
-                foreach (var repo in allRecentRepos)
+                foreach (RecentRepoInfo repo in allRecentRepos)
                 {
                     AllRecentLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.AllRecent));
                 }
@@ -359,9 +359,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void listView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            var listView = (ListView)sender;
+            ListView listView = (ListView)sender;
 
-            var rowBounds = e.Bounds;
+            Rectangle rowBounds = e.Bounds;
             int leftMargin = e.Item.GetBounds(ItemBoundsPortion.Label).Left;
             Rectangle bounds = new(leftMargin, rowBounds.Top, rowBounds.Width - leftMargin, rowBounds.Height);
 

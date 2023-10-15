@@ -11,7 +11,7 @@
         {
             if (durationMilliseconds.HasValue)
             {
-                var timeText = TimeSpan.FromMilliseconds(durationMilliseconds.Value).ToString(@"mm\:ss");
+                string timeText = TimeSpan.FromMilliseconds(durationMilliseconds.Value).ToString(@"mm\:ss");
                 return $"({timeText})";
             }
 

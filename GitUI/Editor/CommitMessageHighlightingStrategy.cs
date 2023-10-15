@@ -22,11 +22,11 @@ namespace GitUI.Editor
 
         protected override void MarkTokens(IDocument document, IList<LineSegment> lines)
         {
-            var summaryLineNumber = -1;
-            var seenDividingSpace = false;
-            var descriptionStartLineNumber = -1;
+            int summaryLineNumber = -1;
+            bool seenDividingSpace = false;
+            int descriptionStartLineNumber = -1;
 
-            foreach (var line in document.LineSegmentCollection)
+            foreach (LineSegment line in document.LineSegmentCollection)
             {
                 if (summaryLineNumber == -1)
                 {
@@ -62,16 +62,16 @@ namespace GitUI.Editor
 
             // NOTE the pattern of removing then adding markers might look suboptimal, but tracking their presence isn't reliable as they can be removed without warning
 
-            foreach (var line in lines)
+            foreach (LineSegment line in lines)
             {
-                var lineNumber = line.LineNumber;
+                int lineNumber = line.LineNumber;
 
                 if (TryHighlightComment(document, line))
                 {
                 }
                 else
                 {
-                    var color = lineNumber == summaryLineNumber ? ColorSummary : ColorNormal;
+                    HighlightColor color = lineNumber == summaryLineNumber ? ColorSummary : ColorNormal;
 
                     line.Words = new List<TextWord>(capacity: 1)
                         { new TextWord(document, line, 0, line.Length, color, hasDefaultColor: false) };
@@ -108,7 +108,7 @@ namespace GitUI.Editor
             {
                 if (_overlengthDescriptionMarkers.Count != 0)
                 {
-                    foreach (var marker in _overlengthDescriptionMarkers)
+                    foreach (TextMarker marker in _overlengthDescriptionMarkers)
                     {
                         document.MarkerStrategy.RemoveMarker(marker);
                     }
@@ -119,9 +119,9 @@ namespace GitUI.Editor
                 return;
             }
 
-            var markerIndex = 0;
+            int markerIndex = 0;
 
-            foreach (var line in document.LineSegmentCollection)
+            foreach (LineSegment line in document.LineSegmentCollection)
             {
                 if (line.LineNumber < descriptionStartLineNumber)
                 {
@@ -130,8 +130,8 @@ namespace GitUI.Editor
 
                 if (line.Length > maxDescriptionLength)
                 {
-                    var markerOffset = line.Offset + maxDescriptionLength;
-                    var markerLength = line.Length - maxDescriptionLength;
+                    int markerOffset = line.Offset + maxDescriptionLength;
+                    int markerLength = line.Length - maxDescriptionLength;
 
                     TextMarker overlengthMarker;
                     if (markerIndex < _overlengthDescriptionMarkers.Count)
@@ -152,13 +152,13 @@ namespace GitUI.Editor
                 }
             }
 
-            var toRemove = _overlengthDescriptionMarkers.Count - markerIndex;
+            int toRemove = _overlengthDescriptionMarkers.Count - markerIndex;
 
             if (toRemove > 0)
             {
-                for (var i = 0; i < toRemove; i++)
+                for (int i = 0; i < toRemove; i++)
                 {
-                    var marker = _overlengthDescriptionMarkers[markerIndex + i];
+                    TextMarker marker = _overlengthDescriptionMarkers[markerIndex + i];
                     document.MarkerStrategy.RemoveMarker(marker);
                 }
 

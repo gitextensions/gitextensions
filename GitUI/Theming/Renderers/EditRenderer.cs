@@ -7,7 +7,7 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using var ctx = CreateRenderContext(hdc, pcliprect);
+            using Context ctx = CreateRenderContext(hdc, pcliprect);
             return (Parts)partid switch
             {
                 Parts.EP_EDITTEXT => RenderEditText(ctx, stateid, prect),

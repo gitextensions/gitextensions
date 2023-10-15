@@ -49,7 +49,7 @@ namespace GitUI.UserControls
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
             // We only care about double-clicks on the node itself, not the plus/minus part
-            var hitTest = _treeView.HitTest(e.Location);
+            TreeViewHitTestInfo hitTest = _treeView.HitTest(e.Location);
             if (hitTest.Location == TreeViewHitTestLocations.PlusMinus)
             {
                 return;

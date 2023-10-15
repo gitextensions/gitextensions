@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
         private void Initialize()
         {
             _bw?.CancelAsync();
-            var waitScope = WaitCursorScope.Enter();
+            WaitCursorScope waitScope = WaitCursorScope.Enter();
             _oldSubmoduleInfo = null;
             if (Submodules.SelectedRows.Count == 1)
             {
@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
             };
             _bw.DoWork += (sender, e) =>
             {
-                foreach (var oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule is not null))
+                foreach (IGitSubmoduleInfo oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule is not null))
                 {
                     if (_bw.CancellationPending)
                     {
@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
                     Module.UnstageFile(".gitmodules");
                 }
 
-                var configFile = Module.LocalConfigFile;
+                GitCommands.Settings.ConfigFileSettings configFile = Module.LocalConfigFile;
                 configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
                 configFile.Save();
 
@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs
 
         private void Pull_Click(object sender, EventArgs e)
         {
-            var submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
+            GitModule submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
 
             UICommands.WithGitModule(submodule).StartPullDialog(this);
 

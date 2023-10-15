@@ -32,7 +32,7 @@ namespace GitUI.LeftPanel
             // Extract submodule name and branch
             // e.g. Info.Text = "Externals/conemu-inside [no branch]"
             // Note that the branch portion won't be there if the user hasn't yet init'd + updated the submodule.
-            var pathAndBranch = Info.Text.Split(Delimiters.Space, 2);
+            string[] pathAndBranch = Info.Text.Split(Delimiters.Space, 2);
             Trace.Assert(pathAndBranch.Length >= 1);
             SubmoduleName = pathAndBranch[0].SubstringAfterLast('/'); // Remove path
             BranchText = pathAndBranch.Length == 2 ? " " + pathAndBranch[1] : "";

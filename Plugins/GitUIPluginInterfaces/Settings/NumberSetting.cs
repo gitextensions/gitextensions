@@ -95,7 +95,7 @@
 
             public override void SaveSetting(ISettingsSource settings, TextBox control)
             {
-                var controlValue = control.Text;
+                string controlValue = control.Text;
 
                 if (settings.SettingLevel == SettingLevel.Effective)
                 {
@@ -126,7 +126,7 @@
                 return null;
             }
 
-            var type = typeof(T);
+            Type type = typeof(T);
             if (type == typeof(int))
             {
                 return int.Parse(value);

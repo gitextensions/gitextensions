@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
 
         private void Browse_Click(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this);
+            string userSelectedPath = OsShellUtil.PickFolder(this);
 
             if (userSelectedPath is not null)
             {
@@ -120,19 +120,19 @@ namespace GitUI.CommandsDialogs
             string rev2 = "";
             string result = "";
 
-            var revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
+            IReadOnlyList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
             if (revisions.Count > 0)
             {
                 if (revisions.Count == 1)
                 {
-                    var parents = revisions[0].ParentIds;
+                    IReadOnlyList<ObjectId> parents = revisions[0].ParentIds;
                     rev1 = parents?.Count > 0 ? parents[0].ToString() : "";
                     rev2 = revisions[0].Guid;
                     result = Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
                 else if (revisions.Count == 2)
                 {
-                    var parents = revisions[0].ParentIds;
+                    IReadOnlyList<ObjectId> parents = revisions[0].ParentIds;
                     rev1 = parents?.Count > 0 ? parents[0].ToString() : "";
                     rev2 = revisions[1].Guid;
                     result = Module.FormatPatch(rev1, rev2, savePatchesToDir);
@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs
                     foreach (GitRevision revision in revisions)
                     {
                         n++;
-                        var parents = revision.ParentIds;
+                        IReadOnlyList<ObjectId> parents = revision.ParentIds;
                         rev1 = parents?.Count > 0 ? parents[0].ToString() : "";
                         rev2 = revision.Guid;
                         result += Module.FormatPatch(rev1, rev2, savePatchesToDir, n);

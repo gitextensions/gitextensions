@@ -68,15 +68,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 Client github = new();
                 Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
 
-                var configData = gitExtRepo?.GetRef("heads/configdata");
+                GitHubReference configData = gitExtRepo?.GetRef("heads/configdata");
 
-                var tree = configData?.GetTree();
+                GitHubTree tree = configData?.GetTree();
                 if (tree is null)
                 {
                     return;
                 }
 
-                var releases = tree.Tree.FirstOrDefault(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase));
+                GitHubTreeEntry releases = tree.Tree.FirstOrDefault(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase));
 
                 if (releases?.Blob.Value is not null)
                 {
@@ -111,10 +111,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void CheckForNewerVersion(string releases)
         {
-            var versions = ReleaseVersion.Parse(releases);
-            var updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
+            IEnumerable<ReleaseVersion> versions = ReleaseVersion.Parse(releases);
+            IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
 
-            var update = updates.OrderBy(version => version.Version).LastOrDefault();
+            ReleaseVersion update = updates.OrderBy(version => version.Version).LastOrDefault();
             if (update is not null)
             {
                 UpdateFound = true;
@@ -270,7 +270,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             ConfigFile cfg = new(fileName: "");
             cfg.LoadFromString(versionsStr);
-            var sections = cfg.GetConfigSections("Version");
+            IEnumerable<IConfigSection> sections = cfg.GetConfigSections("Version");
             sections = sections.Concat(cfg.GetConfigSections("RCVersion"));
 
             return sections.Select(FromSection).WhereNotNull();
@@ -281,7 +281,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             bool checkForReleaseCandidates,
             IEnumerable<ReleaseVersion> availableVersions)
         {
-            var versions = availableVersions.Where(version =>
+            IEnumerable<ReleaseVersion> versions = availableVersions.Where(version =>
                     version.ReleaseType == ReleaseType.Major ||
                     version.ReleaseType == ReleaseType.HotFix ||
                     (checkForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate));

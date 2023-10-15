@@ -167,7 +167,7 @@ namespace GitUI
             SafeInvoke(() =>
             {
                 // One ApplicationId, so all windows must share the same jumplist
-                var jumpList = JumpList.CreateJumpList();
+                JumpList jumpList = JumpList.CreateJumpList();
                 jumpList.ClearAllUserTasks();
                 jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
                 jumpList.Refresh();
@@ -177,7 +177,7 @@ namespace GitUI
 
             if (ToolbarButtonsCreated && _deferredAddToRecent is not null)
             {
-                var recentRepoAddToRecent = _deferredAddToRecent;
+                string recentRepoAddToRecent = _deferredAddToRecent;
                 _deferredAddToRecent = null;
                 AddToRecent(recentRepoAddToRecent);
             }

@@ -57,7 +57,7 @@ namespace GitUI.Theming
                 throw new InvalidOperationException("Only user-defined theme can be deleted");
             }
 
-            var themePath = _themePathProvider.GetThemePath(themeId);
+            string themePath = _themePathProvider.GetThemePath(themeId);
             File.Delete(themePath);
         }
 

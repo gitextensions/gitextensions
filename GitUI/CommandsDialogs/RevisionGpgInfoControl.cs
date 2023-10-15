@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 DisplayCommitSignatureStatus(info.CommitStatus);
-                var message = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(info.CommitVerificationMessage);
+                string message = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(info.CommitVerificationMessage);
                 txtCommitGpgInfo.Text = info.CommitStatus != CommitStatus.NoSignature ? message : _commitNotSigned.Text;
 
                 DisplayTagSignatureStatus(info.TagStatus);

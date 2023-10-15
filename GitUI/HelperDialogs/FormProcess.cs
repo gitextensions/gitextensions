@@ -42,7 +42,7 @@ namespace GitUI.HelperDialogs
             ProcessString = process ?? AppSettings.GitCommand;
             ProcessArguments = arguments;
 
-            var displayPath = PathUtil.GetDisplayPath(WorkingDirectory);
+            string displayPath = PathUtil.GetDisplayPath(WorkingDirectory);
             if (!string.IsNullOrWhiteSpace(displayPath))
             {
                 Text += $" ({displayPath})";

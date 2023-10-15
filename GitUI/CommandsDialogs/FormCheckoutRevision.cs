@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
+                GitUIPluginInterfaces.ObjectId selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
 
                 if (selectedObjectId is null)
                 {
@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                var checkedOutObjectId = Module.GetCurrentCheckout();
+                GitUIPluginInterfaces.ObjectId checkedOutObjectId = Module.GetCurrentCheckout();
 
                 Debug.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 

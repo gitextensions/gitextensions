@@ -129,7 +129,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
             AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
 
-            var shouldClearCache =
+            bool shouldClearCache =
                 AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
                 || AppSettings.AvatarFallbackType != (AvatarFallbackType)_NO_TRANSLATE_NoImageService.SelectedValue
                 || AppSettings.CustomAvatarTemplate != txtCustomAvatarTemplate.Text;
@@ -225,7 +225,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ManageAvatarOptionsDisplay()
         {
-            var showCustomTemplate = (AvatarProvider)AvatarProvider.SelectedValue == GitCommands.AvatarProvider.Custom;
+            bool showCustomTemplate = (AvatarProvider)AvatarProvider.SelectedValue == GitCommands.AvatarProvider.Custom;
 
             lblCustomAvatarTemplate.Visible = showCustomTemplate;
             txtCustomAvatarTemplate.Visible = showCustomTemplate;

@@ -21,9 +21,9 @@ namespace GitUI.Theming
         public void MarkTokens(IDocument document)
         {
             _original.MarkTokens(document);
-            foreach (var line in document.LineSegmentCollection)
+            foreach (LineSegment line in document.LineSegmentCollection)
             {
-                foreach (var word in line.Words)
+                foreach (TextWord word in line.Words)
                 {
                     if (word.SyntaxColor is not null)
                     {
@@ -38,7 +38,7 @@ namespace GitUI.Theming
             _original.MarkTokens(document, lines);
             foreach (LineSegment line in lines)
             {
-                foreach (var word in line.Words)
+                foreach (TextWord word in line.Words)
                 {
                     if (word.SyntaxColor is not null)
                     {

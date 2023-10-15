@@ -23,7 +23,7 @@ namespace GitUI.UserControls
 
         protected override void WndProc(ref Message m)
         {
-            var message = m;
+            Message message = m;
             switch (m.Msg)
             {
                 default:

@@ -158,7 +158,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public RevisionGraphRevision? GetNodeForRow(int row)
         {
             // Use a local variable, because the cached list can be reset
-            var localOrderedNodesCache = BuildOrderedNodesCache(row);
+            RevisionGraphRevision[] localOrderedNodesCache = BuildOrderedNodesCache(row);
             if (row >= localOrderedNodesCache.Length)
             {
                 return null;
@@ -170,7 +170,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IRevisionGraphRow? GetSegmentsForRow(int row)
         {
             // Use a local variable, because the cached list can be reset
-            var localOrderedRowCache = _orderedRowCache;
+            IList<RevisionGraphRow> localOrderedRowCache = _orderedRowCache;
             if (localOrderedRowCache is null || row < 0 || row >= localOrderedRowCache.Count)
             {
                 return null;
@@ -182,7 +182,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public void HighlightBranch(ObjectId id)
         {
             // Clear current highlighting
-            foreach (var revision in _nodes)
+            foreach (RevisionGraphRevision revision in _nodes)
             {
                 revision.IsRelative = false;
             }
@@ -216,7 +216,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 if (insertScore is not null && _nodeByObjectId is not null)
                 {
                     // This revision is to be inserted before a certain node
-                    foreach (var (_, graphRevision) in _nodeByObjectId)
+                    foreach ((ObjectId _, RevisionGraphRevision graphRevision) in _nodeByObjectId)
                     {
                         if (graphRevision.Score < insertScore)
                         {
@@ -362,7 +362,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     // This is the first row. Start with only the startsegments of this row
                     segments = new List<RevisionGraphSegment>(revisionStartSegments);
 
-                    foreach (var startSegment in revisionStartSegments)
+                    foreach (RevisionGraphSegment startSegment in revisionStartSegments)
                     {
                         startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: null);
                     }
@@ -376,7 +376,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revisionStartSegments.Length);
 
                     // Loop through all segments that do not end in the previous row
-                    foreach (var segment in previousRevisionGraphRow.Segments.Where(s => s.Parent != previousRevisionGraphRow.Revision))
+                    foreach (RevisionGraphSegment segment in previousRevisionGraphRow.Segments.Where(s => s.Parent != previousRevisionGraphRow.Revision))
                     {
                         segments.Add(segment);
 
@@ -390,7 +390,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                                 segments.AddRange(revisionStartSegments);
                             }
 
-                            foreach (var startSegment in revisionStartSegments)
+                            foreach (RevisionGraphSegment startSegment in revisionStartSegments)
                             {
                                 if (startSegment == revisionStartSegments[0])
                                 {
@@ -416,7 +416,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         // Add new segments started by this revision to the end
                         segments.AddRange(revisionStartSegments);
 
-                        foreach (var startSegment in revisionStartSegments)
+                        foreach (RevisionGraphSegment startSegment in revisionStartSegments)
                         {
                             startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: null);
                         }
@@ -579,9 +579,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // Only used for unit testing.
             public bool ValidateTopoOrder()
             {
-                foreach (var node in _revisionGraph._nodes)
+                foreach (RevisionGraphRevision node in _revisionGraph._nodes)
                 {
-                    foreach (var parent in node.Parents)
+                    foreach (RevisionGraphRevision parent in node.Parents)
                     {
                         if (parent.Score <= node.Score)
                         {
@@ -589,7 +589,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         }
                     }
 
-                    foreach (var child in node.Children)
+                    foreach (RevisionGraphRevision child in node.Children)
                     {
                         if (node.Score <= child.Score)
                         {

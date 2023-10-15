@@ -38,7 +38,7 @@ namespace GitUI.UserControls
             directoryInfoPath ??= getter();
 
             // TODO: do we need ParentForm or is "this" ok?
-            var userSelectedPath = OsShellUtil.PickFolder(ParentForm, directoryInfoPath);
+            string userSelectedPath = OsShellUtil.PickFolder(ParentForm, directoryInfoPath);
 
             if (userSelectedPath is not null)
             {

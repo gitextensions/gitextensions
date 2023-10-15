@@ -13,7 +13,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void Init(IReadOnlyList<string> strings)
         {
-            var items = strings.OrderBy(s => s).Select(s => new ItemData(s, s)).ToList();
+            List<ItemData> items = strings.OrderBy(s => s).Select(s => new ItemData(s, s)).ToList();
 
             Init(items, _actionSelect.Text);
         }

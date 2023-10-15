@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
 
         private void ApplyLayout()
         {
-            var controls1 = new Control[]
+            Control[] controls1 = new Control[]
             {
                 tlpnlBranches,
                 horLine,
@@ -170,9 +170,9 @@ namespace GitUI.CommandsDialogs
             Width = tlpnlMain.PreferredSize.Width + 50;
 
             int height;
-            for (var i = 0; i < controls1.Length; i++)
+            for (int i = 0; i < controls1.Length; i++)
             {
-                var margin = controls1[i].Margin;
+                Padding margin = controls1[i].Margin;
                 height = controls1[i].Height + margin.Top + margin.Bottom;
                 _controls.Add(controls1[i], height);
 
@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs
 
             if (_containRevisions is null)
             {
-                var branches = LocalBranch.Checked ? GetLocalBranches() : GetRemoteBranches();
+                IEnumerable<IGitRef> branches = LocalBranch.Checked ? GetLocalBranches() : GetRemoteBranches();
 
                 branchNames = branches.Select(b => b.Name);
             }
@@ -220,7 +220,7 @@ namespace GitUI.CommandsDialogs
                 HashSet<string> result = new();
                 if (_containRevisions.Count > 0)
                 {
-                    var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
+                    IEnumerable<string> branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
                             !LocalBranch.Checked)
                         .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));
@@ -229,8 +229,8 @@ namespace GitUI.CommandsDialogs
 
                 for (int index = 1; index < _containRevisions.Count; index++)
                 {
-                    var containRevision = _containRevisions[index];
-                    var branches =
+                    ObjectId containRevision = _containRevisions[index];
+                    IEnumerable<string> branches =
                         Module.GetAllBranchesWhichContainGivenCommit(containRevision, LocalBranch.Checked,
                                 !LocalBranch.Checked)
                             .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
@@ -257,10 +257,10 @@ namespace GitUI.CommandsDialogs
             // if the user hits [Enter] at any point, we need to trigger txtCustomBranchName Leave event
             Ok.Focus();
 
-            var branchName = Branches.Text.Trim();
-            var isRemote = Remotebranch.Checked;
-            var newBranchName = (string?)null;
-            var newBranchMode = CheckoutNewBranchMode.DontCreate;
+            string branchName = Branches.Text.Trim();
+            bool isRemote = Remotebranch.Checked;
+            string newBranchName = (string?)null;
+            CheckoutNewBranchMode newBranchMode = CheckoutNewBranchMode.DontCreate;
 
             if (isRemote)
             {
@@ -288,8 +288,8 @@ namespace GitUI.CommandsDialogs
                     IGitRef remoteBranchRef = GetRemoteBranchRef(branchName);
                     if (localBranchRef is not null && remoteBranchRef is not null && localBranchRef.ObjectId is not null && remoteBranchRef.ObjectId is not null)
                     {
-                        var mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
-                        var isResetFastForward = localBranchRef.ObjectId == mergeBaseGuid;
+                        ObjectId mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
+                        bool isResetFastForward = localBranchRef.ObjectId == mergeBaseGuid;
 
                         if (!isResetFastForward)
                         {
@@ -316,7 +316,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            var localChanges = ChangesMode;
+            LocalChangesAction localChanges = ChangesMode;
             if (localChanges != LocalChangesAction.Reset && chkSetLocalChangesActionAsDefault.Checked)
             {
                 AppSettings.CheckoutBranchAction = localChanges;
@@ -342,7 +342,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            var originalId = Module.GetCurrentCheckout();
+            ObjectId originalId = Module.GetCurrentCheckout();
 
             bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, this);
             if (!success)
@@ -384,7 +384,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                var currentId = Module.GetCurrentCheckout();
+                ObjectId currentId = Module.GetCurrentCheckout();
 
                 if (originalId != currentId)
                 {
@@ -440,7 +440,7 @@ namespace GitUI.CommandsDialogs
         {
             lbChanges.Text = "";
 
-            var branch = Branches.Text;
+            string branch = Branches.Text;
             if (string.IsNullOrWhiteSpace(branch) || !Remotebranch.Checked)
             {
                 _remoteName = string.Empty;
@@ -451,7 +451,7 @@ namespace GitUI.CommandsDialogs
             {
                 _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemoteNames());
                 _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch) ?? "";
-                var remoteBranchName = _remoteName.Length > 0 ? branch[(_remoteName.Length + 1)..] : branch;
+                string remoteBranchName = _remoteName.Length > 0 ? branch[(_remoteName.Length + 1)..] : branch;
                 _newLocalBranchName = string.Concat(_remoteName, "_", remoteBranchName);
                 int i = 2;
                 while (LocalBranchExists(_newLocalBranchName))
@@ -475,11 +475,11 @@ namespace GitUI.CommandsDialogs
             {
                 ThreadHelper.FileAndForget(async () =>
                     {
-                        var currentCheckout = Module.GetCurrentCheckout();
+                        ObjectId currentCheckout = Module.GetCurrentCheckout();
 
                         Validates.NotNull(currentCheckout);
 
-                        var text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
+                        string text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
 
                         await this.SwitchToMainThreadAsync();
 
@@ -543,8 +543,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var caretPosition = txtCustomBranchName.SelectionStart;
-            var normalisedBranchName = _branchNameNormaliser.Normalise(txtCustomBranchName.Text, _gitBranchNameOptions);
+            int caretPosition = txtCustomBranchName.SelectionStart;
+            string normalisedBranchName = _branchNameNormaliser.Normalise(txtCustomBranchName.Text, _gitBranchNameOptions);
             txtCustomBranchName.Text = normalisedBranchName;
             txtCustomBranchName.SelectionStart = caretPosition;
         }

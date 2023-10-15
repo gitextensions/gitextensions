@@ -70,12 +70,12 @@ namespace GitUI.CommandsDialogs
 
         private void SearchForCandidates(IEnumerable<T> candidates)
         {
-            var selectionStart = txtSearchBox.SelectionStart;
-            var selectionLength = txtSearchBox.SelectionLength;
+            int selectionStart = txtSearchBox.SelectionStart;
+            int selectionLength = txtSearchBox.SelectionLength;
             listBoxSearchResult.BeginUpdate();
             listBoxSearchResult.Items.Clear();
 
-            foreach (var candidate in candidates.Take(20))
+            foreach (T candidate in candidates.Take(20))
             {
                 listBoxSearchResult.Items.Add(candidate);
             }
@@ -101,11 +101,11 @@ namespace GitUI.CommandsDialogs
 
             listBoxSearchResult.Visible = true;
 
-            var txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
+            Point txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
             if (ParentForm is not null && !ParentForm.Controls.Contains(listBoxSearchResult))
             {
                 ParentForm.Controls.Add(listBoxSearchResult);
-                var listBoxLocationOnScreen = txtBoxOnScreen;
+                Point listBoxLocationOnScreen = txtBoxOnScreen;
                 listBoxSearchResult.Location = ParentForm.PointToClient(listBoxLocationOnScreen);
             }
 
@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (listBoxSearchResult.Items.Count > 1)
                 {
-                    var newSelectedIndex = listBoxSearchResult.SelectedIndex - 1;
+                    int newSelectedIndex = listBoxSearchResult.SelectedIndex - 1;
                     if (newSelectedIndex < 0)
                     {
                         newSelectedIndex = listBoxSearchResult.Items.Count - 1;

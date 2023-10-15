@@ -9,7 +9,7 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using var ctx = CreateRenderContext(hdc, pcliprect);
+            using Context ctx = CreateRenderContext(hdc, pcliprect);
             switch ((Parts)partid)
             {
                 case Parts.CP_BACKGROUND:
@@ -113,7 +113,7 @@ namespace GitUI.Theming
 
         private static int RenderDropDownButton(Context ctx, State.DropDown stateid, Rectangle prect)
         {
-            var border = prect.Inclusive();
+            Rectangle border = prect.Inclusive();
             switch (stateid)
             {
                 case State.DropDown.CBXS_HOT:
@@ -186,7 +186,7 @@ namespace GitUI.Theming
             int y1 = prect.Top + ((prect.Height - h) / 2);
             int y2 = y1 + h;
 
-            var arrowPoints = new[]
+            Point[] arrowPoints = new[]
             {
                 new Point(x1, y1),
                 new Point(x2, y2),

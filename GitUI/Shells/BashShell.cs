@@ -15,7 +15,7 @@ namespace GitUI.Shells
             Name = ShellName;
             Icon = Images.GitForWindows;
 
-            if (PathUtil.TryFindShellPath(GitBashExe, out var exePath))
+            if (PathUtil.TryFindShellPath(GitBashExe, out string? exePath))
             {
                 ExecutableName = GitBashExe;
                 ExecutablePath = exePath;

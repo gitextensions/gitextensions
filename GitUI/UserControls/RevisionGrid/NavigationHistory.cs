@@ -40,8 +40,8 @@ namespace GitUI.UserControls.RevisionGrid
                 throw new InvalidOperationException();
             }
 
-            var curr = _prevItems.Pop();
-            var prev = _prevItems.Peek();
+            ObjectId curr = _prevItems.Pop();
+            ObjectId prev = _prevItems.Peek();
             _nextItems.Push(curr);
             return prev;
         }
@@ -62,7 +62,7 @@ namespace GitUI.UserControls.RevisionGrid
                 throw new InvalidOperationException();
             }
 
-            var next = _nextItems.Pop();
+            ObjectId next = _nextItems.Pop();
             _prevItems.Push(next);
             return next;
         }

@@ -48,10 +48,10 @@ namespace GitUI.HelperDialogs
 
         private IGitRef[] GetLocalBranchesWithoutCurrent()
         {
-            var currentBranch = Module.GetSelectedBranch();
-            var isDetachedHead = currentBranch == DetachedHeadParser.DetachedBranch;
+            string currentBranch = Module.GetSelectedBranch();
+            bool isDetachedHead = currentBranch == DetachedHeadParser.DetachedBranch;
 
-            var selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
+            List<IGitRef> selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
 
             return Module.GetRefs(RefsFilter.Heads)
                 .Where(r => r.IsHead)
@@ -74,14 +74,14 @@ namespace GitUI.HelperDialogs
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            var gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
+            IGitRef gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
             if (gitRefToReset is null)
             {
                 MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            var command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.GetGitExecPath(Module.WorkingDir), ForceReset.Checked);
+            GitExtUtils.ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.GetGitExecPath(Module.WorkingDir), ForceReset.Checked);
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {

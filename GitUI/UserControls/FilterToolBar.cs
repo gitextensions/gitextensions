@@ -197,7 +197,7 @@ namespace GitUI.UserControls
             tsddbtnRevisionFilter.BackColor = toolBackColor;
             tsddbtnRevisionFilter.ForeColor = toolForeColor;
 
-            var toolTextBoxBackColor = SystemColors.Window;
+            Color toolTextBoxBackColor = SystemColors.Window;
             tscboBranchFilter.BackColor = toolTextBoxBackColor;
             tscboBranchFilter.ForeColor = toolForeColor;
             tstxtRevisionFilter.BackColor = toolTextBoxBackColor;
@@ -211,7 +211,7 @@ namespace GitUI.UserControls
                 selectedIndex = 0;
             }
 
-            var selectedMenuItem = tssbtnShowBranches.DropDownItems[selectedIndex];
+            ToolStripItem selectedMenuItem = tssbtnShowBranches.DropDownItems[selectedIndex];
             tssbtnShowBranches.Image = selectedMenuItem.Image;
             tssbtnShowBranches.Text = selectedMenuItem.Text;
             tssbtnShowBranches.ToolTipText = selectedMenuItem.ToolTipText;
@@ -311,7 +311,7 @@ namespace GitUI.UserControls
 
             void BindBranches(string[] branches)
             {
-                var autoCompleteList = tscboBranchFilter.AutoCompleteCustomSource.Cast<string>();
+                IEnumerable<string> autoCompleteList = tscboBranchFilter.AutoCompleteCustomSource.Cast<string>();
                 if (!autoCompleteList.SequenceEqual(branches))
                 {
                     tscboBranchFilter.AutoCompleteCustomSource.Clear();

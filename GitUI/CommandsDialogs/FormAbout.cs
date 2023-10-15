@@ -31,8 +31,8 @@ namespace GitUI.CommandsDialogs
             pictureDonate.Click += delegate { OsShellUtil.OpenUrlInDefaultBrowser(FormDonate.DonationUrl); };
             linkLabelIcons.LinkClicked += delegate { OsShellUtil.OpenUrlInDefaultBrowser(@"http://p.yusukekamiyamane.com/"); };
 
-            var contributorsList = GetContributorList();
-            var thanksToContributorsText = string.Format(_thanksToContributors.Text, contributorsList.Count);
+            IReadOnlyList<string> contributorsList = GetContributorList();
+            string thanksToContributorsText = string.Format(_thanksToContributors.Text, contributorsList.Count);
 
             Random random = new();
 
@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs
             void ThankNextContributor()
             {
                 // Select a contributor at random
-                var contributorName = contributorsList[random.Next(contributorsList.Count)].Trim();
+                string contributorName = contributorsList[random.Next(contributorsList.Count)].Trim();
 
                 _NO_TRANSLATE_ThanksTo.Text = thanksToContributorsText + contributorName;
             }

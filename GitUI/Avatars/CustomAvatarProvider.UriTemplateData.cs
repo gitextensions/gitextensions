@@ -37,8 +37,8 @@ namespace GitUI.Avatars
             {
                 using (hashAlgorithm)
                 {
-                    var inputBytes = Encoding.UTF8.GetBytes(input);
-                    var hashBytes = hashAlgorithm.ComputeHash(inputBytes);
+                    byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                    byte[] hashBytes = hashAlgorithm.ComputeHash(inputBytes);
                     return HexString.FromByteArray(hashBytes);
                 }
             }

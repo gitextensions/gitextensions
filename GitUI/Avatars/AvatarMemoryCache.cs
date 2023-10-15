@@ -30,7 +30,7 @@ namespace GitUI.Avatars
             (string email, int imageSize) key = (email, imageSize);
             lock (_cache)
             {
-                if (_cache.TryGetValue(key, out var cachedImage))
+                if (_cache.TryGetValue(key, out Image? cachedImage))
                 {
                     return cachedImage;
                 }
@@ -44,7 +44,7 @@ namespace GitUI.Avatars
                 {
                     lock (_cache)
                     {
-                        if (_cache.TryGetValue(key, out var cachedImage))
+                        if (_cache.TryGetValue(key, out Image? cachedImage))
                         {
                             return cachedImage;
                         }

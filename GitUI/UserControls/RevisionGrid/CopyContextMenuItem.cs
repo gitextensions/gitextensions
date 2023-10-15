@@ -30,7 +30,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey)
         {
-            var textToCopy = ExtractRevisionTexts(extractRevisionText);
+            string[] textToCopy = ExtractRevisionTexts(extractRevisionText);
             if (textToCopy is null)
             {
                 return;
@@ -77,7 +77,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return null;
             }
 
-            var gitRevisions = _revisionFunc?.Invoke();
+            IReadOnlyList<GitRevision> gitRevisions = _revisionFunc?.Invoke();
             if (gitRevisions?.Count is not > 0)
             {
                 return null;
@@ -88,7 +88,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void OnDropDownOpening(object sender, EventArgs e)
         {
-            var revisions = _revisionFunc?.Invoke();
+            IReadOnlyList<GitRevision> revisions = _revisionFunc?.Invoke();
             if (revisions?.Count is not > 0)
             {
                 HideDropDown();
@@ -100,7 +100,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             List<string> branchNames = new();
             List<string> tagNames = new();
-            foreach (var revision in revisions)
+            foreach (GitRevision revision in revisions)
             {
                 GitRefListsForRevision refLists = new(revision);
                 branchNames.AddRange(refLists.GetAllBranchNames());
@@ -116,7 +116,7 @@ namespace GitUI.UserControls.RevisionGrid
                 MenuUtil.SetAsCaptionMenuItem(caption, Owner);
                 DropDownItems.Add(caption);
 
-                foreach (var name in branchNames)
+                foreach (string name in branchNames)
                 {
                     AddItem(name, textToCopy: name, Images.Branch.AdaptLightness(), hotkey: null);
                 }
@@ -131,7 +131,7 @@ namespace GitUI.UserControls.RevisionGrid
                 MenuUtil.SetAsCaptionMenuItem(caption, Owner);
                 DropDownItems.Add(caption);
 
-                foreach (var name in tagNames)
+                foreach (string name in tagNames)
                 {
                     AddItem(name, textToCopy: name, Images.Tag, hotkey: null);
                 }

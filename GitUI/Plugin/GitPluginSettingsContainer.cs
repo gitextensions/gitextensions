@@ -41,7 +41,7 @@ namespace GitUI
                 return ExternalSettings.GetValue($"{_pluginName}{name}");
             }
 
-            var value = ExternalSettings.GetValue($"{_pluginId}.{name}");
+            string value = ExternalSettings.GetValue($"{_pluginId}.{name}");
 
             // for old plugin setting processing
             if (value is null)

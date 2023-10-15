@@ -10,7 +10,7 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using var ctx = CreateRenderContext(hdc, pcliprect);
+            using Context ctx = CreateRenderContext(hdc, pcliprect);
             return (Parts)partid switch
             {
                 Parts.TVP_GLYPH => RenderGlyph(ctx, (State.Glyph)stateid, prect),
@@ -164,7 +164,7 @@ namespace GitUI.Theming
             int x1 = prect.Left + ((prect.Width - w) / 2);
             int x2 = x1 + w;
 
-            var arrowPoints = new[]
+            Point[] arrowPoints = new[]
             {
                 new Point(x1, y1),
                 new Point(x2, y2),
@@ -190,7 +190,7 @@ namespace GitUI.Theming
             int y1 = prect.Top + ((prect.Height - h) / 2);
             int y2 = y1 + h;
 
-            var arrowPoints = new[]
+            Point[] arrowPoints = new[]
             {
                 new Point(x1, y1),
                 new Point(x2, y2),

@@ -81,16 +81,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             };
 
             _allRecentRepositories ??= ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-            var repositories = Filter(_allRecentRepositories, pattern);
+            IList<Repository> repositories = Filter(_allRecentRepositories, pattern);
             splitter.SplitRecentRepos(repositories, pinnedRepos, allRecentRepos);
-            var recentRepositories = pinnedRepos.Union(allRecentRepos).ToList();
+            List<RecentRepoInfo> recentRepositories = pinnedRepos.Union(allRecentRepos).ToList();
 
             _allFavoriteRepositories ??= ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
             repositories = Filter(_allFavoriteRepositories, pattern);
             pinnedRepos.Clear();
             allRecentRepos.Clear();
             splitter.SplitRecentRepos(repositories, pinnedRepos, allRecentRepos);
-            var favouriteRepositories = pinnedRepos.Union(allRecentRepos).ToList();
+            List<RecentRepoInfo> favouriteRepositories = pinnedRepos.Union(allRecentRepos).ToList();
 
             return (recentRepositories, favouriteRepositories);
         }

@@ -12,10 +12,10 @@ namespace GitUI.LeftPanel
         private void FixInvalidTreeToPositionIndices()
         {
             // Sort by index, then force assign 0-based sequential indices
-            var treeToIndex = GetTreeToPositionIndex();
+            Dictionary<Tree, int> treeToIndex = GetTreeToPositionIndex();
 
             int i = 0;
-            foreach (var kvp in treeToIndex.OrderBy(kvp => kvp.Value))
+            foreach (KeyValuePair<Tree, int> kvp in treeToIndex.OrderBy(kvp => kvp.Value))
             {
                 treeToIndex[kvp.Key] = i;
                 ++i;
@@ -47,9 +47,9 @@ namespace GitUI.LeftPanel
 
         private void ReorderTreeNode(TreeNode node, bool up)
         {
-            var tree = (Tree)node.Tag;
-            var treeToIndex = GetTreeToPositionIndex();
-            var indexToTree = treeToIndex.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+            Tree tree = (Tree)node.Tag;
+            Dictionary<Tree, int> treeToIndex = GetTreeToPositionIndex();
+            Dictionary<int, Tree> indexToTree = treeToIndex.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
 
             int currIndex = treeToIndex[tree];
 
@@ -67,7 +67,7 @@ namespace GitUI.LeftPanel
             }
             while (!indexToTree[swapIndex].TreeViewNode.IsVisible);
 
-            var swapWithTree = indexToTree[swapIndex];
+            Tree swapWithTree = indexToTree[swapIndex];
 
             // Swap indices
             treeToIndex[tree] = treeToIndex[swapWithTree];

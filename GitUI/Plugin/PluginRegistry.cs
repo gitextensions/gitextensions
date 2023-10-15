@@ -27,7 +27,7 @@ namespace GitUI
 
                 try
                 {
-                    foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
+                    foreach (IGitPlugin plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
                     {
                         Validates.NotNull(plugin.Description);
 

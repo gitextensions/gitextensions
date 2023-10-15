@@ -65,8 +65,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var caretPosition = BranchNameTextBox.SelectionStart;
-            var branchName = _branchNameNormaliser.Normalise(BranchNameTextBox.Text, _gitBranchNameOptions);
+            int caretPosition = BranchNameTextBox.SelectionStart;
+            string branchName = _branchNameNormaliser.Normalise(BranchNameTextBox.Text, _gitBranchNameOptions);
             BranchNameTextBox.Text = branchName;
             BranchNameTextBox.SelectionStart = caretPosition;
         }
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs
 
             // ensure all labels are wrapped if required
             // this must happen only after the label texts have been set
-            foreach (var label in this.FindDescendantsOfType<Label>())
+            foreach (Label label in this.FindDescendantsOfType<Label>())
             {
                 label.AutoSize = true;
             }
@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs
             // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
             Ok.Focus();
 
-            var objectId = commitPickerSmallControl1.SelectedObjectId;
+            ObjectId objectId = commitPickerSmallControl1.SelectedObjectId;
             if (objectId is null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var branchName = BranchNameTextBox.Text.Trim();
+            string branchName = BranchNameTextBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(branchName))
             {
                 MessageBox.Show(_branchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -120,9 +120,9 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var originalHash = Module.GetCurrentCheckout();
+                ObjectId originalHash = Module.GetCurrentCheckout();
 
-                var command = Orphan.Checked
+                GitExtUtils.ArgumentString command = Orphan.Checked
                     ? Commands.CreateOrphan(branchName, objectId)
                     : Commands.Branch(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 

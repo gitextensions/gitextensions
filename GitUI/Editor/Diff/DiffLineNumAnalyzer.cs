@@ -13,11 +13,11 @@ namespace GitUI.Editor.Diff
         public DiffLinesInfo Analyze(string diffContent)
         {
             DiffLinesInfo ret = new();
-            var isCombinedDiff = PatchProcessor.IsCombinedDiff(diffContent);
-            var lineNumInDiff = 0;
-            var leftLineNum = DiffLineInfo.NotApplicableLineNum;
-            var rightLineNum = DiffLineInfo.NotApplicableLineNum;
-            var isHeaderLineLocated = false;
+            bool isCombinedDiff = PatchProcessor.IsCombinedDiff(diffContent);
+            int lineNumInDiff = 0;
+            int leftLineNum = DiffLineInfo.NotApplicableLineNum;
+            int rightLineNum = DiffLineInfo.NotApplicableLineNum;
+            bool isHeaderLineLocated = false;
             string[] lines = diffContent.Split(Delimiters.LineFeed);
             for (int i = 0; i < lines.Length; i++)
             {
@@ -38,7 +38,7 @@ namespace GitUI.Editor.Diff
                         LineType = DiffLineType.Header
                     };
 
-                    var lineNumbers = regex.Match(line);
+                    Match lineNumbers = regex.Match(line);
                     leftLineNum = int.Parse(lineNumbers.Groups["leftStart"].Value);
                     rightLineNum = int.Parse(lineNumbers.Groups["rightStart"].Value);
 

@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             detailedSettings.SmtpServer = SmtpServer.Text;
 
-            if (int.TryParse(SmtpServerPort.Text, out var port))
+            if (int.TryParse(SmtpServerPort.Text, out int port))
             {
                 detailedSettings.SmtpPort = port;
             }
@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             detailedSettings.GetRemoteBranchesDirectlyFromRemote = chkRemotesFromServer.Checked;
             detailedSettings.AddMergeLogMessages = addLogMessages.Checked;
 
-            if (int.TryParse(nbMessages.Text, out var messagesCount))
+            if (int.TryParse(nbMessages.Text, out int messagesCount))
             {
                 detailedSettings.MergeLogMessagesCount = messagesCount;
             }

@@ -154,7 +154,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (EnvUtils.RunningOnWindows())
             {
-                foreach (var command in GetWindowsCommandLocations())
+                foreach (string command in GetWindowsCommandLocations())
                 {
                     if (TestGitCommand(command))
                     {
@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     yield return AppSettings.GitCommandValue;
                 }
 
-                foreach (var path in GetGitLocations())
+                foreach (string path in GetGitLocations())
                 {
                     if (Directory.Exists(path + @"bin\"))
                     {
@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                 }
 
-                foreach (var path in GetGitLocations())
+                foreach (string path in GetGitLocations())
                 {
                     if (Directory.Exists(path + @"cmd\"))
                     {

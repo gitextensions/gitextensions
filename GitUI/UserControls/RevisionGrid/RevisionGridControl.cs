@@ -317,7 +317,7 @@ namespace GitUI
 
         internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
         {
-            var flags =
+            TextFormatFlags flags =
                 TextFormatFlags.NoPrefix |
                 TextFormatFlags.VerticalCenter |
                 TextFormatFlags.NoPadding |
@@ -328,7 +328,7 @@ namespace GitUI
                 flags |= TextFormatFlags.EndEllipsis;
             }
 
-            var size = TextRenderer.MeasureText(e.Graphics, text, font, bounds.Size, flags);
+            Size size = TextRenderer.MeasureText(e.Graphics, text, font, bounds.Size, flags);
             TextRenderer.DrawText(e.Graphics, text, font, bounds, color, flags);
 
             _toolTipProvider.SetTruncation(e.ColumnIndex, e.RowIndex, truncated: size.Width > bounds.Width);
@@ -348,9 +348,9 @@ namespace GitUI
 
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetItem)
         {
-            foreach (var menuCommand in menuCommands)
+            foreach (MenuCommand menuCommand in menuCommands)
             {
-                var item = MenuCommand.CreateToolStripItem(menuCommand);
+                ToolStripItem item = MenuCommand.CreateToolStripItem(menuCommand);
 
                 if (item is ToolStripMenuItem menuItem)
                 {
@@ -372,7 +372,7 @@ namespace GitUI
         // returns " --find-renames=... --find-copies=..." according to app settings
         private static ArgumentString FindRenamesAndCopiesOpts()
         {
-            var findCopies = AppSettings.FollowRenamesInFileHistoryExactOnly
+            string findCopies = AppSettings.FollowRenamesInFileHistoryExactOnly
                 ? " --find-copies=\"100%\""
                 : " --find-copies";
             return FindRenamesOpt() + findCopies;
@@ -426,7 +426,7 @@ namespace GitUI
 
         public Point GetQuickItemSelectorLocation()
         {
-            var rect = _gridView.GetCellDisplayRectangle(0, _latestSelectedRowIndex, true);
+            Rectangle rect = _gridView.GetCellDisplayRectangle(0, _latestSelectedRowIndex, true);
             return PointToScreen(new Point(rect.Right, rect.Bottom));
         }
 
@@ -637,8 +637,8 @@ namespace GitUI
                     // Set the first selected row as current.
                     // Assigning _gridView.CurrentCell results in a single selection of that row.
                     // So do not set row as current but make it visible at least.
-                    var selectedRows = gridView.SelectedRows;
-                    var firstSelectedRow = selectedRows[0];
+                    DataGridViewSelectedRowCollection selectedRows = gridView.SelectedRows;
+                    DataGridViewRow firstSelectedRow = selectedRows[0];
                     if (selectedRows.Count == 1)
                     {
                         gridView.CurrentCell = firstSelectedRow.Cells[1];
@@ -669,13 +669,13 @@ namespace GitUI
 
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
-            var description = revision.IsArtificial
+            string description = revision.IsArtificial
                 ? string.Empty
                 : revision.ObjectId.ToShortString() + ": ";
 
             GitRefListsForRevision gitRefListsForRevision = new(revision);
 
-            var descriptiveRef = gitRefListsForRevision.AllBranches
+            IGitRef descriptiveRef = gitRefListsForRevision.AllBranches
                 .Concat(gitRefListsForRevision.AllTags)
                 .FirstOrDefault();
 
@@ -718,14 +718,14 @@ namespace GitUI
         /// <returns>The selected revisions.</returns>
         public IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection? direction = null)
         {
-            var rows = _gridView
+            IEnumerable<DataGridViewRow> rows = _gridView
                 .SelectedRows
                 .Cast<DataGridViewRow>()
                 .Where(row => _gridView.RowCount > row.Index);
 
             if (direction.HasValue)
             {
-                var d = direction.Value == SortDirection.Ascending ? 1 : -1;
+                int d = direction.Value == SortDirection.Ascending ? 1 : -1;
                 rows = rows.OrderBy(row => row.Index, (r1, r2) => d * (r1 - r2));
             }
 
@@ -1094,10 +1094,10 @@ namespace GitUI
 
                 selectedRef.IsSelected = true;
 
-                var localConfigFile = module.LocalConfigFile;
-                var selectedRemote = selectedRef.GetTrackingRemote(localConfigFile);
-                var selectedMerge = selectedRef.GetMergeWith(localConfigFile);
-                var selectedHeadMergeSource = gitRefs.FirstOrDefault(
+                GitCommands.Settings.ConfigFileSettings localConfigFile = module.LocalConfigFile;
+                string selectedRemote = selectedRef.GetTrackingRemote(localConfigFile);
+                string selectedMerge = selectedRef.GetMergeWith(localConfigFile);
+                IGitRef selectedHeadMergeSource = gitRefs.FirstOrDefault(
                     gitRef => gitRef.IsRemote
                          && selectedRemote == gitRef.Remote
                          && selectedMerge == gitRef.LocalName);
@@ -1171,12 +1171,12 @@ namespace GitUI
 
                 HashSet<string?> setOfFileNames = new();
                 ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
-                var lines = result.StandardOutput.LazySplit('\n');
+                LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
 
                 // TODO Check the exit code and warn the user that rename detection could not be done.
 
                 ObjectId currentObjectId = null;
-                foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
+                foreach (string line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
                 {
                     if (string.IsNullOrEmpty(line))
                     {
@@ -1283,8 +1283,8 @@ namespace GitUI
                 }
 
                 bool insertWithMatch = headParents is not null;
-                var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
-                var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+                string userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
+                string userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
                 // Add working directory as an artificial commit
                 GitRevision workTreeRev = new(ObjectId.WorkTreeId)
@@ -1442,11 +1442,11 @@ namespace GitUI
                 }
 
                 SuperProjectInfo spi = new();
-                var (code, commit) = await gitModule.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
+                (char code, ObjectId commit) = await gitModule.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
                 if (code == 'U')
                 {
                     // return local and remote hashes
-                    var array = await gitModule.SuperprojectModule.GetConflictAsync(gitModule.SubmodulePath)
+                    ConflictData array = await gitModule.SuperprojectModule.GetConflictAsync(gitModule.SubmodulePath)
                         .ConfigureAwaitRunInline();
                     spi.ConflictBase = array.Base.ObjectId;
                     spi.ConflictLocal = array.Local.ObjectId;
@@ -1457,7 +1457,7 @@ namespace GitUI
                     spi.CurrentCommit = commit;
                 }
 
-                var refs = await gitModule.SuperprojectModule.GetSubmoduleItemsForEachRefAsync(gitModule.SubmodulePath, noLocks: noLocks);
+                Dictionary<IGitRef, IGitItem?> refs = await gitModule.SuperprojectModule.GetSubmoduleItemsForEachRefAsync(gitModule.SubmodulePath, noLocks: noLocks);
 
                 if (refs is not null)
                 {
@@ -1518,7 +1518,7 @@ namespace GitUI
                 ExecutionResult result = module.GitExecutable.Execute(args, throwOnErrorExit: false);
                 foreach (string line in result.StandardOutput.LazySplit('\n'))
                 {
-                    if (ObjectId.TryParse(line, out var parentId))
+                    if (ObjectId.TryParse(line, out ObjectId? parentId))
                     {
                         yield return parentId;
                     }
@@ -1553,14 +1553,14 @@ namespace GitUI
             _selectionTimer.Stop();
             _selectionTimer.Start();
 
-            var (first, selected) = GetFirstAndSelected();
+            (ObjectId first, GitRevision selected) = GetFirstAndSelected();
 
             compareToWorkingDirectoryMenuItem.Enabled = selected is not null && selected.ObjectId != ObjectId.WorkTreeId;
             compareWithCurrentBranchToolStripMenuItem.Enabled = !string.IsNullOrWhiteSpace(CurrentBranch.Value);
             compareSelectedCommitsMenuItem.Enabled = first is not null && selected is not null;
             openCommitsWithDiffToolMenuItem.Enabled = first is not null && selected is not null;
 
-            var selectedRevisions = GetSelectedRevisions();
+            IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
             HighlightRevisionsByAuthor(selectedRevisions);
 
             if (selectedRevisions.Count == 1 && selected is not null)
@@ -1668,7 +1668,7 @@ namespace GitUI
 
         private void OnGridViewMouseClick(object sender, MouseEventArgs e)
         {
-            var hti = _gridView.HitTest(e.X, e.Y);
+            DataGridView.HitTestInfo hti = _gridView.HitTest(e.X, e.Y);
             _latestSelectedRowIndex = hti.RowIndex;
 
             if (Control.ModifierKeys.HasFlag(Keys.Alt))
@@ -1711,7 +1711,7 @@ namespace GitUI
 
         public void ViewSelectedRevisions()
         {
-            var selectedRevisions = GetSelectedRevisions();
+            IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0 && !selectedRevisions[0].IsArtificial)
             {
                 Form ProvideForm()
@@ -1729,7 +1729,7 @@ namespace GitUI
 
         private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revision = LatestSelectedRevision;
+            GitRevision revision = LatestSelectedRevision;
 
             UICommands.DoActionOnRepo(() =>
             {
@@ -1747,7 +1747,7 @@ namespace GitUI
 
             UICommands.DoActionOnRepo(() =>
             {
-                using var form = FormResetCurrentBranch.Create(UICommands, LatestSelectedRevision);
+                using FormResetCurrentBranch form = FormResetCurrentBranch.Create(UICommands, LatestSelectedRevision);
                 return form.ShowDialog(ParentForm) == DialogResult.OK;
             });
         }
@@ -1761,14 +1761,14 @@ namespace GitUI
 
             UICommands.DoActionOnRepo(() =>
             {
-                using var form = FormResetAnotherBranch.Create(UICommands, LatestSelectedRevision);
+                using FormResetAnotherBranch form = FormResetAnotherBranch.Create(UICommands, LatestSelectedRevision);
                 return form.ShowDialog(ParentForm) == DialogResult.OK;
             });
         }
 
         private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revision = LatestSelectedRevision;
+            GitRevision revision = LatestSelectedRevision;
 
             UICommands.DoActionOnRepo(() =>
             {
@@ -1845,7 +1845,7 @@ namespace GitUI
                 return;
             }
 
-            var inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
+            bool inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
             SetEnabled(markRevisionAsBadToolStripMenuItem, inTheMiddleOfBisect);
             SetEnabled(markRevisionAsGoodToolStripMenuItem, inTheMiddleOfBisect);
             SetEnabled(bisectSkipRevisionToolStripMenuItem, inTheMiddleOfBisect);
@@ -1858,26 +1858,26 @@ namespace GitUI
             ContextMenuStrip mergeBranchDropDown = new();
             ContextMenuStrip renameDropDown = new();
 
-            var revision = LatestSelectedRevision;
+            GitRevision revision = LatestSelectedRevision;
             GitRefListsForRevision gitRefListsForRevision = new(revision);
             _rebaseOnTopOf = null;
 
-            foreach (var head in gitRefListsForRevision.AllTags)
+            foreach (IGitRef head in gitRefListsForRevision.AllTags)
             {
                 AddBranchMenuItem(deleteTagDropDown, head, delegate { UICommands.StartDeleteTagDialog(ParentForm, head.Name); });
 
-                var refUnambiguousName = GetRefUnambiguousName(head);
-                var mergeItem = AddBranchMenuItem(mergeBranchDropDown, head,
+                string refUnambiguousName = GetRefUnambiguousName(head);
+                ToolStripMenuItem mergeItem = AddBranchMenuItem(mergeBranchDropDown, head,
                     delegate { UICommands.StartMergeBranchDialog(ParentForm, refUnambiguousName); });
                 mergeItem.Tag = refUnambiguousName;
             }
 
             // For now there is no action that could be done on currentBranch
             string currentBranchRef = GitRefName.RefsHeadsPrefix + CurrentBranch.Value;
-            var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
+            IReadOnlyList<IGitRef> branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
-            foreach (var head in branchesWithNoIdenticalRemotes)
+            foreach (IGitRef head in branchesWithNoIdenticalRemotes)
             {
                 if (head.CompleteName == currentBranchRef)
                 {
@@ -1885,7 +1885,7 @@ namespace GitUI
                 }
                 else
                 {
-                    var toolStripItem = AddBranchMenuItem(mergeBranchDropDown, head,
+                    ToolStripMenuItem toolStripItem = AddBranchMenuItem(mergeBranchDropDown, head,
                         delegate { UICommands.StartMergeBranchDialog(ParentForm, GetRefUnambiguousName(head)); });
 
                     _rebaseOnTopOf ??= (string)toolStripItem.Tag;
@@ -1907,10 +1907,10 @@ namespace GitUI
                 _rebaseOnTopOf ??= toolStripItem.Tag as string;
             }
 
-            var allBranches = gitRefListsForRevision.AllBranches;
+            IReadOnlyList<IGitRef> allBranches = gitRefListsForRevision.AllBranches;
             bool isHeadOfCurrentBranch = false;
             bool firstRemoteBranchForCheckout = false;
-            foreach (var head in allBranches)
+            foreach (IGitRef head in allBranches)
             {
                 // skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
@@ -1954,7 +1954,7 @@ namespace GitUI
             }
 
             bool firstRemoteBranchForDelete = true;
-            foreach (var head in allBranches)
+            foreach (IGitRef head in allBranches)
             {
                 if (head.IsRemote)
                 {
@@ -2037,8 +2037,8 @@ namespace GitUI
 
             void UpdateSeparators()
             {
-                var seenItem = false;
-                foreach (var item in mainContextMenu.Items.Cast<ToolStripItem>())
+                bool seenItem = false;
+                foreach (ToolStripItem item in mainContextMenu.Items.Cast<ToolStripItem>())
                 {
                     if (item is ToolStripSeparator separator)
                     {
@@ -2192,7 +2192,7 @@ namespace GitUI
 
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var selectedRevisions = GetSelectedRevisions();
+            IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count is > 2)
             {
                 MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2269,8 +2269,8 @@ namespace GitUI
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revisions = GetSelectedRevisions(SortDirection.Ascending);
-            foreach (var rev in revisions)
+            IReadOnlyList<GitRevision> revisions = GetSelectedRevisions(SortDirection.Ascending);
+            foreach (GitRevision rev in revisions)
             {
                 UICommands.StartRevertCommitDialog(ParentForm, rev);
             }
@@ -2278,7 +2278,7 @@ namespace GitUI
 
         private void CherryPickCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revisions = GetSelectedRevisions(SortDirection.Descending);
+            IReadOnlyList<GitRevision> revisions = GetSelectedRevisions(SortDirection.Descending);
             UICommands.StartCherryPickDialog(ParentForm, revisions);
         }
 
@@ -2302,7 +2302,7 @@ namespace GitUI
 
         private void DropStashToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var stashName = LatestSelectedRevision.ReflogSelector;
+            string stashName = LatestSelectedRevision.ReflogSelector;
             if (string.IsNullOrEmpty(stashName))
             {
                 return;
@@ -2413,10 +2413,10 @@ namespace GitUI
             {
                 Debug.Assert(objectId == ObjectId.WorkTreeId || objectId == ObjectId.IndexId,
                     $"Unexpected Git object id {objectId}");
-                var changeCount = GetChangeCount(objectId);
+                ArtificialCommitChangeCount changeCount = GetChangeCount(objectId);
                 Validates.NotNull(changeCount);
                 StagedStatus staged = objectId == ObjectId.WorkTreeId ? StagedStatus.WorkTree : StagedStatus.Index;
-                var items = status?.Where(item => item.Staged == staged).ToList();
+                List<GitItemStatus> items = status?.Where(item => item.Staged == staged).ToList();
                 changeCount.Update(items);
             }
         }
@@ -2624,7 +2624,7 @@ namespace GitUI
 
         private void renameBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var item = (ToolStripMenuItem)sender;
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
 
             if (item.DropDown is not null && item.DropDown.Items.Count == 1)
             {
@@ -2634,7 +2634,7 @@ namespace GitUI
 
         private void deleteBranchTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var item = (ToolStripMenuItem)sender;
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
 
             if (item.DropDown is not null && item.DropDown.Items.Count == 1)
             {
@@ -2644,7 +2644,7 @@ namespace GitUI
 
         private void goToParentToolStripMenuItem_Click()
         {
-            var r = LatestSelectedRevision;
+            GitRevision r = LatestSelectedRevision;
             if (r is not null)
             {
                 if (_parentChildNavigationHistory.HasPreviousParent)
@@ -2696,7 +2696,7 @@ namespace GitUI
             // Artificial commits are replaced with HEAD
             // If only one revision is selected, compare to HEAD
             // => Fill with HEAD to if less than two normal revisions (it is OK to compare HEAD HEAD)
-            var revisions = GetSelectedRevisions().Select(i => i.ObjectId).Where(i => !i.IsArtificial).ToList();
+            List<ObjectId> revisions = GetSelectedRevisions().Select(i => i.ObjectId).Where(i => !i.IsArtificial).ToList();
             bool hasArtificial = GetSelectedRevisions().Any(i => i.IsArtificial);
             ObjectId? headId = Module.RevParse("HEAD");
             if (headId is null || (revisions.Count == 0 && !hasArtificial))
@@ -2712,7 +2712,7 @@ namespace GitUI
                 revisions
             };
 
-            var mergeBaseCommitId = UICommands.GitModule.GitExecutable.GetOutput(args).TrimEnd('\n');
+            string mergeBaseCommitId = UICommands.GitModule.GitExecutable.GetOutput(args).TrimEnd('\n');
             if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
             {
                 MessageBox.Show(_noMergeBaseCommit.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2728,10 +2728,10 @@ namespace GitUI
 
         private void goToChildToolStripMenuItem_Click()
         {
-            var r = LatestSelectedRevision;
+            GitRevision r = LatestSelectedRevision;
             if (r is not null)
             {
-                var children = GetRevisionChildren(r.ObjectId);
+                IReadOnlyList<ObjectId> children = GetRevisionChildren(r.ObjectId);
 
                 if (_parentChildNavigationHistory.HasPreviousChild)
                 {
@@ -2751,7 +2751,7 @@ namespace GitUI
                 return;
             }
 
-            if (DetachedHeadParser.TryParse(refName, out var sha1))
+            if (DetachedHeadParser.TryParse(refName, out string? sha1))
             {
                 refName = sha1;
             }
@@ -2810,7 +2810,7 @@ namespace GitUI
             if (form.ShowDialog(ParentForm) == DialogResult.OK)
             {
                 Validates.NotNull(form.BranchName);
-                var baseCommit = Module.RevParse(form.BranchName);
+                ObjectId baseCommit = Module.RevParse(form.BranchName);
                 Validates.NotNull(baseCommit);
                 UICommands.ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
             }
@@ -2890,20 +2890,20 @@ namespace GitUI
 
         private void diffSelectedCommitsMenuItem_Click(object sender, EventArgs e)
         {
-            var item = sender as ToolStripMenuItem;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item?.DropDownItems != null)
             {
                 // "main menu" clicked, cancel dropdown manually, invoke default difftool
                 item.HideDropDown();
             }
 
-            var toolName = item?.Tag as string;
+            string toolName = item?.Tag as string;
             DiffSelectedCommitsWithDifftool(toolName);
         }
 
         public void DiffSelectedCommitsWithDifftool(string? customTool = null)
         {
-            var (first, selected) = GetFirstAndSelected();
+            (ObjectId first, GitRevision selected) = GetFirstAndSelected();
             if (selected is not null)
             {
                 Module.OpenWithDifftoolDirDiff(first?.ToString(), selected.ObjectId.ToString(), customTool: customTool);
@@ -2980,7 +2980,7 @@ namespace GitUI
 
                 foreach (object fileNameObject in fileNameArray)
                 {
-                    var fileName = fileNameObject as string;
+                    string fileName = fileNameObject as string;
 
                     if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -2997,7 +2997,7 @@ namespace GitUI
             {
                 foreach (object fileNameObject in fileNameArray)
                 {
-                    var fileName = fileNameObject as string;
+                    string fileName = fileNameObject as string;
 
                     if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -3072,7 +3072,7 @@ namespace GitUI
                 case Command.RenameRef: RenameRef(); break;
                 default:
                     {
-                        var result = base.ExecuteCommand(cmd);
+                        CommandStatus result = base.ExecuteCommand(cmd);
                         if (result.NeedsGridRefresh)
                         {
                             PerformRefreshRevisions();
@@ -3116,7 +3116,7 @@ namespace GitUI
         // TODO: refactor out
         void IRunScript.Execute(int scriptId)
         {
-            var scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
+            IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
             if (scriptsRunner.RunScript(scriptId, FindForm() as GitModuleForm, this).NeedsGridRefresh)
             {
                 PerformRefreshRevisions();

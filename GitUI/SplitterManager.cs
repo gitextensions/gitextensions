@@ -24,7 +24,7 @@ namespace GitUI
 
         public void RestoreSplitters()
         {
-            foreach (var splitter in _splitters)
+            foreach (SplitterData splitter in _splitters)
             {
                 splitter.RestoreFromSettings(_settings);
             }
@@ -32,7 +32,7 @@ namespace GitUI
 
         public void SaveSplitters()
         {
-            foreach (var splitter in _splitters)
+            foreach (SplitterData splitter in _splitters)
             {
                 splitter.SaveToSettings(_settings);
             }
@@ -72,8 +72,8 @@ namespace GitUI
 
                 if (prevSize > 0 && prevDistance > 0)
                 {
-                    var fixedPanel = _splitter.FixedPanel;
-                    var splitterWidth = _splitter.SplitterWidth;
+                    FixedPanel fixedPanel = _splitter.FixedPanel;
+                    int splitterWidth = _splitter.SplitterWidth;
                     if (SplitterSize == prevSize && _dpi == prevDpi)
                     {
                         SetSplitterDistance(fixedPanel == FixedPanel.Panel2 ? prevDistance + splitterWidth : prevDistance);

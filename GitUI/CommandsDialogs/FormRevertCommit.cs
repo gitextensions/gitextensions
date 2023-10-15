@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs
             parentListPanel.Visible = _isMerge;
             if (_isMerge)
             {
-                var parents = Module.GetParentRevisions(Revision.ObjectId);
+                IReadOnlyList<GitRevision> parents = Module.GetParentRevisions(Revision.ObjectId);
 
                 for (int i = 0; i < parents.Count; i++)
                 {

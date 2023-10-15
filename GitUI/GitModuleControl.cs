@@ -127,7 +127,7 @@ namespace GitUI
 
         protected override CommandStatus ExecuteCommand(int command)
         {
-            var result = ExecuteScriptCommand();
+            CommandStatus result = ExecuteScriptCommand();
             if (!result.Executed)
             {
                 result = base.ExecuteCommand(command);
@@ -137,13 +137,13 @@ namespace GitUI
 
             CommandStatus ExecuteScriptCommand()
             {
-                var revisionGridControl = this as RevisionGridControl;
+                RevisionGridControl revisionGridControl = this as RevisionGridControl;
                 if (revisionGridControl is null)
                 {
                     revisionGridControl = (FindForm() as GitModuleForm)?.RevisionGridControl;
                 }
 
-                var scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
+                IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
                 return scriptsRunner.RunScript(command, FindForm() as GitModuleForm, revisionGridControl);
             }
         }

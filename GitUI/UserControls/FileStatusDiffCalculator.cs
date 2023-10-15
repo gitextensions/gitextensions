@@ -78,10 +78,10 @@ namespace GitUI
                 }
 
                 // Show combined (merge conflicts) when a single merge commit is selected
-                var isMergeCommit = (selectedRev.ParentIds?.Count ?? 0) > 1;
+                bool isMergeCommit = (selectedRev.ParentIds?.Count ?? 0) > 1;
                 if (isMergeCommit && AppSettings.ShowDiffForAllParents)
                 {
-                    var conflicts = module.GetCombinedDiffFileList(selectedRev.Guid);
+                    IReadOnlyList<GitItemStatus> conflicts = module.GetCombinedDiffFileList(selectedRev.Guid);
                     if (conflicts.Count != 0)
                     {
                         // Create an artificial commit
@@ -99,7 +99,7 @@ namespace GitUI
 
             // With 4 selected, assume that ranges are selected: baseA..headA baseB..headB
             // the first item is therefore the second selected
-            var firstRev = AppSettings.ShowDiffForAllParents && revisions.Count == maxMultiCompare
+            GitRevision firstRev = AppSettings.ShowDiffForAllParents && revisions.Count == maxMultiCompare
                 ? revisions[2]
                 : revisions[^1];
 
@@ -188,18 +188,18 @@ namespace GitUI
                 return fileStatusDescs;
             }
 
-            var allAToB = fileStatusDescs[0].Statuses;
-            var allBaseToB = module.GetDiffFilesWithSubmodulesStatus(baseRevId, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken);
-            var allBaseToA = module.GetDiffFilesWithSubmodulesStatus(baseRevId, firstRev.ObjectId, firstRev.FirstParentId, cancellationToken);
+            IReadOnlyList<GitItemStatus> allAToB = fileStatusDescs[0].Statuses;
+            IReadOnlyList<GitItemStatus> allBaseToB = module.GetDiffFilesWithSubmodulesStatus(baseRevId, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken);
+            IReadOnlyList<GitItemStatus> allBaseToA = module.GetDiffFilesWithSubmodulesStatus(baseRevId, firstRev.ObjectId, firstRev.FirstParentId, cancellationToken);
 
             GitItemStatusNameEqualityComparer comparer = new();
-            var sameBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
-            var onlyA = allBaseToA.Except(allBaseToB, comparer).ToList();
-            var onlyB = allBaseToB.Except(allBaseToA, comparer).ToList();
+            List<GitItemStatus> sameBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
+            List<GitItemStatus> onlyA = allBaseToA.Except(allBaseToB, comparer).ToList();
+            List<GitItemStatus> onlyB = allBaseToB.Except(allBaseToA, comparer).ToList();
 
-            foreach (var l in new[] { allAToB, allBaseToB, allBaseToA })
+            foreach (IReadOnlyList<GitItemStatus> l in new[] { allAToB, allBaseToB, allBaseToA })
             {
-                foreach (var f in l)
+                foreach (GitItemStatus f in l)
                 {
                     f.DiffStatus = GetDiffStatus(f, l == allAToB);
                 }
@@ -234,13 +234,13 @@ namespace GitUI
             }
 
             // Add rangeDiff as a FileStatus item (even with artificial commits)
-            var first = firstRev.ObjectId == firstRevHead ? firstRev : new GitRevision(firstRevHead);
-            var selected = selectedRev.ObjectId == selectedRevHead ? selectedRev : new GitRevision(selectedRevHead);
-            var (baseToFirstCount, baseToSecondCount) = module.GetCommitRangeDiffCount(first.ObjectId, selected.ObjectId);
+            GitRevision first = firstRev.ObjectId == firstRevHead ? firstRev : new GitRevision(firstRevHead);
+            GitRevision selected = selectedRev.ObjectId == selectedRevHead ? selectedRev : new GitRevision(selectedRevHead);
+            (int? baseToFirstCount, int? baseToSecondCount) = module.GetCommitRangeDiffCount(first.ObjectId, selected.ObjectId);
 
             // first and selected has a common merge base and count must be available
             // Only a printout, so no Validates
-            var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ BASE {GetDescriptionForRevision(baseRevId)}";
+            string desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ BASE {GetDescriptionForRevision(baseRevId)}";
             allAToB = allAToB.Append(new GitItemStatus(name: desc) { IsRangeDiff = true }).ToList();
 
             // Replace the A->B group with new statuses
@@ -276,7 +276,7 @@ namespace GitUI
 
         private GitModule GetModule()
         {
-            var module = _getModule();
+            GitModule module = _getModule();
 
             if (module is null)
             {

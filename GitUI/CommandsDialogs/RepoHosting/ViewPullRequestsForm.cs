@@ -61,10 +61,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _loader.LoadAsync(
                 () =>
                 {
-                    var hostedRemotes = _gitHoster.GetHostedRemotesForModule().ToArray();
+                    IHostedRemote[] hostedRemotes = _gitHoster.GetHostedRemotesForModule().ToArray();
 
                     // load all hosted repositories.
-                    foreach (var hostedRemote in hostedRemotes)
+                    foreach (IHostedRemote hostedRemote in hostedRemotes)
                     {
                         try
                         {
@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
+            IHostedRemote hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
 
             _pullRequestsList.Items.Clear();
             IHostedRepository? hostedRepo;
@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     try
                     {
-                        var pullRequests = hostedRepo.GetPullRequests();
+                        IReadOnlyList<IPullRequestInformation> pullRequests = hostedRepo.GetPullRequests();
 
                         await this.SwitchToMainThreadAsync();
 
@@ -190,7 +190,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void SelectHostedRepositoryForCurrentRemote()
         {
-            var currentRemote = Module.GetCurrentRemote();
+            string currentRemote = Module.GetCurrentRemote();
 
             // Local branches have no current remote, return value is empty string.
             // In this case we fallback to the first remote in the list.
@@ -198,7 +198,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // So there will always be at least 1 remote when this dialog is open
             _cloneGitProtocol = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync)
                 .First(r => string.IsNullOrEmpty(currentRemote) || r.Name == currentRemote).FetchUrl.IsUrlUsingHttp() ? GitProtocol.Https : GitProtocol.Ssh;
-            var hostedRemote = _selectHostedRepoCB.Items.
+            IHostedRemote hostedRemote = _selectHostedRepoCB.Items.
                 Cast<IHostedRemote>().
                 FirstOrDefault(remote => string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
 
@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void LoadListView()
         {
             Validates.NotNull(_pullRequestsInfo);
-            foreach (var info in _pullRequestsInfo)
+            foreach (IPullRequestInformation info in _pullRequestsInfo)
             {
                 _pullRequestsList.Items.Add(new ListViewItem
                 {
@@ -271,7 +271,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void ResizeColumnsToFitContent()
         {
-            var resizeStrategy = _pullRequestsList.Items.Count == 0 ? -2 : -1;
+            int resizeStrategy = _pullRequestsList.Items.Count == 0 ? -2 : -1;
 
             foreach (ColumnHeader column in _pullRequestsList.Columns)
             {
@@ -281,7 +281,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var prevPri = _currentPullRequestInfo;
+            IPullRequestInformation prevPri = _currentPullRequestInfo;
 
             if (_pullRequestsList.SelectedItems.Count != 1)
             {
@@ -320,7 +320,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         // TODO make this operation async (requires change to Git.hub submodule)
                         Validates.NotNull(_currentPullRequestInfo);
-                        var discussion = _currentPullRequestInfo.GetDiscussion();
+                        IPullRequestDiscussion discussion = _currentPullRequestInfo.GetDiscussion();
 
                         await this.SwitchToMainThreadAsync();
 
@@ -337,7 +337,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void LoadDiscussion(IPullRequestDiscussion? discussion)
         {
             Validates.NotNull(_currentPullRequestInfo);
-            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
+            string t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
             _discussionWB.DocumentText = t;
         }
 
@@ -356,7 +356,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     try
                     {
-                        var content = await _currentPullRequestInfo.GetDiffDataAsync();
+                        string content = await _currentPullRequestInfo.GetDiffDataAsync();
 
                         await this.SwitchToMainThreadAsync();
 
@@ -373,7 +373,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _diffCache = new Dictionary<string, string>();
 
-            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el?.Trim().Length is > 10).ToList();
+            List<string> fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el?.Trim().Length is > 10).ToList();
             List<GitItemStatus> giss = new();
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
@@ -385,9 +385,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            foreach (var part in fileParts)
+            foreach (string part in fileParts)
             {
-                var match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
+                Match match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
                 if (!match.Success)
                 {
                     MessageBox.Show(this, _strUnableUnderstandPatch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -418,9 +418,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}",
+            string cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}",
                 _currentPullRequestInfo.HeadRepo.CloneUrl, _currentPullRequestInfo.HeadRef, _currentPullRequestInfo.FetchBranch);
-            var success = FormProcess.ShowDialog(this, UICommands, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+            bool success = FormProcess.ShowDialog(this, UICommands, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
             if (!success)
             {
                 return;
@@ -441,14 +441,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
             UICommands.RepoChangedNotifier.Lock();
             try
             {
-                var remoteName = _currentPullRequestInfo.Owner;
-                var remoteUrl = _currentPullRequestInfo.HeadRepo.CloneUrl;
-                var remoteRef = _currentPullRequestInfo.HeadRef;
+                string remoteName = _currentPullRequestInfo.Owner;
+                string remoteUrl = _currentPullRequestInfo.HeadRepo.CloneUrl;
+                string remoteRef = _currentPullRequestInfo.HeadRef;
 
-                var existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
+                IHostedRemote existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
                 if (existingRepo is not null)
                 {
-                    var hostedRepository = existingRepo.GetHostedRepository();
+                    IHostedRepository hostedRepository = existingRepo.GetHostedRepository();
                     hostedRepository.CloneProtocol = _cloneGitProtocol;
                     if (hostedRepository.CloneUrl != remoteUrl)
                     {
@@ -459,7 +459,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
                 else
                 {
-                    var error = Module.AddRemote(remoteName, remoteUrl);
+                    string error = Module.AddRemote(remoteName, remoteUrl);
                     if (!string.IsNullOrEmpty(error))
                     {
                         MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -469,8 +469,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     UICommands.RepoChangedNotifier.Notify();
                 }
 
-                var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-                var success = FormProcess.ShowDialog(this, UICommands, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                string cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
+                bool success = FormProcess.ShowDialog(this, UICommands, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (!success)
                 {
                     return;
@@ -495,14 +495,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var gis = _fileStatusList.SelectedItem?.Item;
+            GitItemStatus gis = _fileStatusList.SelectedItem?.Item;
             if (gis is null)
             {
                 return;
             }
 
             Validates.NotNull(_diffCache);
-            var data = _diffCache[gis.Name];
+            string data = _diffCache[gis.Name];
 
             if (gis.IsSubmodule)
             {

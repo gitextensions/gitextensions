@@ -42,17 +42,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
             MultilineIndicator indicator = new(e, revision);
-            var messageBounds = indicator.RemainingCellBounds;
+            Rectangle messageBounds = indicator.RemainingCellBounds;
             List<IGitRef> superprojectRefs = new();
-            var offset = ColumnLeftMargin;
+            int offset = ColumnLeftMargin;
 
-            if (_grid.TryGetSuperProjectInfo(out var spi))
+            if (_grid.TryGetSuperProjectInfo(out SuperProjectInfo? spi))
             {
                 // Draw super project references (for submodules)
                 DrawSuperprojectInfo(e, spi, revision, style, messageBounds, ref offset);
 
                 if (spi.Refs is not null && revision.ObjectId is not null &&
-                    spi.Refs.TryGetValue(revision.ObjectId, out var refs))
+                    spi.Refs.TryGetValue(revision.ObjectId, out IReadOnlyList<IGitRef> refs))
                 {
                     superprojectRefs.AddRange(refs);
                 }
@@ -60,8 +60,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (revision.Refs.Count != 0)
             {
-                var gitRefs = SortRefs(revision.Refs.Where(FilterRef));
-                foreach (var gitRef in gitRefs)
+                IReadOnlyList<IGitRef> gitRefs = SortRefs(revision.Refs.Where(FilterRef));
+                foreach (IGitRef gitRef in gitRefs)
                 {
                     if (offset > messageBounds.Width)
                     {
@@ -69,7 +69,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         break;
                     }
 
-                    var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
+                    IGitRef superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
                     if (superprojectRef is not null)
                     {
                         superprojectRefs.Remove(superprojectRef);
@@ -134,7 +134,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         _toolTipBuilder.AppendLine();
                     }
 
-                    foreach (var gitRef in SortRefs(revision.Refs))
+                    foreach (IGitRef gitRef in SortRefs(revision.Refs))
                     {
                         if (gitRef.IsBisectGood)
                         {
@@ -172,7 +172,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Rectangle messageBounds,
             ref int offset)
         {
-            var baseOffset = offset;
+            int baseOffset = offset;
 
             // Add fake "refs" for artificial commits
             RevisionGridRefRenderer.DrawRef(
@@ -187,7 +187,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 dashedLine: false,
                 fill: AppSettings.FillRefLabels);
 
-            var max = Math.Max(
+            int max = Math.Max(
                 TextRenderer.MeasureText(ResourceManager.TranslatedStrings.Workspace, style.NormalFont).Width,
                 TextRenderer.MeasureText(ResourceManager.TranslatedStrings.Index, style.NormalFont).Width);
 
@@ -236,23 +236,23 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return;
                 }
 
-                var imageVerticalPadding = DpiUtil.Scale(6);
-                var textHorizontalPadding = DpiUtil.Scale(4);
-                var imageSize = e.CellBounds.Height - imageVerticalPadding - imageVerticalPadding;
+                int imageVerticalPadding = DpiUtil.Scale(6);
+                int textHorizontalPadding = DpiUtil.Scale(4);
+                int imageSize = e.CellBounds.Height - imageVerticalPadding - imageVerticalPadding;
                 Rectangle imageRect = new(
                     messageBounds.Left + offset,
                     e.CellBounds.Top + imageVerticalPadding,
                     imageSize,
                     imageSize);
 
-                var container = e.Graphics.BeginContainer();
+                System.Drawing.Drawing2D.GraphicsContainer container = e.Graphics.BeginContainer();
                 e.Graphics.DrawImage(icon, imageRect);
                 e.Graphics.EndContainer(container);
                 offset += imageSize + textHorizontalPadding;
 
-                var text = items?.Count.ToString() ?? "";
-                var bounds = messageBounds.ReduceLeft(offset);
-                var textWidth = Math.Max(
+                string text = items?.Count.ToString() ?? "";
+                Rectangle bounds = messageBounds.ReduceLeft(offset);
+                int textWidth = Math.Max(
                     grid.DrawColumnText(e, text, style.NormalFont, style.ForeColor, bounds),
                     TextRenderer.MeasureText("88", style.NormalFont).Width);
                 offset += textWidth + textHorizontalPadding;
@@ -266,18 +266,18 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Rectangle messageBounds,
             ref int offset)
         {
-            for (var i = 0; i < Math.Min(MaxSuperprojectRefs, superprojectRefs.Count); i++)
+            for (int i = 0; i < Math.Min(MaxSuperprojectRefs, superprojectRefs.Count); i++)
             {
-                var gitRef = superprojectRefs[i];
-                var headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
-                var gitRefName = i < (MaxSuperprojectRefs - 1) ? gitRef.Name : "…";
+                IGitRef gitRef = superprojectRefs[i];
+                Color headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
+                string gitRefName = i < (MaxSuperprojectRefs - 1) ? gitRef.Name : "…";
 
-                var arrowType = gitRef.IsSelected
+                RefArrowType arrowType = gitRef.IsSelected
                     ? RefArrowType.Filled
                     : gitRef.IsSelectedHeadMergeSource
                         ? RefArrowType.NotFilled
                         : RefArrowType.None;
-                var font = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
+                Font font = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
 
                 RevisionGridRefRenderer.DrawRef(
                     e.State.HasFlag(DataGridViewElementStates.Selected),
@@ -358,19 +358,19 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 }
             }
 
-            var headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
+            Color headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
 
-            var arrowType = gitRef.IsSelected
+            RefArrowType arrowType = gitRef.IsSelected
                 ? RefArrowType.Filled
                 : gitRef.IsSelectedHeadMergeSource
                     ? RefArrowType.NotFilled
                     : RefArrowType.None;
 
-            var font = gitRef.IsSelected
+            Font font = gitRef.IsSelected
                 ? style.BoldFont
                 : style.NormalFont;
 
-            var name = gitRef.Name;
+            string name = gitRef.Name;
 
             if (gitRef.IsTag &&
                 gitRef.IsDereference && // see note on using IsDereference in CommitInfo class
@@ -398,10 +398,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Rectangle messageBounds,
             ref int offset)
         {
-            var x = e.CellBounds.X + offset;
+            int x = e.CellBounds.X + offset;
             if (x + image.Width < messageBounds.Right)
             {
-                var y = e.CellBounds.Y + ((e.CellBounds.Height - image.Height) / 2);
+                int y = e.CellBounds.Y + ((e.CellBounds.Height - image.Height) / 2);
                 e.Graphics.DrawImage(image, x, y);
                 offset += image.Width + DpiUtil.Scale(4);
             }
@@ -415,13 +415,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             MultilineIndicator indicator,
             ref int offset)
         {
-            var lines = GetCommitMessageLines(revision);
+            string[] lines = GetCommitMessageLines(revision);
             if (lines.Length == 0)
             {
                 return;
             }
 
-            var commitTitle = lines[0];
+            string commitTitle = lines[0];
 
             // Draw markers for fixup! and squash! commits
             if (commitTitle.StartsWith(CommitKind.Fixup.GetPrefix()) || commitTitle.StartsWith(CommitKind.Squash.GetPrefix()) || commitTitle.StartsWith(CommitKind.Amend.GetPrefix()))
@@ -435,7 +435,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
 
             Font font = revision.ObjectId == _grid.CurrentCheckout ? style.BoldFont : style.NormalFont;
-            var titleBounds = messageBounds.ReduceLeft(offset);
+            Rectangle titleBounds = messageBounds.ReduceLeft(offset);
             int titleWidth = _grid.DrawColumnText(e, commitTitle, font, style.ForeColor, titleBounds);
             offset += titleWidth;
 
@@ -446,9 +446,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (lines.Length > 1 && AppSettings.ShowCommitBodyInRevisionGrid)
             {
-                var commitBody = string.Concat(lines.Skip(1).Select(_ => " " + _));
-                var bodyBounds = messageBounds.ReduceLeft(offset);
-                var bodyWidth = _grid.DrawColumnText(e, commitBody, font, style.CommitBodyForeColor, bodyBounds);
+                string commitBody = string.Concat(lines.Skip(1).Select(_ => " " + _));
+                Rectangle bodyBounds = messageBounds.ReduceLeft(offset);
+                int bodyWidth = _grid.DrawColumnText(e, commitBody, font, style.CommitBodyForeColor, bodyBounds);
                 offset += bodyWidth;
             }
 
@@ -473,16 +473,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
         {
-            var sortedRefs = refs.ToList();
+            List<IGitRef> sortedRefs = refs.ToList();
             sortedRefs.Sort(CompareRefs);
             return sortedRefs;
 
             int CompareRefs(IGitRef left, IGitRef right)
             {
-                var leftTypeRank = RefTypeRank(left);
-                var rightTypeRank = RefTypeRank(right);
+                int leftTypeRank = RefTypeRank(left);
+                int rightTypeRank = RefTypeRank(right);
 
-                var c = leftTypeRank.CompareTo(rightTypeRank);
+                int c = leftTypeRank.CompareTo(rightTypeRank);
 
                 return c == 0
                     ? string.Compare(left.Name, right.Name, StringComparison.Ordinal)

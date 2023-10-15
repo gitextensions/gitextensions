@@ -44,14 +44,14 @@
         /// </summary>
         public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase
         {
-            foreach (var node in this)
+            foreach (Node node in this)
             {
                 if (node is TNode node1)
                 {
                     yield return node1;
                 }
 
-                foreach (var subNode in node.Nodes.DepthEnumerator<TNode>())
+                foreach (TNode subNode in node.Nodes.DepthEnumerator<TNode>())
                 {
                     yield return subNode;
                 }
@@ -67,21 +67,21 @@
         {
             HashSet<Node> prevNodes = new();
 
-            for (var i = 0; i < treeViewNode.Nodes.Count; i++)
+            for (int i = 0; i < treeViewNode.Nodes.Count; i++)
             {
                 prevNodes.Add(Node.GetNode(treeViewNode.Nodes[i]));
             }
 
-            var oldNodeIdx = 0;
+            int oldNodeIdx = 0;
 
-            foreach (var node in this)
+            foreach (Node node in this)
             {
                 TreeNode treeNode;
 
                 if (oldNodeIdx < treeViewNode.Nodes.Count)
                 {
                     treeNode = treeViewNode.Nodes[oldNodeIdx];
-                    var oldNode = Node.GetNode(treeNode);
+                    Node oldNode = Node.GetNode(treeNode);
 
                     if (!oldNode.Equals(node) && !prevNodes.Contains(node))
                     {

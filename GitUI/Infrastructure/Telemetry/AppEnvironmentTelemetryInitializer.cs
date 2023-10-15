@@ -9,7 +9,7 @@ namespace GitUI.Infrastructure.Telemetry
         public void Initialize(ITelemetry telemetry)
         {
             string sshClient;
-            var sshPath = AppSettings.SshPath;
+            string sshPath = AppSettings.SshPath;
             if (string.IsNullOrEmpty(sshPath))
             {
                 sshClient = "OpenSSH";

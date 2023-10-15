@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
 
         private void InitClick(object sender, EventArgs e)
         {
-            var directoryPath = _NO_TRANSLATE_Directory.Text;
+            string directoryPath = _NO_TRANSLATE_Directory.Text;
 
             if (!IsRootedDirectoryPath(directoryPath))
             {
@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this);
+            string userSelectedPath = OsShellUtil.PickFolder(this);
 
             if (userSelectedPath is not null)
             {

@@ -17,11 +17,11 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void Init(Action action, IReadOnlyList<IGitRef> refs)
         {
-            var items = refs.OrderBy(r => r.IsTag).ThenBy(r => r.Name).Select(GetItemData).ToList();
+            List<ItemData> items = refs.OrderBy(r => r.IsTag).ThenBy(r => r.Name).Select(GetItemData).ToList();
 
             ItemData GetItemData(IGitRef gitRef)
             {
-                var suffix = gitRef.IsTag ? $" ({_tag.Text})" : string.Empty;
+                string suffix = gitRef.IsTag ? $" ({_tag.Text})" : string.Empty;
                 return new ItemData($"{gitRef.Name}{suffix}", gitRef);
             }
 

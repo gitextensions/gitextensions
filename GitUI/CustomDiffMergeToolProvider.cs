@@ -60,10 +60,10 @@ namespace GitUI
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-                foreach (var menu in menus)
+                foreach (CustomDiffMergeTool menu in menus)
                 {
                     menu.MenuItem.DropDown = new ContextMenuStrip(components);
-                    foreach (var tool in tools)
+                    foreach (string tool in tools)
                     {
                         ToolStripMenuItem item = new(tool) { Tag = tool };
 
@@ -108,7 +108,7 @@ namespace GitUI
 
             static void InitMenus(IList<CustomDiffMergeTool> menus)
             {
-                foreach (var menu in menus)
+                foreach (CustomDiffMergeTool menu in menus)
                 {
                     menu.MenuItem.DropDown = null;
                 }

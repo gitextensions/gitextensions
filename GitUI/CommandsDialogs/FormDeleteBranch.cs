@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            var selectedBranches = Branches.GetSelectedBranches().ToArray();
+            IGitRef[] selectedBranches = Branches.GetSelectedBranches().ToArray();
             if (!selectedBranches.Any())
             {
                 return;

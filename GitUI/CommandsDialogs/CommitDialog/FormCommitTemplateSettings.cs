@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
             else if (_commitTemplates.Length < _maxCommitTemplates)
             {
                 // Migration: keep the one configured and complete with empty ones
-                var previousCommitTemplates = _commitTemplates;
+                CommitTemplateItem[] previousCommitTemplates = _commitTemplates;
                 _commitTemplates = new CommitTemplateItem[_maxCommitTemplates];
                 for (int i = 0; i < _commitTemplates.Length; i++)
                 {

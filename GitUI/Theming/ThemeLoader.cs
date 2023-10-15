@@ -40,7 +40,7 @@ namespace GitUI.Theming
             string content = _themeFileReader.ReadThemeFile(themeFileName);
             Stylesheet stylesheet = _parser.Parse(content);
 
-            foreach (var importDirective in stylesheet.ImportRules)
+            foreach (IImportRule importDirective in stylesheet.ImportRules)
             {
                 ImportTheme(themeFileName, importDirective, allowedClasses, cssImportChain, themeColors);
             }
@@ -78,8 +78,8 @@ namespace GitUI.Theming
 
         private static void ParseRule(string themeFileName, StyleRule rule, in IReadOnlyList<string> allowedClasses, ThemeColors themeColors)
         {
-            var color = GetColor(themeFileName, rule);
-            var classNames = GetClassNames(themeFileName, rule);
+            Color color = GetColor(themeFileName, rule);
+            string[] classNames = GetClassNames(themeFileName, rule);
 
             string colorName = classNames[0];
             if (!classNames.Skip(1).All(allowedClasses.Contains))
@@ -112,7 +112,7 @@ namespace GitUI.Theming
 
         private static string[] GetClassNames(string themeFileName, StyleRule rule)
         {
-            var selectorText = rule.Selector.Text;
+            string selectorText = rule.Selector.Text;
             if (!selectorText.StartsWith(ClassSelector))
             {
                 throw StyleRuleThemeException(rule, themeFileName);
