@@ -4,7 +4,6 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
-using GitExtensions.UITests.CommandsDialogs;
 using GitUI;
 using GitUIPluginInterfaces;
 using NSubstitute;
