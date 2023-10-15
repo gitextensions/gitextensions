@@ -52,7 +52,7 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript, IRevisionGridFilter, IRevisionGridInfo, IRevisionGridUpdate
+    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRevisionGridFilter, IRevisionGridInfo, IRevisionGridUpdate
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
         public event EventHandler<FilterChangedEventArgs>? FilterChanged;
@@ -2027,7 +2027,7 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ((IRunScript)this).Execute, UICommands);
+            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, hostControl: this, UICommands);
 
             UpdateSeparators();
 
@@ -3115,13 +3115,6 @@ namespace GitUI
         #endregion
 
         bool ICheckRefs.Contains(ObjectId objectId) => _gridView.Contains(objectId);
-
-        // TODO: refactor out
-        void IRunScript.Execute(int scriptId)
-        {
-            IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
-            scriptsRunner.RunScript(scriptId, FindForm() as GitModuleForm, this);
-        }
 
         internal TestAccessor GetTestAccessor()
             => new(this);

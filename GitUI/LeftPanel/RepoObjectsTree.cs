@@ -16,7 +16,7 @@ using ResourceManager;
 
 namespace GitUI.LeftPanel
 {
-    public sealed partial class RepoObjectsTree : GitModuleControl
+    public sealed partial class RepoObjectsTree : GitModuleControl, IScriptHostControl
     {
         public const string HotkeySettingsName = "LeftPanel";
 
@@ -38,7 +38,7 @@ namespace GitUI.LeftPanel
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
         private IRevisionGridInfo _revisionGridInfo;
-        private IRunScript _scriptRunner;
+        private IScriptHostControl? _scriptHostControl;
 
         public RepoObjectsTree()
         {
@@ -221,13 +221,13 @@ namespace GitUI.LeftPanel
         }
 
         public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?> filterRevisionGridBySpaceSeparatedRefs,
-            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo, IRunScript scriptRunner)
+            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo, IScriptHostControl? scriptHostControl)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
             _refsSource = refsSource;
             _revisionGridInfo = revisionGridInfo;
-            _scriptRunner = scriptRunner;
+            _scriptHostControl = scriptHostControl;
 
             // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
             // notifications for each Tree.
@@ -645,6 +645,25 @@ namespace GitUI.LeftPanel
             // e.Node won't be the one you double clicked, but a child node instead
             Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDoubleClick());
         }
+
+        #region IScriptHostControl
+
+        GitRevision? IScriptHostControl.GetLatestSelectedRevision()
+            => _scriptHostControl.GetLatestSelectedRevision();
+
+        IReadOnlyList<GitRevision> IScriptHostControl.GetSelectedRevisions()
+            => _scriptHostControl.GetSelectedRevisions();
+
+        Point IScriptHostControl.GetQuickItemSelectorLocation()
+            => _scriptHostControl.GetQuickItemSelectorLocation();
+
+        void IScriptHostControl.Refresh()
+            => _scriptHostControl.Refresh();
+
+        void IScriptHostControl.GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection)
+            => _scriptHostControl.GoToRef(refName, showNoRevisionMsg, toggleSelection);
+
+        #endregion
 
         internal TestAccessor GetTestAccessor()
             => new(this);

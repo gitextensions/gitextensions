@@ -83,7 +83,7 @@ namespace GitExtensions.UITests.ScriptEngine
         {
             _exampleScript.Command = command;
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, scriptHostControl: null);
 
             result.Should().BeFalse();
         }
@@ -94,7 +94,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "";
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, scriptHostControl: null);
 
             result.Should().BeTrue();
         }
@@ -105,7 +105,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "--version";
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, scriptHostControl: null);
 
             result.Should().BeTrue();
         }
@@ -119,7 +119,7 @@ namespace GitExtensions.UITests.ScriptEngine
             GitRevision revision = new(ObjectId.IndexId);
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, scriptHostControl: null);
 
             result.Should().BeTrue();
         }
@@ -133,7 +133,7 @@ namespace GitExtensions.UITests.ScriptEngine
 
             _module.GetCurrentCheckout().Returns((ObjectId)null);
 
-            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, uiCommands: null, revisionGrid: null))).Should()
+            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, uiCommands: null, scriptHostControl: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -142,12 +142,12 @@ namespace GitExtensions.UITests.ScriptEngine
         }
 
         [Test]
-        public void RunScript_with_arguments_with_s_option_without_RevisionGrid_shall_display_error_and_return_false()
+        public void RunScript_with_arguments_with_s_option_without_ScriptHostControl_shall_display_error_and_return_false()
         {
             _exampleScript.Command = "cmd";
             _exampleScript.Arguments = "/c echo {sHash}";
 
-            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, revisionGrid: null))).Should()
+            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, scriptHostControl: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\n'sHash' option is only supported when invoked from the revision grid");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -202,7 +202,7 @@ namespace GitExtensions.UITests.ScriptEngine
             });
         }
 
-        private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
+        private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptHostControl? scriptHostControl)
         {
             try
             {
@@ -212,7 +212,7 @@ namespace GitExtensions.UITests.ScriptEngine
                         script,
                         owner,
                         uiCommands,
-                        revisionGrid
+                        scriptHostControl
                     });
                 return result;
             }
