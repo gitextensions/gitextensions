@@ -302,7 +302,7 @@ namespace GitUI.CommandsDialogs
             _controller = new FormBrowseController(new GitGpgController(() => Module));
             _commitDataManager = new CommitDataManager(() => Module);
 
-            _submoduleStatusProvider = SubmoduleStatusProvider.Default;
+            _submoduleStatusProvider = commands.GetRequiredService<ISubmoduleStatusProvider>();
             _submoduleStatusProvider.StatusUpdating += SubmoduleStatusProvider_StatusUpdating;
             _submoduleStatusProvider.StatusUpdated += SubmoduleStatusProvider_StatusUpdated;
 

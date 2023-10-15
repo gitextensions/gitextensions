@@ -70,10 +70,13 @@ namespace GitExtensions.UITests.CommandsDialogs
             _repo2Module = submodules.ElementAt(0);
             _repo3Module = submodules.ElementAt(1);
 
-            // Use the singleton provider, which is also used by the left panel, so we can synchronize on updates
-            _provider = SubmoduleStatusProvider.Default;
+            _provider = new SubmoduleStatusProvider();
 
-            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _repo1Module);
+            IServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
+            serviceContainer.RemoveService<ISubmoduleStatusProvider>();
+            serviceContainer.AddService(_provider);
+
+            _commands = new GitUICommands(serviceContainer, _repo1Module);
         }
 
         [TearDown]
