@@ -53,7 +53,7 @@ namespace ResourceManager
             }
 
             HotkeyCommand? hotkey = _hotkeys?.FirstOrDefault(hotkey => hotkey?.KeyData == keyData);
-            return hotkey is not null && ExecuteCommand(hotkey.CommandCode).Executed;
+            return hotkey is not null && ExecuteCommand(hotkey.CommandCode);
         }
 
         protected bool IsDesignMode => _initialiser.IsDesignMode;
@@ -109,7 +109,7 @@ namespace ResourceManager
         }
 
         /// <summary>Override this method to handle form-specific Hotkey commands.</summary>
-        protected virtual CommandStatus ExecuteCommand(int command)
+        protected virtual bool ExecuteCommand(int command)
         {
             return false;
         }

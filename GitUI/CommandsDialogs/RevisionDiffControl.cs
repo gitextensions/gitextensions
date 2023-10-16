@@ -136,12 +136,12 @@ namespace GitUI.CommandsDialogs
             OpenWorkingDirectoryFileWith = 16,
         }
 
-        public CommandStatus ExecuteCommand(Command cmd)
+        public bool ExecuteCommand(Command cmd)
         {
             return ExecuteCommand((int)cmd);
         }
 
-        protected override CommandStatus ExecuteCommand(int cmd)
+        protected override bool ExecuteCommand(int cmd)
         {
             if (DiffFiles.FilterFocused && IsTextEditKey(GetShortcutKeys(cmd)))
             {

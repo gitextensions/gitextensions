@@ -1512,7 +1512,7 @@ namespace GitUI.CommandsDialogs
             ChooseBase = 4
         }
 
-        protected override CommandStatus ExecuteCommand(int cmd)
+        protected override bool ExecuteCommand(int cmd)
         {
             Commands command = (Commands)cmd;
 

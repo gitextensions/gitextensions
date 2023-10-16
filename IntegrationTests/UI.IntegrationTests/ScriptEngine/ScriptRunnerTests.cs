@@ -83,9 +83,9 @@ namespace GitExtensions.UITests.ScriptEngine
         {
             _exampleScript.Command = command;
 
-            CommandStatus result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
-            result.Executed.Should().BeFalse();
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -94,9 +94,9 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "";
 
-            CommandStatus result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
-            result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -105,9 +105,9 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "--version";
 
-            CommandStatus result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
-            result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -119,9 +119,9 @@ namespace GitExtensions.UITests.ScriptEngine
             GitRevision revision = new(ObjectId.IndexId);
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-            CommandStatus result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
-            result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -195,25 +195,25 @@ namespace GitExtensions.UITests.ScriptEngine
                 Assert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
 
                 string errorMessage = null;
-                CommandStatus result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, formBrowse.RevisionGridControl);
+                bool result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, formBrowse.RevisionGridControl);
 
                 errorMessage.Should().BeNull();
-                result.Should().BeEquivalentTo(new CommandStatus(executed: true, needsGridRefresh: false));
+                result.Should().BeTrue();
             });
         }
 
-        private static CommandStatus ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
+        private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
         {
             try
             {
-                CommandStatus result = (CommandStatus)_miRunScript.Invoke(null,
-                                                                new object[]
-                                                                {
-                                                                    script,
-                                                                    owner,
-                                                                    uiCommands,
-                                                                    revisionGrid
-                                                                });
+                bool result = (bool)_miRunScript.Invoke(null,
+                    new object[]
+                    {
+                        script,
+                        owner,
+                        uiCommands,
+                        revisionGrid
+                    });
                 return result;
             }
             catch (TargetInvocationException ex)
