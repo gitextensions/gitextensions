@@ -821,7 +821,8 @@ namespace GitCommands
             {
                 parent,
                 $"^{child}",
-                "--count"
+                "--count",
+                "--"
             };
             ExecutionResult result = _gitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: throwOnErrorExit);
             string output = result.StandardOutput;
