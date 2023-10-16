@@ -2027,7 +2027,7 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, hostControl: this, UICommands);
+            mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, scriptHostControl: this, UICommands);
 
             UpdateSeparators();
 
@@ -3101,6 +3101,12 @@ namespace GitUI
         Point IScriptHostControl.GetQuickItemSelectorLocation()
             => GetQuickItemSelectorLocation();
 
+        void IScriptHostControl.GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection)
+            => GoToRef(refName, showNoRevisionMsg, toggleSelection);
+
+
+        GitModuleForm IScriptHostControl.GetGitModuleForm()
+            => FindForm() as GitModuleForm;
         #endregion
 
         #region IRevisionGridInfo

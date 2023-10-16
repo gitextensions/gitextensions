@@ -16,7 +16,7 @@ using ResourceManager;
 
 namespace GitUI.LeftPanel
 {
-    public sealed partial class RepoObjectsTree : GitModuleControl, IScriptHostControl
+    public sealed partial class RepoObjectsTree : GitModuleControl
     {
         public const string HotkeySettingsName = "LeftPanel";
 
@@ -645,25 +645,6 @@ namespace GitUI.LeftPanel
             // e.Node won't be the one you double clicked, but a child node instead
             Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDoubleClick());
         }
-
-        #region IScriptHostControl
-
-        GitRevision? IScriptHostControl.GetLatestSelectedRevision()
-            => _scriptHostControl.GetLatestSelectedRevision();
-
-        IReadOnlyList<GitRevision> IScriptHostControl.GetSelectedRevisions()
-            => _scriptHostControl.GetSelectedRevisions();
-
-        Point IScriptHostControl.GetQuickItemSelectorLocation()
-            => _scriptHostControl.GetQuickItemSelectorLocation();
-
-        void IScriptHostControl.Refresh()
-            => _scriptHostControl.Refresh();
-
-        void IScriptHostControl.GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection)
-            => _scriptHostControl.GoToRef(refName, showNoRevisionMsg, toggleSelection);
-
-        #endregion
 
         internal TestAccessor GetTestAccessor()
             => new(this);
