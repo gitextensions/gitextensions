@@ -125,17 +125,12 @@ namespace GitUI
         {
         }
 
-        protected override CommandStatus ExecuteCommand(int command)
+        protected override bool ExecuteCommand(int command)
         {
-            CommandStatus result = ExecuteScriptCommand();
-            if (!result.Executed)
-            {
-                result = base.ExecuteCommand(command);
-            }
+            return ExecuteScriptCommand()
+                || base.ExecuteCommand(command);
 
-            return result;
-
-            CommandStatus ExecuteScriptCommand()
+            bool ExecuteScriptCommand()
             {
                 RevisionGridControl revisionGridControl = this as RevisionGridControl;
                 if (revisionGridControl is null)

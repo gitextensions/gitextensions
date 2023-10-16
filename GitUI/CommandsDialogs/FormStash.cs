@@ -226,7 +226,7 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        protected override CommandStatus ExecuteCommand(int cmd)
+        protected override bool ExecuteCommand(int cmd)
         {
             switch ((Command)cmd)
             {

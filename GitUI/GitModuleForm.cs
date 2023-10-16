@@ -103,15 +103,10 @@ namespace GitUI
         {
         }
 
-        protected override CommandStatus ExecuteCommand(int command)
+        protected override bool ExecuteCommand(int command)
         {
-            CommandStatus result = ScriptsRunner.RunScript(command, this, RevisionGridControl);
-            if (!result.Executed)
-            {
-                result = base.ExecuteCommand(command);
-            }
-
-            return result;
+            return ScriptsRunner.RunScript(command, this, RevisionGridControl)
+                || base.ExecuteCommand(command);
         }
 
         protected virtual void OnUICommandsChanged(GitUICommandsChangedEventArgs e)

@@ -57,8 +57,8 @@ namespace GitUI.ScriptsEngine
         {
             foreach (ScriptInfo script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                CommandStatus result = ScriptRunner.RunScript(script, form, revisionGrid: null);
-                if (!result.Executed)
+                bool executed = ScriptRunner.RunScript(script, form, revisionGrid: null);
+                if (!executed)
                 {
                     return false;
                 }
@@ -67,7 +67,7 @@ namespace GitUI.ScriptsEngine
             return true;
         }
 
-        public CommandStatus RunScript<THostForm>(int scriptId, THostForm form, RevisionGridControl? revisionGrid = null)
+        public bool RunScript<THostForm>(int scriptId, THostForm form, RevisionGridControl? revisionGrid = null)
             where THostForm : IGitModuleForm, IWin32Window
         {
             ScriptInfo? scriptInfo = GetScript(scriptId);

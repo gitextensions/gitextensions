@@ -116,7 +116,7 @@ namespace ResourceManager
             }
 
             HotkeyCommand? hotkey = _hotkeys?.FirstOrDefault(hotkey => hotkey?.KeyData == keyData);
-            return hotkey is not null && ExecuteCommand(hotkey.CommandCode).Executed;
+            return hotkey is not null && ExecuteCommand(hotkey.CommandCode);
         }
 
         /// <summary>
@@ -164,10 +164,9 @@ namespace ResourceManager
 
         /// <summary>
         /// Override this method to handle form-specific Hotkey commands.
-        /// <remarks>This base method does nothing and returns a <see cref="GitCommands.CommandStatus"/>
-        /// with <see cref="GitCommands.CommandStatus.Executed"/> set to <see langword="false"/></remarks>
+        /// <remarks>This base method does nothing and returns <see langword="false"/>.</remarks>
         /// </summary>
-        protected virtual GitCommands.CommandStatus ExecuteCommand(int command)
+        protected virtual bool ExecuteCommand(int command)
         {
             return false;
         }
