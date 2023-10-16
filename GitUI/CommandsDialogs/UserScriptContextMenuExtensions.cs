@@ -15,13 +15,12 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         /// <param name="contextMenu">The context menu to add user scripts to.</param>
         /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
-        /// <param name="hostControl">UI control that provides parameters to the script, and may receive refresh and navigation events from it.</param>
-        public static void AddUserScripts<THostControl>(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, THostControl hostControl, IServiceProvider serviceProvider)
-            where THostControl : Control, IScriptHostControl
+        /// <param name="scriptHostControl">UI control that provides parameters to the script, and may receive refresh and navigation events from it.</param>
+        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, IScriptHostControl scriptHostControl, IServiceProvider serviceProvider)
         {
             ArgumentNullException.ThrowIfNull(contextMenu);
             ArgumentNullException.ThrowIfNull(hostMenuItem);
-            ArgumentNullException.ThrowIfNull(hostControl);
+            ArgumentNullException.ThrowIfNull(scriptHostControl);
 
             RemoveOwnScripts(contextMenu, hostMenuItem);
             int hostItemIndex = contextMenu.Items.IndexOf(hostMenuItem);
@@ -47,7 +46,7 @@ namespace GitUI.CommandsDialogs
                 {
                     int scriptId = script.HotkeyCommandIdentifier;
                     var scriptsRunner = serviceProvider.GetRequiredService<IScriptsRunner>();
-                    scriptsRunner.RunScript(scriptId, hostControl.FindForm() as GitModuleForm, hostControl);
+                    scriptsRunner.RunScript(scriptId, scriptHostControl.GetGitModuleForm(), scriptHostControl);
                 };
 
                 if (script.AddToRevisionGridContextMenu)

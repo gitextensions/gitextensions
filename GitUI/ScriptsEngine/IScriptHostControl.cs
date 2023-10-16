@@ -10,5 +10,7 @@ namespace GitUI.ScriptsEngine
 
         void GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection = false);
         void Refresh();
+
+        GitModuleForm GetGitModuleForm();
     }
 }
