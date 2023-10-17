@@ -131,7 +131,7 @@ namespace GitUI.LeftPanel
 
             RegisterClick(filterForSelectedRefsMenuItem, () =>
             {
-                var refPaths = GetSelectedNodes().OfType<IGitRefActions>().Select(b => b.FullPath);
+                IEnumerable<string> refPaths = GetSelectedNodes().OfType<IGitRefActions>().Select(b => b.FullPath);
                 _filterRevisionGridBySpaceSeparatedRefs(refPaths.Join(" "));
             });
 
@@ -215,7 +215,7 @@ namespace GitUI.LeftPanel
             copyContextMenuItem.Enable(hasSingleSelection && (selectedNode is BaseBranchLeafNode or StashNode) && selectedNode.Visible);
             filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any()); // enable if selection contains refs
 
-            var selectedLocalBranch = selectedNode as LocalBranchNode;
+            LocalBranchNode selectedLocalBranch = selectedNode as LocalBranchNode;
 
             foreach (ToolStripItemWithKey item in _localBranchMenuItems)
             {

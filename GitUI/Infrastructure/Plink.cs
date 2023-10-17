@@ -75,9 +75,9 @@ namespace GitUI.Infrastructure
         {
             host = GetPlinkCompatibleUrl(host);
 
-            var args = $"/k \"\"{AppSettings.Plink}\" -T {host}\"";
+            string args = $"/k \"\"{AppSettings.Plink}\" -T {host}\"";
 
-            using var process = _executable.Start(args, createWindow: true, redirectInput: false, redirectOutput: false, outputEncoding: null);
+            using GitUIPluginInterfaces.IProcess process = _executable.Start(args, createWindow: true, redirectInput: false, redirectOutput: false, outputEncoding: null);
             return await process.WaitForExitAsync() == 0;
         }
 

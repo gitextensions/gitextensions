@@ -61,14 +61,14 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             _worktrees = new List<WorkTree>();
             WorkTree? currentWorktree = null;
-            foreach (var line in lines.LazySplit('\n'))
+            foreach (string line in lines.LazySplit('\n'))
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     continue;
                 }
 
-                var strings = line.Split(' ');
+                string[] strings = line.Split(' ');
                 if (strings[0] == "worktree")
                 {
                     currentWorktree = new WorkTree { Path = Module.GetWindowsPath(line[9..]) };
@@ -108,7 +108,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Font font = Worktrees.DefaultCellStyle.Font;
             Font deletedFont = new(font.FontFamily, font.Size, font.Style | FontStyle.Strikeout);
 
-            for (var i = 0; i < Worktrees.Rows.Count; i++)
+            for (int i = 0; i < Worktrees.Rows.Count; i++)
             {
                 if (_worktrees[i].IsDeleted)
                 {
@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void buttonDeleteSelectedWorktree_Click(object sender, EventArgs e)
         {
-            if (!CanActOnSelectedWorkspace(out var workTree))
+            if (!CanActOnSelectedWorkspace(out WorkTree workTree))
             {
                 return;
             }
@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void buttonOpenSelectedWorktree_Click(object sender, EventArgs e)
         {
-            if (!CanActOnSelectedWorkspace(out var workTree))
+            if (!CanActOnSelectedWorkspace(out WorkTree workTree))
             {
                 return;
             }

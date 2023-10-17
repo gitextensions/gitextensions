@@ -89,11 +89,11 @@ namespace GitUI.CommandsDialogs
                 return null;
             }
 
-            var name = (!isSecondRevision && !string.IsNullOrWhiteSpace(item.Item.OldName)
+            string name = (!isSecondRevision && !string.IsNullOrWhiteSpace(item.Item.OldName)
                     ? item.Item.OldName
                     : item.Item.Name)
                 ?.ToPosixPath();
-            var id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
+            ObjectId id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
             if (string.IsNullOrWhiteSpace(name) || id is null)
             {
                 return null;

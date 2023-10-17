@@ -47,8 +47,8 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var buildResultPageEnabled = revision is not null && IsBuildResultPageEnabled();
-                var buildInfoIsAvailable = !string.IsNullOrEmpty(revision?.BuildStatus?.Url);
+                bool buildResultPageEnabled = revision is not null && IsBuildResultPageEnabled();
+                bool buildInfoIsAvailable = !string.IsNullOrEmpty(revision?.BuildStatus?.Url);
 
                 if (buildResultPageEnabled && buildInfoIsAvailable)
                 {
@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
 
                     SetTabPageContent(revision);
 
-                    var isFavIconMissing = _buildReportTabPage.ImageIndex < 0;
+                    bool isFavIconMissing = _buildReportTabPage.ImageIndex < 0;
 
                     if (isFavIconMissing || _tabControl.SelectedTab == _buildReportTabPage)
                     {
@@ -181,21 +181,21 @@ namespace GitUI.CommandsDialogs
 
             _buildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
 
-            var favIconUrl = DetermineFavIconUrl(_buildReportWebBrowser.Document);
+            string favIconUrl = DetermineFavIconUrl(_buildReportWebBrowser.Document);
 
             if (favIconUrl is not null)
             {
                 ThreadHelper.FileAndForget(async () =>
                     {
-                        using var imageStream = await DownloadRemoteImageFileAsync(favIconUrl);
+                        using Stream imageStream = await DownloadRemoteImageFileAsync(favIconUrl);
                         if (imageStream is not null)
                         {
                             await _tabControl.SwitchToMainThreadAsync();
 
-                            var favIconImage = Image.FromStream(imageStream)
+                            Image favIconImage = Image.FromStream(imageStream)
                                                     .GetThumbnailImage(16, 16, null, IntPtr.Zero);
-                            var imageCollection = _tabControl.ImageList.Images;
-                            var imageIndex = _buildReportTabPage.ImageIndex;
+                            ImageList.ImageCollection imageCollection = _tabControl.ImageList.Images;
+                            int imageIndex = _buildReportTabPage.ImageIndex;
 
                             if (imageIndex < 0)
                             {
@@ -221,7 +221,7 @@ namespace GitUI.CommandsDialogs
 
         private IGitModule GetModule()
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
 
             if (module is null)
             {
@@ -233,8 +233,8 @@ namespace GitUI.CommandsDialogs
 
         private static string? DetermineFavIconUrl(HtmlDocument htmlDocument)
         {
-            var links = htmlDocument.GetElementsByTagName("link");
-            var favIconLink =
+            HtmlElementCollection links = htmlDocument.GetElementsByTagName("link");
+            HtmlElement favIconLink =
                 links.Cast<HtmlElement>()
                      .SingleOrDefault(x => x.GetAttribute("rel").ToLowerInvariant() == "shortcut icon");
 
@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
                 return null;
             }
 
-            var href = favIconLink.GetAttribute("href");
+            string href = favIconLink.GetAttribute("href");
 
             if (htmlDocument.Url.PathAndQuery == "/")
             {
@@ -260,10 +260,10 @@ namespace GitUI.CommandsDialogs
         private static async Task<Stream?> DownloadRemoteImageFileAsync(string uri)
         {
 #pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
-            var request = (HttpWebRequest)WebRequest.Create(uri);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
 #pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
 
-            var response = await GetWebResponseAsync(request).ConfigureAwait(false);
+            HttpWebResponse response = await GetWebResponseAsync(request).ConfigureAwait(false);
 
             // Check that the remote file was found. The ContentType
             // check is performed since a request for a non-existent

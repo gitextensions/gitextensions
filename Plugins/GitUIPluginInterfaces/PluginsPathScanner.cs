@@ -27,7 +27,7 @@
         /// <returns>An enumeration of found dll files.</returns>
         public static IEnumerable<FileInfo> GetFiles(params string?[] pluginsPaths)
         {
-            var result = Enumerable.Empty<FileInfo>();
+            IEnumerable<FileInfo> result = Enumerable.Empty<FileInfo>();
 
             foreach (string? pluginsPath in pluginsPaths)
             {
@@ -37,7 +37,7 @@
 
                     result = Enumerable.Concat(result, directory.GetFiles("*.dll"));
 
-                    foreach (var childDirectory in directory.GetDirectories())
+                    foreach (DirectoryInfo childDirectory in directory.GetDirectories())
                     {
                         result = Enumerable.Concat(result, childDirectory.GetFiles("*.dll"));
                     }

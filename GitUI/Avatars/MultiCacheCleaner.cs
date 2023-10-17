@@ -23,7 +23,7 @@
         /// <inheritdoc/>
         public async Task ClearCacheAsync()
         {
-            foreach (var cacheCleaner in _inner)
+            foreach (IAvatarCacheCleaner cacheCleaner in _inner)
             {
                 await cacheCleaner.ClearCacheAsync();
             }

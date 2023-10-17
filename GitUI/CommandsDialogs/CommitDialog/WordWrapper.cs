@@ -5,7 +5,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
         private static IEnumerable<string> InternalWrapSingleLine(string line, int lineLimit)
         {
             WrapperState wrapper = new(lineLimit);
-            foreach (var word in line.Split())
+            foreach (string word in line.Split())
             {
                 if (!wrapper.CanAddWord(word))
                 {
@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         public static string WrapSingleLine(string text, int lineLimit)
         {
-            var lines = InternalWrapSingleLine(text, lineLimit);
+            IEnumerable<string> lines = InternalWrapSingleLine(text, lineLimit);
             return string.Join(Environment.NewLine, lines);
         }
 
@@ -50,13 +50,13 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
             public bool CanAddWord(string word)
             {
-                var newLength = _wordsLength + _wordList.Count + word.Length;
+                int newLength = _wordsLength + _wordList.Count + word.Length;
                 return (newLength < _lineLimit) || _wordList.Any() == false;
             }
 
             public string GetLineAndReset()
             {
-                var line = string.Join(" ", _wordList);
+                string line = string.Join(" ", _wordList);
                 Reset();
                 return line;
             }

@@ -338,7 +338,7 @@ namespace GitUI.CommandsDialogs
                 string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts").EnsureTrailingPathSeparator();
                 if (Directory.Exists(dir))
                 {
-                    if (_mergeScripts.TryGetValue(extension, out var mergeScript) &&
+                    if (_mergeScripts.TryGetValue(extension, out string mergeScript) &&
                         File.Exists(Path.Combine(dir!, mergeScript)))
                     {
                         if (MessageBox.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
@@ -363,7 +363,7 @@ namespace GitUI.CommandsDialogs
         private void UseMergeWithScript(string fileName, string mergeScript, string? baseFileName, string? localFileName, string? remoteFileName)
         {
             // get timestamp of file before merge. This is an extra check to verify if merge was successfully
-            var filePath = _fullPathResolver.Resolve(fileName);
+            string filePath = _fullPathResolver.Resolve(fileName);
             DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
             ArgumentBuilder args = new()
@@ -477,7 +477,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResolveItemConflict(ConflictData item)
         {
-            var itemType = GetItemType(item.Filename);
+            ItemType itemType = GetItemType(item.Filename);
             if (itemType == ItemType.Submodule)
             {
                 FormMergeSubmodule form = new(UICommands, item.Filename);
@@ -494,7 +494,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResolveFilesConflict(ConflictData item)
         {
-            var (baseFile, localFile, remoteFile) = Module.CheckoutConflictedFiles(item);
+            (string baseFile, string localFile, string remoteFile) = Module.CheckoutConflictedFiles(item);
 
             try
             {
@@ -536,7 +536,7 @@ namespace GitUI.CommandsDialogs
                     // quotes also. For other tools a little bit more magic is needed.
                     if (item.Base.Filename is null)
                     {
-                        var text = string.Format(_noBaseRevision.Text, item.Filename);
+                        string text = string.Format(_noBaseRevision.Text, item.Filename);
                         DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.Yes)
@@ -556,7 +556,7 @@ namespace GitUI.CommandsDialogs
                     arguments = arguments.Replace("$MERGED", item.Filename);
 
                     // get timestamp of file before merge. This is an extra check to verify if merge was successful
-                    var filePath = _fullPathResolver.Resolve(item.Filename);
+                    string filePath = _fullPathResolver.Resolve(item.Filename);
                     DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
                     GitUIPluginInterfaces.ExecutionResult res;
@@ -566,7 +566,7 @@ namespace GitUI.CommandsDialogs
                     }
                     catch (Exception)
                     {
-                        var text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
+                        string text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
                         MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
@@ -763,7 +763,7 @@ namespace GitUI.CommandsDialogs
         private void SetAvailableCommands(bool enabled)
         {
             // Disable extra GE processing if path or cmd is not set
-            var mergeToolExtrasConfigured = !string.IsNullOrWhiteSpace(_mergetoolPath) || !string.IsNullOrWhiteSpace(_mergetoolCmd);
+            bool mergeToolExtrasConfigured = !string.IsNullOrWhiteSpace(_mergetoolPath) || !string.IsNullOrWhiteSpace(_mergetoolCmd);
             OpenMergetool.Enabled = enabled && mergeToolExtrasConfigured;
             customMergetool.Enabled = enabled;
             openMergeToolBtn.Enabled = enabled && mergeToolExtrasConfigured;
@@ -783,7 +783,7 @@ namespace GitUI.CommandsDialogs
         {
             SetAvailableCommands(true);
 
-            var item = GetConflict();
+            ConflictData item = GetConflict();
 
             bool baseFileExists = !string.IsNullOrEmpty(item.Base.Filename);
             bool localFileExists = !string.IsNullOrEmpty(item.Local.Filename);
@@ -805,7 +805,7 @@ namespace GitUI.CommandsDialogs
             localFileName.Text = localFileExists ? item.Local.Filename : _deleted.Text;
             remoteFileName.Text = remoteFileExists ? item.Remote.Filename : _deleted.Text;
 
-            var itemType = GetItemType(item.Filename);
+            ItemType itemType = GetItemType(item.Filename);
             if (itemType == ItemType.Submodule)
             {
                 baseFileName.Text = baseFileName.Text + GetShortHash(item.Base);
@@ -818,10 +818,10 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var conflictItems = GetConflicts();
+                IReadOnlyList<ConflictData> conflictItems = GetConflicts();
 
                 StartProgressBarWithMaxValue(conflictItems.Count);
-                foreach (var conflictItem in conflictItems)
+                foreach (ConflictData conflictItem in conflictItems)
                 {
                     if (CheckForBaseRevision(conflictItem))
                     {
@@ -848,9 +848,9 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var conflictItems = GetConflicts();
+                IReadOnlyList<ConflictData> conflictItems = GetConflicts();
                 StartProgressBarWithMaxValue(conflictItems.Count);
-                foreach (var conflictItem in conflictItems)
+                foreach (ConflictData conflictItem in conflictItems)
                 {
                     if (CheckForLocalRevision(conflictItem))
                     {
@@ -877,9 +877,9 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var conflictItems = GetConflicts();
+                IReadOnlyList<ConflictData> conflictItems = GetConflicts();
                 StartProgressBarWithMaxValue(conflictItems.Count);
-                foreach (var conflictItem in conflictItems)
+                foreach (ConflictData conflictItem in conflictItems)
                 {
                     if (CheckForRemoteRevision(conflictItem))
                     {
@@ -1186,7 +1186,7 @@ namespace GitUI.CommandsDialogs
             {
                 try
                 {
-                    var items = GetConflicts();
+                    IReadOnlyList<ConflictData> items = GetConflicts();
                     _conflictItemsCount = items.Count;
 
                     List<ConflictData> filesDeletedLocallyAndModifiedRemotely = new();
@@ -1194,7 +1194,7 @@ namespace GitUI.CommandsDialogs
                     List<ConflictData> filesRemaining = new();
 
                     // Insert(0, conflictData) is needed the task dialog shows the same order of files as selected in the grid
-                    foreach (var conflictData in items)
+                    foreach (ConflictData conflictData in items)
                     {
                         if (string.IsNullOrEmpty(conflictData.Local.Filename) && !string.IsNullOrEmpty(conflictData.Remote.Filename))
                         {
@@ -1219,14 +1219,14 @@ namespace GitUI.CommandsDialogs
                     StartProgressBarWithMaxValue(_conflictItemsCount);
 
                     _solveMergeConflictApplyToAll = false;
-                    foreach (var conflictData in filesDeletedLocallyAndModifiedRemotely)
+                    foreach (ConflictData conflictData in filesDeletedLocallyAndModifiedRemotely)
                     {
                         IncrementProgressBarValue();
                         ResolveItemConflict(conflictData);
                     }
 
                     _solveMergeConflictApplyToAll = false;
-                    foreach (var conflictData in filesModifiedLocallyAndDeletedRemotely)
+                    foreach (ConflictData conflictData in filesModifiedLocallyAndDeletedRemotely)
                     {
                         IncrementProgressBarValue();
                         ResolveItemConflict(conflictData);
@@ -1234,7 +1234,7 @@ namespace GitUI.CommandsDialogs
 
                     _solveMergeConflictDialogCheckboxText = string.Empty; // Hide checkbox "apply to all"
                     _solveMergeConflictApplyToAll = false;
-                    foreach (var conflictData in filesRemaining)
+                    foreach (ConflictData conflictData in filesRemaining)
                     {
                         IncrementProgressBarValue();
                         ResolveItemConflict(conflictData);
@@ -1256,7 +1256,7 @@ namespace GitUI.CommandsDialogs
 
         private void customMergetool_Click(object sender, EventArgs e)
         {
-            var item = sender as ToolStripMenuItem;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item?.DropDownItems != null)
             {
                 // "main menu" clicked, cancel dropdown manually, invoke default mergetool
@@ -1266,9 +1266,9 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                var customTool = item?.Tag as string;
+                string customTool = item?.Tag as string;
 
-                foreach (var conflict in GetConflicts())
+                foreach (ConflictData conflict in GetConflicts())
                 {
                     Directory.SetCurrentDirectory(Module.WorkingDir);
                     Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool);
@@ -1291,7 +1291,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var conflictData = GetConflict();
+                ConflictData conflictData = GetConflict();
                 string fileName = conflictData.Filename;
                 fileName = PathUtil.GetFileName(fileName);
 
@@ -1336,9 +1336,9 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var conflictData = GetConflict();
+                ConflictData conflictData = GetConflict();
                 string fileName = PathUtil.GetFileName(conflictData.Filename);
-                var initialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename));
+                string initialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename));
 
                 using SaveFileDialog fileDialog = new()
                 {
@@ -1346,7 +1346,7 @@ namespace GitUI.CommandsDialogs
                     InitialDirectory = initialDirectory,
                     AddExtension = true
                 };
-                var ext = Path.GetExtension(fileDialog.FileName);
+                string ext = Path.GetExtension(fileDialog.FileName);
                 fileDialog.DefaultExt = ext;
                 fileDialog.Filter = string.Format(_currentFormatFilter.Text, ext) + "|*." + ext + "|" + _allFilesFilter.Text + "|*.*";
 
@@ -1411,7 +1411,7 @@ namespace GitUI.CommandsDialogs
 
         private void DisableInvalidEntriesInConflictedFilesContextMenu(string fileName)
         {
-            var conflictedFileNames = ThreadHelper.JoinableTaskFactory.Run(() =>
+            ConflictData conflictedFileNames = ThreadHelper.JoinableTaskFactory.Run(() =>
                 Module.GetConflictAsync(fileName));
             if (string.IsNullOrEmpty(conflictedFileNames.Local.Filename))
             {
@@ -1514,7 +1514,7 @@ namespace GitUI.CommandsDialogs
 
         protected override CommandStatus ExecuteCommand(int cmd)
         {
-            var command = (Commands)cmd;
+            Commands command = (Commands)cmd;
 
             switch (command)
             {

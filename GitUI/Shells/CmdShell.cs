@@ -11,7 +11,7 @@ namespace GitUI.Shells
             Icon = Images.cmd;
 
             ExecutableName = "cmd.exe";
-            if (PathUtil.TryFindShellPath(ExecutableName, out var exePath))
+            if (PathUtil.TryFindShellPath(ExecutableName, out string? exePath))
             {
                 ExecutablePath = exePath;
                 ExecutableCommandLine = exePath.Quote();

@@ -60,7 +60,7 @@
 
             public override void SaveSetting(ISettingsSource settings, ComboBox control)
             {
-                var controlValue = control.SelectedItem?.ToString();
+                string controlValue = control.SelectedItem?.ToString();
                 if (settings.SettingLevel == SettingLevel.Effective)
                 {
                     if (Setting.ValueOrDefault(settings) == controlValue)

@@ -21,7 +21,7 @@
         {
             lock (_sizeCache)
             {
-                if (_sizeCache.TryGetValue(imageSize, out var image))
+                if (_sizeCache.TryGetValue(imageSize, out Image image))
                 {
                     return image;
                 }

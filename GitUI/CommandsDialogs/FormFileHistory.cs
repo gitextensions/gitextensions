@@ -82,7 +82,7 @@ namespace GitUI.CommandsDialogs
 
             Diff.ExtraDiffArgumentsChanged += (sender, e) => UpdateSelectedFileViewers();
 
-            var isSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(FileName));
+            bool isSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(FileName));
 
             if (isSubmodule)
             {
@@ -236,7 +236,7 @@ namespace GitUI.CommandsDialogs
 
         private void SetTitle(string? alternativeFileName = null)
         {
-            var str = new StringBuilder()
+            StringBuilder str = new StringBuilder()
                 .Append("File History - ")
                 .Append(FileName);
 
@@ -252,7 +252,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateSelectedFileViewers(bool force = false)
         {
-            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
 
             if (selectedRevisions.Count == 0)
             {
@@ -260,7 +260,7 @@ namespace GitUI.CommandsDialogs
             }
 
             GitRevision revision = selectedRevisions[0];
-            var children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
+            IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             string fileName = GetFileNameForRevision(revision) ?? FileName;
 
             SetTitle(fileName);
@@ -379,7 +379,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object sender)
         {
-            var item = sender as ToolStripMenuItem;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
             if (item?.DropDownItems != null)
             {
                 // "main menu" clicked, cancel dropdown manually, invoke default mergetool
@@ -387,9 +387,9 @@ namespace GitUI.CommandsDialogs
                 item.Owner.Hide();
             }
 
-            var toolName = item?.Tag as string;
-            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            var orgFileName = selectedRevisions.Count != 0
+            string toolName = item?.Tag as string;
+            IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            string orgFileName = selectedRevisions.Count != 0
                 ? GetFileNameForRevision(selectedRevisions[0])
                 : null;
 
@@ -479,7 +479,7 @@ namespace GitUI.CommandsDialogs
 
         private void cherryPickThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
                 UICommands.StartCherryPickDialog(this, selectedRevisions[0]);
@@ -488,7 +488,7 @@ namespace GitUI.CommandsDialogs
 
         private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
                 UICommands.StartRevertCommitDialog(this, selectedRevisions[0]);
@@ -497,7 +497,7 @@ namespace GitUI.CommandsDialogs
 
         private void FileHistoryContextMenuOpening(object sender, CancelEventArgs e)
         {
-            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
 
             diffToolRemoteLocalStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId != ObjectId.WorkTreeId &&
@@ -538,7 +538,7 @@ namespace GitUI.CommandsDialogs
             if (e.Command == "gotocommit")
             {
                 Validates.NotNull(e.Data);
-                if (Module.TryResolvePartialCommitId(e.Data, out var objectId))
+                if (Module.TryResolvePartialCommitId(e.Data, out ObjectId? objectId))
                 {
                     if (!RevisionGrid.SetSelectedRevision(objectId))
                     {

@@ -51,7 +51,7 @@ namespace GitUI
 
                     BinarySearch.Find(min: 0, count: maxStep + 1, step =>
                     {
-                        var (tmpPrefix, tmpText, tmpSuffix) = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
+                        (string tmpPrefix, string tmpText, string tmpSuffix) = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
                         int measuredWidth = MeasureString(tmpPrefix, tmpText, tmpSuffix).Width;
                         bool isShortEnough = measuredWidth <= maxWidth;
 
@@ -73,8 +73,8 @@ namespace GitUI
         public static (string text, string? suffix) FormatTextForFileNameOnly(string name, string? oldName)
         {
             name = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
-            var fileName = Path.GetFileName(name);
-            var oldFileName = Path.GetFileName(oldName);
+            string fileName = Path.GetFileName(name);
+            string oldFileName = Path.GetFileName(oldName);
             string? suffix = fileName == oldFileName ? null : FormatOldName(oldFileName);
             return (fileName, suffix);
         }
@@ -87,7 +87,7 @@ namespace GitUI
 
         public Size MeasureString(string? str, bool withPadding = false)
         {
-            var formatFlags = FilePathStringFormat;
+            TextFormatFlags formatFlags = FilePathStringFormat;
             if (!withPadding)
             {
                 formatFlags |= TextFormatFlags.NoPadding;
@@ -112,12 +112,12 @@ namespace GitUI
                 int nameTruncatedChars = isNameTruncated ? step - numberOfTruncatedChars : numberOfTruncatedChars;
                 int oldNameTruncatedChars = step - nameTruncatedChars;
 
-                var (path, filename) = SplitPathName(TruncatePath(name, name.Length - oldNameTruncatedChars));
+                (string path, string filename) = SplitPathName(TruncatePath(name, name.Length - oldNameTruncatedChars));
                 string? suffix = FormatOldName(TruncatePath(oldName, oldName.Length - oldNameTruncatedChars));
                 return (path, filename, suffix);
             }
 
-            var (prefix, text) = SplitPathName(TruncatePath(name, name.Length - step));
+            (string prefix, string text) = SplitPathName(TruncatePath(name, name.Length - step));
             return (prefix, text, null);
 
             static string TruncatePath(string path, int length)
@@ -133,7 +133,7 @@ namespace GitUI
                 }
 
                 // The win32 method PathCompactPathEx is only supported on Windows
-                var truncatePathMethod = AppSettings.TruncatePathMethod;
+                TruncatePathMethod truncatePathMethod = AppSettings.TruncatePathMethod;
 
                 if (truncatePathMethod == TruncatePathMethod.Compact && EnvUtils.RunningOnWindows())
                 {

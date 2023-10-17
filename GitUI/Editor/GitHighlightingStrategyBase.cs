@@ -80,9 +80,9 @@ namespace GitUI.Editor
 
         protected bool IsComment(IDocument document, LineSegment line)
         {
-            for (var i = 0; i < line.Length; i++)
+            for (int i = 0; i < line.Length; i++)
             {
-                var c = document.GetCharAt(line.Offset + i);
+                char c = document.GetCharAt(line.Offset + i);
 
                 if (char.IsWhiteSpace(c))
                 {
@@ -97,9 +97,9 @@ namespace GitUI.Editor
 
         protected static bool IsEmptyOrWhiteSpace(IDocument document, LineSegment line)
         {
-            for (var i = 0; i < line.Length; i++)
+            for (int i = 0; i < line.Length; i++)
             {
-                var c = document.GetCharAt(line.Offset + i);
+                char c = document.GetCharAt(line.Offset + i);
 
                 if (!char.IsWhiteSpace(c))
                 {

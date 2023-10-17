@@ -26,9 +26,9 @@ namespace GitUI.Avatars
         {
             UriTemplateData templateData = new(email, name, imageSize);
 
-            foreach (var provider in _subProvider)
+            foreach (IAvatarProvider provider in _subProvider)
             {
-                var avatar = provider switch
+                Image avatar = provider switch
                 {
                     UriTemplateResolver r => await _downloader.DownloadImageAsync(r.ResolveTemplate(templateData)),
                     _ => await provider.GetAvatarAsync(email, name, imageSize),
@@ -56,7 +56,7 @@ namespace GitUI.Avatars
                 throw new ArgumentNullException(nameof(downloader));
             }
 
-            var providerParts = customProviderTemplates
+            IAvatarProvider[] providerParts = customProviderTemplates
                 .LazySplit(';')
                 .Select(p => p.Trim())
                 .Select(p => FromTemplateSegment(downloader, p))
@@ -79,9 +79,9 @@ namespace GitUI.Avatars
             // and try to parse it as an AvatarProvider enum.
             if (providerTemplate.StartsWith("<") && providerTemplate.EndsWith(">"))
             {
-                var providerName = providerTemplate[1..^1];
+                string providerName = providerTemplate[1..^1];
 
-                if (Enum.TryParse<AvatarProvider>(providerName, true, out var provider)
+                if (Enum.TryParse<AvatarProvider>(providerName, true, out AvatarProvider provider)
                     && provider != AvatarProvider.Custom)
                 {
                     return AvatarService.CreateAvatarProvider(provider, null, downloader);

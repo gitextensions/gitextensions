@@ -20,7 +20,7 @@ namespace GitUI.Theming
 
         public IntPtr GetBrush(int colorref)
         {
-            if (!_cache.TryGetValue(colorref, out var handle))
+            if (!_cache.TryGetValue(colorref, out HandleRef handle))
             {
                 IntPtr hbrush = CreateSolidBrush(colorref);
                 handle = new HandleRef(this, hbrush);

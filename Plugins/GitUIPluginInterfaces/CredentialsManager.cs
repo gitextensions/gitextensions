@@ -27,7 +27,7 @@ namespace GitUIPluginInterfaces
 
         public void Save()
         {
-            var credentials = Credentials.ToList();
+            List<KeyValuePair<string, NetworkCredential>> credentials = Credentials.ToList();
             if (credentials.Count < 1)
             {
                 return;
@@ -35,7 +35,7 @@ namespace GitUIPluginInterfaces
 
             Credentials.Clear();
 
-            foreach (var networkCredentials in credentials)
+            foreach (KeyValuePair<string, NetworkCredential> networkCredentials in credentials)
             {
                 if (networkCredentials.Value is null)
                 {
@@ -50,13 +50,13 @@ namespace GitUIPluginInterfaces
 
         protected NetworkCredential GetCredentialOrDefault(SettingLevel settingLevel, string name, NetworkCredential defaultValue)
         {
-            var targetName = GetWindowsCredentialsTarget(name, settingLevel);
+            string targetName = GetWindowsCredentialsTarget(name, settingLevel);
             if (string.IsNullOrWhiteSpace(targetName))
             {
                 return defaultValue;
             }
 
-            if (Credentials.TryGetValue(targetName, out var result) || AdysTechCredentialManagerWrapper.TryGetCredentials(targetName, out result))
+            if (Credentials.TryGetValue(targetName, out NetworkCredential? result) || AdysTechCredentialManagerWrapper.TryGetCredentials(targetName, out result))
             {
                 return result ?? defaultValue;
             }
@@ -66,7 +66,7 @@ namespace GitUIPluginInterfaces
 
         protected void SetCredentials(SettingLevel settingLevel, string name, NetworkCredential? value)
         {
-            var targetName = GetWindowsCredentialsTarget(name, settingLevel);
+            string targetName = GetWindowsCredentialsTarget(name, settingLevel);
             Validates.NotNull(targetName);
             Credentials.AddOrUpdate(targetName, value, (s, credential) => value);
         }
@@ -79,7 +79,7 @@ namespace GitUIPluginInterfaces
             }
 
             Validates.NotNull(_getWorkingDir);
-            var suffix = _getWorkingDir();
+            string suffix = _getWorkingDir();
             return string.IsNullOrWhiteSpace(suffix) ? null : $"{name}_{suffix}";
         }
 

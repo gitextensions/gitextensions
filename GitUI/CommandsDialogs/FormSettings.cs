@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                foreach (var settingsPage in SettingsPages)
+                foreach (ISettingsPage settingsPage in SettingsPages)
                 {
                     settingsPage.LoadSettings();
                 }
@@ -110,14 +110,14 @@ namespace GitUI.CommandsDialogs
 
             // Git Extensions settings
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null, Images.GitExtensionsLogo16);
-            var gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
+            SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
             settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef, icon: null, asRoot: true);
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GeneralSettingsPage>(this, serviceProvider), gitExtPageRef, Images.GeneralSettings);
 
             // >> Appearance
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Appearance);
-            var appearanceSettingsPage = AppearanceSettingsPage.GetPageReference();
+            SettingsPageReference appearanceSettingsPage = AppearanceSettingsPage.GetPageReference();
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<SortingSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.SortBy);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Colors);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Font.AdaptLightness());
@@ -140,19 +140,19 @@ namespace GitUI.CommandsDialogs
 
             // >> Detailed
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DetailedSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Settings);
-            var detailedSettingsPage = DetailedSettingsPage.GetPageReference();
+            SettingsPageReference detailedSettingsPage = DetailedSettingsPage.GetPageReference();
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.BranchFolder);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<CommitDialogSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.CommitSummary);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DiffViewerSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.Diff);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<BlameViewerSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.Blame);
 
-            var sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this, serviceProvider);
+            SshSettingsPage sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this, serviceProvider);
             settingsTreeView.AddSettingsPage(sshSettingsPage, gitExtPageRef, Images.Key);
             checklistSettingsPage.SshSettingsPage = sshSettingsPage;
 
             // Git settings
             settingsTreeView.AddSettingsPage(new GitSettingsGroup(), null, Images.GitLogo16);
-            var gitPageRef = GitSettingsGroup.GetPageReference();
+            SettingsPageReference gitPageRef = GitSettingsGroup.GetPageReference();
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this, serviceProvider), gitPageRef, Images.FolderOpen);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigSettingsPage>(this, serviceProvider), gitPageRef, Images.GeneralSettings);
@@ -166,14 +166,14 @@ namespace GitUI.CommandsDialogs
 
             lock (PluginRegistry.Plugins)
             {
-                var pluginEntries = PluginRegistry.Plugins
+                IOrderedEnumerable<(GitUIPluginInterfaces.IGitPlugin plugin, PluginSettingsPage page)> pluginEntries = PluginRegistry.Plugins
                     .Where(p => p.HasSettings)
                     .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin, UICommands)))
                     .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
 
-                foreach (var entry in pluginEntries)
+                foreach ((GitUIPluginInterfaces.IGitPlugin plugin, PluginSettingsPage page) entry in pluginEntries)
                 {
-                    settingsTreeView.AddSettingsPage(entry.Page, pluginsPageRef, entry.Plugin.Icon as Bitmap);
+                    settingsTreeView.AddSettingsPage(entry.page, pluginsPageRef, entry.plugin.Icon as Bitmap);
                 }
             }
 
@@ -184,7 +184,7 @@ namespace GitUI.CommandsDialogs
         {
             panelCurrentSettingsPage.Controls.Clear();
 
-            var settingsPage = e.SettingsPage;
+            ISettingsPage settingsPage = e.SettingsPage;
 
             _lastSelectedSettingsPageType = settingsPage.GetType();
 
@@ -227,7 +227,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                foreach (var settingsPage in SettingsPages)
+                foreach (ISettingsPage settingsPage in SettingsPages)
                 {
                     settingsPage.SaveSettings();
                 }

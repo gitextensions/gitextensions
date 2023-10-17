@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
 
         private void AddToIgnoreClick(object sender, EventArgs e)
         {
-            var patterns = GetCurrentPatterns().ToArray();
+            string[] patterns = GetCurrentPatterns().ToArray();
             if (patterns.Length == 0)
             {
                 Close();
@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var fileName = ExcludeFile;
+                string fileName = ExcludeFile;
                 Validates.NotNull(fileName);
                 FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
                 {
@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs
                         gitIgnoreFileAddition.Append(Environment.NewLine);
                     }
 
-                    foreach (var pattern in patterns)
+                    foreach (string pattern in patterns)
                     {
                         gitIgnoreFileAddition.Append(pattern);
                         gitIgnoreFileAddition.Append(Environment.NewLine);

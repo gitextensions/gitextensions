@@ -49,18 +49,18 @@ namespace GitUI.Editor.Diff
 
         public override void Paint(Graphics g, Rectangle rect)
         {
-            var numbersWidth = Width - TextHorizontalMargin;
-            var leftWidth = TextHorizontalMargin + (numbersWidth / 2);
-            var rightWidth = rect.Width - leftWidth;
+            int numbersWidth = Width - TextHorizontalMargin;
+            int leftWidth = TextHorizontalMargin + (numbersWidth / 2);
+            int rightWidth = rect.Width - leftWidth;
 
-            var fontHeight = textArea.TextView.FontHeight;
-            var lineNumberPainterColor = textArea.Document.HighlightingStrategy.GetColorFor("LineNumbers");
-            var fillBrush = textArea.Enabled ? BrushRegistry.GetBrush(lineNumberPainterColor.BackgroundColor) : SystemBrushes.InactiveBorder;
-            var drawBrush = BrushRegistry.GetBrush(lineNumberPainterColor.Color);
+            int fontHeight = textArea.TextView.FontHeight;
+            ICSharpCode.TextEditor.Document.HighlightColor lineNumberPainterColor = textArea.Document.HighlightingStrategy.GetColorFor("LineNumbers");
+            Brush fillBrush = textArea.Enabled ? BrushRegistry.GetBrush(lineNumberPainterColor.BackgroundColor) : SystemBrushes.InactiveBorder;
+            Brush drawBrush = BrushRegistry.GetBrush(lineNumberPainterColor.Color);
 
-            for (var y = 0; y < ((DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / fontHeight) + 1; ++y)
+            for (int y = 0; y < ((DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / fontHeight) + 1; ++y)
             {
-                var ypos = drawingPosition.Y + (fontHeight * y) - textArea.TextView.VisibleLineDrawingRemainder;
+                int ypos = drawingPosition.Y + (fontHeight * y) - textArea.TextView.VisibleLineDrawingRemainder;
                 Rectangle backgroundRectangle = new(drawingPosition.X, ypos, drawingPosition.Width, fontHeight);
                 if (!rect.IntersectsWith(backgroundRectangle))
                 {
@@ -68,7 +68,7 @@ namespace GitUI.Editor.Diff
                 }
 
                 g.FillRectangle(fillBrush, backgroundRectangle);
-                var curLine = textArea.Document.GetFirstLogicalLine(textArea.Document.GetVisibleLine(textArea.TextView.FirstVisibleLine) + y);
+                int curLine = textArea.Document.GetFirstLogicalLine(textArea.Document.GetVisibleLine(textArea.TextView.FirstVisibleLine) + y);
 
                 if (curLine >= textArea.Document.TotalNumberOfLines)
                 {
@@ -80,7 +80,7 @@ namespace GitUI.Editor.Diff
                     continue;
                 }
 
-                var diffLine = _diffLines[curLine + 1];
+                DiffLineInfo diffLine = _diffLines[curLine + 1];
                 if (diffLine.LineType != DiffLineType.Context)
                 {
                     using Brush brush = diffLine.LineType switch

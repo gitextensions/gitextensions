@@ -17,9 +17,9 @@ namespace GitUI.UserControls
                 return false;
             }
 
-            var revision = selectedRevisions.FirstOrDefault();
+            GitRevision revision = selectedRevisions.FirstOrDefault();
 
-            var changed = !string.Equals(revision?.AuthorEmail, AuthorEmailToHighlight, StringComparison.OrdinalIgnoreCase);
+            bool changed = !string.Equals(revision?.AuthorEmail, AuthorEmailToHighlight, StringComparison.OrdinalIgnoreCase);
             if (changed)
             {
                 AuthorEmailToHighlight = revision is not null

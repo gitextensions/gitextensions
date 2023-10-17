@@ -50,7 +50,7 @@ namespace GitUI
 
         public void OnKeyPress(KeyPressEventArgs e)
         {
-            var curIndex = _gridView.SelectedRows.Count > 0
+            int curIndex = _gridView.SelectedRows.Count > 0
                 ? _gridView.SelectedRows[0].Index
                 : -1;
 
@@ -92,7 +92,7 @@ namespace GitUI
 
         public void NextResult(bool down)
         {
-            var curIndex = -1;
+            int curIndex = -1;
             if (_gridView.SelectedRows.Count > 0)
             {
                 curIndex = _gridView.SelectedRows[0].Index;
@@ -101,7 +101,7 @@ namespace GitUI
             RestartQuickSearchTimer();
 
             bool reverse = !down;
-            var nextIndex = 0;
+            int nextIndex = 0;
             if (curIndex >= 0)
             {
                 nextIndex = reverse ? curIndex - 1 : curIndex + 1;
@@ -139,7 +139,7 @@ namespace GitUI
                 return;
             }
 
-            var matchIndex = reverse
+            int? matchIndex = reverse
                 ? SearchBackwards()
                 : SearchForward();
 

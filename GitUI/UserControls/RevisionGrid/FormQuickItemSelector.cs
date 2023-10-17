@@ -31,19 +31,19 @@
             }
 
             // constrain the listbox min width, otherwise the button may not have enough space
-            var longestItemWidth = 150f;
+            float longestItemWidth = 150f;
             try
             {
                 lbxRefs.BeginUpdate();
 
                 using Graphics graphics = lbxRefs.CreateGraphics();
-                foreach (var item in items)
+                foreach (ItemData item in items)
                 {
                     lbxRefs.Items.Add(item);
 
                     // assume that the branch names or tags are never longer than MaxRefLength symbols long
                     // if they are (sanity!) - don't resize past beyond certain limit
-                    var label = item.Label.Length > MaxRefLength ? item.Label[..MaxRefLength] : item.Label;
+                    string label = item.Label.Length > MaxRefLength ? item.Label[..MaxRefLength] : item.Label;
                     longestItemWidth = Math.Max(longestItemWidth, graphics.MeasureString(label, lbxRefs.Font).Width);
                 }
             }

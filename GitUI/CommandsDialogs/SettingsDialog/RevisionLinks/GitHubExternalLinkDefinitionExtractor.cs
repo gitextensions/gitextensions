@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
             organizationName ??= "ORGANIZATION_NAME";
             repoName ??= "REPO_NAME";
 
-            var gitHubUrl = $"https://github.com/{organizationName}/{repoName}";
+            string gitHubUrl = $"https://github.com/{organizationName}/{repoName}";
             ExternalLinkDefinition definition = new()
             {
                 Name = string.Format(CodeLink.Text, ServiceName),

@@ -11,7 +11,7 @@ namespace GitUI
         public static bool AskForKey(IWin32Window parent, [NotNullWhen(returnValue: true)] out string? keyPath)
         {
             using FormPuttyError form = new();
-            var result = form.ShowDialog(parent);
+            DialogResult result = form.ShowDialog(parent);
             keyPath = form.KeyPath;
             return result == DialogResult.Retry;
         }
@@ -26,7 +26,7 @@ namespace GitUI
 
         private void LoadSSHKey_Click(object sender, EventArgs e)
         {
-            var pathLoaded = BrowseForPrivateKey.BrowseAndLoad(this);
+            string pathLoaded = BrowseForPrivateKey.BrowseAndLoad(this);
             if (!string.IsNullOrEmpty(pathLoaded))
             {
                 KeyPath = pathLoaded;

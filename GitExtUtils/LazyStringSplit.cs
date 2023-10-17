@@ -133,13 +133,13 @@ namespace GitExtUtils
 
         public static string? FirstOrDefault(this LazyStringSplit split)
         {
-            using var enumerator = split.GetEnumerator();
+            using LazyStringSplit.Enumerator enumerator = split.GetEnumerator();
             return enumerator.MoveNext() ? enumerator.Current : null;
         }
 
         public static string? LastOrDefault(this LazyStringSplit split)
         {
-            using var enumerator = split.GetEnumerator();
+            using LazyStringSplit.Enumerator enumerator = split.GetEnumerator();
 
             if (!enumerator.MoveNext())
             {

@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void LoadEncoding()
         {
-            var includedEncoding = AppSettings.AvailableEncodings;
+            Dictionary<string, Encoding> includedEncoding = AppSettings.AvailableEncodings;
             ListIncludedEncodings.BeginUpdate();
             try
             {
@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (ListIncludedEncodings.SelectedItem is not null)
             {
-                var index = ListIncludedEncodings.SelectedIndex;
+                int index = ListIncludedEncodings.SelectedIndex;
                 ListAvailableEncodings.Items.Add(ListIncludedEncodings.SelectedItem);
                 ListIncludedEncodings.Items.RemoveAt(index);
             }
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private void ListIncludedEncodings_SelectedValueChanged(object sender, EventArgs e)
         {
             // Get selected encoding
-            var encoding = ListIncludedEncodings.SelectedItem as Encoding;
+            Encoding encoding = ListIncludedEncodings.SelectedItem as Encoding;
             Type? encodingType = null;
 
             // Get type if exists

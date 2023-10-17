@@ -81,8 +81,8 @@ namespace GitUI.SpellChecker
             DrawLines(IllFormedLines, DrawType.Mark);
 
             // Mark first line if it is blank
-            var lh = LineHeight();
-            var ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
+            int lh = LineHeight();
+            int ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
             if (_richTextBox.Text.Length > 1 &&
 
                 // check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
@@ -102,10 +102,10 @@ namespace GitUI.SpellChecker
 
         private void DrawLines(IEnumerable<TextPos> list, DrawType type)
         {
-            foreach (var textPos in list)
+            foreach (TextPos textPos in list)
             {
-                var start = _richTextBox.GetPositionFromCharIndex(textPos.Start);
-                var end = _richTextBox.GetPositionFromCharIndex(textPos.End);
+                Point start = _richTextBox.GetPositionFromCharIndex(textPos.Start);
+                Point end = _richTextBox.GetPositionFromCharIndex(textPos.End);
 
                 // The position above now points to the top left corner of the character.
                 // We need to account for the character height so the underlines go
@@ -152,18 +152,18 @@ namespace GitUI.SpellChecker
         private void DrawWave(Point start, Point end)
         {
             using Pen pen = new(Color.Red, DpiUtil.ScaleX);
-            var waveWidth = DpiUtil.Scale(4);
-            var waveHalfWidth = waveWidth >> 1;
+            int waveWidth = DpiUtil.Scale(4);
+            int waveHalfWidth = waveWidth >> 1;
             if ((end.X - start.X) > waveWidth)
             {
                 List<Point> pl = new();
-                for (var i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
+                for (int i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
                 {
                     pl.Add(new Point(i, start.Y));
                     pl.Add(new Point(i + waveHalfWidth, start.Y + waveHalfWidth));
                 }
 
-                var p = pl.ToArray();
+                Point[] p = pl.ToArray();
                 _bufferGraphics!.DrawLines(pen, p);
             }
             else
@@ -174,8 +174,8 @@ namespace GitUI.SpellChecker
 
         private void DrawMark(Point start, Point end)
         {
-            var col = Color.FromArgb(120, 255, 255, 0);
-            var lineHeight = LineHeight();
+            Color col = Color.FromArgb(120, 255, 255, 0);
+            int lineHeight = LineHeight();
             using Pen pen = new(col, lineHeight);
             start.Offset(0, -lineHeight / 2);
             end.Offset(0, -lineHeight / 2);

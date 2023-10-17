@@ -65,9 +65,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             stack.Push(this);
             while (stack.Count > 0)
             {
-                var revision = stack.Pop();
+                RevisionGraphRevision revision = stack.Pop();
 
-                foreach (var parent in revision.Parents)
+                foreach (RevisionGraphRevision parent in revision.Parents)
                 {
                     if (parent.Score > revision.Score)
                     {
@@ -114,11 +114,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             while (stack.Count > 0)
             {
-                var revision = stack.Pop();
+                RevisionGraphRevision revision = stack.Pop();
 
                 revision.IsRelative = true;
 
-                foreach (var parent in revision.Parents)
+                foreach (RevisionGraphRevision parent in revision.Parents)
                 {
                     if (parent.IsRelative)
                     {

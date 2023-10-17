@@ -15,20 +15,20 @@ namespace GitUI
 
         public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false)
         {
-            var paddingLeftRight = !string.IsNullOrEmpty(name) ? DpiUtil.Scale(4) : DpiUtil.Scale(1);
-            var paddingTopBottom = DpiUtil.Scale(2);
-            var marginRight = DpiUtil.Scale(7);
+            int paddingLeftRight = !string.IsNullOrEmpty(name) ? DpiUtil.Scale(4) : DpiUtil.Scale(1);
+            int paddingTopBottom = DpiUtil.Scale(2);
+            int marginRight = DpiUtil.Scale(7);
 
-            var textColor = fill ? headColor : ColorHelper.Lerp(headColor, Color.Black, 0.25F);
+            Color textColor = fill ? headColor : ColorHelper.Lerp(headColor, Color.Black, 0.25F);
 
             Size textSize = !string.IsNullOrEmpty(name)
                 ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
                 : new(0, TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height);
 
-            var arrowWidth = arrowType == RefArrowType.None ? 0 : bounds.Height / 2;
+            int arrowWidth = arrowType == RefArrowType.None ? 0 : bounds.Height / 2;
 
-            var backgroundHeight = textSize.Height + paddingTopBottom + paddingTopBottom - 1;
-            var outerMarginTopBottom = (bounds.Height - backgroundHeight) / 2;
+            int backgroundHeight = textSize.Height + paddingTopBottom + paddingTopBottom - 1;
+            int outerMarginTopBottom = (bounds.Height - backgroundHeight) / 2;
 
             Rectangle rect = new(
                 bounds.X + offset,
@@ -61,17 +61,17 @@ namespace GitUI
 
         private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, int radius, RefArrowType arrowType, bool dashedLine, bool fill)
         {
-            var oldMode = graphics.SmoothingMode;
+            SmoothingMode oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             try
             {
-                using var path = CreateRoundRectPath(bounds, radius);
+                using GraphicsPath path = CreateRoundRectPath(bounds, radius);
                 if (fill)
                 {
-                    var color1 = ColorHelper.Lerp(color, SystemColors.Window, 0.92F);
-                    var color2 = ColorHelper.Lerp(color1, SystemColors.Window, 0.9f);
-                    using var brush = new LinearGradientBrush(bounds, color1, color2, angle: 90);
+                    Color color1 = ColorHelper.Lerp(color, SystemColors.Window, 0.92F);
+                    Color color2 = ColorHelper.Lerp(color1, SystemColors.Window, 0.9f);
+                    using LinearGradientBrush brush = new LinearGradientBrush(bounds, color1, color2, angle: 90);
                     graphics.FillPath(brush, path);
                 }
                 else if (isRowSelected)
@@ -172,10 +172,10 @@ namespace GitUI
 
         internal static GraphicsPath CreateRoundRectPath(Rectangle rect, int radius)
         {
-            var left = rect.X;
-            var top = rect.Y;
-            var right = left + rect.Width;
-            var bottom = top + rect.Height;
+            int left = rect.X;
+            int top = rect.Y;
+            int right = left + rect.Width;
+            int bottom = top + rect.Height;
 
             GraphicsPath path = new();
             path.AddArc(left, top, radius, radius, startAngle: 180, sweepAngle: 90);

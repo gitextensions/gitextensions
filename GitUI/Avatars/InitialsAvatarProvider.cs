@@ -153,25 +153,25 @@ namespace GitUI.Avatars
         {
             lock (_avatarColors)
             {
-                var fontSizeEstimation = size / 4.0f;
+                float fontSizeEstimation = size / 4.0f;
                 Font font = new(AppSettings.CommitFont.FontFamily, fontSizeEstimation);
 
                 SizeF textSize = _graphics.MeasureString(text, font);
 
                 // Adjust font size with the measure
-                var sizeSquare = Math.Max((int)textSize.Width, (int)textSize.Height);
+                int sizeSquare = Math.Max((int)textSize.Width, (int)textSize.Height);
                 font = new Font(AppSettings.CommitFont.FontFamily, fontSizeEstimation * size / sizeSquare);
                 textSize = _graphics.MeasureString(text, font);
 
                 Bitmap img = new(size, size);
 
-                using var drawing = Graphics.FromImage(img);
+                using Graphics drawing = Graphics.FromImage(img);
                 drawing.Clear(backColor);
                 drawing.SmoothingMode = SmoothingMode.AntiAlias;
                 drawing.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-                var x = textSize.Width >= textSize.Height ? 0 : (textSize.Height - textSize.Width) / 2;
-                var y = textSize.Width >= textSize.Height ? (textSize.Width - textSize.Height) / 2 : 0;
+                float x = textSize.Width >= textSize.Height ? 0 : (textSize.Height - textSize.Width) / 2;
+                float y = textSize.Width >= textSize.Height ? (textSize.Width - textSize.Height) / 2 : 0;
                 drawing.DrawString(text, font, foreColor, x, y);
                 drawing.Save();
 

@@ -9,7 +9,7 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using var ctx = CreateRenderContext(hdc, pcliprect);
+            using Context ctx = CreateRenderContext(hdc, pcliprect);
             switch ((Parts)partid)
             {
                 case Parts.BP_GROUPBOX:
@@ -41,7 +41,7 @@ namespace GitUI.Theming
 
         private static void RenderPushButton(Context ctx, State.Push stateid, Rectangle prect)
         {
-            var border = prect.Inclusive();
+            Rectangle border = prect.Inclusive();
             switch (stateid)
             {
                 case State.Push.PBS_DISABLED:
@@ -129,7 +129,7 @@ namespace GitUI.Theming
             }
 
             ctx.Graphics.FillRectangle(backBrush, prect);
-            var border = prect.Inclusive();
+            Rectangle border = prect.Inclusive();
             ctx.Graphics.DrawRectangle(borderPen, border);
 
             switch (stateid)
@@ -153,7 +153,7 @@ namespace GitUI.Theming
                     int y1 = border.Top + (border.Height / 4);
                     int y2 = border.Top + (border.Height / 2);
                     int y3 = border.Bottom - (border.Height / 4);
-                    var points = new[]
+                    Point[] points = new[]
                     {
                         new Point(x1, y2),
                         new Point(x2, y3),
@@ -205,10 +205,10 @@ namespace GitUI.Theming
 
             using (ctx.HighQuality())
             {
-                var rect = prect.Inclusive();
+                Rectangle rect = prect.Inclusive();
                 ctx.Graphics.FillEllipse(backBrush, rect);
                 ctx.Graphics.DrawEllipse(SystemPens.FromSystemColor(foreColor), rect);
-                var padding = DpiUtil.Scale(new Size(-3, -3));
+                Size padding = DpiUtil.Scale(new Size(-3, -3));
                 switch (stateid)
                 {
                     case State.Radio.RBS_CHECKEDNORMAL:

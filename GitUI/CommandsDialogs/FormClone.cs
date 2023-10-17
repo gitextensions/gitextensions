@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs
                         string text = Clipboard.GetText(TextDataFormat.Text) ?? string.Empty;
 
                         // See if it's a valid URL.
-                        if (TryExtractUrl(text, out var possibleURL))
+                        if (TryExtractUrl(text, out string possibleURL))
                         {
                             _NO_TRANSLATE_From.Text = possibleURL;
                         }
@@ -90,10 +90,10 @@ namespace GitUI.CommandsDialogs
                 // that the cloned repository is hosted on the same server
                 if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_From.Text) && Module.IsValidGitWorkingDir())
                 {
-                    var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
+                    string currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                     if (string.IsNullOrEmpty(currentBranchRemote))
                     {
-                        var remotes = Module.GetRemoteNames();
+                        IReadOnlyList<string> remotes = Module.GetRemoteNames();
 
                         if (remotes.Any(s => s.Equals("origin", StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
                 _branchListLoader.Cancel();
 
                 // validate if destination path is supplied
-                var destination = _NO_TRANSLATE_To.Text;
+                string destination = _NO_TRANSLATE_To.Text;
                 if (string.IsNullOrWhiteSpace(destination))
                 {
                     MessageBox.Show(this, _errorDestinationNotSupplied.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                var dirTo = Path.Combine(destination, _NO_TRANSLATE_NewDirectory.Text);
+                string dirTo = Path.Combine(destination, _NO_TRANSLATE_NewDirectory.Text);
 
                 // this will fail if the path is anyhow invalid
                 dirTo = PathUtil.Resolve(dirTo);
@@ -210,7 +210,7 @@ namespace GitUI.CommandsDialogs
                 string sourceRepo = PathUtil.IsLocalFile(_NO_TRANSLATE_From.Text)
                     ? UICommands.Module.GetGitExecPath(_NO_TRANSLATE_From.Text)
                     : _NO_TRANSLATE_From.Text;
-                var cloneCmd = Commands.Clone(sourceRepo,
+                GitExtUtils.ArgumentString cloneCmd = Commands.Clone(sourceRepo,
                     UICommands.Module.GetGitExecPath(dirTo),
                     CentralRepository.Checked,
                     cbIntializeAllSubmodules.Checked,
@@ -267,7 +267,7 @@ namespace GitUI.CommandsDialogs
 
         private void FromBrowseClick(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
+            string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
 
             if (userSelectedPath is not null)
             {
@@ -279,7 +279,7 @@ namespace GitUI.CommandsDialogs
 
         private void ToBrowseClick(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
+            string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
 
             if (userSelectedPath is not null)
             {
@@ -446,7 +446,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            var parts = contents.Split(' ');
+            string[] parts = contents.Split(' ');
             foreach (string s in parts)
             {
                 if (PathUtil.CanBeGitURL(s))

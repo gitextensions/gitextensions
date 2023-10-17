@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var path = _fullPathResolver.Resolve(".gitattributes");
+                string path = _fullPathResolver.Resolve(".gitattributes");
                 if (File.Exists(path))
                 {
                     _NO_TRANSLATE_GitAttributesText.ViewFileAsync(path!);
@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormGitAttributesClosing(object sender, FormClosingEventArgs e)
         {
-            var needToClose = false;
+            bool needToClose = false;
 
             if (!IsFileUpToDate())
             {

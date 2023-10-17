@@ -33,7 +33,7 @@ namespace GitUI
                 gitVer = null;
             }
 
-            var gitVersionInfo = GetGitVersionInfo(gitVer, GitVersion.LastSupportedVersion, GitVersion.LastRecommendedVersion);
+            string gitVersionInfo = GetGitVersionInfo(gitVer, GitVersion.LastSupportedVersion, GitVersion.LastRecommendedVersion);
 
             // Build and open FormAbout design to make sure info still looks good if you change this code.
             StringBuilder sb = new();
@@ -85,8 +85,8 @@ namespace GitUI
             try
             {
                 string output = dotnet.GetOutput(args);
-                var desktopAppMatches = Regex.Matches(output, @"^(?=.*\bMicrosoft\.WindowsDesktop\.App\b)[^\n\r]*", RegexOptions.Multiline).Cast<Match>();
-                var desktopAppLines = string.Join(Environment.NewLine, desktopAppMatches);
+                IEnumerable<Match> desktopAppMatches = Regex.Matches(output, @"^(?=.*\bMicrosoft\.WindowsDesktop\.App\b)[^\n\r]*", RegexOptions.Multiline).Cast<Match>();
+                string desktopAppLines = string.Join(Environment.NewLine, desktopAppMatches);
 
                 desktopAppLines = Regex.Replace(desktopAppLines, "^", "    ", RegexOptions.Multiline);
                 sb.AppendLine($"{desktopAppLines}");

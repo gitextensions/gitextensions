@@ -10,10 +10,10 @@
         /// </summary>
         public static string GetFullNamePath(this TreeNode node)
         {
-            var sep = node.TreeView is not null ? node.TreeView.PathSeparator : "\\";
+            string sep = node.TreeView is not null ? node.TreeView.PathSeparator : "\\";
 
             string result = GetNameOrText(node);
-            var currNode = node;
+            TreeNode currNode = node;
             while (currNode.Parent is not null)
             {
                 currNode = currNode.Parent;
@@ -45,9 +45,9 @@
         /// </summary>
         public static void RestoreExpandedNodesState(this TreeNode node, HashSet<string> expandedNodes)
         {
-            foreach (var path in expandedNodes)
+            foreach (string path in expandedNodes)
             {
-                var foundNode = GetNodeFromPath(node, path);
+                TreeNode foundNode = GetNodeFromPath(node, path);
                 foundNode?.Expand();
             }
         }
@@ -74,7 +74,7 @@
 
             foreach (TreeNode childNode in node.Nodes)
             {
-                var foundNode = GetNodeFromPath(childNode, path);
+                TreeNode foundNode = GetNodeFromPath(childNode, path);
                 if (foundNode is not null)
                 {
                     return foundNode;

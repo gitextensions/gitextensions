@@ -34,7 +34,7 @@ namespace GitUI.CommitInfo
                 return string.Empty;
             }
 
-            var (formattedBranches, truncated) = FilterAndFormatBranches(branches, showAsLinks, limit);
+            (IEnumerable<string> formattedBranches, bool truncated) = FilterAndFormatBranches(branches, showAsLinks, limit);
             return ToString(formattedBranches, TranslatedStrings.ContainedInBranches, TranslatedStrings.ContainedInNoBranch, "branches", truncated);
         }
 
@@ -46,7 +46,7 @@ namespace GitUI.CommitInfo
             }
 
             bool truncate = limit && tags.Count > MaximumDisplayedLinesIfLimited;
-            var formattedTags = FormatTags(truncate ? tags.Take(MaximumDisplayedRefsIfLimited) : tags);
+            IEnumerable<string> formattedTags = FormatTags(truncate ? tags.Take(MaximumDisplayedRefsIfLimited) : tags);
             return ToString(formattedTags, TranslatedStrings.ContainedInTags, TranslatedStrings.ContainedInNoTag, "tags", truncate);
 
             IEnumerable<string> FormatTags(IEnumerable<string> selectedTags)
@@ -72,7 +72,7 @@ namespace GitUI.CommitInfo
             bool allowLocal = AppSettings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
 
-            foreach (var branch in branches)
+            foreach (string branch in branches)
             {
                 string noPrefixBranch = branch ?? string.Empty;
                 bool branchIsLocal;
@@ -96,7 +96,7 @@ namespace GitUI.CommitInfo
 
                 if ((branchIsLocal && allowLocal) || (!branchIsLocal && allowRemote))
                 {
-                    var branchText = showAsLinks
+                    string branchText = showAsLinks
                         ? _linkFactory.CreateBranchLink(noPrefixBranch)
                         : WebUtility.HtmlEncode(noPrefixBranch);
 
@@ -127,7 +127,7 @@ namespace GitUI.CommitInfo
                 return WebUtility.HtmlEncode(textIfEmpty);
             }
 
-            var sb = new StringBuilder()
+            StringBuilder sb = new StringBuilder()
                 .AppendLine(WebUtility.HtmlEncode(prefix))
                 .Append(linksJoined);
             if (truncated)

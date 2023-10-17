@@ -38,7 +38,7 @@ namespace GitUI.Avatars
 
             try
             {
-                var image = await _avatarProvider.GetAvatarAsync(email, name, imageSize);
+                Image image = await _avatarProvider.GetAvatarAsync(email, name, imageSize);
 
                 if (image is not null)
                 {

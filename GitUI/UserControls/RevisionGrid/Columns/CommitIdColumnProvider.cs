@@ -32,8 +32,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
-            var monospaceFont = style.MonospaceFont;
-            if (!_widthByLengthByFont.TryGetValue(monospaceFont, out var widthByLength))
+            Font monospaceFont = style.MonospaceFont;
+            if (!_widthByLengthByFont.TryGetValue(monospaceFont, out int[] widthByLength))
             {
                 widthByLength = Enumerable.Range(0, ObjectId.Sha1CharCount + 1).Select(c => TextRenderer.MeasureText(new string('8', c), monospaceFont).Width).ToArray();
 
@@ -42,7 +42,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (!revision.IsArtificial)
             {
-                var i = Array.FindIndex(widthByLength, w => w > Column.Width);
+                int i = Array.FindIndex(widthByLength, w => w > Column.Width);
 
                 if (i == -1 && Column.Width > widthByLength[^1])
                 {

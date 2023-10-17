@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             void LoadBranchesAsync()
             {
-                var selectedBranch = UICommands.GitModule.GetSelectedBranch();
+                string selectedBranch = UICommands.GitModule.GetSelectedBranch();
                 ExistingBranches = Module.GetRefs(RefsFilter.Heads);
                 comboBoxBranches.Text = TranslatedStrings.LoadingData;
                 ThreadHelper.FileAndForget(async () =>
@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             void UpdateWorktreePath()
             {
-                var branchNameNormalized = NormalizeBranchName(radioButtonCheckoutExistingBranch.Checked
+                string branchNameNormalized = NormalizeBranchName(radioButtonCheckoutExistingBranch.Checked
                     ? ((IGitRef)comboBoxBranches.SelectedItem)?.Name ?? string.Empty
                     : textBoxNewBranchName.Text);
                 newWorktreeDirectory.Text = $"{_initialDirectoryPath}_{branchNameNormalized}";

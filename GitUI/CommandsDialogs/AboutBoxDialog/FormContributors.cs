@@ -23,12 +23,12 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
                 SuspendLayout();
                 Controls.Clear();
 
-                var tabControl = GetNewTabControl();
+                TabControl tabControl = GetNewTabControl();
 
-                var tabCaptions = new[] { _developers.Text, _translators.Text, _designers.Text };
-                var textBoxes = new TextBox[tabCaptions.Length];
-                var tabPages = new TabPage[tabCaptions.Length];
-                for (var i = 0; i < tabCaptions.Length; i++)
+                string[] tabCaptions = new[] { _developers.Text, _translators.Text, _designers.Text };
+                TextBox[] textBoxes = new TextBox[tabCaptions.Length];
+                TabPage[] tabPages = new TabPage[tabCaptions.Length];
+                for (int i = 0; i < tabCaptions.Length; i++)
                 {
                     textBoxes[i] = GetNewTextBox();
                     tabPages[i] = GetNewTabPage(textBoxes[i], tabCaptions[i]);

@@ -13,7 +13,7 @@ namespace GitUI.Shells
 
         public string GetShellCommandLine(string? shellType)
         {
-            var shell = GetShell(shellType);
+            IShellDescriptor shell = GetShell(shellType);
 
             if (!shell.HasExecutable || shell.ExecutableCommandLine is null)
             {

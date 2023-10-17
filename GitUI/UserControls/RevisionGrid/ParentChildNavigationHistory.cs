@@ -25,13 +25,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void NavigateToPreviousParent(ObjectId current)
         {
-            var parent = _parentHistory.Pop();
+            ObjectId parent = _parentHistory.Pop();
             Navigate(current, parent, NavigationDirection.Parent);
         }
 
         public void NavigateToPreviousChild(ObjectId current)
         {
-            var child = _childHistory.Pop();
+            ObjectId child = _childHistory.Pop();
             Navigate(current, child, NavigationDirection.Child);
         }
 

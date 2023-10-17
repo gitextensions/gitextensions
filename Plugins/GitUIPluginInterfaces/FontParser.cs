@@ -38,7 +38,7 @@ namespace GitUIPluginInterfaces
                     fontSize = fontSize.Replace(".", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
                 }
 
-                var fontStyle = parts.Length > 3 && parts[3] == "1" ? FontStyle.Bold : FontStyle.Regular;
+                FontStyle fontStyle = parts.Length > 3 && parts[3] == "1" ? FontStyle.Bold : FontStyle.Regular;
                 fontStyle |= parts.Length > 4 && parts[4] == "1" ? FontStyle.Italic : FontStyle.Regular;
 
                 return new Font(parts[0], float.Parse(fontSize, CultureInfo.InvariantCulture), fontStyle);

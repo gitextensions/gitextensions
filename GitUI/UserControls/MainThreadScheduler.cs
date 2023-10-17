@@ -12,8 +12,8 @@ namespace GitUI.UserControls
         {
             CancellationDisposable cancellationDisposable = new();
             SingleAssignmentDisposable disposable = new();
-            var normalizedTime = Scheduler.Normalize(dueTime);
-            var token = cancellationDisposable.Token;
+            TimeSpan normalizedTime = Scheduler.Normalize(dueTime);
+            CancellationToken token = cancellationDisposable.Token;
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {

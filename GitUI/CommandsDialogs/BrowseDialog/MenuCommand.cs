@@ -135,7 +135,7 @@
 
         public void UnregisterMenuItems(IEnumerable<ToolStripMenuItem> items)
         {
-            foreach (var item in items)
+            foreach (ToolStripMenuItem item in items)
             {
                 _registeredMenuItems.Remove(item);
             }
@@ -147,7 +147,7 @@
             {
                 bool isChecked = IsCheckedFunc();
 
-                foreach (var item in _registeredMenuItems)
+                foreach (ToolStripMenuItem item in _registeredMenuItems)
                 {
                     item.Checked = isChecked;
                 }
@@ -157,7 +157,7 @@
             {
                 bool isEnabled = IsEnabledFunc();
 
-                foreach (var item in _registeredMenuItems)
+                foreach (ToolStripMenuItem item in _registeredMenuItems)
                 {
                     item.Enabled = isEnabled;
                 }
@@ -166,7 +166,7 @@
 
         public void UpdateMenuItemsShortcutKeyDisplayString()
         {
-            foreach (var item in _registeredMenuItems)
+            foreach (ToolStripMenuItem item in _registeredMenuItems)
             {
                 item.ShortcutKeyDisplayString = ShortcutKeyDisplayString;
             }

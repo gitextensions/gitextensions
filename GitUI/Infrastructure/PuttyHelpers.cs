@@ -90,7 +90,7 @@ namespace GitUI.Infrastructure
 
             static bool IsPageantRunning()
             {
-                var pageantProcName = Path.GetFileNameWithoutExtension(AppSettings.Pageant);
+                string pageantProcName = Path.GetFileNameWithoutExtension(AppSettings.Pageant);
                 return Process.GetProcessesByName(pageantProcName).Length != 0;
             }
         }

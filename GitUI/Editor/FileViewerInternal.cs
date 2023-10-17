@@ -95,7 +95,7 @@ namespace GitUI.Editor
 
             IList<TextMarker> selectionMarkers = GetTextMarkersMatchingWord(text);
 
-            foreach (var selectionMarker in selectionMarkers)
+            foreach (TextMarker selectionMarker in selectionMarkers)
             {
                 TextEditor.Document.MarkerStrategy.AddMarker(selectionMarker);
             }
@@ -241,7 +241,7 @@ namespace GitUI.Editor
 
             if (isDiff)
             {
-                var index = TextEditor.ActiveTextAreaControl.TextArea.LeftMargins.IndexOf(_lineNumbersControl);
+                int index = TextEditor.ActiveTextAreaControl.TextArea.LeftMargins.IndexOf(_lineNumbersControl);
                 if (index == -1)
                 {
                     TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
@@ -275,7 +275,7 @@ namespace GitUI.Editor
 
             if (_shouldScrollToBottom || _shouldScrollToTop)
             {
-                var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
+                VScrollBar scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
                 if (scrollBar.Visible)
                 {
                     scrollBar.Value = _shouldScrollToTop ? 0 : Math.Max(0, scrollBar.Maximum - scrollBar.Height - _bottomBlankHeight);
@@ -372,7 +372,7 @@ namespace GitUI.Editor
             get { return TextEditor.ActiveTextAreaControl.HScrollBar?.Value ?? 0; }
             set
             {
-                var scrollBar = TextEditor.ActiveTextAreaControl.HScrollBar;
+                HScrollBar scrollBar = TextEditor.ActiveTextAreaControl.HScrollBar;
                 if (scrollBar is null)
                 {
                     return;
@@ -389,7 +389,7 @@ namespace GitUI.Editor
             get { return TextEditor.ActiveTextAreaControl.VScrollBar?.Value ?? 0; }
             set
             {
-                var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
+                VScrollBar scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
                 if (scrollBar is null)
                 {
                     return;
@@ -510,7 +510,7 @@ namespace GitUI.Editor
 
         public void ClearHighlighting()
         {
-            var document = TextEditor.Document;
+            IDocument document = TextEditor.Document;
             document.MarkerStrategy.RemoveAll(t => true);
         }
 
@@ -529,9 +529,9 @@ namespace GitUI.Editor
 
         private void TextArea_MouseWheel(object sender, MouseEventArgs e)
         {
-            var isScrollingTowardTop = e.Delta > 0;
-            var isScrollingTowardBottom = e.Delta < 0;
-            var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
+            bool isScrollingTowardTop = e.Delta > 0;
+            bool isScrollingTowardBottom = e.Delta < 0;
+            VScrollBar scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
 
             if (isScrollingTowardTop && (scrollBar.Value == 0))
             {
@@ -672,7 +672,7 @@ namespace GitUI.Editor
                     return;
                 }
 
-                var viewPosition = _currentViewPosition;
+                ViewPosition viewPosition = _currentViewPosition;
                 if (_viewer.TotalNumberOfLines == viewPosition.TotalNumberOfLines)
                 {
                     _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
@@ -707,7 +707,7 @@ namespace GitUI.Editor
             /// <returns>The current line number at the caret offset</returns>
             public int CurrentFileLine(bool isDiff)
             {
-                var viewPosition = _currentViewPosition;
+                ViewPosition viewPosition = _currentViewPosition;
                 if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum is not null)
                 {
                     // prefer the RightLineNum that is for the current revision

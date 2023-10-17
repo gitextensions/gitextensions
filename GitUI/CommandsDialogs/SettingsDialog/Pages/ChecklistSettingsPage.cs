@@ -215,7 +215,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void DiffToolFix_Click(object sender, EventArgs e)
         {
             Validates.NotNull(_diffMergeToolConfigurationManager);
-            var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            string diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
             if (string.IsNullOrEmpty(diffTool))
             {
                 GotoPageGlobalSettings();
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
             Validates.NotNull(_diffMergeToolConfigurationManager);
-            var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            string mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             if (string.IsNullOrEmpty(mergeTool))
             {
                 GotoPageGlobalSettings();
@@ -285,14 +285,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(() => CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.EffectiveSettings);
 
-            var isValid = PerformChecks();
+            bool isValid = PerformChecks();
             CheckAtStartup.Checked = IsCheckAtStartupChecked(isValid);
             return isValid;
 
             bool PerformChecks()
             {
                 bool result = true;
-                foreach (var func in CheckFuncs())
+                foreach (Func<bool> func in CheckFuncs())
                 {
                     try
                     {
@@ -329,7 +329,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private static bool IsCheckAtStartupChecked(bool isValid)
         {
-            var retValue = AppSettings.CheckSettings;
+            bool retValue = AppSettings.CheckSettings;
 
             if (isValid && retValue)
             {
@@ -349,7 +349,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// <seealso href="https://github.com/gitextensions/gitextensions/issues/3511#issuecomment-313633897"/>
         private bool CheckGitCredentialWinStore()
         {
-            var setting = GetGlobalSetting(SettingKeyString.CredentialHelper) ?? string.Empty;
+            string setting = GetGlobalSetting(SettingKeyString.CredentialHelper) ?? string.Empty;
             if (setting.IndexOf("git-credential-winstore.exe", StringComparison.OrdinalIgnoreCase) < 0)
             {
                 GcmDetected.Visible = false;
@@ -431,7 +431,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
             DiffTool.Visible = true;
-            var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            string diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
             if (string.IsNullOrEmpty(diffTool))
             {
                 RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
@@ -454,7 +454,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
             MergeTool.Visible = true;
-            var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            string mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             if (string.IsNullOrEmpty(mergeTool))
             {
                 RenderSettingUnset(MergeTool, MergeTool_Fix, _configureMergeTool.Text);
@@ -521,7 +521,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             GitExtensionsInstall.Visible = true;
 
-            var installDir = AppSettings.GetInstallDir();
+            string installDir = AppSettings.GetInstallDir();
 
             if (string.IsNullOrEmpty(installDir))
             {

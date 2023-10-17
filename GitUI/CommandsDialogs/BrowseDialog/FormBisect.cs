@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             UpdateButtonsState();
 
-            var revisions = _revisionGridInfo.GetSelectedRevisions();
+            IReadOnlyList<GitRevision> revisions = _revisionGridInfo.GetSelectedRevisions();
             if (revisions.Count > 1)
             {
                 if (MessageBox.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void BisectRange(ObjectId startRevision, ObjectId endRevision)
             {
-                var command = Commands.ContinueBisect(GitBisectOption.Good, startRevision);
+                GitExtUtils.ArgumentString command = Commands.ContinueBisect(GitBisectOption.Good, startRevision);
                 bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (!success)
                 {

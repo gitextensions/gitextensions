@@ -9,7 +9,7 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partId, int stateId, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using var ctx = CreateRenderContext(hdc, pcliprect);
+            using Context ctx = CreateRenderContext(hdc, pcliprect);
             switch ((Parts)partId)
             {
                 case Parts.None:
@@ -20,7 +20,7 @@ namespace GitUI.Theming
 
                 case Parts.HP_HEADERITEM:
                 {
-                    var backBrush = GetBackBrush((State.Item)stateId);
+                    Brush backBrush = GetBackBrush((State.Item)stateId);
                     ctx.Graphics.FillRectangle(backBrush, prect);
                     ctx.Graphics.DrawLine(SystemPens.ControlDark,
                         new Point(prect.Right - 1, prect.Top),
@@ -30,7 +30,7 @@ namespace GitUI.Theming
 
                 case Parts.HP_HEADERSORTARROW:
                 {
-                    var arrowPoints = GetArrowPolygon((State.SortArrow)stateId, prect);
+                    Point[] arrowPoints = GetArrowPolygon((State.SortArrow)stateId, prect);
                     ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
                     using (ctx.HighQuality())
                     {

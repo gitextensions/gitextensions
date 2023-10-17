@@ -31,7 +31,7 @@ namespace GitUI
 
         public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
         {
-            var revision = _gridView.GetRevision(e.RowIndex);
+            GitUIPluginInterfaces.GitRevision revision = _gridView.GetRevision(e.RowIndex);
 
             if (revision is null)
             {
@@ -65,13 +65,13 @@ namespace GitUI
                 try
                 {
                     if (_gridView.Columns[e.ColumnIndex].Tag is ColumnProvider provider &&
-                        provider.TryGetToolTip(e, revision, out var toolTip) &&
+                        provider.TryGetToolTip(e, revision, out string? toolTip) &&
                         !string.IsNullOrWhiteSpace(toolTip))
                     {
                         return toolTip;
                     }
 
-                    if (_isTruncatedByCellPos.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out var showToolTip)
+                    if (_isTruncatedByCellPos.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out bool showToolTip)
                         && showToolTip)
                     {
                         return _gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue?.ToString() ?? "";

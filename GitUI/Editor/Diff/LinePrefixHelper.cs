@@ -22,7 +22,7 @@ namespace GitUI.Editor.Diff
 
             while (beginIndex < document.TotalNumberOfLines)
             {
-                var lineSegment = _segmentGetter.GetSegment(document, beginIndex);
+                ISegment lineSegment = _segmentGetter.GetSegment(document, beginIndex);
 
                 if (lineSegment.Length > 0
                     && DoesLineStartWith(document, lineSegment.Offset, prefixStrs))

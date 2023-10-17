@@ -15,9 +15,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             if (entries is not null)
             {
-                foreach (var entry in entries)
+                foreach (IDiscussionEntry entry in entries)
                 {
-                    var cde = entry as ICommitDiscussionEntry;
+                    ICommitDiscussionEntry cde = entry as ICommitDiscussionEntry;
 
                     AddLine(html, "<div class='entry {0}'>", cde is null ? "commentEntry" : " commitEntry");
 
@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 if (_cssData is null)
                 {
                     _cssData = _cssDataRaw;
-                    foreach (var elem in SystemInfoReplacement)
+                    foreach (KeyValuePair<string, string> elem in SystemInfoReplacement)
                     {
                         _cssData = _cssData.Replace(elem.Key, elem.Value);
                     }
@@ -71,9 +71,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 if (_systemInfoReplacement is null)
                 {
-                    var props = typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty).ToList();
+                    List<PropertyInfo> props = typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty).ToList();
 
-                    var kvps = from prop in props
+                    IEnumerable<KeyValuePair<string, string>> kvps = from prop in props
                                where prop.PropertyType == typeof(Color)
                                let c = (Color)prop.GetValue(null, null)
                                select new KeyValuePair<string, string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));

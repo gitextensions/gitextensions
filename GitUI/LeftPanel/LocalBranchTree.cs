@@ -51,7 +51,7 @@ namespace GitUI.LeftPanel
             #endregion
 
             Nodes nodes = new(this);
-            var aheadBehindData = _aheadBehindDataProvider?.GetData();
+            IDictionary<string, AheadBehindData> aheadBehindData = _aheadBehindDataProvider?.GetData();
             string currentBranch = _revisionGridInfo.GetCurrentBranch();
             Dictionary<string, BaseRevisionNode> pathToNode = new();
             foreach (IGitRef branch in PrioritizedBranches(branches))
@@ -67,7 +67,7 @@ namespace GitUI.LeftPanel
                     localBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), aheadBehind.RemoteRef);
                 }
 
-                var parent = localBranchNode.CreateRootNode(pathToNode, (tree, parentPath) => new BranchPathNode(tree, parentPath));
+                BaseRevisionNode parent = localBranchNode.CreateRootNode(pathToNode, (tree, parentPath) => new BranchPathNode(tree, parentPath));
                 if (parent is not null)
                 {
                     nodes.AddNode(parent);
@@ -96,7 +96,7 @@ namespace GitUI.LeftPanel
                 return;
             }
 
-            var currentBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsCurrent);
+            LocalBranchNode currentBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsCurrent);
             TreeViewNode.TreeView.SelectedNode = currentBranch?.TreeViewNode;
         }
     }

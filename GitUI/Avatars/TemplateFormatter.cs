@@ -19,14 +19,14 @@ namespace GitUI.Avatars
         public static Func<TInput, string> Create<TInput>(string template, Func<string, Func<TInput, string?>> valueMapperProvider)
         {
             List<Action<StringBuilder, TInput>> formatParts = new();
-            var position = 0;
+            int position = 0;
 
             while (true)
             {
-                var variableStartIndex = template.IndexOf('{', position);
-                var fixIndex = variableStartIndex < 0 ? template.Length : variableStartIndex;
+                int variableStartIndex = template.IndexOf('{', position);
+                int fixIndex = variableStartIndex < 0 ? template.Length : variableStartIndex;
 
-                var fixValue = template[position..fixIndex];
+                string fixValue = template[position..fixIndex];
                 formatParts.Add((sb, _) => sb.Append(fixValue));
 
                 if (variableStartIndex < 0)
@@ -36,7 +36,7 @@ namespace GitUI.Avatars
 
                 position = variableStartIndex + 1;
 
-                var variableEndIndex = template.IndexOf('}', position);
+                int variableEndIndex = template.IndexOf('}', position);
 
                 if (variableEndIndex < 0)
                 {
@@ -45,8 +45,8 @@ namespace GitUI.Avatars
 
                 position = variableEndIndex + 1;
 
-                var variableName = template.Substring(variableStartIndex + 1, variableEndIndex - variableStartIndex - 1);
-                var inputParser = valueMapperProvider(variableName);
+                string variableName = template.Substring(variableStartIndex + 1, variableEndIndex - variableStartIndex - 1);
+                Func<TInput, string?> inputParser = valueMapperProvider(variableName);
                 formatParts.Add((sb, i) => sb.Append(inputParser(i)));
             }
 
@@ -60,7 +60,7 @@ namespace GitUI.Avatars
         {
             StringBuilder sb = new();
 
-            foreach (var formatter in formatParts)
+            foreach (Action<StringBuilder, TInput> formatter in formatParts)
             {
                 formatter(sb, input);
             }

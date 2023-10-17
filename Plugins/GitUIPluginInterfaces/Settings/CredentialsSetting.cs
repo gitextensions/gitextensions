@@ -26,14 +26,14 @@ namespace GitUIPluginInterfaces
         {
             if (settings.SettingLevel == SettingLevel.Effective)
             {
-                var currentCredentials = GetValueOrDefault(settings);
+                NetworkCredential currentCredentials = GetValueOrDefault(settings);
                 if (currentCredentials.UserName == userName && currentCredentials.Password == password)
                 {
                     return;
                 }
             }
 
-            var newCredentials = string.IsNullOrWhiteSpace(userName)
+            NetworkCredential newCredentials = string.IsNullOrWhiteSpace(userName)
                 ? null
                 : new NetworkCredential(userName, password);
             SetCredentials(settings.SettingLevel, Name, newCredentials);
@@ -61,7 +61,7 @@ namespace GitUIPluginInterfaces
             {
                 if (SettingLevelSupported(settings.SettingLevel))
                 {
-                    var credentials = Setting.GetValueOrDefault(settings);
+                    NetworkCredential credentials = Setting.GetValueOrDefault(settings);
                     control.UserName = credentials.UserName;
                     control.Password = credentials.Password;
                     control.Enabled = true;

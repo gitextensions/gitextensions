@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
+            string userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
 
             if (userSelectedPath is not null)
             {
@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
             using (WaitCursorScope.Enter())
             {
-                var command = Commands.AddSubmodule(Directory.Text, LocalPath.Text, Branch.Text, chkForce.Checked);
+                ArgumentString command = Commands.AddSubmodule(Directory.Text, LocalPath.Text, Branch.Text, chkForce.Checked);
                 FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 Close();
             }
@@ -90,7 +90,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
             }
 
             GitArgumentBuilder gitArguments = new("ls-remote") { "--heads", url.ToPosixPath().Quote() };
-            var heads = gitExecutable.GetOutput(gitArguments);
+            string heads = gitExecutable.GetOutput(gitArguments);
             return heads.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
                         .Select(head =>
                         {

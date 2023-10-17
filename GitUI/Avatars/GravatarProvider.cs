@@ -47,7 +47,7 @@ namespace GitUI.Avatars
         /// <inheritdoc/>
         public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            var hash = ComputeHash(email);
+            string hash = ComputeHash(email);
 
             UriBuilder uri = new("https", "www.gravatar.com")
             {
@@ -55,7 +55,7 @@ namespace GitUI.Avatars
                 Query = _queryString + imageSize
             };
 
-            var avatarUri = uri.Uri;
+            Uri avatarUri = uri.Uri;
 
             // TODO NULLABLE UriBuilder.Uri doesn't appear to be nullable
             if (avatarUri is null)
@@ -69,8 +69,8 @@ namespace GitUI.Avatars
         private string ComputeHash(string email)
         {
             // Gravatar doesn't specify an encoding
-            var emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
-            var hashBytes = _md5.ComputeHash(emailBytes);
+            byte[] emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
+            byte[] hashBytes = _md5.ComputeHash(emailBytes);
 
             return HexString.FromByteArray(hashBytes);
         }

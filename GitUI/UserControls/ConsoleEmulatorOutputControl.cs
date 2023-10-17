@@ -90,7 +90,7 @@ namespace GitUI.UserControls
 
             try
             {
-                var commandLine = new ArgumentBuilder { command.Quote(), arguments }.ToString();
+                string commandLine = new ArgumentBuilder { command.Quote(), arguments }.ToString();
                 ConsoleCommandLineOutputProcessor outputProcessor = new(commandLine.Length, FireDataReceived);
 
                 ConEmuStartInfo startInfo = new()
@@ -102,7 +102,7 @@ namespace GitUI.UserControls
                     StartupDirectory = workDir
                 };
 
-                foreach (var (name, value) in envVariables)
+                foreach ((string name, string value) in envVariables)
                 {
                     startInfo.SetEnv(name, value);
                 }
@@ -168,7 +168,7 @@ namespace GitUI.UserControls
 
         public void AnsiStreamChunkReceived(object sender, AnsiStreamChunkEventArgs args)
         {
-            var text = args.GetText(GitModule.SystemEncoding);
+            string text = args.GetText(GitModule.SystemEncoding);
             string? filtered = FilterOutConsoleCommandLine(text);
             if (filtered is not null)
             {

@@ -17,13 +17,13 @@ namespace GitUI.LeftPanel
 
         public void DeleteAll()
         {
-            var branches = Nodes.DepthEnumerator<LocalBranchNode>().Select(branch => branch.FullPath);
+            IEnumerable<string> branches = Nodes.DepthEnumerator<LocalBranchNode>().Select(branch => branch.FullPath);
             UICommands.StartDeleteBranchDialog(ParentWindow(), branches);
         }
 
         public void CreateBranch()
         {
-            var newBranchNamePrefix = FullPath + PathSeparator;
+            string newBranchNamePrefix = FullPath + PathSeparator;
             UICommands.StartCreateBranchDialog(ParentWindow(), objectId: null, newBranchNamePrefix);
         }
     }

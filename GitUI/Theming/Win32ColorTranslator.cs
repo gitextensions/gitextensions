@@ -15,8 +15,8 @@
 
         public static int GetSystemColorIndex(KnownColor name)
         {
-            var ole = ColorTranslator.ToOle(Color.FromKnownColor(name));
-            var result = ole & 0xffffff;
+            int ole = ColorTranslator.ToOle(Color.FromKnownColor(name));
+            int result = ole & 0xffffff;
             return result;
         }
     }

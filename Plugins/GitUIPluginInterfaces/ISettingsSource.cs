@@ -46,7 +46,7 @@ namespace GitUIPluginInterfaces
         {
             string? stringValue = GetValue(name);
 
-            if (int.TryParse(stringValue, out var result))
+            if (int.TryParse(stringValue, out int result))
             {
                 return result;
             }
@@ -67,7 +67,7 @@ namespace GitUIPluginInterfaces
         {
             string? stringValue = GetValue(name);
 
-            if (float.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
+            if (float.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out float result))
             {
                 return result;
             }
@@ -93,7 +93,7 @@ namespace GitUIPluginInterfaces
         {
             string? stringValue = GetValue(name);
 
-            if (DateTime.TryParseExact(stringValue, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
+            if (DateTime.TryParseExact(stringValue, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
             {
                 return result;
             }

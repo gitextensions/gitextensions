@@ -20,7 +20,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public string GetLaneInfo(int rowIndex, int lane)
         {
-            (var node, bool isAtNode) = _nodeLocator.FindPrevNode(rowIndex, lane);
+            (RevisionGraphRevision node, bool isAtNode) = _nodeLocator.FindPrevNode(rowIndex, lane);
             if (node is null)
             {
                 return string.Empty;

@@ -30,14 +30,14 @@ namespace GitUI.Avatars
 
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            var uri = await BuildAvatarUriAsync(email, imageSize);
+            Uri uri = await BuildAvatarUriAsync(email, imageSize);
 
             if (uri is null)
             {
                 return null;
             }
 
-            var image = await _downloader.DownloadImageAsync(uri);
+            Image image = await _downloader.DownloadImageAsync(uri);
 
             // Sadly GitHub doesn't provide an option to return a 404 error for non-custom avatars
             // and always provides a fallback image (identicon). Using GitHubs fallback image would
@@ -47,7 +47,7 @@ namespace GitUI.Avatars
             // GitHub are never scaled and always 420 x 420 - even if a different size was requested.
 
             // We exploit that fact to filter out identicons.
-            var isIdenticon = imageSize != 420 && image?.Size.Width is 420;
+            bool isIdenticon = imageSize != 420 && image?.Size.Width is 420;
 
             if (isIdenticon)
             {
@@ -59,13 +59,13 @@ namespace GitUI.Avatars
 
         private async Task<Uri?> BuildAvatarUriAsync(string email, int imageSize)
         {
-            var match = _gitHubEmailRegex.Match(email);
+            Match match = _gitHubEmailRegex.Match(email);
 
             if (match.Success)
             {
                 // email is an @users.noreply.github.com address
 
-                var username = match.Groups["username"].Value;
+                string username = match.Groups["username"].Value;
 
                 // For real users we can directly access the avatar by using
                 // https://avatars.githubusercontent.com/{encodedUsername}?s={imageSize}
@@ -78,12 +78,12 @@ namespace GitUI.Avatars
                 // query the GitHub profile first.
 
                 // GitHub user names can't contain square brackets but bots use them.
-                var isBot = username.IndexOf('[') >= 0;
+                bool isBot = username.IndexOf('[') >= 0;
 
                 if (isBot)
                 {
                     Git.hub.Client client = new();
-                    var userProfile = await client.GetUserAsync(username);
+                    Git.hub.User userProfile = await client.GetUserAsync(username);
 
                     if (string.IsNullOrEmpty(userProfile?.AvatarUrl))
                     {
@@ -99,7 +99,7 @@ namespace GitUI.Avatars
                 }
                 else
                 {
-                    var encodedUsername = HttpUtility.UrlEncode(match.Groups["username"].Value);
+                    string encodedUsername = HttpUtility.UrlEncode(match.Groups["username"].Value);
                     return new Uri($"https://avatars.githubusercontent.com/{encodedUsername}?s={imageSize}");
                 }
             }
@@ -112,7 +112,7 @@ namespace GitUI.Avatars
                     return null;
                 }
 
-                var encodedEmail = HttpUtility.UrlEncode(email);
+                string encodedEmail = HttpUtility.UrlEncode(email);
                 return new Uri($"https://avatars.githubusercontent.com/u/e?email={encodedEmail}&s={imageSize}");
             }
         }

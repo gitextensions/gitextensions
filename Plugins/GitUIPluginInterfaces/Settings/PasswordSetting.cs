@@ -48,7 +48,7 @@
 
             public override void SaveSetting(ISettingsSource settings, TextBox control)
             {
-                var controlValue = control.Text;
+                string controlValue = control.Text;
                 if (settings.SettingLevel == SettingLevel.Effective)
                 {
                     if (Setting.ValueOrDefault(settings) == controlValue)

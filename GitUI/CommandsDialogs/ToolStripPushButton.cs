@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var data = aheadBehindData[branchName];
+            AheadBehindData data = aheadBehindData[branchName];
             Text = data.ToDisplay();
             DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             ToolTipText = GetToolTipText(data);

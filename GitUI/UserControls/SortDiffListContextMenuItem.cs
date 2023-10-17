@@ -47,7 +47,7 @@ namespace GitUI.UserControls
 
             _allItems = new[] { _filePathSortItem, _fileExtensionSortItem, _fileStatusSortItem, };
 
-            foreach (var item in AllItems())
+            foreach (ToolStripMenuItem item in AllItems())
             {
                 item.Click += Item_Click;
                 DropDownItems.Add(item);
@@ -64,8 +64,8 @@ namespace GitUI.UserControls
 
         private void RequerySortingMethod()
         {
-            var currentSort = _sortService.DiffListSorting;
-            foreach (var item in AllItems())
+            DiffListSortType currentSort = _sortService.DiffListSorting;
+            foreach (ToolStripMenuItem item in AllItems())
             {
                 item.Checked = currentSort.Equals(item.Tag);
             }
@@ -73,8 +73,8 @@ namespace GitUI.UserControls
 
         private void Item_Click(object sender, EventArgs e)
         {
-            var item = (ToolStripMenuItem)sender;
-            var sortingType = (DiffListSortType)item.Tag;
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            DiffListSortType sortingType = (DiffListSortType)item.Tag;
             _sortService.DiffListSorting = sortingType;
         }
 
