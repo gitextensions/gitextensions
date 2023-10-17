@@ -1,9 +1,11 @@
 ﻿using System.Text.RegularExpressions;
+using CommunityToolkit.Mvvm.Messaging;
 using GitCommands;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.NBugReports;
 using GitUIPluginInterfaces;
+using Plugins.GitUIPluginInterfaces.ViewModels;
 using ResourceManager;
 
 namespace GitUI.ScriptsEngine
@@ -89,7 +91,7 @@ namespace GitUI.ScriptsEngine
                                 GitUIEventArgs eventArgs = new(owner, uiCommands);
                                 if (plugin.Execute(eventArgs))
                                 {
-                                    uiCommands.RepoViewModel.RefreshRevisions();
+                                    uiCommands.GetRequiredService<IMessenger>().Send(new RepoModifiedMessage());
                                     return new CommandStatus(executed: true, needsGridRefresh: true);
                                 }
 
@@ -149,7 +151,7 @@ namespace GitUI.ScriptsEngine
                 bool needsGridRefresh = !script.RunInBackground;
                 if (needsGridRefresh)
                 {
-                    uiCommands.RepoViewModel.RefreshRevisions();
+                    uiCommands.GetRequiredService<IMessenger>().Send(new RepoModifiedMessage());
                 }
 
                 return new CommandStatus(executed: true, needsGridRefresh);

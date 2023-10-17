@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using CommunityToolkit.Mvvm.Messaging;
 using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Config;
@@ -207,7 +208,9 @@ namespace GitUI.CommandsDialogs
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFormBrowseController _controller;
+        private readonly IGitRepoViewModel _gitRepoViewModel;
         private readonly ICommitDataManager _commitDataManager;
+        private readonly IMessenger _messenger;
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
         private readonly IWindowsJumpListManager _windowsJumpListManager;
@@ -247,6 +250,8 @@ namespace GitUI.CommandsDialogs
         internal FormBrowse(GitUICommands commands, BrowseArguments args, ISettingsSource settingsSource)
             : base(commands)
         {
+            _messenger = commands.GetRequiredService<IMessenger>();
+
             _splitterManager = new(settingsSource);
 
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
@@ -322,7 +327,8 @@ namespace GitUI.CommandsDialogs
             // Show blame by default if not started from command line
             fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, RefreshGitStatusMonitor, _isFileBlameHistory);
             RevisionGrid.ResumeRefreshRevisions();
-            UICommands.RepoViewModel.PropertyChanged += RepoViewModel_PropertyChanged;
+            _gitRepoViewModel = commands.GetRequiredService<IGitRepoViewModel>();
+            _gitRepoViewModel.PropertyChanged += RepoViewModel_PropertyChanged;
 
             // Application is init, the repo related operations are triggered in OnLoad()
             return;
@@ -442,13 +448,9 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                if (_splitterManager is null)
+                if (_gitRepoViewModel is not null)
                 {
-                    // UICommands is unset in TranslationApp
-                }
-                else
-                {
-                    UICommands.RepoViewModel.PropertyChanged -= RepoViewModel_PropertyChanged;
+                    _gitRepoViewModel.PropertyChanged -= RepoViewModel_PropertyChanged;
                 }
 
                 _repositoryHistoryUIService.GitModuleChanged -= SetGitModule;
@@ -797,7 +799,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
-                            UICommands.RepoViewModel.RefreshRevisions();
+                            _messenger.Send(new RepoModifiedMessage());
                         }
                     };
 
@@ -2971,7 +2973,7 @@ namespace GitUI.CommandsDialogs
 
         private void RepoViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(GitRepoViewModel.Revisions))
+            if (e.PropertyName == nameof(IGitRepoViewModel.Revisions))
             {
                 _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
                 RefreshRevisions();

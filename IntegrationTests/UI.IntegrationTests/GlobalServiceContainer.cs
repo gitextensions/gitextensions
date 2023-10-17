@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.Design;
+using CommunityToolkit.Mvvm.Messaging;
 using GitCommands;
 using GitCommands.Submodules;
 using GitUI;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
 using NSubstitute;
+using Plugins.GitUIPluginInterfaces.ViewModels;
 using ResourceManager;
 
 namespace GitExtensions.UITests
@@ -15,6 +17,10 @@ namespace GitExtensions.UITests
         public static ServiceContainer CreateDefaultMockServiceContainer()
         {
             ServiceContainer serviceContainer = new();
+
+            serviceContainer.AddService(Substitute.For<IMessenger>());
+            serviceContainer.AddService(Substitute.For<IGitRepoViewModel>());
+
             serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
             serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
             serviceContainer.AddService(Substitute.For<ILinkFactory>());

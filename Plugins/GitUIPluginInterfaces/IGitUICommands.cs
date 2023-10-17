@@ -1,5 +1,4 @@
 ﻿using GitExtUtils;
-using Plugins.GitUIPluginInterfaces.ViewModels;
 
 namespace GitUIPluginInterfaces
 {
@@ -14,7 +13,6 @@ namespace GitUIPluginInterfaces
         event EventHandler<GitUIEventArgs> PreCommit;
 
         IGitModule GitModule { get; }
-        GitRepoViewModel RepoViewModel { get; }
 
         IGitRemoteCommand CreateRemoteCommand();
 

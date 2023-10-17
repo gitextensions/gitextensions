@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="AdysTech.CredentialManager" />
     <PackageReference Include="Ben.Demystifier" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 
