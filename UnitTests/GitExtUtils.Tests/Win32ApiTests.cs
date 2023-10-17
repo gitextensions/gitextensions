@@ -10,7 +10,7 @@ namespace GitExtUtilsTests
             [Values(short.MinValue, -1, 0, 1, short.MaxValue)] short x,
             [Values(short.MinValue, -1, 0, 1, short.MaxValue)] short y)
         {
-            var point = ToLParam(x, y).ToPoint();
+            Point point = ToLParam(x, y).ToPoint();
 
             Assert.That(point.X, Is.EqualTo(x));
             Assert.That(point.Y, Is.EqualTo(y));
@@ -21,7 +21,7 @@ namespace GitExtUtilsTests
             [Values(short.MinValue, -1, 0, 1, short.MaxValue)] short x,
             [Values(short.MinValue, -1, 0, 1, short.MaxValue)] short y)
         {
-            var point = ICSharpCode.TextEditor.Util.Win32Util.ToPoint(ToLParam(x, y));
+            Point point = ICSharpCode.TextEditor.Util.Win32Util.ToPoint(ToLParam(x, y));
 
             Assert.That(point.X, Is.EqualTo(x));
             Assert.That(point.Y, Is.EqualTo(y));

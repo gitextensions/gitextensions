@@ -33,14 +33,14 @@ namespace GitCommandsTests.Git.Tag
         [Test]
         public void CreateTagWithMessageThrowsIfTheWindowIsNull()
         {
-            var args = CreateAnnotatedTagArgs();
+            GitCreateTagArgs args = CreateAnnotatedTagArgs();
             Assert.Throws<ArgumentNullException>(() => _controller.CreateTag(args, parentWindow: null));
         }
 
         [Test]
         public void CreateTagWithMessageWritesTagMessageFile()
         {
-            var args = CreateAnnotatedTagArgs();
+            GitCreateTagArgs args = CreateAnnotatedTagArgs();
 
             _controller.CreateTag(args, CreateTestingWindow());
 
@@ -52,7 +52,7 @@ namespace GitCommandsTests.Git.Tag
         [TestCase(false)]
         public void CreateTagWithMessageDeletesTheTemporaryFileForUiResult(bool uiResult)
         {
-            var args = CreateAnnotatedTagArgs();
+            GitCreateTagArgs args = CreateAnnotatedTagArgs();
 
             _fileSystem.File.Exists(Arg.Is<string>(s => s != null)).Returns(true);
 
@@ -67,8 +67,8 @@ namespace GitCommandsTests.Git.Tag
         [Test]
         public void PassesCreatedArgsAndWindowToCommands()
         {
-            var args = CreateAnnotatedTagArgs();
-            var window = CreateTestingWindow();
+            GitCreateTagArgs args = CreateAnnotatedTagArgs();
+            IWin32Window window = CreateTestingWindow();
 
             _controller.CreateTag(args, window);
 

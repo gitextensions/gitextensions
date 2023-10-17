@@ -90,7 +90,7 @@ namespace ResourceManager
                 return;
             }
 
-            if (ParseInternalScheme(uri, out var commandEventArgs))
+            if (ParseInternalScheme(uri, out CommandEventArgs? commandEventArgs))
             {
                 if (commandEventArgs.Command == ShowAll)
                 {

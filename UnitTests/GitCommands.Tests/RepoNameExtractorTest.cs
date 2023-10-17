@@ -38,7 +38,7 @@ namespace GitCommandsTests
             _module.GetRemoteNames().Returns(x => new[] { remote, "    ", "\t" });
             _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote)).Returns(x => url);
 
-            var (project, repo) = _repoNameExtractor.Get();
+            (string project, string repo) = _repoNameExtractor.Get();
 
             project.Should().Be(expProject);
             repo.Should().Be(expRepo);
@@ -52,7 +52,7 @@ namespace GitCommandsTests
             _module.GetRemoteNames().Returns(x => new[] { remote, "    ", "\t" });
             _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote)).Returns(x => url);
 
-            var (project, repo) = _repoNameExtractor.Get();
+            (string project, string repo) = _repoNameExtractor.Get();
 
             project.Should().Be(expProject);
             repo.Should().Be(expRepo);

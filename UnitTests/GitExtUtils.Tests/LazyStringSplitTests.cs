@@ -36,7 +36,7 @@ namespace GitExtUtilsTests
             // Non boxing foreach
             List<string> list = new();
 
-            foreach (var s in new LazyStringSplit(input, delimiter, StringSplitOptions.None))
+            foreach (string s in new LazyStringSplit(input, delimiter, StringSplitOptions.None))
             {
                 list.Add(s);
             }
@@ -77,7 +77,7 @@ namespace GitExtUtilsTests
             // Non boxing foreach
             List<string> list = new();
 
-            foreach (var s in new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string s in new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries))
             {
                 list.Add(s);
             }

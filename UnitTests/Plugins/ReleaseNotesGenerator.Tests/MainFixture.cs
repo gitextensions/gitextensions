@@ -16,7 +16,7 @@ namespace ReleaseNotesGeneratorTests
         [Platform("Win")]
         public void CreateHtmlFormatClipboardDataObjectTest()
         {
-            var dataObject = HtmlFragment.CreateHtmlFormatClipboardDataObject("<p>Hallo</p>");
+            DataObject dataObject = HtmlFragment.CreateHtmlFormatClipboardDataObject("<p>Hallo</p>");
             dataObject.GetFormats().Length.Should().Be(2);
             dataObject.GetText().Should().Be("<p>Hallo</p>");
             ((string)dataObject.GetData("HTML Format")).Should().Be(

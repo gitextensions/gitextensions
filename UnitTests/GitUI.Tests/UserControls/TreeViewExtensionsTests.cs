@@ -37,7 +37,7 @@ namespace GitUITests.UserControls
         [Test]
         public void GetExpandedNodesState_should_return_no_expanded_nodes()
         {
-            var expandedNodes = _root.GetExpandedNodesState();
+            HashSet<string> expandedNodes = _root.GetExpandedNodesState();
             Assert.AreEqual(0, expandedNodes.Count);
         }
 
@@ -45,7 +45,7 @@ namespace GitUITests.UserControls
         public void GetExpandedNodesState_should_return_one_expanded_node()
         {
             _b.Expand();
-            var expandedNodes = _root.GetExpandedNodesState();
+            HashSet<string> expandedNodes = _root.GetExpandedNodesState();
             Assert.AreEqual(1, expandedNodes.Count);
             Assert.AreEqual(true, expandedNodes.Contains(@"Root\B"));
         }
@@ -54,7 +54,7 @@ namespace GitUITests.UserControls
         public void GetExpandedNodesState_should_return_all_expanded_nodes()
         {
             _root.ExpandAll();
-            var expandedNodes = _root.GetExpandedNodesState();
+            HashSet<string> expandedNodes = _root.GetExpandedNodesState();
             Assert.AreEqual(8, expandedNodes.Count);
         }
 
@@ -64,7 +64,7 @@ namespace GitUITests.UserControls
             HashSet<string> expandedNodes = new();
             _root.RestoreExpandedNodesState(expandedNodes);
 
-            var expandedNodesPost = _root.GetExpandedNodesState();
+            HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
             Assert.AreEqual(0, expandedNodesPost.Count);
         }
 
@@ -74,7 +74,7 @@ namespace GitUITests.UserControls
             HashSet<string> expandedNodes = new() { @"Root\B" };
             _root.RestoreExpandedNodesState(expandedNodes);
 
-            var expandedNodesPost = _root.GetExpandedNodesState();
+            HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
             Assert.AreEqual(1, expandedNodesPost.Count);
             Assert.AreEqual(true, expandedNodes.Contains(@"Root\B"));
         }
@@ -96,7 +96,7 @@ namespace GitUITests.UserControls
 
             _root.RestoreExpandedNodesState(expandedNodes);
 
-            var expandedNodesPost = _root.GetExpandedNodesState();
+            HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
             Assert.AreEqual(8, expandedNodesPost.Count);
             Assert.AreEqual(expandedNodes, expandedNodesPost);
         }

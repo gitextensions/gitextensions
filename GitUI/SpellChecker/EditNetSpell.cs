@@ -103,8 +103,8 @@ namespace GitUI.SpellChecker
 
         public void ReplaceLine(int line, string withText)
         {
-            var oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
-            var startIdx = TextBox.GetFirstCharIndexFromLine(line);
+            int oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
+            int startIdx = TextBox.GetFirstCharIndexFromLine(line);
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = startIdx;
             TextBox.SelectionLength = Line(line).Length;
@@ -276,11 +276,11 @@ namespace GitUI.SpellChecker
 
                 toolStripDropDown.Items.Add(noDicToolStripMenuItem);
 
-                foreach (var fileName in Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
+                foreach (string fileName in Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
                 {
                     FileInfo file = new(fileName);
 
-                    var dic = file.Name.Replace(".dic", "");
+                    string dic = file.Name.Replace(".dic", "");
 
                     ToolStripMenuItem dicToolStripMenuItem = new(dic);
                     dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
@@ -326,9 +326,9 @@ namespace GitUI.SpellChecker
                 // generate suggestions
                 _spelling.Suggest();
 
-                foreach (var suggestion in _spelling.Suggestions)
+                foreach (string suggestion in _spelling.Suggestions)
                 {
-                    var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
+                    ToolStripMenuItem si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
                     si.Font = new Font(si.Font, FontStyle.Bold);
                 }
 
@@ -443,12 +443,12 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            var numLines = TextBox.Lines.Length;
-            var chars = 0;
-            for (var curLine = 0; curLine < numLines; ++curLine)
+            int numLines = TextBox.Lines.Length;
+            int chars = 0;
+            for (int curLine = 0; curLine < numLines; ++curLine)
             {
-                var curLength = TextBox.Lines[curLine].Length;
-                var curMaxLength = curLine switch
+                int curLength = TextBox.Lines[curLine].Length;
+                int curMaxLength = curLine switch
                 {
                     0 => 50,
                     1 => 0,
@@ -467,8 +467,8 @@ namespace GitUI.SpellChecker
 
         private void SpellingDeletedWord(object sender, SpellingEventArgs e)
         {
-            var start = TextBox.SelectionStart;
-            var length = TextBox.SelectionLength;
+            int start = TextBox.SelectionStart;
+            int length = TextBox.SelectionLength;
 
             TextBox.Select(e.TextIndex, e.Word.Length);
             TextBox.SelectedText = "";
@@ -488,8 +488,8 @@ namespace GitUI.SpellChecker
 
         private void SpellingReplacedWord(object sender, ReplaceWordEventArgs e)
         {
-            var start = TextBox.SelectionStart;
-            var length = TextBox.SelectionLength;
+            int start = TextBox.SelectionStart;
+            int length = TextBox.SelectionLength;
 
             TextBox.Select(e.TextIndex, e.Word.Length);
             TextBox.SelectedText = e.ReplacementWord;
@@ -510,7 +510,7 @@ namespace GitUI.SpellChecker
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
             TextBox.Focus();
-            var pos = TextBox.SelectionStart;
+            int pos = TextBox.SelectionStart;
             if (pos < 0)
             {
                 e.Cancel = true;
@@ -590,7 +590,7 @@ namespace GitUI.SpellChecker
             // if a Module is available, then always change the "repository local" setting
             // it will set a dictionary only for this Module (repository) locally
 
-            var settings = Module.LocalSettings ?? Settings;
+            DistributedSettings settings = Module.LocalSettings ?? Settings;
             IDetachedSettings detachedSettings = settings.Detached();
 
             detachedSettings.Dictionary = ((ToolStripItem)sender).Text;
@@ -834,13 +834,13 @@ namespace GitUI.SpellChecker
 
         public void ChangeTextColor(int line, int offset, int length, Color color)
         {
-            var oldPos = TextBox.SelectionStart;
-            var oldColor = TextBox.SelectionColor;
-            var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
+            int oldPos = TextBox.SelectionStart;
+            Color oldColor = TextBox.SelectionColor;
+            int lineIndex = TextBox.GetFirstCharIndexFromLine(line);
             TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
             TextBox.SelectionLength = length;
             TextBox.SelectionColor = color;
-            var restoreColor = oldPos < TextBox.SelectionStart || oldPos > TextBox.SelectionStart + TextBox.SelectionLength;
+            bool restoreColor = oldPos < TextBox.SelectionStart || oldPos > TextBox.SelectionStart + TextBox.SelectionLength;
 
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
@@ -860,13 +860,13 @@ namespace GitUI.SpellChecker
         /// </summary>
         public void EnsureEmptyLine(bool addBullet, int afterLine)
         {
-            var lineLength = LineLength(afterLine);
+            int lineLength = LineLength(afterLine);
             if (lineLength > 0)
             {
-                var bullet = addBullet ? " - " : string.Empty;
-                var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
-                var newLine = Environment.NewLine;
-                var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
+                string bullet = addBullet ? " - " : string.Empty;
+                int indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
+                string newLine = Environment.NewLine;
+                int newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
                 TextBox.SelectionLength = 0;
                 TextBox.SelectionStart = indexOfLine;
                 TextBox.SelectedText = newLine + bullet;
@@ -957,7 +957,7 @@ namespace GitUI.SpellChecker
         private void AcceptAutoComplete(AutoCompleteWord? completionWord = null)
         {
             completionWord ??= (AutoCompleteWord)AutoComplete.SelectedItem;
-            var word = GetWordAtCursor();
+            string word = GetWordAtCursor();
             TextBox.Select(TextBox.SelectionStart - word.Length, word.Length);
             TextBox.SelectedText = completionWord.Word;
             CloseAutoComplete();
@@ -1005,7 +1005,7 @@ namespace GitUI.SpellChecker
             AutoCompleteToolTipTimer.Stop();
             AutoCompleteToolTip.Hide(TextBox);
 
-            var word = GetWordAtCursor();
+            string word = GetWordAtCursor();
 
             if (word is null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
             {
@@ -1041,13 +1041,13 @@ namespace GitUI.SpellChecker
                 _autoCompleteWasUserActivated = true;
             }
 
-            var sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
+            List<Size> sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
 
-            var cursorPos = GetCursorPosition();
+            Point cursorPos = GetCursorPosition();
 
-            var top = cursorPos.Y;
-            var height = (sizes.Count + 1) * AutoComplete.ItemHeight;
-            var width = sizes.Max(x => x.Width);
+            int top = cursorPos.Y;
+            int height = (sizes.Count + 1) * AutoComplete.ItemHeight;
+            int width = sizes.Max(x => x.Width);
             if (top + height > TextBox.Height)
             {
                 // if reduced height is not too small then shrink only
@@ -1076,7 +1076,7 @@ namespace GitUI.SpellChecker
 
         private Point GetCursorPosition()
         {
-            var cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
+            Point cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
             cursorPos.Y += (int)Math.Ceiling(TextBox.Font.GetHeight());
             cursorPos.X += 2;
             return cursorPos;

@@ -205,16 +205,16 @@ namespace ResourceManager
 
         protected void TranslateItem(string itemName, object item)
         {
-            var translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+            IDictionary<string, Xliff.TranslationFile> translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
 
             if (translation.Count == 0)
             {
                 return;
             }
 
-            var itemsToTranslate = new[] { (itemName, item) };
+            (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
 
-            foreach (var pair in translation)
+            foreach (KeyValuePair<string, Xliff.TranslationFile> pair in translation)
             {
                 TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
             }

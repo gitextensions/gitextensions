@@ -16,7 +16,7 @@ namespace GitUI.Avatars
 
             StringBuilder builder = new(capacity: data.Length * 2);
 
-            foreach (var b in data)
+            foreach (byte b in data)
             {
                 builder.AppendFormat("{0:x2}", b);
             }

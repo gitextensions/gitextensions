@@ -21,23 +21,23 @@
 
         public static Color GetForeColorForBackColor(Color backColor)
         {
-            var hsl1 = backColor.ToPerceptedHsl();
+            HslColor hsl1 = backColor.ToPerceptedHsl();
 
-            var closestBack = Enumerable.Range(0, BackForeExamples.Length)
+            (double distance, int index) closestBack = Enumerable.Range(0, BackForeExamples.Length)
                 .Select(i => (Distance: DistanceTo(BackForeExamples[i].back), Index: i))
                 .Min();
 
-            var closestFore = Enumerable.Range(0, BackForeExamples.Length)
+            (double distance, int index) closestFore = Enumerable.Range(0, BackForeExamples.Length)
                 .Select(i => (Distance: DistanceTo(BackForeExamples[i].fore), Index: i))
                 .Min();
 
-            return ThemeSettings.Theme.GetNonEmptyColor(closestBack.Distance <= closestFore.Distance * 1.25 // prefer back-fore combination
-                ? BackForeExamples[closestBack.Index].fore
-                : BackForeExamples[closestFore.Index].back);
+            return ThemeSettings.Theme.GetNonEmptyColor(closestBack.distance <= closestFore.distance * 1.25 // prefer back-fore combination
+                ? BackForeExamples[closestBack.index].fore
+                : BackForeExamples[closestFore.index].back);
 
             double DistanceTo(KnownColor c2)
             {
-                var hsl2 = ThemeSettings.Theme.GetNonEmptyColor(c2).ToPerceptedHsl();
+                HslColor hsl2 = ThemeSettings.Theme.GetNonEmptyColor(c2).ToPerceptedHsl();
                 return
                     Math.Abs(hsl1.L - hsl2.L) +
                     (0.25 * Math.Abs(hsl1.S - hsl2.S)) +
@@ -81,7 +81,7 @@
                 textHsl.L, backgroundHsl.L,
                 highlightTextHsl.L, highlightBackgroundHsl.L);
 
-            var highlightGrayTextHsl = grayTextHsl.WithLuminosity(highlightGrayTextL);
+            HslColor highlightGrayTextHsl = grayTextHsl.WithLuminosity(highlightGrayTextL);
             return AdaptTextColor(highlightGrayTextHsl.ToColor());
         }
 
@@ -95,7 +95,7 @@
             HslColor textHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
 
             double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
-            var highlightGrayTextHsl = grayTextHsl.WithLuminosity(grayTextL);
+            HslColor highlightGrayTextHsl = grayTextHsl.WithLuminosity(grayTextL);
             return AdaptTextColor(highlightGrayTextHsl.ToColor());
         }
 
@@ -106,23 +106,23 @@
                 return original;
             }
 
-            var hsl1 = original.ToPerceptedHsl();
+            HslColor hsl1 = original.ToPerceptedHsl();
 
-            var index = Enumerable.Range(0, BackForeExamples.Length)
+            int index = Enumerable.Range(0, BackForeExamples.Length)
                 .Select(i => (
                     distance: DistanceTo(
                         isForeground ? BackForeExamples[i].fore : BackForeExamples[i].back),
                     index: i))
                 .Min().index;
 
-            var option = BackForeExamples[index];
+            (KnownColor back, KnownColor fore) option = BackForeExamples[index];
             return isForeground
                 ? AdaptColor(original, option.fore, option.back)
                 : AdaptColor(original, option.back, option.fore);
 
             double DistanceTo(KnownColor c2)
             {
-                var hsl2 = ThemeSettings.InvariantTheme.GetNonEmptyColor(c2).ToPerceptedHsl();
+                HslColor hsl2 = ThemeSettings.InvariantTheme.GetNonEmptyColor(c2).ToPerceptedHsl();
                 return Math.Abs(hsl1.L - hsl2.L) + (0.25 * Math.Abs(hsl1.S - hsl2.S));
             }
         }
@@ -194,7 +194,7 @@
                 return original;
             }
 
-            var clone = (Bitmap)original.Clone();
+            Bitmap clone = (Bitmap)original.Clone();
             new LightnessCorrection(clone).Execute();
             return clone;
         }
@@ -211,11 +211,11 @@
                 original = original.AdaptToColorblindness();
             }
 
-            var exampleOrigRgbHsl = RgbHsl(exampleOriginal);
-            var oppositeOrigRgbHsl = RgbHsl(oppositeOriginal);
-            var exampleRgbHsl = RgbHsl(example);
-            var oppositeRgbHsl = RgbHsl(opposite);
-            var originalRgbHsl = RgbHsl(original);
+            (Color rgb, HslColor hsl) exampleOrigRgbHsl = RgbHsl(exampleOriginal);
+            (Color rgb, HslColor hsl) oppositeOrigRgbHsl = RgbHsl(oppositeOriginal);
+            (Color rgb, HslColor hsl) exampleRgbHsl = RgbHsl(example);
+            (Color rgb, HslColor hsl) oppositeRgbHsl = RgbHsl(opposite);
+            (Color rgb, HslColor hsl) originalRgbHsl = RgbHsl(original);
 
             double perceptedL = Transform(
                 PerceptedL(originalRgbHsl),
@@ -226,7 +226,7 @@
 
             double actualL = ActualL(originalRgbHsl.rgb, perceptedL);
 
-            var result = originalRgbHsl.hsl.WithLuminosity(actualL).ToColor();
+            Color result = originalRgbHsl.hsl.WithLuminosity(actualL).ToColor();
             return result;
 
             double PerceptedL((Color rgb, HslColor hsl) c) =>
@@ -258,7 +258,7 @@
 
         private static double GammaTransform(this double l, double gamma)
         {
-            var l0 = gamma / (gamma + 1);
+            double l0 = gamma / (gamma + 1);
             if (l < l0)
             {
                 return l / gamma;
@@ -300,7 +300,7 @@
             double excludeHTo = 15d; // orange
 
             HslColor hsl = new(color);
-            var deltaH = ((hsl.H * 360d) - excludeHTo + 180).Modulo(360) - 180;
+            double deltaH = ((hsl.H * 360d) - excludeHTo + 180).Modulo(360) - 180;
 
             const double deltaFrom = -140d;
             const double deltaTo = 0d;
@@ -333,8 +333,8 @@
 
             float Lerp(float start, float end)
             {
-                var difference = end - start;
-                var adjusted = difference * amount;
+                float difference = end - start;
+                float adjusted = difference * amount;
                 return start + adjusted;
             }
         }

@@ -49,7 +49,7 @@ namespace GitUITests.UserControls
         [TestCaseSource(nameof(GetInvalidAheadBehindData))]
         public void DisplayAheadBehindInformation_should_display_default_text_image_if_ahead_behind_data_null(IDictionary<string, AheadBehindData> data)
         {
-            var branchName = "who_cares";
+            string branchName = "who_cares";
             _aheadBehindDataProvider.GetData(branchName).Returns(x => data);
 
             _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
@@ -77,7 +77,7 @@ namespace GitUITests.UserControls
         [Test]
         public void DisplayAheadBehindInformation_should_display_normal_state_when_no_data_returned()
         {
-            var branchName = "(no branch) or any-branch";
+            string branchName = "(no branch) or any-branch";
             _aheadBehindDataProvider.GetData(branchName).Returns(x => null);
 
             _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName);
@@ -90,7 +90,7 @@ namespace GitUITests.UserControls
         [Test]
         public void DisplayAheadBehindInformation_should_display_normal_state_when_in_ahead_state()
         {
-            var branchName = "my-branch";
+            string branchName = "my-branch";
             Dictionary<string, AheadBehindData> data = new()
             {
                 { branchName, new AheadBehindData { AheadCount = "9", BehindCount = string.Empty, Branch = branchName } }
@@ -108,7 +108,7 @@ namespace GitUITests.UserControls
         [Test]
         public void DisplayAheadBehindInformation_should_display_warning_state_when_in_behind_state()
         {
-            var branchName = "my-branch";
+            string branchName = "my-branch";
             Dictionary<string, AheadBehindData> data = new()
             {
                 { branchName, new AheadBehindData { AheadCount = string.Empty, BehindCount = "2", Branch = branchName } }
@@ -126,7 +126,7 @@ namespace GitUITests.UserControls
         [Test]
         public void DisplayAheadBehindInformation_should_display_warning_state_when_in_ahead_and_behind_state()
         {
-            var branchName = "my-branch";
+            string branchName = "my-branch";
             Dictionary<string, AheadBehindData> data = new()
             {
                 { branchName, new AheadBehindData { AheadCount = "99", BehindCount = "3", Branch = branchName } }
@@ -146,7 +146,7 @@ namespace GitUITests.UserControls
         {
             AppSettings.ShowAheadBehindData = false;
 
-            var branchName = "my-branch";
+            string branchName = "my-branch";
 
             _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName);
 

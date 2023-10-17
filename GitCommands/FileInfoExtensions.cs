@@ -16,7 +16,7 @@
             }
 
             FileInfo fileInfo = new(fileName);
-            var oldAttributes = fileInfo.Attributes;
+            FileAttributes oldAttributes = fileInfo.Attributes;
             fileInfo.Attributes = FileAttributes.Normal;
             writableAction(fileName);
 

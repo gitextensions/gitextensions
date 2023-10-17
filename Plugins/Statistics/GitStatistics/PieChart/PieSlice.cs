@@ -195,7 +195,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             _shadowStyle = shadowStyle;
 
             // create pens for rendering
-            var edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
+            Color edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
             Pen = new Pen(edgeLineColor) { LineJoin = LineJoin.Round };
             InitializePieSlice(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, sliceHeight);
         }
@@ -419,12 +419,12 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         internal PieSlice[] Split(float splitAngle)
         {
-            var transformedSplitAngle = TransformAngle(splitAngle);
-            var pieSlice1 = (PieSlice)MemberwiseClone();
+            float transformedSplitAngle = TransformAngle(splitAngle);
+            PieSlice pieSlice1 = (PieSlice)MemberwiseClone();
             pieSlice1.StartAngle = transformedSplitAngle;
             pieSlice1.SweepAngle = (StartAngle + SweepAngle - transformedSplitAngle) % 360;
             pieSlice1.InitializeSides();
-            var pieSlice2 = (PieSlice)MemberwiseClone();
+            PieSlice pieSlice2 = (PieSlice)MemberwiseClone();
             pieSlice2.SweepAngle = (transformedSplitAngle - StartAngle + 360) % 360;
             pieSlice2.InitializeSides();
             return new[] { pieSlice1, pieSlice2 };
@@ -495,8 +495,8 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         {
             Validates.NotNull(Pen);
             Validates.NotNull(BrushPeripherySurface);
-            var peripherySurfaceBounds = GetVisiblePeripherySurfaceBounds();
-            foreach (var surfaceBounds in peripherySurfaceBounds)
+            IEnumerable<PeripherySurfaceBounds> peripherySurfaceBounds = GetVisiblePeripherySurfaceBounds();
+            foreach (PeripherySurfaceBounds surfaceBounds in peripherySurfaceBounds)
             {
                 DrawCylinderSurfaceSection(
                     graphics,
@@ -601,8 +601,8 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         internal bool PeripheryContainsPoint(PointF point)
         {
-            var peripherySurfaceBounds = GetVisiblePeripherySurfaceBounds();
-            foreach (var surfaceBounds in peripherySurfaceBounds)
+            IEnumerable<PeripherySurfaceBounds> peripherySurfaceBounds = GetVisiblePeripherySurfaceBounds();
+            foreach (PeripherySurfaceBounds surfaceBounds in peripherySurfaceBounds)
             {
                 if (CylinderSurfaceSectionContainsPoint(
                     point,
@@ -759,7 +759,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         protected virtual Brush CreateBrushForSide(Color color, double angle)
         {
-            var d = 1 - (0.8 * Math.Cos(angle * Math.PI / 180));
+            double d = 1 - (0.8 * Math.Cos(angle * Math.PI / 180));
             return
                 new SolidBrush(
                     ColorUtil.CreateColorWithCorrectedLightness(
@@ -779,11 +779,11 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         protected virtual Brush CreateBrushForPeriphery(Color color)
         {
-            var color1 =
+            Color color1 =
                 ColorUtil.CreateColorWithCorrectedLightness(
                     color,
                     -ColorUtil.BrightnessEnhancementFactor1 / 2);
-            var color2 =
+            Color color2 =
                 ColorUtil.CreateColorWithCorrectedLightness(
                     color,
                     -ColorUtil.BrightnessEnhancementFactor1);
@@ -831,7 +831,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             Graphics graphics, Pen pen, Brush brush, float startAngle,
             float endAngle, PointF pointStart, PointF pointEnd)
         {
-            var path = CreatePathForCylinderSurfaceSection(startAngle, endAngle, pointStart, pointEnd);
+            GraphicsPath path = CreatePathForCylinderSurfaceSection(startAngle, endAngle, pointStart, pointEnd);
             graphics.FillPath(brush, path);
             graphics.DrawPath(pen, path);
         }
@@ -848,9 +848,9 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         protected float TransformAngle(float angle)
         {
-            var x = BoundingRectangle.Width * Math.Cos(angle * Math.PI / 180);
-            var y = BoundingRectangle.Height * Math.Sin(angle * Math.PI / 180);
-            var result = (float)(Math.Atan2(y, x) * 180 / Math.PI);
+            double x = BoundingRectangle.Width * Math.Cos(angle * Math.PI / 180);
+            double y = BoundingRectangle.Height * Math.Sin(angle * Math.PI / 180);
+            float result = (float)(Math.Atan2(y, x) * 180 / Math.PI);
             if (result < 0)
             {
                 return result + 360;
@@ -885,7 +885,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             float xCenter, float yCenter, float semiMajor, float semiMinor,
             float angleDegrees)
         {
-            var angleRadians = angleDegrees * Math.PI / 180;
+            double angleRadians = angleDegrees * Math.PI / 180;
             return new PointF(
                 xCenter + (float)(semiMajor * Math.Cos(angleRadians)),
                 yCenter + (float)(semiMinor * Math.Sin(angleRadians)));
@@ -940,8 +940,8 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             CreateSurfaceBrushes(_surfaceColor, _shadowStyle);
 
             // calculates center and end points on periphery
-            var xCenter = xBoundingRect + (widthBoundingRect / 2);
-            var yCenter = yBoundingRect + (heightBoundingRect / 2);
+            float xCenter = xBoundingRect + (widthBoundingRect / 2);
+            float yCenter = yBoundingRect + (heightBoundingRect / 2);
             Center = new PointF(xCenter, yCenter);
             CenterBelow = new PointF(xCenter, yCenter + sliceHeight);
             PointStart = PeripheralPoint(
@@ -991,9 +991,9 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 // edge, whichever comes first
                 if (StartAngle < 180)
                 {
-                    var fi1 = StartAngle;
+                    float fi1 = StartAngle;
                     PointF x1 = new(PointStart.X, PointStart.Y);
-                    var fi2 = EndAngle;
+                    float fi2 = EndAngle;
                     PointF x2 = new(PointEnd.X, PointEnd.Y);
                     if (StartAngle + SweepAngle > 180)
                     {
@@ -1010,7 +1010,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 {
                     const float fi1 = 0;
                     PointF x1 = new(BoundingRectangle.Right, Center.Y);
-                    var fi2 = EndAngle;
+                    float fi2 = EndAngle;
                     PointF x2 = new(PointEnd.X, PointEnd.Y);
                     if (fi2 > 180)
                     {
@@ -1133,29 +1133,29 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         {
             double a = widthBoundingRectangle / 2;
             double b = heightBoundingRectangle / 2;
-            var x = point.X - xBoundingRectangle - a;
-            var y = point.Y - yBoundingRectangle - b;
-            var angle = Math.Atan2(y, x);
+            double x = point.X - xBoundingRectangle - a;
+            double y = point.Y - yBoundingRectangle - b;
+            double angle = Math.Atan2(y, x);
             if (angle < 0)
             {
                 angle += 2 * Math.PI;
             }
 
-            var angleDegrees = angle * 180 / Math.PI;
+            double angleDegrees = angle * 180 / Math.PI;
 
             // point is inside the pie slice only if between start and end angle
             if ((angleDegrees >= startAngle && angleDegrees <= (startAngle + sweepAngle)) ||
                 ((startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle))))
             {
                 // distance of the point from the ellipse centre
-                var r = Math.Sqrt((y * y) + (x * x));
-                var a2 = a * a;
-                var b2 = b * b;
-                var cosFi = Math.Cos(angle);
-                var sinFi = Math.Sin(angle);
+                double r = Math.Sqrt((y * y) + (x * x));
+                double a2 = a * a;
+                double b2 = b * b;
+                double cosFi = Math.Cos(angle);
+                double sinFi = Math.Sin(angle);
 
                 // distance of the ellipse perimeter point
-                var ellipseRadius = (b * a) / Math.Sqrt((b2 * cosFi * cosFi) + (a2 * sinFi * sinFi));
+                double ellipseRadius = (b * a) / Math.Sqrt((b2 * cosFi * cosFi) + (a2 * sinFi * sinFi));
                 return ellipseRadius > r;
             }
 

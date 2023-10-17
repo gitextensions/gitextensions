@@ -63,7 +63,7 @@ namespace GitCommands
                 return;
             }
 
-            foreach (var value in values)
+            foreach (string value in values)
             {
                 builder.Add(value);
             }
@@ -89,7 +89,7 @@ namespace GitCommands
                 return;
             }
 
-            foreach (var value in ifConditionTrue)
+            foreach (string value in ifConditionTrue)
             {
                 builder.Add(value);
             }
@@ -267,7 +267,7 @@ namespace GitCommands
                 return;
             }
 
-            foreach (var objectId in objectIds)
+            foreach (ObjectId objectId in objectIds)
             {
                 builder.Add(objectId);
             }
@@ -291,7 +291,7 @@ namespace GitCommands
             // '"git.exe" ' is always included in final command line arguments
             baseLength ??= AppSettings.GitCommand.Length + 3;
 
-            var baseArgument = builder.ToString();
+            string baseArgument = builder.ToString();
             if (baseLength + baseArgument.Length >= maxLength)
             {
                 throw new ArgumentException($"Git base command \"{baseArgument}\" always reached max length of {maxLength} characters.", nameof(baseArgument));
@@ -299,9 +299,9 @@ namespace GitCommands
 
             // Clone command as argument builder
             List<BatchArgumentItem> batches = new();
-            var currentBatchItemCount = 0;
-            var currentArgumentLength = baseArgument.Length;
-            var lastBatchBuilder = arguments.Aggregate(builder, (currentBatchBuilder, argument) =>
+            int currentBatchItemCount = 0;
+            int currentArgumentLength = baseArgument.Length;
+            ArgumentBuilder lastBatchBuilder = arguments.Aggregate(builder, (currentBatchBuilder, argument) =>
             {
                 // 1: ' ' space character length will be added
                 // When enumeration is finished, no need to add ' ' to length calculation

@@ -10,9 +10,9 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestToString()
         {
-            var committerTime = DateTime.Now;
-            var authorTime = DateTime.Now;
-            var commitHash = ObjectId.Random();
+            DateTime committerTime = DateTime.Now;
+            DateTime authorTime = DateTime.Now;
+            ObjectId commitHash = ObjectId.Random();
 
             StringBuilder str = new();
 
@@ -44,9 +44,9 @@ namespace GitCommandsTests.Git
         [Test]
         public void ToString_When_Not_Null_Returns_Output()
         {
-            var committerTime = DateTime.Now;
-            var authorTime = DateTime.Now;
-            var commitHash = ObjectId.Random();
+            DateTime committerTime = DateTime.Now;
+            DateTime authorTime = DateTime.Now;
+            ObjectId commitHash = ObjectId.Random();
 
             Func<string?, string?> summaryBuilder = (input) => $"SOME BUILDER TEXT: {input}";
 
@@ -80,9 +80,9 @@ namespace GitCommandsTests.Git
         [Test]
         public void ToString_When_Null_Returns_Input()
         {
-            var committerTime = DateTime.Now;
-            var authorTime = DateTime.Now;
-            var commitHash = ObjectId.Random();
+            DateTime committerTime = DateTime.Now;
+            DateTime authorTime = DateTime.Now;
+            ObjectId commitHash = ObjectId.Random();
 
             Func<string?, string?> summaryBuilder = (input) => null;
 

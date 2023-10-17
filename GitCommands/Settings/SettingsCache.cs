@@ -70,7 +70,7 @@ namespace GitCommands
         {
             LockedAction(() =>
                 {
-                    foreach (var (key, value) in keyValuePairs)
+                    foreach ((string key, string value) in keyValuePairs)
                     {
                         if (value is not null)
                         {

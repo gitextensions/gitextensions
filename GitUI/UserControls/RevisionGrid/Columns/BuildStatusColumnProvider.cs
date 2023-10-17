@@ -39,11 +39,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Refresh(int rowHeight, in VisibleRowRange range)
         {
-            var showIcon = AppSettings.ShowBuildStatusIconColumn;
-            var showText = AppSettings.ShowBuildStatusTextColumn;
+            bool showIcon = AppSettings.ShowBuildStatusIconColumn;
+            bool showText = AppSettings.ShowBuildStatusTextColumn;
 
             IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
-            var columnVisible = buildServerSettings.IntegrationEnabledOrDefault && (showIcon || showText);
+            bool columnVisible = buildServerSettings.IntegrationEnabledOrDefault && (showIcon || showText);
 
             Column.Visible = columnVisible;
 
@@ -59,7 +59,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 Column.Resizable = showText ? DataGridViewTriState.True : DataGridViewTriState.False;
                 Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
 
-                var iconColumnWidth = DpiUtil.Scale(IconColumnWidth);
+                int iconColumnWidth = DpiUtil.Scale(IconColumnWidth);
 
                 if (showIcon && !showText)
                 {
@@ -89,9 +89,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     e.CellBounds.Left + (size.Width / 2),
                     e.CellBounds.Top + ((e.CellBounds.Height - size.Height) / 2));
 
-                var container = e.Graphics.BeginContainer();
+                GraphicsContainer container = e.Graphics.BeginContainer();
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                using var brush = CreateCircleBrush();
+                using Brush brush = CreateCircleBrush();
                 e.Graphics.FillEllipse(brush, new Rectangle(location, size));
                 e.Graphics.EndContainer(container);
             }
@@ -112,7 +112,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Color GetColor(Color foreColor)
             {
-                var isSelected = _gridView.Rows[e.RowIndex].Selected;
+                bool isSelected = _gridView.Rows[e.RowIndex].Selected;
 
                 Color customColor;
                 switch (revision.BuildStatus.Status)

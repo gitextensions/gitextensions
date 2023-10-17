@@ -27,19 +27,19 @@ namespace CommonTestUtils.MEF
 
             public ExportProvider GetOrCreateExportProvider()
             {
-                var expectedCatalog = Interlocked.CompareExchange(ref _scope.ExpectedCatalog, _catalog, null) ?? _catalog;
+                ComposableCatalog expectedCatalog = Interlocked.CompareExchange(ref _scope.ExpectedCatalog, _catalog, null) ?? _catalog;
                 RequireForSingleExportProvider(expectedCatalog == _catalog);
 
-                var expected = _scope.ExpectedProviderForCatalog;
+                ExportProvider expected = _scope.ExpectedProviderForCatalog;
                 if (expected == null)
                 {
-                    foreach (var errorCollection in _configuration.CompositionErrors)
+                    foreach (IReadOnlyCollection<ComposedPartDiagnostic> errorCollection in _configuration.CompositionErrors)
                     {
-                        foreach (var error in errorCollection)
+                        foreach (ComposedPartDiagnostic error in errorCollection)
                         {
-                            foreach (var part in error.Parts)
+                            foreach (ComposedPart part in error.Parts)
                             {
-                                foreach (var (importBinding, exportBindings) in part.SatisfyingExports)
+                                foreach ((ImportDefinitionBinding importBinding, IReadOnlyList<ExportDefinitionBinding> exportBindings) in part.SatisfyingExports)
                                 {
                                     if (exportBindings.Count <= 1)
                                     {
@@ -67,7 +67,7 @@ namespace CommonTestUtils.MEF
                     Interlocked.CompareExchange(ref _scope.CurrentExportProvider, expected, null);
                 }
 
-                var exportProvider = _scope.CurrentExportProvider;
+                ExportProvider exportProvider = _scope.CurrentExportProvider;
                 RequireForSingleExportProvider(exportProvider == expected);
 
                 return exportProvider;

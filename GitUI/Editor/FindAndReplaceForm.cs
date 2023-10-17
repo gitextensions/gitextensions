@@ -164,7 +164,7 @@ namespace GitUI
                     startFrom = _search.EndOffset;
                 }
 
-                var isMultiFileSearch = _fileLoader is not null && !_search.HasScanRegion;
+                bool isMultiFileSearch = _fileLoader is not null && !_search.HasScanRegion;
 
                 range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
                 if (range is not null && (!_lastSearchLoopedAround || !isMultiFileSearch))
@@ -180,7 +180,7 @@ namespace GitUI
                     }
 
                     Validates.NotNull(_fileLoader);
-                    if (_fileLoader(searchBackward, true, out var fileIndex, out var loadFileContent))
+                    if (_fileLoader(searchBackward, true, out int fileIndex, out Task loadFileContent))
                     {
                         currentIdx = fileIndex;
                         try
@@ -252,7 +252,7 @@ namespace GitUI
                 int offset = 0, count = 0;
                 for (; ;)
                 {
-                    TextRange? range = _search.FindNext(offset, false, out var looped);
+                    TextRange? range = _search.FindNext(offset, false, out bool looped);
                     if (range is null || looped)
                     {
                         break;

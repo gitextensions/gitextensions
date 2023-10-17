@@ -11,7 +11,7 @@ namespace GitCommandsTests.Git
         public void GetSubmoduleNamesFromDiffTest()
         {
             // TODO produce a valid working directory
-            var root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
 
             // Create actual working directories so that Process.Start doesn't throw Win32Exception due to an invalid path
             Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside"));
@@ -26,7 +26,7 @@ namespace GitCommandsTests.Git
             string text = "diff --git a/Externals/conemu-inside b/Externals/conemu-inside\nindex a17ea0c..b5a3d51 160000\n--- a/Externals/conemu-inside\n+++ b/Externals/conemu-inside\n@@ -1 +1 @@\n-Subproject commit a17ea0c8ebe9d8cd7e634ba44559adffe633c11d\n+Subproject commit b5a3d51777c85a9aeee534c382b5ccbb86b485d3\n";
             string fileName = "Externals/conemu-inside";
 
-            var status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+            GitSubmoduleStatus status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
             Assert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
             Assert.AreEqual(fileName, status.Name);

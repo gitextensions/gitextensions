@@ -32,7 +32,7 @@ namespace GitCommands.Git
             GitSubmoduleStatus? submoduleStatus = ParseSubmoduleStatus(patch?.Text, module, fileName);
             if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
             {
-                var submodule = submoduleStatus.GetSubmodule(module);
+                GitModule submodule = submoduleStatus.GetSubmodule(module);
                 submoduleStatus.CheckSubmoduleStatus(submodule);
             }
 
@@ -61,7 +61,7 @@ namespace GitCommands.Git
 
                 if (line is not null)
                 {
-                    var match = Regex.Match(line, @"diff --git [abic]/(.+)\s[abwi]/(.+)");
+                    Match match = Regex.Match(line, @"diff --git [abic]/(.+)\s[abwi]/(.+)");
                     if (match.Groups.Count > 1)
                     {
                         name = match.Groups[1].Value;
@@ -124,7 +124,7 @@ namespace GitCommands.Git
                 }
                 else
                 {
-                    var submodule = module.GetSubmodule(fileName);
+                    GitModule submodule = module.GetSubmodule(fileName);
                     if (submodule.IsValidGitWorkingDir())
                     {
                         addedCommits = submodule.GetCommitCount(commitId.ToString(), oldCommitId.ToString(), cache: true, throwOnErrorExit: false);

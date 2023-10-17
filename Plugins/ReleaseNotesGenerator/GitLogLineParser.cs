@@ -19,7 +19,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
                 return null;
             }
 
-            var m = LogLineRegex.Match(line);
+            Match m = LogLineRegex.Match(line);
             if (!m.Success)
             {
                 return null;
@@ -40,7 +40,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
             LogLine? logLineCurrent = null;
             foreach (string line in lines)
             {
-                var logLine1 = Parse(line);
+                LogLine logLine1 = Parse(line);
                 if (logLine1 is not null)
                 {
                     if (logLineCurrent is not null)

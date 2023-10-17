@@ -47,7 +47,7 @@ namespace GitExtensions.UITests
                 // Avoid using ThreadHelper.JoinableTaskFactory for the outermost operation because we don't want the task
                 // tracked by its collection. Otherwise, test code would not be able to wait for pending operations to
                 // complete.
-                var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
+                Microsoft.VisualStudio.Threading.JoinableTask test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
                 {
                     Log("switching to UI thread");
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

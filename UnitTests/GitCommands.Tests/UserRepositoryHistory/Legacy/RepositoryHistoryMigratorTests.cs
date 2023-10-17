@@ -30,7 +30,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         [Test]
         public async Task MigrateSettings_should_migrate_old_categorised_settings()
         {
-            var xml = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.CategorisedRepositories02.xml");
+            string xml = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.CategorisedRepositories02.xml");
             if (string.IsNullOrWhiteSpace(xml))
             {
                 throw new FileFormatException("Unexpected data");
@@ -38,7 +38,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
 
             _repositoryStorage.Load().Returns(x => new RepositoryCategoryXmlSerialiser().Deserialize(xml));
 
-            var (currentHistory, migrated) = await _historyMigrator.MigrateAsync(new List<Current.Repository>());
+            (IList<Current.Repository> currentHistory, bool migrated) = await _historyMigrator.MigrateAsync(new List<Current.Repository>());
 
             currentHistory.Count.Should().Be(8);
             currentHistory.Count(r => r.Category == "Git Extensions").Should().Be(1);

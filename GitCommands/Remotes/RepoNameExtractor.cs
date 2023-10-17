@@ -31,23 +31,23 @@ namespace GitCommands.Remotes
         /// </summary>
         public (string repoProject, string repoName) Get()
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
 
             // Extract "name of repo" from remote url
-            var remoteName = module.GetCurrentRemote();
+            string remoteName = module.GetCurrentRemote();
 
             if (string.IsNullOrWhiteSpace(remoteName))
             {
                 // No remote for the branch, for instance a submodule. Use first remote.
-                var remotes = module.GetRemoteNames();
+                IReadOnlyList<string> remotes = module.GetRemoteNames();
                 if (remotes.Count > 0)
                 {
                     remoteName = remotes[0];
                 }
             }
 
-            var remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
-            var repoName = Path.GetFileNameWithoutExtension(remoteUrl);
+            string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
+            string repoName = Path.GetFileNameWithoutExtension(remoteUrl);
 
             return (GetRepoProject(), repoName);
 

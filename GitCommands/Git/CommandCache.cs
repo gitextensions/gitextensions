@@ -68,7 +68,7 @@ namespace GitCommands
             {
                 lock (_cache)
                 {
-                    if (_cache.TryGetValue(cmd, out var item))
+                    if (_cache.TryGetValue(cmd, out (byte[] output, byte[] error) item))
                     {
                         (output, error) = item;
                         return true;

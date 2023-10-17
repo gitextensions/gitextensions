@@ -62,7 +62,7 @@ namespace GitCommands
         /// <returns>The list of valid paths defined under %PATH% environment variable.</returns>
         public IEnumerable<string> GetEnvironmentValidPaths()
         {
-            var envPaths = GetEnvironmentPaths();
+            IEnumerable<string> envPaths = GetEnvironmentPaths();
             return envPaths.Where(IsValidPath);
         }
 

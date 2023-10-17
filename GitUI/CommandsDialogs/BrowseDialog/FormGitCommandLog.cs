@@ -78,8 +78,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private static void RefreshListBox(ListBox log, object dataSource)
         {
-            var isLastIndexSelected = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
-            var lastIndex = -1;
+            bool isLastIndexSelected = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
+            int lastIndex = -1;
             if (!isLastIndexSelected)
             {
                 lastIndex = log.SelectedIndex;
@@ -114,9 +114,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var command = (string)CommandCacheItems.SelectedItem;
+            string command = (string)CommandCacheItems.SelectedItem;
 
-            if (GitModule.GitCommandCache.TryGet(command, out var cmdOut, out var cmdErr))
+            if (GitModule.GitCommandCache.TryGet(command, out byte[]? cmdOut, out byte[]? cmdErr))
             {
                 Encoding encoding = GitModule.SystemEncoding;
                 commandCacheOutput.Text =
@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LogItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var entry = (CommandLogEntry)LogItems.SelectedItem;
+            CommandLogEntry entry = (CommandLogEntry)LogItems.SelectedItem;
 
             LogOutput.Text = entry.Detail;
         }
@@ -160,7 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             };
             if (fileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                var separator = fileDialog.FileName.EndsWith("csv") ?
+                string separator = fileDialog.FileName.EndsWith("csv") ?
                     System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator :
                     "\t";
                 File.WriteAllLines(

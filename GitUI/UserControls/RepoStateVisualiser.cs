@@ -27,11 +27,11 @@ namespace GitUI.UserControls
                 return Unknown;
             }
 
-            var indexCount = 0;
-            var workTreeSubmodulesCount = 0;
-            var notTrackedCount = 0;
+            int indexCount = 0;
+            int workTreeSubmodulesCount = 0;
+            int notTrackedCount = 0;
 
-            foreach (var status in allChangedFiles)
+            foreach (GitItemStatus status in allChangedFiles)
             {
                 if (status.Staged == StagedStatus.Index)
                 {
@@ -49,7 +49,7 @@ namespace GitUI.UserControls
                 }
             }
 
-            var workTreeCount = allChangedFiles.Count - indexCount;
+            int workTreeCount = allChangedFiles.Count - indexCount;
 
             return (indexCount, workTreeCount) switch
             {

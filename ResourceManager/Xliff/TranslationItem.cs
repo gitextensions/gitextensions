@@ -37,7 +37,7 @@ namespace ResourceManager.Xliff
             get => Name + "." + Property;
             set
             {
-                var values = value.Split(Delimiters.Period, 2);
+                string[] values = value.Split(Delimiters.Period, 2);
                 Name = values[0];
                 Property = values.Length > 1 ? values[1] : "";
             }

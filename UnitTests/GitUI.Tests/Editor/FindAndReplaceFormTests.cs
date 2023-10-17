@@ -58,7 +58,7 @@ namespace GitUITests.Editor
         {
             Arrange(text, searchPhrase, matchCase);
 
-            var actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+            TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
 
             AssertTextRange(expectedRange, actualRange);
         }
@@ -77,7 +77,7 @@ namespace GitUITests.Editor
         {
             Arrange(text, searchPhrase, matchWholeWordOnly: true);
 
-            var actualRange = await _findAndReplaceForm.FindNextAsync(false, true, null);
+            TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, true, null);
 
             AssertTextRange(expectedRange, actualRange);
         }
@@ -132,7 +132,7 @@ namespace GitUITests.Editor
 
             foreach (TextRange expectedRange in expectedRanges)
             {
-                var actualRange = await _findAndReplaceForm.FindNextAsync(false, searchBackwards, null);
+                TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, searchBackwards, null);
 
                 AssertTextRange(expectedRange, actualRange);
             }
@@ -143,7 +143,7 @@ namespace GitUITests.Editor
         {
             Arrange("line one\r\nline two\r\nline three", "line", scanRegion: new TextRegion(new TextLocation(0, 0), new TextLocation(0, 1)));
 
-            var actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+            TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
             AssertTextRange(new TextRange(0, 4), actualRange);
 
             // Move the caret outside of the originally selected region.
@@ -197,7 +197,7 @@ namespace GitUITests.Editor
 
             foreach (TextRange expectedRange in expectedRanges)
             {
-                var actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+                TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
 
                 AssertTextRange(expectedRange, actualRange);
             }
@@ -249,7 +249,7 @@ namespace GitUITests.Editor
             }
 
             // Assert text selected
-            var actualSelection = _textEditorControl.ActiveTextAreaControl.SelectionManager.SelectionCollection.Single();
+            ISelection actualSelection = _textEditorControl.ActiveTextAreaControl.SelectionManager.SelectionCollection.Single();
             Assert.AreEqual(expectedRange.Offset, actualSelection.Offset);
             Assert.AreEqual(expectedRange.Length, actualSelection.Length);
 

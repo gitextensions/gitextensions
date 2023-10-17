@@ -9,7 +9,7 @@
                 throw new ArgumentNullException(nameof(comboBox));
             }
 
-            var width = GetPreferredDropDownWidth(comboBox);
+            int width = GetPreferredDropDownWidth(comboBox);
 
             comboBox.Width = width;
 
@@ -26,7 +26,7 @@
                 throw new ArgumentNullException(nameof(comboBox));
             }
 
-            var calculatedWidth = GetPreferredDropDownWidth(comboBox);
+            int calculatedWidth = GetPreferredDropDownWidth(comboBox);
             comboBox.DropDownWidth = Math.Min(Math.Max(calculatedWidth, minWidth), maxWidth);
         }
 
@@ -37,17 +37,17 @@
                 throw new ArgumentNullException(nameof(comboBox));
             }
 
-            var calculatedWidth = GetPreferredDropDownWidth(comboBox.Control);
+            int calculatedWidth = GetPreferredDropDownWidth(comboBox.Control);
             comboBox.DropDownWidth = Math.Min(Math.Max(calculatedWidth, minWidth), maxWidth);
         }
 
         private static int GetPreferredDropDownWidth(dynamic comboBox)
         {
-            var calculatedWidth = 0;
-            using var graphics = comboBox.CreateGraphics();
+            int calculatedWidth = 0;
+            using dynamic graphics = comboBox.CreateGraphics();
             foreach (object obj in comboBox.Items)
             {
-                var area = graphics.MeasureString(obj.ToString(), comboBox.Font);
+                dynamic area = graphics.MeasureString(obj.ToString(), comboBox.Font);
                 calculatedWidth = Math.Max((int)area.Width, calculatedWidth);
             }
 

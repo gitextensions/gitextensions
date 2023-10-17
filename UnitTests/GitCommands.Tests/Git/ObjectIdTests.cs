@@ -15,7 +15,7 @@ namespace GitCommandsTests.Git
         [TestCase("0123456789abcdef0123456789abcdef01234567")]
         public void TryParse_handles_valid_hashes(string sha1)
         {
-            Assert.True(ObjectId.TryParse(sha1, out var id));
+            Assert.True(ObjectId.TryParse(sha1, out ObjectId? id));
             Assert.AreEqual(sha1.ToLower(), id.ToString());
         }
 
@@ -38,7 +38,7 @@ namespace GitCommandsTests.Git
         [TestCase("__0102030405060708091011121314151617181920__", 2)]
         public void TryParse_with_offset_handles_valid_hashes(string sha1, int offset)
         {
-            Assert.True(ObjectId.TryParse(sha1, offset, out var id));
+            Assert.True(ObjectId.TryParse(sha1, offset, out ObjectId? id));
             Assert.AreEqual(
                 sha1.Substring(offset, 40),
                 id.ToString());
@@ -100,8 +100,8 @@ namespace GitCommandsTests.Git
         [Test]
         public void ParseFromRegexCapture()
         {
-            var objectId = ObjectId.Random();
-            var str = "XYZ" + objectId + "XYZ";
+            ObjectId objectId = ObjectId.Random();
+            string str = "XYZ" + objectId + "XYZ";
 
             Assert.AreEqual(objectId, ObjectId.Parse(str, Regex.Match(str, "[a-f0-9]{40}")));
             Assert.Throws<FormatException>(() => ObjectId.Parse(str, Regex.Match(str, "[a-f0-9]{39}")));
@@ -279,9 +279,9 @@ namespace GitCommandsTests.Git
         public void ToShortString()
         {
             const string s = "0102030405060708091011121314151617181920";
-            var id = ObjectId.Parse(s);
+            ObjectId id = ObjectId.Parse(s);
 
-            for (var length = 0; length < ObjectId.Sha1CharCount; length++)
+            for (int length = 0; length < ObjectId.Sha1CharCount; length++)
             {
                 Assert.AreEqual(s[..length], id.ToShortString(length));
             }

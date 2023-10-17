@@ -167,10 +167,10 @@ namespace GitUI.CommandsDialogs
 
         private void Apply_Click(object sender, EventArgs e)
         {
-            var patchFile = PatchFile.Text;
-            var dirText = PatchDir.Text;
-            var ignoreWhiteSpace = IgnoreWhitespace.Checked;
-            var signOff = SignOff.Checked;
+            string patchFile = PatchFile.Text;
+            string dirText = PatchDir.Text;
+            bool ignoreWhiteSpace = IgnoreWhitespace.Checked;
+            bool signOff = SignOff.Checked;
 
             if (string.IsNullOrEmpty(patchFile) && string.IsNullOrEmpty(dirText))
             {
@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs
                 if (PatchFileMode.Checked)
                 {
                     string gitPatch = Module.GetGitExecPath(patchFile);
-                    var arguments = IsDiffFile(patchFile)
+                    GitExtUtils.ArgumentString arguments = IsDiffFile(patchFile)
                         ? Commands.ApplyDiffPatch(ignoreWhiteSpace, gitPatch)
                         : Commands.ApplyMailboxPatch(signOff, ignoreWhiteSpace, gitPatch);
 
@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     // No need for PathUtil.GetRepoPath(), file streamed
-                    var arguments = Commands.ApplyMailboxPatch(signOff, ignoreWhiteSpace);
+                    GitExtUtils.ArgumentString arguments = Commands.ApplyMailboxPatch(signOff, ignoreWhiteSpace);
 
                     Module.ApplyPatch(dirText, arguments);
                 }
@@ -238,7 +238,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
+                PatchFile applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
                 if (applyingPatch is not null)
                 {
                     applyingPatch.IsSkipped = true;
@@ -285,7 +285,7 @@ namespace GitUI.CommandsDialogs
 
         private void BrowseDir_Click(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this);
+            string userSelectedPath = OsShellUtil.PickFolder(this);
 
             if (userSelectedPath is not null)
             {

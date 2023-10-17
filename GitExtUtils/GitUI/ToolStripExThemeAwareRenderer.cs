@@ -14,8 +14,8 @@ namespace GitUI
 
         protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
         {
-            var image = (Bitmap)e.Image;
-            if (!AdaptedImagesCache.TryGetValue(image, out var adapted))
+            Bitmap image = (Bitmap)e.Image;
+            if (!AdaptedImagesCache.TryGetValue(image, out Bitmap adapted))
             {
                 adapted = image.AdaptLightness();
                 AdaptedImagesCache.Add(image, adapted);

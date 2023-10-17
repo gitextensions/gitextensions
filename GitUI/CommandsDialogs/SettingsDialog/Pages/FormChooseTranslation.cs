@@ -31,10 +31,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             foreach (string translation in translations)
             {
-                var imagePath = Path.Combine(Translator.GetTranslationDir(), translation + ".gif");
+                string imagePath = Path.Combine(Translator.GetTranslationDir(), translation + ".gif");
                 if (File.Exists(imagePath))
                 {
-                    var image = Image.FromFile(imagePath);
+                    Image image = Image.FromFile(imagePath);
                     imageList.Images.Add(translation, image);
                 }
             }
@@ -65,7 +65,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void lvTranslations_ItemActivate(object sender, EventArgs e)
         {
             // take the selection if any, else see the fallback in FormChooseTranslation_FormClosing
-            var selectedItems = ((ListView)sender).SelectedItems;
+            ListView.SelectedListViewItemCollection selectedItems = ((ListView)sender).SelectedItems;
             if (selectedItems.Count > 0)
             {
                 AppSettings.Translation = selectedItems[0].Tag.ToString();

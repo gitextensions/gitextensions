@@ -138,12 +138,12 @@ namespace GitCommands.Settings
                     return;
                 }
 
-                var tmpFile = Path.GetTempFileName();
+                string tmpFile = Path.GetTempFileName();
                 WriteSettings(tmpFile);
 
                 if (File.Exists(SettingsFilePath))
                 {
-                    var backupName = SettingsFilePath + ".backup";
+                    string backupName = SettingsFilePath + ".backup";
                     try
                     {
                         File.Copy(SettingsFilePath, backupName, true);
@@ -157,7 +157,7 @@ namespace GitCommands.Settings
                 try
                 {
                     // ensure the directory structure exists
-                    var parentFolder = Path.GetDirectoryName(SettingsFilePath);
+                    string parentFolder = Path.GetDirectoryName(SettingsFilePath);
                     if (!Directory.Exists(parentFolder))
                     {
                         Directory.CreateDirectory(parentFolder);

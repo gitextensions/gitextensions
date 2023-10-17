@@ -94,7 +94,7 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            var module = GetModule();
+            IGitModule module = GetModule();
 
             return await Task.Run(() =>
             {
@@ -146,7 +146,7 @@ namespace GitCommands.Gpg
             }
 
             /* No Tag present, exit */
-            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
+            List<IGitRef> usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
 
             if (usefulTagRefs.Count == 0)
             {
@@ -199,7 +199,7 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            var module = GetModule();
+            IGitModule module = GetModule();
             GitArgumentBuilder args = new("log")
             {
                 "--pretty=\"format:%GG\"",
@@ -220,7 +220,7 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
+            List<IGitRef> usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
             return EvaluateTagVerifyMessage(usefulTagRefs);
         }
 
@@ -258,7 +258,7 @@ namespace GitCommands.Gpg
             string tagVerifyMessage = "";
 
             /* Only to populate TagVerifyMessage */
-            foreach (var tagRef in usefulTagRefs)
+            foreach (IGitRef tagRef in usefulTagRefs)
             {
                 /* String printed in dialog box */
                 tagVerifyMessage = $"{tagVerifyMessage}{tagRef.LocalName}\r\n{GetTagVerificationMessage(tagRef, false)}\r\n\r\n";
@@ -269,7 +269,7 @@ namespace GitCommands.Gpg
 
         private IGitModule GetModule()
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
             if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");

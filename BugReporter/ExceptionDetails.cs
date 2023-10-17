@@ -54,7 +54,7 @@ namespace BugReporter
 
             if (exception.InnerExceptions is not null)
             {
-                foreach (var innerException in exception.InnerExceptions)
+                foreach (SerializableException innerException in exception.InnerExceptions)
                 {
                     FillInnerExceptionTree(innerException, exceptionTreeView.Nodes[0]);
                 }
@@ -66,7 +66,7 @@ namespace BugReporter
 
         private void DisplayExceptionDetails(TreeNode node)
         {
-            var exception = _exceptionDetailsList[node];
+            SerializableException exception = _exceptionDetailsList[node];
             exceptionDetailsListView.SuspendLayout();
             exceptionDetailsListView.Items.Clear();
 
@@ -107,7 +107,7 @@ namespace BugReporter
 
             if (exception.Data is not null)
             {
-                foreach (var pair in exception.Data)
+                foreach (KeyValuePair<object, object> pair in exception.Data)
                 {
                     exceptionDetailsListView.Items.Add(string.Format("Data[\"{0}\"]", pair.Key)).SubItems.Add(pair.Value.ToString());
                 }
@@ -115,9 +115,9 @@ namespace BugReporter
 
             if (exception.ExtendedInformation is not null)
             {
-                foreach (var info in exception.ExtendedInformation)
+                foreach (KeyValuePair<string, object> info in exception.ExtendedInformation)
                 {
-                    var item = exceptionDetailsListView.Items.Add(info.Key);
+                    ListViewItem item = exceptionDetailsListView.Items.Add(info.Key);
                     item.UseItemStyleForSubItems = false;
                     item.Font = new Font(Font, FontStyle.Bold);
                     item.SubItems.Add(info.Value.ToString());

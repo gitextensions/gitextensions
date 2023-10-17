@@ -27,8 +27,8 @@ namespace BugReporter.Serialization
         {
             OriginalException = exception ?? throw new ArgumentNullException();
 
-            var oldCulture = Thread.CurrentThread.CurrentCulture;
-            var oldUICulture = Thread.CurrentThread.CurrentUICulture;
+            CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo oldUICulture = Thread.CurrentThread.CurrentUICulture;
 
             try
             {
@@ -66,7 +66,7 @@ namespace BugReporter.Serialization
                 {
                     InnerExceptions = new List<SerializableException>();
 
-                    foreach (var innerException in ((AggregateException)exception).InnerExceptions)
+                    foreach (Exception innerException in ((AggregateException)exception).InnerExceptions)
                     {
                         InnerExceptions.Add(new SerializableException(innerException));
                     }
@@ -164,7 +164,7 @@ namespace BugReporter.Serialization
             stream.SetLength(0);
             serializer.Serialize(stream, this);
             stream.Position = 0;
-            var doc = XDocument.Load(stream);
+            XDocument doc = XDocument.Load(stream);
             return doc.Root.ToString();
         }
 
@@ -185,7 +185,7 @@ namespace BugReporter.Serialization
 
         private SerializableDictionary<string, object>? GetExtendedInformation(Exception exception)
         {
-            var extendedProperties = (from property in exception.GetType().GetProperties()
+            System.Reflection.PropertyInfo[] extendedProperties = (from property in exception.GetType().GetProperties()
                                       where
                                           property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
                                           && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
@@ -196,7 +196,7 @@ namespace BugReporter.Serialization
             {
                 SerializableDictionary<string, object> extendedInformation = new();
 
-                foreach (var property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
+                foreach (System.Reflection.PropertyInfo property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
                 {
                     extendedInformation.Add(property.Name, property.GetValue(exception, null));
                 }

@@ -43,7 +43,7 @@ namespace GitUI
 
         internal static IMenuItemBackgroundFilter? GetMenuItemBackgroundFilter(this ToolStrip toolStrip)
         {
-            if (MenuItemBackgroundFilters.TryGetValue(toolStrip, out var filter))
+            if (MenuItemBackgroundFilters.TryGetValue(toolStrip, out IMenuItemBackgroundFilter filter))
             {
                 return filter;
             }

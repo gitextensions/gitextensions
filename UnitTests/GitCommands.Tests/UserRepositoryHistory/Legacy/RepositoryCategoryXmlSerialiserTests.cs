@@ -28,13 +28,13 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         [Test]
         public void Deserialize_should_load_legacy_categorised_repositories()
         {
-            var xml = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.CategorisedRepositories01.xml");
+            string xml = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.CategorisedRepositories01.xml");
             if (string.IsNullOrWhiteSpace(xml))
             {
                 throw new FileFormatException("Unexpected data");
             }
 
-            var categorisedHistory = _repositoryXmlSerialiser.Deserialize(xml);
+            IReadOnlyList<RepositoryCategory> categorisedHistory = _repositoryXmlSerialiser.Deserialize(xml);
 
             categorisedHistory.Count.Should().Be(2);
             categorisedHistory[0].Description.Should().Be("3rd Party");

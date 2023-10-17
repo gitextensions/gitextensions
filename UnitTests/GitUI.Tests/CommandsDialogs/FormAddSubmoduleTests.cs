@@ -41,7 +41,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase("C:\\Repo", "\"C:/Repo\"")]
         public void LoadRemoteRepoBranches_Url(string url, string encodedUrl)
         {
-            using var _ = MockupGitOutput(Heads, encodedUrl);
+            using IDisposable _ = MockupGitOutput(Heads, encodedUrl);
             FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url)
                 .Should().BeEquivalentTo(_branches);
         }
@@ -49,7 +49,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadRemoteRepoBranches_GitWarnings()
         {
-            using var _ = MockupGitOutput($"warning: this\n{Heads}\nwarning: or that");
+            using IDisposable _ = MockupGitOutput($"warning: this\n{Heads}\nwarning: or that");
             FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, DummyUrl)
                 .Should().BeEquivalentTo(_branches);
         }
@@ -57,7 +57,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadRemoteRepoBranches_GitError()
         {
-            using var _ = MockupGitOutput("error: no such repo");
+            using IDisposable _ = MockupGitOutput("error: no such repo");
             FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, DummyUrl)
                 .Should().BeEmpty();
         }

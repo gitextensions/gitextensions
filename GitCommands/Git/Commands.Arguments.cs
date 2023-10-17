@@ -373,7 +373,7 @@ namespace GitCommands.Git
         {
             selectedFiles ??= Array.Empty<string>();
 
-            var isPartialStash = selectedFiles.Any();
+            bool isPartialStash = selectedFiles.Any();
 
             return new GitArgumentBuilder("stash")
             {

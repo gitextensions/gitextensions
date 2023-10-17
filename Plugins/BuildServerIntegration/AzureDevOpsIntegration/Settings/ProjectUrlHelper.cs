@@ -74,12 +74,12 @@ namespace AzureDevOpsIntegration.Settings
                 return (false, null);
             }
 
-            foreach (var kv in lookupDictionary)
+            foreach (KeyValuePair<Regex, Func<Match, string>> kv in lookupDictionary)
             {
-                var regex = kv.Key;
-                var converter = kv.Value;
+                Regex regex = kv.Key;
+                Func<Match, string> converter = kv.Value;
 
-                var match = regex.Match(value);
+                Match match = regex.Match(value);
                 if (match.Success)
                 {
                     return (true, converter(match));
@@ -162,11 +162,11 @@ namespace AzureDevOpsIntegration.Settings
                 return (false, null, -1);
             }
 
-            var match = BuildUrlInfoRegex.Match(buildUrl);
+            Match match = BuildUrlInfoRegex.Match(buildUrl);
             if (match.Success)
             {
-                var projectUrl = match.Groups["projecturl"].Value;
-                if (int.TryParse(match.Groups["buildid"].Value, out var buildId))
+                string projectUrl = match.Groups["projecturl"].Value;
+                if (int.TryParse(match.Groups["buildid"].Value, out int buildId))
                 {
                     return (true, projectUrl, buildId);
                 }

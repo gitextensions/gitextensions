@@ -13,7 +13,7 @@ namespace GitUITests.Theming
 
             ThemeFileReader reader = new();
 
-            var tempPath = Path.GetTempFileName();
+            string tempPath = Path.GetTempFileName();
             try
             {
                 File.WriteAllText(tempPath, mockThemeContent);

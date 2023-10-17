@@ -21,7 +21,7 @@ namespace GitCommands.Config
         {
             _configKeys = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
-            var slashIndex = name.IndexOf('\"');
+            int slashIndex = name.IndexOf('\"');
 
             if (slashIndex != -1)
             {
@@ -39,7 +39,7 @@ namespace GitCommands.Config
             else
             {
                 // [section.subsection] case insensitive
-                var subSectionIndex = name.IndexOf('.');
+                int subSectionIndex = name.IndexOf('.');
 
                 if (subSectionIndex < 1)
                 {
@@ -95,7 +95,7 @@ namespace GitCommands.Config
 
         public string GetValue(string key, string defaultValue)
         {
-            if (_configKeys.TryGetValue(key, out var list))
+            if (_configKeys.TryGetValue(key, out List<string> list))
             {
                 if (list.Count > 0)
                 {
@@ -116,7 +116,7 @@ namespace GitCommands.Config
             string result = "[" + SectionName;
             if (!string.IsNullOrEmpty(SubSection))
             {
-                var escSubSection = SubSection.Replace("\"", "\\\"");
+                string escSubSection = SubSection.Replace("\"", "\\\"");
                 escSubSection = escSubSection.Replace("\\", "\\\\");
 
                 if (!SubSectionCaseSensitive)
@@ -133,7 +133,7 @@ namespace GitCommands.Config
 
         public bool Equals(IConfigSection other)
         {
-            var sc = SubSectionCaseSensitive
+            StringComparison sc = SubSectionCaseSensitive
                 ? StringComparison.Ordinal
                 : StringComparison.OrdinalIgnoreCase;
 

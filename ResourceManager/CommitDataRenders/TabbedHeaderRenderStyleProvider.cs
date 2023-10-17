@@ -8,7 +8,7 @@ namespace ResourceManager.CommitDataRenders
 
         public TabbedHeaderRenderStyleProvider()
         {
-            var strings = new[]
+            string[] strings = new[]
             {
                 TranslatedStrings.Author,
                 TranslatedStrings.AuthorDate,
@@ -19,7 +19,7 @@ namespace ResourceManager.CommitDataRenders
                 TranslatedStrings.GetParents(10)
             };
 
-            var tabStop = strings
+            int tabStop = strings
                 .Select(s => TextRenderer.MeasureText(s + "  ", AppSettings.Font).Width)
                 .Max();
 

@@ -64,8 +64,8 @@
             List<RecentRepoInfo> pinnedRepos = new();
             List<RecentRepoInfo> allRecentRepos = new();
 
-            var middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
-            var signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
+            bool middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
+            bool signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
 
             int n = Math.Min(MaxPinnedRepositories, recentRepositories.Count);
 
@@ -103,7 +103,7 @@
             // remove not anchored repos if there is more than maxRecentRepositories repos
             while (pinnedRepos.Count > n && r >= 0)
             {
-                var repo = pinnedRepos[r];
+                RecentRepoInfo repo = pinnedRepos[r];
                 if (repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned)
                 {
                     r--;
@@ -173,7 +173,7 @@
                 repoInfo.Caption = repoInfo.Repo.Path;
             }
 
-            var existsShortName = orderedRepos.TryGetValue(repoInfo.Caption!, out var list);
+            bool existsShortName = orderedRepos.TryGetValue(repoInfo.Caption!, out List<RecentRepoInfo> list);
             if (!existsShortName)
             {
                 list = new List<RecentRepoInfo>();
@@ -349,7 +349,7 @@
                 }
             }
 
-            if (!orderedRepos.TryGetValue(repoInfo.Caption!, out var list))
+            if (!orderedRepos.TryGetValue(repoInfo.Caption!, out List<RecentRepoInfo> list))
             {
                 list = new List<RecentRepoInfo>();
                 orderedRepos.Add(repoInfo.Caption!, list);

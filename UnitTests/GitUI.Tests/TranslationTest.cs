@@ -28,19 +28,19 @@ namespace GitUITests
         {
             UserEnvironmentInformation.Initialise("0123456789012345678901234567890123456789", isDirty: false);
 
-            var translatableTypes = TranslationUtil.GetTranslatableTypes();
+            Dictionary<string, List<Type>> translatableTypes = TranslationUtil.GetTranslatableTypes();
 
             List<(string typeName, Exception exception)> problems = new();
 
-            foreach (var types in translatableTypes.Values)
+            foreach (List<Type> types in translatableTypes.Values)
             {
                 TranslationFile translation = new();
 
-                foreach (var type in types)
+                foreach (Type type in types)
                 {
                     try
                     {
-                        using var obj = (ITranslate)TranslationUtil.CreateInstanceOfClass(type);
+                        using ITranslate obj = (ITranslate)TranslationUtil.CreateInstanceOfClass(type);
                         obj.AddTranslationItems(translation);
                         obj.TranslateItems(translation);
                     }

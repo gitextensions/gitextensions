@@ -52,7 +52,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
             // backup the original setting
             AppSettings.SetString(KeyHistoryBackup, legacySetting);
 
-            var history = _repositoryCategorySerialiser.Deserialize(legacySetting);
+            IReadOnlyList<RepositoryCategory> history = _repositoryCategorySerialiser.Deserialize(legacySetting);
             if (history is null)
             {
                 return Array.Empty<RepositoryCategory>();

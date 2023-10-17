@@ -69,13 +69,13 @@ namespace CommonTestUtils
 
             int index = 0;
 
-            using var expectedEnumerator = expected.GetEnumerator();
-            using var actualEnumerator = actual.GetEnumerator();
+            using IEnumerator<T> expectedEnumerator = expected.GetEnumerator();
+            using IEnumerator<T> actualEnumerator = actual.GetEnumerator();
 
             while (true)
             {
-                var expectedHasNext = expectedEnumerator.MoveNext();
-                var actualHasNext = actualEnumerator.MoveNext();
+                bool expectedHasNext = expectedEnumerator.MoveNext();
+                bool actualHasNext = actualEnumerator.MoveNext();
 
                 switch (expectedHasNext, actualHasNext)
                 {

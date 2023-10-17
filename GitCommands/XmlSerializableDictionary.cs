@@ -29,7 +29,7 @@ namespace GitCommands
         {
             XmlSerializer keySerializer = new(typeof(TKey));
             XmlSerializer valueSerializer = new(typeof(TValue));
-            var wasEmpty = reader.IsEmptyElement;
+            bool wasEmpty = reader.IsEmptyElement;
 
             reader.Read();
 
@@ -50,11 +50,11 @@ namespace GitCommands
                     reader.ReadStartElement("item");
 
                     reader.ReadStartElement("key");
-                    var key = (TKey)keySerializer.Deserialize(reader);
+                    TKey key = (TKey)keySerializer.Deserialize(reader);
                     reader.ReadEndElement();
 
                     reader.ReadStartElement("value");
-                    var value = (TValue)valueSerializer.Deserialize(reader);
+                    TValue value = (TValue)valueSerializer.Deserialize(reader);
                     reader.ReadEndElement();
 
                     reader.ReadEndElement();
@@ -72,7 +72,7 @@ namespace GitCommands
             XmlSerializer keySerializer = new(typeof(TKey));
             XmlSerializer valueSerializer = new(typeof(TValue));
 
-            foreach (var (key, value) in this.OrderBy(pair => pair.Key))
+            foreach ((TKey key, TValue value) in this.OrderBy(pair => pair.Key))
             {
                 writer.WriteStartElement("item");
 

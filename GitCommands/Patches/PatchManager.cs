@@ -9,7 +9,7 @@ namespace GitCommands.Patches
     {
         public static byte[]? GetResetWorkTreeLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
         {
-            var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
+            IReadOnlyList<Chunk> selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out string? header);
 
             if (selectedChunks is null)
             {
@@ -156,8 +156,8 @@ namespace GitCommands.Patches
 
         public static byte[]? GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] filePreamble, string? treeGuid)
         {
-            var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
-            var isTracked = treeGuid is not null;
+            IReadOnlyList<Chunk> selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
+            bool isTracked = treeGuid is not null;
             string? body = ToIndexPatch(selectedChunks, isIndex: isTracked, isWholeFile: true);
 
             if (body is null)
@@ -349,7 +349,7 @@ namespace GitCommands.Patches
                 diff = diff.Combine("\n", line.Text);
             }
 
-            foreach (var removedLine in RemovedLines)
+            foreach (PatchLine removedLine in RemovedLines)
             {
                 selectedLastAddedLine = removedLine.Selected;
                 if (removedLine.Selected)
@@ -375,7 +375,7 @@ namespace GitCommands.Patches
                 }
             }
 
-            foreach (var addedLine in AddedLines)
+            foreach (PatchLine addedLine in AddedLines)
             {
                 selectedLastRemovedLine = addedLine.Selected;
                 if (addedLine.Selected)
@@ -570,7 +570,7 @@ namespace GitCommands.Patches
         /// </remarks>
         private void ParseHeader(string header)
         {
-            var match = Regex.Match(header, @".*-(\d+),");
+            Match match = Regex.Match(header, @".*-(\d+),");
 
             if (match.Success)
             {

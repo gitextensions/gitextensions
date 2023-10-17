@@ -29,7 +29,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         [Test]
         public void Load_should_return_empty_collection_if_settings_value_null()
         {
-            var repositories = _repositoryStorage.Load("a");
+            IReadOnlyList<Repository> repositories = _repositoryStorage.Load("a");
 
             repositories.Should().BeEmpty();
         }
@@ -39,7 +39,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             _repositorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => null);
 
-            var repositories = _repositoryStorage.Load("a");
+            IReadOnlyList<Repository> repositories = _repositoryStorage.Load("a");
 
             repositories.Should().BeEmpty();
         }
@@ -62,7 +62,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => history);
 
-            var repositories = _repositoryStorage.Load("a");
+            IReadOnlyList<Repository> repositories = _repositoryStorage.Load("a");
 
             repositories.Should().BeSameAs(history);
         }

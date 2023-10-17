@@ -69,7 +69,7 @@ namespace GitCommands.Submodules
             _submoduleInfos.Clear();
 
             // Cancel previous structure and status updates
-            var cancelToken = _submodulesStructureSequence.Next();
+            CancellationToken cancelToken = _submodulesStructureSequence.Next();
             _submodulesStatusSequence.Next();
 
             // Do not throttle next status update
@@ -81,12 +81,12 @@ namespace GitCommands.Submodules
 
             // Start gathering new submodule structure asynchronously.
             GitModule currentModule = new(workingDirectory);
-            var result = GetSuperProjectRepositorySubmodulesStructure(currentModule, noBranchText);
+            SubmoduleInfoResult result = GetSuperProjectRepositorySubmodulesStructure(currentModule, noBranchText);
 
             // Prepare info for status updates
             Validates.NotNull(result.TopProject);
             _submoduleInfos[result.TopProject.Path] = result.TopProject;
-            foreach (var info in result.AllSubmodules)
+            foreach (SubmoduleInfo info in result.AllSubmodules)
             {
                 _submoduleInfos[info.Path] = info;
             }
@@ -101,13 +101,13 @@ namespace GitCommands.Submodules
                 // (The structure below the current module could have been updated from git-status but the current module
                 // must be updated from its super project to set the ahead/behind information)
                 // Further git-status updates only the current module and below
-                var topModule = currentModule.GetTopModule();
+                GitModule topModule = currentModule.GetTopModule();
                 await GetSubmoduleDetailedStatusAsync(topModule, cancelToken);
 
                 // Set status for top module from submodules
-                foreach (var name in topModule.GetSubmodulesLocalPaths(false))
+                foreach (string name in topModule.GetSubmodulesLocalPaths(false))
                 {
-                    var path = topModule.GetSubmoduleFullPath(name);
+                    string path = topModule.GetSubmoduleFullPath(name);
 
                     if (_submoduleInfos.ContainsKey(path) && _submoduleInfos[path].Detailed is not null)
                     {
@@ -133,7 +133,7 @@ namespace GitCommands.Submodules
                 return;
             }
 
-            var cancelToken = _submodulesStatusSequence.Next();
+            CancellationToken cancelToken = _submodulesStatusSequence.Next();
             await TaskScheduler.Default;
             cancelToken.ThrowIfCancellationRequested();
 
@@ -208,15 +208,15 @@ namespace GitCommands.Submodules
 
         private static void SetSubmoduleData(GitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
         {
-            var submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
+            string[] submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
             if (!submodules.Any())
             {
                 return;
             }
 
-            var superWorkDir = currentModule.SuperprojectModule?.WorkingDir;
-            var currentWorkDir = currentModule.WorkingDir;
-            var localPath = currentWorkDir[topProject.WorkingDir.Length..];
+            string superWorkDir = currentModule.SuperprojectModule?.WorkingDir;
+            string currentWorkDir = currentModule.WorkingDir;
+            string localPath = currentWorkDir[topProject.WorkingDir.Length..];
             if (string.IsNullOrWhiteSpace(localPath))
             {
                 localPath = ".";
@@ -224,7 +224,7 @@ namespace GitCommands.Submodules
 
             localPath = Path.GetDirectoryName(localPath).ToPosixPath();
 
-            foreach (var submodule in submodules)
+            foreach (string submodule in submodules)
             {
                 string path = topProject.GetSubmoduleFullPath(submodule);
                 string name = submodule + GetBranchNameSuffix(path, noBranchText);
@@ -270,8 +270,8 @@ namespace GitCommands.Submodules
 
         private static string GetModuleBranch(string path, string noBranchText)
         {
-            var branch = GitModule.GetSelectedBranchFast(path);
-            var text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
+            string branch = GitModule.GetSelectedBranchFast(path);
+            string text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
             return $"({text})";
         }
 
@@ -317,16 +317,16 @@ namespace GitCommands.Submodules
 
             // Recursive update submodules,
             // git-status can set IsDirty if Unknown remains (but not ahead/behind status)
-            var changedSubmodules = gitStatus?.Where(i => i.IsSubmodule) ?? new List<GitItemStatus>();
-            var unchangedSubmoduleNames = module
+            IEnumerable<GitItemStatus> changedSubmodules = gitStatus?.Where(i => i.IsSubmodule) ?? new List<GitItemStatus>();
+            IEnumerable<string> unchangedSubmoduleNames = module
                 .GetSubmodulesLocalPaths(false)
                 .Where(s => changedSubmodules.All(i => i.Name != s));
-            foreach (var submoduleName in unchangedSubmoduleNames)
+            foreach (string submoduleName in unchangedSubmoduleNames)
             {
                 SetSubmoduleEmptyDetailedStatus(module, submoduleName);
             }
 
-            foreach (var status in changedSubmodules)
+            foreach (GitItemStatus status in changedSubmodules)
             {
                 await GetSubmoduleDetailedStatusAsync(module, status.Name, cancelToken);
             }
@@ -386,7 +386,7 @@ namespace GitCommands.Submodules
                 return;
             }
 
-            foreach (var name in module.GetSubmodulesLocalPaths(false))
+            foreach (string name in module.GetSubmodulesLocalPaths(false))
             {
                 cancelToken.ThrowIfCancellationRequested();
 
@@ -408,16 +408,16 @@ namespace GitCommands.Submodules
                 return;
             }
 
-            var path = superModule.GetSubmoduleFullPath(submoduleName);
+            string path = superModule.GetSubmoduleFullPath(submoduleName);
             if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
             {
                 return;
             }
 
-            var info = _submoduleInfos[path];
+            SubmoduleInfo info = _submoduleInfos[path];
             cancelToken.ThrowIfCancellationRequested();
 
-            var submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
+            GitSubmoduleStatus submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
                 .ConfigureAwait(false);
 
             // If no changes, set info.Detailed to null
@@ -438,7 +438,7 @@ namespace GitCommands.Submodules
             }
 
             // no changes to submodules
-            foreach (var name in module.GetSubmodulesLocalPaths(false))
+            foreach (string name in module.GetSubmodulesLocalPaths(false))
             {
                 SetSubmoduleEmptyDetailedStatus(module, name);
             }
@@ -470,7 +470,7 @@ namespace GitCommands.Submodules
 
             _submoduleInfos[path].Detailed = null;
             GitModule module = new(path);
-            foreach (var name in module.GetSubmodulesLocalPaths(false))
+            foreach (string name in module.GetSubmodulesLocalPaths(false))
             {
                 SetSubmoduleEmptyDetailedStatus(module, name);
             }

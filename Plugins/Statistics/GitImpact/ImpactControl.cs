@@ -213,7 +213,7 @@ namespace GitExtensions.Plugins.GitImpact
 
                 // Draw paths in order of the author_stack
                 // Default: person with least number of changed lines first, others on top
-                foreach (var author in _authorStack)
+                foreach (string author in _authorStack)
                 {
                     if (_brushes.ContainsKey(author) && _paths.TryGetValue(author, out GraphicsPath? authorPath))
                     {
@@ -228,7 +228,7 @@ namespace GitExtensions.Plugins.GitImpact
                     e.Graphics.DrawPath(new Pen(SystemColors.WindowText, 2), selectedAuthorPath);
                 }
 
-                foreach (var author in _authorStack)
+                foreach (string author in _authorStack)
                 {
                     DrawAuthorLinesLabels(e.Graphics, author);
                 }
@@ -249,7 +249,7 @@ namespace GitExtensions.Plugins.GitImpact
                 using Font font = new("Arial", LinesFontSize);
                 Brush brush = Brushes.White;
 
-                foreach (var (point, size) in _lineLabels[author])
+                foreach ((PointF point, int size) in _lineLabels[author])
                 {
                     SizeF sz = g.MeasureString(size.ToString(), font);
                     PointF pt = new(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
@@ -265,7 +265,7 @@ namespace GitExtensions.Plugins.GitImpact
                 using Font font = new("Arial", WeekFontSize);
                 Brush brush = Brushes.Gray;
 
-                foreach (var (point, date) in _weekLabels)
+                foreach ((PointF point, DateTime date) in _weekLabels)
                 {
                     SizeF sz = g.MeasureString(date.ToString("dd. MMM yy"), font);
                     PointF pt = new(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
@@ -293,12 +293,12 @@ namespace GitExtensions.Plugins.GitImpact
                 _weekLabels.Clear();
 
                 // Iterate through weeks
-                foreach (var (weekDate, dataByAuthor) in _impact)
+                foreach ((DateTime weekDate, Dictionary<string, ImpactLoader.DataPoint> dataByAuthor) in _impact)
                 {
                     int y = 0;
 
                     // Iterate through authors
-                    foreach (var (author, data) in from entry in dataByAuthor orderby entry.Value.ChangedLines descending select entry)
+                    foreach ((string author, ImpactLoader.DataPoint data) in from entry in dataByAuthor orderby entry.Value.ChangedLines descending select entry)
                     {
                         // Calculate week-author-rectangle
                         int height = Math.Max(1, (int)Math.Round(Math.Pow(Math.Log(data.ChangedLines), 1.5) * 4));
@@ -315,7 +315,7 @@ namespace GitExtensions.Plugins.GitImpact
                         // Create a new random brush for the author if none exists yet
                         if (!_brushes.ContainsKey(author))
                         {
-                            var color = Color.FromArgb((int)(author.GetHashCode() | 0xFF000000));
+                            Color color = Color.FromArgb((int)(author.GetHashCode() | 0xFF000000));
                             _brushes.Add(author, new SolidBrush(color));
                         }
 
@@ -339,7 +339,7 @@ namespace GitExtensions.Plugins.GitImpact
                 // Scale week label coordinates
                 for (int i = 0; i < _weekLabels.Count; i++)
                 {
-                    var (point, date) = _weekLabels[i];
+                    (PointF point, DateTime date) = _weekLabels[i];
 
                     PointF adjustedPoint = new(point.X, point.Y * (float)height_factor);
 
@@ -353,12 +353,12 @@ namespace GitExtensions.Plugins.GitImpact
                 _lineLabels.Clear();
 
                 // Add points to each author's GraphicsPath
-                foreach (var (author, points) in author_points_dict)
+                foreach ((string author, List<(Rectangle, int changeCount)> points) in author_points_dict)
                 {
                     // Scale heights
                     for (int i = 0; i < points.Count; i++)
                     {
-                        var (unscaledRect, num) = points[i];
+                        (Rectangle unscaledRect, int num) = points[i];
 
                         Rectangle rect = new(unscaledRect.Left, (int)(unscaledRect.Top * height_factor),
                             unscaledRect.Width, Math.Max(1, (int)(unscaledRect.Height * height_factor)));
@@ -381,7 +381,7 @@ namespace GitExtensions.Plugins.GitImpact
 
                     _paths.Add(author, new GraphicsPath());
 
-                    var (firstRect, _) = points[0];
+                    (Rectangle firstRect, int _) = points[0];
 
                     // Left border
                     _paths[author].AddLine(firstRect.Left, firstRect.Bottom,
@@ -390,14 +390,14 @@ namespace GitExtensions.Plugins.GitImpact
                     // Top borders
                     for (int i = 0; i < points.Count; i++)
                     {
-                        var (rect, _) = points[i];
+                        (Rectangle rect, int _) = points[i];
 
                         _paths[author].AddLine(rect.Left, rect.Top,
                                                rect.Right, rect.Top);
 
                         if (i < points.Count - 1)
                         {
-                            var (nextRect, _) = points[i + 1];
+                            (Rectangle nextRect, int _) = points[i + 1];
 
                             _paths[author].AddBezier(rect.Right, rect.Top,
                                                      rect.Right + (TransitionWidth / 2), rect.Top,
@@ -406,7 +406,7 @@ namespace GitExtensions.Plugins.GitImpact
                         }
                     }
 
-                    var (lastRect, _) = points[^1];
+                    (Rectangle lastRect, int _) = points[^1];
 
                     // Right border
                     _paths[author].AddLine(lastRect.Right,
@@ -417,14 +417,14 @@ namespace GitExtensions.Plugins.GitImpact
                     // Bottom borders
                     for (int i = points.Count - 1; i >= 0; i--)
                     {
-                        var (rect, _) = points[i];
+                        (Rectangle rect, int _) = points[i];
 
                         _paths[author].AddLine(rect.Right, rect.Bottom,
                                                rect.Left, rect.Bottom);
 
                         if (i > 0)
                         {
-                            var (prevRect, _) = points[i - 1];
+                            (Rectangle prevRect, int _) = points[i - 1];
 
                             _paths[author].AddBezier(rect.Left, rect.Bottom,
                                                      rect.Left - (TransitionWidth / 2), rect.Bottom,
@@ -446,7 +446,7 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                foreach (var author in _authorStack.Reverse<string>())
+                foreach (string author in _authorStack.Reverse<string>())
                 {
                     if (_paths.ContainsKey(author) && _paths[author].IsVisible(x + _scrollBar.Value, y))
                     {

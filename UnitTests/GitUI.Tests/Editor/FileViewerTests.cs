@@ -35,7 +35,7 @@ namespace GitUITests.Editor
         {
             Assert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
 
-            var accessor = _fileViewer.GetTestAccessor();
+            FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
 
             accessor.IgnoreWhitespace = oldIgnoreWhitespace;
 
@@ -78,7 +78,7 @@ namespace GitUITests.Editor
         {
             Assert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
 
-            var accessor = _fileViewer.GetTestAccessor();
+            FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
 
             accessor.IgnoreWhitespace = oldIgnoreWhitespace;
 

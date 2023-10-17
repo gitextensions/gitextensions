@@ -106,7 +106,7 @@ namespace GitCommands
                 case 'b':
                     string baseString = input.Substring(startPosition, input.Length - startPosition - 2);
                     byte[] baseDecoded = Convert.FromBase64String(baseString);
-                    var intermediate = enc.GetString(baseDecoded);
+                    string intermediate = enc.GetString(baseDecoded);
                     sb.Append(intermediate);
                     break;
             }
@@ -143,7 +143,7 @@ namespace GitCommands
                         int skipNewLineCount = 0;
                         for (int j = 0; j < 2; ++j)
                         {
-                            var c = (char)workingBytes[i + j + 1];
+                            char c = (char)workingBytes[i + j + 1];
                             if (c == '\r' || c == '\n')
                             {
                                 ++skipNewLineCount;

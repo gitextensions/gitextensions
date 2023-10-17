@@ -45,7 +45,7 @@ namespace GitUI
         {
             foreach (string branch in branches.Text.LazySplit(' ', StringSplitOptions.RemoveEmptyEntries))
             {
-                var gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
+                IGitRef gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
                 if (gitHead is null)
                 {
                     MessageBox.Show(string.Format(_branchCheckoutError.Text, branch), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -77,7 +77,7 @@ namespace GitUI
             Validates.NotNull(_branchesToSelect);
 
             using FormSelectMultipleBranches formSelectMultipleBranches = new(_branchesToSelect);
-            foreach (var branch in GetSelectedBranches())
+            foreach (IGitRef branch in GetSelectedBranches())
             {
                 formSelectMultipleBranches.SelectBranch(branch.Name);
             }

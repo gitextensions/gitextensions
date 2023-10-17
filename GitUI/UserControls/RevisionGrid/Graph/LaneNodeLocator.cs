@@ -36,10 +36,10 @@
                 return (row.Revision, isAtNode: true);
             }
 
-            var segmentsForLane = row.GetSegmentsForIndex(lane);
+            IEnumerable<RevisionGraphSegment> segmentsForLane = row.GetSegmentsForIndex(lane);
             if (segmentsForLane.Any())
             {
-                var firstParent = segmentsForLane.First().Parent;
+                RevisionGraphRevision firstParent = segmentsForLane.First().Parent;
 #if DEBUG
                 if (segmentsForLane.Any(segment => segment.Parent != firstParent))
                 {

@@ -142,7 +142,7 @@ namespace GitCommands
 
         private IGitModule GetModule()
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
             if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");

@@ -57,7 +57,7 @@ namespace GitCommands.UserRepositoryHistory
                 return Array.Empty<Repository>();
             }
 
-            var history = _repositorySerialiser.Deserialize(setting);
+            IReadOnlyList<Repository> history = _repositorySerialiser.Deserialize(setting);
             if (history is null)
             {
                 return Array.Empty<Repository>();
@@ -85,7 +85,7 @@ namespace GitCommands.UserRepositoryHistory
                 throw new ArgumentNullException(nameof(repositories));
             }
 
-            var xml = _repositorySerialiser.Serialize(repositories);
+            string xml = _repositorySerialiser.Serialize(repositories);
             if (xml is null)
             {
                 return;

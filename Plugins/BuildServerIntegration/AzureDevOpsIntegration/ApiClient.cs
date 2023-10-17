@@ -44,7 +44,7 @@ namespace AzureDevOpsIntegration
         {
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var apiTokenHeaderValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{apiToken}"));
+            string apiTokenHeaderValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{apiToken}"));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", apiTokenHeaderValue);
 
             _httpClient.BaseAddress = new Uri(projectUrl.EndsWith("/") ? projectUrl + "_apis/" : projectUrl + "/_apis/");
@@ -52,7 +52,7 @@ namespace AzureDevOpsIntegration
 
         private async Task<T> HttpGetAsync<T>(string url)
         {
-            using var response = await _httpClient.GetAsync(url);
+            using HttpResponseMessage response = await _httpClient.GetAsync(url);
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new UnauthorizedAccessException();
@@ -66,9 +66,9 @@ namespace AzureDevOpsIntegration
 
         public async Task<string?> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
         {
-            var isNotFiltered = string.IsNullOrWhiteSpace(buildDefinitionNameFilter);
-            var buildDefinitionUriFilter = isNotFiltered ? string.Empty : "&name=" + buildDefinitionNameFilter;
-            var buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl + buildDefinitionUriFilter);
+            bool isNotFiltered = string.IsNullOrWhiteSpace(buildDefinitionNameFilter);
+            string buildDefinitionUriFilter = isNotFiltered ? string.Empty : "&name=" + buildDefinitionNameFilter;
+            ListWrapper<BuildDefinition> buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl + buildDefinitionUriFilter);
             if (buildDefinitions.Count != 0)
             {
                 return GetBuildDefinitionsIds(buildDefinitions.Value);
@@ -103,7 +103,7 @@ namespace AzureDevOpsIntegration
         /// </param>
         public async Task<string?> GetBuildDefinitionNameFromIdAsync(int buildId)
         {
-            var build = await HttpGetAsync<Build>($"build/builds/{buildId}?api-version=2.0");
+            Build build = await HttpGetAsync<Build>($"build/builds/{buildId}?api-version=2.0");
             return build.Definition?.Name;
         }
 
@@ -114,7 +114,7 @@ namespace AzureDevOpsIntegration
                 ? $"&minTime={sinceDate.Value.ToUniversalTime():s}&api-version=4.1"
                 : "&api-version=2.0";
 
-            var finishedBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
+            IList<Build> finishedBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
             Validates.NotNull(finishedBuilds);
             return finishedBuilds;
         }
@@ -123,7 +123,7 @@ namespace AzureDevOpsIntegration
         {
             string queryUrl = QueryForBuildStatus(buildDefinitionsToQuery, "cancelling,inProgress,none,notStarted,postponed") + "&api-version=2.0";
 
-            var runningBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
+            IList<Build> runningBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
             Validates.NotNull(runningBuilds);
             return runningBuilds;
         }

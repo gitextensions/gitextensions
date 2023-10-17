@@ -26,9 +26,9 @@ namespace CommonTestUtils.MEF
                     return 0;
                 }
 
-                var hashCode = 0;
-                var count = 0;
-                foreach (var value in values)
+                int hashCode = 0;
+                int count = 0;
+                foreach (T value in values)
                 {
                     if (count++ >= maxItemsToHash)
                     {

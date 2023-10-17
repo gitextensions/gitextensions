@@ -20,9 +20,9 @@ namespace GitUI.Theming
                 case Parts.LVP_GROUPHEADER:
                 {
                     NativeMethods.GetThemeColor(htheme, partid, stateid, poptions.iColorPropId,
-                        out var crefText);
-                    var color = Color.FromArgb(crefText.R, crefText.G, crefText.B);
-                    var adaptedColor = color.AdaptTextColor();
+                        out NativeMethods.COLORREF crefText);
+                    Color color = Color.FromArgb(crefText.R, crefText.G, crefText.B);
+                    Color adaptedColor = color.AdaptTextColor();
 
                     // do not render, just modify text color
                     poptions.iColorPropId = 0;
@@ -39,7 +39,7 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using var ctx = CreateRenderContext(hdc, pcliprect);
+            using Context ctx = CreateRenderContext(hdc, pcliprect);
             return (Parts)partid switch
             {
                 Parts.LVP_GROUPHEADERLINE => RenderGroupHeaderLine(ctx, prect),
@@ -89,7 +89,7 @@ namespace GitUI.Theming
                             return Unhandled;
                     }
 
-                    using (var ctx = CreateRenderContext(hdc, clip: null))
+                    using (Context ctx = CreateRenderContext(hdc, clip: null))
                     {
                         CheckBoxRenderer.DrawCheckBox(
                             ctx.Graphics,
@@ -194,7 +194,7 @@ namespace GitUI.Theming
             int y1 = prect.Top + ((prect.Height - h) / 2);
             int y2 = y1 + h;
 
-            var arrowPoints = down
+            Point[] arrowPoints = down
                 ? new[]
                 {
                     new Point(x1, y1),

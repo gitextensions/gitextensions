@@ -134,14 +134,14 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public async Task ClearCacheAsync()
         {
-            var cachePath = AppSettings.AvatarImageCachePath;
+            string cachePath = AppSettings.AvatarImageCachePath;
 
             if (_fileSystem.Directory.Exists(cachePath))
             {
                 await Task.Run(
                     () =>
                     {
-                        foreach (var file in _fileSystem.Directory.GetFiles(cachePath))
+                        foreach (string file in _fileSystem.Directory.GetFiles(cachePath))
                         {
                             try
                             {

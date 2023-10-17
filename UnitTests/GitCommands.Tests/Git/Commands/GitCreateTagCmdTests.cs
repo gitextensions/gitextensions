@@ -52,7 +52,7 @@ namespace GitCommandsTests.Git_Commands
             GitCreateTagArgs args = new(TagName, Revision, TagOperation.SignWithDefaultKey, TagMessage, KeyId, force);
             IGitCommand cmd = Commands.CreateTag(args, TagMessageFile);
 
-            var cmdLine = cmd.Arguments;
+            string cmdLine = cmd.Arguments;
 
             Assert.AreEqual(expected, cmdLine);
         }
@@ -66,7 +66,7 @@ namespace GitCommandsTests.Git_Commands
             GitCreateTagArgs args = new(TagName, Revision, operation, signKeyId: KeyId, force: true);
             IGitCommand cmd = Commands.CreateTag(args, TagMessageFile);
 
-            var actualCmdLine = cmd.Arguments;
+            string actualCmdLine = cmd.Arguments;
 
             Assert.AreEqual(expected, actualCmdLine);
         }

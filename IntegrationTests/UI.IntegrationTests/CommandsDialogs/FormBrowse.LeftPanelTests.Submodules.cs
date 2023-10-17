@@ -64,7 +64,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             _repo2.AddSubmodule(_repo3, "repo3");
             _repo1.AddSubmodule(_repo2, "repo2");
-            var submodules = _repo1.GetSubmodulesRecursive();
+            IEnumerable<GitModule> submodules = _repo1.GetSubmodulesRecursive();
 
             _repo1Module = _repo1.Module;
             _repo2Module = submodules.ElementAt(0);
@@ -98,19 +98,19 @@ namespace GitExtensions.UITests.CommandsDialogs
                     await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
 
                     // assert
-                    var submodulesNode = GetSubmoduleNode(form);
+                    TreeNode submodulesNode = GetSubmoduleNode(form);
 
                     submodulesNode.Nodes.Count.Should().Be(1);
 
-                    var repo1Node = submodulesNode.Nodes[0];
+                    TreeNode repo1Node = submodulesNode.Nodes[0];
                     repo1Node.Name.Should().StartWith("repo1");
                     repo1Node.Nodes.Count.Should().Be(1);
 
-                    var repo2Node = repo1Node.Nodes[0];
+                    TreeNode repo2Node = repo1Node.Nodes[0];
                     repo2Node.Name.Should().StartWith("repo2");
                     repo2Node.Nodes.Count.Should().Be(1);
 
-                    var repo3Node = repo2Node.Nodes[0];
+                    TreeNode repo3Node = repo2Node.Nodes[0];
                     repo3Node.Name.Should().StartWith("repo3");
                     repo3Node.Nodes.Count.Should().Be(0);
                 });
@@ -118,8 +118,8 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private static TreeNode GetSubmoduleNode(FormBrowse form)
         {
-            var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Submodules);
+            GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
+            TreeNode remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Submodules);
             remotesNode.Should().NotBeNull();
             return remotesNode;
         }

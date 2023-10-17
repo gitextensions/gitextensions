@@ -91,13 +91,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     try
                     {
-                        var repos = _gitHoster.GetMyRepos();
+                        IReadOnlyList<IHostedRepository> repos = _gitHoster.GetMyRepos();
 
                         await this.SwitchToMainThreadAsync();
 
                         myReposLV.Items.Clear();
 
-                        foreach (var repo in repos.OrderBy(r => r.Name))
+                        foreach (IHostedRepository repo in repos.OrderBy(r => r.Name))
                         {
                             myReposLV.Items.Add(new ListViewItem
                             {
@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private static void ResizeColumnToFitContent(ColumnHeader column)
         {
-            var resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
+            int resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
             column.Width = resizeStrategy;
         }
 
@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _searchBtn_Click(object sender, EventArgs e)
         {
-            var search = searchTB.Text;
+            string search = searchTB.Text;
             if (search?.Trim().Length is not > 0)
             {
                 return;
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     try
                     {
-                        var repositories = _gitHoster.SearchForRepository(search);
+                        IReadOnlyList<IHostedRepository> repositories = _gitHoster.SearchForRepository(search);
 
                         await this.SwitchToMainThreadAsync();
 
@@ -168,7 +168,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _getFromUserBtn_Click(object sender, EventArgs e)
         {
-            var search = searchTB.Text;
+            string search = searchTB.Text;
             if (search?.Trim().Length is not > 0)
             {
                 return;
@@ -180,7 +180,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     try
                     {
-                        var repositories = _gitHoster.GetRepositoriesOfUser(search.Trim());
+                        IReadOnlyList<IHostedRepository> repositories = _gitHoster.GetRepositoriesOfUser(search.Trim());
 
                         await this.SwitchToMainThreadAsync();
 
@@ -217,7 +217,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             searchResultsLV.Items.Clear();
 
-            foreach (var repo in repos.OrderBy(r => r.Name))
+            foreach (IHostedRepository repo in repos.OrderBy(r => r.Name))
             {
                 searchResultsLV.Items.Add(new ListViewItem
                 {
@@ -246,7 +246,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            var hostedRepo = searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
+            IHostedRepository hostedRepo = searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
             try
             {
                 hostedRepo?.Fork();
@@ -280,15 +280,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             forkBtn.Enabled = true;
-            var hostedRepo = (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
+            IHostedRepository hostedRepo = (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
             searchResultItemDescription.Text = hostedRepo.Description;
         }
 
         private void _browseForCloneToDirbtn_Click(object sender, EventArgs e)
         {
-            var initialDir = destinationTB.Text.Length > 0 ? destinationTB.Text : "C:\\";
+            string initialDir = destinationTB.Text.Length > 0 ? destinationTB.Text : "C:\\";
 
-            var userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
+            string userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
 
             if (userSelectedPath is not null)
             {
@@ -299,7 +299,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _cloneBtn_Click(object sender, EventArgs e)
         {
-            var repo = CurrentySelectedGitRepo;
+            IHostedRepository repo = CurrentySelectedGitRepo;
 
             if (repo is not null)
             {
@@ -374,7 +374,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ? uiCommands.Module.GetGitExecPath(repo.CloneUrl)
                 : repo.CloneUrl;
 
-            var cmd = Commands.Clone(repoSrc, uiCommands.Module.GetGitExecPath(targetDir), depth: GetDepth());
+            GitExtUtils.ArgumentString cmd = Commands.Clone(repoSrc, uiCommands.Module.GetGitExecPath(targetDir), depth: GetDepth());
 
             FormRemoteProcess formRemoteProcess = new(uiCommands, cmd)
             {
@@ -392,7 +392,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentUrl))
             {
-                var error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentUrl);
+                string error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -429,7 +429,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void UpdateCloneInfo(bool updateCreateDirTB = true, bool updateProtocols = true)
         {
-            var repo = CurrentySelectedGitRepo;
+            IHostedRepository repo = CurrentySelectedGitRepo;
 
             if (repo is not null)
             {
@@ -456,7 +456,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     addUpstreamRemoteAsCB.Items.Clear();
                     if (repo.ParentOwner is not null)
                     {
-                        var upstreamRemoteName = repo.ParentOwner ?? "";
+                        string upstreamRemoteName = repo.ParentOwner ?? "";
                         addUpstreamRemoteAsCB.Items.Add(upstreamRemoteName);
                         addUpstreamRemoteAsCB.Items.Add(UpstreamRemoteName);
                         if (addUpstreamRemoteAsCB.Text != UpstreamRemoteName)
@@ -482,7 +482,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void SetCloneInfoText(IHostedRepository repo)
         {
-            var moreInfo = !string.IsNullOrEmpty(addUpstreamRemoteAsCB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, addUpstreamRemoteAsCB.Text.Trim()) : "";
+            string moreInfo = !string.IsNullOrEmpty(addUpstreamRemoteAsCB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, addUpstreamRemoteAsCB.Text.Trim()) : "";
 
             if (tabControl.SelectedTab == searchReposPage)
             {

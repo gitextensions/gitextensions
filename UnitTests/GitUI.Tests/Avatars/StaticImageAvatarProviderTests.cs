@@ -22,7 +22,7 @@ namespace GitUITests.Avatars
         {
             StaticImageAvatarProvider provider = new(_img);
 
-            var result = await provider.GetAvatarAsync(_email, _name, _size);
+            Image result = await provider.GetAvatarAsync(_email, _name, _size);
 
             Assert.AreSame(_img, result);
         }
@@ -31,10 +31,10 @@ namespace GitUITests.Avatars
         public async Task Resized_images_are_cached_and_same_instance_is_returned_on_second_call()
         {
             StaticImageAvatarProvider provider = new(_img);
-            var otherSize = 32;
+            int otherSize = 32;
 
-            var result1 = await provider.GetAvatarAsync(_email, _name, otherSize);
-            var result2 = await provider.GetAvatarAsync(_email, _name, otherSize);
+            Image result1 = await provider.GetAvatarAsync(_email, _name, otherSize);
+            Image result2 = await provider.GetAvatarAsync(_email, _name, otherSize);
 
             Assert.AreSame(result1, result2);
         }

@@ -67,7 +67,7 @@ namespace GitCommands
             bool stripAnsiEscapeCodes = true)
         {
             StringBuilder sb = new();
-            foreach (var batch in batchArguments)
+            foreach (BatchArgumentItem batch in batchArguments)
             {
                 sb.Append(executable.GetOutput(batch.Argument, input, outputEncoding, cache, stripAnsiEscapeCodes));
             }
@@ -95,12 +95,12 @@ namespace GitCommands
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            if (cache?.TryGet(arguments, out var output, out var error) is true)
+            if (cache?.TryGet(arguments, out byte[]? output, out byte[]? error) is true)
             {
                 return ComposeOutput();
             }
 
-            using var process = executable.Start(
+            using IProcess process = executable.Start(
                 arguments,
                 createWindow: false,
                 redirectInput: input is not null,
@@ -123,8 +123,8 @@ namespace GitCommands
 #endif
 
             MemoryStream outputBuffer = new();
-            var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
-            var exitTask = process.WaitForExitAsync();
+            Task outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
+            Task<int> exitTask = process.WaitForExitAsync();
 
             await Task.WhenAll(outputTask, exitTask);
 
@@ -224,7 +224,7 @@ namespace GitCommands
             byte[]? input = null,
             bool createWindow = false)
         {
-            using var process = executable.Start(arguments, createWindow: createWindow, redirectInput: input is not null);
+            using IProcess process = executable.Start(arguments, createWindow: createWindow, redirectInput: input is not null);
             if (input is not null)
             {
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);

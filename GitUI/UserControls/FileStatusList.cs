@@ -114,7 +114,7 @@ namespace GitUI
                     ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
                 };
 
-                var images = new (string imageKey, Bitmap icon)[]
+                (string imageKey, Bitmap icon)[] images = new (string imageKey, Bitmap icon)[]
                 {
                     (nameof(Images.FileStatusUnknown), ScaleHeight(Images.FileStatusUnknown)),
                     (nameof(Images.FileStatusModified), ScaleHeight(Images.FileStatusModified)),
@@ -157,7 +157,7 @@ namespace GitUI
                     (nameof(Images.Diff), ScaleHeight(Images.Diff))
                 };
 
-                for (var i = 0; i < images.Length; i++)
+                for (int i = 0; i < images.Length; i++)
                 {
                     list.Images.Add(images[i].icon);
                     _stateImageIndexDict.Add(images[i].imageKey, i);
@@ -169,7 +169,7 @@ namespace GitUI
                 {
                     Debug.Assert(input.Height < rowHeight, "Can only increase row height");
                     Bitmap scaled = new(input.Width, rowHeight, input.PixelFormat);
-                    using var g = Graphics.FromImage(scaled);
+                    using Graphics g = Graphics.FromImage(scaled);
                     g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);
 
                     return scaled;
@@ -385,7 +385,7 @@ namespace GitUI
             get => SelectedItem?.Item;
             set
             {
-                var itemToBeSelected = GetItemByStatus(value);
+                ListViewItem itemToBeSelected = GetItemByStatus(value);
                 SelectItems(item => item == itemToBeSelected);
                 return;
 
@@ -399,7 +399,7 @@ namespace GitUI
                     ListViewItem? newSelected = null;
                     foreach (ListViewItem item in FileStatusListView.Items)
                     {
-                        var gitItemStatus = item.Tag<FileStatusItem>();
+                        FileStatusItem gitItemStatus = item.Tag<FileStatusItem>();
                         if (gitItemStatus.Item == status)
                         {
                             return item;
@@ -504,13 +504,13 @@ namespace GitUI
         private static (Image? image, string? prefix, string text, string? suffix, int prefixTextStartX, int textWidth, int textMaxWidth)
             FormatListViewItem(ListViewItem item, PathFormatter formatter, int itemWidth)
         {
-            var gitItemStatus = item.Tag<FileStatusItem>().Item;
-            var image = item.Image();
+            GitItemStatus gitItemStatus = item.Tag<FileStatusItem>().Item;
+            Image image = item.Image();
             int itemLeft = item.Position.X;
 
-            var prefixTextStartX = itemLeft + (image?.Width ?? 0);
-            var textMaxWidth = itemWidth - prefixTextStartX;
-            var (prefix, text, suffix, textWidth) = formatter.FormatTextForDrawing(textMaxWidth, gitItemStatus.Name, gitItemStatus.OldName);
+            int prefixTextStartX = itemLeft + (image?.Width ?? 0);
+            int textMaxWidth = itemWidth - prefixTextStartX;
+            (string prefix, string text, string suffix, int textWidth) = formatter.FormatTextForDrawing(textMaxWidth, gitItemStatus.Name, gitItemStatus.OldName);
             text = AppendItemSubmoduleStatus(text ?? "", gitItemStatus);
 
             return (image, prefix, text, suffix, prefixTextStartX, textWidth, textMaxWidth);
@@ -717,7 +717,7 @@ namespace GitUI
                 return;
             }
 
-            var group = FileStatusListView.Groups().FirstOrDefault(gr => gr.Items.Count > 0);
+            ListViewGroup group = FileStatusListView.Groups().FirstOrDefault(gr => gr.Items.Count > 0);
             if (group is not null)
             {
                 ListViewItem? sortedFirstGroupItem = FileStatusListView.Items().FirstOrDefault(item => item.Group == group);
@@ -790,12 +790,12 @@ namespace GitUI
             GroupByRevision = true;
             GitItemStatusesWithDescription = new List<FileStatusWithDescription>
             {
-                new FileStatusWithDescription(
+                new(
                     firstRev: indexRev,
                     secondRev: workTreeRev,
                     summary: workTreeDesc,
                     statuses: workTreeItems),
-                new FileStatusWithDescription(
+                new(
                     firstRev: headRev,
                     secondRev: indexRev,
                     summary: indexDesc,
@@ -808,7 +808,7 @@ namespace GitUI
             GroupByRevision = false;
             GitItemStatusesWithDescription = new List<FileStatusWithDescription>
             {
-                new FileStatusWithDescription(
+                new(
                     firstRev: firstRev,
                     secondRev: secondRev,
                     summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId),
@@ -850,7 +850,7 @@ namespace GitUI
 
         public int SetSelectionFilter(string selectionFilter)
         {
-            var regex = RegexForSelecting(selectionFilter);
+            Regex regex = RegexForSelecting(selectionFilter);
             SelectItems(item => regex.IsMatch(item.Name));
             return FileStatusListView.SelectedIndices.Count;
 
@@ -920,7 +920,7 @@ namespace GitUI
         {
             Validates.NotNull(SelectedItem);
 
-            var submoduleName = SelectedItem.Item.Name;
+            string submoduleName = SelectedItem.Item.Name;
 
             Task<GitSubmoduleStatus?>? task = SelectedItem.Item.GetSubmoduleStatusAsync();
             GitSubmoduleStatus? status = task is not null
@@ -949,7 +949,7 @@ namespace GitUI
                 FileStatusListView.BeginUpdate();
 
                 ListViewItem? firstSelectedItem = null;
-                foreach (var item in FileStatusListView.Items())
+                foreach (ListViewItem item in FileStatusListView.Items())
                 {
                     item.Selected = predicate(item);
                     if (item.Selected && firstSelectedItem is null)
@@ -1024,7 +1024,7 @@ namespace GitUI
             FileStatusListView.Items.Clear();
 
             List<ListViewItem> list = new();
-            foreach (var i in GitItemStatusesWithDescription)
+            foreach (FileStatusWithDescription i in GitItemStatusesWithDescription)
             {
                 string name = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
                     ? i.Summary
@@ -1053,7 +1053,7 @@ namespace GitUI
                     itemStatuses = i.Statuses;
                 }
 
-                foreach (var item in itemStatuses)
+                foreach (GitItemStatus item in itemStatuses)
                 {
                     if (!IsFilterMatch(item))
                     {
@@ -1070,7 +1070,7 @@ namespace GitUI
                     if (item.IsSubmodule
                         && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> task)
                     {
-                        var capturedItem = item;
+                        GitItemStatus capturedItem = item;
 
                         ThreadHelper.FileAndForget(async () =>
                         {
@@ -1123,7 +1123,7 @@ namespace GitUI
 
             int GetItemImageIndex(GitItemStatus gitItemStatus)
             {
-                var imageKey = GetItemImageKey(gitItemStatus);
+                string imageKey = GetItemImageKey(gitItemStatus);
                 return _stateImageIndexDict.TryGetValue(imageKey, out int value)
                     ? value
                     : _stateImageIndexDict[nameof(Images.FileStatusUnknown)];
@@ -1293,8 +1293,8 @@ namespace GitUI
 
             if (FileStatusListView.Groups.Count == 0)
             {
-                var index = SelectedIndex == 0 ? FileStatusListView.Items.Count - 1 : SelectedIndex - 1;
-                var item = FileStatusListView.Items[index];
+                int index = SelectedIndex == 0 ? FileStatusListView.Items.Count - 1 : SelectedIndex - 1;
+                ListViewItem item = FileStatusListView.Items[index];
                 item.Selected = true;
                 item.EnsureVisible();
             }
@@ -1302,12 +1302,12 @@ namespace GitUI
             ListViewItem? selectedItemFound = null;
             for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
             {
-                var group = FileStatusListView.Groups[i];
-                var groupItems = FileStatusListView.Items
+                ListViewGroup group = FileStatusListView.Groups[i];
+                IEnumerable<ListViewItem> groupItems = FileStatusListView.Items
                     .Cast<ListViewItem>()
                     .Where(item => item.Group == group)
                     .Reverse();
-                foreach (var item in groupItems)
+                foreach (ListViewItem item in groupItems)
                 {
                     if (selectedItemFound is not null)
                     {
@@ -1334,19 +1334,19 @@ namespace GitUI
 
             if (FileStatusListView.Groups.Count == 0)
             {
-                var index = SelectedIndex >= FileStatusListView.Items.Count - 1 ? 0 : SelectedIndex + 1;
-                var item = FileStatusListView.Items[index];
+                int index = SelectedIndex >= FileStatusListView.Items.Count - 1 ? 0 : SelectedIndex + 1;
+                ListViewItem item = FileStatusListView.Items[index];
                 item.Selected = true;
                 item.EnsureVisible();
             }
 
             ListViewItem? selectedItemFound = null;
-            foreach (var group in FileStatusListView.Groups)
+            foreach (object group in FileStatusListView.Groups)
             {
-                var groupItems = FileStatusListView.Items
+                IEnumerable<ListViewItem> groupItems = FileStatusListView.Items
                     .Cast<ListViewItem>()
                     .Where(item => item.Group == group);
-                foreach (var item in groupItems)
+                foreach (ListViewItem item in groupItems)
                 {
                     if (selectedItemFound is not null)
                     {
@@ -1379,7 +1379,7 @@ namespace GitUI
                 return;
             }
 
-            var cm = (ContextMenuStrip)sender;
+            ContextMenuStrip cm = (ContextMenuStrip)sender;
 
             // TODO The handling of _NO_TRANSLATE_openSubmoduleMenuItem need to be revised
             // This code handles the 'bold' in the menu for submodules. Other default actions are not set to bold.
@@ -1419,10 +1419,10 @@ namespace GitUI
             }
 
             // Show 'Show file differences for all parents' menu item if it is possible that there are multiple first revisions
-            var mayBeMultipleRevs = _enableDisablingShowDiffForAllParents && _itemsWithDescription.Count > 1;
+            bool mayBeMultipleRevs = _enableDisablingShowDiffForAllParents && _itemsWithDescription.Count > 1;
 
             const string showAllDifferencesItemName = "ShowDiffForAllParentsText";
-            var diffItem = cm.Items.Find(showAllDifferencesItemName, true);
+            ToolStripItem[] diffItem = cm.Items.Find(showAllDifferencesItemName, true);
             const string separatorKey = showAllDifferencesItemName + "Separator";
             if (!diffItem.Any())
             {
@@ -1458,7 +1458,7 @@ namespace GitUI
             {
                 diffItem[0].Visible = mayBeMultipleRevs;
 
-                var sepItem = cm.Items.Find(separatorKey, true);
+                ToolStripItem[] sepItem = cm.Items.Find(separatorKey, true);
                 if (sepItem.Length > 0)
                 {
                     sepItem[0].Visible = mayBeMultipleRevs;
@@ -1492,10 +1492,10 @@ namespace GitUI
 
         private void FileStatusListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            var item = e.Item;
+            ListViewItem item = e.Item;
             PathFormatter formatter = new(e.Graphics, FileStatusListView.Font);
 
-            var (image, prefix, text, suffix, prefixTextStartX, _, textMaxWidth) = FormatListViewItem(item, formatter, item.Bounds.Width);
+            (Image image, string prefix, string text, string suffix, int prefixTextStartX, int _, int textMaxWidth) = FormatListViewItem(item, formatter, item.Bounds.Width);
 
             if (item.Selected)
             {
@@ -1525,7 +1525,7 @@ namespace GitUI
                 if (!string.IsNullOrEmpty(prefix))
                 {
                     DrawString(textRect, prefix, grayTextColor);
-                    var prefixSize = formatter.MeasureString(prefix);
+                    Size prefixSize = formatter.MeasureString(prefix);
                     textRect.Offset(prefixSize.Width, 0);
                 }
 
@@ -1533,7 +1533,7 @@ namespace GitUI
 
                 if (!string.IsNullOrEmpty(suffix))
                 {
-                    var textSize = formatter.MeasureString(text);
+                    Size textSize = formatter.MeasureString(text);
                     textRect.Offset(textSize.Width, 0);
                     DrawString(textRect, suffix, grayTextColor);
                 }
@@ -1582,7 +1582,7 @@ namespace GitUI
             // SELECT
             if (e.Button == MouseButtons.Right)
             {
-                var hover = FileStatusListView.HitTest(e.Location);
+                ListViewHitTestInfo hover = FileStatusListView.HitTest(e.Location);
 
                 if (hover.Item is not null && !hover.Item.Selected)
                 {
@@ -1671,7 +1671,7 @@ namespace GitUI
                     hoveredItem = null;
                 }
 
-                var gitItemStatus = hoveredItem?.Tag<FileStatusItem>();
+                FileStatusItem gitItemStatus = hoveredItem?.Tag<FileStatusItem>();
 
                 if (gitItemStatus is not null)
                 {
@@ -1686,7 +1686,7 @@ namespace GitUI
                     }
 
                     float textWidth;
-                    using (var graphics = listView.CreateGraphics())
+                    using (Graphics graphics = listView.CreateGraphics())
                     {
                         textWidth = graphics.MeasureString(text, listView.Font).Width + 17;
                     }
@@ -1789,7 +1789,7 @@ namespace GitUI
                     filterText =>
                     {
                         _toolTipText = "";
-                        var fileCount = 0;
+                        int fileCount = 0;
                         try
                         {
                             fileCount = FilterFiles(filterText);

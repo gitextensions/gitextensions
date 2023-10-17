@@ -22,9 +22,9 @@ namespace GitUI.Editor.Diff
         {
             bool forceAbort = false;
 
-            for (var line = 0; line < document.TotalNumberOfLines && !forceAbort; line++)
+            for (int line = 0; line < document.TotalNumberOfLines && !forceAbort; line++)
             {
-                var lineSegment = document.GetLineSegment(line);
+                LineSegment lineSegment = document.GetLineSegment(line);
 
                 if (lineSegment.TotalLength == 0)
                 {

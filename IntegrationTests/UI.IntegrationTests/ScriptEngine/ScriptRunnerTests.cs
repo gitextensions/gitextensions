@@ -82,7 +82,7 @@ namespace GitExtensions.UITests.ScriptEngine
         {
             _exampleScript.Command = command;
 
-            var result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            CommandStatus result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
             result.Executed.Should().BeFalse();
         }
@@ -93,7 +93,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "";
 
-            var result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            CommandStatus result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
         }
@@ -104,7 +104,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "--version";
 
-            var result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            CommandStatus result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
         }
@@ -118,7 +118,7 @@ namespace GitExtensions.UITests.ScriptEngine
             GitRevision revision = new(ObjectId.IndexId);
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-            var result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
+            CommandStatus result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, revisionGrid: null);
 
             result.Should().BeEquivalentTo(new CommandStatus(true, needsGridRefresh: false));
         }
@@ -132,7 +132,7 @@ namespace GitExtensions.UITests.ScriptEngine
 
             _module.GetCurrentCheckout().Returns((ObjectId)null);
 
-            var ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, uiCommands: null, revisionGrid: null))).Should()
+            FluentAssertions.Specialized.ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, uiCommands: null, revisionGrid: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -146,7 +146,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "cmd";
             _exampleScript.Arguments = "/c echo {sHash}";
 
-            var ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, revisionGrid: null))).Should()
+            FluentAssertions.Specialized.ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, revisionGrid: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\n'sHash' option is only supported when invoked from the revision grid");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -170,7 +170,7 @@ namespace GitExtensions.UITests.ScriptEngine
                 Assert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
                 formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull();
 
-                var ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, formBrowse.RevisionGridControl))).Should()
+                FluentAssertions.Specialized.ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, formBrowse.RevisionGridControl))).Should()
                         .Throw<UserExternalOperationException>();
                 ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\nA valid revision is required to substitute the argument options");
                 ex.And.Command.Should().Be(_exampleScript.Command);
@@ -194,7 +194,7 @@ namespace GitExtensions.UITests.ScriptEngine
                 Assert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
 
                 string errorMessage = null;
-                var result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, formBrowse.RevisionGridControl);
+                CommandStatus result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, formBrowse.RevisionGridControl);
 
                 errorMessage.Should().BeNull();
                 result.Should().BeEquivalentTo(new CommandStatus(executed: true, needsGridRefresh: false));
@@ -205,7 +205,7 @@ namespace GitExtensions.UITests.ScriptEngine
         {
             try
             {
-                var result = (CommandStatus)_miRunScript.Invoke(null,
+                CommandStatus result = (CommandStatus)_miRunScript.Invoke(null,
                                                                 new object[]
                                                                 {
                                                                     script,

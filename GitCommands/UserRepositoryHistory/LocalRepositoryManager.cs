@@ -98,9 +98,9 @@ namespace GitCommands.UserRepositoryHistory
             async Task<IList<Repository>> AddAsMostRecentRepositoryAsync(string path)
             {
                 await TaskScheduler.Default;
-                var repositoryHistory = await LoadRecentHistoryAsync();
+                IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
 
-                var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
+                Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
                 if (repository is not null)
                 {
                     if (repositoryHistory[0] == repository)
@@ -141,8 +141,8 @@ namespace GitCommands.UserRepositoryHistory
 
             await TaskScheduler.Default;
 
-            var favourites = await LoadFavouriteHistoryAsync();
-            var favourite = favourites.FirstOrDefault(f => string.Equals(f.Path, repository.Path, StringComparison.OrdinalIgnoreCase));
+            IList<Repository> favourites = await LoadFavouriteHistoryAsync();
+            Repository favourite = favourites.FirstOrDefault(f => string.Equals(f.Path, repository.Path, StringComparison.OrdinalIgnoreCase));
 
             if (favourite is null)
             {
@@ -177,10 +177,10 @@ namespace GitCommands.UserRepositoryHistory
         {
             await TaskScheduler.Default;
 
-            var history = _repositoryStorage.Load(KeyFavouriteHistory) ?? Array.Empty<Repository>();
+            IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyFavouriteHistory) ?? Array.Empty<Repository>();
 
             // backwards compatibility - port the existing user's categorised repositories
-            var (migrated, changed) = await _repositoryHistoryMigrator.MigrateAsync(history);
+            (IList<Repository> migrated, bool changed) = await _repositoryHistoryMigrator.MigrateAsync(history);
             if (changed)
             {
                 _repositoryStorage.Save(KeyFavouriteHistory, migrated);
@@ -199,7 +199,7 @@ namespace GitCommands.UserRepositoryHistory
 
             int size = AppSettings.RecentRepositoriesHistorySize;
 
-            var history = _repositoryStorage.Load(KeyRecentHistory);
+            IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRecentHistory);
             if (history is null)
             {
                 return Array.Empty<Repository>();
@@ -222,8 +222,8 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             await TaskScheduler.Default;
-            var repositoryHistory = await LoadFavouriteHistoryAsync();
-            var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+            IList<Repository> repositoryHistory = await LoadFavouriteHistoryAsync();
+            Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
             if (repository is null)
             {
                 return repositoryHistory;
@@ -252,8 +252,8 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             await TaskScheduler.Default;
-            var repositoryHistory = await LoadRecentHistoryAsync();
-            var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+            IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
+            Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
             if (repository is null)
             {
                 return repositoryHistory;
@@ -317,13 +317,13 @@ namespace GitCommands.UserRepositoryHistory
 
             await TaskScheduler.Default;
 
-            var recentRepositoryHistory = await LoadRecentHistoryAsync();
-            var existingRecentCount = recentRepositoryHistory.Count;
-            var invalidRecentRepositories = recentRepositoryHistory
+            IList<Repository> recentRepositoryHistory = await LoadRecentHistoryAsync();
+            int existingRecentCount = recentRepositoryHistory.Count;
+            List<Repository> invalidRecentRepositories = recentRepositoryHistory
                                             .Where(repo => !predicate(repo.Path))
                                             .ToList();
 
-            foreach (var repo in invalidRecentRepositories)
+            foreach (Repository repo in invalidRecentRepositories)
             {
                 recentRepositoryHistory.Remove(repo);
             }
@@ -333,13 +333,13 @@ namespace GitCommands.UserRepositoryHistory
                 await SaveRecentHistoryAsync(recentRepositoryHistory);
             }
 
-            var favouriteRepositoryHistory = await LoadFavouriteHistoryAsync();
-            var existingFavouriteCount = favouriteRepositoryHistory.Count;
-            var invalidFavouriteRepositories = favouriteRepositoryHistory
+            IList<Repository> favouriteRepositoryHistory = await LoadFavouriteHistoryAsync();
+            int existingFavouriteCount = favouriteRepositoryHistory.Count;
+            List<Repository> invalidFavouriteRepositories = favouriteRepositoryHistory
                                                 .Where(repo => !predicate(repo.Path))
                                                 .ToList();
 
-            foreach (var repo in invalidFavouriteRepositories)
+            foreach (Repository repo in invalidFavouriteRepositories)
             {
                 favouriteRepositoryHistory.Remove(repo);
             }

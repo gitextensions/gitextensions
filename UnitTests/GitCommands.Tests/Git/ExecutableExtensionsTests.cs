@@ -24,15 +24,15 @@ namespace GitCommandsTests.Git
             // Work around: When running unittest, Application.UserAppDataPath always points to
             // %APPDATA%Roaming\Microsoft Corporation\Microsoft.TestHost.x86
             // We need to correct it to %APPDATA%\GitExtensions\GitExtensions for v3 at least
-            var userAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var settingPath = Path.Combine(userAppDataPath, "GitExtensions\\GitExtensions\\GitExtensions.settings");
+            string userAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string settingPath = Path.Combine(userAppDataPath, "GitExtensions\\GitExtensions\\GitExtensions.settings");
             DistributedSettings settingContainer = new(lowerPriority: null, GitExtSettingsCache.FromCache(settingPath), SettingLevel.Unknown);
             _appPath = settingContainer.GetString("gitcommand", "git.exe");
 
             // Execute process in GitExtension working directory, so that git will return success exit-code
             // git always return non-zero exit code when run git reset outside of git repository
             // NUnit working directory always default to MS test host
-            var workingDir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ExecutableExtensionsTests)).Location);
+            string workingDir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ExecutableExtensionsTests)).Location);
             _gitExecutable = new Executable(_appPath, workingDir);
         }
 
@@ -54,7 +54,7 @@ namespace GitCommandsTests.Git
                 output: GitModule.SystemEncoding.GetBytes("Hello"),
                 error: GitModule.SystemEncoding.GetBytes("World!"));
 
-            var output = _executable.GetOutput(arguments, cache: cache);
+            string output = _executable.GetOutput(arguments, cache: cache);
 
             Assert.AreEqual($"Hello{Environment.NewLine}World!", output);
 
@@ -73,14 +73,14 @@ namespace GitCommandsTests.Git
 
             using (_executable.StageOutput(arguments, commandOutput))
             {
-                var output = _executable.GetOutput(arguments, cache: cache);
+                string output = _executable.GetOutput(arguments, cache: cache);
 
                 Assert.AreEqual(commandOutput, output);
             }
 
             // Validate data stored in cache afterwards
             Assert.AreEqual(1, cache.GetCachedCommands().Count);
-            Assert.IsTrue(cache.TryGet(arguments, out var outputBytes, out var errorBytes));
+            Assert.IsTrue(cache.TryGet(arguments, out byte[]? outputBytes, out byte[]? errorBytes));
             Assert.AreEqual(GitModule.SystemEncoding.GetBytes(commandOutput), outputBytes);
             Assert.IsEmpty(errorBytes);
         }
@@ -120,14 +120,14 @@ namespace GitCommandsTests.Git
         public void RunBatchCommand_throw_when_cmd_exceed_max_length(int arg1Len, int arg2Len,
             int maxLength)
         {
-            var args = new ArgumentBuilder() { "reset --" }
+            List<BatchArgumentItem> args = new ArgumentBuilder() { "reset --" }
                 .BuildBatchArguments(new string[]
                 {
                     GenerateStringByLength(Math.Max(1, arg1Len - _appPath.Length - 4)),
                     GenerateStringByLength(Math.Max(1, arg2Len - _appPath.Length - 4))
                 }, _appPath.Length + 3, maxLength);
 
-            var ex = Assert.Throws<ExternalOperationException>(() => _gitExecutable.RunBatchCommand(args));
+            ExternalOperationException ex = Assert.Throws<ExternalOperationException>(() => _gitExecutable.RunBatchCommand(args));
             Assert.IsInstanceOf<Win32Exception>(ex.InnerException);
         }
 

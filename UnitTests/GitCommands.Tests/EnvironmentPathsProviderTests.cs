@@ -27,7 +27,7 @@ namespace GitCommandsTests
             string pathVariable = string.Join(_separator, GetValidPaths().Concat(GetInvalidPaths()));
             _environment.GetEnvironmentVariable("PATH").Returns(_ => pathVariable);
 
-            var validPaths = _provider.GetEnvironmentValidPaths();
+            IEnumerable<string> validPaths = _provider.GetEnvironmentValidPaths();
 
             CollectionAssert.AreEqual(GetValidPaths().ToArray(), validPaths.ToArray());
         }
@@ -35,12 +35,12 @@ namespace GitCommandsTests
         [Test]
         public void GetEnvironmentValidPaths_quoted()
         {
-            var paths = GetValidPaths().Concat(GetInvalidPaths());
-            var quotedPaths = paths.Select(path => path.Quote());
+            IEnumerable<string> paths = GetValidPaths().Concat(GetInvalidPaths());
+            IEnumerable<string> quotedPaths = paths.Select(path => path.Quote());
             string pathVariable = string.Join(_separator, quotedPaths);
             _environment.GetEnvironmentVariable("PATH").Returns(pathVariable);
 
-            var validPaths = _provider.GetEnvironmentValidPaths();
+            IEnumerable<string> validPaths = _provider.GetEnvironmentValidPaths();
 
             CollectionAssert.AreEqual(GetValidPaths().ToArray(), validPaths.ToArray());
         }

@@ -76,7 +76,7 @@ namespace TeamCityIntegration
             string url = serverUrl + "ntlmLogin.html";
             CookieContainer cookieContainer = new();
 #pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 #pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
             request.CookieContainer = cookieContainer;
 
@@ -112,7 +112,7 @@ namespace TeamCityIntegration
             ProjectNames = buildServerWatcher.ReplaceVariables(config.GetString("ProjectName", ""))
                 .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var buildIdFilerSetting = config.GetString("BuildIdFilter", "");
+            string buildIdFilerSetting = config.GetString("BuildIdFilter", "");
             if (!BuildServerSettingsHelper.IsRegexValid(buildIdFilerSetting))
             {
                 return;
@@ -128,11 +128,11 @@ namespace TeamCityIntegration
                 if (ProjectNames.Length > 0)
                 {
                     _getBuildTypesTask.Clear();
-                    foreach (var name in ProjectNames)
+                    foreach (string name in ProjectNames)
                     {
                         _getBuildTypesTask.Add(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                         {
-                            var response = await GetProjectFromNameXmlResponseAsync(name, CancellationToken.None).ConfigureAwait(false);
+                            XDocument response = await GetProjectFromNameXmlResponseAsync(name, CancellationToken.None).ConfigureAwait(false);
                             return from element in response.XPathSelectElements("/project/buildTypes/buildType")
                                    select element.Attribute("id").Value;
                         }));
@@ -205,16 +205,16 @@ namespace TeamCityIntegration
 
                 Validates.NotNull(BuildIdFilter);
 
-                var localObserver = observer;
-                var buildTypes = _getBuildTypesTask.SelectMany(t => t.Join()).Where(id => BuildIdFilter.IsMatch(id));
-                var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
+                IObserver<BuildInfo> localObserver = observer;
+                IEnumerable<string> buildTypes = _getBuildTypesTask.SelectMany(t => t.Join()).Where(id => BuildIdFilter.IsMatch(id));
+                Task<XDocument>[] buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
 
                 Task.Factory
                     .ContinueWhenAll(
                         buildIdTasks,
                         completedTasks =>
                             {
-                                var buildIds = completedTasks.Where(task => task.Status == TaskStatus.RanToCompletion)
+                                string[] buildIds = completedTasks.Where(task => task.Status == TaskStatus.RanToCompletion)
                                                              .SelectMany(
                                                                  buildIdTask =>
                                                                  buildIdTask.CompletedResult()
@@ -246,19 +246,19 @@ namespace TeamCityIntegration
         private void NotifyObserverOfBuilds(string[] buildIds, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
             List<Task> tasks = new(8);
-            var buildsLeft = buildIds.Length;
+            int buildsLeft = buildIds.Length;
 
-            foreach (var buildId in buildIds.OrderByDescending(int.Parse))
+            foreach (string buildId in buildIds.OrderByDescending(int.Parse))
             {
-                var notifyObserverTask =
+                Task notifyObserverTask =
                     GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
                         .ContinueWith(
                             task =>
                                 {
                                     if (task.Status == TaskStatus.RanToCompletion)
                                     {
-                                        var buildDetails = task.CompletedResult();
-                                        var buildInfo = CreateBuildInfo(buildDetails);
+                                        XDocument buildDetails = task.CompletedResult();
+                                        BuildInfo buildInfo = CreateBuildInfo(buildDetails);
                                         if (buildInfo.CommitHashList.Any())
                                         {
                                             observer.OnNext(buildInfo);
@@ -274,7 +274,7 @@ namespace TeamCityIntegration
 
                 if (tasks.Count == tasks.Capacity || buildsLeft == 0)
                 {
-                    var batchTasks = tasks.ToArray();
+                    Task[] batchTasks = tasks.ToArray();
                     tasks.Clear();
 
                     try
@@ -315,20 +315,20 @@ namespace TeamCityIntegration
 
         private BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
         {
-            var buildXElement = buildXmlDocument.Element("build");
-            var idValue = buildXElement.Attribute("id").Value;
-            var statusValue = buildXElement.Attribute("status").Value;
-            var startDateText = buildXElement.Element("startDate").Value;
-            var statusText = buildXElement.Element("statusText").Value;
-            var webUrl = buildXElement.Attribute("webUrl").Value + LogAsGuestUrlParameter;
-            var revisionsElements = buildXElement.XPathSelectElements("revisions/revision");
-            var commitHashList = revisionsElements.Select(x => ObjectId.Parse(x.Attribute("version").Value)).ToList();
-            var runningAttribute = buildXElement.Attribute("running");
+            XElement buildXElement = buildXmlDocument.Element("build");
+            string idValue = buildXElement.Attribute("id").Value;
+            string statusValue = buildXElement.Attribute("status").Value;
+            string startDateText = buildXElement.Element("startDate").Value;
+            string statusText = buildXElement.Element("statusText").Value;
+            string webUrl = buildXElement.Attribute("webUrl").Value + LogAsGuestUrlParameter;
+            IEnumerable<XElement> revisionsElements = buildXElement.XPathSelectElements("revisions/revision");
+            List<ObjectId> commitHashList = revisionsElements.Select(x => ObjectId.Parse(x.Attribute("version").Value)).ToList();
+            XAttribute runningAttribute = buildXElement.Attribute("running");
 
             if (runningAttribute is not null && Convert.ToBoolean(runningAttribute.Value))
             {
-                var runningInfoXElement = buildXElement.Element("running-info");
-                var currentStageText = runningInfoXElement.Attribute("currentStageText").Value;
+                XElement runningInfoXElement = buildXElement.Element("running-info");
+                string currentStageText = runningInfoXElement.Attribute("currentStageText").Value;
 
                 statusText = currentStageText;
             }
@@ -387,7 +387,7 @@ namespace TeamCityIntegration
             {
                 if (task.CompletedResult().IsSuccessStatusCode)
                 {
-                    var httpContent = task.CompletedResult().Content;
+                    HttpContent httpContent = task.CompletedResult().Content;
 
                     if (httpContent.Headers.ContentType.MediaType == "text/html")
                     {
@@ -507,12 +507,12 @@ namespace TeamCityIntegration
 
         private Task<XDocument> GetXmlResponseAsync(string relativePath, CancellationToken cancellationToken)
         {
-            var getStreamTask = GetStreamAsync(relativePath, cancellationToken);
+            Task<Stream> getStreamTask = GetStreamAsync(relativePath, cancellationToken);
 
             return getStreamTask.ContinueWith(
                 task =>
                     {
-                        using var responseStream = task.Result;
+                        using Stream responseStream = task.Result;
                         return XDocument.Load(responseStream);
                     },
                 cancellationToken,
@@ -560,8 +560,8 @@ namespace TeamCityIntegration
             }
 
             string buildLocator = string.Join(",", values);
-            var url = string.Format("buildTypes/id:{0}/builds/?locator={1}", buildTypeId, buildLocator);
-            var filteredBuildsXmlResponseTask = GetXmlResponseAsync(url, cancellationToken);
+            string url = string.Format("buildTypes/id:{0}/builds/?locator={1}", buildTypeId, buildLocator);
+            Task<XDocument> filteredBuildsXmlResponseTask = GetXmlResponseAsync(url, cancellationToken);
 
             return filteredBuildsXmlResponseTask;
         }
@@ -596,8 +596,8 @@ namespace TeamCityIntegration
 
         public Project? GetProjectsTree()
         {
-            var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectsResponseAsync(CancellationToken.None));
-            var projects = projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e => new Project
+            XDocument projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectsResponseAsync(CancellationToken.None));
+            List<Project> projects = projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e => new Project
             {
                 Id = (string)e.Attribute("id"),
                 Name = (string)e.Attribute("name"),
@@ -605,10 +605,10 @@ namespace TeamCityIntegration
                 SubProjects = new List<Project>()
             }).ToList();
 
-            var projectDictionary = projects.ToDictionary(p => p.Id, p => p);
+            Dictionary<string, Project> projectDictionary = projects.ToDictionary(p => p.Id, p => p);
 
             Project? rootProject = null;
-            foreach (var project in projects)
+            foreach (Project project in projects)
             {
                 if (project.ParentProject is not null)
                 {
@@ -627,7 +627,7 @@ namespace TeamCityIntegration
 
         public List<Build> GetProjectBuilds(string projectId)
         {
-            var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None));
+            XDocument projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None));
             return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build
             {
                 Id = (string)e.Attribute("id"),
@@ -638,8 +638,8 @@ namespace TeamCityIntegration
 
         public Build GetBuildType(string buildId)
         {
-            var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetBuildTypeFromIdXmlResponseAsync(buildId, CancellationToken.None));
-            var buildType = projectsRootElement.Root;
+            XDocument projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetBuildTypeFromIdXmlResponseAsync(buildId, CancellationToken.None));
+            XElement buildType = projectsRootElement.Root;
             return new Build
             {
                 Id = buildId,

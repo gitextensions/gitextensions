@@ -43,7 +43,7 @@ namespace GitUI.Avatars
                     throw new ArgumentNullException(nameof(templateData));
                 }
 
-                var rawUri = _templateResolver(templateData);
+                string rawUri = _templateResolver(templateData);
 
                 if (string.IsNullOrWhiteSpace(rawUri))
                 {

@@ -34,7 +34,7 @@ namespace GitCommands.Git
             // 100644 blob 5b0965cd097b8c48b66dd456337852640fa429c8    stylecop.json
 
             // Split on \0 too, as GitModule.GetTree uses `ls-tree -z` which uses null terminators
-            var items = tree.Split(Delimiters.NullAndLineFeed);
+            string[] items = tree.Split(Delimiters.NullAndLineFeed);
 
             return items.Select(ParseSingle).Where(item => item is not null)!;
         }
@@ -46,17 +46,17 @@ namespace GitCommands.Git
                 return null;
             }
 
-            var match = _treeLineRegex.Match(rawItem);
+            Match match = _treeLineRegex.Match(rawItem);
 
             if (!match.Success)
             {
                 return null;
             }
 
-            var mode = int.Parse(match.Groups["mode"].Value);
-            var typeName = match.Groups["type"].Value;
-            var objectId = ObjectId.Parse(rawItem, match.Groups["objectid"]);
-            var name = match.Groups["name"].Value;
+            int mode = int.Parse(match.Groups["mode"].Value);
+            string typeName = match.Groups["type"].Value;
+            ObjectId objectId = ObjectId.Parse(rawItem, match.Groups["objectid"]);
+            string name = match.Groups["name"].Value;
 
             Enum.TryParse(typeName, ignoreCase: true, out GitObjectType type);
 

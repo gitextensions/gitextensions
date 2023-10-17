@@ -43,7 +43,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(Key).Returns(x => history);
 
-            var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
+            IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
             newHistory.Count.Should().Be(5);
             newHistory[0].Path.Should().Be(repoToAdd);
@@ -63,7 +63,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(Key).Returns(x => history);
 
-            var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
+            IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
             newHistory.Count.Should().Be(5);
             newHistory[0].Path.Should().Be(repoToAdd);
@@ -84,7 +84,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(Key).Returns(x => history);
 
-            var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
+            IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
             newHistory.Count.Should().Be(6);
             newHistory[0].Path.Should().Be(repoToAdd);
@@ -105,7 +105,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(Key).Returns(x => history);
 
-            var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
+            IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
             newHistory.Count.Should().Be(5);
             newHistory[0].Path.Should().Be(repoToAdd);
@@ -126,7 +126,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(Key).Returns(x => history);
 
-            var newHistory = await _manager.RemoveRecentAsync(repoToDelete);
+            IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
             newHistory.Count.Should().Be(4);
             newHistory.Should().NotContain(repoToDelete);
@@ -149,7 +149,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(Key).Returns(x => history);
 
-            var newHistory = await _manager.RemoveRecentAsync(repoToDelete);
+            IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
             newHistory.Count.Should().Be(5);
             newHistory.Should().NotContain(repoToDelete);

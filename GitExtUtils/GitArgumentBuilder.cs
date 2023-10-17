@@ -64,7 +64,7 @@ namespace GitExtUtils
             _gitArgs = gitOptions;
             commandConfiguration ??= GitCommandConfiguration.Default;
 
-            var defaultConfig = commandConfiguration.Get(command);
+            IReadOnlyList<GitConfigItem> defaultConfig = commandConfiguration.Get(command);
             _configItems = new List<GitConfigItem>(capacity: defaultConfig.Count + 2);
             if (defaultConfig.Count != 0)
             {
@@ -82,7 +82,7 @@ namespace GitExtUtils
         public void Add(GitConfigItem configItem)
         {
             // Append or replace config item based upon its key
-            var index = _configItems.IndexOf(item => string.Equals(item.Key, configItem.Key, StringComparison.OrdinalIgnoreCase));
+            int index = _configItems.IndexOf(item => string.Equals(item.Key, configItem.Key, StringComparison.OrdinalIgnoreCase));
 
             if (index == -1)
             {
@@ -97,15 +97,15 @@ namespace GitExtUtils
         /// <inheritdoc />
         public override string ToString()
         {
-            var arguments = base.ToString();
-            var gitArgsLength = _gitArgs.Length;
+            string arguments = base.ToString();
+            int gitArgsLength = _gitArgs.Length;
             if (gitArgsLength == 0)
             {
                 gitArgsLength = -1; // prevent extra capacity when length is 0
             }
 
             // 7 = "-c " + "=" + " " + 2 (for possible quotes of value)
-            var capacity = _configItems.Sum(i => i.Key.Length + i.Value.Length + 7) + _command.Length + 1 + arguments.Length;
+            int capacity = _configItems.Sum(i => i.Key.Length + i.Value.Length + 7) + _command.Length + 1 + arguments.Length;
             capacity += gitArgsLength + 1;
 
             StringBuilder str = new(capacity);
@@ -116,7 +116,7 @@ namespace GitExtUtils
                 str.Append(' ');
             }
 
-            foreach (var (key, value) in _configItems)
+            foreach ((string key, string value) in _configItems)
             {
                 str.Append("-c ").Append(key).Append('=').AppendQuoted(value).Append(' ');
             }

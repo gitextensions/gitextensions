@@ -96,7 +96,7 @@ namespace GitCommands.Settings
             {
                 get
                 {
-                    var storedValue = GetValue(Name);
+                    object storedValue = GetValue(Name);
 
                     if (default(T) is null)
                     {
@@ -116,7 +116,7 @@ namespace GitCommands.Settings
 
                 set
                 {
-                    var storedValue = GetValue(Name);
+                    object storedValue = GetValue(Name);
 
                     if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
                     {
@@ -159,7 +159,7 @@ namespace GitCommands.Settings
                         }
                     }
 
-                    var storedValue = GetValue(Name);
+                    object storedValue = GetValue(Name);
 
                     return storedValue is null;
                 }

@@ -25,8 +25,8 @@ namespace GitUI
                 throw new ArgumentNullException(nameof(workingDir));
             }
 
-            var pattern = searchPattern.ToPosixPath();
-            var dir = workingDir.ToPosixPath();
+            string pattern = searchPattern.ToPosixPath();
+            string dir = workingDir.ToPosixPath();
 
             if (pattern.StartsWith(dir, StringComparison.OrdinalIgnoreCase))
             {

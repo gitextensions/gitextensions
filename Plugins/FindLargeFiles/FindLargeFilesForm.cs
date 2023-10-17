@@ -54,9 +54,9 @@ namespace GitExtensions.Plugins.FindLargeFiles
         {
             try
             {
-                var data = GetLargeFiles(_threshold);
+                IEnumerable<GitObject> data = GetLargeFiles(_threshold);
                 Dictionary<string, DateTime> revData = new();
-                foreach (var d in data)
+                foreach (GitObject d in data)
                 {
                     string commit = d.Commit.First();
                     DateTime date;
@@ -77,7 +77,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
                         date = revData[commit];
                     }
 
-                    if (!_list.TryGetValue(d.SHA, out var curGitObject))
+                    if (!_list.TryGetValue(d.SHA, out GitObject curGitObject))
                     {
                         d.LastCommitDate = date;
                         _list.Add(d.SHA, d);
@@ -106,8 +106,8 @@ namespace GitExtensions.Plugins.FindLargeFiles
                 string objectsPackDirectory = _gitCommands.ResolveGitInternalPath("objects/pack/");
                 if (Directory.Exists(objectsPackDirectory))
                 {
-                    var packFiles = Directory.GetFiles(objectsPackDirectory, "pack-*.idx");
-                    foreach (var pack in packFiles)
+                    string[] packFiles = Directory.GetFiles(objectsPackDirectory, "pack-*.idx");
+                    foreach (string pack in packFiles)
                     {
                         GitArgumentBuilder args = new("verify-pack")
                         {
@@ -121,12 +121,12 @@ namespace GitExtensions.Plugins.FindLargeFiles
                             await pbRevisions.SwitchToMainThreadAsync();
                             pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length);
                         });
-                        foreach (var gitObject in objects.Where(x => x.Contains(" blob ")))
+                        foreach (string gitObject in objects.Where(x => x.Contains(" blob ")))
                         {
                             string[] dataFields = gitObject.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (_list.TryGetValue(dataFields[0], out var curGitObject))
+                            if (_list.TryGetValue(dataFields[0], out GitObject curGitObject))
                             {
-                                if (int.TryParse(dataFields[3], out var compressedSize))
+                                if (int.TryParse(dataFields[3], out int compressedSize))
                                 {
                                     curGitObject.CompressedSizeInBytes = compressedSize;
                                     ThreadHelper.JoinableTaskFactory.Run(async () =>
@@ -170,7 +170,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
 
         private IEnumerable<GitObject> GetLargeFiles(float threshold)
         {
-            var thresholdSize = (int)(threshold * 1024 * 1024);
+            int thresholdSize = (int)(threshold * 1024 * 1024);
             for (int i = 0; i < _revList.Length; i++)
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
@@ -188,11 +188,11 @@ namespace GitExtensions.Plugins.FindLargeFiles
                 foreach (string objData in objects)
                 {
                     // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"
-                    var dataPack = objData.Split('\t');
-                    var data = dataPack[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] dataPack = objData.Split('\t');
+                    string[] data = dataPack[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (data[1] == "blob")
                     {
-                        int.TryParse(data[3], out var size);
+                        int.TryParse(data[3], out int size);
                         if (size >= thresholdSize)
                         {
                             yield return new GitObject(data[2], dataPack[1], size, rev);

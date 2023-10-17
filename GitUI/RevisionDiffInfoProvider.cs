@@ -39,7 +39,7 @@ namespace GitUI
                 return false;
             }
 
-            var revision0 = revisions[0];
+            GitRevision revision0 = revisions[0];
 
             if (revision0 is null)
             {

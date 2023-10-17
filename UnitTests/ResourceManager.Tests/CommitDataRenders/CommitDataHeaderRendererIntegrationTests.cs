@@ -18,11 +18,11 @@ namespace ResourceManagerTests.CommitDataRenders
         [SetUp]
         public void Setup()
         {
-            var commitGuid = ObjectId.Random();
-            var parentId1 = ObjectId.Random();
-            var parentId2 = ObjectId.Random();
-            var authorTime = DateTime.UtcNow.AddDays(-3);
-            var commitTime = DateTime.UtcNow.AddDays(-2);
+            ObjectId commitGuid = ObjectId.Random();
+            ObjectId parentId1 = ObjectId.Random();
+            ObjectId parentId2 = ObjectId.Random();
+            DateTime authorTime = DateTime.UtcNow.AddDays(-3);
+            DateTime commitTime = DateTime.UtcNow.AddDays(-2);
 
             _data = new CommitData(
                 commitGuid,
@@ -46,7 +46,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_with_tabs_and_links()
         {
-            var expectedHeader = "Author:		<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
+            string expectedHeader = "Author:		<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
                                     "Author date:	3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
                                  "Committer:	<a href='mailto:Jane.Doe@test.com'>Jane Doe &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:	2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
@@ -59,7 +59,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                    "<a href='gitext://gotocommit/" + _data.ParentIds[0] + "'>" + _data.ParentIds[0].ToShortString() + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ParentIds[1] + "'>" + _data.ParentIds[1].ToShortString() + "</a>";
 
-            var result = _rendererTabs.Render(_data, true);
+            string result = _rendererTabs.Render(_data, true);
 
             result.Should().Be(expectedHeader);
         }
@@ -67,7 +67,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_with_tabs_no_links()
         {
-            var expectedHeader = "Author:		<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
+            string expectedHeader = "Author:		<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Author date:	3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
                                  "Committer:	<a href='mailto:Jane.Doe@test.com'>Jane Doe &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:	2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
@@ -80,7 +80,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                    _data.ParentIds[0].ToShortString() + " " +
                                    _data.ParentIds[1].ToShortString();
 
-            var result = _rendererTabs.Render(_data, false);
+            string result = _rendererTabs.Render(_data, false);
 
             result.Should().Be(expectedHeader);
         }
@@ -88,7 +88,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_with_spaces_with_links()
         {
-            var expectedHeader = "Author:      <a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
+            string expectedHeader = "Author:      <a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Author date: 3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
                                  "Committer:   <a href='mailto:Jane.Doe@test.com'>Jane Doe &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date: 2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
@@ -101,7 +101,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                    "<a href='gitext://gotocommit/" + _data.ParentIds[0] + "'>" + _data.ParentIds[0].ToShortString() + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ParentIds[1] + "'>" + _data.ParentIds[1].ToShortString() + "</a>";
 
-            var result = _rendererSpaces.Render(_data, true);
+            string result = _rendererSpaces.Render(_data, true);
 
             result.Should().Be(expectedHeader);
         }
@@ -109,7 +109,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_with_spaces_no_links()
         {
-            var expectedHeader = "Author:      <a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
+            string expectedHeader = "Author:      <a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Author date: 3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
                                  "Committer:   <a href='mailto:Jane.Doe@test.com'>Jane Doe &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date: 2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
@@ -122,7 +122,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                    _data.ParentIds[0].ToShortString() + " " +
                                    _data.ParentIds[1].ToShortString();
 
-            var result = _rendererSpaces.Render(_data, false);
+            string result = _rendererSpaces.Render(_data, false);
 
             result.Should().Be(expectedHeader);
         }
@@ -130,13 +130,13 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void RenderPlain_with_tabs()
         {
-            var expectedHeader = "Author:		John Doe (Acme Inc) <John.Doe@test.com>" + Environment.NewLine +
+            string expectedHeader = "Author:		John Doe (Acme Inc) <John.Doe@test.com>" + Environment.NewLine +
                                  "Author date:	3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
                                  "Committer:	Jane Doe <Jane.Doe@test.com>" + Environment.NewLine +
                                  "Commit date:	2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                                  "Commit hash:	" + _data.ObjectId;
 
-            var result = _rendererTabs.RenderPlain(_data);
+            string result = _rendererTabs.RenderPlain(_data);
 
             result.Should().Be(expectedHeader);
         }
@@ -144,13 +144,13 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void RenderPlain_with_spaces()
         {
-            var expectedHeader = "Author:      John Doe (Acme Inc) <John.Doe@test.com>" + Environment.NewLine +
+            string expectedHeader = "Author:      John Doe (Acme Inc) <John.Doe@test.com>" + Environment.NewLine +
                                  "Author date: 3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
                                  "Committer:   Jane Doe <Jane.Doe@test.com>" + Environment.NewLine +
                                  "Commit date: 2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                                  "Commit hash: " + _data.ObjectId;
 
-            var result = _rendererSpaces.RenderPlain(_data);
+            string result = _rendererSpaces.RenderPlain(_data);
 
             result.Should().Be(expectedHeader);
         }

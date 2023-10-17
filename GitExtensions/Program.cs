@@ -166,7 +166,7 @@ namespace GitExtensions
                     {
                         CheckSettingsLogic checkSettingsLogic = new(commonLogic);
                         SettingsPageHostMock fakePageHost = new(checkSettingsLogic);
-                        using var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost, _serviceContainer);
+                        using ChecklistSettingsPage checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost, _serviceContainer);
                         if (!checklistSettingsPage.CheckSettings())
                         {
                             if (!checkSettingsLogic.AutoSolveAllSettings() || !checklistSettingsPage.CheckSettings())
@@ -272,12 +272,12 @@ namespace GitExtensions
             try
             {
                 // perhaps this should be checked for if it is null
-                var in3 = ce.InnerException.InnerException;
+                Exception in3 = ce.InnerException.InnerException;
 
                 // saves having to have a reference to System.Xml just to check that we have an XmlException
                 if (in3.GetType().Name == "XmlException")
                 {
-                    var localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
+                    string localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 
                     // assume that if we are having this error and the installation is not a portable one then the folder will exist.
                     if (Directory.Exists(localSettingsPath))
@@ -292,7 +292,7 @@ namespace GitExtensions
                                 // Restart Git Extensions with the same arguments after old config is deleted?
                                 if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)))
                                 {
-                                    var args = Environment.GetCommandLineArgs();
+                                    string[] args = Environment.GetCommandLineArgs();
                                     Process p = new() { StartInfo = { FileName = args[0] } };
                                     if (args.Length > 1)
                                     {

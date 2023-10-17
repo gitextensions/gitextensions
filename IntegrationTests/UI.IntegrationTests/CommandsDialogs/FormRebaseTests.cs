@@ -24,7 +24,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormRebase.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.chkInteractive.Checked = true;
 
@@ -39,7 +39,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormRebase.TestAccessor accessor = form.GetTestAccessor();
                     accessor.chkInteractive.Checked = true;
 
                     accessor.chkInteractive.Checked = false;
@@ -55,7 +55,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormRebase.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.chkIgnoreDate.Checked = true;
 
@@ -73,7 +73,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormRebase.TestAccessor accessor = form.GetTestAccessor();
                     accessor.chkInteractive.Checked = true;
                     accessor.chkIgnoreDate.Checked = true;
 
@@ -93,7 +93,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormRebase.TestAccessor accessor = form.GetTestAccessor();
                     accessor.chkIgnoreDate.Checked = true;
 
                     accessor.chkIgnoreDate.Checked = false;
@@ -112,7 +112,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormRebase.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.chkCommitterDateIsAuthorDate.Checked = true;
 
@@ -130,7 +130,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormRebase.TestAccessor accessor = form.GetTestAccessor();
                     accessor.chkInteractive.Checked = true;
                     accessor.chkCommitterDateIsAuthorDate.Checked = true;
 
@@ -150,7 +150,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormRebase.TestAccessor accessor = form.GetTestAccessor();
                     accessor.chkCommitterDateIsAuthorDate.Checked = true;
 
                     accessor.chkCommitterDateIsAuthorDate.Checked = false;

@@ -21,7 +21,7 @@ namespace GitCommands.Remotes
             project = null;
             repository = null;
 
-            var m = MatchRegExes(remoteUrl, AzureDevopsRegexes);
+            System.Text.RegularExpressions.Match m = MatchRegExes(remoteUrl, AzureDevopsRegexes);
 
             if (m is null || !m.Success)
             {

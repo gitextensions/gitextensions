@@ -13,14 +13,14 @@ namespace GitExtUtilsTests
             [Values(0.25d, 0.75d)] double opposite,
             [Values(0d, 0.5d, 1d)] double alpha)
         {
-            var transformed = ColorHelper.TestAccessor.Transform(
+            double transformed = ColorHelper.TestAccessor.Transform(
                 (exampleOrig * (1 - alpha)) + (oppositeOrig * alpha),
                 exampleOrig,
                 oppositeOrig,
                 example,
                 opposite);
 
-            var expected = (example * (1 - alpha)) + (opposite * alpha);
+            double expected = (example * (1 - alpha)) + (opposite * alpha);
             Assert.That(transformed, Is.EqualTo(expected).Within(0.001));
         }
 
@@ -39,7 +39,7 @@ namespace GitExtUtilsTests
         public void Outside_original_segment_interpolates_between_boundary_and_segment(
             double exampleOrig, double oppositeOrig, double example, double opposite, double orig, double expected)
         {
-            var transformed = ColorHelper.TestAccessor.Transform(
+            double transformed = ColorHelper.TestAccessor.Transform(
                 orig,
                 exampleOrig,
                 oppositeOrig,

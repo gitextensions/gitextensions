@@ -27,12 +27,12 @@ namespace GitExtensions.Plugins.GitHub3
 
             Entries.Add(new GitHubDiscussionComment { Author = _pullRequest.User.Login, Created = _pullRequest.CreatedAt, Body = _pullRequest.Body });
 
-            foreach (var commit in _pullRequest.GetCommits())
+            foreach (PullRequestCommit commit in _pullRequest.GetCommits())
             {
                 Entries.Add(new GitHubDiscussionCommit { Sha = commit.Sha, Author = commit.AuthorName.Replace("<", "&lt;").Replace(">", "&gt;"), Created = commit.Commit.Author.Date, Body = commit.Commit.Message });
             }
 
-            foreach (var comment in _pullRequest.GetIssueComments())
+            foreach (IssueComment comment in _pullRequest.GetIssueComments())
             {
                 Entries.Add(new GitHubDiscussionComment { Author = comment.User.Login, Created = comment.CreatedAt, Body = comment.Body });
             }

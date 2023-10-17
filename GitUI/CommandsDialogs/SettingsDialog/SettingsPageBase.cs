@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected virtual void SettingsToPage()
         {
-            foreach (var cb in _controlBindings)
+            foreach (ISettingControlBinding cb in _controlBindings)
             {
                 cb.LoadSetting(GetCurrentSettings());
             }
@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected virtual void PageToSettings()
         {
-            foreach (var cb in _controlBindings)
+            foreach (ISettingControlBinding cb in _controlBindings)
             {
                 cb.SaveSetting(GetCurrentSettings());
             }
@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             while (queue.Count != 0)
             {
-                var next = queue.Dequeue();
+                Control next = queue.Dequeue();
 
                 if (!next.Visible || next is NumericUpDown)
                 {

@@ -60,7 +60,7 @@ b3e7944 and 11119447928051cfb3494c9c0ef1a1d0ecde56a8
 @line 42.
 ");
 
-            var result = _rendererReal.Render(data, true);
+            string result = _rendererReal.Render(data, true);
 
             result.Should().Be(@"fix\n\nAllow cherry-picking multiple commits from FormBrowse menu
 
@@ -80,7 +80,7 @@ The ability to do so from the RevisionGrid context menu has been added in commit
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,
                 "fix\n\nAllow cherry-picking multiple commits from FormBrowse menu\r\n\r\nThe ability to do so from the RevisionGrid context menu has been added in commit\r\nb3e79447928051cfb3494c9c0ef1a1d0ecde56a8\r\n");
 
-            var result = _rendererReal.Render(data, false);
+            string result = _rendererReal.Render(data, false);
 
             // TODO remove leading newline and achieve padding at the top via the control layout
             result.Should().Be("fix\n\nAllow cherry-picking multiple commits from FormBrowse menu\r\n\r\nThe ability to do so from the RevisionGrid context menu has been added in commit\r\nb3e79447928051cfb3494c9c0ef1a1d0ecde56a8");

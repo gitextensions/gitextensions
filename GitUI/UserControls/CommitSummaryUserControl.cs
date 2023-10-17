@@ -61,7 +61,7 @@ namespace GitUI.UserControls
                     labelDate.Text = _dateFormatter.FormatDateAsRelativeLocal(Revision.CommitDate);
                     labelMessage.Text = Revision.Subject;
 
-                    var tagList = Revision.Refs.Where(r => r.IsTag).ToList();
+                    List<IGitRef> tagList = Revision.Refs.Where(r => r.IsTag).ToList();
                     if (tagList.Any())
                     {
                         labelTags.BackColor = _tagsBackColor;
@@ -75,7 +75,7 @@ namespace GitUI.UserControls
                         labelTags.Text = _notAvailable.Text;
                     }
 
-                    var branchesList = Revision.Refs.Where(r => r.IsHead).ToList();
+                    List<IGitRef> branchesList = Revision.Refs.Where(r => r.IsHead).ToList();
                     if (branchesList.Any())
                     {
                         labelBranches.BackColor = _branchesBackColor;

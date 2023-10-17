@@ -99,14 +99,14 @@ namespace GitUI
 
                 const int maxItems = 5;
 
-                for (var i = 0; i < maxItems && i < items.Count; i++)
+                for (int i = 0; i < maxItems && i < items.Count; i++)
                 {
                     builder.Append("- ").AppendLine(items[i].Name);
                 }
 
                 if (items.Count > maxItems)
                 {
-                    var unlistedCount = items.Count - maxItems;
+                    int unlistedCount = items.Count - maxItems;
                     builder.Append("- (").Append(unlistedCount).Append(" more file");
                     if (unlistedCount != 1)
                     {

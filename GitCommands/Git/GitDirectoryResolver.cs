@@ -71,11 +71,11 @@ namespace GitCommands.Git
                 return string.Empty;
             }
 
-            var gitPath = Path.Combine(repositoryPath, ".git");
+            string gitPath = Path.Combine(repositoryPath, ".git");
             if (_fileSystem.File.Exists(gitPath))
             {
                 const string gitdir = "gitdir:";
-                var line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));
+                string line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));
                 if (line is not null)
                 {
                     string path = line[gitdir.Length..].Trim().ToNativePath();

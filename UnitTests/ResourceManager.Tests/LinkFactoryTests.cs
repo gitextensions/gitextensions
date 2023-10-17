@@ -12,7 +12,7 @@ namespace ResourceManagerTests
         public void ParseInvalidLink(string link)
         {
             LinkFactory linkFactory = new();
-            Assert.False(linkFactory.GetTestAccessor().TryParseLink(link, out var actualUri));
+            Assert.False(linkFactory.GetTestAccessor().TryParseLink(link, out Uri? actualUri));
             Assert.That(actualUri, Is.Null);
         }
 
@@ -22,7 +22,7 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
             linkFactory.CreateBranchLink("master");
             string expected = "gitext://gotobranch/master";
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink("master#gitext://gotobranch/master", out var actualUri));
+            Assert.True(linkFactory.GetTestAccessor().TryParseLink("master#gitext://gotobranch/master", out Uri? actualUri));
             Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
@@ -32,7 +32,7 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
             linkFactory.CreateBranchLink("PR#23");
             string expected = "gitext://gotobranch/PR#23";
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink("PR#23#gitext://gotobranch/PR#23", out var actualUri));
+            Assert.True(linkFactory.GetTestAccessor().TryParseLink("PR#23#gitext://gotobranch/PR#23", out Uri? actualUri));
             Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
@@ -51,7 +51,7 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
             linkFactory.CreateLink(caption, uri);
             string expected = uri;
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink(caption + "#" + uri, out var actualUri));
+            Assert.True(linkFactory.GetTestAccessor().TryParseLink(caption + "#" + uri, out Uri? actualUri));
             Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
@@ -73,7 +73,7 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
 
             string expected = "https://github.com/gitextensions/gitextensions/pull/3471#end";
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out var actualUri));
+            Assert.True(linkFactory.GetTestAccessor().TryParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out Uri? actualUri));
             Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
@@ -87,7 +87,7 @@ namespace ResourceManagerTests
         public void ParseInternalScheme_Null()
         {
             LinkFactory linkFactory = new();
-            Assert.False(linkFactory.GetTestAccessor().ParseInternalScheme(null, out var actualCommandEventArgs));
+            Assert.False(linkFactory.GetTestAccessor().ParseInternalScheme(null, out CommandEventArgs? actualCommandEventArgs));
             Assert.That(actualCommandEventArgs, Is.Null);
         }
 
@@ -99,7 +99,7 @@ namespace ResourceManagerTests
         {
             LinkFactory linkFactory = new();
             Uri uri = new(link);
-            Assert.False(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out var actualCommandEventArgs));
+            Assert.False(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
             Assert.That(actualCommandEventArgs, Is.Null);
         }
 
@@ -115,7 +115,7 @@ namespace ResourceManagerTests
         {
             LinkFactory linkFactory = new();
             Uri uri = new(link);
-            Assert.True(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out var actualCommandEventArgs));
+            Assert.True(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
             Assert.That(actualCommandEventArgs.Command, Is.EqualTo(expectedCommand));
             Assert.That(actualCommandEventArgs.Data, Is.EqualTo(expectedData));
         }

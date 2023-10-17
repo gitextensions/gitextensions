@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateCheckedState()
         {
-            var cellValues = Cells
+            List<bool?> cellValues = Cells
                 .Select(cell => cell.Value)
                 .Cast<bool?>()
                 .Distinct()
@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs
         {
             base.Paint(graphics, clipBounds, cellBounds, rowIndex, dataGridViewElementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
 
-            var glyphSize = CheckBoxRenderer.GetGlyphSize(graphics, CheckBoxState.UncheckedNormal);
+            Size glyphSize = CheckBoxRenderer.GetGlyphSize(graphics, CheckBoxState.UncheckedNormal);
             Point relativeLocation = new((cellBounds.Width / 2) - (glyphSize.Width / 2), (cellBounds.Height / 2) - (glyphSize.Height / 2));
             Point absoluteLocation = new(cellBounds.Location.X + relativeLocation.X, cellBounds.Location.Y + relativeLocation.Y);
 
@@ -127,10 +127,10 @@ namespace GitUI.CommandsDialogs
         {
             if (_checkBoxArea.Contains(e.X, e.Y))
             {
-                var newStateIsChecked = CheckedState != CheckState.Checked;
+                bool newStateIsChecked = CheckedState != CheckState.Checked;
                 CheckedState = newStateIsChecked ? CheckState.Checked : CheckState.Unchecked;
                 _selfChanging = true;
-                foreach (var cell in Cells)
+                foreach (DataGridViewCheckBoxCell cell in Cells)
                 {
                     if (cell == DataGridView.CurrentCell)
                     {

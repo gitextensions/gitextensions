@@ -83,7 +83,7 @@ namespace GitUIPluginInterfaces
                 {
 #if false // Composition caching currently disabled
                     Directory.CreateDirectory(Path.Combine(applicationDataFolder, "Plugins"));
-                    using var cacheStream = File.OpenWrite(cacheFile);
+                    using FileStream cacheStream = File.OpenWrite(cacheFile);
                     ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().SaveAsync(runtimeComposition, cacheStream));
 #endif
                 }

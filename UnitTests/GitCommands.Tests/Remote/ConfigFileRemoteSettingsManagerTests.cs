@@ -41,7 +41,7 @@ namespace GitCommandsTests.Remote
         {
             _module.GetRemoteNames().Returns(x => Array.Empty<string>());
 
-            var remotes = _remotesManager.LoadRemotes(true);
+            IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(true);
 
             remotes.Count().Should().Be(0);
             _module.Received(1).GetRemoteNames();
@@ -54,7 +54,7 @@ namespace GitCommandsTests.Remote
         {
             _module.GetRemoteNames().Returns(x => new[] { null, "", " ", "    ", "\t" });
 
-            var remotes = _remotesManager.LoadRemotes(true);
+            IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(true);
 
             remotes.Count().Should().Be(0);
             _module.Received(1).GetRemoteNames();
@@ -72,7 +72,7 @@ namespace GitCommandsTests.Remote
             List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{remoteName2}", true) };
             _configFile.GetConfigSections().Returns(x => sections);
 
-            var remotes = _remotesManager.LoadRemotes(loadDisabled);
+            IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(loadDisabled);
 
             remotes.Count().Should().Be(loadDisabled ? 2 : 1);
 
@@ -82,7 +82,7 @@ namespace GitCommandsTests.Remote
             _module.Received(1).GetSetting(string.Format(SettingKeyString.RemotePuttySshKey, remoteName1));
             _module.Received(1).GetSettings(string.Format(SettingKeyString.RemotePush, remoteName1));
 
-            var count = loadDisabled ? 1 : 0;
+            int count = loadDisabled ? 1 : 0;
             _configFile.Received(count).GetConfigSections();
             _module.Received(count).GetSetting(ConfigFileRemoteSettingsManager.DisabledSectionPrefix + string.Format(SettingKeyString.RemoteUrl, remoteName2));
             _module.Received(count).GetSetting(ConfigFileRemoteSettingsManager.DisabledSectionPrefix + string.Format(SettingKeyString.RemotePushUrl, remoteName2));
@@ -126,7 +126,7 @@ namespace GitCommandsTests.Remote
             const string output = "";
             _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-            var result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, null, null);
+            ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, null, null);
 
             result.UserMessage.Should().Be(output);
             result.ShouldUpdateRemote.Should().BeTrue();
@@ -143,7 +143,7 @@ namespace GitCommandsTests.Remote
             const string output = "";
             _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-            var result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, remotePushUrl, remotePuttySshKey);
+            ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, remotePushUrl, remotePuttySshKey);
 
             result.UserMessage.Should().Be(output);
             result.ShouldUpdateRemote.Should().BeTrue();
@@ -161,7 +161,7 @@ namespace GitCommandsTests.Remote
             ConfigFileRemote gitRemote = new() { Name = "old", Url = remoteUrl };
             _module.RenameRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-            var result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null);
+            ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null);
 
             result.UserMessage.Should().Be(output);
             result.ShouldUpdateRemote.Should().BeFalse();
@@ -177,7 +177,7 @@ namespace GitCommandsTests.Remote
             ConfigFileRemote gitRemote = new() { Name = "old", Url = "old" };
             _module.RenameRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-            var result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null);
+            ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null);
 
             result.UserMessage.Should().Be(output);
             result.ShouldUpdateRemote.Should().BeTrue();
@@ -251,7 +251,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void ConfigureRemotes_Should_not_update_localHead_if_remoteHead_is_local()
         {
-            var refs = new[]
+            IGitRef[] refs = new[]
             {
                 CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/local", ""),
             };
@@ -260,7 +260,7 @@ namespace GitCommandsTests.Remote
 
             _remotesManager.ConfigureRemotes("origin");
 
-            var mergeWith = "";
+            string mergeWith = "";
             Assert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(0).MergeWith = mergeWith;
         }
@@ -268,7 +268,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void ConfigureRemotes_Should_not_update_localHead_if_localHead_is_remote()
         {
-            var refs = new[]
+            IGitRef[] refs = new[]
             {
                 CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/remotes/origin/develop", "origin"),
             };
@@ -276,7 +276,7 @@ namespace GitCommandsTests.Remote
 
             _remotesManager.ConfigureRemotes("origin");
 
-            var mergeWith = "";
+            string mergeWith = "";
             Assert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(0).MergeWith = mergeWith;
         }
@@ -284,7 +284,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void ConfigureRemotes_Should_not_update_localHead_if_remoteHead_is_not_the_remote_origin_of_the_localHead()
         {
-            var refs = new[]
+            IGitRef[] refs = new[]
             {
                 CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/develop", ""),
                 CreateSubstituteRef("ddca5a9cdc3ab10e042ae6cf5f8da2dd25c4b75f", "refs/remotes/origin/master", "origin"),
@@ -293,7 +293,7 @@ namespace GitCommandsTests.Remote
 
             _remotesManager.ConfigureRemotes("origin");
 
-            var mergeWith = "";
+            string mergeWith = "";
 
             Assert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(0).MergeWith = mergeWith;
@@ -302,7 +302,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void ConfigureRemotes_Should_not_update_localHead_if_remoteHead_is_Tag()
         {
-            var refs = new[]
+            IGitRef[] refs = new[]
             {
                 CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/tags/local-tag", ""),
             };
@@ -310,7 +310,7 @@ namespace GitCommandsTests.Remote
 
             _remotesManager.ConfigureRemotes("origin");
 
-            var mergeWith = "";
+            string mergeWith = "";
 
             Assert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(0).MergeWith = mergeWith;
@@ -319,7 +319,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void ConfigureRemotes_Should_update_localHead_if_remoteHead_is_the_remote_origin_of_the_localHead()
         {
-            var refs = new[]
+            IGitRef[] refs = new[]
             {
                 CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/develop", ""),
                 CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/remotes/origin/develop", "origin"),
@@ -327,17 +327,17 @@ namespace GitCommandsTests.Remote
             _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
             _remotesManager.ConfigureRemotes("origin");
-            var mergeWith = "develop";
+            string mergeWith = "develop";
             Assert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(1).MergeWith = mergeWith;
         }
 
         private IGitRef CreateSubstituteRef(string guid, string completeName, string remote)
         {
-            var isRemote = !string.IsNullOrEmpty(remote);
-            var name = (isRemote ? remote + "/" : "") + completeName.LazySplit('/').LastOrDefault();
-            var isTag = completeName.StartsWith("refs/tags/", StringComparison.InvariantCultureIgnoreCase);
-            var gitRef = Substitute.For<IGitRef>();
+            bool isRemote = !string.IsNullOrEmpty(remote);
+            string name = (isRemote ? remote + "/" : "") + completeName.LazySplit('/').LastOrDefault();
+            bool isTag = completeName.StartsWith("refs/tags/", StringComparison.InvariantCultureIgnoreCase);
+            IGitRef gitRef = Substitute.For<IGitRef>();
             gitRef.Module.Returns(_module);
             gitRef.Guid.Returns(guid);
             gitRef.CompleteName.Returns(completeName);
@@ -359,11 +359,11 @@ namespace GitCommandsTests.Remote
             List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true) };
             _configFile.GetConfigSections().Returns(x => sections);
 
-            var disabledRemotes = _remotesManager.GetDisabledRemotes();
+            IReadOnlyList<GitUIPluginInterfaces.Remote> disabledRemotes = _remotesManager.GetDisabledRemotes();
             Assert.AreEqual(1, disabledRemotes.Count);
             Assert.AreEqual(disabledRemoteName, disabledRemotes[0].Name);
 
-            var disabledRemoteNames = _remotesManager.GetDisabledRemoteNames();
+            IReadOnlyList<string> disabledRemoteNames = _remotesManager.GetDisabledRemoteNames();
             Assert.AreEqual(1, disabledRemoteNames.Count);
             Assert.AreEqual(disabledRemoteName, disabledRemoteNames[0]);
         }
@@ -379,7 +379,7 @@ namespace GitCommandsTests.Remote
             List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true) };
             _configFile.GetConfigSections().Returns(x => sections);
 
-            var enabledRemoteNames = _remotesManager.GetEnabledRemoteNames();
+            IReadOnlyList<string> enabledRemoteNames = _remotesManager.GetEnabledRemoteNames();
             Assert.AreEqual(1, enabledRemoteNames.Count);
             Assert.AreEqual(enabledRemoteName, enabledRemoteNames[0]);
         }

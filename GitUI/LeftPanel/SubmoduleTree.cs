@@ -59,12 +59,12 @@ namespace GitUI.LeftPanel
                 if (_currentNodes is not null)
                 {
                     // Structure is up-to-date, update status
-                    var infos = e.Info.AllSubmodules.ToDictionary(info => info.Path, info => info);
+                    Dictionary<string, SubmoduleInfo> infos = e.Info.AllSubmodules.ToDictionary(info => info.Path, info => info);
                     Validates.NotNull(e.Info.TopProject);
                     infos[e.Info.TopProject.Path] = e.Info.TopProject;
-                    var nodes = _currentNodes.DepthEnumerator<SubmoduleNode>().ToList();
+                    List<SubmoduleNode> nodes = _currentNodes.DepthEnumerator<SubmoduleNode>().ToList();
 
-                    foreach (var node in nodes)
+                    foreach (SubmoduleNode node in nodes)
                     {
                         if (infos.ContainsKey(node.Info.Path))
                         {
@@ -189,7 +189,7 @@ namespace GitUI.LeftPanel
         {
             Validates.NotNull(result.TopProject);
 
-            var threadModule = (GitModule?)result.Module;
+            GitModule threadModule = (GitModule?)result.Module;
 
             Validates.NotNull(threadModule);
 
@@ -207,10 +207,10 @@ namespace GitUI.LeftPanel
         {
             // result.OurSubmodules/AllSubmodules contain a recursive list of submodules, but don't provide info about the super
             // project path. So we deduce these by substring matching paths against an ordered list of all paths.
-            var modulePaths = result.AllSubmodules.Select(info => info.Path).ToList();
+            List<string> modulePaths = result.AllSubmodules.Select(info => info.Path).ToList();
 
             // Add current and parent module paths
-            var parentModule = threadModule;
+            GitModule parentModule = threadModule;
 
             while (parentModule is not null)
             {
@@ -221,7 +221,7 @@ namespace GitUI.LeftPanel
             // Sort descending so we find the nearest outer folder first
             modulePaths = modulePaths.OrderByDescending(path => path).ToList();
 
-            foreach (var submoduleInfo in result.AllSubmodules)
+            foreach (SubmoduleInfo submoduleInfo in result.AllSubmodules)
             {
                 string? superPath = GetSubmoduleSuperPath(submoduleInfo.Path);
 
@@ -233,7 +233,7 @@ namespace GitUI.LeftPanel
 
                 string localPath = Path.GetDirectoryName(submoduleInfo.Path[superPath.Length..]).ToPosixPath();
 
-                var isCurrent = submoduleInfo.Bold;
+                bool isCurrent = submoduleInfo.Bold;
 
                 nodes.Add(new SubmoduleNode(this,
                     submoduleInfo,
@@ -287,25 +287,25 @@ namespace GitUI.LeftPanel
             // Input 'nodes' is an array of SubmoduleNodes for all the submodules; now we need to create SubmoduleFolderNodes
             // and insert everything into a tree.
 
-            var topModule = threadModule.GetTopModule();
+            GitModule topModule = threadModule.GetTopModule();
 
             // Build a mapping of top-module-relative path to node
             Dictionary<string, Node> pathToNodes = new();
 
             // Add existing SubmoduleNodes
-            foreach (var node in submoduleNodes)
+            foreach (SubmoduleNode node in submoduleNodes)
             {
                 pathToNodes[GetNodeRelativePath(topModule, node)] = node;
             }
 
             // Create and add missing SubmoduleFolderNodes
-            foreach (var node in submoduleNodes)
+            foreach (SubmoduleNode node in submoduleNodes)
             {
-                var parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
+                string[] parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
 
                 for (int i = 0; i < parts.Length - 1; ++i)
                 {
-                    var path = string.Join("/", parts.Take(i + 1));
+                    string path = string.Join("/", parts.Take(i + 1));
 
                     if (!pathToNodes.ContainsKey(path))
                     {
@@ -317,15 +317,15 @@ namespace GitUI.LeftPanel
             // Now build the tree
             DummyNode rootNode = new();
             HashSet<Node> nodesInTree = new();
-            foreach (var node in submoduleNodes)
+            foreach (SubmoduleNode node in submoduleNodes)
             {
                 Node parentNode = rootNode;
-                var parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
+                string[] parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
 
                 for (int i = 0; i < parts.Length; ++i)
                 {
-                    var path = string.Join("/", parts.Take(i + 1));
-                    var nodeToAdd = pathToNodes[path];
+                    string path = string.Join("/", parts.Take(i + 1));
+                    Node nodeToAdd = pathToNodes[path];
 
                     // If node is not already in the tree, add it
                     if (!nodesInTree.Contains(nodeToAdd))

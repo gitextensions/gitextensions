@@ -135,7 +135,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
         {
             _NO_TRANSLATE_cbSelectTheme.Items.Clear();
-            var formattedThemeIds = themeIds
+            object[] formattedThemeIds = themeIds
                 .Select(id => new FormattedThemeId(id))
                 .Cast<object>()
                 .ToArray();

@@ -37,7 +37,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void AllFirstAreParentsToSelected_should_return_false_if_no_parents_contains_any_of_selected_items()
         {
-            var firstSelected = new[] { ObjectId.IndexId, ObjectId.Random() };
+            ObjectId[] firstSelected = new[] { ObjectId.IndexId, ObjectId.Random() };
 
             GitRevision selectedRevision = new(ObjectId.WorkTreeId)
             {
@@ -50,10 +50,10 @@ namespace GitCommandsTests.Git
         [Test]
         public void AllFirstAreParentsToSelected_should_return_true_if_all_parents_contains_all_of_selected_items()
         {
-            var parent1 = ObjectId.Random();
-            var parent2 = ObjectId.Random();
+            ObjectId parent1 = ObjectId.Random();
+            ObjectId parent2 = ObjectId.Random();
 
-            var firstSelected2 = new[]
+            ObjectId[] firstSelected2 = new[]
             {
                 parent1,
                 parent2
@@ -132,7 +132,7 @@ namespace GitCommandsTests.Git
         [TestCase("myName")]
         public void Matches_should_match_name(string criteria)
         {
-            var gitRef = Substitute.For<IGitRef>();
+            IGitRef gitRef = Substitute.For<IGitRef>();
             gitRef.Name.Returns(x => "Name is MyName");
             GitRevision revision = new(ObjectId.Random()) { Refs = new[] { gitRef } };
 
@@ -145,7 +145,7 @@ namespace GitCommandsTests.Git
         [TestCase("012", false)]
         public void Matches_should_match_guid(string criteria, bool expected)
         {
-            var gitRef = Substitute.For<IGitRef>();
+            IGitRef gitRef = Substitute.For<IGitRef>();
             gitRef.Name.Returns(x => "Name is MyName");
 
             GitRevision revision = new(ObjectId.Parse("0011223344556677889900112233445566778899")) { Refs = new[] { gitRef } };

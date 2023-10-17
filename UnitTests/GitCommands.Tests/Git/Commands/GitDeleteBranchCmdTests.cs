@@ -41,8 +41,8 @@ namespace GitCommandsTests.Git_Commands
 
                 // Test local branches only
                 List<IGitRef> localRefs = new();
-                var localGitModule = Substitute.For<IGitModule>();
-                var localConfigFileSettings = Substitute.For<IConfigFileSettings>();
+                IGitModule localGitModule = Substitute.For<IGitModule>();
+                IConfigFileSettings localConfigFileSettings = Substitute.For<IConfigFileSettings>();
                 localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns(string.Empty);
                 localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(string.Empty);
                 localGitModule.LocalConfigFile.Returns(localConfigFileSettings);
@@ -83,8 +83,8 @@ namespace GitCommandsTests.Git_Commands
 
         private static GitRef SetupRawRemoteRef(string remoteName, string completeName)
         {
-            var localGitModule = Substitute.For<IGitModule>();
-            var localConfigFileSettings = Substitute.For<IConfigFileSettings>();
+            IGitModule localGitModule = Substitute.For<IGitModule>();
+            IConfigFileSettings localConfigFileSettings = Substitute.For<IConfigFileSettings>();
             localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns(completeName);
             localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(remoteName);
             localGitModule.LocalConfigFile.Returns(localConfigFileSettings);

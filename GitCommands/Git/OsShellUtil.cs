@@ -55,7 +55,7 @@
                     dialog.SelectedPath = selectedPath;
                 }
 
-                var result = dialog.ShowDialog(ownerWindow);
+                DialogResult result = dialog.ShowDialog(ownerWindow);
                 if (result == DialogResult.OK)
                 {
                     return dialog.SelectedPath;

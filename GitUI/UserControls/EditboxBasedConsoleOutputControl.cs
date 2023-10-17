@@ -104,7 +104,7 @@ namespace GitUI.UserControls
                 KillProcess();
 
                 // process used to execute external commands
-                var outputEncoding = GitModule.SystemEncoding;
+                Encoding outputEncoding = GitModule.SystemEncoding;
                 ProcessStartInfo startInfo = new()
                 {
                     UseShellExecute = false,
@@ -120,7 +120,7 @@ namespace GitUI.UserControls
                     WorkingDirectory = workDir
                 };
 
-                foreach (var (name, value) in envVariables)
+                foreach ((string name, string value) in envVariables)
                 {
                     startInfo.EnvironmentVariables.Add(name, value);
                 }

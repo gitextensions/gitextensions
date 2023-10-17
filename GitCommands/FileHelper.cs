@@ -78,14 +78,14 @@ namespace GitCommands
                 return null;
             }
 
-            var lines = result.StandardOutput.Split(Delimiters.NullAndLineFeed);
+            string[] lines = result.StandardOutput.Split(Delimiters.NullAndLineFeed);
             Dictionary<string, string> attributes = new();
             for (int i = 0; i < lines.Length - 2; i += 3)
             {
                 attributes[lines[i + 1].Trim()] = lines[i + 2].Trim();
             }
 
-            if (attributes.TryGetValue("diff", out var diff))
+            if (attributes.TryGetValue("diff", out string diff))
             {
                 if (diff == "unset")
                 {
@@ -98,7 +98,7 @@ namespace GitCommands
                 }
             }
 
-            if (attributes.TryGetValue("text", out var text))
+            if (attributes.TryGetValue("text", out string text))
             {
                 if (text != "unset" && text != "unspecified")
                 {
@@ -106,7 +106,7 @@ namespace GitCommands
                 }
             }
 
-            if (attributes.TryGetValue("crlf", out var crlf))
+            if (attributes.TryGetValue("crlf", out string crlf))
             {
                 if (crlf != "unset" && crlf != "unspecified")
                 {
@@ -114,7 +114,7 @@ namespace GitCommands
                 }
             }
 
-            if (attributes.TryGetValue("eol", out var eol))
+            if (attributes.TryGetValue("eol", out string eol))
             {
                 if (eol != "unset" && eol != "unspecified")
                 {

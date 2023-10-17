@@ -48,13 +48,13 @@ namespace GitCommands
         /// </remarks>
         public Icon? Get(string workingDirectory, string relativeFilePath)
         {
-            var extension = Path.GetExtension(relativeFilePath);
+            string extension = Path.GetExtension(relativeFilePath);
             if (string.IsNullOrWhiteSpace(extension))
             {
                 return null;
             }
 
-            var icon = LoadedFileIcons.GetOrAdd(extension, ext =>
+            Icon icon = LoadedFileIcons.GetOrAdd(extension, ext =>
             {
                 string? tempFile = null;
                 try
@@ -65,7 +65,7 @@ namespace GitCommands
                     // extensions from the registry and using p/invokes and WinAPI, which have
                     // significantly higher maintenance overhead.
 
-                    var fullPath = Path.Combine(workingDirectory, relativeFilePath);
+                    string fullPath = Path.Combine(workingDirectory, relativeFilePath);
                     if (!_fileSystem.File.Exists(fullPath))
                     {
                         tempFile = CreateTempFile(Path.GetFileName(fullPath));
@@ -91,7 +91,7 @@ namespace GitCommands
 
         private string CreateTempFile(string fileName)
         {
-            var tempFile = Path.Combine(Path.GetTempPath(), fileName);
+            string tempFile = Path.Combine(Path.GetTempPath(), fileName);
             _fileSystem.File.WriteAllText(tempFile, string.Empty);
             return tempFile;
         }

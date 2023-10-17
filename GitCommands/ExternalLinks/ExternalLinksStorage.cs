@@ -27,7 +27,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public IReadOnlyList<ExternalLinkDefinition>? Load(DistributedSettings settings)
         {
-            var xml = settings.GetString(SettingName, null);
+            string xml = settings.GetString(SettingName, null);
             return LoadFromXmlString(xml);
         }
 
@@ -45,7 +45,7 @@ namespace GitCommands.ExternalLinks
                 }
                 else
                 {
-                    foreach (var definition in definitions)
+                    foreach (ExternalLinkDefinition definition in definitions)
                     {
                         definition.RemoveEmptyFormats();
                     }

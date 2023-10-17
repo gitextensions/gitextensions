@@ -18,7 +18,7 @@ namespace GitCommands.Remotes
             owner = null;
             repository = null;
 
-            var m = MatchRegExes(remoteUrl, GitHubRegexes);
+            System.Text.RegularExpressions.Match m = MatchRegExes(remoteUrl, GitHubRegexes);
 
             if (m is null || !m.Success)
             {

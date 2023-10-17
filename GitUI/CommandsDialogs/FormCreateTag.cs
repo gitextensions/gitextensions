@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var tagName = CreateTag();
+                string tagName = CreateTag();
 
                 if (pushTag.Checked && !string.IsNullOrEmpty(tagName))
                 {
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs
 
         private string CreateTag()
         {
-            var objectId = commitPickerSmallControl1.SelectedObjectId;
+            ObjectId objectId = commitPickerSmallControl1.SelectedObjectId;
 
             if (objectId is null)
             {
@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
                                                      tagMessage.Text,
                                                      textBoxGpgKey.Text,
                                                      ForceTag.Checked);
-            var success = _gitTagController.CreateTag(createTagArgs, this);
+            bool success = _gitTagController.CreateTag(createTagArgs, this);
             if (!success)
             {
                 return "";
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
 
         private void PushTag(string tagName)
         {
-            var pushCmd = Commands.PushTag(_currentRemote, tagName, false);
+            GitExtUtils.ArgumentString pushCmd = Commands.PushTag(_currentRemote, tagName, false);
 
             bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
             if (!success)

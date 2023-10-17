@@ -30,7 +30,7 @@ namespace GitUITests
 
         protected override string? GetValueImpl(string key)
         {
-            if (_stringSettings.TryGetValue(key, out var value))
+            if (_stringSettings.TryGetValue(key, out string? value))
             {
                 return value;
             }

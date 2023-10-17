@@ -22,7 +22,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         [Test]
         public void LoadLegacy_should_return_empty_collection_if_settings_value_null()
         {
-            var repositories = _repositoryStorage.Load();
+            IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();
 
             repositories.Should().BeEmpty();
         }
@@ -33,7 +33,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             AppSettings.SetString("repositories", "repo");
             _repositoryCategorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => null);
 
-            var repositories = _repositoryStorage.Load();
+            IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();
 
             repositories.Should().BeEmpty();
         }
@@ -68,7 +68,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             };
             _repositoryCategorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => history);
 
-            var repositories = _repositoryStorage.Load();
+            IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();
 
             repositories.Should().BeSameAs(history);
         }

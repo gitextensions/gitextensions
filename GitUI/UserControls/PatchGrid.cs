@@ -160,7 +160,7 @@ namespace GitUI
         private IReadOnlyList<PatchFile> GetPatches()
         {
             string rebaseTodoFilePath = $"{Module.GetRebaseDir()}git-rebase-todo";
-            var patches = File.Exists(rebaseTodoFilePath)
+            IReadOnlyList<PatchFile> patches = File.Exists(rebaseTodoFilePath)
                             ? GetInteractiveRebasePatchFiles()
                             : GetRebasePatchFiles();
 
@@ -170,10 +170,10 @@ namespace GitUI
             }
 
             // Select commits with `ObjectId` and patches with `Name`
-            var skippedPatches = patches
+            IEnumerable<PatchFile> skippedPatches = patches
                 .TakeWhile(p => !p.IsNext)
                 .Where(p => _skipped.Any(s => p.ObjectId == s.ObjectId && p.Name == s.Name));
-            foreach (var patchFile in skippedPatches)
+            foreach (PatchFile patchFile in skippedPatches)
             {
                 patchFile.IsSkipped = true;
             }
@@ -191,20 +191,20 @@ namespace GitUI
         {
             List<PatchFile> patchFiles = new();
 
-            var nextFile = GetNextRebasePatch();
+            string nextFile = GetNextRebasePatch();
 
-            int.TryParse(nextFile, out var next);
+            int.TryParse(nextFile, out int next);
 
-            var rebaseDir = Module.GetRebaseDir();
+            string rebaseDir = Module.GetRebaseDir();
 
-            var files = Directory.Exists(rebaseDir)
+            string[] files = Directory.Exists(rebaseDir)
                 ? Directory.GetFiles(rebaseDir)
                 : Array.Empty<string>();
 
-            foreach (var fullFileName in files)
+            foreach (string fullFileName in files)
             {
-                var file = PathUtil.GetFileName(fullFileName);
-                if (!int.TryParse(file, out var n))
+                string file = PathUtil.GetFileName(fullFileName);
+                if (!int.TryParse(file, out int n))
                 {
                     continue;
                 }
@@ -222,9 +222,9 @@ namespace GitUI
                 {
                     string? key = null;
                     string value = "";
-                    foreach (var line in File.ReadLines(rebaseDir + file))
+                    foreach (string line in File.ReadLines(rebaseDir + file))
                     {
-                        var m = HeadersMatch.Match(line);
+                        Match m = HeadersMatch.Match(line);
                         if (key is null)
                         {
                             if (!string.IsNullOrWhiteSpace(line) && !m.Success)
@@ -241,7 +241,7 @@ namespace GitUI
                                 case "From":
                                     if (value.IndexOf('<') > 0 && value.IndexOf('<') < value.Length)
                                     {
-                                        var author = RFC2047Decoder.Parse(value);
+                                        string author = RFC2047Decoder.Parse(value);
                                         patchFile.Author = author[..author.IndexOf('<')].Trim();
                                     }
                                     else
@@ -294,8 +294,8 @@ namespace GitUI
 
             string AppendQuotedString(string str1, string str2)
             {
-                var m1 = QuotedText.Match(str1);
-                var m2 = QuotedText.Match(str2);
+                Match m1 = QuotedText.Match(str1);
+                Match m2 = QuotedText.Match(str2);
                 if (!m1.Success || !m2.Success)
                 {
                     return str1 + str2;
@@ -326,7 +326,7 @@ namespace GitUI
         {
             Validates.NotNull(PatchFiles);
 
-            var updatedPatches = GetPatches();
+            IReadOnlyList<PatchFile> updatedPatches = GetPatches();
 
             for (int i = 0; i < updatedPatches.Count; i++)
             {
@@ -343,7 +343,7 @@ namespace GitUI
                 return;
             }
 
-            var shouldSelectIndex = PatchFiles.IndexOf(p => p.IsNext);
+            int shouldSelectIndex = PatchFiles.IndexOf(p => p.IsNext);
 
             if (shouldSelectIndex >= 0)
             {

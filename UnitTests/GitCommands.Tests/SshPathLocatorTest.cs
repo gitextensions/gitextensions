@@ -32,7 +32,7 @@ namespace GitCommandsTests
         public void GetSshFromGitDir_should_return_null_if_system_access_throwing()
         {
             const string path = @"C:\";
-            var directoryBase = Substitute.For<DirectoryBase>();
+            DirectoryBase directoryBase = Substitute.For<DirectoryBase>();
             directoryBase.GetParent(path).Throws<Exception>();
             _fileSystem.Directory.Returns(directoryBase);
             SshPathLocator sshPathLocator = new(_fileSystem);
@@ -60,11 +60,11 @@ namespace GitCommandsTests
         {
             const string path = @"C:\somedir";
             const string parentPath = @"C:\";
-            var gitBinDir = Substitute.For<DirectoryInfoBase>();
+            DirectoryInfoBase gitBinDir = Substitute.For<DirectoryInfoBase>();
             gitBinDir.FullName.Returns(path);
-            var gitDir = Substitute.For<DirectoryInfoBase>();
+            DirectoryInfoBase gitDir = Substitute.For<DirectoryInfoBase>();
             gitDir.FullName.Returns(parentPath);
-            var directoryBase = Substitute.For<DirectoryBase>();
+            DirectoryBase directoryBase = Substitute.For<DirectoryBase>();
             directoryBase.GetParent(path).Returns(gitDir);
 
             // a single trailing separator is considered a sub-directory by Directory.GetParent

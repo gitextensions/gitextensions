@@ -106,7 +106,7 @@ Current Branch:
             }
 
             tableLayoutPanel1.Dock = DockStyle.Fill;
-            var margin = propertyGrid1.Margin.Left;
+            int margin = propertyGrid1.Margin.Left;
             propertyGrid1.Margin = new Padding(margin, margin, panelButtons.Width, margin);
 
             propertyGrid1.SelectedGridItemChanged += (s, e) =>
@@ -165,7 +165,7 @@ Current Branch:
         {
             _scripts.Clear();
 
-            foreach (var script in _scriptsManager.GetScripts())
+            foreach (ScriptInfo script in _scriptsManager.GetScripts())
             {
                 _scripts.Add(script);
             }
@@ -212,7 +212,7 @@ Current Branch:
 
                 foreach (ScriptInfoProxy script in scripts)
                 {
-                    var color = !script.Enabled ? SystemColors.GrayText : SystemColors.WindowText;
+                    Color color = !script.Enabled ? SystemColors.GrayText : SystemColors.WindowText;
 
                     ListViewItem lvitem = new(script.Name)
                     {

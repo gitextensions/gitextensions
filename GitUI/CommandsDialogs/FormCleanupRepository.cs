@@ -170,7 +170,7 @@ namespace GitUI.CommandsDialogs
                 SelectedPath = Module.WorkingDir,
             };
 
-            var result = dialog.ShowDialog(this);
+            DialogResult result = dialog.ShowDialog(this);
 
             string subFoldersToClean;
             if (result != DialogResult.OK
@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs
             openFileDialog.InitialDirectory = Module.WorkingDir;
             openFileDialog.RestoreDirectory = true;
 
-            var result = openFileDialog.ShowDialog(this);
+            DialogResult result = openFileDialog.ShowDialog(this);
 
             string fileToExclude;
             if (result != DialogResult.OK

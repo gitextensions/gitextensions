@@ -54,7 +54,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </param>
         public Quadrilateral(PointF point1, PointF point2, PointF point3, PointF point4, bool toClose)
         {
-            var pointTypes = (byte[])QuadrilateralPointTypes.Clone();
+            byte[] pointTypes = (byte[])QuadrilateralPointTypes.Clone();
             if (toClose)
             {
                 pointTypes[3] |= (byte)PathPointType.CloseSubpath;
@@ -117,8 +117,8 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         public static bool Contains(PointF point, PointF[] cornerPoints)
         {
-            var intersections = 0;
-            for (var i = 1; i < cornerPoints.Length; ++i)
+            int intersections = 0;
+            for (int i = 1; i < cornerPoints.Length; ++i)
             {
                 if (DoesIntersects(point, cornerPoints[i], cornerPoints[i - 1]))
                 {
@@ -152,13 +152,13 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         private static bool DoesIntersects(PointF point, PointF point1, PointF point2)
         {
-            var x2 = point2.X;
-            var y2 = point2.Y;
-            var x1 = point1.X;
-            var y1 = point1.Y;
+            float x2 = point2.X;
+            float y2 = point2.Y;
+            float x1 = point1.X;
+            float y1 = point1.Y;
             if ((x2 < point.X && x1 >= point.X) || (x2 >= point.X && x1 < point.X))
             {
-                var y = ((y2 - y1) / (x2 - x1) * (point.X - x1)) + y1;
+                float y = ((y2 - y1) / (x2 - x1) * (point.X - x1)) + y1;
                 return y > point.Y;
             }
 

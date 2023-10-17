@@ -70,7 +70,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 _info.TargetRepo.RepoName, _info.TargetBranch);
 
             JArray reviewers = new();
-            foreach (var reviewer in _info.Reviewers)
+            foreach (BitbucketUser reviewer in _info.Reviewers)
             {
                 JObject r = new();
                 r["user"] = new JObject();

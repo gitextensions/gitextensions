@@ -83,10 +83,10 @@ namespace GitExtensions.Plugins.ProxySwitcher
         {
             StringBuilder sb = new();
             sb.Append("\"");
-            var username = _plugin.Username.ValueOrDefault(_settings);
+            string username = _plugin.Username.ValueOrDefault(_settings);
             if (!string.IsNullOrEmpty(username))
             {
-                var password = _plugin.Password.ValueOrDefault(_settings);
+                string password = _plugin.Password.ValueOrDefault(_settings);
                 sb.Append(username);
                 if (!string.IsNullOrEmpty(password))
                 {
@@ -98,7 +98,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
             }
 
             sb.Append(_plugin.HttpProxy.ValueOrDefault(_settings));
-            var port = _plugin.HttpProxyPort.ValueOrDefault(_settings);
+            string port = _plugin.HttpProxyPort.ValueOrDefault(_settings);
             if (!string.IsNullOrEmpty(port))
             {
                 sb.Append(":");
@@ -111,7 +111,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         private void SetProxy_Button_Click(object sender, EventArgs e)
         {
-            var httpProxy = BuildHttpProxy();
+            string httpProxy = BuildHttpProxy();
 
             GitArgumentBuilder args = new("config")
             {
@@ -126,7 +126,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         private void UnsetProxy_Button_Click(object sender, EventArgs e)
         {
-            var arguments = ApplyGlobally_CheckBox.Checked
+            string arguments = ApplyGlobally_CheckBox.Checked
                 ? "config --global --unset http.proxy"
                 : "config --unset http.proxy";
 

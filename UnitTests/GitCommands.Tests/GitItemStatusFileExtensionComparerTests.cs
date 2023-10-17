@@ -18,7 +18,7 @@ namespace GitCommandsTests
         [Test]
         public void Compares_file_extension_then_normal_item_comparison()
         {
-            var unsortedItems = new[]
+            GitItemStatus[] unsortedItems = new[]
             {
                 new GitItemStatus("src/newFile.txt") { OldName = null },
                 new GitItemStatus("src/newFile.cs") { OldName = null },
@@ -29,9 +29,9 @@ namespace GitCommandsTests
                 new GitItemStatus("changeExtension.cs") { OldName = "changeExtension.txt" },
             };
 
-            var copy = unsortedItems.ToList();
+            List<GitItemStatus> copy = unsortedItems.ToList();
             copy.Sort(_comparerUnderTest);
-            var sorted = copy;
+            List<GitItemStatus> sorted = copy;
 
             CollectionAssert.AreEqual(
                 new GitItemStatus[]
@@ -76,8 +76,8 @@ namespace GitCommandsTests
                     return 1;
                 }
 
-                var lhs = x as GitItemStatus;
-                var rhs = y as GitItemStatus;
+                GitItemStatus lhs = x as GitItemStatus;
+                GitItemStatus rhs = y as GitItemStatus;
 
                 return lhs.Name == rhs.Name && lhs.OldName == rhs.OldName ? 0 : 1;
             }

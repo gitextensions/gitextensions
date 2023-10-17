@@ -42,7 +42,7 @@
         [Test]
         public void IndexOf()
         {
-            var ints = new[] { 0, 1, 2, 3 };
+            int[] ints = new[] { 0, 1, 2, 3 };
 
             Assert.AreEqual(0, ints.IndexOf(i => i == 0));
             Assert.AreEqual(1, ints.IndexOf(i => i == 1));

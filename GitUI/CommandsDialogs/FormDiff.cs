@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs
             // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
             // git difftool --gui --no-prompt --dir-diff HEAD succeeds
             // Thus, we disable comparing "from" working directory.
-            var enableDifftoolDirDiff = _firstRevision?.ObjectId != ObjectId.WorkTreeId;
+            bool enableDifftoolDirDiff = _firstRevision?.ObjectId != ObjectId.WorkTreeId;
             btnCompareDirectoriesWithDiffTool.Enabled = enableDifftoolDirDiff;
 
             Validates.NotNull(_secondRevision);
@@ -157,11 +157,11 @@ namespace GitUI.CommandsDialogs
 
         private void btnSwap_Click(object sender, EventArgs e)
         {
-            var orgFirstRev = _firstRevision;
+            GitRevision orgFirstRev = _firstRevision;
             _firstRevision = _secondRevision;
             _secondRevision = orgFirstRev;
 
-            var orgFirstStr = _firstCommitDisplayStr;
+            string orgFirstStr = _firstCommitDisplayStr;
             _firstCommitDisplayStr = _secondCommitDisplayStr;
             _secondCommitDisplayStr = orgFirstStr;
             PopulateDiffFiles();
@@ -174,16 +174,16 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var diffKind = GetDiffKind();
+            RevisionDiffKind diffKind = GetDiffKind();
 
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (FileStatusItem item in DiffFiles.SelectedItems)
             {
                 if (item.FirstRevision?.ObjectId == ObjectId.CombinedDiffId)
                 {
                     continue;
                 }
 
-                var revs = new[] { item.SecondRevision, item.FirstRevision };
+                GitRevision[] revs = new[] { item.SecondRevision, item.FirstRevision };
                 UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked);
             }
 
@@ -234,16 +234,16 @@ namespace GitUI.CommandsDialogs
 
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var candidates = DiffFiles.GitItemStatuses;
+            IReadOnlyList<GitItemStatus> candidates = DiffFiles.GitItemStatuses;
 
             IEnumerable<GitItemStatus> FindDiffFilesMatches(string name)
             {
-                var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
+                Func<string?, bool> predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item => predicate(item.Name) || predicate(item.OldName));
             }
 
             GitItemStatus? selectedItem;
-            using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
+            using (SearchWindow<GitItemStatus> searchWindow = new(FindDiffFilesMatches)
             {
                 Owner = this
             })
@@ -308,7 +308,7 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
+            List<ObjectId> parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
             bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(parentIds, _secondRevision);
             bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
 
@@ -339,7 +339,7 @@ namespace GitUI.CommandsDialogs
             if (form.ShowDialog(this) == DialogResult.OK)
             {
                 displayStr = form.BranchName;
-                var objectId = Module.RevParse(form.BranchName);
+                ObjectId objectId = Module.RevParse(form.BranchName);
                 revision = objectId is null ? null : new GitRevision(objectId);
                 PopulateDiffFiles();
             }

@@ -55,16 +55,16 @@ namespace GitCommands.UserRepositoryHistory.Legacy
                 throw new ArgumentNullException(nameof(currentHistory));
             }
 
-            var history = currentHistory.ToList();
+            List<Current.Repository> history = currentHistory.ToList();
 
             await TaskScheduler.Default;
-            var categorised = _repositoryStorage.Load();
+            IReadOnlyList<RepositoryCategory> categorised = _repositoryStorage.Load();
             if (categorised.Count < 1)
             {
                 return (history, false);
             }
 
-            var changed = MigrateSettings(history, categorised);
+            bool changed = MigrateSettings(history, categorised);
 
             // settings have been migrated, clear the old setting
             _repositoryStorage.Save();
@@ -74,15 +74,15 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 
         private static bool MigrateSettings(IList<Current.Repository> history, IEnumerable<RepositoryCategory> categorised)
         {
-            var changed = false;
+            bool changed = false;
 
-            foreach (var category in categorised.Where(c => c.CategoryType == "Repositories"))
+            foreach (RepositoryCategory category in categorised.Where(c => c.CategoryType == "Repositories"))
             {
                 Validates.NotNull(category.Repositories);
 
-                foreach (var repository in category.Repositories)
+                foreach (Repository repository in category.Repositories)
                 {
-                    var repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
+                    Current.Repository repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
                     if (repo is null)
                     {
                         repo = new Current.Repository(repository.Path!);
@@ -101,7 +101,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 
             Current.Repository.RepositoryAnchor GetAnchor(string anchor)
             {
-                if (!Enum.TryParse<Current.Repository.RepositoryAnchor>(anchor, out var repositoryAnchor))
+                if (!Enum.TryParse<Current.Repository.RepositoryAnchor>(anchor, out Current.Repository.RepositoryAnchor repositoryAnchor))
                 {
                     return Current.Repository.RepositoryAnchor.None;
                 }

@@ -35,7 +35,7 @@
                 throw new ArgumentException("At least one control is required", nameof(controls));
             }
 
-            var requiredWidth = controls.Max(c => c.Margin.Left + c.Width + c.Margin.Right);
+            int requiredWidth = controls.Max(c => c.Margin.Left + c.Width + c.Margin.Right);
             table.ColumnStyles[columnIndex].SizeType = SizeType.Absolute;
             table.ColumnStyles[columnIndex].Width = requiredWidth;
         }

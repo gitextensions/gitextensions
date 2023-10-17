@@ -42,12 +42,12 @@ namespace GitCommandsTests.Settings
             where T : struct
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<T>(settingsPath, settingName, settingDefault);
+            ISetting<T> setting = Setting.Create<T>(settingsPath, settingName, settingDefault);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -65,8 +65,8 @@ namespace GitCommandsTests.Settings
             where T : struct
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             T storedValue = default;
@@ -74,7 +74,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, settingDefault);
+                ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
                 setting.Value = value;
 
@@ -90,7 +90,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, settingDefault);
+                ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
                 storedValue = setting.Value;
             });
@@ -105,13 +105,13 @@ namespace GitCommandsTests.Settings
             where T : struct
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -137,13 +137,13 @@ namespace GitCommandsTests.Settings
             where T : struct
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
             setting.Value = value;
 
@@ -171,8 +171,8 @@ namespace GitCommandsTests.Settings
             where T : struct
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             T storedValue = default;
@@ -180,7 +180,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, settingDefault);
+                ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
                 storedValue = setting.Value;
             });
@@ -195,8 +195,8 @@ namespace GitCommandsTests.Settings
             where T : struct
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             T storedValue = default;
@@ -204,7 +204,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, string.Empty);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
                 setting.Value = Guid.NewGuid().ToString();
 
@@ -220,7 +220,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, settingDefault);
+                ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
                 storedValue = setting.Value;
             });
@@ -238,12 +238,12 @@ namespace GitCommandsTests.Settings
         public void Should_create_string_setting(string settingDefault)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -260,15 +260,15 @@ namespace GitCommandsTests.Settings
         public void Should_save_string_setting(string settingDefault, string value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
             string storedValue = null;
 
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, settingDefault);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
                 setting.Value = value;
 
@@ -284,7 +284,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, settingDefault);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
                 storedValue = setting.Value;
             });
@@ -298,13 +298,13 @@ namespace GitCommandsTests.Settings
         public void Should_trigger_updated_event_for_string_setting(string settingDefault, string value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -329,13 +329,13 @@ namespace GitCommandsTests.Settings
         public void Should_not_trigger_updated_event_for_string_setting(string settingDefault, string value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
             setting.Value = value;
 
@@ -365,12 +365,12 @@ namespace GitCommandsTests.Settings
         public void Should_create_nullable_bool_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<bool>(settingsPath, settingName);
+            ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -389,12 +389,12 @@ namespace GitCommandsTests.Settings
         public void Should_save_nullable_bool_setting(bool? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<bool>(settingsPath, settingName);
+            ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -414,13 +414,13 @@ namespace GitCommandsTests.Settings
         public void Should_trigger_updated_event_for_nullable_bool_setting(bool? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<bool>(settingsPath, settingName);
+            ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -447,13 +447,13 @@ namespace GitCommandsTests.Settings
         public void Should_not_trigger_updated_event_for_nullable_bool_setting(bool? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<bool>(settingsPath, settingName);
+            ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -479,8 +479,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_bool_setting_if_value_not_exist()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             bool? storedValue = null;
@@ -488,7 +488,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create<bool>(settingsPath, settingName);
+                ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -501,8 +501,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_bool_setting_if_value_is_incorrect()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             bool? storedValue = null;
@@ -510,7 +510,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, string.Empty);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
                 setting.Value = Guid.NewGuid().ToString();
 
@@ -526,7 +526,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create<bool>(settingsPath, settingName);
+                ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -543,12 +543,12 @@ namespace GitCommandsTests.Settings
         public void Should_create_nullable_char_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<char>(settingsPath, settingName);
+            ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -567,12 +567,12 @@ namespace GitCommandsTests.Settings
         public void Should_save_nullable_char_setting(char? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<char>(settingsPath, settingName);
+            ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -592,13 +592,13 @@ namespace GitCommandsTests.Settings
         public void Should_trigger_updated_event_for_nullable_char_setting(char? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<char>(settingsPath, settingName);
+            ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -625,13 +625,13 @@ namespace GitCommandsTests.Settings
         public void Should_not_trigger_updated_event_for_nullable_char_setting(char? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<char>(settingsPath, settingName);
+            ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -657,8 +657,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_char_setting_if_value_not_exist()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             char? storedValue = null;
@@ -666,7 +666,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create<char>(settingsPath, settingName);
+                ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -679,8 +679,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_char_setting_if_value_is_incorrect()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             char? storedValue = null;
@@ -688,7 +688,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, string.Empty);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
                 setting.Value = Guid.NewGuid().ToString();
 
@@ -704,7 +704,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create<char>(settingsPath, settingName);
+                ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -721,12 +721,12 @@ namespace GitCommandsTests.Settings
         public void Should_create_nullable_byte_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<byte>(settingsPath, settingName);
+            ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -746,12 +746,12 @@ namespace GitCommandsTests.Settings
         public void Should_save_nullable_byte_setting(byte? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<byte>(settingsPath, settingName);
+            ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -772,13 +772,13 @@ namespace GitCommandsTests.Settings
         public void Should_trigger_updated_event_for_nullable_byte_setting(byte? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<byte>(settingsPath, settingName);
+            ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -806,13 +806,13 @@ namespace GitCommandsTests.Settings
         public void Should_not_trigger_updated_event_for_nullable_byte_setting(byte? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<byte>(settingsPath, settingName);
+            ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -838,8 +838,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_byte_setting_if_value_not_exist()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             byte? storedValue = null;
@@ -847,7 +847,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create<byte>(settingsPath, settingName);
+                ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -860,8 +860,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_byte_setting_if_value_is_incorrect()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             byte? storedValue = null;
@@ -869,7 +869,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, string.Empty);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
                 setting.Value = Guid.NewGuid().ToString();
 
@@ -885,7 +885,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create<byte>(settingsPath, settingName);
+                ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -902,12 +902,12 @@ namespace GitCommandsTests.Settings
         public void Should_create_nullable_int_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<int>(settingsPath, settingName);
+            ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -927,12 +927,12 @@ namespace GitCommandsTests.Settings
         public void Should_save_nullable_int_setting(int? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<int>(settingsPath, settingName);
+            ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -953,13 +953,13 @@ namespace GitCommandsTests.Settings
         public void Should_trigger_updated_event_for_nullable_int_setting(int? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<int>(settingsPath, settingName);
+            ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -987,13 +987,13 @@ namespace GitCommandsTests.Settings
         public void Should_not_trigger_updated_event_for_nullable_int_setting(int? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<int>(settingsPath, settingName);
+            ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -1019,8 +1019,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_int_setting_if_value_not_exist()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             int? storedValue = null;
@@ -1028,7 +1028,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create<int>(settingsPath, settingName);
+                ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -1041,8 +1041,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_int_setting_if_value_is_incorrect()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             int? storedValue = null;
@@ -1050,7 +1050,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, string.Empty);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
                 setting.Value = Guid.NewGuid().ToString();
 
@@ -1066,7 +1066,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create<int>(settingsPath, settingName);
+                ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -1083,12 +1083,12 @@ namespace GitCommandsTests.Settings
         public void Should_create_nullable_float_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<float>(settingsPath, settingName);
+            ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -1108,12 +1108,12 @@ namespace GitCommandsTests.Settings
         public void Should_save_nullable_float_setting(float? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<float>(settingsPath, settingName);
+            ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -1134,13 +1134,13 @@ namespace GitCommandsTests.Settings
         public void Should_trigger_updated_event_for_nullable_float_setting(float? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<float>(settingsPath, settingName);
+            ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -1168,13 +1168,13 @@ namespace GitCommandsTests.Settings
         public void Should_not_trigger_updated_event_for_nullable_float_setting(float? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<float>(settingsPath, settingName);
+            ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -1200,8 +1200,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_float_setting_if_value_not_exist()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             float? storedValue = null;
@@ -1209,7 +1209,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create<float>(settingsPath, settingName);
+                ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -1222,8 +1222,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_float_setting_if_value_is_incorrect()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             float? storedValue = null;
@@ -1231,7 +1231,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, string.Empty);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
                 setting.Value = Guid.NewGuid().ToString();
 
@@ -1247,7 +1247,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create<float>(settingsPath, settingName);
+                ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -1264,12 +1264,12 @@ namespace GitCommandsTests.Settings
         public void Should_create_nullable_enum_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<TestEnum>(settingsPath, settingName);
+            ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -1288,12 +1288,12 @@ namespace GitCommandsTests.Settings
         public void Should_save_nullable_enum_setting(TestEnum? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<TestEnum>(settingsPath, settingName);
+            ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -1314,8 +1314,8 @@ namespace GitCommandsTests.Settings
         public void Should_save_nullable_enum_setting_as_string(TestEnum? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             string storedValue = string.Empty;
@@ -1323,7 +1323,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create<TestEnum>(settingsPath, settingName);
+                ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
                 setting.Value = value;
 
@@ -1339,12 +1339,12 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, string.Empty);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
                 storedValue = setting.Value;
             });
 
-            var isNumber = int.TryParse(storedValue, out _);
+            bool isNumber = int.TryParse(storedValue, out _);
 
             // Assert
             Assert.That(isNumber, Is.False);
@@ -1356,13 +1356,13 @@ namespace GitCommandsTests.Settings
         public void Should_trigger_updated_event_for_nullable_enum_setting(TestEnum? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<TestEnum>(settingsPath, settingName);
+            ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -1389,13 +1389,13 @@ namespace GitCommandsTests.Settings
         public void Should_not_trigger_updated_event_for_nullable_enum_setting(TestEnum? value)
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<TestEnum>(settingsPath, settingName);
+            ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -1421,8 +1421,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_enum_setting_if_value_not_exist()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             TestEnum? storedValue = null;
@@ -1430,7 +1430,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create<TestEnum>(settingsPath, settingName);
+                ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -1443,8 +1443,8 @@ namespace GitCommandsTests.Settings
         public void Should_return_default_value_for_nullable_enum_setting_if_value_is_incorrect()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             TestEnum? storedValue = null;
@@ -1452,7 +1452,7 @@ namespace GitCommandsTests.Settings
             // Act
             AppSettings.UsingContainer(_settingContainer, () =>
             {
-                var setting = Setting.Create(settingsPath, settingName, string.Empty);
+                ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
                 setting.Value = Guid.NewGuid().ToString();
 
@@ -1468,7 +1468,7 @@ namespace GitCommandsTests.Settings
 
             AppSettings.UsingContainer(container, () =>
             {
-                var setting = Setting.Create<TestEnum>(settingsPath, settingName);
+                ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
                 storedValue = setting.Value;
             });
@@ -1491,12 +1491,12 @@ namespace GitCommandsTests.Settings
         public void Should_create_nullable_struct_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            var setting = Setting.Create<TestStruct>(settingsPath, settingName);
+            ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
             // Assert
             Assert.That(setting, Is.Not.Null);
@@ -1512,8 +1512,8 @@ namespace GitCommandsTests.Settings
         public void Should_save_nullable_struct_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
             TestStruct? value = new TestStruct
             {
@@ -1525,7 +1525,7 @@ namespace GitCommandsTests.Settings
             };
 
             // Act
-            var setting = Setting.Create<TestStruct>(settingsPath, settingName);
+            ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -1543,8 +1543,8 @@ namespace GitCommandsTests.Settings
         public void Should_trigger_updated_event_for_nullable_struct_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
             TestStruct? value = new TestStruct
             {
@@ -1555,10 +1555,10 @@ namespace GitCommandsTests.Settings
                 Float = 0f
             };
 
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<TestStruct>(settingsPath, settingName);
+            ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
             setting.Updated += (source, eventArgs) =>
             {
@@ -1582,8 +1582,8 @@ namespace GitCommandsTests.Settings
         public void Should_not_trigger_updated_event_for_nullable_struct_setting()
         {
             // Arrange
-            var pathName = Guid.NewGuid().ToString();
-            var settingName = Guid.NewGuid().ToString();
+            string pathName = Guid.NewGuid().ToString();
+            string settingName = Guid.NewGuid().ToString();
             AppSettingsPath settingsPath = new(pathName);
             TestStruct? value = new TestStruct
             {
@@ -1594,10 +1594,10 @@ namespace GitCommandsTests.Settings
                 Float = 0f
             };
 
-            var updated = false;
+            bool updated = false;
 
             // Act
-            var setting = Setting.Create<TestStruct>(settingsPath, settingName);
+            ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -1638,7 +1638,7 @@ namespace GitCommandsTests.Settings
 
         private static IEnumerable<object[]> CreateCases()
         {
-            foreach (var value in Values())
+            foreach (object value in Values())
             {
                 yield return new object[] { value };
             }
@@ -1646,9 +1646,9 @@ namespace GitCommandsTests.Settings
 
         private static IEnumerable<object[]> SaveCases()
         {
-            foreach (var settingDefault in Values())
+            foreach (object settingDefault in Values())
             {
-                foreach (var value in Values())
+                foreach (object value in Values())
                 {
                     if (settingDefault.GetType() == value.GetType())
                     {

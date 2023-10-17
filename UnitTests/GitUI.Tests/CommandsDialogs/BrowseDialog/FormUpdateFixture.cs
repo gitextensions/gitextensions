@@ -22,10 +22,10 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         public void CheckForReleaseCandidatesTest()
         {
             Version currentVersion = new(2, 47);
-            var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
+            IEnumerable<ReleaseVersion> availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
-            var updates = ReleaseVersion.GetNewerVersions(currentVersion, true, availableVersions);
-            var expectedVersions = new[]
+            IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(currentVersion, true, availableVersions);
+            Version[] expectedVersions = new[]
             {
                 new Version(2, 48),
                 new Version(2, 49),
@@ -38,10 +38,10 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         public void CheckForMajorReleasesTest()
         {
             Version currentVersion = new(2, 47);
-            var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
+            IEnumerable<ReleaseVersion> availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
-            var updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
-            var expectedVersions = new[]
+            IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
+            Version[] expectedVersions = new[]
             {
                 new Version(2, 48)
             };
@@ -52,9 +52,9 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         public void CheckForNoMajorReleasesTest()
         {
             Version currentVersion = new(2, 48);
-            var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
+            IEnumerable<ReleaseVersion> availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
-            var updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
+            IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
             updates.Select(rv => rv.Version).Should().BeEmpty();
         }
     }

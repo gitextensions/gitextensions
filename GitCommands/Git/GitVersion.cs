@@ -72,7 +72,7 @@ namespace GitCommands
         {
             Full = Fix();
 
-            var numbers = GetNumbers();
+            IReadOnlyList<int> numbers = GetNumbers();
             _a = Get(numbers, 0);
             _b = Get(numbers, 1);
             _c = Get(numbers, 2);
@@ -101,9 +101,9 @@ namespace GitCommands
 
                 IEnumerable<int> ParseNumbers()
                 {
-                    foreach (var number in Full.LazySplit('.'))
+                    foreach (string number in Full.LazySplit('.'))
                     {
-                        if (int.TryParse(number, out var value))
+                        if (int.TryParse(number, out int value))
                         {
                             yield return value;
                         }

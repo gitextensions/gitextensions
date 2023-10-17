@@ -35,15 +35,15 @@ namespace GitUI.Editor.Diff
         private static void MarkDifference(IDocument document, ISegment lineRemoved,
             ISegment lineAdded, int beginOffset)
         {
-            var lineRemovedEndOffset = lineRemoved.Length;
-            var lineAddedEndOffset = lineAdded.Length;
-            var endOffsetMin = Math.Min(lineRemovedEndOffset, lineAddedEndOffset);
-            var reverseOffset = 0;
+            int lineRemovedEndOffset = lineRemoved.Length;
+            int lineAddedEndOffset = lineAdded.Length;
+            int endOffsetMin = Math.Min(lineRemovedEndOffset, lineAddedEndOffset);
+            int reverseOffset = 0;
 
             while (beginOffset < endOffsetMin)
             {
-                var a = document.GetCharAt(lineAdded.Offset + beginOffset);
-                var r = document.GetCharAt(lineRemoved.Offset + beginOffset);
+                char a = document.GetCharAt(lineAdded.Offset + beginOffset);
+                char r = document.GetCharAt(lineRemoved.Offset + beginOffset);
 
                 if (a != r)
                 {
@@ -57,8 +57,8 @@ namespace GitUI.Editor.Diff
             {
                 reverseOffset = lineAdded.Length - lineAddedEndOffset;
 
-                var a = document.GetCharAt(lineAdded.Offset + lineAdded.Length - 1 - reverseOffset);
-                var r = document.GetCharAt(lineRemoved.Offset + lineRemoved.Length - 1 - reverseOffset);
+                char a = document.GetCharAt(lineAdded.Offset + lineAdded.Length - 1 - reverseOffset);
+                char r = document.GetCharAt(lineRemoved.Offset + lineRemoved.Length - 1 - reverseOffset);
 
                 if (a != r)
                 {
@@ -70,7 +70,7 @@ namespace GitUI.Editor.Diff
             }
 
             Color color;
-            var markerStrategy = document.MarkerStrategy;
+            MarkerStrategy markerStrategy = document.MarkerStrategy;
 
             if (lineAdded.Length - beginOffset - reverseOffset > 0)
             {
@@ -93,16 +93,16 @@ namespace GitUI.Editor.Diff
 
         private void AddExtraPatchHighlighting(IDocument document)
         {
-            var line = 0;
+            int line = 0;
 
             bool found = false;
             int diffContentOffset;
-            var linesRemoved = GetRemovedLines(document, ref line, ref found);
-            var linesAdded = GetAddedLines(document, ref line, ref found);
+            List<ISegment> linesRemoved = GetRemovedLines(document, ref line, ref found);
+            List<ISegment> linesAdded = GetAddedLines(document, ref line, ref found);
             if (linesAdded.Count == 1 && linesRemoved.Count == 1)
             {
-                var lineA = linesRemoved[0];
-                var lineB = linesAdded[0];
+                ISegment lineA = linesRemoved[0];
+                ISegment lineB = linesAdded[0];
                 if (lineA.Length > 4 && lineB.Length > 4 &&
                     document.GetCharAt(lineA.Offset + 4) == 'a' &&
                     document.GetCharAt(lineB.Offset + 4) == 'b')
@@ -151,7 +151,7 @@ namespace GitUI.Editor.Diff
                 return;
             }
 
-            var endLine = document.GetLineSegment(line);
+            LineSegment endLine = document.GetLineSegment(line);
 
             for (;
                 line < document.TotalNumberOfLines
@@ -181,9 +181,9 @@ namespace GitUI.Editor.Diff
 
             AddExtraPatchHighlighting(document);
 
-            for (var line = 0; line < document.TotalNumberOfLines && !forceAbort; line++)
+            for (int line = 0; line < document.TotalNumberOfLines && !forceAbort; line++)
             {
-                var lineSegment = document.GetLineSegment(line);
+                LineSegment lineSegment = document.GetLineSegment(line);
 
                 if (lineSegment.TotalLength == 0)
                 {
@@ -216,8 +216,8 @@ namespace GitUI.Editor.Diff
                 return;
             }
 
-            var markerStrategy = document.MarkerStrategy;
-            var lineSegment = document.GetLineSegment(line);
+            MarkerStrategy markerStrategy = document.MarkerStrategy;
+            LineSegment lineSegment = document.GetLineSegment(line);
             markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
                                                     lineSegment.Length, TextMarkerType.SolidBlock, color));
         }
@@ -229,9 +229,9 @@ namespace GitUI.Editor.Diff
                 return;
             }
 
-            var markerStrategy = document.MarkerStrategy;
-            var startLineSegment = document.GetLineSegment(startLine);
-            var endLineSegment = document.GetLineSegment(endLine);
+            MarkerStrategy markerStrategy = document.MarkerStrategy;
+            LineSegment startLineSegment = document.GetLineSegment(startLine);
+            LineSegment endLineSegment = document.GetLineSegment(endLine);
             markerStrategy.AddMarker(new TextMarker(startLineSegment.Offset,
                                                     endLineSegment.Offset - startLineSegment.Offset + endLineSegment.Length,
                                                     TextMarkerType.SolidBlock, color));

@@ -160,7 +160,7 @@ namespace GitCommands
             // when persisted "" is treated as null, so use "+" instead
             get
             {
-                var value = GetString("AutoNormaliseSymbol", "_");
+                string value = GetString("AutoNormaliseSymbol", "_");
                 return value == "+" ? "" : value;
             }
             set
@@ -184,7 +184,7 @@ namespace GitCommands
         {
             SettingsContainer.LockedAction(() =>
                 {
-                    var oldSC = SettingsContainer;
+                    DistributedSettings oldSC = SettingsContainer;
                     try
                     {
                         SettingsContainer = settingsContainer;
@@ -224,7 +224,7 @@ namespace GitCommands
             int len = debugPath.Length;
             if (gitExtDir.Length > len)
             {
-                var path = gitExtDir[^len..];
+                string path = gitExtDir[^len..];
 
                 if (debugPath.ToPosixPath() == path.ToPosixPath())
                 {
@@ -624,7 +624,7 @@ namespace GitCommands
         private static TEnum GetEnumViaString<TEnum>(string settingName, TEnum defaultValue)
             where TEnum : struct
         {
-            var settingStringValue = GetString(settingName, defaultValue.ToString());
+            string settingStringValue = GetString(settingName, defaultValue.ToString());
 
             if (Enum.TryParse(settingStringValue, out TEnum settingEnumValue))
             {
@@ -747,7 +747,7 @@ namespace GitCommands
         {
             get
             {
-                if (_languageCodes.TryGetValue(CurrentTranslation, out var code))
+                if (_languageCodes.TryGetValue(CurrentTranslation, out string code))
                 {
                     return code;
                 }
@@ -2153,7 +2153,7 @@ namespace GitCommands
             else
             {
                 UTF8Encoding utf8 = new(false);
-                foreach (var encodingName in availableEncodings.LazySplit(';'))
+                foreach (string encodingName in availableEncodings.LazySplit(';'))
                 {
 #pragma warning disable SYSLIB0001 // Type or member is obsolete
                     if (encodingName == Encoding.UTF7.WebName)

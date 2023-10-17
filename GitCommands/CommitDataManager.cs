@@ -101,7 +101,7 @@ namespace GitCommands
 
         private IGitModule GetModule()
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
 
             if (module is null)
             {

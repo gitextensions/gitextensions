@@ -93,11 +93,11 @@ namespace GitCommands.Remotes
         // TODO: moved verbatim from FormRemotes.cs, perhaps needs refactoring
         public void ConfigureRemotes(string remoteName)
         {
-            var module = GetModule();
-            var localConfig = module.LocalConfigFile;
-            var moduleRefs = module.GetRefs(RefsFilter.Heads);
+            IGitModule module = GetModule();
+            IConfigFileSettings localConfig = module.LocalConfigFile;
+            IReadOnlyList<IGitRef> moduleRefs = module.GetRefs(RefsFilter.Heads);
 
-            foreach (var remoteHead in moduleRefs)
+            foreach (IGitRef remoteHead in moduleRefs)
             {
                 if (!remoteHead.IsRemote ||
                     !remoteHead.Name.Contains(remoteName, StringComparison.InvariantCultureIgnoreCase))
@@ -105,7 +105,7 @@ namespace GitCommands.Remotes
                     continue;
                 }
 
-                foreach (var localHead in moduleRefs)
+                foreach (IGitRef localHead in moduleRefs)
                 {
                     if (localHead.IsRemote ||
                         !string.IsNullOrEmpty(localHead.GetTrackingRemote(localConfig)) ||
@@ -132,14 +132,14 @@ namespace GitCommands.Remotes
                 throw new ArgumentNullException(nameof(remote));
             }
 
-            var module = GetModule();
+            IGitModule module = GetModule();
             bool IsSettingForBranch(string setting, string branchName)
             {
                 GitRef head = new(module, null, setting);
                 return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
             }
 
-            var remoteHead = remote.Push
+            GitRef remoteHead = remote.Push
                                    .Select(s => s.Split(Delimiters.Colon))
                                    .Where(t => t.Length == 2)
                                    .Where(t => IsSettingForBranch(t[0], branch))
@@ -174,7 +174,7 @@ namespace GitCommands.Remotes
         /// </summary>
         public IReadOnlyList<string> GetDisabledRemoteNames()
         {
-            var module = GetModule();
+            IGitModule module = GetModule();
             return module.LocalConfigFile.GetConfigSections()
                 .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
                 .Select(s => s.SubSection)
@@ -197,7 +197,7 @@ namespace GitCommands.Remotes
         public IEnumerable<ConfigFileRemote> LoadRemotes(bool loadDisabled)
         {
             List<ConfigFileRemote> remotes = new();
-            var module = _getModule();
+            IGitModule module = _getModule();
             if (module is null)
             {
                 return remotes;
@@ -224,14 +224,14 @@ namespace GitCommands.Remotes
                 throw new ArgumentNullException(nameof(remote));
             }
 
-            var module = GetModule();
+            IGitModule module = GetModule();
             if (!remote.Disabled)
             {
                 Validates.NotNull(remote.Name);
                 return module.RemoveRemote(remote.Name);
             }
 
-            var sectionName = $"{DisabledSectionPrefix}{SectionRemote}.{remote.Name}";
+            string sectionName = $"{DisabledSectionPrefix}{SectionRemote}.{remote.Name}";
             module.LocalConfigFile.RemoveConfigSection(sectionName, true);
             return string.Empty;
         }
@@ -284,9 +284,9 @@ namespace GitCommands.Remotes
             bool updateRemoteRequired = false;
 
             // if operation return anything back, relay that to the user
-            var output = string.Empty;
+            string output = string.Empty;
 
-            var module = GetModule();
+            IGitModule module = GetModule();
             bool remoteDisabled = false;
             if (remote is null)
             {
@@ -357,11 +357,11 @@ namespace GitCommands.Remotes
             }
 
             // disabled is the new state, so if the new state is 'false' (=enabled), then the existing state is 'true' (=disabled, i.e. '-remote')
-            var sectionName = (disabled ? "" : DisabledSectionPrefix) + SectionRemote;
+            string sectionName = (disabled ? "" : DisabledSectionPrefix) + SectionRemote;
 
-            var module = GetModule();
-            var sections = module.LocalConfigFile.GetConfigSections();
-            var section = sections.FirstOrDefault(s => s.SectionName == sectionName && s.SubSection == remoteName);
+            IGitModule module = GetModule();
+            IReadOnlyList<IConfigSection> sections = module.LocalConfigFile.GetConfigSections();
+            IConfigSection section = sections.FirstOrDefault(s => s.SectionName == sectionName && s.SubSection == remoteName);
             if (section is null)
             {
                 // we didn't find it, nothing we can do
@@ -377,7 +377,7 @@ namespace GitCommands.Remotes
                 module.LocalConfigFile.RemoveConfigSection($"{sectionName}.{remoteName}");
             }
 
-            var newSectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
+            string newSectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
 
             // ensure that the section with the same name doesn't already exist
             // use case:
@@ -385,7 +385,7 @@ namespace GitCommands.Remotes
             // - then deactivated the remote via GE
             // - then added a remote with the same name from a command line or via UI
             // - then attempted to deactivate the new remote
-            var dupSection = sections.FirstOrDefault(s => s.SectionName == newSectionName && s.SubSection == remoteName);
+            IConfigSection dupSection = sections.FirstOrDefault(s => s.SectionName == newSectionName && s.SubSection == remoteName);
             if (dupSection is not null)
             {
                 module.LocalConfigFile.RemoveConfigSection($"{newSectionName}.{remoteName}");
@@ -401,7 +401,7 @@ namespace GitCommands.Remotes
         // pass the list in to minimise allocations
         private void PopulateRemotes(List<ConfigFileRemote> allRemotes, bool enabled)
         {
-            var module = GetModule();
+            IGitModule module = GetModule();
 
             Func<IReadOnlyList<string>> func;
             if (enabled)
@@ -413,7 +413,7 @@ namespace GitCommands.Remotes
                 func = GetDisabledRemoteNames;
             }
 
-            var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+            List<string> gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             if (gitRemotes.Any())
             {
                 allRemotes.AddRange(gitRemotes.Select(remote => new ConfigFileRemote
@@ -432,7 +432,7 @@ namespace GitCommands.Remotes
 
         private IGitModule GetModule()
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
             if (module is null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
@@ -443,14 +443,14 @@ namespace GitCommands.Remotes
 
         private static string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
         {
-            var key = string.Format(settingKey, remoteName);
+            string key = string.Format(settingKey, remoteName);
             return remoteEnabled ? key : DisabledSectionPrefix + key;
         }
 
         private static void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string? value)
         {
-            var prefix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
-            var fullSettingName = prefix + string.Format(settingName, remoteName);
+            string prefix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
+            string fullSettingName = prefix + string.Format(settingName, remoteName);
 
             if (!string.IsNullOrWhiteSpace(value))
             {

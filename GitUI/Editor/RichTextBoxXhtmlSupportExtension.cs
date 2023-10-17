@@ -406,7 +406,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                     // Encode unicode characters
                     StringBuilder sb = new();
-                    foreach (var c in str)
+                    foreach (char c in str)
                     {
                         if (c < 0x7f)
                         {
@@ -604,9 +604,9 @@ namespace GitUI.Editor.RichTextBoxExtension
         // convert COLORREF to Color
         private static Color GetColor(int crColor)
         {
-            var r = (byte)crColor;
-            var g = (byte)(crColor >> 8);
-            var b = (byte)(crColor >> 16);
+            byte r = (byte)crColor;
+            byte g = (byte)(crColor >> 8);
+            byte b = (byte)(crColor >> 16);
 
             return Color.FromArgb(r, g, b);
         }
@@ -635,7 +635,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string GetUrl(this LinkClickedEventArgs e)
         {
-            var v = e.LinkText.Split(Delimiters.Hash, 2);
+            string[] v = e.LinkText.Split(Delimiters.Hash, 2);
             return v.Length switch
             {
                 0 => "",
@@ -646,7 +646,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
         {
-            var v = e.LinkText.Split(Delimiters.Hash, 2);
+            string[] v = e.LinkText.Split(Delimiters.Hash, 2);
             if (v.Length == 0)
             {
                 url = "";
@@ -689,7 +689,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 int nAcum = 0;
                 for (int i = 0; i < colFormat.Count; i++)
                 {
-                    var (pos, markup) = colFormat[i];
+                    (int pos, string markup) = colFormat[i];
                     strHTML.Append(WebUtility.HtmlEncode(strT[nAcum..pos]) + markup);
                     nAcum = pos;
                 }
@@ -781,7 +781,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     int fsize = yHeight / (20 * 5);
 
                     // color object from COLORREF
-                    var color = GetColor(crFont);
+                    Color color = GetColor(crFont);
 
                     // add <font> tag
                     string strcolor = string.Concat("#", (color.ToArgb() & 0x00FFFFFF).ToString("X6"));
@@ -990,8 +990,8 @@ namespace GitUI.Editor.RichTextBoxExtension
             {
                 for (int j = i + 1; j < k; j++)
                 {
-                    var mfr = colFormat[i];
-                    var mfr2 = colFormat[j];
+                    KeyValuePair<int, string> mfr = colFormat[i];
+                    KeyValuePair<int, string> mfr2 = colFormat[j];
 
                     if (mfr2.Key < mfr.Key)
                     {
@@ -1098,7 +1098,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string? GetLink(this RichTextBox rtb, int charIndex)
         {
-            var text = rtb.Text;
+            string text = rtb.Text;
             if (charIndex < 0 || text.Length <= charIndex)
             {
                 return null;
@@ -1279,7 +1279,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             // apply links style
             CHARFORMAT ncf = new(CFM.LINK, CFE.LINK);
             ncf.cbSize = Marshal.SizeOf(ncf);
-            foreach (var (start, length) in cs.links)
+            foreach ((int start, int length) in cs.links)
             {
                 rtb.Select(start, length);
                 SetCharFormat(handleRef, ncf);

@@ -110,8 +110,8 @@ namespace GitExtUtils.GitUI.Theming
             }
             else
             {
-                var q = L < 0.5 ? L * (1 + S) : L + S - (L * S);
-                var p = (2 * L) - q;
+                double q = L < 0.5 ? L * (1 + S) : L + S - (L * S);
+                double p = (2 * L) - q;
                 r = Hue2Rgb(p, q, H + (1 / 3d));
                 g = Hue2Rgb(p, q, H);
                 b = Hue2Rgb(p, q, H - (1 / 3d));

@@ -136,9 +136,9 @@ namespace GitUI.Theming
                 renderer.AddThemeData(IntPtr.Zero);
             }
 
-            var editorHandle = new ICSharpCode.TextEditor.TextEditorControl().Handle;
-            var listViewHandle = new NativeListView().Handle;
-            var treeViewHandle = new NativeTreeView().Handle;
+            IntPtr editorHandle = new ICSharpCode.TextEditor.TextEditorControl().Handle;
+            IntPtr listViewHandle = new NativeListView().Handle;
+            IntPtr treeViewHandle = new NativeTreeView().Handle;
 
             _scrollBarRenderer.AddThemeData(editorHandle);
             _scrollBarRenderer.AddThemeData(listViewHandle);
@@ -161,7 +161,7 @@ namespace GitUI.Theming
 
             if (_renderers is not null)
             {
-                foreach (var renderer in _renderers)
+                foreach (ThemeRenderer renderer in _renderers)
                 {
                     renderer.Dispose();
                 }
@@ -177,9 +177,9 @@ namespace GitUI.Theming
             TDelegate hookImpl)
             where TDelegate : Delegate
         {
-            var addr = LocalHook.GetProcAddress(dll, method);
-            var original = Marshal.GetDelegateForFunctionPointer<TDelegate>(addr);
-            var hook = LocalHook.Create(addr, hookImpl, null);
+            IntPtr addr = LocalHook.GetProcAddress(dll, method);
+            TDelegate original = Marshal.GetDelegateForFunctionPointer<TDelegate>(addr);
+            LocalHook hook = LocalHook.Create(addr, hookImpl, null);
 
             try
             {
@@ -198,8 +198,8 @@ namespace GitUI.Theming
         {
             if (!BypassAnyHook)
             {
-                var name = Win32ColorTranslator.GetKnownColor(nindex);
-                var color = _theme!.GetColor(name);
+                KnownColor name = Win32ColorTranslator.GetKnownColor(nindex);
+                Color color = _theme!.GetColor(name);
                 if (color != Color.Empty)
                 {
                     return ColorTranslator.ToWin32(color);
@@ -213,8 +213,8 @@ namespace GitUI.Theming
         {
             if (!BypassAnyHook)
             {
-                var name = Win32ColorTranslator.GetKnownColor(nindex);
-                var color = _theme!.GetColor(name);
+                KnownColor name = Win32ColorTranslator.GetKnownColor(nindex);
+                Color color = _theme!.GetColor(name);
                 if (color != Color.Empty)
                 {
                     int colorref = ColorTranslator.ToWin32(color);
@@ -232,7 +232,7 @@ namespace GitUI.Theming
         {
             if (!BypassThemeRenderers)
             {
-                var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
+                ThemeRenderer renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer?.RenderBackground(hdc, partid, stateid, prect, pcliprect) == ThemeRenderer.Handled)
                 {
                     return ThemeRenderer.Handled;
@@ -249,7 +249,7 @@ namespace GitUI.Theming
         {
             if (!BypassThemeRenderers)
             {
-                var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
+                ThemeRenderer renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer is null && InitializingListViews.Any(_ => _.CheckBoxes))
                 {
                     renderer = _renderers.OfType<ListViewRenderer>().SingleOrDefault();
@@ -269,7 +269,7 @@ namespace GitUI.Theming
         {
             if (!BypassThemeRenderers)
             {
-                var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
+                ThemeRenderer renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer?.GetThemeColor(ipartid, istateid, ipropid, out pcolor) is ThemeRenderer.Handled)
                 {
                     return ThemeRenderer.Handled;
@@ -287,7 +287,7 @@ namespace GitUI.Theming
         {
             if (!BypassThemeRenderers)
             {
-                var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
+                ThemeRenderer renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer?.ForceUseRenderTextEx is true)
                 {
                     NativeMethods.DTTOPTS poptions = new()
@@ -319,7 +319,7 @@ namespace GitUI.Theming
         {
             if (!BypassThemeRenderers)
             {
-                var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
+                ThemeRenderer renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer?.RenderTextEx(
                     htheme, hdc,
                     partid, stateid,
@@ -344,7 +344,7 @@ namespace GitUI.Theming
             int x, int y, int nwidth, int nheight,
             IntPtr hwndparent, IntPtr hmenu, IntPtr hinstance, IntPtr lpparam)
         {
-            var hwnd = _createWindowExBypass!(
+            IntPtr hwnd = _createWindowExBypass!(
                 dwexstyle, lpclassname, lpwindowname, dwstyle,
                 x, y, nwidth, nheight,
                 hwndparent, hmenu, hinstance, lpparam);

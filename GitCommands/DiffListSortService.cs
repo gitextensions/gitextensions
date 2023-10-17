@@ -12,7 +12,7 @@
             get { return _diffListSorting; }
             set
             {
-                var previous = _diffListSorting;
+                DiffListSortType previous = _diffListSorting;
                 if (previous != value)
                 {
                     _diffListSorting = value;

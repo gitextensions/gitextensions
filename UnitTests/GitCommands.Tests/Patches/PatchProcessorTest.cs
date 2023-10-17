@@ -19,8 +19,8 @@ namespace GitCommandsTests.Patches
 
             string LoadPatch(string fileName)
             {
-                var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Patches/testdata", fileName);
-                var bytes = File.ReadAllBytes(path);
+                string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Patches/testdata", fileName);
+                byte[] bytes = File.ReadAllBytes(path);
                 return GitModule.LosslessEncoding.GetString(bytes);
             }
         }
@@ -30,7 +30,7 @@ namespace GitCommandsTests.Patches
         {
             TestPatch expectedPatch = CreateSmallPatchExample();
 
-            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
+            IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Patch createdPatch = patches.First();
 
@@ -46,7 +46,7 @@ namespace GitCommandsTests.Patches
         {
             TestPatch expectedPatch = CreateSmallPatchExample(reverse: true);
 
-            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
+            IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Patch createdPatch = patches.First();
 
@@ -60,7 +60,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsTheRightNumberOfDiffsInAPatchFile()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
+            IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Assert.AreEqual(17, patches.Count());
         }
@@ -68,7 +68,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsTheRightFileNamesInAPatchFile()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+            List<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
             Assert.AreEqual(17, patches.Select(p => p.FileNameA).Distinct().Count());
             Assert.AreEqual(17, patches.Select(p => p.FileNameB).Distinct().Count());
@@ -77,7 +77,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsBinaryPatch()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigBinPatch, new Lazy<Encoding>(() => Encoding.UTF8));
+            IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigBinPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Assert.AreEqual(248, patches.Count(p => p.FileType == PatchFileType.Binary));
         }
@@ -85,7 +85,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsOneNewFile()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
+            IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Assert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.NewFile));
         }
@@ -93,7 +93,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsOneDeleteFile()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
+            IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Assert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.DeleteFile));
         }
@@ -101,17 +101,17 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsChangeFiles()
         {
-            var bigPatches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
+            IEnumerable<Patch> bigPatches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
             Assert.AreEqual(15, bigPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
 
-            var smallPatches = PatchProcessor.CreatePatchesFromString(CreateSmallPatchExample().PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
+            IEnumerable<Patch> smallPatches = PatchProcessor.CreatePatchesFromString(CreateSmallPatchExample().PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
             Assert.AreEqual(1, smallPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
         }
 
         [Test]
         public void TestCorrectlyLoadsRebaseDiff()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_rebaseDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+            List<Patch> patches = PatchProcessor.CreatePatchesFromString(_rebaseDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
             Assert.AreEqual(13, patches.Count);
             Assert.AreEqual(3, patches.Count(p => p.IsCombinedDiff));
@@ -130,7 +130,7 @@ index cdf8bebba,55ff37bb9..000000000
 +++ b/UnitTests/GitCommandsTests/Patches/PatchProcessorTest.cs
 ";
 
-            var patches = PatchProcessor.CreatePatchesFromString(diff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+            List<Patch> patches = PatchProcessor.CreatePatchesFromString(diff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
             Assert.AreEqual(2, patches.Count);
             Assert.IsTrue(patches.All(p => p.IsCombinedDiff));
@@ -138,7 +138,7 @@ index cdf8bebba,55ff37bb9..000000000
 
         private static TestPatch CreateSmallPatchExample(bool reverse = false)
         {
-            var header = reverse
+            string header = reverse
                 ? "diff --git a/thisisatestb.txt b/thisisatesta.txt"
                 : "diff --git b/thisisatesta.txt a/thisisatestb.txt";
             const string index = "index 5e4dce2..5eb1e6f 100644";

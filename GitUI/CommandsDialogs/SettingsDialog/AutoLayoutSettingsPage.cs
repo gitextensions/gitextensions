@@ -114,9 +114,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public override void AddSettingControlImpl(ISettingControlBinding controlBinding)
         {
             _currentRow++;
-            var tableLayout = Panel;
+            TableLayoutPanel tableLayout = Panel;
 
-            var caption = controlBinding.Caption();
+            string caption = controlBinding.Caption();
 
             if (caption is not null)
             {
@@ -131,7 +131,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 tableLayout.Controls.Add(label, 0, _currentRow);
             }
 
-            var control = controlBinding.GetControl();
+            Control control = controlBinding.GetControl();
             control.Dock = DockStyle.Fill;
             tableLayout.Controls.Add(control, 1, _currentRow);
         }
@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public override void AddSettingsLayout(ISettingsLayout layout)
         {
             _currentRow++;
-            var control = layout.GetControl();
+            Control control = layout.GetControl();
             control.Dock = DockStyle.Fill;
             Panel.Controls.Add(control, 1, _currentRow);
         }

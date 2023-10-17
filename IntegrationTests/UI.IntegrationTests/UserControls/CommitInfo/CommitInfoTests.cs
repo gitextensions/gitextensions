@@ -78,7 +78,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                     ["refs/heads/warning"] = 2
                 };
 
-                var refs = commitInfo.GetTestAccessor().GetSortedTags();
+                IDictionary<string, int> refs = commitInfo.GetTestAccessor().GetSortedTags();
 
                 refs.Count.Should().Be(3);
                 refs.Should().BeEquivalentTo(expected);
@@ -103,7 +103,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                     ["refs/remotes/origin/bugfix/ys-38651-test-twist-changes-r100-on-s375"] = 3
                 };
 
-                var refs = commitInfo.GetTestAccessor().GetSortedTags();
+                IDictionary<string, int> refs = commitInfo.GetTestAccessor().GetSortedTags();
 
                 refs.Count.Should().Be(4);
                 refs.Should().BeEquivalentTo(expected);
@@ -129,7 +129,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                     [" refs/tags/v3.1"] = 4
                 };
 
-                var refs = commitInfo.GetTestAccessor().GetSortedTags();
+                IDictionary<string, int> refs = commitInfo.GetTestAccessor().GetSortedTags();
 
                 refs.Count.Should().Be(5);
                 refs.Should().BeEquivalentTo(expected);
@@ -154,7 +154,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                     ["refs/remotes/foo/last"] = 3,
                 };
 
-                var refs = commitInfo.GetTestAccessor().GetSortedTags();
+                IDictionary<string, int> refs = commitInfo.GetTestAccessor().GetSortedTags();
 
                 refs.Count.Should().Be(4);
                 refs.Should().BeEquivalentTo(expected);
@@ -176,7 +176,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
             _gitExecutable.StageOutput($"describe --tags --first-parent --abbrev=40 {hash}", "");
 
-            var realCommitObjectId = ObjectId.Parse(hash);
+            ObjectId realCommitObjectId = ObjectId.Parse(hash);
             GitRevision revision = new(realCommitObjectId)
             {
                 Author = "John Doe",
@@ -214,7 +214,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
             _gitExecutable.StageOutput($"describe --tags --first-parent --abbrev=40 {hash}", "");
 
-            var realCommitObjectId = ObjectId.Parse(hash);
+            ObjectId realCommitObjectId = ObjectId.Parse(hash);
             GitRevision revision = new(realCommitObjectId)
             {
                 Author = "John Doe",
@@ -233,7 +233,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 // Wait for pending operations so the Control is loaded completely before testing it
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                var ta = commitInfo.GetTestAccessor();
+                GitUI.CommitInfo.CommitInfo.TestAccessor ta = commitInfo.GetTestAccessor();
 
                 // simulate a click on refText link
                 ta.LinkClicked(ta.RevisionInfo, new(refText, linkStart, linkLength: refText.Length));
@@ -259,7 +259,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
             _gitExecutable.StageOutput($"describe --tags --first-parent --abbrev=40 {hash}", "");
 
-            var realCommitObjectId = ObjectId.Parse(hash);
+            ObjectId realCommitObjectId = ObjectId.Parse(hash);
             GitRevision revision = new(realCommitObjectId)
             {
                 Author = "John Doe",
@@ -277,7 +277,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 // simulate a click on refText link
-                var ta = commitInfo.GetTestAccessor();
+                GitUI.CommitInfo.CommitInfo.TestAccessor ta = commitInfo.GetTestAccessor();
                 ta.LinkClicked(ta.RevisionInfo, new("not important", linkStart: 423, linkLength: 0));
                 _mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/branches");
 
@@ -298,7 +298,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
             _gitExecutable.StageOutput($"describe --tags --first-parent --abbrev=40 {hash}", "");
 
-            var realCommitObjectId = ObjectId.Parse(hash);
+            ObjectId realCommitObjectId = ObjectId.Parse(hash);
             GitRevision revision = new(realCommitObjectId)
             {
                 Author = "John Doe",
@@ -316,7 +316,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 // simulate a click on refText link
-                var ta = commitInfo.GetTestAccessor();
+                GitUI.CommitInfo.CommitInfo.TestAccessor ta = commitInfo.GetTestAccessor();
                 ta.LinkClicked(ta.RevisionInfo, new("not important", linkStart: 774, linkLength: 0));
                 _mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/tags");
 
@@ -329,7 +329,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
             UITest.RunControl(
                 createControl: form =>
                 {
-                    var uiCommandsSource = Substitute.For<IGitUICommandsSource>();
+                    IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
                     uiCommandsSource.UICommands.Returns(x => _commands);
 
                     // the following assignment of CommitInfo.UICommandsSource will already call this command

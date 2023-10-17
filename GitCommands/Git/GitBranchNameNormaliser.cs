@@ -118,7 +118,7 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         internal string Rule01(string branchName, GitBranchNameOptions options)
         {
-            var tokens = branchName.Split(Delimiters.ForwardSlash);
+            string[] tokens = branchName.Split(Delimiters.ForwardSlash);
             for (int i = 0; i < tokens.Length; i++)
             {
                 if (tokens[i].StartsWith("."))

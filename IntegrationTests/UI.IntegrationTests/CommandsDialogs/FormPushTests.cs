@@ -43,7 +43,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormPush.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.ForcePushTags.Checked = forcePushTagChecked;
                     accessor.ckForceWithLease.Checked = forcePushBranchWithLeaseChecked;

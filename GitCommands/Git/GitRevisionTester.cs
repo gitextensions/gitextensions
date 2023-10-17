@@ -46,7 +46,7 @@ namespace GitCommands.Git
                 return false;
             }
 
-            foreach (var item in firstSelected)
+            foreach (ObjectId item in firstSelected)
             {
                 if (!selectedRevision.ParentIds.Contains(item))
                 {
@@ -65,14 +65,14 @@ namespace GitCommands.Git
                 return false;
             }
 
-            var items = selectedItemsWithParent as List<GitItemStatus> ?? selectedItemsWithParent.ToList();
+            List<GitItemStatus> items = selectedItemsWithParent as List<GitItemStatus> ?? selectedItemsWithParent.ToList();
             bool localExists = items.Any(item => !item.IsTracked);
             if (localExists)
             {
                 return true;
             }
 
-            foreach (var item in items)
+            foreach (GitItemStatus item in items)
             {
                 string? filePath = _fullPathResolver.Resolve(item.Name);
                 if (_fileSystem.File.Exists(filePath))

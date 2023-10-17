@@ -26,7 +26,7 @@ namespace GitExtUtils.GitUI.Theming
 
         public void Execute()
         {
-            var bmpData = _bmp.LockBits(Rect, ImageLockMode.ReadWrite, PixelFormat);
+            BitmapData bmpData = _bmp.LockBits(Rect, ImageLockMode.ReadWrite, PixelFormat);
 
             try
             {

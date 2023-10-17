@@ -50,7 +50,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadItemsInTreeView_should_add_all_none_GitItem_items_with_1st_level_nodes()
         {
-            var items = new INamedGitItem[] { new MockGitItem("file1"), new MockGitItem("file2") };
+            INamedGitItem[] items = new INamedGitItem[] { new MockGitItem("file1"), new MockGitItem("file2") };
             MockGitItem item = new("folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
@@ -71,7 +71,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadItemsInTreeView_should_add_IsTree_as_folders()
         {
-            var items = new[] { new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "file1"), new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "file2") };
+            GitItem[] items = new[] { new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "file1"), new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "file2") };
             GitItem item = new(0, GitObjectType.Tree, ObjectId.Random(), "folder");
 
             _revisionInfoProvider.LoadChildren(item).Returns(items);
@@ -93,7 +93,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadItemsInTreeView_should_add_IsCommit_as_submodule()
         {
-            var items = new[] { new GitItem(0, GitObjectType.Commit, ObjectId.Random(), "file1"), new GitItem(0, GitObjectType.Commit, ObjectId.Random(), "file2") };
+            GitItem[] items = new[] { new GitItem(0, GitObjectType.Commit, ObjectId.Random(), "file1"), new GitItem(0, GitObjectType.Commit, ObjectId.Random(), "file2") };
             GitItem item = new(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
@@ -114,7 +114,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadItemsInTreeView_should_add_IsBlob_as_file()
         {
-            var items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2") };
+            GitItem[] items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2") };
             GitItem item = new(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
@@ -131,7 +131,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadItemsInTreeView_should_not_load_icons_for_file_without_extension()
         {
-            var items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1."), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2") };
+            GitItem[] items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1."), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2") };
             GitItem item = new(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
@@ -153,7 +153,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadItemsInTreeView_should_not_add_icons_for_file_if_none_provided()
         {
-            var items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1.foo"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2.txt") };
+            GitItem[] items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1.foo"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2.txt") };
             GitItem item = new(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
@@ -175,7 +175,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void LoadItemsInTreeView_should_add_icon_for_file_extension_only_once()
         {
-            var items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1.txt"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2.txt") };
+            GitItem[] items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1.txt"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2.txt") };
             GitItem item = new(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
             using Bitmap bitmap = new(1, 1);
@@ -199,11 +199,11 @@ namespace GitUITests.CommandsDialogs
 
         private static void PopulateTreeView(NativeTreeView treeView, string filePathToAdd)
         {
-            var parts = filePathToAdd.Split(Path.DirectorySeparatorChar);
-            var folders = parts.Take(parts.Length - 1);
-            var fileName = parts[^1];
-            var nodes = treeView.Nodes;
-            foreach (var folder in folders)
+            string[] parts = filePathToAdd.Split(Path.DirectorySeparatorChar);
+            IEnumerable<string> folders = parts.Take(parts.Length - 1);
+            string fileName = parts[^1];
+            TreeNodeCollection nodes = treeView.Nodes;
+            foreach (string folder in folders)
             {
                 if (nodes.ContainsKey(folder))
                 {
@@ -211,7 +211,7 @@ namespace GitUITests.CommandsDialogs
                 }
                 else
                 {
-                    var node = nodes.Add(folder);
+                    TreeNode node = nodes.Add(folder);
                     GitItem item = new(666, GitObjectType.Tree, ObjectId.WorkTreeId, folder);
                     node.Name = folder;
                     node.Tag = item;
@@ -219,7 +219,7 @@ namespace GitUITests.CommandsDialogs
                 }
             }
 
-            var fileNode = nodes.Add(fileName);
+            TreeNode fileNode = nodes.Add(fileName);
             GitItem fileItem = new(666, GitObjectType.Blob, ObjectId.WorkTreeId, fileName);
             fileNode.Tag = fileItem;
         }
@@ -230,7 +230,7 @@ namespace GitUITests.CommandsDialogs
             NativeTreeView nativeTreeView = new();
             PopulateTreeView(nativeTreeView, @"folder1\file1");
             PopulateTreeView(nativeTreeView, @"folder2\file2");
-            var isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, "folder1");
+            bool isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, "folder1");
 
             Assert.IsTrue(isNodeFound);
             Assert.AreEqual("folder1", nativeTreeView.SelectedNode.FullPath);
@@ -242,7 +242,7 @@ namespace GitUITests.CommandsDialogs
             NativeTreeView nativeTreeView = new();
             PopulateTreeView(nativeTreeView, @"folder1\file1");
             PopulateTreeView(nativeTreeView, @"folder1\file2");
-            var isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, @"folder1\file1");
+            bool isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, @"folder1\file1");
 
             Assert.IsTrue(isNodeFound);
             Assert.AreEqual(@"folder1\file1", nativeTreeView.SelectedNode.FullPath);
@@ -253,7 +253,7 @@ namespace GitUITests.CommandsDialogs
         {
             NativeTreeView nativeTreeView = new();
             PopulateTreeView(nativeTreeView, @"folder1\file1");
-            var isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, "inexisting_folder");
+            bool isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, "inexisting_folder");
 
             Assert.IsFalse(isNodeFound);
             Assert.IsNull(nativeTreeView.SelectedNode);
@@ -267,7 +267,7 @@ namespace GitUITests.CommandsDialogs
             PopulateTreeView(nativeTreeView, @"folder1\subfolder1\subfolder2\file2");
             PopulateTreeView(nativeTreeView, @"folder1\subfolder3\file2");
             PopulateTreeView(nativeTreeView, @"folder1\subfolder4\subfolder5\file2");
-            var isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, @"folder1\subfolder1\subfolder2\file2");
+            bool isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, @"folder1\subfolder1\subfolder2\file2");
 
             Assert.IsTrue(isNodeFound);
             Assert.AreEqual(@"folder1\subfolder1\subfolder2\file2", nativeTreeView.SelectedNode.FullPath);

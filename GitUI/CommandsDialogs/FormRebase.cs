@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
 
             PatchGrid.SelectCurrentlyApplyingPatch();
 
-            var selectedHead = Module.GetSelectedBranch();
+            string selectedHead = Module.GetSelectedBranch();
             Currentbranch.Text = selectedHead;
 
             // Offer rebase on refs also for tags (but not stash, notes etc)
@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
 
             // Honor the rebase.autosquash configuration.
-            var autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
+            string autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
             chkAutosquash.Checked = autosquashSetting.Trim().ToLower() == "true";
 
             chkStash.Checked = AppSettings.RebaseAutoStash;
@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
             btnSolveConflicts.ForeColor = SystemColors.ControlText;
             MergeToolPanel.BackColor = Color.Transparent;
 
-            var highlightColor = Color.Yellow.AdaptBackColor();
+            Color highlightColor = Color.Yellow.AdaptBackColor();
 
             if (conflictedMerge)
             {
@@ -253,7 +253,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
+                PatchFile applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
                 if (applyingPatch is not null)
                 {
                     applyingPatch.IsSkipped = true;

@@ -44,17 +44,17 @@ namespace GitUI.AutoCompletion
 
             string output = result.StandardOutput;
             IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
-            foreach (var file in changedFiles)
+            foreach (GitItemStatus file in changedFiles)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var regex = GetRegexForExtension(Path.GetExtension(file.Name) ?? "");
+                Regex regex = GetRegexForExtension(Path.GetExtension(file.Name) ?? "");
 
                 if (regex is not null)
                 {
                     // HACK: need to expose require methods at IGitModule level
-                    var text = await GetChangedFileTextAsync((GitModule)module, file);
-                    var matches = regex.Matches(text);
+                    string text = await GetChangedFileTextAsync((GitModule)module, file);
+                    MatchCollection matches = regex.Matches(text);
                     foreach (Match match in matches)
                     {
                         // Skip first group since it always contains the entire matched string (regardless of capture groups)
@@ -82,7 +82,7 @@ namespace GitUI.AutoCompletion
 
         private IGitModule GetModule()
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
 
             if (module is null)
             {
@@ -103,14 +103,14 @@ namespace GitUI.AutoCompletion
 
             Validates.NotNull(appDataPath);
 
-            var path = Path.Combine(appDataPath, "AutoCompleteRegexes.txt");
+            string path = Path.Combine(appDataPath, "AutoCompleteRegexes.txt");
 
             if (File.Exists(path))
             {
                 return File.ReadLines(path);
             }
 
-            var entryAssembly = Assembly.GetEntryAssembly();
+            Assembly entryAssembly = Assembly.GetEntryAssembly();
 
             if (entryAssembly is null)
             {
@@ -131,20 +131,20 @@ namespace GitUI.AutoCompletion
 
         private static Dictionary<string, Regex> ParseRegexes()
         {
-            var autoCompleteRegexes = ReadOrInitializeAutoCompleteRegexes();
+            IEnumerable<string> autoCompleteRegexes = ReadOrInitializeAutoCompleteRegexes();
 
             Dictionary<string, Regex> regexes = new();
 
-            foreach (var line in autoCompleteRegexes)
+            foreach (string line in autoCompleteRegexes)
             {
-                var i = line.IndexOf('=');
-                var extensionStr = line[..i];
-                var regexStr = line[(i + 1)..].Trim();
+                int i = line.IndexOf('=');
+                string extensionStr = line[..i];
+                string regexStr = line[(i + 1)..].Trim();
 
-                var extensions = extensionStr.LazySplit(',').Select(s => s.Trim()).Distinct();
+                IEnumerable<string> extensions = extensionStr.LazySplit(',').Select(s => s.Trim()).Distinct();
                 Regex regex = new(regexStr, RegexOptions.Compiled);
 
-                foreach (var extension in extensions)
+                foreach (string extension in extensions)
                 {
                     regexes.Add(extension, regex);
                 }
@@ -183,7 +183,7 @@ namespace GitUI.AutoCompletion
             // Try to read the contents of the file: if it cannot be read, skip the operation silently.
             try
             {
-                using var reader = File.OpenText(Path.Combine(module.WorkingDir, file.Name));
+                using StreamReader reader = File.OpenText(Path.Combine(module.WorkingDir, file.Name));
                 return await reader.ReadToEndAsync();
             }
             catch

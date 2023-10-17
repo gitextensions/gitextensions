@@ -134,7 +134,7 @@ pick {commitToDoPicked.RebaseLine}");
             UITest.RunControl(
                 createControl: form =>
                 {
-                    var uiCommandsSource = Substitute.For<IGitUICommandsSource>();
+                    IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
                     uiCommandsSource.UICommands.Returns(x => _commands);
 
                     form.Size = new(600, 480);

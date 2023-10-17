@@ -15,7 +15,7 @@ namespace GitUITests.Theming
         public void Should_resolve_to_preinstalled_themes_directory_by_default()
         {
             ThemeCssUrlResolver resolver = new(CreateMockThemePathProvider());
-            var resolvedPath = resolver.ResolveCssUrl("bright.css");
+            string resolvedPath = resolver.ResolveCssUrl("bright.css");
             resolvedPath.Should().Be(Path.Combine(PreinstalledThemesMockPath, "bright.css"));
         }
 
@@ -23,13 +23,13 @@ namespace GitUITests.Theming
         public void Should_resolve_to_user_defined_themes_directory_When_url_starts_with_macro()
         {
             ThemeCssUrlResolver resolver = new(CreateMockThemePathProvider());
-            var resolvedPath = resolver.ResolveCssUrl("{UserAppData}/bright_custom.css");
+            string resolvedPath = resolver.ResolveCssUrl("{UserAppData}/bright_custom.css");
             resolvedPath.Should().Be(Path.Combine(UserDefinedThemesMockPath, "bright_custom.css"));
         }
 
         private static IThemePathProvider CreateMockThemePathProvider()
         {
-            var pathProvider = Substitute.For<IThemePathProvider>();
+            IThemePathProvider pathProvider = Substitute.For<IThemePathProvider>();
 
             pathProvider.ThemeExtension.Returns(".css");
 

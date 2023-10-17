@@ -15,7 +15,7 @@
         {
             get
             {
-                var hwnd = NativeMethods.GetActiveWindow();
+                IntPtr hwnd = NativeMethods.GetActiveWindow();
                 return hwnd != IntPtr.Zero && Control.FromHandle(hwnd) is null;
             }
         }

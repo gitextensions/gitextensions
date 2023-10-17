@@ -116,7 +116,7 @@ namespace GitExtUtils.GitUI.Theming
 
         private static void SetupTreeView(TreeView view)
         {
-            var unused = view.Handle; // force handle creation
+            IntPtr unused = view.Handle; // force handle creation
             view.TouchBackColor();
             view.TouchForeColor();
             view.LineColor = SystemColors.ControlDark;

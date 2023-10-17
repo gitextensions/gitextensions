@@ -20,7 +20,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         private RevisionGraphRevision SetupLaneRow(int row, int lane, int laneCount, int nodeLane = -1, RevisionGraphSegment firstSegment = null)
         {
             RevisionGraphRevision node = new(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
-            var revisionGraphRow = Substitute.For<IRevisionGraphRow>();
+            IRevisionGraphRow revisionGraphRow = Substitute.For<IRevisionGraphRow>();
 
             List<RevisionGraphSegment> segments = new();
             if (firstSegment is not null)
@@ -80,7 +80,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         {
             const int row = 100;
             const int lane = 0;
-            var node = SetupLaneRow(row, lane, laneCount: 0, nodeLane: lane);
+            RevisionGraphRevision node = SetupLaneRow(row, lane, laneCount: 0, nodeLane: lane);
 
             // row.GetCurrentRevisionLane() == lane
             _laneNodeLocator.FindPrevNode(row, lane).Should().Be((node, true));
@@ -114,7 +114,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         {
             const int row = 100;
             const int lane = 3;
-            var laneNode = SetupLaneRow(row, lane, laneCount: lane + 1);
+            RevisionGraphRevision laneNode = SetupLaneRow(row, lane, laneCount: lane + 1);
 
             // innermost "return"
             _laneNodeLocator.FindPrevNode(row, lane).Should().Be((laneNode, false));
@@ -128,7 +128,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             RevisionGraphRevision parentNode = new(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
             RevisionGraphRevision childNode = new(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
             RevisionGraphSegment segment = new(parentNode, childNode);
-            var laneNode = SetupLaneRow(row, lane, laneCount: lane + 1, firstSegment: segment);
+            RevisionGraphRevision laneNode = SetupLaneRow(row, lane, laneCount: lane + 1, firstSegment: segment);
 
 #if !DEBUG
             // innermost "return" in RELEASE build

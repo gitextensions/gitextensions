@@ -153,7 +153,7 @@ namespace GitUI.Blame
 
             _lineIndex = BlameAuthor.GetLineFromVisualPosY(e.Y);
 
-            var blameCommit = _lineIndex < _blame.Lines.Count
+            GitBlameCommit blameCommit = _lineIndex < _blame.Lines.Count
                 ? _blame.Lines[_lineIndex].Commit
                 : null;
 
@@ -183,9 +183,9 @@ namespace GitUI.Blame
                 return;
             }
 
-            var lineIndex = BlameFile.GetLineFromVisualPosY(e.Y);
+            int lineIndex = BlameFile.GetLineFromVisualPosY(e.Y);
 
-            var blameCommit = lineIndex < _blame.Lines.Count
+            GitBlameCommit blameCommit = lineIndex < _blame.Lines.Count
                 ? _blame.Lines[lineIndex].Commit
                 : null;
 
@@ -301,8 +301,8 @@ namespace GitUI.Blame
 
         private void ProcessBlame(string? filename, GitRevision revision, IReadOnlyList<ObjectId>? children, Control? controlToMask, int lineNumber, CancellationToken cancellationToken = default)
         {
-            var avatarSize = BlameAuthor.Font.Height + 1;
-            var (gutter, body, avatars) = BuildBlameContents(filename, avatarSize);
+            int avatarSize = BlameAuthor.Font.Height + 1;
+            (string gutter, string body, List<GitBlameEntry> avatars) = BuildBlameContents(filename, avatarSize);
             cancellationToken.ThrowIfCancellationRequested();
 
             BlameAuthor.SetGitBlameGutter(avatars);
@@ -340,9 +340,9 @@ namespace GitUI.Blame
             GitBlameCommit? lastCommit = null;
 
             bool showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
-            var gitBlameDisplays = showAuthorAvatar ? CalculateBlameGutterData(_blame.Lines) : new List<GitBlameEntry>(0);
+            List<GitBlameEntry> gitBlameDisplays = showAuthorAvatar ? CalculateBlameGutterData(_blame.Lines) : new List<GitBlameEntry>(0);
 
-            var dateTimeFormat = AppSettings.BlameShowAuthorTime
+            string dateTimeFormat = AppSettings.BlameShowAuthorTime
                 ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " +
                   CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
                 : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
@@ -354,28 +354,28 @@ namespace GitUI.Blame
 
             filename = filename?.ToPosixPath();
 
-            var filePathLengthEstimate = _blame.Lines.Where(l => filename != l.Commit.FileName)
+            int filePathLengthEstimate = _blame.Lines.Where(l => filename != l.Commit.FileName)
                                                      .Select(l => l.Commit.FileName.Length)
                                                      .DefaultIfEmpty(0)
                                                      .Max();
-            var lineLengthEstimate = 25 + _blame.Lines.Max(l => l.Commit.Author?.Length ?? 0) + filePathLengthEstimate;
-            var lineLength = Math.Max(80, lineLengthEstimate);
+            int lineLengthEstimate = 25 + _blame.Lines.Max(l => l.Commit.Author?.Length ?? 0) + filePathLengthEstimate;
+            int lineLength = Math.Max(80, lineLengthEstimate);
             StringBuilder lineBuilder = new(lineLength + 2);
             StringBuilder gutter = new(capacity: lineBuilder.Capacity * _blame.Lines.Count);
             string emptyLine = new(' ', lineLength);
             Dictionary<string, Image?> cacheAvatars = new();
-            var noAuthorImage = (Image)new Bitmap(Images.User80, avatarSize, avatarSize);
+            Image noAuthorImage = (Image)new Bitmap(Images.User80, avatarSize, avatarSize);
             Dictionary<ObjectId, string> authorLineCache = new();
-            for (var index = 0; index < _blame.Lines.Count; index++)
+            for (int index = 0; index < _blame.Lines.Count; index++)
             {
-                var line = _blame.Lines[index];
+                GitBlameLine line = _blame.Lines[index];
                 if (line.Commit == lastCommit)
                 {
                     gutter.AppendLine(emptyLine);
                 }
                 else
                 {
-                    var authorEmail = line.Commit.AuthorMail?.Trim('<', '>');
+                    string authorEmail = line.Commit.AuthorMail?.Trim('<', '>');
                     if (showAuthorAvatar)
                     {
                         if (authorEmail is not null)
@@ -472,21 +472,21 @@ namespace GitUI.Blame
 
         private List<GitBlameEntry> CalculateBlameGutterData(IReadOnlyList<GitBlameLine> blameLines)
         {
-            var mostRecentDate = DateTime.Now.Ticks;
-            var artificialOldBoundary = ArtificialOldBoundary;
+            long mostRecentDate = DateTime.Now.Ticks;
+            DateTime artificialOldBoundary = ArtificialOldBoundary;
             List<GitBlameEntry> gitBlameDisplays = new(blameLines.Count);
 
-            var lessRecentDate = Math.Min(artificialOldBoundary.Ticks,
+            long lessRecentDate = Math.Min(artificialOldBoundary.Ticks,
                                           blameLines.Select(l => l.Commit.AuthorTime)
                                                     .Where(d => d != DateTime.MinValue)
                                                     .DefaultIfEmpty(artificialOldBoundary)
                                                     .Min()
                                                     .Ticks);
-            var intervalSize = (mostRecentDate - lessRecentDate + 1) / AgeBucketGradientColors.Count;
-            foreach (var blame in blameLines)
+            long intervalSize = (mostRecentDate - lessRecentDate + 1) / AgeBucketGradientColors.Count;
+            foreach (GitBlameLine blame in blameLines)
             {
-                var relativeTicks = Math.Max(0, blame.Commit.AuthorTime.Ticks - lessRecentDate);
-                var ageBucketIndex = Math.Min((int)(relativeTicks / intervalSize), AgeBucketGradientColors.Count - 1);
+                long relativeTicks = Math.Max(0, blame.Commit.AuthorTime.Ticks - lessRecentDate);
+                int ageBucketIndex = Math.Min((int)(relativeTicks / intervalSize), AgeBucketGradientColors.Count - 1);
                 GitBlameEntry gitBlameDisplay = new()
                 {
                     AgeBucketIndex = ageBucketIndex,
@@ -545,7 +545,7 @@ namespace GitUI.Blame
 
             contextMenu.Tag = new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId);
 
-            if (!TryGetSelectedRevision(out var blameinfo))
+            if (!TryGetSelectedRevision(out (GitRevision selectedRevision, string filename) blameinfo))
             {
                 blameRevisionToolStripMenuItem.Enabled = false;
 
@@ -586,7 +586,7 @@ namespace GitUI.Blame
 
         private void CopyToClipboard(Func<GitBlameCommit, string> formatter)
         {
-            var commit = GetBlameCommit();
+            GitBlameCommit commit = GetBlameCommit();
 
             if (commit is null)
             {
@@ -608,7 +608,7 @@ namespace GitUI.Blame
 
         private bool TryGetSelectedRevision([NotNullWhen(returnValue: true)] out (GitRevision? selectedRevision, string? filename) blameInfo)
         {
-            var blameCommit = GetBlameCommit();
+            GitBlameCommit blameCommit = GetBlameCommit();
             if (blameCommit is null)
             {
                 blameInfo = (null, null);
@@ -621,7 +621,7 @@ namespace GitUI.Blame
 
         private void blameRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetSelectedRevision(out var blameInfo))
+            if (!TryGetSelectedRevision(out (GitRevision selectedRevision, string filename) blameInfo))
             {
                 return;
             }
@@ -633,7 +633,7 @@ namespace GitUI.Blame
 
         private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetSelectedRevision(out var blameInfo))
+            if (!TryGetSelectedRevision(out (GitRevision selectedRevision, string filename) blameInfo))
             {
                 return;
             }
@@ -669,7 +669,7 @@ namespace GitUI.Blame
 
         private void showChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var commit = GetBlameCommit();
+            GitBlameCommit commit = GetBlameCommit();
 
             if (commit is null)
             {

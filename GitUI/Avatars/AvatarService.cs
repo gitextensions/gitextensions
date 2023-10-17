@@ -48,7 +48,7 @@ namespace GitUI.Avatars
             Lazy<IAvatarDownloader> lazyDownloader = new(() => downloader ?? new AvatarDownloader());
 
             // build collection of (non-null) providers
-            var providers = new[]
+            IAvatarProvider[] providers = new[]
             {
                 BuildMainProvider(),
                 BuildFallbackProvider()
@@ -99,7 +99,7 @@ namespace GitUI.Avatars
                     null => InitialsAvatarProvider,
 
                     // Use Gravatar as fallback provider
-                    var type when GravatarProvider.IsFallbackSupportedByGravatar(fallbackType.Value) => new GravatarProvider(lazyDownloader.Value, type, true),
+                    AvatarFallbackType type when GravatarProvider.IsFallbackSupportedByGravatar(fallbackType.Value) => new GravatarProvider(lazyDownloader.Value, type, true),
 
                     // Use author initials for unknown types
                     _ => InitialsAvatarProvider,

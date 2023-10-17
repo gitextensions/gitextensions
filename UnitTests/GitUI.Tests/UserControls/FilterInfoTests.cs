@@ -1205,7 +1205,7 @@ namespace GitUITests.UserControls
         public void FilterInfo_Apply_ByCommitMessage()
         {
             FilterInfo filterInfo = new();
-            var filterLaunched = filterInfo.Apply(new RevisionFilter("message", byCommit: true, byCommitter: false, byAuthor: false, byDiffContent: false));
+            bool filterLaunched = filterInfo.Apply(new RevisionFilter("message", byCommit: true, byCommitter: false, byAuthor: false, byDiffContent: false));
 
             filterLaunched.Should().BeTrue();
             filterInfo.ByMessage.Should().BeTrue();
@@ -1222,7 +1222,7 @@ namespace GitUITests.UserControls
         public void FilterInfo_Apply_ByCommitter()
         {
             FilterInfo filterInfo = new();
-            var filterLaunched = filterInfo.Apply(new RevisionFilter("committer", byCommit: false, byCommitter: true, byAuthor: false, byDiffContent: false));
+            bool filterLaunched = filterInfo.Apply(new RevisionFilter("committer", byCommit: false, byCommitter: true, byAuthor: false, byDiffContent: false));
 
             filterLaunched.Should().BeTrue();
             filterInfo.ByCommitter.Should().BeTrue();
@@ -1239,7 +1239,7 @@ namespace GitUITests.UserControls
         public void FilterInfo_Apply_ByAuthor()
         {
             FilterInfo filterInfo = new();
-            var filterLaunched = filterInfo.Apply(new RevisionFilter("author", byCommit: false, byCommitter: false, byAuthor: true, byDiffContent: false));
+            bool filterLaunched = filterInfo.Apply(new RevisionFilter("author", byCommit: false, byCommitter: false, byAuthor: true, byDiffContent: false));
 
             filterLaunched.Should().BeTrue();
             filterInfo.ByAuthor.Should().BeTrue();
@@ -1256,7 +1256,7 @@ namespace GitUITests.UserControls
         public void FilterInfo_Apply_ByDiffContent()
         {
             FilterInfo filterInfo = new();
-            var filterLaunched = filterInfo.Apply(new RevisionFilter("diff", byCommit: false, byCommitter: false, byAuthor: false, byDiffContent: true));
+            bool filterLaunched = filterInfo.Apply(new RevisionFilter("diff", byCommit: false, byCommitter: false, byAuthor: false, byDiffContent: true));
 
             filterLaunched.Should().BeTrue();
             filterInfo.ByDiffContent.Should().BeTrue();
@@ -1276,7 +1276,7 @@ namespace GitUITests.UserControls
             // to ensure that the filtering will be triggered i.e. returned value is always `true`
 
             FilterInfo filterInfo = new();
-            var filterLaunched = filterInfo.Apply(new RevisionFilter("a_content", byCommit: true, byCommitter: false, byAuthor: false, byDiffContent: false));
+            bool filterLaunched = filterInfo.Apply(new RevisionFilter("a_content", byCommit: true, byCommitter: false, byAuthor: false, byDiffContent: false));
 
             filterLaunched.Should().BeTrue();
             filterInfo.ByMessage.Should().BeTrue();

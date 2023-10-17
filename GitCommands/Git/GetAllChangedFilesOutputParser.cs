@@ -47,10 +47,10 @@ namespace GitCommands.Git
             string trimmedStatus = RemoveWarnings(getAllChangedFilesCommandOutput);
 
             // Doesn't work with removed submodules
-            var submodules = GetModule().GetSubmodulesLocalPaths();
+            IReadOnlyList<string> submodules = GetModule().GetSubmodulesLocalPaths();
 
             // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
-            var files = trimmedStatus.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
+            string[] files = trimmedStatus.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 if (string.IsNullOrEmpty(files[n]))
@@ -105,7 +105,7 @@ namespace GitCommands.Git
                     || y != GitItemStatusConverter.UnmergedStatus)
                 {
                     GitItemStatus gitItemStatusX;
-                    var stagedX = fromDiff ? staged : StagedStatus.Index;
+                    StagedStatus stagedX = fromDiff ? staged : StagedStatus.Index;
                     if (x == GitItemStatusConverter.RenamedStatus || x == GitItemStatusConverter.CopiedStatus)
                     {
                         // Find renamed files...
@@ -132,7 +132,7 @@ namespace GitCommands.Git
                 }
 
                 GitItemStatus gitItemStatusY;
-                var stagedY = StagedStatus.WorkTree;
+                StagedStatus stagedY = StagedStatus.WorkTree;
                 if (y == GitItemStatusConverter.RenamedStatus || y == GitItemStatusConverter.CopiedStatus)
                 {
                     // Find renamed files...
@@ -173,7 +173,7 @@ namespace GitCommands.Git
             string trimmedStatus = RemoveWarnings(getAllChangedFilesCommandOutput);
 
             // Split all files on '\0'
-            var files = trimmedStatus.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
+            string[] files = trimmedStatus.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 string line = files[n];
@@ -263,7 +263,7 @@ namespace GitCommands.Git
                     return;
                 }
 
-                var staged = isIndex ? StagedStatus.Index : StagedStatus.WorkTree;
+                StagedStatus staged = isIndex ? StagedStatus.Index : StagedStatus.WorkTree;
                 GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(staged, fileName, x);
                 if (oldFileName is not null)
                 {
@@ -334,7 +334,7 @@ namespace GitCommands.Git
 
         private IGitModule GetModule()
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
 
             if (module is null)
             {
@@ -347,7 +347,7 @@ namespace GitCommands.Git
         private static string RemoveWarnings(string statusString)
         {
             // The status string from git-diff can show warnings. See tests
-            var nl = new[] { '\n', '\r' };
+            char[] nl = new[] { '\n', '\r' };
             string trimmedStatus = statusString;
             int lastNewLinePos = trimmedStatus.LastIndexOfAny(nl);
             while (lastNewLinePos >= 0)

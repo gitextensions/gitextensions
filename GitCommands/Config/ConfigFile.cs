@@ -78,9 +78,9 @@ namespace GitCommands.Config
         {
             StringBuilder configFileContent = new();
 
-            foreach (var section in ConfigSections)
+            foreach (IConfigSection section in ConfigSections)
             {
-                var dic = section.AsDictionary();
+                IDictionary<string, IReadOnlyList<string>> dic = section.AsDictionary();
 
                 // Skip empty sections
                 if (dic.Count == 0)
@@ -91,9 +91,9 @@ namespace GitCommands.Config
                 configFileContent.Append(section);
                 configFileContent.Append(Environment.NewLine);
 
-                foreach (var (key, values) in dic)
+                foreach ((string key, IReadOnlyList<string> values) in dic)
                 {
-                    foreach (var value in values)
+                    foreach (string value in values)
                     {
                         configFileContent.AppendLine(string.Concat("\t", key, " = ", EscapeValue(value)));
                     }
@@ -105,10 +105,10 @@ namespace GitCommands.Config
 
         private void SetStringValue(string setting, string value)
         {
-            var keyIndex = FindAndCheckKeyIndex(setting);
+            int keyIndex = FindAndCheckKeyIndex(setting);
 
-            var configSectionName = setting[..keyIndex];
-            var keyName = setting[(keyIndex + 1)..];
+            string configSectionName = setting[..keyIndex];
+            string keyName = setting[(keyIndex + 1)..];
 
             FindOrCreateConfigSection(configSectionName).SetValue(keyName, value);
         }
@@ -120,7 +120,7 @@ namespace GitCommands.Config
 
         private static int FindAndCheckKeyIndex(string setting)
         {
-            var keyIndex = FindKeyIndex(setting);
+            int keyIndex = FindKeyIndex(setting);
 
             if (keyIndex < 0 || keyIndex == setting.Length)
             {
@@ -147,12 +147,12 @@ namespace GitCommands.Config
                 throw new ArgumentNullException();
             }
 
-            var keyIndex = FindAndCheckKeyIndex(setting);
+            int keyIndex = FindAndCheckKeyIndex(setting);
 
-            var configSectionName = setting[..keyIndex];
-            var keyName = setting[(keyIndex + 1)..];
+            string configSectionName = setting[..keyIndex];
+            string keyName = setting[(keyIndex + 1)..];
 
-            var configSection = FindConfigSection(configSectionName);
+            IConfigSection configSection = FindConfigSection(configSectionName);
 
             if (configSection is null)
             {
@@ -169,12 +169,12 @@ namespace GitCommands.Config
 
         public IReadOnlyList<string> GetValues(string setting)
         {
-            var keyIndex = FindAndCheckKeyIndex(setting);
+            int keyIndex = FindAndCheckKeyIndex(setting);
 
-            var configSectionName = setting[..keyIndex];
-            var keyName = setting[(keyIndex + 1)..];
+            string configSectionName = setting[..keyIndex];
+            string keyName = setting[(keyIndex + 1)..];
 
-            var configSection = FindConfigSection(configSectionName);
+            IConfigSection configSection = FindConfigSection(configSectionName);
 
             if (configSection is null)
             {
@@ -186,7 +186,7 @@ namespace GitCommands.Config
 
         public IConfigSection FindOrCreateConfigSection(string name)
         {
-            var result = FindConfigSection(name);
+            IConfigSection result = FindConfigSection(name);
             if (result is null)
             {
                 result = new ConfigSection(name, true);
@@ -208,7 +208,7 @@ namespace GitCommands.Config
 
         public void RemoveConfigSection(string configSectionName)
         {
-            var configSection = FindConfigSection(configSectionName);
+            IConfigSection configSection = FindConfigSection(configSectionName);
 
             if (configSection is null)
             {
@@ -271,7 +271,7 @@ namespace GitCommands.Config
 
             private void NewSection()
             {
-                var sectionName = _token.ToString();
+                string sectionName = _token.ToString();
                 _token.Clear();
                 _section = _configFile.FindConfigSection(sectionName);
                 if (_section is null)

@@ -69,18 +69,18 @@ namespace GitUI.CommandsDialogs
 
             async Task DisplayRefLog()
             {
-                var item = (string)Branches.SelectedItem;
+                string item = (string)Branches.SelectedItem;
                 await TaskScheduler.Default;
                 GitArgumentBuilder arguments = new("reflog")
                 {
                     "--no-abbrev",
                     item
                 };
-                var output = UICommands.GitModule.GitExecutable.GetOutput(arguments);
-                var refLines = ConvertReflogOutput().ToList();
+                string output = UICommands.GitModule.GitExecutable.GetOutput(arguments);
+                List<RefLine> refLines = ConvertReflogOutput().ToList();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _lastHitRowIndex = 0;
-                var refLinesList = new SortableRefLineList();
+                SortableRefLineList refLinesList = new SortableRefLineList();
                 refLinesList.AddRange(refLines);
                 gridReflog.DataSource = refLinesList;
 
@@ -113,8 +113,8 @@ namespace GitUI.CommandsDialogs
 
         private ObjectId GetShaOfRefLine()
         {
-            var row = GetSelectedRow();
-            var refLine = (RefLine)row.DataBoundItem;
+            DataGridViewRow row = GetSelectedRow();
+            RefLine refLine = (RefLine)row.DataBoundItem;
             return refLine.Sha;
 
             DataGridViewRow GetSelectedRow()
@@ -145,11 +145,11 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            var gitRevision = UICommands.Module.GetRevision(GetShaOfRefLine());
-            var resetType = _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
+            GitRevision gitRevision = UICommands.Module.GetRevision(GetShaOfRefLine());
+            FormResetCurrentBranch.ResetType resetType = _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
             UICommands.DoActionOnRepo(() =>
             {
-                using var form = FormResetCurrentBranch.Create(UICommands, gitRevision, resetType);
+                using FormResetCurrentBranch form = FormResetCurrentBranch.Create(UICommands, gitRevision, resetType);
                 return form.ShowDialog(this) == DialogResult.OK;
             });
         }
@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
 
         private void gridReflog_MouseMove(object sender, MouseEventArgs e)
         {
-            var hit = gridReflog.HitTest(e.X, e.Y);
+            DataGridView.HitTestInfo hit = gridReflog.HitTest(e.X, e.Y);
 
             if (hit.Type == DataGridViewHitTestType.Cell && _lastHitRowIndex != hit.RowIndex)
             {

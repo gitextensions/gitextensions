@@ -83,7 +83,7 @@ namespace GitUITests.Avatars
             _fileInfo.ClearReceivedCalls();
             _file.ClearReceivedCalls();
 
-            var image = await _cache.GetAvatarAsync(_email1, _name1, 16);
+            Image image = await _cache.GetAvatarAsync(_email1, _name1, 16);
 
             image.Should().NotBeNull();
             _ = _fileInfo.Received(1).LastWriteTime;

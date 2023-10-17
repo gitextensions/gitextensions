@@ -13,17 +13,17 @@ namespace GitExtensions.Plugins.GitStatistics
 
         public static CodeFile Parse(FileInfo file)
         {
-            var lineCount = 0;
-            var blankLineCount = 0;
-            var designerLineCount = 0;
-            var commentLineCount = 0;
-            var isTestFile = false;
+            int lineCount = 0;
+            int blankLineCount = 0;
+            int designerLineCount = 0;
+            int commentLineCount = 0;
+            bool isTestFile = false;
 
-            var extension = file.Extension;
-            var inCodeGeneratedRegion = false;
-            var inCommentBlock = false;
+            string extension = file.Extension;
+            bool inCodeGeneratedRegion = false;
+            bool inCommentBlock = false;
 
-            foreach (var line in ReadLines())
+            foreach (string line in ReadLines())
             {
                 ProcessLine(line);
             }
@@ -36,7 +36,7 @@ namespace GitExtensions.Plugins.GitStatistics
                 using StreamReader reader = new(file.FullName, detectEncodingFromByteOrderMarks: true);
                 while (true)
                 {
-                    var line = reader.ReadLine();
+                    string line = reader.ReadLine();
 
                     if (line is null)
                     {
@@ -110,7 +110,7 @@ namespace GitExtensions.Plugins.GitStatistics
 
                 bool IsDesignerFile()
                 {
-                    var isWebReferenceFile = file.FullName.Contains("Web References") && file.Name == "Reference.cs";
+                    bool isWebReferenceFile = file.FullName.Contains("Web References") && file.Name == "Reference.cs";
 
                     return isWebReferenceFile || file.Name.Contains(".Designer.", StringComparison.CurrentCultureIgnoreCase);
                 }

@@ -52,15 +52,15 @@ namespace GitUI
 
             // Make sure to obtain the CancellationToken for the next source before exposing the source,
             // or another thread could dispose of source before we get a chance to access this property.
-            var nextToken = next.Token;
+            CancellationToken nextToken = next.Token;
 
             // The following block is identical to Interlocked.Exchange, except no replacement is
             // made if the current field value is null (latch on null).
-            var prior = Volatile.Read(ref _cancellationTokenSource);
+            CancellationTokenSource prior = Volatile.Read(ref _cancellationTokenSource);
 
             while (prior is not null)
             {
-                var candidate = Interlocked.CompareExchange(ref _cancellationTokenSource, next, prior);
+                CancellationTokenSource candidate = Interlocked.CompareExchange(ref _cancellationTokenSource, next, prior);
 
                 if (candidate == prior)
                 {
@@ -118,7 +118,7 @@ namespace GitUI
         /// </remarks>
         public void Dispose()
         {
-            var cancellationTokenSource = Interlocked.Exchange(ref _cancellationTokenSource, null);
+            CancellationTokenSource cancellationTokenSource = Interlocked.Exchange(ref _cancellationTokenSource, null);
 
             if (cancellationTokenSource is null)
             {

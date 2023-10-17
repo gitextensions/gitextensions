@@ -128,7 +128,7 @@ namespace GitCommandsTests.Settings
 
         private static IEnumerable<object[]> TestCases()
         {
-            foreach (var value in Values())
+            foreach (object value in Values())
             {
                 foreach ((PropertyInfo property, object defaultValue, bool isNullable, bool isSetting) in PropertyInfos())
                 {
@@ -139,8 +139,8 @@ namespace GitCommandsTests.Settings
 
                     if (value is not null)
                     {
-                        var valueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
-                        var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        Type valueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
+                        Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
                         if (valueType == propertyType)
                         {
@@ -152,7 +152,7 @@ namespace GitCommandsTests.Settings
 
             static IEnumerable<(PropertyInfo property, object defaultValue, bool isNullable, bool isSetting)> PropertyInfos()
             {
-                var properties = typeof(AppSettings).GetProperties()
+                Dictionary<string, PropertyInfo> properties = typeof(AppSettings).GetProperties()
                     .ToDictionary(x => x.Name, x => x);
 
                 yield return (properties[nameof(AppSettings.TelemetryEnabled)], null, true, false);
@@ -398,7 +398,7 @@ namespace GitCommandsTests.Settings
                 yield return DateTime.MaxValue;
                 yield return DateTime.Today;
 
-                var enumTypes = new Type[]
+                Type[] enumTypes = new Type[]
                 {
                     typeof(TruncatePathMethod),
                     typeof(AvatarProvider),
@@ -411,9 +411,9 @@ namespace GitCommandsTests.Settings
                     typeof(DiffListSortType)
                 };
 
-                foreach (var enumType in enumTypes)
+                foreach (Type enumType in enumTypes)
                 {
-                    foreach (var enumValue in Enum.GetValues(enumType))
+                    foreach (object enumValue in Enum.GetValues(enumType))
                     {
                         yield return enumValue;
                     }

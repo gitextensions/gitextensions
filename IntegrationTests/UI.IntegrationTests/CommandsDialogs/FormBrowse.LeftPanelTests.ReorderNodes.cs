@@ -86,10 +86,10 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunRepoObjectsTreeTest(
                 repoObjectTree =>
                 {
-                    var testAccessor = repoObjectTree.GetTestAccessor();
+                    RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
 
                     // act
-                    var currNodes = testAccessor.TreeView.Nodes;
+                    TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
                     // assert
@@ -115,10 +115,10 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunRepoObjectsTreeTest(
                 repoObjectTree =>
                 {
-                    var testAccessor = repoObjectTree.GetTestAccessor();
+                    RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
 
                     // act
-                    var currNodes = testAccessor.TreeView.Nodes;
+                    TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
                     // assert
@@ -149,10 +149,10 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunRepoObjectsTreeTest(
                 repoObjectTree =>
                 {
-                    var testAccessor = repoObjectTree.GetTestAccessor();
+                    RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
 
                     // act
-                    var currNodes = testAccessor.TreeView.Nodes;
+                    TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
                     AssertListCount(initialNodes, 5);
 

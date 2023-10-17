@@ -39,9 +39,9 @@ namespace GitCommands
             // TODO should we set these on the child process only?
             EnvironmentConfiguration.SetEnvironmentVariables();
 
-            var args = (arguments.Arguments ?? "").Replace("$QUOTE$", "\\\"");
+            string args = (arguments.Arguments ?? "").Replace("$QUOTE$", "\\\"");
 
-            var fileName = _fileNameProvider();
+            string fileName = _fileNameProvider();
 
             return new ProcessWrapper(fileName, _prefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
         }

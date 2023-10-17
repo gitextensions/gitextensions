@@ -26,7 +26,7 @@ namespace GitCommandsTests.ExternalLinks
         {
             _testHelper = new GitModuleTestHelper();
 
-            var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
+            string content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
             _repoLocalConfigFilePath = _testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
             content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level2_repodist_GitExtensions.settings.xml");
             _repoDistributedConfigFilePath = _testHelper.CreateFile(_testHelper.TemporaryPath + "/RoamingProfile", "GitExtensions.settings", content);
@@ -66,7 +66,7 @@ namespace GitCommandsTests.ExternalLinks
                 new ExternalLinkDefinition { Name = "user definition 1" },
             });
 
-            var effectiveSettings = _provider.Get(_userRoaming);
+            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_userRoaming);
 
             effectiveSettings.Count.Should().Be(1);
         }
@@ -86,7 +86,7 @@ namespace GitCommandsTests.ExternalLinks
                     new ExternalLinkDefinition { Name = "distributed definition 3" },
                 });
 
-            var effectiveSettings = _provider.Get(_repoDistributed);
+            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_repoDistributed);
 
             // 1 comes from the user roaming settings
             // 3 come from the distributed
@@ -112,7 +112,7 @@ namespace GitCommandsTests.ExternalLinks
                     new ExternalLinkDefinition { Name = "user definition 1" },
                 });
 
-            var effectiveSettings = _provider.Get(_repoLocal);
+            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_repoLocal);
 
             // 1 comes from the user roaming settings
             // 3 come from the distributed

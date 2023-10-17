@@ -16,7 +16,7 @@ namespace CommonTestUtils
 
         public IDisposable StageOutput(string arguments, string output, int? exitCode = 0, string? error = null)
         {
-            var stack = _outputStackByArguments.GetOrAdd(
+            ConcurrentStack<(string output, int? exitCode, string? error)> stack = _outputStackByArguments.GetOrAdd(
                 arguments,
                 args => new ConcurrentStack<(string output, int? exitCode, string? error)>());
 
@@ -36,13 +36,13 @@ namespace CommonTestUtils
 
         public IDisposable StageCommand(string arguments)
         {
-            var id = Interlocked.Increment(ref _nextCommandId);
+            int id = Interlocked.Increment(ref _nextCommandId);
             _commandArgumentsSet[arguments] = id;
 
             return new DelegateDisposable(
                 () =>
                 {
-                    if (_commandArgumentsSet.TryGetValue(arguments, out var storedId) && storedId != id)
+                    if (_commandArgumentsSet.TryGetValue(arguments, out int storedId) && storedId != id)
                     {
                         throw new AssertionException($"Staged command should have been consumed.\nArguments: {arguments}");
                     }
@@ -59,7 +59,7 @@ namespace CommonTestUtils
             Assert.IsEmpty(_outputStackByArguments, "All staged output should have been consumed.");
             Assert.IsEmpty(_commandArgumentsSet, "All staged output should have been consumed.");
 
-            foreach (var process in _processes)
+            foreach (MockProcess process in _processes)
             {
                 process.Verify();
             }
@@ -142,7 +142,7 @@ namespace CommonTestUtils
                 else
                 {
                     CancellationTokenSource cts = new();
-                    var ct = cts.Token;
+                    CancellationToken ct = cts.Token;
                     cts.Cancel();
                     return Task.FromCanceled<int>(ct);
                 }

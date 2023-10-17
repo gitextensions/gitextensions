@@ -134,7 +134,7 @@ namespace GitUI.LeftPanel
                 Image Pad(Image image)
                 {
                     Bitmap padded = new(image.Width, image.Height + rowPadding + rowPadding, PixelFormat.Format32bppArgb);
-                    using var g = Graphics.FromImage(padded);
+                    using Graphics g = Graphics.FromImage(padded);
                     g.DrawImageUnscaled(image, 0, rowPadding);
                     return padded;
                 }
@@ -292,7 +292,7 @@ namespace GitUI.LeftPanel
                 return;
             }
 
-            var cancellationToken = _selectionCancellationTokenSequence.Next();
+            CancellationToken cancellationToken = _selectionCancellationTokenSequence.Next();
 
             GitRevision? selectedRevision;
             string? selectedGuid;
@@ -436,7 +436,7 @@ namespace GitUI.LeftPanel
             List<TreeNode> nodeList = treeMain.Nodes.OfType<TreeNode>().ToList();
             nodeList.Add(tree.TreeViewNode);
             treeMain.Nodes.Clear();
-            var treeToPositionIndex = GetTreeToPositionIndex();
+            Dictionary<Tree, int> treeToPositionIndex = GetTreeToPositionIndex();
             treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag]).ToArray());
             treeMain.EndUpdate();
 
@@ -460,7 +460,7 @@ namespace GitUI.LeftPanel
             if (_searchCriteriaChanged && _searchResult?.Any() is true)
             {
                 _searchCriteriaChanged = false;
-                foreach (var coloredNode in _searchResult)
+                foreach (TreeNode coloredNode in _searchResult)
                 {
                     coloredNode.BackColor = SystemColors.Window;
                 }
@@ -481,7 +481,7 @@ namespace GitUI.LeftPanel
                 }
             }
 
-            var node = GetNextSearchResult();
+            TreeNode node = GetNextSearchResult();
 
             if (node is null)
             {
@@ -512,7 +512,7 @@ namespace GitUI.LeftPanel
 
                 while (queue.Count != 0)
                 {
-                    var n = queue.Dequeue();
+                    TreeNode n = queue.Dequeue();
 
                     if (n.Tag is BaseRevisionNode branch)
                     {
@@ -597,7 +597,7 @@ namespace GitUI.LeftPanel
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            var node = e.Node.Tag as NodeBase;
+            NodeBase node = e.Node.Tag as NodeBase;
 
             if (e.Button == MouseButtons.Right && node.IsSelected)
             {
@@ -635,7 +635,7 @@ namespace GitUI.LeftPanel
             // Don't consider-double clicking on the PlusMinus as a double-click event
             // for nodes in tree. This prevents opening inner submodules, for example,
             // when quickly collapsing/expanding them.
-            var hitTest = treeMain.HitTest(e.Location);
+            TreeViewHitTestInfo hitTest = treeMain.HitTest(e.Location);
             if (hitTest.Location == TreeViewHitTestLocations.PlusMinus)
             {
                 return;
@@ -678,10 +678,10 @@ namespace GitUI.LeftPanel
             /// or the selected node is not of type <typeparamref name="TExpected"/>.</exception>
             public void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false) where TExpected : Node
             {
-                var nodes = TreeView.Nodes.Cast<TreeNode>();
+                IEnumerable<TreeNode> nodes = TreeView.Nodes.Cast<TreeNode>();
                 TreeNode node = null;
 
-                foreach (var text in nodeTexts)
+                foreach (string text in nodeTexts)
                 {
                     node = nodes.SingleOrDefault(node => node.Text == text);
 
@@ -711,7 +711,7 @@ namespace GitUI.LeftPanel
 
             public void SetTreeVisibleByIndex(int index, bool visible)
             {
-                var tree = _repoObjectsTree.GetTreeToPositionIndex().FirstOrDefault(kvp => kvp.Value == index).Key;
+                Tree tree = _repoObjectsTree.GetTreeToPositionIndex().FirstOrDefault(kvp => kvp.Value == index).Key;
 
                 if (tree.TreeViewNode.IsVisible == visible)
                 {

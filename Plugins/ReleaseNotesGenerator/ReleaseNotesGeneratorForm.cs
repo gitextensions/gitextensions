@@ -121,7 +121,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
 
             StringBuilder stringBuilder = new();
 
-            foreach (var logLine in logLines)
+            foreach (LogLine logLine in logLines)
             {
                 string message = string.Join(Environment.NewLine + colSeparatorRestLines,
                     logLine.MessageLines.Where(
@@ -137,7 +137,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
         {
             StringBuilder stringBuilder = new();
             stringBuilder.Append("<table>\r\n");
-            foreach (var logLine in logLines)
+            foreach (LogLine logLine in logLines)
             {
                 string message = string.Join("<br/>", logLine.MessageLines.Select(a => WebUtility.HtmlEncode(a)));
                 stringBuilder.AppendFormat("<tr>\r\n  <td>{0}</td>\r\n  <td>{1}</td>\r\n</tr>\r\n", logLine.Commit, message);

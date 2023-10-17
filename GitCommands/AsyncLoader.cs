@@ -51,7 +51,7 @@ namespace GitCommands
             Cancel();
 
             // Create a new cancellation token
-            var token = _cancellationSequence.Next();
+            CancellationToken token = _cancellationSequence.Next();
 
             T? result;
 

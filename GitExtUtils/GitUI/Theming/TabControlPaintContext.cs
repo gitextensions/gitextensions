@@ -88,7 +88,7 @@
                 pageIndices = Enumerable.Range(0, _tabCount);
             }
 
-            foreach (var index in pageIndices)
+            foreach (int index in pageIndices)
             {
                 RenderTabBackground(index);
                 RenderTabImage(index);
@@ -98,9 +98,9 @@
 
         private void RenderTabBackground(int index)
         {
-            using var borderPen = CreateBorderPen();
-            var outerRect = GetOuterTabRect(index);
-            using (var backgroundBrush = CreateBackgroundBrusScope(index))
+            using Pen borderPen = CreateBorderPen();
+            Rectangle outerRect = GetOuterTabRect(index);
+            using (BrushScope backgroundBrush = CreateBackgroundBrusScope(index))
             {
                 _graphics.FillRectangle(backgroundBrush.Brush, outerRect);
             }
@@ -124,19 +124,19 @@
 
         private void RenderTabImage(int index)
         {
-            var image = _tabImages[index];
+            Image image = _tabImages[index];
             if (image is null)
             {
                 return;
             }
 
-            var imgRect = GetTabImageRect(index);
+            Rectangle imgRect = GetTabImageRect(index);
             _graphics.DrawImage(image, imgRect);
         }
 
         private Rectangle GetTabImageRect(int index)
         {
-            var innerRect = _tabRects[index];
+            Rectangle innerRect = _tabRects[index];
             int imgHeight = _imageSize.Height;
             Rectangle imgRect = new(
                 new Point(innerRect.X + ImagePadding,
@@ -153,13 +153,13 @@
 
         private static Image? GetTabImage(TabControl tabs, int index)
         {
-            var images = tabs.ImageList?.Images;
+            ImageList.ImageCollection images = tabs.ImageList?.Images;
             if (images is null)
             {
                 return null;
             }
 
-            var page = tabs.TabPages[index];
+            TabPage page = tabs.TabPages[index];
             if (!string.IsNullOrEmpty(page.ImageKey))
             {
                 return images[page.ImageKey];
@@ -180,7 +180,7 @@
                 return;
             }
 
-            var textRect = GetTabTextRect(index, hasImage);
+            Rectangle textRect = GetTabTextRect(index, hasImage);
 
             const TextFormatFlags format =
                 TextFormatFlags.NoClipping |
@@ -188,7 +188,7 @@
                 TextFormatFlags.VerticalCenter |
                 TextFormatFlags.HorizontalCenter;
 
-            var textColor = _enabled
+            Color textColor = _enabled
                 ? index == _selectedIndex
                     ? SystemColors.WindowText
                     : SystemColors.ControlText
@@ -199,7 +199,7 @@
 
         private Rectangle GetTabTextRect(int index, bool hasImage)
         {
-            var innerRect = _tabRects[index];
+            Rectangle innerRect = _tabRects[index];
             Rectangle textRect;
             if (hasImage)
             {
@@ -225,7 +225,7 @@
 
         private Rectangle GetOuterTabRect(int index)
         {
-            var innerRect = _tabRects[index];
+            Rectangle innerRect = _tabRects[index];
 
             if (index == _selectedIndex)
             {
@@ -250,8 +250,8 @@
                 return;
             }
 
-            var tabRect = _tabRects[_selectedIndex];
-            var pageRect = Rectangle.FromLTRB(0, tabRect.Bottom, _size.Width - 1,
+            Rectangle tabRect = _tabRects[_selectedIndex];
+            Rectangle pageRect = Rectangle.FromLTRB(0, tabRect.Bottom, _size.Width - 1,
                 _size.Height - 1);
 
             if (!_clipRectangle.IntersectsWith(pageRect))
@@ -259,12 +259,12 @@
                 return;
             }
 
-            using (var backgroundBrush = CreateBackgroundBrusScope(_selectedIndex))
+            using (BrushScope backgroundBrush = CreateBackgroundBrusScope(_selectedIndex))
             {
                 _graphics.FillRectangle(backgroundBrush.Brush, pageRect);
             }
 
-            using (var borderPen = CreateBorderPen())
+            using (Pen borderPen = CreateBorderPen())
             {
                 _graphics.DrawRectangle(borderPen, pageRect);
             }
@@ -272,7 +272,7 @@
 
         private static Color GetParentBackColor(TabControl tabs)
         {
-            var parent = tabs.Parent;
+            Control parent = tabs.Parent;
             while (parent is not null)
             {
                 if (parent.BackColor != Color.Transparent)

@@ -102,7 +102,7 @@ namespace GitUI.CommitInfo
             _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
             _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-            var messageBackground = KnownColor.Window.MakeBackgroundDarkerBy(0.04);
+            Color messageBackground = KnownColor.Window.MakeBackgroundDarkerBy(0.04);
             pnlCommitMessage.BackColor = messageBackground;
             rtbxCommitMessage.BackColor = messageBackground;
 
@@ -258,7 +258,7 @@ namespace GitUI.CommitInfo
 
             int i = 0;
             Dictionary<string, int> dict = new();
-            foreach (var entry in tree.LazySplit('\n'))
+            foreach (string entry in tree.LazySplit('\n'))
             {
                 if (dict.ContainsKey(entry))
                 {
@@ -359,8 +359,8 @@ namespace GitUI.CommitInfo
 
             void StartAsyncDataLoad(DistributedSettings settings)
             {
-                var cancellationToken = _asyncLoadCancellation.Next();
-                var initialRevision = _revision;
+                CancellationToken cancellationToken = _asyncLoadCancellation.Next();
+                GitRevision initialRevision = _revision;
 
                 ThreadHelper.FileAndForget(async () =>
                 {
@@ -445,7 +445,7 @@ namespace GitUI.CommitInfo
                 {
                     await TaskScheduler.Default;
 
-                    var annotatedTagsMessages = GetAnnotatedTagsMessages();
+                    IDictionary<string, string>? annotatedTagsMessages = GetAnnotatedTagsMessages();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _annotatedTagsMessages = annotatedTagsMessages;
@@ -506,7 +506,7 @@ namespace GitUI.CommitInfo
                 {
                     await TaskScheduler.Default;
 
-                    var tags = Module.GetAllTagsWhichContainGivenCommit(objectId).ToList();
+                    List<string> tags = Module.GetAllTagsWhichContainGivenCommit(objectId).ToList();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _tags = tags;
@@ -523,7 +523,7 @@ namespace GitUI.CommitInfo
                     // Include remote branches if requested
                     bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                                      AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                    var branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
+                    List<string> branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _branches = branches;
@@ -549,7 +549,7 @@ namespace GitUI.CommitInfo
 
                     string GetDescribeInfoForRevision()
                     {
-                        var (precedingTag, commitCount) = _gitDescribeProvider.Get(commitId);
+                        (string precedingTag, string commitCount) = _gitDescribeProvider.Get(commitId);
 
                         StringBuilder gitDescribeInfo = new();
                         if (!string.IsNullOrEmpty(precedingTag))
@@ -627,9 +627,9 @@ namespace GitUI.CommitInfo
             {
                 StringBuilder result = new();
 
-                foreach (var tag in tagNames)
+                foreach (string tag in tagNames)
                 {
-                    if (annotatedTagsMessages.TryGetValue(tag, out var annotatedContents))
+                    if (annotatedTagsMessages.TryGetValue(tag, out string? annotatedContents))
                     {
                         result.Append("<u>").Append(tag).Append("</u>: ").Append(annotatedContents).AppendLine();
                     }
@@ -968,7 +968,7 @@ namespace GitUI.CommitInfo
                         s = _prefix + s;
                     }
 
-                    if (_orderDict.TryGetValue(s, out var index))
+                    if (_orderDict.TryGetValue(s, out int index))
                     {
                         return index;
                     }

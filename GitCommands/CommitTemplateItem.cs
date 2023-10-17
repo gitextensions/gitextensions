@@ -45,7 +45,7 @@ namespace GitCommands
         public static CommitTemplateItem[]? LoadFromSettings()
         {
             string serializedString = AppSettings.CommitTemplates;
-            var templates = DeserializeCommitTemplates(serializedString, out var shouldBeUpdated);
+            CommitTemplateItem[] templates = DeserializeCommitTemplates(serializedString, out bool shouldBeUpdated);
             if (shouldBeUpdated)
             {
                 SaveToSettings(templates!);

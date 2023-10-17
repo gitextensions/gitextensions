@@ -39,9 +39,9 @@ namespace GitCommands.UserRepositoryHistory
             async Task<IList<Repository>> AddAsMostRecentRepositoryAsync(string path)
             {
                 await TaskScheduler.Default;
-                var repositoryHistory = await LoadRecentHistoryAsync();
+                IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
 
-                var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
+                Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
                 if (repository is not null)
                 {
                     if (repositoryHistory[0] == repository)
@@ -75,7 +75,7 @@ namespace GitCommands.UserRepositoryHistory
             // BUG: this must be a separate settings
             // TODO: to be addressed separately
             int size = AppSettings.RecentRepositoriesHistorySize;
-            var history = _repositoryStorage.Load(KeyRemoteHistory);
+            IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRemoteHistory);
             if (history is null)
             {
                 return Array.Empty<Repository>();
@@ -98,8 +98,8 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             await TaskScheduler.Default;
-            var repositoryHistory = await LoadRecentHistoryAsync();
-            var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+            IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
+            Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
             if (repository is null)
             {
                 return repositoryHistory;

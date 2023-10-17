@@ -107,7 +107,7 @@ namespace GitCommandsTests.Helpers
             Assert.IsNull(((string)null).RemoveTrailingPathSeparator());
             Assert.AreEqual("".RemoveTrailingPathSeparator(), "");
 
-            var s = Path.DirectorySeparatorChar;
+            char s = Path.DirectorySeparatorChar;
 
             Assert.AreEqual($"C:{s}".RemoveTrailingPathSeparator(), "C:");
             Assert.AreEqual("foo".RemoveTrailingPathSeparator(), "foo");
@@ -370,7 +370,7 @@ namespace GitCommandsTests.Helpers
         [Test]
         public void GetDisplayPath()
         {
-            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
             Assert.AreEqual(@"~\SomePath", PathUtil.GetDisplayPath(Path.Combine(home, "SomePath")));
             Assert.AreEqual("c:\\SomePath", PathUtil.GetDisplayPath("c:\\SomePath"));
@@ -408,7 +408,7 @@ namespace GitCommandsTests.Helpers
         [Test]
         public void DeleteWithExtremePrejudice_should_return_true_if_delete_successful()
         {
-            var tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempPath);
             Directory.Exists(tempPath).Should().BeTrue();
 

@@ -12,7 +12,7 @@ namespace GitUI
                 throw new ArgumentNullException(nameof(control));
             }
 
-            var isDpiScaled = DpiUtil.IsNonStandard;
+            bool isDpiScaled = DpiUtil.IsNonStandard;
 
             // If we are in design mode, don't scale anything as the designer may
             // write scaled values back to InitializeComponent.
@@ -21,7 +21,7 @@ namespace GitUI
                 return;
             }
 
-            foreach (var descendant in control.FindDescendants())
+            foreach (Control descendant in control.FindDescendants())
             {
                 // NOTE we can't automatically scale TreeView or ListView here as
                 // adjustment must be done before images are added to the

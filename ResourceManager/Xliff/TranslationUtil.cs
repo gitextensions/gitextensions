@@ -70,7 +70,7 @@ namespace ResourceManager.Xliff
                 yield return (objName, obj);
             }
 
-            foreach (var field in obj.GetType().GetFields(_fieldFlags))
+            foreach (FieldInfo field in obj.GetType().GetFields(_fieldFlags))
             {
                 if (field.IsPublic && !field.IsInitOnly)
                 {
@@ -85,7 +85,7 @@ namespace ResourceManager.Xliff
 
         public static void AddTranslationItem(string category, object obj, string propName, ITranslation translation)
         {
-            var property = obj?.GetType().GetProperty(propName, _propertyFlags);
+            PropertyInfo property = obj?.GetType().GetProperty(propName, _propertyFlags);
 
             if (property?.GetValue(obj, null) is string value && AllowTranslateProperty(value))
             {
@@ -131,7 +131,7 @@ namespace ResourceManager.Xliff
                 isTranslatable = IsTranslatableItemInComponent;
             }
 
-            foreach (var property in item.GetType().GetProperties(_fieldFlags).Where(isTranslatable))
+            foreach (PropertyInfo property in item.GetType().GetProperties(_fieldFlags).Where(isTranslatable))
             {
                 yield return property;
             }
@@ -139,7 +139,7 @@ namespace ResourceManager.Xliff
 
         public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<(string name, object item)> items)
         {
-            foreach (var (itemName, itemObj) in items)
+            foreach ((string itemName, object itemObj) in items)
             {
                 if (itemObj is ToolTip tooltip)
                 {
@@ -150,7 +150,7 @@ namespace ResourceManager.Xliff
                         translation.AddTranslationItem(category, itemName, "ToolTipTitle", toolTipTitle);
                     }
 
-                    foreach (var (itemNameForTooltip, itemObjForTooltip) in items)
+                    foreach ((string itemNameForTooltip, object itemObjForTooltip) in items)
                     {
                         if (itemObjForTooltip is Control control)
                         {
@@ -166,9 +166,9 @@ namespace ResourceManager.Xliff
                     continue;
                 }
 
-                foreach (var property in GetItemPropertiesEnumerator(itemName, itemObj))
+                foreach (PropertyInfo property in GetItemPropertiesEnumerator(itemName, itemObj))
                 {
-                    var value = property.GetValue(itemObj, null);
+                    object value = property.GetValue(itemObj, null);
 
                     if (value is null)
                     {
@@ -189,7 +189,7 @@ namespace ResourceManager.Xliff
                     {
                         for (int index = 0; index < listItems.Count; index++)
                         {
-                            var listItem = listItems[index] as string;
+                            string listItem = listItems[index] as string;
 
                             if (AllowTranslateProperty(listItem))
                             {
@@ -203,7 +203,7 @@ namespace ResourceManager.Xliff
 
         public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<(string name, object item)> items)
         {
-            foreach (var (itemName, itemObj) in items)
+            foreach ((string itemName, object itemObj) in items)
             {
                 // If a user control is being translated through its host control (e.g. FilterToolBar is hosted on FormBrowse,
                 // and its translations are recorded under 'FormBrowse' node) then the host's "$this.Text" will be applied to
@@ -226,7 +226,7 @@ namespace ResourceManager.Xliff
                         tooltip.ToolTipTitle = toolTipTitle;
                     }
 
-                    foreach (var (itemNameForTooltip, itemObjForTooltip) in items)
+                    foreach ((string itemNameForTooltip, object itemObjForTooltip) in items)
                     {
                         if (itemObjForTooltip is Control control)
                         {
@@ -242,13 +242,13 @@ namespace ResourceManager.Xliff
                     continue;
                 }
 
-                foreach (var propertyInfo in GetItemPropertiesEnumerator(itemName, itemObj))
+                foreach (PropertyInfo propertyInfo in GetItemPropertiesEnumerator(itemName, itemObj))
                 {
-                    var property = propertyInfo; // copy for lambda
+                    PropertyInfo property = propertyInfo; // copy for lambda
 
                     if (property.Name == "Items" && typeof(IList).IsAssignableFrom(property.PropertyType))
                     {
-                        var list = (IList)property.GetValue(itemObj, null);
+                        IList list = (IList)property.GetValue(itemObj, null);
                         for (int index = 0; index < list.Count; index++)
                         {
                             if (list[index] is string listValue)
@@ -295,7 +295,7 @@ namespace ResourceManager.Xliff
 
         public static void TranslateProperty(string category, object obj, string propName, ITranslation translation)
         {
-            var property = obj?.GetType().GetProperty(propName, _propertyFlags);
+            PropertyInfo property = obj?.GetType().GetProperty(propName, _propertyFlags);
 
             if (property is null)
             {
@@ -392,10 +392,10 @@ namespace ResourceManager.Xliff
 
             object? obj = null;
 
-            var constructors = type.GetConstructors(constructorFlags);
+            ConstructorInfo[] constructors = type.GetConstructors(constructorFlags);
 
             // try to find parameterless constructor first
-            foreach (var constructor in constructors)
+            foreach (ConstructorInfo constructor in constructors)
             {
                 if (constructor.GetParameters().Length == 0)
                 {
@@ -405,8 +405,8 @@ namespace ResourceManager.Xliff
 
             if (obj is null && constructors.Length != 0)
             {
-                var parameterConstructor = constructors[0];
-                var parameters = parameterConstructor.GetParameters();
+                ConstructorInfo parameterConstructor = constructors[0];
+                ParameterInfo[] parameters = parameterConstructor.GetParameters();
                 obj = parameterConstructor.Invoke(new object[parameters.Length]);
             }
 

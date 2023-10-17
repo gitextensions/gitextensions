@@ -63,7 +63,7 @@ namespace GitCommandsTests
             _file.Exists(fullPath).Returns(true);
             _file.ReadAllText(fullPath).Returns("line1");
 
-            var content = _manager.LoadGitCommitTemplate();
+            string content = _manager.LoadGitCommitTemplate();
 
             content.Should().NotBeEmpty();
         }
@@ -72,7 +72,7 @@ namespace GitCommandsTests
         public void Register_should_not_add_duplicates()
         {
             const string templateName = "template1";
-            var count = _manager.RegisteredTemplates.Count();
+            int count = _manager.RegisteredTemplates.Count();
             _manager.Register(templateName, () => "text1", null);
             _manager.Register(templateName, () => "text2", null);
             _manager.RegisteredTemplates.Count().Should().Be(count + 1);
@@ -83,8 +83,8 @@ namespace GitCommandsTests
         {
             _manager.Register("template1", () => "text1", null);
             _manager.Register("template2", () => "text2", null);
-            var i = _manager.RegisteredTemplates.Count() + 1;
-            foreach (var managerRegisteredTemplate in _manager.RegisteredTemplates)
+            int i = _manager.RegisteredTemplates.Count() + 1;
+            foreach (CommitTemplateItem managerRegisteredTemplate in _manager.RegisteredTemplates)
             {
                 _manager.Unregister(managerRegisteredTemplate.Name);
                 _manager.Register($"template{i}", () => "text", null);
@@ -96,7 +96,7 @@ namespace GitCommandsTests
         public void RegisteredTemplates_should_be_immutable()
         {
             _manager.Register("template1", () => "text1", null);
-            var expectedCount = _manager.RegisteredTemplates.Count();
+            int expectedCount = _manager.RegisteredTemplates.Count();
             expectedCount.Should().BeGreaterThan(0);
             ((IList)_manager.RegisteredTemplates).Clear();
             _manager.RegisteredTemplates.Count().Should().Be(expectedCount);
@@ -115,7 +115,7 @@ namespace GitCommandsTests
                 helper.Module.SetSetting("commit.template", "template.txt");
                 helper.CreateRepoFile("template.txt", content);
 
-                var body = manager.LoadGitCommitTemplate();
+                string body = manager.LoadGitCommitTemplate();
 
                 body.Should().Be(content);
             }

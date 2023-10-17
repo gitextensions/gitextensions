@@ -24,8 +24,8 @@ namespace GitExtensions.Plugins.Bitbucket
                 DestBranch = json["toRef"]["displayId"].ToString(),
                 CreatedDate = Convert.ToDouble(json["createdDate"].ToString()[..10])
             };
-            var reviewers = json["reviewers"];
-            var participants = json["participants"];
+            JToken reviewers = json["reviewers"];
+            JToken participants = json["participants"];
 
             if (!reviewers.HasValues)
             {
@@ -35,7 +35,7 @@ namespace GitExtensions.Plugins.Bitbucket
             {
                 request.Reviewers = "";
 
-                foreach (var reviewer in reviewers)
+                foreach (JToken reviewer in reviewers)
                 {
                     request.Reviewers += reviewer["user"]["displayName"] + " (" + reviewer["approved"] + ")" + Environment.NewLine;
                 }
@@ -49,7 +49,7 @@ namespace GitExtensions.Plugins.Bitbucket
             {
                 request.Participants = "";
 
-                foreach (var participant in participants)
+                foreach (JToken participant in participants)
                 {
                     request.Participants += participant["user"]["displayName"] + " (" + participant["approved"] + ")" + Environment.NewLine;
                 }

@@ -23,12 +23,12 @@ namespace CommonTestUtils.MEF
 
         public static ComposableCatalog CreateAssemblyCatalog(IEnumerable<Assembly> assemblies, Resolver? resolver = null)
         {
-            var discovery = resolver == null ? _partDiscovery : CreatePartDiscovery(resolver);
+            PartDiscovery discovery = resolver == null ? _partDiscovery : CreatePartDiscovery(resolver);
 
             // If we run CreatePartsAsync on the test thread we may deadlock since it'll schedule stuff back
             // on the thread.
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-            var parts = Task.Run(async () => await discovery.CreatePartsAsync(assemblies).ConfigureAwait(false)).Result;
+            DiscoveredParts parts = Task.Run(async () => await discovery.CreatePartsAsync(assemblies).ConfigureAwait(false)).Result;
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
 
             return ComposableCatalog.Create(resolver ?? Resolver.DefaultInstance).AddParts(parts);
@@ -36,12 +36,12 @@ namespace CommonTestUtils.MEF
 
         public static ComposableCatalog CreateTypeCatalog(IEnumerable<Type> types, Resolver? resolver = null)
         {
-            var discovery = resolver == null ? _partDiscovery : CreatePartDiscovery(resolver);
+            PartDiscovery discovery = resolver == null ? _partDiscovery : CreatePartDiscovery(resolver);
 
             // If we run CreatePartsAsync on the test thread we may deadlock since it'll schedule stuff back
             // on the thread.
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-            var parts = Task.Run(async () => await discovery.CreatePartsAsync(types).ConfigureAwait(false)).Result;
+            DiscoveredParts parts = Task.Run(async () => await discovery.CreatePartsAsync(types).ConfigureAwait(false)).Result;
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
 
             return ComposableCatalog.Create(resolver ?? Resolver.DefaultInstance).AddParts(parts);
@@ -65,7 +65,7 @@ namespace CommonTestUtils.MEF
         /// </summary>
         public static ComposableCatalog WithoutPartsOfTypes(this ComposableCatalog catalog, IEnumerable<Type> types)
         {
-            var parts = catalog.Parts.Where(composablePartDefinition => !IsExcludedPart(composablePartDefinition));
+            IEnumerable<ComposablePartDefinition> parts = catalog.Parts.Where(composablePartDefinition => !IsExcludedPart(composablePartDefinition));
             return ComposableCatalog.Create(Resolver.DefaultInstance).AddParts(parts);
 
             bool IsExcludedPart(ComposablePartDefinition part)
@@ -76,10 +76,10 @@ namespace CommonTestUtils.MEF
 
         public static IExportProviderFactory CreateExportProviderFactory(ComposableCatalog catalog, bool isRemoteHostComposition)
         {
-            var scope = new Scope("local");
-            var configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
-            var runtimeComposition = RuntimeComposition.CreateRuntimeComposition(configuration);
-            var exportProviderFactory = runtimeComposition.CreateExportProviderFactory();
+            Scope scope = new Scope("local");
+            CompositionConfiguration configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
+            RuntimeComposition runtimeComposition = RuntimeComposition.CreateRuntimeComposition(configuration);
+            IExportProviderFactory exportProviderFactory = runtimeComposition.CreateExportProviderFactory();
 
             return new SingleExportProviderFactory(scope, catalog, configuration, exportProviderFactory);
         }

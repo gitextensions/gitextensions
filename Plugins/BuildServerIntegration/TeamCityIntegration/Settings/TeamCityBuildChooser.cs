@@ -17,11 +17,11 @@ namespace TeamCityIntegration.Settings
             TeamCityBuildIdFilter = teamCityBuildIdFilter;
             _teamCityAdapter.InitializeHttpClient(teamCityServerUrl);
 
-            var rootProject = _teamCityAdapter.GetProjectsTree();
+            Project rootProject = _teamCityAdapter.GetProjectsTree();
 
             if (rootProject is not null)
             {
-                var rootTreeNode = LoadTreeView(treeViewTeamCityProjects, rootProject);
+                TreeNode rootTreeNode = LoadTreeView(treeViewTeamCityProjects, rootProject);
 
                 rootTreeNode.Expand();
             }
@@ -47,7 +47,7 @@ namespace TeamCityIntegration.Settings
         private TreeNode LoadTreeView(TreeView treeView, Project rootProject)
         {
             treeView.Nodes.Clear();
-            var rootNode = ConvertProjectInTreeNode(rootProject);
+            TreeNode rootNode = ConvertProjectInTreeNode(rootProject);
             treeView.Nodes.Add(rootNode);
             return rootNode;
         }
@@ -81,7 +81,7 @@ namespace TeamCityIntegration.Settings
 
         private void LoadProjectBuilds(TreeNode treeNode)
         {
-            var project = (Project)treeNode.Tag;
+            Project project = (Project)treeNode.Tag;
             if (project.Builds is null)
             {
                 Validates.NotNull(project.Id);
@@ -94,7 +94,7 @@ namespace TeamCityIntegration.Settings
                     treeNode.Nodes.RemoveAt(0);
                 }
 
-                var buildNodes = project.Builds.Select(b => new TreeNode(b.DisplayName)
+                TreeNode[] buildNodes = project.Builds.Select(b => new TreeNode(b.DisplayName)
                 {
                     Name = b.Id,
                     ForeColor = SystemColors.Highlight,

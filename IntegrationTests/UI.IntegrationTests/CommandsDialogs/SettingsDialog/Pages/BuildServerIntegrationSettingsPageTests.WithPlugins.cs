@@ -28,7 +28,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
         public void SetUp()
         {
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            var composition = TestComposition.Empty
+            TestComposition composition = TestComposition.Empty
                 .AddParts(typeof(MockGenericBuildServerAdapter))
                 .AddParts(typeof(MockGenericBuildServerSettingsUserControl));
             ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();

@@ -847,7 +847,7 @@ namespace NetSpell.SpellChecker
             {
                 // save the current word index
                 WordIndex = i;
-                var currentWord = CurrentWord;
+                string currentWord = CurrentWord;
 
                 if (CheckString(currentWord))
                 {
@@ -1048,7 +1048,7 @@ namespace NetSpell.SpellChecker
             tempSuggestion.Sort();  // sorts by edit score
             Suggestions.Clear();
 
-            foreach (var suggestion in tempSuggestion)
+            foreach (Word suggestion in tempSuggestion)
             {
                 string word = suggestion.Text;
 
@@ -1099,7 +1099,7 @@ namespace NetSpell.SpellChecker
                 return true;
             }
 
-            var lowerWord = word.ToLower();
+            string lowerWord = word.ToLower();
             if (word != lowerWord)
             {
                 return Dictionary.Contains(lowerWord);
@@ -1413,7 +1413,7 @@ namespace NetSpell.SpellChecker
 
         public void AddAutoCompleteWords(IEnumerable<string> words)
         {
-            foreach (var word in words)
+            foreach (string word in words)
             {
                 _autoCompleteWords.Add(word);
             }

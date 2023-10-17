@@ -51,7 +51,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Clicking_an_item_sets_sort_in_service()
         {
-            foreach (var item in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>())
+            foreach (ToolStripMenuItem item in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>())
             {
                 item.PerformClick();
                 _testingSortService.Received(1).DiffListSorting = (DiffListSortType)item.Tag;
@@ -60,10 +60,10 @@ namespace GitUITests.UserControls
 
         private void AssertOnlyCheckedItemIs(DiffListSortType sortType)
         {
-            var matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i.Tag.Equals(sortType));
+            ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i.Tag.Equals(sortType));
             Assert.IsTrue(matchingSubItem.Checked);
 
-            foreach (var otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))
+            foreach (ToolStripMenuItem otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))
             {
                 Assert.IsFalse(otherItem.Checked);
             }

@@ -94,7 +94,7 @@ namespace GitExtensions.Plugins.GitStatistics
         {
             ThreadHelper.FileAndForget(async () =>
                 {
-                    var (totalCommits, commitsPerUser) = _module.GetCommitsByContributor();
+                    (int totalCommits, Dictionary<string, int> commitsPerUser) = _module.GetCommitsByContributor();
 
                     await this.SwitchToMainThreadAsync();
 
@@ -102,10 +102,10 @@ namespace GitExtensions.Plugins.GitStatistics
 
                     StringBuilder builder = new();
 
-                    var commitCountValues = new decimal[commitsPerUser.Count];
-                    var commitCountLabels = new string[commitsPerUser.Count];
-                    var n = 0;
-                    foreach (var (user, commits) in commitsPerUser)
+                    decimal[] commitCountValues = new decimal[commitsPerUser.Count];
+                    string[] commitCountLabels = new string[commitsPerUser.Count];
+                    int n = 0;
+                    foreach ((string user, int commits) in commitsPerUser)
                     {
                         builder.AppendLine($"{commits:N0} {user}");
 
@@ -163,11 +163,11 @@ namespace GitExtensions.Plugins.GitStatistics
 
                 if (_countSubmodules)
                 {
-                    var submodules = _module.GetSubmodulesInfo()
+                    IEnumerable<GitModule> submodules = _module.GetSubmodulesInfo()
                         .WhereNotNull()
                         .Select(submodule => new GitModule(Path.Combine(_module.WorkingDir, submodule.LocalPath)));
 
-                    foreach (var submodule in submodules)
+                    foreach (GitModule submodule in submodules)
                     {
                         LoadLinesOfCodeForModule(submodule);
                     }
@@ -180,7 +180,7 @@ namespace GitExtensions.Plugins.GitStatistics
 
                 void LoadLinesOfCodeForModule(IGitModule module)
                 {
-                    var filesToCheck = module
+                    List<string> filesToCheck = module
                         .GetTree(module.RevParse("HEAD"), full: true)
                         .Select(file => Path.Combine(module.WorkingDir, file.Name))
                         .ToList();
@@ -195,18 +195,18 @@ namespace GitExtensions.Plugins.GitStatistics
             Validates.NotNull(_lineCounter);
 
             // Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
-            var extensionValues = new decimal[_lineCounter.LinesOfCodePerExtension.Count];
-            var extensionLabels = new string[_lineCounter.LinesOfCodePerExtension.Count];
+            decimal[] extensionValues = new decimal[_lineCounter.LinesOfCodePerExtension.Count];
+            string[] extensionLabels = new string[_lineCounter.LinesOfCodePerExtension.Count];
 
             List<KeyValuePair<string, int>> linesOfCodePerExtension = new(_lineCounter.LinesOfCodePerExtension);
             linesOfCodePerExtension.Sort((first, next) => -first.Value.CompareTo(next.Value));
 
-            var n = 0;
+            int n = 0;
             StringBuilder linesOfCodePerLanguageText = new();
-            foreach (var (extension, loc) in linesOfCodePerExtension)
+            foreach ((string extension, int loc) in linesOfCodePerExtension)
             {
-                var percent = (double)loc / _lineCounter.CodeLineCount;
-                var line = string.Format(_linesOfCodeInFiles.Text, loc, extension, percent);
+                double percent = (double)loc / _lineCounter.CodeLineCount;
+                string line = string.Format(_linesOfCodeInFiles.Text, loc, extension, percent);
                 linesOfCodePerLanguageText.AppendLine(line);
                 extensionValues[n] = loc;
                 extensionLabels[n] = line;
@@ -228,8 +228,8 @@ namespace GitExtensions.Plugins.GitStatistics
                     lineCounter.CodeLineCount - lineCounter.TestCodeLineCount
                 });
 
-            var percentTest = (double)lineCounter.TestCodeLineCount / lineCounter.CodeLineCount;
-            var percentProd = (double)(lineCounter.CodeLineCount - lineCounter.TestCodeLineCount) / lineCounter.CodeLineCount;
+            double percentTest = (double)lineCounter.TestCodeLineCount / lineCounter.CodeLineCount;
+            double percentProd = (double)(lineCounter.CodeLineCount - lineCounter.TestCodeLineCount) / lineCounter.CodeLineCount;
             TestCodePie.ToolTips =
                 new[]
                     {
@@ -240,10 +240,10 @@ namespace GitExtensions.Plugins.GitStatistics
             TestCodeText.Text = string.Format(_linesOfTestCodeP.Text, lineCounter.TestCodeLineCount, percentTest) + Environment.NewLine +
                 string.Format(_linesOfProductionCodeP.Text, lineCounter.CodeLineCount - lineCounter.TestCodeLineCount, percentProd);
 
-            var percentBlank = (double)lineCounter.BlankLineCount / lineCounter.TotalLineCount;
-            var percentComments = (double)lineCounter.CommentLineCount / lineCounter.TotalLineCount;
-            var percentCode = (double)lineCounter.CodeLineCount / lineCounter.TotalLineCount;
-            var percentDesigner = (double)lineCounter.DesignerLineCount / lineCounter.TotalLineCount;
+            double percentBlank = (double)lineCounter.BlankLineCount / lineCounter.TotalLineCount;
+            double percentComments = (double)lineCounter.CommentLineCount / lineCounter.TotalLineCount;
+            double percentCode = (double)lineCounter.CodeLineCount / lineCounter.TotalLineCount;
+            double percentDesigner = (double)lineCounter.DesignerLineCount / lineCounter.TotalLineCount;
             LinesOfCodePie.SetValues(new decimal[]
                 {
                     lineCounter.BlankLineCount,

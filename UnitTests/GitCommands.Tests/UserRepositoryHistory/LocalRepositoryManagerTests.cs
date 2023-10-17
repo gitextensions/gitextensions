@@ -49,7 +49,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-            var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
+            IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
             newHistory.Count.Should().Be(5);
             newHistory[0].Path.Should().Be(repoToAdd);
@@ -69,7 +69,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-            var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
+            IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
             newHistory.Count.Should().Be(5);
             newHistory[0].Path.Should().Be(repoToAdd);
@@ -90,7 +90,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-            var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
+            IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
             newHistory.Count.Should().Be(6);
             newHistory[0].Path.Should().Be(repoToAdd);
@@ -111,7 +111,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-            var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
+            IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
             newHistory.Count.Should().Be(5);
             newHistory[0].Path.Should().Be(repoToAdd);
@@ -130,7 +130,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => null);
 
-            var history = await _manager.LoadFavouriteHistoryAsync();
+            IList<Repository> history = await _manager.LoadFavouriteHistoryAsync();
 
             history.Should().BeEmpty();
         }
@@ -152,7 +152,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             _repositoryStorage.Load(KeyRecentHistory).Returns(x => null);
 
-            var history = await _manager.LoadRecentHistoryAsync();
+            IList<Repository> history = await _manager.LoadRecentHistoryAsync();
 
             history.Should().BeEmpty();
         }
@@ -174,7 +174,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-            var repositories = await _manager.LoadRecentHistoryAsync();
+            IList<Repository> repositories = await _manager.LoadRecentHistoryAsync();
 
             repositories.Count.Should().Be(size);
             repositories.Select(r => r.Path).Should().ContainInOrder("path1", "path2", "path3");
@@ -194,7 +194,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-            var newHistory = await _manager.RemoveRecentAsync(repoToDelete);
+            IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
             newHistory.Count.Should().Be(4);
             newHistory.Should().NotContain(repoToDelete);
@@ -218,7 +218,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => history);
             _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => (history, false));
 
-            var newHistory = await _manager.RemoveFavouriteAsync(repoToDelete);
+            IList<Repository> newHistory = await _manager.RemoveFavouriteAsync(repoToDelete);
 
             newHistory.Count.Should().Be(5);
             newHistory.Should().NotContain(repoToDelete);
@@ -245,7 +245,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => history);
             _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => (history, false));
 
-            var newHistory = await _manager.RemoveFavouriteAsync(repoToDelete);
+            IList<Repository> newHistory = await _manager.RemoveFavouriteAsync(repoToDelete);
 
             newHistory.Count.Should().Be(4);
             newHistory.Should().NotContain(repoToDelete);
@@ -271,7 +271,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-            var newHistory = await _manager.RemoveRecentAsync(repoToDelete);
+            IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
             newHistory.Count.Should().Be(5);
             newHistory.Should().NotContain(repoToDelete);

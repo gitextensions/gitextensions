@@ -38,7 +38,7 @@ namespace GitExtensions.Plugins.GitStatistics
                 return false;
             }
 
-            var countSubmodule = !_ignoreSubmodules.ValueOrDefault(Settings);
+            bool countSubmodule = !_ignoreSubmodules.ValueOrDefault(Settings);
 
             FormGitStatistics formStatistics = new(args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
             {
