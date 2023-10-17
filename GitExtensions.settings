@@ -34,6 +34,29 @@
   </item>
   <item>
     <key>
+      <string>ownScripts</string>
+    </key>
+    <value>
+      <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfScriptInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ScriptInfo&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;Name&gt;T&lt;/Name&gt;
+    &lt;Command&gt;cmd&lt;/Command&gt;
+    &lt;Arguments&gt;/c start cmd /k dotnet build /p:RunTranslationApp=true&lt;/Arguments&gt;
+    &lt;AddToRevisionGridContextMenu&gt;false&lt;/AddToRevisionGridContextMenu&gt;
+    &lt;OnEvent&gt;ShowInUserMenuBar&lt;/OnEvent&gt;
+    &lt;AskConfirmation&gt;false&lt;/AskConfirmation&gt;
+    &lt;RunInBackground&gt;true&lt;/RunInBackground&gt;
+    &lt;IsPowerShell&gt;false&lt;/IsPowerShell&gt;
+    &lt;HotkeyCommandIdentifier&gt;10001&lt;/HotkeyCommandIdentifier&gt;
+    &lt;Icon&gt;FileStatusRenamed&lt;/Icon&gt;
+  &lt;/ScriptInfo&gt;
+&lt;/ArrayOfScriptInfo&gt;</string>
+    </value>
+  </item>
+  <item>
+    <key>
       <string>RevisionLinkDefs</string>
     </key>
     <value>

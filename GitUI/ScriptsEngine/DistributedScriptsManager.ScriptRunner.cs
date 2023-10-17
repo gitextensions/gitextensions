@@ -7,7 +7,7 @@ using ResourceManager;
 
 namespace GitUI.ScriptsEngine
 {
-    partial class ScriptsManager
+    partial class DistributedScriptsManager
     {
         /// <summary>Runs scripts.</summary>
         internal static class ScriptRunner

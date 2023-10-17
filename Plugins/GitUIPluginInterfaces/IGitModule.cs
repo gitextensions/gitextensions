@@ -37,6 +37,12 @@ namespace GitUIPluginInterfaces
         void UnsetSetting(string setting);
 
         /// <summary>
+        /// Returns git common directory.
+        /// https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir.
+        /// </summary>
+        string GitCommonDirectory { get; }
+
+        /// <summary>
         /// Gets the directory which contains the git repository.
         /// </summary>
         string WorkingDir { get; }

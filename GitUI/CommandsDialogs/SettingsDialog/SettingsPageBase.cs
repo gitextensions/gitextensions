@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public virtual bool IsInstantSavePage => false;
 
-        protected GitModule? Module => CommonLogic.Module;
+        protected IGitModule Module => CommonLogic.Module;
 
         public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
 
