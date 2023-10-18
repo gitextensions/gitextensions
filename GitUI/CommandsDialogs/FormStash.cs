@@ -271,7 +271,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 ObjectId firstId = Module.RevParse(gitStash.Name + "^");
-                GitRevision firstRev = firstId is null ? null : new GitRevision(firstId);
+                GitRevision? firstRev = firstId is null ? null : new(firstId);
 
                 ObjectId selectedId = Module.RevParse(gitStash.Name);
                 Validates.NotNull(selectedId);

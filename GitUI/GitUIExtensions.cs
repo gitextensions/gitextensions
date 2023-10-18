@@ -49,7 +49,7 @@ namespace GitUI
                 return;
             }
 
-            ObjectId firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentId;
+            ObjectId? firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentId;
 
             openWithDiffTool ??= OpenWithDiffTool;
 
@@ -137,7 +137,7 @@ namespace GitUI
                 if (file.IsSubmodule && task is not null)
                 {
                     // Patch already evaluated
-                    GitSubmoduleStatus status = await task;
+                    GitSubmoduleStatus? status = await task;
 
                     cancellationToken.ThrowIfCancellationRequested();
                     return status is not null

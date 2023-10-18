@@ -33,7 +33,7 @@ namespace GitUIPluginInterfaces
                 }
             }
 
-            NetworkCredential newCredentials = string.IsNullOrWhiteSpace(userName)
+            NetworkCredential? newCredentials = string.IsNullOrWhiteSpace(userName)
                 ? null
                 : new NetworkCredential(userName, password);
             SetCredentials(settings.SettingLevel, Name, newCredentials);
