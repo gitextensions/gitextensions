@@ -2,6 +2,7 @@ using System.ComponentModel.Design;
 using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
+using FluentAssertions.Specialized;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -132,7 +133,7 @@ namespace GitExtensions.UITests.ScriptEngine
 
             _module.GetCurrentCheckout().Returns((ObjectId)null);
 
-            FluentAssertions.Specialized.ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, uiCommands: null, revisionGrid: null))).Should()
+            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, uiCommands: null, revisionGrid: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -146,7 +147,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "cmd";
             _exampleScript.Arguments = "/c echo {sHash}";
 
-            FluentAssertions.Specialized.ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, revisionGrid: null))).Should()
+            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, revisionGrid: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\n'sHash' option is only supported when invoked from the revision grid");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -170,7 +171,7 @@ namespace GitExtensions.UITests.ScriptEngine
                 Assert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
                 formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull();
 
-                FluentAssertions.Specialized.ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, formBrowse.RevisionGridControl))).Should()
+                ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, formBrowse.RevisionGridControl))).Should()
                         .Throw<UserExternalOperationException>();
                 ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\nA valid revision is required to substitute the argument options");
                 ex.And.Command.Should().Be(_exampleScript.Command);

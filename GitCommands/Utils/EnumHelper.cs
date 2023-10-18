@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Reflection;
 
 namespace GitCommands.Utils
 {
@@ -7,7 +8,7 @@ namespace GitCommands.Utils
         public static string GetDescription<T>(this T value) where T : Enum
         {
             Type type = typeof(T);
-            System.Reflection.MemberInfo[] memInfo = type.GetMember(value.ToString());
+            MemberInfo[] memInfo = type.GetMember(value.ToString());
             IEnumerable<DescriptionAttribute> attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false)
                 .OfType<DescriptionAttribute>();
 

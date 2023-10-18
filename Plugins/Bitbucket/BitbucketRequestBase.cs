@@ -36,7 +36,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             RestClient client = new()
             {
-                BaseUrl = new System.Uri(Settings.BitbucketUrl),
+                BaseUrl = new Uri(Settings.BitbucketUrl),
                 Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password)
             };
 

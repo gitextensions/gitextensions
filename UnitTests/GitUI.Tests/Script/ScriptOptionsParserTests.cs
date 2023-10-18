@@ -338,7 +338,7 @@ namespace GitUITests.Script
             repositoryDescriptionProvider.Get(Arg.Any<string>()).Returns(dirName);
 
             ServiceContainer serviceContainer = new();
-            serviceContainer.AddService<IRepositoryDescriptionProvider>(repositoryDescriptionProvider);
+            serviceContainer.AddService(repositoryDescriptionProvider);
 
             _scriptHostControl = Substitute.For<IScriptHostControl>();
 

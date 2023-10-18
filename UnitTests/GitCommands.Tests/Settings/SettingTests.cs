@@ -47,7 +47,7 @@ namespace GitCommandsTests.Settings
             AppSettingsPath settingsPath = new(pathName);
 
             // Act
-            ISetting<T> setting = Setting.Create<T>(settingsPath, settingName, settingDefault);
+            ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
             // Assert
             Assert.That(setting, Is.Not.Null);

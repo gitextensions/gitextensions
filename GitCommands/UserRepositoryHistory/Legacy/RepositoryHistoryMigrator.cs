@@ -101,7 +101,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 
             Current.Repository.RepositoryAnchor GetAnchor(string anchor)
             {
-                if (!Enum.TryParse<Current.Repository.RepositoryAnchor>(anchor, out Current.Repository.RepositoryAnchor repositoryAnchor))
+                if (!Enum.TryParse(anchor, out Current.Repository.RepositoryAnchor repositoryAnchor))
                 {
                     return Current.Repository.RepositoryAnchor.None;
                 }

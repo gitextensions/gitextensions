@@ -146,9 +146,9 @@ See the changes in the commit form.");
                 }
 
                 // AfterSelect will not fire when selecting again, show manually
-                tvGitTree.AfterSelect -= new System.Windows.Forms.TreeViewEventHandler(tvGitTree_AfterSelect);
+                tvGitTree.AfterSelect -= new TreeViewEventHandler(tvGitTree_AfterSelect);
                 tvGitTree.SelectedNode = foundNode;
-                tvGitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(tvGitTree_AfterSelect);
+                tvGitTree.AfterSelect += new TreeViewEventHandler(tvGitTree_AfterSelect);
                 tvGitTree.SelectedNode.EnsureVisible();
 
                 this.InvokeAndForget(() => ShowGitItemAsync(gitItem, line));

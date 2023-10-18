@@ -1406,7 +1406,7 @@ namespace NetSpell.SpellChecker
         /// </summary>
         private void InitializeComponent()
         {
-            _components = new System.ComponentModel.Container();
+            _components = new Container();
         }
 
         #endregion

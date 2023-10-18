@@ -21,7 +21,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
             Icon = Resources.IconProxySwitcher;
         }
 
-        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
+        public override IEnumerable<ISetting> GetSettings()
         {
             yield return Username;
             yield return Password;

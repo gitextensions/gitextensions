@@ -2325,7 +2325,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RevisionInfo_CommandClicked(object sender, ResourceManager.CommandEventArgs e)
+        private void RevisionInfo_CommandClicked(object sender, CommandEventArgs e)
         {
             // TODO this code duplicated in FormFileHistory.Blame_CommandClick
             switch (e.Command)

@@ -468,7 +468,7 @@ namespace GitCommandsTests
         {
             using (_executable.StageOutput("remote -v", line))
             {
-                await AssertEx.ThrowsAsync<System.Exception>(async () => await _gitModule.GetRemotesAsync());
+                await AssertEx.ThrowsAsync<Exception>(async () => await _gitModule.GetRemotesAsync());
             }
         }
 

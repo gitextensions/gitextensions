@@ -398,7 +398,7 @@ namespace GitUI.UserControls
             tsmiResetAllFilters.Enabled = e.HasFilter;
         }
 
-        private void revisionFilterBox_CheckedChanged(object sender, System.EventArgs e)
+        private void revisionFilterBox_CheckedChanged(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
             {

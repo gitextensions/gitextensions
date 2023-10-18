@@ -176,7 +176,7 @@ namespace GitUITests.GitUICommandsTests
         {
             string expectedTab = command.Contains("blame") ? "Blame" : "Diff";
 
-            System.Collections.Generic.List<string> args = new() { "ge.exe", command, "filename" };
+            List<string> args = new() { "ge.exe", command, "filename" };
             if (commit)
             {
                 args.Add(_referenceRepository.CommitHash);
@@ -205,7 +205,7 @@ namespace GitUITests.GitUICommandsTests
             };
             (bool commitValid, bool filter, bool filterValid) = invalidVariants[invalidVariant];
 
-            System.Collections.Generic.List<string> args = new() { "ge.exe", command, "filename" };
+            List<string> args = new() { "ge.exe", command, "filename" };
             args.Add(commitValid ? _referenceRepository.CommitHash : "no-commit");
             if (filter)
             {

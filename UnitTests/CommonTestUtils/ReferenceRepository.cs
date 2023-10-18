@@ -37,7 +37,7 @@ namespace CommonTestUtils
                 {
                     refRepo.Reset();
                 }
-                catch (LibGit2Sharp.LockedFileException)
+                catch (LockedFileException)
                 {
                     // the index is locked; this might be due to a concurrent or crashed process
                     refRepo.Dispose();
@@ -61,8 +61,8 @@ namespace CommonTestUtils
 
         private static string Commit(Repository repository, string commitMessage)
         {
-            LibGit2Sharp.Signature author = GetAuthorSignature();
-            LibGit2Sharp.CommitOptions options = new() { PrettifyMessage = false };
+            Signature author = GetAuthorSignature();
+            CommitOptions options = new() { PrettifyMessage = false };
             Commit commit = repository.Commit(commitMessage, author, author, options);
             repository.Index.Write();
             return commit.Id.Sha;
@@ -70,14 +70,14 @@ namespace CommonTestUtils
 
         public void CreateBranch(string branchName, string commitHash, bool allowOverwrite = false)
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             repository.Branches.Add(branchName, commitHash, allowOverwrite);
             Console.WriteLine($"Created branch: {commitHash}, message: {branchName}");
         }
 
         public string CreateCommit(string commitMessage, string content = null)
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(_fileName, content ?? commitMessage);
             IndexAdd(repository, _fileName);
 
@@ -88,7 +88,7 @@ namespace CommonTestUtils
 
         public string CreateCommit(string commitMessage, string content1, string fileName1, string? content2 = null, string? fileName2 = null)
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(fileName1, content1);
             IndexAdd(repository, fileName1);
             if (content2 != null && fileName2 != null)
@@ -120,31 +120,31 @@ namespace CommonTestUtils
 
         public void CreateAnnotatedTag(string tagName, string commitHash, string message)
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             repository.Tags.Add(tagName, commitHash, GetAuthorSignature(), message);
         }
 
         public void CreateTag(string tagName, string commitHash, bool allowOverwrite = false)
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             repository.Tags.Add(tagName, commitHash, allowOverwrite);
         }
 
         public void CheckoutRevision()
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             Commands.Checkout(repository, CommitHash, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
         public void CheckoutBranch(string branchName)
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             Commands.Checkout(repository, branchName, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
         public void CreateRemoteForMasterBranch()
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             repository.Network.Remotes.Add("origin", "http://useless.url");
             Remote remote = repository.Network.Remotes["origin"];
 
@@ -157,17 +157,17 @@ namespace CommonTestUtils
 
         public void Fetch(string remoteName)
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             Commands.Fetch(repository, remoteName, Array.Empty<string>(), new FetchOptions(), null);
         }
 
         private void Reset()
         {
             // Undo potential impact from earlier tests
-            using (LibGit2Sharp.Repository repository = new(Module.WorkingDir))
+            using (Repository repository = new(Module.WorkingDir))
             {
-                LibGit2Sharp.CheckoutOptions options = new();
-                repository.Reset(LibGit2Sharp.ResetMode.Hard, (LibGit2Sharp.Commit)repository.Lookup(CommitHash, LibGit2Sharp.ObjectType.Commit), options);
+                CheckoutOptions options = new();
+                repository.Reset(LibGit2Sharp.ResetMode.Hard, (Commit)repository.Lookup(CommitHash, LibGit2Sharp.ObjectType.Commit), options);
                 repository.RemoveUntrackedFiles();
 
                 string[] remoteNames = repository.Network.Remotes.Select(remote => remote.Name).ToArray();
@@ -188,7 +188,7 @@ namespace CommonTestUtils
 
         public void Stash(string stashMessage, string content = null)
         {
-            using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
+            using Repository repository = new(Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(_fileName, content ?? stashMessage);
             IndexAdd(repository, _fileName);
 
@@ -196,7 +196,7 @@ namespace CommonTestUtils
             Console.WriteLine($"Created stash: {stash.Index.Sha}, message: {stashMessage}");
         }
 
-        private static LibGit2Sharp.Signature GetAuthorSignature() => new(AuthorName, AuthorEmail, DateTimeOffset.Now);
+        private static Signature GetAuthorSignature() => new(AuthorName, AuthorEmail, DateTimeOffset.Now);
 
         public void Dispose()
         {

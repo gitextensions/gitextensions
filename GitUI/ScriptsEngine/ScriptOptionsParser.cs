@@ -165,7 +165,7 @@ namespace GitUI.ScriptsEngine
             }
 
             using FormQuickGitRefSelector f = new();
-            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new Point();
             f.Init(FormQuickGitRefSelector.Action.Select, items);
             f.ShowDialog();
             return f.SelectedRef?.Name ?? "";
@@ -174,7 +174,7 @@ namespace GitUI.ScriptsEngine
         private static string AskToSpecify(IEnumerable<string> options, IScriptHostControl? scriptHostControl)
         {
             using FormQuickStringSelector f = new();
-            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new Point();
             f.Init(options.ToList());
             f.ShowDialog();
             return f.SelectedString ?? "";

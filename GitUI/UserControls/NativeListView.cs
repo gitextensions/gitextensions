@@ -2,7 +2,7 @@
 
 namespace GitUI.UserControls
 {
-    public class NativeListView : System.Windows.Forms.ListView
+    public class NativeListView : ListView
     {
         internal static event EventHandler? BeginCreateHandle;
         internal static event EventHandler? EndCreateHandle;

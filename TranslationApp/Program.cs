@@ -3,6 +3,7 @@ using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using ResourceManager.Xliff;
 
 namespace TranslationApp
 {
@@ -43,7 +44,7 @@ namespace TranslationApp
             string[] translationsNames = Translator.GetAllTranslations();
             foreach (string name in translationsNames)
             {
-                IDictionary<string, ResourceManager.Xliff.TranslationFile> translation = Translator.GetTranslation(name);
+                IDictionary<string, TranslationFile> translation = Translator.GetTranslation(name);
                 IDictionary<string, List<TranslationItemWithCategory>> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
                 filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
                 TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);

@@ -588,7 +588,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ta.Message.Text = message;
                 ta.Message.SelectionStart = selectionStart;
                 ta.Message.SelectionLength = selectionLength;
-                ta.ExecuteCommand(FormCommit.Command.AddSelectionToCommitMessage).Should().Be((GitCommands.CommandStatus)expectedResult);
+                ta.ExecuteCommand(FormCommit.Command.AddSelectionToCommitMessage).Should().Be((CommandStatus)expectedResult);
                 ta.Message.Text.Should().Be(expectedMessage);
                 ta.Message.SelectionStart.Should().Be(expectedSelectionStart);
                 ta.Message.SelectionLength.Should().Be(expectedResult ? 0 : selectionLength);

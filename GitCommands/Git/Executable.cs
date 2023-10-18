@@ -49,7 +49,7 @@ namespace GitCommands
         #region ProcessWrapper
 
         /// <summary>
-        /// Manages the lifetime of a process. The <see cref="System.Diagnostics.Process"/> object has many members
+        /// Manages the lifetime of a process. The <see cref="Process"/> object has many members
         /// that throw at different times in the lifecycle of the process, such as after it is disposed. This class
         /// provides a simplified API that meets the need of this application via the <see cref="IProcess"/> interface.
         /// </summary>

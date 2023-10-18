@@ -1298,7 +1298,7 @@ namespace GitUI.Editor
             OnExtraDiffArgumentsChanged();
         }
 
-        private void ShowSyntaxHighlighting_Click(object sender, System.EventArgs e)
+        private void ShowSyntaxHighlighting_Click(object sender, EventArgs e)
         {
             ShowSyntaxHighlightingInDiff = !ShowSyntaxHighlightingInDiff;
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;

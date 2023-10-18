@@ -26,7 +26,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
         private readonly BoolSetting _regexInvertedFlag = new("Search branches that does not match regex", false);
         private readonly BoolSetting _includeUnmergedBranchesFlag = new("Delete unmerged branches", false);
 
-        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
+        public override IEnumerable<ISetting> GetSettings()
         {
             yield return _daysOlderThan;
             yield return _mergedInBranch;

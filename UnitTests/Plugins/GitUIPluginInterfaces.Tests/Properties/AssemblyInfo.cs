@@ -1,4 +1,4 @@
 using CommonTestUtils;
 
 [assembly: TestAppSettings]
-[assembly: NUnit.Framework.Category("UnitTests")]
+[assembly: Category("UnitTests")]

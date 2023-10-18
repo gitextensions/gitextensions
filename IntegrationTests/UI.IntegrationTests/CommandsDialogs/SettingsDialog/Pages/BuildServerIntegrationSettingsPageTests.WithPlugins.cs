@@ -105,17 +105,17 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
 
             public void GotoPage(SettingsPageReference settingsPageReference)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public void LoadAll()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public void SaveAll()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }

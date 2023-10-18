@@ -2,6 +2,7 @@
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -479,7 +480,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            GitUIPluginInterfaces.ObjectId objectId = formGoToCommit.ValidateAndGetSelectedRevision();
+            ObjectId objectId = formGoToCommit.ValidateAndGetSelectedRevision();
 
             if (objectId is not null)
             {

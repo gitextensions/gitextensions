@@ -176,12 +176,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private void ShowGitStatus_CheckedChanged(object sender, System.EventArgs e)
+        private void ShowGitStatus_CheckedChanged(object sender, EventArgs e)
         {
             SetSubmoduleStatus();
         }
 
-        private void LlblTelemetryPrivacyLink_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void LlblTelemetryPrivacyLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/PrivacyPolicy.md");
         }

@@ -88,8 +88,8 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
 
-            labelAuthor.Font = new System.Drawing.Font(labelAuthor.Font, System.Drawing.FontStyle.Bold);
-            labelMessage.Font = new System.Drawing.Font(labelMessage.Font, System.Drawing.FontStyle.Bold);
+            labelAuthor.Font = new Font(labelAuthor.Font, System.Drawing.FontStyle.Bold);
+            labelMessage.Font = new Font(labelMessage.Font, System.Drawing.FontStyle.Bold);
         }
 
         private void FormArchive_Load(object sender, EventArgs e)

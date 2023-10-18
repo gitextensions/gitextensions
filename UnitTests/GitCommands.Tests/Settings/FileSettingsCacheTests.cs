@@ -94,22 +94,22 @@ namespace GitCommandsTests.Settings
 
             protected override void ClearImpl()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override string GetValueImpl(string key)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void ReadSettings(string fileName)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void SetValueImpl(string key, string value)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void WriteSettings(string fileName)

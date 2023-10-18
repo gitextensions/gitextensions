@@ -91,7 +91,7 @@ namespace GitUITests.Editor
             FileViewerInternal.CurrentViewPositionCache.TestAccessor test = _viewPositionCache.GetTestAccessor();
             test.TextEditor.ShowLineNumbers = false;
             test.TextEditor.Text = "a\r\nb\r\nc\r\nd\r\ne\r\nf\r\ng\r\nh\r\ni\r\nj\r\nk\r\nl\r\nm\r\nn\r\no\r\np\r\nr\r\ns\r\nt\r\nu\r\nv\r\nw\r\nx\r\ny\r\nz\r\n0\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\r\n0";
-            test.TextEditor.ActiveTextAreaControl.TextArea.TextView.DrawingPosition = new System.Drawing.Rectangle(0, 0, 100, 100);
+            test.TextEditor.ActiveTextAreaControl.TextArea.TextView.DrawingPosition = new Rectangle(0, 0, 100, 100);
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Line = 23;
             test.TextEditor.ActiveTextAreaControl.TextArea.ScrollToCaret();
             test.TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 22;
@@ -112,7 +112,7 @@ namespace GitUITests.Editor
             FileViewerInternal.CurrentViewPositionCache.TestAccessor test = _viewPositionCache.GetTestAccessor();
             test.TextEditor.ShowLineNumbers = false;
             test.TextEditor.Text = Given.GitDiff;
-            test.TextEditor.ActiveTextAreaControl.TextArea.TextView.DrawingPosition = new System.Drawing.Rectangle(0, 0, 100, 100);
+            test.TextEditor.ActiveTextAreaControl.TextArea.TextView.DrawingPosition = new Rectangle(0, 0, 100, 100);
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Line = 19;
             test.TextEditor.ActiveTextAreaControl.TextArea.ScrollToCaret();
             test.TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 18;
@@ -138,7 +138,7 @@ namespace GitUITests.Editor
         {
             FileViewerInternal.CurrentViewPositionCache.TestAccessor test = _viewPositionCache.GetTestAccessor();
             test.TextEditor.Text = Given.GitDiff;
-            test.TextEditor.ActiveTextAreaControl.TextArea.TextView.DrawingPosition = new System.Drawing.Rectangle(0, 0, 100, 100);
+            test.TextEditor.ActiveTextAreaControl.TextArea.TextView.DrawingPosition = new Rectangle(0, 0, 100, 100);
 
             FileViewerInternal.ViewPosition existingViewPosition = new()
             {

@@ -81,7 +81,7 @@ namespace GitUI.Avatars
             {
                 string providerName = providerTemplate[1..^1];
 
-                if (Enum.TryParse<AvatarProvider>(providerName, true, out AvatarProvider provider)
+                if (Enum.TryParse(providerName, true, out AvatarProvider provider)
                     && provider != AvatarProvider.Custom)
                 {
                     return AvatarService.CreateAvatarProvider(provider, null, downloader);
