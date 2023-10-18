@@ -78,8 +78,8 @@ namespace GitCommandsTests.Git
         {
             IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
             {
-                new GitItemStatus("file1") { IsTracked = true },
-                new GitItemStatus("file1") { IsTracked = false }
+                new("file1") { IsTracked = true },
+                new("file1") { IsTracked = false }
             };
             _tester.AnyLocalFileExists(selectedItemsWithParent).Should().BeTrue();
         }
@@ -89,8 +89,8 @@ namespace GitCommandsTests.Git
         {
             IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
             {
-                new GitItemStatus("file1") { IsTracked = true },
-                new GitItemStatus("file2") { IsTracked = true }
+                new("file1") { IsTracked = true },
+                new("file2") { IsTracked = true }
             };
             _fullPathResolver.Resolve("file1").Returns("file1");
             _fullPathResolver.Resolve("file2").Returns("file2");
@@ -104,8 +104,8 @@ namespace GitCommandsTests.Git
         {
             IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
             {
-                new GitItemStatus("file1") { IsTracked = true },
-                new GitItemStatus("file2") { IsTracked = true }
+                new("file1") { IsTracked = true },
+                new("file2") { IsTracked = true }
             };
             _fullPathResolver.Resolve("file1").Returns("file1");
             _fullPathResolver.Resolve("file2").Returns("file2");

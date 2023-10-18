@@ -68,7 +68,7 @@ namespace NetSpell.SpellChecker.Dictionary
                 try
                 {
                     fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                    using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                    using (StreamReader sr = new(fs, Encoding.UTF8))
                     {
                         fs = null;
 
@@ -120,7 +120,7 @@ namespace NetSpell.SpellChecker.Dictionary
             try
             {
                 fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                using (StreamWriter sw = new(fs, Encoding.UTF8))
                 {
                     fs = null;
                     sw.NewLine = "\n";
@@ -387,7 +387,7 @@ namespace NetSpell.SpellChecker.Dictionary
             try
             {
                 fs = new FileStream(dictionaryPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                using (StreamReader sr = new(fs, Encoding.UTF8))
                 {
                     fs = null;
 

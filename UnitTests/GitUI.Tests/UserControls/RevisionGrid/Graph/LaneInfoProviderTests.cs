@@ -317,7 +317,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             int maxScoreIsIgnored;
             _mergeCommitNode.AddParent(_innerCommitNode, out maxScoreIsIgnored);
             _innerCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
-            _realCommitNode.GitRevision.Refs = new GitRef[] { new GitRef(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored") };
+            _realCommitNode.GitRevision.Refs = new GitRef[] { new(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored") };
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
 
             Check(new GitRef(null, null, GitRefName.RefsHeadsPrefix + "local_branch"));

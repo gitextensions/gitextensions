@@ -905,10 +905,10 @@ namespace GitCommandsTests
                 yield return new TestCaseData(
                     new GitItemStatus[]
                     {
-                        new GitItemStatus("abc2") { IsNew = true },
-                        new GitItemStatus("abc2") { IsNew = true, IsDeleted = true },
-                        new GitItemStatus("abc2") { IsNew = false },
-                        new GitItemStatus("abc3") { IsNew = false, IsRenamed = true, OldName = "def" }
+                        new("abc2") { IsNew = true },
+                        new("abc2") { IsNew = true, IsDeleted = true },
+                        new("abc2") { IsNew = false },
+                        new("abc3") { IsNew = false, IsRenamed = true, OldName = "def" }
                     },
                     new string[]
                     {
@@ -921,8 +921,8 @@ namespace GitCommandsTests
                 yield return new TestCaseData(
                     new GitItemStatus[]
                     {
-                        new GitItemStatus("abc2") { IsNew = false },
-                        new GitItemStatus("abc3") { IsNew = false, IsDeleted = true }
+                        new("abc2") { IsNew = false },
+                        new("abc3") { IsNew = false, IsDeleted = true }
                     },
                     new string[]
                     {

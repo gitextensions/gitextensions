@@ -41,7 +41,7 @@ namespace GitUI.Editor
                     !TryHighlightInteractiveRebaseCommand(document, line))
                 {
                     line.Words = new List<TextWord>(capacity: 1)
-                        { new TextWord(document, line, 0, line.Length, ColorNormal, hasDefaultColor: true) };
+                        { new(document, line, 0, line.Length, ColorNormal, hasDefaultColor: true) };
                 }
 
                 document.RequestUpdate(
@@ -142,9 +142,9 @@ namespace GitUI.Editor
 
                             line.Words = new List<TextWord>(capacity: 3)
                             {
-                                new TextWord(document, line, 0, idStartIndex, cmd.color, hasDefaultColor: false),
-                                new TextWord(document, line, idStartIndex, idLength, cmd.color, hasDefaultColor: false),
-                                new TextWord(document, line, index, line.Length - index, ColorNormal, hasDefaultColor: true)
+                                new(document, line, 0, idStartIndex, cmd.color, hasDefaultColor: false),
+                                new(document, line, idStartIndex, idLength, cmd.color, hasDefaultColor: false),
+                                new(document, line, index, line.Length - index, ColorNormal, hasDefaultColor: true)
                             };
 
                             return true;

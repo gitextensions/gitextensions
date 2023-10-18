@@ -76,7 +76,7 @@ namespace CommonTestUtils.MEF
 
         public static IExportProviderFactory CreateExportProviderFactory(ComposableCatalog catalog, bool isRemoteHostComposition)
         {
-            Scope scope = new Scope("local");
+            Scope scope = new("local");
             CompositionConfiguration configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
             RuntimeComposition runtimeComposition = RuntimeComposition.CreateRuntimeComposition(configuration);
             IExportProviderFactory exportProviderFactory = runtimeComposition.CreateExportProviderFactory();

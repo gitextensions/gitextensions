@@ -64,9 +64,9 @@ namespace GitUITests.UserControls
             blameControlTestAccessor.Blame = new GitBlame(new GitBlameLine[]
             {
                 _gitBlameLine,
-                new GitBlameLine(blameCommit1, 2, 2, "line2"),
-                new GitBlameLine(blameCommit2, 3, 3, "line3"),
-                new GitBlameLine(blameCommit2, 4, 4, "line4"),
+                new(blameCommit1, 2, 2, "line2"),
+                new(blameCommit2, 3, 3, "line3"),
+                new(blameCommit2, 4, 4, "line4"),
             });
 
             ReferenceRepository.ResetRepo(ref _referenceRepository);

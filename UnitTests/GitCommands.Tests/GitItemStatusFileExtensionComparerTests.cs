@@ -36,13 +36,13 @@ namespace GitCommandsTests
             CollectionAssert.AreEqual(
                 new GitItemStatus[]
                 {
-                    new GitItemStatus("changeExtension.cs") { OldName = "changeExtension.txt" },
-                    new GitItemStatus("newName.cs") { OldName = "oldName.cs" },
-                    new GitItemStatus("src/Alice.cs") { OldName = null },
-                    new GitItemStatus("src/newFile.cs") { OldName = null },
-                    new GitItemStatus("src/newName.cs") { OldName = "src/oldName.cs" },
-                    new GitItemStatus("newFile.txt") { OldName = null },
-                    new GitItemStatus("src/newFile.txt") { OldName = null },
+                    new("changeExtension.cs") { OldName = "changeExtension.txt" },
+                    new("newName.cs") { OldName = "oldName.cs" },
+                    new("src/Alice.cs") { OldName = null },
+                    new("src/newFile.cs") { OldName = null },
+                    new("src/newName.cs") { OldName = "src/oldName.cs" },
+                    new("newFile.txt") { OldName = null },
+                    new("src/newFile.txt") { OldName = null },
                 },
                 sorted,
                 new GitItemStatusCollectionEqualityComparer());

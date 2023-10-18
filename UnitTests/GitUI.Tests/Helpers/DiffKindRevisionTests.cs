@@ -19,7 +19,7 @@ namespace GitUITests.Helpers
             Assert.False(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffAB, out _, out _, out _), "2 null rev");
 
             ObjectId head = ObjectId.Random();
-            revisions = new List<GitRevision> { new GitRevision(head), null };
+            revisions = new List<GitRevision> { new(head), null };
             Assert.False(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffBLocal, out _, out _, out _), "2nd null rev DiffBLocal");
         }
 

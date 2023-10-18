@@ -270,7 +270,7 @@ Inactive remote is completely invisible to git.");
         private void InitialiseTabDefaultPullBehaviors(string? preselectLocal = null)
         {
             List<IGitRef> heads = Module.GetRefs(RefsFilter.Heads).OrderBy(r => r.LocalName).ToList();
-            SortableGitRefList headsList = new SortableGitRefList();
+            SortableGitRefList headsList = new();
             headsList.AddRange(heads);
 
             RemoteRepositoryCombo.Sorted = false;

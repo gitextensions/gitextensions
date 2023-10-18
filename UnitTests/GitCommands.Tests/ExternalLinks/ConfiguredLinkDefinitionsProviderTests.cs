@@ -63,7 +63,7 @@ namespace GitCommandsTests.ExternalLinks
         {
             _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(new List<ExternalLinkDefinition>
             {
-                new ExternalLinkDefinition { Name = "user definition 1" },
+                new() { Name = "user definition 1" },
             });
 
             IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_userRoaming);
@@ -77,13 +77,13 @@ namespace GitCommandsTests.ExternalLinks
             _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(
                 new List<ExternalLinkDefinition>
                 {
-                    new ExternalLinkDefinition { Name = "local definition 1" },
+                    new() { Name = "local definition 1" },
                 },
                 new List<ExternalLinkDefinition>
                 {
-                    new ExternalLinkDefinition { Name = "distributed definition 1" },
-                    new ExternalLinkDefinition { Name = "distributed definition 2" },
-                    new ExternalLinkDefinition { Name = "distributed definition 3" },
+                    new() { Name = "distributed definition 1" },
+                    new() { Name = "distributed definition 2" },
+                    new() { Name = "distributed definition 3" },
                 });
 
             IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_repoDistributed);
@@ -99,17 +99,17 @@ namespace GitCommandsTests.ExternalLinks
             _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(
                 new List<ExternalLinkDefinition>
                 {
-                    new ExternalLinkDefinition { Name = "local definition 1" },
+                    new() { Name = "local definition 1" },
                 },
                 new List<ExternalLinkDefinition>
                 {
-                    new ExternalLinkDefinition { Name = "distributed definition 1" },
-                    new ExternalLinkDefinition { Name = "distributed definition 2" },
-                    new ExternalLinkDefinition { Name = "distributed definition 3" },
+                    new() { Name = "distributed definition 1" },
+                    new() { Name = "distributed definition 2" },
+                    new() { Name = "distributed definition 3" },
                 },
                 new List<ExternalLinkDefinition>
                 {
-                    new ExternalLinkDefinition { Name = "user definition 1" },
+                    new() { Name = "user definition 1" },
                 });
 
             IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_repoLocal);

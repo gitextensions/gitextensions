@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
                 List<RefLine> refLines = ConvertReflogOutput().ToList();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _lastHitRowIndex = 0;
-                SortableRefLineList refLinesList = new SortableRefLineList();
+                SortableRefLineList refLinesList = new();
                 refLinesList.AddRange(refLines);
                 gridReflog.DataSource = refLinesList;
 

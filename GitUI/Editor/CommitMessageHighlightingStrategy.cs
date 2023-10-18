@@ -74,7 +74,7 @@ namespace GitUI.Editor
                     HighlightColor color = lineNumber == summaryLineNumber ? ColorSummary : ColorNormal;
 
                     line.Words = new List<TextWord>(capacity: 1)
-                        { new TextWord(document, line, 0, line.Length, color, hasDefaultColor: false) };
+                        { new(document, line, 0, line.Length, color, hasDefaultColor: false) };
 
                     if (lineNumber == summaryLineNumber)
                     {

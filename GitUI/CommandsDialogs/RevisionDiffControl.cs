@@ -836,7 +836,7 @@ namespace GitUI.CommandsDialogs
             }
 
             GitItemStatus? selectedItem;
-            using (SearchWindow<GitItemStatus> searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
+            using (SearchWindow<GitItemStatus> searchWindow = new(FindDiffFilesMatches)
             {
                 Owner = FindForm()
             })
