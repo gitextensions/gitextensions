@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using GitCommands.Remotes;
 
 namespace GitExtensions.Plugins.GitlabIntegration.Settings
@@ -24,7 +25,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
             owner = null;
             repository = null;
 
-            System.Text.RegularExpressions.Match m = MatchRegExes(remoteUrl, GitHubRegexes);
+            Match m = MatchRegExes(remoteUrl, GitHubRegexes);
 
             if (m is null || !m.Success)
             {

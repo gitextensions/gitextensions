@@ -6,6 +6,7 @@
 
 using System.Collections;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -185,7 +186,7 @@ namespace BugReporter.Serialization
 
         private SerializableDictionary<string, object>? GetExtendedInformation(Exception exception)
         {
-            System.Reflection.PropertyInfo[] extendedProperties = (from property in exception.GetType().GetProperties()
+            PropertyInfo[] extendedProperties = (from property in exception.GetType().GetProperties()
                                       where
                                           property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
                                           && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
@@ -196,7 +197,7 @@ namespace BugReporter.Serialization
             {
                 SerializableDictionary<string, object> extendedInformation = new();
 
-                foreach (System.Reflection.PropertyInfo property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
+                foreach (PropertyInfo property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
                 {
                     extendedInformation.Add(property.Name, property.GetValue(exception, null));
                 }

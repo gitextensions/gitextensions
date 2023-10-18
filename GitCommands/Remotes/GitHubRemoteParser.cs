@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace GitCommands.Remotes
 {
@@ -18,7 +19,7 @@ namespace GitCommands.Remotes
             owner = null;
             repository = null;
 
-            System.Text.RegularExpressions.Match m = MatchRegExes(remoteUrl, GitHubRegexes);
+            Match m = MatchRegExes(remoteUrl, GitHubRegexes);
 
             if (m is null || !m.Success)
             {

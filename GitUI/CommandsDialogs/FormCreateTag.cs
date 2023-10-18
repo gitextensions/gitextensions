@@ -1,6 +1,7 @@
 ﻿using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
+using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
@@ -103,7 +104,7 @@ namespace GitUI.CommandsDialogs
 
         private void PushTag(string tagName)
         {
-            GitExtUtils.ArgumentString pushCmd = Commands.PushTag(_currentRemote, tagName, false);
+            ArgumentString pushCmd = Commands.PushTag(_currentRemote, tagName, false);
 
             bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
             if (!success)

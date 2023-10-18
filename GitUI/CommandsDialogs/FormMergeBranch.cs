@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
@@ -102,7 +103,7 @@ namespace GitUI.CommandsDialogs
                 mergeMessagePath = _commitMessageManager.MergeMessagePath;
             }
 
-            GitExtUtils.ArgumentString command = Commands.MergeBranch(Branches.GetSelectedText(),
+            ArgumentString command = Commands.MergeBranch(Branches.GetSelectedText(),
                                                             fastForward.Checked,
                                                             squash.Checked,
                                                             noCommit.Checked,

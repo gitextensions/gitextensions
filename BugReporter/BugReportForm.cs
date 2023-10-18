@@ -15,6 +15,7 @@ using GitExtUtils.GitUI;
 using GitUI;
 using Microsoft;
 using ResourceManager;
+using ResourceManager.Xliff;
 using Report = BugReporter.Info.Report;
 
 namespace BugReporter
@@ -201,7 +202,7 @@ Send report?");
 
         protected void TranslateItem(string itemName, object item)
         {
-            IDictionary<string, ResourceManager.Xliff.TranslationFile> translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+            IDictionary<string, TranslationFile> translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
 
             if (translation.Count == 0)
             {
@@ -210,7 +211,7 @@ Send report?");
 
             (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
 
-            foreach (KeyValuePair<string, ResourceManager.Xliff.TranslationFile> pair in translation)
+            foreach (KeyValuePair<string, TranslationFile> pair in translation)
             {
                 TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
             }

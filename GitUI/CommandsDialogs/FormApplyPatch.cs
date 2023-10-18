@@ -1,6 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
-using GitCommands.Patches;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using ResourceManager;
@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs
                 if (PatchFileMode.Checked)
                 {
                     string gitPatch = Module.GetGitExecPath(patchFile);
-                    GitExtUtils.ArgumentString arguments = IsDiffFile(patchFile)
+                    ArgumentString arguments = IsDiffFile(patchFile)
                         ? Commands.ApplyDiffPatch(ignoreWhiteSpace, gitPatch)
                         : Commands.ApplyMailboxPatch(signOff, ignoreWhiteSpace, gitPatch);
 
@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     // No need for PathUtil.GetRepoPath(), file streamed
-                    GitExtUtils.ArgumentString arguments = Commands.ApplyMailboxPatch(signOff, ignoreWhiteSpace);
+                    ArgumentString arguments = Commands.ApplyMailboxPatch(signOff, ignoreWhiteSpace);
 
                     Module.ApplyPatch(dirText, arguments);
                 }

@@ -2,6 +2,7 @@
 using CommonTestUtils;
 using GitCommands;
 using GitUI;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommandsTests
 {
@@ -248,7 +249,7 @@ namespace GitCommandsTests
 
             Exception ex = new();
 
-            Microsoft.VisualStudio.Threading.JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
+            JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
                 () => throw ex,
                 Assert.Fail));
 
