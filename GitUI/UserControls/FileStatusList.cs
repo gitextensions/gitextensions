@@ -1,12 +1,12 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.NBugReports;
@@ -167,7 +167,7 @@ namespace GitUI
 
                 static Bitmap ScaleHeight(Bitmap input)
                 {
-                    Debug.Assert(input.Height < rowHeight, "Can only increase row height");
+                    DebugHelpers.Assert(input.Height < rowHeight, "Can only increase row height");
                     Bitmap scaled = new(input.Width, rowHeight, input.PixelFormat);
                     using Graphics g = Graphics.FromImage(scaled);
                     g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);

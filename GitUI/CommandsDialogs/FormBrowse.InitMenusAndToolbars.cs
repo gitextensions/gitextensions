@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using GitCommands;
+﻿using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Hotkey;
 using GitUI.Properties;
@@ -124,13 +124,13 @@ namespace GitUI.CommandsDialogs
                 // 3. Assert all toolbars on the same row
                 foreach (ToolStrip toolStrip in toolStrips)
                 {
-                    Debug.Assert(toolStrip.Top == 0, $"{toolStrip.Name} must be placed on the 1st row");
+                    DebugHelpers.Assert(toolStrip.Top == 0, $"{toolStrip.Name} must be placed on the 1st row");
                 }
 
                 // 4. Assert the correct order of toolbars
                 for (int i = toolStrips.Length - 1; i > 0; i--)
                 {
-                    Debug.Assert(toolStrips[i].Left < toolStrips[i - 1].Left, $"{toolStrips[i - 1].Name} must be placed before {toolStrips[i].Name}");
+                    DebugHelpers.Assert(toolStrips[i].Left < toolStrips[i - 1].Left, $"{toolStrips[i - 1].Name} must be placed before {toolStrips[i].Name}");
                 }
 #endif
             }

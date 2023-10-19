@@ -1109,7 +1109,7 @@ namespace GitCommands
                 return null;
             }
 
-            Debug.Assert(WorkingDir.StartsWith(SuperprojectModule.WorkingDir), "Submodule working dir should start with super-project's working dir");
+            DebugHelpers.Assert(WorkingDir.StartsWith(SuperprojectModule.WorkingDir), "Submodule working dir should start with super-project's working dir");
 
             return Path.GetDirectoryName(
                 WorkingDir[SuperprojectModule.WorkingDir.Length..]).ToPosixPath();
@@ -1119,7 +1119,7 @@ namespace GitCommands
         {
             if (localPath is null)
             {
-                Debug.Fail("No path for submodule - incorrectly parsed status?");
+                DebugHelpers.Fail("No path for submodule - incorrectly parsed status?");
                 return "";
             }
 

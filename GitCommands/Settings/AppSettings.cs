@@ -1861,7 +1861,7 @@ namespace GitCommands
                     // Translations
                     _applicationExecutablePath.EndsWith("TranslationApp.exe", StringComparison.InvariantCultureIgnoreCase);
 
-                Debug.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to GitExtensions.exe");
+                DebugHelpers.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to GitExtensions.exe");
             }
 #endif
 

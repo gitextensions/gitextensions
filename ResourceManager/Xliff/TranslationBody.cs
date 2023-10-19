@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Xml.Serialization;
+using GitExtUtils;
 
 namespace ResourceManager.Xliff
 {
@@ -48,7 +49,7 @@ namespace ResourceManager.Xliff
             }
             else
             {
-                Debug.Assert(ti.Value == translationItem.Value, "ti.Value == translationItem.Value");
+                DebugHelpers.Assert(ti.Value == translationItem.Value, "ti.Value == translationItem.Value");
             }
         }
 

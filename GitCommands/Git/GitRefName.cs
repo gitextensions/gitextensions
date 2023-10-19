@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -51,7 +52,7 @@ namespace GitCommands
             // This method requires the full form of the ref path, which begins with "refs/".
             // The overload which accepts multiple remote names can be used when the format might
             // be abbreviated to "remote/branch".
-            Debug.Assert(refName.StartsWith("refs/"), "Must begin with \"refs/\".");
+            DebugHelpers.Assert(refName.StartsWith("refs/"), "Must begin with \"refs/\".");
 
             return string.Empty;
         }

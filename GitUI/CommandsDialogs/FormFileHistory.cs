@@ -1,7 +1,7 @@
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Text;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
@@ -291,7 +291,7 @@ namespace GitUI.CommandsDialogs
                 if (DiffTab.Parent is null)
                 {
                     int index = tabControl1.TabPages.IndexOf(CommitInfoTabPage);
-                    Debug.Assert(index != -1, "TabControl should contain commit info tab page");
+                    DebugHelpers.Assert(index != -1, "TabControl should contain commit info tab page");
                     tabControl1.TabPages.Insert(index + 1, DiffTab);
                 }
             }
@@ -306,14 +306,14 @@ namespace GitUI.CommandsDialogs
                 if (ViewTab.Parent is null)
                 {
                     int index = tabControl1.TabPages.IndexOf(DiffTab);
-                    Debug.Assert(index != -1, "TabControl should contain diff tab page");
+                    DebugHelpers.Assert(index != -1, "TabControl should contain diff tab page");
                     tabControl1.TabPages.Insert(index + 1, ViewTab);
                 }
 
                 if (BlameTab.Parent is null)
                 {
                     int index = tabControl1.TabPages.IndexOf(ViewTab);
-                    Debug.Assert(index != -1, "TabControl should contain view tab page");
+                    DebugHelpers.Assert(index != -1, "TabControl should contain view tab page");
                     tabControl1.TabPages.Insert(index + 1, BlameTab);
                 }
             }

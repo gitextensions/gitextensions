@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using GitExtUtils;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
@@ -62,7 +62,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </summary>
         public void SetLeftMargin(float value)
         {
-            Debug.Assert(value >= 0, "value >= 0");
+            DebugHelpers.Assert(value >= 0, "value >= 0");
             _leftMargin = value;
             Invalidate();
         }
@@ -72,7 +72,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </summary>
         public void SetRightMargin(float value)
         {
-            Debug.Assert(value >= 0, "value >= 0");
+            DebugHelpers.Assert(value >= 0, "value >= 0");
             _rightMargin = value;
             Invalidate();
         }
@@ -82,7 +82,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </summary>
         public void SetTopMargin(float value)
         {
-            Debug.Assert(value >= 0, "value >= 0");
+            DebugHelpers.Assert(value >= 0, "value >= 0");
             _topMargin = value;
             Invalidate();
         }
@@ -92,7 +92,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </summary>
         public void SetBottomMargin(float value)
         {
-            Debug.Assert(value >= 0, "value >= 0");
+            DebugHelpers.Assert(value >= 0, "value >= 0");
             _bottomMargin = value;
             Invalidate();
         }

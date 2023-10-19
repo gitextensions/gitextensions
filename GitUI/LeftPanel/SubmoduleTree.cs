@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Submodules;
+using GitExtUtils;
 using GitUI.CommandsDialogs;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -74,7 +75,7 @@ namespace GitUI.LeftPanel
                         else
                         {
                             // structure no longer matching
-                            Debug.Assert(true, $"Status info with {1 + e.Info.AllSubmodules.Count} records do not match current nodes ({nodes.Count})");
+                            DebugHelpers.Assert(true, $"Status info with {1 + e.Info.AllSubmodules.Count} records do not match current nodes ({nodes.Count})");
                             _currentNodes = null;
                             break;
                         }

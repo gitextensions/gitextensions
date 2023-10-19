@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using GitExtUtils;
 
 namespace GitExtensions.Plugins.GitStatistics
 {
@@ -284,7 +284,7 @@ namespace GitExtensions.Plugins.GitStatistics
 
             CodeLineCount = totalLineCount - blankLineCount - designerLineCount - commentLineCount;
 
-            Debug.Assert(CodeLineCount >= 0, "CodeLineCount >= 0");
+            DebugHelpers.Assert(CodeLineCount >= 0, "CodeLineCount >= 0");
         }
     }
 }

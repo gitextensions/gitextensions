@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
@@ -221,12 +222,12 @@ namespace GitCommands.Git
 
                 if (entryType == OrdinaryEntry)
                 {
-                    Debug.Assert(line.Length > 113, "Cannot parse line:" + line);
+                    DebugHelpers.Assert(line.Length > 113, "Cannot parse line:" + line);
                     fileName = line[113..];
                 }
                 else if (entryType == RenamedEntry)
                 {
-                    Debug.Assert(n + 1 < files.Length, "Cannot parse renamed:" + line);
+                    DebugHelpers.Assert(n + 1 < files.Length, "Cannot parse renamed:" + line);
 
                     // Find renamed files...
                     string[] renames = line[114..].Split(Delimiters.Space, 2);
@@ -236,7 +237,7 @@ namespace GitCommands.Git
                 }
                 else if (entryType == UnmergedEntry)
                 {
-                    Debug.Assert(line.Length > 161, "Cannot parse unmerged:" + line);
+                    DebugHelpers.Assert(line.Length > 161, "Cannot parse unmerged:" + line);
                     fileName = line[161..];
                 }
                 else

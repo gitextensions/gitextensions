@@ -3,6 +3,7 @@ using System.Text;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
+using GitExtUtils;
 using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.UserControls
@@ -35,13 +36,13 @@ namespace GitUI.UserControls
 
             void AppendMessage(string text)
             {
-                Debug.Assert(text is not null, "text is not null");
+                DebugHelpers.Assert(text is not null, "text is not null");
                 if (IsDisposed)
                 {
                     return;
                 }
 
-                Debug.Assert(!InvokeRequired, "!InvokeRequired");
+                DebugHelpers.Assert(!InvokeRequired, "!InvokeRequired");
 
                 _editbox.Visible = true;
                 _editbox.Text += text;

@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace System
+﻿namespace System
 {
 #if SUPPORT_THEME_HOOKS
     internal static partial class NativeMethods

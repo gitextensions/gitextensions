@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using GitExtUtils;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
@@ -14,7 +14,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </summary>
         public static Color GetRenderingColor(EdgeColorType edgeColorType, Color color)
         {
-            Debug.Assert(color != Color.Empty, "color != Color.Empty");
+            DebugHelpers.Assert(color != Color.Empty, "color != Color.Empty");
             if (edgeColorType is (EdgeColorType.Contrast or EdgeColorType.EnhancedContrast))
             {
                 edgeColorType = GetContrastColorType(color, edgeColorType);
@@ -50,7 +50,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
 
         private static EdgeColorType GetContrastColorType(Color color, EdgeColorType colorType)
         {
-            Debug.Assert(colorType is (EdgeColorType.Contrast or EdgeColorType.EnhancedContrast), "colorType is(EdgeColorType.Contrast or EdgeColorType.EnhancedContrast)");
+            DebugHelpers.Assert(colorType is (EdgeColorType.Contrast or EdgeColorType.EnhancedContrast), "colorType is(EdgeColorType.Contrast or EdgeColorType.EnhancedContrast)");
             if (color.GetBrightness() > BrightnessThreshold)
             {
                 return colorType ==

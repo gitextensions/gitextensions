@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using GitExtUtils;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
@@ -50,7 +51,7 @@ namespace GitUI
                 return;
             }
 
-            Debug.Assert(JoinableTaskContext.IsOnMainThread, "Must be on the UI thread.");
+            DebugHelpers.Assert(JoinableTaskContext.IsOnMainThread, "Must be on the UI thread.");
         }
 
         public static void ThrowIfOnUIThread([CallerMemberName] string callerMemberName = "")

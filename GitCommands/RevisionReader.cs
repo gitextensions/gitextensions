@@ -555,7 +555,7 @@ namespace GitCommands
             void ParseAssert(string message)
             {
                 _noOfParseError++;
-                Debug.Assert(!Debugger.IsAttached || _noOfParseError > 1, message);
+                DebugHelpers.Assert(!Debugger.IsAttached || _noOfParseError > 1, message);
                 Trace.WriteLineIf(_noOfParseError < 10, message);
             }
         }

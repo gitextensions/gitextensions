@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ICSharpCode.TextEditor;
@@ -91,7 +91,7 @@ namespace GitUI.Editor.Diff
                         _ => default(Brush)
                     };
 
-                    Debug.Assert(brush is not null, string.Format("brush is not null, unknow diff line style {0}", diffLine.LineType));
+                    DebugHelpers.Assert(brush is not null, string.Format("brush is not null, unknow diff line style {0}", diffLine.LineType));
                     g.FillRectangle(brush, new Rectangle(0, backgroundRectangle.Top, leftWidth, backgroundRectangle.Height));
                     g.FillRectangle(brush, new Rectangle(leftWidth, backgroundRectangle.Top, rightWidth, backgroundRectangle.Height));
                 }

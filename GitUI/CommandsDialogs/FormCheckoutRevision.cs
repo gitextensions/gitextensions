@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
 using ResourceManager;
@@ -38,7 +39,7 @@ namespace GitUI.CommandsDialogs
 
                 GitUIPluginInterfaces.ObjectId checkedOutObjectId = Module.GetCurrentCheckout();
 
-                Debug.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
+                DebugHelpers.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 
                 bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, this);
                 if (!success)

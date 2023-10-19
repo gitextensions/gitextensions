@@ -1195,7 +1195,7 @@ namespace GitUI.CommandsDialogs
                 if (TreeTabPage.Parent is null)
                 {
                     int index = CommitInfoTabControl.TabPages.IndexOf(DiffTabPage);
-                    Debug.Assert(index != -1, "TabControl should contain diff tab page");
+                    DebugHelpers.Assert(index != -1, "TabControl should contain diff tab page");
                     CommitInfoTabControl.TabPages.Insert(index + 1, TreeTabPage);
                 }
             }
@@ -2564,7 +2564,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    Debug.Fail($"Status info for {path} ({1 + result.AllSubmodules.Count} records) has no match in current nodes ({_currentSubmoduleMenuItems.Count})");
+                    DebugHelpers.Fail($"Status info for {path} ({1 + result.AllSubmodules.Count} records) has no match in current nodes ({_currentSubmoduleMenuItems.Count})");
                 }
             }
         }

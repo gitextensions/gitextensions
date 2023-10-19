@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
@@ -183,7 +182,7 @@ namespace GitUI.CommandsDialogs
 
                     break;
                 case AppSettings.PullAction.Default:
-                    Debug.Assert(false, "pullAction is not a valid action");
+                    DebugHelpers.Assert(false, "pullAction is not a valid action");
                     break;
             }
 
@@ -672,7 +671,7 @@ namespace GitUI.CommandsDialogs
                 return new FormRemoteProcess(UICommands, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked, PruneTags.Checked));
             }
 
-            Debug.Assert(Merge.Checked || Rebase.Checked, "Merge.Checked || Rebase.Checked");
+            DebugHelpers.Assert(Merge.Checked || Rebase.Checked, "Merge.Checked || Rebase.Checked");
 
             return new FormRemoteProcess(UICommands, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
             {

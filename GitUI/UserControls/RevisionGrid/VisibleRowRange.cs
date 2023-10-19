@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Diagnostics;
+using GitExtUtils;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -10,8 +10,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         public VisibleRowRange(int fromIndex, int count)
         {
-            Debug.Assert(fromIndex >= 0, "fromIndex >= 0");
-            Debug.Assert(count >= 0, "count >= 0");
+            DebugHelpers.Assert(fromIndex >= 0, "fromIndex >= 0");
+            DebugHelpers.Assert(count >= 0, "count >= 0");
 
             FromIndex = fromIndex;
             Count = count;

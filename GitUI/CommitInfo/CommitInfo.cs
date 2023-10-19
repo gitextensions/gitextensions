@@ -1,7 +1,6 @@
 #nullable enable
 
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
@@ -17,7 +16,6 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
-using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -233,7 +231,7 @@ namespace GitUI.CommitInfo
                     _tagInfo = null; // forces update
                     break;
                 default:
-                    Debug.Fail("unsupported type in ShowAll(\"" + what + "\")");
+                    DebugHelpers.Fail($"Unsupported type in ShowAll('{what}')");
                     return;
             }
 

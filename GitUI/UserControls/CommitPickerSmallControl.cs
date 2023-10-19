@@ -2,7 +2,6 @@
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {

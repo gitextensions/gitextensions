@@ -1,5 +1,4 @@
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
@@ -10,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -304,7 +304,7 @@ namespace TeamCityIntegration
 
             if (task.IsFaulted)
             {
-                Debug.Assert(task.Exception is not null, "task.Exception is not null");
+                DebugHelpers.Assert(task.Exception is not null, "task.Exception is not null");
 
                 observer.OnError(task.Exception);
                 return true;

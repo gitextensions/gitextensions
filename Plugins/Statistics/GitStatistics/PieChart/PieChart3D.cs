@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using GitExtUtils;
 using Microsoft;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart
@@ -365,7 +365,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </summary>
         public void SetSliceRelativeHeight(float value)
         {
-            Debug.Assert(value <= 0.5F, "value <= 0.5F");
+            DebugHelpers.Assert(value <= 0.5F, "value <= 0.5F");
             SliceRelativeHeight = value;
         }
 
@@ -375,7 +375,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </summary>
         public void SetSliceRelativeDisplacement(float value)
         {
-            Debug.Assert(IsDisplacementValid(value), "IsDisplacementValid(value)");
+            DebugHelpers.Assert(IsDisplacementValid(value), "IsDisplacementValid(value)");
             SliceRelativeDisplacements = new[] { value };
         }
 
@@ -386,7 +386,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         public void SetSliceRelativeDisplacements(float[] value)
         {
             SliceRelativeDisplacements = value;
-            Debug.Assert(AreDisplacementsValid(value), "AreDisplacementsValid(value)");
+            DebugHelpers.Assert(AreDisplacementsValid(value), "AreDisplacementsValid(value)");
         }
 
         /// <summary>
@@ -418,7 +418,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </param>
         public void Draw(Graphics graphics)
         {
-            Debug.Assert(Values?.Length is > 0, "Values?.Length is > 0");
+            DebugHelpers.Assert(Values?.Length is > 0, "Values?.Length is > 0");
             InitializePieSlices();
             if (FitToBoundingRectangle)
             {
@@ -477,7 +477,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 float angle1 = 270 - sliceLeft.StartAngle;
                 PieSlice sliceRight = pieSlices[incrementIndex];
                 float angle2 = (sliceRight.EndAngle + 90) % 360;
-                Debug.Assert(angle2 >= 0, "angle2 >= 0");
+                DebugHelpers.Assert(angle2 >= 0, "angle2 >= 0");
                 if (angle2 < angle1)
                 {
                     if (sliceRight.PeripheryContainsPoint(point))
@@ -584,7 +584,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 }
             }
 
-            Debug.Assert(false, "Foremost pie slice not found");
+            DebugHelpers.Assert(false, "Foremost pie slice not found");
             return -1;
         }
 
@@ -662,7 +662,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 float yDisplacement = SliceRelativeDisplacements[displacementIndex];
                 if (xDisplacement > 0F)
                 {
-                    Debug.Assert(largestDisplacement > 0F, "largestDisplacement > 0F");
+                    DebugHelpers.Assert(largestDisplacement > 0F, "largestDisplacement > 0F");
                     SizeF pieDisplacement = GetSliceDisplacement((float)(startAngle + (sweepAngle / 2)),
                                                                SliceRelativeDisplacements[displacementIndex]);
                     xDisplacement = pieDisplacement.Width;
@@ -850,7 +850,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         protected SizeF GetSliceDisplacement(float angle, float displacementFactor)
         {
-            Debug.Assert(IsDisplacementValid(displacementFactor), "displacementFactor is (>= 0F and <= 1F)");
+            DebugHelpers.Assert(IsDisplacementValid(displacementFactor), "displacementFactor is (>= 0F and <= 1F)");
             if (displacementFactor == 0F)
             {
                 return SizeF.Empty;
@@ -932,7 +932,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 float angle1 = 270 - sliceLeft.StartAngle;
                 PieSlice sliceRight = pieSlices[incrementIndex];
                 float angle2 = (sliceRight.EndAngle + 90) % 360;
-                Debug.Assert(angle2 >= 0, "angle2 >= 0");
+                DebugHelpers.Assert(angle2 >= 0, "angle2 >= 0");
                 if (angle2 < angle1)
                 {
                     sliceRight.DrawVisibleEndSide(graphics);

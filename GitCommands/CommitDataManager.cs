@@ -128,7 +128,7 @@ namespace GitCommands
             };
 
             // This command can be cached if commitId is a git sha and Notes are ignored
-            Debug.Assert(!cache || ObjectId.TryParse(commitId, out _), $"git-log cache should be used only for sha ({commitId})");
+            DebugHelpers.Assert(!cache || ObjectId.TryParse(commitId, out _), $"git-log cache should be used only for sha ({commitId})");
 
             ExecutionResult exec = GetModule().GitExecutable.Execute(arguments,
                 outputEncoding: GitModule.LosslessEncoding,

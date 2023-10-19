@@ -1,8 +1,7 @@
-﻿using System.Diagnostics;
-using GitCommands;
+﻿using GitCommands;
+using GitExtUtils;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {
@@ -133,7 +132,7 @@ namespace GitUI.UserControls
         {
             _getModule = getModule ?? throw new ArgumentNullException(nameof(getModule));
 
-            Debug.Assert(_revisionGridFilter is null, $"{nameof(Bind)} must be invoked only once.");
+            DebugHelpers.Assert(_revisionGridFilter is null, $"{nameof(Bind)} must be invoked only once.");
             _revisionGridFilter = revisionGridFilter ?? throw new ArgumentNullException(nameof(revisionGridFilter));
             _revisionGridFilter.FilterChanged += revisionGridFilter_FilterChanged;
         }
@@ -285,7 +284,7 @@ namespace GitUI.UserControls
             {
                 if (_getRefs is null)
                 {
-                    Debug.Fail("getRefs is unexpectedly null");
+                    DebugHelpers.Fail("getRefs is unexpectedly null");
                     return;
                 }
 

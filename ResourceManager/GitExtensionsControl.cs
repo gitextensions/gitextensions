@@ -1,6 +1,6 @@
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 
@@ -139,17 +139,7 @@ namespace ResourceManager
 
             if (!TryGetUICommands(out IGitUICommands commands))
             {
-#if DEBUG
-                if (Debugger.IsAttached)
-                {
-                    Debug.Fail($"{GetType().FullName}: service provider is unavailable.");
-                }
-                else
-                {
-                    throw new InvalidOperationException($"{GetType().FullName}: service provider is unavailable.");
-                }
-#endif
-
+                DebugHelpers.Fail($"{GetType().FullName}: service provider is unavailable.");
                 return;
             }
 
