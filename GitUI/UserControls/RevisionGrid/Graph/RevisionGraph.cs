@@ -309,8 +309,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             };
 
             workTreeGraphRevision.AddParent(indexGraphRevision, workTreeGraphRevision.Score + 1);
-            _nodeByObjectId.TryAdd(workTreeRev.ObjectId, workTreeGraphRevision);
-            _nodeByObjectId.TryAdd(indexRev.ObjectId, indexGraphRevision);
+            _ = _nodeByObjectId.TryAdd(workTreeRev.ObjectId, workTreeGraphRevision)
+                && _nodeByObjectId.TryAdd(indexRev.ObjectId, indexGraphRevision);
             ImmutableInterlocked.Update(ref _nodes, (list, revision) => list.Add(revision), workTreeGraphRevision);
             ImmutableInterlocked.Update(ref _nodes, (list, revision) => list.Add(revision), indexGraphRevision);
 
