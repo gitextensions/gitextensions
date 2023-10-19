@@ -21,7 +21,7 @@ public static class DebugHelpers
     [DoesNotReturn]
     public static void Fail(string message)
     {
-        if (Debugger.IsAttached)
+        if (Debugger.IsAttached || IsTestRunning)
         {
             Debug.Fail(message);
         }
@@ -35,4 +35,7 @@ public static class DebugHelpers
             }
         }
     }
+
+    private static bool IsTestRunning
+        => Application.ExecutablePath.EndsWith("testhost.exe");
 }
