@@ -383,7 +383,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // merge
             // |    \
             // inner real
-            int maxScore = _mergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
+            _mergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
             _mergeCommitNode.GetTestAccessor().AddParent(_realCommitNode);
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
 
@@ -408,7 +408,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             // |   /
             // real
             _artificialCommitNode.GetTestAccessor().AddParent(_undetectedMergeCommitNode);
-            int maxScore = _undetectedMergeCommitNode.GetTestAccessor().AddParent(_realCommitNode);
+            _undetectedMergeCommitNode.GetTestAccessor().AddParent(_realCommitNode);
             _undetectedMergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
             _innerCommitNode.GetTestAccessor().AddParent(_realCommitNode);
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));

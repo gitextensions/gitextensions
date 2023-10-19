@@ -47,6 +47,11 @@ namespace GitUI.UserControls.RevisionGrid
         private Font _monospaceFont;
 
         /// <summary>
+        /// Force refresh the gridview, set when revision graph is changed while loading revisions.
+        /// </summary>
+        private bool _forceRefresh = false;
+
+        /// <summary>
         /// Indicates whether 'interesting' rows in the data grid is currently being loaded.
         ///
         /// The property is set to true when all revisions have been read (including
@@ -311,7 +316,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// <param name="revision">The revision to add.</param>
         public void Add(GitRevision revision)
         {
-            _revisionGraph.Add(revision);
+            _forceRefresh = _revisionGraph.Add(revision) || _forceRefresh;
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
                 ++_loadedToBeSelectedRevisionsCount;
@@ -339,7 +344,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             // Insert at matching parent.
-            _revisionGraph.Insert(workTreeRev, indexRev, parents);
+            _forceRefresh = _revisionGraph.Insert(workTreeRev, indexRev, parents) || _forceRefresh;
 
             if (ToBeSelectedObjectIds.Contains(workTreeRev.ObjectId))
             {
@@ -351,13 +356,13 @@ namespace GitUI.UserControls.RevisionGrid
                 ++_loadedToBeSelectedRevisionsCount;
             }
 
-            _revisionGraph.InvalidateCacheAndRebuild();
             UpdateVisibleRowRange();
         }
 
         public void Clear()
         {
             _backgroundScrollTo = 0;
+            _forceRefresh = false;
 
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about to delete the data
             SetRowCount(0);
@@ -428,6 +433,7 @@ namespace GitUI.UserControls.RevisionGrid
                 _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
             }
 
+            _revisionGraph.LoadingCompleted();
             if (_revisionGraph.Count == 0)
             {
                 MarkAsDataLoadingComplete();
@@ -476,11 +482,6 @@ namespace GitUI.UserControls.RevisionGrid
 
                     MarkAsDataLoadingComplete();
                 });
-            }
-
-            foreach (ColumnProvider columnProvider in _columnProviders)
-            {
-                columnProvider.LoadingCompleted();
             }
 
             return;
@@ -667,9 +668,14 @@ namespace GitUI.UserControls.RevisionGrid
             int visibleRowCount = _rowHeight <= 0 ? 0 : (Height + _rowHeight - 1) / _rowHeight; // Rounding up integer division: (a+b-1)/b = ceil(a/b)
 
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
-
-            if (_visibleRowRange.FromIndex != fromIndex || _visibleRowRange.Count != visibleRowCount)
+            if (_forceRefresh)
             {
+                _backgroundScrollTo = -1;
+            }
+
+            if (_forceRefresh || _visibleRowRange.FromIndex != fromIndex || _visibleRowRange.Count != visibleRowCount)
+            {
+                _forceRefresh = false;
                 _visibleRowRange = new VisibleRowRange(fromIndex, visibleRowCount);
 
                 if (visibleRowCount > 0)
@@ -753,11 +759,6 @@ namespace GitUI.UserControls.RevisionGrid
             _rowHeight = (int)g.MeasureString("By", _normalFont).Height + DpiUtil.Scale(9);
             //// + AppSettings.GridRowSpacing
             RowTemplate.Height = _rowHeight;
-        }
-
-        public bool IsRevisionRelative(ObjectId objectId)
-        {
-            return _revisionGraph.IsRevisionRelative(objectId);
         }
 
         public GitRevision? GetRevision(ObjectId objectId)
