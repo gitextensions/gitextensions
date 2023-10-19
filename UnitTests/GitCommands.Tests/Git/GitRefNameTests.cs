@@ -24,7 +24,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("foo", GitRefName.GetRemoteName("refs/remotes/foo/master"));
             Assert.AreEqual("", GitRefName.GetRemoteName("refs/tags/1.0.0"));
 
-            var remotes = new[] { "foo", "bar" };
+            string[] remotes = new[] { "foo", "bar" };
 
             Assert.AreEqual("foo", GitRefName.GetRemoteName("foo/master", remotes));
             Assert.AreEqual("", GitRefName.GetRemoteName("food/master", remotes));

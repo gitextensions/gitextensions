@@ -32,7 +32,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void ItemSelections()
         {
-            var accessor = _fileStatusList.GetTestAccessor();
+            FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
             GitItemStatus itemNotInList = new(name: "not in list");
             GitItemStatus item0 = new(name: "z.0");
@@ -41,9 +41,9 @@ namespace GitExtensions.UITests.CommandsDialogs
             List<GitItemStatus> items = new() { item0, item1, item2 };
 
             // alphabetical order
-            var itemAt0 = item1;
-            var itemAt1 = item2;
-            var itemAt2 = item0;
+            GitItemStatus itemAt0 = item1;
+            GitItemStatus itemAt1 = item2;
+            GitItemStatus itemAt2 = item0;
             GitRevision firstRev = new(ObjectId.Random());
             GitRevision secondRev = new(ObjectId.Random());
             _fileStatusList.SetDiffs(firstRev: firstRev, secondRev: secondRev, items: items);
@@ -193,7 +193,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _fileStatusList.SelectedIndex = 2;
             _fileStatusList.SelectAll();
 
-            foreach (var item in accessor.FileStatusListView.Items())
+            foreach (ListViewItem item in accessor.FileStatusListView.Items())
             {
                 item.Selected.Should().BeTrue();
             }
@@ -220,7 +220,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             [Values(true, false)] bool filterFocused,
             [Values(true, false)] bool filterVisible)
         {
-            var accessor = _fileStatusList.GetTestAccessor();
+            FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
             accessor.FilterComboBox.Text = filterText; // must be set first because it does not need to update the visibility
 
@@ -238,7 +238,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Test_FilterWatermarkLabelVisibility_on_Focus()
         {
-            var accessor = _fileStatusList.GetTestAccessor();
+            FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
             accessor.FilterComboBox.Text = "";
 
@@ -262,9 +262,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TestCase("\\.cs", true)]
         public void Test_StoreFilter_valid(string regex, bool active)
         {
-            var accessor = _fileStatusList.GetTestAccessor();
+            FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
-            var expectedColor = active ? accessor.ActiveInputColor : SystemColors.Window;
+            Color expectedColor = active ? accessor.ActiveInputColor : SystemColors.Window;
             string expectedRegex = string.IsNullOrEmpty(regex) ? null : regex;
 
             _fileStatusList.SetFilter(regex);
@@ -283,7 +283,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             const string validRegex = "\\.cs";
             const string invalidRegex = "(";
 
-            var accessor = _fileStatusList.GetTestAccessor();
+            FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
             // set a valid Filter that must not change
             accessor.StoreFilter(validRegex);

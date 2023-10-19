@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormMergeSubmodule_Load(object sender, EventArgs e)
         {
-            var item = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictAsync(_filename));
+            GitCommands.Git.ConflictData item = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictAsync(_filename));
 
             tbBase.Text = item.Base.ObjectId?.ToString() ?? _deleted.Text;
             tbLocal.Text = item.Local.ObjectId?.ToString() ?? _deleted.Text;
@@ -70,9 +70,9 @@ namespace GitUI.CommandsDialogs
 
         private void btCheckoutBranch_Click(object sender, EventArgs e)
         {
-            var revisions = new[] { ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text) };
+            ObjectId[] ids = new[] { ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text) };
             GitUICommands submoduleCommands = UICommands.WithWorkingDirectory(Module.GetSubmoduleFullPath(_filename));
-            if (!submoduleCommands.StartCheckoutBranch(this, revisions))
+            if (!submoduleCommands.StartCheckoutBranch(this, ids))
             {
                 return;
             }

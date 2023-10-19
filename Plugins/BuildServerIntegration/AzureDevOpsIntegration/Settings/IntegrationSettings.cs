@@ -17,9 +17,9 @@ namespace AzureDevOpsIntegration.Settings
         /// </summary>
         public static IntegrationSettings ReadFrom(ISettingsSource config)
         {
-            var projectUrl = config?.GetString(ProjectUrlKey, "") ?? "";
-            var buildDefinitionFilter = config?.GetString(BuildDefinitionFilterKey, "") ?? "";
-            var apiToken = config?.GetString(ApiTokenKey, "") ?? "";
+            string projectUrl = config?.GetString(ProjectUrlKey, "") ?? "";
+            string buildDefinitionFilter = config?.GetString(BuildDefinitionFilterKey, "") ?? "";
+            string apiToken = config?.GetString(ApiTokenKey, "") ?? "";
 
             return new IntegrationSettings()
             {

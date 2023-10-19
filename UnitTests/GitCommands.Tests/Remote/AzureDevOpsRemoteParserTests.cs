@@ -13,7 +13,7 @@ namespace GitCommandsTests.Remote
         public void Should_succeed_in_parsing_valid_url(string url)
         {
             AzureDevOpsRemoteParser azureDevOpsRemoteParser = new();
-            azureDevOpsRemoteParser.TryExtractAzureDevopsDataFromRemoteUrl(url, out var owner, out var project, out var repository).Should().BeTrue();
+            azureDevOpsRemoteParser.TryExtractAzureDevopsDataFromRemoteUrl(url, out string? owner, out string? project, out string? repository).Should().BeTrue();
             owner.Should().Be("owner");
             project.Should().Be("project");
             repository.Should().Be("repo");
@@ -25,8 +25,8 @@ namespace GitCommandsTests.Remote
         public void Should_fail_in_parsing_invalid_url()
         {
             AzureDevOpsRemoteParser azureDevOpsRemoteParser = new();
-            var url = "https://owner@dev.bad.com/owner/project/_git/repo";
-            azureDevOpsRemoteParser.TryExtractAzureDevopsDataFromRemoteUrl(url, out var owner, out var project, out var repository).Should().BeFalse();
+            string url = "https://owner@dev.bad.com/owner/project/_git/repo";
+            azureDevOpsRemoteParser.TryExtractAzureDevopsDataFromRemoteUrl(url, out string? owner, out string? project, out string? repository).Should().BeFalse();
             owner.Should().BeNull();
             project.Should().BeNull();
             repository.Should().BeNull();

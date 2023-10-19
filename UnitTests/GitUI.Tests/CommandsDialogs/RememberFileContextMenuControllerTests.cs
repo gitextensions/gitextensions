@@ -136,7 +136,7 @@ namespace GitUITests.CommandsDialogs
         {
             GitRevision rev = new(ObjectId.Random());
             GitRevision workTree = new(ObjectId.WorkTreeId);
-            var name = "WorkTreeFile";
+            string name = "WorkTreeFile";
             FileStatusItem item = new(
                 firstRev: workTree,
                 secondRev: rev,
@@ -149,7 +149,7 @@ namespace GitUITests.CommandsDialogs
         {
             GitRevision rev = new(ObjectId.Random());
             GitRevision workTree = new(ObjectId.WorkTreeId);
-            var name = "WorkTreeFile";
+            string name = "WorkTreeFile";
             FileStatusItem item = new(
                 firstRev: rev,
                 secondRev: workTree,
@@ -187,7 +187,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(true)]
         public void RememberFile_GetGitCommit_Commit(bool isSecondRev)
         {
-            var id = ObjectId.Random();
+            ObjectId id = ObjectId.Random();
             GitRevision rev = new(id);
             const string newName = "newName";
             const string oldName = "oldName";
@@ -198,7 +198,7 @@ namespace GitUITests.CommandsDialogs
                 {
                     OldName = oldName
                 });
-            var expected = $"{id}:{(isSecondRev ? newName : oldName)}";
+            string expected = $"{id}:{(isSecondRev ? newName : oldName)}";
             _rememberFileContextMenuController.GetGitCommit(null, item, isSecondRev).Should().Be(expected);
         }
 
@@ -206,14 +206,14 @@ namespace GitUITests.CommandsDialogs
         [TestCase(true)]
         public void RememberFile_GetGitCommit_CommitNoOld(bool isSecondRev)
         {
-            var id = ObjectId.Random();
+            ObjectId id = ObjectId.Random();
             GitRevision rev = new(id);
             const string newName = "newName";
             FileStatusItem item = new(
                 firstRev: rev,
                 secondRev: rev,
                 item: new GitItemStatus(name: newName));
-            var expected = $"{id}:{newName}";
+            string expected = $"{id}:{newName}";
             _rememberFileContextMenuController.GetGitCommit(null, item, isSecondRev).Should().Be(expected);
         }
     }

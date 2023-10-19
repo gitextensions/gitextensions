@@ -2,6 +2,7 @@
 using CommonTestUtils;
 using GitCommands;
 using GitUI;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommandsTests
 {
@@ -30,9 +31,9 @@ namespace GitCommandsTests
                 SemaphoreSlim loadSignal = new(0);
                 SemaphoreSlim completeSignal = new(0);
 
-                var started = 0;
-                var completed = 0;
-                var task = _loader.LoadAsync(
+                int started = 0;
+                int completed = 0;
+                Task task = _loader.LoadAsync(
                     () =>
                     {
                         started++;
@@ -62,7 +63,7 @@ namespace GitCommandsTests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var callerThread = Thread.CurrentThread;
+                Thread callerThread = Thread.CurrentThread;
                 Thread loadThread = null;
                 Thread continuationThread = null;
 
@@ -87,9 +88,9 @@ namespace GitCommandsTests
                 SemaphoreSlim loadSignal = new(0);
                 SemaphoreSlim completeSignal = new(0);
 
-                var started = 0;
-                var completed = 0;
-                var task = _loader.LoadAsync(
+                int started = 0;
+                int completed = 0;
+                Task task = _loader.LoadAsync(
                     () =>
                     {
                         started++;
@@ -123,9 +124,9 @@ namespace GitCommandsTests
                 // Deliberately use a long delay as cancellation should cut it short
                 _loader.Delay = TimeSpan.FromMilliseconds(5000);
 
-                var started = 0;
-                var completed = 0;
-                var task = _loader.LoadAsync(
+                int started = 0;
+                int completed = 0;
+                Task task = _loader.LoadAsync(
                     () => started++,
                     () => completed++);
 
@@ -153,9 +154,9 @@ namespace GitCommandsTests
                 SemaphoreSlim loadSignal = new(0);
                 SemaphoreSlim completeSignal = new(0);
 
-                var started = 0;
-                var completed = 0;
-                var task = _loader.LoadAsync(
+                int started = 0;
+                int completed = 0;
+                Task task = _loader.LoadAsync(
                     () =>
                     {
                         started++;
@@ -188,7 +189,7 @@ namespace GitCommandsTests
             {
                 _loader.Delay = TimeSpan.FromMilliseconds(100);
 
-                var sw = Stopwatch.StartNew();
+                Stopwatch sw = Stopwatch.StartNew();
 
                 await _loader.LoadAsync(
                     () => sw.Stop(),
@@ -248,11 +249,11 @@ namespace GitCommandsTests
 
             Exception ex = new();
 
-            var loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
+            JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
                 () => throw ex,
                 Assert.Fail));
 
-            var oe = Assert.Throws<Exception>(() => loadTask.Join());
+            Exception oe = Assert.Throws<Exception>(() => loadTask.Join());
 
             Assert.AreEqual(1, observed.Count);
             Assert.AreSame(ex, observed[0]);

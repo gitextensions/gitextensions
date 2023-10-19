@@ -102,7 +102,7 @@ namespace GitCommandsTests.Git
         public void Resolve_submodule_real_filesystem()
         {
             using GitModuleTestHelper helper = new();
-            var submodulePath = Path.Combine(helper.Module.WorkingDir, "External", "Git.hub");
+            string submodulePath = Path.Combine(helper.Module.WorkingDir, "External", "Git.hub");
             helper.CreateFile(submodulePath, ".git", "\r \r\ngitdir: ../../.git/modules/Externals/Git.hub\r\ntext");
             _resolver = new GitDirectoryResolver();
 

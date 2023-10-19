@@ -20,7 +20,7 @@ namespace AppVeyorIntegrationTests
         [Test]
         public void Should_return_no_build_Info_When_Api_Json_is_empty()
         {
-            var buildInfo = new AppVeyorAdapter().ExtractBuildInfo(_projectId, string.Empty);
+            IEnumerable<AppVeyorBuildInfo> buildInfo = new AppVeyorAdapter().ExtractBuildInfo(_projectId, string.Empty);
 
             buildInfo.Should().HaveCount(0);
         }
@@ -41,19 +41,19 @@ namespace AppVeyorIntegrationTests
 
         private string BuildBuildInfoForFile(string filename)
         {
-            var resultString = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(),
+            string resultString = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(),
                 $"{GetType().Namespace}.MockData.{filename}");
             AppVeyorAdapter appVeyorAdapter = new();
             appVeyorAdapter.Initialize(Substitute.For<IBuildServerWatcher>(), Substitute.For<ISettingsSource>(), () => { },
                 id => true);
 
-            var buildInfo = appVeyorAdapter.ExtractBuildInfo(_projectId, resultString).ToList();
+            List<AppVeyorBuildInfo> buildInfo = appVeyorAdapter.ExtractBuildInfo(_projectId, resultString).ToList();
             return YamlSerialize(buildInfo);
         }
 
         private static string YamlSerialize(List<AppVeyorBuildInfo> buildInfo)
         {
-            var serializer = new SerializerBuilder()
+            ISerializer serializer = new SerializerBuilder()
                 .WithTypeConverter(new CommitsYamlTypeConverter())
                 .Build();
 
@@ -94,7 +94,7 @@ namespace AppVeyorIntegrationTests
 
             if (type == typeof(ObjectId[]))
             {
-                var commits = (ObjectId[])value;
+                ObjectId[] commits = (ObjectId[])value;
                 emitter.Emit(new SequenceStart(null, null, false, SequenceStyle.Block));
 
                 foreach (ObjectId commit in commits)

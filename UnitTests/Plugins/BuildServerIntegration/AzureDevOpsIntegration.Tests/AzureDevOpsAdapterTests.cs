@@ -21,7 +21,7 @@ namespace AzureDevOpsIntegrationTests
             Build myBuild = new() { SourceVersion = "ACommitHash" };
             IList<Build> runningBuilds = new List<Build> { myBuild };
 
-            var filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
+            IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
             filteredRunningBuilds.Should().ContainSingle().And.Contain(myBuild);
         }
@@ -33,7 +33,7 @@ namespace AzureDevOpsIntegrationTests
             Build buildOnAnotherCommit = new() { SourceVersion = "another_commit_Hash" };
             IList<Build> runningBuilds = new List<Build> { buildOnOneCommit, buildOnAnotherCommit };
 
-            var filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
+            IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
             filteredRunningBuilds.Should().ContainInOrder(buildOnOneCommit, buildOnAnotherCommit);
         }
@@ -46,7 +46,7 @@ namespace AzureDevOpsIntegrationTests
             Build buildAlsoStartedOnSameCommitButAfterAlso = new() { SourceVersion = "a_commit_Hash", StartTime = new DateTime(2010, 1, 3) };
             IList<Build> runningBuilds = new List<Build> { firstBuildStartedOnACommit, buildAlsoStartedOnSameCommitButAfter, buildAlsoStartedOnSameCommitButAfterAlso };
 
-            var filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
+            IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
             filteredRunningBuilds.Should().HaveCount(1).And.ContainInOrder(firstBuildStartedOnACommit);
         }
@@ -59,7 +59,7 @@ namespace AzureDevOpsIntegrationTests
             Build buildAlsoStartedOnSameCommitButAfterAlso = new() { SourceVersion = "a_commit_Hash" };
             IList<Build> runningBuilds = new List<Build> { firstBuildStartedOnACommit, buildAlsoStartedOnSameCommitButAfter, buildAlsoStartedOnSameCommitButAfterAlso };
 
-            var filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
+            IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
             filteredRunningBuilds.Should().HaveCount(1);
         }
@@ -72,7 +72,7 @@ namespace AzureDevOpsIntegrationTests
             Build anotherNotStartedBuildOnACommit = new() { SourceVersion = "a_commit_Hash" };
             IList<Build> runningBuilds = new List<Build> { notStartedBuildOnACommit, startedBuild, anotherNotStartedBuildOnACommit };
 
-            var filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
+            IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
             filteredRunningBuilds.Should().HaveCount(1).And.ContainInOrder(startedBuild);
         }

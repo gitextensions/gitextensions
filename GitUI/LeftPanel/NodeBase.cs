@@ -34,7 +34,7 @@ namespace GitUI.LeftPanel
             // recursively process descendants if required
             if (includingDescendants && HasChildren)
             {
-                foreach (var child in Nodes)
+                foreach (Node child in Nodes)
                 {
                     child.Select(select, includingDescendants);
                 }

@@ -58,7 +58,7 @@ namespace GitExtensions.UITests.NBugReports
                     Assert.AreEqual("Stack Trace", listView.Items[index].Text);
                     Assert.AreEqual(exception.StackTrace, listView.Items[index].SubItems[1].Text);
 
-                    foreach (var info in exception.ExtendedInformation)
+                    foreach (KeyValuePair<string, object> info in exception.ExtendedInformation)
                     {
                         index++;
                         Assert.AreEqual(info.Key, listView.Items[index].Text);

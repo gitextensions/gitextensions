@@ -64,7 +64,7 @@ namespace GitUI.Hotkey
             }
 
             // Get the string representation
-            var str = key.ToCultureSpecificString();
+            string str = key.ToCultureSpecificString();
 
             // Strip the leading 'D' if it's a Decimal Key (D1, D2, ...)
             if (str?.Length is 2 && str[0] == 'D')
@@ -93,7 +93,7 @@ namespace GitUI.Hotkey
             }
 
             // var str = key.ToString(); // OLD: this is culture unspecific
-            var culture = CultureInfo.CurrentCulture; // TODO: replace this with the GitExtensions language setting
+            CultureInfo culture = CultureInfo.CurrentCulture; // TODO: replace this with the GitExtensions language setting
 
             // for modifier keys this yields for example "Ctrl+None" thus we have to strip the rest after the +
             return new KeysConverter().ConvertToString(null, culture, key)?.SubstringUntil('+');

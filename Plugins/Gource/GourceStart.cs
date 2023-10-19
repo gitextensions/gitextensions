@@ -80,22 +80,22 @@ namespace GitExtensions.Plugins.Gource
 
         private async Task<string> LoadAvatarsAsync()
         {
-            var gourceAvatarsDir = Path.Combine(Path.GetTempPath(), "GitAvatars");
+            string gourceAvatarsDir = Path.Combine(Path.GetTempPath(), "GitAvatars");
 
             Directory.CreateDirectory(gourceAvatarsDir);
 
-            foreach (var file in Directory.GetFiles(gourceAvatarsDir))
+            foreach (string file in Directory.GetFiles(gourceAvatarsDir))
             {
                 File.Delete(file);
             }
 
             GitArgumentBuilder args = new("log") { "--pretty=format:\"%aE|%aN\"" };
-            var lines = GitUIArgs.GitModule.GitExecutable.GetOutput(args).Split('\n');
+            string[] lines = GitUIArgs.GitModule.GitExecutable.GetOutput(args).Split('\n');
 
-            var authors = lines.Select(
+            IEnumerable<(string email, string name)> authors = lines.Select(
                 line =>
                 {
-                    var bits = line.Split('|');
+                    string[] bits = line.Split('|');
                     return (email: bits[0], name: bits[1]);
                 })
                 .Where(t => !string.IsNullOrWhiteSpace(t.email) && !string.IsNullOrWhiteSpace(t.name))
@@ -110,15 +110,15 @@ namespace GitExtensions.Plugins.Gource
             {
                 try
                 {
-                    var image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
-                    var filename = author.name + ".png";
+                    Image image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
+                    string filename = author.name + ".png";
 
                     if (image is null || filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
                     {
                         return;
                     }
 
-                    var filePath = Path.Combine(gourceAvatarsDir, filename);
+                    string filePath = Path.Combine(gourceAvatarsDir, filename);
                     image.Save(filePath, ImageFormat.Png);
                 }
                 catch

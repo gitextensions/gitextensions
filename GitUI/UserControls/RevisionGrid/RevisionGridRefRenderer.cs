@@ -71,7 +71,7 @@ namespace GitUI
                 {
                     Color color1 = ColorHelper.Lerp(color, SystemColors.Window, 0.92F);
                     Color color2 = ColorHelper.Lerp(color1, SystemColors.Window, 0.9f);
-                    using LinearGradientBrush brush = new LinearGradientBrush(bounds, color1, color2, angle: 90);
+                    using LinearGradientBrush brush = new(bounds, color1, color2, angle: 90);
                     graphics.FillPath(brush, path);
                 }
                 else if (isRowSelected)

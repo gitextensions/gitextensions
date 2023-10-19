@@ -65,7 +65,7 @@ namespace GitUITests.CommandsDialogs
             string path = Path.GetTempPath();
             path[^1].Should().Be(Path.DirectorySeparatorChar);
 
-            var module = FormOpenDirectory.TestAccessor.OpenGitRepository(_referenceRepository.Module.WorkingDir, _localRepositoryManager);
+            GitCommands.GitModule module = FormOpenDirectory.TestAccessor.OpenGitRepository(_referenceRepository.Module.WorkingDir, _localRepositoryManager);
 
             module.Should().NotBeNull();
             module.WorkingDir.Should().Be(_referenceRepository.Module.WorkingDir);

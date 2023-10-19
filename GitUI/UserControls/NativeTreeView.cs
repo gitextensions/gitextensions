@@ -1,6 +1,6 @@
 ﻿namespace GitUI.UserControls
 {
-    public class NativeTreeView : System.Windows.Forms.TreeView
+    public class NativeTreeView : TreeView
     {
         protected override void CreateHandle()
         {

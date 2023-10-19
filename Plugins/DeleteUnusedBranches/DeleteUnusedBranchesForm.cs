@@ -100,10 +100,10 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                     $"{branchName}^1..{branchName}"
                 };
 
-                var commitLog = context.Commands.GitExecutable.GetOutput(args).Split('\n');
-                DateTime.TryParse(commitLog[0], out var commitDate);
-                var authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
-                var message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
+                string[] commitLog = context.Commands.GitExecutable.GetOutput(args).Split('\n');
+                DateTime.TryParse(commitLog[0], out DateTime commitDate);
+                string authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
+                string message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
 
                 yield return new Branch(branchName, commitDate, authorName, message, commitDate < DateTime.Now - context.ObsolescenceDuration);
             }
@@ -121,7 +121,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 options = RegexOptions.Compiled;
             }
 
-            var regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, options);
+            Regex regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, options);
             bool regexMustMatch = !context.RegexDoesNotMatch;
 
             GitArgumentBuilder args = new("branch")
@@ -131,7 +131,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                  { !context.IncludeUnmerged, $"--merged {context.ReferenceBranch}" }
             };
 
-            var result = context.Commands.GitExecutable.Execute(args, throwOnErrorExit: false);
+            ExecutionResult result = context.Commands.GitExecutable.Execute(args, throwOnErrorExit: false);
 
             if (!result.ExitedSuccessfully)
             {
@@ -147,7 +147,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            var selectedBranches = _branches.Where(branch => branch.Delete).ToList();
+            List<Branch> selectedBranches = _branches.Where(branch => branch.Delete).ToList();
             if (selectedBranches.Count == 0)
             {
                 MessageBox.Show(string.Format(_selectBranchesToDelete.Text, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -159,16 +159,16 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 return;
             }
 
-            var remoteName = _NO_TRANSLATE_Remote.Text;
-            var remoteBranchPrefix = remoteName + "/";
-            var remoteBranchesSource = IncludeRemoteBranches.Checked
+            string remoteName = _NO_TRANSLATE_Remote.Text;
+            string remoteBranchPrefix = remoteName + "/";
+            IEnumerable<Branch> remoteBranchesSource = IncludeRemoteBranches.Checked
                 ? selectedBranches.Where(branch => branch.Name.StartsWith(remoteBranchPrefix))
                 : Enumerable.Empty<Branch>();
-            var remoteBranches = remoteBranchesSource.ToList();
+            List<Branch> remoteBranches = remoteBranchesSource.ToList();
 
             if (remoteBranches.Count > 0)
             {
-                var message = string.Format(_dangerousAction.Text, remoteName);
+                string message = string.Format(_dangerousAction.Text, remoteName);
                 if (MessageBox.Show(this, message, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
                     return;
@@ -177,7 +177,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
             HasDeletedBranch = true;
 
-            var localBranches = selectedBranches.Except(remoteBranches).ToList();
+            List<Branch> localBranches = selectedBranches.Except(remoteBranches).ToList();
             SetWorkingState(isWorking: true);
             lblStatus.Text = _deletingBranches.Text;
 
@@ -185,10 +185,10 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             {
                 try
                 {
-                    foreach (var remoteBranch in remoteBranches)
+                    foreach (Branch remoteBranch in remoteBranches)
                     {
                         // Delete branches one by one, because it is possible one fails
-                        var remoteBranchNameOffset = remoteBranchPrefix.Length;
+                        int remoteBranchNameOffset = remoteBranchPrefix.Length;
                         GitArgumentBuilder args = new("push")
                         {
                             remoteName,
@@ -197,7 +197,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                         _gitCommands.GitExecutable.GetOutput(args);
                     }
 
-                    foreach (var localBranch in localBranches)
+                    foreach (Branch localBranch in localBranches)
                     {
                         GitArgumentBuilder args = new("branch")
                         {
@@ -306,7 +306,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             IsRefreshing = true;
             Validates.NotNull(_refreshCancellation);
 
-            var curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
+            string curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
             RefreshContext context = new(
                 _gitCommands,
                 IncludeRemoteBranches.Checked,

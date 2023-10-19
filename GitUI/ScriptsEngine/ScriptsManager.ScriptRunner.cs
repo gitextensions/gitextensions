@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Text.RegularExpressions;
+using GitCommands;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.NBugReports;
@@ -81,7 +82,7 @@ namespace GitUI.ScriptsEngine
 
                     lock (PluginRegistry.Plugins)
                     {
-                        foreach (var plugin in PluginRegistry.Plugins)
+                        foreach (IGitPlugin plugin in PluginRegistry.Plugins)
                         {
                             if (string.Equals(plugin.Name, command, StringComparison.CurrentCultureIgnoreCase))
                             {
@@ -170,7 +171,7 @@ namespace GitUI.ScriptsEngine
                 }
 
                 // Prefix should be {plugin:pluginname},{plugin=pluginname}
-                var match = System.Text.RegularExpressions.Regex.Match(originalCommand, @"\{plugin.(.+)\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                Match match = Regex.Match(originalCommand, @"\{plugin.(.+)\}", RegexOptions.IgnoreCase);
                 if (match.Success && match.Groups.Count > 1)
                 {
                     originalCommand = $"{PluginPrefix}{match.Groups[1].Value.ToLower()}";

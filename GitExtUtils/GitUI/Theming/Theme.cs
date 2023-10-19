@@ -40,7 +40,7 @@
         /// returns <see cref="Color.Empty"/>.
         /// </summary>
         public Color GetColor(AppColor name) =>
-            _appColorValues.TryGetValue(name, out var result)
+            _appColorValues.TryGetValue(name, out Color result)
                 ? result
                 : Color.Empty;
 
@@ -48,7 +48,7 @@
         /// Get .Net system color value as defined by this instance.
         /// </summary>
         private Color GetSysColor(KnownColor name) =>
-            _sysColorValues.TryGetValue(name, out var result)
+            _sysColorValues.TryGetValue(name, out Color result)
                 ? result
                 : Color.Empty;
 
@@ -78,7 +78,7 @@
                 throw new ArgumentException($"{name} is not system color");
             }
 
-            var actualName = Duplicates.TryGetValue(name, out var duplicate)
+            KnownColor actualName = Duplicates.TryGetValue(name, out KnownColor duplicate)
                 ? duplicate
                 : name;
 
@@ -91,7 +91,7 @@
         /// </summary>
         public Color GetNonEmptyColor(KnownColor name)
         {
-            var result = GetColor(name);
+            Color result = GetColor(name);
             if (result == Color.Empty)
             {
                 return Color.FromKnownColor(name);
@@ -102,8 +102,8 @@
 
         public static Theme CreateDefaultTheme(string[]? variations = null)
         {
-            var appColors = AppColorNames.ToDictionary(name => name, name => AppColorDefaults.GetBy(name, variations));
-            var sysColors = SysColorNames.ToDictionary(name => name, GetFixedColor);
+            Dictionary<AppColor, Color> appColors = AppColorNames.ToDictionary(name => name, name => AppColorDefaults.GetBy(name, variations));
+            Dictionary<KnownColor, Color> sysColors = SysColorNames.ToDictionary(name => name, GetFixedColor);
             return new Theme(appColors, sysColors, ThemeId.Default);
         }
 

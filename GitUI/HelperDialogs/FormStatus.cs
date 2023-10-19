@@ -200,7 +200,7 @@ namespace GitUI.HelperDialogs
             await this.SwitchToMainThreadAsync();
 
             int index = text.LastIndexOf('%');
-            if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
+            if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out int progressValue) && progressValue >= 0)
             {
                 ProgressBar.Style = ProgressBarStyle.Blocks;
                 ProgressBar.Value = Math.Min(100, progressValue);

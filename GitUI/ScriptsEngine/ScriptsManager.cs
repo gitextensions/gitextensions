@@ -193,9 +193,9 @@ namespace GitUI.ScriptsEngine
 
                 if (inputString.Contains(paramSeparator) || inputString.Contains(scriptSeparator))
                 {
-                    foreach (var script in inputString.Split(new[] { scriptSeparator }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (string script in inputString.Split(new[] { scriptSeparator }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        var parameters = script.Split(new[] { paramSeparator }, StringSplitOptions.None);
+                        string[] parameters = script.Split(new[] { paramSeparator }, StringSplitOptions.None);
 
                         scripts.Add(new ScriptInfo
                         {

@@ -51,7 +51,7 @@
             {
                 // Force a reselection of the current node
                 _lastKeyNavigateTime = DateTime.MinValue;
-                var currNode = _treeView.SelectedNode;
+                TreeNode currNode = _treeView.SelectedNode;
                 _treeView.SelectedNode = null;
                 _treeView.SelectedNode = currNode;
             }

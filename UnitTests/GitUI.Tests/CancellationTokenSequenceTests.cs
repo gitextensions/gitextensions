@@ -10,11 +10,11 @@ namespace GitUITests
         {
             CancellationTokenSequence sequence = new();
 
-            var token1 = sequence.Next();
+            CancellationToken token1 = sequence.Next();
 
             Assert.False(token1.IsCancellationRequested);
 
-            var token2 = sequence.Next();
+            CancellationToken token2 = sequence.Next();
 
             Assert.True(token1.IsCancellationRequested);
             Assert.False(token2.IsCancellationRequested);
@@ -35,7 +35,7 @@ namespace GitUITests
         {
             CancellationTokenSequence sequence = new();
 
-            var token = sequence.Next();
+            CancellationToken token = sequence.Next();
 
             Assert.False(token.IsCancellationRequested);
 
@@ -49,7 +49,7 @@ namespace GitUITests
         {
             CancellationTokenSequence sequence = new();
 
-            var token = sequence.Next();
+            CancellationToken token = sequence.Next();
 
             Assert.False(token.IsCancellationRequested);
 
@@ -72,7 +72,7 @@ namespace GitUITests
         {
             CancellationTokenSequence sequence = new();
 
-            var token = sequence.Next();
+            CancellationToken token = sequence.Next();
 
             Assert.False(token.IsCancellationRequested);
 
@@ -107,19 +107,19 @@ namespace GitUITests
         {
             const int loopCount = 10000;
 
-            var logicalProcessorCount = Environment.ProcessorCount;
-            var threadCount = Math.Max(2, logicalProcessorCount);
+            int logicalProcessorCount = Environment.ProcessorCount;
+            int threadCount = Math.Max(2, logicalProcessorCount);
 
             using CancellationTokenSequence sequence = new();
             using Barrier barrier = new(threadCount);
             using CountdownEvent countdown = new(loopCount * threadCount);
-            var completedCount = 0;
+            int completedCount = 0;
 
             CancellationTokenSource completionTokenSource = new();
-            var completionToken = completionTokenSource.Token;
-            var winnerByIndex = new int[threadCount];
+            CancellationToken completionToken = completionTokenSource.Token;
+            int[] winnerByIndex = new int[threadCount];
 
-            var tasks = Enumerable
+            List<Task> tasks = Enumerable
                 .Range(0, threadCount)
                 .Select(i => Task.Run(() => ThreadMethod(i)))
                 .ToList();
@@ -153,7 +153,7 @@ namespace GitUITests
                         return;
                     }
 
-                    var token = sequence.Next();
+                    CancellationToken token = sequence.Next();
 
                     barrier.SignalAndWait();
 

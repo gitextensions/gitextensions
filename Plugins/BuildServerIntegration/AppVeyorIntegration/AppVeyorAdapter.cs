@@ -78,7 +78,7 @@ namespace AppVeyorIntegration
             // accountName may be any accessible project (for instance upstream)
             // if AppVeyorAccountName is set, projectNamesSetting may exclude the accountName part
             string projectNamesSetting = config.GetString("AppVeyorProjectName", "");
-            var projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
+            List<string> projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
                 .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
                 .Where(p => p.Contains("/") || !string.IsNullOrEmpty(accountName))
                 .Select(p => p.Contains("/") ? p : accountName.Combine("/", p)!)
@@ -137,7 +137,7 @@ namespace AppVeyorIntegration
             List<AppVeyorBuildInfo> FilterBuilds(IEnumerable<AppVeyorBuildInfo> allBuilds)
             {
                 List<AppVeyorBuildInfo> filteredBuilds = new();
-                foreach (var build in allBuilds.OrderByDescending(b => b.StartDate))
+                foreach (AppVeyorBuildInfo build in allBuilds.OrderByDescending(b => b.StartDate))
                 {
                     Validates.NotNull(build.CommitId);
                     if (!_fetchBuilds.Contains(build.CommitId))
@@ -175,37 +175,37 @@ namespace AppVeyorIntegration
 
             Validates.NotNull(_isCommitInRevisionGrid);
 
-            var content = JObject.Parse(result);
+            JObject content = JObject.Parse(result);
 
-            var projectData = content["project"];
-            var repositoryName = projectData["repositoryName"];
-            var repositoryType = projectData["repositoryType"];
+            JToken projectData = content["project"];
+            JToken repositoryName = projectData["repositoryName"];
+            JToken repositoryType = projectData["repositoryType"];
 
-            var builds = content["builds"].Children();
-            var baseWebUrl = $"{WebSiteUrl}/project/{projectId}/build/";
-            var baseApiUrl = $"{ApiBaseUrl}{projectId}/";
+            JEnumerable<JToken> builds = content["builds"].Children();
+            string baseWebUrl = $"{WebSiteUrl}/project/{projectId}/build/";
+            string baseApiUrl = $"{ApiBaseUrl}{projectId}/";
 
             List<AppVeyorBuildInfo> buildDetails = new();
-            foreach (var b in builds)
+            foreach (JToken b in builds)
             {
                 try
                 {
                     if (!ObjectId.TryParse((b["pullRequestHeadCommitId"] ?? b["commitId"]).ToObject<string>(),
-                            out var objectId) || !_isCommitInRevisionGrid(objectId))
+                            out ObjectId? objectId) || !_isCommitInRevisionGrid(objectId))
                     {
                         continue;
                     }
 
-                    var pullRequestId = b["pullRequestId"];
-                    var version = b["version"].ToObject<string>();
-                    var status = ParseBuildStatus(b["status"].ToObject<string>());
+                    JToken pullRequestId = b["pullRequestId"];
+                    string version = b["version"].ToObject<string>();
+                    BuildInfo.BuildStatus status = ParseBuildStatus(b["status"].ToObject<string>());
                     long? duration = null;
                     if (status is (BuildInfo.BuildStatus.Success or BuildInfo.BuildStatus.Failure))
                     {
                         duration = GetBuildDuration(b);
                     }
 
-                    var pullRequestTitle = b["pullRequestName"];
+                    JToken pullRequestTitle = b["pullRequestName"];
 
                     buildDetails.Add(new AppVeyorBuildInfo
                     {
@@ -294,7 +294,7 @@ namespace AppVeyorIntegration
                 }
 
                 // Display all builds found
-                foreach (var build in _allBuilds)
+                foreach (AppVeyorBuildInfo build in _allBuilds)
                 {
                     // Update finished build with tests results
                     if (_shouldLoadTestResults
@@ -308,7 +308,7 @@ namespace AppVeyorIntegration
                 }
 
                 // Manage in progress builds...
-                var inProgressBuilds = _allBuilds.Where(b => b.Status == BuildInfo.BuildStatus.InProgress).ToList();
+                List<AppVeyorBuildInfo> inProgressBuilds = _allBuilds.Where(b => b.Status == BuildInfo.BuildStatus.InProgress).ToList();
 
                 // Reset current build list - refresh required to see new builds
                 _allBuilds = null;
@@ -316,7 +316,7 @@ namespace AppVeyorIntegration
                 {
                     const int inProgressRefresh = 10000;
                     Thread.Sleep(inProgressRefresh);
-                    foreach (var build in inProgressBuilds)
+                    foreach (AppVeyorBuildInfo build in inProgressBuilds)
                     {
                         UpdateDescription(build, cancellationToken);
                         UpdateDisplay(observer, build);
@@ -369,7 +369,7 @@ namespace AppVeyorIntegration
             {
                 int failedTestCount = buildDescription["failedTestsCount"].ToObject<int>();
                 int skippedTestCount = testCount - buildDescription["passedTestsCount"].ToObject<int>();
-                var testResults = testCount + " tests";
+                string testResults = testCount + " tests";
                 if (failedTestCount != 0 || skippedTestCount != 0)
                 {
                     testResults += $" ( {failedTestCount} failed, {skippedTestCount} skipped )";
@@ -381,8 +381,8 @@ namespace AppVeyorIntegration
 
         private static long GetBuildDuration(JToken buildData)
         {
-            var startTime = (buildData["started"] ?? buildData["created"])?.ToObject<DateTime>();
-            var updateTime = buildData["updated"]?.ToObject<DateTime>();
+            DateTime? startTime = (buildData["started"] ?? buildData["created"])?.ToObject<DateTime>();
+            DateTime? updateTime = buildData["updated"]?.ToObject<DateTime>();
             if (!startTime.HasValue || !updateTime.HasValue)
             {
                 return 0;
@@ -402,10 +402,10 @@ namespace AppVeyorIntegration
             }
             catch
             {
-                var buildHistoryUrl = buildDetails.BaseApiUrl + "/history?recordsNumber=1&startBuildId=" + (int.Parse(buildDetails.BuildId) + 1);
-                var builds = JObject.Parse(await GetResponseAsync(_httpClientAppVeyor, buildHistoryUrl, cancellationToken).ConfigureAwait(false));
+                string buildHistoryUrl = buildDetails.BaseApiUrl + "/history?recordsNumber=1&startBuildId=" + (int.Parse(buildDetails.BuildId) + 1);
+                JObject builds = JObject.Parse(await GetResponseAsync(_httpClientAppVeyor, buildHistoryUrl, cancellationToken).ConfigureAwait(false));
 
-                var version = builds["builds"][0]["version"].ToObject<string>();
+                string version = builds["builds"][0]["version"].ToObject<string>();
                 buildDetails.Id = version;
                 buildDetails.AppVeyorBuildReportUrl = buildDetails.BaseApiUrl + "/build/" + version;
                 buildDetails.Url = buildDetails.BaseWebUrl + version;
@@ -443,7 +443,7 @@ namespace AppVeyorIntegration
 
         private Task<Stream?> GetStreamFromHttpResponseAsync(HttpClient httpClient, Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
-            var retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
+            bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
 
             if (retry)
             {
@@ -460,9 +460,9 @@ namespace AppVeyorIntegration
 
         private Task<string> GetResponseAsync(HttpClient httpClient, string relativePath, CancellationToken cancellationToken)
         {
-            var getStreamTask = GetStreamAsync(httpClient, relativePath, cancellationToken);
+            Task<Stream?> getStreamTask = GetStreamAsync(httpClient, relativePath, cancellationToken);
 
-            var taskContinuationOptions = relativePath.Contains("github") ? TaskContinuationOptions.None : TaskContinuationOptions.AttachedToParent;
+            TaskContinuationOptions taskContinuationOptions = relativePath.Contains("github") ? TaskContinuationOptions.None : TaskContinuationOptions.AttachedToParent;
             return getStreamTask.ContinueWith(
                 task =>
                 {
@@ -471,7 +471,7 @@ namespace AppVeyorIntegration
                         return string.Empty;
                     }
 
-                    using var responseStream = task.Result;
+                    using Stream responseStream = task.Result;
 
                     if (responseStream is null)
                     {

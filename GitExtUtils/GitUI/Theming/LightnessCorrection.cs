@@ -33,12 +33,12 @@
 
         private void Transform(byte[] bgraValues, int location)
         {
-            var rgb = Color.FromArgb(
+            Color rgb = Color.FromArgb(
                 bgraValues[location + R],
                 bgraValues[location + G],
                 bgraValues[location + B]);
-            var hsl = rgb.ToPerceptedHsl();
-            var hslTransformed = Transform(hsl);
+            HslColor hsl = rgb.ToPerceptedHsl();
+            HslColor hslTransformed = Transform(hsl);
             ToBgra(hslTransformed.ToActualHsl(rgb), bgraValues, location);
         }
 
@@ -57,7 +57,7 @@
 
         private static void ToBgra(HslColor c, byte[] rgbArr, int location)
         {
-            var rgb = c.ToColor();
+            Color rgb = c.ToColor();
             rgbArr[location + B] = rgb.B;
             rgbArr[location + G] = rgb.G;
             rgbArr[location + R] = rgb.R;

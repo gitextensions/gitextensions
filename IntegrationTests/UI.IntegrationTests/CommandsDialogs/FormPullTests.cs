@@ -49,10 +49,10 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormPull.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.Merge.Checked = true;
-                    var expected = string.Format(accessor.PullTitleText, PathUtil.GetDisplayPath(_referenceRepository.Module.WorkingDir));
+                    string expected = string.Format(accessor.PullTitleText, PathUtil.GetDisplayPath(_referenceRepository.Module.WorkingDir));
 
                     accessor.Title.Should().StartWith(expected);
                 },
@@ -67,10 +67,10 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormPull.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.Rebase.Checked = true;
-                    var expected = string.Format(accessor.PullTitleText, PathUtil.GetDisplayPath(_referenceRepository.Module.WorkingDir));
+                    string expected = string.Format(accessor.PullTitleText, PathUtil.GetDisplayPath(_referenceRepository.Module.WorkingDir));
 
                     accessor.Title.Should().StartWith(expected);
                 },
@@ -85,10 +85,10 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormPull.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.Fetch.Checked = true;
-                    var expected = string.Format(accessor.FetchTitleText, PathUtil.GetDisplayPath(_referenceRepository.Module.WorkingDir));
+                    string expected = string.Format(accessor.FetchTitleText, PathUtil.GetDisplayPath(_referenceRepository.Module.WorkingDir));
 
                     accessor.Title.Should().StartWith(expected);
                 },
@@ -113,7 +113,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 {
                     try
                     {
-                        var accessor = form.GetTestAccessor();
+                        FormPull.TestAccessor accessor = form.GetTestAccessor();
 
                         accessor.Merge.Checked.Should().Be(mergeChecked);
                         accessor.Prune.Checked.Should().Be(pruneRemoteBranches);
@@ -147,7 +147,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormPull.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.Merge.Checked.Should().Be(mergeChecked);
                     accessor.Prune.Checked.Should().Be(pruneRemoteBranches);
@@ -170,7 +170,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormPull.TestAccessor accessor = form.GetTestAccessor();
 
                     accessor.Merge.Checked = mergeChecked;
                     accessor.Rebase.Checked = rebaseChecked;
@@ -192,7 +192,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    FormPull.TestAccessor accessor = form.GetTestAccessor();
                     accessor.AutoStash.Checked = autoStashChecked;
 
                     accessor.UpdateSettingsDuringPull();

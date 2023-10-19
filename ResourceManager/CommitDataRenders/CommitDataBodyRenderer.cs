@@ -39,7 +39,7 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            var body = WebUtility.HtmlEncode((commitData.Body ?? "").Trim());
+            string body = WebUtility.HtmlEncode((commitData.Body ?? "").Trim());
 
             if (showRevisionsAsLinks)
             {
@@ -51,14 +51,14 @@ namespace ResourceManager.CommitDataRenders
 
         private string ProcessHashCandidate(string hash)
         {
-            var module = _getModule();
+            IGitModule module = _getModule();
 
             if (module is null)
             {
                 return hash;
             }
 
-            if (!module.TryResolvePartialCommitId(hash, out var fullHash))
+            if (!module.TryResolvePartialCommitId(hash, out ObjectId? fullHash))
             {
                 return hash;
             }

@@ -23,7 +23,7 @@ namespace GitUI
                 return;
             }
 
-            foreach (var textInput in control.FindDescendants().Where(c => c is TextBoxBase || c is ComboBox))
+            foreach (Control textInput in control.FindDescendants().Where(c => c is TextBoxBase || c is ComboBox))
             {
                 textInput.KeyDown += HandleKeyDown;
                 textInput.Disposed += HandleDisposed;

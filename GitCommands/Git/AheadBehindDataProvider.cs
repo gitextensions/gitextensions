@@ -83,12 +83,12 @@ namespace GitCommands.Git
                 return null;
             }
 
-            var matches = _aheadBehindRegEx.Matches(result.StandardOutput);
+            MatchCollection matches = _aheadBehindRegEx.Matches(result.StandardOutput);
             Dictionary<string, AheadBehindData> aheadBehindForBranchesData = new();
             foreach (Match match in matches)
             {
-                var branch = match.Groups["branch"].Value;
-                var remoteRef = (match.Groups["remote_p"].Success && !string.IsNullOrEmpty(match.Groups["remote_p"].Value))
+                string branch = match.Groups["branch"].Value;
+                string remoteRef = (match.Groups["remote_p"].Success && !string.IsNullOrEmpty(match.Groups["remote_p"].Value))
                     ? match.Groups["remote_p"].Value
                     : match.Groups["remote_u"].Value;
                 if (string.IsNullOrEmpty(branch) || string.IsNullOrEmpty(remoteRef))
@@ -138,7 +138,7 @@ namespace GitCommands.Git
 
         private IExecutable GetGitExecutable()
         {
-            var executable = _getGitExecutable();
+            IExecutable executable = _getGitExecutable();
 
             if (executable is null)
             {

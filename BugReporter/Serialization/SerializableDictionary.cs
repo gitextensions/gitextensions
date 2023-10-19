@@ -30,7 +30,7 @@ namespace BugReporter.Serialization
                 throw new ArgumentNullException();
             }
 
-            foreach (var pair in dictionary)
+            foreach (KeyValuePair<TKey, TValue> pair in dictionary)
             {
                 Add(pair.Key, pair.Value);
             }
@@ -47,12 +47,12 @@ namespace BugReporter.Serialization
             {
                 return;
             }*/
-            var inner = reader.ReadSubtree();
+            XmlReader inner = reader.ReadSubtree();
 
-            var xElement = XElement.Load(inner);
+            XElement xElement = XElement.Load(inner);
             if (xElement.HasElements)
             {
-                foreach (var element in xElement.Elements())
+                foreach (XElement element in xElement.Elements())
                 {
                     Add((TKey)Convert.ChangeType(element.Name.ToString(), typeof(TKey)), (TValue)Convert.ChangeType(element.Value, typeof(TValue)));
                 }
@@ -65,7 +65,7 @@ namespace BugReporter.Serialization
 
         public void WriteXml(XmlWriter writer)
         {
-            foreach (var key in Keys)
+            foreach (TKey key in Keys)
             {
                 writer.WriteStartElement(key.ToString().Replace(" ", ""));
 

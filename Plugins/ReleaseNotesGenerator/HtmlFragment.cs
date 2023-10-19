@@ -161,7 +161,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
         /// <param name="sourceUri">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
         public static void CopyToClipboard(string htmlFragment, string? title = null, Uri? sourceUri = null)
         {
-            var dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
+            DataObject dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
 
             Clipboard.Clear();
             Clipboard.SetDataObject(dataObject);

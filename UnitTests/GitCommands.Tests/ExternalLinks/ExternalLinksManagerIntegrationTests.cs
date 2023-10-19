@@ -24,7 +24,7 @@ namespace GitCommandsTests.ExternalLinks
         {
             _testHelper = new GitModuleTestHelper();
 
-            var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
+            string content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
             _level1 = _testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
             content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level2_repodist_GitExtensions.settings.xml");
             _level2 = _testHelper.CreateFile(_testHelper.TemporaryPath + "/RoamingProfile", "GitExtensions.settings", content);
@@ -66,7 +66,7 @@ namespace GitCommandsTests.ExternalLinks
             };
             manager.Add(definition);
 
-            var effectiveSettings = manager.GetEffectiveSettings();
+            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = manager.GetEffectiveSettings();
 
             // 2 comes from the user roaming settings
             // 3 come from the distributed
@@ -96,7 +96,7 @@ namespace GitCommandsTests.ExternalLinks
             };
             manager.Add(definition);
 
-            var effectiveSettings = manager.GetEffectiveSettings();
+            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = manager.GetEffectiveSettings();
 
             // 1 comes from the local
             // 3 come from the distributed
@@ -128,7 +128,7 @@ namespace GitCommandsTests.ExternalLinks
             };
             manager.Add(definition);
 
-            var effectiveSettings = manager.GetEffectiveSettings();
+            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = manager.GetEffectiveSettings();
 
             // 1 comes from the user roaming settings
             // 4 come from the distributed
@@ -149,7 +149,7 @@ namespace GitCommandsTests.ExternalLinks
 
             ExternalLinksManager manager = new(_repoLocal);
 
-            var effective = manager.GetEffectiveSettings();
+            IReadOnlyList<ExternalLinkDefinition> effective = manager.GetEffectiveSettings();
 
             // 1 comes from the user roaming settings
             // 3 come from the distributed
@@ -160,7 +160,7 @@ namespace GitCommandsTests.ExternalLinks
 
             manager.Save();
 
-            var effectiveSettings = manager.GetEffectiveSettings();
+            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = manager.GetEffectiveSettings();
 
             // 0 comes from the user roaming settings
             // 3 come from the distributed

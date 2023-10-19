@@ -23,7 +23,7 @@ namespace GitExtUtils.GitUI
 
             static void SetCursor(string fieldName, IDC idc)
             {
-                var field = typeof(Cursors).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
+                FieldInfo field = typeof(Cursors).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
                 field?.SetValue(null, new Cursor(NativeMethods.LoadCursor(IntPtr.Zero, idc)));
             }
         }

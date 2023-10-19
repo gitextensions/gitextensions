@@ -28,7 +28,7 @@ namespace GitUI.UserControls
         /// </summary>
         public void SetSelectedCommitHash(string? commitHash)
         {
-            var oldCommitHash = SelectedObjectId;
+            ObjectId oldCommitHash = SelectedObjectId;
 
             SelectedObjectId = Module.RevParse(commitHash);
 
@@ -42,7 +42,7 @@ namespace GitUI.UserControls
                 SelectedObjectIdChanged?.Invoke(this, EventArgs.Empty);
             }
 
-            var isArtificialCommitForEmptyRepo = commitHash == "HEAD";
+            bool isArtificialCommitForEmptyRepo = commitHash == "HEAD";
 
             if (SelectedObjectId is null || isArtificialCommitForEmptyRepo)
             {
@@ -54,11 +54,11 @@ namespace GitUI.UserControls
                 textBoxCommitHash.Text = SelectedObjectId.ToShortString();
                 ThreadHelper.FileAndForget(async () =>
                     {
-                        var currentCheckout = Module.GetCurrentCheckout();
+                        ObjectId currentCheckout = Module.GetCurrentCheckout();
 
                         Validates.NotNull(currentCheckout);
 
-                        var text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
+                        string text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
 
                         await this.SwitchToMainThreadAsync();
 

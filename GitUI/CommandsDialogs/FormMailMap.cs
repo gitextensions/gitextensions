@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var path = _fullPathResolver.Resolve(".mailmap");
+                string path = _fullPathResolver.Resolve(".mailmap");
                 if (File.Exists(path))
                 {
                     _NO_TRANSLATE_MailMapText.ViewFileAsync(path!);
@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
         {
-            var needToClose = false;
+            bool needToClose = false;
 
             if (!IsFileUpToDate())
             {

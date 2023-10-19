@@ -36,7 +36,7 @@
 
         public static Color GetBy(AppColor name, string[]? variations = null)
         {
-            if (!Values.TryGetValue(name, out var result))
+            if (!Values.TryGetValue(name, out Color result))
             {
                 result = FallbackColor;
             }
@@ -48,12 +48,12 @@
 
             foreach (string variation in variations)
             {
-                if (!Variations.TryGetValue(variation, out var colorOverrides))
+                if (!Variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
                 {
                     continue;
                 }
 
-                if (colorOverrides.TryGetValue(name, out var colorOverride))
+                if (colorOverrides.TryGetValue(name, out Color colorOverride))
                 {
                     result = colorOverride;
                 }

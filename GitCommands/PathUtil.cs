@@ -120,8 +120,8 @@ namespace GitCommands
 
         public static string GetFileName(string fileName)
         {
-            var pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
-            var pos = fileName.LastIndexOfAny(pathSeparators);
+            char[] pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
+            int pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
             {
                 fileName = fileName[(pos + 1)..];
@@ -360,7 +360,7 @@ namespace GitCommands
                     return true;
                 }
 
-                foreach (var path in EnvironmentPathsProvider.GetEnvironmentValidPaths())
+                foreach (string path in EnvironmentPathsProvider.GetEnvironmentValidPaths())
                 {
                     fullPath = Path.Combine(path, fileName);
                     if (File.Exists(fullPath))
@@ -417,13 +417,13 @@ namespace GitCommands
         public static string GetDisplayPath(string path)
         {
             // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
-            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            var comparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            StringComparison comparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
             if (path.StartsWith(userProfile, comparison))
             {
-                var length = path.Length - userProfile.Length;
+                int length = path.Length - userProfile.Length;
                 if (path.EndsWith("/") || path.EndsWith("\\"))
                 {
                     length--;
@@ -504,13 +504,13 @@ namespace GitCommands
 
             string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
             {
-                var envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
+                string envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
                 if (string.IsNullOrEmpty(envVarFolder))
                 {
                     return null;
                 }
 
-                var path = Path.Combine(envVarFolder, location);
+                string path = Path.Combine(envVarFolder, location);
                 if (!Directory.Exists(path))
                 {
                     return null;

@@ -36,7 +36,7 @@ namespace GitExtUtils
         /// <param name="commands">One or more command names to register this config item against.</param>
         public void Add(GitConfigItem configItem, params string[] commands)
         {
-            foreach (var command in commands)
+            foreach (string command in commands)
             {
                 _configByCommand.AddOrUpdate(
                     command,
@@ -52,7 +52,7 @@ namespace GitExtUtils
         /// <returns>The default config items for <paramref name="command"/>.</returns>
         public IReadOnlyList<GitConfigItem> Get(string command)
         {
-            return _configByCommand.TryGetValue(command, out var items)
+            return _configByCommand.TryGetValue(command, out GitConfigItem[] items)
                 ? items
                 : Array.Empty<GitConfigItem>();
         }

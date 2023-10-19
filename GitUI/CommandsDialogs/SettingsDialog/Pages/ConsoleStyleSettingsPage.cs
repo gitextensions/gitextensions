@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return new SettingsPageReferenceByType(typeof(ConsoleStyleSettingsPage));
         }
 
-        private void consoleFontChangeButton_Click(object sender, System.EventArgs e)
+        private void consoleFontChangeButton_Click(object sender, EventArgs e)
         {
             consoleFontDialog.Font = _consoleFont;
             DialogResult result = consoleFontDialog.ShowDialog(this);

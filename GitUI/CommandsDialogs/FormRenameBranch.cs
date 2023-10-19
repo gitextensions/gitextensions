@@ -30,8 +30,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var caretPosition = BranchNameTextBox.SelectionStart;
-            var branchName = _branchNameNormaliser.Normalise(BranchNameTextBox.Text, _gitBranchNameOptions);
+            int caretPosition = BranchNameTextBox.SelectionStart;
+            string branchName = _branchNameNormaliser.Normalise(BranchNameTextBox.Text, _gitBranchNameOptions);
             BranchNameTextBox.Text = branchName;
             BranchNameTextBox.SelectionStart = caretPosition;
         }
@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
             // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
             Ok.Focus();
 
-            var newName = BranchNameTextBox.Text;
+            string newName = BranchNameTextBox.Text;
 
             if (newName == _oldName)
             {
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var renameBranchResult = Module.RenameBranch(_oldName, newName);
+                string renameBranchResult = Module.RenameBranch(_oldName, newName);
 
                 if (!string.IsNullOrEmpty(renameBranchResult))
                 {

@@ -35,7 +35,7 @@ namespace ReleaseNotesGeneratorTests
         [TestCase("0824e058c@RevisionDiffProvider@ Release tests", "0824e058c", "RevisionDiffProvider@ Release tests")]
         public void Parse_line_should_parse_correctly(string line, string expectedHash, string expectedMessage)
         {
-            var logLine = _parser.Parse(line);
+            LogLine logLine = _parser.Parse(line);
 
             logLine.Should().NotBeNull();
             logLine.Commit.Should().Be(expectedHash);
@@ -91,11 +91,11 @@ The irrelevant commands are disabled
 There are some existing checks for bareRepositories in InternalInitialize() (where some init code is running...) that al
 so could be removed after this (some were missing from that menu). checkoutBranchToolStripMenuItem is a little special t";
 
-            var logLines = _parser.Parse(log.Replace("\r\n", "\n").Split('\n')).ToList();
+            List<LogLine> logLines = _parser.Parse(log.Replace("\r\n", "\n").Split('\n')).ToList();
 
             logLines.Count.Should().Be(18);
 
-            var line = logLines.SingleOrDefault(l => l.Commit == "77fc3cb50");
+            LogLine line = logLines.SingleOrDefault(l => l.Commit == "77fc3cb50");
             line.Should().NotBeNull();
             line.MessageLines.Count.Should().Be(10);
 

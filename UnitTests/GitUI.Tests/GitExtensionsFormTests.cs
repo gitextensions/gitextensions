@@ -26,7 +26,7 @@ namespace GitUITests
                 Size = new Size(500, 500)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
+            GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
             test.GetScreensWorkingArea = () => throw new InvalidOperationException();
 
             form.InvokeRestorePosition();
@@ -45,7 +45,7 @@ namespace GitUITests
                 WindowState = FormWindowState.Minimized
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
+            GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
             test.GetScreensWorkingArea = () => throw new InvalidOperationException();
 
             form.InvokeRestorePosition();
@@ -64,7 +64,7 @@ namespace GitUITests
                 Size = new Size(500, 500)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
+            GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
             test.GetScreensWorkingArea = () => throw new InvalidOperationException();
             test.WindowPositionManager = _windowPositionManager;
 
@@ -89,14 +89,14 @@ namespace GitUITests
                 Size = new Size(300, 300),
                 FormBorderStyle = borderStyle
             };
-            var screens = new[]
+            Rectangle[] screens = new[]
             {
                 new Rectangle(-1920, 0, 1920, 1080),
                 new Rectangle(1920, 0, 1920, 1080),
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
+            GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
             test.GetScreensWorkingArea = () => screens;
             test.WindowPositionManager = _windowPositionManager;
 
@@ -124,14 +124,14 @@ namespace GitUITests
                 Location = new Point(-100, -100),
                 Size = new Size(300, 300),
             };
-            var screens = new[]
+            Rectangle[] screens = new[]
             {
                 new Rectangle(-1920, 0, 1920, 1080),
                 new Rectangle(1920, 0, 1920, 1080),
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
+            GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
             test.GetScreensWorkingArea = () => screens;
             test.WindowPositionManager = _windowPositionManager;
 
@@ -163,14 +163,14 @@ namespace GitUITests
                 Owner = owner,
                 StartPosition = FormStartPosition.CenterParent
             };
-            var screens = new[]
+            Rectangle[] screens = new[]
             {
                 new Rectangle(-1920, 0, 1920, 1080),
                 new Rectangle(1920, 0, 1920, 1080),
                 new Rectangle(0, 0, 1920, 1080)
             };
 
-            var test = form.GetGitExtensionsFormTestAccessor();
+            GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
             test.GetScreensWorkingArea = () => screens;
             test.WindowPositionManager = _windowPositionManager;
             _windowPositionManager.LoadPosition(form)

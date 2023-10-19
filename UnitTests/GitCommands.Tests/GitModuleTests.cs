@@ -41,7 +41,7 @@ namespace GitCommandsTests
         [TestCase(@"author <author@mail.com>", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
         public void CommitCmdShouldTrimAuthor(string input, string expected)
         {
-            var actual = _gitModule.CommitCmd(false, author: input);
+            ArgumentString actual = _gitModule.CommitCmd(false, author: input);
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
@@ -58,14 +58,14 @@ namespace GitCommandsTests
         [TestCase(true, true, @"", true, true, true, @"12345678", @"commit --amend --no-verify --signoff -S12345678 -F ""COMMITMESSAGE""")]
         public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool gpgSign, string gpgKeyId, string expected)
         {
-            var actual = _gitModule.CommitCmd(amend, signOff, author, useExplicitCommitMessage, noVerify, gpgSign, gpgKeyId);
+            ArgumentString actual = _gitModule.CommitCmd(amend, signOff, author, useExplicitCommitMessage, noVerify, gpgSign, gpgKeyId);
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
         [Test]
         public void ParseGitBlame()
         {
-            var path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/README.blame");
+            string path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/README.blame");
             GitBlame result = _gitModule.ParseGitBlame(File.ReadAllText(path), Encoding.UTF8);
 
             Assert.AreEqual(80, result.Lines.Count);
@@ -268,7 +268,7 @@ namespace GitCommandsTests
                 "5303e7114f1896c639dea0231fac522752cc44a2\trefs/remotes/upstream/mono\n" +
                 "366dfba1abf6cb98d2934455713f3d190df2ba34\trefs/tags/2.51\n";
 
-            var refs = _gitModule.ParseRefs(refList);
+            IReadOnlyList<IGitRef> refs = _gitModule.ParseRefs(refList);
 
             Assert.AreEqual(4, refs.Count);
 
@@ -333,7 +333,7 @@ namespace GitCommandsTests
         {
             using (_executable.StageOutput(cmd + " " + Sha1.ToString(), output))
             {
-                var result = _gitModule.GetAllBranchesWhichContainGivenCommit(Sha1, getLocal, getRemote);
+                IReadOnlyList<string> result = _gitModule.GetAllBranchesWhichContainGivenCommit(Sha1, getLocal, getRemote);
                 Assert.AreEqual(result, expected);
             }
         }
@@ -347,7 +347,7 @@ namespace GitCommandsTests
             bool getRemote,
             string[] expected)
         {
-            var result = _gitModule.GetAllBranchesWhichContainGivenCommit(Sha1, getLocal, getRemote);
+            IReadOnlyList<string> result = _gitModule.GetAllBranchesWhichContainGivenCommit(Sha1, getLocal, getRemote);
             Assert.AreEqual(result, expected);
         }
 
@@ -376,7 +376,7 @@ namespace GitCommandsTests
         [Test]
         public void RevParse_should_query_git_and_return_ObjectId_if_get_valid_hash()
         {
-            var revisionExpression = "11111";
+            string revisionExpression = "11111";
             using (_executable.StageOutput($"rev-parse --quiet --verify \"{revisionExpression}~0\"", new string('1', ObjectId.Sha1CharCount), 0))
             {
                 _gitModule.RevParse(revisionExpression).Should().Be(ObjectId.WorkTreeId);
@@ -386,7 +386,7 @@ namespace GitCommandsTests
         [Test]
         public void RevParse_should_query_git_and_return_null_if_invalid_response()
         {
-            var revisionExpression = "11111";
+            string revisionExpression = "11111";
             using (_executable.StageOutput($"rev-parse --quiet --verify \"{revisionExpression}~0\"", "foo bar", 0))
             {
                 _gitModule.RevParse(revisionExpression).Should().BeNull();
@@ -430,7 +430,7 @@ namespace GitCommandsTests
             // TODO produce a valid working directory
             GitModule module = new(Path.GetTempPath());
             // git diff --find-renames --find-copies -z --name-status
-            var statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
+            List<GitItemStatus> statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
 
             await Verifier.VerifyJson(JsonConvert.SerializeObject(statuses))
                 .UseParameters(testName);
@@ -452,7 +452,7 @@ namespace GitCommandsTests
         public void GetCurrentCheckout_should_query_git_and_return_sha_for_HEAD()
         {
             ObjectId objectId;
-            var headId = "69a7c7a40230346778e7eebed809773a6bc45268";
+            string headId = "69a7c7a40230346778e7eebed809773a6bc45268";
 
             using (_executable.StageOutput("rev-parse HEAD", headId))
             {
@@ -468,7 +468,7 @@ namespace GitCommandsTests
         {
             using (_executable.StageOutput("remote -v", line))
             {
-                await AssertEx.ThrowsAsync<System.Exception>(async () => await _gitModule.GetRemotesAsync());
+                await AssertEx.ThrowsAsync<Exception>(async () => await _gitModule.GetRemotesAsync());
             }
         }
 
@@ -477,7 +477,7 @@ namespace GitCommandsTests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var lines = new[]
+                string[] lines = new[]
                 {
                     "RussKie\tgit://github.com/RussKie/gitextensions.git (fetch)",
                     "RussKie\tgit://github.com/RussKie/gitextensions.git (push)",
@@ -503,7 +503,7 @@ namespace GitCommandsTests
 
                 using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
                 {
-                    var remotes = await _gitModule.GetRemotesAsync();
+                    IReadOnlyList<GitUIPluginInterfaces.Remote> remotes = await _gitModule.GetRemotesAsync();
 
                     Assert.AreEqual(6, remotes.Count);
 
@@ -544,11 +544,11 @@ namespace GitCommandsTests
         [Test]
         public void GetRemoteNames()
         {
-            var lines = new[] { "RussKie", "origin", "upstream", "asymmetrical", "with-space" };
+            string[] lines = new[] { "RussKie", "origin", "upstream", "asymmetrical", "with-space" };
 
             using (_executable.StageOutput("remote", string.Join("\n", lines)))
             {
-                var remotes = _gitModule.GetRemoteNames();
+                IReadOnlyList<string> remotes = _gitModule.GetRemoteNames();
 
                 Assert.AreEqual(lines, remotes);
             }
@@ -566,7 +566,7 @@ namespace GitCommandsTests
                 args.ToString(),
                 $"{Sha2}\n{Sha3}\n"))
             {
-                var parents = _gitModule.GetParents(Sha1);
+                IReadOnlyList<ObjectId> parents = _gitModule.GetParents(Sha1);
 
                 Assert.AreEqual(parents, new[] { Sha2, Sha3 });
             }
@@ -640,7 +640,7 @@ namespace GitCommandsTests
         {
             get
             {
-                var headObjectId = ObjectId.Random();
+                ObjectId headObjectId = ObjectId.Random();
 
                 yield return new TestCaseData(ObjectId.IndexId, ObjectId.WorkTreeId, ObjectId.IndexId, StagedStatus.WorkTree);
 
@@ -671,7 +671,7 @@ namespace GitCommandsTests
         [Test, TestCaseSource(nameof(StagedStatuses))]
         public void GetStagedStatus(ObjectId firstRevision, ObjectId secondRevision, ObjectId parentToSecond, StagedStatus status)
         {
-            var stagedStatus = _gitModule.GetTestAccessor().GetStagedStatus(firstRevision, secondRevision, parentToSecond);
+            StagedStatus stagedStatus = _gitModule.GetTestAccessor().GetStagedStatus(firstRevision, secondRevision, parentToSecond);
             Assert.AreEqual(status, stagedStatus);
         }
 
@@ -689,7 +689,7 @@ namespace GitCommandsTests
                     Debug.WriteLine($"Repo[{i}]:{moduleTestHelpers[i].TemporaryPath}");
                 }
 
-                foreach (var helper in moduleTestHelpers)
+                foreach (GitModuleTestHelper helper in moduleTestHelpers)
                 {
                     // Submodules require at least one commit
                     helper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial commit""");
@@ -697,20 +697,20 @@ namespace GitCommandsTests
 
                 for (int i = numModules - 1; i > 0; --i)
                 {
-                    var parent = moduleTestHelpers[i - 1];
-                    var child = moduleTestHelpers[i];
+                    GitModuleTestHelper parent = moduleTestHelpers[i - 1];
+                    GitModuleTestHelper child = moduleTestHelpers[i];
 
                     // Add child as submodule of parent
                     parent.AddSubmodule(child, $"repo{i}");
                 }
 
                 // Init all modules of root
-                var root = moduleTestHelpers[0];
+                GitModuleTestHelper root = moduleTestHelpers[0];
                 IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();
 
                 root.Module.GitExecutable.Execute(Commands.SubmoduleUpdate(name: null, cfgs));
 
-                var paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
+                IReadOnlyList<string> paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
                 Assert.AreEqual(new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" }, paths, $"Modules: {string.Join(" ", paths)}");
 
                 paths = root.Module.GetSubmodulesLocalPaths(recursive: false);
@@ -718,7 +718,7 @@ namespace GitCommandsTests
             }
             finally
             {
-                foreach (var helper in moduleTestHelpers)
+                foreach (GitModuleTestHelper helper in moduleTestHelpers)
                 {
                     helper.Dispose();
                 }
@@ -747,7 +747,7 @@ namespace GitCommandsTests
 
             // Add and init the submodule
             moduleTestHelperSuper.AddSubmodule(moduleTestHelperSub, "sub repo");
-            var moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
+            GitModule moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
 
             // Commit in submodule
             moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");
@@ -786,7 +786,7 @@ namespace GitCommandsTests
             repo.CreateAnnotatedTag("test_tag", repo.CommitHash, tagMessage);
 
             // execute test look-up
-            var actualReturnedMessage = repo.Module.GetTagMessage("test_tag");
+            string actualReturnedMessage = repo.Module.GetTagMessage("test_tag");
 
             // compare result to expectations
             Assert.AreEqual(expectedReturnedMessage, actualReturnedMessage);
@@ -799,9 +799,9 @@ namespace GitCommandsTests
         [TestCase(true, @"update-index --add --stdin")]
         public void UpdateIndexCmd_should_add_core_safecrlf(bool showErrorsWhenStagingFiles, string expected)
         {
-            var accessor = _gitModule.GetTestAccessor();
+            GitModule.TestAccessor accessor = _gitModule.GetTestAccessor();
 
-            var actual = accessor.UpdateIndexCmd(showErrorsWhenStagingFiles).ToString();
+            string actual = accessor.UpdateIndexCmd(showErrorsWhenStagingFiles).ToString();
             Assert.AreEqual(expected, actual);
         }
 
@@ -857,10 +857,10 @@ namespace GitCommandsTests
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
             using GitModuleTestHelper moduleTestHelper = new();
-            var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+            GitModule gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
             string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
             _executable.StageOutput(args, dummyCommandOutput);
-            var result = gitModule.CheckoutIndexFiles(files.ToList());
+            string result = gitModule.CheckoutIndexFiles(files.ToList());
             Assert.AreEqual(dummyCommandOutput, result);
         }
 
@@ -869,10 +869,10 @@ namespace GitCommandsTests
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
             using GitModuleTestHelper moduleTestHelper = new();
-            var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+            GitModule gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
             string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
             _executable.StageOutput(args, dummyCommandOutput);
-            var result = gitModule.RemoveFiles(files.ToList(), false);
+            string result = gitModule.RemoveFiles(files.ToList(), false);
             Assert.AreEqual(dummyCommandOutput, result);
         }
 
@@ -887,14 +887,14 @@ namespace GitCommandsTests
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
             using GitModuleTestHelper moduleTestHelper = new();
-            var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
+            GitModule gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
 
-            foreach (var arg in args)
+            foreach (string arg in args)
             {
                 _executable.StageCommand(arg);
             }
 
-            var result = gitModule.BatchUnstageFiles(files);
+            bool result = gitModule.BatchUnstageFiles(files);
             Assert.AreEqual(expectedResult, result);
         }
 
@@ -905,10 +905,10 @@ namespace GitCommandsTests
                 yield return new TestCaseData(
                     new GitItemStatus[]
                     {
-                        new GitItemStatus("abc2") { IsNew = true },
-                        new GitItemStatus("abc2") { IsNew = true, IsDeleted = true },
-                        new GitItemStatus("abc2") { IsNew = false },
-                        new GitItemStatus("abc3") { IsNew = false, IsRenamed = true, OldName = "def" }
+                        new("abc2") { IsNew = true },
+                        new("abc2") { IsNew = true, IsDeleted = true },
+                        new("abc2") { IsNew = false },
+                        new("abc3") { IsNew = false, IsRenamed = true, OldName = "def" }
                     },
                     new string[]
                     {
@@ -921,8 +921,8 @@ namespace GitCommandsTests
                 yield return new TestCaseData(
                     new GitItemStatus[]
                     {
-                        new GitItemStatus("abc2") { IsNew = false },
-                        new GitItemStatus("abc3") { IsNew = false, IsDeleted = true }
+                        new("abc2") { IsNew = false },
+                        new("abc3") { IsNew = false, IsDeleted = true }
                     },
                     new string[]
                     {

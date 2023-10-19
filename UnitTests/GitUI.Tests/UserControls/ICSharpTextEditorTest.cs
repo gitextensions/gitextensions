@@ -9,19 +9,19 @@ namespace GitUITests.UserControls
         public void ResourceStreamNamesMatchSyntaxNodes()
         {
             Assembly assembly = typeof(ICSharpCode.TextEditor.Document.ResourceSyntaxModeProvider).Assembly;
-            var resources = assembly.GetManifestResourceNames();
-            var syntaxNodesResource = resources.First(r => r.Contains("SyntaxModes"));
-            var xmlModes = XElement.Load(assembly.GetManifestResourceStream(syntaxNodesResource)).Elements("Mode");
-            var resourcesToCheck = resources.Where(r => r.EndsWith("xshd"));
+            string[] resources = assembly.GetManifestResourceNames();
+            string syntaxNodesResource = resources.First(r => r.Contains("SyntaxModes"));
+            IEnumerable<XElement> xmlModes = XElement.Load(assembly.GetManifestResourceStream(syntaxNodesResource)).Elements("Mode");
+            IEnumerable<string> resourcesToCheck = resources.Where(r => r.EndsWith("xshd"));
 
             var matched = from xml in xmlModes
                           join res in resourcesToCheck on xml.Attribute("file").Value equals
                           res.Replace("ICSharpCode.TextEditor.Resources.", "")
                           select new { ResourceName = res, XMLModeFile = xml.Attribute("file").Value };
 
-            var missingInXML = resourcesToCheck.Except(matched.Select(m => m.ResourceName));
+            IEnumerable<string> missingInXML = resourcesToCheck.Except(matched.Select(m => m.ResourceName));
 
-            var missingInResources = from nd in xmlModes
+            IEnumerable<string> missingInResources = from nd in xmlModes
                                      where !matched.Select(m => m.XMLModeFile).Contains(nd.Attribute("file").Value)
                                      select nd.Attribute("file").Value;
 

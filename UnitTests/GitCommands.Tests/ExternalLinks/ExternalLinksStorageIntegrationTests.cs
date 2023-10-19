@@ -23,14 +23,14 @@ namespace GitCommandsTests.ExternalLinks
         [TestCase("level3_roaming_GitExtensions", 1)]
         public void Can_load_settings(string fileName, int expected)
         {
-            var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{fileName}.settings.xml");
+            string content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{fileName}.settings.xml");
 
             using GitModuleTestHelper testHelper = new();
-            var settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
+            string settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
             using GitExtSettingsCache settingsCache = new(settingsFile);
             DistributedSettings settings = new(lowerPriority: null, settingsCache, SettingLevel.Unknown);
 
-            var definitions = _externalLinksStorage.Load(settings);
+            IReadOnlyList<ExternalLinkDefinition> definitions = _externalLinksStorage.Load(settings);
             definitions.Count.Should().Be(expected);
         }
 

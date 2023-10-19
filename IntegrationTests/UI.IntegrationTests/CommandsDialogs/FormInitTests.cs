@@ -29,7 +29,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_show_supplied_path()
         {
-            var currentDir = "bla";
+            string currentDir = "bla";
             RunFormTest(
                 form =>
                 {
@@ -56,7 +56,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TestCase(@"foo\bar")]
         public void IsRootedDirectoryPath_should_detect_invalid_paths(string input)
         {
-            var currentDir = "bla";
+            string currentDir = "bla";
             RunFormTest(
                 form =>
                 {
@@ -71,7 +71,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TestCase(@"  c:\foo\bar  ")]
         public void IsRootedDirectoryPath_returns_true_on_valid_paths(string input)
         {
-            var currentDir = "bla";
+            string currentDir = "bla";
             RunFormTest(
                 form =>
                 {

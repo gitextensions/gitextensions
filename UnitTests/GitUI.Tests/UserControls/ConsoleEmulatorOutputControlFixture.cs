@@ -57,7 +57,7 @@ namespace GitUITests.UserControls
         {
             string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\" rebase  -i --autosquash --autostash \"branch_foo\"";
 
-            var outputData = new[]
+            string[] outputData = new[]
             {
                 cmd,
                 Environment.NewLine,
@@ -84,7 +84,7 @@ namespace GitUITests.UserControls
 
             filter.Flush();
 
-            var expectedData = new[]
+            string[] expectedData = new[]
             {
                 "Receiving: 10%\r",
                 "Receiving: 20%\r",
@@ -102,7 +102,7 @@ namespace GitUITests.UserControls
         {
             string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\" rebase  -i --autosquash --autostash \"branch_foo\"";
 
-            var outputData = new[]
+            string[] outputData = new[]
             {
                 cmd,
                 Environment.NewLine,
@@ -129,7 +129,7 @@ namespace GitUITests.UserControls
 
             filter.Flush();
 
-            var expectedData = new[]
+            string[] expectedData = new[]
             {
                 "Receiving: 10%\r",
                 "Receiving: 20%\r",

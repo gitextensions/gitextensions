@@ -31,7 +31,7 @@ namespace GitUI.Editor
             _avatars = _blameLines.Select(a => a.Avatar).ToList();
 
             // Update the resolution otherwise the image is not drawn at the good size :(
-            foreach (var avatar in _avatars)
+            foreach (Image avatar in _avatars)
             {
                 if (avatar is Bitmap bitmapAvatar)
                 {
@@ -40,7 +40,7 @@ namespace GitUI.Editor
             }
 
             // Build brushes
-            foreach (var blameLine in _blameLines)
+            foreach (GitBlameEntry blameLine in _blameLines)
             {
                 if (!_brushs.ContainsKey(blameLine.AgeBucketIndex))
                 {
@@ -68,10 +68,10 @@ namespace GitUI.Editor
                 return;
             }
 
-            var verticalOffset = textArea.VirtualTop.Y;
-            var lineStart = verticalOffset / LineHeight;
-            var negativeOffset = (lineStart * LineHeight) - verticalOffset;
-            var lineCount = (int)Math.Ceiling((double)(rect.Height - negativeOffset) / LineHeight);
+            int verticalOffset = textArea.VirtualTop.Y;
+            int lineStart = verticalOffset / LineHeight;
+            int negativeOffset = (lineStart * LineHeight) - verticalOffset;
+            int lineCount = (int)Math.Ceiling((double)(rect.Height - negativeOffset) / LineHeight);
 
             for (int i = 0; i < lineCount; i++)
             {

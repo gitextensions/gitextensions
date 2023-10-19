@@ -47,7 +47,7 @@ namespace GitCommandsTests.Settings
         [TestCase("")]
         public void SaveImpl_should_throw_if_invalid_path(string settingsFilePath)
         {
-            var cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
+            FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
             cache.SetLastModificationDate(DateTime.Now);
             ((Action)(() => cache.SaveImpl())).Should().Throw<SaveSettingsException>();
         }
@@ -55,12 +55,12 @@ namespace GitCommandsTests.Settings
         [Test]
         public void SaveImpl_should_create_folder_if_absent()
         {
-            var tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            var settingsFilePath = Path.Combine(tempPath, "GitExtensions.settings");
+            string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string settingsFilePath = Path.Combine(tempPath, "GitExtensions.settings");
 
             try
             {
-                var cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
+                FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
                 cache.SetLastModificationDate(DateTime.Now);
 
                 Directory.Exists(tempPath).Should().BeFalse();
@@ -94,22 +94,22 @@ namespace GitCommandsTests.Settings
 
             protected override void ClearImpl()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override string GetValueImpl(string key)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void ReadSettings(string fileName)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void SetValueImpl(string key, string value)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void WriteSettings(string fileName)

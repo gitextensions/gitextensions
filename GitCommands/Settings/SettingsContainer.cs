@@ -40,7 +40,7 @@ namespace GitCommands.Settings
 
         public override string? GetValue(string name)
         {
-            TryGetValue(name, out var value);
+            TryGetValue(name, out string? value);
             return value;
         }
 

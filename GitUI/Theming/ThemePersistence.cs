@@ -25,7 +25,7 @@ namespace GitUI.Theming
 
         public void Save(Theme theme, string themeFileName)
         {
-            var serializationData = (IThemeSerializationData)theme;
+            IThemeSerializationData serializationData = (IThemeSerializationData)theme;
             string serialized = string.Join(
                 Environment.NewLine,
                 Enumerable.Concat(

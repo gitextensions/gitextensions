@@ -28,7 +28,7 @@ namespace GitUI.LeftPanel
 
         public bool Fetch()
         {
-            var remoteBranchInfo = GetRemoteBranchInfo();
+            RemoteBranchInfo remoteBranchInfo = GetRemoteBranchInfo();
             UICommands.StartPullDialogAndPullImmediately(
                 out bool pullCompleted,
                 TreeViewNode.TreeView,
@@ -40,8 +40,8 @@ namespace GitUI.LeftPanel
 
         private RemoteBranchInfo GetRemoteBranchInfo()
         {
-            var remote = FullPath.LazySplit('/').First();
-            var branch = FullPath[(remote.Length + 1)..];
+            string remote = FullPath.LazySplit('/').First();
+            string branch = FullPath[(remote.Length + 1)..];
             return new RemoteBranchInfo(remote, branch);
         }
 
@@ -57,7 +57,7 @@ namespace GitUI.LeftPanel
 
         public bool Delete()
         {
-            var remoteBranchInfo = GetRemoteBranchInfo();
+            RemoteBranchInfo remoteBranchInfo = GetRemoteBranchInfo();
             return UICommands.StartDeleteRemoteBranchDialog(TreeViewNode.TreeView, remoteBranchInfo.Remote + '/' + remoteBranchInfo.BranchName);
         }
 

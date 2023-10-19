@@ -49,7 +49,7 @@ namespace GitCommands.Git
         /// <returns><see langword="true"/> if index is locked; otherwise <see langword="false"/>.</returns>
         public bool IsIndexLocked()
         {
-            var indexLockFile = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
+            string indexLockFile = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
             return _fileSystem.File.Exists(indexLockFile);
         }
 
@@ -62,7 +62,7 @@ namespace GitCommands.Git
         /// <exception cref="FileDeleteException">Unable to delete specific index.lock.</exception>
         public void UnlockIndex(bool includeSubmodules = true)
         {
-            var workingFolderIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
+            string workingFolderIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
             if (!includeSubmodules)
             {
                 DeleteIndexLock(workingFolderIndexLock);
@@ -70,15 +70,15 @@ namespace GitCommands.Git
             }
 
             // get the list of files to delete
-            var submodules = _module.GetSubmodulesLocalPaths();
-            var list = submodules.Select(sm =>
+            IReadOnlyList<string> submodules = _module.GetSubmodulesLocalPaths();
+            IEnumerable<string> list = submodules.Select(sm =>
             {
-                var submodulePath = _module.GetSubmoduleFullPath(sm);
-                var submoduleIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(submodulePath), IndexLock);
+                string submodulePath = _module.GetSubmoduleFullPath(sm);
+                string submoduleIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(submodulePath), IndexLock);
                 return submoduleIndexLock;
             }).Union(new[] { workingFolderIndexLock });
 
-            foreach (var indexLock in list)
+            foreach (string indexLock in list)
             {
                 DeleteIndexLock(indexLock);
             }

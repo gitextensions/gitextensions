@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
@@ -55,7 +56,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormMergeBranchLoad(object sender, EventArgs e)
         {
-            var selectedHead = Module.GetSelectedBranch();
+            string selectedHead = Module.GetSelectedBranch();
             currentBranchLabel.Text = selectedHead;
 
             // Offer rebase on refs also for tags (but not stash, notes etc)
@@ -102,7 +103,7 @@ namespace GitUI.CommandsDialogs
                 mergeMessagePath = _commitMessageManager.MergeMessagePath;
             }
 
-            var command = Commands.MergeBranch(Branches.GetSelectedText(),
+            ArgumentString command = Commands.MergeBranch(Branches.GetSelectedText(),
                                                             fastForward.Checked,
                                                             squash.Checked,
                                                             noCommit.Checked,
@@ -112,7 +113,7 @@ namespace GitUI.CommandsDialogs
                                                             addLogMessages.Checked ? (int)nbMessages.Value : (int?)null);
             success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
-            var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
+            bool wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
 
             if (success || wasConflict)
             {

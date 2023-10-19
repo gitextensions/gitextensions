@@ -118,9 +118,9 @@ namespace GitUITests.GitUICommandsTests
         [Test]
         public void RunCommandBasedOnArgument_browse()
         {
-            var selected = ObjectId.Random();
-            var first = ObjectId.Random();
-            var otherIgnored = ObjectId.Random();
+            ObjectId selected = ObjectId.Random();
+            ObjectId first = ObjectId.Random();
+            ObjectId otherIgnored = ObjectId.Random();
             RunCommandBasedOnArgument<FormBrowse>(new string[] { "ge.exe", "browse", $"-commit={selected},{first},,{otherIgnored}" });
         }
 
@@ -174,9 +174,9 @@ namespace GitUITests.GitUICommandsTests
             [Values(false, true)] bool commit,
             [Values(false, true)] bool filter)
         {
-            var expectedTab = command.Contains("blame") ? "Blame" : "Diff";
+            string expectedTab = command.Contains("blame") ? "Blame" : "Diff";
 
-            System.Collections.Generic.List<string> args = new() { "ge.exe", command, "filename" };
+            List<string> args = new() { "ge.exe", command, "filename" };
             if (commit)
             {
                 args.Add(_referenceRepository.CommitHash);
@@ -205,7 +205,7 @@ namespace GitUITests.GitUICommandsTests
             };
             (bool commitValid, bool filter, bool filterValid) = invalidVariants[invalidVariant];
 
-            System.Collections.Generic.List<string> args = new() { "ge.exe", command, "filename" };
+            List<string> args = new() { "ge.exe", command, "filename" };
             args.Add(commitValid ? _referenceRepository.CommitHash : "no-commit");
             if (filter)
             {
@@ -295,7 +295,7 @@ namespace GitUITests.GitUICommandsTests
                 while (true)
                 {
                     await UITest.WaitForIdleAsync();
-                    var formPull = Application.OpenForms.OfType<FormPull>().FirstOrDefault();
+                    FormPull formPull = Application.OpenForms.OfType<FormPull>().FirstOrDefault();
                     if (formPull is not null)
                     {
                         formPull.Close();
@@ -306,7 +306,7 @@ namespace GitUITests.GitUICommandsTests
                 while (true)
                 {
                     await UITest.WaitForIdleAsync();
-                    var formPush = Application.OpenForms.OfType<FormPush>().FirstOrDefault();
+                    FormPush formPush = Application.OpenForms.OfType<FormPush>().FirstOrDefault();
                     if (formPush is not null)
                     {
                         formPush.Close();

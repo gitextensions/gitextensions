@@ -39,7 +39,7 @@ namespace GitCommands
                 throw new ArgumentException("Item must have a valid identifier", nameof(item.Guid));
             }
 
-            var module = _getModule();
+            IGitModule module = _getModule();
 
             if (module is null)
             {
@@ -50,9 +50,9 @@ namespace GitCommands
 
             IEnumerable<INamedGitItem> YieldSubItems()
             {
-                var basePath = (item as GitItem)?.FileName ?? string.Empty;
+                string basePath = (item as GitItem)?.FileName ?? string.Empty;
 
-                foreach (var subItem in module.GetTree(item.ObjectId, full: false))
+                foreach (INamedGitItem subItem in module.GetTree(item.ObjectId, full: false))
                 {
                     if (subItem is GitItem gitItem)
                     {

@@ -18,8 +18,8 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
             ThemeModule.TestAccessor.SuppressWin32Hooks = true;
 
             MockColorsSettingsPage page = new();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
+            IThemeRepository themeRepository = Substitute.For<IThemeRepository>();
+            IThemePathProvider themePathProvider = Substitute.For<IThemePathProvider>();
             themeRepository
                 .GetTheme(Arg.Any<ThemeId>(), Arg.Any<IReadOnlyList<string>>())
                 .Returns(callInfo => new Theme(new Dictionary<AppColor, Color>(), new Dictionary<KnownColor, Color>(), callInfo.Arg<ThemeId>()));

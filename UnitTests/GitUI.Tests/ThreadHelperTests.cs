@@ -96,7 +96,7 @@ namespace GitUITests
         {
             TaskCompletionSource<int> tcs = new();
             tcs.SetCanceled();
-            var actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
+            AggregateException actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
             Assert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
         }
 
@@ -106,7 +106,7 @@ namespace GitUITests
             TaskCompletionSource<int> tcs = new();
             Exception ex = new();
             tcs.SetException(ex);
-            var actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
+            AggregateException actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
             Assert.AreSame(ex, actual.InnerException);
             Assert.AreEqual(1, actual.InnerExceptions.Count);
         }
@@ -131,7 +131,7 @@ namespace GitUITests
         {
             TaskCompletionSource<int> tcs = new();
             tcs.SetCanceled();
-            var actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
+            AggregateException actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
             Assert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
         }
 
@@ -141,7 +141,7 @@ namespace GitUITests
             TaskCompletionSource<int> tcs = new();
             Exception ex = new();
             tcs.SetException(ex);
-            var actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
+            AggregateException actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
             Assert.AreSame(ex, actual.InnerException);
             Assert.AreEqual(1, actual.InnerExceptions.Count);
         }

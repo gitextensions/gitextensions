@@ -38,7 +38,7 @@ namespace GitUITests
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
-            var awaiter = form.SwitchToMainThreadAsync().GetAwaiter();
+            ControlThreadingExtensions.ControlMainThreadAwaiter awaiter = form.SwitchToMainThreadAsync().GetAwaiter();
             Assert.True(awaiter.IsCompleted);
             awaiter.GetResult();
 
@@ -105,7 +105,7 @@ namespace GitUITests
             cancellationTokenSource.Cancel();
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
-            var exception = await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
+            OperationCanceledException exception = await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
 
             // If both conditions are met on entry, the explicit cancellation token is the one used for the exception
             Assert.AreEqual(cancellationTokenSource.Token, exception.CancellationToken);
@@ -116,7 +116,7 @@ namespace GitUITests
         {
             Form form = new();
 
-            var awaitable = form.SwitchToMainThreadAsync();
+            ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync();
 
             form.Dispose();
 
@@ -130,7 +130,7 @@ namespace GitUITests
             Form form = new();
             CancellationTokenSource cancellationTokenSource = new();
 
-            var awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
+            ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 
             cancellationTokenSource.Cancel();
 
@@ -172,7 +172,7 @@ namespace GitUITests
 
             await TaskScheduler.Default;
 
-            var awaitable = form.SwitchToMainThreadAsync();
+            ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync();
 #pragma warning disable VSTHRD103 // Call async methods when in an async method
             ThreadHelper.JoinableTaskFactory.Run(
 #pragma warning restore VSTHRD103 // Call async methods when in an async method
@@ -195,7 +195,7 @@ namespace GitUITests
 
             CancellationTokenSource cancellationTokenSource = new();
 
-            var awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
+            ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 
             cancellationTokenSource.Cancel();
 

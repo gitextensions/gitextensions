@@ -7,7 +7,7 @@ namespace GitCommands.Remotes
         protected Match? MatchRegExes(string remoteUrl, string[] regExs)
         {
             Match? m = null;
-            foreach (var regex in regExs)
+            foreach (string regex in regExs)
             {
                 m = Regex.Match(remoteUrl, regex);
                 if (m.Success)

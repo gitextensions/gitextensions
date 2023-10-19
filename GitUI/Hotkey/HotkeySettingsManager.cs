@@ -57,8 +57,8 @@ namespace GitUI.Hotkey
         public IReadOnlyList<HotkeySettings> LoadSettings()
         {
             // Get the default settings
-            var defaultSettings = CreateDefaultSettings();
-            var loadedSettings = LoadSerializedSettings();
+            IReadOnlyList<HotkeySettings> defaultSettings = CreateDefaultSettings();
+            HotkeySettings[] loadedSettings = LoadSerializedSettings();
 
             MergeIntoDefaultSettings(defaultSettings, loadedSettings);
 

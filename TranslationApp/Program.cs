@@ -3,6 +3,7 @@ using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using ResourceManager.Xliff;
 
 namespace TranslationApp
 {
@@ -36,15 +37,15 @@ namespace TranslationApp
             // Set the flag that will stop this from happening.
             GitModuleForm.IsUnitTestActive = true;
 
-            var neutralItems = TranslationHelpers.LoadNeutralItems();
+            IDictionary<string, List<TranslationItemWithCategory>> neutralItems = TranslationHelpers.LoadNeutralItems();
             string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
             TranslationHelpers.SaveTranslation(null, neutralItems, filename);
 
-            var translationsNames = Translator.GetAllTranslations();
-            foreach (var name in translationsNames)
+            string[] translationsNames = Translator.GetAllTranslations();
+            foreach (string name in translationsNames)
             {
-                var translation = Translator.GetTranslation(name);
-                var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+                IDictionary<string, TranslationFile> translation = Translator.GetTranslation(name);
+                IDictionary<string, List<TranslationItemWithCategory>> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
                 filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
                 TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);
             }

@@ -20,7 +20,7 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
         [TestCase("", "")]
         public void GetInitialDirectory_CalculateInitialDirectory_should_return_ProgramFiles_if_path_and_toolPreferredPath_unset(string path, string toolPreferredPath)
         {
-            var expected = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            string expected = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
             _controller.GetInitialDirectory(path, toolPreferredPath).Should().Be(expected);
         }
@@ -28,7 +28,7 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
         [Test]
         public void GetInitialDirectory_CalculateInitialDirectory_should_return_directory_for_supplied_path()
         {
-            var tempFolder = @"c:\";
+            string tempFolder = @"c:\";
             _controller.GetInitialDirectory(tempFolder, null).Should().Be(@"c:\");
 
             tempFolder = @"c:";
@@ -39,7 +39,7 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
 
             _controller.GetInitialDirectory(tempFolder.Remove(tempFolder.Length - 1), null).Should().Be(tempFolder);
 
-            var tempFile = Path.GetTempFileName(); // something like: C:\Users\user\AppData\Local\Temp\tmp97C5.tmp
+            string tempFile = Path.GetTempFileName(); // something like: C:\Users\user\AppData\Local\Temp\tmp97C5.tmp
             _controller.GetInitialDirectory(tempFile, null).Should().Be(tempFolder);
         }
     }

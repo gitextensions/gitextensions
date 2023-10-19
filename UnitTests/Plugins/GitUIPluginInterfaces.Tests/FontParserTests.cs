@@ -35,7 +35,7 @@ namespace GitUIPluginInterfacesTests
         [TestCase("\t")]
         public void Parse_should_return_default_if_null_or_empty(string serialised)
         {
-            var font = serialised.Parse(_defaultFont);
+            Font font = serialised.Parse(_defaultFont);
 
             font.Should().Be(_defaultFont);
         }
@@ -44,7 +44,7 @@ namespace GitUIPluginInterfacesTests
         [TestCase("Arial;")]
         public void Parse_should_return_default_if_less_then_two_parts(string serialised)
         {
-            var font = serialised.Parse(_defaultFont);
+            Font font = serialised.Parse(_defaultFont);
 
             font.Should().Be(_defaultFont);
         }
@@ -59,7 +59,7 @@ namespace GitUIPluginInterfacesTests
         [TestCase("Courier;12;_IC_;1;1", "Courier", 12f, FontStyle.Italic | FontStyle.Bold)]
         public void Parse_should_parse(string serialised, string name, float size, FontStyle style)
         {
-            var font = serialised.Parse(_defaultFont);
+            Font font = serialised.Parse(_defaultFont);
 
             font.Should().NotBe(_defaultFont);
             font.OriginalFontName.Should().Be(name);

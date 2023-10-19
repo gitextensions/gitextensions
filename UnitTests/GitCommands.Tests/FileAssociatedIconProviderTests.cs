@@ -44,7 +44,7 @@ namespace GitCommandsTests
 
             _iconProvider.Get(folder, file).Should().BeNull();
 
-            var tempPath = Path.Combine(Path.GetTempPath(), file);
+            string tempPath = Path.Combine(Path.GetTempPath(), file);
             _file.Received(1).WriteAllText(tempPath, string.Empty);
         }
 
@@ -59,7 +59,7 @@ namespace GitCommandsTests
 
             _iconProvider.Get(folder, file).Should().BeNull();
 
-            var tempPath = Path.Combine(Path.GetTempPath(), file);
+            string tempPath = Path.Combine(Path.GetTempPath(), file);
             _file.Received(1).WriteAllText(tempPath, string.Empty);
         }
 
@@ -69,7 +69,7 @@ namespace GitCommandsTests
             _iconProvider = new FileAssociatedIconProvider(); // use real file system
             _iconProvider.ResetCache();
 
-            var tempFile = Path.GetTempFileName();
+            string tempFile = Path.GetTempFileName();
             string folder = Path.GetDirectoryName(tempFile);
             string file = Path.GetFileName(tempFile);
 

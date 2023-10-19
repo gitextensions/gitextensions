@@ -43,9 +43,9 @@ namespace GitExtensions.Plugins.Bitbucket
 
             if (module is not null)
             {
-                var repoUrl = _NO_TRANSLATE_RepoUrl = string.Format(_NO_TRANSLATE_RepoUrl,
+                string repoUrl = _NO_TRANSLATE_RepoUrl = string.Format(_NO_TRANSLATE_RepoUrl,
                                           _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
-                var branch = GitCommands.GitRefName.GetFullBranchName(module.GetSelectedBranch());
+                string branch = GitCommands.GitRefName.GetFullBranchName(module.GetSelectedBranch());
 
                 _NO_TRANSLATE_lblLinkCreatePull.Text = repoUrl +
                     ((string.IsNullOrEmpty(branch) || branch.Equals(DetachedHeadParser.DetachedBranch)) ?
@@ -69,7 +69,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             ThreadHelper.FileAndForget(async () =>
             {
-                var repositories = await GetRepositoriesAsync();
+                List<Repository> repositories = await GetRepositoriesAsync();
 
                 await this.SwitchToMainThreadAsync();
                 ddlRepositorySource.DataSource = repositories.ToList();
@@ -85,7 +85,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
                 List<Repository> list = new();
                 GetRepoRequest getDefaultRepo = new(_settings.ProjectKey, _settings.RepoSlug, _settings);
-                var defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
+                BitbucketResponse<Repository> defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
                 if (defaultRepo.Success)
                 {
                     Validates.NotNull(defaultRepo.Result);
@@ -105,7 +105,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             ThreadHelper.FileAndForget(async () =>
             {
-                var pullRequests = await GetPullRequestsAsync();
+                List<PullRequest> pullRequests = await GetPullRequestsAsync();
 
                 await this.SwitchToMainThreadAsync();
                 lbxPullRequests.DataSource = pullRequests;
@@ -119,7 +119,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
                 List<PullRequest> list = new();
                 GetPullRequest getPullRequests = new(_settings.ProjectKey, _settings.RepoSlug, _settings);
-                var result = await getPullRequests.SendAsync().ConfigureAwait(false);
+                BitbucketResponse<List<PullRequest>> result = await getPullRequests.SendAsync().ConfigureAwait(false);
                 if (result.Success)
                 {
                     list.AddRange(result.Result);
@@ -181,11 +181,11 @@ namespace GitExtensions.Plugins.Bitbucket
 
             List<string> list = new();
             GetBranchesRequest getBranches = new(selectedRepo, _settings);
-            var result = await getBranches.SendAsync().ConfigureAwait(false);
+            BitbucketResponse<Newtonsoft.Json.Linq.JObject> result = await getBranches.SendAsync().ConfigureAwait(false);
             if (result.Success)
             {
                 Validates.NotNull(result.Result);
-                foreach (var value in result.Result["values"])
+                foreach (Newtonsoft.Json.Linq.JToken value in result.Result["values"])
                 {
                     list.Add(value["displayId"].ToString());
                 }
@@ -211,7 +211,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
         private async Task RefreshDDLBranchAsync(ComboBox branchComboBox, object selectedValue)
         {
-            var branchNames = (await GetBitbucketBranchesAsync((Repository)selectedValue)).ToList();
+            List<string> branchNames = (await GetBitbucketBranchesAsync((Repository)selectedValue)).ToList();
             branchNames.Sort();
             branchNames.Insert(0, "");
             await this.SwitchToMainThreadAsync();
@@ -227,7 +227,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var commit = await GetCommitInfoAsync((Repository)ddlRepositorySource.SelectedValue,
+                Commit commit = await GetCommitInfoAsync((Repository)ddlRepositorySource.SelectedValue,
                                                     ddlBranchSource.SelectedValue.ToString());
                 await this.SwitchToMainThreadAsync();
 
@@ -247,7 +247,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var commit = await GetCommitInfoAsync((Repository)ddlRepositoryTarget.SelectedValue,
+                Commit commit = await GetCommitInfoAsync((Repository)ddlRepositoryTarget.SelectedValue,
                                                     ddlBranchTarget.SelectedValue.ToString());
                 await this.SwitchToMainThreadAsync();
 
@@ -266,7 +266,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             Validates.NotNull(_settings);
             GetHeadCommitRequest getCommit = new(repo, branch, _settings);
-            var result = await getCommit.SendAsync().ConfigureAwait(false);
+            BitbucketResponse<Commit> result = await getCommit.SendAsync().ConfigureAwait(false);
             return result.Success ? result.Result : null;
         }
 
@@ -303,7 +303,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 (Commit)ddlBranchTarget.Tag,
                 _settings);
 
-            var result = await getCommitsInBetween.SendAsync();
+            BitbucketResponse<List<Commit>> result = await getCommitsInBetween.SendAsync();
             if (result.Success)
             {
                 Validates.NotNull(result.Result);
@@ -312,7 +312,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
                 StringBuilder sb = new();
                 sb.AppendLine();
-                foreach (var commit in result.Result)
+                foreach (Commit commit in result.Result)
                 {
                     if (!commit.IsMerge)
                     {
@@ -326,7 +326,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
         private void PullRequestChanged(object sender, EventArgs e)
         {
-            var curItem = (PullRequest)lbxPullRequests.SelectedItem;
+            PullRequest curItem = (PullRequest)lbxPullRequests.SelectedItem;
 
             txtPRTitle.Text = curItem.Title;
             txtPRDescription.Text = curItem.Description;
@@ -360,7 +360,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
                 // Merge
                 MergePullRequest mergeRequest = new(_settings, mergeInfo);
-                var response = ThreadHelper.JoinableTaskFactory.Run(() => mergeRequest.SendAsync());
+                BitbucketResponse<Newtonsoft.Json.Linq.JObject> response = ThreadHelper.JoinableTaskFactory.Run(() => mergeRequest.SendAsync());
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -410,7 +410,7 @@ namespace GitExtensions.Plugins.Bitbucket
         {
             try
             {
-                var link = ((LinkLabel)sender).Text;
+                string link = ((LinkLabel)sender).Text;
                 if (e.Button == MouseButtons.Right)
                 {
                     // Just copy the text

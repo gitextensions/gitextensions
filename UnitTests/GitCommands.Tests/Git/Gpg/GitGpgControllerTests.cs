@@ -36,7 +36,7 @@ namespace GitCommandsTests.Git.Gpg
         [TestCase(CommitStatus.NoSignature, "N")]
         public async Task Validate_GetRevisionCommitSignatureStatusAsync(CommitStatus expected, string gitCmdReturn)
         {
-            var objectId = ObjectId.Random();
+            ObjectId objectId = ObjectId.Random();
 
             GitRevision revision = new(objectId);
             GitArgumentBuilder args = new("log")
@@ -46,9 +46,9 @@ namespace GitCommandsTests.Git.Gpg
                 revision.Guid
             };
 
-            using var _ = _executable.StageOutput(args.ToString(), gitCmdReturn);
+            using IDisposable _ = _executable.StageOutput(args.ToString(), gitCmdReturn);
 
-            var actual = await _gpgController.GetRevisionCommitSignatureStatusAsync(revision);
+            CommitStatus actual = await _gpgController.GetRevisionCommitSignatureStatusAsync(revision);
 
             Assert.AreEqual(expected, actual);
         }
@@ -69,7 +69,7 @@ namespace GitCommandsTests.Git.Gpg
         [TestCase(TagStatus.Many, 2)]
         public async Task Validate_GetRevisionTagSignatureStatusAsync(TagStatus tagStatus, int numberOfTags)
         {
-            var objectId = ObjectId.Random();
+            ObjectId objectId = ObjectId.Random();
 
             string gitRefCompleteName = "refs/tags/FirstTag^{}";
 
@@ -80,7 +80,7 @@ namespace GitCommandsTests.Git.Gpg
                     .ToList()
             };
 
-            var actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
+            TagStatus actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
             Assert.AreEqual(tagStatus, actual);
         }
@@ -90,7 +90,7 @@ namespace GitCommandsTests.Git.Gpg
         [TestCase(TagStatus.NoPubKey, "NO_PUBKEY ...")]
         public async Task Validate_GetRevisionTagSignatureStatusAsync_one_tag(TagStatus tagStatus, string gitCmdReturn)
         {
-            var objectId = ObjectId.Random();
+            ObjectId objectId = ObjectId.Random();
 
             GitRef gitRef = new(_module, objectId, "refs/tags/FirstTag^{}");
 
@@ -101,9 +101,9 @@ namespace GitCommandsTests.Git.Gpg
                 gitRef.LocalName
             };
 
-            using var _ = _executable.StageOutput(args.ToString(), output: "", error: gitCmdReturn);
+            using IDisposable _ = _executable.StageOutput(args.ToString(), output: "", error: gitCmdReturn);
 
-            var actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
+            TagStatus actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
             Assert.AreEqual(tagStatus, actual);
         }
@@ -111,7 +111,7 @@ namespace GitCommandsTests.Git.Gpg
         [TestCase("return string")]
         public void Validate_GetCommitVerificationMessage(string returnString)
         {
-            var objectId = ObjectId.Random();
+            ObjectId objectId = ObjectId.Random();
             GitRevision revision = new(objectId);
             GitArgumentBuilder args = new("log")
             {
@@ -120,9 +120,9 @@ namespace GitCommandsTests.Git.Gpg
                 revision.Guid
             };
 
-            using var _ = _executable.StageOutput(args.ToString(), returnString);
+            using IDisposable _ = _executable.StageOutput(args.ToString(), returnString);
 
-            var actual = _gpgController.GetCommitVerificationMessage(revision);
+            string actual = _gpgController.GetCommitVerificationMessage(revision);
 
             Assert.AreEqual(returnString, actual);
         }
@@ -144,7 +144,7 @@ namespace GitCommandsTests.Git.Gpg
         [TestCase(2, "FirstTag\r\nFirstTag\r\n\r\nSecondTag\r\nSecondTag\r\n\r\n")]
         public void Validate_GetTagVerifyMessage(int usefulTagRefNumber, string expected)
         {
-            var objectId = ObjectId.Random();
+            ObjectId objectId = ObjectId.Random();
             GitRevision revision = new(objectId);
 
             IDisposable validate = null;
@@ -190,7 +190,7 @@ namespace GitCommandsTests.Git.Gpg
                     }
             }
 
-            var actual = _gpgController.GetTagVerifyMessage(revision);
+            string actual = _gpgController.GetTagVerifyMessage(revision);
 
             Assert.AreEqual(expected, actual);
 

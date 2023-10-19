@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
                 else
                 {
-                    if (!_pages2NodeMap.TryGetValue(parentPageReference, out var parentNode))
+                    if (!_pages2NodeMap.TryGetValue(parentPageReference, out TreeNode parentNode))
                     {
                         throw new ArgumentException("You have to add parent page first: " + parentPageReference);
                     }
@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private TreeNode AddPage(TreeNodeCollection treeNodeCollection, ISettingsPage page, Image? icon)
         {
-            var node = treeNodeCollection.Add(page.GetTitle());
+            TreeNode node = treeNodeCollection.Add(page.GetTitle());
             if (icon is null)
             {
                 return node;
@@ -95,11 +95,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (SettingsPageSelected is not null)
             {
-                var page = (ISettingsPage)node.Tag;
+                ISettingsPage page = (ISettingsPage)node.Tag;
 
                 if (page.GuiControl is null)
                 {
-                    var firstSubNode = node.FirstNode;
+                    TreeNode firstSubNode = node.FirstNode;
                     if (firstSubNode is not null)
                     {
                         treeView1.SelectedNode = firstSubNode;
@@ -122,10 +122,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             string searchFor = textBoxFind.Text.ToLowerInvariant();
-            var andKeywords = searchFor.LazySplit(' ');
-            foreach (var node in treeView1.AllNodes())
+            LazyStringSplit andKeywords = searchFor.LazySplit(' ');
+            foreach (TreeNode node in treeView1.AllNodes())
             {
-                var settingsPage = (ISettingsPage)node.Tag;
+                ISettingsPage settingsPage = (ISettingsPage)node.Tag;
 
                 // search for title
                 if (settingsPage.GetTitle().Contains(searchFor, StringComparison.InvariantCultureIgnoreCase))
@@ -147,7 +147,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             ResetAllNodeHighlighting();
 
-            foreach (var node in _nodesFoundByTextBox)
+            foreach (TreeNode node in _nodesFoundByTextBox)
             {
                 HighlightNode(node, true);
                 node.EnsureVisible();
@@ -218,7 +218,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 int indexOfSelectedNode = _nodesFoundByTextBox.IndexOf(treeView1.SelectedNode);
                 if (indexOfSelectedNode == -1 || indexOfSelectedNode + 1 == _nodesFoundByTextBox.Count)
                 {
-                    var firstFoundNode = _nodesFoundByTextBox.FirstOrDefault();
+                    TreeNode firstFoundNode = _nodesFoundByTextBox.FirstOrDefault();
                     if (firstFoundNode is not null)
                     {
                         treeView1.SelectedNode = firstFoundNode;

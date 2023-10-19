@@ -73,8 +73,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
             Validates.NotNull(CurrentSettings);
 
-            var mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
-            var diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            string mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            string diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
 
             Global_FilesEncoding.Text = CurrentSettings.FilesEncoding?.EncodingName ?? "";
 
@@ -127,7 +127,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
             // TODO: why use GUI???
-            var diffTool = _NO_TRANSLATE_cboDiffTool.Text;
+            string diffTool = _NO_TRANSLATE_cboDiffTool.Text;
             if (!string.IsNullOrWhiteSpace(diffTool))
             {
                 _diffMergeToolConfigurationManager.ConfigureDiffMergeTool(diffTool, DiffMergeToolType.Diff, txtDiffToolPath.Text, txtDiffToolCommand.Text);
@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             // TODO: merge.guitool???
-            var mergeTool = _NO_TRANSLATE_cboMergeTool.Text;
+            string mergeTool = _NO_TRANSLATE_cboMergeTool.Text;
             if (!string.IsNullOrWhiteSpace(mergeTool))
             {
                 _diffMergeToolConfigurationManager.ConfigureDiffMergeTool(mergeTool, DiffMergeToolType.Merge, txtMergeToolPath.Text, txtMergeToolCommand.Text);
@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
             DiffMergeToolConfiguration diffMergeToolConfig = default;
-            var index = toolType == DiffMergeToolType.Diff ? _NO_TRANSLATE_cboDiffTool.SelectedIndex : _NO_TRANSLATE_cboMergeTool.SelectedIndex;
+            int index = toolType == DiffMergeToolType.Diff ? _NO_TRANSLATE_cboDiffTool.SelectedIndex : _NO_TRANSLATE_cboMergeTool.SelectedIndex;
             if (index > -1)
             {
                 diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, null);
@@ -184,7 +184,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             string initialDirectory = _controller.GetInitialDirectory(path, diffMergeToolConfig.Path);
 
-            var filter = !string.IsNullOrWhiteSpace(diffMergeToolConfig.ExeFileName)
+            string filter = !string.IsNullOrWhiteSpace(diffMergeToolConfig.ExeFileName)
                 ? $"{toolName}|{diffMergeToolConfig.ExeFileName}"
                 : "*.exe;*.cmd;*.bat|*.exe;*.cmd;*.bat";
 
@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SuggestDiffToolCommand()
         {
-            var toolName = _NO_TRANSLATE_cboDiffTool.Text;
+            string toolName = _NO_TRANSLATE_cboDiffTool.Text;
             if (string.IsNullOrWhiteSpace(toolName))
             {
                 txtDiffToolCommand.Text = string.Empty;
@@ -207,13 +207,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
-            var diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtDiffToolPath.Text);
+            DiffMergeToolConfiguration diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtDiffToolPath.Text);
             txtDiffToolCommand.Text = diffMergeToolConfig.FullDiffCommand;
         }
 
         private void SuggestMergeToolCommand()
         {
-            var toolName = _NO_TRANSLATE_cboMergeTool.Text;
+            string toolName = _NO_TRANSLATE_cboMergeTool.Text;
             if (string.IsNullOrWhiteSpace(toolName))
             {
                 txtMergeToolCommand.Text = string.Empty;
@@ -221,7 +221,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
-            var diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtMergeToolPath.Text);
+            DiffMergeToolConfiguration diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtMergeToolPath.Text);
             txtMergeToolCommand.Text = diffMergeToolConfig.FullMergeCommand;
         }
 
@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             // we only want to suggest command for known built-in tool types
-            var toolName = _NO_TRANSLATE_cboMergeTool.Text;
+            string toolName = _NO_TRANSLATE_cboMergeTool.Text;
             if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Merge).Contains(toolName))
             {
                 SuggestMergeToolCommand();
@@ -274,7 +274,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             // we only want to suggest command for known built-in tool types
-            var toolName = _NO_TRANSLATE_cboDiffTool.Text;
+            string toolName = _NO_TRANSLATE_cboDiffTool.Text;
             if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Diff).Contains(toolName))
             {
                 SuggestDiffToolCommand();
@@ -289,7 +289,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void cboDiffTool_TextChanged(object sender, EventArgs e)
         {
-            var toolName = _NO_TRANSLATE_cboDiffTool.Text;
+            string toolName = _NO_TRANSLATE_cboDiffTool.Text;
 
             txtDiffToolPath.Enabled =
                 btnDiffToolBrowse.Enabled =
@@ -317,7 +317,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void cboMergeTool_TextChanged(object sender, EventArgs e)
         {
-            var toolName = _NO_TRANSLATE_cboMergeTool.Text;
+            string toolName = _NO_TRANSLATE_cboMergeTool.Text;
 
             txtMergeToolPath.Enabled =
                 btnMergeToolBrowse.Enabled =

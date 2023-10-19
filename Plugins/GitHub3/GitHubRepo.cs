@@ -89,7 +89,7 @@ namespace GitExtensions.Plugins.GitHub3
 
         public IReadOnlyList<IPullRequestInformation> GetPullRequests()
         {
-            var pullRequests = _repo?.GetPullRequests();
+            IList<PullRequest> pullRequests = _repo?.GetPullRequests();
 
             if (pullRequests is not null)
             {
@@ -103,7 +103,7 @@ namespace GitExtensions.Plugins.GitHub3
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
-            var pullRequest = _repo.CreatePullRequest(GitHubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
+            PullRequest pullRequest = _repo.CreatePullRequest(GitHubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
 
             if (pullRequest?.Number is not > 0)
             {

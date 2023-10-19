@@ -8,7 +8,7 @@ namespace GitCommandsTests
         [Test]
         public void Subsequence()
         {
-            var nums = Enumerable.Range(0, 10).ToArray();
+            int[] nums = Enumerable.Range(0, 10).ToArray();
 
             Assert.AreEqual(
                 new[] { 0, 1, 2, 3 },

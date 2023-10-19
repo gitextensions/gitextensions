@@ -9,11 +9,11 @@ namespace GitUITests.Avatars
         [Test]
         public async Task ClearCache_is_passed_to_all_children()
         {
-            var cacheCleaner1 = Substitute.For<IAvatarCacheCleaner>();
-            var cacheCleaner2 = Substitute.For<IAvatarCacheCleaner>();
-            var cacheCleaner3 = Substitute.For<IAvatarCacheCleaner>();
+            IAvatarCacheCleaner cacheCleaner1 = Substitute.For<IAvatarCacheCleaner>();
+            IAvatarCacheCleaner cacheCleaner2 = Substitute.For<IAvatarCacheCleaner>();
+            IAvatarCacheCleaner cacheCleaner3 = Substitute.For<IAvatarCacheCleaner>();
 
-            var cacheClearedEventHandler = Substitute.For<EventHandler>();
+            EventHandler cacheClearedEventHandler = Substitute.For<EventHandler>();
 
             MultiCacheCleaner cacheCleaner = new(cacheCleaner1, cacheCleaner2, cacheCleaner3);
             cacheCleaner.CacheCleared += cacheClearedEventHandler;

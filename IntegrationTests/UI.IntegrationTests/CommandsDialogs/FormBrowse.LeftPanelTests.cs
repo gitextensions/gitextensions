@@ -116,7 +116,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 {
                     await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                    var ta = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
+                    RepoObjectsTree.TestAccessor ta = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
 
                     // We are running several tests one after another to speed up the test execution
                     // as we don't need to re-create the host form

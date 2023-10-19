@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            var guid = Module.RevParse(text);
+            ObjectId guid = Module.RevParse(text);
             if (guid is not null)
             {
                 textboxCommitExpression.Text = text;

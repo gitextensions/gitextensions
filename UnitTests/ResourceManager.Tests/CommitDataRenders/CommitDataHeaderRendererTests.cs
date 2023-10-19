@@ -58,7 +58,7 @@ namespace ResourceManagerTests.CommitDataRenders
         public void GetFont_should_get_font_from_style_provider()
         {
             using Control c = new();
-            using var g = c.CreateGraphics();
+            using Graphics g = c.CreateGraphics();
             _renderer.GetFont(g);
 
             _headerRendererStyleProvider.Received().GetFont(g);
@@ -81,10 +81,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_not_render_committer_info_if_same_as_author_info()
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = author;
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = authorDate;
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = author;
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 Array.Empty<ObjectId>(),
@@ -94,7 +94,7 @@ namespace ResourceManagerTests.CommitDataRenders
             _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
 
-            var result = _renderer.Render(data, false);
+            string result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
@@ -108,10 +108,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_render_committer_if_different_from_author()
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = "John Doe <John.Doe@test.com>";
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = authorDate;
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = "John Doe <John.Doe@test.com>";
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 Array.Empty<ObjectId>(),
@@ -122,7 +122,7 @@ namespace ResourceManagerTests.CommitDataRenders
             _linkFactory.CreateLink(committer, Arg.Any<string>()).Returns(x => committer);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
 
-            var result = _renderer.Render(data, false);
+            string result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Committer:     John Doe <John.Doe@test.com>{Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
@@ -136,10 +136,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_render_commit_date_if_different_from_author_date()
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = author;
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = author;
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 Array.Empty<ObjectId>(),
@@ -150,7 +150,7 @@ namespace ResourceManagerTests.CommitDataRenders
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
             _dateFormatter.FormatDateAsRelativeLocal(commitDate).Returns("2 months ago (10/23/2017 12:17:11)");
 
-            var result = _renderer.Render(data, false);
+            string result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Author date:   6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit date:   2 months ago (10/23/2017 12:17:11){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
@@ -164,10 +164,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_render_commit_children()
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = author;
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = authorDate;
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = author;
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 Array.Empty<ObjectId>(),
@@ -178,7 +178,7 @@ namespace ResourceManagerTests.CommitDataRenders
             _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
 
-            var result = _renderer.Render(data, false);
+            string result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c{Environment.NewLine}" +
                 $"Children:      {_childrenHashes[0].ToShortString()} " +
@@ -195,10 +195,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_render_commit_parents()
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = author;
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = authorDate;
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = author;
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 _parentHashes,
@@ -208,7 +208,7 @@ namespace ResourceManagerTests.CommitDataRenders
             _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
 
-            var result = _renderer.Render(data, false);
+            string result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c{Environment.NewLine}" +
                 $"Parents:       {_parentHashes[0].ToShortString()} {_parentHashes[1].ToShortString()} {_parentHashes[2].ToShortString()}");
@@ -224,10 +224,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [TestCase(GitRevision.WorkTreeGuid)]
         public void Render_should_render_minimal_info_for_artificial_commits(string artificialGuid)
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = author;
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = authorDate;
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = author;
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse(artificialGuid),
                 _parentHashes,
@@ -236,7 +236,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
 
-            var result = _renderer.Render(data, false);
+            string result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}" +
                                $"Parents:       {_parentHashes[0].ToShortString()} {_parentHashes[1].ToShortString()} {_parentHashes[2].ToShortString()}");
@@ -257,10 +257,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void RenderPlain_should_not_render_committer_info_if_same_as_author_info()
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = author;
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = authorDate;
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = author;
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 Array.Empty<ObjectId>(),
@@ -270,7 +270,7 @@ namespace ResourceManagerTests.CommitDataRenders
             _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
 
-            var result = _renderer.RenderPlain(data);
+            string result = _renderer.RenderPlain(data);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
@@ -284,10 +284,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void RenderPlain_should_render_committer_if_different_from_author()
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = "John Doe <John.Doe@test.com>";
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = authorDate;
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = "John Doe <John.Doe@test.com>";
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 Array.Empty<ObjectId>(),
@@ -298,7 +298,7 @@ namespace ResourceManagerTests.CommitDataRenders
             _linkFactory.CreateLink(committer, Arg.Any<string>()).Returns(x => committer);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
 
-            var result = _renderer.RenderPlain(data);
+            string result = _renderer.RenderPlain(data);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Committer:     John Doe <John.Doe@test.com>{Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
@@ -312,10 +312,10 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void RenderPlain_should_render_commit_date_if_different_from_author_date()
         {
-            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
-            var committer = author;
-            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
-            var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
+            string author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            string committer = author;
+            DateTime authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            DateTime commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 Array.Empty<ObjectId>(),
@@ -326,7 +326,7 @@ namespace ResourceManagerTests.CommitDataRenders
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
             _dateFormatter.FormatDateAsRelativeLocal(commitDate).Returns("2 months ago (10/23/2017 12:17:11)");
 
-            var result = _renderer.RenderPlain(data);
+            string result = _renderer.RenderPlain(data);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Author date:   6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit date:   2 months ago (10/23/2017 12:17:11){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());

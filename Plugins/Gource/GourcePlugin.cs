@@ -57,11 +57,11 @@ namespace GitExtensions.Plugins.Gource
                 return false;
             }
 
-            var pathToGource = _gourcePath.ValueOrDefault(Settings);
+            string pathToGource = _gourcePath.ValueOrDefault(Settings);
 
             if (!File.Exists(pathToGource))
             {
-                var result = MessageBox.Show(
+                DialogResult result = MessageBox.Show(
                     args.OwnerForm,
                     string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -78,7 +78,7 @@ namespace GitExtensions.Plugins.Gource
                         args.OwnerForm, _doYouWantDownloadGource.Text, _download.Text,
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    var gourceUrl = SearchForGourceUrl();
+                    string gourceUrl = SearchForGourceUrl();
 
                     if (string.IsNullOrEmpty(gourceUrl))
                     {
@@ -86,16 +86,16 @@ namespace GitExtensions.Plugins.Gource
                         return false;
                     }
 
-                    var downloadDir = Path.GetTempPath();
-                    var fileName = Path.Combine(downloadDir, "gource.zip");
-                    var downloadSize = DownloadFile(gourceUrl, fileName);
+                    string downloadDir = Path.GetTempPath();
+                    string fileName = Path.Combine(downloadDir, "gource.zip");
+                    int downloadSize = DownloadFile(gourceUrl, fileName);
                     if (downloadSize > 0)
                     {
                         MessageBox.Show(string.Format(_bytesDownloaded.Text, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Directory.CreateDirectory(Path.Combine(downloadDir, "gource"));
                         UnZipFiles(fileName, Path.Combine(downloadDir, "gource"), true);
 
-                        var newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
+                        string newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                         if (File.Exists(newGourcePath))
                         {
                             MessageBox.Show(args.OwnerForm, _gourceDownloadedAndUnzipped.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -128,33 +128,33 @@ namespace GitExtensions.Plugins.Gource
                     Directory.CreateDirectory(outputFolder);
                 }
 
-                using (var zipFileStream = File.OpenRead(zipPathAndFile))
+                using (FileStream zipFileStream = File.OpenRead(zipPathAndFile))
                 using (ZipInputStream zipInputStream = new(zipFileStream))
                 {
                     while (true)
                     {
-                        var entry = zipInputStream.GetNextEntry();
+                        ZipEntry entry = zipInputStream.GetNextEntry();
 
                         if (entry is null)
                         {
                             break;
                         }
 
-                        var fileName = Path.GetFileName(entry.Name);
+                        string fileName = Path.GetFileName(entry.Name);
 
                         if (fileName == string.Empty || entry.Name.Contains(".ini"))
                         {
                             continue;
                         }
 
-                        var fullPath = Path.Combine(outputFolder, entry.Name).Replace("\\ ", "\\");
-                        var fullDirPath = Path.GetDirectoryName(fullPath);
+                        string fullPath = Path.Combine(outputFolder, entry.Name).Replace("\\ ", "\\");
+                        string fullDirPath = Path.GetDirectoryName(fullPath);
                         if (fullDirPath is not null && !Directory.Exists(fullDirPath))
                         {
                             Directory.CreateDirectory(fullDirPath);
                         }
 
-                        using var fileStream = File.Create(fullPath);
+                        using FileStream fileStream = File.Create(fullPath);
                         zipInputStream.CopyTo(fileStream);
                     }
                 }
@@ -174,7 +174,7 @@ namespace GitExtensions.Plugins.Gource
         {
             // Function will return the number of bytes processed
             // to the caller. Initialize to 0 here.
-            var bytesProcessed = 0;
+            int bytesProcessed = 0;
 
             // Assign values to these objects here so that they can
             // be referenced in the finally block
@@ -191,13 +191,13 @@ namespace GitExtensions.Plugins.Gource
 
                 // Once the WebResponse object has been retrieved,
                 // get the stream object associated with the response's data
-                var remoteStream = webClient.OpenRead(remoteFilename);
+                Stream remoteStream = webClient.OpenRead(remoteFilename);
 
                 // Create the local file
                 localStream = File.Create(localFilename);
 
                 // Allocate a 1k buffer
-                var buffer = new byte[1024];
+                byte[] buffer = new byte[1024];
                 int bytesRead;
 
                 // Simple do/while loop to read from stream until
@@ -241,13 +241,13 @@ namespace GitExtensions.Plugins.Gource
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
                 webClient.Encoding = Encoding.UTF8;
 
-                var response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/latest");
+                string response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/latest");
 
                 // find http://gource.googlecode.com/files/gource-0.26b.win32.zip
                 // find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
                 Regex regEx = new(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""");
 
-                var matches = regEx.Matches(response);
+                MatchCollection matches = regEx.Matches(response);
 
                 foreach (Match match in matches)
                 {

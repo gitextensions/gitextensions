@@ -20,7 +20,7 @@ namespace GitCommands.ExternalLinks
 
         public IEnumerable<ExternalLink> Parse(GitRevision revision, ExternalLinkDefinition definition)
         {
-            var remoteMatches = ParseRemotes(definition);
+            IEnumerable<Match?> remoteMatches = ParseRemotes(definition);
             return remoteMatches.SelectMany(remoteMatch => ParseRevision(revision, definition, remoteMatch));
         }
 
@@ -53,10 +53,10 @@ namespace GitCommands.ExternalLinks
 
             List<string> remoteUrls = new();
 
-            var remotes = _remotesManager.LoadRemotes(false);
-            var matchingRemotes = GetMatchingRemotes(definition, remotes);
+            IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(false);
+            IEnumerable<ConfigFileRemote> matchingRemotes = GetMatchingRemotes(definition, remotes);
 
-            foreach (var remote in matchingRemotes)
+            foreach (ConfigFileRemote remote in matchingRemotes)
             {
                 if (definition.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.URL))
                 {
@@ -75,12 +75,12 @@ namespace GitCommands.ExternalLinks
                 }
             }
 
-            foreach (var url in remoteUrls.Distinct())
+            foreach (string url in remoteUrls.Distinct())
             {
-                var matches = definition.RemoteSearchPatternRegex.Value.Matches(url);
-                for (var i = 0; i < matches.Count; i++)
+                MatchCollection matches = definition.RemoteSearchPatternRegex.Value.Matches(url);
+                for (int i = 0; i < matches.Count; i++)
                 {
-                    var match = matches[i];
+                    Match match = matches[i];
                     if (match.Success)
                     {
                         allMatches.Add(match);
@@ -129,9 +129,9 @@ namespace GitCommands.ExternalLinks
             List<Match> allMatches = new();
 
             MatchCollection matches = definition.SearchPatternRegex.Value.Matches(part);
-            for (var i = 0; i < matches.Count; i++)
+            for (int i = 0; i < matches.Count; i++)
             {
-                var match = matches[i];
+                Match match = matches[i];
                 if (match.Success)
                 {
                     if (string.IsNullOrEmpty(definition.NestedSearchPattern))
@@ -142,7 +142,7 @@ namespace GitCommands.ExternalLinks
                     {
                         MatchCollection nestedMatches = definition.NestedSearchPatternRegex.Value.Matches(match.Value);
 
-                        for (var n = 0; n < nestedMatches.Count; n++)
+                        for (int n = 0; n < nestedMatches.Count; n++)
                         {
                             allMatches.Add(nestedMatches[n]);
                         }
@@ -150,9 +150,9 @@ namespace GitCommands.ExternalLinks
                 }
             }
 
-            foreach (var match in allMatches.Where(m => m.Success))
+            foreach (Match match in allMatches.Where(m => m.Success))
             {
-                foreach (var format in definition.LinkFormats)
+                foreach (ExternalLinkFormat format in definition.LinkFormats)
                 {
                     yield return format.Apply(remoteMatch, match, revision);
                 }

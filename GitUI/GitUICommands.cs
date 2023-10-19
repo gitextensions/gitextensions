@@ -95,7 +95,7 @@ namespace GitUI
 
         public void StartBatchFileProcessDialog(string batchFile)
         {
-            var tempFile = Path.Combine(Path.GetTempPath(), $"GitExtensions-{Guid.NewGuid():N}.cmd");
+            string tempFile = Path.Combine(Path.GetTempPath(), $"GitExtensions-{Guid.NewGuid():N}.cmd");
 
             try
             {
@@ -174,14 +174,14 @@ namespace GitUI
 
         public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch)
         {
-            var objectId = Module.RevParse(branch);
+            ObjectId objectId = Module.RevParse(branch);
             if (objectId is null)
             {
                 MessageBox.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
-            using var form = FormResetCurrentBranch.Create(this, Module.GetRevision(objectId));
+            using FormResetCurrentBranch form = FormResetCurrentBranch.Create(this, Module.GetRevision(objectId));
             return form.ShowDialog(owner) == DialogResult.OK;
         }
 
@@ -189,7 +189,7 @@ namespace GitUI
         {
             bool Action()
             {
-                var arguments = Commands.StashSave(includeUntrackedFiles, keepIndex, message, selectedFiles);
+                ArgumentString arguments = Commands.StashSave(includeUntrackedFiles, keepIndex, message, selectedFiles);
                 FormProcess.ShowDialog(owner, this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
@@ -430,7 +430,7 @@ namespace GitUI
 
         public bool StartCreateBranchDialog(IWin32Window? owner, string? branch)
         {
-            var objectId = Module.RevParse(branch);
+            ObjectId objectId = Module.RevParse(branch);
             if (objectId is null)
             {
                 MessageBox.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -602,12 +602,12 @@ namespace GitUI
 
         private bool StartPullDialogInternal(IWin32Window? owner, bool pullOnShow, out bool pullCompleted, string? remoteBranch, string? remote, AppSettings.PullAction pullAction)
         {
-            var pulled = false;
+            bool pulled = false;
 
             bool Action()
             {
                 using FormPull formPull = new(this, remoteBranch, remote, pullAction);
-                var dlgResult = pullOnShow
+                DialogResult dlgResult = pullOnShow
                     ? formPull.PullAndShowDialogWhenFailed(owner, remote, pullAction)
                     : formPull.ShowDialog(owner);
 
@@ -810,7 +810,7 @@ namespace GitUI
                     bool repoChanged = false;
 
                     // ReSharper disable once PossibleMultipleEnumeration
-                    foreach (var r in revisions)
+                    foreach (GitRevision r in revisions)
                     {
                         FormCherryPick frm = new(this, r);
                         if (prevForm is not null)
@@ -1093,7 +1093,7 @@ namespace GitUI
                 return;
             }
 
-            var updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? (AppSettings.DontConfirmUpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(owner));
+            bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? (AppSettings.DontConfirmUpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(owner));
 
             if (updateSubmodules)
             {
@@ -1148,7 +1148,7 @@ namespace GitUI
         {
             // Note: Order in revisions is that first clicked is last in array
 
-            if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out var firstRevision, out var secondRevision, out var error))
+            if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out string firstRevision, out string secondRevision, out string error))
             {
                 MessageBox.Show(owner, error, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -1182,7 +1182,7 @@ namespace GitUI
                     form.CheckForceWithLease();
                 }
 
-                var dlgResult = pushOnShow
+                DialogResult dlgResult = pushOnShow
                     ? form.PushAndShowDialogWhenFailed(owner)
                     : form.ShowDialog(owner);
 
@@ -1358,14 +1358,14 @@ namespace GitUI
 
         public bool RunCommand(IReadOnlyList<string> args)
         {
-            var arguments = InitializeArguments(args);
+            IReadOnlyDictionary<string, string?> arguments = InitializeArguments(args);
 
             if (args.Count <= 1)
             {
                 return false;
             }
 
-            var command = args[1];
+            string command = args[1];
 
             if (command == "blame" && args.Count <= 2)
             {
@@ -1404,7 +1404,7 @@ namespace GitUI
         private bool RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string?> arguments)
         {
 #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
-            var command = args[1];
+            string command = args[1];
             switch (command)
             {
                 case "about":
@@ -1534,10 +1534,10 @@ namespace GitUI
 
         private static bool UninstallEditor()
         {
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
 
-            var coreEditor = configFileGlobalSettings.GetValue("core.editor");
-            var path = AppSettings.GetInstallDir().ToPosixPath();
+            string coreEditor = configFileGlobalSettings.GetValue("core.editor");
+            string path = AppSettings.GetInstallDir().ToPosixPath();
             if (path is not null && coreEditor.ToLowerInvariant().Contains(path.ToLowerInvariant()))
             {
                 configFileGlobalSettings.SetValue("core.editor", "");
@@ -1576,7 +1576,7 @@ namespace GitUI
 
         private bool RunBrowseCommand(IReadOnlyList<string> args)
         {
-            var arg = GetParameterOrEmptyStringAsDefault(args, "-commit");
+            string arg = GetParameterOrEmptyStringAsDefault(args, "-commit");
             if (arg == "")
             {
                 return StartBrowseDialog(owner: null,
@@ -1610,7 +1610,7 @@ namespace GitUI
                 firstId = null;
                 foreach (string part in arg.LazySplit(','))
                 {
-                    if (!module.TryResolvePartialCommitId(part, out var objectId))
+                    if (!module.TryResolvePartialCommitId(part, out ObjectId? objectId))
                     {
                         return false;
                     }
@@ -1634,11 +1634,11 @@ namespace GitUI
 
         private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
         {
-            var withEquals = paramName + "=";
+            string withEquals = paramName + "=";
 
-            for (var i = 2; i < args.Count; i++)
+            for (int i = 2; i < args.Count; i++)
             {
-                var arg = args[i];
+                string arg = args[i];
                 if (arg.StartsWith(withEquals))
                 {
                     return arg.Replace(withEquals, "");
@@ -1711,7 +1711,7 @@ namespace GitUI
         private bool RunFileHistoryCommand(IReadOnlyList<string> args, bool showBlame)
         {
             string fileHistoryFileName = args[2];
-            if (new FormFileHistoryController().TryGetExactPath(_fullPathResolver.Resolve(fileHistoryFileName), out var exactFileName))
+            if (new FormFileHistoryController().TryGetExactPath(_fullPathResolver.Resolve(fileHistoryFileName), out string exactFileName))
             {
                 fileHistoryFileName = NormalizeFileName(exactFileName);
             }
@@ -1724,7 +1724,7 @@ namespace GitUI
             GitRevision? revision = null;
             if (args.Count > 3)
             {
-                if (!ObjectId.TryParse(args[3], out var objectId))
+                if (!ObjectId.TryParse(args[3], out ObjectId? objectId))
                 {
                     return false;
                 }
@@ -1783,7 +1783,7 @@ namespace GitUI
             int? initialLine = null;
             if (args.Count > 3)
             {
-                if (int.TryParse(args[3], out var temp))
+                if (int.TryParse(args[3], out int temp))
                 {
                     initialLine = temp;
                 }
@@ -1828,9 +1828,9 @@ namespace GitUI
 
         private IEnumerable<string> FindFileMatches(string name)
         {
-            var candidates = Module.GetFullTree("HEAD");
+            IReadOnlyList<string> candidates = Module.GetFullTree("HEAD");
 
-            var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
+            Func<string?, bool> predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate);
         }
@@ -1838,7 +1838,7 @@ namespace GitUI
         private bool Commit(IReadOnlyDictionary<string, string?> arguments)
         {
             arguments.TryGetValue("message", out string? overridingMessage);
-            var showOnlyWhenChanges = arguments.ContainsKey("quiet");
+            bool showOnlyWhenChanges = arguments.ContainsKey("quiet");
             return StartCommitDialog(null, overridingMessage, showOnlyWhenChanges);
         }
 
@@ -1855,7 +1855,7 @@ namespace GitUI
                 remoteBranch = arguments["remotebranch"];
             }
 
-            var isQuiet = arguments.ContainsKey("quiet");
+            bool isQuiet = arguments.ContainsKey("quiet");
 
             if (isQuiet)
             {

@@ -69,7 +69,7 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand(result);
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
             data.Should().BeNull();
         }
@@ -82,7 +82,7 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand(result);
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
             data.Should().HaveCount(0);
         }
@@ -93,7 +93,7 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand(result);
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
             data.Should().HaveCount(0);
         }
@@ -103,10 +103,10 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand("::translated-ahead 3::::refs/remotes/upstream/branch::my-branch");
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
             data.Should().HaveCount(1);
-            var aheadBehindData = data.Values.First();
+            AheadBehindData aheadBehindData = data.Values.First();
             aheadBehindData.AheadCount.Should().Be(string.Empty);
             aheadBehindData.BehindCount.Should().Be(string.Empty);
             aheadBehindData.Branch.Should().Be("my-branch");
@@ -119,10 +119,10 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand("::ahead 10::::refs/remotes/upstream/branch::my-branch");
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
             data.Should().HaveCount(1);
-            var aheadBehindData = data.Values.First();
+            AheadBehindData aheadBehindData = data.Values.First();
             aheadBehindData.AheadCount.Should().Be("10");
             aheadBehindData.BehindCount.Should().Be(string.Empty);
             aheadBehindData.Branch.Should().Be("my-branch");
@@ -135,10 +135,10 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand("::behind 2::::refs/remotes/upstream/my-branch::my-branch");
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
             data.Should().HaveCount(1);
-            var aheadBehindData = data.Values.First();
+            AheadBehindData aheadBehindData = data.Values.First();
             aheadBehindData.AheadCount.Should().Be("0");
             aheadBehindData.BehindCount.Should().Be("2");
             aheadBehindData.Branch.Should().Be("my-branch");
@@ -151,10 +151,10 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand("::::::refs/remotes/upstream/my-branch::my-branch");
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
             data.Should().HaveCount(1);
-            var aheadBehindData = data.Values.First();
+            AheadBehindData aheadBehindData = data.Values.First();
             aheadBehindData.AheadCount.Should().Be("0");
             aheadBehindData.BehindCount.Should().Be("");
             aheadBehindData.Branch.Should().Be("my-branch");
@@ -167,10 +167,10 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand(result);
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
             data.Should().HaveCount(1);
-            var aheadBehindData = data.Values.First();
+            AheadBehindData aheadBehindData = data.Values.First();
             aheadBehindData.AheadCount.Should().Be("99");
             aheadBehindData.BehindCount.Should().Be("3");
             aheadBehindData.Branch.Should().Be("my-branch");
@@ -183,10 +183,10 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand(result);
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
             data.Should().HaveCount(1);
-            var aheadBehindData = data.Values.First();
+            AheadBehindData aheadBehindData = data.Values.First();
             aheadBehindData.AheadCount.Should().Be("99");
             aheadBehindData.BehindCount.Should().Be("97");
             aheadBehindData.Branch.Should().Be("my-branch");
@@ -199,10 +199,10 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand(result);
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
             data.Should().HaveCount(1);
-            var aheadBehindData = data.Values.First();
+            AheadBehindData aheadBehindData = data.Values.First();
             aheadBehindData.AheadCount.Should().Be("99");
             aheadBehindData.BehindCount.Should().Be("");
             aheadBehindData.Branch.Should().Be("my-branch");
@@ -215,10 +215,10 @@ namespace GitCommandsTests.Git
         {
             SetResultOfGitCommand(result);
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
             data.Should().HaveCount(1);
-            var aheadBehindData = data.Values.First();
+            AheadBehindData aheadBehindData = data.Values.First();
             aheadBehindData.AheadCount.Should().Be("");
             aheadBehindData.BehindCount.Should().Be("97");
             aheadBehindData.Branch.Should().Be("my-branch");
@@ -235,7 +235,7 @@ namespace GitCommandsTests.Git
                     + "::ahead 3::::refs/remotes/upstream/branch::ahead-branch\n"
                     + "::behind 4::::refs/remotes/upstream/branch::behind-branch");
 
-            var data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "*");
+            IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "*");
 
             data.Should().HaveCount(4);
             data.Should().BeEquivalentTo(

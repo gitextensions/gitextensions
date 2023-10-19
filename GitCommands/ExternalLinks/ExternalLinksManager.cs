@@ -58,7 +58,7 @@ namespace GitCommands.ExternalLinks
                 throw new ArgumentNullException(nameof(definitions));
             }
 
-            foreach (var externalLinkDefinition in definitions)
+            foreach (ExternalLinkDefinition externalLinkDefinition in definitions)
             {
                 Add(externalLinkDefinition);
             }

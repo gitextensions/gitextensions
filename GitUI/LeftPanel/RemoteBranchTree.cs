@@ -37,7 +37,7 @@ namespace GitUI.LeftPanel
 
                 Validates.NotNull(branch.ObjectId);
 
-                var remoteName = branch.Name.SubstringUntil('/');
+                string remoteName = branch.Name.SubstringUntil('/');
                 if (remoteByName.TryGetValue(remoteName, out Remote remote))
                 {
                     RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, visible: true);
@@ -46,7 +46,7 @@ namespace GitUI.LeftPanel
                         remoteBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
                     }
 
-                    var parent = remoteBranchNode.CreateRootNode(
+                    BaseRevisionNode parent = remoteBranchNode.CreateRootNode(
                         pathToNodes,
                         (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
@@ -58,10 +58,10 @@ namespace GitUI.LeftPanel
             }
 
             // Create nodes for enabled remotes without branches
-            var enabledRemotesNoBranches = GetEnabledRemoteNamesWithoutBranches(branches, remoteByName);
-            foreach (var remoteName in enabledRemotesNoBranches)
+            IReadOnlyList<string> enabledRemotesNoBranches = GetEnabledRemoteNamesWithoutBranches(branches, remoteByName);
+            foreach (string remoteName in enabledRemotesNoBranches)
             {
-                if (remoteByName.TryGetValue(remoteName, out var remote))
+                if (remoteByName.TryGetValue(remoteName, out Remote remote))
                 {
                     RemoteRepoNode node = new(this, remoteName, remotesManager, remote, true);
                     enabledRemoteRepoNodes.Add(node);
@@ -75,7 +75,7 @@ namespace GitUI.LeftPanel
             }
 
             // Add disabled remotes, if any
-            var disabledRemotes = remotesManager.GetDisabledRemotes();
+            IReadOnlyList<Remote> disabledRemotes = remotesManager.GetDisabledRemotes();
             if (disabledRemotes.Count > 0)
             {
                 List<RemoteRepoNode> disabledRemoteRepoNodes = new();

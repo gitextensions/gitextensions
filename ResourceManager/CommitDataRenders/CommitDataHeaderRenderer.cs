@@ -83,7 +83,7 @@ namespace ResourceManager.CommitDataRenders
             bool isArtificial = commitData.ObjectId.IsArtificial;
             bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
-            var padding = _headerRendererStyleProvider.GetMaxWidth();
+            int padding = _headerRendererStyleProvider.GetMaxWidth();
             string authorEmail = GetEmail(commitData.Author);
 
             Validates.NotNull(_linkFactory);
@@ -117,7 +117,7 @@ namespace ResourceManager.CommitDataRenders
                 header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.GetChildren(commitData.ChildIds.Count), padding) + RenderObjectIds(commitData.ChildIds, showRevisionsAsLinks));
             }
 
-            var parentIds = commitData.ParentIds;
+            IReadOnlyList<ObjectId> parentIds = commitData.ParentIds;
             if (parentIds?.Count > 0)
             {
                 header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.GetParents(parentIds.Count), padding) + RenderObjectIds(parentIds, showRevisionsAsLinks));
@@ -141,7 +141,7 @@ namespace ResourceManager.CommitDataRenders
 
             bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
-            var padding = _headerRendererStyleProvider.GetMaxWidth();
+            int padding = _headerRendererStyleProvider.GetMaxWidth();
 
             StringBuilder header = new();
             header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.Author, padding) + commitData.Author);
@@ -168,7 +168,7 @@ namespace ResourceManager.CommitDataRenders
                 return "";
             }
 
-            var ind = author.IndexOf("<", StringComparison.Ordinal);
+            int ind = author.IndexOf("<", StringComparison.Ordinal);
             if (ind == -1)
             {
                 return "";

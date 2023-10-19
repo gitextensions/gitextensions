@@ -66,7 +66,7 @@ namespace GitUITests.Avatars
         {
             _inner.ClearReceivedCalls();
 
-            var actual = await _cache.GetAvatarAsync(email, name, _size);
+            Image actual = await _cache.GetAvatarAsync(email, name, _size);
 
             _ = _inner.Received(1).GetAvatarAsync(email, name, _size);
 
@@ -80,7 +80,7 @@ namespace GitUITests.Avatars
         {
             _inner.ClearReceivedCalls();
 
-            var actual = await _cache.GetAvatarAsync(email, name, _size);
+            Image actual = await _cache.GetAvatarAsync(email, name, _size);
 
             _ = _inner.Received(0).GetAvatarAsync(email, name, _size);
 

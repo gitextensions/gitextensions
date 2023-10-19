@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs
             {
                 string text = System.IO.File.ReadAllText(PatchFileNameEdit.Text, GitModule.LosslessEncoding);
                 List<Patch> patches = PatchProcessor.CreatePatchesFromString(text, new Lazy<Encoding>(() => Module.FilesEncoding)).ToList();
-                SortablePatchesList patchesList = new SortablePatchesList();
+                SortablePatchesList patchesList = new();
                 patchesList.AddRange(patches);
                 GridChangedFiles.DataSource = patchesList;
             }

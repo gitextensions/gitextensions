@@ -38,7 +38,7 @@
         /// Gets the associated bitmap.
         /// </summary>
         /// <returns>Bitmap image.</returns>
-        public System.Drawing.Bitmap? GetIcon()
+        public Bitmap? GetIcon()
         {
             if (string.IsNullOrWhiteSpace(Icon))
             {
@@ -51,7 +51,7 @@
                     System.Reflection.Assembly.GetExecutingAssembly());
 
             // return icon
-            return (System.Drawing.Bitmap)rm.GetObject(Icon);
+            return (Bitmap)rm.GetObject(Icon);
         }
     }
 }

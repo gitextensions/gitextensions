@@ -53,7 +53,7 @@ namespace GitCommandsTests
             DiffListSortService service = new();
             service.DiffListSorting = DiffListSortType.FilePath;
 
-            var raisedCount = 0;
+            int raisedCount = 0;
             service.DiffListSortingChanged += (s, e) => raisedCount++;
 
             service.DiffListSorting = DiffListSortType.FilePath;

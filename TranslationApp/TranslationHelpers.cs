@@ -13,8 +13,8 @@ namespace TranslationApp
                 // Set language to neutral to get neutral translations
                 GitCommands.AppSettings.CurrentTranslation = "";
 
-                var translatableTypes = TranslationUtil.GetTranslatableTypes();
-                foreach (var (key, types) in translatableTypes)
+                Dictionary<string, List<Type>> translatableTypes = TranslationUtil.GetTranslatableTypes();
+                foreach ((string key, List<Type> types) in translatableTypes)
                 {
                     TranslationFile translation = new();
                     try
@@ -58,9 +58,9 @@ namespace TranslationApp
         public static IDictionary<string, List<TranslationItemWithCategory>> GetItemsDictionary(IDictionary<string, TranslationFile> translations)
         {
             Dictionary<string, List<TranslationItemWithCategory>> items = new();
-            foreach (var (key, file) in translations)
+            foreach ((string key, TranslationFile file) in translations)
             {
-                var list = from item in file.TranslationCategories
+                IEnumerable<TranslationItemWithCategory> list = from item in file.TranslationCategories
                            from translationItem in item.Body.TranslationItems
                            select new TranslationItemWithCategory(item.Name, translationItem);
                 items.Add(key, list.ToList());
@@ -71,7 +71,7 @@ namespace TranslationApp
 
         private static List<T> Find<T>(this IDictionary<string, List<T>> dictionary, string key)
         {
-            if (!dictionary.TryGetValue(key, out var list))
+            if (!dictionary.TryGetValue(key, out List<T> list))
             {
                 list = new List<T>();
                 dictionary.Add(key, list);
@@ -85,20 +85,20 @@ namespace TranslationApp
         {
             Dictionary<string, List<TranslationItemWithCategory>> translateItems = new();
 
-            var oldTranslationItems = GetItemsDictionary(translation);
+            IDictionary<string, List<TranslationItemWithCategory>> oldTranslationItems = GetItemsDictionary(translation);
 
-            foreach (var (key, items) in neutralItems)
+            foreach ((string key, List<TranslationItemWithCategory> items) in neutralItems)
             {
-                var oldItems = oldTranslationItems.Find(key);
-                var transItems = translateItems.Find(key);
+                List<TranslationItemWithCategory> oldItems = oldTranslationItems.Find(key);
+                List<TranslationItemWithCategory> transItems = translateItems.Find(key);
                 Dictionary<string, string> dict = new();
-                foreach (var item in items)
+                foreach (TranslationItemWithCategory item in items)
                 {
-                    var curItems = oldItems.Where(
+                    IEnumerable<TranslationItemWithCategory> curItems = oldItems.Where(
                         oldItem => oldItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
                                   oldItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
                                   oldItem.Property == item.Property);
-                    var curItem = curItems.FirstOrDefault();
+                    TranslationItemWithCategory curItem = curItems.FirstOrDefault();
 
                     if (curItem is null)
                     {
@@ -127,7 +127,7 @@ namespace TranslationApp
                     transItems.Add(curItem);
                 }
 
-                foreach (var item in oldItems)
+                foreach (TranslationItemWithCategory item in oldItems)
                 {
                     // Obsolete should be added only to dictionary
                     if (!string.IsNullOrEmpty(item.TranslatedValue) &&
@@ -138,12 +138,12 @@ namespace TranslationApp
                 }
 
                 // update untranslated items
-                var untranslatedItems =
+                IEnumerable<TranslationItemWithCategory> untranslatedItems =
                     from transItem in transItems
                     where string.IsNullOrEmpty(transItem.TranslatedValue) && dict.ContainsKey(transItem.NeutralValue)
                     select transItem;
 
-                foreach (var untranslatedItem in untranslatedItems)
+                foreach (TranslationItemWithCategory untranslatedItem in untranslatedItems)
                 {
                     untranslatedItem.TranslatedValue = dict[untranslatedItem.NeutralValue];
                 }
@@ -155,14 +155,14 @@ namespace TranslationApp
         public static void SaveTranslation(string targetLanguageCode,
             IDictionary<string, List<TranslationItemWithCategory>> items, string filename)
         {
-            var ext = Path.GetExtension(filename);
+            string ext = Path.GetExtension(filename);
 
-            foreach (var (key, translateItems) in items)
+            foreach ((string key, List<TranslationItemWithCategory> translateItems) in items)
             {
                 TranslationFile foreignTranslation = new(GitCommands.AppSettings.ProductVersion, "en", targetLanguageCode);
-                foreach (var translateItem in translateItems)
+                foreach (TranslationItemWithCategory translateItem in translateItems)
                 {
-                    var item = translateItem.GetTranslationItem();
+                    TranslationItem item = translateItem.GetTranslationItem();
 
                     TranslationItem ti = new(item.Name, item.Property, item.Source, item.Value);
                     ti.Value ??= string.Empty;
@@ -170,7 +170,7 @@ namespace TranslationApp
                         .Body.AddTranslationItem(ti);
                 }
 
-                var newFileName = Path.ChangeExtension(filename, key + ext);
+                string newFileName = Path.ChangeExtension(filename, key + ext);
                 TranslationSerializer.Serialize(foreignTranslation, newFileName);
             }
         }

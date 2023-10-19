@@ -9,9 +9,9 @@
                 yield break;
             }
 
-            foreach (var line in commandOutput.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)))
+            foreach (string line in commandOutput.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)))
             {
-                var branchName = line.Trim('*', ' ', '\n', '\r');
+                string branchName = line.Trim('*', ' ', '\n', '\r');
 
                 if (branchName != "HEAD")
                 {

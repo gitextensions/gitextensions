@@ -40,7 +40,7 @@ namespace GitUITests.Avatars
         {
             ChainedAvatarProvider provider = new();
 
-            var image = await provider.GetAvatarAsync(_email1, _name1, _size);
+            Image image = await provider.GetAvatarAsync(_email1, _name1, _size);
             Assert.Null(image);
         }
 
@@ -61,9 +61,9 @@ namespace GitUITests.Avatars
         [Test]
         public async Task Return_first_non_null_result()
         {
-            var provider1 = Substitute.For<IAvatarProvider>();
-            var provider2 = Substitute.For<IAvatarProvider>();
-            var provider3 = Substitute.For<IAvatarProvider>();
+            IAvatarProvider provider1 = Substitute.For<IAvatarProvider>();
+            IAvatarProvider provider2 = Substitute.For<IAvatarProvider>();
+            IAvatarProvider provider3 = Substitute.For<IAvatarProvider>();
 
             // Register different images (for the same parameters)
             // for each provider. This allows us to detect incorrect results.
@@ -90,10 +90,10 @@ namespace GitUITests.Avatars
 
             ChainedAvatarProvider chainedProvider = new(provider1, provider2, provider3);
 
-            var res1 = await chainedProvider.GetAvatarAsync(_email1, _name1, _size);
-            var res2 = await chainedProvider.GetAvatarAsync(_email2, _name2, _size);
-            var res3 = await chainedProvider.GetAvatarAsync(_email3, _name3, _size);
-            var res4 = await chainedProvider.GetAvatarAsync(_email4, _name4, _size);
+            Image res1 = await chainedProvider.GetAvatarAsync(_email1, _name1, _size);
+            Image res2 = await chainedProvider.GetAvatarAsync(_email2, _name2, _size);
+            Image res3 = await chainedProvider.GetAvatarAsync(_email3, _name3, _size);
+            Image res4 = await chainedProvider.GetAvatarAsync(_email4, _name4, _size);
 
             Assert.AreSame(_img1, res1);
             Assert.AreSame(_img4, res2);

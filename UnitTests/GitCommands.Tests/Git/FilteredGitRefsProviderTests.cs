@@ -17,11 +17,11 @@ namespace GitCommandsTests.Git
 
         private IGitRef CreateSubstituteRef(string guid, string completeName, string remote)
         {
-            var isRemote = !string.IsNullOrEmpty(remote);
-            var name = (isRemote ? remote + "/" : "") + completeName.LazySplit('/').LastOrDefault();
-            var isTag = completeName.StartsWith("refs/tags/", StringComparison.InvariantCultureIgnoreCase);
-            var isHead = completeName.StartsWith("refs/heads/", StringComparison.InvariantCultureIgnoreCase);
-            var gitRef = Substitute.For<IGitRef>();
+            bool isRemote = !string.IsNullOrEmpty(remote);
+            string name = (isRemote ? remote + "/" : "") + completeName.LazySplit('/').LastOrDefault();
+            bool isTag = completeName.StartsWith("refs/tags/", StringComparison.InvariantCultureIgnoreCase);
+            bool isHead = completeName.StartsWith("refs/heads/", StringComparison.InvariantCultureIgnoreCase);
+            IGitRef gitRef = Substitute.For<IGitRef>();
             gitRef.Module.Returns(_module);
             gitRef.Guid.Returns(guid);
             gitRef.CompleteName.Returns(completeName);
@@ -36,7 +36,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void FilteredGitRefsProviderTest()
         {
-            var refs = new[]
+            IGitRef[] refs = new[]
             {
                 CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/develop", ""),
                 CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/remotes/origin/develop", "origin"),

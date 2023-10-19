@@ -67,7 +67,7 @@ namespace GitUITests.UserControls
                 // Reset to the default
                 AppSettings.RefsSortBy = GitRefsSortBy.Default;
 
-                foreach (var item in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>())
+                foreach (ToolStripMenuItem item in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>())
                 {
                     item.PerformClick();
                     _onSortOrderChanged.Received(1).Invoke();
@@ -82,10 +82,10 @@ namespace GitUITests.UserControls
 
         private void AssertOnlyCheckedItemIs(GitRefsSortBy sortType)
         {
-            var matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i.Tag.Equals(sortType));
+            ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i.Tag.Equals(sortType));
             Assert.IsTrue(matchingSubItem.Checked);
 
-            foreach (var otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))
+            foreach (ToolStripMenuItem otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))
             {
                 Assert.IsFalse(otherItem.Checked);
             }

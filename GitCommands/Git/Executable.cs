@@ -39,9 +39,9 @@ namespace GitCommands
             // TODO should we set these on the child process only?
             EnvironmentConfiguration.SetEnvironmentVariables();
 
-            var args = (arguments.Arguments ?? "").Replace("$QUOTE$", "\\\"");
+            string args = (arguments.Arguments ?? "").Replace("$QUOTE$", "\\\"");
 
-            var fileName = _fileNameProvider();
+            string fileName = _fileNameProvider();
 
             return new ProcessWrapper(fileName, _prefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
         }
@@ -49,7 +49,7 @@ namespace GitCommands
         #region ProcessWrapper
 
         /// <summary>
-        /// Manages the lifetime of a process. The <see cref="System.Diagnostics.Process"/> object has many members
+        /// Manages the lifetime of a process. The <see cref="Process"/> object has many members
         /// that throw at different times in the lifecycle of the process, such as after it is disposed. This class
         /// provides a simplified API that meets the need of this application via the <see cref="IProcess"/> interface.
         /// </summary>

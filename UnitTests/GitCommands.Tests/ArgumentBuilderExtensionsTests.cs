@@ -205,7 +205,7 @@ namespace GitCommandsTests
 
             void Test<T>()
             {
-                var method = typeof(ArgumentBuilderExtensions).GetMethod(
+                System.Reflection.MethodInfo method = typeof(ArgumentBuilderExtensions).GetMethod(
                     nameof(ArgumentBuilderExtensions.Add),
                     new[]
                     {
@@ -331,11 +331,11 @@ namespace GitCommandsTests
         public void BuildBatchArguments_builder_work_as_expected(string command, string[] arguments, int maxLength, string[] expected, int[] expectedCounts,
             int baseLength = 0)
         {
-            var batch = new GitArgumentBuilder(command)
+            List<BatchArgumentItem> batch = new GitArgumentBuilder(command)
                 .BuildBatchArguments(arguments, baseLength, maxLength);
 
-            var args = batch.Select(item => item.Argument.ToString()).ToArray();
-            var counts = batch.Select(item => item.BatchItemsCount).ToArray();
+            string[] args = batch.Select(item => item.Argument.ToString()).ToArray();
+            int[] counts = batch.Select(item => item.BatchItemsCount).ToArray();
 
             Assert.AreEqual(expected, args);
             Assert.AreEqual(expectedCounts, counts);

@@ -109,7 +109,7 @@ namespace GitCommands
             if (EnvUtils.RunningOnWindows())
             {
                 // Use the Windows default home directory
-                var homeDrive = Env.GetEnvironmentVariable("HOMEDRIVE");
+                string homeDrive = Env.GetEnvironmentVariable("HOMEDRIVE");
 
                 if (!string.IsNullOrEmpty(homeDrive))
                 {

@@ -282,7 +282,7 @@ Detail of the error:");
             // by selecting the first started or if none, one that is waiting to start
             foreach (IGrouping<string, Build> commitBuilds in byCommitBuilds)
             {
-                var buildSelected = commitBuilds.Where(b => b.StartTime.HasValue).MinBy(b => b.StartTime)
+                Build buildSelected = commitBuilds.Where(b => b.StartTime.HasValue).MinBy(b => b.StartTime)
                                     ?? commitBuilds.First();
                 runningBuilds.Add(buildSelected);
             }

@@ -13,7 +13,7 @@
             }
 
             return control.Tag is Dictionary<string, object> dict &&
-                dict.TryGetValue(key, out var value) &&
+                dict.TryGetValue(key, out object value) &&
                 value is TValue;
         }
 
@@ -24,7 +24,7 @@
         {
             if (control.Tag is null ||
                 !(control.Tag is Dictionary<string, object?> dict) ||
-                !dict.TryGetValue(key, out var result))
+                !dict.TryGetValue(key, out object? result))
             {
                 return default;
             }

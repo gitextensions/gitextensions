@@ -117,7 +117,7 @@ namespace GitCommandsTests.DiffMergeTools
         [TestCase("bla", DiffMergeToolType.Merge, "mergetool.bla.cmd")]
         public void GetToolCommand_should_return_command_for_toolName_if_set(string toolName, DiffMergeToolType toolType, string expectedValueKey)
         {
-            var command = "--wait --diff \"$LOCAL\" \"$REMOTE\"";
+            string command = "--wait --diff \"$LOCAL\" \"$REMOTE\"";
             _fileSettings.GetValue(expectedValueKey).Returns(command);
 
             _configurationManager.GetToolCommand(toolName, toolType).Should().Be(command);
@@ -136,7 +136,7 @@ namespace GitCommandsTests.DiffMergeTools
         [Test]
         public void LoadDiffMergeToolConfig_should_create_tool_config_with_userSuppliedPath_if_tool_unregistered()
         {
-            var config = _configurationManager.LoadDiffMergeToolConfig("bla", @"c:\some\path\to the tool\bla.exe");
+            DiffMergeToolConfiguration config = _configurationManager.LoadDiffMergeToolConfig("bla", @"c:\some\path\to the tool\bla.exe");
 
             config.Should().NotBeNull();
             config.ExeFileName.Should().Be("bla.exe");
@@ -150,7 +150,7 @@ namespace GitCommandsTests.DiffMergeTools
         [TestCase("\t")]
         public void LoadDiffMergeToolConfig_should_create_tool_config_if_tool_unregistered(string userSuppliedPath)
         {
-            var config = _configurationManager.LoadDiffMergeToolConfig("bla", userSuppliedPath);
+            DiffMergeToolConfiguration config = _configurationManager.LoadDiffMergeToolConfig("bla", userSuppliedPath);
 
             config.Should().NotBeNull();
             config.ExeFileName.Should().Be("bla.exe");
@@ -162,7 +162,7 @@ namespace GitCommandsTests.DiffMergeTools
         [Test]
         public void LoadDiffMergeToolConfig_should_create_tool_config_if_tool_unregistered_but_exists_path()
         {
-            var config = _configurationManager.LoadDiffMergeToolConfig("notepad", null);
+            DiffMergeToolConfiguration config = _configurationManager.LoadDiffMergeToolConfig("notepad", null);
 
             config.Should().NotBeNull();
             config.ExeFileName.Should().Be("notepad.exe");
@@ -176,11 +176,11 @@ namespace GitCommandsTests.DiffMergeTools
         {
             SemanticMerge tool = new();
 
-            var toolPath = @"c:\some\path\to the tool\MyTool.exe";
+            string toolPath = @"c:\some\path\to the tool\MyTool.exe";
             _fileSettings.GetValue($"mergetool.{tool.Name}.path").Returns(toolPath);
             _configurationManager = new DiffMergeToolConfigurationManager(() => _fileSettings, FindFileInFolders);
 
-            var config = _configurationManager.LoadDiffMergeToolConfig(tool.Name, null);
+            DiffMergeToolConfiguration config = _configurationManager.LoadDiffMergeToolConfig(tool.Name, null);
 
             config.Should().NotBeNull();
             config.ExeFileName.Should().Be(tool.ExeFileName);
@@ -212,7 +212,7 @@ namespace GitCommandsTests.DiffMergeTools
         [TestCase("bla", DiffMergeToolType.Merge, "mergetool.bla.path")]
         public void GetToolPath_should_return_command_for_toolName_if_set(string toolName, DiffMergeToolType toolType, string expectedValueKey)
         {
-            var toolPath = @"c:\some\path\to the tool\MyTool.exe";
+            string toolPath = @"c:\some\path\to the tool\MyTool.exe";
             _fileSettings.GetValue(expectedValueKey).Returns(toolPath);
 
             _configurationManager.GetToolPath(toolName, toolType).Should().Be(toolPath);
@@ -224,7 +224,7 @@ namespace GitCommandsTests.DiffMergeTools
         [TestCase(DiffMergeToolType.Merge, MergeToolKey, "mergetool")]
         public void GetInfo(DiffMergeToolType toolType, string expectedToolKey, string expectedPrefix)
         {
-            var info = _configurationManager.GetTestAccessor().GetInfo(toolType);
+            (string toolKey, string prefix) info = _configurationManager.GetTestAccessor().GetInfo(toolType);
 
             info.toolKey.Should().Be(expectedToolKey);
             info.prefix.Should().Be(expectedPrefix);
@@ -234,7 +234,7 @@ namespace GitCommandsTests.DiffMergeTools
         public void GetToolSetting_should_return_empty_if_toolName_is_empty()
         {
             _fileSettings.GetValue(Arg.Any<string>()).Returns(string.Empty);
-            var settings = _configurationManager.GetTestAccessor().GetToolSetting(string.Empty, DiffMergeToolType.Diff, "");
+            string settings = _configurationManager.GetTestAccessor().GetToolSetting(string.Empty, DiffMergeToolType.Diff, "");
 
             settings.Should().BeEmpty();
             _fileSettings.Received(1).GetValue(Arg.Any<string>());
@@ -245,7 +245,7 @@ namespace GitCommandsTests.DiffMergeTools
         [TestCase(DiffMergeToolType.Merge, "mergetool")]
         public void GetToolSetting_should_load_setting_for_requested_toolName(DiffMergeToolType toolType, string expectedPrefix)
         {
-            var settings = _configurationManager.GetTestAccessor().GetToolSetting(DiffToolName, toolType, "customSuffix");
+            string settings = _configurationManager.GetTestAccessor().GetToolSetting(DiffToolName, toolType, "customSuffix");
 
             settings.Should().BeEmpty();
             _fileSettings.GetValue($"{expectedPrefix}.{DiffToolName}.customSuffix");

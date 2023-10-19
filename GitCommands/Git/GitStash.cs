@@ -14,7 +14,7 @@ namespace GitCommands.Git
             // "stash@{i}: On {branch}: {Message}"
             // "stash@{i}: autostash"
 
-            var match = _regex.Match(s);
+            Match match = _regex.Match(s);
 
             if (!match.Success)
             {

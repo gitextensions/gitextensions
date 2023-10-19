@@ -35,7 +35,7 @@ namespace GitCommands
 
             _type = GetType();
 
-            var name = ParseName();
+            string name = ParseName();
 
             Name = string.IsNullOrWhiteSpace(name) ? CompleteName : name;
 

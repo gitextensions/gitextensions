@@ -23,7 +23,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void Parse_should_return_the_list()
         {
-            var items = _parser.Parse(GetLsTreeOutput()).ToList();
+            List<GitItem> items = _parser.Parse(GetLsTreeOutput()).ToList();
 
             items.Count.Should().Be(10);
 
@@ -56,7 +56,7 @@ namespace GitCommandsTests.Git
         public void ParseSingle_should_return_GitItem()
         {
             const string s = "100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491    .editorconfig";
-            var item = _parser.ParseSingle(s);
+            GitItem item = _parser.ParseSingle(s);
 
             item.Guid.Should().Be("25d7b5d771e84982a3dfd8bd537531d8fb45d491");
             item.Mode.Should().Be(100644);

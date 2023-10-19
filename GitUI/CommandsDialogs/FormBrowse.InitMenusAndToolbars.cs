@@ -167,7 +167,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillNextPullActionAsDefaultToolStripMenuItems()
         {
-            var setDefaultPullActionDropDown = (ToolStripDropDownMenu)setDefaultPullButtonActionToolStripMenuItem.DropDown;
+            ToolStripDropDownMenu setDefaultPullActionDropDown = (ToolStripDropDownMenu)setDefaultPullButtonActionToolStripMenuItem.DropDown;
 
             // Show both Check and Image margins in a menu
             setDefaultPullActionDropDown.ShowImageMargin = true;
@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs
                 }
             };
 
-            var setDefaultPullActionDropDownItems = toolStripButtonPull.DropDownItems
+            IEnumerable<ToolStripItem> setDefaultPullActionDropDownItems = toolStripButtonPull.DropDownItems
                 .OfType<ToolStripMenuItem>()
                 .Where(tsmi => tsmi.Tag is AppSettings.PullAction)
                 .Select(tsmi =>
@@ -205,7 +205,7 @@ namespace GitUI.CommandsDialogs
 
             void SetDefaultPullActionMenuItemClick(object sender, EventArgs eventArgs)
             {
-                var clickedMenuItem = (ToolStripMenuItem)sender;
+                ToolStripMenuItem clickedMenuItem = (ToolStripMenuItem)sender;
                 AppSettings.DefaultPullAction = (AppSettings.PullAction)clickedMenuItem.Tag;
                 RefreshDefaultPullAction();
             }
@@ -251,7 +251,7 @@ namespace GitUI.CommandsDialogs
             // set the first available shell as default
             if (userShell.Visible && !userShellAccessible)
             {
-                var shell = (IShellDescriptor)userShell.DropDownItems[0].Tag;
+                IShellDescriptor shell = (IShellDescriptor)userShell.DropDownItems[0].Tag;
                 userShell.Image = shell.Icon;
                 userShell.ToolTipText = shell.Name;
                 userShell.Tag = shell;
@@ -266,7 +266,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var defaultPullAction = AppSettings.DefaultPullAction;
+            AppSettings.PullAction defaultPullAction = AppSettings.DefaultPullAction;
 
             foreach (ToolStripMenuItem menuItem in setDefaultPullButtonActionToolStripMenuItem.DropDown.Items)
             {
@@ -312,7 +312,7 @@ namespace GitUI.CommandsDialogs
         private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
         {
             RepoStateVisualiser repoStateVisualiser = new();
-            var (image, brush) = repoStateVisualiser.Invoke(status);
+            (Image image, Brush brush) = repoStateVisualiser.Invoke(status);
 
             if (showCount)
             {

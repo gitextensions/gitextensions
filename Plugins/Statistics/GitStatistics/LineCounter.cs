@@ -15,12 +15,12 @@
 
         public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore, IEnumerable<string> filesToCheck)
         {
-            var extensions = filePattern.Replace("*", "").Split(';').ToHashSet(StringComparer.InvariantCultureIgnoreCase);
-            var directoryFilter = directoriesToIgnore.Split(';');
-            var lastUpdate = DateTime.Now;
-            var timer = TimeSpan.FromMilliseconds(500);
+            HashSet<string> extensions = filePattern.Replace("*", "").Split(';').ToHashSet(StringComparer.InvariantCultureIgnoreCase);
+            string[] directoryFilter = directoriesToIgnore.Split(';');
+            DateTime lastUpdate = DateTime.Now;
+            TimeSpan timer = TimeSpan.FromMilliseconds(500);
 
-            foreach (var file in GetFiles())
+            foreach (FileInfo file in GetFiles())
             {
                 if (DirectoryIsFiltered(file.Directory, directoryFilter))
                 {
@@ -46,7 +46,7 @@
 
             IEnumerable<FileInfo> GetFiles()
             {
-                foreach (var file in filesToCheck)
+                foreach (string file in filesToCheck)
                 {
                     FileInfo fileInfo = null;
                     try
@@ -75,16 +75,16 @@
                     return;
                 }
 
-                var codeFile = CodeFile.Parse(file);
+                CodeFile codeFile = CodeFile.Parse(file);
 
                 TotalLineCount += codeFile.TotalLineCount;
                 BlankLineCount += codeFile.BlankLineCount;
                 CommentLineCount += codeFile.CommentLineCount;
                 DesignerLineCount += codeFile.DesignerLineCount;
 
-                var extension = file.Extension.ToLower();
+                string extension = file.Extension.ToLower();
 
-                LinesOfCodePerExtension.TryGetValue(extension, out var linesForExtensions);
+                LinesOfCodePerExtension.TryGetValue(extension, out int linesForExtensions);
                 LinesOfCodePerExtension[extension] = linesForExtensions + codeFile.CodeLineCount;
 
                 CodeLineCount += codeFile.CodeLineCount;

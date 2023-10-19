@@ -18,7 +18,7 @@ namespace GitExtUtils.GitUI
 
         static DpiUtil()
         {
-            using var hdc = GetDC(IntPtr.Zero);
+            using DeviceContextSafeHandle hdc = GetDC(IntPtr.Zero);
             try
             {
                 const int LOGPIXELSX = 88;
@@ -61,7 +61,7 @@ namespace GitExtUtils.GitUI
         /// </summary>
         public static Size Scale(Size size, int originalDpi)
         {
-            var scale = (float)DpiX / originalDpi;
+            float scale = (float)DpiX / originalDpi;
 
             return new Size(
                 (int)(size.Width * scale),
@@ -95,7 +95,7 @@ namespace GitExtUtils.GitUI
         /// </summary>
         public static int Scale(int i, int originalDpi)
         {
-            var scale = (float)DpiX / originalDpi;
+            float scale = (float)DpiX / originalDpi;
 
             return (int)(i * scale);
         }
@@ -117,7 +117,7 @@ namespace GitExtUtils.GitUI
         /// </summary>
         public static float Scale(float f, int originalDpi)
         {
-            var scale = (float)DpiX / originalDpi;
+            float scale = (float)DpiX / originalDpi;
 
             return f * scale;
         }
@@ -139,7 +139,7 @@ namespace GitExtUtils.GitUI
         /// </summary>
         public static Point Scale(Point point, int originalDpi)
         {
-            var scale = (float)DpiX / originalDpi;
+            float scale = (float)DpiX / originalDpi;
 
             return new Point(
                 (int)(point.X * scale),
@@ -168,10 +168,10 @@ namespace GitExtUtils.GitUI
                 return image;
             }
 
-            var size = Scale(new Size(image.Width, image.Height));
+            Size size = Scale(new Size(image.Width, image.Height));
             Bitmap bitmap = new(size.Width, size.Height);
 
-            using var g = Graphics.FromImage(bitmap);
+            using Graphics g = Graphics.FromImage(bitmap);
 
             // NearestNeighbor is better for 200% and above
             // http://blogs.msdn.com/b/visualstudio/archive/2014/03/19/improving-high-dpi-support-for-visual-studio-2013.aspx

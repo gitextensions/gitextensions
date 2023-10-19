@@ -188,8 +188,8 @@ namespace GitCommands
 
             StringBuilder formattedCommitMessage = new();
 
-            var lineNumber = 1;
-            foreach (var line in commitMessage.LazySplit('\n'))
+            int lineNumber = 1;
+            foreach (string line in commitMessage.LazySplit('\n'))
             {
                 // When a committemplate is used, skip comments and do not count them as line.
                 // otherwise: "#" is probably not used for comment but for issue number

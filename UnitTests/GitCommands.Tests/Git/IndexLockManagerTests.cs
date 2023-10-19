@@ -91,7 +91,7 @@ namespace GitCommandsTests.Git
             _file.Exists(_indexLockFile).Returns(true);
             _file.When(x => x.Delete(_indexLockFile)).Throw(new DivideByZeroException("boom"));
 
-            var ex = Assert.Throws<FileDeleteException>(() => _manager.UnlockIndex(false));
+            FileDeleteException ex = Assert.Throws<FileDeleteException>(() => _manager.UnlockIndex(false));
 
             ex.FileName.Should().Be(_indexLockFile);
             _module.DidNotReceive().GetSubmodulesLocalPaths();
@@ -105,12 +105,12 @@ namespace GitCommandsTests.Git
         {
             _file.Exists(_indexLockFile).Returns(true);
 
-            var submoduleGitHubWorkingDir = $@"{_workingDir}\Externals\Git.hub\";
-            var submoduleNbugWorkingDir = $@"{_workingDir}\Externals\NBug\";
-            var submoduleGitHubWorkingDirGitDir = $@"{_gitWorkingDir}\modules\Externals\Git.hub\";
-            var submoduleNBugWorkingDirGitDir = $@"{_gitWorkingDir}\modules\Externals\NBug\";
-            var submoduleGitHubIndexLock = $@"{_gitWorkingDir}\modules\Externals\Git.hub\{IndexLock}";
-            var submoduleNBugIndexLock = $@"{_gitWorkingDir}\modules\Externals\NBug\{IndexLock}";
+            string submoduleGitHubWorkingDir = $@"{_workingDir}\Externals\Git.hub\";
+            string submoduleNbugWorkingDir = $@"{_workingDir}\Externals\NBug\";
+            string submoduleGitHubWorkingDirGitDir = $@"{_gitWorkingDir}\modules\Externals\Git.hub\";
+            string submoduleNBugWorkingDirGitDir = $@"{_gitWorkingDir}\modules\Externals\NBug\";
+            string submoduleGitHubIndexLock = $@"{_gitWorkingDir}\modules\Externals\Git.hub\{IndexLock}";
+            string submoduleNBugIndexLock = $@"{_gitWorkingDir}\modules\Externals\NBug\{IndexLock}";
 
             _module.GetSubmodulesLocalPaths().Returns(new[] { "Externals/Git.hub", "Externals/NBug" });
             _module.GetSubmoduleFullPath(Arg.Any<string>())
@@ -137,10 +137,10 @@ namespace GitCommandsTests.Git
     path = Externals/Git.hub
     url = https://github.com/gitextensions/Git.hub.gitk");
 
-            var submoduleGitHub = Path.Combine(helper.Module.WorkingDir, "Externals", "Git.hub");
-            var submoduleNBug = Path.Combine(helper.Module.WorkingDir, "Externals", "NBug");
-            var submoduleGitHubWorkingDirGitDir = Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "Git.hub");
-            var submoduleNbugWorkingDirGitDir = Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "NBug");
+            string submoduleGitHub = Path.Combine(helper.Module.WorkingDir, "Externals", "Git.hub");
+            string submoduleNBug = Path.Combine(helper.Module.WorkingDir, "Externals", "NBug");
+            string submoduleGitHubWorkingDirGitDir = Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "Git.hub");
+            string submoduleNbugWorkingDirGitDir = Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "NBug");
             helper.CreateFile(submoduleGitHub, ".git", "gitdir: ../../.git/modules/Externals/Git.hub");
             helper.CreateFile(submoduleNBug, ".git", "gitdir: ../../.git/modules/Externals/NBug");
             helper.CreateFile(helper.Module.WorkingDirGitDir, IndexLock, "");
@@ -148,11 +148,11 @@ namespace GitCommandsTests.Git
 
             _manager = new IndexLockManager(helper.Module);
 
-            var indexLock = Path.Combine(helper.Module.WorkingDirGitDir, IndexLock);
+            string indexLock = Path.Combine(helper.Module.WorkingDirGitDir, IndexLock);
             File.Exists(indexLock).Should().BeTrue();
-            var gitHubIndexLock = Path.Combine(submoduleGitHubWorkingDirGitDir, IndexLock);
+            string gitHubIndexLock = Path.Combine(submoduleGitHubWorkingDirGitDir, IndexLock);
             File.Exists(gitHubIndexLock).Should().BeTrue();
-            var nbugIndexLock = Path.Combine(submoduleNbugWorkingDirGitDir, IndexLock);
+            string nbugIndexLock = Path.Combine(submoduleNbugWorkingDirGitDir, IndexLock);
             File.Exists(nbugIndexLock).Should().BeFalse();
 
             _manager.UnlockIndex(true);

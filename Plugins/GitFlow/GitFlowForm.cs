@@ -74,7 +74,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         private void Init()
         {
-            var isInitialised = IsGitFlowInitialised;
+            bool isInitialised = IsGitFlowInitialised;
 
             btnInit.Visible = !isInitialised;
             gbStart.Enabled = isInitialised;
@@ -84,7 +84,7 @@ namespace GitExtensions.Plugins.GitFlow
 
             if (isInitialised)
             {
-                var remotes = _gitUiCommands.GitModule.GetRemoteNames();
+                IReadOnlyList<string> remotes = _gitUiCommands.GitModule.GetRemoteNames();
                 cbRemote.DataSource = remotes;
                 btnPull.Enabled = btnPublish.Enabled = remotes.Any();
 
@@ -109,7 +109,7 @@ namespace GitExtensions.Plugins.GitFlow
         {
             foreach (Branch branch in Enum.GetValues(typeof(Branch)))
             {
-                var startRef = branch + "/";
+                string startRef = branch + "/";
                 if (currentRef.StartsWith(startRef))
                 {
                     branchType = branch.ToString();
@@ -149,7 +149,7 @@ namespace GitExtensions.Plugins.GitFlow
         private IReadOnlyList<string> GetBranches(string typeBranch)
         {
             GitArgumentBuilder args = new("flow") { typeBranch };
-            var result = _gitUiCommands.GitModule.GitExecutable.Execute(args);
+            ExecutionResult result = _gitUiCommands.GitModule.GitExecutable.Execute(args);
 
             if (!result.ExitedSuccessfully || result.StandardOutput is null)
             {
@@ -164,9 +164,9 @@ namespace GitExtensions.Plugins.GitFlow
 
         private void DisplayBranchData()
         {
-            var branchType = cbManageType.SelectedValue.ToString();
-            var branches = Branches[branchType];
-            var isThereABranch = branches.Any();
+            string branchType = cbManageType.SelectedValue.ToString();
+            IReadOnlyList<string> branches = Branches[branchType];
+            bool isThereABranch = branches.Any();
 
             cbManageType.Enabled = true;
             cbBranches.DataSource = isThereABranch ? branches : new[] { string.Format(_noBranchExist.Text, branchType) };
@@ -187,8 +187,8 @@ namespace GitExtensions.Plugins.GitFlow
 
         private void LoadBaseBranches()
         {
-            var branchType = cbType.SelectedValue.ToString();
-            var manageBaseBranch = branchType != Branch.release.ToString("G");
+            string branchType = cbType.SelectedValue.ToString();
+            bool manageBaseBranch = branchType != Branch.release.ToString("G");
             pnlBasedOn.Visible = manageBaseBranch;
 
             if (manageBaseBranch)
@@ -224,7 +224,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         private void btnStartBranch_Click(object sender, EventArgs e)
         {
-            var branchType = cbType.SelectedValue.ToString();
+            string branchType = cbType.SelectedValue.ToString();
             GitArgumentBuilder args = new("flow")
             {
                 branchType,
@@ -249,7 +249,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         private string GetBaseBranch()
         {
-            var branchType = cbType.SelectedValue.ToString();
+            string branchType = cbType.SelectedValue.ToString();
             if (branchType == Branch.release.ToString("G"))
             {
                 return string.Empty;
@@ -314,7 +314,7 @@ namespace GitExtensions.Plugins.GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText, throwOnErrorExit: false);
+            ExecutionResult result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText, throwOnErrorExit: false);
 
             IsRefreshNeeded = true;
 
@@ -322,7 +322,7 @@ namespace GitExtensions.Plugins.GitFlow
             ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + result.ExitCode);
 
             // TODO Can AllOutput be replaced with StandardOutput?
-            var resultText = Regex.Replace(result.AllOutput, @"\r\n?|\n", Environment.NewLine);
+            string resultText = Regex.Replace(result.AllOutput, @"\r\n?|\n", Environment.NewLine);
 
             if (result.ExitedSuccessfully)
             {
@@ -366,7 +366,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         private void cbManageType_SelectedValueChanged(object sender, EventArgs e)
         {
-            var branchType = cbManageType.SelectedValue.ToString();
+            string branchType = cbManageType.SelectedValue.ToString();
             lblPrefixManage.Text = branchType + "/";
             if (!string.IsNullOrWhiteSpace(branchType))
             {

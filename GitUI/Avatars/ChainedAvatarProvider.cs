@@ -33,7 +33,7 @@
         /// </summary>
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            foreach (var provider in _avatarProviders)
+            foreach (IAvatarProvider provider in _avatarProviders)
             {
                 Image? avatar = null;
 

@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
         /// <inheritdoc/>
         public TreeNode? Find(TreeNodeCollection nodes, string label)
         {
-            for (var i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < nodes.Count; i++)
             {
                 if (nodes[i].Text == label)
                 {
@@ -77,16 +77,16 @@ namespace GitUI.CommandsDialogs
         {
             Validates.NotNull(item.Guid);
 
-            var childrenItems = _cachedItems.GetOrAdd(item.Guid, _revisionInfoProvider.LoadChildren(item));
+            IEnumerable<INamedGitItem> childrenItems = _cachedItems.GetOrAdd(item.Guid, _revisionInfoProvider.LoadChildren(item));
             if (childrenItems is null)
             {
                 return;
             }
 
             string? workingDir = null;
-            foreach (var childItem in childrenItems.OrderBy(gi => gi, new GitFileTreeComparer()))
+            foreach (INamedGitItem childItem in childrenItems.OrderBy(gi => gi, new GitFileTreeComparer()))
             {
-                var subNode = nodes.Add(childItem.Name);
+                TreeNode subNode = nodes.Add(childItem.Name);
                 subNode.Tag = childItem;
 
                 if (!(childItem is GitItem gitItem))
@@ -113,7 +113,7 @@ namespace GitUI.CommandsDialogs
 
                     case GitObjectType.Blob:
                         {
-                            var extension = Path.GetExtension(gitItem.FileName);
+                            string extension = Path.GetExtension(gitItem.FileName);
 
                             if (string.IsNullOrWhiteSpace(extension))
                             {
@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs
                                 // lazy - initialise the first time used
                                 workingDir ??= _getWorkingDir();
 
-                                var fileIcon = _iconProvider.Get(workingDir, gitItem.FileName);
+                                Icon fileIcon = _iconProvider.Get(workingDir, gitItem.FileName);
                                 if (fileIcon is null)
                                 {
                                     continue;
@@ -145,7 +145,7 @@ namespace GitUI.CommandsDialogs
         public bool SelectFileOrFolder(NativeTreeView tree, string fileSubPath)
         {
             Queue<string> pathParts = new(fileSubPath.Split(Delimiters.PathSeparators));
-            var foundNode = FindSubNode(tree.Nodes, pathParts);
+            TreeNode foundNode = FindSubNode(tree.Nodes, pathParts);
             if (foundNode is null)
             {
                 return false;
@@ -159,13 +159,13 @@ namespace GitUI.CommandsDialogs
         {
             while (true)
             {
-                var treeToFind = pathParts.Dequeue();
+                string treeToFind = pathParts.Dequeue();
                 if (pathParts.Count == 0)
                 {
                     return nodes.Cast<TreeNode>().SingleOrDefault(n => n?.Tag is GitItem item && item.Name == treeToFind);
                 }
 
-                var node = nodes.Cast<TreeNode>().SingleOrDefault(n =>
+                TreeNode node = nodes.Cast<TreeNode>().SingleOrDefault(n =>
                     n?.Tag is GitItem { ObjectType: GitObjectType.Tree } item && item.Name == treeToFind);
 
                 if (node is null)

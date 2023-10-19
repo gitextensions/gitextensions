@@ -68,7 +68,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
 
             Validates.NotNull(_currentGitUiCommands);
 
-            var gitModule = _currentGitUiCommands.GitModule;
+            IGitModule gitModule = _currentGitUiCommands.GitModule;
             if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())
             {
                 _cancellationToken =

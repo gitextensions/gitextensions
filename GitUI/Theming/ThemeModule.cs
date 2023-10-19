@@ -107,7 +107,7 @@ namespace GitUI.Theming
 #if SUPPORT_THEME_HOOKS
         private static void ResetGdiCaches()
         {
-            var systemDrawingAssembly = typeof(Color).Assembly;
+            System.Reflection.Assembly systemDrawingAssembly = typeof(Color).Assembly;
 
             var colorTableField =
                 systemDrawingAssembly.GetType("System.Drawing.KnownColorTable")
@@ -133,7 +133,7 @@ namespace GitUI.Theming
             var systemPensKey = systemPensKeyField
                 .GetValue(null);
 
-            var threadData = (IDictionary)threadDataProperty.GetValue(null, null);
+            IDictionary<TKey, TValue> threadData = (IDictionary)threadDataProperty.GetValue(null, null);
             colorTableField.SetValue(null, null);
 
             threadData[systemBrushesKey] = null;

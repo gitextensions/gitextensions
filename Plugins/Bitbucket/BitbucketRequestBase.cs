@@ -36,7 +36,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             RestClient client = new()
             {
-                BaseUrl = new System.Uri(Settings.BitbucketUrl),
+                BaseUrl = new Uri(Settings.BitbucketUrl),
                 Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password)
             };
 
@@ -49,7 +49,7 @@ namespace GitExtensions.Plugins.Bitbucket
             // XSRF check fails when approving/creating
             request.AddHeader("X-Atlassian-Token", "no-check");
 
-            var response = await client.ExecuteAsync(request).ConfigureAwait(false);
+            IRestResponse response = await client.ExecuteAsync(request).ConfigureAwait(false);
             if (response.ResponseStatus != ResponseStatus.Completed)
             {
                 return new BitbucketResponse<T>
@@ -95,14 +95,14 @@ namespace GitExtensions.Plugins.Bitbucket
             {
                 List<string> messages = new();
                 BitbucketResponse<T> errorResponse = new() { Success = false };
-                foreach (var error in json["errors"])
+                foreach (JToken error in json["errors"])
                 {
                     StringBuilder sb = new();
                     sb.AppendLine(error["message"].ToString());
                     if (error["reviewerErrors"] is not null)
                     {
                         sb.AppendLine();
-                        foreach (var reviewerError in error["reviewerErrors"])
+                        foreach (JToken reviewerError in error["reviewerErrors"])
                         {
                             sb.Append(reviewerError["message"]).AppendLine();
                         }

@@ -12,7 +12,7 @@ namespace ResourceManager.CommitDataRenders
 
         public MonospacedHeaderRenderStyleProvider()
         {
-            var strings = new[]
+            string[] strings = new[]
             {
                 TranslatedStrings.Author,
                 TranslatedStrings.AuthorDate,

@@ -10,7 +10,7 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partId, int stateId, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using var ctx = CreateRenderContext(hdc, pcliprect);
+            using Context ctx = CreateRenderContext(hdc, pcliprect);
             DrawBackground(ctx, partId, stateId, prect);
             if ((Parts)partId == Parts.SBP_ARROWBTN)
             {
@@ -22,14 +22,14 @@ namespace GitUI.Theming
 
         private static void DrawBackground(Context ctx, int partId, int stateId, Rectangle prect)
         {
-            var backBrush = GetBackBrush(stateId, (Parts)partId);
+            Brush backBrush = GetBackBrush(stateId, (Parts)partId);
             ctx.Graphics.FillRectangle(backBrush, prect);
         }
 
         private static void DrawArrow(Context ctx, States.ArrowButton stateId, Rectangle prect)
         {
-            var foreColor = GetArrowButtonForeColor(stateId);
-            var arrowPts = GetArrowPolygon(prect, stateId);
+            Color foreColor = GetArrowButtonForeColor(stateId);
+            Point[] arrowPts = GetArrowPolygon(prect, stateId);
             using Pen pen = new(foreColor, DpiUtil.Scale(2));
             using (ctx.HighQuality())
             {

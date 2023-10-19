@@ -26,7 +26,7 @@ namespace GitCommands.Utils
                 return false;
             }
 
-            var currentProcess = Process.GetCurrentProcess();
+            Process currentProcess = Process.GetCurrentProcess();
             if (currentProcess is null)
             {
                 return false;
@@ -90,7 +90,7 @@ namespace GitCommands.Utils
                     {
                         using (registryKey)
                         {
-                            var v = registryKey.GetValue("Install");
+                            object v = registryKey.GetValue("Install");
                             return v?.ToString() is "1";
                         }
                     }

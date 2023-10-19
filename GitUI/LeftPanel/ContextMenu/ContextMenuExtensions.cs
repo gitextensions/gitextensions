@@ -53,7 +53,7 @@ namespace GitUI.LeftPanel.ContextMenu
         internal static void ToggleSeparators(this ContextMenuStrip contextMenu)
         {
             contextMenu.SuspendLayout();
-            var items = contextMenu.Items.Cast<ToolStripItem>().ToArray();
+            ToolStripItem[] items = contextMenu.Items.Cast<ToolStripItem>().ToArray();
 
             // toggle all separators (but the last) looking behind for visible items other than separators
             ToolStripItem lastPrecedingVisibleItem = null;
@@ -74,7 +74,7 @@ namespace GitUI.LeftPanel.ContextMenu
             }
 
             // hide the last visible separator that above look-behind loop may have left over
-            var lastVisible = items.LastOrDefault(i => i.Visible);
+            ToolStripItem lastVisible = items.LastOrDefault(i => i.Visible);
 
             if (lastVisible is ToolStripSeparator)
             {

@@ -43,7 +43,7 @@ namespace System
         [Pure]
         public static string SubstringUntil(this string str, char c)
         {
-            var index = str.IndexOf(c);
+            int index = str.IndexOf(c);
 
             return index != -1
                 ? str[..index]
@@ -58,7 +58,7 @@ namespace System
         [Pure]
         public static string SubstringUntilLast(this string str, char c)
         {
-            var index = str.LastIndexOf(c);
+            int index = str.LastIndexOf(c);
 
             return index != -1
                 ? str[..index]
@@ -73,7 +73,7 @@ namespace System
         [Pure]
         public static string SubstringAfter(this string str, char c)
         {
-            var index = str.IndexOf(c);
+            int index = str.IndexOf(c);
 
             return index != -1
                 ? str[(index + 1)..]
@@ -88,7 +88,7 @@ namespace System
         [Pure]
         public static string SubstringAfter(this string str, string s, StringComparison comparison = StringComparison.Ordinal)
         {
-            var index = str.IndexOf(s, comparison);
+            int index = str.IndexOf(s, comparison);
 
             return index != -1
                 ? str[(index + s.Length)..]
@@ -103,7 +103,7 @@ namespace System
         [Pure]
         public static string SubstringAfterLast(this string str, char c)
         {
-            var index = str.LastIndexOf(c);
+            int index = str.LastIndexOf(c);
 
             return index != -1
                 ? str[(index + 1)..]
@@ -118,7 +118,7 @@ namespace System
         [Pure]
         public static string SubstringAfterLast(this string str, string s, StringComparison comparison = StringComparison.Ordinal)
         {
-            var index = str.LastIndexOf(s, comparison);
+            int index = str.LastIndexOf(s, comparison);
 
             return index != -1
                 ? str[(index + s.Length)..]
@@ -226,7 +226,7 @@ namespace System
 
             StringBuilder sb = new(capacity: value.Length);
 
-            foreach (var line in value.LazySplit('\n'))
+            foreach (string line in value.LazySplit('\n'))
             {
                 if (!shouldRemoveLine(line))
                 {

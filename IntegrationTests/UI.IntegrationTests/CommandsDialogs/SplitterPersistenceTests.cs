@@ -184,7 +184,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         }
                     };
 
-                    var test = form.GetGitExtensionsFormTestAccessor();
+                    GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
                     test.WindowPositionManager = _windowPositionManager;
 
                     if (Application.MessageLoop)

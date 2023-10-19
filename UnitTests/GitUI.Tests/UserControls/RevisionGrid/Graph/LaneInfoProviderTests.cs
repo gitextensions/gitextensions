@@ -103,7 +103,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                     Body = "WIP: fixing bugs"
                 }
             };
-            var realCommitObjectId = ObjectId.Parse("a48da1aba59a65b2a7f0df7e3512817caf16819f");
+            ObjectId realCommitObjectId = ObjectId.Parse("a48da1aba59a65b2a7f0df7e3512817caf16819f");
             _realCommitNode = new RevisionGraphRevision(realCommitObjectId, 0)
             {
                 GitRevision = new GitRevision(realCommitObjectId)
@@ -115,7 +115,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                     Body = "fix: bugs\r\n\r\nall bugs fixed"
                 }
             };
-            var mergeCommitObjectId = ObjectId.Parse("b48da1aba59a65b2a7f0df7e3512817caf16819f");
+            ObjectId mergeCommitObjectId = ObjectId.Parse("b48da1aba59a65b2a7f0df7e3512817caf16819f");
             _mergeCommitNode = new RevisionGraphRevision(mergeCommitObjectId, 0)
             {
                 GitRevision = new GitRevision(mergeCommitObjectId)
@@ -128,7 +128,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                     HasMultiLineMessage = true
                 }
             };
-            var undetectedMergeCommitObjectId = ObjectId.Parse("c48da1aba59a65b2a7f0df7e3512817caf16819f");
+            ObjectId undetectedMergeCommitObjectId = ObjectId.Parse("c48da1aba59a65b2a7f0df7e3512817caf16819f");
             _undetectedMergeCommitNode = new RevisionGraphRevision(undetectedMergeCommitObjectId, 0)
             {
                 GitRevision = new GitRevision(undetectedMergeCommitObjectId)
@@ -141,7 +141,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                     HasMultiLineMessage = true
                 }
             };
-            var innerCommitObjectId = ObjectId.Parse("d48da1aba59a65b2a7f0df7e3512817caf16819f");
+            ObjectId innerCommitObjectId = ObjectId.Parse("d48da1aba59a65b2a7f0df7e3512817caf16819f");
             _innerCommitNode = new RevisionGraphRevision(innerCommitObjectId, 0)
             {
                 GitRevision = new GitRevision(innerCommitObjectId)
@@ -317,7 +317,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             int maxScoreIsIgnored;
             _mergeCommitNode.AddParent(_innerCommitNode, out maxScoreIsIgnored);
             _innerCommitNode.AddParent(_realCommitNode, out maxScoreIsIgnored);
-            _realCommitNode.GitRevision.Refs = new GitRef[] { new GitRef(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored") };
+            _realCommitNode.GitRevision.Refs = new GitRef[] { new(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored") };
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
 
             Check(new GitRef(null, null, GitRefName.RefsHeadsPrefix + "local_branch"));

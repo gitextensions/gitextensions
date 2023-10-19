@@ -32,10 +32,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 {
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                    var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-                    var buildServerTypes = exports.Select(export =>
+                    IEnumerable<Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                    string[] buildServerTypes = exports.Select(export =>
                         {
-                            var canBeLoaded = export.Metadata.CanBeLoaded;
+                            string canBeLoaded = export.Metadata.CanBeLoaded;
                             return export.Metadata.BuildServerType.Combine(" - ", canBeLoaded);
                         }).ToArray();
 
@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 ? null
                 : checkBoxShowBuildResultPage.Checked;
 
-            var control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
+            IBuildServerSettingsUserControl control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
             control?.SaveSettings(buildServerSettings.SettingsSource);
 
             base.PageToSettings();
@@ -94,11 +94,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ActivateBuildServerSettingsControl()
         {
-            var controls = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().Cast<Control>();
-            var previousControl = controls.SingleOrDefault();
+            IEnumerable<Control> controls = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().Cast<Control>();
+            Control previousControl = controls.SingleOrDefault();
             previousControl?.Dispose();
 
-            var control = CreateBuildServerSettingsUserControl();
+            IBuildServerSettingsUserControl control = CreateBuildServerSettingsUserControl();
 
             buildServerSettingsPanel.Controls.Clear();
 
@@ -122,15 +122,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return null;
             }
 
-            var defaultProjectName = Module.WorkingDir.Split(Delimiters.PathSeparators, StringSplitOptions.RemoveEmptyEntries)[^1];
+            string defaultProjectName = Module.WorkingDir.Split(Delimiters.PathSeparators, StringSplitOptions.RemoveEmptyEntries)[^1];
 
-            var exports = ManagedExtensibility.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
-            var selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
+            IEnumerable<Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
+            Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata> selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
             if (selectedExport is not null)
             {
-                var buildServerSettingsUserControl = selectedExport.Value;
+                IBuildServerSettingsUserControl buildServerSettingsUserControl = selectedExport.Value;
                 Validates.NotNull(_remotesManager);
-                var remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);
+                IEnumerable<string> remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);
 
                 buildServerSettingsUserControl.Initialize(defaultProjectName, remoteUrls);
                 return buildServerSettingsUserControl;

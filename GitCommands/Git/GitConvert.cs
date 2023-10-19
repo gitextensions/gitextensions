@@ -52,7 +52,7 @@ namespace GitCommands
                 }
             }
 
-            for (var index = 1; index < buf.Length; index++)
+            for (int index = 1; index < buf.Length; index++)
             {
                 if (buf[index] == lf)
                 {

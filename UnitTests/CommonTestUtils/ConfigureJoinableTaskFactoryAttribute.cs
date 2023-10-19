@@ -30,7 +30,7 @@ namespace CommonTestUtils
             Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
             IList apartmentState = null;
-            for (var scope = test; scope is not null; scope = scope.Parent)
+            for (ITest scope = test; scope is not null; scope = scope.Parent)
             {
                 apartmentState = scope.Properties[nameof(ApartmentState)];
                 if (apartmentState.Count > 0)
@@ -74,7 +74,7 @@ namespace CommonTestUtils
                     }
                     catch (OperationCanceledException) when (cts.IsCancellationRequested)
                     {
-                        if (int.TryParse(Environment.GetEnvironmentVariable("GE_TEST_SLEEP_SECONDS_ON_HANG"), out var sleepSeconds) && sleepSeconds > 0)
+                        if (int.TryParse(Environment.GetEnvironmentVariable("GE_TEST_SLEEP_SECONDS_ON_HANG"), out int sleepSeconds) && sleepSeconds > 0)
                         {
                             Thread.Sleep(TimeSpan.FromSeconds(sleepSeconds));
                         }

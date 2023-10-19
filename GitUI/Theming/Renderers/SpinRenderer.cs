@@ -9,7 +9,7 @@ namespace GitUI.Theming
         public override int RenderBackground(IntPtr hdc, int partId, int stateId, Rectangle prect,
             NativeMethods.RECTCLS pcliprect)
         {
-            using var ctx = CreateRenderContext(hdc, pcliprect);
+            using Context ctx = CreateRenderContext(hdc, pcliprect);
             return (Parts)partId switch
             {
                 Parts.SPNP_UP => RenderUpButton(ctx, stateId, prect),
@@ -20,18 +20,18 @@ namespace GitUI.Theming
 
         private static int RenderDownButton(Context ctx, int stateId, Rectangle prect)
         {
-            var backBrush = GetBackBrush((State.Down)stateId);
-            var foreColor = GetForeColor((State.Down)stateId);
-            var arrowPolygon = GetArrowPolygon(prect, down: true);
+            Brush backBrush = GetBackBrush((State.Down)stateId);
+            Color foreColor = GetForeColor((State.Down)stateId);
+            Point[] arrowPolygon = GetArrowPolygon(prect, down: true);
             RenderButton(ctx, prect, backBrush, foreColor, arrowPolygon);
             return Handled;
         }
 
         private static int RenderUpButton(Context ctx, int stateId, Rectangle prect)
         {
-            var backBrush = GetBackBrush((State.Up)stateId);
-            var foreColor = GetForeColor((State.Up)stateId);
-            var arrowPolygon = GetArrowPolygon(prect, down: false);
+            Brush backBrush = GetBackBrush((State.Up)stateId);
+            Color foreColor = GetForeColor((State.Up)stateId);
+            Point[] arrowPolygon = GetArrowPolygon(prect, down: false);
             RenderButton(ctx, prect, backBrush, foreColor, arrowPolygon);
             return Handled;
         }

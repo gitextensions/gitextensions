@@ -30,7 +30,7 @@ namespace GitUITests.UserControls
         [Test]
         public void ReturnsIconCleanWhenThereIsNoChangedFiles()
         {
-            var commitIcon = _repoStateVisualiser.Invoke(Array.Empty<GitItemStatus>());
+            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(Array.Empty<GitItemStatus>());
 
             Assert.AreEqual(RepoStateVisualiser.Clean, commitIcon);
         }
@@ -38,7 +38,7 @@ namespace GitUITests.UserControls
         [Test]
         public void ReturnsIconDirtySubmodulesWhenThereAreOnlyWorkTreeSubmodules()
         {
-            var commitIcon = _repoStateVisualiser.Invoke(new[]
+            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isSubmodule: true),
                 CreateGitItemStatus(isSubmodule: true)
@@ -50,7 +50,7 @@ namespace GitUITests.UserControls
         [Test]
         public void ReturnsIconDirtyWhenThereAreWorkTreeChanges()
         {
-            var commitIcon = _repoStateVisualiser.Invoke(new[]
+            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isSubmodule: true),
                 CreateGitItemStatus()
@@ -62,7 +62,7 @@ namespace GitUITests.UserControls
         [Test]
         public void ReturnsIconMixedWhenThereAreIndexAndWorkTreeFiles()
         {
-            var commitIcon = _repoStateVisualiser.Invoke(new[]
+            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isStaged: true),
                 CreateGitItemStatus()
@@ -74,7 +74,7 @@ namespace GitUITests.UserControls
         [Test]
         public void ReturnsIconStagedWhenThereAreOnlyIndexFiles()
         {
-            var commitIcon = _repoStateVisualiser.Invoke(new[]
+            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isStaged: true),
                 CreateGitItemStatus(isStaged: true)
@@ -86,7 +86,7 @@ namespace GitUITests.UserControls
         [Test]
         public void ReturnsIconUntrackedOnlyWhenThereAreUntrackedFilesOnly()
         {
-            var commitIcon = _repoStateVisualiser.Invoke(new[]
+            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isTracked: false),
                 CreateGitItemStatus(isTracked: false)
@@ -98,7 +98,7 @@ namespace GitUITests.UserControls
         [Test]
         public void ReturnsIconUnknownWhenNull()
         {
-            var commitIcon = _repoStateVisualiser.Invoke(null);
+            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(null);
 
             Assert.AreEqual(RepoStateVisualiser.Unknown, commitIcon);
         }

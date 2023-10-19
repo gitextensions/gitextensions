@@ -28,7 +28,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
         public void SetUp()
         {
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            var composition = TestComposition.Empty
+            TestComposition composition = TestComposition.Empty
                 .AddParts(typeof(MockGenericBuildServerAdapter))
                 .AddParts(typeof(MockGenericBuildServerSettingsUserControl));
             ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
@@ -105,17 +105,17 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
 
             public void GotoPage(SettingsPageReference settingsPageReference)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public void LoadAll()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public void SaveAll()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }

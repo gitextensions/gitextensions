@@ -27,7 +27,7 @@ namespace GitUI
 
             while (queue.Count != 0)
             {
-                var c = queue.Dequeue();
+                Control c = queue.Dequeue();
 
                 yield return c;
 
@@ -70,7 +70,7 @@ namespace GitUI
         /// </remarks>
         public static IEnumerable<Control> FindAncestors(this Control control)
         {
-            var parent = control.Parent;
+            Control parent = control.Parent;
 
             while (parent is not null)
             {

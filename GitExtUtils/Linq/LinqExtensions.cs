@@ -91,7 +91,7 @@ namespace System.Linq
 
         public static void Swap<T>(this IList<T> list, int index1, int index2)
         {
-            var temp = list[index1];
+            T temp = list[index1];
             list[index1] = list[index2];
             list[index2] = temp;
         }
@@ -113,13 +113,13 @@ namespace System.Linq
                         return Array.Empty<T>();
                     }
 
-                    var items = new T[collection.Count];
+                    T[] items = new T[collection.Count];
                     collection.CopyTo(items, 0);
                     return items;
                 }
             }
 
-            using var e = source.GetEnumerator();
+            using IEnumerator<T> e = source.GetEnumerator();
             if (!e.MoveNext())
             {
                 return Array.Empty<T>();
@@ -142,9 +142,9 @@ namespace System.Linq
             this IEnumerable<T> source,
             [InstantHandle] Func<T, bool> predicate)
         {
-            var index = 0;
+            int index = 0;
 
-            foreach (var element in source)
+            foreach (T element in source)
             {
                 if (predicate(element))
                 {
@@ -163,9 +163,9 @@ namespace System.Linq
             this IReadOnlyList<TSource> source,
             [InstantHandle] Func<TSource, TResult> map)
         {
-            var array = new TResult[source.Count];
+            TResult[] array = new TResult[source.Count];
 
-            for (var i = 0; i < source.Count; i++)
+            for (int i = 0; i < source.Count; i++)
             {
                 array[i] = map(source[i]);
             }
@@ -177,7 +177,7 @@ namespace System.Linq
         [MustUseReturnValue]
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
         {
-            foreach (var item in source)
+            foreach (T item in source)
             {
                 if (item is not null)
                 {
@@ -190,7 +190,7 @@ namespace System.Linq
         [MustUseReturnValue]
         public static IEnumerable<string> WhereNotNullOrWhiteSpace(this IEnumerable<string?> source)
         {
-            foreach (var item in source)
+            foreach (string item in source)
             {
                 if (!string.IsNullOrWhiteSpace(item))
                 {

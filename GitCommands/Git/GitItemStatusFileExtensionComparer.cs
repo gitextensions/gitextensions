@@ -22,12 +22,12 @@
                 return 1;
             }
 
-            var lhsPath = GetPrimarySortingPath(x);
-            var rhsPath = GetPrimarySortingPath(y);
-            var lhsExt = Path.GetExtension(lhsPath);
-            var rhsExt = Path.GetExtension(rhsPath);
+            string lhsPath = GetPrimarySortingPath(x);
+            string rhsPath = GetPrimarySortingPath(y);
+            string lhsExt = Path.GetExtension(lhsPath);
+            string rhsExt = Path.GetExtension(rhsPath);
 
-            var comparisonResult = StringComparer.InvariantCulture.Compare(lhsExt, rhsExt);
+            int comparisonResult = StringComparer.InvariantCulture.Compare(lhsExt, rhsExt);
             if (comparisonResult == 0)
             {
                 // originally used Comparer<GitItemStatus>.Default.Compare(x, y) but this would

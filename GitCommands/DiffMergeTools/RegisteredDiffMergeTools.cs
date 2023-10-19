@@ -9,7 +9,7 @@
 
         static RegisteredDiffMergeTools()
         {
-            var diffTools = AppDomain.CurrentDomain.GetAssemblies()
+            IEnumerable<DiffMergeTool> diffTools = AppDomain.CurrentDomain.GetAssemblies()
                                                    .SelectMany(asm =>
                                                    {
                                                        try
@@ -23,7 +23,7 @@
                                                    })
                                                    .Where(t => t.IsSubclassOf(typeof(DiffMergeTool)))
                                                    .Select(t => (DiffMergeTool)Activator.CreateInstance(t));
-            foreach (var tool in diffTools)
+            foreach (DiffMergeTool tool in diffTools)
             {
                 RegisteredTools.Add(tool.Name, tool);
             }

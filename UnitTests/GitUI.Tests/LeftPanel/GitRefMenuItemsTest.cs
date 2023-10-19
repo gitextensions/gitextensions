@@ -34,7 +34,7 @@ namespace GitUITests.LeftPanel
         public void WithInactiveLocalBranch_HasAllMenuItems()
         {
             // Arrange
-            var group = CreateGenerator(_factory);
+            MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
             new LocalBranchMenuItemsStrings().ApplyTo(group.Strings);
             WithRefMenu_HasAllItems(group);
         }
@@ -43,7 +43,7 @@ namespace GitUITests.LeftPanel
         public void WithRemoteBranch_HasAllMenuItems()
         {
             // Arrange
-            var group = CreateGenerator(_factory);
+            MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
             new RemoteBranchMenuItemsStrings().ApplyTo(group.Strings);
             WithRefMenu_HasAllItems(group);
         }
@@ -52,7 +52,7 @@ namespace GitUITests.LeftPanel
         public void WithTagNode_HasAllMenuItems()
         {
             // Arrange
-            var group = CreateGenerator(_factory);
+            MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
             new TagMenuItemsStrings().ApplyTo(group.Strings);
 
             // mock rename to keep the test simple
@@ -63,7 +63,7 @@ namespace GitUITests.LeftPanel
         private void WithRefMenu_HasAllItems(MenuItemsGenerator<TestBranchNode> group)
         {
             // Act
-            var menuItems = group.ToArray();
+            ToolStripItemWithKey[] menuItems = group.ToArray();
             Assert.IsEmpty(_factoryQueue);
             Assert.AreEqual(menuItems.Length, expectedTotal);
             int testIndex = 0;
@@ -86,7 +86,7 @@ namespace GitUITests.LeftPanel
             // Act
             const int expectedEnabled = 2; // create branch, rename
             int expectedDisabled = expectedTotal - expectedEnabled;
-            var disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
+            ToolStripItemWithKey[] disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
             Assert.AreEqual(disabledItems.Length, expectedDisabled);
             int testIndex = 0;
             AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Checkout));
@@ -99,7 +99,7 @@ namespace GitUITests.LeftPanel
 
         private void AssertItem(ToolStripItemWithKey menuItem, string caption)
         {
-            var item = menuItem.Item as ToolStripMenuItem;
+            ToolStripMenuItem item = menuItem.Item as ToolStripMenuItem;
             item.PerformClick();
             Assert.AreEqual(caption, _testNode.CallStatck.Pop());
         }

@@ -17,7 +17,7 @@ namespace GitUITests.Theming
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var testAccessor = AppSettings.GetTestAccessor();
+            AppSettings.TestAccessor testAccessor = AppSettings.GetTestAccessor();
             _originalAppExecutablePath = testAccessor.ApplicationExecutablePath;
             testAccessor.ApplicationExecutablePath = Path.Combine(MockAppInstallPath, "gitextensions.exe");
 
@@ -28,7 +28,7 @@ namespace GitUITests.Theming
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            var testAccessor = AppSettings.GetTestAccessor();
+            AppSettings.TestAccessor testAccessor = AppSettings.GetTestAccessor();
             testAccessor.ApplicationExecutablePath = _originalAppExecutablePath;
             testAccessor.ApplicationDataPath = _originalAppDataPath;
         }

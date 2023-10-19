@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             Validates.NotNull(_externalLinksManager);
 
-            var effectiveLinkDefinitions = _externalLinksManager.GetEffectiveSettings();
+            IReadOnlyList<ExternalLinkDefinition> effectiveLinkDefinitions = _externalLinksManager.GetEffectiveSettings();
 
             _NO_TRANSLATE_Categories.DataSource = null;
             _NO_TRANSLATE_Categories.DisplayMember = nameof(ExternalLinkDefinition.Name);
@@ -131,7 +131,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void LoadTemplatesInMenu()
         {
-            foreach (var externalLinkDefinitionExtractor in new CloudProviderExternalLinkDefinitionExtractorFactory().GetAllExtractor())
+            foreach (ICloudProviderExternalLinkDefinitionExtractor externalLinkDefinitionExtractor in new CloudProviderExternalLinkDefinitionExtractorFactory().GetAllExtractor())
             {
                 Add.DropDownItems.Add(new ToolStripMenuItem(
                     string.Format(_addTemplate.Text, externalLinkDefinitionExtractor.ServiceName),
@@ -150,10 +150,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return default;
             }
 
-            var remoteNames = new[] { "upstream", "fork", "origin" };
-            foreach (var remoteName in remoteNames)
+            string[] remoteNames = new[] { "upstream", "fork", "origin" };
+            foreach (string remoteName in remoteNames)
             {
-                var remoteFound = remotes.FirstOrDefault(r => r.Name == remoteName);
+                Remote remoteFound = remotes.FirstOrDefault(r => r.Name == remoteName);
                 if (remoteFound.Name is not null)
                 {
                     return remoteFound;
@@ -206,7 +206,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (SelectedLinkDefinition is not null)
             {
-                var selected = SelectedLinkDefinition;
+                ExternalLinkDefinition selected = SelectedLinkDefinition;
                 selected.Name = _NO_TRANSLATE_Name.Text;
                 ReloadCategories();
                 _NO_TRANSLATE_Categories.SelectedItem = selected;

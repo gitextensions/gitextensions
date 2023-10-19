@@ -53,7 +53,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             // we will be modifying .git/config and need to completely reset each time
             _referenceRepository = new ReferenceRepository();
 
-            foreach (var name in RemoteNames)
+            foreach (string name in RemoteNames)
             {
                 _referenceRepository.Module.AddRemote(name, $"http://localhost/remotes/{name}.git");
             }
@@ -92,7 +92,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    var names = remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text).ToList();
+                    List<string> names = remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text).ToList();
                     names.Should().BeEquivalentTo(RemoteNames);
                     names.Should().BeInAscendingOrder();
                 });
@@ -161,7 +161,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    var inactiveNodes = remotesNode.Nodes.OfType<TreeNode>().Last().Nodes.OfType<TreeNode>().Select(n => n.Text).ToList();
+                    List<string> inactiveNodes = remotesNode.Nodes.OfType<TreeNode>().Last().Nodes.OfType<TreeNode>().Select(n => n.Text).ToList();
                     inactiveNodes.Count.Should().Be(3);
                     inactiveNodes.Should().BeEquivalentTo(RemoteNames[3], RemoteNames[0], RemoteNames[1]);
                     inactiveNodes.Should().BeInAscendingOrder();
@@ -180,8 +180,8 @@ namespace GitExtensions.UITests.CommandsDialogs
             // Await all async operation such as load of branches and remotes in the left panel
             ThreadHelper.JoinPendingOperations();
 
-            var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
+            GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
+            TreeNode remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
             remotesNode.Should().NotBeNull();
 
             return remotesNode;

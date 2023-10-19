@@ -22,11 +22,11 @@ namespace ResourceManager
                 string translationsDir = GetTranslationDir();
                 if (Directory.Exists(translationsDir))
                 {
-                    var result = Directory.EnumerateFiles(translationsDir, translationName + "*.xlf");
-                    foreach (var file in result)
+                    IEnumerable<string> result = Directory.EnumerateFiles(translationsDir, translationName + "*.xlf");
+                    foreach (string file in result)
                     {
-                        var name = Path.GetFileNameWithoutExtension(file)[translationName.Length..];
-                        var t = TranslationSerializer.Deserialize(file) ??
+                        string name = Path.GetFileNameWithoutExtension(file)[translationName.Length..];
+                        TranslationFile t = TranslationSerializer.Deserialize(file) ??
                                 new TranslationFile();
                         t.SourceLanguage = t.TranslationCategories.FirstOrDefault()?.SourceLanguage;
                         t.TargetLanguage = t.TranslationCategories.FirstOrDefault()?.TargetLanguage;
@@ -57,7 +57,7 @@ namespace ResourceManager
 
                 foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))
                 {
-                    var name = Path.GetFileNameWithoutExtension(fileName);
+                    string name = Path.GetFileNameWithoutExtension(fileName);
                     if (name.IndexOf(".") > 0)
                     {
                         continue;
@@ -80,13 +80,13 @@ namespace ResourceManager
 
         public static void Translate(ITranslate obj, string translationName)
         {
-            var translation = GetTranslation(translationName);
+            IDictionary<string, TranslationFile> translation = GetTranslation(translationName);
             if (translation.Count == 0)
             {
                 return;
             }
 
-            foreach (var pair in translation)
+            foreach (KeyValuePair<string, TranslationFile> pair in translation)
             {
                 obj.TranslateItems(pair.Value);
             }

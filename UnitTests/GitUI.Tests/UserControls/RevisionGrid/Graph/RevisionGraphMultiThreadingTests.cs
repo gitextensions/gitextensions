@@ -74,8 +74,8 @@ namespace GitUITests.UserControls.RevisionGrid
                 GitRevision revision = new(ObjectId.Random());
                 if (randomRevisions.Count > 1)
                 {
-                    var randomRevision1 = randomRevisions[_random.Next(randomRevisions.Count - 1)];
-                    var randomRevision2 = randomRevisions[_random.Next(randomRevisions.Count - 1)];
+                    GitRevision randomRevision1 = randomRevisions[_random.Next(randomRevisions.Count - 1)];
+                    GitRevision randomRevision2 = randomRevisions[_random.Next(randomRevisions.Count - 1)];
 
                     revision.ParentIds = new ObjectId[] { randomRevision1.ObjectId, randomRevision2.ObjectId };
                 }
@@ -101,7 +101,7 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             for (int i = 0; i < _numberOfRevisionsAddedPerRun / 10; i++)
             {
-                var pageStart = _random.Next(_revisionGraph.Count);
+                int pageStart = _random.Next(_revisionGraph.Count);
 
                 for (int j = pageStart; j < pageStart + 4; j++)
                 {

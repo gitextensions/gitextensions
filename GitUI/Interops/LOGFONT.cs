@@ -21,7 +21,7 @@ namespace System
             public byte lfClipPrecision;
             public byte lfQuality;
             public byte lfPitchAndFamily;
-            [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = LF_FACESIZE)]
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = LF_FACESIZE)]
             public string lfFaceName;
         }
     }

@@ -48,7 +48,7 @@ namespace GitExtUtils
         {
             Entry entry = new(key, value);
 
-            if (_nodeByKey.TryGetValue(key, out var node))
+            if (_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry> node))
             {
                 node.Value = entry;
                 _entries.Remove(node);
@@ -58,7 +58,7 @@ namespace GitExtUtils
             {
                 if (_entries.Count == Capacity)
                 {
-                    var last = _entries.Last;
+                    LinkedListNode<MruCache<TKey, TValue>.Entry> last = _entries.Last;
                     _entries.RemoveLast();
                     _nodeByKey.Remove(last.Value.Key);
                 }
@@ -85,7 +85,7 @@ namespace GitExtUtils
         /// <returns><c>true</c> if <paramref name="key"/> exists in the cache, otherwise <c>false</c>.</returns>
         public bool TryGetValue(TKey key, [NotNullWhen(returnValue: true)] out TValue? value)
         {
-            if (!_nodeByKey.TryGetValue(key, out var node))
+            if (!_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry> node))
             {
                 value = default;
                 return false;
@@ -108,7 +108,7 @@ namespace GitExtUtils
         [ContractAnnotation("=>false,value:null")]
         public bool TryRemove(TKey key, [NotNullWhen(returnValue: true)] out TValue? value)
         {
-            if (!_nodeByKey.TryGetValue(key, out var node))
+            if (!_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry> node))
             {
                 value = default;
                 return false;

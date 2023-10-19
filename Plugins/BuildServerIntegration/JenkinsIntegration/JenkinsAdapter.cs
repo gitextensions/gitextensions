@@ -63,12 +63,12 @@ namespace JenkinsIntegration
 
             _buildServerWatcher = buildServerWatcher;
 
-            var projectName = config.GetString("ProjectName", null);
-            var hostName = config.GetString("BuildServerUrl", null);
+            string projectName = config.GetString("ProjectName", null);
+            string hostName = config.GetString("BuildServerUrl", null);
 
             if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
             {
-                var baseAddress = hostName.Contains("://")
+                Uri baseAddress = hostName.Contains("://")
                     ? new Uri(hostName, UriKind.Absolute)
                     : new Uri($"{Uri.UriSchemeHttp}://{hostName}:8080", UriKind.Absolute);
 
@@ -78,19 +78,19 @@ namespace JenkinsIntegration
                     BaseAddress = baseAddress
                 };
 
-                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
+                IBuildServerCredentials buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 
                 UpdateHttpClientOptions(buildServerCredentials);
 
                 string[] projectUrls = _buildServerWatcher.ReplaceVariables(projectName)
                     .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var projectUrl in projectUrls.Select(s => baseAddress + "job/" + s.Trim() + "/"))
+                foreach (string projectUrl in projectUrls.Select(s => baseAddress + "job/" + s.Trim() + "/"))
                 {
                     _lastProjectBuildTime[projectUrl] = -1;
                 }
             }
 
-            var ignoreBuilds = config.GetString("IgnoreBuildBranch", string.Empty);
+            string ignoreBuilds = config.GetString("IgnoreBuildBranch", string.Empty);
             _ignoreBuilds = !string.IsNullOrWhiteSpace(ignoreBuilds) ? new Regex(ignoreBuilds) : null;
         }
 
@@ -143,7 +143,7 @@ namespace JenkinsIntegration
                     // Multi-branch pipeline
                     s = jobDescription["jobs"]
                         .SelectMany(j => j["builds"]);
-                    foreach (var j in jobDescription["jobs"])
+                    foreach (JToken j in jobDescription["jobs"])
                     {
                         try
                         {
@@ -152,7 +152,7 @@ namespace JenkinsIntegration
                                 continue;
                             }
 
-                            var ts = j["lastBuild"]["timestamp"];
+                            JToken ts = j["lastBuild"]["timestamp"];
                             timestamp = Math.Max(timestamp, ts.ToObject<long>());
                         }
                         catch
@@ -208,7 +208,7 @@ namespace JenkinsIntegration
                 List<JoinableTask<ResponseInfo>> allBuildInfos = new();
                 List<JoinableTask<ResponseInfo>> latestBuildInfos = new();
 
-                foreach (var projectUrl in _lastProjectBuildTime.Keys)
+                foreach (string projectUrl in _lastProjectBuildTime.Keys)
                 {
                     if (_lastProjectBuildTime[projectUrl] <= 0)
                     {
@@ -225,7 +225,7 @@ namespace JenkinsIntegration
                 // The simple request will limit the load on the Jenkins server
                 // To fetch just new builds is possible too, but it will make the solution more complicated
                 // Similar, the build results could be cached so they are available when switching repos
-                foreach (var info in latestBuildInfos.Where(info => !info.Task.IsFaulted))
+                foreach (JoinableTask<ResponseInfo> info in latestBuildInfos.Where(info => !info.Task.IsFaulted))
                 {
                     ResponseInfo responseInfo = info.Join();
 
@@ -246,7 +246,7 @@ namespace JenkinsIntegration
                 }
 
                 Dictionary<ObjectId, BuildInfo.BuildStatus> builds = new();
-                foreach (var build in allBuildInfos)
+                foreach (JoinableTask<ResponseInfo> build in allBuildInfos)
                 {
                     if (build.Task.IsFaulted)
                     {
@@ -256,7 +256,7 @@ namespace JenkinsIntegration
                         continue;
                     }
 
-                    var buildResponse = build.Join(cancellationToken);
+                    ResponseInfo buildResponse = build.Join(cancellationToken);
                     if (build.Task.IsCanceled || buildResponse.Timestamp <= 0)
                     {
                         // No valid information received for the build
@@ -268,7 +268,7 @@ namespace JenkinsIntegration
 
                     _lastProjectBuildTime[buildResponse.Url] = buildResponse.Timestamp;
 
-                    foreach (var buildDetails in buildResponse.JobDescription)
+                    foreach (JToken buildDetails in buildResponse.JobDescription)
                     {
                         if (cancellationToken.IsCancellationRequested)
                         {
@@ -277,7 +277,7 @@ namespace JenkinsIntegration
 
                         try
                         {
-                            var buildInfo = CreateBuildInfo((JObject)buildDetails);
+                            BuildInfo buildInfo = CreateBuildInfo((JObject)buildDetails);
                             if (buildInfo is null)
                             {
                                 continue;
@@ -292,8 +292,8 @@ namespace JenkinsIntegration
                             // Normally, there is only one commit per Jenkins build
                             // builds listed with latest first, likely most interesting
                             // Update the observer if at least one of them is better (cannot be selective)
-                            var isBetter = false;
-                            foreach (var commit in buildInfo.CommitHashList)
+                            bool isBetter = false;
+                            foreach (ObjectId commit in buildInfo.CommitHashList)
                             {
                                 if (!StatusIsBetter(buildInfo.Status, commit, builds))
                                 {
@@ -343,7 +343,7 @@ namespace JenkinsIntegration
                     return true;
                 }
 
-                var existingStatus = builds[commit];
+                BuildInfo.BuildStatus existingStatus = builds[commit];
 
                 // Completed status is never replaced
                 if (IsBuildCompleted(existingStatus))
@@ -374,32 +374,32 @@ namespace JenkinsIntegration
 
         private BuildInfo? CreateBuildInfo(JObject buildDescription)
         {
-            var idValue = buildDescription["number"].ToObject<string>();
-            var statusValue = buildDescription["result"].ToObject<string>();
-            var startDateTicks = buildDescription["timestamp"].ToObject<long>();
-            var webUrl = buildDescription["url"].ToObject<string>();
+            string idValue = buildDescription["number"].ToObject<string>();
+            string statusValue = buildDescription["result"].ToObject<string>();
+            long startDateTicks = buildDescription["timestamp"].ToObject<long>();
+            string webUrl = buildDescription["url"].ToObject<string>();
 
-            var action = buildDescription["actions"];
+            JToken action = buildDescription["actions"];
             List<ObjectId> commitHashList = new();
             string testResults = string.Empty;
-            foreach (var element in action)
+            foreach (JToken element in action)
             {
                 if (element["lastBuiltRevision"] is not null)
                 {
                     commitHashList.Add(ObjectId.Parse(element["lastBuiltRevision"]["SHA1"].ToObject<string>()));
-                    var branches = element["lastBuiltRevision"]["branch"];
+                    JToken branches = element["lastBuiltRevision"]["branch"];
                     if (_ignoreBuilds is not null && branches is not null)
                     {
                         // Ignore build events for specified branches
-                        foreach (var branch in branches)
+                        foreach (JToken branch in branches)
                         {
-                            var name = branch["name"];
+                            JToken name = branch["name"];
                             if (name is null)
                             {
                                 continue;
                             }
 
-                            var name2 = name.ToObject<string>();
+                            string name2 = name.ToObject<string>();
                             if (!string.IsNullOrWhiteSpace(name2) && _ignoreBuilds.IsMatch(name2))
                             {
                                 return null;
@@ -422,7 +422,7 @@ namespace JenkinsIntegration
                 }
             }
 
-            var isRunning = buildDescription["building"].ToObject<bool>();
+            bool isRunning = buildDescription["building"].ToObject<bool>();
             long? buildDuration;
             if (isRunning)
             {
@@ -433,8 +433,8 @@ namespace JenkinsIntegration
                 buildDuration = buildDescription["duration"].ToObject<long>();
             }
 
-            var status = isRunning ? BuildInfo.BuildStatus.InProgress : ParseBuildStatus(statusValue);
-            var statusText = status.ToString("G");
+            BuildInfo.BuildStatus status = isRunning ? BuildInfo.BuildStatus.InProgress : ParseBuildStatus(statusValue);
+            string statusText = status.ToString("G");
             BuildInfo buildInfo = new()
             {
                 Id = idValue,
@@ -444,7 +444,7 @@ namespace JenkinsIntegration
                 CommitHashList = commitHashList.ToArray(),
                 Url = webUrl
             };
-            var durationText = _buildDurationFormatter.Format(buildInfo.Duration);
+            string durationText = _buildDurationFormatter.Format(buildInfo.Duration);
             buildInfo.Description = $"#{idValue} {durationText} {testResults} {statusText}";
             return buildInfo;
         }
@@ -480,7 +480,7 @@ namespace JenkinsIntegration
 
             Validates.NotNull(_httpClient);
 
-            var response = await _httpClient.GetAsync(restServicePath, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            HttpResponseMessage response = await _httpClient.GetAsync(restServicePath, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
             return await GetStreamFromHttpResponseAsync(response);
 
@@ -490,7 +490,7 @@ namespace JenkinsIntegration
 
                 if (resp.IsSuccessStatusCode)
                 {
-                    var httpContent = resp.Content;
+                    HttpContent httpContent = resp.Content;
 
                     if (httpContent.Headers.ContentType.MediaType == "text/html")
                     {
@@ -519,7 +519,7 @@ namespace JenkinsIntegration
 
                 Validates.NotNull(_buildServerWatcher);
 
-                var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false);
+                IBuildServerCredentials buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false);
 
                 if (buildServerCredentials is null)
                 {
@@ -550,7 +550,7 @@ namespace JenkinsIntegration
 
         private async Task<string> GetResponseAsync(string relativePath, CancellationToken cancellationToken)
         {
-            using var responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
+            using Stream responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
             using StreamReader reader = new(responseStream);
             return await reader.ReadToEndAsync();
         }

@@ -67,12 +67,12 @@ namespace GitUI.UserControls
 
             IReadOnlyList<Brush> GetBrushes()
             {
-                var alphaDelta = (byte.MaxValue / 2) / _dotCount;
+                int alphaDelta = (byte.MaxValue / 2) / _dotCount;
 
-                var brushes = new Brush[_dotCount];
-                var alpha = 0;
+                Brush[] brushes = new Brush[_dotCount];
+                int alpha = 0;
 
-                for (var i = 0; i < _dotCount; i++)
+                for (int i = 0; i < _dotCount; i++)
                 {
                     if (alpha > 255)
                     {
@@ -88,13 +88,13 @@ namespace GitUI.UserControls
 
             (float sin, float cos)[] GetAngles()
             {
-                var angleDelta = Math.PI * 2.0 / _dotCount;
+                double angleDelta = Math.PI * 2.0 / _dotCount;
 
-                var angles = new (float sin, float cos)[_dotCount];
+                (float sin, float cos)[] angles = new (float sin, float cos)[_dotCount];
 
-                var angle = 0.0;
+                double angle = 0.0;
 
-                for (var i = 0; i < _dotCount; i++)
+                for (int i = 0; i < _dotCount; i++)
                 {
                     angles[i] = (
                         sin: (float)Math.Sin(angle),
@@ -120,11 +120,11 @@ namespace GitUI.UserControls
         {
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 
-            var p = _progress;
-            for (var i = 0; i < _dotCount; i++)
+            int p = _progress;
+            for (int i = 0; i < _dotCount; i++)
             {
                 p %= _dotCount;
-                ref var angle = ref _angles[p];
+                ref (float sin, float cos) angle = ref _angles[p];
                 e.Graphics.FillEllipse(
                     _brushes[i],
                     (_centre.X - (_dotRadius / 2f)) + (_circleRadius * angle.cos),

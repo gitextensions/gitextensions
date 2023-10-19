@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Load += GitConfigAdvancedSettingsPage_Load;
         }
 
-        private void GitConfigAdvancedSettingsPage_Load(object? sender, System.EventArgs e)
+        private void GitConfigAdvancedSettingsPage_Load(object? sender, EventArgs e)
         {
             foreach (GitSettingUiMapping gitSetting in _gitSettings)
             {

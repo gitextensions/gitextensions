@@ -2,6 +2,7 @@
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -46,9 +47,9 @@ namespace GitUI.UserControls.RevisionGrid
 
             void UpdateMenuCommandShortcutKeyDisplayString(IReadOnlyList<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
             {
-                foreach (var source in sourceList.Where(mc => !mc.IsSeparator))
+                foreach (MenuCommand source in sourceList.Where(mc => !mc.IsSeparator))
                 {
-                    var target = targetList.Single(mc => !mc.IsSeparator && mc.Name == source.Name);
+                    MenuCommand target = targetList.Single(mc => !mc.IsSeparator && mc.Name == source.Name);
                     target.ShortcutKeyDisplayString = source.ShortcutKeyDisplayString;
                 }
             }
@@ -58,7 +59,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             MenuChanged?.Invoke(this, null);
 
-            foreach (var menuCommand in GetMenuCommandsWithoutSeparators())
+            foreach (MenuCommand menuCommand in GetMenuCommandsWithoutSeparators())
             {
                 menuCommand.SetCheckForRegisteredMenuItems();
                 menuCommand.UpdateMenuItemsShortcutKeyDisplayString();
@@ -479,7 +480,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            var objectId = formGoToCommit.ValidateAndGetSelectedRevision();
+            ObjectId objectId = formGoToCommit.ValidateAndGetSelectedRevision();
 
             if (objectId is not null)
             {

@@ -19,8 +19,8 @@ namespace GitUITests.CommandsDialogs
         [TestCase(" ")]
         public void TryGetExactPathName_Should_return_null_on_not_existing_file(string path)
         {
-            var lowercasePath = path.ToLower();
-            var isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
+            string lowercasePath = path.ToLower();
+            bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
 
             Assert.IsFalse(isExistingOnFileSystem);
             Assert.IsNull(exactPath);
@@ -29,10 +29,10 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void TryGetExactPathName_Should_handle_network_path()
         {
-            var path = @"\\" + Environment.MachineName.ToLower() + @"\c$\Windows\System32";
+            string path = @"\\" + Environment.MachineName.ToLower() + @"\c$\Windows\System32";
 
-            var lowercasePath = path.ToLower();
-            var isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
+            string lowercasePath = path.ToLower();
+            bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
 
             Assert.IsTrue(isExistingOnFileSystem);
 
@@ -48,9 +48,9 @@ namespace GitUITests.CommandsDialogs
             using GitModuleTestHelper repo = new();
 
             // Create a file
-            var notUsed = repo.CreateFile(Path.Combine(repo.TemporaryPath, "Folder1"), "file1.txt", "bla");
+            string notUsed = repo.CreateFile(Path.Combine(repo.TemporaryPath, "Folder1"), "file1.txt", "bla");
 
-            var expected = Path.Combine(repo.TemporaryPath, relativePath);
+            string expected = Path.Combine(repo.TemporaryPath, relativePath);
 
             Assert.AreEqual(isResolved, _controller.TryGetExactPath(expected, out string exactPath));
             Assert.AreEqual(doesMatch, exactPath == expected);

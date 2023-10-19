@@ -153,7 +153,7 @@ namespace GitCommands.Settings
             // Convert it to lowercase, to ensure matching.
             encodingName = encodingName.ToLowerInvariant();
 
-            if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out var result))
+            if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out Encoding result))
             {
                 return result;
             }

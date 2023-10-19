@@ -7,8 +7,8 @@ namespace GitUI.Theming
     {
         public static HighlightColor Transform(this HighlightColor original)
         {
-            var backReplacement = Adapt(original.BackgroundColor, isForeground: false);
-            var replacement = Adapt(original.Color, isForeground: true);
+            Color backReplacement = Adapt(original.BackgroundColor, isForeground: false);
+            Color replacement = Adapt(original.Color, isForeground: true);
             return new HighlightColor(original, replacement, backReplacement);
 
             Color Adapt(Color c, bool isForeground) =>

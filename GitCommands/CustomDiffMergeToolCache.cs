@@ -61,8 +61,8 @@ namespace GitCommands
                     await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var toolKey = _isDiff ? SettingKeyString.DiffToolKey : SettingKeyString.MergeToolKey;
-                    var defaultTool = module.GetEffectiveSetting(toolKey);
+                    string toolKey = _isDiff ? SettingKeyString.DiffToolKey : SettingKeyString.MergeToolKey;
+                    string defaultTool = module.GetEffectiveSetting(toolKey);
                     string output = module.GetCustomDiffMergeTools(_isDiff, cancellationToken);
                     _tools = ParseCustomDiffMergeTool(output, defaultTool);
                 }
@@ -100,7 +100,7 @@ namespace GitCommands
 
             // The sections to parse in the text has a 'header', then break parsing at first non match
 
-            foreach (var l in output.LazySplit('\n'))
+            foreach (string l in output.LazySplit('\n'))
             {
                 if (l == "The following tools are valid, but not currently available:")
                 {
@@ -116,7 +116,7 @@ namespace GitCommands
                 // two tabs, then tool name, cmd (if split in 3) in second
                 // cmd is unreliable for diff and not needed but could be used for mergetool special handling
                 string[] delimit = { " ", ".cmd" };
-                var tool = l[2..].Split(delimit, 2, StringSplitOptions.None);
+                string[] tool = l[2..].Split(delimit, 2, StringSplitOptions.None);
                 if (tool.Length == 0)
                 {
                     continue;
@@ -124,7 +124,7 @@ namespace GitCommands
 
                 // Ignore (known) tools that must run in a terminal
                 string[] ignoredTools = { "vimdiff", "vimdiff1", "vimdiff2", "vimdiff3" };
-                var toolName = tool[0];
+                string toolName = tool[0];
                 if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
                 {
                     tools.Add(toolName);

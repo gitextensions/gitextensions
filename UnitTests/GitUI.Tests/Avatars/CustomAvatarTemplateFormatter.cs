@@ -13,8 +13,8 @@ namespace GitUITests.Avatars
         [TestCase("{val1} + {val2}", "{val1}", "{val2}", "{val1} + {val2}")]
         public void Given_test_cases_render_as_expected(string template, string val1, string val2, string expectation)
         {
-            var formatter = TemplateFormatter.Create(template, ValueMappingProvider);
-            var result = formatter((val1, val2));
+            Func<(string val1, string val2), string> formatter = TemplateFormatter.Create(template, ValueMappingProvider);
+            string result = formatter((val1, val2));
 
             Assert.AreEqual(expectation, result);
         }
@@ -22,10 +22,10 @@ namespace GitUITests.Avatars
         [Test]
         public void Formatter_can_be_reused_with_different_inputs()
         {
-            var formatter = TemplateFormatter.Create("Example {val1} Template {val2}", ValueMappingProvider);
+            Func<(string val1, string val2), string> formatter = TemplateFormatter.Create("Example {val1} Template {val2}", ValueMappingProvider);
 
-            var result1 = formatter(("x", "y"));
-            var result2 = formatter(("a", "b"));
+            string result1 = formatter(("x", "y"));
+            string result2 = formatter(("a", "b"));
 
             Assert.AreEqual("Example x Template y", result1);
             Assert.AreEqual("Example a Template b", result2);

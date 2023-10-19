@@ -22,18 +22,18 @@ namespace GitExtensions.Plugins.Bitbucket
                 DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
             };
 
-            var module = (GitModule)gitModule;
+            GitModule module = (GitModule)gitModule;
 
-            var remotes = module.GetRemoteNames()
+            string[] remotes = module.GetRemoteNames()
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .Distinct()
                 .Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))
                 .ToArray();
 
-            foreach (var url in remotes)
+            foreach (string url in remotes)
             {
-                var pattern = url.Contains("http") ? BitbucketHttpRegex : BitbucketSshRegex;
-                var match = Regex.Match(url, pattern);
+                string pattern = url.Contains("http") ? BitbucketHttpRegex : BitbucketSshRegex;
+                Match match = Regex.Match(url, pattern);
                 if (match.Success && result.BitbucketUrl.Contains(match.Groups["url"].Value))
                 {
                     result.ProjectKey = match.Groups["project"].Value;

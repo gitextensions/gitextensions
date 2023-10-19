@@ -15,7 +15,7 @@ namespace GitCommandsTests.Git_Commands
         {
             AppSettings.CurrentTranslation = "English";
 
-            var now = DateTime.Now;
+            DateTime now = DateTime.Now;
 
             Assert.AreEqual("0 seconds ago", LocalizationHelpers.GetRelativeDateString(now, now));
             Assert.AreEqual("1 second ago", LocalizationHelpers.GetRelativeDateString(now, now.AddSeconds(-1)));
@@ -42,7 +42,7 @@ namespace GitCommandsTests.Git_Commands
         {
             AppSettings.CurrentTranslation = "English";
 
-            var now = DateTime.Now;
+            DateTime now = DateTime.Now;
 
             Assert.AreEqual("-1 second ago", LocalizationHelpers.GetRelativeDateString(now, now.AddSeconds(1)));
             Assert.AreEqual("-1 minute ago", LocalizationHelpers.GetRelativeDateString(now, now.AddMinutes(1)));
@@ -72,55 +72,55 @@ namespace GitCommandsTests.Git_Commands
             module.LocalConfigFile.SetString("submodule.fetchJobs", null);
             {
                 // Specifying a remote and a local branch creates a local branch
-                var fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
+                string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
 
             {
-                var fetchCmd = module.FetchCmd("origin", "some-branch", "local", true).Arguments;
+                string fetchCmd = module.FetchCmd("origin", "some-branch", "local", true).Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"origin\" +some-branch:refs/heads/local --tags", fetchCmd);
             }
 
             {
                 // Using a URL as remote and passing a local branch creates the branch
-                var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", "local").Arguments;
+                string fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", "local").Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"https://host.com/repo\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
 
             {
                 // Using a URL as remote and not passing a local branch
-                var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", null).Arguments;
+                string fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", null).Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // No remote branch -> No local branch
-                var fetchCmd = module.FetchCmd("origin", "", "local").Arguments;
+                string fetchCmd = module.FetchCmd("origin", "", "local").Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"origin\" --no-tags", fetchCmd);
             }
 
             {
                 // Pull doesn't accept a local branch ever
-                var fetchCmd = module.PullCmd("origin", "some-branch", false).Arguments;
+                string fetchCmd = module.PullCmd("origin", "some-branch", false).Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 pull --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // Not even for URL remote
-                var fetchCmd = module.PullCmd("https://host.com/repo", "some-branch", false).Arguments;
+                string fetchCmd = module.PullCmd("https://host.com/repo", "some-branch", false).Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 pull --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // Pull with rebase
-                var fetchCmd = module.PullCmd("origin", "some-branch", true).Arguments;
+                string fetchCmd = module.PullCmd("origin", "some-branch", true).Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 pull --rebase --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // Config test fetch.parallel
                 module.LocalConfigFile.SetString("fetch.parallel", "1");
-                var fetchCmd = module.FetchCmd("fetch.parallel", "some-branch", "local").Arguments;
+                string fetchCmd = module.FetchCmd("fetch.parallel", "some-branch", "local").Arguments;
                 Assert.AreEqual("-c submodule.fetchJobs=0 fetch --progress \"fetch.parallel\" +some-branch:refs/heads/local --no-tags", fetchCmd);
                 module.LocalConfigFile.SetString("fetch.parallel", null);
             }
@@ -128,7 +128,7 @@ namespace GitCommandsTests.Git_Commands
             {
                 // Config test submodule.fetchJobs
                 module.LocalConfigFile.SetString("submodule.fetchJobs", "0");
-                var fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
+                string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
                 module.LocalConfigFile.SetString("submodule.fetchJobs", null);
             }
@@ -137,7 +137,7 @@ namespace GitCommandsTests.Git_Commands
                 // Config test fetch.parallel and submodule.fetchJobs
                 module.LocalConfigFile.SetString("fetch.parallel", "8");
                 module.LocalConfigFile.SetString("submodule.fetchJobs", "99");
-                var fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
+                string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
                 module.LocalConfigFile.SetString("fetch.parallel", null);
                 module.LocalConfigFile.SetString("submodule.fetchJobs", null);
@@ -201,7 +201,7 @@ namespace GitCommandsTests.Git_Commands
         [Test]
         public void RevertCmd()
         {
-            var commitId = ObjectId.Random();
+            ObjectId commitId = ObjectId.Random();
 
             Assert.AreEqual(
                 $"revert {commitId}",
@@ -422,8 +422,8 @@ namespace GitCommandsTests.Git_Commands
         [Test]
         public void ContinueBisectCmd()
         {
-            var id1 = ObjectId.Random();
-            var id2 = ObjectId.Random();
+            ObjectId id1 = ObjectId.Random();
+            ObjectId id2 = ObjectId.Random();
 
             Assert.AreEqual(
                 "bisect good",

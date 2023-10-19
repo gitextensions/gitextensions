@@ -13,7 +13,7 @@ namespace GitUITests.Theming
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var testAccessor = AppSettings.GetTestAccessor();
+            AppSettings.TestAccessor testAccessor = AppSettings.GetTestAccessor();
             _originalPath = testAccessor.ApplicationExecutablePath;
             testAccessor.ApplicationExecutablePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "gitextensions.exe");
         }
@@ -21,7 +21,7 @@ namespace GitUITests.Theming
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            var testAccessor = AppSettings.GetTestAccessor();
+            AppSettings.TestAccessor testAccessor = AppSettings.GetTestAccessor();
             testAccessor.ApplicationExecutablePath = _originalPath;
         }
 
@@ -46,7 +46,7 @@ namespace GitUITests.Theming
                 Color value = invariantTheme.GetColor(name);
                 value.Should().NotBe(Color.Empty);
 
-                var defaultValue = AppColorDefaults.GetBy(name);
+                Color defaultValue = AppColorDefaults.GetBy(name);
                 value.ToArgb().Should().Be(defaultValue.ToArgb());
             }
         }
@@ -58,7 +58,7 @@ namespace GitUITests.Theming
             foreach (AppColor name in Enum.GetValues(typeof(AppColor)))
             {
                 Color value = invariantTheme.GetColor(name);
-                var defaultValue = AppColorDefaults.GetBy(name);
+                Color defaultValue = AppColorDefaults.GetBy(name);
                 value.ToArgb().Should().Be(defaultValue.ToArgb());
             }
         }

@@ -127,7 +127,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
         private void ProcessLoadedBuilds(IEnumerable<GitlabPipeline> items, IObserver<BuildInfo> observer)
         {
-            foreach (var item in items)
+            foreach (GitlabPipeline item in items)
             {
                 if (_loadedItems.ContainsKey(item.Sha) == false || _loadedItems[item.Sha] < item.UpdatedAt)
                 {

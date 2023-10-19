@@ -16,14 +16,14 @@ namespace GitUITests.Editor.Diff
 -removed line
 -removed line";
 
-            var lineSegmentGetter = PrepareLineSegmentGetter(diffText);
+            LineSegmentGetter lineSegmentGetter = PrepareLineSegmentGetter(diffText);
 
-            var doc = PreDocumentForDiffText(diffText);
+            IDocument doc = PreDocumentForDiffText(diffText);
 
-            var beginIndex = 0;
-            var found = false;
+            int beginIndex = 0;
+            bool found = false;
 
-            var lines = new LinePrefixHelper(lineSegmentGetter)
+            List<ISegment> lines = new LinePrefixHelper(lineSegmentGetter)
                 .GetLinesStartingWith(doc, ref beginIndex, "+", ref found);
 
             lines.Count.Should().Be(2);
@@ -39,14 +39,14 @@ namespace GitUITests.Editor.Diff
 -removed line1
 -removed line2";
 
-            var lineSegmentGetter = PrepareLineSegmentGetter(diffText);
+            LineSegmentGetter lineSegmentGetter = PrepareLineSegmentGetter(diffText);
 
-            var doc = PreDocumentForDiffText(diffText);
+            IDocument doc = PreDocumentForDiffText(diffText);
 
-            var beginIndex = 0;
-            var found = false;
+            int beginIndex = 0;
+            bool found = false;
 
-            var lines = new LinePrefixHelper(lineSegmentGetter)
+            List<ISegment> lines = new LinePrefixHelper(lineSegmentGetter)
                 .GetLinesStartingWith(doc, ref beginIndex, "-", ref found);
 
             lines.Count.Should().Be(2);
@@ -66,9 +66,9 @@ namespace GitUITests.Editor.Diff
         [TestCase("- diffline", "-")]
         public void CanCheckIfTheLineStartsWithSpecificPrefix(string diffText, string prefix)
         {
-            var lineSegmentGetter = PrepareLineSegmentGetter(diffText);
+            LineSegmentGetter lineSegmentGetter = PrepareLineSegmentGetter(diffText);
 
-            var doc = PreDocumentForDiffText(diffText);
+            IDocument doc = PreDocumentForDiffText(diffText);
 
             LinePrefixHelper helper = new(lineSegmentGetter);
             helper.DoesLineStartWith(doc, 0, prefix).Should().BeTrue();
@@ -78,9 +78,9 @@ namespace GitUITests.Editor.Diff
         [TestCase("-")]
         public void GivenThatTheDocDoesNotHaveEnoughChars_ShouldReturnFalseWhenCheckPrefix(string diffText)
         {
-            var lineSegmentGetter = PrepareLineSegmentGetter(diffText);
+            LineSegmentGetter lineSegmentGetter = PrepareLineSegmentGetter(diffText);
 
-            var doc = PreDocumentForDiffText(diffText);
+            IDocument doc = PreDocumentForDiffText(diffText);
 
             LinePrefixHelper helper = new(lineSegmentGetter);
             helper.DoesLineStartWith(doc, 0, "++").Should().BeFalse();
@@ -88,7 +88,7 @@ namespace GitUITests.Editor.Diff
 
         private static IDocument PreDocumentForDiffText(string diffText)
         {
-            var doc = Substitute.For<IDocument>();
+            IDocument doc = Substitute.For<IDocument>();
             doc.GetCharAt(Arg.Any<int>()).Returns(args => diffText[(int)args[0]]);
             doc.TotalNumberOfLines.Returns(diffText.Split('\n').Length);
             doc.TextLength.Returns(diffText.Length);
@@ -97,8 +97,8 @@ namespace GitUITests.Editor.Diff
 
         private static LineSegmentGetter PrepareLineSegmentGetter(string diffText)
         {
-            var lineSegments = GetSegmentsForDiffText(diffText);
-            var lineSegmentGetter = Substitute.For<LineSegmentGetter>();
+            List<ISegment> lineSegments = GetSegmentsForDiffText(diffText);
+            LineSegmentGetter lineSegmentGetter = Substitute.For<LineSegmentGetter>();
             lineSegmentGetter.GetSegment(Arg.Any<IDocument>(), Arg.Any<int>())
                 .Returns(args => lineSegments[(int)args[1]]);
             return lineSegmentGetter;
@@ -107,9 +107,9 @@ namespace GitUITests.Editor.Diff
         private static List<ISegment> GetSegmentsForDiffText(string diffText)
         {
             List<ISegment> lineSegments = new();
-            foreach (var diffLine in diffText.Split('\n'))
+            foreach (string diffLine in diffText.Split('\n'))
             {
-                var seg = Substitute.For<ISegment>();
+                ISegment seg = Substitute.For<ISegment>();
                 seg.Length.Returns(diffLine.Length);
                 if (!lineSegments.Any())
                 {

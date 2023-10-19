@@ -8,7 +8,7 @@ namespace GitCommands
         {
             path1 = Path.GetFullPath(path1).TrimEnd('\\');
             path2 = Path.GetFullPath(path2).TrimEnd('\\');
-            var comparison = !EnvUtils.RunningOnWindows()
+            StringComparison comparison = !EnvUtils.RunningOnWindows()
                 ? StringComparison.InvariantCulture
                 : StringComparison.InvariantCultureIgnoreCase;
 

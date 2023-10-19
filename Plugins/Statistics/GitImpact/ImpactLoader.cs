@@ -74,9 +74,9 @@ namespace GitExtensions.Plugins.GitImpact
 
         public void Execute()
         {
-            var token = _cancellationTokenSequence.Next();
+            CancellationToken token = _cancellationTokenSequence.Next();
 
-            var tasks = GetTasks(token);
+            IReadOnlyList<JoinableTask> tasks = GetTasks(token);
 
             ThreadHelper.FileAndForget(async () =>
             {
@@ -108,8 +108,8 @@ namespace GitExtensions.Plugins.GitImpact
 
         private IReadOnlyList<JoinableTask> GetTasks(CancellationToken token)
         {
-            var authorName = RespectMailmap ? "%aN" : "%an";
-            var command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=iso -C --all --no-merges";
+            string authorName = RespectMailmap ? "%aN" : "%an";
+            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=iso -C --all --no-merges";
 
             List<JoinableTask> tasks = new()
             {
@@ -142,13 +142,13 @@ namespace GitExtensions.Plugins.GitImpact
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
             ExecutionResult result = module.GitExecutable.Execute(command);
-            using var lineEnumerator = result.StandardOutput.Split('\n').ToList().GetEnumerator();
+            using List<string>.Enumerator lineEnumerator = result.StandardOutput.Split('\n').ToList().GetEnumerator();
 
             // Analyze commit listing
             while (!token.IsCancellationRequested && lineEnumerator.MoveNext())
             {
                 // Read line
-                var line = lineEnumerator.Current;
+                string line = lineEnumerator.Current;
 
                 // Reached the end ?
                 if (line is null)
@@ -174,18 +174,18 @@ namespace GitExtensions.Plugins.GitImpact
                 }
 
                 // Save author in variable
-                var author = header[1];
+                string author = header[1];
 
                 // Parse commit date
-                var date = DateTime.Parse(header[0]).Date;
+                DateTime date = DateTime.Parse(header[0]).Date;
 
                 // Calculate first day of the commit week
-                var week = date.AddDays(-(int)date.DayOfWeek);
+                DateTime week = date.AddDays(-(int)date.DayOfWeek);
 
                 // Reset commit data
-                var commits = 1;
-                var added = 0;
-                var deleted = 0;
+                int commits = 1;
+                int added = 0;
+                int deleted = 0;
 
                 // Parse commit lines
                 while (lineEnumerator.MoveNext() && (line = lineEnumerator.Current) is not null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
@@ -222,14 +222,14 @@ namespace GitExtensions.Plugins.GitImpact
             ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact,
             IEnumerable<string> authors)
         {
-            foreach (var author in authors)
+            foreach (string author in authors)
             {
                 // Determine first and last commit week of each author
                 DateTime start = new();
                 DateTime end = new();
-                var startFound = false;
+                bool startFound = false;
 
-                foreach (var (weekDate, weekDataByAuthor) in impact)
+                foreach ((DateTime weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
                 {
                     if (weekDataByAuthor.ContainsKey(author))
                     {
@@ -249,7 +249,7 @@ namespace GitExtensions.Plugins.GitImpact
                 }
 
                 // Add 0 commits weeks in between
-                foreach (var (weekDate, weekDataByAuthor) in impact)
+                foreach ((DateTime weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
                 {
                     if (!weekDataByAuthor.ContainsKey(author) &&
                         weekDate > start && weekDate < end)

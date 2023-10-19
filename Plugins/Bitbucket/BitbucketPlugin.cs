@@ -43,7 +43,7 @@ namespace GitExtensions.Plugins.Bitbucket
             return true;
         }
 
-        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
+        public override IEnumerable<ISetting> GetSettings()
         {
             yield return BitbucketUsername;
             yield return BitbucketPassword;

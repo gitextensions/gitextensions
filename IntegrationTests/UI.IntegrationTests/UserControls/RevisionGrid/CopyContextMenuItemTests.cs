@@ -51,7 +51,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [TestCaseSource(nameof(GetArtificialCommits))]
         public void Should_should_show_minimum_info_for_artificial_commits(ObjectId objectId)
         {
-            var revisions = new[] { new GitRevision(objectId) };
+            GitRevision[] revisions = new[] { new GitRevision(objectId) };
             _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
             _copyContextMenuItem.ShowDropDown();
@@ -74,7 +74,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 new GitRef(null, revision.ObjectId, "refs/heads/branch2")
             };
             revision.Refs = refs;
-            var revisions = new[] { revision };
+            GitRevision[] revisions = new[] { revision };
             _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
             _copyContextMenuItem.ShowDropDown();
@@ -100,7 +100,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 new GitRef(null, revision.ObjectId, "refs/tags/tag2")
             };
             revision.Refs = refs;
-            var revisions = new[] { revision };
+            GitRevision[] revisions = new[] { revision };
             _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
             _copyContextMenuItem.ShowDropDown();
@@ -128,7 +128,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 new GitRef(null, revision.ObjectId, "refs/heads/branch2"),
             };
             revision.Refs = refs;
-            var revisions = new[] { revision };
+            GitRevision[] revisions = new[] { revision };
             _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
             _copyContextMenuItem.ShowDropDown();
@@ -170,7 +170,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 Author = "Author3",
                 AuthorEmail = "author3@foo.bla",
             };
-            var revisions = new[] { rev1, rev2, rev3 };
+            GitRevision[] revisions = new[] { rev1, rev2, rev3 };
             _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
             _copyContextMenuItem.ShowDropDown();

@@ -122,7 +122,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 {
                     WaitForRevisionsToBeLoaded(revisionGridControl);
 
-                    var ta = revisionGridControl.GetTestAccessor();
+                    RevisionGridControl.TestAccessor ta = revisionGridControl.GetTestAccessor();
                     Assert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
 #if DEBUG
                     // https://github.com/gitextensions/gitextensions/issues/10170
@@ -164,7 +164,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 {
                     WaitForRevisionsToBeLoaded(revisionGridControl);
 
-                    var ta = revisionGridControl.GetTestAccessor();
+                    RevisionGridControl.TestAccessor ta = revisionGridControl.GetTestAccessor();
                     Assert.True(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
                     ta.VisibleRevisionCount.Should().Be(2);
 
@@ -380,7 +380,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
                     formBrowse.RevisionGridControl.LatestSelectedRevision.Guid.Should().Be(_headCommit);
 
-                    var ta = formBrowse.GetTestAccessor();
+                    FormBrowse.TestAccessor ta = formBrowse.GetTestAccessor();
                     ta.CommitInfoTabControl.SelectedTab = ta.TreeTabPage;
 
                     // let the focus events be handled

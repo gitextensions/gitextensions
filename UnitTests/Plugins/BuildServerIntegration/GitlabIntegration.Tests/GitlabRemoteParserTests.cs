@@ -13,7 +13,7 @@ namespace GitlabIntegrationTests
         [TestCase("git@gitlab.com/owner/repo.git/")]
         public void TryExtractGitlabDataFromGitlabComRemoteUrl(string url)
         {
-            new GitlabRemoteParser().TryExtractGitlabDataFromRemoteUrl(url, out var host, out var owner, out var repository).Should().BeTrue();
+            new GitlabRemoteParser().TryExtractGitlabDataFromRemoteUrl(url, out string? host, out string? owner, out string? repository).Should().BeTrue();
             host.Should().Be("gitlab.com");
             owner.Should().Be("owner");
             repository.Should().Be("repo");
@@ -26,7 +26,7 @@ namespace GitlabIntegrationTests
         [TestCase("https://repo.192.168.1.11:5896/owner/repo/", "repo.192.168.1.11:5896")]
         public void TryExtractGitlabDataFromSelfHostedRemoteUrl(string url, string expectedHost)
         {
-            new GitlabRemoteParser().TryExtractGitlabDataFromRemoteUrl(url, out var host, out var owner, out var repository).Should().BeTrue();
+            new GitlabRemoteParser().TryExtractGitlabDataFromRemoteUrl(url, out string? host, out string? owner, out string? repository).Should().BeTrue();
             host.Should().Be(expectedHost);
             owner.Should().Be("owner");
             repository.Should().Be("repo");
@@ -37,7 +37,7 @@ namespace GitlabIntegrationTests
         {
             GitlabRemoteParser gitlabRemoteParser = new();
             string url = "https://owner@dev.bad.com/owner/project/_git/repo";
-            gitlabRemoteParser.TryExtractGitlabDataFromRemoteUrl(url, out var host, out var owner, out var repository).Should().BeFalse();
+            gitlabRemoteParser.TryExtractGitlabDataFromRemoteUrl(url, out string? host, out string? owner, out string? repository).Should().BeFalse();
             owner.Should().BeNull();
             repository.Should().BeNull();
 

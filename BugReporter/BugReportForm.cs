@@ -15,6 +15,7 @@ using GitExtUtils.GitUI;
 using GitUI;
 using Microsoft;
 using ResourceManager;
+using ResourceManager.Xliff;
 using Report = BugReporter.Info.Report;
 
 namespace BugReporter
@@ -115,7 +116,7 @@ Send report?");
             DialogResult = DialogResult.None;
 
             // ToDo: Fill in the 'Report Contents' tab);
-            var result = ShowDialog(owner);
+            DialogResult result = ShowDialog(owner);
 
             // Write back the user description (as we passed 'report' as a reference since it is a reference object anyway)
             _lastReport.GeneralInfo.UserDescription = descriptionTextBox.Text;
@@ -131,7 +132,7 @@ Send report?");
 
         private static bool CheckContainsInfo(string input)
         {
-            var text = Regex.Replace(input, @"\s*|\r|\n", string.Empty);
+            string text = Regex.Replace(input, @"\s*|\r|\n", string.Empty);
             return !string.IsNullOrWhiteSpace(text);
         }
 
@@ -143,7 +144,7 @@ Send report?");
 
         private void SendAndQuitButton_Click(object sender, EventArgs e)
         {
-            var hasUserText = CheckContainsInfo(descriptionTextBox.Text);
+            bool hasUserText = CheckContainsInfo(descriptionTextBox.Text);
             if (!hasUserText)
             {
                 MessageBox.Show(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -170,7 +171,7 @@ Send report?");
         {
             Validates.NotNull(_lastException);
 
-            var report = ErrorReportBodyBuilder.CopyText(_lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
+            string report = ErrorReportBodyBuilder.CopyText(_lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
             if (string.IsNullOrWhiteSpace(report))
             {
                 return;
@@ -201,16 +202,16 @@ Send report?");
 
         protected void TranslateItem(string itemName, object item)
         {
-            var translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+            IDictionary<string, TranslationFile> translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
 
             if (translation.Count == 0)
             {
                 return;
             }
 
-            var itemsToTranslate = new[] { (itemName, item) };
+            (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
 
-            foreach (var pair in translation)
+            foreach (KeyValuePair<string, TranslationFile> pair in translation)
             {
                 TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
             }

@@ -72,7 +72,7 @@ namespace GitExtUtilsTests
             cache.Add(2, "two");
             cache.Add(3, "three");
 
-            Assert.True(cache.TryRemove(1, out var removed));
+            Assert.True(cache.TryRemove(1, out string? removed));
             Assert.AreEqual("one", removed);
             Assert.False(cache.TryGetValue(1, out _));
 
@@ -87,7 +87,7 @@ namespace GitExtUtilsTests
 
             cache.Add(1, "one");
 
-            Assert.False(cache.TryRemove(2, out var removed));
+            Assert.False(cache.TryRemove(2, out string? removed));
             Assert.Null(removed);
         }
     }

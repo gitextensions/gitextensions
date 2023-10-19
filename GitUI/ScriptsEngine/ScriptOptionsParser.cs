@@ -102,7 +102,7 @@ namespace GitUI.ScriptsEngine
             List<IGitRef> selectedTags = new();
             List<IGitRef> currentLocalBranches = new();
             List<IGitRef> currentRemoteBranches = new();
-            var currentRemote = "";
+            string currentRemote = "";
             List<IGitRef> currentBranches = new();
             List<IGitRef> currentTags = new();
 
@@ -158,14 +158,14 @@ namespace GitUI.ScriptsEngine
 
         private static string AskToSpecify(IEnumerable<IGitRef> options, IScriptHostControl? scriptHostControl)
         {
-            var items = options.ToList();
+            List<IGitRef> items = options.ToList();
             if (items.Count == 0)
             {
                 return string.Empty;
             }
 
             using FormQuickGitRefSelector f = new();
-            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new Point();
             f.Init(FormQuickGitRefSelector.Action.Select, items);
             f.ShowDialog();
             return f.SelectedRef?.Name ?? "";
@@ -174,7 +174,7 @@ namespace GitUI.ScriptsEngine
         private static string AskToSpecify(IEnumerable<string> options, IScriptHostControl? scriptHostControl)
         {
             using FormQuickStringSelector f = new();
-            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new Point();
             f.Init(options.ToList());
             f.ShowDialog();
             return f.SelectedString ?? "";
@@ -190,7 +190,7 @@ namespace GitUI.ScriptsEngine
                 return null;
             }
 
-            foreach (var head in selectedRevision.Refs)
+            foreach (IGitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)
                 {
@@ -224,7 +224,7 @@ namespace GitUI.ScriptsEngine
                 return string.Empty;
             }
 
-            var result = "{" + option.Trim() + "}";
+            string result = "{" + option.Trim() + "}";
 
             if (quoted)
             {
@@ -243,7 +243,7 @@ namespace GitUI.ScriptsEngine
             currentRevision = module.GetRevision(shortFormat: !loadBody, loadRefs: true);
             refs = currentRevision?.Refs ?? Array.Empty<IGitRef>();
 
-            foreach (var gitRef in refs)
+            foreach (IGitRef gitRef in refs)
             {
                 if (gitRef.IsTag)
                 {
@@ -268,7 +268,7 @@ namespace GitUI.ScriptsEngine
 
         private static string GetRemotePath(string url)
         {
-            if (Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+            if (Uri.TryCreate(url, UriKind.Absolute, out Uri? uri) ||
                 Uri.TryCreate("ssh://" + url.Replace(":", "/"), UriKind.Absolute, out uri))
             {
                 return uri.LocalPath.SubstringUntilLast('.');

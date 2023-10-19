@@ -65,7 +65,7 @@ namespace GitCommands.DiffMergeTools
                 return;
             }
 
-            var fileSettings = _getFileSettings();
+            IConfigValueStore fileSettings = _getFileSettings();
             if (fileSettings is null)
             {
                 return;
@@ -90,13 +90,13 @@ namespace GitCommands.DiffMergeTools
                 return string.Empty;
             }
 
-            var command = GetToolSetting(toolName, toolType, "cmd");
+            string command = GetToolSetting(toolName, toolType, "cmd");
             if (!string.IsNullOrWhiteSpace(command))
             {
                 return command;
             }
 
-            var config = LoadDiffMergeToolConfig(toolName, null);
+            DiffMergeToolConfiguration config = LoadDiffMergeToolConfig(toolName, null);
 
             return toolType switch
             {
@@ -119,7 +119,7 @@ namespace GitCommands.DiffMergeTools
                 return string.Empty;
             }
 
-            var path = GetToolSetting(toolName, toolType, "path");
+            string path = GetToolSetting(toolName, toolType, "path");
             if (!string.IsNullOrWhiteSpace(path))
             {
                 return path;
@@ -137,10 +137,10 @@ namespace GitCommands.DiffMergeTools
 
             string? fullPath;
 
-            var diffTool = RegisteredDiffMergeTools.Get(toolName);
+            DiffMergeTool diffTool = RegisteredDiffMergeTools.Get(toolName);
             if (diffTool is null)
             {
-                var exeName = toolName + ".exe";
+                string exeName = toolName + ".exe";
                 if (!string.IsNullOrWhiteSpace(userSuppliedPath))
                 {
                     fullPath = userSuppliedPath;
@@ -159,7 +159,7 @@ namespace GitCommands.DiffMergeTools
             }
             else
             {
-                var pathsToSearch = new[] { UnquoteString(GetToolSetting(diffTool.Name, DiffMergeToolType.Merge, "path")) }.Union(diffTool.SearchPaths);
+                IEnumerable<string> pathsToSearch = new[] { UnquoteString(GetToolSetting(diffTool.Name, DiffMergeToolType.Merge, "path")) }.Union(diffTool.SearchPaths);
                 fullPath = _findFileInFolders(diffTool.ExeFileName, pathsToSearch);
             }
 
@@ -172,7 +172,7 @@ namespace GitCommands.DiffMergeTools
         /// <param name="toolType">Type of the tool.</param>
         public void UnsetCurrentTool(DiffMergeToolType toolType)
         {
-            var fileSettings = _getFileSettings();
+            IConfigValueStore fileSettings = _getFileSettings();
             if (fileSettings is null)
             {
                 return;

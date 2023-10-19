@@ -65,7 +65,7 @@ namespace GitCommands.Patches
 
             string header = lines[lineIndex];
 
-            var headerMatch = _patchHeaderRegex.Match(header);
+            Match headerMatch = _patchHeaderRegex.Match(header);
 
             if (!headerMatch.Success)
             {
@@ -74,11 +74,11 @@ namespace GitCommands.Patches
 
             header = GitModule.ReEncodeFileNameFromLossless(header);
 
-            var state = PatchProcessorState.InHeader;
+            PatchProcessorState state = PatchProcessorState.InHeader;
 
             string? fileNameA, fileNameB;
 
-            var isCombinedDiff = headerMatch.Groups["type"].Value != "git";
+            bool isCombinedDiff = headerMatch.Groups["type"].Value != "git";
 
             if (!isCombinedDiff)
             {
@@ -108,8 +108,8 @@ namespace GitCommands.Patches
             }
 
             string? index = null;
-            var changeType = PatchChangeType.ChangeFile;
-            var fileType = PatchFileType.Text;
+            PatchChangeType changeType = PatchChangeType.ChangeFile;
+            PatchFileType fileType = PatchFileType.Text;
             StringBuilder patchText = new();
 
             patchText.Append(header);
@@ -118,12 +118,12 @@ namespace GitCommands.Patches
                 patchText.Append("\n");
             }
 
-            var done = false;
-            var i = lineIndex + 1;
+            bool done = false;
+            int i = lineIndex + 1;
 
             for (; i < lines.Length; i++)
             {
-                var line = lines[i];
+                string line = lines[i];
 
                 if (IsStartOfANewPatch(line))
                 {
@@ -256,7 +256,7 @@ namespace GitCommands.Patches
             // process patch body
             for (; !done && i < lines.Length; i++)
             {
-                var line = lines[i];
+                string line = lines[i];
 
                 if (IsStartOfANewPatch(line))
                 {

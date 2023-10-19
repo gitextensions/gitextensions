@@ -60,13 +60,13 @@ namespace GitUITests.UserControls
 
             _blameControl = new BlameControl();
 
-            var blameControlTestAccessor = _blameControl.GetTestAccessor();
+            BlameControl.TestAccessor blameControlTestAccessor = _blameControl.GetTestAccessor();
             blameControlTestAccessor.Blame = new GitBlame(new GitBlameLine[]
             {
                 _gitBlameLine,
-                new GitBlameLine(blameCommit1, 2, 2, "line2"),
-                new GitBlameLine(blameCommit2, 3, 3, "line3"),
-                new GitBlameLine(blameCommit2, 4, 4, "line4"),
+                new(blameCommit1, 2, 2, "line2"),
+                new(blameCommit2, 3, 3, "line3"),
+                new(blameCommit2, 4, 4, "line4"),
             });
 
             ReferenceRepository.ResetRepo(ref _referenceRepository);
@@ -123,16 +123,16 @@ namespace GitUITests.UserControls
         [Test]
         public void BuildBlameContents_WithDateAndTime()
         {
-            var originalValue = AppSettings.BlameShowAuthorTime;
+            bool originalValue = AppSettings.BlameShowAuthorTime;
 
             try
             {
                 AppSettings.BlameShowAuthorTime = true;
 
-                var (gutter, content, _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
+                (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
-                var gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                string[] gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 gutterLines[0].TrimEnd().Should().Be("3/22/2010 12:01 PM - author1");
                 gutterLines[1].Should().NotBeNullOrEmpty().And.BeNullOrWhiteSpace();
                 gutterLines[2].TrimEnd().Should().Be("3/22/2011 12:01 PM - author2");
@@ -150,7 +150,7 @@ namespace GitUITests.UserControls
         [Test]
         public void BuildBlameContents_WithDateButNotTime()
         {
-            var originalValue = AppSettings.BlameShowAuthorTime;
+            bool originalValue = AppSettings.BlameShowAuthorTime;
 
             try
             {
@@ -158,11 +158,11 @@ namespace GitUITests.UserControls
                 AppSettings.BlameShowAuthorTime = false;
 
                 // When
-                var (gutter, content, _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
+                (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
                 // Then
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
-                var gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                string[] gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 gutterLines[0].TrimEnd().Should().Be($"3/22/2010 - author1");
                 gutterLines[1].Should().NotBeNullOrEmpty().And.BeNullOrWhiteSpace();
                 gutterLines[2].TrimEnd().Should().Be($"3/22/2011 - author2");
@@ -179,7 +179,7 @@ namespace GitUITests.UserControls
 
         private static IEnumerable<GitBlameLine> CreateBlameLine(params DateTime[] lineDates)
         {
-            for (var index = 0; index < lineDates.Length; index++)
+            for (int index = 0; index < lineDates.Length; index++)
             {
                 DateTime lineDate = lineDates[index];
                 yield return new GitBlameLine(
@@ -193,11 +193,11 @@ namespace GitUITests.UserControls
         public void CalculateBlameGutterData_When_date_is_older_than_artificial_old_boundary_Then_it_defines_first_age_bucket_and_so_falls_into_it()
         {
             // Given
-            var sut = _blameControl.GetTestAccessor();
+            BlameControl.TestAccessor sut = _blameControl.GetTestAccessor();
             IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(sut.ArtificialOldBoundary.AddDays(-1)).ToList();
 
             // When
-            var blameEntries = sut.CalculateBlameGutterData(blameLines);
+            List<GitUI.Editor.GitBlameEntry> blameEntries = sut.CalculateBlameGutterData(blameLines);
 
             // Then
             blameEntries.Should().HaveCount(1);
@@ -211,7 +211,7 @@ namespace GitUITests.UserControls
             IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(DateTime.Now.AddMonths(-18)).ToList();
 
             // When
-            var blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
+            List<GitUI.Editor.GitBlameEntry> blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
 
             // Then
             blameEntries.Should().HaveCount(1);
@@ -225,7 +225,7 @@ namespace GitUITests.UserControls
             IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(DateTime.Now.AddMonths(-18), DateTime.MinValue).ToList();
 
             // When
-            var blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
+            List<GitUI.Editor.GitBlameEntry> blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
 
             // Then
             blameEntries.Should().HaveCount(2);
@@ -239,7 +239,7 @@ namespace GitUITests.UserControls
             IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(DateTime.MinValue, DateTime.MinValue).ToList();
 
             // When
-            var blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
+            List<GitUI.Editor.GitBlameEntry> blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
 
             // Then
             blameEntries.Should().HaveCount(2);
@@ -251,8 +251,8 @@ namespace GitUITests.UserControls
         public void CalculateBlameGutterData_When_dates_just_after_age_bucket_limit_Then_One_date_in_each_age_bucket()
         {
             // Given
-            var now = DateTime.Now;
-            var marginError = TimeSpan.FromMinutes(10); // Due to the DateTime.Now value which is slightly different
+            DateTime now = DateTime.Now;
+            TimeSpan marginError = TimeSpan.FromMinutes(10); // Due to the DateTime.Now value which is slightly different
             IReadOnlyList<GitBlameLine> blameLines = CreateBlameLine(
                 now.AddDays(-7 * 365), // Because there are 7 age buckets (corresponding to the different colors)
                 now.AddDays(-6 * 365).Add(marginError),
@@ -264,7 +264,7 @@ namespace GitUITests.UserControls
                 now.Add(-marginError)).ToList();
 
             // When
-            var blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
+            List<GitUI.Editor.GitBlameEntry> blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
 
             // Then
             blameEntries.Should().HaveCount(8);

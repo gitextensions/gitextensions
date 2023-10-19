@@ -87,17 +87,17 @@ namespace CommonTestUtils.MEF
 
             lock (_factoryCache)
             {
-                if (_factoryCache.TryGetValue(key, out var existing))
+                if (_factoryCache.TryGetValue(key, out IExportProviderFactory existing))
                 {
                     return existing;
                 }
             }
 
-            var newFactory = ExportProviderCache.CreateExportProviderFactory(GetCatalog(), isRemoteHostComposition: false);
+            IExportProviderFactory newFactory = ExportProviderCache.CreateExportProviderFactory(GetCatalog(), isRemoteHostComposition: false);
 
             lock (_factoryCache)
             {
-                if (_factoryCache.TryGetValue(key, out var existing))
+                if (_factoryCache.TryGetValue(key, out IExportProviderFactory existing))
                 {
                     return existing;
                 }
@@ -163,7 +163,7 @@ namespace CommonTestUtils.MEF
                 return this;
             }
 
-            var testAssembly = assemblies.FirstOrDefault(IsTestAssembly);
+            Assembly testAssembly = assemblies.FirstOrDefault(IsTestAssembly);
             if (testAssembly == null)
             {
                 throw new NullReferenceException($"Test assemblies are not allowed in test composition: {testAssembly}. Specify explicit test parts instead.");
@@ -173,7 +173,7 @@ namespace CommonTestUtils.MEF
 
             static bool IsTestAssembly(Assembly assembly)
             {
-                var name = assembly.GetName().Name!;
+                string name = assembly.GetName().Name!;
                 return
                     name.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase) ||
                     name.EndsWith(".UnitTests", StringComparison.OrdinalIgnoreCase) ||
@@ -193,12 +193,12 @@ namespace CommonTestUtils.MEF
         /// <returns>All composition error messages.</returns>
         internal string GetCompositionErrorLog()
         {
-            var configuration = CompositionConfiguration.Create(GetCatalog());
+            CompositionConfiguration configuration = CompositionConfiguration.Create(GetCatalog());
 
             StringBuilder sb = new();
-            foreach (var errorGroup in configuration.CompositionErrors)
+            foreach (IReadOnlyCollection<ComposedPartDiagnostic> errorGroup in configuration.CompositionErrors)
             {
-                foreach (var error in errorGroup)
+                foreach (ComposedPartDiagnostic error in errorGroup)
                 {
                     sb.Append(error.Message);
                     sb.AppendLine();

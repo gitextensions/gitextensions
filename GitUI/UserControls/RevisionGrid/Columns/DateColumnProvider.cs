@@ -35,7 +35,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
         {
-            var dateTime = AppSettings.ShowAuthorDate
+            DateTime dateTime = AppSettings.ShowAuthorDate
                 ? revision.AuthorDate
                 : revision.CommitDate;
 

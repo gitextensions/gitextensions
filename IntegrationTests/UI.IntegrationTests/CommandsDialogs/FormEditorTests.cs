@@ -2,6 +2,7 @@
 using CommonTestUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Editor;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {
@@ -46,7 +47,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     {
                         Assert.False(form.GetTestAccessor().HasChanges);
 
-                        var fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
+                        FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
                         fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, isDiff: false);
 
                         Assert.True(form.GetTestAccessor().HasChanges);
@@ -84,7 +85,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     {
                         Assert.False(form.GetTestAccessor().HasChanges);
 
-                        var fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
+                        FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
                         fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, isDiff: false);
 
                         Assert.True(form.GetTestAccessor().HasChanges);
@@ -136,7 +137,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     },
                     form =>
                     {
-                        var fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
+                        FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
                         fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, isDiff: false);
                         form.GetTestAccessor().SaveChanges();
                         return Task.CompletedTask;

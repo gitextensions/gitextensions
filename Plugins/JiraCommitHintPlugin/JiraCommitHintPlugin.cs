@@ -73,7 +73,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
             ThreadHelper.FileAndForget(async () =>
                 {
-                    var message = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
+                    JiraTaskDTO[] message = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     MessageBox.Show(string.Join(Environment.NewLine, message.Select(jt => jt.Text).ToArray()), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 });
@@ -158,9 +158,9 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
                 _btnPreview.Enabled = false;
 
-                var localJira = CreateJiraClient(_urlSettings.CustomControl.Text, _credentialsSettings.CustomControl.UserName, _credentialsSettings.CustomControl.Password, _authTypeSettings.CustomControl.SelectedItem.ToString());
-                var localQuery = _jqlQuerySettings.CustomControl.Text;
-                var localStringTemplate = _stringTemplateSetting.CustomControl.Text;
+                Jira localJira = CreateJiraClient(_urlSettings.CustomControl.Text, _credentialsSettings.CustomControl.UserName, _credentialsSettings.CustomControl.Password, _authTypeSettings.CustomControl.SelectedItem.ToString());
+                string localQuery = _jqlQuerySettings.CustomControl.Text;
+                string localStringTemplate = _stringTemplateSetting.CustomControl.Text;
 
                 ThreadHelper.FileAndForget(async () =>
                     {
@@ -189,7 +189,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             }
 
             // Saved value last time, or default value.
-            var credentials = _credentialsSettings.GetValueOrDefault(Settings);
+            System.Net.NetworkCredential credentials = _credentialsSettings.GetValueOrDefault(Settings);
 
             if (comboBox.SelectedIndex == _authTypeSettings.Values.IndexOf(AuthTypePersonalAccessToken))
             {
@@ -240,9 +240,9 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
                 return;
             }
 
-            var url = _urlSettings.ValueOrDefault(Settings);
-            var credentials = _credentialsSettings.GetValueOrDefault(Settings);
-            var authType = _authTypeSettings.ValueOrDefault(Settings);
+            string url = _urlSettings.ValueOrDefault(Settings);
+            System.Net.NetworkCredential credentials = _credentialsSettings.GetValueOrDefault(Settings);
+            string authType = _authTypeSettings.ValueOrDefault(Settings);
 
             if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(credentials.UserName) || string.IsNullOrWhiteSpace(credentials.Password))
             {
@@ -295,12 +295,12 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
             ThreadHelper.FileAndForget(async () =>
             {
-                var currentMessages = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
+                JiraTaskDTO[] currentMessages = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                 _currentMessages = currentMessages;
-                foreach (var message in _currentMessages)
+                foreach (JiraTaskDTO message in _currentMessages)
                 {
                     e.GitUICommands.AddCommitTemplate(message.Title, () => message.Text, Icon);
                 }
@@ -319,7 +319,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
                 return;
             }
 
-            foreach (var message in _currentMessages)
+            foreach (JiraTaskDTO message in _currentMessages)
             {
                 e.GitUICommands.RemoveCommitTemplate(message.Title);
             }
@@ -331,7 +331,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
         {
             try
             {
-                var results = await jira.Issues.GetIssuesFromJqlAsync(query);
+                IPagedQueryResult<Issue> results = await jira.Issues.GetIssuesFromJqlAsync(query);
                 return results
                     .Select(issue => new JiraTaskDTO(issue.Key + ": " + issue.Summary, StringTemplate.Format(stringTemplate, issue)))
                     .ToArray();

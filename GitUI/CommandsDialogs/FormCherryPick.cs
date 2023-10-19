@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs
 
                 if (_isMerge && Revision is not null)
                 {
-                    var parents = Module.GetParentRevisions(Revision.ObjectId);
+                    IReadOnlyList<GitRevision> parents = Module.GetParentRevisions(Revision.ObjectId);
 
                     for (int i = 0; i < parents.Count; i++)
                     {
@@ -108,7 +108,7 @@ namespace GitUI.CommandsDialogs
         private void btnPick_Click(object sender, EventArgs e)
         {
             ArgumentBuilder args = new();
-            var canExecute = true;
+            bool canExecute = true;
 
             if (_isMerge)
             {
@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs
 
             if (canExecute && Revision is not null)
             {
-                var command = Commands.CherryPick(Revision.ObjectId, cbxAutoCommit.Checked, args.ToString());
+                ArgumentString command = Commands.CherryPick(Revision.ObjectId, cbxAutoCommit.Checked, args.ToString());
 
                 // Don't verify whether the command is successful.
                 // If it fails, likely there is a conflict that needs to be resolved.

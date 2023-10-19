@@ -209,8 +209,8 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             }
 
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            var width = ClientSize.Width - _leftMargin - _rightMargin;
-            var height = ClientSize.Height - _topMargin - _bottomMargin;
+            float width = ClientSize.Width - _leftMargin - _rightMargin;
+            float height = ClientSize.Height - _topMargin - _bottomMargin;
 
             // if the width or height if <=0 an exception would be thrown -> exit method..
             if (width <= 0 || height <= 0)
@@ -268,7 +268,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 return;
             }
 
-            var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
+            int index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
             if (index != -1)
             {
                 if (ToolTips is null || ToolTips.Length <= index || ToolTips[index].Length == 0)
@@ -293,7 +293,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         {
             if (_pieChart is not null)
             {
-                var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
+                int index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
                 if (index != -1)
                 {
                     if (ToolTips is null || ToolTips.Length <= index || ToolTips[index].Length == 0)

@@ -25,7 +25,7 @@ namespace DeleteUnusedBranchesTests
         [TestCase]
         public void GetBranchNames_should_return_parse_correctly()
         {
-            var commandOutput = @"  feature/branch-1
+            string commandOutput = @"  feature/branch-1
 * fix/branch-2
   master
 

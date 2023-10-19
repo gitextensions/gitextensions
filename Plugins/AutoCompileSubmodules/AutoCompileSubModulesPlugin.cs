@@ -62,16 +62,16 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
                 return false;
             }
 
-            var msbuildPath = _msBuildPath.ValueOrDefault(Settings);
+            string msbuildPath = _msBuildPath.ValueOrDefault(Settings);
 
             DirectoryInfo workingDir = new(args.GitModule.WorkingDir);
-            var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
+            FileInfo[] solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
 
-            for (var n = solutionFiles.Length - 1; n > 0; n--)
+            for (int n = solutionFiles.Length - 1; n > 0; n--)
             {
-                var solutionFile = solutionFiles[n];
+                FileInfo solutionFile = solutionFiles[n];
 
-                var result =
+                DialogResult result =
                     MessageBox.Show(args.OwnerForm,
                         string.Format(_doYouWantBuild.Text,
                                       solutionFile.Name,
@@ -120,9 +120,9 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
         {
             StringBuilder solutionString = new();
 
-            for (var n = solutionFiles.Count - 1; n > 0; n--)
+            for (int n = solutionFiles.Count - 1; n > 0; n--)
             {
-                var solutionFile = solutionFiles[n];
+                FileInfo solutionFile = solutionFiles[n];
                 solutionString.Append(solutionFile.Name);
                 solutionString.Append("\n");
             }

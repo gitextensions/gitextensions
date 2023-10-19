@@ -40,7 +40,7 @@ namespace GitCommandsTests.Git
 
             _cache.Add("git command", originalOutput, originalError);
 
-            Assert.IsTrue(_cache.TryGet("git command", out var cachedOutput, out var cachedError));
+            Assert.IsTrue(_cache.TryGet("git command", out byte[]? cachedOutput, out byte[]? cachedError));
             Assert.AreEqual(cachedOutput, originalOutput);
             Assert.AreEqual(cachedError, originalError);
         }
@@ -48,7 +48,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestTryGetFails()
         {
-            Assert.IsFalse(_cache.TryGet(null, out var output, out var error));
+            Assert.IsFalse(_cache.TryGet(null, out byte[]? output, out byte[]? error));
             Assert.IsFalse(_cache.TryGet("", out output, out error));
             Assert.IsNull(output);
             Assert.IsNull(error);
