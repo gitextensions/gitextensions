@@ -130,6 +130,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
+        /// <summary>
+        /// Add a parent to this revision.
+        /// </summary>
+        /// <param name="parent">The parent to add.</param>
+        /// <param name="checkScore">The minimal accepted score.</param>
+        /// <returns>The new max score.</returns>
         public int AddParent(RevisionGraphRevision parent, int checkScore)
         {
             if (IsRelative)
@@ -150,6 +156,30 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private void AddChild(RevisionGraphRevision child)
         {
             ImmutableInterlocked.Push(ref _children, child);
+        }
+
+        internal TestAccessor GetTestAccessor() => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly RevisionGraphRevision _form;
+
+            public TestAccessor(RevisionGraphRevision form)
+            {
+                _form = form;
+            }
+
+            /// <summary>
+            /// Add a parent to this revision.
+            /// The parent score is checked to be higher than the score of this revision,
+            /// but siblings are not considered (which is OK in tests).
+            /// </summary>
+            /// <param name="parent">The parent to add.</param>
+            /// <returns>The new max score.</returns>
+            public int AddParent(RevisionGraphRevision parent)
+            {
+                return _form.AddParent(parent, _form.Score + 1);
+            }
         }
     }
 }
