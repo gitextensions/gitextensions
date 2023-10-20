@@ -5,10 +5,8 @@ namespace GitUI.ScriptsEngine
 {
     public interface IScriptsRunner
     {
-        bool RunEventScripts<THostForm>(ScriptEvent scriptEvent, THostForm form)
-            where THostForm : IGitModuleForm, IWin32Window;
+        bool RunEventScripts(ScriptEvent scriptEvent, IScriptHostControl scriptHostControl);
 
-        bool RunScript<THostForm>(int scriptId, THostForm form, IScriptHostControl? scriptHostControl = null)
-            where THostForm : IGitModuleForm, IWin32Window;
+        bool RunScript(int scriptId, IScriptHostControl scriptHostControl);
     }
 }

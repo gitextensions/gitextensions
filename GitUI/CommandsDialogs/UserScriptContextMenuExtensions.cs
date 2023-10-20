@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
                 {
                     int scriptId = script.HotkeyCommandIdentifier;
                     IScriptsRunner scriptsRunner = serviceProvider.GetRequiredService<IScriptsRunner>();
-                    scriptsRunner.RunScript(scriptId, scriptHostControl.GetGitModuleForm(), scriptHostControl);
+                    scriptsRunner.RunScript(scriptId, scriptHostControl);
                 };
 
                 if (script.AddToRevisionGridContextMenu)

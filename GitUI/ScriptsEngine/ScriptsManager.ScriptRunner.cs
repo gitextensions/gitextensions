@@ -16,12 +16,11 @@ namespace GitUI.ScriptsEngine
             private const string PluginPrefix = "plugin:";
             private const string NavigateToPrefix = "navigateTo:";
 
-            public static bool RunScript<THostForm>(ScriptInfo script, THostForm form, IScriptHostControl? scriptHostControl)
-                where THostForm : IGitModuleForm, IWin32Window
+            public static bool RunScript(ScriptInfo script, IScriptHostControl scriptHostControl)
             {
                 try
                 {
-                    return RunScriptInternal(script, form, form.UICommands, scriptHostControl);
+                    return RunScriptInternal(script, scriptHostControl.Window, scriptHostControl.UICommands, scriptHostControl);
                 }
                 catch (ExternalOperationException ex) when (ex is not UserExternalOperationException)
                 {
@@ -29,7 +28,7 @@ namespace GitUI.ScriptsEngine
                 }
             }
 
-            private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptHostControl? scriptHostControl)
+            private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptHostControl scriptHostControl)
             {
                 if (string.IsNullOrEmpty(script.Command))
                 {
@@ -37,7 +36,7 @@ namespace GitUI.ScriptsEngine
                 }
 
                 string? arguments = script.Arguments;
-                if (!string.IsNullOrEmpty(arguments) && scriptHostControl is null)
+                if (!string.IsNullOrEmpty(arguments) && !scriptHostControl.IsRevisionGrid)
                 {
                     string? optionDependingOnSelectedRevision
                         = ScriptOptionsParser.Options.FirstOrDefault(option => ScriptOptionsParser.DependsOnSelectedRevision(option)
@@ -102,7 +101,7 @@ namespace GitUI.ScriptsEngine
 
                 if (command.StartsWith(NavigateToPrefix))
                 {
-                    if (scriptHostControl is null)
+                    if (!scriptHostControl.IsRevisionGrid)
                     {
                         return false;
                     }

@@ -1013,7 +1013,7 @@ namespace GitUI.CommandsDialogs
                         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
                     };
 
-                    button.Click += (s, e) => ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, this, RevisionGrid);
+                    button.Click += (s, e) => ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, RevisionGrid);
 
                     // add to toolstrip
                     ToolStripScripts.Items.Add(button);
@@ -1957,7 +1957,7 @@ namespace GitUI.CommandsDialogs
 
         private void QuickFetch()
         {
-            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeFetch, this);
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeFetch, new DefaultScriptHostControl(this, UICommands));
             if (!success)
             {
                 return;
@@ -1969,7 +1969,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, this);
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, new DefaultScriptHostControl(this, UICommands));
             RefreshRevisions();
         }
 

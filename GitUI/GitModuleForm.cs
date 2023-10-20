@@ -105,7 +105,7 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int command)
         {
-            return ScriptsRunner.RunScript(command, this, RevisionGridControl)
+            return ScriptsRunner.RunScript(command, (this as IScriptHostControl) ?? ((IScriptHostControl?)RevisionGridControl) ?? new DefaultScriptHostControl(this, UICommands))
                 || base.ExecuteCommand(command);
         }
 
