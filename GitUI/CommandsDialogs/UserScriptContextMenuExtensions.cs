@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
                 item.Click += (s, e) =>
                 {
                     int scriptId = script.HotkeyCommandIdentifier;
-                    var scriptsRunner = serviceProvider.GetRequiredService<IScriptsRunner>();
+                    IScriptsRunner scriptsRunner = serviceProvider.GetRequiredService<IScriptsRunner>();
                     scriptsRunner.RunScript(scriptId, scriptHostControl.GetGitModuleForm(), scriptHostControl);
                 };
 

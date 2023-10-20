@@ -38,7 +38,7 @@ namespace GitUI.LeftPanel
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
         private IRevisionGridInfo _revisionGridInfo;
-        private IScriptHostControl? _scriptHostControl;
+        private IScriptHostControl _scriptHostControl;
 
         public RepoObjectsTree()
         {
@@ -221,7 +221,7 @@ namespace GitUI.LeftPanel
         }
 
         public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?> filterRevisionGridBySpaceSeparatedRefs,
-            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo, IScriptHostControl? scriptHostControl)
+            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo, IScriptHostControl scriptHostControl)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;

@@ -9,7 +9,6 @@ namespace GitUI.ScriptsEngine
         Point GetQuickItemSelectorLocation();
 
         void GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection = false);
-        void Refresh();
 
         GitModuleForm GetGitModuleForm();
     }
