@@ -37,6 +37,7 @@ namespace GitExtensions.UITests.ScriptEngine
         private MockForm _mockForm;
         private IGitModule _module;
         private IGitUICommands _commands;
+        private IScriptHostControl _scriptHostControl;
 
         [SetUp]
         public void Setup()
@@ -61,6 +62,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _commands.GitModule.Returns(_module);
 
             _mockForm = new(_commands);
+            _scriptHostControl = new DefaultScriptHostControl(_mockForm, _commands);
 
             _exampleScript = scriptsManager.GetScript(_keyOfExampleScript);
             _exampleScript.AskConfirmation = false; // avoid any dialogs popping up
@@ -83,7 +85,7 @@ namespace GitExtensions.UITests.ScriptEngine
         {
             _exampleScript.Command = command;
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, scriptHostControl: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, scriptHostControl: _scriptHostControl);
 
             result.Should().BeFalse();
         }
@@ -94,7 +96,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "";
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, scriptHostControl: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, scriptHostControl: _scriptHostControl);
 
             result.Should().BeTrue();
         }
@@ -105,7 +107,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "--version";
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, scriptHostControl: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, scriptHostControl: _scriptHostControl);
 
             result.Should().BeTrue();
         }
@@ -119,7 +121,7 @@ namespace GitExtensions.UITests.ScriptEngine
             GitRevision revision = new(ObjectId.IndexId);
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, scriptHostControl: null);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, scriptHostControl: _scriptHostControl);
 
             result.Should().BeTrue();
         }
@@ -133,7 +135,7 @@ namespace GitExtensions.UITests.ScriptEngine
 
             _module.GetCurrentCheckout().Returns((ObjectId)null);
 
-            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, uiCommands: null, scriptHostControl: null))).Should()
+            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, uiCommands: null, scriptHostControl: _scriptHostControl))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -147,7 +149,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "cmd";
             _exampleScript.Arguments = "/c echo {sHash}";
 
-            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, scriptHostControl: null))).Should()
+            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, scriptHostControl: _scriptHostControl))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\n'sHash' option is only supported when invoked from the revision grid");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -202,7 +204,7 @@ namespace GitExtensions.UITests.ScriptEngine
             });
         }
 
-        private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptHostControl? scriptHostControl)
+        private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptHostControl scriptHostControl)
         {
             try
             {

@@ -148,8 +148,13 @@ namespace GitUI
                     }
                 }
 
+                if (scriptHostControl == null)
+                {
+                    scriptHostControl = new DefaultScriptHostControl(FindForm(), UICommands);
+                }
+
                 IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
-                return scriptsRunner.RunScript(command, FindForm() as GitModuleForm, scriptHostControl);
+                return scriptsRunner.RunScript(command, scriptHostControl);
             }
         }
 

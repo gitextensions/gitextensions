@@ -3104,8 +3104,12 @@ namespace GitUI
         void IScriptHostControl.GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection)
             => GoToRef(refName, showNoRevisionMsg, toggleSelection);
 
-        GitModuleForm IScriptHostControl.GetGitModuleForm()
-            => FindForm() as GitModuleForm;
+        bool IScriptHostControl.IsRevisionGrid { get; } = true;
+
+        IWin32Window IScriptHostControl.Window { get => FindForm(); }
+
+        IGitUICommands IScriptHostControl.UICommands { get => UICommands; }
+
         #endregion
 
         #region IRevisionGridInfo

@@ -52,12 +52,11 @@ namespace GitUI.ScriptsEngine
             return null;
         }
 
-        public bool RunEventScripts<THostForm>(ScriptEvent scriptEvent, THostForm form)
-            where THostForm : IGitModuleForm, IWin32Window
+        public bool RunEventScripts(ScriptEvent scriptEvent, IScriptHostControl scriptHostControl)
         {
             foreach (ScriptInfo script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                bool executed = ScriptRunner.RunScript(script, form, scriptHostControl: null);
+                bool executed = ScriptRunner.RunScript(script, scriptHostControl);
                 if (!executed)
                 {
                     return false;
@@ -67,17 +66,16 @@ namespace GitUI.ScriptsEngine
             return true;
         }
 
-        public bool RunScript<THostForm>(int scriptId, THostForm form, IScriptHostControl? scriptHostControl = null)
-            where THostForm : IGitModuleForm, IWin32Window
+        public bool RunScript(int scriptId, IScriptHostControl scriptHostControl)
         {
             ScriptInfo? scriptInfo = GetScript(scriptId);
             if (scriptInfo is null)
             {
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorCantFind}: '{scriptId}'",
-                    new ExternalOperationException(workingDirectory: form.UICommands.GitModule.WorkingDir));
+                    new ExternalOperationException(workingDirectory: scriptHostControl.UICommands.GitModule.WorkingDir));
             }
 
-            return ScriptRunner.RunScript(scriptInfo, form, scriptHostControl);
+            return ScriptRunner.RunScript(scriptInfo, scriptHostControl);
         }
 
         public string? SerializeIntoXml()

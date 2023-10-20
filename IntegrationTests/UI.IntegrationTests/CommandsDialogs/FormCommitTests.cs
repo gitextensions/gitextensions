@@ -37,7 +37,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             serviceContainer.RemoveService<IScriptsRunner>();
 
             IScriptsRunner scriptsRunner = Substitute.For<IScriptsRunner>();
-            scriptsRunner.RunEventScripts(Arg.Any<ScriptEvent>(), Arg.Any<FormCommit>()).Returns(true);
+            scriptsRunner.RunEventScripts(Arg.Any<ScriptEvent>(), Arg.Any<IScriptHostControl>()).Returns(true);
             serviceContainer.AddService(scriptsRunner);
 
             _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
