@@ -200,3 +200,4 @@ YYYY/MM/DD, github id, Full name, email
 2023/08/01, IlijaQ, Ilija Kujovic, ilijaqnet{at]gmail.com
 2023/08/30, SlugFiller, Saar Korren, slugfiller(at)gmail.com
 2023/07/16, e-stadnik, Evgeny Stadnik ev.stadnik(at)outlook.com
+2023/10/20, dmitrybozhenok, Dmitry Bozhenok, dmitry.bozhenok(at)gmail.com
