@@ -163,6 +163,7 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
+        [Ignore("disabled feature")]
         public async Task SegmentsWithOutgoingSecondaryMergesAreNotStraightened()
         {
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:4,5  7:6  8:6,7  9:8,5 ");
@@ -199,6 +200,7 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
+        [Ignore("disabled feature")]
         public async Task SegmentsAreNotStraightenedIfThisCausesAShiftForPrimarySegment()
         {
             RevisionGraph revisionGraph = CreateGraph(" 1  a:1  b:1  2:1  3:1  4:1  5:4,1  6:3  7:5,6  8:7,2,6  c:8  d:8  e:8  9:8,e,d,c,b,a ");
