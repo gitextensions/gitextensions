@@ -52,6 +52,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _maxScore = 0;
             _nodeByObjectId.Clear();
             _nodes = ImmutableList<RevisionGraphRevision>.Empty;
+            _orderedUntilScore = int.MinValue;
+            _reorder = true;
             _orderedNodesCache = null;
             _orderedRowCache = null;
         }
@@ -198,87 +200,57 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// Add a single revision from the git log to the graph, including segments to parents.
         /// </summary>
         /// <param name="revision">The revision to add.</param>
-        /// <param name="insertScore">Insert the (artificial) revision before the node with this score.</param>
-        /// <param name="insertRange">Number of scores "reserved" in the list when inserting.</param>
-        public void Add(GitRevision revision, int? insertScore = null, int insertRange = 0)
+        public void Add(GitRevision revision)
         {
-            // The commits are sorted by the score (not contiuous numbering there may be gaps)
-            // This commit will be ordered after existing, _maxScore is a preliminary score
-            _maxScore++;
+            int minExistingScore;
 
-            bool updateParents = true;
-            if (!_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
+            // The commits will be sorted by the score (not continuous numbering, there may be gaps).
+            // This revision will be ordered after existing, 1+_maxScore is a preliminary score.
+            if (_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
             {
-                // This revision is added from the log, but not seen before. This is probably a root node (new branch)
-                // OR the revisions are not in topo order. If this the case, we deal with it later.
-                int score = _maxScore;
-
-                if (insertScore is not null && _nodeByObjectId is not null)
-                {
-                    // This revision is to be inserted before a certain node
-                    foreach ((ObjectId _, RevisionGraphRevision graphRevision) in _nodeByObjectId)
-                    {
-                        if (graphRevision.Score < insertScore)
-                        {
-                            // Lower existing scores to reserve the inserted range
-                            graphRevision.OffsetScore(-insertRange);
-                        }
-                    }
-
-                    score = insertScore.Value - insertRange;
-                }
-
-                revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, score);
-                _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
+                // This revision was added as a parent, but is now found in the log.
+                // Increase the score for this revision to keep the order intact.
+                minExistingScore = revisionGraphRevision.Score;
+                revisionGraphRevision.OverrideScore(++_maxScore);
             }
             else
             {
-                // This revision was added earlier, but is now found in the log.
-                if (insertScore is null)
-                {
-                    // Increase the score to the current maxScore to keep the order intact.
-                    revisionGraphRevision.EnsureScoreIsAbove(_maxScore);
-                }
-                else
-                {
-                    // Second artificial (Index), score already set
-                    // No parent segment to be added (HEAD not in grid)
-                    updateParents = false;
-                }
+                // This revision is added from the log, but not seen before. This is probably a root node (new branch)
+                // or the revisions are not in topo order. If this the case, we deal with it later.
+                revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, ++_maxScore);
+                minExistingScore = revisionGraphRevision.Score;
+                _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
             }
 
             // This revision may have been added as a parent before. Probably only the ObjectId is known. Set all the other properties.
             revisionGraphRevision.GitRevision = revision;
             revisionGraphRevision.ApplyFlags(isCheckedOut: HeadId == revision.ObjectId);
 
-            // Build the revisions parent/child structure. The parents need to added here. The child structure is kept in synch in
-            // the RevisionGraphRevision class.
-            if (revision.ParentIds is not null && updateParents)
+            // Build the parent/child structure. The parent revisions need to added here.
+            if (revision.ParentIds is not null)
             {
                 foreach (ObjectId parentObjectId in revision.ParentIds)
                 {
-                    if (!_nodeByObjectId.TryGetValue(parentObjectId, out RevisionGraphRevision parentRevisionGraphRevision))
+                    if (_nodeByObjectId.TryGetValue(parentObjectId, out RevisionGraphRevision parentRevisionGraphRevision))
                     {
-                        int score = insertScore is not null
-
-                            // Inserted after current revision
-                            ? revisionGraphRevision.Score + 1 + revision.ParentIds.IndexOf(parentId => parentId == parentObjectId)
-
-                            // This parent is not loaded before. Create a new (partial) revision. We will complete the info in the revision
-                            // when this revision is loaded from the log.
-                            : ++_maxScore;
-                        parentRevisionGraphRevision = new RevisionGraphRevision(parentObjectId, score);
-                        _nodeByObjectId.TryAdd(parentObjectId, parentRevisionGraphRevision);
+                        // Node existed, may need to adjust the score.
+                        if (parentRevisionGraphRevision.GitRevision is not null)
+                        {
+                            // This parent must already have a score lower than its parents and may be the score where to invalidate the cache from.
+                            minExistingScore = Math.Min(minExistingScore, parentRevisionGraphRevision.Score);
+                        }
                     }
                     else
                     {
-                        // This revision is already loaded, add the existing revision to the parents list of new revision.
-                        // If the current score is lower, cache is invalid. The new score will (probably) be higher.
-                        MarkCacheAsInvalidIfNeeded(parentRevisionGraphRevision);
+                        // This parent is not seen before. Create a new (partial) revision.
+                        // Complete the info in the revision when this revision is loaded from the log.
+                        parentRevisionGraphRevision = new RevisionGraphRevision(parentObjectId, 0);
+                        _nodeByObjectId.TryAdd(parentObjectId, parentRevisionGraphRevision);
                     }
 
                     // Store the newly created segment (connection between 2 revisions)
-                    revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore);
+                    // Also adjust the score of the parents of the parent if required.
+                    int newMaxScore = revisionGraphRevision.AddParent(parentRevisionGraphRevision, ++_maxScore);
                     _maxScore = Math.Max(_maxScore, newMaxScore);
 
                     if (OnlyFirstParent)
@@ -290,13 +262,67 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // Ensure all parents are loaded before adding it to the _nodes list. This is important for ordering.
             ImmutableInterlocked.Update(ref _nodes, (list, revision) => list.Add(revision), revisionGraphRevision);
+            MarkCacheAsInvalidIfNeeded(minExistingScore);
+        }
 
-            if (!updateParents)
+        /// <summary>
+        /// Insert workTree and index revisions to the graph, offset existing revisions.
+        /// </summary>
+        /// <param name="workTreeRev">The workTree revision to add.</param>
+        /// <param name="indexRev">The index revision to add.</param>
+        /// <param name="parents">Parent ids for the revision to find (and insert before).</param>
+        public void Insert(GitRevision workTreeRev, GitRevision indexRev, IReadOnlyList<ObjectId> parents)
+        {
+            // Find the first parent that is already in the graph, insert a gap in scores before.
+            // Set the default insert score if not found as before the existing.
+            int insertScore = int.MinValue;
+            foreach (ObjectId parentId in parents!)
             {
-                // The rows may already be cached, invalidate and update but do not reload rows in this context
-                _reorder = true;
-                Updated?.Invoke();
+                if (TryGetNode(parentId, out RevisionGraphRevision? parentRev))
+                {
+                    // Insert before this ancestor
+                    const int insertRange = 2;
+                    int limitScore = parentRev.Score;
+                    insertScore = limitScore - insertRange;
+                    foreach (RevisionGraphRevision graphRevision in _nodeByObjectId.Values)
+                    {
+                        if (graphRevision.Score < limitScore)
+                        {
+                            // Lower existing scores to reserve the inserted range
+                            graphRevision.OverrideScore(graphRevision.Score - insertRange);
+                        }
+                    }
+
+                    break;
+                }
             }
+
+            // Add graph revisions including segment.
+            RevisionGraphRevision workTreeGraphRevision = new(workTreeRev.ObjectId, insertScore)
+            {
+                GitRevision = workTreeRev
+            };
+
+            RevisionGraphRevision indexGraphRevision = new(indexRev.ObjectId, ++insertScore)
+            {
+                GitRevision = indexRev
+            };
+
+            workTreeGraphRevision.AddParent(indexGraphRevision, workTreeGraphRevision.Score + 1);
+            _ = _nodeByObjectId.TryAdd(workTreeRev.ObjectId, workTreeGraphRevision)
+                && _nodeByObjectId.TryAdd(indexRev.ObjectId, indexGraphRevision);
+            ImmutableInterlocked.Update(ref _nodes, (list, revision) => list.Add(revision), workTreeGraphRevision);
+            ImmutableInterlocked.Update(ref _nodes, (list, revision) => list.Add(revision), indexGraphRevision);
+
+            // Invalidate caches
+            MarkCacheAsInvalidIfNeeded(workTreeGraphRevision.Score);
+        }
+
+        public void InvalidateCacheAndRebuild()
+        {
+            // The rows may already be cached, invalidate and update but do not reload rows in this context
+            _reorder = true;
+            Updated?.Invoke();
         }
 
         /// <summary>
@@ -556,9 +582,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        private void MarkCacheAsInvalidIfNeeded(RevisionGraphRevision revisionGraphRevision)
+        /// <summary>
+        /// Mark the cache as invalid if the node scores have been changed.
+        /// </summary>
+        /// <param name="minScore">The minimum score of the modified nodes.</param>
+        private void MarkCacheAsInvalidIfNeeded(int minScore)
         {
-            if (revisionGraphRevision.Score <= _orderedUntilScore)
+            if (minScore <= _orderedUntilScore)
             {
                 _reorder = true;
             }
@@ -576,23 +606,27 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             // This method will validate the topo order in brute force.
-            // Only used for unit testing.
             public bool ValidateTopoOrder()
             {
-                foreach (RevisionGraphRevision node in _revisionGraph._nodes)
+                for (int i = 0; i < _revisionGraph._nodes.Count; i++)
                 {
-                    foreach (RevisionGraphRevision parent in node.Parents)
+                    RevisionGraphRevision node = _revisionGraph._nodes[i];
+                    for (int j = 0; j < node.Parents.Count(); j++)
                     {
+                        RevisionGraphRevision parent = node.Parents.ElementAt(j);
                         if (parent.Score <= node.Score)
                         {
+                            Console.WriteLine($"Node {i}:{node.Score} parent {j}:{parent.Score} has a lower score");
                             return false;
                         }
                     }
 
-                    foreach (RevisionGraphRevision child in node.Children)
+                    for (int j = 0; j < node.Children.Count(); j++)
                     {
+                        RevisionGraphRevision child = node.Children.ElementAt(j);
                         if (node.Score <= child.Score)
                         {
+                            Console.WriteLine($"Node {i}:{node.Score} child {j}:{child.Score} has a higher score");
                             return false;
                         }
                     }

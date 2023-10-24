@@ -1282,11 +1282,9 @@ namespace GitUI
                     return false;
                 }
 
-                bool insertWithMatch = headParents is not null;
                 string userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
                 string userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
-                // Add working directory as an artificial commit
                 GitRevision workTreeRev = new(ObjectId.WorkTreeId)
                 {
                     Author = userName,
@@ -1299,9 +1297,6 @@ namespace GitUI
                     ParentIds = new[] { ObjectId.IndexId },
                     HasNotes = true
                 };
-                _gridView.Add(workTreeRev, insertWithMatch: insertWithMatch, insertRange: 2, parents: headParents);
-
-                // Add index as an artificial commit
                 GitRevision indexRev = new(ObjectId.IndexId)
                 {
                     Author = userName,
@@ -1315,8 +1310,18 @@ namespace GitUI
                     HasNotes = true
                 };
 
-                // headParents is not needed for Index, already handled by WorkTree insertion
-                _gridView.Add(indexRev, insertWithMatch: insertWithMatch, insertRange: 0, parents: null);
+                if (headParents is null)
+                {
+                    // Add as normal commits at current position
+                    _gridView.Add(workTreeRev);
+                    _gridView.Add(indexRev);
+                }
+                else
+                {
+                    // Insert before headParents if they are found, otherwise first.
+                    _gridView.Insert(workTreeRev, indexRev, headParents);
+                }
+
                 return true;
             }
 
