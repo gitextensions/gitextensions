@@ -13,11 +13,9 @@ public interface IGitRepoViewModel : INotifyPropertyChanged
 
 internal partial class GitRepoViewModel : ObservableObject, IGitRepoViewModel, IRecipient<RepoModifiedMessage>
 {
-    internal static void Register(IServiceContainer serviceContainer)
+    internal GitRepoViewModel(IMessenger messenger)
     {
-        IGitRepoViewModel model = new GitRepoViewModel();
-        serviceContainer.AddService(model);
-        serviceContainer.GetRequiredService<IMessenger>().RegisterAll(model);
+        messenger.RegisterAll(this);
     }
 
     public IEnumerable<GitRevision> Revisions
