@@ -627,6 +627,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     // Reset flags to ensure the cache isn't marked dirty before we even got to rebuilding it.
                     _orderedNodesCacheInvalid = false;
+                    _orderedNodesCache = ImmutableArray<RevisionGraphRevision>.Empty;
 
                     _orderedNodesCache = _revisionByObjectId.Values.OrderBy(n => n.Score).ToImmutableArray();
 
