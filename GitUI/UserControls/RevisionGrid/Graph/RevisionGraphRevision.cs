@@ -15,7 +15,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         private ImmutableStack<RevisionGraphRevision> _parents = ImmutableStack<RevisionGraphRevision>.Empty;
         private ImmutableStack<RevisionGraphRevision> _children = ImmutableStack<RevisionGraphRevision>.Empty;
-        private ConcurrentQueue<RevisionGraphSegment> _startSegments = new();
+        private readonly ConcurrentQueue<RevisionGraphSegment> _startSegments = new();
 
         public RevisionGraphRevision(ObjectId objectId, int guessScore)
         {
@@ -43,8 +43,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <param name="score">The new score.</param>
         public void OverrideScore(int score) => Score = score;
 
-        // This method is called to ensure that the score is higher than a given score.
-        // E.g. the score needs to be higher that the score of its children.
+        /// <summary>
+        /// This method is called to ensure that the score is higher than a given score.
+        /// E.g. the score needs to be higher that the score of its children.
+        /// </summary>
+        /// <param name="minimalScore">The minimal score to set.</param>
+        /// <returns>true if Score was updated.</returns>
         public int EnsureScoreIsAbove(int minimalScore)
         {
             if (minimalScore <= Score)
@@ -94,8 +98,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public ImmutableStack<RevisionGraphRevision> Children => _children;
         public RevisionGraphSegment[] GetStartSegments() => _startSegments.ToArray();
 
-        // Mark this commit, and all its parents, as relative. Used for branch highlighting.
-        // By default, the current checkout will be marked relative.
+        /// <summary>
+        /// Mark this commit, and all its parents, as relative. Used for branch highlighting.
+        /// By default, the current checkout will be marked relative.
+        /// </summary>
         public void MakeRelative()
         {
             if (IsRelative)
@@ -134,10 +140,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// Add a parent to this revision.
         /// </summary>
         /// <param name="parent">The parent to add.</param>
-        /// <param name="checkScore">The minimal accepted score.</param>
-        /// <returns>The new max score.</returns>
-        public int AddParent(RevisionGraphRevision parent, int checkScore)
+        public void AddParent(RevisionGraphRevision parent)
         {
+            DebugHelpers.Assert(parent.Score > Score, "Parent score must be higher than for the child.");
+
             if (IsRelative)
             {
                 parent.MakeRelative();
@@ -146,11 +152,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             ImmutableInterlocked.Push(ref _parents, parent);
             parent.AddChild(this);
 
-            int maxScore = parent.EnsureScoreIsAbove(checkScore);
-
             _startSegments.Enqueue(new RevisionGraphSegment(parent, this));
-
-            return maxScore;
         }
 
         private void AddChild(RevisionGraphRevision child)
@@ -175,10 +177,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             /// but siblings are not considered (which is OK in tests).
             /// </summary>
             /// <param name="parent">The parent to add.</param>
-            /// <returns>The new max score.</returns>
-            public int AddParent(RevisionGraphRevision parent)
+            public void AddParent(RevisionGraphRevision parent)
             {
-                return _form.AddParent(parent, _form.Score + 1);
+                // This adjustment was previously in AddParent(), moved out for performance reasons.
+                parent.EnsureScoreIsAbove(_form.Score + 1);
+
+                _form.AddParent(parent);
             }
         }
     }

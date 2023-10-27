@@ -27,10 +27,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
         }
 
-        public virtual void LoadingCompleted()
-        {
-        }
-
         /// <summary>Renders the content of a cell in this column.</summary>
         public abstract void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style);
 
