@@ -974,9 +974,16 @@ namespace GitUI
                     // If the current checkout (HEAD) is changed, don't get the currently selected rows,
                     // select the new current checkout instead.
                     CurrentCheckout = currentCheckout.Value;
-                    if (CurrentCheckout != previousCheckout && CurrentCheckout is not null)
+                    if (CurrentCheckout != previousCheckout)
                     {
-                        currentlySelectedObjectIds = new List<ObjectId> { CurrentCheckout };
+                        if (CurrentCheckout is null)
+                        {
+                            currentlySelectedObjectIds = null;
+                        }
+                        else
+                        {
+                            currentlySelectedObjectIds = new List<ObjectId> { CurrentCheckout };
+                        }
                     }
 
                     // Exclude the 'stash' ref, it is specially handled when stashes are shown
