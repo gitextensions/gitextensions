@@ -84,12 +84,12 @@
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(503, 6);
+            toolStripMenuItem1.Size = new Size(286, 6);
             // 
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(503, 6);
+            toolStripMenuItem2.Size = new Size(286, 6);
             // 
             // pnlHeader
             // 
@@ -97,10 +97,10 @@
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Margin = new Padding(0);
-            pnlHeader.MinimumSize = new Size(900, 0);
+            pnlHeader.MinimumSize = new Size(450, 0);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Padding = new Padding(40, 0, 40, 22);
-            pnlHeader.Size = new Size(902, 146);
+            pnlHeader.Padding = new Padding(20, 0, 20, 11);
+            pnlHeader.Size = new Size(451, 73);
             pnlHeader.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -108,19 +108,19 @@
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 3;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 600F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 88F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 44F));
             tableLayoutPanel1.Controls.Add(lblRecentRepositories, 0, 0);
             tableLayoutPanel1.Controls.Add(textBoxSearch, 1, 0);
             tableLayoutPanel1.Controls.Add(comboChooseView, 2, 0);
             tableLayoutPanel1.Dock = DockStyle.Bottom;
-            tableLayoutPanel1.Location = new Point(40, 59);
-            tableLayoutPanel1.Margin = new Padding(4);
+            tableLayoutPanel1.Location = new Point(20, 30);
+            tableLayoutPanel1.Margin = new Padding(2);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(822, 65);
+            tableLayoutPanel1.Size = new Size(411, 32);
             tableLayoutPanel1.TabIndex = 3;
             // 
             // lblRecentRepositories
@@ -130,17 +130,16 @@
             lblRecentRepositories.Location = new Point(0, 0);
             lblRecentRepositories.Margin = new Padding(0);
             lblRecentRepositories.Name = "lblRecentRepositories";
-            lblRecentRepositories.Size = new Size(600, 65);
+            lblRecentRepositories.Size = new Size(300, 32);
             lblRecentRepositories.TabIndex = 2;
             lblRecentRepositories.Text = "Recent repositories";
             // 
             // textBoxSearch
             // 
             textBoxSearch.Dock = DockStyle.Fill;
-            textBoxSearch.Location = new Point(606, 6);
-            textBoxSearch.Margin = new Padding(6);
+            textBoxSearch.Location = new Point(303, 3);
             textBoxSearch.Name = "textBoxSearch";
-            textBoxSearch.Size = new Size(122, 39);
+            textBoxSearch.Size = new Size(61, 23);
             textBoxSearch.TabIndex = 0;
             textBoxSearch.KeyDown += TextBoxSearch_KeyDown;
             // 
@@ -148,10 +147,10 @@
             // 
             comboChooseView.FormattingEnabled = true;
             comboChooseView.Items.AddRange(new object[] { "Tiles", "Detailed" });
-            comboChooseView.Location = new Point(738, 4);
-            comboChooseView.Margin = new Padding(4);
+            comboChooseView.Location = new Point(369, 2);
+            comboChooseView.Margin = new Padding(2);
             comboChooseView.Name = "comboChooseView";
-            comboChooseView.Size = new Size(76, 40);
+            comboChooseView.Size = new Size(40, 23);
             comboChooseView.TabIndex = 4;
             comboChooseView.SelectedIndexChanged += comboChooseView_SelectedIndexChanged;
             // 
@@ -159,11 +158,11 @@
             // 
             pnlBody.Controls.Add(flowLayoutPanel);
             pnlBody.Dock = DockStyle.Fill;
-            pnlBody.Location = new Point(0, 146);
+            pnlBody.Location = new Point(0, 73);
             pnlBody.Margin = new Padding(0);
             pnlBody.Name = "pnlBody";
-            pnlBody.Padding = new Padding(40, 36, 40, 6);
-            pnlBody.Size = new Size(902, 420);
+            pnlBody.Padding = new Padding(20, 18, 20, 3);
+            pnlBody.Size = new Size(451, 210);
             pnlBody.TabIndex = 1;
             // 
             // flowLayoutPanel
@@ -171,10 +170,10 @@
             flowLayoutPanel.Controls.Add(listViewRecentRepositories);
             flowLayoutPanel.Controls.Add(listViewFavouriteRepositories);
             flowLayoutPanel.Dock = DockStyle.Fill;
-            flowLayoutPanel.Location = new Point(40, 36);
+            flowLayoutPanel.Location = new Point(20, 18);
             flowLayoutPanel.Margin = new Padding(0);
             flowLayoutPanel.Name = "flowLayoutPanel";
-            flowLayoutPanel.Size = new Size(822, 378);
+            flowLayoutPanel.Size = new Size(411, 189);
             flowLayoutPanel.TabIndex = 3;
             flowLayoutPanel.SizeChanged += flowLayoutPanel_SizeChanged;
             // 
@@ -188,14 +187,14 @@
             listViewRecentRepositories.HeaderStyle = ColumnHeaderStyle.None;
             listViewRecentRepositories.Items.AddRange(new ListViewItem[] { listViewItem1 });
             listViewRecentRepositories.LargeImageList = imageListLarge;
-            listViewRecentRepositories.Location = new Point(0, 6);
-            listViewRecentRepositories.Margin = new Padding(0, 6, 0, 6);
-            listViewRecentRepositories.MinimumSize = new Size(350, 240);
+            listViewRecentRepositories.Location = new Point(0, 3);
+            listViewRecentRepositories.Margin = new Padding(0, 3, 0, 3);
+            listViewRecentRepositories.MinimumSize = new Size(175, 120);
             listViewRecentRepositories.MultiSelect = false;
             listViewRecentRepositories.Name = "listViewRecentRepositories";
             listViewRecentRepositories.OwnerDraw = true;
             listViewRecentRepositories.ShowItemToolTips = true;
-            listViewRecentRepositories.Size = new Size(1000, 240);
+            listViewRecentRepositories.Size = new Size(500, 120);
             listViewRecentRepositories.SmallImageList = imageListSmall;
             listViewRecentRepositories.TabIndex = 1;
             listViewRecentRepositories.TileSize = new Size(350, 50);
@@ -224,7 +223,7 @@
             contextMenuStripRepository.ImageScalingSize = new Size(32, 32);
             contextMenuStripRepository.Items.AddRange(new ToolStripItem[] { tsmiOpenFolder, toolStripMenuItem1, tsmiCategories, toolStripMenuItem2, tsmiRemoveFromList, tsmiRemoveMissingReposFromList });
             contextMenuStripRepository.Name = "contextMenuStripRepository";
-            contextMenuStripRepository.Size = new Size(507, 176);
+            contextMenuStripRepository.Size = new Size(290, 168);
             contextMenuStripRepository.Closed += contextMenuStrip_Closed;
             contextMenuStripRepository.Opening += contextMenuStrip_Opening;
             // 
@@ -232,7 +231,7 @@
             // 
             tsmiOpenFolder.Image = Properties.Images.BrowseFileExplorer;
             tsmiOpenFolder.Name = "tsmiOpenFolder";
-            tsmiOpenFolder.Size = new Size(506, 40);
+            tsmiOpenFolder.Size = new Size(289, 38);
             tsmiOpenFolder.Text = "Show in folder";
             tsmiOpenFolder.Click += tsmiOpenFolder_Click;
             // 
@@ -240,14 +239,14 @@
             // 
             tsmiCategories.DropDownItems.AddRange(new ToolStripItem[] { tsmiCategoryNone, tsmiCategoryAdd });
             tsmiCategories.Name = "tsmiCategories";
-            tsmiCategories.Size = new Size(506, 40);
+            tsmiCategories.Size = new Size(289, 38);
             tsmiCategories.Text = "Categories";
             tsmiCategories.DropDownOpening += tsmiCategories_DropDownOpening;
             // 
             // tsmiCategoryNone
             // 
             tsmiCategoryNone.Name = "tsmiCategoryNone";
-            tsmiCategoryNone.Size = new Size(256, 44);
+            tsmiCategoryNone.Size = new Size(130, 22);
             tsmiCategoryNone.Text = "(none)";
             tsmiCategoryNone.Click += tsmiCategory_Click;
             // 
@@ -255,21 +254,21 @@
             // 
             tsmiCategoryAdd.Image = Properties.Images.BulletAdd;
             tsmiCategoryAdd.Name = "tsmiCategoryAdd";
-            tsmiCategoryAdd.Size = new Size(256, 44);
+            tsmiCategoryAdd.Size = new Size(130, 22);
             tsmiCategoryAdd.Text = "Add new...";
             tsmiCategoryAdd.Click += tsmiCategoryAdd_Click;
             // 
             // tsmiRemoveFromList
             // 
             tsmiRemoveFromList.Name = "tsmiRemoveFromList";
-            tsmiRemoveFromList.Size = new Size(506, 40);
+            tsmiRemoveFromList.Size = new Size(289, 38);
             tsmiRemoveFromList.Text = "Remove project from the list";
             tsmiRemoveFromList.Click += tsmiRemoveFromList_Click;
             // 
             // tsmiRemoveMissingReposFromList
             // 
             tsmiRemoveMissingReposFromList.Name = "tsmiRemoveMissingReposFromList";
-            tsmiRemoveMissingReposFromList.Size = new Size(506, 40);
+            tsmiRemoveMissingReposFromList.Size = new Size(289, 38);
             tsmiRemoveMissingReposFromList.Text = "Remove missing projects from the list";
             tsmiRemoveMissingReposFromList.Click += tsmiRemoveMissingReposFromList_Click;
             // 
@@ -300,14 +299,14 @@
             listViewFavouriteRepositories.HeaderStyle = ColumnHeaderStyle.None;
             listViewFavouriteRepositories.Items.AddRange(new ListViewItem[] { listViewItem2 });
             listViewFavouriteRepositories.LargeImageList = imageListLarge;
-            listViewFavouriteRepositories.Location = new Point(0, 252);
+            listViewFavouriteRepositories.Location = new Point(0, 126);
             listViewFavouriteRepositories.Margin = new Padding(0);
-            listViewFavouriteRepositories.MinimumSize = new Size(350, 240);
+            listViewFavouriteRepositories.MinimumSize = new Size(175, 120);
             listViewFavouriteRepositories.MultiSelect = false;
             listViewFavouriteRepositories.Name = "listViewFavouriteRepositories";
             listViewFavouriteRepositories.OwnerDraw = true;
             listViewFavouriteRepositories.ShowItemToolTips = true;
-            listViewFavouriteRepositories.Size = new Size(1000, 240);
+            listViewFavouriteRepositories.Size = new Size(500, 120);
             listViewFavouriteRepositories.SmallImageList = imageListSmall;
             listViewFavouriteRepositories.TabIndex = 2;
             listViewFavouriteRepositories.TileSize = new Size(350, 50);
@@ -336,13 +335,13 @@
             contextMenuStripCategory.ImageScalingSize = new Size(32, 32);
             contextMenuStripCategory.Items.AddRange(new ToolStripItem[] { tsmiCategoryRename, tsmiCategoryDelete, tsmiCategoryClear });
             contextMenuStripCategory.Name = "contextMenuStripCategory";
-            contextMenuStripCategory.Size = new Size(395, 124);
+            contextMenuStripCategory.Size = new Size(233, 118);
             // 
             // tsmiCategoryRename
             // 
             tsmiCategoryRename.Image = Properties.Images.FileStatusModified;
             tsmiCategoryRename.Name = "tsmiCategoryRename";
-            tsmiCategoryRename.Size = new Size(394, 40);
+            tsmiCategoryRename.Size = new Size(232, 38);
             tsmiCategoryRename.Text = "Rename category";
             tsmiCategoryRename.Click += tsmiCategoryRename_Click;
             // 
@@ -350,7 +349,7 @@
             // 
             tsmiCategoryDelete.Image = Properties.Images.StarRemove;
             tsmiCategoryDelete.Name = "tsmiCategoryDelete";
-            tsmiCategoryDelete.Size = new Size(394, 40);
+            tsmiCategoryDelete.Size = new Size(232, 38);
             tsmiCategoryDelete.Text = "Delete category";
             tsmiCategoryDelete.Click += tsmiCategoryDelete_Click;
             // 
@@ -358,7 +357,7 @@
             // 
             tsmiCategoryClear.Image = Properties.Images.CleanupRepo;
             tsmiCategoryClear.Name = "tsmiCategoryClear";
-            tsmiCategoryClear.Size = new Size(394, 40);
+            tsmiCategoryClear.Size = new Size(232, 38);
             tsmiCategoryClear.Text = "Clear all recent repositories";
             tsmiCategoryClear.Click += tsmiCategoryClear_Click;
             // 
@@ -368,8 +367,7 @@
             menuStripRecentMenu.Items.AddRange(new ToolStripItem[] { mnuTop });
             menuStripRecentMenu.Location = new Point(0, 0);
             menuStripRecentMenu.Name = "menuStripRecentMenu";
-            menuStripRecentMenu.Padding = new Padding(12, 4, 0, 4);
-            menuStripRecentMenu.Size = new Size(902, 48);
+            menuStripRecentMenu.Size = new Size(451, 24);
             menuStripRecentMenu.TabIndex = 3;
             menuStripRecentMenu.Visible = false;
             // 
@@ -377,29 +375,28 @@
             // 
             mnuTop.DropDownItems.AddRange(new ToolStripItem[] { mnuConfigure });
             mnuTop.Name = "mnuTop";
-            mnuTop.Size = new Size(20, 40);
+            mnuTop.Size = new Size(12, 20);
             // 
             // mnuConfigure
             // 
             mnuConfigure.Image = Properties.Images.Settings;
             mnuConfigure.Name = "mnuConfigure";
-            mnuConfigure.Size = new Size(440, 44);
+            mnuConfigure.Size = new Size(218, 22);
             mnuConfigure.Text = "Recent repositories &settings";
             mnuConfigure.Click += mnuConfigure_Click;
             // 
             // UserRepositoriesList
             // 
             AllowDrop = true;
-            AutoScaleDimensions = new SizeF(192F, 192F);
+            AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = SystemColors.Control;
             Controls.Add(pnlBody);
             Controls.Add(pnlHeader);
             Controls.Add(menuStripRecentMenu);
             DoubleBuffered = true;
-            Margin = new Padding(6);
             Name = "UserRepositoriesList";
-            Size = new Size(902, 566);
+            Size = new Size(451, 283);
             Load += RecentRepositoriesList_Load;
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();

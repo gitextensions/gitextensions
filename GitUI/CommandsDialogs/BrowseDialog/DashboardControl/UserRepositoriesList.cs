@@ -614,6 +614,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var spacing4 = DpiUtil.Scale(4f);
             var spacing6 = DpiUtil.Scale(6f);
 
+            if (!_tilesMode)
+            {
+                var textOffset2 = spacing2 + imageListSmall.ImageSize.Width + spacing2;
+                PointF textPadding2 = new(e.Bounds.Left + spacing4, e.Bounds.Top + spacing6);
+                PointF pointPath2 = new(textPadding2.X + textOffset2, textPadding2.Y);
+                int textWidth2 = e.Bounds.Width - (int)textOffset2;
+
+                DrawText(e.Graphics, e.Item.Text, AppSettings.Font, _foreColorBrush, textWidth2, pointPath2, spacing4 * 2);
+
+                return;
+            }
+
             var textOffset = spacing2 + imageListLarge.ImageSize.Width + spacing2;
             int textWidth = e.Bounds.Width - (int)textOffset;
 
@@ -1082,11 +1094,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             {
                 listViewFavouriteRepositories.View = View.Tile;
                 listViewRecentRepositories.View = View.Tile;
+                listViewFavouriteRepositories.HeaderStyle = ColumnHeaderStyle.None;
+                listViewRecentRepositories.HeaderStyle = ColumnHeaderStyle.None;
             }
             else
             {
                 listViewFavouriteRepositories.View = View.Details;
                 listViewRecentRepositories.View = View.Details;
+                listViewFavouriteRepositories.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+                listViewRecentRepositories.HeaderStyle = ColumnHeaderStyle.Nonclickable;
             }
 
             ShowRecentRepositories();
