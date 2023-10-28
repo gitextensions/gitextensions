@@ -201,7 +201,11 @@ namespace GitCommands.Submodules
             bool isCurrentTopProject)
         {
             string path = topProject.WorkingDir;
-            string name = Directory.Exists(path) ? Path.GetFileName(Path.GetDirectoryName(path)) : path;
+
+            // Workaround for links to .git directories on WSL, assume links are to .git directories
+            string name = (Directory.Exists(path) || File.Exists(PathUtil.RemoveTrailingPathSeparator(path)) || PathUtil.IsWslLink(path))
+                    ? Path.GetFileName(Path.GetDirectoryName(path))
+                    : path;
             name += GetBranchNameSuffix(path, noBranchText);
             result.TopProject = new SubmoduleInfo(text: name, path, bold: isCurrentTopProject);
         }
@@ -270,6 +274,7 @@ namespace GitCommands.Submodules
 
         private static string GetModuleBranch(string path, string noBranchText)
         {
+            // Note: This will fail for WSL symbolic links to .git directories
             string branch = GitModule.GetSelectedBranchFast(path);
             string text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
             return $"({text})";

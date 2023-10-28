@@ -62,7 +62,7 @@ namespace GitCommandsTests.Git
         public void Resolve_should_return_path_to_git_folder_if_present()
         {
             _directory.Exists(_gitWorkingDir).Returns(true);
-            _file.Exists(Arg.Any<string>()).Returns(false);
+            _file.Exists(Arg.Any<string>()).Returns(true);
 
             _resolver.Resolve(_workingDir).Should().Be(_gitWorkingDir);
         }

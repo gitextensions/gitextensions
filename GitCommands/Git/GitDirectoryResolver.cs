@@ -71,11 +71,25 @@ namespace GitCommands.Git
                 return string.Empty;
             }
 
+            // Workaround for links to .git directories on WSL
+            bool isWslLink = false;
             string gitPath = Path.Combine(repositoryPath, ".git");
             if (_fileSystem.File.Exists(gitPath))
             {
                 const string gitdir = "gitdir:";
-                string line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));
+                string line;
+                try
+                {
+                    line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));
+                }
+                catch (IOException) when (PathUtil.IsWslLink(gitPath))
+                {
+                    // Assume this is a directory link as created by e.g. Google's repo tool.
+                    // A link to a "gitdir:" file is not expected and not supported.
+                    isWslLink = true;
+                    line = null;
+                }
+
                 if (line is not null)
                 {
                     string path = line[gitdir.Length..].Trim().ToNativePath();
@@ -89,7 +103,7 @@ namespace GitCommands.Git
             }
 
             gitPath = gitPath.EnsureTrailingPathSeparator();
-            return !_fileSystem.Directory.Exists(gitPath) ? repositoryPath : gitPath;
+            return _fileSystem.Directory.Exists(gitPath) || isWslLink ? gitPath : repositoryPath;
         }
     }
 }

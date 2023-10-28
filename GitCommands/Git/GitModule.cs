@@ -108,7 +108,20 @@ namespace GitCommands
                 string gitDir = Path.Combine(WorkingDir, ".git");
                 if (superprojectPath is null && File.Exists(gitDir))
                 {
-                    foreach (string line in File.ReadLines(gitDir))
+                    IEnumerable<string> lines;
+                    try
+                    {
+                        lines = File.ReadLines(gitDir);
+                    }
+                    catch (IOException)
+                    {
+                        // If we cannot read the .git file, assume it's not a submodule
+                        // See also special handling of WSL .git symbolic links in PathUtil.IsWslLink()
+                        // Symbolic links to submodule .git is not expected and not supported.
+                        return (null, null, null);
+                    }
+
+                    foreach (string line in lines)
                     {
                         const string gitdir = "gitdir:";
 

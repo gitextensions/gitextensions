@@ -164,6 +164,25 @@ namespace GitCommands
             return path.Replace(WslLocalhostPrefix, WslPrefix, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// WSL links are not fully supported by the Windows or .NET
+        /// This is a workaround to handle symbolic links to .git directories in WSL,
+        /// other use cases are not considered.
+        /// Note especially that this method is not checking if the link points to a file or directory.
+        /// </summary>
+        /// <param name="path">The path to check.</param>
+        /// <returns><see langword="true"/> if the path seem to be a link; otherwise, <see langword="false"/>.</returns>
+        public static bool IsWslLink(string path)
+        {
+            // FileAttributes.ReparsePoint is a 'reasonable' indicator for a WSL link.
+            // File.Exists() (without trailing separator) is true but
+            // Directory.Exists() is false for links to both files and directories.
+            // To access these paths, native WSL utilities are required.
+            return IsWslPrefixPath(path)
+                 && File.Exists(RemoveTrailingPathSeparator(path))
+                 && File.GetAttributes(path).HasFlag(FileAttributes.ReparsePoint);
+        }
+
         public static string Resolve(string path, string relativePath = "")
         {
             if (string.IsNullOrWhiteSpace(path))

@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
@@ -376,13 +377,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
+                bool isValidGitDir = !string.IsNullOrEmpty(gitDirPath) && Directory.Exists(gitDirPath);
                 if (!string.IsNullOrEmpty(workTreePath) && Directory.Exists(workTreePath) &&
-                    !string.IsNullOrEmpty(gitDirPath) && Directory.Exists(gitDirPath))
+                    (isValidGitDir || PathUtil.IsWslLink(gitDirPath)))
                 {
                     _workTreeWatcher.Path = workTreePath;
-                    _gitDirWatcher.Path = gitDirPath;
                     _gitPath = Path.GetDirectoryName(gitDirPath);
-                    _submodulesPath = Path.Combine(_gitPath, "modules");
+                    if (isValidGitDir)
+                    {
+                        _gitDirWatcher.Path = PathUtil.RemoveTrailingPathSeparator(gitDirPath);
+                        _submodulesPath = Path.Combine(_gitPath, "modules");
+                    }
+                    else
+                    {
+                        // WSL link, FileSystemWatcher will throw on directories that are symbolic links
+                        _gitDirWatcher.Path = workTreePath;
+                        _submodulesPath = Path.Combine(gitDirPath, "modules");
+                    }
 
                     CurrentStatus = GitStatusMonitorState.Running;
                 }
