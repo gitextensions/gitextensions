@@ -3465,10 +3465,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <source>Commit</source>
         <target />
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         <target />
@@ -3479,10 +3475,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -3776,6 +3768,14 @@ You can unset the template:
         <source>(Branch name)</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target />
@@ -3904,10 +3904,6 @@ You can unset the template:
         <source>(Remote name)</source>
         <target />
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target />
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target />
@@ -4006,6 +4002,10 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
         <target />
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
