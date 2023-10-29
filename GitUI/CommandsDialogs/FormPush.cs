@@ -380,12 +380,19 @@ namespace GitUI.CommandsDialogs
 
                 if (_NO_TRANSLATE_Branch.Text == AllRefs)
                 {
-                    pushCmd = Module.PushAllCmd(destination, GetForcePushOption(), track, RecursiveSubmodules.SelectedIndex);
+                    pushCmd = Commands.PushAll(destination,
+                                               GetForcePushOption(),
+                                               track,
+                                               RecursiveSubmodules.SelectedIndex);
                 }
                 else
                 {
-                    pushCmd = Module.PushCmd(destination, _NO_TRANSLATE_Branch.Text, RemoteBranch.Text,
-                        GetForcePushOption(), track, RecursiveSubmodules.SelectedIndex);
+                    pushCmd = Commands.Push(destination,
+                                            Module.FormatBranchName(_NO_TRANSLATE_Branch.Text),
+                                            RemoteBranch.Text,
+                                            GetForcePushOption(),
+                                            track,
+                                            RecursiveSubmodules.SelectedIndex);
                 }
             }
             else if (TabControlTagBranch.SelectedTab == TagTab)

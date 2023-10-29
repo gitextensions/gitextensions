@@ -1616,63 +1616,6 @@ namespace GitCommands
             return "";
         }
 
-        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
-        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it.
-        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
-        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
-        /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
-        /// <returns>'git push' command with the specified parameters.</returns>
-        public ArgumentString PushAllCmd(string remote, ForcePushOptions force, bool track, int recursiveSubmodules)
-        {
-            // TODO make an enum for RecursiveSubmodulesOption and add to ArgumentBuilderExtensions
-            return new GitArgumentBuilder("push")
-            {
-                force,
-                { track, "-u" },
-                { recursiveSubmodules == 1, "--recurse-submodules=check" },
-                { recursiveSubmodules == 2, "--recurse-submodules=on-demand" },
-                "--progress",
-                "--all",
-                remote.ToPosixPath().Trim().Quote()
-            };
-        }
-
-        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
-        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="fromBranch">Name of the branch to push.</param>
-        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it.
-        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
-        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
-        /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
-        /// <returns>'git push' command with the specified parameters.</returns>
-        public ArgumentString PushCmd(string remote, string fromBranch, string? toBranch, ForcePushOptions force, bool track, int recursiveSubmodules)
-        {
-            // This method is for pushing to remote branches, so fully qualify the
-            // remote branch name with refs/heads/.
-            fromBranch = FormatBranchName(fromBranch)!;
-            toBranch = GitRefName.GetFullBranchName(toBranch);
-
-            if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
-            {
-                fromBranch = "HEAD";
-            }
-
-            // TODO make an enum for RecursiveSubmodulesOption and add to ArgumentBuilderExtensions
-            return new GitArgumentBuilder("push")
-            {
-                force,
-                { track, "-u" },
-                { recursiveSubmodules == 1, "--recurse-submodules=check" },
-                { recursiveSubmodules == 2, "--recurse-submodules=on-demand" },
-                "--progress",
-                remote.ToPosixPath().Trim().Quote(),
-                { string.IsNullOrEmpty(toBranch), fromBranch },
-                { !string.IsNullOrEmpty(toBranch), $"{fromBranch}:{toBranch}" }
-            };
-        }
-
         public string ApplyPatch(string dir, ArgumentString amCommand)
         {
             using IProcess process = _gitExecutable.Start(amCommand, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding);
@@ -3767,12 +3710,9 @@ namespace GitCommands
         /// </summary>
         /// <param name="branchName">Branch name to test.</param>
         /// <returns>Well formed branch name.</returns>
-        private string? FormatBranchName(string branchName)
+        public string? FormatBranchName(string branchName)
         {
-            if (branchName is null)
-            {
-                throw new ArgumentNullException(nameof(branchName));
-            }
+            ArgumentNullException.ThrowIfNull(branchName);
 
             string fullBranchName = GitRefName.GetFullBranchName(branchName);
 
