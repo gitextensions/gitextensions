@@ -106,7 +106,7 @@ namespace GitUI.CommandsDialogs
         {
             ArgumentString pushCmd = Commands.PushTag(_currentRemote, tagName, false);
 
-            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, new DefaultScriptHostControl(this, UICommands));
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
             if (!success)
             {
                 return;
@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
             {
-                ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, new DefaultScriptHostControl(this, UICommands));
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
             }
         }
 

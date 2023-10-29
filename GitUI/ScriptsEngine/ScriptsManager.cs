@@ -52,11 +52,12 @@ namespace GitUI.ScriptsEngine
             return null;
         }
 
-        public bool RunEventScripts(ScriptEvent scriptEvent, IScriptHostControl scriptHostControl)
+        public bool RunEventScripts<THostForm>(ScriptEvent scriptEvent, THostForm form)
+            where THostForm : IGitModuleForm, IWin32Window
         {
             foreach (ScriptInfo script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                bool executed = ScriptRunner.RunScript(script, scriptHostControl);
+                bool executed = ScriptRunner.RunScript(script, new DefaultScriptHostControl(form, form.UICommands));
                 if (!executed)
                 {
                     return false;
