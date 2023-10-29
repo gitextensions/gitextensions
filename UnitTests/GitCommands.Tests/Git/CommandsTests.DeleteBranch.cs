@@ -3,10 +3,9 @@ using GitCommands.Git;
 using GitUIPluginInterfaces;
 using NSubstitute;
 
-namespace GitCommandsTests.Git_Commands
+namespace GitCommandsTests_Git
 {
-    [TestFixture]
-    public sealed class GitDeleteBranchCmdTests
+    partial class CommandsTests
     {
         [Test]
         public void ctor_should_throw_if_branches_is_null()
@@ -33,7 +32,7 @@ namespace GitCommandsTests.Git_Commands
             Assert.IsTrue(cmd.ChangesRepoState);
         }
 
-        private static IEnumerable<TestCaseData> GetRefsCommandTestData
+        private static IEnumerable<TestCaseData> DeleteBranchTestData
         {
             get
             {
@@ -74,7 +73,7 @@ namespace GitCommandsTests.Git_Commands
             }
         }
 
-        [TestCaseSource(nameof(GetRefsCommandTestData))]
+        [TestCaseSource(nameof(DeleteBranchTestData))]
         public void Arguments_are_Expected(IReadOnlyCollection<IGitRef> branches, bool force, string expected)
         {
             IGitCommand cmd = Commands.DeleteBranch(branches, force);
