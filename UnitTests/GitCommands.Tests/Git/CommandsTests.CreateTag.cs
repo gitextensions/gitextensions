@@ -2,10 +2,9 @@ using GitCommands.Git;
 using GitCommands.Git.Tag;
 using GitUIPluginInterfaces;
 
-namespace GitCommandsTests.Git_Commands
+namespace GitCommandsTests_Git
 {
-    [TestFixture]
-    public sealed class GitCreateTagCmdTests
+    partial class CommandsTests
     {
         private const string TagName = "bla";
         private static readonly ObjectId Revision = ObjectId.Parse("0123456789012345678901234567890123456789");
