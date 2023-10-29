@@ -567,6 +567,8 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         private IList<int> CalculateGraphIndices()
         {
+            // This will assert if switching from one repo with no checkout but with a revision selected
+            // to a repo also without a checkout. This is handled below.
             DebugHelpers.Assert(_loadedToBeSelectedRevisionsCount == ToBeSelectedObjectIds.Count,
                 $"{nameof(CalculateGraphIndices)}() was called before all expected revisions were loaded.");
 
