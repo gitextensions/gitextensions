@@ -2643,17 +2643,17 @@ namespace GitUI.CommandsDialogs
 
         private void btnResetAllChanges_Click(object sender, EventArgs e)
         {
-            ResetChanges(onlyWorkTree: false, Unstaged.AllItems);
+            ResetChanges(onlyWorkTree: false);
         }
 
         private void btnResetUnstagedChanges_Click(object sender, EventArgs e)
         {
-            ResetChanges(onlyWorkTree: true, Unstaged.AllItems);
+            ResetChanges(onlyWorkTree: true);
         }
 
-        private void ResetChanges(bool onlyWorkTree, IEnumerable<FileStatusItem> filesToReset)
+        private void ResetChanges(bool onlyWorkTree)
         {
-            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, filesToReset.Select(i => i.Item).ToList(), onlyWorkTree));
+            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.Select(i => i.Item).ToList(), onlyWorkTree));
             Initialize();
         }
 
