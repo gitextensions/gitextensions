@@ -31,7 +31,7 @@ namespace GitUI.ScriptsEngine
 
         public void GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection = false) => throw new NotImplementedException();
 
-        public bool IsRevisionGrid { get; } = false;
+        public bool IsRevisionGrid => false;
 
         public IWin32Window Window { get; }
 
