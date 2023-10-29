@@ -1368,7 +1368,7 @@ namespace GitUI.CommandsDialogs
                                                                                       ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty));
                     }
 
-                    bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCommit, new DefaultScriptHostControl(this, UICommands));
+                    bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCommit, this);
 
                     if (!success)
                     {
@@ -1395,7 +1395,7 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    ScriptsRunner.RunEventScripts(ScriptEvent.AfterCommit, new DefaultScriptHostControl(this, UICommands));
+                    ScriptsRunner.RunEventScripts(ScriptEvent.AfterCommit, this);
 
                     // Message.Text has been used and stored
                     ThreadHelper.JoinableTaskFactory.Run(_commitMessageManager.ResetCommitMessageAsync);

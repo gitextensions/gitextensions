@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs
         {
             string pushCmd = string.Format("push \"{0}\" :refs/tags/{1}", remotesComboboxControl1.SelectedRemote, tagName);
 
-            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, new DefaultScriptHostControl(this, UICommands));
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
             if (!success)
             {
                 return;
@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
             {
-                ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, new DefaultScriptHostControl(this, UICommands));
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
             }
         }
 

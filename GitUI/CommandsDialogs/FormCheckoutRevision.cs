@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
 
                 DebugHelpers.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 
-                bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, new DefaultScriptHostControl(this, UICommands));
+                bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, this);
                 if (!success)
                 {
                     return;
@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ScriptsRunner.RunEventScripts(ScriptEvent.AfterCheckout, new DefaultScriptHostControl(this, UICommands));
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterCheckout, this);
 
                 DialogResult = DialogResult.OK;
                 Close();

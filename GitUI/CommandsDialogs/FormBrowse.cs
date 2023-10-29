@@ -1957,7 +1957,7 @@ namespace GitUI.CommandsDialogs
 
         private void QuickFetch()
         {
-            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeFetch, new DefaultScriptHostControl(this, UICommands));
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeFetch, this);
             if (!success)
             {
                 return;
@@ -1969,7 +1969,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, new DefaultScriptHostControl(this, UICommands));
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, this);
             RefreshRevisions();
         }
 
