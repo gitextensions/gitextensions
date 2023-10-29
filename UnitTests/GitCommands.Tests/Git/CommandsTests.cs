@@ -327,6 +327,61 @@ namespace GitCommandsTests_Git
             Assert.AreEqual(expected, Commands.MergedBranches(includeRemote, fullRefname, commit).Arguments);
         }
 
+        [Test]
+        public void PushAllCmd()
+        {
+            Assert.AreEqual(
+                "push --progress --all \"remote\"",
+                Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);
+            Assert.AreEqual(
+                "push -f --progress --all \"remote\"",
+                Commands.PushAll("remote", ForcePushOptions.Force, track: false, recursiveSubmodules: 0).Arguments);
+            Assert.AreEqual(
+                "push --force-with-lease --progress --all \"remote\"",
+                Commands.PushAll("remote", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0).Arguments);
+            Assert.AreEqual(
+                "push -u --progress --all \"remote\"",
+                Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0).Arguments);
+            Assert.AreEqual(
+                "push --recurse-submodules=check --progress --all \"remote\"",
+                Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1).Arguments);
+            Assert.AreEqual(
+                "push --recurse-submodules=on-demand --progress --all \"remote\"",
+                Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2).Arguments);
+        }
+
+        [Test]
+        public void PushCmd()
+        {
+            Assert.AreEqual(
+                "push --progress \"remote\" from-branch",
+                Commands.Push("remote", "from-branch", null, ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);
+
+            Assert.AreEqual(
+                "push --progress \"remote\" from-branch:refs/heads/to-branch",
+                Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);
+
+            Assert.AreEqual(
+                "push -f --progress \"remote\" from-branch:refs/heads/to-branch",
+                Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.Force, track: false, recursiveSubmodules: 0).Arguments);
+
+            Assert.AreEqual(
+                "push --force-with-lease --progress \"remote\" from-branch:refs/heads/to-branch",
+                Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0).Arguments);
+
+            Assert.AreEqual(
+                "push -u --progress \"remote\" from-branch:refs/heads/to-branch",
+                Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0).Arguments);
+
+            Assert.AreEqual(
+                "push --recurse-submodules=check --progress \"remote\" from-branch:refs/heads/to-branch",
+                Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1).Arguments);
+
+            Assert.AreEqual(
+                "push --recurse-submodules=on-demand --progress \"remote\" from-branch:refs/heads/to-branch",
+                Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2).Arguments);
+        }
+
         [TestCase("mybranch", ".", false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
         [TestCase("branch2", "/my/path", true, ExpectedResult = @"push ""file:///my/path"" ""1111111111111111111111111111111111111111:branch2"" --force")]
         [TestCase("branchx", @"c:/my/path", true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force")]

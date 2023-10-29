@@ -368,6 +368,72 @@ namespace GitCommands.Git
         }
 
         /// <summary>
+        ///  Creates a <c>git push</c> command using the specified parameters.</summary>
+        /// <param name="remote">The remote repository that is the destination of the push operation.</param>
+        /// <param name="fromBranch">
+        ///  The fully-qualified name of the branch to push (i.e., the name must start with <c>refs/heads/</c>).
+        /// </param>
+        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it.</param>
+        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
+        /// <param name="recursiveSubmodules">
+        ///  If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote
+        ///  tracking branch; otherwise, the push will be aborted.
+        /// </param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public static ArgumentString Push(string remote, string fromBranch, string? toBranch, ForcePushOptions force, bool track, int recursiveSubmodules)
+        {
+            ArgumentNullException.ThrowIfNull(remote);
+            ArgumentNullException.ThrowIfNull(fromBranch);
+
+            toBranch = GitRefName.GetFullBranchName(toBranch);
+
+            if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
+            {
+                fromBranch = "HEAD";
+            }
+
+            // TODO make an enum for RecursiveSubmodulesOption and add to ArgumentBuilderExtensions
+            return new GitArgumentBuilder("push")
+            {
+                force,
+                { track, "-u" },
+                { recursiveSubmodules == 1, "--recurse-submodules=check" },
+                { recursiveSubmodules == 2, "--recurse-submodules=on-demand" },
+                "--progress",
+                remote.ToPosixPath().Trim().Quote(),
+                { string.IsNullOrEmpty(toBranch), fromBranch },
+                { !string.IsNullOrEmpty(toBranch), $"{fromBranch}:{toBranch}" }
+            };
+        }
+
+        /// <summary>
+        ///  Creates a 'git push' command using the specified parameters.
+        /// </summary>
+        /// <param name="remote">The remote repository that is the destination of the push operation.</param>
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it.</param>
+        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
+        /// <param name="recursiveSubmodules">
+        ///  If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote
+        ///  tracking branch; otherwise, the push will be aborted.
+        /// </param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public static ArgumentString PushAll(string remote, ForcePushOptions force, bool track, int recursiveSubmodules)
+        {
+            // TODO make an enum for RecursiveSubmodulesOption and add to ArgumentBuilderExtensions
+            return new GitArgumentBuilder("push")
+            {
+                force,
+                { track, "-u" },
+                { recursiveSubmodules == 1, "--recurse-submodules=check" },
+                { recursiveSubmodules == 2, "--recurse-submodules=on-demand" },
+                "--progress",
+                "--all",
+                remote.ToPosixPath().Trim().Quote()
+            };
+        }
+
+        /// <summary>
         /// Push a local reference to a new commit
         /// This is similar to "git branch --force "branch" "commit", except that you get a warning if commits are lost.
         /// </summary>
