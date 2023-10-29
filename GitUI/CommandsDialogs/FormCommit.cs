@@ -2088,11 +2088,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void tsmiResetUnstagedChanges_Click(object sender, EventArgs e)
-        {
-            ResetChanges(onlyWorkTree: true, Unstaged.SelectedItems);
-        }
-
         private void ResetFilesClick(object sender, EventArgs e)
         {
             _shouldRescanChanges = false;
@@ -2117,8 +2112,9 @@ namespace GitUI.CommandsDialogs
                 toolStripProgressBar1.Visible = true;
                 toolStripProgressBar1.Maximum = selectedItems.Count(item => item.Staged == StagedStatus.Index);
                 toolStripProgressBar1.Value = 0;
+                ObjectId? resetId = _currentFilesList == Unstaged ? ObjectId.IndexId : null;
 
-                Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: (eventArgs) =>
+                Module.ResetChanges(resetId, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: (eventArgs) =>
                 {
                     toolStripProgressBar1.Value = Math.Max(0, Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + eventArgs.ProcessedCount));
                 });

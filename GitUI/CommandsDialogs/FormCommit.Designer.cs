@@ -221,7 +221,7 @@ namespace GitUI.CommandsDialogs
             this.tsmiResetUnstagedChanges.Name = "tsmiResetUnstagedChanges";
             this.tsmiResetUnstagedChanges.Size = new System.Drawing.Size(232, 22);
             this.tsmiResetUnstagedChanges.Text = "Reset file or directory changes";
-            this.tsmiResetUnstagedChanges.Click += new System.EventHandler(this.tsmiResetUnstagedChanges_Click);
+            this.tsmiResetUnstagedChanges.Click += new System.EventHandler(this.ResetFilesClick);
             // 
             // resetPartOfFileToolStripMenuItem
             // 
