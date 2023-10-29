@@ -10,24 +10,9 @@ namespace GitCommandsTests_Git
     public partial class CommandsTests
     {
         [Test]
-        public void MergedBranchesCmd([Values(true, false)] bool includeRemote, [Values(true, false)] bool fullRefname,
-            [Values(null, "", " ", "HEAD", "1234567890")] string commit)
+        public void AbortMergeCmd()
         {
-            string formatArg = fullRefname ? @" --format=""%(refname)""" : string.Empty;
-            string remoteArg = includeRemote ? " -a" : string.Empty;
-            string commitArg = string.IsNullOrWhiteSpace(commit) ? string.Empty : $" {commit}";
-            string expected = $"branch{formatArg}{remoteArg} --merged{commitArg}";
-
-            Assert.AreEqual(expected, Commands.MergedBranches(includeRemote, fullRefname, commit).Arguments);
-        }
-
-        [Test]
-        public void SubmoduleSyncCmd()
-        {
-            string config = "";
-            Assert.AreEqual($"{config}submodule sync \"foo\"", Commands.SubmoduleSync("foo").Arguments);
-            Assert.AreEqual($"{config}submodule sync", Commands.SubmoduleSync("").Arguments);
-            Assert.AreEqual($"{config}submodule sync", Commands.SubmoduleSync(null).Arguments);
+            Assert.AreEqual("merge --abort", Commands.AbortMerge().Arguments);
         }
 
         private static IEnumerable<TestCaseData> AddSubmoduleTestCases()
@@ -57,21 +42,93 @@ namespace GitCommandsTests_Git
         }
 
         [Test]
-        public void RevertCmd()
+        public void ApplyDiffPatchCmd()
         {
-            ObjectId commitId = ObjectId.Random();
+            Assert.AreEqual(
+                "apply \"hello/world.patch\"",
+                Commands.ApplyDiffPatch(false, "hello\\world.patch").Arguments);
+            Assert.AreEqual(
+                "apply --ignore-whitespace \"hello/world.patch\"",
+                Commands.ApplyDiffPatch(true, "hello\\world.patch").Arguments);
+        }
+
+        [TestCase(false, false, "hello\\world.patch", "am --3way \"hello/world.patch\"")]
+        [TestCase(false, true, "hello\\world.patch", "am --3way --ignore-whitespace \"hello/world.patch\"")]
+        [TestCase(true, false, "hello\\world.patch", "am --3way --signoff \"hello/world.patch\"")]
+        [TestCase(true, true, "hello\\world.patch", "am --3way --signoff --ignore-whitespace \"hello/world.patch\"")]
+        [TestCase(true, true, null, "am --3way --signoff --ignore-whitespace")]
+        public void ApplyMailboxPatchCmd(bool signOff, bool ignoreWhitespace, string patchFile, string expected)
+        {
+            Assert.AreEqual(
+                expected,
+                Commands.ApplyMailboxPatch(signOff, ignoreWhitespace, patchFile).Arguments);
+        }
+
+        [Test]
+        public void BranchCmd()
+        {
+            // TODO split this into BranchCmd and CheckoutCmd
 
             Assert.AreEqual(
-                $"revert {commitId}",
-                Commands.Revert(commitId, autoCommit: true, parentIndex: 0).Arguments);
-
+                "checkout -b \"branch\" \"revision\"",
+                Commands.Branch("branch", "revision", checkout: true).Arguments);
             Assert.AreEqual(
-                $"revert --no-commit {commitId}",
-                Commands.Revert(commitId, autoCommit: false, parentIndex: 0).Arguments);
-
+                "branch \"branch\" \"revision\"",
+                Commands.Branch("branch", "revision", checkout: false).Arguments);
             Assert.AreEqual(
-                $"revert -m 1 {commitId}",
-                Commands.Revert(commitId, autoCommit: true, parentIndex: 1).Arguments);
+                "checkout -b \"branch\"",
+                Commands.Branch("branch", null, checkout: true).Arguments);
+            Assert.AreEqual(
+                "checkout -b \"branch\"",
+                Commands.Branch("branch", "", checkout: true).Arguments);
+            Assert.AreEqual(
+                "checkout -b \"branch\"",
+                Commands.Branch("branch", "  ", checkout: true).Arguments);
+        }
+
+        [Test]
+        public void CheckoutCmd()
+        {
+            Assert.AreEqual(
+                "checkout \"branch\"",
+                Commands.Checkout("branch", LocalChangesAction.DontChange).Arguments);
+            Assert.AreEqual(
+                "checkout --merge \"branch\"",
+                Commands.Checkout("branch", LocalChangesAction.Merge).Arguments);
+            Assert.AreEqual(
+                "checkout --force \"branch\"",
+                Commands.Checkout("branch", LocalChangesAction.Reset).Arguments);
+            Assert.AreEqual(
+                "checkout \"branch\"",
+                Commands.Checkout("branch", LocalChangesAction.Stash).Arguments);
+        }
+
+        [TestCase(CleanMode.OnlyNonIgnored, true, false, null, null, "clean --dry-run")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, null, "clean -f")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, true, null, null, "clean -d -f")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\"", null, "clean -f \"path1\"")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\"", "--exclude=excludes", "clean -f \"path1\" --exclude=excludes")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "excludes", "clean -f excludes")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\" \"path2\"", null, "clean -f \"path1\" \"path2\"")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\" \"path2\"", "--exclude=exclude1 --exclude=exclude2", "clean -f \"path1\" \"path2\" --exclude=exclude1 --exclude=exclude2")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "--exclude=exclude1 --exclude=exclude2", "clean -f --exclude=exclude1 --exclude=exclude2")]
+        [TestCase(CleanMode.OnlyIgnored, false, false, null, null, "clean -X -f")]
+        [TestCase(CleanMode.All, false, false, null, null, "clean -x -f")]
+        public void CleanCmd(CleanMode mode, bool dryRun, bool directories, string paths, string excludes, string expected)
+        {
+            Assert.AreEqual(expected, Commands.Clean(mode, dryRun, directories, paths, excludes).Arguments);
+        }
+
+        [TestCase(CleanMode.OnlyNonIgnored, true, false, null, "clean --dry-run")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "clean -f")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, true, null, "clean -d -f")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "paths", "clean -f paths")]
+        [TestCase(CleanMode.OnlyIgnored, false, false, null, "clean -X -f")]
+        [TestCase(CleanMode.All, false, false, null, "clean -x -f")]
+        public void CleanupSubmoduleCommand(CleanMode mode, bool dryRun, bool directories, string paths, string expected)
+        {
+            string subExpected = "submodule foreach --recursive git " + expected;
+            Assert.AreEqual(subExpected, Commands.CleanSubmodules(mode, dryRun, directories, paths).Arguments);
         }
 
         [Test]
@@ -110,61 +167,172 @@ namespace GitCommandsTests_Git
         }
 
         [Test]
-        public void CheckoutCmd()
+        public void ContinueBisectCmd()
         {
+            ObjectId id1 = ObjectId.Random();
+            ObjectId id2 = ObjectId.Random();
+
             Assert.AreEqual(
-                "checkout \"branch\"",
-                Commands.Checkout("branch", LocalChangesAction.DontChange).Arguments);
+                "bisect good",
+                Commands.ContinueBisect(GitBisectOption.Good).Arguments);
             Assert.AreEqual(
-                "checkout --merge \"branch\"",
-                Commands.Checkout("branch", LocalChangesAction.Merge).Arguments);
+                "bisect bad",
+                Commands.ContinueBisect(GitBisectOption.Bad).Arguments);
             Assert.AreEqual(
-                "checkout --force \"branch\"",
-                Commands.Checkout("branch", LocalChangesAction.Reset).Arguments);
+                "bisect skip",
+                Commands.ContinueBisect(GitBisectOption.Skip).Arguments);
             Assert.AreEqual(
-                "checkout \"branch\"",
-                Commands.Checkout("branch", LocalChangesAction.Stash).Arguments);
+                $"bisect good {id1} {id2}",
+                Commands.ContinueBisect(GitBisectOption.Good, id1, id2).Arguments);
         }
 
         [Test]
-        public void RemoveCmd()
+        public void ContinueMergeCmd()
         {
-            // TODO file names should be quoted
-
-            Assert.AreEqual(
-                "rm --force -r .",
-                Commands.Remove().Arguments);
-            Assert.AreEqual(
-                "rm -r .",
-                Commands.Remove(force: false).Arguments);
-            Assert.AreEqual(
-                "rm --force .",
-                Commands.Remove(isRecursive: false).Arguments);
-            Assert.AreEqual(
-                "rm --force -r a b c",
-                Commands.Remove(files: new[] { "a", "b", "c" }).Arguments);
+            Assert.AreEqual("merge --continue", Commands.ContinueMerge().Arguments);
         }
 
         [Test]
-        public void BranchCmd()
+        public void GetAllChangedFilesCmd()
         {
-            // TODO split this into BranchCmd and CheckoutCmd
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignored --ignore-submodules",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=no --ignore-submodules",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=all --ignore-submodules",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty).Arguments);
+            Assert.AreEqual(
+                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=all",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All).Arguments);
+            Assert.AreEqual(
+                "--no-optional-locks -c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
+                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true).Arguments);
+        }
 
-            Assert.AreEqual(
-                "checkout -b \"branch\" \"revision\"",
-                Commands.Branch("branch", "revision", checkout: true).Arguments);
-            Assert.AreEqual(
-                "branch \"branch\" \"revision\"",
-                Commands.Branch("branch", "revision", checkout: false).Arguments);
-            Assert.AreEqual(
-                "checkout -b \"branch\"",
-                Commands.Branch("branch", null, checkout: true).Arguments);
-            Assert.AreEqual(
-                "checkout -b \"branch\"",
-                Commands.Branch("branch", "", checkout: true).Arguments);
-            Assert.AreEqual(
-                "checkout -b \"branch\"",
-                Commands.Branch("branch", "  ", checkout: true).Arguments);
+        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", false)]
+        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra -- ""new""", "new", "old", false, "extra", false)]
+        [TestCase(@"--no-optional-locks -c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", true)]
+        public void GetCurrentChangesCmd(string expected, string fileName, string oldFileName, bool staged, string extraDiffArguments, bool noLocks)
+        {
+            Assert.AreEqual(expected, Commands.GetCurrentChanges(fileName, oldFileName, staged,
+                extraDiffArguments, noLocks).ToString());
+        }
+
+        private static IEnumerable<TestCaseData> GetRefsTestData
+        {
+            get
+            {
+                foreach (GitRefsSortBy sortBy in EnumHelper.GetValues<GitRefsSortBy>())
+                {
+                    foreach (GitRefsSortOrder sortOrder in EnumHelper.GetValues<GitRefsSortOrder>())
+                    {
+                        string sortCondition;
+                        string sortConditionRef;
+                        string format = @" --format=""%(if)%(authordate)%(then)%(objectname) %(refname)%(else)%(*objectname) %(*refname)%(end)""";
+                        string formatNoTag = @" --format=""%(objectname) %(refname)""";
+                        if (sortBy == GitRefsSortBy.Default)
+                        {
+                            sortCondition = sortConditionRef = string.Empty;
+                        }
+                        else
+                        {
+                            const string gitRefsSortByVersion = "version:refname";
+                            string sortKey = sortBy == GitRefsSortBy.versionRefname ? gitRefsSortByVersion : sortBy.ToString();
+                            string derefSortKey = (sortBy == GitRefsSortBy.versionRefname ? GitRefsSortBy.refname : sortBy).ToString();
+
+                            string order = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
+                            sortCondition = $@" --sort=""{order}{sortKey}""";
+                            sortConditionRef = $@" --sort=""{order}*{derefSortKey}""";
+                        }
+
+                        yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
+                            /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
+                        yield return new TestCaseData(RefsFilter.Tags, /* noLocks */ false, sortBy, sortOrder, 0,
+                            /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/");
+                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 0,
+                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 100,
+                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/");
+                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ true, sortBy, sortOrder, 0,
+                            /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        yield return new TestCaseData(RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
+                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/");
+
+                        yield return new TestCaseData(RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
+                            /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}");
+                        yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
+                            /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
+                    }
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(GetRefsTestData))]
+        public void GetRefsCmd(RefsFilter getRefs, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, int count, string expected)
+        {
+            Assert.AreEqual(expected, Commands.GetRefs(getRefs, noLocks, sortBy, sortOrder, count).ToString());
+        }
+
+        // Don't care about permutations because the args aren't correlated
+        [TestCase(false, false, false, null, false, null, null, "merge --no-ff branch")]
+        [TestCase(true, true, true, null, true, null, null, "merge --squash --no-commit --allow-unrelated-histories branch")]
+
+        // mergeCommitFilePath parameter
+        [TestCase(false, true, false, null, false, "", null, "merge --no-ff --squash branch")]
+        [TestCase(false, true, false, null, false, "   ", null, "merge --no-ff --squash branch")]
+        [TestCase(false, true, false, null, false, "\t", null, "merge --no-ff --squash branch")]
+        [TestCase(false, true, false, null, false, "\n", null, "merge --no-ff --squash branch")]
+        [TestCase(false, true, false, null, false, "foo", null, "merge --no-ff --squash -F \"foo\" branch")]
+        [TestCase(false, true, false, null, false, "D:\\myrepo\\.git\\file", null, "merge --no-ff --squash -F \"D:\\myrepo\\.git\\file\" branch")]
+
+        // log parameter
+        [TestCase(true, true, false, null, false, null, -1, "merge --squash branch")]
+        [TestCase(true, true, false, null, false, null, 0, "merge --squash branch")]
+        [TestCase(true, true, false, null, false, null, 5, "merge --squash --log=5 branch")]
+        public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log, string expected)
+        {
+            Assert.AreEqual(expected, Commands.MergeBranch("branch", allowFastForward, squash, noCommit, strategy, allowUnrelatedHistories, mergeCommitFilePath, log).Arguments);
+        }
+
+        [Test]
+        public void MergedBranchesCmd([Values(true, false)] bool includeRemote, [Values(true, false)] bool fullRefname,
+             [Values(null, "", " ", "HEAD", "1234567890")] string commit)
+        {
+            string formatArg = fullRefname ? @" --format=""%(refname)""" : string.Empty;
+            string remoteArg = includeRemote ? " -a" : string.Empty;
+            string commitArg = string.IsNullOrWhiteSpace(commit) ? string.Empty : $" {commit}";
+            string expected = $"branch{formatArg}{remoteArg} --merged{commitArg}";
+
+            Assert.AreEqual(expected, Commands.MergedBranches(includeRemote, fullRefname, commit).Arguments);
+        }
+
+        [TestCase("mybranch", ".", false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
+        [TestCase("branch2", "/my/path", true, ExpectedResult = @"push ""file:///my/path"" ""1111111111111111111111111111111111111111:branch2"" --force")]
+        [TestCase("branchx", @"c:/my/path", true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force")]
+        public string PushLocalCmd(string gitRef, string repoDir, bool force)
+        {
+            return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, force).Arguments;
         }
 
         [Test]
@@ -193,108 +361,6 @@ namespace GitCommandsTests_Git
             Assert.AreEqual(
                 "",
                 Commands.PushTag("path", "", all: false).Arguments);
-        }
-
-        [Test]
-        public void StashSaveCmd()
-        {
-            // TODO test case where message string contains quotes
-            // TODO test case where message string contains newlines
-            // TODO test case where selectedFiles contains whitespaces (not currently quoted)
-
-            Assert.AreEqual(
-                "stash save",
-                Commands.StashSave(untracked: false, keepIndex: false, null, Array.Empty<string>()).Arguments);
-
-            Assert.AreEqual(
-                "stash save",
-                Commands.StashSave(untracked: false, keepIndex: false, null, null).Arguments);
-
-            Assert.AreEqual(
-                "stash save -u",
-                Commands.StashSave(untracked: true, keepIndex: false, null, null).Arguments);
-
-            Assert.AreEqual(
-                "stash save --keep-index",
-                Commands.StashSave(untracked: false, keepIndex: true, null, null).Arguments);
-
-            Assert.AreEqual(
-                "stash save --keep-index",
-                Commands.StashSave(untracked: false, keepIndex: true, null, null).Arguments);
-
-            Assert.AreEqual(
-                "stash save \"message\"",
-                Commands.StashSave(untracked: false, keepIndex: false, "message", null).Arguments);
-
-            Assert.AreEqual(
-                "stash push -- \"a\" \"b\"",
-                Commands.StashSave(untracked: false, keepIndex: false, null, new[] { "a", "b" }).Arguments);
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        [TestCase("\t")]
-        public void StashSaveCmd_should_not_add_empty_message_full_stash(string theMessage)
-        {
-            Assert.AreEqual(
-               "stash save",
-               Commands.StashSave(untracked: false, keepIndex: false, theMessage, Array.Empty<string>()).Arguments);
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        [TestCase("\t")]
-        public void StashPushCmd_should_not_add_empty_message_partial_stash(string theMessage)
-        {
-            Assert.AreEqual(
-               "stash push -- \"a\" \"b\"",
-               Commands.StashSave(untracked: false, keepIndex: false, theMessage, new[] { "a", "b" }).Arguments);
-        }
-
-        [Test]
-        public void StashSaveCmd_should_add_message_if_provided_full_stash()
-        {
-            Assert.AreEqual(
-               "stash save \"test message\"",
-               Commands.StashSave(untracked: false, keepIndex: false, "test message", Array.Empty<string>()).Arguments);
-        }
-
-        [Test]
-        public void StashPushCmd_should_add_message_if_provided_partial_stash()
-        {
-            Assert.AreEqual(
-               "stash push -m \"test message\" -- \"a\" \"b\"",
-               Commands.StashSave(untracked: false, keepIndex: false, "test message", new[] { "a", "b" }).Arguments);
-        }
-
-        [Test]
-        public void StashPushCmd_should_not_add_null_or_empty_filenames()
-        {
-            Assert.AreEqual(
-               "stash push -- \"a\"",
-               Commands.StashSave(untracked: false, keepIndex: false, null, new[] { null, "", "a" }).Arguments);
-        }
-
-        [Test]
-        public void ContinueBisectCmd()
-        {
-            ObjectId id1 = ObjectId.Random();
-            ObjectId id2 = ObjectId.Random();
-
-            Assert.AreEqual(
-                "bisect good",
-                Commands.ContinueBisect(GitBisectOption.Good).Arguments);
-            Assert.AreEqual(
-                "bisect bad",
-                Commands.ContinueBisect(GitBisectOption.Bad).Arguments);
-            Assert.AreEqual(
-                "bisect skip",
-                Commands.ContinueBisect(GitBisectOption.Skip).Arguments);
-            Assert.AreEqual(
-                $"bisect good {id1} {id2}",
-                Commands.ContinueBisect(GitBisectOption.Good, id1, id2).Arguments);
         }
 
         [Test]
@@ -356,32 +422,23 @@ namespace GitCommandsTests_Git
                 () => Commands.Rebase("branch", false, false, false, false, false, false, from: "from", onto: null));
         }
 
-        [TestCase(CleanMode.OnlyNonIgnored, true, false, null, null, "clean --dry-run")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, null, "clean -f")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, true, null, null, "clean -d -f")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\"", null, "clean -f \"path1\"")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\"", "--exclude=excludes", "clean -f \"path1\" --exclude=excludes")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "excludes", "clean -f excludes")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\" \"path2\"", null, "clean -f \"path1\" \"path2\"")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, "\"path1\" \"path2\"", "--exclude=exclude1 --exclude=exclude2", "clean -f \"path1\" \"path2\" --exclude=exclude1 --exclude=exclude2")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "--exclude=exclude1 --exclude=exclude2", "clean -f --exclude=exclude1 --exclude=exclude2")]
-        [TestCase(CleanMode.OnlyIgnored, false, false, null, null, "clean -X -f")]
-        [TestCase(CleanMode.All, false, false, null, null, "clean -x -f")]
-        public void CleanCmd(CleanMode mode, bool dryRun, bool directories, string paths, string excludes, string expected)
+        [Test]
+        public void RemoveCmd()
         {
-            Assert.AreEqual(expected, Commands.Clean(mode, dryRun, directories, paths, excludes).Arguments);
-        }
+            // TODO file names should be quoted
 
-        [TestCase(CleanMode.OnlyNonIgnored, true, false, null, "clean --dry-run")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "clean -f")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, true, null, "clean -d -f")]
-        [TestCase(CleanMode.OnlyNonIgnored, false, false, "paths", "clean -f paths")]
-        [TestCase(CleanMode.OnlyIgnored, false, false, null, "clean -X -f")]
-        [TestCase(CleanMode.All, false, false, null, "clean -x -f")]
-        public void CleanupSubmoduleCommand(CleanMode mode, bool dryRun, bool directories, string paths, string expected)
-        {
-            string subExpected = "submodule foreach --recursive git " + expected;
-            Assert.AreEqual(subExpected, Commands.CleanSubmodules(mode, dryRun, directories, paths).Arguments);
+            Assert.AreEqual(
+                "rm --force -r .",
+                Commands.Remove().Arguments);
+            Assert.AreEqual(
+                "rm -r .",
+                Commands.Remove(force: false).Arguments);
+            Assert.AreEqual(
+                "rm --force .",
+                Commands.Remove(isRecursive: false).Arguments);
+            Assert.AreEqual(
+                "rm --force -r a b c",
+                Commands.Remove(files: new[] { "a", "b", "c" }).Arguments);
         }
 
         [TestCase(null)]
@@ -391,14 +448,6 @@ namespace GitCommandsTests_Git
         {
             Assert.Throws<ArgumentException>(
                 () => Commands.Reset(ResetMode.ResetIndex, commit: hash, file: "file.txt"));
-        }
-
-        [TestCase("mybranch", ".", false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
-        [TestCase("branch2", "/my/path", true, ExpectedResult = @"push ""file:///my/path"" ""1111111111111111111111111111111111111111:branch2"" --force")]
-        [TestCase("branchx", @"c:/my/path", true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force")]
-        public string PushLocalCmd(string gitRef, string repoDir, bool force)
-        {
-            return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, force).Arguments;
         }
 
         [TestCase(ResetMode.ResetIndex, "tree-ish", null, @"reset ""tree-ish"" --")]
@@ -429,162 +478,112 @@ namespace GitCommandsTests_Git
         }
 
         [Test]
-        public void GetAllChangedFilesCmd()
+        public void RevertCmd()
         {
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignored --ignore-submodules",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=no --ignore-submodules",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=all --ignore-submodules",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty).Arguments);
-            Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=all",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All).Arguments);
-            Assert.AreEqual(
-                "--no-optional-locks -c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
-                Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true).Arguments);
-        }
+            ObjectId commitId = ObjectId.Random();
 
-        // Don't care about permutations because the args aren't correlated
-        [TestCase(false, false, false, null, false, null, null, "merge --no-ff branch")]
-        [TestCase(true, true, true, null, true, null, null, "merge --squash --no-commit --allow-unrelated-histories branch")]
+            Assert.AreEqual(
+                $"revert {commitId}",
+                Commands.Revert(commitId, autoCommit: true, parentIndex: 0).Arguments);
 
-        // mergeCommitFilePath parameter
-        [TestCase(false, true, false, null, false, "", null, "merge --no-ff --squash branch")]
-        [TestCase(false, true, false, null, false, "   ", null, "merge --no-ff --squash branch")]
-        [TestCase(false, true, false, null, false, "\t", null, "merge --no-ff --squash branch")]
-        [TestCase(false, true, false, null, false, "\n", null, "merge --no-ff --squash branch")]
-        [TestCase(false, true, false, null, false, "foo", null, "merge --no-ff --squash -F \"foo\" branch")]
-        [TestCase(false, true, false, null, false, "D:\\myrepo\\.git\\file", null, "merge --no-ff --squash -F \"D:\\myrepo\\.git\\file\" branch")]
+            Assert.AreEqual(
+                $"revert --no-commit {commitId}",
+                Commands.Revert(commitId, autoCommit: false, parentIndex: 0).Arguments);
 
-        // log parameter
-        [TestCase(true, true, false, null, false, null, -1, "merge --squash branch")]
-        [TestCase(true, true, false, null, false, null, 0, "merge --squash branch")]
-        [TestCase(true, true, false, null, false, null, 5, "merge --squash --log=5 branch")]
-        public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log, string expected)
-        {
-            Assert.AreEqual(expected, Commands.MergeBranch("branch", allowFastForward, squash, noCommit, strategy, allowUnrelatedHistories, mergeCommitFilePath, log).Arguments);
+            Assert.AreEqual(
+                $"revert -m 1 {commitId}",
+                Commands.Revert(commitId, autoCommit: true, parentIndex: 1).Arguments);
         }
 
         [Test]
-        public void ContinueMergeCmd()
+        public void StashSaveCmd()
         {
-            Assert.AreEqual("merge --continue", Commands.ContinueMerge().Arguments);
+            // TODO test case where message string contains quotes
+            // TODO test case where message string contains newlines
+            // TODO test case where selectedFiles contains whitespaces (not currently quoted)
+
+            Assert.AreEqual(
+                "stash save",
+                Commands.StashSave(untracked: false, keepIndex: false, null, Array.Empty<string>()).Arguments);
+
+            Assert.AreEqual(
+                "stash save",
+                Commands.StashSave(untracked: false, keepIndex: false, null, null).Arguments);
+
+            Assert.AreEqual(
+                "stash save -u",
+                Commands.StashSave(untracked: true, keepIndex: false, null, null).Arguments);
+
+            Assert.AreEqual(
+                "stash save --keep-index",
+                Commands.StashSave(untracked: false, keepIndex: true, null, null).Arguments);
+
+            Assert.AreEqual(
+                "stash save --keep-index",
+                Commands.StashSave(untracked: false, keepIndex: true, null, null).Arguments);
+
+            Assert.AreEqual(
+                "stash save \"message\"",
+                Commands.StashSave(untracked: false, keepIndex: false, "message", null).Arguments);
+
+            Assert.AreEqual(
+                "stash push -- \"a\" \"b\"",
+                Commands.StashSave(untracked: false, keepIndex: false, null, new[] { "a", "b" }).Arguments);
         }
 
         [Test]
-        public void AbortMergeCmd()
+        public void StashSave_should_add_message_if_provided_partial_stash()
         {
-            Assert.AreEqual("merge --abort", Commands.AbortMerge().Arguments);
+            Assert.AreEqual(
+               "stash push -m \"test message\" -- \"a\" \"b\"",
+               Commands.StashSave(untracked: false, keepIndex: false, "test message", new[] { "a", "b" }).Arguments);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("\t")]
+        public void StashSave_should_not_add_empty_message_partial_stash(string theMessage)
+        {
+            Assert.AreEqual(
+               "stash push -- \"a\" \"b\"",
+               Commands.StashSave(untracked: false, keepIndex: false, theMessage, new[] { "a", "b" }).Arguments);
         }
 
         [Test]
-        public void ApplyDiffPatchCmd()
+        public void StashSave_should_not_add_null_or_empty_filenames()
         {
             Assert.AreEqual(
-                "apply \"hello/world.patch\"",
-                Commands.ApplyDiffPatch(false, "hello\\world.patch").Arguments);
-            Assert.AreEqual(
-                "apply --ignore-whitespace \"hello/world.patch\"",
-                Commands.ApplyDiffPatch(true, "hello\\world.patch").Arguments);
+               "stash push -- \"a\"",
+               Commands.StashSave(untracked: false, keepIndex: false, null, new[] { null, "", "a" }).Arguments);
         }
 
-        [TestCase(false, false, "hello\\world.patch", "am --3way \"hello/world.patch\"")]
-        [TestCase(false, true, "hello\\world.patch", "am --3way --ignore-whitespace \"hello/world.patch\"")]
-        [TestCase(true, false, "hello\\world.patch", "am --3way --signoff \"hello/world.patch\"")]
-        [TestCase(true, true, "hello\\world.patch", "am --3way --signoff --ignore-whitespace \"hello/world.patch\"")]
-        [TestCase(true, true, null, "am --3way --signoff --ignore-whitespace")]
-        public void ApplyMailboxPatchCmd(bool signOff, bool ignoreWhitespace, string patchFile, string expected)
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("\t")]
+        public void StashSaveCmd_should_not_add_empty_message_full_stash(string theMessage)
         {
             Assert.AreEqual(
-                expected,
-                Commands.ApplyMailboxPatch(signOff, ignoreWhitespace, patchFile).Arguments);
+               "stash save",
+               Commands.StashSave(untracked: false, keepIndex: false, theMessage, Array.Empty<string>()).Arguments);
         }
 
-        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", false)]
-        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra -- ""new""", "new", "old", false, "extra", false)]
-        [TestCase(@"--no-optional-locks -c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", true)]
-        public void GetCurrentChangesCmd(string expected, string fileName, string oldFileName, bool staged,
-            string extraDiffArguments, bool noLocks)
+        [Test]
+        public void StashSaveCmd_should_add_message_if_provided_full_stash()
         {
-            Assert.AreEqual(expected, Commands.GetCurrentChanges(fileName, oldFileName, staged,
-                extraDiffArguments, noLocks).ToString());
+            Assert.AreEqual(
+               "stash save \"test message\"",
+               Commands.StashSave(untracked: false, keepIndex: false, "test message", Array.Empty<string>()).Arguments);
         }
 
-        private static IEnumerable<TestCaseData> GetRefsTestData
+        [Test]
+        public void SubmoduleSyncCmd()
         {
-            get
-            {
-                foreach (GitRefsSortBy sortBy in EnumHelper.GetValues<GitRefsSortBy>())
-                {
-                    foreach (GitRefsSortOrder sortOrder in EnumHelper.GetValues<GitRefsSortOrder>())
-                    {
-                        string sortCondition;
-                        string sortConditionRef;
-                        string format = @" --format=""%(if)%(authordate)%(then)%(objectname) %(refname)%(else)%(*objectname) %(*refname)%(end)""";
-                        string formatNoTag = @" --format=""%(objectname) %(refname)""";
-                        if (sortBy == GitRefsSortBy.Default)
-                        {
-                            sortCondition = sortConditionRef = string.Empty;
-                        }
-                        else
-                        {
-                            const string gitRefsSortByVersion = "version:refname";
-                            string sortKey = sortBy == GitRefsSortBy.versionRefname ? gitRefsSortByVersion : sortBy.ToString();
-                            string derefSortKey = (sortBy == GitRefsSortBy.versionRefname ? GitRefsSortBy.refname : sortBy).ToString();
-
-                            string order = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
-                            sortCondition = $@" --sort=""{order}{sortKey}""";
-                            sortConditionRef = $@" --sort=""{order}*{derefSortKey}""";
-                        }
-
-                        yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
-                            /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
-                        yield return new TestCaseData(RefsFilter.Tags, /* noLocks */ false, sortBy, sortOrder, 0,
-                            /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/");
-                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 0,
-                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/");
-                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 100,
-                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/");
-                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ true, sortBy, sortOrder, 0,
-                            /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/");
-                        yield return new TestCaseData(RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
-                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/");
-
-                        yield return new TestCaseData(RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
-                            /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}");
-                        yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
-                            /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
-                    }
-                }
-            }
-        }
-
-        [TestCaseSource(nameof(GetRefsTestData))]
-        public void GetRefsCmd(RefsFilter getRefs, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, int count, string expected)
-        {
-            Assert.AreEqual(expected, Commands.GetRefs(getRefs, noLocks, sortBy, sortOrder, count).ToString());
+            string config = "";
+            Assert.AreEqual($"{config}submodule sync \"foo\"", Commands.SubmoduleSync("foo").Arguments);
+            Assert.AreEqual($"{config}submodule sync", Commands.SubmoduleSync("").Arguments);
+            Assert.AreEqual($"{config}submodule sync", Commands.SubmoduleSync(null).Arguments);
         }
     }
 }
