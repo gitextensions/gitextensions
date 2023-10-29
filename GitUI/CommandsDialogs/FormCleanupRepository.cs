@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
             if (result != DialogResult.OK
                 || !(subFoldersToClean = dialog.SelectedPath).StartsWith(Module.WorkingDir)
                 || !Directory.Exists(subFoldersToClean)
-                || subFoldersToClean.Equals(Module.WorkingDirGitDir.TrimEnd(Path.DirectorySeparatorChar)))
+                || subFoldersToClean.Equals(PathUtil.RemoveTrailingPathSeparator(Module.WorkingDirGitDir)))
             {
                 return null;
             }
