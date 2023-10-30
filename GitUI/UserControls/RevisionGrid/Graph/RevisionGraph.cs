@@ -687,30 +687,32 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             /// <returns><see langword="true"/> if scores for the revisions are validated; otherwise <see langword="false"/>.</returns>
             public bool ValidateTopoOrder()
             {
-                int i = 0;
+                int nodeIndex = -1;
                 foreach (RevisionGraphRevision node in _revisionGraph._revisionByObjectId.Values)
                 {
-                    for (int j = 0; j < node.Parents.Count(); j++)
+                    ++nodeIndex;
+
+                    int parentIndex = -1;
+                    foreach (RevisionGraphRevision parent in node.Parents)
                     {
-                        RevisionGraphRevision parent = node.Parents.ElementAt(j);
+                        ++parentIndex;
                         if (parent.Score <= node.Score)
                         {
-                            Console.WriteLine($"Node {i}:{node.Score} parent {j}:{parent.Score} has a lower score");
+                            Trace.WriteLine($"Node {nodeIndex}:{node.Score} parent {parentIndex}:{parent.Score} has a lower score");
                             return false;
                         }
                     }
 
-                    for (int j = 0; j < node.Children.Count(); j++)
+                    int childIndex = -1;
+                    foreach (RevisionGraphRevision child in node.Children)
                     {
-                        RevisionGraphRevision child = node.Children.ElementAt(j);
+                        ++childIndex;
                         if (node.Score <= child.Score)
                         {
-                            Console.WriteLine($"Node {i}:{node.Score} child {j}:{child.Score} has a higher score");
+                            Trace.WriteLine($"Node {nodeIndex}:{node.Score} child {childIndex}:{child.Score} has a higher score");
                             return false;
                         }
                     }
-
-                    i++;
                 }
 
                 return true;
