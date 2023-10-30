@@ -40,7 +40,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             }
             else
             {
-                segments.Add(new RevisionGraphSegment(node, null));
+                segments.Add(new RevisionGraphSegment(parent: node, child: null, isFirstChildOfParent: false));
             }
 
             _revisionGraphRowProvider.GetSegmentsForRow(row).Returns(x => revisionGraphRow);
@@ -127,8 +127,8 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             const int lane = 3;
             RevisionGraphRevision parentNode = new(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
             RevisionGraphRevision childNode = new(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
-            RevisionGraphSegment segment = new(parentNode, childNode);
-            var laneNode = SetupLaneRow(row, lane, laneCount: lane + 1, firstSegment: segment);
+            RevisionGraphSegment segment = new(parentNode, childNode, isFirstChildOfParent: true);
+            RevisionGraphRevision laneNode = SetupLaneRow(row, lane, laneCount: lane + 1, firstSegment: segment);
 
 #if !DEBUG
             // innermost "return" in RELEASE build

@@ -7,9 +7,9 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
     [TestFixture]
     public class RevisionGraphRowTests
     {
-        private RevisionGraphSegment _segment = new(parent: new(ObjectId.IndexId, guessScore: 0), child: new(ObjectId.WorkTreeId, guessScore: 0));
-        private RevisionGraphSegment _segment1 = new(parent: new(ObjectId.Random(), guessScore: 0), child: new(ObjectId.Random(), guessScore: 0));
-        private RevisionGraphSegment _segment2 = new(parent: new(ObjectId.Random(), guessScore: 0), child: new(ObjectId.Random(), guessScore: 0));
+        private RevisionGraphSegment _segment = new(parent: new(ObjectId.IndexId, guessScore: 0), child: new(ObjectId.WorkTreeId, guessScore: 0), isFirstChildOfParent: true);
+        private RevisionGraphSegment _segment1 = new(parent: new(ObjectId.Random(), guessScore: 0), child: new(ObjectId.Random(), guessScore: 0), isFirstChildOfParent: true);
+        private RevisionGraphSegment _segment2 = new(parent: new(ObjectId.Random(), guessScore: 0), child: new(ObjectId.Random(), guessScore: 0), isFirstChildOfParent: true);
 
         [Test]
         public void MoveLanesRight_should_do_nothing_if_empty([Values(-1, 0, 1)] int fromLane)

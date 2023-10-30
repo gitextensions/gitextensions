@@ -18,13 +18,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     //     | /
     //     *    <- Parent
     [DebuggerDisplay("Child: {Child} - Parent: {Parent}")]
-    public class RevisionGraphSegment
+    public sealed class RevisionGraphSegment
     {
-        public RevisionGraphSegment(RevisionGraphRevision parent, RevisionGraphRevision child)
+        public RevisionGraphSegment(RevisionGraphRevision parent, RevisionGraphRevision child, bool isFirstChildOfParent)
         {
             Parent = parent;
             Child = child;
+            IsFirstChildOfParent = isFirstChildOfParent;
         }
+
+        public bool IsFirstChildOfParent { get; }
 
         public LaneInfo? LaneInfo { get; set; }
 

@@ -10,7 +10,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     //     |
     //     *  <- parent revision
     [DebuggerDisplay("{Objectid}")]
-    public class RevisionGraphRevision
+    public sealed class RevisionGraphRevision
     {
         private ImmutableStack<RevisionGraphRevision> _parents = ImmutableStack<RevisionGraphRevision>.Empty;
         private ImmutableStack<RevisionGraphRevision> _children = ImmutableStack<RevisionGraphRevision>.Empty;
@@ -138,11 +138,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             ImmutableInterlocked.Push(ref _parents, parent);
+
+            bool isFirstChildOfParent = parent.Children.IsEmpty;
             parent.AddChild(this);
 
             maxScore = parent.EnsureScoreIsAbove(Score + 1);
 
-            _startSegments.Enqueue(new RevisionGraphSegment(parent, this));
+            _startSegments.Enqueue(new RevisionGraphSegment(parent, this, isFirstChildOfParent));
         }
 
         private void AddChild(RevisionGraphRevision child)

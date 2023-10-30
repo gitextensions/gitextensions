@@ -1,6 +1,5 @@
 ﻿// Hotfix of #11292 for release 4.2: Due to heavy performance issues with the Linux repo, do not determine the kind of LaneSharing of secondary segments.
 // This deactivates #10915 which avoided the multiple drawing of shared graph segments.
-// This reactivates a minor hyperactivity of line-straightening over commits (#11059).
 #define ALL_PRIMARY_LANES
 
 using Microsoft;
@@ -24,7 +23,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // The segments can be returned in the order how it is stored.
     // Segments are not the same as lanes.A crossing segment is a lane, but multiple segments can connect to the revision.
     // Therefore, a single lane can have multiple segments.
-    public class RevisionGraphRow : IRevisionGraphRow
+    public sealed class RevisionGraphRow : IRevisionGraphRow
     {
         private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
@@ -297,13 +296,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </returns>
         public RevisionGraphSegment FirstParentOrSelf(RevisionGraphSegment segment)
         {
-            if (segment.Parent != Revision
-                || GetLaneForSegment(segment).Sharing != LaneSharing.ExclusiveOrPrimary)
+            if (segment.Parent == Revision && segment.IsFirstChildOfParent)
             {
-                return segment;
+                return Segments.FirstOrDefault(s => s.Child == Revision, defaultValue: segment);
             }
 
-            return Segments.FirstOrDefault(s => s.Child == Revision, defaultValue: segment);
+            return segment;
         }
     }
 }
