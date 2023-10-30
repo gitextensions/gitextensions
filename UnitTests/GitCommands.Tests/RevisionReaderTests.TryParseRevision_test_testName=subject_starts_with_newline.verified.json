@@ -1,0 +1,27 @@
+﻿{
+  "ObjectId": {
+    "IsArtificial": false
+  },
+  "Guid": "8452225978d76fc1a95b2fdc4a5b6dca16658ad6",
+  "TreeGuid": {
+    "IsArtificial": false
+  },
+  "Author": "IEVin",
+  "AuthorEmail": "i.e.vin@ya.ru",
+  "AuthorUnixTime": 1698711360,
+  "AuthorDate": "DateTimeOffset_1",
+  "Committer": "IEVin",
+  "CommitterEmail": "i.e.vin@ya.ru",
+  "CommitUnixTime": 1698711360,
+  "CommitDate": "DateTimeOffset_1",
+  "BuildStatus": null,
+  "Subject": "",
+  "Body": "\ncommit message subject starts with a newline symbol",
+  "HasMultiLineMessage": true,
+  "HasNotes": false,
+  "IsArtificial": false,
+  "IsStash": false,
+  "ReflogSelector": null,
+  "HasParent": false,
+  "FirstParentId": null
+}
