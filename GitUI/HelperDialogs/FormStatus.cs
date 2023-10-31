@@ -1,6 +1,9 @@
+using System.Diagnostics;
 using GitCommands;
+using GitUI.Models;
 using GitUI.Properties;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI.HelperDialogs
@@ -49,6 +52,9 @@ namespace GitUI.HelperDialogs
 
             InitializeComplete();
         }
+
+        public string? ProcessString { get; protected init; }
+        public string? ProcessArguments { get; set; }
 
         /// <summary>
         /// Clean up any resources being used.
@@ -120,7 +126,7 @@ namespace GitUI.HelperDialogs
             form.StartPosition = FormStartPosition.CenterParent;
 
             // We know that an operation (whatever it may have been) has failed, so set the error state.
-            form.Done(false);
+            form.Done(isSuccess: false);
 
             form.ShowDialog(owner);
         }
@@ -155,6 +161,18 @@ namespace GitUI.HelperDialogs
         {
             try
             {
+                _errorOccurred = !isSuccess;
+
+                try
+                {
+                    RunProcessInfo runProcessInfo = new(ProcessString, ProcessArguments, GetOutputString(), DateTime.Now);
+                    UICommands.GetRequiredService<IProcessHistoryModel>().Trace(runProcessInfo);
+                }
+                catch (Exception exception)
+                {
+                    Trace.WriteLine(exception);
+                }
+
                 AppendMessage("Done");
                 ProgressBar.Visible = false;
                 Ok.Enabled = true;
@@ -166,16 +184,15 @@ namespace GitUI.HelperDialogs
                 Bitmap image = isSuccess ? Images.StatusBadgeSuccess : Images.StatusBadgeError;
                 SetIcon(image);
 
-                _errorOccurred = !isSuccess;
-
                 if (isSuccess && (_useDialogSettings && AppSettings.CloseProcessDialog))
                 {
                     Close();
                 }
             }
-            catch (ConEmu.WinForms.GuiMacroExecutor.GuiMacroException)
+            catch (ConEmu.WinForms.GuiMacroExecutor.GuiMacroException guiMacroException)
             {
                 // Do nothing
+                Trace.WriteLine(guiMacroException);
             }
         }
 
@@ -241,7 +258,7 @@ namespace GitUI.HelperDialogs
             {
                 AbortCallback?.Invoke(this);
                 OutputLog.Append(Environment.NewLine + "Aborted");  // TODO: write to display control also, if we pull the function up to this base class
-                Done(false);
+                Done(isSuccess: false);
                 DialogResult = DialogResult.Abort;
             }
             catch
