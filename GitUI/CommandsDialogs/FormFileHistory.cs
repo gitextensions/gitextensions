@@ -224,9 +224,9 @@ namespace GitUI.CommandsDialogs
                 return null;
             }
 
-            ObjectId objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
+            ObjectId? objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
 
-            return RevisionGrid.FilePathByObjectId.TryGetValue(objectId, out string? path) ? path : null;
+            return RevisionGrid.GetRevisionFileName(FileName, objectId);
         }
 
         private void FileChangesSelectionChanged(object sender, EventArgs e)

@@ -1509,6 +1509,40 @@ namespace GitUI
             }
         }
 
+        /// <summary>
+        /// Returns the name of a file in a specific revision (following renames and merge commits).
+        /// </summary>
+        /// <param name="path">The path to the file to get the name of</param>
+        /// <param name="objectId">The revision to get the file name in</param>
+        /// <returns>The name of the file at <paramref name="path"/> in revision identified by <paramref name="objectId"/>; <see langword="null"/> if not available.</returns>
+        public string? GetRevisionFileName(string path, ObjectId? objectId)
+        {
+            if (objectId is null)
+            {
+                return null;
+            }
+
+            if (FilePathByObjectId?.TryGetValue(objectId, out string? fileName) is true)
+            {
+                return fileName;
+            }
+
+            GitArgumentBuilder args = new("log")
+            {
+                // --name-only will list each filename on a separate line, ending with an empty line
+                $"--format=\"{_objectIdPrefix}%H\"",
+                "--name-only",
+                "--follow",
+                "--diff-merges=separate",
+                FindRenamesAndCopiesOpts(),
+                objectId.ToString(),
+                "--max-count=1",
+                "--",
+                path,
+            };
+
+            return ParseFileNames(args).FirstOrDefault();
+        }
 
         private IEnumerable<string> ParseFileNames(GitArgumentBuilder args)
         {
