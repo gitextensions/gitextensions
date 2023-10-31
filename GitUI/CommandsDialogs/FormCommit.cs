@@ -272,7 +272,7 @@ namespace GitUI.CommandsDialogs
             SelectedDiff.AddContextMenuSeparator();
             _addSelectionToCommitMessageToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_addSelectionToCommitMessage.Text, (s, e) => AddSelectionToCommitMessage());
             _addSelectionToCommitMessageToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.AddSelectionToCommitMessage);
-            resetChanges.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetSelectedFiles);
+            tsmiResetUnstagedChanges.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetSelectedFiles);
             stagedResetChanges.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetSelectedFiles);
             deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
             viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
@@ -317,8 +317,8 @@ namespace GitUI.CommandsDialogs
             }
 
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
-            Reset.Visible = AppSettings.ShowResetAllChanges;
-            ResetUnStaged.Visible = AppSettings.ShowResetWorkTreeChanges;
+            btnResetAllChanges.Visible = AppSettings.ShowResetAllChanges;
+            btnResetUnstagedChanges.Visible = AppSettings.ShowResetWorkTreeChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
@@ -955,7 +955,7 @@ namespace GitUI.CommandsDialogs
             toolStageItem.Enabled = enable;
             toolStageAllItem.Enabled = enable;
             workingToolStripMenuItem.Enabled = enable;
-            ResetUnStaged.Enabled = Unstaged.AllItems.Any();
+            btnResetUnstagedChanges.Enabled = Unstaged.AllItems.Any();
         }
 
         private async Task UpdateBranchNameDisplayAsync()
@@ -1021,8 +1021,8 @@ namespace GitUI.CommandsDialogs
 
                     Commit.Enabled = false;
                     CommitAndPush.Enabled = false;
-                    Reset.Enabled = false;
-                    ResetUnStaged.Enabled = false;
+                    btnResetAllChanges.Enabled = false;
+                    btnResetUnstagedChanges.Enabled = false;
                     EnableStageButtons(false);
 
                     ComputeUnstagedFiles(LoadUnstagedOutput, true);
@@ -2112,8 +2112,9 @@ namespace GitUI.CommandsDialogs
                 toolStripProgressBar1.Visible = true;
                 toolStripProgressBar1.Maximum = selectedItems.Count(item => item.Staged == StagedStatus.Index);
                 toolStripProgressBar1.Value = 0;
+                ObjectId? resetId = _currentFilesList == Unstaged ? ObjectId.IndexId : null;
 
-                Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: (eventArgs) =>
+                Module.ResetChanges(resetId, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: (eventArgs) =>
                 {
                     toolStripProgressBar1.Value = Math.Max(0, Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + eventArgs.ProcessedCount));
                 });
@@ -2640,19 +2641,19 @@ namespace GitUI.CommandsDialogs
                     });
         }
 
-        private void ResetClick(object sender, EventArgs e)
+        private void btnResetAllChanges_Click(object sender, EventArgs e)
         {
-            HandleResetButton(onlyUnstaged: false);
+            ResetChanges(onlyWorkTree: false);
         }
 
-        private void ResetUnStagedClick(object sender, EventArgs e)
+        private void btnResetUnstagedChanges_Click(object sender, EventArgs e)
         {
-            HandleResetButton(onlyUnstaged: true);
+            ResetChanges(onlyWorkTree: true);
         }
 
-        private void HandleResetButton(bool onlyUnstaged)
+        private void ResetChanges(bool onlyWorkTree)
         {
-            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.Select(i => i.Item).ToList(), onlyWorkTree: onlyUnstaged));
+            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.Select(i => i.Item).ToList(), onlyWorkTree));
             Initialize();
         }
 
@@ -3311,9 +3312,9 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateButtonStates()
         {
-            Reset.Enabled = Unstaged.AllItems.Any() || Staged.AllItems.Any();
+            btnResetAllChanges.Enabled = Unstaged.AllItems.Any() || Staged.AllItems.Any();
             CommitAndPush.Text = PushForced ? _commitAndForcePush.Text
-                : Reset.Enabled || Amend.Checked ? _commitAndPush.Text
+                : btnResetAllChanges.Enabled || Amend.Checked ? _commitAndPush.Text
                 : TranslatedStrings.ButtonPush;
         }
 
