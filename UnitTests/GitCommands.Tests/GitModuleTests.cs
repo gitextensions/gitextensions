@@ -36,32 +36,6 @@ namespace GitCommandsTests
             _executable.Verify();
         }
 
-        [TestCase(@"  ""author <author@mail.com>""  ", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
-        [TestCase(@"""author <author@mail.com>""", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
-        [TestCase(@"author <author@mail.com>", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
-        public void CommitCmdShouldTrimAuthor(string input, string expected)
-        {
-            ArgumentString actual = _gitModule.CommitCmd(false, author: input);
-            StringAssert.AreEqualIgnoringCase(expected, actual);
-        }
-
-        [TestCase(false, false, @"", false, false, false, @"", @"commit")]
-        [TestCase(true, false, @"", false, false, false, @"", @"commit --amend")]
-        [TestCase(false, true, @"", false, false, false, @"", @"commit --signoff")]
-        [TestCase(false, false, @"", true, false, false, @"", @"commit -F ""COMMITMESSAGE""")]
-        [TestCase(false, false, @"", false, true, false, @"", @"commit --no-verify")]
-        [TestCase(false, false, @"", false, false, false, @"12345678", @"commit")]
-        [TestCase(false, false, @"", false, false, true, @"", @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, @"      ", @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, null, @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, @"12345678", @"commit -S12345678")]
-        [TestCase(true, true, @"", true, true, true, @"12345678", @"commit --amend --no-verify --signoff -S12345678 -F ""COMMITMESSAGE""")]
-        public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool gpgSign, string gpgKeyId, string expected)
-        {
-            ArgumentString actual = _gitModule.CommitCmd(amend, signOff, author, useExplicitCommitMessage, noVerify, gpgSign, gpgKeyId);
-            StringAssert.AreEqualIgnoringCase(expected, actual);
-        }
-
         [Test]
         public void ParseGitBlame()
         {
@@ -149,35 +123,6 @@ namespace GitCommandsTests
                     "-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force --prune-tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true, pruneRemoteBranchesAndTags: true).Arguments);
             }
-        }
-
-        [Test]
-        public void CommitCmd()
-        {
-            Assert.AreEqual(
-                "commit -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false).Arguments);
-            Assert.AreEqual(
-                "commit --amend -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: true).Arguments);
-            Assert.AreEqual(
-                "commit --signoff -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false, signOff: true).Arguments);
-            Assert.AreEqual(
-                "commit --author=\"foo\" -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false, author: "foo").Arguments);
-            Assert.AreEqual(
-                "commit",
-                _gitModule.CommitCmd(amend: false, useExplicitCommitMessage: false).Arguments);
-            Assert.AreEqual(
-                "commit --no-verify -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false, noVerify: true).Arguments);
-            Assert.AreEqual(
-                "commit -S -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false, gpgSign: true).Arguments);
-            Assert.AreEqual(
-                "commit -Skey -F \"COMMITMESSAGE\"",
-                _gitModule.CommitCmd(amend: false, gpgSign: true, gpgKeyId: "key").Arguments);
         }
 
         [Test]

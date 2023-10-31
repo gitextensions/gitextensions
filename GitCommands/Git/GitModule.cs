@@ -1984,22 +1984,6 @@ namespace GitCommands
             return InTheMiddleOfConflictedMerge() || InTheMiddleOfRebase();
         }
 
-        public ArgumentString CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
-        {
-            return new GitArgumentBuilder("commit")
-            {
-                { amend, "--amend" },
-                { noVerify, "--no-verify" },
-                { signOff, "--signoff" },
-                { !string.IsNullOrEmpty(author), $"--author=\"{author?.Trim().Trim('"')}\"" },
-                { gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
-                { gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
-                { useExplicitCommitMessage, $"-F \"{GetGitExecPath(Path.Combine(GetGitDirectory(), "COMMITMESSAGE"))}\"" },
-                { allowEmpty, "--allow-empty" },
-                { resetAuthor && amend, "--reset-author" }
-            };
-        }
-
         public string RemoveRemote(string remoteName)
         {
             GitArgumentBuilder args = new("remote")
