@@ -121,6 +121,11 @@ namespace GitUI
         private SuperProjectInfo? _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
 
+        /// <summary>
+        /// A prefix to use in git log output for parsing file names for individual revisions
+        /// </summary>
+        private const string _objectIdPrefix = "????";
+
         // NOTE internal properties aren't serialised by the WinForms designer
 
         internal ObjectId? CurrentCheckout { get; private set; }
@@ -1162,12 +1167,10 @@ namespace GitUI
                 //  1. use git log --follow to get all previous filenames of the file we are interested in
                 //  2. use git log "list of files names" to get the history graph
 
-                const string startOfObjectId = "????";
                 GitArgumentBuilder args = new("log")
                 {
                     // --name-only will list each filename on a separate line, ending with an empty line
-                    // Find start of a new commit with a sequence impossible in a filename
-                    $"--format=\"{startOfObjectId}%H\"",
+                    $"--format=\"{_objectIdPrefix}%H\"",
                     "--name-only",
                     "--follow",
                     FindRenamesAndCopiesOpts(),
@@ -1176,41 +1179,10 @@ namespace GitUI
                 };
 
                 HashSet<string?> setOfFileNames = [];
-                ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
-                LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
 
-                // TODO Check the exit code and warn the user that rename detection could not be done.
-
-                ObjectId currentObjectId = null;
-                foreach (string line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
+                foreach (string fileName in ParseFileNames(args))
                 {
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        // empty line after sha
-                        continue;
-                    }
-
-                    if (line.StartsWith(startOfObjectId))
-                    {
-                        if (line.Length < ObjectId.Sha1CharCount + startOfObjectId.Length
-                            || !ObjectId.TryParse(line, offset: startOfObjectId.Length, out currentObjectId))
-                        {
-                            // Parse error, ignore
-                            currentObjectId = null;
-                        }
-
-                        continue;
-                    }
-
-                    if (currentObjectId == null)
-                    {
-                        // Parsing has failed, ignore
-                        continue;
-                    }
-
-                    // Add only the first file to the dictionary
-                    FilePathByObjectId?.TryAdd(currentObjectId, line);
-                    setOfFileNames.Add(line);
+                    setOfFileNames.Add(fileName);
                 }
 
                 // Add path in case of no matches so result is never empty
@@ -1534,6 +1506,53 @@ namespace GitUI
                         yield return parentId;
                     }
                 }
+            }
+        }
+
+
+        private IEnumerable<string> ParseFileNames(GitArgumentBuilder args)
+        {
+            ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
+
+            if (!result.ExitedSuccessfully)
+            {
+                yield break;
+            }
+
+            LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
+
+            ObjectId? currentObjectId = null;
+
+            foreach (string line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
+            {
+                if (string.IsNullOrEmpty(line))
+                {
+                    // empty line after sha
+                    continue;
+                }
+
+                if (line.StartsWith(_objectIdPrefix))
+                {
+                    if (line.Length < ObjectId.Sha1CharCount + _objectIdPrefix.Length
+                        || !ObjectId.TryParse(line, offset: _objectIdPrefix.Length, out currentObjectId))
+                    {
+                        // Parse error, ignore
+                        currentObjectId = null;
+                    }
+
+                    continue;
+                }
+
+                if (currentObjectId is null)
+                {
+                    // Parsing has failed, ignore
+                    continue;
+                }
+
+                // Add only the first file to the dictionary
+                FilePathByObjectId?.TryAdd(currentObjectId, line);
+
+                yield return line;
             }
         }
 
