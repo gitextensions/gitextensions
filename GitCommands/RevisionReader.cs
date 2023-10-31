@@ -459,7 +459,7 @@ namespace GitCommands
             if (keepBody && revision.HasMultiLineMessage)
             {
                 // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
-                int currentOffset = lengthSubject - 1;
+                int currentOffset = lengthSubject;
                 int verticalFeedIndex;
                 while ((verticalFeedIndex = decoded.Slice(currentOffset).IndexOf('\v')) >= 0)
                 {
