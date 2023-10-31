@@ -3082,16 +3082,7 @@ namespace GitUI
                 case Command.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.DeleteRef: DeleteRef(); break;
                 case Command.RenameRef: RenameRef(); break;
-                default:
-                    {
-                        CommandStatus result = base.ExecuteCommand(cmd);
-                        if (result.NeedsGridRefresh)
-                        {
-                            PerformRefreshRevisions();
-                        }
-
-                        return result;
-                    }
+                default: return base.ExecuteCommand(cmd);
             }
 
             return true;
@@ -3129,10 +3120,7 @@ namespace GitUI
         void IRunScript.Execute(int scriptId)
         {
             IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
-            if (scriptsRunner.RunScript(scriptId, FindForm() as GitModuleForm, this).NeedsGridRefresh)
-            {
-                PerformRefreshRevisions();
-            }
+            scriptsRunner.RunScript(scriptId, FindForm() as GitModuleForm, this);
         }
 
         internal TestAccessor GetTestAccessor()
