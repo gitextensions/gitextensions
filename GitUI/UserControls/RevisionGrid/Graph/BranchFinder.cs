@@ -55,7 +55,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             Validates.NotNull(node.GitRevision);
 
-            bool isTheFirstBranch = parent is null || node.Parents.IsEmpty || node.Parents.Last() == parent; // note: Parents are stored in reverse order
+            bool isTheFirstBranch = parent is null || node.Parents.FirstOrDefault() == parent;
             string? mergedInto;
             string? mergedWith;
             (mergedInto, mergedWith) = ParseMergeMessage(node.GitRevision.Subject, appendPullRequest: isTheFirstBranch);

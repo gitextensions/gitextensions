@@ -13,7 +13,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     [DebuggerDisplay("{Objectid}")]
     public class RevisionGraphRevision
     {
-        private ImmutableStack<RevisionGraphRevision> _parents = ImmutableStack<RevisionGraphRevision>.Empty;
         private ImmutableStack<RevisionGraphRevision> _children = ImmutableStack<RevisionGraphRevision>.Empty;
         private readonly ConcurrentQueue<RevisionGraphSegment> _startSegments = new();
 
@@ -58,7 +57,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Score = minimalScore;
 
-            if (Parents.IsEmpty)
+            if (_startSegments.IsEmpty)
             {
                 return Score;
             }
@@ -71,8 +70,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 RevisionGraphRevision revision = stack.Pop();
 
-                foreach (RevisionGraphRevision parent in revision.Parents)
+                foreach (RevisionGraphSegment segment in revision._startSegments)
                 {
+                    RevisionGraphRevision parent = segment.Parent;
                     if (parent.Score > revision.Score)
                     {
                         continue;
@@ -94,7 +94,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public ObjectId Objectid { get; }
 
-        public ImmutableStack<RevisionGraphRevision> Parents => _parents;
+        public IEnumerable<RevisionGraphRevision> Parents => _startSegments.Select(segment => segment.Parent);
         public ImmutableStack<RevisionGraphRevision> Children => _children;
         public RevisionGraphSegment[] GetStartSegments() => _startSegments.ToArray();
 
@@ -109,7 +109,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            if (Parents.IsEmpty)
+            if (_startSegments.IsEmpty)
             {
                 IsRelative = true;
                 return;
@@ -124,8 +124,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 revision.IsRelative = true;
 
-                foreach (RevisionGraphRevision parent in revision.Parents)
+                foreach (RevisionGraphSegment segment in revision._startSegments)
                 {
+                    RevisionGraphRevision parent = segment.Parent;
                     if (parent.IsRelative)
                     {
                         continue;
@@ -149,7 +150,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 parent.MakeRelative();
             }
 
-            ImmutableInterlocked.Push(ref _parents, parent);
             parent.AddChild(this);
 
             _startSegments.Enqueue(new RevisionGraphSegment(parent, this));
