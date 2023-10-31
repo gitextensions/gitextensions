@@ -178,6 +178,27 @@ namespace GitCommands.Git
             };
         }
 
+        public static ArgumentString Commit(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = false, string commitMessageFile = null, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
+        {
+            if (useExplicitCommitMessage && string.IsNullOrEmpty(commitMessageFile))
+            {
+                throw new ArgumentException("Required", nameof(commitMessageFile));
+            }
+
+            return new GitArgumentBuilder("commit")
+            {
+                { amend, "--amend" },
+                { noVerify, "--no-verify" },
+                { signOff, "--signoff" },
+                { !string.IsNullOrEmpty(author), $"--author=\"{author?.Trim().Trim('"')}\"" },
+                { gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
+                { gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
+                { useExplicitCommitMessage, $"-F \"{commitMessageFile}\"" },
+                { allowEmpty, "--allow-empty" },
+                { resetAuthor && amend, "--reset-author" }
+            };
+        }
+
         public static ArgumentString ContinueBisect(GitBisectOption bisectOption, params ObjectId[] revisions)
         {
             return new GitArgumentBuilder("bisect")

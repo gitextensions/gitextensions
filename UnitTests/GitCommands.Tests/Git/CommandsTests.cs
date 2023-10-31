@@ -167,6 +167,61 @@ namespace GitCommandsTests_Git
         }
 
         [Test]
+        public void CommitCmd()
+        {
+            Assert.AreEqual(
+                "commit -F \"COMMITMESSAGE\"",
+                Commands.Commit(amend: false, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+            Assert.AreEqual(
+                "commit --amend -F \"COMMITMESSAGE\"",
+                Commands.Commit(amend: true, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+            Assert.AreEqual(
+                "commit --signoff -F \"COMMITMESSAGE\"",
+                Commands.Commit(amend: false, signOff: true, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+            Assert.AreEqual(
+                "commit --author=\"foo\" -F \"COMMITMESSAGE\"",
+                Commands.Commit(amend: false, author: "foo", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+            Assert.AreEqual(
+                "commit",
+                Commands.Commit(amend: false, useExplicitCommitMessage: false).Arguments);
+            Assert.AreEqual(
+                "commit --no-verify -F \"COMMITMESSAGE\"",
+                Commands.Commit(amend: false, noVerify: true, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+            Assert.AreEqual(
+                "commit -S -F \"COMMITMESSAGE\"",
+                Commands.Commit(amend: false, gpgSign: true, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+            Assert.AreEqual(
+                "commit -Skey -F \"COMMITMESSAGE\"",
+                Commands.Commit(amend: false, gpgSign: true, gpgKeyId: "key", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+        }
+
+        [TestCase(@"  ""author <author@mail.com>""  ", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
+        [TestCase(@"""author <author@mail.com>""", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
+        [TestCase(@"author <author@mail.com>", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
+        public void CommitCmdShouldTrimAuthor(string input, string expected)
+        {
+            ArgumentString actual = Commands.Commit(false, author: input, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE");
+            StringAssert.AreEqualIgnoringCase(expected, actual);
+        }
+
+        [TestCase(false, false, @"", false, false, false, @"", @"commit")]
+        [TestCase(true, false, @"", false, false, false, @"", @"commit --amend")]
+        [TestCase(false, true, @"", false, false, false, @"", @"commit --signoff")]
+        [TestCase(false, false, @"", true, false, false, @"", @"commit -F ""COMMITMESSAGE""")]
+        [TestCase(false, false, @"", false, true, false, @"", @"commit --no-verify")]
+        [TestCase(false, false, @"", false, false, false, @"12345678", @"commit")]
+        [TestCase(false, false, @"", false, false, true, @"", @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, @"      ", @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, null, @"commit -S")]
+        [TestCase(false, false, @"", false, false, true, @"12345678", @"commit -S12345678")]
+        [TestCase(true, true, @"", true, true, true, @"12345678", @"commit --amend --no-verify --signoff -S12345678 -F ""COMMITMESSAGE""")]
+        public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool gpgSign, string gpgKeyId, string expected)
+        {
+            ArgumentString actual = Commands.Commit(amend, signOff, author, useExplicitCommitMessage, "COMMITMESSAGE", noVerify, gpgSign, gpgKeyId);
+            StringAssert.AreEqualIgnoringCase(expected, actual);
+        }
+
+        [Test]
         public void ContinueBisectCmd()
         {
             ObjectId id1 = ObjectId.Random();

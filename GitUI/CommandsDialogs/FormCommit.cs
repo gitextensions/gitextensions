@@ -1375,11 +1375,12 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    ArgumentString commitCmd = Module.CommitCmd(
+                    ArgumentString commitCmd = Commands.Commit(
                         createAmendCommit,
                         signOffToolStripMenuItem.Checked,
                         toolAuthor.Text,
                         _useFormCommitMessage,
+                        _commitMessageManager.CommitMessagePath,
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
                         toolStripGpgKeyTextBox.Text,
