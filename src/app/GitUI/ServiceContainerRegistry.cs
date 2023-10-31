@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.Design;
+using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
 using GitUI.Hotkey;
+using GitUI.Models;
 using GitUI.ScriptsEngine;
 using ResourceManager;
 
@@ -14,6 +16,9 @@ public static class ServiceContainerRegistry
         ScriptsManager scriptsManager = new();
         HotkeySettingsManager hotkeySettingsManager = new(scriptsManager);
 
+        OutputHistoryModel outputHistoryModel = new(AppSettings.OutputHistoryDepth.Value);
+        serviceContainer.GetRequiredService<ISubscribableTraceListener>().TraceReceived += outputHistoryModel.Trace;
+
         serviceContainer.AddService<IWindowsJumpListManager>(new WindowsJumpListManager(serviceContainer.GetRequiredService<IRepositoryDescriptionProvider>()));
         serviceContainer.AddService<IScriptsManager>(scriptsManager);
         serviceContainer.AddService<IScriptsRunner>(scriptsManager);
@@ -21,5 +26,6 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IHotkeySettingsLoader>(hotkeySettingsManager);
         serviceContainer.AddService<ISimplePromptCreator>(new SimplePromptCreator());
         serviceContainer.AddService<IFilePromptCreator>(new FilePromptCreator());
+        serviceContainer.AddService<IOutputHistoryModel>(outputHistoryModel);
     }
 }
