@@ -1958,7 +1958,7 @@ namespace GitUI.Editor
             IgnoreAllWhitespace = 15,
         }
 
-        protected override CommandStatus ExecuteCommand(int cmd)
+        protected override bool ExecuteCommand(int cmd)
         {
             Command command = (Command)cmd;
 
@@ -2042,7 +2042,7 @@ namespace GitUI.Editor
             public ToolStripButton IgnoreAllWhitespacesButton => _fileViewer.ignoreAllWhitespaces;
             public ToolStripMenuItem IgnoreAllWhitespacesMenuItem => _fileViewer.ignoreAllWhitespaceChangesToolStripMenuItem;
 
-            internal CommandStatus ExecuteCommand(Command command) => _fileViewer.ExecuteCommand((int)command);
+            internal bool ExecuteCommand(Command command) => _fileViewer.ExecuteCommand((int)command);
 
             internal void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceAtEolToolStripMenuItem_Click(sender, e);
             internal void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceChangesToolStripMenuItemClick(sender, e);

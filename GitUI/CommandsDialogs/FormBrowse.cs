@@ -2000,7 +2000,7 @@ namespace GitUI.CommandsDialogs
                 || (CommitInfoTabControl.SelectedTab == TreeTabPage && fileTree.ProcessHotkey(keyData));
         }
 
-        protected override CommandStatus ExecuteCommand(int cmd)
+        protected override bool ExecuteCommand(int cmd)
         {
             switch ((Command)cmd)
             {
@@ -2162,7 +2162,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        internal CommandStatus ExecuteCommand(Command cmd)
+        internal bool ExecuteCommand(Command cmd)
         {
             return ExecuteCommand((int)cmd);
         }

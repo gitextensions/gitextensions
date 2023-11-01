@@ -863,7 +863,7 @@ namespace GitUI.CommandsDialogs
             AppSettings.CommitDialogShowOnlyMyMessages = ShowOnlyMyMessagesToolStripMenuItem.Checked;
         }
 
-        protected override CommandStatus ExecuteCommand(int cmd)
+        protected override bool ExecuteCommand(int cmd)
         {
             switch ((Command)cmd)
             {
@@ -3342,7 +3342,7 @@ namespace GitUI.CommandsDialogs
 
             internal ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
 
-            internal CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
+            internal bool ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
 
             internal Rectangle Bounds => _formCommit.Bounds;
 

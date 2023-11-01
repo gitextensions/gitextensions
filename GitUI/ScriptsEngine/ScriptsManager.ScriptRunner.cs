@@ -16,7 +16,7 @@ namespace GitUI.ScriptsEngine
             private const string PluginPrefix = "plugin:";
             private const string NavigateToPrefix = "navigateTo:";
 
-            public static CommandStatus RunScript<THostForm>(ScriptInfo script, THostForm form, RevisionGridControl? revisionGrid)
+            public static bool RunScript<THostForm>(ScriptInfo script, THostForm form, RevisionGridControl? revisionGrid)
                 where THostForm : IGitModuleForm, IWin32Window
             {
                 try
@@ -29,7 +29,7 @@ namespace GitUI.ScriptsEngine
                 }
             }
 
-            private static CommandStatus RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
+            private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
             {
                 if (string.IsNullOrEmpty(script.Command))
                 {
@@ -72,8 +72,8 @@ namespace GitUI.ScriptsEngine
                     PowerShellHelper.RunPowerShell(command, argument, uiCommands.GitModule.WorkingDir, script.RunInBackground);
 
                     // 'RunPowerShell' always runs the script detached (yet).
-                    // Hence currently, it does not make sense to set 'needsGridRefresh' to '!scriptInfo.RunInBackground'.
-                    return new CommandStatus(executed: true, needsGridRefresh: false);
+                    // Hence currently, it does not make sense to trigger the 'RepoChangedNotifier' if '!scriptInfo.RunInBackground'.
+                    return true;
                 }
 
                 if (command.StartsWith(PluginPrefix))
@@ -90,10 +90,9 @@ namespace GitUI.ScriptsEngine
                                 if (plugin.Execute(eventArgs))
                                 {
                                     uiCommands.RepoChangedNotifier.Notify();
-                                    return new CommandStatus(executed: true, needsGridRefresh: true);
                                 }
 
-                                return new CommandStatus(executed: true, needsGridRefresh: false);
+                                return true;
                             }
                         }
                     }
@@ -120,7 +119,7 @@ namespace GitUI.ScriptsEngine
                         }
                     }
 
-                    return new CommandStatus(executed: true, needsGridRefresh: false);
+                    return true;
                 }
 
                 if (!script.RunInBackground)
@@ -148,7 +147,7 @@ namespace GitUI.ScriptsEngine
                     }
                 }
 
-                return new CommandStatus(executed: true, needsGridRefresh: !script.RunInBackground);
+                return true;
             }
 
             private static string ExpandCommandVariables(string originalCommand, IGitModule module)
