@@ -132,14 +132,26 @@ namespace GitUI
 
             bool ExecuteScriptCommand()
             {
-                RevisionGridControl revisionGridControl = this as RevisionGridControl;
-                if (revisionGridControl is null)
+                IScriptHostControl? scriptHostControl = null;
+                for (Control control = this; control is not null; control = control.Parent)
                 {
-                    revisionGridControl = (FindForm() as GitModuleForm)?.RevisionGridControl;
+                    scriptHostControl = control as IScriptHostControl;
+                    if (scriptHostControl is not null)
+                    {
+                        break;
+                    }
+
+                    if (control is GitModuleForm gitModuleForm)
+                    {
+                        scriptHostControl = gitModuleForm.RevisionGridControl;
+                        break;
+                    }
                 }
 
+                scriptHostControl ??= new DefaultScriptHostControl(FindForm(), UICommands);
+
                 IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
-                return scriptsRunner.RunScript(command, FindForm() as GitModuleForm, revisionGridControl);
+                return scriptsRunner.RunScript(command, scriptHostControl);
             }
         }
 

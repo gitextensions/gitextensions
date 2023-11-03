@@ -38,7 +38,7 @@ namespace GitUI.LeftPanel
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
         private IRevisionGridInfo _revisionGridInfo;
-        private IRunScript _scriptRunner;
+        private IScriptHostControl _scriptHostControl;
 
         public RepoObjectsTree()
         {
@@ -221,13 +221,13 @@ namespace GitUI.LeftPanel
         }
 
         public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?> filterRevisionGridBySpaceSeparatedRefs,
-            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo, IRunScript scriptRunner)
+            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo, IScriptHostControl scriptHostControl)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
             _refsSource = refsSource;
             _revisionGridInfo = revisionGridInfo;
-            _scriptRunner = scriptRunner;
+            _scriptHostControl = scriptHostControl;
 
             // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
             // notifications for each Tree.

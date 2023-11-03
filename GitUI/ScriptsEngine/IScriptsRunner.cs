@@ -8,7 +8,6 @@ namespace GitUI.ScriptsEngine
         bool RunEventScripts<THostForm>(ScriptEvent scriptEvent, THostForm form)
             where THostForm : IGitModuleForm, IWin32Window;
 
-        bool RunScript<THostForm>(int scriptId, THostForm form, RevisionGridControl? revisionGrid = null)
-            where THostForm : IGitModuleForm, IWin32Window;
+        bool RunScript(int scriptId, IScriptHostControl scriptHostControl);
     }
 }

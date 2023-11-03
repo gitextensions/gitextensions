@@ -15,21 +15,21 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         /// <param name="contextMenu">The context menu to add user scripts to.</param>
         /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
-        /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
-        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Action<int> scriptInvoker, IServiceProvider serviceProvider)
+        /// <param name="scriptHostControl">UI control that provides parameters to the script, and may receive refresh and navigation events from it.</param>
+        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, IScriptHostControl scriptHostControl)
         {
             ArgumentNullException.ThrowIfNull(contextMenu);
             ArgumentNullException.ThrowIfNull(hostMenuItem);
-            ArgumentNullException.ThrowIfNull(scriptInvoker);
+            ArgumentNullException.ThrowIfNull(scriptHostControl);
 
             RemoveOwnScripts(contextMenu, hostMenuItem);
             int hostItemIndex = contextMenu.Items.IndexOf(hostMenuItem);
             int lastScriptItemIndex = hostItemIndex;
 
-            IScriptsManager scriptsManager = serviceProvider.GetRequiredService<IScriptsManager>();
+            IScriptsManager scriptsManager = scriptHostControl.UICommands.GetRequiredService<IScriptsManager>();
             IEnumerable<ScriptInfo> scripts = scriptsManager.GetScripts().Where(x => x.Enabled);
 
-            IHotkeySettingsLoader hotkeySettingsLoader = serviceProvider.GetRequiredService<IHotkeySettingsLoader>();
+            IHotkeySettingsLoader hotkeySettingsLoader = scriptHostControl.UICommands.GetRequiredService<IHotkeySettingsLoader>();
             IReadOnlyList<HotkeyCommand> hotkeys = hotkeySettingsLoader.LoadHotkeys(FormSettings.HotkeySettingsName);
 
             foreach (ScriptInfo script in scripts)
@@ -45,7 +45,8 @@ namespace GitUI.CommandsDialogs
                 item.Click += (s, e) =>
                 {
                     int scriptId = script.HotkeyCommandIdentifier;
-                    scriptInvoker(scriptId);
+                    IScriptsRunner scriptsRunner = scriptHostControl.UICommands.GetRequiredService<IScriptsRunner>();
+                    scriptsRunner.RunScript(scriptId, scriptHostControl);
                 };
 
                 if (script.AddToRevisionGridContextMenu)
