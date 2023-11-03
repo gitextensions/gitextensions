@@ -74,7 +74,7 @@ namespace GitUI.LeftPanel
                 string branch = RelatedBranch is null || !Control.ModifierKeys.HasFlag(Keys.Alt)
                     ? FullPath
                     : RelatedBranch;
-                UICommands.BrowseGoToRef(branch, showNoRevisionMsg: true, toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
+                UICommands.BrowseRepo?.GoToRef(branch, showNoRevisionMsg: true, toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
                 TreeViewNode.TreeView?.Focus();
             });
         }

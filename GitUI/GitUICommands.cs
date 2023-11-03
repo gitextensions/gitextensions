@@ -1898,21 +1898,6 @@ namespace GitUI
             InvokeEvent(owner, PostRegisterPlugin);
         }
 
-        public void BrowseGoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false)
-        {
-            BrowseRepo?.GoToRef(refName, showNoRevisionMsg, toggleSelection);
-        }
-
-        public void BrowseSetWorkingDir(string path, ObjectId? selectedId = null, ObjectId? firstId = null)
-        {
-            BrowseRepo?.SetWorkingDir(path, selectedId, firstId);
-        }
-
-        public IReadOnlyList<GitRevision>? GetSelectedRevisions()
-        {
-            return BrowseRepo?.GetSelectedRevisions();
-        }
-
         public IGitRemoteCommand CreateRemoteCommand()
         {
             return new GitRemoteCommand(this);
