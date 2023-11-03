@@ -81,7 +81,7 @@ namespace GitUI.ScriptsEngine
             return option.StartsWith("s");
         }
 
-        public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptHostControl? scriptHostControl)
+        public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptHostControl? scriptHostControl = null)
         {
             if (string.IsNullOrWhiteSpace(arguments))
             {
@@ -132,14 +132,14 @@ namespace GitUI.ScriptsEngine
                         if (string.IsNullOrEmpty(currentRemote))
                         {
                             currentRemote = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.BranchRemote,
-                                AskToSpecify(currentLocalBranches, scriptHostControl)));
+                                AskToSpecify(currentLocalBranches, uiCommands, owner)));
                         }
                     }
                 }
-                else if (selectedRevision is null && scriptHostControl is not null && DependsOnSelectedRevision(option))
+                else if (selectedRevision is null && uiCommands.BrowseRepo is not null && DependsOnSelectedRevision(option))
                 {
-                    allSelectedRevisions = scriptHostControl.GetSelectedRevisions() ?? Array.Empty<GitRevision>();
-                    selectedRevision = CalculateSelectedRevision(scriptHostControl, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
+                    allSelectedRevisions = uiCommands.BrowseRepo.GetSelectedRevisions();
+                    selectedRevision = CalculateSelectedRevision(uiCommands, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                     if (selectedRevision is null)
                     {
                         return (arguments: null, abort: true);
@@ -156,7 +156,7 @@ namespace GitUI.ScriptsEngine
             return (arguments, abort: false);
         }
 
-        private static string AskToSpecify(IEnumerable<IGitRef> options, IScriptHostControl? scriptHostControl)
+        private static string AskToSpecify(IEnumerable<IGitRef> options, IGitUICommands uiCommands, IWin32Window owner)
         {
             List<IGitRef> items = options.ToList();
             if (items.Count == 0)
@@ -165,26 +165,26 @@ namespace GitUI.ScriptsEngine
             }
 
             using FormQuickGitRefSelector f = new();
-            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new Point();
+            f.Location = uiCommands.BrowseRepo?.GetQuickItemSelectorLocation() ?? new Point();
             f.Init(FormQuickGitRefSelector.Action.Select, items);
-            f.ShowDialog();
+            f.ShowDialog(owner);
             return f.SelectedRef?.Name ?? "";
         }
 
-        private static string AskToSpecify(IEnumerable<string> options, IScriptHostControl? scriptHostControl)
+        private static string AskToSpecify(IEnumerable<string> options, IGitUICommands uiCommands, IWin32Window owner)
         {
             using FormQuickStringSelector f = new();
-            f.Location = scriptHostControl?.GetQuickItemSelectorLocation() ?? new Point();
+            f.Location = uiCommands.BrowseRepo?.GetQuickItemSelectorLocation() ?? new Point();
             f.Init(options.ToList());
-            f.ShowDialog();
+            f.ShowDialog(owner);
             return f.SelectedString ?? "";
         }
 
-        private static GitRevision? CalculateSelectedRevision(IScriptHostControl? scriptHostControl, List<IGitRef> selectedRemoteBranches,
+        private static GitRevision? CalculateSelectedRevision(IGitUICommands uiCommands, List<IGitRef> selectedRemoteBranches,
             List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
             List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
-            GitRevision? selectedRevision = scriptHostControl?.GetLatestSelectedRevision();
+            GitRevision? selectedRevision = uiCommands.BrowseRepo?.GetLatestSelectedRevision();
             if (selectedRevision is null)
             {
                 return null;
@@ -501,28 +501,28 @@ namespace GitUI.ScriptsEngine
 
             static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
 
-            string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, scriptHostControl);
+            string SelectOneRef(IList<IGitRef> refs) => ScriptOptionsParser.SelectOne(refs, uiCommands, owner);
 
-            string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, scriptHostControl);
+            string SelectOneString(IList<string> strings) => ScriptOptionsParser.SelectOne(strings, uiCommands, owner);
         }
 
-        private static string SelectOne(IList<IGitRef> refs, IScriptHostControl? scriptHostControl)
+        private static string SelectOne(IList<IGitRef> refs, IGitUICommands uiCommands, IWin32Window owner)
         {
             return refs.Count switch
             {
                 0 => string.Empty,
                 1 => refs[0].Name,
-                _ => AskToSpecify(refs, scriptHostControl)
+                _ => AskToSpecify(refs, uiCommands, owner)
             };
         }
 
-        private static string SelectOne(IList<string> strings, IScriptHostControl? scriptHostControl)
+        private static string SelectOne(IList<string> strings, IGitUICommands uiCommands, IWin32Window owner)
         {
             return strings.Count switch
             {
                 0 => string.Empty,
                 1 => strings[0],
-                _ => AskToSpecify(strings, scriptHostControl)
+                _ => AskToSpecify(strings, uiCommands, owner)
             };
         }
 
@@ -553,7 +553,7 @@ namespace GitUI.ScriptsEngine
                 List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
                 => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, loadBody);
 
-            public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptHostControl scriptHostControl,
+            public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptHostControl? scriptHostControl,
                 IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
                 List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision,
                 List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches,

@@ -16,12 +16,12 @@ namespace GitUI.ScriptsEngine
             private const string PluginPrefix = "plugin:";
             private const string NavigateToPrefix = "navigateTo:";
 
-            public static bool RunScript<THostForm>(ScriptInfo script, THostForm form, RevisionGridControl? revisionGrid)
+            public static bool RunScript<THostForm>(ScriptInfo script, THostForm form, IScriptHostControl? scriptHostControl = null)
                 where THostForm : IGitModuleForm, IWin32Window
             {
                 try
                 {
-                    return RunScriptInternal(script, form, form.UICommands, revisionGrid);
+                    return RunScriptInternal(script, form, form.UICommands, scriptHostControl);
                 }
                 catch (ExternalOperationException ex) when (ex is not UserExternalOperationException)
                 {
@@ -29,7 +29,7 @@ namespace GitUI.ScriptsEngine
                 }
             }
 
-            private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
+            private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptHostControl? scriptHostControl)
             {
                 if (string.IsNullOrEmpty(script.Command))
                 {
@@ -37,7 +37,7 @@ namespace GitUI.ScriptsEngine
                 }
 
                 string? arguments = script.Arguments;
-                if (!string.IsNullOrEmpty(arguments) && revisionGrid is null)
+                if (!string.IsNullOrEmpty(arguments) && uiCommands.BrowseRepo is null)
                 {
                     string? optionDependingOnSelectedRevision
                         = ScriptOptionsParser.Options.FirstOrDefault(option => ScriptOptionsParser.DependsOnSelectedRevision(option)
@@ -57,7 +57,7 @@ namespace GitUI.ScriptsEngine
                 }
 
                 string? originalCommand = script.Command;
-                (string? argument, bool abort) = ScriptOptionsParser.Parse(script.Arguments, uiCommands, owner, revisionGrid);
+                (string? argument, bool abort) = ScriptOptionsParser.Parse(script.Arguments, uiCommands, owner, scriptHostControl);
                 if (abort)
                 {
                     throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.Name}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",
@@ -102,7 +102,7 @@ namespace GitUI.ScriptsEngine
 
                 if (command.StartsWith(NavigateToPrefix))
                 {
-                    if (revisionGrid is null)
+                    if (uiCommands.BrowseRepo is null)
                     {
                         return false;
                     }
@@ -115,7 +115,7 @@ namespace GitUI.ScriptsEngine
 
                         if (revisionRef is not null)
                         {
-                            revisionGrid.GoToRef(revisionRef, true);
+                            uiCommands.BrowseRepo.GoToRef(revisionRef, true);
                         }
                     }
 

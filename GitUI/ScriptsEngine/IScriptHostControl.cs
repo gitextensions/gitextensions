@@ -1,11 +1,5 @@
-﻿using GitUIPluginInterfaces;
+﻿namespace GitUI.ScriptsEngine;
 
-namespace GitUI.ScriptsEngine
+public interface IScriptHostControl
 {
-    public interface IScriptHostControl
-    {
-        GitRevision? GetLatestSelectedRevision();
-        IReadOnlyList<GitRevision> GetSelectedRevisions();
-        Point GetQuickItemSelectorLocation();
-    }
 }

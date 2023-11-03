@@ -181,11 +181,13 @@ namespace GitUITests.Script
                 Subject = Subject,
                 Body = $"{Subject}\n\nline3"
             };
-            _scriptHostControl.GetLatestSelectedRevision().Returns(x => revision);
+            IBrowseRepo browseRepo = Substitute.For<IBrowseRepo>();
+            browseRepo.GetLatestSelectedRevision().Returns(x => revision);
+            _commands.BrowseRepo.Returns(browseRepo);
 
             string expectedMessage = $"{Subject}\\n\\nline3";
 
-            (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{sSubject}} {{sMessage}}", _commands, owner: null, _scriptHostControl);
+            (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{sSubject}} {{sMessage}}", _commands, owner: null, scriptHostControl: null);
 
             result.arguments.Should().Be($"echo \"{revision.Subject}\" \"{expectedMessage}\"");
             result.abort.Should().Be(false);
@@ -339,8 +341,6 @@ namespace GitUITests.Script
 
             ServiceContainer serviceContainer = new();
             serviceContainer.AddService(repositoryDescriptionProvider);
-
-            _scriptHostControl = Substitute.For<IScriptHostControl>();
 
             _commands = new GitUICommands(serviceContainer, new GitModule(""));
 

@@ -12,14 +12,16 @@ namespace GitUIPluginInterfaces
         event EventHandler<GitUIEventArgs> PostRegisterPlugin;
         event EventHandler<GitUIEventArgs> PreCommit;
 
-        IGitModule GitModule { get; }
+        public IBrowseRepo? BrowseRepo { get; set; }
 
-        IGitRemoteCommand CreateRemoteCommand();
+        IGitModule GitModule { get; }
 
         /// <summary>
         /// RepoChangedNotifier.Notify() should be called after each action that changes repo state
         /// </summary>
         ILockableNotifier RepoChangedNotifier { get; }
+
+        IGitRemoteCommand CreateRemoteCommand();
 
         bool StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments);
         bool StartCommandLineProcessDialog(IWin32Window? owner, IGitCommand command);
