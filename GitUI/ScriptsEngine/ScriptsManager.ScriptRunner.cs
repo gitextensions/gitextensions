@@ -124,7 +124,8 @@ namespace GitUI.ScriptsEngine
 
                 if (!script.RunInBackground)
                 {
-                    bool success = FormProcess.ShowDialog(owner, commands: null, argument, uiCommands.GitModule.WorkingDir, null, true, process: command);
+                    // TODO: Remove downcast from IGitUICommands to GitUICommands after https://github.com/gitextensions/gitextensions/pull/11269
+                    bool success = FormProcess.ShowDialog(owner, uiCommands as GitUICommands, argument, uiCommands.GitModule.WorkingDir, null, true, process: command);
                     if (!success)
                     {
                         return false;

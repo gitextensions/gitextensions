@@ -13,9 +13,11 @@ namespace GitUI.HelperDialogs
         private protected Action<FormStatus>? ProcessCallback;
         private protected Action<FormStatus>? AbortCallback;
 
-        public FormStatus(GitUICommands? commands, ConsoleOutputControl? consoleOutput, bool useDialogSettings)
+        public FormStatus(GitUICommands commands, ConsoleOutputControl? consoleOutput, bool useDialogSettings)
             : base(commands, enablePositionRestore: true)
         {
+            ArgumentNullException.ThrowIfNull(commands);
+
             _useDialogSettings = useDialogSettings;
 
             ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
