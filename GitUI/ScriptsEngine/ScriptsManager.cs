@@ -57,7 +57,7 @@ namespace GitUI.ScriptsEngine
         {
             foreach (ScriptInfo script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                bool executed = ScriptRunner.RunScript(script, form, revisionGrid: null);
+                bool executed = ScriptRunner.RunScript(script, form);
                 if (!executed)
                 {
                     return false;
@@ -67,7 +67,7 @@ namespace GitUI.ScriptsEngine
             return true;
         }
 
-        public bool RunScript<THostForm>(int scriptId, THostForm form, RevisionGridControl? revisionGrid = null)
+        public bool RunScript<THostForm>(int scriptId, THostForm form, IScriptHostControl? scriptHostControl = null)
             where THostForm : IGitModuleForm, IWin32Window
         {
             ScriptInfo? scriptInfo = GetScript(scriptId);
@@ -77,7 +77,7 @@ namespace GitUI.ScriptsEngine
                     new ExternalOperationException(workingDirectory: form.UICommands.GitModule.WorkingDir));
             }
 
-            return ScriptRunner.RunScript(scriptInfo, form, revisionGrid);
+            return ScriptRunner.RunScript(scriptInfo, form, scriptHostControl);
         }
 
         public string? SerializeIntoXml()

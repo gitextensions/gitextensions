@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
 
         private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
-        public override RevisionGridControl RevisionGridControl { get => RevisionGrid; }
+        public RevisionGridControl RevisionGridControl => RevisionGrid;
 
         /// <summary>
         /// Open Browse - main GUI including dashboard.
@@ -676,18 +676,10 @@ namespace GitUI.CommandsDialogs
 
         #region IBrowseRepo
 
-        public void GoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false)
-        {
-            using (WaitCursorScope.Enter())
-            {
-                RevisionGrid.GoToRef(refName, showNoRevisionMsg, toggleSelection);
-            }
-        }
-
-        public IReadOnlyList<GitRevision> GetSelectedRevisions()
-        {
-            return RevisionGrid.GetSelectedRevisions();
-        }
+        public GitRevision? GetLatestSelectedRevision() => RevisionGrid.LatestSelectedRevision;
+        public IReadOnlyList<GitRevision> GetSelectedRevisions() => RevisionGrid.GetSelectedRevisions();
+        public Point GetQuickItemSelectorLocation() => RevisionGrid.GetQuickItemSelectorLocation();
+        public void GoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false) => RevisionGrid.GoToRef(refName, showNoRevisionMsg, toggleSelection);
 
         #endregion
 
@@ -1013,7 +1005,7 @@ namespace GitUI.CommandsDialogs
                         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
                     };
 
-                    button.Click += (s, e) => ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, this, RevisionGrid);
+                    button.Click += (s, e) => ScriptsRunner.RunScript(script.HotkeyCommandIdentifier, this, scriptHostControl: null);
 
                     // add to toolstrip
                     ToolStripScripts.Items.Add(button);

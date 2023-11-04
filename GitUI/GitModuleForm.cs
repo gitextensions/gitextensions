@@ -25,8 +25,6 @@ namespace GitUI
         /// </summary>
         internal static bool IsUnitTestActive { get; set; }
 
-        public virtual RevisionGridControl? RevisionGridControl { get; }
-
         public IHotkeySettingsLoader HotkeySettingsReader
         {
             get => _hotkeySettingsLoader ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
@@ -105,7 +103,7 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int command)
         {
-            return ScriptsRunner.RunScript(command, this, RevisionGridControl)
+            return ScriptsRunner.RunScript(command, this)
                 || base.ExecuteCommand(command);
         }
 

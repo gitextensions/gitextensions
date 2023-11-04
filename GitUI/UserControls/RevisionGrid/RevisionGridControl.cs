@@ -52,7 +52,7 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript, IRevisionGridFilter, IRevisionGridInfo, IRevisionGridUpdate
+    public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRunScript, IRevisionGridFilter, IRevisionGridInfo, IRevisionGridUpdate
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
         public event EventHandler<FilterChangedEventArgs>? FilterChanged;
@@ -3090,19 +3090,6 @@ namespace GitUI
 
         #endregion
 
-        #region IScriptHostControl
-
-        GitRevision? IScriptHostControl.GetLatestSelectedRevision()
-            => LatestSelectedRevision;
-
-        IReadOnlyList<GitRevision> IScriptHostControl.GetSelectedRevisions()
-            => GetSelectedRevisions();
-
-        Point IScriptHostControl.GetQuickItemSelectorLocation()
-            => GetQuickItemSelectorLocation();
-
-        #endregion
-
         #region IRevisionGridInfo
 
         IReadOnlyList<GitRevision> IRevisionGridInfo.GetSelectedRevisions()
@@ -3120,7 +3107,7 @@ namespace GitUI
         void IRunScript.Execute(int scriptId)
         {
             IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
-            scriptsRunner.RunScript(scriptId, FindForm() as GitModuleForm, this);
+            scriptsRunner.RunScript(scriptId, FindForm() as GitModuleForm);
         }
 
         internal TestAccessor GetTestAccessor()
