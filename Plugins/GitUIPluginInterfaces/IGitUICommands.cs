@@ -12,7 +12,7 @@ namespace GitUIPluginInterfaces
         event EventHandler<GitUIEventArgs> PostRegisterPlugin;
         event EventHandler<GitUIEventArgs> PreCommit;
 
-        public IBrowseRepo? BrowseRepo { get; set; }
+        IBrowseRepo? BrowseRepo { get; set; }
 
         IGitModule GitModule { get; }
 
