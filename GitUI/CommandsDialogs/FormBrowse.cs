@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
 
         private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
-        public override RevisionGridControl RevisionGridControl { get => RevisionGrid; }
+        public RevisionGridControl RevisionGridControl => RevisionGrid;
 
         /// <summary>
         /// Open Browse - main GUI including dashboard.

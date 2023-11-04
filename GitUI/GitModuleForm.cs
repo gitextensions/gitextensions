@@ -25,8 +25,6 @@ namespace GitUI
         /// </summary>
         internal static bool IsUnitTestActive { get; set; }
 
-        public virtual RevisionGridControl? RevisionGridControl { get; }
-
         public IHotkeySettingsLoader HotkeySettingsReader
         {
             get => _hotkeySettingsLoader ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");

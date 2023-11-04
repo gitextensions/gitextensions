@@ -239,12 +239,12 @@ namespace GitUI.UserControls
             switch (_action)
             {
                 case GitAction.Bisect:
-                    if (Form is not FormBrowse || Form.RevisionGridControl is null)
+                    if (Form is not FormBrowse formBrowse)
                     {
                         return;
                     }
 
-                    using (FormBisect frm = new(Form.RevisionGridControl))
+                    using (FormBisect frm = new(formBrowse.RevisionGridControl))
                     {
                         frm.ShowDialog(this);
                     }
