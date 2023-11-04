@@ -124,7 +124,7 @@ namespace GitUI.ScriptsEngine
 
                 if (!script.RunInBackground)
                 {
-                    bool success = FormProcess.ShowDialog(owner, commands: null, argument, uiCommands.GitModule.WorkingDir, null, true, process: command);
+                    bool success = FormProcess.ShowDialog(owner, uiCommands as GitUICommands, argument, uiCommands.GitModule.WorkingDir, null, true, process: command);
                     if (!success)
                     {
                         return false;
