@@ -19,6 +19,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         internal const int MaxLanes = 40;
         private const int _straightenLanesLookAhead = 20;
 
+        internal RevisionGraphConfig Config { get; private set; } = new();
+
         /// <summary>
         /// GitRevision which can be displayed.
         /// This information is added from the update thread but can be accessed by multiple threads.
@@ -85,6 +87,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _orderedNodesCacheInvalid = true;
             _orderedRowCache = ImmutableArray<RevisionGraphRow>.Empty;
             _orderedRowCacheInvalid = false;
+            Config = new();
         }
 
         public void LoadingCompleted()
@@ -511,7 +514,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     }
                 }
 
-                localOrderedRowCache.Add(new RevisionGraphRow(revision, segments, previousRevisionGraphRow));
+                localOrderedRowCache.Add(new RevisionGraphRow(revision, segments, previousRevisionGraphRow, Config.MergeGraphLanesHavingCommonParent));
             }
 
             // Straightening does not apply to the first and the last row. The single node there shall not be moved.

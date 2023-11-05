@@ -185,7 +185,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 void DrawItem(int index)
                 {
-                    GraphRenderer.DrawItem(_graphCache.GraphBitmapGraphics, index, width, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
+                    GraphRenderer.DrawItem(_revisionGraph.Config, _graphCache.GraphBitmapGraphics, index, width, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
                 }
             }
         }

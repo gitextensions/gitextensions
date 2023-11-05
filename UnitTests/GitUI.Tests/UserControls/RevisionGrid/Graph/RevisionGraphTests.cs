@@ -1,4 +1,5 @@
-﻿using GitUI.UserControls.RevisionGrid.Graph;
+﻿using GitCommands;
+using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 
 namespace GitUITests.UserControls.RevisionGrid
@@ -11,6 +12,8 @@ namespace GitUITests.UserControls.RevisionGrid
         [SetUp]
         public void Setup()
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = true;
+
             _revisionGraph = new RevisionGraph();
 
             foreach (GitRevision revision in Revisions)

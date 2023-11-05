@@ -285,6 +285,8 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.UseSystemVisualStyle)], true, false, false);
                 yield return (properties[nameof(AppSettings.MulticolorBranches)], true, false, false);
                 yield return (properties[nameof(AppSettings.HighlightAuthoredRevisions)], true, false, false);
+                yield return (properties[nameof(AppSettings.FillRefLabels)], false, false, false);
+                yield return (properties[nameof(AppSettings.MergeGraphLanesHavingCommonParent)], true, false, true);
                 yield return (properties[nameof(AppSettings.LastFormatPatchDir)], string.Empty, true, false);
                 yield return (properties[nameof(AppSettings.IgnoreWhitespaceKind)], IgnoreWhitespaceKind.None, false, false);
                 yield return (properties[nameof(AppSettings.RememberIgnoreWhiteSpacePreference)], true, false, false);

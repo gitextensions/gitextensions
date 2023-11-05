@@ -32,8 +32,10 @@ namespace GitCommands
 
         public static DistributedSettings SettingsContainer { get; private set; }
 
+        private static readonly SettingsPath AppearanceSettingsPath = new AppSettingsPath("Appearance");
         private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
+        private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
 
         private static Mutex _globalMutex;
 
@@ -1520,6 +1522,8 @@ namespace GitCommands
             set => SetBool("FillRefLabels", value);
         }
 
+        public static ISetting<bool> MergeGraphLanesHavingCommonParent { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(MergeGraphLanesHavingCommonParent), true);
+
         public static string LastFormatPatchDir
         {
             get => GetString("lastformatpatchdir", "");
@@ -2230,6 +2234,10 @@ namespace GitCommands
     public class AppSettingsPath : SettingsPath
     {
         public AppSettingsPath(string pathName) : base(null, pathName)
+        {
+        }
+
+        public AppSettingsPath(SettingsPath parent, string pathName) : base(null, parent.PathFor(pathName))
         {
         }
 

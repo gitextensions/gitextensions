@@ -4,16 +4,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 {
     internal ref struct SegmentRenderer
     {
-        private readonly Graphics _g;
-        private readonly Pen _pen;
+        private readonly Context _context;
 
-        private Point? _fromPoint;
+        private Point? _fromPoint = null;
 
-        public SegmentRenderer(Graphics g, Pen pen)
+        public SegmentRenderer(in Context context)
         {
-            _g = g;
-            _pen = pen;
-            _fromPoint = null;
+            _context = context;
         }
 
         public void DrawTo(Point toPoint)
@@ -25,7 +22,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
                     return;
                 }
 
-                DrawTo(_g, _pen, _fromPoint.Value, toPoint);
+                DrawTo(_context.Graphics, _context.Pen, _fromPoint.Value, toPoint);
             }
             finally
             {

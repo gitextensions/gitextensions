@@ -1,4 +1,5 @@
-﻿using GitCommands.Settings;
+﻿using GitCommands;
+using GitCommands.Settings;
 using GitUIPluginInterfaces.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -27,6 +28,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
+            chkMergeGraphLanesHavingCommonParent.Checked = AppSettings.MergeGraphLanesHavingCommonParent.Value;
+
             IDetailedSettings detailedSettings = GetCurrentSettings()
                 .Detailed();
 
@@ -43,6 +46,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = chkMergeGraphLanesHavingCommonParent.Checked;
+
             IDetailedSettings detailedSettings = GetCurrentSettings()
                 .Detailed();
 

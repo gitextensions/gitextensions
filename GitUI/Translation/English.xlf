@@ -1290,11 +1290,15 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target />
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
-        <source>Push window</source>
+        <source>&amp;Push window</source>
         <target />
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
+        <source>Merge graph lanes having common parent</source>
         <target />
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1305,8 +1309,12 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Use SSL/TLS</source>
         <target />
       </trans-unit>
+      <trans-unit id="gbRevisionGraph.Text">
+        <source>&amp;Revision graph</source>
+        <target />
+      </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
+        <source>&amp;Email settings for sending patches</source>
         <target />
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1318,7 +1326,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target />
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
-        <source>Merge window</source>
+        <source>&amp;Merge window</source>
         <target />
       </trans-unit>
     </body>

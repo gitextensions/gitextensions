@@ -32,6 +32,9 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             chkRemotesFromServer = new CheckBox();
             tableLayoutPanel2 = new TableLayoutPanel();
+            gbRevisionGraph = new GroupBox();
+            tlpnlRevisionGraph = new TableLayoutPanel();
+            chkMergeGraphLanesHavingCommonParent = new CheckBox();
             groupBoxEmailSettings = new GroupBox();
             tlpnlEmailSettings = new TableLayoutPanel();
             SmtpServer = new TextBox();
@@ -47,6 +50,8 @@
             PushWindowGB.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
+            gbRevisionGraph.SuspendLayout();
+            tlpnlRevisionGraph.SuspendLayout();
             groupBoxEmailSettings.SuspendLayout();
             tlpnlEmailSettings.SuspendLayout();
             mergeWindowGroup.SuspendLayout();
@@ -60,13 +65,13 @@
             PushWindowGB.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PushWindowGB.Controls.Add(tableLayoutPanel1);
             PushWindowGB.Dock = DockStyle.Fill;
-            PushWindowGB.Location = new Point(3, 3);
+            PushWindowGB.Location = new Point(3, 66);
             PushWindowGB.Name = "PushWindowGB";
             PushWindowGB.Padding = new Padding(8);
             PushWindowGB.Size = new Size(1480, 57);
-            PushWindowGB.TabIndex = 0;
+            PushWindowGB.TabIndex = 1;
             PushWindowGB.TabStop = false;
-            PushWindowGB.Text = "Push window";
+            PushWindowGB.Text = "&Push window";
             // 
             // tableLayoutPanel1
             // 
@@ -105,13 +110,15 @@
             tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.Controls.Add(groupBoxEmailSettings, 0, 2);
-            tableLayoutPanel2.Controls.Add(mergeWindowGroup, 0, 1);
-            tableLayoutPanel2.Controls.Add(PushWindowGB, 0, 0);
+            tableLayoutPanel2.Controls.Add(gbRevisionGraph, 0, 0);
+            tableLayoutPanel2.Controls.Add(groupBoxEmailSettings, 0, 3);
+            tableLayoutPanel2.Controls.Add(mergeWindowGroup, 0, 2);
+            tableLayoutPanel2.Controls.Add(PushWindowGB, 0, 1);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(8, 8);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 4;
+            tableLayoutPanel2.RowCount = 5;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
@@ -119,18 +126,61 @@
             tableLayoutPanel2.Size = new Size(1486, 670);
             tableLayoutPanel2.TabIndex = 0;
             // 
+            // gbRevisionGraph
+            // 
+            gbRevisionGraph.AutoSize = true;
+            gbRevisionGraph.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gbRevisionGraph.Controls.Add(tlpnlRevisionGraph);
+            gbRevisionGraph.Dock = DockStyle.Fill;
+            gbRevisionGraph.Location = new Point(3, 3);
+            gbRevisionGraph.Name = "gbRevisionGraph";
+            gbRevisionGraph.Padding = new Padding(8);
+            gbRevisionGraph.Size = new Size(1480, 57);
+            gbRevisionGraph.TabIndex = 0;
+            gbRevisionGraph.TabStop = false;
+            gbRevisionGraph.Text = "&Revision graph";
+            // 
+            // tlpnlRevisionGraph
+            // 
+            tlpnlRevisionGraph.AutoSize = true;
+            tlpnlRevisionGraph.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlRevisionGraph.ColumnCount = 3;
+            tlpnlRevisionGraph.ColumnStyles.Add(new ColumnStyle());
+            tlpnlRevisionGraph.ColumnStyles.Add(new ColumnStyle());
+            tlpnlRevisionGraph.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpnlRevisionGraph.Controls.Add(chkMergeGraphLanesHavingCommonParent, 0, 0);
+            tlpnlRevisionGraph.Dock = DockStyle.Fill;
+            tlpnlRevisionGraph.Location = new Point(8, 24);
+            tlpnlRevisionGraph.Name = "tlpnlRevisionGraph";
+            tlpnlRevisionGraph.RowCount = 1;
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.Size = new Size(1464, 25);
+            tlpnlRevisionGraph.TabIndex = 0;
+            // 
+            // chkMergeGraphLanesHavingCommonParent
+            // 
+            chkMergeGraphLanesHavingCommonParent.AutoSize = true;
+            tlpnlRevisionGraph.SetColumnSpan(chkMergeGraphLanesHavingCommonParent, 2);
+            chkMergeGraphLanesHavingCommonParent.Dock = DockStyle.Fill;
+            chkMergeGraphLanesHavingCommonParent.Location = new Point(3, 3);
+            chkMergeGraphLanesHavingCommonParent.Name = "chkMergeGraphLanesHavingCommonParent";
+            chkMergeGraphLanesHavingCommonParent.Size = new Size(252, 19);
+            chkMergeGraphLanesHavingCommonParent.TabIndex = 0;
+            chkMergeGraphLanesHavingCommonParent.Text = "Merge graph lanes having common parent";
+            chkMergeGraphLanesHavingCommonParent.UseVisualStyleBackColor = true;
+            // 
             // groupBoxEmailSettings
             // 
             groupBoxEmailSettings.AutoSize = true;
             groupBoxEmailSettings.Controls.Add(tlpnlEmailSettings);
             groupBoxEmailSettings.Dock = DockStyle.Fill;
-            groupBoxEmailSettings.Location = new Point(3, 139);
+            groupBoxEmailSettings.Location = new Point(3, 202);
             groupBoxEmailSettings.Name = "groupBoxEmailSettings";
             groupBoxEmailSettings.Padding = new Padding(8);
             groupBoxEmailSettings.Size = new Size(1480, 115);
-            groupBoxEmailSettings.TabIndex = 2;
+            groupBoxEmailSettings.TabIndex = 3;
             groupBoxEmailSettings.TabStop = false;
-            groupBoxEmailSettings.Text = "Email settings for sending patches";
+            groupBoxEmailSettings.Text = "&Email settings for sending patches";
             // 
             // tlpnlEmailSettings
             // 
@@ -210,13 +260,13 @@
             mergeWindowGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             mergeWindowGroup.Controls.Add(tableLayoutPanel4);
             mergeWindowGroup.Dock = DockStyle.Top;
-            mergeWindowGroup.Location = new Point(3, 66);
+            mergeWindowGroup.Location = new Point(3, 129);
             mergeWindowGroup.Name = "mergeWindowGroup";
             mergeWindowGroup.Padding = new Padding(8);
             mergeWindowGroup.Size = new Size(1480, 67);
-            mergeWindowGroup.TabIndex = 1;
+            mergeWindowGroup.TabIndex = 2;
             mergeWindowGroup.TabStop = false;
-            mergeWindowGroup.Text = "Merge window";
+            mergeWindowGroup.Text = "&Merge window";
             // 
             // tableLayoutPanel4
             // 
@@ -278,6 +328,10 @@
             tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
+            gbRevisionGraph.ResumeLayout(false);
+            gbRevisionGraph.PerformLayout();
+            tlpnlRevisionGraph.ResumeLayout(false);
+            tlpnlRevisionGraph.PerformLayout();
             groupBoxEmailSettings.ResumeLayout(false);
             groupBoxEmailSettings.PerformLayout();
             tlpnlEmailSettings.ResumeLayout(false);
@@ -310,5 +364,8 @@
         private CheckBox chkUseSSL;
         private TextBox SmtpServerPort;
         private Label lblSmtpServerName;
+        private GroupBox gbRevisionGraph;
+        private TableLayoutPanel tlpnlRevisionGraph;
+        private CheckBox chkMergeGraphLanesHavingCommonParent;
     }
 }

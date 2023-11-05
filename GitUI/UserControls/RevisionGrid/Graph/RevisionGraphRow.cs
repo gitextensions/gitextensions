@@ -23,16 +23,19 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
-        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, RevisionGraphRow previousRow)
+        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, RevisionGraphRow previousRow, bool mergeGraphLanesHavingCommonParent)
         {
             Revision = revision;
             Segments = segments;
             _previousRow = previousRow;
+            _mergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
         }
 
         public RevisionGraphRevision Revision { get; }
 
         public IReadOnlyList<RevisionGraphSegment> Segments { get; }
+
+        private readonly bool _mergeGraphLanesHavingCommonParent;
 
         private readonly RevisionGraphRow _previousRow;
 
@@ -174,12 +177,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     // |       <-- processed row: merge into a singe lane to simplify graph
                     // |
                     // *
-                    foreach (KeyValuePair<RevisionGraphSegment, Lane> searchParent in _segmentLanes)
+                    if (_mergeGraphLanesHavingCommonParent)
                     {
-                        // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
-                        if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
+                        foreach (KeyValuePair<RevisionGraphSegment, Lane> searchParent in _segmentLanes)
                         {
-                            return new Lane(searchParent.Value.Index, GetSecondarySharingOfContinuedSegment());
+                            // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
+                            if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
+                            {
+                                return new Lane(searchParent.Value.Index, GetSecondarySharingOfContinuedSegment());
+                            }
                         }
                     }
 

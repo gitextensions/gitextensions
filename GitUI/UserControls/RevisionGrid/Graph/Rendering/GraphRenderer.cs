@@ -15,7 +15,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 
         private const int _noLane = -10;
 
-        public static void DrawItem(Graphics g, int index, int width, int rowHeight,
+        public static void DrawItem(RevisionGraphConfig config, Graphics g, int index, int width, int rowHeight,
             Func<int, IRevisionGraphRow?> getSegmentsForRow,
             RevisionGraphDrawStyle revisionGraphDrawStyle,
             ObjectId headId)
@@ -59,7 +59,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
                 foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
                 {
                     bool skipSecondarySharedSegments = revisionGraphDrawStyle is not (RevisionGraphDrawStyle.DrawNonRelativesGray or RevisionGraphDrawStyle.HighlightSelected);
-                    SegmentLanesInfo lanes = GetLanesInfo(revisionGraphSegment, previousRow, currentRow, nextRow, li => currentRowRevisionLaneInfo = li, skipSecondarySharedSegments);
+                    SegmentLanesInfo lanes = GetLanesInfo(revisionGraphSegment, previousRow, currentRow, nextRow, skipSecondarySharedSegments, config.MergeGraphLanesHavingCommonParent,
+                        setLaneInfo: li => currentRowRevisionLaneInfo = li);
                     if (!lanes.DrawFromStart && !lanes.DrawToEnd)
                     {
                         continue;
@@ -72,7 +73,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 
                     Brush laneBrush = GetBrushForLaneInfo(revisionGraphSegment.LaneInfo, revisionGraphSegment.Child.IsRelative, revisionGraphDrawStyle);
                     using Pen lanePen = new(laneBrush, LaneLineWidth);
-                    SegmentRenderer segmentRenderer = new(g, lanePen);
+                    SegmentRenderer segmentRenderer = new(new Context(config, g, lanePen));
 
                     DrawSegment(segmentRenderer, p, lanes);
                 }
@@ -119,12 +120,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
             }
         }
 
-        private static SegmentLanesInfo GetLanesInfo(RevisionGraphSegment revisionGraphSegment,
-            IRevisionGraphRow? previousRow,
-            IRevisionGraphRow currentRow,
-            IRevisionGraphRow? nextRow,
-            Action<LaneInfo?>? setLaneInfo,
-            bool skipSecondarySharedSegments)
+        private static SegmentLanesInfo GetLanesInfo(in RevisionGraphSegment revisionGraphSegment,
+            in IRevisionGraphRow? previousRow,
+            in IRevisionGraphRow currentRow,
+            in IRevisionGraphRow? nextRow,
+            in bool skipSecondarySharedSegments,
+            in bool mergeGraphLanesHavingCommonParent,
+            in Action<LaneInfo?>? setLaneInfo)
         {
             Lane currentLane = currentRow.GetLaneForSegment(revisionGraphSegment);
 
@@ -164,7 +166,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
             switch (currentLane.Sharing)
             {
                 case LaneSharing.DifferentStart:
-                    if (AppSettings.ShowRevisionGridGraphColumn)
+                    if (mergeGraphLanesHavingCommonParent)
                     {
                         if (skipSecondarySharedSegments)
                         {
