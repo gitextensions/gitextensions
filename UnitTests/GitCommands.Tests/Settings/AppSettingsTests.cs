@@ -175,6 +175,8 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, true);
                 yield return (properties[nameof(AppSettings.ConEmuStyle)], "<Solarized Light>", true, true);
                 yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", true, true);
+                yield return (properties[nameof(AppSettings.UseBrowseForFileHistory)], true, false, true);
+                yield return (properties[nameof(AppSettings.UseDiffViewerForBlame)], false, false, true);
                 yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, true);
 
                 yield return (properties[nameof(AppSettings.ShowSplitViewLayout)], true, false, false);
@@ -229,6 +231,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.AlwaysShowAdvOpt)], false, false, false);
                 yield return (properties[nameof(AppSettings.DontConfirmAmend)], false, false, false);
                 yield return (properties[nameof(AppSettings.DontConfirmCommitIfNoBranch)], false, false, false);
+                yield return (properties[nameof(AppSettings.ConfirmBranchCheckout)], false, false, false);
                 yield return (properties[nameof(AppSettings.AutoPopStashAfterPull)], null, true, false);
                 yield return (properties[nameof(AppSettings.AutoPopStashAfterCheckoutBranch)], null, true, false);
                 yield return (properties[nameof(AppSettings.AutoPullOnPushRejectedAction)], null, true, false);

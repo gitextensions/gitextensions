@@ -449,12 +449,12 @@ namespace GitCommands
             set => SetBool("showresetallchanges", value);
         }
 
-        public static ISetting<bool> ShowConEmuTab => Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
-        public static ISetting<string> ConEmuStyle => Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
-        public static ISetting<string> ConEmuTerminal => Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
-        public static ISetting<bool> UseBrowseForFileHistory => Setting.Create(DetailedSettingsPath, nameof(UseBrowseForFileHistory), true);
-        public static ISetting<bool> UseDiffViewerForBlame => Setting.Create(DetailedSettingsPath, nameof(UseDiffViewerForBlame), false);
-        public static ISetting<bool> ShowGpgInformation => Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
+        public static ISetting<bool> ShowConEmuTab { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
+        public static ISetting<string> ConEmuStyle { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
+        public static ISetting<string> ConEmuTerminal { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
+        public static ISetting<bool> UseBrowseForFileHistory { get; } = Setting.Create(DetailedSettingsPath, nameof(UseBrowseForFileHistory), true);
+        public static ISetting<bool> UseDiffViewerForBlame { get; } = Setting.Create(DetailedSettingsPath, nameof(UseDiffViewerForBlame), false);
+        public static ISetting<bool> ShowGpgInformation { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
 
         public static CommitInfoPosition CommitInfoPosition
         {
@@ -1004,7 +1004,7 @@ namespace GitCommands
             set => SetBool("DontConfirmCommitIfNoBranch", value);
         }
 
-        public static readonly ISetting<bool> ConfirmBranchCheckout = Setting.Create(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), false);
+        public static ISetting<bool> ConfirmBranchCheckout { get; } = Setting.Create(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), false);
 
         public static bool? AutoPopStashAfterPull
         {
