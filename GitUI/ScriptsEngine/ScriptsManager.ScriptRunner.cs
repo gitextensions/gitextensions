@@ -4,7 +4,6 @@ using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.NBugReports;
 using GitUIPluginInterfaces;
-using ResourceManager;
 
 namespace GitUI.ScriptsEngine
 {
@@ -16,12 +15,11 @@ namespace GitUI.ScriptsEngine
             private const string PluginPrefix = "plugin:";
             private const string NavigateToPrefix = "navigateTo:";
 
-            public static bool RunScript<THostForm>(ScriptInfo script, THostForm form, IScriptHostControl? scriptHostControl = null)
-                where THostForm : IGitModuleForm, IWin32Window
+            public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptHostControl? scriptHostControl = null)
             {
                 try
                 {
-                    return RunScriptInternal(script, form, form.UICommands, scriptHostControl);
+                    return RunScriptInternal(script, owner, commands, scriptHostControl);
                 }
                 catch (ExternalOperationException ex) when (ex is not UserExternalOperationException)
                 {

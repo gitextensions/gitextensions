@@ -3,7 +3,6 @@ using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
 using FluentAssertions.Specialized;
-using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.NBugReports;
@@ -83,7 +82,7 @@ namespace GitExtensions.UITests.ScriptEngine
         {
             _exampleScript.Command = command;
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
 
             result.Should().BeFalse();
         }
@@ -94,7 +93,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "";
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
 
             result.Should().BeTrue();
         }
@@ -105,7 +104,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _exampleScript.Command = "{git}";
             _exampleScript.Arguments = "--version";
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
 
             result.Should().BeTrue();
         }
@@ -119,7 +118,7 @@ namespace GitExtensions.UITests.ScriptEngine
             GitRevision revision = new(ObjectId.IndexId);
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm);
+            bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
 
             result.Should().BeTrue();
         }

@@ -133,7 +133,7 @@ namespace GitUI
             bool ExecuteScriptCommand()
             {
                 IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
-                return scriptsRunner.RunScript(command, FindForm() as GitModuleForm, this as IScriptHostControl);
+                return scriptsRunner.RunScript(command, owner: this, UICommands, this as IScriptHostControl);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+﻿using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.ScriptsEngine
@@ -8,7 +8,6 @@ namespace GitUI.ScriptsEngine
         bool RunEventScripts<THostForm>(ScriptEvent scriptEvent, THostForm form)
             where THostForm : IGitModuleForm, IWin32Window;
 
-        bool RunScript<THostForm>(int scriptId, THostForm form, IScriptHostControl? scriptHostControl = null)
-            where THostForm : IGitModuleForm, IWin32Window;
+        bool RunScript(int scriptId, IWin32Window owner, IGitUICommands commands, IScriptHostControl? scriptHostControl = null);
     }
 }

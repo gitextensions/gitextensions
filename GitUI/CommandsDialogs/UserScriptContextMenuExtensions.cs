@@ -16,11 +16,13 @@ namespace GitUI.CommandsDialogs
         /// <param name="contextMenu">The context menu to add user scripts to.</param>
         /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
         /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
-        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Action<int> scriptInvoker, IServiceProvider serviceProvider)
+        /// <param name="serviceProvider">The DI service provider.</param>
+        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Func<int, bool> scriptInvoker, IServiceProvider serviceProvider)
         {
             ArgumentNullException.ThrowIfNull(contextMenu);
             ArgumentNullException.ThrowIfNull(hostMenuItem);
             ArgumentNullException.ThrowIfNull(scriptInvoker);
+            ArgumentNullException.ThrowIfNull(serviceProvider);
 
             RemoveOwnScripts(contextMenu, hostMenuItem);
             int hostItemIndex = contextMenu.Items.IndexOf(hostMenuItem);

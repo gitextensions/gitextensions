@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using GitCommands;
 using GitExtUtils;
 using GitUI.NBugReports;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.ScriptsEngine
@@ -57,7 +58,7 @@ namespace GitUI.ScriptsEngine
         {
             foreach (ScriptInfo script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                bool executed = ScriptRunner.RunScript(script, form);
+                bool executed = ScriptRunner.RunScript(script, owner: form, form.UICommands);
                 if (!executed)
                 {
                     return false;
@@ -67,17 +68,16 @@ namespace GitUI.ScriptsEngine
             return true;
         }
 
-        public bool RunScript<THostForm>(int scriptId, THostForm form, IScriptHostControl? scriptHostControl = null)
-            where THostForm : IGitModuleForm, IWin32Window
+        public bool RunScript(int scriptId, IWin32Window owner, IGitUICommands commands, IScriptHostControl? scriptHostControl = null)
         {
             ScriptInfo? scriptInfo = GetScript(scriptId);
             if (scriptInfo is null)
             {
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorCantFind}: '{scriptId}'",
-                    new ExternalOperationException(workingDirectory: form.UICommands.GitModule.WorkingDir));
+                    new ExternalOperationException(workingDirectory: commands.GitModule.WorkingDir));
             }
 
-            return ScriptRunner.RunScript(scriptInfo, form, scriptHostControl);
+            return ScriptRunner.RunScript(scriptInfo, owner, commands, scriptHostControl);
         }
 
         public string? SerializeIntoXml()

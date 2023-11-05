@@ -103,7 +103,7 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int command)
         {
-            return ScriptsRunner.RunScript(command, this)
+            return ScriptsRunner.RunScript(command, owner: this, UICommands)
                 || base.ExecuteCommand(command);
         }
 

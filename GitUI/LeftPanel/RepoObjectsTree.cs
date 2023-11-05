@@ -8,7 +8,6 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
-using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -38,7 +37,6 @@ namespace GitUI.LeftPanel
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
         private IRevisionGridInfo _revisionGridInfo;
-        private IRunScript _scriptRunner;
 
         public RepoObjectsTree()
         {
@@ -221,13 +219,12 @@ namespace GitUI.LeftPanel
         }
 
         public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?> filterRevisionGridBySpaceSeparatedRefs,
-            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo, IRunScript scriptRunner)
+            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
             _refsSource = refsSource;
             _revisionGridInfo = revisionGridInfo;
-            _scriptRunner = scriptRunner;
 
             // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
             // notifications for each Tree.

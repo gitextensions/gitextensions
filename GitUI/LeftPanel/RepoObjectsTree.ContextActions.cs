@@ -245,7 +245,7 @@ namespace GitUI.LeftPanel
 
             if (hasSingleSelection && selectedLocalBranch?.Visible == true)
             {
-                contextMenu.AddUserScripts(runScriptToolStripMenuItem, _scriptRunner.Execute, UICommands);
+                contextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, UICommands);
             }
             else
             {
