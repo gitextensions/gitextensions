@@ -20,6 +20,9 @@ namespace TeamCityIntegration.Settings
                 "(Should contain at least the \"buildTypeId\" parameter)");
         private readonly TranslationString _failToExtractDataFromClipboardCaption = new("Build url not valid");
 
+        [GeneratedRegex(@"(\?|\&)([^=]+)\=([^&]+)")]
+        private static partial Regex TeamcityBuildUrl();
+
         public TeamCitySettingsUserControl()
         {
             InitializeComponent();
@@ -105,7 +108,6 @@ namespace TeamCityIntegration.Settings
             buttonProjectChooser.Enabled = !string.IsNullOrWhiteSpace(TeamCityServerUrl.Text);
         }
 
-        private readonly Regex _teamcityBuildUrlParameters = new(@"(\?|\&)([^=]+)\=([^&]+)");
         private void lnkExtractDataFromBuildUrlCopiedInTheClipboard_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (Clipboard.ContainsText() && Clipboard.GetText().Contains("buildTypeId="))
@@ -115,7 +117,7 @@ namespace TeamCityIntegration.Settings
                 TeamCityServerUrl.Text = teamCityServerUrl;
                 _teamCityAdapter.InitializeHttpClient(teamCityServerUrl);
 
-                MatchCollection paramResults = _teamcityBuildUrlParameters.Matches(buildUri.Query);
+                MatchCollection paramResults = TeamcityBuildUrl().Matches(buildUri.Query);
                 foreach (Match paramResult in paramResults)
                 {
                     if (paramResult.Success)

@@ -11,18 +11,17 @@ namespace GitCommands.Git
         void ResetCache();
     }
 
-    public class AheadBehindDataProvider : IAheadBehindDataProvider
+    public partial class AheadBehindDataProvider : IAheadBehindDataProvider
     {
         private readonly Func<IExecutable> _getGitExecutable;
 
         // Parse info about remote branches, see below for explanation
         // This assumes that the Git output is not localised
-        private static readonly Regex _aheadBehindRegEx =
-            new(
-                @"^((?<gone_p>gone)|((ahead\s(?<ahead_p>\d+))?(,\s)?(behind\s(?<behind_p>\d+))?)|(?<unk_p>.*?))::
+        [GeneratedRegex(@"^((?<gone_p>gone)|((ahead\s(?<ahead_p>\d+))?(,\s)?(behind\s(?<behind_p>\d+))?)|(?<unk_p>.*?))::
                    ((?<gone_u>gone)|((ahead\s(?<ahead_u>\d+))?(,\s)?(behind\s(?<behind_u>\d+))?)|(?<unk_u>.*?))::
                    (?<remote_p>.*?)::(?<remote_u>.*?)::(?<branch>.*)$",
-                RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+                RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture)]
+        private static partial Regex AheadBehindRegex();
         private readonly string _refFormat = @"%(push:track,nobracket)::%(upstream:track,nobracket)::%(push)::%(upstream)::%(refname:short)";
         private Lazy<IDictionary<string, AheadBehindData>?> _lazyData;
         private string _branchName;
@@ -52,7 +51,7 @@ namespace GitCommands.Git
                 ResetCache();
             }
 
-            // Use Lazy<> to syncronize callers
+            // Use Lazy<> to synchronize callers
             _lazyData ??= new(() => GetData(null, branchName));
             _branchName = branchName;
             return _lazyData.Value;
@@ -83,7 +82,7 @@ namespace GitCommands.Git
                 return null;
             }
 
-            MatchCollection matches = _aheadBehindRegEx.Matches(result.StandardOutput);
+            MatchCollection matches = AheadBehindRegex().Matches(result.StandardOutput);
             Dictionary<string, AheadBehindData> aheadBehindForBranchesData = [];
             foreach (Match match in matches)
             {

@@ -4,9 +4,10 @@ using System.Text.RegularExpressions;
 namespace GitUIPluginInterfaces
 {
     /// <summary>Stored local modifications.</summary>
-    public sealed class GitStash
+    public sealed partial class GitStash
     {
-        private static readonly Regex _regex = new(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$", RegexOptions.Compiled);
+        [GeneratedRegex(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$")]
+        private static partial Regex StashRegex();
 
         public static bool TryParse(string s, [NotNullWhen(returnValue: true)] out GitStash? stash)
         {
@@ -14,7 +15,7 @@ namespace GitUIPluginInterfaces
             // "stash@{i}: On {branch}: {Message}"
             // "stash@{i}: autostash"
 
-            Match match = _regex.Match(s);
+            Match match = StashRegex().Match(s);
 
             if (!match.Success)
             {

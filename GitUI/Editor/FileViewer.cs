@@ -83,6 +83,9 @@ namespace GitUI.Editor
         private static string[] _combinedDiffPrefixes = { "+", "-", " +", " -" };
         private static string[] _normalDiffPrefixes = { "+", "-" };
 
+        [GeneratedRegex("warning: .*has type .* expected .*")]
+        private static partial Regex FileModeWarningRegex();
+
         public FileViewer()
         {
             TreatAllFilesAsText = false;
@@ -1645,8 +1648,7 @@ namespace GitUI.Editor
             if (EnvUtils.RunningOnWindows())
             {
                 // remove file mode warnings
-                Regex regEx = new("warning: .*has type .* expected .*");
-                output = output.RemoveLines(regEx.IsMatch);
+                output = output.RemoveLines(FileModeWarningRegex().IsMatch);
             }
 
             if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))

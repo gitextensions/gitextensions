@@ -16,8 +16,15 @@ namespace GitUI.CommandsDialogs
             Other
         }
 
-        private sealed class LostObject
+        private sealed partial class LostObject
         {
+            [GeneratedRegex(@"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$")]
+            private static partial Regex RawDataRegex();
+            [GeneratedRegex("^(?<author>[^\u001F]+)\u001F(?<subject>.*)\u001F(?<date>\\d+)\u001F(?<first_parent>[^ ]+)?( .+)?$", RegexOptions.Singleline)]
+            private static partial Regex LogRegex();
+            [GeneratedRegex(@"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n", RegexOptions.Multiline)]
+            private static partial Regex TagRegex();
+
             /// <summary>
             /// {0} - lost object's hash.
             /// %aN - committer name.
@@ -35,10 +42,6 @@ namespace GitUI.CommandsDialogs
                 "-p",
                 "{0}"
             };
-
-            private static readonly Regex RawDataRegex = new(@"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$", RegexOptions.Compiled);
-            private static readonly Regex LogRegex = new("^(?<author>[^\u001F]+)\u001F(?<subject>.*)\u001F(?<date>\\d+)\u001F(?<first_parent>[^ ]+)?( .+)?$", RegexOptions.Compiled | RegexOptions.Singleline);
-            private static readonly Regex TagRegex = new(@"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n", RegexOptions.Compiled | RegexOptions.Multiline);
 
             public LostObjectType ObjectType { get; }
 
@@ -81,7 +84,7 @@ namespace GitUI.CommandsDialogs
                     throw new ArgumentException("Raw source must be non-empty string", raw);
                 }
 
-                Match patternMatch = RawDataRegex.Match(raw);
+                Match patternMatch = RawDataRegex().Match(raw);
 
                 // show failed assertion for unsupported cases (for developers)
                 // if you get this message,
@@ -104,7 +107,7 @@ namespace GitUI.CommandsDialogs
                 if (objectType == LostObjectType.Commit)
                 {
                     string commitLog = GetLostCommitLog();
-                    Match logPatternMatch = LogRegex.Match(commitLog);
+                    Match logPatternMatch = LogRegex().Match(commitLog);
                     if (logPatternMatch.Success)
                     {
                         result.Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups["author"].Value);
@@ -120,7 +123,7 @@ namespace GitUI.CommandsDialogs
                 else if (objectType == LostObjectType.Tag)
                 {
                     string tagData = GetLostTagData();
-                    Match tagPatternMatch = TagRegex.Match(tagData);
+                    Match tagPatternMatch = TagRegex().Match(tagData);
                     if (tagPatternMatch.Success)
                     {
                         result.Parent = ObjectId.Parse(tagData, tagPatternMatch.Groups[1]);

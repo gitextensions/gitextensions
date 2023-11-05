@@ -40,6 +40,9 @@ Send report?");
         private string _exceptionInfo;
         private string? _environmentInfo;
 
+        [GeneratedRegex(@"\s|\r|\n")]
+        private static partial Regex WhitespaceRegex();
+
         static BugReportForm()
         {
             ErrorReportBodyBuilder = new ErrorReportUrlBuilder();
@@ -132,7 +135,7 @@ Send report?");
 
         private static bool CheckContainsInfo(string input)
         {
-            string text = Regex.Replace(input, @"\s*|\r|\n", string.Empty);
+            string text = WhitespaceRegex().Replace(input, string.Empty);
             return !string.IsNullOrWhiteSpace(text);
         }
 

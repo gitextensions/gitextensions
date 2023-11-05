@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace GitUI.Avatars
 {
-    public sealed class GithubAvatarProvider : IAvatarProvider
+    public sealed partial class GithubAvatarProvider : IAvatarProvider
     {
         /* A brief skim through the Git Extensions repo history shows GitHub emails with the following user names:
          *
@@ -17,10 +17,11 @@ namespace GitUI.Avatars
          * RaMMicHaeL
          * SamuelLongchamps
          */
-        private static readonly Regex _gitHubEmailRegex = new(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
         private readonly IAvatarDownloader _downloader;
         private readonly bool _onlySupplyNoReply;
+
+        [GeneratedRegex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.IgnoreCase)]
+        private static partial Regex GitHubEmailRegex();
 
         public GithubAvatarProvider([NotNull] IAvatarDownloader downloader, bool onlySupplyNoReply = false)
         {
@@ -59,7 +60,7 @@ namespace GitUI.Avatars
 
         private async Task<Uri?> BuildAvatarUriAsync(string email, int imageSize)
         {
-            Match match = _gitHubEmailRegex.Match(email);
+            Match match = GitHubEmailRegex().Match(email);
 
             if (match.Success)
             {

@@ -11,8 +11,11 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
     /// Helper class to decode HTML from the clipboard.
     /// See http://blogs.msdn.com/jmstall/archive/2007/01/21/html-clipboard.aspx for details.
     /// </summary>
-    internal class HtmlFragment
+    internal partial class HtmlFragment
     {
+        [GeneratedRegex(@"([a-zA-Z]+):(.+?)[\r\n]", RegexOptions.IgnoreCase)]
+        private static partial Regex HtmlRegex();
+
         #region Read and decode from clipboard
 
         /// <summary>
@@ -49,12 +52,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
             int startHtml = 0;
             int startFragment = 0;
 
-            Regex r = new(
-                "([a-zA-Z]+):(.+?)[\r\n]",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
-            Match m;
-            for (m = r.Match(rawClipboardText); m.Success; m = m.NextMatch())
+            for (Match m = HtmlRegex().Match(rawClipboardText); m.Success; m = m.NextMatch())
             {
                 string key = m.Groups[1].Value.ToLower();
                 string val = m.Groups[2].Value;
@@ -226,7 +224,6 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
 
             return dataObject;
         }
-
         #endregion
     }
 }

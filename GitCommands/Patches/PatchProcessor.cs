@@ -6,7 +6,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Patches
 {
-    public static class PatchProcessor
+    public static partial class PatchProcessor
     {
         private enum PatchProcessorState
         {
@@ -15,7 +15,14 @@ namespace GitCommands.Patches
             OutsidePatch
         }
 
-        private static readonly Regex _patchHeaderRegex = new("^diff --(?<type>git|cc|combined)\\s", RegexOptions.Compiled);
+        [GeneratedRegex(@"^diff --(?<type>git|cc|combined)\s")]
+        private static partial Regex PatchHeaderRegex();
+        [GeneratedRegex("^diff --git [\\\"]?[abiwco12]/(.*)[\\\"]? [\\\"]?[abiwco12]/(.*)[\\\"]?$")]
+        private static partial Regex DiffCommandRegex();
+        [GeneratedRegex("^diff --(cc|combined) [\\\"]?(?<filenamea>.*)[\\\"]?$")]
+        private static partial Regex CombinedDiffCommandRegex();
+        [GeneratedRegex("[-+]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?")]
+        private static partial Regex FileNameRegex();
 
         /// <summary>
         /// Parses a patch file into individual <see cref="Patch"/> objects.
@@ -66,7 +73,7 @@ namespace GitCommands.Patches
 
             string header = lines[lineIndex];
 
-            Match headerMatch = _patchHeaderRegex.Match(header);
+            Match headerMatch = PatchHeaderRegex().Match(header);
 
             if (!headerMatch.Success)
             {
@@ -85,7 +92,7 @@ namespace GitCommands.Patches
             {
                 // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
                 // diff --git b/Benchmarks/App.config a/Benchmarks/App.config
-                Match match = Regex.Match(header, "^diff --git [\\\"]?[abiwco12]/(.*)[\\\"]? [\\\"]?[abiwco12]/(.*)[\\\"]?$");
+                Match match = DiffCommandRegex().Match(header);
 
                 if (!match.Success)
                 {
@@ -97,7 +104,7 @@ namespace GitCommands.Patches
             }
             else
             {
-                Match match = Regex.Match(header, "^diff --(cc|combined) [\\\"]?(?<filenamea>.*)[\\\"]?$");
+                Match match = CombinedDiffCommandRegex().Match(header);
 
                 if (!match.Success)
                 {
@@ -211,7 +218,7 @@ namespace GitCommands.Patches
                 {
                     // old file name
                     line = GitModule.UnescapeOctalCodePoints(line);
-                    Match regexMatch = Regex.Match(line, "[-]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
+                    Match regexMatch = FileNameRegex().Match(line);
 
                     if (regexMatch.Success)
                     {
@@ -234,7 +241,7 @@ namespace GitCommands.Patches
                 {
                     // new file name
                     line = GitModule.UnescapeOctalCodePoints(line);
-                    Match regexMatch = Regex.Match(line, "[+]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
+                    Match regexMatch = FileNameRegex().Match(line);
 
                     if (regexMatch.Success)
                     {
@@ -300,7 +307,7 @@ namespace GitCommands.Patches
         [Pure]
         private static bool IsStartOfANewPatch(string input)
         {
-            return _patchHeaderRegex.IsMatch(input);
+            return PatchHeaderRegex().IsMatch(input);
         }
     }
 }

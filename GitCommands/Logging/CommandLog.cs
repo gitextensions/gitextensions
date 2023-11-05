@@ -64,8 +64,11 @@ namespace GitCommands.Logging
         }
     }
 
-    public sealed class CommandLogEntry
+    public sealed partial class CommandLogEntry
     {
+        [GeneratedRegex(@"((-c +[^ ]+)|(--no-optional-locks)) *")]
+        private static partial Regex GitArgumentsWithoutConfigurationRegex();
+
         public string FileName { get; }
         public string Arguments { get; }
         public string WorkingDir { get; }
@@ -94,17 +97,22 @@ namespace GitCommands.Logging
                     ? "running"
                     : $"{((TimeSpan)Duration).TotalMilliseconds:0,0} ms";
 
-                string fileName = FileName;
-                string arguments = Arguments;
-                if (fileName.StartsWith("wsl "))
+                string fileName;
+                string arguments;
+                if (FileName.StartsWith("wsl "))
                 {
                     fileName = "wsl";
-                    arguments = GitArgumentsWithoutConfigurationOptions;
+                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "");
                 }
-                else if (fileName.EndsWith("git.exe"))
+                else if (FileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
-                    arguments = GitArgumentsWithoutConfigurationOptions;
+                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "");
+                }
+                else
+                {
+                    fileName = FileName;
+                    arguments = Arguments;
                 }
 
                 string exit = ExitCode is not null ? $"{ExitCode}" : Exception is not null ? "exc" : string.Empty;
@@ -162,8 +170,6 @@ namespace GitCommands.Logging
                 return s.ToString();
             }
         }
-
-        public string GitArgumentsWithoutConfigurationOptions => Regex.Replace(Arguments, @"((-c +[^ ]+)|(--no-optional-locks)) *", "");
     }
 
     public static class CommandLog

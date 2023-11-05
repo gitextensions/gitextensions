@@ -4,12 +4,12 @@ using GitUIPluginInterfaces;
 
 namespace GitExtensions.Plugins.Bitbucket
 {
-    public class Settings
+    public partial class Settings
     {
-        private const string BitbucketHttpRegex =
-            @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([^\/]+?))\/(?<repo>(.*?)).git";
-        private const string BitbucketSshRegex =
-            @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([^\/]+))\/(?<repo>(.*?)).git";
+        [GeneratedRegex(@"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([^\/]+?))\/(?<repo>(.*?)).git")]
+        private static partial Regex BitbucketHttpRegex();
+        [GeneratedRegex(@"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([^\/]+))\/(?<repo>(.*?)).git")]
+        private static partial Regex BitbucketSshRegex();
 
         public static Settings? Parse(IGitModule module, ISettingsSource settings, BitbucketPlugin plugin)
         {
@@ -29,8 +29,8 @@ namespace GitExtensions.Plugins.Bitbucket
 
             foreach (string url in remotes)
             {
-                string pattern = url.Contains("http") ? BitbucketHttpRegex : BitbucketSshRegex;
-                Match match = Regex.Match(url, pattern);
+                Regex pattern = url.Contains("http") ? BitbucketHttpRegex() : BitbucketSshRegex();
+                Match match = pattern.Match(url);
                 if (match.Success && result.BitbucketUrl.Contains(match.Groups["url"].Value))
                 {
                     result.ProjectKey = match.Groups["project"].Value;

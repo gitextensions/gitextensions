@@ -509,11 +509,14 @@ namespace GitCommands.Patches
 
     internal delegate string? SubChunkToPatchFnc(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines);
 
-    internal sealed class Chunk
+    internal sealed partial class Chunk
     {
         private int _startLine;
         private readonly List<SubChunk> _subChunks = [];
         private SubChunk? _currentSubChunk;
+
+        [GeneratedRegex(@".*-(\d+),")]
+        private static partial Regex HeaderRegex();
 
         private SubChunk CurrentSubChunk
         {
@@ -571,7 +574,7 @@ namespace GitCommands.Patches
         /// </remarks>
         private void ParseHeader(string header)
         {
-            Match match = Regex.Match(header, @".*-(\d+),");
+            Match match = HeaderRegex().Match(header);
 
             if (match.Success)
             {

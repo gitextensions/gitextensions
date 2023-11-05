@@ -10,7 +10,7 @@ namespace GitUI.ScriptsEngine
     partial class ScriptsManager
     {
         /// <summary>Runs scripts.</summary>
-        internal static class ScriptRunner
+        internal static partial class ScriptRunner
         {
             private const string PluginPrefix = "plugin:";
             private const string NavigateToPrefix = "navigateTo:";
@@ -18,7 +18,10 @@ namespace GitUI.ScriptsEngine
             private const string userFiles = "UserFiles";
 
             // Regex that ensure that in the default value, there is the same number of '{' than '}' to find the right end of the default value expression.
-            private static readonly Regex userInputRegex = new(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}");
+            [GeneratedRegex(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}")]
+            private static partial Regex UserInputRegex();
+            [GeneratedRegex(@"\{plugin.(.+)\}", RegexOptions.IgnoreCase)]
+            private static partial Regex PluginRegex();
 
             public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
             {
@@ -38,7 +41,7 @@ namespace GitUI.ScriptsEngine
 
                 // Specific handling of "UserInput" because the value entered should replace only "UserInput" with same label
                 Match match;
-                while ((match = userInputRegex.Match(arguments)).Success)
+                while ((match = UserInputRegex().Match(arguments)).Success)
                 {
                     Group defaultValueMatch = match.Groups["defaultValue"];
                     (string? arguments, bool abort) defaultValue = defaultValueMatch is null
@@ -257,7 +260,7 @@ namespace GitUI.ScriptsEngine
                 }
 
                 // Prefix should be {plugin:pluginname},{plugin=pluginname}
-                Match match = Regex.Match(originalCommand, @"\{plugin.(.+)\}", RegexOptions.IgnoreCase);
+                Match match = PluginRegex().Match(originalCommand);
                 if (match.Success && match.Groups.Count > 1)
                 {
                     originalCommand = $"{PluginPrefix}{match.Groups[1].Value.ToLower()}";

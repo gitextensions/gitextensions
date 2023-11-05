@@ -4,7 +4,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
-    public sealed class FormContributors : GitExtensionsForm
+    public sealed partial class FormContributors : GitExtensionsForm
     {
         private readonly TranslationString _developers = new("Developers");
         private readonly TranslationString _translators = new("Translators");
@@ -12,6 +12,9 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         private readonly TranslationString _team = new("Team");
         private readonly TranslationString _contributors = new("Contributors");
         private readonly TranslationString _caption = new("The application would not be possible without...");
+
+        [GeneratedRegex(@"\r\n?|\n")]
+        private static partial Regex NewlineRegex();
 
         public FormContributors()
         {
@@ -34,12 +37,11 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
                     tabPages[i] = GetNewTabPage(textBoxes[i], tabCaptions[i]);
                 }
 
-                const string NEWLINES = @"\r\n?|\n";
                 textBoxes[0].Text = string.Format("{0}:\r\n{1}\r\n\r\n{2}:\r\n{3}",
-                    _team.Text, Regex.Replace(Resources.Team, NEWLINES, " "),
-                    _contributors.Text, Regex.Replace(Resources.Coders, NEWLINES, " "));
-                textBoxes[1].Text = Regex.Replace(Resources.Translators, NEWLINES, " ");
-                textBoxes[2].Text = Regex.Replace(Resources.Designers, NEWLINES, " ");
+                    _team.Text, NewlineRegex().Replace(Resources.Team, " "),
+                    _contributors.Text, NewlineRegex().Replace(Resources.Coders, " "));
+                textBoxes[1].Text = NewlineRegex().Replace(Resources.Translators, " ");
+                textBoxes[2].Text = NewlineRegex().Replace(Resources.Designers, " ");
 
                 Controls.Add(tabControl);
 

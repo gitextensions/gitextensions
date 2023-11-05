@@ -21,10 +21,13 @@ namespace NetSpell.SpellChecker.Dictionary
     /// The WordDictionary class contains all the logic for managing the word list.
     /// </summary>
     [ToolboxBitmap(typeof(WordDictionary), "Dictionary.bmp")]
-    public class WordDictionary : Component
+    public partial class WordDictionary : Component
     {
         private string _dictionaryFile = Thread.CurrentThread.CurrentCulture.Name + ".dic";
         private Container _components;
+
+        [GeneratedRegex(@"[^\s]+")]
+        private static partial Regex SpaceRegex();
 
         /// <summary>
         ///     Initializes a new instance of the class
@@ -375,7 +378,7 @@ namespace NetSpell.SpellChecker.Dictionary
             TryCharacters = "";
 
             // the following is used to split a line by white space
-            Regex spaceRegex = new(@"[^\s]+", RegexOptions.Compiled);
+            Regex spaceRegex = SpaceRegex();
 
             string currentSection = "";
             AffixRule currentRule = null;

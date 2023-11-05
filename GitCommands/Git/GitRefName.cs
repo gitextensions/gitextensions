@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 using GitExtUtils;
@@ -7,10 +6,12 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public static class GitRefName
+    public static partial class GitRefName
     {
-        private static readonly Regex _remoteHeadRegex = new("^refs/remotes/[^/]+/HEAD$", RegexOptions.Compiled);
-        private static readonly Regex _remoteNameRegex = new("^refs/remotes/([^/]+)", RegexOptions.Compiled);
+        [GeneratedRegex(@"^refs/remotes/[^/]+/HEAD$")]
+        private static partial Regex RemoteHeadRegex();
+        [GeneratedRegex(@"^refs/remotes/([^/]+)")]
+        private static partial Regex RemoteNameRegex();
 
         /// <summary>"refs/tags/".</summary>
         public static string RefsTagsPrefix { get; } = "refs/tags/";
@@ -42,7 +43,7 @@ namespace GitCommands
         [Pure]
         public static string GetRemoteName(string refName)
         {
-            Match match = _remoteNameRegex.Match(refName);
+            Match match = RemoteNameRegex().Match(refName);
 
             if (match.Success)
             {
@@ -111,7 +112,7 @@ namespace GitCommands
 
             // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
             // NOTE: We can use `String.IsNullOrEmpty(Module.RevParse(srcRev))` instead
-            if (GitRevision.Sha1HashRegex.IsMatch(branch))
+            if (GitRevision.Sha1HashRegex().IsMatch(branch))
             {
                 return branch;
             }
@@ -122,7 +123,7 @@ namespace GitCommands
         [Pure]
         public static bool IsRemoteHead(string refName)
         {
-            return _remoteHeadRegex.IsMatch(refName);
+            return RemoteHeadRegex().IsMatch(refName);
         }
     }
 }

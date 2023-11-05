@@ -13,7 +13,7 @@ using Microsoft.Win32;
 
 namespace GitCommands
 {
-    public static class AppSettings
+    public static partial class AppSettings
     {
         // semi-constants
         public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
@@ -39,6 +39,9 @@ namespace GitCommands
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
 
         private static Mutex _globalMutex;
+
+        [GeneratedRegex(@"^(\d+)\.(\d+)")]
+        private static partial Regex VersionRegex();
 
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
@@ -136,7 +139,7 @@ namespace GitCommands
             if (!string.IsNullOrWhiteSpace(version) && !version.StartsWith(defaultDevelopmentVersion))
             {
                 // We expect version to be something starting with "X.Y" (ignore patch versions)
-                Match match = Regex.Match(version, @"^(\d+)\.(\d+)");
+                Match match = VersionRegex().Match(version);
                 if (match.Success)
                 {
                     docVersion = $"en/release-{match.Groups[1]}.{match.Groups[2]}/";

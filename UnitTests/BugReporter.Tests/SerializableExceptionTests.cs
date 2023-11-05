@@ -7,8 +7,11 @@ namespace BugReporterTests
     [TestFixture]
     [SetCulture("en-US")]
     [SetUICulture("en-US")]
-    public sealed class SerializableExceptionTests
+    public sealed partial class SerializableExceptionTests
     {
+        [GeneratedRegex(@"^(?<keep>.*)(?<codeLocationToBeRemoved>\sin\s.*)$")]
+        private static partial Regex PathRegex();
+
         [Test, TestCaseSource(nameof(TestCases))]
         public async Task ToString(string testName, Action action)
         {
@@ -60,7 +63,7 @@ namespace BugReporterTests
             StringBuilder m = new();
             foreach (string line in exceptionMessage.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                m.AppendLine(Regex.Replace(line, @"^(?<keep>.*)(?<codeLocationToBeRemoved>\sin\s.*)$", "${keep}"));
+                m.AppendLine(PathRegex().Replace(line, "${keep}"));
             }
 
             return m.ToString();

@@ -122,6 +122,9 @@ namespace GitUI.CommandsDialogs
         private List<IGitRef>? _heads;
         private bool _bInternalUpdate;
 
+        [GeneratedRegex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.")]
+        private static partial Regex IsRefRemoved();
+
         public bool ErrorOccurred { get; private set; }
 
         public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, AppSettings.PullAction pullAction)
@@ -696,9 +699,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // auto pull only if current branch was rejected
-                Regex isRefRemoved = new(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.");
-
-                if (isRefRemoved.IsMatch(form.GetOutputString()))
+                if (IsRefRemoved().IsMatch(form.GetOutputString()))
                 {
                     TaskDialogPage page = new()
                     {

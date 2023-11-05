@@ -9,8 +9,11 @@ using ResourceManager;
 
 namespace GitUI
 {
-    public static class GitUIExtensions
+    public static partial class GitUIExtensions
     {
+        [GeneratedRegex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)", RegexOptions.ExplicitCapture)]
+        private static partial Regex FileNameRegex();
+
         /// <summary>
         /// View the changes between the revisions, if possible as a diff.
         /// </summary>
@@ -68,7 +71,7 @@ namespace GitUI
                     : $"{item.BaseA}..{firstId} {item.BaseB}..{item.SecondRevision.ObjectId}";
                 await fileViewer.ViewTextAsync("git-range-diff.sh", $"git range-diff {range} -- {additionalCommandInfo}");
 
-                string output = await fileViewer.Module.GetRangeDiffAsync(
+                string? output = await fileViewer.Module.GetRangeDiffAsync(
                         firstId,
                         item.SecondRevision.ObjectId,
                         item.BaseA,
@@ -78,7 +81,7 @@ namespace GitUI
                         cancellationToken);
 
                 // Try set highlighting from first found filename
-                Match match = new Regex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)").Match(output ?? "");
+                Match match = FileNameRegex().Match(output ?? "");
                 string filename = match.Groups["file"].Success ? match.Groups["file"].Value : item.Item.Name;
 
                 cancellationToken.ThrowIfCancellationRequested();

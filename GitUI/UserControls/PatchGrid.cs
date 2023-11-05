@@ -14,12 +14,15 @@ namespace GitUI
 {
     public partial class PatchGrid : GitModuleControl
     {
-        private static readonly Regex HeadersMatch = new(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
-        private static readonly Regex QuotedText = new(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
         private readonly TranslationString _unableToShowPatchDetails = new("Unable to show details of patch file.");
         private readonly ICommitDataManager _commitDataManager;
         private IList<PatchFile> _skipped = Array.Empty<PatchFile>();
         private bool _isManagingRebase;
+
+        [GeneratedRegex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$")]
+        private static partial Regex HeadersRegex();
+        [GeneratedRegex(@"=\?([\w-]+)\?q\?(.*)\?=$")]
+        private static partial Regex QuotedRegex();
 
         public PatchGrid()
         {
@@ -225,7 +228,7 @@ namespace GitUI
                     string value = "";
                     foreach (string line in File.ReadLines(rebaseDir + file))
                     {
-                        Match m = HeadersMatch.Match(line);
+                        Match m = HeadersRegex().Match(line);
                         if (key is null)
                         {
                             if (!string.IsNullOrWhiteSpace(line) && !m.Success)
@@ -295,8 +298,8 @@ namespace GitUI
 
             string AppendQuotedString(string str1, string str2)
             {
-                Match m1 = QuotedText.Match(str1);
-                Match m2 = QuotedText.Match(str2);
+                Match m1 = QuotedRegex().Match(str1);
+                Match m2 = QuotedRegex().Match(str2);
                 if (!m1.Success || !m2.Success)
                 {
                     return str1 + str2;

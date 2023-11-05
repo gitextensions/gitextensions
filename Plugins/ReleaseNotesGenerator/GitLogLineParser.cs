@@ -8,9 +8,10 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
         IEnumerable<LogLine> Parse(IEnumerable<string>? lines);
     }
 
-    public sealed class GitLogLineParser : IGitLogLineParser
+    public sealed partial class GitLogLineParser : IGitLogLineParser
     {
-        private static readonly Regex LogLineRegex = new("^([a-zA-Z0-9]{1,})@(.*)", RegexOptions.Compiled);
+        [GeneratedRegex("^([a-zA-Z0-9]{1,})@(.*)")]
+        private static partial Regex LogLineRegex();
 
         public LogLine? Parse(string line)
         {
@@ -19,7 +20,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
                 return null;
             }
 
-            Match m = LogLineRegex.Match(line);
+            Match m = LogLineRegex().Match(line);
             if (!m.Success)
             {
                 return null;
