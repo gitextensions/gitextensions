@@ -81,7 +81,7 @@ namespace GitUI.ScriptsEngine
             return option.StartsWith("s");
         }
 
-        public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptHostControl? scriptHostControl = null)
+        public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
         {
             if (string.IsNullOrWhiteSpace(arguments))
             {
@@ -106,7 +106,7 @@ namespace GitUI.ScriptsEngine
             List<IGitRef> currentBranches = new();
             List<IGitRef> currentTags = new();
 
-            foreach (string option in Options)
+            foreach (string option in GetOptions(Options, scriptOptionsProvider))
             {
                 if (!Contains(arguments, option))
                 {
@@ -146,7 +146,7 @@ namespace GitUI.ScriptsEngine
                     }
                 }
 
-                arguments = ParseScriptArguments(arguments, option, owner, scriptHostControl, uiCommands, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision!, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision!, currentRemote);
+                arguments = ParseScriptArguments(arguments, option, owner, scriptOptionsProvider, uiCommands, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision!, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision!, currentRemote);
                 if (arguments is null)
                 {
                     return (arguments: null, abort: true);
@@ -154,6 +154,9 @@ namespace GitUI.ScriptsEngine
             }
 
             return (arguments, abort: false);
+
+            static IEnumerable<string> GetOptions(IReadOnlyList<string> options, IScriptOptionsProvider scriptOptionsProvider)
+                => scriptOptionsProvider is null ? options : options.Union(scriptOptionsProvider.Options);
         }
 
         private static string AskToSpecify(IEnumerable<IGitRef> options, IGitUICommands uiCommands, IWin32Window owner)
@@ -278,7 +281,7 @@ namespace GitUI.ScriptsEngine
         }
 
         private static string? ParseScriptArguments(string arguments, string option, IWin32Window owner,
-            IScriptHostControl? scriptHostControl, IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions,
+            IScriptOptionsProvider? scriptOptionsProvider, IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions,
             in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches,
             in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision,
             in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches,
@@ -480,6 +483,10 @@ namespace GitUI.ScriptsEngine
                 case "WorkingDir":
                     newString = uiCommands.GitModule.WorkingDir;
                     break;
+
+                default:
+                    newString = scriptOptionsProvider?.GetValue(option);
+                    break;
             }
 
             if (newString is not null)
@@ -553,12 +560,12 @@ namespace GitUI.ScriptsEngine
                 List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
                 => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, loadBody);
 
-            public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptHostControl? scriptHostControl,
+            public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider,
                 IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
                 List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision,
                 List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches,
                 GitRevision currentRevision, string currentRemote)
-                => ScriptOptionsParser.ParseScriptArguments(arguments, option, owner, scriptHostControl, uiCommands, allSelectedRevisions,
+                => ScriptOptionsParser.ParseScriptArguments(arguments, option, owner, scriptOptionsProvider, uiCommands, allSelectedRevisions,
                     selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision,
                     currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
         }

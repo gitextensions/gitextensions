@@ -15,11 +15,11 @@ namespace GitUI.ScriptsEngine
             private const string PluginPrefix = "plugin:";
             private const string NavigateToPrefix = "navigateTo:";
 
-            public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptHostControl? scriptHostControl = null)
+            public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
             {
                 try
                 {
-                    return RunScriptInternal(script, owner, commands, scriptHostControl);
+                    return RunScriptInternal(script, owner, commands, scriptOptionsProvider);
                 }
                 catch (ExternalOperationException ex) when (ex is not UserExternalOperationException)
                 {
@@ -27,7 +27,7 @@ namespace GitUI.ScriptsEngine
                 }
             }
 
-            private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptHostControl? scriptHostControl)
+            private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider? scriptOptionsProvider)
             {
                 if (string.IsNullOrEmpty(script.Command))
                 {
@@ -55,7 +55,7 @@ namespace GitUI.ScriptsEngine
                 }
 
                 string? originalCommand = script.Command;
-                (string? argument, bool abort) = ScriptOptionsParser.Parse(script.Arguments, uiCommands, owner, scriptHostControl);
+                (string? argument, bool abort) = ScriptOptionsParser.Parse(script.Arguments, uiCommands, owner, scriptOptionsProvider);
                 if (abort)
                 {
                     throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.Name}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",

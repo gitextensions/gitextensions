@@ -17,13 +17,13 @@ namespace GitUITests.Script
     {
         private IGitUICommands _commands;
         private IGitModule _module;
-        private IScriptHostControl _scriptHostControl;
+        private IScriptOptionsProvider _scriptOptionsProvider;
 
         [SetUp]
         public void Setup()
         {
             _module = Substitute.For<IGitModule>();
-            _scriptHostControl = Substitute.For<IScriptHostControl>();
+            _scriptOptionsProvider = Substitute.For<IScriptOptionsProvider>();
 
             _commands = Substitute.For<IGitUICommands>();
             _commands.GitModule.Returns(_module);
@@ -125,7 +125,7 @@ namespace GitUITests.Script
         [Test]
         public void Parse_should_throw_if_module_null()
         {
-            ((Action)(() => ScriptOptionsParser.Parse(arguments: "bla", uiCommands: null, owner: null, scriptHostControl: null))).Should()
+            ((Action)(() => ScriptOptionsParser.Parse(arguments: "bla", uiCommands: null, owner: null, scriptOptionsProvider: null))).Should()
                 .Throw<ArgumentNullException>()
                 .WithMessage("Value cannot be null. (Parameter 'uiCommands')");
         }
@@ -136,7 +136,7 @@ namespace GitUITests.Script
         [TestCase("\t")]
         public void Parse_should_return_without_process_if_arguments_unset(string arguments)
         {
-            (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments, uiCommands: null, owner: null, scriptHostControl: null);
+            (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments, uiCommands: null, owner: null, scriptOptionsProvider: null);
 
             result.arguments.Should().Be(arguments);
             result.abort.Should().Be(false);
@@ -147,7 +147,7 @@ namespace GitUITests.Script
         {
             const string arguments = "{openUrl} https://gitlab.com{zeDefaultRemotePathFromUrl}/tree/{zeBranch}";
 
-            (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments: arguments, _commands, owner: null, scriptHostControl: null);
+            (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments: arguments, _commands, owner: null, scriptOptionsProvider: null);
 
             result.arguments.Should().Be(arguments);
             result.abort.Should().Be(false);
@@ -166,7 +166,7 @@ namespace GitUITests.Script
 
             string expectedMessage = $"{Subject}\\n\\nline3";
 
-            (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{cSubject}} {{cMessage}}", _commands, owner: null, scriptHostControl: null);
+            (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{cSubject}} {{cMessage}}", _commands, owner: null, scriptOptionsProvider: null);
 
             result.arguments.Should().Be($"echo \"{revision.Subject}\" \"{expectedMessage}\"");
             result.abort.Should().Be(false);
@@ -187,7 +187,7 @@ namespace GitUITests.Script
 
             string expectedMessage = $"{Subject}\\n\\nline3";
 
-            (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{sSubject}} {{sMessage}}", _commands, owner: null, scriptHostControl: null);
+            (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{sSubject}} {{sMessage}}", _commands, owner: null, scriptOptionsProvider: null);
 
             result.arguments.Should().Be($"echo \"{revision.Subject}\" \"{expectedMessage}\"");
             result.abort.Should().Be(false);
@@ -198,7 +198,7 @@ namespace GitUITests.Script
         {
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
-                owner: null, scriptHostControl: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -214,7 +214,7 @@ namespace GitUITests.Script
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
-                owner: null, scriptHostControl: null, _commands, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, _commands, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote);
@@ -229,7 +229,7 @@ namespace GitUITests.Script
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
-                owner: null, scriptHostControl: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, noSelectedRemotes, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -246,7 +246,7 @@ namespace GitUITests.Script
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
-                owner: null, scriptHostControl: null, _commands, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, _commands, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -265,7 +265,7 @@ namespace GitUITests.Script
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
-                owner: null, scriptHostControl: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: remoteBranches, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -284,7 +284,7 @@ namespace GitUITests.Script
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
-                owner: null, scriptHostControl: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: remoteBranches, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -303,7 +303,7 @@ namespace GitUITests.Script
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
-                owner: null, scriptHostControl: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: remoteBranches, currentRevision: null, currentRemote: null);
@@ -322,7 +322,7 @@ namespace GitUITests.Script
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
-                owner: null, scriptHostControl: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: remoteBranches, currentRevision: null, currentRemote: null);
@@ -346,7 +346,7 @@ namespace GitUITests.Script
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
-                owner: null, scriptHostControl: null, _commands, allSelectedRevisions: null, selectedTags: null,
+                owner: null, scriptOptionsProvider: null, _commands, allSelectedRevisions: null, selectedTags: null,
                 selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
                 currentTags: null,
                 currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -375,6 +375,23 @@ namespace GitUITests.Script
 
             result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{sMessage}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
             result.Should().Be("test string with \"double qoutes\" and escaped \\\"double qoutes\\\"");
+        }
+
+        [Test]
+        public void Parse_should_resolve_IScriptOptionsProvider_options()
+        {
+            const string option1 = nameof(option1);
+            const string option2 = nameof(option2);
+            const string value1 = nameof(value1);
+            const string value2 = nameof(value2);
+            _scriptOptionsProvider.Options.Returns(new string[] { option1, option2 });
+            _scriptOptionsProvider.GetValue(option1).Returns(value1);
+            _scriptOptionsProvider.GetValue(option2).Returns(value2);
+
+            (string? arguments, bool abort) = ScriptOptionsParser.Parse("foo {{" + option1 + "}} bar {" + option2 + "}", Substitute.For<IGitUICommands>(), owner: null, _scriptOptionsProvider);
+
+            arguments.Should().Be($"foo \"{value1}\" bar {value2}");
+            abort.Should().BeFalse();
         }
     }
 }

@@ -68,7 +68,7 @@ namespace GitUI.ScriptsEngine
             return true;
         }
 
-        public bool RunScript(int scriptId, IWin32Window owner, IGitUICommands commands, IScriptHostControl? scriptHostControl = null)
+        public bool RunScript(int scriptId, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
         {
             ScriptInfo? scriptInfo = GetScript(scriptId);
             if (scriptInfo is null)
@@ -77,7 +77,7 @@ namespace GitUI.ScriptsEngine
                     new ExternalOperationException(workingDirectory: commands.GitModule.WorkingDir));
             }
 
-            return ScriptRunner.RunScript(scriptInfo, owner, commands, scriptHostControl);
+            return ScriptRunner.RunScript(scriptInfo, owner, commands, scriptOptionsProvider);
         }
 
         public string? SerializeIntoXml()

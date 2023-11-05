@@ -202,7 +202,7 @@ namespace GitExtensions.UITests.ScriptEngine
             });
         }
 
-        private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptHostControl? scriptHostControl = null)
+        private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider? scriptOptionsProvider = null)
         {
             try
             {
@@ -212,7 +212,7 @@ namespace GitExtensions.UITests.ScriptEngine
                         script,
                         owner,
                         uiCommands,
-                        scriptHostControl
+                        scriptOptionsProvider
                     });
                 return result;
             }
