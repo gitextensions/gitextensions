@@ -145,6 +145,12 @@ namespace GitUI.CommitInfo
             base.Dispose(disposing);
         }
 
+        protected override void OnRuntimeLoad()
+        {
+            base.OnRuntimeLoad();
+            ReloadHotkeys();
+        }
+
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
         {
             base.OnUICommandsSourceSet(source);
@@ -161,13 +167,16 @@ namespace GitUI.CommitInfo
                 _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
                 _refsFormatter = new RefsFormatter(_linkFactory);
 
-                LoadHotkeys(FormBrowse.HotkeySettingsName);
-
                 source.UICommandsChanged += delegate { RefreshSortedTags(); };
 
                 // call this event handler also now (necessary for "Contained in branches/tags")
                 RefreshSortedTags();
             }
+        }
+
+        internal void ReloadHotkeys()
+        {
+            LoadHotkeys(FormBrowse.HotkeySettingsName);
         }
 
         private void RefreshSortedTags()

@@ -351,11 +351,6 @@ See the changes in the commit form.");
                     Images.FolderSubmodule // Submodule
                 }
             };
-        }
-
-        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
-        {
-            base.OnUICommandsSourceSet(source);
 
             ReloadHotkeys();
         }
