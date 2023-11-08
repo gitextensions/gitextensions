@@ -4,6 +4,7 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitCommandsTests.Settings
 {
@@ -35,12 +36,12 @@ namespace GitCommandsTests.Settings
 
         [Test]
         [TestCaseSource(nameof(TestCases))]
-        public void Should_return_default_value(PropertyInfo property, object value, object defaultValue, bool isSetting)
+        public void Should_return_default_value(PropertyInfo property, object value, object defaultValue, bool isISetting)
         {
             // Arrange
             object root = null;
 
-            if (isSetting)
+            if (isISetting)
             {
                 root = property.GetValue(null);
 
@@ -70,12 +71,12 @@ namespace GitCommandsTests.Settings
 
         [Test]
         [TestCaseSource(nameof(TestCases))]
-        public void Should_save_value(PropertyInfo property, object value, object defaultValue, bool isSetting)
+        public void Should_save_value(PropertyInfo property, object value, object defaultValue, bool isISetting)
         {
             // Arrange
             object root = null;
 
-            if (isSetting)
+            if (isISetting)
             {
                 root = property.GetValue(null);
 
@@ -104,7 +105,7 @@ namespace GitCommandsTests.Settings
             // Assert
             if (Type.GetTypeCode(property.PropertyType) == TypeCode.String)
             {
-                if (isSetting)
+                if (isISetting)
                 {
                     Assert.That(storedValue, Is.EqualTo(value ?? string.Empty));
                 }
@@ -128,31 +129,35 @@ namespace GitCommandsTests.Settings
 
         private static IEnumerable<object[]> TestCases()
         {
-            foreach (var value in Values())
+            foreach ((PropertyInfo property, object defaultValue, bool isNullable, bool isISetting) in PropertyInfos())
             {
-                foreach ((PropertyInfo property, object defaultValue, bool isNullable, bool isSetting) in PropertyInfos())
+                if (isNullable)
                 {
-                    if (value is null && isNullable)
-                    {
-                        yield return new object[] { property, value, defaultValue, isSetting };
-                    }
+                    yield return new object[] { property, null, defaultValue, isISetting };
+                }
 
-                    if (value is not null)
-                    {
-                        var valueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
-                        var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                Type? propertyType = property.PropertyType;
+                if (isISetting)
+                {
+                    propertyType = propertyType.GetProperty(nameof(ISetting<string>.Value))?.PropertyType;
+                }
 
-                        if (valueType == propertyType)
-                        {
-                            yield return new object[] { property, value, defaultValue, isSetting };
-                        }
+                propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+                Validates.NotNull(propertyType);
+
+                foreach (object value in Values())
+                {
+                    Type valueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
+                    if (valueType == propertyType)
+                    {
+                        yield return new object[] { property, value, defaultValue, isISetting };
                     }
                 }
             }
 
-            static IEnumerable<(PropertyInfo property, object defaultValue, bool isNullable, bool isSetting)> PropertyInfos()
+            static IEnumerable<(PropertyInfo property, object defaultValue, bool isNullable, bool isISetting)> PropertyInfos()
             {
-                var properties = typeof(AppSettings).GetProperties()
+                Dictionary<string, PropertyInfo> properties = typeof(AppSettings).GetProperties()
                     .ToDictionary(x => x.Name, x => x);
 
                 yield return (properties[nameof(AppSettings.TelemetryEnabled)], null, true, false);
@@ -184,7 +189,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.TruncatePathMethod)], TruncatePathMethod.None, false, false);
                 yield return (properties[nameof(AppSettings.ShowGitStatusInBrowseToolbar)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowGitStatusForArtificialCommits)], true, false, false);
-                yield return (properties[nameof(AppSettings.RevisionSortOrder)], RevisionSortOrder.GitDefault, false, false);
+                yield return (properties[nameof(AppSettings.RevisionSortOrder)], RevisionSortOrder.GitDefault, false, true);
                 yield return (properties[nameof(AppSettings.CommitInfoShowContainedInBranchesLocal)], true, false, false);
                 yield return (properties[nameof(AppSettings.CheckForUncommittedChangesInCheckoutBranch)], true, false, false);
                 yield return (properties[nameof(AppSettings.AlwaysShowCheckoutBranchDlg)], false, false, false);
@@ -247,7 +252,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.IncludeUntrackedFilesInAutoStash)], false, false, false);
                 yield return (properties[nameof(AppSettings.IncludeUntrackedFilesInManualStash)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowRemoteBranches)], true, false, false);
-                yield return (properties[nameof(AppSettings.ShowReflogReferences)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowReflogReferences)], false, false, true);
                 yield return (properties[nameof(AppSettings.ShowSuperprojectTags)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowSuperprojectBranches)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowSuperprojectRemoteBranches)], false, false, false);
@@ -271,9 +276,9 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.ShowBuildStatusTextColumn)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowAuthorDate)], true, false, false);
                 yield return (properties[nameof(AppSettings.CloseProcessDialog)], false, false, false);
-                yield return (properties[nameof(AppSettings.ShowCurrentBranchOnly)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowCurrentBranchOnly)], false, false, true);
                 yield return (properties[nameof(AppSettings.ShowSimplifyByDecoration)], false, false, false);
-                yield return (properties[nameof(AppSettings.BranchFilterEnabled)], false, false, false);
+                yield return (properties[nameof(AppSettings.BranchFilterEnabled)], false, false, true);
                 yield return (properties[nameof(AppSettings.ShowOnlyFirstParent)], false, false, false);
                 yield return (properties[nameof(AppSettings.CommitDialogSelectionFilter)], false, false, false);
                 yield return (properties[nameof(AppSettings.DefaultCloneDestinationPath)], string.Empty, true, false);
@@ -289,14 +294,14 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.MulticolorBranches)], true, false, false);
                 yield return (properties[nameof(AppSettings.HighlightAuthoredRevisions)], true, false, false);
                 yield return (properties[nameof(AppSettings.LastFormatPatchDir)], string.Empty, true, false);
-                yield return (properties[nameof(AppSettings.IgnoreWhitespaceKind)], IgnoreWhitespaceKind.None, false, false);
+                yield return (properties[nameof(AppSettings.IgnoreWhitespaceKind)], IgnoreWhitespaceKind.None, false, true);
                 yield return (properties[nameof(AppSettings.RememberIgnoreWhiteSpacePreference)], true, false, false);
-                yield return (properties[nameof(AppSettings.ShowNonPrintingChars)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowNonPrintingChars)], false, false, true);
                 yield return (properties[nameof(AppSettings.RememberShowNonPrintingCharsPreference)], false, false, false);
-                yield return (properties[nameof(AppSettings.ShowEntireFile)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowEntireFile)], false, false, true);
                 yield return (properties[nameof(AppSettings.RememberShowEntireFilePreference)], false, false, false);
                 yield return (properties[nameof(AppSettings.RememberNumberOfContextLines)], false, false, false);
-                yield return (properties[nameof(AppSettings.ShowSyntaxHighlightingInDiff)], true, false, false);
+                yield return (properties[nameof(AppSettings.ShowSyntaxHighlightingInDiff)], true, false, true);
                 yield return (properties[nameof(AppSettings.RememberShowSyntaxHighlightingInDiff)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowRepoCurrentBranch)], true, false, false);
                 yield return (properties[nameof(AppSettings.OwnScripts)], string.Empty, true, false);
@@ -351,8 +356,6 @@ namespace GitCommandsTests.Settings
 
             static IEnumerable<object> Values()
             {
-                yield return null;
-
                 yield return string.Empty;
                 yield return " ";
                 yield return "0";
@@ -414,7 +417,8 @@ namespace GitCommandsTests.Settings
                     typeof(ShorteningRecentRepoPathStrategy),
                     typeof(GitRefsSortBy),
                     typeof(GitRefsSortOrder),
-                    typeof(DiffListSortType)
+                    typeof(DiffListSortType),
+                    typeof(RevisionSortOrder),
                 };
 
                 foreach (var enumType in enumTypes)
