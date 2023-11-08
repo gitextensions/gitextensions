@@ -21,6 +21,10 @@ User Input:
 {UserInput}
 {UserFiles}
 
+Conditional:
+{if:option}{/if}
+{ifnot:option}{/ifnot}
+
 Working Dir:
 {WorkingDir}
 
