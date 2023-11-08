@@ -129,7 +129,8 @@ namespace GitCommands
                 throw new InvalidOperationException("Documentation base URL can only be set once");
             }
 
-            string? docVersion = "en/main/";
+            // override for release, Git branch is still release/4.0
+            string? docVersion = "en/release-4.2/";
 
             if (!string.IsNullOrWhiteSpace(currentGitBranch))
             {
