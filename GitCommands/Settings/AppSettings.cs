@@ -142,7 +142,7 @@ namespace GitCommands
             }
 
             // override for release, Git branch is still release/4.0
-            string? docVersion = "en/release-4.2/";
+            docVersion = "en/release-4.2/";
             _documentationBaseUrl = $"https://git-extensions-documentation.readthedocs.org/{docVersion}";
         }
 
