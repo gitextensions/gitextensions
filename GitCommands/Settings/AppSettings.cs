@@ -129,8 +129,7 @@ namespace GitCommands
                 throw new InvalidOperationException("Documentation base URL can only be set once");
             }
 
-            // override for release, Git branch is still release/4.0
-            string? docVersion = "en/release-4.2/";
+            string? docVersion = "en/main/";
 
             if (!string.IsNullOrWhiteSpace(currentGitBranch))
             {
@@ -142,6 +141,8 @@ namespace GitCommands
                 }
             }
 
+            // override for release, Git branch is still release/4.0
+            string? docVersion = "en/release-4.2/";
             _documentationBaseUrl = $"https://git-extensions-documentation.readthedocs.org/{docVersion}";
         }
 
