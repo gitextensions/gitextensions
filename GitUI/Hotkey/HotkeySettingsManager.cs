@@ -49,7 +49,6 @@ namespace GitUI.Hotkey
         public HotkeySettingsManager(IScriptsManager scriptsManager)
         {
             _scriptsManager = scriptsManager;
-            MigrateSettings();
         }
 
         public bool IsUniqueKey(Keys keyData) => _usedKeys.Contains(keyData);
@@ -172,30 +171,6 @@ namespace GitUI.Hotkey
             catch
             {
                 return null;
-            }
-        }
-
-        private void MigrateSettings()
-        {
-            if (AppSettings.SerializedHotkeys is null)
-            {
-                Properties.Settings.Default.Upgrade();
-                if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.Hotkeys))
-                {
-                    HotkeySettings[]? settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
-                    if (settings is null)
-                    {
-                        AppSettings.SerializedHotkeys = " "; // mark settings as migrated
-                    }
-                    else
-                    {
-                        SaveSettings(settings);
-                    }
-                }
-                else
-                {
-                    AppSettings.SerializedHotkeys = " "; // mark settings as migrated
-                }
             }
         }
 

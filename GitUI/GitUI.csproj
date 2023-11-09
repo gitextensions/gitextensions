@@ -65,12 +65,6 @@
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs" AutoGen="True" DependentUpon="Resources.resx" DesignTime="True" />
 
-    <!-- Settings -->
-    <None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />
-    <Compile Update="Properties\Settings.Designer.cs" AutoGen="True" DependentUpon="Settings.settings">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-
     <None Include="Properties\DataSources\*.datasource" />
   </ItemGroup>
 
