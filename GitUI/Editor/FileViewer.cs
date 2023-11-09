@@ -748,18 +748,13 @@ namespace GitUI.Editor
         {
             base.OnRuntimeLoad();
 
+            ReloadHotkeys();
+
             Font = AppSettings.FixedWidthFont;
 
             string[] encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
             encodingToolStripComboBox.Items.AddRange(encodings);
             encodingToolStripComboBox.ResizeDropDownWidth(50, 250);
-        }
-
-        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
-        {
-            base.OnUICommandsSourceSet(source);
-
-            ReloadHotkeys();
         }
 
         // Private methods

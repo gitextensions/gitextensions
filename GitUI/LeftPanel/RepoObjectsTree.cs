@@ -337,13 +337,17 @@ namespace GitUI.LeftPanel
             }
         }
 
+        protected override void OnRuntimeLoad()
+        {
+            base.OnRuntimeLoad();
+            ReloadHotkeys();
+        }
+
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
         {
             _selectionCancellationTokenSequence.CancelCurrent();
 
             base.OnUICommandsSourceSet(source);
-
-            ReloadHotkeys();
 
             CreateBranches();
             CreateRemotes();

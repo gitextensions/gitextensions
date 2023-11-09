@@ -540,9 +540,9 @@ namespace GitUI
             ShowLoading();
         }
 
-        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
+        protected override void OnRuntimeLoad()
         {
-            base.OnUICommandsSourceSet(source);
+            base.OnRuntimeLoad();
 
             ReloadHotkeys();
             LoadCustomDifftools();

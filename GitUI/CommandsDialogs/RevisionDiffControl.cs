@@ -326,11 +326,6 @@ namespace GitUI.CommandsDialogs
 
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.FixedWidthFont;
-        }
-
-        protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
-        {
-            base.OnUICommandsSourceSet(source);
 
             ReloadHotkeys();
             LoadCustomDifftools();
