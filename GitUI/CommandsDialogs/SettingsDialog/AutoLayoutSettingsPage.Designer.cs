@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // AutoLayoutSettingsPage
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.AutoScroll = true;
-            this.Name = "AutoLayoutSettingsPage";
-            this.Size = new System.Drawing.Size(1109, 461);
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            AutoScroll = true;
+            Name = "AutoLayoutSettingsPage";
+            Size = new Size(1109, 461);
+            ResumeLayout(false);
 
         }
 

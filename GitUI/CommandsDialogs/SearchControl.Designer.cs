@@ -30,72 +30,72 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBoxSearchResult = new System.Windows.Forms.ListBox();
-            this.txtSearchBox = new GitUI.UserControls.TextBoxEx();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            listBoxSearchResult = new ListBox();
+            txtSearchBox = new GitUI.UserControls.TextBoxEx();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // listBoxSearchResult
             // 
-            this.listBoxSearchResult.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left))));
-            this.listBoxSearchResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listBoxSearchResult.FormattingEnabled = true;
-            this.listBoxSearchResult.Location = new System.Drawing.Point(0, 20);
-            this.listBoxSearchResult.Margin = new System.Windows.Forms.Padding(0);
-            this.listBoxSearchResult.Name = "listBoxSearchResult";
-            this.listBoxSearchResult.Size = new System.Drawing.Size(64, 15);
-            this.listBoxSearchResult.TabIndex = 2;
-            this.listBoxSearchResult.DoubleClick += new System.EventHandler(this.listBoxSearchResult_DoubleClick);
+            listBoxSearchResult.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            listBoxSearchResult.BorderStyle = BorderStyle.FixedSingle;
+            listBoxSearchResult.FormattingEnabled = true;
+            listBoxSearchResult.Location = new Point(0, 20);
+            listBoxSearchResult.Margin = new Padding(0);
+            listBoxSearchResult.Name = "listBoxSearchResult";
+            listBoxSearchResult.Size = new Size(64, 15);
+            listBoxSearchResult.TabIndex = 2;
+            listBoxSearchResult.DoubleClick += listBoxSearchResult_DoubleClick;
             // 
             // txtSearchBox
             // 
-            this.txtSearchBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtSearchBox.Location = new System.Drawing.Point(0, 0);
-            this.txtSearchBox.Margin = new System.Windows.Forms.Padding(0);
-            this.txtSearchBox.Name = "txtSearchBox";
-            this.txtSearchBox.Size = new System.Drawing.Size(64, 20);
-            this.txtSearchBox.TabIndex = 1;
-            this.txtSearchBox.TextChanged += new System.EventHandler(this.txtSearchBox_TextChange);
-            this.txtSearchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchBox_KeyDown);
-            this.txtSearchBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSearchBox_KeyUp);
+            txtSearchBox.Dock = DockStyle.Fill;
+            txtSearchBox.Location = new Point(0, 0);
+            txtSearchBox.Margin = new Padding(0);
+            txtSearchBox.Name = "txtSearchBox";
+            txtSearchBox.Size = new Size(64, 20);
+            txtSearchBox.TabIndex = 1;
+            txtSearchBox.TextChanged += txtSearchBox_TextChange;
+            txtSearchBox.KeyDown += txtSearchBox_KeyDown;
+            txtSearchBox.KeyUp += txtSearchBox_KeyUp;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.txtSearchBox, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.listBoxSearchResult, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(64, 23);
-            this.tableLayoutPanel1.TabIndex = 8;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(txtSearchBox, 0, 0);
+            tableLayoutPanel1.Controls.Add(listBoxSearchResult, 0, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(64, 23);
+            tableLayoutPanel1.TabIndex = 8;
             // 
             // SearchControl
             // 
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.MinimumSize = new System.Drawing.Size(64, 23);
-            this.Name = "SearchControl";
-            this.Size = new System.Drawing.Size(64, 23);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            BackColor = Color.Transparent;
+            Controls.Add(tableLayoutPanel1);
+            Margin = new Padding(0);
+            MinimumSize = new Size(64, 23);
+            Name = "SearchControl";
+            Size = new Size(64, 23);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBoxSearchResult;
+        private ListBox listBoxSearchResult;
         private GitUI.UserControls.TextBoxEx txtSearchBox;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

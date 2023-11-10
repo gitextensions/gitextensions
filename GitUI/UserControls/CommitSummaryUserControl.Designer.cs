@@ -28,204 +28,204 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-            this.labelDate = new System.Windows.Forms.Label();
-            this.labelMessage = new System.Windows.Forms.Label();
-            this.labelAuthor = new System.Windows.Forms.Label();
-            this.labelTags = new System.Windows.Forms.Label();
-            this.labelBranches = new System.Windows.Forms.Label();
-            this.labelTagsCaption = new System.Windows.Forms.Label();
-            this.labelBranchesCaption = new System.Windows.Forms.Label();
-            this.labelAuthorCaption = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.labelDateCaption = new System.Windows.Forms.Label();
-            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox1.SuspendLayout();
+            TableLayoutPanel tableLayoutPanel1;
+            labelDate = new Label();
+            labelMessage = new Label();
+            labelAuthor = new Label();
+            labelTags = new Label();
+            labelBranches = new Label();
+            labelTagsCaption = new Label();
+            labelBranchesCaption = new Label();
+            labelAuthorCaption = new Label();
+            groupBox1 = new GroupBox();
+            labelDateCaption = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            groupBox1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // labelDate
             // 
-            this.labelDate.AutoSize = true;
-            this.labelDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelDate.Location = new System.Drawing.Point(114, 68);
-            this.labelDate.Name = "labelDate";
-            this.labelDate.Size = new System.Drawing.Size(291, 28);
-            this.labelDate.TabIndex = 4;
-            this.labelDate.Text = "...";
-            this.labelDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelDate.AutoSize = true;
+            labelDate.Dock = DockStyle.Fill;
+            labelDate.Location = new Point(114, 68);
+            labelDate.Name = "labelDate";
+            labelDate.Size = new Size(291, 28);
+            labelDate.TabIndex = 4;
+            labelDate.Text = "...";
+            labelDate.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelMessage
             // 
-            this.labelMessage.AutoEllipsis = true;
-            this.labelMessage.AutoSize = true;
-            tableLayoutPanel1.SetColumnSpan(this.labelMessage, 2);
-            this.labelMessage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelMessage.Location = new System.Drawing.Point(3, 0);
-            this.labelMessage.MaximumSize = new System.Drawing.Size(1000, 50);
-            this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(402, 20);
-            this.labelMessage.TabIndex = 0;
-            this.labelMessage.Text = "...";
-            this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelMessage.SizeChanged += new System.EventHandler(this.labelMessage_SizeChanged);
+            labelMessage.AutoEllipsis = true;
+            labelMessage.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(labelMessage, 2);
+            labelMessage.Dock = DockStyle.Fill;
+            labelMessage.Location = new Point(3, 0);
+            labelMessage.MaximumSize = new Size(1000, 50);
+            labelMessage.Name = "labelMessage";
+            labelMessage.Size = new Size(402, 20);
+            labelMessage.TabIndex = 0;
+            labelMessage.Text = "...";
+            labelMessage.TextAlign = ContentAlignment.MiddleLeft;
+            labelMessage.SizeChanged += labelMessage_SizeChanged;
             // 
             // labelAuthor
             // 
-            this.labelAuthor.AutoSize = true;
-            this.labelAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelAuthor.Location = new System.Drawing.Point(114, 40);
-            this.labelAuthor.Name = "labelAuthor";
-            this.labelAuthor.Size = new System.Drawing.Size(291, 28);
-            this.labelAuthor.TabIndex = 2;
-            this.labelAuthor.Text = "...";
-            this.labelAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelAuthor.AutoSize = true;
+            labelAuthor.Dock = DockStyle.Fill;
+            labelAuthor.Location = new Point(114, 40);
+            labelAuthor.Name = "labelAuthor";
+            labelAuthor.Size = new Size(291, 28);
+            labelAuthor.TabIndex = 2;
+            labelAuthor.Text = "...";
+            labelAuthor.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelTags
             // 
-            this.labelTags.AutoSize = true;
-            this.labelTags.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.labelTags.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelTags.Location = new System.Drawing.Point(114, 124);
-            this.labelTags.Name = "labelTags";
-            this.labelTags.Size = new System.Drawing.Size(291, 28);
-            this.labelTags.TabIndex = 8;
-            this.labelTags.Text = "...";
-            this.labelTags.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelTags.AutoSize = true;
+            labelTags.BackColor = Color.LightSteelBlue;
+            labelTags.Dock = DockStyle.Fill;
+            labelTags.Location = new Point(114, 124);
+            labelTags.Name = "labelTags";
+            labelTags.Size = new Size(291, 28);
+            labelTags.TabIndex = 8;
+            labelTags.Text = "...";
+            labelTags.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelBranches
             // 
-            this.labelBranches.AutoSize = true;
-            this.labelBranches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelBranches.Location = new System.Drawing.Point(114, 96);
-            this.labelBranches.Name = "labelBranches";
-            this.labelBranches.Size = new System.Drawing.Size(291, 28);
-            this.labelBranches.TabIndex = 6;
-            this.labelBranches.Text = "...";
-            this.labelBranches.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelBranches.AutoSize = true;
+            labelBranches.Dock = DockStyle.Fill;
+            labelBranches.Location = new Point(114, 96);
+            labelBranches.Name = "labelBranches";
+            labelBranches.Size = new Size(291, 28);
+            labelBranches.TabIndex = 6;
+            labelBranches.Text = "...";
+            labelBranches.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelTagsCaption
             // 
-            this.labelTagsCaption.AutoSize = true;
-            this.labelTagsCaption.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelTagsCaption.Location = new System.Drawing.Point(4, 128);
-            this.labelTagsCaption.Margin = new System.Windows.Forms.Padding(4);
-            this.labelTagsCaption.Name = "labelTagsCaption";
-            this.labelTagsCaption.Size = new System.Drawing.Size(103, 20);
-            this.labelTagsCaption.TabIndex = 7;
-            this.labelTagsCaption.Text = "Tag(s):";
-            this.labelTagsCaption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelTagsCaption.AutoSize = true;
+            labelTagsCaption.Dock = DockStyle.Fill;
+            labelTagsCaption.Location = new Point(4, 128);
+            labelTagsCaption.Margin = new Padding(4);
+            labelTagsCaption.Name = "labelTagsCaption";
+            labelTagsCaption.Size = new Size(103, 20);
+            labelTagsCaption.TabIndex = 7;
+            labelTagsCaption.Text = "Tag(s):";
+            labelTagsCaption.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelBranchesCaption
             // 
-            this.labelBranchesCaption.AutoSize = true;
-            this.labelBranchesCaption.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelBranchesCaption.Location = new System.Drawing.Point(4, 100);
-            this.labelBranchesCaption.Margin = new System.Windows.Forms.Padding(4);
-            this.labelBranchesCaption.Name = "labelBranchesCaption";
-            this.labelBranchesCaption.Size = new System.Drawing.Size(103, 20);
-            this.labelBranchesCaption.TabIndex = 5;
-            this.labelBranchesCaption.Text = "Branch(es):";
-            this.labelBranchesCaption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelBranchesCaption.AutoSize = true;
+            labelBranchesCaption.Dock = DockStyle.Fill;
+            labelBranchesCaption.Location = new Point(4, 100);
+            labelBranchesCaption.Margin = new Padding(4);
+            labelBranchesCaption.Name = "labelBranchesCaption";
+            labelBranchesCaption.Size = new Size(103, 20);
+            labelBranchesCaption.TabIndex = 5;
+            labelBranchesCaption.Text = "Branch(es):";
+            labelBranchesCaption.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelAuthorCaption
             // 
-            this.labelAuthorCaption.AutoSize = true;
-            this.labelAuthorCaption.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelAuthorCaption.Location = new System.Drawing.Point(4, 44);
-            this.labelAuthorCaption.Margin = new System.Windows.Forms.Padding(4);
-            this.labelAuthorCaption.Name = "labelAuthorCaption";
-            this.labelAuthorCaption.Size = new System.Drawing.Size(103, 20);
-            this.labelAuthorCaption.TabIndex = 1;
-            this.labelAuthorCaption.Text = "Author:";
-            this.labelAuthorCaption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelAuthorCaption.AutoSize = true;
+            labelAuthorCaption.Dock = DockStyle.Fill;
+            labelAuthorCaption.Location = new Point(4, 44);
+            labelAuthorCaption.Margin = new Padding(4);
+            labelAuthorCaption.Name = "labelAuthorCaption";
+            labelAuthorCaption.Size = new Size(103, 20);
+            labelAuthorCaption.TabIndex = 1;
+            labelAuthorCaption.Text = "Author:";
+            labelAuthorCaption.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // groupBox1
             // 
-            this.groupBox1.AutoSize = true;
-            this.groupBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox1.Controls.Add(tableLayoutPanel1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(16);
-            this.groupBox1.Size = new System.Drawing.Size(440, 203);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "...";
-            this.groupBox1.Resize += new System.EventHandler(this.groupBox1_Resize);
+            groupBox1.AutoSize = true;
+            groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox1.Controls.Add(tableLayoutPanel1);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Location = new Point(0, 0);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(16);
+            groupBox1.Size = new Size(440, 203);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "...";
+            groupBox1.Resize += groupBox1_Resize;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel1.Controls.Add(this.labelDateCaption, 0, 3);
-            tableLayoutPanel1.Controls.Add(this.labelAuthorCaption, 0, 2);
-            tableLayoutPanel1.Controls.Add(this.labelAuthor, 1, 2);
-            tableLayoutPanel1.Controls.Add(this.labelMessage, 0, 0);
-            tableLayoutPanel1.Controls.Add(this.labelBranches, 1, 4);
-            tableLayoutPanel1.Controls.Add(this.labelBranchesCaption, 0, 4);
-            tableLayoutPanel1.Controls.Add(this.labelTagsCaption, 0, 5);
-            tableLayoutPanel1.Controls.Add(this.labelTags, 1, 5);
-            tableLayoutPanel1.Controls.Add(this.labelDate, 1, 3);
-            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel1.Location = new System.Drawing.Point(16, 35);
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(labelDateCaption, 0, 3);
+            tableLayoutPanel1.Controls.Add(labelAuthorCaption, 0, 2);
+            tableLayoutPanel1.Controls.Add(labelAuthor, 1, 2);
+            tableLayoutPanel1.Controls.Add(labelMessage, 0, 0);
+            tableLayoutPanel1.Controls.Add(labelBranches, 1, 4);
+            tableLayoutPanel1.Controls.Add(labelBranchesCaption, 0, 4);
+            tableLayoutPanel1.Controls.Add(labelTagsCaption, 0, 5);
+            tableLayoutPanel1.Controls.Add(labelTags, 1, 5);
+            tableLayoutPanel1.Controls.Add(labelDate, 1, 3);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(16, 35);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 6;
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.Size = new System.Drawing.Size(408, 152);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(408, 152);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // labelDateCaption
             // 
-            this.labelDateCaption.AutoSize = true;
-            this.labelDateCaption.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelDateCaption.Location = new System.Drawing.Point(4, 72);
-            this.labelDateCaption.Margin = new System.Windows.Forms.Padding(4);
-            this.labelDateCaption.Name = "labelDateCaption";
-            this.labelDateCaption.Size = new System.Drawing.Size(103, 20);
-            this.labelDateCaption.TabIndex = 3;
-            this.labelDateCaption.Text = "Commit date:";
-            this.labelDateCaption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelDateCaption.AutoSize = true;
+            labelDateCaption.Dock = DockStyle.Fill;
+            labelDateCaption.Location = new Point(4, 72);
+            labelDateCaption.Margin = new Padding(4);
+            labelDateCaption.Name = "labelDateCaption";
+            labelDateCaption.Size = new Size(103, 20);
+            labelDateCaption.TabIndex = 3;
+            labelDateCaption.Text = "Commit date:";
+            labelDateCaption.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // CommitSummaryUserControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.groupBox1);
-            this.MinimumSize = new System.Drawing.Size(440, 160);
-            this.Name = "CommitSummaryUserControl";
-            this.Size = new System.Drawing.Size(440, 203);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            AutoScaleDimensions = new SizeF(144F, 144F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Controls.Add(groupBox1);
+            MinimumSize = new Size(440, 160);
+            Name = "CommitSummaryUserControl";
+            Size = new Size(440, 203);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label labelDate;
-        private System.Windows.Forms.Label labelMessage;
-        private System.Windows.Forms.Label labelAuthor;
-        private System.Windows.Forms.Label labelTags;
-        private System.Windows.Forms.Label labelBranches;
-        private System.Windows.Forms.Label labelDateCaption;
-        private System.Windows.Forms.Label labelAuthorCaption;
-        private System.Windows.Forms.Label labelBranchesCaption;
-        private System.Windows.Forms.Label labelTagsCaption;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private Label labelDate;
+        private Label labelMessage;
+        private Label labelAuthor;
+        private Label labelTags;
+        private Label labelBranches;
+        private Label labelDateCaption;
+        private Label labelAuthorCaption;
+        private Label labelBranchesCaption;
+        private Label labelTagsCaption;
+        private GroupBox groupBox1;
     }
 }

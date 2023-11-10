@@ -28,610 +28,608 @@ namespace GitUI.CommandsDialogs.RepoHosting
         /// </summary>
         private void InitializeComponent()
         {
-            this.columnHeaderMyReposName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderMyReposIsFork = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderMyReposForks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderSearchName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderSearchOwner = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderSearchForks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cloneBtn = new System.Windows.Forms.Button();
-            this._NO_TRANSLATE_closeBtn = new System.Windows.Forms.Button();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tabControl = new System.Windows.Forms.TabControl();
-            this.myReposPage = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.helpTextLbl = new System.Windows.Forms.Label();
-            this.myReposLV = new GitUI.UserControls.NativeListView();
-            this.columnHeaderMyReposIsPrivate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.searchReposPage = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.searchTB = new System.Windows.Forms.TextBox();
-            this.searchBtn = new System.Windows.Forms.Button();
-            this.orLbl = new System.Windows.Forms.Label();
-            this.getFromUserBtn = new System.Windows.Forms.Button();
-            this.forkBtn = new System.Windows.Forms.Button();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.searchResultsLV = new GitUI.UserControls.NativeListView();
-            this.columnHeaderSearchIsFork = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.openGitupPageBtn = new System.Windows.Forms.Button();
-            this.searchResultItemDescription = new System.Windows.Forms.TextBox();
-            this.descriptionLbl = new System.Windows.Forms.Label();
-            this.cloneSetupGB = new System.Windows.Forms.GroupBox();
-            this.depthLabel = new System.Windows.Forms.Label();
-            this.ProtocolDropdownList = new System.Windows.Forms.ComboBox();
-            this.ProtocolLabel = new System.Windows.Forms.Label();
-            this.cloneInfoText = new System.Windows.Forms.Label();
-            this.addUpstreamRemoteAsCB = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.createDirTB = new System.Windows.Forms.TextBox();
-            this.createDirectoryLbl = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.browseForCloneToDirbtn = new System.Windows.Forms.Button();
-            this.destinationTB = new System.Windows.Forms.TextBox();
-            this.depthUpDown = new System.Windows.Forms.NumericUpDown();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tabControl.SuspendLayout();
-            this.myReposPage.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            this.searchReposPage.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
-            this.cloneSetupGB.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.depthUpDown)).BeginInit();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            columnHeaderMyReposName = ((ColumnHeader)(new ColumnHeader()));
+            columnHeaderMyReposIsFork = ((ColumnHeader)(new ColumnHeader()));
+            columnHeaderMyReposForks = ((ColumnHeader)(new ColumnHeader()));
+            columnHeaderSearchName = ((ColumnHeader)(new ColumnHeader()));
+            columnHeaderSearchOwner = ((ColumnHeader)(new ColumnHeader()));
+            columnHeaderSearchForks = ((ColumnHeader)(new ColumnHeader()));
+            cloneBtn = new Button();
+            _NO_TRANSLATE_closeBtn = new Button();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            tabControl = new TabControl();
+            myReposPage = new TabPage();
+            tableLayoutPanel5 = new TableLayoutPanel();
+            helpTextLbl = new Label();
+            myReposLV = new GitUI.UserControls.NativeListView();
+            columnHeaderMyReposIsPrivate = ((ColumnHeader)(new ColumnHeader()));
+            searchReposPage = new TabPage();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            flowLayoutPanel2 = new FlowLayoutPanel();
+            searchTB = new TextBox();
+            searchBtn = new Button();
+            orLbl = new Label();
+            getFromUserBtn = new Button();
+            forkBtn = new Button();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            searchResultsLV = new GitUI.UserControls.NativeListView();
+            columnHeaderSearchIsFork = ((ColumnHeader)(new ColumnHeader()));
+            tableLayoutPanel4 = new TableLayoutPanel();
+            openGitupPageBtn = new Button();
+            searchResultItemDescription = new TextBox();
+            descriptionLbl = new Label();
+            cloneSetupGB = new GroupBox();
+            depthLabel = new Label();
+            ProtocolDropdownList = new ComboBox();
+            ProtocolLabel = new Label();
+            cloneInfoText = new Label();
+            addUpstreamRemoteAsCB = new ComboBox();
+            label3 = new Label();
+            createDirTB = new TextBox();
+            createDirectoryLbl = new Label();
+            label1 = new Label();
+            browseForCloneToDirbtn = new Button();
+            destinationTB = new TextBox();
+            depthUpDown = new NumericUpDown();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            tableLayoutPanel2.SuspendLayout();
+            tabControl.SuspendLayout();
+            myReposPage.SuspendLayout();
+            tableLayoutPanel5.SuspendLayout();
+            searchReposPage.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            cloneSetupGB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(depthUpDown)).BeginInit();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // columnHeaderMyReposName
             // 
-            this.columnHeaderMyReposName.Text = "Name";
-            this.columnHeaderMyReposName.Width = 180;
+            columnHeaderMyReposName.Text = "Name";
+            columnHeaderMyReposName.Width = 180;
             // 
             // columnHeaderMyReposIsFork
             // 
-            this.columnHeaderMyReposIsFork.Text = "Is fork";
-            this.columnHeaderMyReposIsFork.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeaderMyReposIsFork.Width = 45;
+            columnHeaderMyReposIsFork.Text = "Is fork";
+            columnHeaderMyReposIsFork.TextAlign = HorizontalAlignment.Center;
+            columnHeaderMyReposIsFork.Width = 45;
             // 
             // columnHeaderMyReposForks
             // 
-            this.columnHeaderMyReposForks.Text = "# Forks";
-            this.columnHeaderMyReposForks.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderMyReposForks.Width = 50;
+            columnHeaderMyReposForks.Text = "# Forks";
+            columnHeaderMyReposForks.TextAlign = HorizontalAlignment.Right;
+            columnHeaderMyReposForks.Width = 50;
             // 
             // columnHeaderSearchName
             // 
-            this.columnHeaderSearchName.Text = "Name";
-            this.columnHeaderSearchName.Width = 180;
+            columnHeaderSearchName.Text = "Name";
+            columnHeaderSearchName.Width = 180;
             // 
             // columnHeaderSearchOwner
             // 
-            this.columnHeaderSearchOwner.Text = "Owner";
-            this.columnHeaderSearchOwner.Width = 110;
+            columnHeaderSearchOwner.Text = "Owner";
+            columnHeaderSearchOwner.Width = 110;
             // 
             // columnHeaderSearchForks
             // 
-            this.columnHeaderSearchForks.Text = "# Forks";
-            this.columnHeaderSearchForks.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderSearchForks.Width = 40;
+            columnHeaderSearchForks.Text = "# Forks";
+            columnHeaderSearchForks.TextAlign = HorizontalAlignment.Right;
+            columnHeaderSearchForks.Width = 40;
             // 
             // cloneBtn
             // 
-            this.cloneBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cloneBtn.Location = new System.Drawing.Point(489, 3);
-            this.cloneBtn.Name = "cloneBtn";
-            this.cloneBtn.Size = new System.Drawing.Size(120, 30);
-            this.cloneBtn.TabIndex = 0;
-            this.cloneBtn.Text = "Clone";
-            this.cloneBtn.UseVisualStyleBackColor = true;
-            this.cloneBtn.Click += new System.EventHandler(this._cloneBtn_Click);
+            cloneBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            cloneBtn.Location = new Point(489, 3);
+            cloneBtn.Name = "cloneBtn";
+            cloneBtn.Size = new Size(120, 30);
+            cloneBtn.TabIndex = 0;
+            cloneBtn.Text = "Clone";
+            cloneBtn.UseVisualStyleBackColor = true;
+            cloneBtn.Click += _cloneBtn_Click;
             // 
             // _NO_TRANSLATE_closeBtn
             // 
-            this._NO_TRANSLATE_closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_closeBtn.Location = new System.Drawing.Point(615, 3);
-            this._NO_TRANSLATE_closeBtn.Name = "closeBtn";
-            this._NO_TRANSLATE_closeBtn.Size = new System.Drawing.Size(120, 30);
-            this._NO_TRANSLATE_closeBtn.TabIndex = 1;
-            this._NO_TRANSLATE_closeBtn.Text = TranslatedStrings.Close;
-            this._NO_TRANSLATE_closeBtn.UseVisualStyleBackColor = true;
-            this._NO_TRANSLATE_closeBtn.Click += new System.EventHandler(this._closeBtn_Click);
+            _NO_TRANSLATE_closeBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            _NO_TRANSLATE_closeBtn.Location = new Point(615, 3);
+            _NO_TRANSLATE_closeBtn.Name = "closeBtn";
+            _NO_TRANSLATE_closeBtn.Size = new Size(120, 30);
+            _NO_TRANSLATE_closeBtn.TabIndex = 1;
+            _NO_TRANSLATE_closeBtn.Text = TranslatedStrings.Close;
+            _NO_TRANSLATE_closeBtn.UseVisualStyleBackColor = true;
+            _NO_TRANSLATE_closeBtn.Click += _closeBtn_Click;
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.tabControl, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.cloneSetupGB, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 2);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(744, 552);
-            this.tableLayoutPanel2.TabIndex = 0;
+            tableLayoutPanel2.ColumnCount = 1;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Controls.Add(tabControl, 0, 0);
+            tableLayoutPanel2.Controls.Add(cloneSetupGB, 0, 1);
+            tableLayoutPanel2.Controls.Add(flowLayoutPanel1, 0, 2);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(0, 0);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 3;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.Size = new Size(744, 552);
+            tableLayoutPanel2.TabIndex = 0;
             // 
             // tabControl
             // 
-            this.tabControl.Controls.Add(this.myReposPage);
-            this.tabControl.Controls.Add(this.searchReposPage);
-            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl.Location = new System.Drawing.Point(3, 3);
-            this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(738, 323);
-            this.tabControl.TabIndex = 0;
-            this.tabControl.SelectedIndexChanged += new System.EventHandler(this._tabControl_SelectedIndexChanged);
+            tabControl.Controls.Add(myReposPage);
+            tabControl.Controls.Add(searchReposPage);
+            tabControl.Dock = DockStyle.Fill;
+            tabControl.Location = new Point(3, 3);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(738, 323);
+            tabControl.TabIndex = 0;
+            tabControl.SelectedIndexChanged += _tabControl_SelectedIndexChanged;
             // 
             // myReposPage
             // 
-            this.myReposPage.Controls.Add(this.tableLayoutPanel5);
-            this.myReposPage.Location = new System.Drawing.Point(4, 22);
-            this.myReposPage.Name = "myReposPage";
-            this.myReposPage.Padding = new System.Windows.Forms.Padding(3);
-            this.myReposPage.Size = new System.Drawing.Size(730, 297);
-            this.myReposPage.TabIndex = 0;
-            this.myReposPage.Text = "My repositories";
-            this.myReposPage.UseVisualStyleBackColor = true;
+            myReposPage.Controls.Add(tableLayoutPanel5);
+            myReposPage.Location = new Point(4, 22);
+            myReposPage.Name = "myReposPage";
+            myReposPage.Padding = new Padding(3);
+            myReposPage.Size = new Size(730, 297);
+            myReposPage.TabIndex = 0;
+            myReposPage.Text = "My repositories";
+            myReposPage.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel5
             // 
-            this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel5.Controls.Add(this.helpTextLbl, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.myReposLV, 0, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 1;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(724, 291);
-            this.tableLayoutPanel5.TabIndex = 0;
+            tableLayoutPanel5.ColumnCount = 2;
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+            tableLayoutPanel5.Controls.Add(helpTextLbl, 1, 0);
+            tableLayoutPanel5.Controls.Add(myReposLV, 0, 0);
+            tableLayoutPanel5.Dock = DockStyle.Fill;
+            tableLayoutPanel5.Location = new Point(3, 3);
+            tableLayoutPanel5.Name = "tableLayoutPanel5";
+            tableLayoutPanel5.RowCount = 1;
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel5.Size = new Size(724, 291);
+            tableLayoutPanel5.TabIndex = 0;
             // 
             // helpTextLbl
             // 
-            this.helpTextLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.helpTextLbl.Location = new System.Drawing.Point(509, 0);
-            this.helpTextLbl.Name = "helpTextLbl";
-            this.helpTextLbl.Size = new System.Drawing.Size(212, 291);
-            this.helpTextLbl.TabIndex = 0;
-            this.helpTextLbl.Text = "If you want to fork a repository owned by somebody else, go to the Search for rep" +
+            helpTextLbl.Dock = DockStyle.Fill;
+            helpTextLbl.Location = new Point(509, 0);
+            helpTextLbl.Name = "helpTextLbl";
+            helpTextLbl.Size = new Size(212, 291);
+            helpTextLbl.TabIndex = 0;
+            helpTextLbl.Text = "If you want to fork a repository owned by somebody else, go to the Search for rep" +
     "ositories tab.";
-            this.helpTextLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            helpTextLbl.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // myReposLV
             // 
-            this.myReposLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderMyReposName,
-            this.columnHeaderMyReposIsFork,
-            this.columnHeaderMyReposForks,
-            this.columnHeaderMyReposIsPrivate});
-            this.myReposLV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.myReposLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.myReposLV.HideSelection = false;
-            this.myReposLV.Location = new System.Drawing.Point(3, 3);
-            this.myReposLV.MultiSelect = false;
-            this.myReposLV.Name = "myReposLV";
-            this.myReposLV.ShowGroups = false;
-            this.myReposLV.Size = new System.Drawing.Size(500, 285);
-            this.myReposLV.TabIndex = 0;
-            this.myReposLV.UseCompatibleStateImageBehavior = false;
-            this.myReposLV.View = System.Windows.Forms.View.Details;
-            this.myReposLV.SelectedIndexChanged += new System.EventHandler(this._myReposLV_SelectedIndexChanged);
+            myReposLV.Columns.AddRange(new ColumnHeader[] {
+            columnHeaderMyReposName,
+            columnHeaderMyReposIsFork,
+            columnHeaderMyReposForks,
+            columnHeaderMyReposIsPrivate});
+            myReposLV.Dock = DockStyle.Fill;
+            myReposLV.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            myReposLV.HideSelection = false;
+            myReposLV.Location = new Point(3, 3);
+            myReposLV.MultiSelect = false;
+            myReposLV.Name = "myReposLV";
+            myReposLV.ShowGroups = false;
+            myReposLV.Size = new Size(500, 285);
+            myReposLV.TabIndex = 0;
+            myReposLV.UseCompatibleStateImageBehavior = false;
+            myReposLV.View = View.Details;
+            myReposLV.SelectedIndexChanged += _myReposLV_SelectedIndexChanged;
             // 
             // columnHeaderMyReposIsPrivate
             // 
-            this.columnHeaderMyReposIsPrivate.Text = "Private";
-            this.columnHeaderMyReposIsPrivate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeaderMyReposIsPrivate.Width = 45;
+            columnHeaderMyReposIsPrivate.Text = "Private";
+            columnHeaderMyReposIsPrivate.TextAlign = HorizontalAlignment.Center;
+            columnHeaderMyReposIsPrivate.Width = 45;
             // 
             // searchReposPage
             // 
-            this.searchReposPage.Controls.Add(this.tableLayoutPanel1);
-            this.searchReposPage.Location = new System.Drawing.Point(4, 22);
-            this.searchReposPage.Name = "searchReposPage";
-            this.searchReposPage.Padding = new System.Windows.Forms.Padding(3);
-            this.searchReposPage.Size = new System.Drawing.Size(730, 297);
-            this.searchReposPage.TabIndex = 1;
-            this.searchReposPage.Text = "Search for repositories";
-            this.searchReposPage.UseVisualStyleBackColor = true;
+            searchReposPage.Controls.Add(tableLayoutPanel1);
+            searchReposPage.Location = new Point(4, 22);
+            searchReposPage.Name = "searchReposPage";
+            searchReposPage.Padding = new Padding(3);
+            searchReposPage.Size = new Size(730, 297);
+            searchReposPage.TabIndex = 1;
+            searchReposPage.Text = "Search for repositories";
+            searchReposPage.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.forkBtn, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(724, 291);
-            this.tableLayoutPanel1.TabIndex = 23;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(flowLayoutPanel2, 0, 0);
+            tableLayoutPanel1.Controls.Add(forkBtn, 0, 2);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 0, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 3);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(724, 291);
+            tableLayoutPanel1.TabIndex = 23;
             // 
             // flowLayoutPanel2
             // 
-            this.flowLayoutPanel2.Controls.Add(this.searchTB);
-            this.flowLayoutPanel2.Controls.Add(this.searchBtn);
-            this.flowLayoutPanel2.Controls.Add(this.orLbl);
-            this.flowLayoutPanel2.Controls.Add(this.getFromUserBtn);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(718, 35);
-            this.flowLayoutPanel2.TabIndex = 0;
+            flowLayoutPanel2.Controls.Add(searchTB);
+            flowLayoutPanel2.Controls.Add(searchBtn);
+            flowLayoutPanel2.Controls.Add(orLbl);
+            flowLayoutPanel2.Controls.Add(getFromUserBtn);
+            flowLayoutPanel2.Dock = DockStyle.Fill;
+            flowLayoutPanel2.Location = new Point(3, 3);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new Size(718, 35);
+            flowLayoutPanel2.TabIndex = 0;
             // 
             // searchTB
             // 
-            this.searchTB.Location = new System.Drawing.Point(3, 3);
-            this.searchTB.Name = "searchTB";
-            this.searchTB.Size = new System.Drawing.Size(198, 20);
-            this.searchTB.TabIndex = 0;
-            this.searchTB.Enter += new System.EventHandler(this._searchTB_Enter);
-            this.searchTB.Leave += new System.EventHandler(this._searchTB_Leave);
+            searchTB.Location = new Point(3, 3);
+            searchTB.Name = "searchTB";
+            searchTB.Size = new Size(198, 20);
+            searchTB.TabIndex = 0;
+            searchTB.Enter += _searchTB_Enter;
+            searchTB.Leave += _searchTB_Leave;
             // 
             // searchBtn
             // 
-            this.searchBtn.Location = new System.Drawing.Point(207, 3);
-            this.searchBtn.Name = "searchBtn";
-            this.searchBtn.Size = new System.Drawing.Size(93, 23);
-            this.searchBtn.TabIndex = 1;
-            this.searchBtn.Text = "Search";
-            this.searchBtn.UseVisualStyleBackColor = true;
-            this.searchBtn.Click += new System.EventHandler(this._searchBtn_Click);
+            searchBtn.Location = new Point(207, 3);
+            searchBtn.Name = "searchBtn";
+            searchBtn.Size = new Size(93, 23);
+            searchBtn.TabIndex = 1;
+            searchBtn.Text = "Search";
+            searchBtn.UseVisualStyleBackColor = true;
+            searchBtn.Click += _searchBtn_Click;
             // 
             // orLbl
             // 
-            this.orLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.orLbl.AutoSize = true;
-            this.orLbl.Location = new System.Drawing.Point(306, 0);
-            this.orLbl.Name = "orLbl";
-            this.orLbl.Size = new System.Drawing.Size(16, 13);
-            this.orLbl.TabIndex = 22;
-            this.orLbl.Text = "or";
+            orLbl.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            orLbl.AutoSize = true;
+            orLbl.Location = new Point(306, 0);
+            orLbl.Name = "orLbl";
+            orLbl.Size = new Size(16, 13);
+            orLbl.TabIndex = 22;
+            orLbl.Text = "or";
             // 
             // getFromUserBtn
             // 
-            this.getFromUserBtn.Location = new System.Drawing.Point(328, 3);
-            this.getFromUserBtn.Name = "getFromUserBtn";
-            this.getFromUserBtn.Size = new System.Drawing.Size(124, 23);
-            this.getFromUserBtn.TabIndex = 2;
-            this.getFromUserBtn.Text = "Get from user";
-            this.getFromUserBtn.UseVisualStyleBackColor = true;
-            this.getFromUserBtn.Click += new System.EventHandler(this._getFromUserBtn_Click);
+            getFromUserBtn.Location = new Point(328, 3);
+            getFromUserBtn.Name = "getFromUserBtn";
+            getFromUserBtn.Size = new Size(124, 23);
+            getFromUserBtn.TabIndex = 2;
+            getFromUserBtn.Text = "Get from user";
+            getFromUserBtn.UseVisualStyleBackColor = true;
+            getFromUserBtn.Click += _getFromUserBtn_Click;
             // 
             // forkBtn
             // 
-            this.forkBtn.Location = new System.Drawing.Point(3, 265);
-            this.forkBtn.Name = "forkBtn";
-            this.forkBtn.Size = new System.Drawing.Size(150, 23);
-            this.forkBtn.TabIndex = 4;
-            this.forkBtn.Text = "Fork!";
-            this.forkBtn.UseVisualStyleBackColor = true;
-            this.forkBtn.Click += new System.EventHandler(this._forkBtn_Click);
+            forkBtn.Location = new Point(3, 265);
+            forkBtn.Name = "forkBtn";
+            forkBtn.Size = new Size(150, 23);
+            forkBtn.TabIndex = 4;
+            forkBtn.Text = "Fork!";
+            forkBtn.UseVisualStyleBackColor = true;
+            forkBtn.Click += _forkBtn_Click;
             // 
             // tableLayoutPanel3
             // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel3.Controls.Add(this.searchResultsLV, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 1, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 44);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(718, 215);
-            this.tableLayoutPanel3.TabIndex = 5;
+            tableLayoutPanel3.ColumnCount = 2;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tableLayoutPanel3.Controls.Add(searchResultsLV, 0, 0);
+            tableLayoutPanel3.Controls.Add(tableLayoutPanel4, 1, 0);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(3, 44);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 1;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.Size = new Size(718, 215);
+            tableLayoutPanel3.TabIndex = 5;
             // 
             // searchResultsLV
             // 
-            this.searchResultsLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderSearchName,
-            this.columnHeaderSearchOwner,
-            this.columnHeaderSearchIsFork,
-            this.columnHeaderSearchForks});
-            this.searchResultsLV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.searchResultsLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.searchResultsLV.HideSelection = false;
-            this.searchResultsLV.Location = new System.Drawing.Point(3, 3);
-            this.searchResultsLV.MultiSelect = false;
-            this.searchResultsLV.Name = "searchResultsLV";
-            this.searchResultsLV.ShowGroups = false;
-            this.searchResultsLV.Size = new System.Drawing.Size(424, 209);
-            this.searchResultsLV.TabIndex = 3;
-            this.searchResultsLV.UseCompatibleStateImageBehavior = false;
-            this.searchResultsLV.View = System.Windows.Forms.View.Details;
-            this.searchResultsLV.SelectedIndexChanged += new System.EventHandler(this._searchResultsLV_SelectedIndexChanged);
+            searchResultsLV.Columns.AddRange(new ColumnHeader[] {
+            columnHeaderSearchName,
+            columnHeaderSearchOwner,
+            columnHeaderSearchIsFork,
+            columnHeaderSearchForks});
+            searchResultsLV.Dock = DockStyle.Fill;
+            searchResultsLV.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            searchResultsLV.HideSelection = false;
+            searchResultsLV.Location = new Point(3, 3);
+            searchResultsLV.MultiSelect = false;
+            searchResultsLV.Name = "searchResultsLV";
+            searchResultsLV.ShowGroups = false;
+            searchResultsLV.Size = new Size(424, 209);
+            searchResultsLV.TabIndex = 3;
+            searchResultsLV.UseCompatibleStateImageBehavior = false;
+            searchResultsLV.View = View.Details;
+            searchResultsLV.SelectedIndexChanged += _searchResultsLV_SelectedIndexChanged;
             // 
             // columnHeaderSearchIsFork
             // 
-            this.columnHeaderSearchIsFork.Text = "Is fork";
-            this.columnHeaderSearchIsFork.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeaderSearchIsFork.Width = 41;
+            columnHeaderSearchIsFork.Text = "Is fork";
+            columnHeaderSearchIsFork.TextAlign = HorizontalAlignment.Center;
+            columnHeaderSearchIsFork.Width = 41;
             // 
             // tableLayoutPanel4
             // 
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.openGitupPageBtn, 0, 2);
-            this.tableLayoutPanel4.Controls.Add(this.searchResultItemDescription, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.descriptionLbl, 0, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(433, 3);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 3;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(282, 209);
-            this.tableLayoutPanel4.TabIndex = 4;
+            tableLayoutPanel4.ColumnCount = 1;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.Controls.Add(openGitupPageBtn, 0, 2);
+            tableLayoutPanel4.Controls.Add(searchResultItemDescription, 0, 1);
+            tableLayoutPanel4.Controls.Add(descriptionLbl, 0, 0);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(433, 3);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 3;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.Size = new Size(282, 209);
+            tableLayoutPanel4.TabIndex = 4;
             // 
             // openGitupPageBtn
             // 
-            this.openGitupPageBtn.Location = new System.Drawing.Point(3, 183);
-            this.openGitupPageBtn.Name = "openGitupPageBtn";
-            this.openGitupPageBtn.Size = new System.Drawing.Size(116, 23);
-            this.openGitupPageBtn.TabIndex = 5;
-            this.openGitupPageBtn.Text = "Open github page";
-            this.openGitupPageBtn.UseVisualStyleBackColor = true;
-            this.openGitupPageBtn.Click += new System.EventHandler(this._openGitupPageBtn_Click);
+            openGitupPageBtn.Location = new Point(3, 183);
+            openGitupPageBtn.Name = "openGitupPageBtn";
+            openGitupPageBtn.Size = new Size(116, 23);
+            openGitupPageBtn.TabIndex = 5;
+            openGitupPageBtn.Text = "Open github page";
+            openGitupPageBtn.UseVisualStyleBackColor = true;
+            openGitupPageBtn.Click += _openGitupPageBtn_Click;
             // 
             // searchResultItemDescription
             // 
-            this.searchResultItemDescription.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.searchResultItemDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.searchResultItemDescription.Location = new System.Drawing.Point(3, 16);
-            this.searchResultItemDescription.Multiline = true;
-            this.searchResultItemDescription.Name = "searchResultItemDescription";
-            this.searchResultItemDescription.ReadOnly = true;
-            this.searchResultItemDescription.Size = new System.Drawing.Size(276, 161);
-            this.searchResultItemDescription.TabIndex = 18;
+            searchResultItemDescription.BackColor = SystemColors.ControlLightLight;
+            searchResultItemDescription.Dock = DockStyle.Fill;
+            searchResultItemDescription.Location = new Point(3, 16);
+            searchResultItemDescription.Multiline = true;
+            searchResultItemDescription.Name = "searchResultItemDescription";
+            searchResultItemDescription.ReadOnly = true;
+            searchResultItemDescription.Size = new Size(276, 161);
+            searchResultItemDescription.TabIndex = 18;
             // 
             // descriptionLbl
             // 
-            this.descriptionLbl.AutoSize = true;
-            this.descriptionLbl.Location = new System.Drawing.Point(3, 0);
-            this.descriptionLbl.Name = "descriptionLbl";
-            this.descriptionLbl.Size = new System.Drawing.Size(63, 13);
-            this.descriptionLbl.TabIndex = 17;
-            this.descriptionLbl.Text = "Description:";
+            descriptionLbl.AutoSize = true;
+            descriptionLbl.Location = new Point(3, 0);
+            descriptionLbl.Name = "descriptionLbl";
+            descriptionLbl.Size = new Size(63, 13);
+            descriptionLbl.TabIndex = 17;
+            descriptionLbl.Text = "Description:";
             // 
             // cloneSetupGB
             // 
-            this.cloneSetupGB.Controls.Add(this.depthLabel);
-            this.cloneSetupGB.Controls.Add(this.ProtocolDropdownList);
-            this.cloneSetupGB.Controls.Add(this.ProtocolLabel);
-            this.cloneSetupGB.Controls.Add(this.cloneInfoText);
-            this.cloneSetupGB.Controls.Add(this.addUpstreamRemoteAsCB);
-            this.cloneSetupGB.Controls.Add(this.label3);
-            this.cloneSetupGB.Controls.Add(this.createDirTB);
-            this.cloneSetupGB.Controls.Add(this.createDirectoryLbl);
-            this.cloneSetupGB.Controls.Add(this.label1);
-            this.cloneSetupGB.Controls.Add(this.browseForCloneToDirbtn);
-            this.cloneSetupGB.Controls.Add(this.destinationTB);
-            this.cloneSetupGB.Controls.Add(this.depthUpDown);
-            this.cloneSetupGB.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cloneSetupGB.Location = new System.Drawing.Point(4, 333);
-            this.cloneSetupGB.Margin = new System.Windows.Forms.Padding(4);
-            this.cloneSetupGB.Name = "cloneSetupGB";
-            this.cloneSetupGB.Padding = new System.Windows.Forms.Padding(4);
-            this.cloneSetupGB.Size = new System.Drawing.Size(736, 175);
-            this.cloneSetupGB.TabIndex = 1;
-            this.cloneSetupGB.TabStop = false;
-            this.cloneSetupGB.Text = "Clone";
+            cloneSetupGB.Controls.Add(depthLabel);
+            cloneSetupGB.Controls.Add(ProtocolDropdownList);
+            cloneSetupGB.Controls.Add(ProtocolLabel);
+            cloneSetupGB.Controls.Add(cloneInfoText);
+            cloneSetupGB.Controls.Add(addUpstreamRemoteAsCB);
+            cloneSetupGB.Controls.Add(label3);
+            cloneSetupGB.Controls.Add(createDirTB);
+            cloneSetupGB.Controls.Add(createDirectoryLbl);
+            cloneSetupGB.Controls.Add(label1);
+            cloneSetupGB.Controls.Add(browseForCloneToDirbtn);
+            cloneSetupGB.Controls.Add(destinationTB);
+            cloneSetupGB.Controls.Add(depthUpDown);
+            cloneSetupGB.Dock = DockStyle.Fill;
+            cloneSetupGB.Location = new Point(4, 333);
+            cloneSetupGB.Margin = new Padding(4);
+            cloneSetupGB.Name = "cloneSetupGB";
+            cloneSetupGB.Padding = new Padding(4);
+            cloneSetupGB.Size = new Size(736, 175);
+            cloneSetupGB.TabIndex = 1;
+            cloneSetupGB.TabStop = false;
+            cloneSetupGB.Text = "Clone";
             // 
             // depthLabel
             // 
-            this.depthLabel.AutoSize = true;
-            this.depthLabel.Location = new System.Drawing.Point(7, 135);
-            this.depthLabel.Name = "depthLabel";
-            this.depthLabel.Size = new System.Drawing.Size(63, 13);
-            this.depthLabel.TabIndex = 10;
-            this.depthLabel.Text = "Limit Depth:";
+            depthLabel.AutoSize = true;
+            depthLabel.Location = new Point(7, 135);
+            depthLabel.Name = "depthLabel";
+            depthLabel.Size = new Size(63, 13);
+            depthLabel.TabIndex = 10;
+            depthLabel.Text = "Limit Depth:";
             // 
             // ProtocolDropdownList
             // 
-            this.ProtocolDropdownList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ProtocolDropdownList.FormattingEnabled = true;
-            this.ProtocolDropdownList.Location = new System.Drawing.Point(470, 32);
-            this.ProtocolDropdownList.Name = "ProtocolDropdownList";
-            this.ProtocolDropdownList.Size = new System.Drawing.Size(121, 21);
-            this.ProtocolDropdownList.TabIndex = 4;
-            this.ProtocolDropdownList.SelectedIndexChanged += new System.EventHandler(this.ProtocolSelectionChanged);
+            ProtocolDropdownList.DropDownStyle = ComboBoxStyle.DropDownList;
+            ProtocolDropdownList.FormattingEnabled = true;
+            ProtocolDropdownList.Location = new Point(470, 32);
+            ProtocolDropdownList.Name = "ProtocolDropdownList";
+            ProtocolDropdownList.Size = new Size(121, 21);
+            ProtocolDropdownList.TabIndex = 4;
+            ProtocolDropdownList.SelectedIndexChanged += ProtocolSelectionChanged;
             // 
             // ProtocolLabel
             // 
-            this.ProtocolLabel.AutoSize = true;
-            this.ProtocolLabel.Location = new System.Drawing.Point(418, 36);
-            this.ProtocolLabel.Name = "ProtocolLabel";
-            this.ProtocolLabel.Size = new System.Drawing.Size(49, 13);
-            this.ProtocolLabel.TabIndex = 3;
-            this.ProtocolLabel.Text = "Protocol:";
+            ProtocolLabel.AutoSize = true;
+            ProtocolLabel.Location = new Point(418, 36);
+            ProtocolLabel.Name = "ProtocolLabel";
+            ProtocolLabel.Size = new Size(49, 13);
+            ProtocolLabel.TabIndex = 3;
+            ProtocolLabel.Text = "Protocol:";
             // 
             // cloneInfoText
             // 
-            this.cloneInfoText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cloneInfoText.Location = new System.Drawing.Point(10, 97);
-            this.cloneInfoText.Name = "cloneInfoText";
-            this.cloneInfoText.Size = new System.Drawing.Size(719, 35);
-            this.cloneInfoText.TabIndex = 9;
+            cloneInfoText.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cloneInfoText.Location = new Point(10, 97);
+            cloneInfoText.Name = "cloneInfoText";
+            cloneInfoText.Size = new Size(719, 35);
+            cloneInfoText.TabIndex = 9;
             // 
             // addUpstreamRemoteAsCB
             // 
-            this.addUpstreamRemoteAsCB.Location = new System.Drawing.Point(212, 71);
-            this.addUpstreamRemoteAsCB.Name = "addUpstreamRemoteAsCB";
-            this.addUpstreamRemoteAsCB.Size = new System.Drawing.Size(200, 21);
-            this.addUpstreamRemoteAsCB.TabIndex = 8;
-            this.addUpstreamRemoteAsCB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
+            addUpstreamRemoteAsCB.Location = new Point(212, 71);
+            addUpstreamRemoteAsCB.Name = "addUpstreamRemoteAsCB";
+            addUpstreamRemoteAsCB.Size = new Size(200, 21);
+            addUpstreamRemoteAsCB.TabIndex = 8;
+            addUpstreamRemoteAsCB.TextChanged += _addRemoteAsTB_TextChanged;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(211, 55);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(124, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Add upstream remote as:";
+            label3.AutoSize = true;
+            label3.Location = new Point(211, 55);
+            label3.Name = "label3";
+            label3.Size = new Size(124, 13);
+            label3.TabIndex = 7;
+            label3.Text = "Add upstream remote as:";
             // 
             // createDirTB
             // 
-            this.createDirTB.Location = new System.Drawing.Point(10, 71);
-            this.createDirTB.Name = "createDirTB";
-            this.createDirTB.Size = new System.Drawing.Size(183, 20);
-            this.createDirTB.TabIndex = 6;
-            this.createDirTB.TextChanged += new System.EventHandler(this._createDirTB_TextChanged);
-            this.createDirTB.Validating += new System.ComponentModel.CancelEventHandler(this._createDirTB_Validating);
+            createDirTB.Location = new Point(10, 71);
+            createDirTB.Name = "createDirTB";
+            createDirTB.Size = new Size(183, 20);
+            createDirTB.TabIndex = 6;
+            createDirTB.TextChanged += _createDirTB_TextChanged;
+            createDirTB.Validating += _createDirTB_Validating;
             // 
             // createDirectoryLbl
             // 
-            this.createDirectoryLbl.AutoSize = true;
-            this.createDirectoryLbl.Location = new System.Drawing.Point(7, 55);
-            this.createDirectoryLbl.Name = "createDirectoryLbl";
-            this.createDirectoryLbl.Size = new System.Drawing.Size(84, 13);
-            this.createDirectoryLbl.TabIndex = 5;
-            this.createDirectoryLbl.Text = "Create directory:";
+            createDirectoryLbl.AutoSize = true;
+            createDirectoryLbl.Location = new Point(7, 55);
+            createDirectoryLbl.Name = "createDirectoryLbl";
+            createDirectoryLbl.Size = new Size(84, 13);
+            createDirectoryLbl.TabIndex = 5;
+            createDirectoryLbl.Text = "Create directory:";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Destination folder:";
+            label1.AutoSize = true;
+            label1.Location = new Point(7, 16);
+            label1.Name = "label1";
+            label1.Size = new Size(92, 13);
+            label1.TabIndex = 0;
+            label1.Text = "Destination folder:";
             // 
             // browseForCloneToDirbtn
             // 
-            this.browseForCloneToDirbtn.Location = new System.Drawing.Point(310, 32);
-            this.browseForCloneToDirbtn.Name = "browseForCloneToDirbtn";
-            this.browseForCloneToDirbtn.Size = new System.Drawing.Size(102, 23);
-            this.browseForCloneToDirbtn.TabIndex = 2;
-            this.browseForCloneToDirbtn.Text = "Browse...";
-            this.browseForCloneToDirbtn.UseVisualStyleBackColor = true;
-            this.browseForCloneToDirbtn.Click += new System.EventHandler(this._browseForCloneToDirbtn_Click);
+            browseForCloneToDirbtn.Location = new Point(310, 32);
+            browseForCloneToDirbtn.Name = "browseForCloneToDirbtn";
+            browseForCloneToDirbtn.Size = new Size(102, 23);
+            browseForCloneToDirbtn.TabIndex = 2;
+            browseForCloneToDirbtn.Text = "Browse...";
+            browseForCloneToDirbtn.UseVisualStyleBackColor = true;
+            browseForCloneToDirbtn.Click += _browseForCloneToDirbtn_Click;
             // 
             // destinationTB
             // 
-            this.destinationTB.Location = new System.Drawing.Point(10, 32);
-            this.destinationTB.Name = "destinationTB";
-            this.destinationTB.Size = new System.Drawing.Size(294, 20);
-            this.destinationTB.TabIndex = 1;
-            this.destinationTB.TextChanged += new System.EventHandler(this._destinationTB_TextChanged);
-            this.destinationTB.Validating += new System.ComponentModel.CancelEventHandler(this._destinationTB_Validating);
+            destinationTB.Location = new Point(10, 32);
+            destinationTB.Name = "destinationTB";
+            destinationTB.Size = new Size(294, 20);
+            destinationTB.TabIndex = 1;
+            destinationTB.TextChanged += _destinationTB_TextChanged;
+            destinationTB.Validating += _destinationTB_Validating;
             // 
             // depthUpDown
             // 
-            this.depthUpDown.Location = new System.Drawing.Point(10, 151);
-            this.depthUpDown.Maximum = new decimal(new int[] {
+            depthUpDown.Location = new Point(10, 151);
+            depthUpDown.Maximum = new decimal(new int[] {
             999,
             0,
             0,
             0});
-            this.depthUpDown.Name = "depthUpDown";
-            this.depthUpDown.Size = new System.Drawing.Size(100, 20);
-            this.depthUpDown.TabIndex = 11;
+            depthUpDown.Name = "depthUpDown";
+            depthUpDown.Size = new Size(100, 20);
+            depthUpDown.TabIndex = 11;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this._NO_TRANSLATE_closeBtn);
-            this.flowLayoutPanel1.Controls.Add(this.cloneBtn);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 515);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(738, 34);
-            this.flowLayoutPanel1.TabIndex = 2;
+            flowLayoutPanel1.Controls.Add(_NO_TRANSLATE_closeBtn);
+            flowLayoutPanel1.Controls.Add(cloneBtn);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
+            flowLayoutPanel1.Location = new Point(3, 515);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(738, 34);
+            flowLayoutPanel1.TabIndex = 2;
             // 
             // ForkAndCloneForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(744, 552);
-            this.Controls.Add(this.tableLayoutPanel2);
-            this.Name = "ForkAndCloneForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Remote repository fork and clone";
-            this.Load += new System.EventHandler(this.ForkAndCloneForm_Load);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tabControl.ResumeLayout(false);
-            this.myReposPage.ResumeLayout(false);
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.searchReposPage.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
-            this.cloneSetupGB.ResumeLayout(false);
-            this.cloneSetupGB.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.depthUpDown)).EndInit();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(744, 552);
+            Controls.Add(tableLayoutPanel2);
+            Name = "ForkAndCloneForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Remote repository fork and clone";
+            Load += ForkAndCloneForm_Load;
+            tableLayoutPanel2.ResumeLayout(false);
+            tabControl.ResumeLayout(false);
+            myReposPage.ResumeLayout(false);
+            tableLayoutPanel5.ResumeLayout(false);
+            searchReposPage.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel2.ResumeLayout(false);
+            flowLayoutPanel2.PerformLayout();
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
+            cloneSetupGB.ResumeLayout(false);
+            cloneSetupGB.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(depthUpDown)).EndInit();
+            flowLayoutPanel1.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button cloneBtn;
-        private System.Windows.Forms.Button _NO_TRANSLATE_closeBtn;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage myReposPage;
-        private System.Windows.Forms.Label helpTextLbl;
+        private Button cloneBtn;
+        private Button _NO_TRANSLATE_closeBtn;
+        private TableLayoutPanel tableLayoutPanel2;
+        private TabControl tabControl;
+        private TabPage myReposPage;
+        private Label helpTextLbl;
         private UserControls.NativeListView myReposLV;
-        private System.Windows.Forms.ColumnHeader columnHeaderMyReposIsPrivate;
-        private System.Windows.Forms.TabPage searchReposPage;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.TextBox searchTB;
-        private System.Windows.Forms.Button searchBtn;
-        private System.Windows.Forms.Label orLbl;
-        private System.Windows.Forms.Button getFromUserBtn;
-        private System.Windows.Forms.Button forkBtn;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private ColumnHeader columnHeaderMyReposIsPrivate;
+        private TabPage searchReposPage;
+        private TableLayoutPanel tableLayoutPanel1;
+        private FlowLayoutPanel flowLayoutPanel2;
+        private TextBox searchTB;
+        private Button searchBtn;
+        private Label orLbl;
+        private Button getFromUserBtn;
+        private Button forkBtn;
+        private TableLayoutPanel tableLayoutPanel3;
         private UserControls.NativeListView searchResultsLV;
-        private System.Windows.Forms.ColumnHeader columnHeaderSearchIsFork;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.Button openGitupPageBtn;
-        private System.Windows.Forms.TextBox searchResultItemDescription;
-        private System.Windows.Forms.Label descriptionLbl;
-        private System.Windows.Forms.GroupBox cloneSetupGB;
-        private System.Windows.Forms.ComboBox addUpstreamRemoteAsCB;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox createDirTB;
-        private System.Windows.Forms.Label createDirectoryLbl;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button browseForCloneToDirbtn;
-        private System.Windows.Forms.TextBox destinationTB;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Label cloneInfoText;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
-        private System.Windows.Forms.ComboBox ProtocolDropdownList;
-        private System.Windows.Forms.Label ProtocolLabel;
-        private System.Windows.Forms.NumericUpDown depthUpDown;
-        private System.Windows.Forms.Label depthLabel;
-        private System.Windows.Forms.ColumnHeader columnHeaderMyReposName;
-        private System.Windows.Forms.ColumnHeader columnHeaderMyReposIsFork;
-        private System.Windows.Forms.ColumnHeader columnHeaderMyReposForks;
-        private System.Windows.Forms.ColumnHeader columnHeaderSearchName;
-        private System.Windows.Forms.ColumnHeader columnHeaderSearchOwner;
-        private System.Windows.Forms.ColumnHeader columnHeaderSearchForks;
+        private ColumnHeader columnHeaderSearchIsFork;
+        private TableLayoutPanel tableLayoutPanel4;
+        private Button openGitupPageBtn;
+        private TextBox searchResultItemDescription;
+        private Label descriptionLbl;
+        private GroupBox cloneSetupGB;
+        private ComboBox addUpstreamRemoteAsCB;
+        private Label label3;
+        private TextBox createDirTB;
+        private Label createDirectoryLbl;
+        private Label label1;
+        private Button browseForCloneToDirbtn;
+        private TextBox destinationTB;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Label cloneInfoText;
+        private TableLayoutPanel tableLayoutPanel5;
+        private ComboBox ProtocolDropdownList;
+        private Label ProtocolLabel;
+        private NumericUpDown depthUpDown;
+        private Label depthLabel;
+        private ColumnHeader columnHeaderMyReposName;
+        private ColumnHeader columnHeaderMyReposIsFork;
+        private ColumnHeader columnHeaderMyReposForks;
+        private ColumnHeader columnHeaderSearchName;
+        private ColumnHeader columnHeaderSearchOwner;
+        private ColumnHeader columnHeaderSearchForks;
     }
 }

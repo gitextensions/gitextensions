@@ -28,162 +28,160 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlLeft = new System.Windows.Forms.Panel();
-            this.flpnlStart = new System.Windows.Forms.FlowLayoutPanel();
-            this.flpnlContribute = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblContribute = new System.Windows.Forms.Label();
-            this.pnlLogo = new System.Windows.Forms.Panel();
-            this.pbLogo = new System.Windows.Forms.PictureBox();
-            this.userRepositoriesList = new GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlLeft.SuspendLayout();
-            this.flpnlContribute.SuspendLayout();
-            this.pnlLogo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            pnlLeft = new Panel();
+            flpnlStart = new FlowLayoutPanel();
+            flpnlContribute = new FlowLayoutPanel();
+            lblContribute = new Label();
+            pnlLogo = new Panel();
+            pbLogo = new PictureBox();
+            userRepositoriesList = new GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            pnlLeft.SuspendLayout();
+            flpnlContribute.SuspendLayout();
+            pnlLogo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(pbLogo)).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // pnlLeft
             // 
-            this.pnlLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(228)))), ((int)(((byte)(235)))));
-            this.pnlLeft.Controls.Add(this.flpnlStart);
-            this.pnlLeft.Controls.Add(this.flpnlContribute);
-            this.pnlLeft.Controls.Add(this.pnlLogo);
-            this.pnlLeft.Location = new System.Drawing.Point(33, 0);
-            this.pnlLeft.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlLeft.Name = "pnlLeft";
-            this.pnlLeft.Size = new System.Drawing.Size(213, 358);
-            this.pnlLeft.TabIndex = 0;
+            pnlLeft.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            pnlLeft.BackColor = Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(228)))), ((int)(((byte)(235)))));
+            pnlLeft.Controls.Add(flpnlStart);
+            pnlLeft.Controls.Add(flpnlContribute);
+            pnlLeft.Controls.Add(pnlLogo);
+            pnlLeft.Location = new Point(33, 0);
+            pnlLeft.Margin = new Padding(0);
+            pnlLeft.Name = "pnlLeft";
+            pnlLeft.Size = new Size(213, 358);
+            pnlLeft.TabIndex = 0;
             // 
             // flpnlStart
             // 
-            this.flpnlStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(50)))), ((int)(((byte)(58)))));
-            this.flpnlStart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpnlStart.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpnlStart.Location = new System.Drawing.Point(0, 68);
-            this.flpnlStart.Margin = new System.Windows.Forms.Padding(2);
-            this.flpnlStart.Name = "flpnlStart";
-            this.flpnlStart.Padding = new System.Windows.Forms.Padding(20);
-            this.flpnlStart.Size = new System.Drawing.Size(213, 135);
-            this.flpnlStart.TabIndex = 1;
-            this.flpnlStart.WrapContents = false;
+            flpnlStart.BackColor = Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(50)))), ((int)(((byte)(58)))));
+            flpnlStart.Dock = DockStyle.Fill;
+            flpnlStart.FlowDirection = FlowDirection.TopDown;
+            flpnlStart.Location = new Point(0, 68);
+            flpnlStart.Margin = new Padding(2);
+            flpnlStart.Name = "flpnlStart";
+            flpnlStart.Padding = new Padding(20);
+            flpnlStart.Size = new Size(213, 135);
+            flpnlStart.TabIndex = 1;
+            flpnlStart.WrapContents = false;
             // 
             // flpnlContribute
             // 
-            this.flpnlContribute.BackColor = System.Drawing.Color.Transparent;
-            this.flpnlContribute.Controls.Add(this.lblContribute);
-            this.flpnlContribute.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flpnlContribute.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpnlContribute.Location = new System.Drawing.Point(0, 203);
-            this.flpnlContribute.Margin = new System.Windows.Forms.Padding(2);
-            this.flpnlContribute.Name = "flpnlContribute";
-            this.flpnlContribute.Padding = new System.Windows.Forms.Padding(20, 20, 20, 30);
-            this.flpnlContribute.Size = new System.Drawing.Size(213, 155);
-            this.flpnlContribute.TabIndex = 2;
-            this.flpnlContribute.WrapContents = false;
+            flpnlContribute.BackColor = Color.Transparent;
+            flpnlContribute.Controls.Add(lblContribute);
+            flpnlContribute.Dock = DockStyle.Bottom;
+            flpnlContribute.FlowDirection = FlowDirection.TopDown;
+            flpnlContribute.Location = new Point(0, 203);
+            flpnlContribute.Margin = new Padding(2);
+            flpnlContribute.Name = "flpnlContribute";
+            flpnlContribute.Padding = new Padding(20, 20, 20, 30);
+            flpnlContribute.Size = new Size(213, 155);
+            flpnlContribute.TabIndex = 2;
+            flpnlContribute.WrapContents = false;
             // 
             // lblContribute
             // 
-            this.lblContribute.AutoSize = true;
-            this.lblContribute.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.lblContribute.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblContribute.Location = new System.Drawing.Point(22, 20);
-            this.lblContribute.Margin = new System.Windows.Forms.Padding(2, 0, 2, 8);
-            this.lblContribute.Name = "lblContribute";
-            this.lblContribute.Size = new System.Drawing.Size(102, 25);
-            this.lblContribute.TabIndex = 0;
-            this.lblContribute.Text = "Contribute";
+            lblContribute.AutoSize = true;
+            lblContribute.Font = new Font("Segoe UI", 14.25F);
+            lblContribute.ForeColor = SystemColors.GrayText;
+            lblContribute.Location = new Point(22, 20);
+            lblContribute.Margin = new Padding(2, 0, 2, 8);
+            lblContribute.Name = "lblContribute";
+            lblContribute.Size = new Size(102, 25);
+            lblContribute.TabIndex = 0;
+            lblContribute.Text = "Contribute";
             // 
             // pnlLogo
             // 
-            this.pnlLogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(57)))));
-            this.pnlLogo.Controls.Add(this.pbLogo);
-            this.pnlLogo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlLogo.Location = new System.Drawing.Point(0, 0);
-            this.pnlLogo.Margin = new System.Windows.Forms.Padding(8);
-            this.pnlLogo.Name = "pnlLogo";
-            this.pnlLogo.Padding = new System.Windows.Forms.Padding(20, 0, 20, 14);
-            this.pnlLogo.Size = new System.Drawing.Size(213, 68);
-            this.pnlLogo.TabIndex = 0;
+            pnlLogo.BackColor = Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(57)))));
+            pnlLogo.Controls.Add(pbLogo);
+            pnlLogo.Dock = DockStyle.Top;
+            pnlLogo.Location = new Point(0, 0);
+            pnlLogo.Margin = new Padding(8);
+            pnlLogo.Name = "pnlLogo";
+            pnlLogo.Padding = new Padding(20, 0, 20, 14);
+            pnlLogo.Size = new Size(213, 68);
+            pnlLogo.TabIndex = 0;
             // 
             // pbLogo
             // 
-            this.pbLogo.Image = global::GitUI.Properties.Images.GitExtensionsLogoWide;
-            this.pbLogo.Location = new System.Drawing.Point(14, 15);
-            this.pbLogo.Name = "pbLogo";
-            this.pbLogo.Size = new System.Drawing.Size(185, 44);
-            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbLogo.TabIndex = 0;
-            this.pbLogo.TabStop = false;
+            pbLogo.Image = Properties.Images.GitExtensionsLogoWide;
+            pbLogo.Location = new Point(14, 15);
+            pbLogo.Name = "pbLogo";
+            pbLogo.Size = new Size(185, 44);
+            pbLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            pbLogo.TabIndex = 0;
+            pbLogo.TabStop = false;
             // 
             // userRepositoriesList
             // 
-            this.userRepositoriesList.BranchNameColor = System.Drawing.SystemColors.HotTrack;
-            this.userRepositoriesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.userRepositoriesList.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(183)))), ((int)(((byte)(226)))));
-            this.userRepositoriesList.HeaderColor = System.Drawing.Color.Empty;
-            this.userRepositoriesList.HeaderHeight = 70;
-            this.userRepositoriesList.HoverColor = System.Drawing.Color.Empty;
-            this.userRepositoriesList.Location = new System.Drawing.Point(246, 0);
-            this.userRepositoriesList.MainBackColor = System.Drawing.Color.Empty;
-            this.userRepositoriesList.Margin = new System.Windows.Forms.Padding(0);
-            this.userRepositoriesList.Name = "userRepositoriesList";
-            this.userRepositoriesList.Size = new System.Drawing.Size(405, 358);
-            this.userRepositoriesList.TabIndex = 1;
+            userRepositoriesList.BranchNameColor = SystemColors.HotTrack;
+            userRepositoriesList.Dock = DockStyle.Fill;
+            userRepositoriesList.HeaderBackColor = Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(183)))), ((int)(((byte)(226)))));
+            userRepositoriesList.HeaderColor = Color.Empty;
+            userRepositoriesList.HeaderHeight = 70;
+            userRepositoriesList.HoverColor = Color.Empty;
+            userRepositoriesList.Location = new Point(246, 0);
+            userRepositoriesList.MainBackColor = Color.Empty;
+            userRepositoriesList.Margin = new Padding(0);
+            userRepositoriesList.Name = "userRepositoriesList";
+            userRepositoriesList.Size = new Size(405, 358);
+            userRepositoriesList.TabIndex = 1;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.BackColor = System.Drawing.Color.Transparent;
-            this.tableLayoutPanel1.ColumnCount = 4;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 213F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.71428F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
-            this.tableLayoutPanel1.Controls.Add(this.pnlLeft, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.userRepositoriesList, 2, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(686, 358);
-            this.tableLayoutPanel1.TabIndex = 2;
+            tableLayoutPanel1.BackColor = Color.Transparent;
+            tableLayoutPanel1.ColumnCount = 4;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7.142857F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 213F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 85.71428F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7.142857F));
+            tableLayoutPanel1.Controls.Add(pnlLeft, 1, 0);
+            tableLayoutPanel1.Controls.Add(userRepositoriesList, 2, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(686, 358);
+            tableLayoutPanel1.TabIndex = 2;
             // 
             // Dashboard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoScroll = true;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(243)))), ((int)(((byte)(253)))));
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.Name = "Dashboard";
-            this.Size = new System.Drawing.Size(686, 358);
-            this.ParentChanged += new System.EventHandler(this.dashboard_ParentChanged);
-            this.pnlLeft.ResumeLayout(false);
-            this.flpnlContribute.ResumeLayout(false);
-            this.flpnlContribute.PerformLayout();
-            this.pnlLogo.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScroll = true;
+            BackColor = Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(243)))), ((int)(((byte)(253)))));
+            Controls.Add(tableLayoutPanel1);
+            DoubleBuffered = true;
+            Margin = new Padding(2, 1, 2, 1);
+            Name = "Dashboard";
+            Size = new Size(686, 358);
+            ParentChanged += dashboard_ParentChanged;
+            pnlLeft.ResumeLayout(false);
+            flpnlContribute.ResumeLayout(false);
+            flpnlContribute.PerformLayout();
+            pnlLogo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(pbLogo)).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.FlowLayoutPanel flpnlStart;
-        private System.Windows.Forms.Panel pnlLeft;
-        private System.Windows.Forms.FlowLayoutPanel flpnlContribute;
-        private System.Windows.Forms.Label lblContribute;
-        private System.Windows.Forms.Panel pnlLogo;
+        private FlowLayoutPanel flpnlStart;
+        private Panel pnlLeft;
+        private FlowLayoutPanel flpnlContribute;
+        private Label lblContribute;
+        private Panel pnlLogo;
         private UserRepositoriesList userRepositoriesList;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.PictureBox pbLogo;
+        private TableLayoutPanel tableLayoutPanel1;
+        private PictureBox pbLogo;
     }
 }

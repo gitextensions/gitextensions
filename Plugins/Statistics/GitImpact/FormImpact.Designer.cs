@@ -29,86 +29,86 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormImpact));
-            this.pnlTop = new System.Windows.Forms.Panel();
-            this.pnlAuthorColor = new System.Windows.Forms.Panel();
-            this.lblAuthor = new System.Windows.Forms.Label();
-            this.cbIncludingSubmodules = new System.Windows.Forms.CheckBox();
-            this.Impact = new GitImpact.ImpactControl();
-            this.pnlTop.SuspendLayout();
-            this.SuspendLayout();
+            pnlTop = new Panel();
+            pnlAuthorColor = new Panel();
+            lblAuthor = new Label();
+            cbIncludingSubmodules = new CheckBox();
+            Impact = new GitImpact.ImpactControl();
+            pnlTop.SuspendLayout();
+            SuspendLayout();
             // 
             // pnlTop
             // 
-            this.pnlTop.Controls.Add(this.pnlAuthorColor);
-            this.pnlTop.Controls.Add(this.lblAuthor);
-            this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTop.Location = new System.Drawing.Point(0, 0);
-            this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(863, 32);
-            this.pnlTop.TabIndex = 1;
+            pnlTop.Controls.Add(pnlAuthorColor);
+            pnlTop.Controls.Add(lblAuthor);
+            pnlTop.Dock = DockStyle.Top;
+            pnlTop.Location = new Point(0, 0);
+            pnlTop.Name = "pnlTop";
+            pnlTop.Size = new Size(863, 32);
+            pnlTop.TabIndex = 1;
             // 
             // pnlAuthorColor
             // 
-            this.pnlAuthorColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlAuthorColor.Location = new System.Drawing.Point(6, 6);
-            this.pnlAuthorColor.Name = "pnlAuthorColor";
-            this.pnlAuthorColor.Size = new System.Drawing.Size(20, 20);
-            this.pnlAuthorColor.TabIndex = 1;
+            pnlAuthorColor.BorderStyle = BorderStyle.FixedSingle;
+            pnlAuthorColor.Location = new Point(6, 6);
+            pnlAuthorColor.Name = "pnlAuthorColor";
+            pnlAuthorColor.Size = new Size(20, 20);
+            pnlAuthorColor.TabIndex = 1;
             // 
             // lblAuthor
             // 
-            this.lblAuthor.AutoSize = true;
-            this.lblAuthor.Location = new System.Drawing.Point(30, 8);
-            this.lblAuthor.Name = "lblAuthor";
-            this.lblAuthor.Size = new System.Drawing.Size(46, 16);
-            this.lblAuthor.TabIndex = 0;
-            this.lblAuthor.Text = "Author";
+            lblAuthor.AutoSize = true;
+            lblAuthor.Location = new Point(30, 8);
+            lblAuthor.Name = "lblAuthor";
+            lblAuthor.Size = new Size(46, 16);
+            lblAuthor.TabIndex = 0;
+            lblAuthor.Text = "Author";
             // 
             // cbIncludingSubmodules
             // 
-            this.cbIncludingSubmodules.AutoSize = true;
-            this.cbIncludingSubmodules.Location = new System.Drawing.Point(692, 9);
-            this.cbIncludingSubmodules.Name = "cbIncludingSubmodules";
-            this.cbIncludingSubmodules.Size = new System.Drawing.Size(128, 17);
-            this.cbIncludingSubmodules.TabIndex = 2;
-            this.cbIncludingSubmodules.Text = "Including submodules";
-            this.cbIncludingSubmodules.UseVisualStyleBackColor = true;
-            this.cbIncludingSubmodules.CheckedChanged += new System.EventHandler(this.cbShowSubmodules_CheckedChanged);
+            cbIncludingSubmodules.AutoSize = true;
+            cbIncludingSubmodules.Location = new Point(692, 9);
+            cbIncludingSubmodules.Name = "cbIncludingSubmodules";
+            cbIncludingSubmodules.Size = new Size(128, 17);
+            cbIncludingSubmodules.TabIndex = 2;
+            cbIncludingSubmodules.Text = "Including submodules";
+            cbIncludingSubmodules.UseVisualStyleBackColor = true;
+            cbIncludingSubmodules.CheckedChanged += cbShowSubmodules_CheckedChanged;
             // 
             // Impact
             // 
-            this.Impact.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.Impact.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Impact.Location = new System.Drawing.Point(0, 32);
-            this.Impact.Name = "Impact";
-            this.Impact.Size = new System.Drawing.Size(863, 452);
-            this.Impact.TabIndex = 0;
-            this.Impact.TabStop = false;
-            this.Impact.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Impact_MouseMove);
+            Impact.BorderStyle = BorderStyle.Fixed3D;
+            Impact.Dock = DockStyle.Fill;
+            Impact.Location = new Point(0, 32);
+            Impact.Name = "Impact";
+            Impact.Size = new Size(863, 452);
+            Impact.TabIndex = 0;
+            Impact.TabStop = false;
+            Impact.MouseMove += Impact_MouseMove;
             // 
             // FormImpact
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(863, 484);
-            this.Controls.Add(this.cbIncludingSubmodules);
-            this.Controls.Add(this.Impact);
-            this.Controls.Add(this.pnlTop);
-            this.Name = "FormImpact";
-            this.Text = "Impact";
-            this.pnlTop.ResumeLayout(false);
-            this.pnlTop.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(863, 484);
+            Controls.Add(cbIncludingSubmodules);
+            Controls.Add(Impact);
+            Controls.Add(pnlTop);
+            Name = "FormImpact";
+            Text = "Impact";
+            pnlTop.ResumeLayout(false);
+            pnlTop.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
         private ImpactControl Impact;
-        private System.Windows.Forms.Panel pnlTop;
-        private System.Windows.Forms.Panel pnlAuthorColor;
-        private System.Windows.Forms.Label lblAuthor;
-        private System.Windows.Forms.CheckBox cbIncludingSubmodules;
+        private Panel pnlTop;
+        private Panel pnlAuthorColor;
+        private Label lblAuthor;
+        private CheckBox cbIncludingSubmodules;
     }
 }

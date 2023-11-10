@@ -17,478 +17,478 @@ namespace GitUI.Editor
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stageSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.unstageSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyNewVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyOldVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.ignoreWhitespaceAtEolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ignoreWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ignoreAllWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.increaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.decreaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showEntireFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.automaticContinuousScrollToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showNonprintableCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.goToLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileviewerToolbar = new GitUI.ToolStripEx();
-            this.nextChangeButton = new System.Windows.Forms.ToolStripButton();
-            this.previousChangeButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.increaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
-            this.decreaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
-            this.showNonPrintChars = new System.Windows.Forms.ToolStripButton();
-            this.ignoreWhitespaceAtEol = new System.Windows.Forms.ToolStripButton();
-            this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
-            this.settingsButton = new System.Windows.Forms.ToolStripButton();
-            this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.ignoreAllWhitespaces = new System.Windows.Forms.ToolStripButton();
-            this.PictureBox = new System.Windows.Forms.PictureBox();
-            this._NO_TRANSLATE_lblShowPreview = new System.Windows.Forms.LinkLabel();
-            this.internalFileViewer = new GitUI.Editor.FileViewerInternal();
-            this.showSyntaxHighlighting = new System.Windows.Forms.ToolStripButton();
-            this.contextMenu.SuspendLayout();
-            this.fileviewerToolbar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            contextMenu = new ContextMenuStrip(components);
+            copyToolStripMenuItem = new ToolStripMenuItem();
+            stageSelectedLinesToolStripMenuItem = new ToolStripMenuItem();
+            unstageSelectedLinesToolStripMenuItem = new ToolStripMenuItem();
+            resetSelectedLinesToolStripMenuItem = new ToolStripMenuItem();
+            copyPatchToolStripMenuItem = new ToolStripMenuItem();
+            copyNewVersionToolStripMenuItem = new ToolStripMenuItem();
+            copyOldVersionToolStripMenuItem = new ToolStripMenuItem();
+            findToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            ignoreWhitespaceAtEolToolStripMenuItem = new ToolStripMenuItem();
+            ignoreWhitespaceChangesToolStripMenuItem = new ToolStripMenuItem();
+            ignoreAllWhitespaceChangesToolStripMenuItem = new ToolStripMenuItem();
+            increaseNumberOfLinesToolStripMenuItem = new ToolStripMenuItem();
+            decreaseNumberOfLinesToolStripMenuItem = new ToolStripMenuItem();
+            showEntireFileToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            treatAllFilesAsTextToolStripMenuItem = new ToolStripMenuItem();
+            automaticContinuousScrollToolStripMenuItem = new ToolStripMenuItem();
+            showNonprintableCharactersToolStripMenuItem = new ToolStripMenuItem();
+            goToLineToolStripMenuItem = new ToolStripMenuItem();
+            fileviewerToolbar = new GitUI.ToolStripEx();
+            nextChangeButton = new ToolStripButton();
+            previousChangeButton = new ToolStripButton();
+            toolStripSeparator3 = new ToolStripSeparator();
+            increaseNumberOfLines = new ToolStripButton();
+            decreaseNumberOfLines = new ToolStripButton();
+            toolStripSeparator4 = new ToolStripSeparator();
+            showEntireFileButton = new ToolStripButton();
+            showNonPrintChars = new ToolStripButton();
+            ignoreWhitespaceAtEol = new ToolStripButton();
+            ignoreWhiteSpaces = new ToolStripButton();
+            settingsButton = new ToolStripButton();
+            encodingToolStripComboBox = new ToolStripComboBox();
+            ignoreAllWhitespaces = new ToolStripButton();
+            PictureBox = new PictureBox();
+            _NO_TRANSLATE_lblShowPreview = new LinkLabel();
+            internalFileViewer = new GitUI.Editor.FileViewerInternal();
+            showSyntaxHighlighting = new ToolStripButton();
+            contextMenu.SuspendLayout();
+            fileviewerToolbar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(PictureBox)).BeginInit();
+            SuspendLayout();
             // 
             // contextMenu
             // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.stageSelectedLinesToolStripMenuItem,
-            this.unstageSelectedLinesToolStripMenuItem,
-            this.resetSelectedLinesToolStripMenuItem,
-            this.copyToolStripMenuItem,
-            this.copyPatchToolStripMenuItem,
-            this.copyNewVersionToolStripMenuItem,
-            this.copyOldVersionToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.ignoreWhitespaceAtEolToolStripMenuItem,
-            this.ignoreWhitespaceChangesToolStripMenuItem,
-            this.ignoreAllWhitespaceChangesToolStripMenuItem,
-            this.increaseNumberOfLinesToolStripMenuItem,
-            this.decreaseNumberOfLinesToolStripMenuItem,
-            this.showEntireFileToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.treatAllFilesAsTextToolStripMenuItem,
-            this.automaticContinuousScrollToolStripMenuItem,
-            this.showNonprintableCharactersToolStripMenuItem,
-            this.findToolStripMenuItem,
-            this.goToLineToolStripMenuItem});
-            this.contextMenu.Name = "ContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(244, 346);
+            contextMenu.Items.AddRange(new ToolStripItem[] {
+            stageSelectedLinesToolStripMenuItem,
+            unstageSelectedLinesToolStripMenuItem,
+            resetSelectedLinesToolStripMenuItem,
+            copyToolStripMenuItem,
+            copyPatchToolStripMenuItem,
+            copyNewVersionToolStripMenuItem,
+            copyOldVersionToolStripMenuItem,
+            toolStripSeparator1,
+            ignoreWhitespaceAtEolToolStripMenuItem,
+            ignoreWhitespaceChangesToolStripMenuItem,
+            ignoreAllWhitespaceChangesToolStripMenuItem,
+            increaseNumberOfLinesToolStripMenuItem,
+            decreaseNumberOfLinesToolStripMenuItem,
+            showEntireFileToolStripMenuItem,
+            toolStripSeparator2,
+            treatAllFilesAsTextToolStripMenuItem,
+            automaticContinuousScrollToolStripMenuItem,
+            showNonprintableCharactersToolStripMenuItem,
+            findToolStripMenuItem,
+            goToLineToolStripMenuItem});
+            contextMenu.Name = "ContextMenu";
+            contextMenu.Size = new Size(244, 346);
             // 
             // stageSelectedLinesToolStripMenuItem
             // 
-            this.stageSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
-            this.stageSelectedLinesToolStripMenuItem.Name = "stageSelectedLinesToolStripMenuItem";
-            this.stageSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.stageSelectedLinesToolStripMenuItem.Text = TranslatedStrings.StageSelectedLines;
-            this.stageSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.stageSelectedLinesToolStripMenuItem_Click);
+            stageSelectedLinesToolStripMenuItem.Image = Properties.Images.Stage;
+            stageSelectedLinesToolStripMenuItem.Name = "stageSelectedLinesToolStripMenuItem";
+            stageSelectedLinesToolStripMenuItem.Size = new Size(243, 22);
+            stageSelectedLinesToolStripMenuItem.Text = TranslatedStrings.StageSelectedLines;
+            stageSelectedLinesToolStripMenuItem.Click += stageSelectedLinesToolStripMenuItem_Click;
             // 
             // unstageSelectedLinesToolStripMenuItem
             // 
-            this.unstageSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.Unstage;
-            this.unstageSelectedLinesToolStripMenuItem.Name = "chunstageSelectedLinesToolStripMenuItemerrypickSelectedLinesToolStripMenuItem";
-            this.unstageSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.unstageSelectedLinesToolStripMenuItem.Text = TranslatedStrings.UnstageSelectedLines;
-            this.unstageSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.unstageSelectedLinesToolStripMenuItem_Click);
+            unstageSelectedLinesToolStripMenuItem.Image = Properties.Images.Unstage;
+            unstageSelectedLinesToolStripMenuItem.Name = "chunstageSelectedLinesToolStripMenuItemerrypickSelectedLinesToolStripMenuItem";
+            unstageSelectedLinesToolStripMenuItem.Size = new Size(243, 22);
+            unstageSelectedLinesToolStripMenuItem.Text = TranslatedStrings.UnstageSelectedLines;
+            unstageSelectedLinesToolStripMenuItem.Click += unstageSelectedLinesToolStripMenuItem_Click;
             // 
             // resetSelectedLinesToolStripMenuItem
             // 
-            this.resetSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
-            this.resetSelectedLinesToolStripMenuItem.Name = "resetSelectedLinesToolStripMenuItem";
-            this.resetSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.resetSelectedLinesToolStripMenuItem.Text = TranslatedStrings.ResetSelectedLines;
-            this.resetSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.resetSelectedLinesToolStripMenuItem_Click);
+            resetSelectedLinesToolStripMenuItem.Image = Properties.Images.ResetWorkingDirChanges;
+            resetSelectedLinesToolStripMenuItem.Name = "resetSelectedLinesToolStripMenuItem";
+            resetSelectedLinesToolStripMenuItem.Size = new Size(243, 22);
+            resetSelectedLinesToolStripMenuItem.Text = TranslatedStrings.ResetSelectedLines;
+            resetSelectedLinesToolStripMenuItem.Click += resetSelectedLinesToolStripMenuItem_Click;
             // 
             // copyToolStripMenuItem
             // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.copyToolStripMenuItem.Text = "Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItemClick);
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            copyToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.C)));
+            copyToolStripMenuItem.Size = new Size(243, 22);
+            copyToolStripMenuItem.Text = "Copy";
+            copyToolStripMenuItem.Click += CopyToolStripMenuItemClick;
             // 
             // copyPatchToolStripMenuItem
             // 
-            this.copyPatchToolStripMenuItem.Name = "copyPatchToolStripMenuItem";
-            this.copyPatchToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.copyPatchToolStripMenuItem.Text = "Copy patch";
-            this.copyPatchToolStripMenuItem.Click += new System.EventHandler(this.CopyPatchToolStripMenuItemClick);
+            copyPatchToolStripMenuItem.Name = "copyPatchToolStripMenuItem";
+            copyPatchToolStripMenuItem.Size = new Size(243, 22);
+            copyPatchToolStripMenuItem.Text = "Copy patch";
+            copyPatchToolStripMenuItem.Click += CopyPatchToolStripMenuItemClick;
             // 
             // copyNewVersionToolStripMenuItem
             // 
-            this.copyNewVersionToolStripMenuItem.Name = "copyNewVersionToolStripMenuItem";
-            this.copyNewVersionToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.copyNewVersionToolStripMenuItem.Text = "Copy new version";
-            this.copyNewVersionToolStripMenuItem.Click += new System.EventHandler(this.copyNewVersionToolStripMenuItem_Click);
+            copyNewVersionToolStripMenuItem.Name = "copyNewVersionToolStripMenuItem";
+            copyNewVersionToolStripMenuItem.Size = new Size(243, 22);
+            copyNewVersionToolStripMenuItem.Text = "Copy new version";
+            copyNewVersionToolStripMenuItem.Click += copyNewVersionToolStripMenuItem_Click;
             // 
             // copyOldVersionToolStripMenuItem
             // 
-            this.copyOldVersionToolStripMenuItem.Name = "copyOldVersionToolStripMenuItem";
-            this.copyOldVersionToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.copyOldVersionToolStripMenuItem.Text = "Copy old version";
-            this.copyOldVersionToolStripMenuItem.Click += new System.EventHandler(this.copyOldVersionToolStripMenuItem_Click);
+            copyOldVersionToolStripMenuItem.Name = "copyOldVersionToolStripMenuItem";
+            copyOldVersionToolStripMenuItem.Size = new Size(243, 22);
+            copyOldVersionToolStripMenuItem.Text = "Copy old version";
+            copyOldVersionToolStripMenuItem.Click += copyOldVersionToolStripMenuItem_Click;
             // 
             // findToolStripMenuItem
             // 
-            this.findToolStripMenuItem.Name = "findToolStripMenuItem";
-            this.findToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.findToolStripMenuItem.Text = "Find";
-            this.findToolStripMenuItem.Click += new System.EventHandler(this.FindToolStripMenuItemClick);
+            findToolStripMenuItem.Name = "findToolStripMenuItem";
+            findToolStripMenuItem.Size = new Size(243, 22);
+            findToolStripMenuItem.Text = "Find";
+            findToolStripMenuItem.Click += FindToolStripMenuItemClick;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(240, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(240, 6);
             // 
             // ignoreWhitespaceAtEolToolStripMenuItem
             // 
-            this.ignoreWhitespaceAtEolToolStripMenuItem.Name = "ignoreWhitespaceAtEolToolStripMenuItem";
-            this.ignoreWhitespaceAtEolToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.ignoreWhitespaceAtEolToolStripMenuItem.Text = "Ignore whitespace changes at end of line";
-            this.ignoreWhitespaceAtEolToolStripMenuItem.Click += new System.EventHandler(this.IgnoreWhitespaceAtEolToolStripMenuItem_Click);
+            ignoreWhitespaceAtEolToolStripMenuItem.Name = "ignoreWhitespaceAtEolToolStripMenuItem";
+            ignoreWhitespaceAtEolToolStripMenuItem.Size = new Size(243, 22);
+            ignoreWhitespaceAtEolToolStripMenuItem.Text = "Ignore whitespace changes at end of line";
+            ignoreWhitespaceAtEolToolStripMenuItem.Click += IgnoreWhitespaceAtEolToolStripMenuItem_Click;
             // 
             // ignoreWhitespaceChangesToolStripMenuItem
             // 
-            this.ignoreWhitespaceChangesToolStripMenuItem.Name = "ignoreWhitespaceChangesToolStripMenuItem";
-            this.ignoreWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore changes in amount of whitespace";
-            this.ignoreWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
+            ignoreWhitespaceChangesToolStripMenuItem.Name = "ignoreWhitespaceChangesToolStripMenuItem";
+            ignoreWhitespaceChangesToolStripMenuItem.Size = new Size(243, 22);
+            ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore changes in amount of whitespace";
+            ignoreWhitespaceChangesToolStripMenuItem.Click += IgnoreWhitespaceChangesToolStripMenuItemClick;
             // 
             // ignoreAllWhitespaceChangesToolStripMenuItem
             // 
-            this.ignoreAllWhitespaceChangesToolStripMenuItem.Name = "ignoreAllWhitespaceChangesToolStripMenuItem";
-            this.ignoreAllWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.ignoreAllWhitespaceChangesToolStripMenuItem.Text = "Ignore all whitespace changes";
-            this.ignoreAllWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.IgnoreAllWhitespaceChangesToolStripMenuItem_Click);
+            ignoreAllWhitespaceChangesToolStripMenuItem.Name = "ignoreAllWhitespaceChangesToolStripMenuItem";
+            ignoreAllWhitespaceChangesToolStripMenuItem.Size = new Size(243, 22);
+            ignoreAllWhitespaceChangesToolStripMenuItem.Text = "Ignore all whitespace changes";
+            ignoreAllWhitespaceChangesToolStripMenuItem.Click += IgnoreAllWhitespaceChangesToolStripMenuItem_Click;
             // 
             // increaseNumberOfLinesToolStripMenuItem
             // 
-            this.increaseNumberOfLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.NumberOfLinesIncrease;
-            this.increaseNumberOfLinesToolStripMenuItem.Name = "increaseNumberOfLinesToolStripMenuItem";
-            this.increaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.increaseNumberOfLinesToolStripMenuItem.Text = "Increase the number of lines of context";
-            this.increaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.IncreaseNumberOfLinesToolStripMenuItemClick);
+            increaseNumberOfLinesToolStripMenuItem.Image = Properties.Images.NumberOfLinesIncrease;
+            increaseNumberOfLinesToolStripMenuItem.Name = "increaseNumberOfLinesToolStripMenuItem";
+            increaseNumberOfLinesToolStripMenuItem.Size = new Size(243, 22);
+            increaseNumberOfLinesToolStripMenuItem.Text = "Increase the number of lines of context";
+            increaseNumberOfLinesToolStripMenuItem.Click += IncreaseNumberOfLinesToolStripMenuItemClick;
             // 
             // descreaseNumberOfLinesToolStripMenuItem
             // 
-            this.decreaseNumberOfLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.NumberOfLinesDecrease;
-            this.decreaseNumberOfLinesToolStripMenuItem.Name = "decreaseNumberOfLinesToolStripMenuItem";
-            this.decreaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.decreaseNumberOfLinesToolStripMenuItem.Text = "Decrease the number of lines of context";
-            this.decreaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.DecreaseNumberOfLinesToolStripMenuItemClick);
+            decreaseNumberOfLinesToolStripMenuItem.Image = Properties.Images.NumberOfLinesDecrease;
+            decreaseNumberOfLinesToolStripMenuItem.Name = "decreaseNumberOfLinesToolStripMenuItem";
+            decreaseNumberOfLinesToolStripMenuItem.Size = new Size(243, 22);
+            decreaseNumberOfLinesToolStripMenuItem.Text = "Decrease the number of lines of context";
+            decreaseNumberOfLinesToolStripMenuItem.Click += DecreaseNumberOfLinesToolStripMenuItemClick;
             // 
             // showEntireFileToolStripMenuItem
             // 
-            this.showEntireFileToolStripMenuItem.Image = global::GitUI.Properties.Images.ShowEntireFile;
-            this.showEntireFileToolStripMenuItem.Name = "showEntireFileToolStripMenuItem";
-            this.showEntireFileToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.showEntireFileToolStripMenuItem.Text = "Show entire file";
-            this.showEntireFileToolStripMenuItem.Click += new System.EventHandler(this.ShowEntireFileToolStripMenuItemClick);
+            showEntireFileToolStripMenuItem.Image = Properties.Images.ShowEntireFile;
+            showEntireFileToolStripMenuItem.Name = "showEntireFileToolStripMenuItem";
+            showEntireFileToolStripMenuItem.Size = new Size(243, 22);
+            showEntireFileToolStripMenuItem.Text = "Show entire file";
+            showEntireFileToolStripMenuItem.Click += ShowEntireFileToolStripMenuItemClick;
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(240, 6);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(240, 6);
             // 
             // treatAllFilesAsTextToolStripMenuItem
             // 
-            this.treatAllFilesAsTextToolStripMenuItem.Name = "treatAllFilesAsTextToolStripMenuItem";
-            this.treatAllFilesAsTextToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
-            this.treatAllFilesAsTextToolStripMenuItem.Click += new System.EventHandler(this.TreatAllFilesAsTextToolStripMenuItemClick);
+            treatAllFilesAsTextToolStripMenuItem.Name = "treatAllFilesAsTextToolStripMenuItem";
+            treatAllFilesAsTextToolStripMenuItem.Size = new Size(243, 22);
+            treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
+            treatAllFilesAsTextToolStripMenuItem.Click += TreatAllFilesAsTextToolStripMenuItemClick;
             // 
             // automaticContinuousScrollToolStripMenuItem
             // 
-            this.automaticContinuousScrollToolStripMenuItem.Image = global::GitUI.Properties.Images.UiScrollBar;
-            this.automaticContinuousScrollToolStripMenuItem.Name = "automaticContinuousScrollToolStripMenuItem";
-            this.automaticContinuousScrollToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.automaticContinuousScrollToolStripMenuItem.Click += new System.EventHandler(this.ContinuousScrollToolStripMenuItemClick);
+            automaticContinuousScrollToolStripMenuItem.Image = Properties.Images.UiScrollBar;
+            automaticContinuousScrollToolStripMenuItem.Name = "automaticContinuousScrollToolStripMenuItem";
+            automaticContinuousScrollToolStripMenuItem.Size = new Size(243, 22);
+            automaticContinuousScrollToolStripMenuItem.Click += ContinuousScrollToolStripMenuItemClick;
             // 
             // showNonprintableCharactersToolStripMenuItem
             // 
-            this.showNonprintableCharactersToolStripMenuItem.Image = global::GitUI.Properties.Images.ShowWhitespace;
-            this.showNonprintableCharactersToolStripMenuItem.Name = "showNonprintableCharactersToolStripMenuItem";
-            this.showNonprintableCharactersToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.showNonprintableCharactersToolStripMenuItem.Text = "Show nonprinting characters";
-            this.showNonprintableCharactersToolStripMenuItem.Click += new System.EventHandler(this.ShowNonprintableCharactersToolStripMenuItemClick);
+            showNonprintableCharactersToolStripMenuItem.Image = Properties.Images.ShowWhitespace;
+            showNonprintableCharactersToolStripMenuItem.Name = "showNonprintableCharactersToolStripMenuItem";
+            showNonprintableCharactersToolStripMenuItem.Size = new Size(243, 22);
+            showNonprintableCharactersToolStripMenuItem.Text = "Show nonprinting characters";
+            showNonprintableCharactersToolStripMenuItem.Click += ShowNonprintableCharactersToolStripMenuItemClick;
             // 
             // goToLineToolStripMenuItem
             // 
-            this.goToLineToolStripMenuItem.Name = "goToLineToolStripMenuItem";
-            this.goToLineToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.goToLineToolStripMenuItem.Text = "Go to line";
-            this.goToLineToolStripMenuItem.Click += new System.EventHandler(this.goToLineToolStripMenuItem_Click);
+            goToLineToolStripMenuItem.Name = "goToLineToolStripMenuItem";
+            goToLineToolStripMenuItem.Size = new Size(243, 22);
+            goToLineToolStripMenuItem.Text = "Go to line";
+            goToLineToolStripMenuItem.Click += goToLineToolStripMenuItem_Click;
             // 
             // fileviewerToolbar
             // 
-            this.fileviewerToolbar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.fileviewerToolbar.BackColor = System.Drawing.SystemColors.Control;
-            this.fileviewerToolbar.ClickThrough = true;
-            this.fileviewerToolbar.Dock = System.Windows.Forms.DockStyle.None;
-            this.fileviewerToolbar.DrawBorder = false;
-            this.fileviewerToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.nextChangeButton,
-            this.previousChangeButton,
-            this.toolStripSeparator3,
-            this.increaseNumberOfLines,
-            this.decreaseNumberOfLines,
-            this.toolStripSeparator4,
-            this.showEntireFileButton,
-            this.showNonPrintChars,
-            this.showSyntaxHighlighting,
-            this.ignoreWhitespaceAtEol,
-            this.ignoreWhiteSpaces,
-            this.ignoreAllWhitespaces,
-            this.encodingToolStripComboBox,
-            this.settingsButton});
-            this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.StackWithOverflow;
-            this.fileviewerToolbar.Location = new System.Drawing.Point(458, 0);
-            this.fileviewerToolbar.Name = "fileviewerToolbar";
-            this.fileviewerToolbar.Size = new System.Drawing.Size(393, 23);
-            this.fileviewerToolbar.Visible = false;
-            this.fileviewerToolbar.TabIndex = 0;
-            this.fileviewerToolbar.VisibleChanged += new System.EventHandler(this.fileviewerToolbar_VisibleChanged);
+            fileviewerToolbar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            fileviewerToolbar.BackColor = SystemColors.Control;
+            fileviewerToolbar.ClickThrough = true;
+            fileviewerToolbar.Dock = DockStyle.None;
+            fileviewerToolbar.DrawBorder = false;
+            fileviewerToolbar.Items.AddRange(new ToolStripItem[] {
+            nextChangeButton,
+            previousChangeButton,
+            toolStripSeparator3,
+            increaseNumberOfLines,
+            decreaseNumberOfLines,
+            toolStripSeparator4,
+            showEntireFileButton,
+            showNonPrintChars,
+            showSyntaxHighlighting,
+            ignoreWhitespaceAtEol,
+            ignoreWhiteSpaces,
+            ignoreAllWhitespaces,
+            encodingToolStripComboBox,
+            settingsButton});
+            fileviewerToolbar.LayoutStyle = ToolStripLayoutStyle.StackWithOverflow;
+            fileviewerToolbar.Location = new Point(458, 0);
+            fileviewerToolbar.Name = "fileviewerToolbar";
+            fileviewerToolbar.Size = new Size(393, 23);
+            fileviewerToolbar.Visible = false;
+            fileviewerToolbar.TabIndex = 0;
+            fileviewerToolbar.VisibleChanged += fileviewerToolbar_VisibleChanged;
             // 
             // nextChangeButton
             // 
-            this.nextChangeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.nextChangeButton.Image = global::GitUI.Properties.Images.ArrowDown;
-            this.nextChangeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.nextChangeButton.Name = "nextChangeButton";
-            this.nextChangeButton.Size = new System.Drawing.Size(23, 20);
-            this.nextChangeButton.ToolTipText = "Next change";
-            this.nextChangeButton.Click += new System.EventHandler(this.NextChangeButtonClick);
+            nextChangeButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            nextChangeButton.Image = Properties.Images.ArrowDown;
+            nextChangeButton.ImageTransparentColor = Color.Magenta;
+            nextChangeButton.Name = "nextChangeButton";
+            nextChangeButton.Size = new Size(23, 20);
+            nextChangeButton.ToolTipText = "Next change";
+            nextChangeButton.Click += NextChangeButtonClick;
             // 
             // previousChangeButton
             // 
-            this.previousChangeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.previousChangeButton.Image = global::GitUI.Properties.Images.ArrowUp;
-            this.previousChangeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.previousChangeButton.Name = "previousChangeButton";
-            this.previousChangeButton.Size = new System.Drawing.Size(23, 20);
-            this.previousChangeButton.ToolTipText = "Previous change";
-            this.previousChangeButton.Click += new System.EventHandler(this.PreviousChangeButtonClick);
+            previousChangeButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            previousChangeButton.Image = Properties.Images.ArrowUp;
+            previousChangeButton.ImageTransparentColor = Color.Magenta;
+            previousChangeButton.Name = "previousChangeButton";
+            previousChangeButton.Size = new Size(23, 20);
+            previousChangeButton.ToolTipText = "Previous change";
+            previousChangeButton.Click += PreviousChangeButtonClick;
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 23);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(6, 23);
             // 
             // increaseNumberOfLines
             // 
-            this.increaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.increaseNumberOfLines.Image = global::GitUI.Properties.Images.NumberOfLinesIncrease;
-            this.increaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.increaseNumberOfLines.Name = "increaseNumberOfLines";
-            this.increaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
-            this.increaseNumberOfLines.ToolTipText = "Increase the number of lines of context";
-            this.increaseNumberOfLines.Click += new System.EventHandler(this.IncreaseNumberOfLinesToolStripMenuItemClick);
+            increaseNumberOfLines.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            increaseNumberOfLines.Image = Properties.Images.NumberOfLinesIncrease;
+            increaseNumberOfLines.ImageTransparentColor = Color.Magenta;
+            increaseNumberOfLines.Name = "increaseNumberOfLines";
+            increaseNumberOfLines.Size = new Size(23, 20);
+            increaseNumberOfLines.ToolTipText = "Increase the number of lines of context";
+            increaseNumberOfLines.Click += IncreaseNumberOfLinesToolStripMenuItemClick;
             // 
             // DecreaseNumberOfLines
             // 
-            this.decreaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.decreaseNumberOfLines.Image = global::GitUI.Properties.Images.NumberOfLinesDecrease;
-            this.decreaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.decreaseNumberOfLines.Name = "decreaseNumberOfLines";
-            this.decreaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
-            this.decreaseNumberOfLines.ToolTipText = "Decrease the number of lines of context";
-            this.decreaseNumberOfLines.Click += new System.EventHandler(this.DecreaseNumberOfLinesToolStripMenuItemClick);
+            decreaseNumberOfLines.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            decreaseNumberOfLines.Image = Properties.Images.NumberOfLinesDecrease;
+            decreaseNumberOfLines.ImageTransparentColor = Color.Magenta;
+            decreaseNumberOfLines.Name = "decreaseNumberOfLines";
+            decreaseNumberOfLines.Size = new Size(23, 20);
+            decreaseNumberOfLines.ToolTipText = "Decrease the number of lines of context";
+            decreaseNumberOfLines.Click += DecreaseNumberOfLinesToolStripMenuItemClick;
             // 
             // toolStripSeparator4
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 23);
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(6, 23);
             // 
             // showEntireFileButton
             // 
-            this.showEntireFileButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showEntireFileButton.Image = global::GitUI.Properties.Images.ShowEntireFile;
-            this.showEntireFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.showEntireFileButton.Name = "showEntireFileButton";
-            this.showEntireFileButton.Size = new System.Drawing.Size(23, 20);
-            this.showEntireFileButton.ToolTipText = "Show entire file";
-            this.showEntireFileButton.Click += new System.EventHandler(this.ShowEntireFileToolStripMenuItemClick);
+            showEntireFileButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            showEntireFileButton.Image = Properties.Images.ShowEntireFile;
+            showEntireFileButton.ImageTransparentColor = Color.Magenta;
+            showEntireFileButton.Name = "showEntireFileButton";
+            showEntireFileButton.Size = new Size(23, 20);
+            showEntireFileButton.ToolTipText = "Show entire file";
+            showEntireFileButton.Click += ShowEntireFileToolStripMenuItemClick;
             // 
             // showNonPrintChars
             // 
-            this.showNonPrintChars.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showNonPrintChars.Image = global::GitUI.Properties.Images.ShowWhitespace;
-            this.showNonPrintChars.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.showNonPrintChars.Name = "showNonPrintChars";
-            this.showNonPrintChars.Size = new System.Drawing.Size(23, 20);
-            this.showNonPrintChars.ToolTipText = "Show nonprinting characters";
-            this.showNonPrintChars.Click += new System.EventHandler(this.ShowNonprintableCharactersToolStripMenuItemClick);
+            showNonPrintChars.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            showNonPrintChars.Image = Properties.Images.ShowWhitespace;
+            showNonPrintChars.ImageTransparentColor = Color.Magenta;
+            showNonPrintChars.Name = "showNonPrintChars";
+            showNonPrintChars.Size = new Size(23, 20);
+            showNonPrintChars.ToolTipText = "Show nonprinting characters";
+            showNonPrintChars.Click += ShowNonprintableCharactersToolStripMenuItemClick;
             // 
             // ignoreWhitespaceAtEol
             // 
-            this.ignoreWhitespaceAtEol.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ignoreWhitespaceAtEol.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ignoreWhitespaceAtEol.Name = "ignoreWhitespaceAtEol";
-            this.ignoreWhitespaceAtEol.Size = new System.Drawing.Size(23, 4);
-            this.ignoreWhitespaceAtEol.ToolTipText = "Ignore whitespace changes at end of line";
-            this.ignoreWhitespaceAtEol.Click += new System.EventHandler(this.IgnoreWhitespaceAtEolToolStripMenuItem_Click);
+            ignoreWhitespaceAtEol.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ignoreWhitespaceAtEol.ImageTransparentColor = Color.Magenta;
+            ignoreWhitespaceAtEol.Name = "ignoreWhitespaceAtEol";
+            ignoreWhitespaceAtEol.Size = new Size(23, 4);
+            ignoreWhitespaceAtEol.ToolTipText = "Ignore whitespace changes at end of line";
+            ignoreWhitespaceAtEol.Click += IgnoreWhitespaceAtEolToolStripMenuItem_Click;
             // 
             // ignoreWhiteSpaces
             // 
-            this.ignoreWhiteSpaces.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ignoreWhiteSpaces.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ignoreWhiteSpaces.Name = "ignoreWhiteSpaces";
-            this.ignoreWhiteSpaces.Size = new System.Drawing.Size(23, 4);
-            this.ignoreWhiteSpaces.ToolTipText = "Ignore changes in amount of whitespace";
-            this.ignoreWhiteSpaces.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
+            ignoreWhiteSpaces.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ignoreWhiteSpaces.ImageTransparentColor = Color.Magenta;
+            ignoreWhiteSpaces.Name = "ignoreWhiteSpaces";
+            ignoreWhiteSpaces.Size = new Size(23, 4);
+            ignoreWhiteSpaces.ToolTipText = "Ignore changes in amount of whitespace";
+            ignoreWhiteSpaces.Click += IgnoreWhitespaceChangesToolStripMenuItemClick;
             // 
             // encodingToolStripComboBox
             // 
-            this.encodingToolStripComboBox.BackColor = System.Drawing.SystemColors.Control;
-            this.encodingToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.encodingToolStripComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.encodingToolStripComboBox.Name = "encodingToolStripComboBox";
-            this.encodingToolStripComboBox.Size = new System.Drawing.Size(140, 23);
-            this.encodingToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.encodingToolStripComboBox_SelectedIndexChanged);
+            encodingToolStripComboBox.BackColor = SystemColors.Control;
+            encodingToolStripComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            encodingToolStripComboBox.FlatStyle = FlatStyle.Flat;
+            encodingToolStripComboBox.Name = "encodingToolStripComboBox";
+            encodingToolStripComboBox.Size = new Size(140, 23);
+            encodingToolStripComboBox.SelectedIndexChanged += encodingToolStripComboBox_SelectedIndexChanged;
             // 
             // settingsButton
             // 
-            this.settingsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.settingsButton.Image = global::GitUI.Properties.Images.Settings;
-            this.settingsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.settingsButton.Name = "settingsButton";
-            this.settingsButton.Size = new System.Drawing.Size(23, 20);
-            this.settingsButton.ToolTipText = "Settings";
-            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            settingsButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            settingsButton.Image = Properties.Images.Settings;
+            settingsButton.ImageTransparentColor = Color.Magenta;
+            settingsButton.Name = "settingsButton";
+            settingsButton.Size = new Size(23, 20);
+            settingsButton.ToolTipText = "Settings";
+            settingsButton.Click += settingsButton_Click;
             // 
             // ignoreAllWhitespaces
             // 
-            this.ignoreAllWhitespaces.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ignoreAllWhitespaces.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ignoreAllWhitespaces.Name = "ignoreAllWhitespaces";
-            this.ignoreAllWhitespaces.Size = new System.Drawing.Size(23, 4);
-            this.ignoreAllWhitespaces.ToolTipText = "Ignore all whitespace changes";
-            this.ignoreAllWhitespaces.Click += new System.EventHandler(this.IgnoreAllWhitespaceChangesToolStripMenuItem_Click);
+            ignoreAllWhitespaces.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ignoreAllWhitespaces.ImageTransparentColor = Color.Magenta;
+            ignoreAllWhitespaces.Name = "ignoreAllWhitespaces";
+            ignoreAllWhitespaces.Size = new Size(23, 4);
+            ignoreAllWhitespaces.ToolTipText = "Ignore all whitespace changes";
+            ignoreAllWhitespaces.Click += IgnoreAllWhitespaceChangesToolStripMenuItem_Click;
             // 
             // PictureBox
             // 
-            this.PictureBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.PictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PictureBox.Location = new System.Drawing.Point(0, 0);
-            this.PictureBox.Margin = new System.Windows.Forms.Padding(0);
-            this.PictureBox.Name = "PictureBox";
-            this.PictureBox.Size = new System.Drawing.Size(757, 518);
-            this.PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.PictureBox.TabIndex = 7;
-            this.PictureBox.TabStop = false;
-            this.PictureBox.Visible = false;
+            PictureBox.BackColor = SystemColors.ControlLightLight;
+            PictureBox.BackgroundImageLayout = ImageLayout.Center;
+            PictureBox.Dock = DockStyle.Fill;
+            PictureBox.Location = new Point(0, 0);
+            PictureBox.Margin = new Padding(0);
+            PictureBox.Name = "PictureBox";
+            PictureBox.Size = new Size(757, 518);
+            PictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            PictureBox.TabIndex = 7;
+            PictureBox.TabStop = false;
+            PictureBox.Visible = false;
             //
             // llShowPreview
             //
-            this._NO_TRANSLATE_lblShowPreview.AutoSize = true;
-            this._NO_TRANSLATE_lblShowPreview.BackColor = System.Drawing.Color.White;
-            this._NO_TRANSLATE_lblShowPreview.Location = new System.Drawing.Point(43, 23);
-            this._NO_TRANSLATE_lblShowPreview.Name = "_NO_TRANSLATE_lblShowPreview";
-            this._NO_TRANSLATE_lblShowPreview.Size = new System.Drawing.Size(214, 13);
-            this._NO_TRANSLATE_lblShowPreview.TabIndex = 2;
-            this._NO_TRANSLATE_lblShowPreview.TabStop = true;
-            this._NO_TRANSLATE_lblShowPreview.Text = "This file is over 5 MB. Click to show preview";
-            this._NO_TRANSLATE_lblShowPreview.Visible = false;
-            this._NO_TRANSLATE_lblShowPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llShowPreview_LinkClicked);
+            _NO_TRANSLATE_lblShowPreview.AutoSize = true;
+            _NO_TRANSLATE_lblShowPreview.BackColor = Color.White;
+            _NO_TRANSLATE_lblShowPreview.Location = new Point(43, 23);
+            _NO_TRANSLATE_lblShowPreview.Name = "_NO_TRANSLATE_lblShowPreview";
+            _NO_TRANSLATE_lblShowPreview.Size = new Size(214, 13);
+            _NO_TRANSLATE_lblShowPreview.TabIndex = 2;
+            _NO_TRANSLATE_lblShowPreview.TabStop = true;
+            _NO_TRANSLATE_lblShowPreview.Text = "This file is over 5 MB. Click to show preview";
+            _NO_TRANSLATE_lblShowPreview.Visible = false;
+            _NO_TRANSLATE_lblShowPreview.LinkClicked += llShowPreview_LinkClicked;
             // 
             // internalFileViewerControl
             // 
-            this.internalFileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.internalFileViewer.FirstVisibleLine = 0;
-            this.internalFileViewer.IsReadOnly = false;
-            this.internalFileViewer.Location = new System.Drawing.Point(0, 40);
-            this.internalFileViewer.Margin = new System.Windows.Forms.Padding(0);
-            this.internalFileViewer.Name = "internalFileViewer";
-            this.internalFileViewer.VScrollPosition = 0;
-            this.internalFileViewer.EolMarkerStyle = ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
-            this.internalFileViewer.ShowSpaces = false;
-            this.internalFileViewer.ShowTabs = false;
-            this.internalFileViewer.Size = new System.Drawing.Size(757, 518);
-            this.internalFileViewer.TabIndex = 1;
+            internalFileViewer.Dock = DockStyle.Fill;
+            internalFileViewer.FirstVisibleLine = 0;
+            internalFileViewer.IsReadOnly = false;
+            internalFileViewer.Location = new Point(0, 40);
+            internalFileViewer.Margin = new Padding(0);
+            internalFileViewer.Name = "internalFileViewer";
+            internalFileViewer.VScrollPosition = 0;
+            internalFileViewer.EolMarkerStyle = ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
+            internalFileViewer.ShowSpaces = false;
+            internalFileViewer.ShowTabs = false;
+            internalFileViewer.Size = new Size(757, 518);
+            internalFileViewer.TabIndex = 1;
             // 
             // showSyntaxHighlighting
             // 
-            this.showSyntaxHighlighting.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showSyntaxHighlighting.Image = global::GitUI.Properties.Resources.SyntaxHighlighting;
-            this.showSyntaxHighlighting.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.showSyntaxHighlighting.Name = "showSyntaxHighlighting";
-            this.showSyntaxHighlighting.Size = new System.Drawing.Size(23, 22);
-            this.showSyntaxHighlighting.ToolTipText = "Show syntax highlighting";
-            this.showSyntaxHighlighting.Click += ShowSyntaxHighlighting_Click;
+            showSyntaxHighlighting.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            showSyntaxHighlighting.Image = Properties.Resources.SyntaxHighlighting;
+            showSyntaxHighlighting.ImageTransparentColor = Color.Magenta;
+            showSyntaxHighlighting.Name = "showSyntaxHighlighting";
+            showSyntaxHighlighting.Size = new Size(23, 22);
+            showSyntaxHighlighting.ToolTipText = "Show syntax highlighting";
+            showSyntaxHighlighting.Click += ShowSyntaxHighlighting_Click;
             // 
             // FileViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this._NO_TRANSLATE_lblShowPreview);
-            this.Controls.Add(this.internalFileViewer);
-            this.Controls.Add(this.PictureBox);
-            this.Controls.Add(this.fileviewerToolbar);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "FileViewer";
-            this.Size = new System.Drawing.Size(757, 518);
-            this.contextMenu.ResumeLayout(false);
-            this.fileviewerToolbar.ResumeLayout(false);
-            this.fileviewerToolbar.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(_NO_TRANSLATE_lblShowPreview);
+            Controls.Add(internalFileViewer);
+            Controls.Add(PictureBox);
+            Controls.Add(fileviewerToolbar);
+            Margin = new Padding(0);
+            Name = "FileViewer";
+            Size = new Size(757, 518);
+            contextMenu.ResumeLayout(false);
+            fileviewerToolbar.ResumeLayout(false);
+            fileviewerToolbar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(PictureBox)).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip contextMenu;
-        private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceAtEolToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceChangesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem increaseNumberOfLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem decreaseNumberOfLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showEntireFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyPatchToolStripMenuItem;
+        private ContextMenuStrip contextMenu;
+        private ToolStripMenuItem findToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem ignoreWhitespaceAtEolToolStripMenuItem;
+        private ToolStripMenuItem ignoreWhitespaceChangesToolStripMenuItem;
+        private ToolStripMenuItem increaseNumberOfLinesToolStripMenuItem;
+        private ToolStripMenuItem decreaseNumberOfLinesToolStripMenuItem;
+        private ToolStripMenuItem showEntireFileToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
+        private ToolStripMenuItem copyToolStripMenuItem;
+        private ToolStripMenuItem copyPatchToolStripMenuItem;
         private ToolStripEx fileviewerToolbar;
         private FileViewerInternal internalFileViewer;
-        private System.Windows.Forms.ToolStripButton nextChangeButton;
-        private System.Windows.Forms.ToolStripButton previousChangeButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripButton increaseNumberOfLines;
-        private System.Windows.Forms.ToolStripButton decreaseNumberOfLines;
-        private System.Windows.Forms.ToolStripButton showEntireFileButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripButton showNonPrintChars;
-        private System.Windows.Forms.ToolStripMenuItem automaticContinuousScrollToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showNonprintableCharactersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton ignoreWhitespaceAtEol;
-        private System.Windows.Forms.ToolStripButton ignoreWhiteSpaces;
-        private System.Windows.Forms.ToolStripButton settingsButton;
-        private System.Windows.Forms.PictureBox PictureBox;
-        private System.Windows.Forms.ToolStripComboBox encodingToolStripComboBox;
-        private System.Windows.Forms.ToolStripMenuItem goToLineToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyNewVersionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyOldVersionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem stageSelectedLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem unstageSelectedLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem resetSelectedLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton ignoreAllWhitespaces;
-        private System.Windows.Forms.ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
+        private ToolStripButton nextChangeButton;
+        private ToolStripButton previousChangeButton;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton increaseNumberOfLines;
+        private ToolStripButton decreaseNumberOfLines;
+        private ToolStripButton showEntireFileButton;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripButton showNonPrintChars;
+        private ToolStripMenuItem automaticContinuousScrollToolStripMenuItem;
+        private ToolStripMenuItem showNonprintableCharactersToolStripMenuItem;
+        private ToolStripButton ignoreWhitespaceAtEol;
+        private ToolStripButton ignoreWhiteSpaces;
+        private ToolStripButton settingsButton;
+        private PictureBox PictureBox;
+        private ToolStripComboBox encodingToolStripComboBox;
+        private ToolStripMenuItem goToLineToolStripMenuItem;
+        private ToolStripMenuItem copyNewVersionToolStripMenuItem;
+        private ToolStripMenuItem copyOldVersionToolStripMenuItem;
+        private ToolStripMenuItem stageSelectedLinesToolStripMenuItem;
+        private ToolStripMenuItem unstageSelectedLinesToolStripMenuItem;
+        private ToolStripMenuItem resetSelectedLinesToolStripMenuItem;
+        private ToolStripButton ignoreAllWhitespaces;
+        private ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
         private LinkLabel _NO_TRANSLATE_lblShowPreview;
         private ToolStripButton showSyntaxHighlighting;
     }

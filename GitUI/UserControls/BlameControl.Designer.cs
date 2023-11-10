@@ -15,212 +15,212 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.CommitInfo = new GitUI.CommitInfo.CommitInfo();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.BlameAuthor = new GitUI.Editor.FileViewer();
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.blameRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.blamePreviousRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commitHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.allCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.BlameFile = new GitUI.Editor.FileViewer();
-            this.blameTooltip = new System.Windows.Forms.ToolTip(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.contextMenu.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            splitContainer1 = new SplitContainer();
+            CommitInfo = new GitUI.CommitInfo.CommitInfo();
+            splitContainer2 = new SplitContainer();
+            BlameAuthor = new GitUI.Editor.FileViewer();
+            contextMenu = new ContextMenuStrip(components);
+            blameRevisionToolStripMenuItem = new ToolStripMenuItem();
+            blamePreviousRevisionToolStripMenuItem = new ToolStripMenuItem();
+            showChangesToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            copyToClipboardToolStripMenuItem = new ToolStripMenuItem();
+            commitHashToolStripMenuItem = new ToolStripMenuItem();
+            commitMessageToolStripMenuItem = new ToolStripMenuItem();
+            allCommitInfoToolStripMenuItem = new ToolStripMenuItem();
+            BlameFile = new GitUI.Editor.FileViewer();
+            blameTooltip = new ToolTip(components);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer2)).BeginInit();
+            splitContainer2.Panel1.SuspendLayout();
+            splitContainer2.Panel2.SuspendLayout();
+            splitContainer2.SuspendLayout();
+            contextMenu.SuspendLayout();
+            SuspendLayout();
             // 
             // splitContainer1
             // 
-            this.splitContainer1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer1.BackColor = SystemColors.Control;
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.FixedPanel = FixedPanel.Panel1;
+            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Margin = new Padding(4);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.CommitInfo);
+            splitContainer1.Panel1.Controls.Add(CommitInfo);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(858, 740);
-            this.splitContainer1.SplitterDistance = 160;
-            this.splitContainer1.TabIndex = 7;
+            splitContainer1.Panel2.Controls.Add(splitContainer2);
+            splitContainer1.Size = new Size(858, 740);
+            splitContainer1.SplitterDistance = 160;
+            splitContainer1.TabIndex = 7;
             // 
             // CommitInfo
             // 
-            this.CommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommitInfo.Location = new System.Drawing.Point(0, 0);
-            this.CommitInfo.Margin = new System.Windows.Forms.Padding(0);
-            this.CommitInfo.Name = "CommitInfo";
-            this.CommitInfo.Size = new System.Drawing.Size(858, 160);
-            this.CommitInfo.TabIndex = 5;
+            CommitInfo.Dock = DockStyle.Fill;
+            CommitInfo.Location = new Point(0, 0);
+            CommitInfo.Margin = new Padding(0);
+            CommitInfo.Name = "CommitInfo";
+            CommitInfo.Size = new Size(858, 160);
+            CommitInfo.TabIndex = 5;
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
-            this.splitContainer2.Name = "splitContainer2";
+            splitContainer2.Dock = DockStyle.Fill;
+            splitContainer2.Location = new Point(0, 0);
+            splitContainer2.Margin = new Padding(0);
+            splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.BlameAuthor);
+            splitContainer2.Panel1.Controls.Add(BlameAuthor);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.BlameFile);
-            this.splitContainer2.Size = new System.Drawing.Size(858, 576);
-            this.splitContainer2.SplitterDistance = 186;
-            this.splitContainer2.TabIndex = 0;
+            splitContainer2.Panel2.Controls.Add(BlameFile);
+            splitContainer2.Size = new Size(858, 576);
+            splitContainer2.SplitterDistance = 186;
+            splitContainer2.TabIndex = 0;
             // 
             // BlameCommitter
             // 
-            this.BlameAuthor.ContextMenuStrip = this.contextMenu;
-            this.BlameAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BlameAuthor.IsReadOnly = false;
-            this.BlameAuthor.Location = new System.Drawing.Point(0, 0);
-            this.BlameAuthor.Margin = new System.Windows.Forms.Padding(0);
-            this.BlameAuthor.Name = "BlameAuthor";
-            this.BlameAuthor.Size = new System.Drawing.Size(186, 576);
-            this.BlameAuthor.TabIndex = 5;
-            this.BlameAuthor.TabStop = false;
+            BlameAuthor.ContextMenuStrip = contextMenu;
+            BlameAuthor.Dock = DockStyle.Fill;
+            BlameAuthor.IsReadOnly = false;
+            BlameAuthor.Location = new Point(0, 0);
+            BlameAuthor.Margin = new Padding(0);
+            BlameAuthor.Name = "BlameAuthor";
+            BlameAuthor.Size = new Size(186, 576);
+            BlameAuthor.TabIndex = 5;
+            BlameAuthor.TabStop = false;
             // 
             // contextMenu
             // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.blameRevisionToolStripMenuItem,
-            this.blamePreviousRevisionToolStripMenuItem,
-            this.showChangesToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.copyToClipboardToolStripMenuItem});
-            this.contextMenu.Name = "ContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(239, 76);
-            this.contextMenu.Opened += new System.EventHandler(this.contextMenu_Opened);
+            contextMenu.Items.AddRange(new ToolStripItem[] {
+            blameRevisionToolStripMenuItem,
+            blamePreviousRevisionToolStripMenuItem,
+            showChangesToolStripMenuItem,
+            toolStripSeparator1,
+            copyToClipboardToolStripMenuItem});
+            contextMenu.Name = "ContextMenu";
+            contextMenu.Size = new Size(239, 76);
+            contextMenu.Opened += contextMenu_Opened;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(235, 6);
-            this.blameRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.Blame;
-            this.blameRevisionToolStripMenuItem.Name = "blameRevisionToolStripMenuItem";
-            this.blameRevisionToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.blameRevisionToolStripMenuItem.Text = "Blame this revision";
-            this.blameRevisionToolStripMenuItem.Click += new System.EventHandler(this.blameRevisionToolStripMenuItem_Click);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(235, 6);
+            blameRevisionToolStripMenuItem.Image = Properties.Resources.Blame;
+            blameRevisionToolStripMenuItem.Name = "blameRevisionToolStripMenuItem";
+            blameRevisionToolStripMenuItem.Size = new Size(199, 22);
+            blameRevisionToolStripMenuItem.Text = "Blame this revision";
+            blameRevisionToolStripMenuItem.Click += blameRevisionToolStripMenuItem_Click;
             // 
             // blamePreviousRevisionToolStripMenuItem
             // 
-            this.blamePreviousRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.RecentRepositories;
-            this.blamePreviousRevisionToolStripMenuItem.Name = "blamePreviousRevisionToolStripMenuItem";
-            this.blamePreviousRevisionToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.blamePreviousRevisionToolStripMenuItem.Text = "Blame previous revision";
-            this.blamePreviousRevisionToolStripMenuItem.Click += new System.EventHandler(this.blamePreviousRevisionToolStripMenuItem_Click);
+            blamePreviousRevisionToolStripMenuItem.Image = Properties.Resources.RecentRepositories;
+            blamePreviousRevisionToolStripMenuItem.Name = "blamePreviousRevisionToolStripMenuItem";
+            blamePreviousRevisionToolStripMenuItem.Size = new Size(238, 22);
+            blamePreviousRevisionToolStripMenuItem.Text = "Blame previous revision";
+            blamePreviousRevisionToolStripMenuItem.Click += blamePreviousRevisionToolStripMenuItem_Click;
             // 
             // showChangesToolStripMenuItem
             // 
-            this.showChangesToolStripMenuItem.Image = global::GitUI.Properties.Resources.information;
-            this.showChangesToolStripMenuItem.Name = "showChangesToolStripMenuItem";
-            this.showChangesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.showChangesToolStripMenuItem.Text = "Show changes";
-            this.showChangesToolStripMenuItem.Click += new System.EventHandler(this.showChangesToolStripMenuItem_Click);
+            showChangesToolStripMenuItem.Image = Properties.Resources.information;
+            showChangesToolStripMenuItem.Name = "showChangesToolStripMenuItem";
+            showChangesToolStripMenuItem.Size = new Size(238, 22);
+            showChangesToolStripMenuItem.Text = "Show changes";
+            showChangesToolStripMenuItem.Click += showChangesToolStripMenuItem_Click;
             // 
             // copyToClipboardToolStripMenuItem
             // 
-            this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.commitHashToolStripMenuItem,
-            this.commitMessageToolStripMenuItem,
-            this.allCommitInfoToolStripMenuItem});
-            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.CopyToClipboard;
-            this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
-            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
+            copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+            commitHashToolStripMenuItem,
+            commitMessageToolStripMenuItem,
+            allCommitInfoToolStripMenuItem});
+            copyToClipboardToolStripMenuItem.Image = Properties.Resources.CopyToClipboard;
+            copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
+            copyToClipboardToolStripMenuItem.Size = new Size(199, 22);
+            copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
             // 
             // commitHashToolStripMenuItem
             // 
-            this.commitHashToolStripMenuItem.Image = global::GitUI.Properties.Resources.CommitId;
-            this.commitHashToolStripMenuItem.Name = "commitHashToolStripMenuItem";
-            this.commitHashToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.commitHashToolStripMenuItem.Text = "Commit hash";
-            this.commitHashToolStripMenuItem.Click += new System.EventHandler(this.copyCommitHashToClipboardToolStripMenuItem_Click);
+            commitHashToolStripMenuItem.Image = Properties.Resources.CommitId;
+            commitHashToolStripMenuItem.Name = "commitHashToolStripMenuItem";
+            commitHashToolStripMenuItem.Size = new Size(180, 22);
+            commitHashToolStripMenuItem.Text = "Commit hash";
+            commitHashToolStripMenuItem.Click += copyCommitHashToClipboardToolStripMenuItem_Click;
             // 
             // commitMessageToolStripMenuItem
             // 
-            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources.Message;
-            this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
-            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.commitMessageToolStripMenuItem.Text = "Commit message";
-            this.commitMessageToolStripMenuItem.Click += new System.EventHandler(this.copyLogMessageToolStripMenuItem_Click);
+            commitMessageToolStripMenuItem.Image = Properties.Resources.Message;
+            commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
+            commitMessageToolStripMenuItem.Size = new Size(180, 22);
+            commitMessageToolStripMenuItem.Text = "Commit message";
+            commitMessageToolStripMenuItem.Click += copyLogMessageToolStripMenuItem_Click;
             // 
             // allCommitInfoToolStripMenuItem
             // 
-            this.allCommitInfoToolStripMenuItem.Image = global::GitUI.Properties.Resources.CommitSummary;
-            this.allCommitInfoToolStripMenuItem.Name = "allCommitInfoToolStripMenuItem";
-            this.allCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.allCommitInfoToolStripMenuItem.Text = "All commit info";
-            this.allCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyAllCommitInfoToClipboardToolStripMenuItem_Click);
+            allCommitInfoToolStripMenuItem.Image = Properties.Resources.CommitSummary;
+            allCommitInfoToolStripMenuItem.Name = "allCommitInfoToolStripMenuItem";
+            allCommitInfoToolStripMenuItem.Size = new Size(180, 22);
+            allCommitInfoToolStripMenuItem.Text = "All commit info";
+            allCommitInfoToolStripMenuItem.Click += copyAllCommitInfoToClipboardToolStripMenuItem_Click;
             // 
             // BlameFile
             // 
-            this.BlameFile.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BlameFile.IsReadOnly = false;
-            this.BlameFile.Location = new System.Drawing.Point(0, 0);
-            this.BlameFile.Margin = new System.Windows.Forms.Padding(0);
-            this.BlameFile.Name = "BlameFile";
-            this.BlameFile.Size = new System.Drawing.Size(666, 576);
-            this.BlameFile.TabIndex = 0;
+            BlameFile.Dock = DockStyle.Fill;
+            BlameFile.IsReadOnly = false;
+            BlameFile.Location = new Point(0, 0);
+            BlameFile.Margin = new Padding(0);
+            BlameFile.Name = "BlameFile";
+            BlameFile.Size = new Size(666, 576);
+            BlameFile.TabIndex = 0;
             // 
             // BlameControl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.splitContainer1);
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "BlameControl";
-            this.Size = new System.Drawing.Size(858, 740);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.contextMenu.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(splitContainer1);
+            Margin = new Padding(4);
+            Name = "BlameControl";
+            Size = new Size(858, 740);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).EndInit();
+            splitContainer1.ResumeLayout(false);
+            splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer2)).EndInit();
+            splitContainer2.ResumeLayout(false);
+            contextMenu.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private SplitContainer splitContainer1;
         private CommitInfo.CommitInfo CommitInfo;
-        private System.Windows.Forms.SplitContainer splitContainer2;
+        private SplitContainer splitContainer2;
         private GitUI.Editor.FileViewer BlameAuthor;
         private GitUI.Editor.FileViewer BlameFile;
-        private System.Windows.Forms.ToolTip blameTooltip;
-        private System.Windows.Forms.ContextMenuStrip contextMenu;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem blamePreviousRevisionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showChangesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem commitHashToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem allCommitInfoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem blameRevisionToolStripMenuItem;
+        private ToolTip blameTooltip;
+        private ContextMenuStrip contextMenu;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem blamePreviousRevisionToolStripMenuItem;
+        private ToolStripMenuItem showChangesToolStripMenuItem;
+        private ToolStripMenuItem copyToClipboardToolStripMenuItem;
+        private ToolStripMenuItem commitHashToolStripMenuItem;
+        private ToolStripMenuItem commitMessageToolStripMenuItem;
+        private ToolStripMenuItem allCommitInfoToolStripMenuItem;
+        private ToolStripMenuItem blameRevisionToolStripMenuItem;
     }
 }

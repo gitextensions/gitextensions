@@ -15,102 +15,102 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.SpellCheckContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.SpellCheckTimer = new System.Windows.Forms.Timer(this.components);
-            this.TextBox = new System.Windows.Forms.RichTextBox();
-            this.AutoComplete = new System.Windows.Forms.ListBox();
-            this.AutoCompleteTimer = new System.Windows.Forms.Timer(this.components);
-            this.AutoCompleteToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.AutoCompleteToolTipTimer = new System.Windows.Forms.Timer(this.components);
-            this.SpellCheckContextMenu.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            SpellCheckContextMenu = new ContextMenuStrip(components);
+            toolStripSeparator1 = new ToolStripSeparator();
+            SpellCheckTimer = new System.Windows.Forms.Timer(components);
+            TextBox = new RichTextBox();
+            AutoComplete = new ListBox();
+            AutoCompleteTimer = new System.Windows.Forms.Timer(components);
+            AutoCompleteToolTip = new ToolTip(components);
+            AutoCompleteToolTipTimer = new System.Windows.Forms.Timer(components);
+            SpellCheckContextMenu.SuspendLayout();
+            SuspendLayout();
             // 
             // SpellCheckContextMenu
             // 
-            this.SpellCheckContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSeparator1});
-            this.SpellCheckContextMenu.Name = "SpellCheckContextMenu";
-            this.SpellCheckContextMenu.Size = new System.Drawing.Size(61, 10);
-            this.SpellCheckContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.SpellCheckContextMenuOpening);
+            SpellCheckContextMenu.Items.AddRange(new ToolStripItem[] {
+            toolStripSeparator1});
+            SpellCheckContextMenu.Name = "SpellCheckContextMenu";
+            SpellCheckContextMenu.Size = new Size(61, 10);
+            SpellCheckContextMenu.Opening += SpellCheckContextMenuOpening;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(57, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(57, 6);
             // 
             // SpellCheckTimer
             // 
-            this.SpellCheckTimer.Interval = 250;
-            this.SpellCheckTimer.Tick += new System.EventHandler(this.SpellCheckTimerTick);
-            this.SpellCheckTimer.Enabled = false;
+            SpellCheckTimer.Interval = 250;
+            SpellCheckTimer.Tick += SpellCheckTimerTick;
+            SpellCheckTimer.Enabled = false;
             // 
             // TextBox
             // 
-            this.TextBox.AcceptsTab = true;
-            this.TextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
-            this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextBox.Location = new System.Drawing.Point(0, 0);
-            this.TextBox.Margin = new System.Windows.Forms.Padding(0);
-            this.TextBox.Name = "TextBox";
-            this.TextBox.Size = new System.Drawing.Size(386, 336);
-            this.TextBox.TabIndex = 1;
-            this.TextBox.Text = "";
-            this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
-            this.TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
-            this.TextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyUp);
-            this.TextBox.Leave += new System.EventHandler(this.TextBoxLeave);
-            this.TextBox.GotFocus += TextBox_GotFocus;
-            this.TextBox.LostFocus += TextBox_LostFocus;
-            this.TextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TextBox_MouseDown);
+            TextBox.AcceptsTab = true;
+            TextBox.BorderStyle = BorderStyle.None;
+            TextBox.ContextMenuStrip = SpellCheckContextMenu;
+            TextBox.Dock = DockStyle.Fill;
+            TextBox.Location = new Point(0, 0);
+            TextBox.Margin = new Padding(0);
+            TextBox.Name = "TextBox";
+            TextBox.Size = new Size(386, 336);
+            TextBox.TabIndex = 1;
+            TextBox.Text = "";
+            TextBox.KeyDown += TextBox_KeyDown;
+            TextBox.KeyPress += TextBox_KeyPress;
+            TextBox.KeyUp += TextBox_KeyUp;
+            TextBox.Leave += TextBoxLeave;
+            TextBox.GotFocus += TextBox_GotFocus;
+            TextBox.LostFocus += TextBox_LostFocus;
+            TextBox.MouseDown += TextBox_MouseDown;
             // 
             // AutoComplete
             // 
-            this.AutoComplete.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.AutoComplete.FormattingEnabled = true;
-            this.AutoComplete.ItemHeight = 15;
-            this.AutoComplete.Location = new System.Drawing.Point(167, 243);
-            this.AutoComplete.Name = "AutoComplete";
-            this.AutoComplete.Size = new System.Drawing.Size(120, 92);
-            this.AutoComplete.Sorted = true;
-            this.AutoComplete.TabIndex = 2;
-            this.AutoComplete.Visible = false;
-            this.AutoComplete.Click += new System.EventHandler(this.AutoComplete_Click);
+            AutoComplete.BorderStyle = BorderStyle.FixedSingle;
+            AutoComplete.FormattingEnabled = true;
+            AutoComplete.ItemHeight = 15;
+            AutoComplete.Location = new Point(167, 243);
+            AutoComplete.Name = "AutoComplete";
+            AutoComplete.Size = new Size(120, 92);
+            AutoComplete.Sorted = true;
+            AutoComplete.TabIndex = 2;
+            AutoComplete.Visible = false;
+            AutoComplete.Click += AutoComplete_Click;
             // 
             // AutoCompleteTimer
             // 
-            this.AutoCompleteTimer.Interval = 200;
-            this.AutoCompleteTimer.Tick += new System.EventHandler(this.AutoCompleteTimer_Tick);
+            AutoCompleteTimer.Interval = 200;
+            AutoCompleteTimer.Tick += AutoCompleteTimer_Tick;
             // 
             // AutoCompleteToolTipTimer
             // 
-            this.AutoCompleteToolTipTimer.Interval = 2000;
-            this.AutoCompleteToolTipTimer.Tick += new System.EventHandler(this.AutoCompleteToolTipTimer_Tick);
+            AutoCompleteToolTipTimer.Interval = 2000;
+            AutoCompleteToolTipTimer.Tick += AutoCompleteToolTipTimer_Tick;
             // 
             // EditNetSpell
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.AutoComplete);
-            this.Controls.Add(this.TextBox);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "EditNetSpell";
-            this.Size = new System.Drawing.Size(386, 336);
-            this.SpellCheckContextMenu.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(AutoComplete);
+            Controls.Add(TextBox);
+            Margin = new Padding(0);
+            Name = "EditNetSpell";
+            Size = new Size(386, 336);
+            SpellCheckContextMenu.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip SpellCheckContextMenu;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private ContextMenuStrip SpellCheckContextMenu;
+        private ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Timer SpellCheckTimer;
-        private System.Windows.Forms.RichTextBox TextBox;
-        private System.Windows.Forms.ListBox AutoComplete;
+        private RichTextBox TextBox;
+        private ListBox AutoComplete;
         private System.Windows.Forms.Timer AutoCompleteTimer;
-        private System.Windows.Forms.ToolTip AutoCompleteToolTip;
+        private ToolTip AutoCompleteToolTip;
         private System.Windows.Forms.Timer AutoCompleteToolTipTimer;
     }
 }

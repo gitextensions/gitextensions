@@ -28,104 +28,104 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.commitSignPicture = new System.Windows.Forms.PictureBox();
-            this.tagSignPicture = new System.Windows.Forms.PictureBox();
-            this.txtTagGpgInfo = new System.Windows.Forms.TextBox();
-            this.txtCommitGpgInfo = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.commitSignPicture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tagSignPicture)).BeginInit();
-            this.SuspendLayout();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            commitSignPicture = new PictureBox();
+            tagSignPicture = new PictureBox();
+            txtTagGpgInfo = new TextBox();
+            txtCommitGpgInfo = new TextBox();
+            tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(commitSignPicture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(tagSignPicture)).BeginInit();
+            SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.commitSignPicture, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tagSignPicture, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.txtTagGpgInfo, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.txtCommitGpgInfo, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 8);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(476, 247);
-            this.tableLayoutPanel1.TabIndex = 0;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 38F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(commitSignPicture, 0, 0);
+            tableLayoutPanel1.Controls.Add(tagSignPicture, 0, 1);
+            tableLayoutPanel1.Controls.Add(txtTagGpgInfo, 1, 1);
+            tableLayoutPanel1.Controls.Add(txtCommitGpgInfo, 1, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(8, 8);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(476, 247);
+            tableLayoutPanel1.TabIndex = 0;
             // 
             // commitSignPicture
             // 
-            this.commitSignPicture.Image = global::GitUI.Properties.Images.CommitSignatureOk;
-            this.commitSignPicture.Location = new System.Drawing.Point(3, 3);
-            this.commitSignPicture.Name = "commitSignPicture";
-            this.commitSignPicture.Size = new System.Drawing.Size(32, 32);
-            this.commitSignPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.commitSignPicture.TabIndex = 5;
-            this.commitSignPicture.TabStop = false;
+            commitSignPicture.Image = Properties.Images.CommitSignatureOk;
+            commitSignPicture.Location = new Point(3, 3);
+            commitSignPicture.Name = "commitSignPicture";
+            commitSignPicture.Size = new Size(32, 32);
+            commitSignPicture.SizeMode = PictureBoxSizeMode.AutoSize;
+            commitSignPicture.TabIndex = 5;
+            commitSignPicture.TabStop = false;
             // 
             // tagSignPicture
             // 
-            this.tagSignPicture.Image = global::GitUI.Properties.Images.CommitSignatureOk;
-            this.tagSignPicture.Location = new System.Drawing.Point(3, 126);
-            this.tagSignPicture.Name = "tagSignPicture";
-            this.tagSignPicture.Size = new System.Drawing.Size(32, 32);
-            this.tagSignPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.tagSignPicture.TabIndex = 4;
-            this.tagSignPicture.TabStop = false;
+            tagSignPicture.Image = Properties.Images.CommitSignatureOk;
+            tagSignPicture.Location = new Point(3, 126);
+            tagSignPicture.Name = "tagSignPicture";
+            tagSignPicture.Size = new Size(32, 32);
+            tagSignPicture.SizeMode = PictureBoxSizeMode.AutoSize;
+            tagSignPicture.TabIndex = 4;
+            tagSignPicture.TabStop = false;
             // 
             // txtTagGpgInfo
             // 
-            this.txtTagGpgInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtTagGpgInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtTagGpgInfo.HideSelection = false;
-            this.txtTagGpgInfo.Location = new System.Drawing.Point(41, 126);
-            this.txtTagGpgInfo.Multiline = true;
-            this.txtTagGpgInfo.Name = "txtTagGpgInfo";
-            this.txtTagGpgInfo.ReadOnly = true;
-            this.txtTagGpgInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtTagGpgInfo.Size = new System.Drawing.Size(432, 118);
-            this.txtTagGpgInfo.TabIndex = 1;
-            this.txtTagGpgInfo.TabStop = false;
+            txtTagGpgInfo.BorderStyle = BorderStyle.None;
+            txtTagGpgInfo.Dock = DockStyle.Fill;
+            txtTagGpgInfo.HideSelection = false;
+            txtTagGpgInfo.Location = new Point(41, 126);
+            txtTagGpgInfo.Multiline = true;
+            txtTagGpgInfo.Name = "txtTagGpgInfo";
+            txtTagGpgInfo.ReadOnly = true;
+            txtTagGpgInfo.ScrollBars = ScrollBars.Vertical;
+            txtTagGpgInfo.Size = new Size(432, 118);
+            txtTagGpgInfo.TabIndex = 1;
+            txtTagGpgInfo.TabStop = false;
             // 
             // txtCommitGpgInfo
             // 
-            this.txtCommitGpgInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtCommitGpgInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtCommitGpgInfo.HideSelection = false;
-            this.txtCommitGpgInfo.Location = new System.Drawing.Point(41, 3);
-            this.txtCommitGpgInfo.Multiline = true;
-            this.txtCommitGpgInfo.Name = "txtCommitGpgInfo";
-            this.txtCommitGpgInfo.ReadOnly = true;
-            this.txtCommitGpgInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtCommitGpgInfo.Size = new System.Drawing.Size(432, 117);
-            this.txtCommitGpgInfo.TabIndex = 0;
-            this.txtCommitGpgInfo.TabStop = false;
+            txtCommitGpgInfo.BorderStyle = BorderStyle.None;
+            txtCommitGpgInfo.Dock = DockStyle.Fill;
+            txtCommitGpgInfo.HideSelection = false;
+            txtCommitGpgInfo.Location = new Point(41, 3);
+            txtCommitGpgInfo.Multiline = true;
+            txtCommitGpgInfo.Name = "txtCommitGpgInfo";
+            txtCommitGpgInfo.ReadOnly = true;
+            txtCommitGpgInfo.ScrollBars = ScrollBars.Vertical;
+            txtCommitGpgInfo.Size = new Size(432, 117);
+            txtCommitGpgInfo.TabIndex = 0;
+            txtCommitGpgInfo.TabStop = false;
             // 
             // RevisionGpgInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "RevisionGpgInfoControl";
-            this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(492, 263);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.commitSignPicture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tagSignPicture)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(tableLayoutPanel1);
+            Name = "RevisionGpgInfoControl";
+            Padding = new Padding(8);
+            Size = new Size(492, 263);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(commitSignPicture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(tagSignPicture)).EndInit();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox txtTagGpgInfo;
-        private System.Windows.Forms.TextBox txtCommitGpgInfo;
-        private System.Windows.Forms.PictureBox tagSignPicture;
-        private System.Windows.Forms.PictureBox commitSignPicture;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TextBox txtTagGpgInfo;
+        private TextBox txtCommitGpgInfo;
+        private PictureBox tagSignPicture;
+        private PictureBox commitSignPicture;
     }
 }

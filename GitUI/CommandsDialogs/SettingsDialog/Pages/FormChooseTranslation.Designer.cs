@@ -28,67 +28,65 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lvTranslations = new GitUI.UserControls.NativeListView();
-            this.SuspendLayout();
+            label1 = new Label();
+            label2 = new Label();
+            lvTranslations = new GitUI.UserControls.NativeListView();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(126, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Choose your language";
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 9);
+            label1.Name = "label1";
+            label1.Size = new Size(126, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Choose your language";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 33);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(338, 15);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "You can change the language at any time in the settings dialog";
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 33);
+            label2.Name = "label2";
+            label2.Size = new Size(338, 15);
+            label2.TabIndex = 7;
+            label2.Text = "You can change the language at any time in the settings dialog";
             // 
             // lvTranslations
             // 
-            this.lvTranslations.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.lvTranslations.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvTranslations.HotTracking = true;
-            this.lvTranslations.HoverSelection = true;
-            this.lvTranslations.Location = new System.Drawing.Point(12, 51);
-            this.lvTranslations.MultiSelect = false;
-            this.lvTranslations.Name = "lvTranslations";
-            this.lvTranslations.ShowGroups = false;
-            this.lvTranslations.Size = new System.Drawing.Size(776, 476);
-            this.lvTranslations.TabIndex = 0;
-            this.lvTranslations.UseCompatibleStateImageBehavior = false;
-            this.lvTranslations.ItemActivate += new System.EventHandler(this.lvTranslations_ItemActivate);
+            lvTranslations.Activation = ItemActivation.OneClick;
+            lvTranslations.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lvTranslations.HotTracking = true;
+            lvTranslations.HoverSelection = true;
+            lvTranslations.Location = new Point(12, 51);
+            lvTranslations.MultiSelect = false;
+            lvTranslations.Name = "lvTranslations";
+            lvTranslations.ShowGroups = false;
+            lvTranslations.Size = new Size(776, 476);
+            lvTranslations.TabIndex = 0;
+            lvTranslations.UseCompatibleStateImageBehavior = false;
+            lvTranslations.ItemActivate += lvTranslations_ItemActivate;
             // 
             // FormChooseTranslation
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(800, 539);
-            this.Controls.Add(this.lvTranslations);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Name = "FormChooseTranslation";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormChooseTranslation_FormClosing);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = SystemColors.ControlLightLight;
+            ClientSize = new Size(800, 539);
+            Controls.Add(lvTranslations);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Name = "FormChooseTranslation";
+            StartPosition = FormStartPosition.CenterScreen;
+            FormClosing += FormChooseTranslation_FormClosing;
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private Label label1;
+        private Label label2;
         private UserControls.NativeListView lvTranslations;
     }
 }

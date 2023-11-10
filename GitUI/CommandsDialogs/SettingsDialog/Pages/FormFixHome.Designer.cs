@@ -29,150 +29,149 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFixHome));
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.otherHomeBrowse = new GitUI.UserControls.FolderBrowserButton();
-            this.otherHomeDir = new System.Windows.Forms.TextBox();
-            this.otherHome = new System.Windows.Forms.RadioButton();
-            this.userprofileHome = new System.Windows.Forms.RadioButton();
-            this.defaultHome = new System.Windows.Forms.RadioButton();
-            this.label51 = new System.Windows.Forms.Label();
-            this.ok = new System.Windows.Forms.Button();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBox8.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            groupBox8 = new GroupBox();
+            otherHomeBrowse = new GitUI.UserControls.FolderBrowserButton();
+            otherHomeDir = new TextBox();
+            otherHome = new RadioButton();
+            userprofileHome = new RadioButton();
+            defaultHome = new RadioButton();
+            label51 = new Label();
+            ok = new Button();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            groupBox8.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // groupBox8
             // 
-            this.groupBox8.Controls.Add(this.otherHomeBrowse);
-            this.groupBox8.Controls.Add(this.otherHomeDir);
-            this.groupBox8.Controls.Add(this.otherHome);
-            this.groupBox8.Controls.Add(this.userprofileHome);
-            this.groupBox8.Controls.Add(this.defaultHome);
-            this.groupBox8.Controls.Add(this.label51);
-            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox8.Location = new System.Drawing.Point(8, 8);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(588, 154);
-            this.groupBox8.TabIndex = 0;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Environment";
+            groupBox8.Controls.Add(otherHomeBrowse);
+            groupBox8.Controls.Add(otherHomeDir);
+            groupBox8.Controls.Add(otherHome);
+            groupBox8.Controls.Add(userprofileHome);
+            groupBox8.Controls.Add(defaultHome);
+            groupBox8.Controls.Add(label51);
+            groupBox8.Dock = DockStyle.Fill;
+            groupBox8.Location = new Point(8, 8);
+            groupBox8.Name = "groupBox8";
+            groupBox8.Size = new Size(588, 154);
+            groupBox8.TabIndex = 0;
+            groupBox8.TabStop = false;
+            groupBox8.Text = "Environment";
             // 
             // otherHomeBrowse
             // 
-            this.otherHomeBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.otherHomeBrowse.Location = new System.Drawing.Point(444, 114);
-            this.otherHomeBrowse.Name = "otherHomeBrowse";
-            this.otherHomeBrowse.PathShowingControl = this.otherHomeDir;
-            this.otherHomeBrowse.Size = new System.Drawing.Size(130, 25);
-            this.otherHomeBrowse.TabIndex = 5;
+            otherHomeBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            otherHomeBrowse.Location = new Point(444, 114);
+            otherHomeBrowse.Name = "otherHomeBrowse";
+            otherHomeBrowse.PathShowingControl = otherHomeDir;
+            otherHomeBrowse.Size = new Size(130, 25);
+            otherHomeBrowse.TabIndex = 5;
             // 
             // otherHomeDir
             // 
-            this.otherHomeDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.otherHomeDir.Location = new System.Drawing.Point(141, 115);
-            this.otherHomeDir.MaxLength = 250;
-            this.otherHomeDir.Name = "otherHomeDir";
-            this.otherHomeDir.Size = new System.Drawing.Size(292, 21);
-            this.otherHomeDir.TabIndex = 4;
+            otherHomeDir.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            otherHomeDir.Location = new Point(141, 115);
+            otherHomeDir.MaxLength = 250;
+            otherHomeDir.Name = "otherHomeDir";
+            otherHomeDir.Size = new Size(292, 21);
+            otherHomeDir.TabIndex = 4;
             // 
             // otherHome
             // 
-            this.otherHome.AutoSize = true;
-            this.otherHome.Location = new System.Drawing.Point(11, 118);
-            this.otherHome.Name = "otherHome";
-            this.otherHome.Size = new System.Drawing.Size(53, 17);
-            this.otherHome.TabIndex = 3;
-            this.otherHome.TabStop = true;
-            this.otherHome.Text = "Other";
-            this.otherHome.UseVisualStyleBackColor = true;
+            otherHome.AutoSize = true;
+            otherHome.Location = new Point(11, 118);
+            otherHome.Name = "otherHome";
+            otherHome.Size = new Size(53, 17);
+            otherHome.TabIndex = 3;
+            otherHome.TabStop = true;
+            otherHome.Text = "Other";
+            otherHome.UseVisualStyleBackColor = true;
             // 
             // userprofileHome
             // 
-            this.userprofileHome.AutoSize = true;
-            this.userprofileHome.Location = new System.Drawing.Point(11, 95);
-            this.userprofileHome.Name = "userprofileHome";
-            this.userprofileHome.Size = new System.Drawing.Size(157, 17);
-            this.userprofileHome.TabIndex = 2;
-            this.userprofileHome.TabStop = true;
-            this.userprofileHome.Text = "Set HOME to USERPROFILE";
-            this.userprofileHome.UseVisualStyleBackColor = true;
+            userprofileHome.AutoSize = true;
+            userprofileHome.Location = new Point(11, 95);
+            userprofileHome.Name = "userprofileHome";
+            userprofileHome.Size = new Size(157, 17);
+            userprofileHome.TabIndex = 2;
+            userprofileHome.TabStop = true;
+            userprofileHome.Text = "Set HOME to USERPROFILE";
+            userprofileHome.UseVisualStyleBackColor = true;
             // 
             // defaultHome
             // 
-            this.defaultHome.AutoSize = true;
-            this.defaultHome.Location = new System.Drawing.Point(11, 72);
-            this.defaultHome.Name = "defaultHome";
-            this.defaultHome.Size = new System.Drawing.Size(129, 17);
-            this.defaultHome.TabIndex = 1;
-            this.defaultHome.TabStop = true;
-            this.defaultHome.Text = "Use default for HOME";
-            this.defaultHome.UseVisualStyleBackColor = true;
+            defaultHome.AutoSize = true;
+            defaultHome.Location = new Point(11, 72);
+            defaultHome.Name = "defaultHome";
+            defaultHome.Size = new Size(129, 17);
+            defaultHome.TabIndex = 1;
+            defaultHome.TabStop = true;
+            defaultHome.Text = "Use default for HOME";
+            defaultHome.UseVisualStyleBackColor = true;
             // 
             // label51
             // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(8, 19);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(412, 39);
-            this.label51.TabIndex = 0;
-            this.label51.Text = resources.GetString("label51.Text");
+            label51.AutoSize = true;
+            label51.Location = new Point(8, 19);
+            label51.Name = "label51";
+            label51.Size = new Size(412, 39);
+            label51.TabIndex = 0;
+            label51.Text = resources.GetString("label51.Text");
             // 
             // ok
             // 
-            this.ok.Location = new System.Drawing.Point(455, 3);
-            this.ok.Name = "ok";
-            this.ok.Size = new System.Drawing.Size(130, 25);
-            this.ok.TabIndex = 0;
-            this.ok.Text = "OK";
-            this.ok.UseVisualStyleBackColor = true;
-            this.ok.Click += new System.EventHandler(this.ok_Click);
+            ok.Location = new Point(455, 3);
+            ok.Name = "ok";
+            ok.Size = new Size(130, 25);
+            ok.TabIndex = 0;
+            ok.Text = "OK";
+            ok.UseVisualStyleBackColor = true;
+            ok.Click += ok_Click;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.ok);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(8, 162);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(588, 31);
-            this.flowLayoutPanel1.TabIndex = 1;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(ok);
+            flowLayoutPanel1.Dock = DockStyle.Bottom;
+            flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
+            flowLayoutPanel1.Location = new Point(8, 162);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(588, 31);
+            flowLayoutPanel1.TabIndex = 1;
             // 
             // FormFixHome
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(604, 201);
-            this.Controls.Add(this.groupBox8);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(620, 240);
-            this.Name = "FormFixHome";
-            this.Padding = new System.Windows.Forms.Padding(8);
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(604, 201);
+            Controls.Add(groupBox8);
+            Controls.Add(flowLayoutPanel1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new Size(620, 240);
+            Name = "FormFixHome";
+            Padding = new Padding(8);
+            StartPosition = FormStartPosition.CenterParent;
+            groupBox8.ResumeLayout(false);
+            groupBox8.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox8;
+        private GroupBox groupBox8;
         private UserControls.FolderBrowserButton otherHomeBrowse;
-        private System.Windows.Forms.TextBox otherHomeDir;
-        private System.Windows.Forms.RadioButton otherHome;
-        private System.Windows.Forms.RadioButton userprofileHome;
-        private System.Windows.Forms.RadioButton defaultHome;
-        private System.Windows.Forms.Label label51;
-        private System.Windows.Forms.Button ok;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private TextBox otherHomeDir;
+        private RadioButton otherHome;
+        private RadioButton userprofileHome;
+        private RadioButton defaultHome;
+        private Label label51;
+        private Button ok;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

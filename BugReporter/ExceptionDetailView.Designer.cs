@@ -28,84 +28,84 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.propertyLabel = new System.Windows.Forms.Label();
-            this.propertyTextBox = new System.Windows.Forms.TextBox();
-            this.propertyInformationTextBox = new System.Windows.Forms.TextBox();
-            this.topPanel = new System.Windows.Forms.Panel();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.SuspendLayout();
+            propertyLabel = new Label();
+            propertyTextBox = new TextBox();
+            propertyInformationTextBox = new TextBox();
+            topPanel = new Panel();
+            statusStrip = new StatusStrip();
+            SuspendLayout();
             // 
             // propertyLabel
             // 
-            this.propertyLabel.AutoSize = true;
-            this.propertyLabel.Location = new System.Drawing.Point(2, 8);
-            this.propertyLabel.Name = "propertyLabel";
-            this.propertyLabel.Size = new System.Drawing.Size(49, 13);
-            this.propertyLabel.TabIndex = 0;
-            this.propertyLabel.Text = "Property:";
+            propertyLabel.AutoSize = true;
+            propertyLabel.Location = new Point(2, 8);
+            propertyLabel.Name = "propertyLabel";
+            propertyLabel.Size = new Size(49, 13);
+            propertyLabel.TabIndex = 0;
+            propertyLabel.Text = "Property:";
             // 
             // propertyTextBox
             // 
-            this.propertyTextBox.Location = new System.Drawing.Point(57, 5);
-            this.propertyTextBox.Name = "propertyTextBox";
-            this.propertyTextBox.ReadOnly = true;
-            this.propertyTextBox.Size = new System.Drawing.Size(507, 20);
-            this.propertyTextBox.TabIndex = 2;
+            propertyTextBox.Location = new Point(57, 5);
+            propertyTextBox.Name = "propertyTextBox";
+            propertyTextBox.ReadOnly = true;
+            propertyTextBox.Size = new Size(507, 20);
+            propertyTextBox.TabIndex = 2;
             // 
             // propertyInformationTextBox
             // 
-            this.propertyInformationTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyInformationTextBox.Location = new System.Drawing.Point(0, 32);
-            this.propertyInformationTextBox.Multiline = true;
-            this.propertyInformationTextBox.Name = "propertyInformationTextBox";
-            this.propertyInformationTextBox.ReadOnly = true;
-            this.propertyInformationTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.propertyInformationTextBox.Size = new System.Drawing.Size(567, 169);
-            this.propertyInformationTextBox.TabIndex = 3;
-            this.propertyInformationTextBox.WordWrap = false;
+            propertyInformationTextBox.Dock = DockStyle.Fill;
+            propertyInformationTextBox.Location = new Point(0, 32);
+            propertyInformationTextBox.Multiline = true;
+            propertyInformationTextBox.Name = "propertyInformationTextBox";
+            propertyInformationTextBox.ReadOnly = true;
+            propertyInformationTextBox.ScrollBars = ScrollBars.Both;
+            propertyInformationTextBox.Size = new Size(567, 169);
+            propertyInformationTextBox.TabIndex = 3;
+            propertyInformationTextBox.WordWrap = false;
             // 
             // topPanel
             // 
-            this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.topPanel.Location = new System.Drawing.Point(0, 0);
-            this.topPanel.Name = "topPanel";
-            this.topPanel.Size = new System.Drawing.Size(567, 32);
-            this.topPanel.TabIndex = 4;
+            topPanel.Dock = DockStyle.Top;
+            topPanel.Location = new Point(0, 0);
+            topPanel.Name = "topPanel";
+            topPanel.Size = new Size(567, 32);
+            topPanel.TabIndex = 4;
             // 
             // statusStrip
             // 
-            this.statusStrip.AutoSize = false;
-            this.statusStrip.Location = new System.Drawing.Point(0, 201);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(567, 17);
-            this.statusStrip.TabIndex = 5;
+            statusStrip.AutoSize = false;
+            statusStrip.Location = new Point(0, 201);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Size = new Size(567, 17);
+            statusStrip.TabIndex = 5;
             // 
             // ExceptionDetailView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(567, 218);
-            this.Controls.Add(this.propertyInformationTextBox);
-            this.Controls.Add(this.statusStrip);
-            this.Controls.Add(this.propertyTextBox);
-            this.Controls.Add(this.propertyLabel);
-            this.Controls.Add(this.topPanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Name = "ExceptionDetailView";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Property Details";
-            this.TopMost = true;
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(567, 218);
+            Controls.Add(propertyInformationTextBox);
+            Controls.Add(statusStrip);
+            Controls.Add(propertyTextBox);
+            Controls.Add(propertyLabel);
+            Controls.Add(topPanel);
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            Name = "ExceptionDetailView";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Property Details";
+            TopMost = true;
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label propertyLabel;
-        private System.Windows.Forms.TextBox propertyTextBox;
-        private System.Windows.Forms.TextBox propertyInformationTextBox;
-        private System.Windows.Forms.Panel topPanel;
-        private System.Windows.Forms.StatusStrip statusStrip;
+        private Label propertyLabel;
+        private TextBox propertyTextBox;
+        private TextBox propertyInformationTextBox;
+        private Panel topPanel;
+        private StatusStrip statusStrip;
     }
 }

@@ -28,274 +28,271 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.Branches = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.branchesPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.currentBranchPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.linkCurrentBranch = new System.Windows.Forms.LinkLabel();
-            this.linkHead = new System.Windows.Forms.LinkLabel();
-            this.gridReflog = new System.Windows.Forms.DataGridView();
-            this.Sha = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Ref = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.contextMenuStripReflog = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copySha1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createABranchOnThisCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblDirtyWorkingDirectory = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.branchesPanel.SuspendLayout();
-            this.currentBranchPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridReflog)).BeginInit();
-            this.contextMenuStripReflog.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            Branches = new ComboBox();
+            label2 = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            branchesPanel = new FlowLayoutPanel();
+            currentBranchPanel = new FlowLayoutPanel();
+            label1 = new Label();
+            linkCurrentBranch = new LinkLabel();
+            linkHead = new LinkLabel();
+            gridReflog = new DataGridView();
+            Sha = new DataGridViewTextBoxColumn();
+            Ref = new DataGridViewTextBoxColumn();
+            Action = new DataGridViewTextBoxColumn();
+            contextMenuStripReflog = new ContextMenuStrip(components);
+            copySha1ToolStripMenuItem = new ToolStripMenuItem();
+            createABranchOnThisCommitToolStripMenuItem = new ToolStripMenuItem();
+            resetCurrentBranchOnThisCommitToolStripMenuItem = new ToolStripMenuItem();
+            lblDirtyWorkingDirectory = new Label();
+            tableLayoutPanel1.SuspendLayout();
+            branchesPanel.SuspendLayout();
+            currentBranchPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(gridReflog)).BeginInit();
+            contextMenuStripReflog.SuspendLayout();
+            SuspendLayout();
             // 
             // Branches
             // 
-            this.Branches.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Branches.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(86, 4);
-            this.Branches.Margin = new System.Windows.Forms.Padding(4);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(272, 24);
-            this.Branches.TabIndex = 6;
-            this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
+            Branches.Anchor = AnchorStyles.Left;
+            Branches.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            Branches.AutoCompleteSource = AutoCompleteSource.ListItems;
+            Branches.DropDownStyle = ComboBoxStyle.DropDownList;
+            Branches.FormattingEnabled = true;
+            Branches.Location = new Point(86, 4);
+            Branches.Margin = new Padding(4);
+            Branches.Name = "Branches";
+            Branches.Size = new Size(272, 24);
+            Branches.TabIndex = 6;
+            Branches.SelectedIndexChanged += Branches_SelectedIndexChanged;
             // 
             // label2
             // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 7);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 17);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Reference:";
+            label2.Anchor = AnchorStyles.Left;
+            label2.AutoSize = true;
+            label2.Location = new Point(4, 7);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(74, 17);
+            label2.TabIndex = 5;
+            label2.Text = "Reference:";
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.branchesPanel, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.currentBranchPanel, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.gridReflog, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lblDirtyWorkingDirectory, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(782, 555);
-            this.tableLayoutPanel1.TabIndex = 19;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(branchesPanel, 0, 1);
+            tableLayoutPanel1.Controls.Add(currentBranchPanel, 1, 1);
+            tableLayoutPanel1.Controls.Add(gridReflog, 0, 2);
+            tableLayoutPanel1.Controls.Add(lblDirtyWorkingDirectory, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(4);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(782, 555);
+            tableLayoutPanel1.TabIndex = 19;
             // 
             // branchesPanel
             // 
-            this.branchesPanel.AutoSize = true;
-            this.branchesPanel.Controls.Add(this.label2);
-            this.branchesPanel.Controls.Add(this.Branches);
-            this.branchesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.branchesPanel.Location = new System.Drawing.Point(4, 38);
-            this.branchesPanel.Margin = new System.Windows.Forms.Padding(4);
-            this.branchesPanel.Name = "branchesPanel";
-            this.branchesPanel.Size = new System.Drawing.Size(362, 32);
-            this.branchesPanel.TabIndex = 32;
+            branchesPanel.AutoSize = true;
+            branchesPanel.Controls.Add(label2);
+            branchesPanel.Controls.Add(Branches);
+            branchesPanel.Dock = DockStyle.Fill;
+            branchesPanel.Location = new Point(4, 38);
+            branchesPanel.Margin = new Padding(4);
+            branchesPanel.Name = "branchesPanel";
+            branchesPanel.Size = new Size(362, 32);
+            branchesPanel.TabIndex = 32;
             // 
             // currentBranchPanel
             // 
-            this.currentBranchPanel.Controls.Add(this.label1);
-            this.currentBranchPanel.Controls.Add(this.linkCurrentBranch);
-            this.currentBranchPanel.Controls.Add(this.linkHead);
-            this.currentBranchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.currentBranchPanel.Location = new System.Drawing.Point(374, 38);
-            this.currentBranchPanel.Margin = new System.Windows.Forms.Padding(4);
-            this.currentBranchPanel.Name = "currentBranchPanel";
-            this.currentBranchPanel.Size = new System.Drawing.Size(453, 32);
-            this.currentBranchPanel.TabIndex = 8;
+            currentBranchPanel.Controls.Add(label1);
+            currentBranchPanel.Controls.Add(linkCurrentBranch);
+            currentBranchPanel.Controls.Add(linkHead);
+            currentBranchPanel.Dock = DockStyle.Fill;
+            currentBranchPanel.Location = new Point(374, 38);
+            currentBranchPanel.Margin = new Padding(4);
+            currentBranchPanel.Name = "currentBranchPanel";
+            currentBranchPanel.Size = new Size(453, 32);
+            currentBranchPanel.TabIndex = 8;
             // 
             // label1
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 7);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 7, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(115, 17);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Display reflog for:";
+            label1.Anchor = AnchorStyles.Left;
+            label1.AutoSize = true;
+            label1.Location = new Point(4, 7);
+            label1.Margin = new Padding(4, 7, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(115, 17);
+            label1.TabIndex = 7;
+            label1.Text = "Display reflog for:";
             // 
             // linkCurrentBranch
             // 
-            this.linkCurrentBranch.AutoSize = true;
-            this.linkCurrentBranch.Location = new System.Drawing.Point(126, 7);
-            this.linkCurrentBranch.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
-            this.linkCurrentBranch.Name = "linkCurrentBranch";
-            this.linkCurrentBranch.Size = new System.Drawing.Size(150, 17);
-            this.linkCurrentBranch.TabIndex = 8;
-            this.linkCurrentBranch.TabStop = true;
-            this.linkCurrentBranch.Text = "(Current branch name)";
-            this.linkCurrentBranch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.linkCurrentBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkCurrentBranch_LinkClicked);
+            linkCurrentBranch.AutoSize = true;
+            linkCurrentBranch.Location = new Point(126, 7);
+            linkCurrentBranch.Margin = new Padding(3, 7, 3, 0);
+            linkCurrentBranch.Name = "linkCurrentBranch";
+            linkCurrentBranch.Size = new Size(150, 17);
+            linkCurrentBranch.TabIndex = 8;
+            linkCurrentBranch.TabStop = true;
+            linkCurrentBranch.Text = "(Current branch name)";
+            linkCurrentBranch.TextAlign = ContentAlignment.MiddleLeft;
+            linkCurrentBranch.LinkClicked += linkCurrentBranch_LinkClicked;
             // 
             // linkHead
             // 
-            this.linkHead.AutoSize = true;
-            this.linkHead.Location = new System.Drawing.Point(282, 7);
-            this.linkHead.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
-            this.linkHead.Name = "linkHead";
-            this.linkHead.Size = new System.Drawing.Size(43, 17);
-            this.linkHead.TabIndex = 8;
-            this.linkHead.TabStop = true;
-            this.linkHead.Text = "HEAD";
-            this.linkHead.Click += new System.EventHandler(this.linkHead_Click);
+            linkHead.AutoSize = true;
+            linkHead.Location = new Point(282, 7);
+            linkHead.Margin = new Padding(3, 7, 3, 0);
+            linkHead.Name = "linkHead";
+            linkHead.Size = new Size(43, 17);
+            linkHead.TabIndex = 8;
+            linkHead.TabStop = true;
+            linkHead.Text = "HEAD";
+            linkHead.Click += linkHead_Click;
             // 
             // gridReflog
             // 
-            this.gridReflog.AllowUserToAddRows = false;
-            this.gridReflog.AllowUserToDeleteRows = false;
-            this.gridReflog.AllowUserToResizeRows = false;
-            this.gridReflog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gridReflog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
-            this.gridReflog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Sha,
-            this.Ref,
-            this.Action});
-            this.tableLayoutPanel1.SetColumnSpan(this.gridReflog, 2);
-            this.gridReflog.ContextMenuStrip = this.contextMenuStripReflog;
-            this.gridReflog.Location = new System.Drawing.Point(3, 77);
-            this.gridReflog.MultiSelect = false;
-            this.gridReflog.Name = "gridReflog";
-            this.gridReflog.ReadOnly = true;
-            this.gridReflog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridReflog.Size = new System.Drawing.Size(825, 509);
-            this.gridReflog.TabIndex = 33;
-            this.gridReflog.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gridReflog_MouseClick);
-            this.gridReflog.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gridReflog_MouseMove);
+            gridReflog.AllowUserToAddRows = false;
+            gridReflog.AllowUserToDeleteRows = false;
+            gridReflog.AllowUserToResizeRows = false;
+            gridReflog.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            gridReflog.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
+            gridReflog.Columns.AddRange(new DataGridViewColumn[] {
+            Sha,
+            Ref,
+            Action});
+            tableLayoutPanel1.SetColumnSpan(gridReflog, 2);
+            gridReflog.ContextMenuStrip = contextMenuStripReflog;
+            gridReflog.Location = new Point(3, 77);
+            gridReflog.MultiSelect = false;
+            gridReflog.Name = "gridReflog";
+            gridReflog.ReadOnly = true;
+            gridReflog.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            gridReflog.Size = new Size(825, 509);
+            gridReflog.TabIndex = 33;
+            gridReflog.MouseClick += gridReflog_MouseClick;
+            gridReflog.MouseMove += gridReflog_MouseMove;
             // 
             // Sha
             // 
-            this.Sha.HeaderText = "SHA-1";
-            this.Sha.Name = "Sha";
-            this.Sha.ReadOnly = true;
-            this.Sha.Width = 5;
+            Sha.HeaderText = "SHA-1";
+            Sha.Name = "Sha";
+            Sha.ReadOnly = true;
+            Sha.Width = 5;
             // 
             // Ref
             // 
-            this.Ref.HeaderText = "Ref";
-            this.Ref.Name = "Ref";
-            this.Ref.ReadOnly = true;
-            this.Ref.Width = 5;
+            Ref.HeaderText = "Ref";
+            Ref.Name = "Ref";
+            Ref.ReadOnly = true;
+            Ref.Width = 5;
             // 
             // Action
             // 
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
-            this.Action.ReadOnly = true;
-            this.Action.Width = 5;
+            Action.HeaderText = "Action";
+            Action.Name = "Action";
+            Action.ReadOnly = true;
+            Action.Width = 5;
             // 
             // contextMenuStripReflog
             // 
-            this.contextMenuStripReflog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copySha1ToolStripMenuItem,
-            this.createABranchOnThisCommitToolStripMenuItem,
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem});
-            this.contextMenuStripReflog.Name = "contextMenuStripReflog";
-            this.contextMenuStripReflog.Size = new System.Drawing.Size(323, 82);
+            contextMenuStripReflog.Items.AddRange(new ToolStripItem[] {
+            copySha1ToolStripMenuItem,
+            createABranchOnThisCommitToolStripMenuItem,
+            resetCurrentBranchOnThisCommitToolStripMenuItem});
+            contextMenuStripReflog.Name = "contextMenuStripReflog";
+            contextMenuStripReflog.Size = new Size(323, 82);
             // 
             // copySha1ToolStripMenuItem
             // 
-            this.copySha1ToolStripMenuItem.Image = global::GitUI.Properties.Images.CommitId;
-            this.copySha1ToolStripMenuItem.Name = "copySha1ToolStripMenuItem";
-            this.copySha1ToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
-            this.copySha1ToolStripMenuItem.Text = "Copy SHA-1";
-            this.copySha1ToolStripMenuItem.Click += new System.EventHandler(this.copySha1ToolStripMenuItem_Click);
+            copySha1ToolStripMenuItem.Image = Properties.Images.CommitId;
+            copySha1ToolStripMenuItem.Name = "copySha1ToolStripMenuItem";
+            copySha1ToolStripMenuItem.Size = new Size(322, 26);
+            copySha1ToolStripMenuItem.Text = "Copy SHA-1";
+            copySha1ToolStripMenuItem.Click += copySha1ToolStripMenuItem_Click;
             // 
             // createABranchOnThisCommitToolStripMenuItem
             // 
-            this.createABranchOnThisCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.BranchCreate;
-            this.createABranchOnThisCommitToolStripMenuItem.Name = "createABranchOnThisCommitToolStripMenuItem";
-            this.createABranchOnThisCommitToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
-            this.createABranchOnThisCommitToolStripMenuItem.Text = "Create a branch on this commit...";
-            this.createABranchOnThisCommitToolStripMenuItem.Click += new System.EventHandler(this.createABranchOnThisCommitToolStripMenuItem_Click);
+            createABranchOnThisCommitToolStripMenuItem.Image = Properties.Images.BranchCreate;
+            createABranchOnThisCommitToolStripMenuItem.Name = "createABranchOnThisCommitToolStripMenuItem";
+            createABranchOnThisCommitToolStripMenuItem.Size = new Size(322, 26);
+            createABranchOnThisCommitToolStripMenuItem.Text = "Create a branch on this commit...";
+            createABranchOnThisCommitToolStripMenuItem.Click += createABranchOnThisCommitToolStripMenuItem_Click;
             // 
             // resetCurrentBranchOnThisCommitToolStripMenuItem
             // 
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Name = "resetCurrentBranchOnThisCommitToolStripMenuItem";
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Text = "Reset current branch to this commit...";
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchOnThisCommitToolStripMenuItem_Click);
+            resetCurrentBranchOnThisCommitToolStripMenuItem.Image = Properties.Images.ResetCurrentBranchToHere;
+            resetCurrentBranchOnThisCommitToolStripMenuItem.Name = "resetCurrentBranchOnThisCommitToolStripMenuItem";
+            resetCurrentBranchOnThisCommitToolStripMenuItem.Size = new Size(322, 26);
+            resetCurrentBranchOnThisCommitToolStripMenuItem.Text = "Reset current branch to this commit...";
+            resetCurrentBranchOnThisCommitToolStripMenuItem.Click += resetCurrentBranchOnThisCommitToolStripMenuItem_Click;
             // 
             // lblDirtyWorkingDirectory
             // 
-            this.lblDirtyWorkingDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDirtyWorkingDirectory.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.lblDirtyWorkingDirectory, 2);
-            this.lblDirtyWorkingDirectory.ForeColor = System.Drawing.Color.Red;
-            this.lblDirtyWorkingDirectory.Location = new System.Drawing.Point(3, 0);
-            this.lblDirtyWorkingDirectory.Name = "lblDirtyWorkingDirectory";
-            this.lblDirtyWorkingDirectory.Size = new System.Drawing.Size(825, 34);
-            this.lblDirtyWorkingDirectory.TabIndex = 34;
-            this.lblDirtyWorkingDirectory.Text = "Warning: you\'ve got changes in your working directory that could be lost if you w" +
+            lblDirtyWorkingDirectory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblDirtyWorkingDirectory.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(lblDirtyWorkingDirectory, 2);
+            lblDirtyWorkingDirectory.ForeColor = Color.Red;
+            lblDirtyWorkingDirectory.Location = new Point(3, 0);
+            lblDirtyWorkingDirectory.Name = "lblDirtyWorkingDirectory";
+            lblDirtyWorkingDirectory.Size = new Size(825, 34);
+            lblDirtyWorkingDirectory.TabIndex = 34;
+            lblDirtyWorkingDirectory.Text = "Warning: you\'ve got changes in your working directory that could be lost if you w" +
     "ant to reset the current branch to another commit.\r\nStash them before if you don" +
     "\'t want to lose them.";
-            this.lblDirtyWorkingDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblDirtyWorkingDirectory.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // FormReflog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(782, 555);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(400, 200);
-            this.Name = "FormReflog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Reflog";
-            this.Load += new System.EventHandler(this.FormReflog_Load);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.branchesPanel.ResumeLayout(false);
-            this.branchesPanel.PerformLayout();
-            this.currentBranchPanel.ResumeLayout(false);
-            this.currentBranchPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridReflog)).EndInit();
-            this.contextMenuStripReflog.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(120F, 120F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackgroundImageLayout = ImageLayout.Center;
+            ClientSize = new Size(782, 555);
+            Controls.Add(tableLayoutPanel1);
+            Margin = new Padding(4);
+            MinimizeBox = false;
+            MinimumSize = new Size(400, 200);
+            Name = "FormReflog";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Reflog";
+            Load += FormReflog_Load;
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            branchesPanel.ResumeLayout(false);
+            branchesPanel.PerformLayout();
+            currentBranchPanel.ResumeLayout(false);
+            currentBranchPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(gridReflog)).EndInit();
+            contextMenuStripReflog.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox Branches;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel branchesPanel;
-        private System.Windows.Forms.DataGridView gridReflog;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Sha;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Ref;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Action;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripReflog;
-        private System.Windows.Forms.ToolStripMenuItem createABranchOnThisCommitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem resetCurrentBranchOnThisCommitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copySha1ToolStripMenuItem;
-        private System.Windows.Forms.FlowLayoutPanel currentBranchPanel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.LinkLabel linkCurrentBranch;
-        private System.Windows.Forms.LinkLabel linkHead;
-        private System.Windows.Forms.Label lblDirtyWorkingDirectory;
+        private Label label2;
+        private ComboBox Branches;
+        private TableLayoutPanel tableLayoutPanel1;
+        private FlowLayoutPanel branchesPanel;
+        private DataGridView gridReflog;
+        private DataGridViewTextBoxColumn Sha;
+        private DataGridViewTextBoxColumn Ref;
+        private DataGridViewTextBoxColumn Action;
+        private ContextMenuStrip contextMenuStripReflog;
+        private ToolStripMenuItem createABranchOnThisCommitToolStripMenuItem;
+        private ToolStripMenuItem resetCurrentBranchOnThisCommitToolStripMenuItem;
+        private ToolStripMenuItem copySha1ToolStripMenuItem;
+        private FlowLayoutPanel currentBranchPanel;
+        private Label label1;
+        private LinkLabel linkCurrentBranch;
+        private LinkLabel linkHead;
+        private Label lblDirtyWorkingDirectory;
     }
 }

@@ -28,327 +28,327 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TableLayoutPanel tlpnlMain;
-            this.gbRevisionGraph = new System.Windows.Forms.GroupBox();
-            this.tlpnlRevisionGraph = new System.Windows.Forms.TableLayoutPanel();
-            this.chkFillRefLabels = new System.Windows.Forms.CheckBox();
-            this.chkHighlightAuthored = new System.Windows.Forms.CheckBox();
-            this.MulticolorBranches = new System.Windows.Forms.CheckBox();
-            this.chkDrawAlternateBackColor = new System.Windows.Forms.CheckBox();
-            this.DrawNonRelativesTextGray = new System.Windows.Forms.CheckBox();
-            this.DrawNonRelativesGray = new System.Windows.Forms.CheckBox();
-            this.gbTheme = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.chkUseSystemVisualStyle = new System.Windows.Forms.CheckBox();
-            this.chkColorblind = new System.Windows.Forms.CheckBox();
-            this.sbOpenThemeFolder = new GitUI.ScriptsEngine.SplitButton();
-            this.cmsOpenThemeFolders = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiApplicationFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiUserFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this._NO_TRANSLATE_cbSelectTheme = new System.Windows.Forms.ComboBox();
-            this.lblRestartNeeded = new System.Windows.Forms.Label();
-            tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
+            components = new System.ComponentModel.Container();
+            TableLayoutPanel tlpnlMain;
+            gbRevisionGraph = new GroupBox();
+            tlpnlRevisionGraph = new TableLayoutPanel();
+            chkFillRefLabels = new CheckBox();
+            chkHighlightAuthored = new CheckBox();
+            MulticolorBranches = new CheckBox();
+            chkDrawAlternateBackColor = new CheckBox();
+            DrawNonRelativesTextGray = new CheckBox();
+            DrawNonRelativesGray = new CheckBox();
+            gbTheme = new GroupBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            chkUseSystemVisualStyle = new CheckBox();
+            chkColorblind = new CheckBox();
+            sbOpenThemeFolder = new GitUI.ScriptsEngine.SplitButton();
+            cmsOpenThemeFolders = new ContextMenuStrip(components);
+            tsmiApplicationFolder = new ToolStripMenuItem();
+            tsmiUserFolder = new ToolStripMenuItem();
+            _NO_TRANSLATE_cbSelectTheme = new ComboBox();
+            lblRestartNeeded = new Label();
+            tlpnlMain = new TableLayoutPanel();
             tlpnlMain.SuspendLayout();
-            this.gbRevisionGraph.SuspendLayout();
-            this.tlpnlRevisionGraph.SuspendLayout();
-            this.gbTheme.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.cmsOpenThemeFolders.SuspendLayout();
-            this.SuspendLayout();
+            gbRevisionGraph.SuspendLayout();
+            tlpnlRevisionGraph.SuspendLayout();
+            gbTheme.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            cmsOpenThemeFolders.SuspendLayout();
+            SuspendLayout();
             // 
             // tlpnlMain
             // 
             tlpnlMain.AutoSize = true;
-            tlpnlMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpnlMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tlpnlMain.ColumnCount = 1;
-            tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tlpnlMain.Controls.Add(this.gbRevisionGraph, 0, 0);
-            tlpnlMain.Controls.Add(this.gbTheme, 0, 2);
-            tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            tlpnlMain.Location = new System.Drawing.Point(8, 8);
+            tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+            tlpnlMain.Controls.Add(gbRevisionGraph, 0, 0);
+            tlpnlMain.Controls.Add(gbTheme, 0, 2);
+            tlpnlMain.Dock = DockStyle.Fill;
+            tlpnlMain.Location = new Point(8, 8);
             tlpnlMain.Name = "tlpnlMain";
             tlpnlMain.RowCount = 4;
-            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tlpnlMain.Size = new System.Drawing.Size(1511, 583);
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpnlMain.Size = new Size(1511, 583);
             tlpnlMain.TabIndex = 0;
             // 
             // gbRevisionGraph
             // 
-            this.gbRevisionGraph.AutoSize = true;
-            this.gbRevisionGraph.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbRevisionGraph.Controls.Add(this.tlpnlRevisionGraph);
-            this.gbRevisionGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbRevisionGraph.Location = new System.Drawing.Point(3, 3);
-            this.gbRevisionGraph.Name = "gbRevisionGraph";
-            this.gbRevisionGraph.Padding = new System.Windows.Forms.Padding(8);
-            this.gbRevisionGraph.Size = new System.Drawing.Size(1505, 182);
-            this.gbRevisionGraph.TabIndex = 0;
-            this.gbRevisionGraph.TabStop = false;
-            this.gbRevisionGraph.Text = "Revision graph";
+            gbRevisionGraph.AutoSize = true;
+            gbRevisionGraph.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gbRevisionGraph.Controls.Add(tlpnlRevisionGraph);
+            gbRevisionGraph.Dock = DockStyle.Fill;
+            gbRevisionGraph.Location = new Point(3, 3);
+            gbRevisionGraph.Name = "gbRevisionGraph";
+            gbRevisionGraph.Padding = new Padding(8);
+            gbRevisionGraph.Size = new Size(1505, 182);
+            gbRevisionGraph.TabIndex = 0;
+            gbRevisionGraph.TabStop = false;
+            gbRevisionGraph.Text = "Revision graph";
             // 
             // tlpnlRevisionGraph
             // 
-            this.tlpnlRevisionGraph.AutoSize = true;
-            this.tlpnlRevisionGraph.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpnlRevisionGraph.ColumnCount = 2;
-            this.tlpnlRevisionGraph.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlRevisionGraph.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlRevisionGraph.Controls.Add(this.chkFillRefLabels, 0, 5);
-            this.tlpnlRevisionGraph.Controls.Add(this.chkHighlightAuthored, 0, 4);
-            this.tlpnlRevisionGraph.Controls.Add(this.MulticolorBranches, 0, 0);
-            this.tlpnlRevisionGraph.Controls.Add(this.chkDrawAlternateBackColor, 0, 1);
-            this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesTextGray, 0, 3);
-            this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesGray, 0, 2);
-            this.tlpnlRevisionGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlRevisionGraph.Location = new System.Drawing.Point(8, 24);
-            this.tlpnlRevisionGraph.Name = "tlpnlRevisionGraph";
-            this.tlpnlRevisionGraph.RowCount = 6;
-            this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRevisionGraph.Size = new System.Drawing.Size(1489, 150);
-            this.tlpnlRevisionGraph.TabIndex = 0;
+            tlpnlRevisionGraph.AutoSize = true;
+            tlpnlRevisionGraph.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlRevisionGraph.ColumnCount = 2;
+            tlpnlRevisionGraph.ColumnStyles.Add(new ColumnStyle());
+            tlpnlRevisionGraph.ColumnStyles.Add(new ColumnStyle());
+            tlpnlRevisionGraph.Controls.Add(chkFillRefLabels, 0, 5);
+            tlpnlRevisionGraph.Controls.Add(chkHighlightAuthored, 0, 4);
+            tlpnlRevisionGraph.Controls.Add(MulticolorBranches, 0, 0);
+            tlpnlRevisionGraph.Controls.Add(chkDrawAlternateBackColor, 0, 1);
+            tlpnlRevisionGraph.Controls.Add(DrawNonRelativesTextGray, 0, 3);
+            tlpnlRevisionGraph.Controls.Add(DrawNonRelativesGray, 0, 2);
+            tlpnlRevisionGraph.Dock = DockStyle.Fill;
+            tlpnlRevisionGraph.Location = new Point(8, 24);
+            tlpnlRevisionGraph.Name = "tlpnlRevisionGraph";
+            tlpnlRevisionGraph.RowCount = 6;
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.Size = new Size(1489, 150);
+            tlpnlRevisionGraph.TabIndex = 0;
             // 
             // chkFillRefLabels
             // 
-            this.chkFillRefLabels.AutoSize = true;
-            this.chkFillRefLabels.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkFillRefLabels.Location = new System.Drawing.Point(3, 128);
-            this.chkFillRefLabels.Name = "chkFillRefLabels";
-            this.chkFillRefLabels.Size = new System.Drawing.Size(183, 19);
-            this.chkFillRefLabels.TabIndex = 6;
-            this.chkFillRefLabels.Text = "Fill git ref labels";
-            this.chkFillRefLabels.UseVisualStyleBackColor = true;
+            chkFillRefLabels.AutoSize = true;
+            chkFillRefLabels.Dock = DockStyle.Fill;
+            chkFillRefLabels.Location = new Point(3, 128);
+            chkFillRefLabels.Name = "chkFillRefLabels";
+            chkFillRefLabels.Size = new Size(183, 19);
+            chkFillRefLabels.TabIndex = 6;
+            chkFillRefLabels.Text = "Fill git ref labels";
+            chkFillRefLabels.UseVisualStyleBackColor = true;
             // 
             // chkHighlightAuthored
             // 
-            this.chkHighlightAuthored.AutoSize = true;
-            this.chkHighlightAuthored.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkHighlightAuthored.Location = new System.Drawing.Point(3, 103);
-            this.chkHighlightAuthored.Name = "chkHighlightAuthored";
-            this.chkHighlightAuthored.Size = new System.Drawing.Size(183, 19);
-            this.chkHighlightAuthored.TabIndex = 5;
-            this.chkHighlightAuthored.Text = "Highlight authored revisions";
-            this.chkHighlightAuthored.UseVisualStyleBackColor = true;
+            chkHighlightAuthored.AutoSize = true;
+            chkHighlightAuthored.Dock = DockStyle.Fill;
+            chkHighlightAuthored.Location = new Point(3, 103);
+            chkHighlightAuthored.Name = "chkHighlightAuthored";
+            chkHighlightAuthored.Size = new Size(183, 19);
+            chkHighlightAuthored.TabIndex = 5;
+            chkHighlightAuthored.Text = "Highlight authored revisions";
+            chkHighlightAuthored.UseVisualStyleBackColor = true;
             // 
             // MulticolorBranches
             // 
-            this.MulticolorBranches.AutoSize = true;
-            this.MulticolorBranches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MulticolorBranches.Location = new System.Drawing.Point(3, 3);
-            this.MulticolorBranches.Name = "MulticolorBranches";
-            this.MulticolorBranches.Size = new System.Drawing.Size(183, 19);
-            this.MulticolorBranches.TabIndex = 0;
-            this.MulticolorBranches.Text = "Multicolor branches";
-            this.MulticolorBranches.UseVisualStyleBackColor = true;
+            MulticolorBranches.AutoSize = true;
+            MulticolorBranches.Dock = DockStyle.Fill;
+            MulticolorBranches.Location = new Point(3, 3);
+            MulticolorBranches.Name = "MulticolorBranches";
+            MulticolorBranches.Size = new Size(183, 19);
+            MulticolorBranches.TabIndex = 0;
+            MulticolorBranches.Text = "Multicolor branches";
+            MulticolorBranches.UseVisualStyleBackColor = true;
             // 
             // chkDrawAlternateBackColor
             // 
-            this.chkDrawAlternateBackColor.AutoSize = true;
-            this.chkDrawAlternateBackColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkDrawAlternateBackColor.Location = new System.Drawing.Point(3, 28);
-            this.chkDrawAlternateBackColor.Name = "chkDrawAlternateBackColor";
-            this.chkDrawAlternateBackColor.Size = new System.Drawing.Size(183, 19);
-            this.chkDrawAlternateBackColor.TabIndex = 2;
-            this.chkDrawAlternateBackColor.Text = "Draw alternate background";
-            this.chkDrawAlternateBackColor.UseVisualStyleBackColor = true;
+            chkDrawAlternateBackColor.AutoSize = true;
+            chkDrawAlternateBackColor.Dock = DockStyle.Fill;
+            chkDrawAlternateBackColor.Location = new Point(3, 28);
+            chkDrawAlternateBackColor.Name = "chkDrawAlternateBackColor";
+            chkDrawAlternateBackColor.Size = new Size(183, 19);
+            chkDrawAlternateBackColor.TabIndex = 2;
+            chkDrawAlternateBackColor.Text = "Draw alternate background";
+            chkDrawAlternateBackColor.UseVisualStyleBackColor = true;
             // 
             // DrawNonRelativesTextGray
             // 
-            this.DrawNonRelativesTextGray.AutoSize = true;
-            this.DrawNonRelativesTextGray.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DrawNonRelativesTextGray.Location = new System.Drawing.Point(3, 78);
-            this.DrawNonRelativesTextGray.Name = "DrawNonRelativesTextGray";
-            this.DrawNonRelativesTextGray.Size = new System.Drawing.Size(183, 19);
-            this.DrawNonRelativesTextGray.TabIndex = 4;
-            this.DrawNonRelativesTextGray.Text = "Draw non relatives text gray";
-            this.DrawNonRelativesTextGray.UseVisualStyleBackColor = true;
+            DrawNonRelativesTextGray.AutoSize = true;
+            DrawNonRelativesTextGray.Dock = DockStyle.Fill;
+            DrawNonRelativesTextGray.Location = new Point(3, 78);
+            DrawNonRelativesTextGray.Name = "DrawNonRelativesTextGray";
+            DrawNonRelativesTextGray.Size = new Size(183, 19);
+            DrawNonRelativesTextGray.TabIndex = 4;
+            DrawNonRelativesTextGray.Text = "Draw non relatives text gray";
+            DrawNonRelativesTextGray.UseVisualStyleBackColor = true;
             // 
             // DrawNonRelativesGray
             // 
-            this.DrawNonRelativesGray.AutoSize = true;
-            this.DrawNonRelativesGray.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DrawNonRelativesGray.Location = new System.Drawing.Point(3, 53);
-            this.DrawNonRelativesGray.Name = "DrawNonRelativesGray";
-            this.DrawNonRelativesGray.Size = new System.Drawing.Size(183, 19);
-            this.DrawNonRelativesGray.TabIndex = 3;
-            this.DrawNonRelativesGray.Text = "Draw non relatives graph gray";
-            this.DrawNonRelativesGray.UseVisualStyleBackColor = true;
+            DrawNonRelativesGray.AutoSize = true;
+            DrawNonRelativesGray.Dock = DockStyle.Fill;
+            DrawNonRelativesGray.Location = new Point(3, 53);
+            DrawNonRelativesGray.Name = "DrawNonRelativesGray";
+            DrawNonRelativesGray.Size = new Size(183, 19);
+            DrawNonRelativesGray.TabIndex = 3;
+            DrawNonRelativesGray.Text = "Draw non relatives graph gray";
+            DrawNonRelativesGray.UseVisualStyleBackColor = true;
             // 
             // gbTheme
             // 
-            this.gbTheme.AutoSize = true;
-            this.gbTheme.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbTheme.Controls.Add(this.tableLayoutPanel1);
-            this.gbTheme.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbTheme.Location = new System.Drawing.Point(3, 191);
-            this.gbTheme.Name = "gbTheme";
-            this.gbTheme.Padding = new System.Windows.Forms.Padding(8);
-            this.gbTheme.Size = new System.Drawing.Size(1505, 129);
-            this.gbTheme.TabIndex = 3;
-            this.gbTheme.TabStop = false;
-            this.gbTheme.Text = "Theme";
+            gbTheme.AutoSize = true;
+            gbTheme.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gbTheme.Controls.Add(tableLayoutPanel1);
+            gbTheme.Dock = DockStyle.Fill;
+            gbTheme.Location = new Point(3, 191);
+            gbTheme.Name = "gbTheme";
+            gbTheme.Padding = new Padding(8);
+            gbTheme.Size = new Size(1505, 129);
+            gbTheme.TabIndex = 3;
+            gbTheme.TabStop = false;
+            gbTheme.Text = "Theme";
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.chkUseSystemVisualStyle, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.chkColorblind, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.sbOpenThemeFolder, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_cbSelectTheme, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblRestartNeeded, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 24);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1489, 97);
-            this.tableLayoutPanel1.TabIndex = 9;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(chkUseSystemVisualStyle, 0, 3);
+            tableLayoutPanel1.Controls.Add(chkColorblind, 0, 2);
+            tableLayoutPanel1.Controls.Add(sbOpenThemeFolder, 1, 1);
+            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_cbSelectTheme, 0, 1);
+            tableLayoutPanel1.Controls.Add(lblRestartNeeded, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(8, 24);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(1489, 97);
+            tableLayoutPanel1.TabIndex = 9;
             // 
             // chkUseSystemVisualStyle
             // 
-            this.chkUseSystemVisualStyle.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkUseSystemVisualStyle.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.chkUseSystemVisualStyle, 2);
-            this.chkUseSystemVisualStyle.Location = new System.Drawing.Point(3, 75);
-            this.chkUseSystemVisualStyle.Name = "chkUseSystemVisualStyle";
-            this.chkUseSystemVisualStyle.Size = new System.Drawing.Size(339, 19);
-            this.chkUseSystemVisualStyle.TabIndex = 4;
-            this.chkUseSystemVisualStyle.Text = "Use system-defined visual style (looks bad with dark colors)";
-            this.chkUseSystemVisualStyle.UseVisualStyleBackColor = true;
+            chkUseSystemVisualStyle.Anchor = AnchorStyles.Left;
+            chkUseSystemVisualStyle.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(chkUseSystemVisualStyle, 2);
+            chkUseSystemVisualStyle.Location = new Point(3, 75);
+            chkUseSystemVisualStyle.Name = "chkUseSystemVisualStyle";
+            chkUseSystemVisualStyle.Size = new Size(339, 19);
+            chkUseSystemVisualStyle.TabIndex = 4;
+            chkUseSystemVisualStyle.Text = "Use system-defined visual style (looks bad with dark colors)";
+            chkUseSystemVisualStyle.UseVisualStyleBackColor = true;
             // 
             // chkColorblind
             // 
-            this.chkColorblind.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkColorblind.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.chkColorblind, 2);
-            this.chkColorblind.Location = new System.Drawing.Point(3, 50);
-            this.chkColorblind.Name = "chkColorblind";
-            this.chkColorblind.Size = new System.Drawing.Size(82, 19);
-            this.chkColorblind.TabIndex = 6;
-            this.chkColorblind.Text = "Colorblind";
-            this.chkColorblind.UseVisualStyleBackColor = true;
+            chkColorblind.Anchor = AnchorStyles.Left;
+            chkColorblind.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(chkColorblind, 2);
+            chkColorblind.Location = new Point(3, 50);
+            chkColorblind.Name = "chkColorblind";
+            chkColorblind.Size = new Size(82, 19);
+            chkColorblind.TabIndex = 6;
+            chkColorblind.Text = "Colorblind";
+            chkColorblind.UseVisualStyleBackColor = true;
             // 
             // sbOpenThemeFolder
             // 
-            this.sbOpenThemeFolder.AutoSize = true;
-            this.sbOpenThemeFolder.ContextMenuStrip = this.cmsOpenThemeFolders;
-            this.sbOpenThemeFolder.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
-            this.sbOpenThemeFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.sbOpenThemeFolder.Location = new System.Drawing.Point(222, 19);
-            this.sbOpenThemeFolder.Name = "sbOpenThemeFolder";
-            this.sbOpenThemeFolder.Padding = new System.Windows.Forms.Padding(40, 0, 0, 0);
-            this.sbOpenThemeFolder.Size = new System.Drawing.Size(175, 25);
-            this.sbOpenThemeFolder.SplitMenuStrip = this.cmsOpenThemeFolders;
-            this.sbOpenThemeFolder.TabIndex = 7;
-            this.sbOpenThemeFolder.Text = "Open theme folder";
-            this.sbOpenThemeFolder.UseVisualStyleBackColor = true;
-            this.sbOpenThemeFolder.WholeButtonDropdown = true;
+            sbOpenThemeFolder.AutoSize = true;
+            sbOpenThemeFolder.ContextMenuStrip = cmsOpenThemeFolders;
+            sbOpenThemeFolder.Image = Properties.Images.BrowseFileExplorer;
+            sbOpenThemeFolder.ImageAlign = ContentAlignment.MiddleLeft;
+            sbOpenThemeFolder.Location = new Point(222, 19);
+            sbOpenThemeFolder.Name = "sbOpenThemeFolder";
+            sbOpenThemeFolder.Padding = new Padding(40, 0, 0, 0);
+            sbOpenThemeFolder.Size = new Size(175, 25);
+            sbOpenThemeFolder.SplitMenuStrip = cmsOpenThemeFolders;
+            sbOpenThemeFolder.TabIndex = 7;
+            sbOpenThemeFolder.Text = "Open theme folder";
+            sbOpenThemeFolder.UseVisualStyleBackColor = true;
+            sbOpenThemeFolder.WholeButtonDropdown = true;
             // 
             // cmsOpenThemeFolders
             // 
-            this.cmsOpenThemeFolders.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiApplicationFolder,
-            this.tsmiUserFolder});
-            this.cmsOpenThemeFolders.Name = "cmsOpenThemeFolders";
-            this.cmsOpenThemeFolders.Size = new System.Drawing.Size(170, 48);
+            cmsOpenThemeFolders.Items.AddRange(new ToolStripItem[] {
+            tsmiApplicationFolder,
+            tsmiUserFolder});
+            cmsOpenThemeFolders.Name = "cmsOpenThemeFolders";
+            cmsOpenThemeFolders.Size = new Size(170, 48);
             // 
             // tsmiApplicationFolder
             // 
-            this.tsmiApplicationFolder.Name = "tsmiApplicationFolder";
-            this.tsmiApplicationFolder.Size = new System.Drawing.Size(169, 22);
-            this.tsmiApplicationFolder.Text = "Application folder";
-            this.tsmiApplicationFolder.Click += new System.EventHandler(this.tsmiApplicationFolder_Click);
+            tsmiApplicationFolder.Name = "tsmiApplicationFolder";
+            tsmiApplicationFolder.Size = new Size(169, 22);
+            tsmiApplicationFolder.Text = "Application folder";
+            tsmiApplicationFolder.Click += tsmiApplicationFolder_Click;
             // 
             // tsmiUserFolder
             // 
-            this.tsmiUserFolder.Name = "tsmiUserFolder";
-            this.tsmiUserFolder.Size = new System.Drawing.Size(169, 22);
-            this.tsmiUserFolder.Text = "User folder";
-            this.tsmiUserFolder.Click += new System.EventHandler(this.tsmiUserFolder_Click);
+            tsmiUserFolder.Name = "tsmiUserFolder";
+            tsmiUserFolder.Size = new Size(169, 22);
+            tsmiUserFolder.Text = "User folder";
+            tsmiUserFolder.Click += tsmiUserFolder_Click;
             // 
             // _NO_TRANSLATE_cbSelectTheme
             // 
-            this._NO_TRANSLATE_cbSelectTheme.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this._NO_TRANSLATE_cbSelectTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._NO_TRANSLATE_cbSelectTheme.FormattingEnabled = true;
-            this._NO_TRANSLATE_cbSelectTheme.Location = new System.Drawing.Point(3, 20);
-            this._NO_TRANSLATE_cbSelectTheme.Name = "_NO_TRANSLATE_cbSelectTheme";
-            this._NO_TRANSLATE_cbSelectTheme.Size = new System.Drawing.Size(213, 23);
-            this._NO_TRANSLATE_cbSelectTheme.TabIndex = 0;
+            _NO_TRANSLATE_cbSelectTheme.Anchor = AnchorStyles.Left;
+            _NO_TRANSLATE_cbSelectTheme.DropDownStyle = ComboBoxStyle.DropDownList;
+            _NO_TRANSLATE_cbSelectTheme.FormattingEnabled = true;
+            _NO_TRANSLATE_cbSelectTheme.Location = new Point(3, 20);
+            _NO_TRANSLATE_cbSelectTheme.Name = "_NO_TRANSLATE_cbSelectTheme";
+            _NO_TRANSLATE_cbSelectTheme.Size = new Size(213, 23);
+            _NO_TRANSLATE_cbSelectTheme.TabIndex = 0;
             // 
             // lblRestartNeeded
             // 
-            this.lblRestartNeeded.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.tableLayoutPanel1.SetColumnSpan(this.lblRestartNeeded, 2);
-            this.lblRestartNeeded.Image = global::GitUI.Properties.Images.Warning;
-            this.lblRestartNeeded.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblRestartNeeded.Location = new System.Drawing.Point(3, 0);
-            this.lblRestartNeeded.Name = "lblRestartNeeded";
-            this.lblRestartNeeded.Size = new System.Drawing.Size(200, 16);
-            this.lblRestartNeeded.TabIndex = 5;
-            this.lblRestartNeeded.Text = "Restart required to apply changes";
-            this.lblRestartNeeded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblRestartNeeded.Anchor = AnchorStyles.Left;
+            tableLayoutPanel1.SetColumnSpan(lblRestartNeeded, 2);
+            lblRestartNeeded.Image = Properties.Images.Warning;
+            lblRestartNeeded.ImageAlign = ContentAlignment.MiddleLeft;
+            lblRestartNeeded.Location = new Point(3, 0);
+            lblRestartNeeded.Name = "lblRestartNeeded";
+            lblRestartNeeded.Size = new Size(200, 16);
+            lblRestartNeeded.TabIndex = 5;
+            lblRestartNeeded.Text = "Restart required to apply changes";
+            lblRestartNeeded.TextAlign = ContentAlignment.MiddleRight;
             // 
             // ColorsSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(tlpnlMain);
-            this.Name = "ColorsSettingsPage";
-            this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1527, 599);
-            this.Text = "Colors";
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(tlpnlMain);
+            Name = "ColorsSettingsPage";
+            Padding = new Padding(8);
+            Size = new Size(1527, 599);
+            Text = "Colors";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
-            this.gbRevisionGraph.ResumeLayout(false);
-            this.gbRevisionGraph.PerformLayout();
-            this.tlpnlRevisionGraph.ResumeLayout(false);
-            this.tlpnlRevisionGraph.PerformLayout();
-            this.gbTheme.ResumeLayout(false);
-            this.gbTheme.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.cmsOpenThemeFolders.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            gbRevisionGraph.ResumeLayout(false);
+            gbRevisionGraph.PerformLayout();
+            tlpnlRevisionGraph.ResumeLayout(false);
+            tlpnlRevisionGraph.PerformLayout();
+            gbTheme.ResumeLayout(false);
+            gbTheme.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            cmsOpenThemeFolders.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
     
-        private System.Windows.Forms.GroupBox gbRevisionGraph;
-        private System.Windows.Forms.CheckBox DrawNonRelativesTextGray;
-        private System.Windows.Forms.CheckBox DrawNonRelativesGray;
-        private System.Windows.Forms.CheckBox MulticolorBranches;
-        private System.Windows.Forms.CheckBox chkDrawAlternateBackColor;
-        private System.Windows.Forms.TableLayoutPanel tlpnlRevisionGraph;
-        private System.Windows.Forms.CheckBox chkHighlightAuthored;
-        private System.Windows.Forms.GroupBox gbTheme;
-        private System.Windows.Forms.ContextMenuStrip cmsOpenThemeFolders;
-        private System.Windows.Forms.ToolStripMenuItem tsmiApplicationFolder;
-        private System.Windows.Forms.ToolStripMenuItem tsmiUserFolder;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.CheckBox chkUseSystemVisualStyle;
-        private System.Windows.Forms.CheckBox chkColorblind;
+        private GroupBox gbRevisionGraph;
+        private CheckBox DrawNonRelativesTextGray;
+        private CheckBox DrawNonRelativesGray;
+        private CheckBox MulticolorBranches;
+        private CheckBox chkDrawAlternateBackColor;
+        private TableLayoutPanel tlpnlRevisionGraph;
+        private CheckBox chkHighlightAuthored;
+        private GroupBox gbTheme;
+        private ContextMenuStrip cmsOpenThemeFolders;
+        private ToolStripMenuItem tsmiApplicationFolder;
+        private ToolStripMenuItem tsmiUserFolder;
+        private TableLayoutPanel tableLayoutPanel1;
+        private CheckBox chkUseSystemVisualStyle;
+        private CheckBox chkColorblind;
         private GitUI.ScriptsEngine.SplitButton sbOpenThemeFolder;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cbSelectTheme;
-        private System.Windows.Forms.Label lblRestartNeeded;
-        private System.Windows.Forms.CheckBox chkFillRefLabels;
+        private ComboBox _NO_TRANSLATE_cbSelectTheme;
+        private Label lblRestartNeeded;
+        private CheckBox chkFillRefLabels;
     }
 }

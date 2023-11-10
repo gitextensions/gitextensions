@@ -28,96 +28,96 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.exceptionDetailsListView = new System.Windows.Forms.ListView();
-            this.propertyColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.informationColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.exceptionDetailsLabel = new System.Windows.Forms.Label();
-            this.exceptionLabel = new System.Windows.Forms.Label();
-            this.exceptionTreeView = new System.Windows.Forms.TreeView();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            exceptionDetailsListView = new ListView();
+            propertyColumnHeader = ((ColumnHeader)(new ColumnHeader()));
+            informationColumnHeader = ((ColumnHeader)(new ColumnHeader()));
+            exceptionDetailsLabel = new Label();
+            exceptionLabel = new Label();
+            exceptionTreeView = new TreeView();
+            toolTip = new ToolTip(components);
+            SuspendLayout();
             // 
             // exceptionDetailsListView
             // 
-            this.exceptionDetailsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.propertyColumnHeader,
-            this.informationColumnHeader});
-            this.exceptionDetailsListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.exceptionDetailsListView.FullRowSelect = true;
-            this.exceptionDetailsListView.GridLines = true;
-            this.exceptionDetailsListView.Location = new System.Drawing.Point(0, 126);
-            this.exceptionDetailsListView.MultiSelect = false;
-            this.exceptionDetailsListView.Name = "exceptionDetailsListView";
-            this.exceptionDetailsListView.Size = new System.Drawing.Size(461, 204);
-            this.exceptionDetailsListView.TabIndex = 3;
-            this.exceptionDetailsListView.UseCompatibleStateImageBehavior = false;
-            this.exceptionDetailsListView.View = System.Windows.Forms.View.Details;
-            this.exceptionDetailsListView.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.ExceptionDetailsListView_ItemMouseHover);
-            this.exceptionDetailsListView.DoubleClick += new System.EventHandler(this.ExceptionDetailsListView_DoubleClick);
+            exceptionDetailsListView.Columns.AddRange(new ColumnHeader[] {
+            propertyColumnHeader,
+            informationColumnHeader});
+            exceptionDetailsListView.Dock = DockStyle.Fill;
+            exceptionDetailsListView.FullRowSelect = true;
+            exceptionDetailsListView.GridLines = true;
+            exceptionDetailsListView.Location = new Point(0, 126);
+            exceptionDetailsListView.MultiSelect = false;
+            exceptionDetailsListView.Name = "exceptionDetailsListView";
+            exceptionDetailsListView.Size = new Size(461, 204);
+            exceptionDetailsListView.TabIndex = 3;
+            exceptionDetailsListView.UseCompatibleStateImageBehavior = false;
+            exceptionDetailsListView.View = View.Details;
+            exceptionDetailsListView.ItemMouseHover += ExceptionDetailsListView_ItemMouseHover;
+            exceptionDetailsListView.DoubleClick += ExceptionDetailsListView_DoubleClick;
             // 
             // propertyColumnHeader
             // 
-            this.propertyColumnHeader.Text = "Property";
-            this.propertyColumnHeader.Width = 101;
+            propertyColumnHeader.Text = "Property";
+            propertyColumnHeader.Width = 101;
             // 
             // informationColumnHeader
             // 
-            this.informationColumnHeader.Text = "Information";
-            this.informationColumnHeader.Width = 350;
+            informationColumnHeader.Text = "Information";
+            informationColumnHeader.Width = 350;
             // 
             // exceptionDetailsLabel
             // 
-            this.exceptionDetailsLabel.AutoSize = true;
-            this.exceptionDetailsLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.exceptionDetailsLabel.Location = new System.Drawing.Point(0, 85);
-            this.exceptionDetailsLabel.Name = "exceptionDetailsLabel";
-            this.exceptionDetailsLabel.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
-            this.exceptionDetailsLabel.Size = new System.Drawing.Size(540, 41);
-            this.exceptionDetailsLabel.TabIndex = 2;
-            this.exceptionDetailsLabel.Text = "Exception Details (double click on items to see details):";
+            exceptionDetailsLabel.AutoSize = true;
+            exceptionDetailsLabel.Dock = DockStyle.Top;
+            exceptionDetailsLabel.Location = new Point(0, 85);
+            exceptionDetailsLabel.Name = "exceptionDetailsLabel";
+            exceptionDetailsLabel.Padding = new Padding(0, 16, 0, 0);
+            exceptionDetailsLabel.Size = new Size(540, 41);
+            exceptionDetailsLabel.TabIndex = 2;
+            exceptionDetailsLabel.Text = "Exception Details (double click on items to see details):";
             // 
             // exceptionLabel
             // 
-            this.exceptionLabel.AutoSize = true;
-            this.exceptionLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.exceptionLabel.Location = new System.Drawing.Point(0, 0);
-            this.exceptionLabel.Name = "exceptionLabel";
-            this.exceptionLabel.Size = new System.Drawing.Size(138, 25);
-            this.exceptionLabel.TabIndex = 0;
-            this.exceptionLabel.Text = "Exception(s):";
+            exceptionLabel.AutoSize = true;
+            exceptionLabel.Dock = DockStyle.Top;
+            exceptionLabel.Location = new Point(0, 0);
+            exceptionLabel.Name = "exceptionLabel";
+            exceptionLabel.Size = new Size(138, 25);
+            exceptionLabel.TabIndex = 0;
+            exceptionLabel.Text = "Exception(s):";
             // 
             // exceptionTreeView
             // 
-            this.exceptionTreeView.Dock = System.Windows.Forms.DockStyle.Top;
-            this.exceptionTreeView.Location = new System.Drawing.Point(0, 25);
-            this.exceptionTreeView.Name = "exceptionTreeView";
-            this.exceptionTreeView.Size = new System.Drawing.Size(461, 60);
-            this.exceptionTreeView.TabIndex = 1;
-            this.exceptionTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ExceptionTreeView_AfterSelect);
+            exceptionTreeView.Dock = DockStyle.Top;
+            exceptionTreeView.Location = new Point(0, 25);
+            exceptionTreeView.Name = "exceptionTreeView";
+            exceptionTreeView.Size = new Size(461, 60);
+            exceptionTreeView.TabIndex = 1;
+            exceptionTreeView.AfterSelect += ExceptionTreeView_AfterSelect;
             // 
             // ExceptionDetails
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.exceptionDetailsListView);
-            this.Controls.Add(this.exceptionDetailsLabel);
-            this.Controls.Add(this.exceptionTreeView);
-            this.Controls.Add(this.exceptionLabel);
-            this.Name = "ExceptionDetails";
-            this.Size = new System.Drawing.Size(461, 330);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(exceptionDetailsListView);
+            Controls.Add(exceptionDetailsLabel);
+            Controls.Add(exceptionTreeView);
+            Controls.Add(exceptionLabel);
+            Name = "ExceptionDetails";
+            Size = new Size(461, 330);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListView exceptionDetailsListView;
-        private System.Windows.Forms.ColumnHeader propertyColumnHeader;
-        private System.Windows.Forms.ColumnHeader informationColumnHeader;
-        private System.Windows.Forms.Label exceptionDetailsLabel;
-        private System.Windows.Forms.Label exceptionLabel;
-        private System.Windows.Forms.TreeView exceptionTreeView;
-        private System.Windows.Forms.ToolTip toolTip;
+        private ListView exceptionDetailsListView;
+        private ColumnHeader propertyColumnHeader;
+        private ColumnHeader informationColumnHeader;
+        private Label exceptionDetailsLabel;
+        private Label exceptionLabel;
+        private TreeView exceptionTreeView;
+        private ToolTip toolTip;
     }
 }

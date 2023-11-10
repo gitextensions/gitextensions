@@ -28,131 +28,131 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.Patches = new System.Windows.Forms.DataGridView();
-            this.patchFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CommitHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.subjectDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.Patches)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.patchFileBindingSource)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            Patches = new DataGridView();
+            patchFileBindingSource = new BindingSource(components);
+            Action = new DataGridViewTextBoxColumn();
+            FileName = new DataGridViewTextBoxColumn();
+            CommitHash = new DataGridViewTextBoxColumn();
+            subjectDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            authorDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            dateDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(Patches)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(patchFileBindingSource)).BeginInit();
+            SuspendLayout();
             // 
             // Patches
             // 
-            this.Patches.AllowUserToAddRows = false;
-            this.Patches.AllowUserToDeleteRows = false;
-            this.Patches.AutoGenerateColumns = false;
-            this.Patches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.Patches.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            this.Patches.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Patches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Patches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Status,
-            this.Action,
-            this.FileName,
-            this.CommitHash,
-            this.subjectDataGridViewTextBoxColumn,
-            this.authorDataGridViewTextBoxColumn,
-            this.dateDataGridViewTextBoxColumn});
-            this.Patches.DataSource = this.patchFileBindingSource;
-            this.Patches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Patches.Location = new System.Drawing.Point(0, 0);
-            this.Patches.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Patches.Name = "Patches";
-            this.Patches.ReadOnly = true;
-            this.Patches.RowHeadersVisible = false;
-            this.Patches.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Patches.Size = new System.Drawing.Size(675, 406);
-            this.Patches.TabIndex = 0;
-            this.Patches.DoubleClick += new System.EventHandler(this.Patches_DoubleClick);
+            Patches.AllowUserToAddRows = false;
+            Patches.AllowUserToDeleteRows = false;
+            Patches.AutoGenerateColumns = false;
+            Patches.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            Patches.BackgroundColor = SystemColors.ControlLight;
+            Patches.BorderStyle = BorderStyle.None;
+            Patches.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            Patches.Columns.AddRange(new DataGridViewColumn[] {
+            Status,
+            Action,
+            FileName,
+            CommitHash,
+            subjectDataGridViewTextBoxColumn,
+            authorDataGridViewTextBoxColumn,
+            dateDataGridViewTextBoxColumn});
+            Patches.DataSource = patchFileBindingSource;
+            Patches.Dock = DockStyle.Fill;
+            Patches.Location = new Point(0, 0);
+            Patches.Margin = new Padding(3, 2, 3, 2);
+            Patches.Name = "Patches";
+            Patches.ReadOnly = true;
+            Patches.RowHeadersVisible = false;
+            Patches.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            Patches.Size = new Size(675, 406);
+            Patches.TabIndex = 0;
+            Patches.DoubleClick += Patches_DoubleClick;
             // 
             // patchFileBindingSource
             // 
-            this.patchFileBindingSource.DataSource = typeof(GitUI.PatchFile);
+            patchFileBindingSource.DataSource = typeof(GitUI.PatchFile);
             // 
             // FileName
             // 
-            this.FileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.FileName.HeaderText = "Name";
-            this.FileName.Name = "FileName";
-            this.FileName.ReadOnly = true;
-            this.FileName.SortMode = DataGridViewColumnSortMode.NotSortable;
+            FileName.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            FileName.HeaderText = "Name";
+            FileName.Name = "FileName";
+            FileName.ReadOnly = true;
+            FileName.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // Action
             // 
-            this.Action.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
-            this.Action.ReadOnly = true;
-            this.Action.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Action.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            Action.HeaderText = "Action";
+            Action.Name = "Action";
+            Action.ReadOnly = true;
+            Action.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // CommitHash
             // 
-            this.CommitHash.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.CommitHash.HeaderText = "Commit hash";
-            this.CommitHash.Name = "CommitHash";
-            this.CommitHash.ReadOnly = true;
-            this.CommitHash.SortMode = DataGridViewColumnSortMode.NotSortable;
+            CommitHash.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            CommitHash.HeaderText = "Commit hash";
+            CommitHash.Name = "CommitHash";
+            CommitHash.ReadOnly = true;
+            CommitHash.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // subjectDataGridViewTextBoxColumn
             // 
-            this.subjectDataGridViewTextBoxColumn.HeaderText = "Subject";
-            this.subjectDataGridViewTextBoxColumn.Name = "subjectDataGridViewTextBoxColumn";
-            this.subjectDataGridViewTextBoxColumn.ReadOnly = true;
-            this.subjectDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+            subjectDataGridViewTextBoxColumn.HeaderText = "Subject";
+            subjectDataGridViewTextBoxColumn.Name = "subjectDataGridViewTextBoxColumn";
+            subjectDataGridViewTextBoxColumn.ReadOnly = true;
+            subjectDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // authorDataGridViewTextBoxColumn
             // 
-            this.authorDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
-            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
-            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
-            this.authorDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+            authorDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            authorDataGridViewTextBoxColumn.HeaderText = "Author";
+            authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
+            authorDataGridViewTextBoxColumn.ReadOnly = true;
+            authorDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // dateDataGridViewTextBoxColumn
             // 
-            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dateDataGridViewTextBoxColumn.HeaderText = "Date";
-            this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
-            this.dateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dateDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+            dateDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dateDataGridViewTextBoxColumn.HeaderText = "Date";
+            dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
+            dateDataGridViewTextBoxColumn.ReadOnly = true;
+            dateDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // Status
             // 
-            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Status.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            Status.HeaderText = "Status";
+            Status.Name = "Status";
+            Status.ReadOnly = true;
+            Status.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // PatchGrid
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.Patches);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "PatchGrid";
-            this.Size = new System.Drawing.Size(675, 406);
-            ((System.ComponentModel.ISupportInitialize)(this.Patches)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.patchFileBindingSource)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(Patches);
+            Margin = new Padding(3, 2, 3, 2);
+            Name = "PatchGrid";
+            Size = new Size(675, 406);
+            ((System.ComponentModel.ISupportInitialize)(Patches)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(patchFileBindingSource)).EndInit();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView Patches;
-        private System.Windows.Forms.BindingSource patchFileBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Action;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CommitHash;
-        private System.Windows.Forms.DataGridViewTextBoxColumn subjectDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private DataGridView Patches;
+        private BindingSource patchFileBindingSource;
+        private DataGridViewTextBoxColumn Action;
+        private DataGridViewTextBoxColumn FileName;
+        private DataGridViewTextBoxColumn CommitHash;
+        private DataGridViewTextBoxColumn subjectDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn Status;
     }
 }

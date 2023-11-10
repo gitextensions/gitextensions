@@ -29,77 +29,75 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TeamCityBuildChooser));
-            this.treeViewTeamCityProjects = new System.Windows.Forms.TreeView();
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            treeViewTeamCityProjects = new TreeView();
+            buttonOK = new Button();
+            buttonCancel = new Button();
+            SuspendLayout();
             // 
             // treeViewTeamCityProjects
             // 
-            this.treeViewTeamCityProjects.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewTeamCityProjects.Location = new System.Drawing.Point(9, 10);
-            this.treeViewTeamCityProjects.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.treeViewTeamCityProjects.Name = "treeViewTeamCityProjects";
-            this.treeViewTeamCityProjects.Size = new System.Drawing.Size(434, 323);
-            this.treeViewTeamCityProjects.TabIndex = 14;
-            this.treeViewTeamCityProjects.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeViewTeamCityProjects_BeforeExpand);
-            this.treeViewTeamCityProjects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewTeamCityProjects_AfterSelect);
-            this.treeViewTeamCityProjects.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewTeamCityProjects_MouseDoubleClick);
+            treeViewTeamCityProjects.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            treeViewTeamCityProjects.Location = new Point(9, 10);
+            treeViewTeamCityProjects.Margin = new Padding(2, 2, 2, 2);
+            treeViewTeamCityProjects.Name = "treeViewTeamCityProjects";
+            treeViewTeamCityProjects.Size = new Size(434, 323);
+            treeViewTeamCityProjects.TabIndex = 14;
+            treeViewTeamCityProjects.BeforeExpand += treeViewTeamCityProjects_BeforeExpand;
+            treeViewTeamCityProjects.AfterSelect += treeViewTeamCityProjects_AfterSelect;
+            treeViewTeamCityProjects.MouseDoubleClick += treeViewTeamCityProjects_MouseDoubleClick;
             // 
             // buttonOK
             // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Enabled = false;
-            this.buttonOK.Location = new System.Drawing.Point(274, 346);
-            this.buttonOK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(56, 19);
-            this.buttonOK.TabIndex = 15;
-            this.buttonOK.Text = "OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            buttonOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonOK.DialogResult = DialogResult.OK;
+            buttonOK.Enabled = false;
+            buttonOK.Location = new Point(274, 346);
+            buttonOK.Margin = new Padding(2, 2, 2, 2);
+            buttonOK.Name = "buttonOK";
+            buttonOK.Size = new Size(56, 19);
+            buttonOK.TabIndex = 15;
+            buttonOK.Text = "OK";
+            buttonOK.UseVisualStyleBackColor = true;
+            buttonOK.Click += buttonOK_Click;
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(121, 346);
-            this.buttonCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(56, 19);
-            this.buttonCancel.TabIndex = 15;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            buttonCancel.DialogResult = DialogResult.Cancel;
+            buttonCancel.Location = new Point(121, 346);
+            buttonCancel.Margin = new Padding(2, 2, 2, 2);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(56, 19);
+            buttonCancel.TabIndex = 15;
+            buttonCancel.Text = "Cancel";
+            buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Click += buttonCancel_Click;
             // 
             // TeamCityBuildChooser
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(451, 379);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.treeViewTeamCityProjects);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "TeamCityBuildChooser";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Choose the TeamCity build...";
-            this.Load += new System.EventHandler(this.TeamCityBuildChooser_Load);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            CancelButton = buttonCancel;
+            ClientSize = new Size(451, 379);
+            Controls.Add(buttonCancel);
+            Controls.Add(buttonOK);
+            Controls.Add(treeViewTeamCityProjects);
+            Margin = new Padding(2, 2, 2, 2);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "TeamCityBuildChooser";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Choose the TeamCity build...";
+            Load += TeamCityBuildChooser_Load;
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeViewTeamCityProjects;
-        private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.Button buttonCancel;
+        private TreeView treeViewTeamCityProjects;
+        private Button buttonOK;
+        private Button buttonCancel;
     }
 }

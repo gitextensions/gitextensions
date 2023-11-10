@@ -4,77 +4,77 @@
     {
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label lblAccountName;
-            System.Windows.Forms.Label lblProjects;
-            this.txtProjectName = new System.Windows.Forms.TextBox();
-            this.txtAccountName = new System.Windows.Forms.TextBox();
-            this.cbLoadTestResults = new System.Windows.Forms.CheckBox();
-            lblAccountName = new System.Windows.Forms.Label();
-            lblProjects = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            Label lblAccountName;
+            Label lblProjects;
+            txtProjectName = new TextBox();
+            txtAccountName = new TextBox();
+            cbLoadTestResults = new CheckBox();
+            lblAccountName = new Label();
+            lblProjects = new Label();
+            SuspendLayout();
             // 
             // lblAccountName
             // 
-            lblAccountName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblAccountName.Anchor = AnchorStyles.Left;
             lblAccountName.AutoSize = true;
-            lblAccountName.Location = new System.Drawing.Point(14, 17);
+            lblAccountName.Location = new Point(14, 17);
             lblAccountName.Name = "lblAccountName";
-            lblAccountName.Size = new System.Drawing.Size(85, 15);
+            lblAccountName.Size = new Size(85, 15);
             lblAccountName.Text = "Account name";
             // 
             // lblProjects
             // 
-            lblProjects.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblProjects.Anchor = AnchorStyles.Left;
             lblProjects.AutoSize = true;
-            lblProjects.Location = new System.Drawing.Point(14, 51);
+            lblProjects.Location = new Point(14, 51);
             lblProjects.Name = "lblProjects";
-            lblProjects.Size = new System.Drawing.Size(105, 15);
+            lblProjects.Size = new Size(105, 15);
             lblProjects.Text = "Project(s) Name(s)";
             // 
             // AppVeyorProjectName
             // 
-            this.txtProjectName.Location = new System.Drawing.Point(125, 48);
-            this.txtProjectName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtProjectName.Name = "AppVeyorProjectName";
-            this.txtProjectName.Size = new System.Drawing.Size(232, 23);
+            txtProjectName.Location = new Point(125, 48);
+            txtProjectName.Margin = new Padding(3, 2, 3, 2);
+            txtProjectName.Name = "AppVeyorProjectName";
+            txtProjectName.Size = new Size(232, 23);
             // 
             // AppVeyorAccountName
             // 
-            this.txtAccountName.Location = new System.Drawing.Point(125, 14);
-            this.txtAccountName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtAccountName.Name = "AppVeyorAccountName";
-            this.txtAccountName.Size = new System.Drawing.Size(232, 23);
+            txtAccountName.Location = new Point(125, 14);
+            txtAccountName.Margin = new Padding(3, 2, 3, 2);
+            txtAccountName.Name = "AppVeyorAccountName";
+            txtAccountName.Size = new Size(232, 23);
             // 
             // cbLoadTestResults
             // 
-            this.cbLoadTestResults.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cbLoadTestResults.AutoSize = true;
-            this.cbLoadTestResults.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.cbLoadTestResults.Location = new System.Drawing.Point(14, 86);
-            this.cbLoadTestResults.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbLoadTestResults.Name = "cbLoadTestResults";
-            this.cbLoadTestResults.Size = new System.Drawing.Size(123, 19);
-            this.cbLoadTestResults.Text = "Display test results";
-            this.cbLoadTestResults.UseVisualStyleBackColor = true;
+            cbLoadTestResults.Anchor = AnchorStyles.Left;
+            cbLoadTestResults.AutoSize = true;
+            cbLoadTestResults.CheckAlign = ContentAlignment.MiddleRight;
+            cbLoadTestResults.Location = new Point(14, 86);
+            cbLoadTestResults.Margin = new Padding(3, 2, 3, 2);
+            cbLoadTestResults.Name = "cbLoadTestResults";
+            cbLoadTestResults.Size = new Size(123, 19);
+            cbLoadTestResults.Text = "Display test results";
+            cbLoadTestResults.UseVisualStyleBackColor = true;
             // 
             // AppVeyorSettingsUserControl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.cbLoadTestResults);
-            this.Controls.Add(this.txtAccountName);
-            this.Controls.Add(lblAccountName);
-            this.Controls.Add(lblProjects);
-            this.Controls.Add(this.txtProjectName);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "AppVeyorSettingsUserControl";
-            this.Size = new System.Drawing.Size(744, 411);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.Inherit;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Controls.Add(cbLoadTestResults);
+            Controls.Add(txtAccountName);
+            Controls.Add(lblAccountName);
+            Controls.Add(lblProjects);
+            Controls.Add(txtProjectName);
+            Margin = new Padding(0);
+            Name = "AppVeyorSettingsUserControl";
+            Size = new Size(744, 411);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
-        private System.Windows.Forms.TextBox txtProjectName;
-        private System.Windows.Forms.TextBox txtAccountName;
-        private System.Windows.Forms.CheckBox cbLoadTestResults;
+        private TextBox txtProjectName;
+        private TextBox txtAccountName;
+        private CheckBox cbLoadTestResults;
     }
 }

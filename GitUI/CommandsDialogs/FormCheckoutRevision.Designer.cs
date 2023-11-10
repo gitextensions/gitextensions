@@ -142,10 +142,10 @@
 
         #endregion
 
-        private System.Windows.Forms.Button OkCheckout;
-        private System.Windows.Forms.CheckBox Force;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label label2;
+        private Button OkCheckout;
+        private CheckBox Force;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Label label2;
         private UserControls.CommitPickerSmallControl commitPickerSmallControl1;
     }
 }

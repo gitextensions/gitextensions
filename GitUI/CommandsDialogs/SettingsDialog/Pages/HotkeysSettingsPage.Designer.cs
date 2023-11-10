@@ -28,28 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.controlHotkeys = new ControlHotkeys();
-            this.SuspendLayout();
+            controlHotkeys = new ControlHotkeys();
+            SuspendLayout();
             // 
             // controlHotkeys
             // 
-            this.controlHotkeys.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.controlHotkeys.Location = new System.Drawing.Point(0, 0);
-            this.controlHotkeys.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.controlHotkeys.Name = "controlHotkeys";
-            this.controlHotkeys.Size = new System.Drawing.Size(670, 330);
-            this.controlHotkeys.TabIndex = 1;
+            controlHotkeys.Dock = DockStyle.Fill;
+            controlHotkeys.Location = new Point(0, 0);
+            controlHotkeys.Margin = new Padding(3, 4, 3, 4);
+            controlHotkeys.Name = "controlHotkeys";
+            controlHotkeys.Size = new Size(670, 330);
+            controlHotkeys.TabIndex = 1;
             // 
             // HotkeysSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.controlHotkeys);
-            this.MinimumSize = new System.Drawing.Size(670, 330);
-            this.Name = "HotkeysSettingsPage";
-            this.Size = new System.Drawing.Size(670, 330);
-            this.Text = "Hotkeys";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(controlHotkeys);
+            MinimumSize = new Size(670, 330);
+            Name = "HotkeysSettingsPage";
+            Size = new Size(670, 330);
+            Text = "Hotkeys";
+            ResumeLayout(false);
 
         }
 

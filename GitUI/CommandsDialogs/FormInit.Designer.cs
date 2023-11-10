@@ -28,140 +28,140 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Directory = new System.Windows.Forms.ComboBox();
-            this.Browse = new GitUI.UserControls.FolderBrowserButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Central = new System.Windows.Forms.RadioButton();
-            this.Personal = new System.Windows.Forms.RadioButton();
-            this.Init = new System.Windows.Forms.Button();
-            this.MainPanel.SuspendLayout();
-            this.ControlsPanel.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.SuspendLayout();
+            label1 = new Label();
+            _NO_TRANSLATE_Directory = new ComboBox();
+            Browse = new GitUI.UserControls.FolderBrowserButton();
+            groupBox1 = new GroupBox();
+            Central = new RadioButton();
+            Personal = new RadioButton();
+            Init = new Button();
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
+            groupBox1.SuspendLayout();
+            SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.groupBox1);
-            this.MainPanel.Controls.Add(this.Browse);
-            this.MainPanel.Controls.Add(this._NO_TRANSLATE_Directory);
-            this.MainPanel.Controls.Add(this.label1);
-            this.MainPanel.Size = new System.Drawing.Size(542, 132);
+            MainPanel.Controls.Add(groupBox1);
+            MainPanel.Controls.Add(Browse);
+            MainPanel.Controls.Add(_NO_TRANSLATE_Directory);
+            MainPanel.Controls.Add(label1);
+            MainPanel.Size = new Size(542, 132);
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.Init);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 132);
-            this.ControlsPanel.Size = new System.Drawing.Size(542, 41);
+            ControlsPanel.Controls.Add(Init);
+            ControlsPanel.Location = new Point(0, 132);
+            ControlsPanel.Size = new Size(542, 41);
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 17);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Directory";
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 17);
+            label1.Name = "label1";
+            label1.Size = new Size(55, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Directory";
             // 
             // _NO_TRANSLATE_Directory
             // 
-            this._NO_TRANSLATE_Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this._NO_TRANSLATE_Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this._NO_TRANSLATE_Directory.FormattingEnabled = true;
-            this._NO_TRANSLATE_Directory.Location = new System.Drawing.Point(95, 14);
-            this._NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
-            this._NO_TRANSLATE_Directory.Size = new System.Drawing.Size(323, 23);
-            this._NO_TRANSLATE_Directory.TabIndex = 1;
+            _NO_TRANSLATE_Directory.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            _NO_TRANSLATE_Directory.AutoCompleteSource = AutoCompleteSource.FileSystemDirectories;
+            _NO_TRANSLATE_Directory.FormattingEnabled = true;
+            _NO_TRANSLATE_Directory.Location = new Point(95, 14);
+            _NO_TRANSLATE_Directory.Name = "_NO_TRANSLATE_Directory";
+            _NO_TRANSLATE_Directory.Size = new Size(323, 23);
+            _NO_TRANSLATE_Directory.TabIndex = 1;
             // 
             // Browse
             // 
-            this.Browse.Location = new System.Drawing.Point(424, 12);
-            this.Browse.Name = "Browse";
-            this.Browse.PathShowingControl = this._NO_TRANSLATE_Directory;
-            this.Browse.Size = new System.Drawing.Size(106, 25);
-            this.Browse.TabIndex = 2;
-            this.Browse.Click += new System.EventHandler(this.BrowseClick);
+            Browse.Location = new Point(424, 12);
+            Browse.Name = "Browse";
+            Browse.PathShowingControl = _NO_TRANSLATE_Directory;
+            Browse.Size = new Size(106, 25);
+            Browse.TabIndex = 2;
+            Browse.Click += BrowseClick;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.Central);
-            this.groupBox1.Controls.Add(this.Personal);
-            this.groupBox1.Location = new System.Drawing.Point(12, 41);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(518, 78);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Repository type";
+            groupBox1.Controls.Add(Central);
+            groupBox1.Controls.Add(Personal);
+            groupBox1.Location = new Point(12, 41);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(518, 78);
+            groupBox1.TabIndex = 3;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Repository type";
             // 
             // Central
             // 
-            this.Central.AutoSize = true;
-            this.Central.Location = new System.Drawing.Point(19, 48);
-            this.Central.Name = "Central";
-            this.Central.Size = new System.Drawing.Size(350, 19);
-            this.Central.TabIndex = 1;
-            this.Central.Text = "Central repository, no working directory  (--bare --shared=all)";
-            this.Central.UseVisualStyleBackColor = true;
+            Central.AutoSize = true;
+            Central.Location = new Point(19, 48);
+            Central.Name = "Central";
+            Central.Size = new Size(350, 19);
+            Central.TabIndex = 1;
+            Central.Text = "Central repository, no working directory  (--bare --shared=all)";
+            Central.UseVisualStyleBackColor = true;
             // 
             // Personal
             // 
-            this.Personal.AutoSize = true;
-            this.Personal.Checked = true;
-            this.Personal.Location = new System.Drawing.Point(19, 25);
-            this.Personal.Name = "Personal";
-            this.Personal.Size = new System.Drawing.Size(126, 19);
-            this.Personal.TabIndex = 0;
-            this.Personal.TabStop = true;
-            this.Personal.Text = "Personal repository";
-            this.Personal.UseVisualStyleBackColor = true;
+            Personal.AutoSize = true;
+            Personal.Checked = true;
+            Personal.Location = new Point(19, 25);
+            Personal.Name = "Personal";
+            Personal.Size = new Size(126, 19);
+            Personal.TabIndex = 0;
+            Personal.TabStop = true;
+            Personal.Text = "Personal repository";
+            Personal.UseVisualStyleBackColor = true;
             // 
             // Init
             // 
-            this.Init.AutoSize = true;
-            this.Init.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Init.Location = new System.Drawing.Point(454, 8);
-            this.Init.MinimumSize = new System.Drawing.Size(75, 23);
-            this.Init.Name = "Init";
-            this.Init.Size = new System.Drawing.Size(75, 25);
-            this.Init.TabIndex = 4;
-            this.Init.Text = "Create";
-            this.Init.UseVisualStyleBackColor = true;
-            this.Init.Click += new System.EventHandler(this.InitClick);
+            Init.AutoSize = true;
+            Init.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Init.Location = new Point(454, 8);
+            Init.MinimumSize = new Size(75, 23);
+            Init.Name = "Init";
+            Init.Size = new Size(75, 25);
+            Init.TabIndex = 4;
+            Init.Text = "Create";
+            Init.UseVisualStyleBackColor = true;
+            Init.Click += InitClick;
             // 
             // FormInit
             // 
-            this.AcceptButton = this.Init;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(542, 173);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.HelpButton = true;
-            this.ManualSectionAnchorName = "create-new-repository";
-            this.ManualSectionSubfolder = "getting_started";
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FormInit";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Create new repository";
-            this.MainPanel.ResumeLayout(false);
-            this.MainPanel.PerformLayout();
-            this.ControlsPanel.ResumeLayout(false);
-            this.ControlsPanel.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = Init;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(542, 173);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            HelpButton = true;
+            ManualSectionAnchorName = "create-new-repository";
+            ManualSectionSubfolder = "getting_started";
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FormInit";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Create new repository";
+            MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Directory;
+        private Label label1;
+        private ComboBox _NO_TRANSLATE_Directory;
         private UserControls.FolderBrowserButton Browse;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton Central;
-        private System.Windows.Forms.RadioButton Personal;
-        private System.Windows.Forms.Button Init;
+        private GroupBox groupBox1;
+        private RadioButton Central;
+        private RadioButton Personal;
+        private Button Init;
     }
 }

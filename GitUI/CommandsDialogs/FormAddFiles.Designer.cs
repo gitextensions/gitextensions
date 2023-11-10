@@ -28,99 +28,98 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.force = new System.Windows.Forms.CheckBox();
-            this.ShowFiles = new System.Windows.Forms.Button();
-            this.AddFiles = new System.Windows.Forms.Button();
-            this.Filter = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            force = new CheckBox();
+            ShowFiles = new Button();
+            AddFiles = new Button();
+            Filter = new TextBox();
+            label1 = new Label();
+            SuspendLayout();
             // 
             // force
             // 
-            this.force.AutoSize = true;
-            this.force.Location = new System.Drawing.Point(89, 40);
-            this.force.Margin = new System.Windows.Forms.Padding(4);
-            this.force.Name = "force";
-            this.force.Size = new System.Drawing.Size(73, 27);
-            this.force.TabIndex = 4;
-            this.force.Text = "Force";
-            this.force.UseVisualStyleBackColor = true;
+            force.AutoSize = true;
+            force.Location = new Point(89, 40);
+            force.Margin = new Padding(4);
+            force.Name = "force";
+            force.Size = new Size(73, 27);
+            force.TabIndex = 4;
+            force.Text = "Force";
+            force.UseVisualStyleBackColor = true;
             // 
             // ShowFiles
             // 
-            this.ShowFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ShowFiles.Location = new System.Drawing.Point(340, 4);
-            this.ShowFiles.Margin = new System.Windows.Forms.Padding(4);
-            this.ShowFiles.Name = "ShowFiles";
-            this.ShowFiles.Size = new System.Drawing.Size(94, 31);
-            this.ShowFiles.TabIndex = 3;
-            this.ShowFiles.Text = "Show files";
-            this.ShowFiles.UseVisualStyleBackColor = true;
-            this.ShowFiles.Click += new System.EventHandler(this.ShowFilesClick);
+            ShowFiles.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ShowFiles.Location = new Point(340, 4);
+            ShowFiles.Margin = new Padding(4);
+            ShowFiles.Name = "ShowFiles";
+            ShowFiles.Size = new Size(94, 31);
+            ShowFiles.TabIndex = 3;
+            ShowFiles.Text = "Show files";
+            ShowFiles.UseVisualStyleBackColor = true;
+            ShowFiles.Click += ShowFilesClick;
             // 
             // AddFiles
             // 
-            this.AddFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddFiles.Location = new System.Drawing.Point(442, 4);
-            this.AddFiles.Margin = new System.Windows.Forms.Padding(4);
-            this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(94, 31);
-            this.AddFiles.TabIndex = 2;
-            this.AddFiles.Text = "Add files";
-            this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(this.AddFilesClick);
+            AddFiles.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AddFiles.Location = new Point(442, 4);
+            AddFiles.Margin = new Padding(4);
+            AddFiles.Name = "AddFiles";
+            AddFiles.Size = new Size(94, 31);
+            AddFiles.TabIndex = 2;
+            AddFiles.Text = "Add files";
+            AddFiles.UseVisualStyleBackColor = true;
+            AddFiles.Click += AddFilesClick;
             // 
             // Filter
             // 
-            this.Filter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Filter.Location = new System.Drawing.Point(89, 6);
-            this.Filter.Margin = new System.Windows.Forms.Padding(4);
-            this.Filter.Name = "Filter";
-            this.Filter.Size = new System.Drawing.Size(217, 30);
-            this.Filter.TabIndex = 1;
-            this.Filter.Text = ".";
+            Filter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            Filter.Location = new Point(89, 6);
+            Filter.Margin = new Padding(4);
+            Filter.Name = "Filter";
+            Filter.Size = new Size(217, 30);
+            Filter.TabIndex = 1;
+            Filter.Text = ".";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 23);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Filter";
+            label1.AutoSize = true;
+            label1.Location = new Point(15, 6);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(47, 23);
+            label1.TabIndex = 0;
+            label1.Text = "Filter";
             // 
             // FormAddFiles
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(552, 73);
-            this.Controls.Add(this.force);
-            this.Controls.Add(this.ShowFiles);
-            this.Controls.Add(this.AddFiles);
-            this.Controls.Add(this.Filter);
-            this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(10000, 120);
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(570, 120);
-            this.Name = "FormAddFiles";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Add files";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(120F, 120F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(552, 73);
+            Controls.Add(force);
+            Controls.Add(ShowFiles);
+            Controls.Add(AddFiles);
+            Controls.Add(Filter);
+            Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            Margin = new Padding(4, 4, 4, 4);
+            MaximizeBox = false;
+            MaximumSize = new Size(10000, 120);
+            MinimizeBox = false;
+            MinimumSize = new Size(570, 120);
+            Name = "FormAddFiles";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Add files";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox Filter;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button AddFiles;
-        private System.Windows.Forms.Button ShowFiles;
-        private System.Windows.Forms.CheckBox force;
+        private TextBox Filter;
+        private Label label1;
+        private Button AddFiles;
+        private Button ShowFiles;
+        private CheckBox force;
     }
 }

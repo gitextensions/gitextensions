@@ -19,243 +19,237 @@ namespace GitUI.CommitInfo
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlCommitMessage = new System.Windows.Forms.Panel();
-            this.rtbxCommitMessage = new System.Windows.Forms.RichTextBox();
-            this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.showContainedInBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showContainedInBranchesRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showMessagesOfAnnotatedTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showTagThisCommitDerivesFromMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.addNoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commitInfoHeader = new GitUI.CommitInfo.CommitInfoHeader();
-            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
-            this.tableLayout.SuspendLayout();
-            this.pnlCommitMessage.SuspendLayout();
-            this.commitInfoContextMenuStrip.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            tableLayout = new TableLayoutPanel();
+            pnlCommitMessage = new Panel();
+            rtbxCommitMessage = new RichTextBox();
+            commitInfoContextMenuStrip = new ContextMenuStrip(components);
+            copyLinkToolStripMenuItem = new ToolStripMenuItem();
+            copyCommitInfoToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            showContainedInBranchesToolStripMenuItem = new ToolStripMenuItem();
+            showContainedInBranchesRemoteToolStripMenuItem = new ToolStripMenuItem();
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem = new ToolStripMenuItem();
+            showContainedInTagsToolStripMenuItem = new ToolStripMenuItem();
+            showMessagesOfAnnotatedTagsToolStripMenuItem = new ToolStripMenuItem();
+            showTagThisCommitDerivesFromMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            addNoteToolStripMenuItem = new ToolStripMenuItem();
+            commitInfoHeader = new GitUI.CommitInfo.CommitInfoHeader();
+            RevisionInfo = new RichTextBox();
+            tableLayout.SuspendLayout();
+            pnlCommitMessage.SuspendLayout();
+            commitInfoContextMenuStrip.SuspendLayout();
+            SuspendLayout();
             // 
             // tableLayout
             // 
-            this.tableLayout.BackColor = System.Drawing.SystemColors.Window;
-            this.tableLayout.ColumnCount = 1;
-            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayout.Controls.Add(this.commitInfoHeader, 0, 0);
-            this.tableLayout.Controls.Add(this.pnlCommitMessage, 0, 1);
-            this.tableLayout.Controls.Add(this.RevisionInfo, 0, 2);
-            this.tableLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-            this.tableLayout.Location = new System.Drawing.Point(0, 0);
-            this.tableLayout.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayout.Name = "tableLayout";
-            this.tableLayout.RowCount = 3;
-            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayout.Size = new System.Drawing.Size(472, 262);
-            this.tableLayout.TabIndex = 0;
-            this.tableLayout.Visible = false;
+            tableLayout.BackColor = SystemColors.Window;
+            tableLayout.ColumnCount = 1;
+            tableLayout.ColumnStyles.Add(new ColumnStyle());
+            tableLayout.Controls.Add(commitInfoHeader, 0, 0);
+            tableLayout.Controls.Add(pnlCommitMessage, 0, 1);
+            tableLayout.Controls.Add(RevisionInfo, 0, 2);
+            tableLayout.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
+            tableLayout.Location = new Point(0, 0);
+            tableLayout.Margin = new Padding(0);
+            tableLayout.Name = "tableLayout";
+            tableLayout.RowCount = 3;
+            tableLayout.RowStyles.Add(new RowStyle());
+            tableLayout.RowStyles.Add(new RowStyle());
+            tableLayout.RowStyles.Add(new RowStyle());
+            tableLayout.Size = new Size(472, 262);
+            tableLayout.TabIndex = 0;
+            tableLayout.Visible = false;
             // 
             // pnlCommitMessage
             // 
-            this.pnlCommitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                | System.Windows.Forms.AnchorStyles.Left)
-                | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlCommitMessage.BackColor = System.Drawing.SystemColors.Control;
-            this.pnlCommitMessage.Controls.Add(this.rtbxCommitMessage);
-            this.pnlCommitMessage.Location = new System.Drawing.Point(0, 112);
-            this.pnlCommitMessage.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlCommitMessage.Name = "pnlCommitMessage";
-            this.pnlCommitMessage.Size = new System.Drawing.Size(456, 36);
-            this.pnlCommitMessage.TabIndex = 0;
+            pnlCommitMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            pnlCommitMessage.BackColor = SystemColors.Control;
+            pnlCommitMessage.Controls.Add(rtbxCommitMessage);
+            pnlCommitMessage.Location = new Point(0, 112);
+            pnlCommitMessage.Margin = new Padding(0);
+            pnlCommitMessage.Name = "pnlCommitMessage";
+            pnlCommitMessage.Size = new Size(456, 36);
+            pnlCommitMessage.TabIndex = 0;
             // 
             // rtbxCommitMessage
             // 
-            this.rtbxCommitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtbxCommitMessage.BackColor = System.Drawing.SystemColors.Control;
-            this.rtbxCommitMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rtbxCommitMessage.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this.rtbxCommitMessage.Location = new System.Drawing.Point(8, 8);
-            this.rtbxCommitMessage.Margin = new System.Windows.Forms.Padding(8);
-            this.rtbxCommitMessage.Name = "rtbxCommitMessage";
-            this.rtbxCommitMessage.ReadOnly = true;
-            this.rtbxCommitMessage.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.rtbxCommitMessage.Size = new System.Drawing.Size(440, 20);
-            this.rtbxCommitMessage.TabIndex = 1;
-            this.rtbxCommitMessage.Text = "";
-            this.rtbxCommitMessage.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
-            this.rtbxCommitMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichTextBox_KeyDown);
-            this.rtbxCommitMessage.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
+            rtbxCommitMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            rtbxCommitMessage.BackColor = SystemColors.Control;
+            rtbxCommitMessage.BorderStyle = BorderStyle.None;
+            rtbxCommitMessage.ContextMenuStrip = commitInfoContextMenuStrip;
+            rtbxCommitMessage.Location = new Point(8, 8);
+            rtbxCommitMessage.Margin = new Padding(8);
+            rtbxCommitMessage.Name = "rtbxCommitMessage";
+            rtbxCommitMessage.ReadOnly = true;
+            rtbxCommitMessage.ScrollBars = RichTextBoxScrollBars.None;
+            rtbxCommitMessage.Size = new Size(440, 20);
+            rtbxCommitMessage.TabIndex = 1;
+            rtbxCommitMessage.Text = "";
+            rtbxCommitMessage.LinkClicked += LinkClicked;
+            rtbxCommitMessage.KeyDown += RichTextBox_KeyDown;
+            rtbxCommitMessage.MouseDown += _RevisionHeader_MouseDown;
             // 
             // commitInfoContextMenuStrip
             // 
-            this.commitInfoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyLinkToolStripMenuItem,
-            this.copyCommitInfoToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.showContainedInBranchesToolStripMenuItem,
-            this.showContainedInBranchesRemoteToolStripMenuItem,
-            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem,
-            this.showContainedInTagsToolStripMenuItem,
-            this.showMessagesOfAnnotatedTagsToolStripMenuItem,
-            this.showTagThisCommitDerivesFromMenuItem,
-            this.toolStripSeparator2,
-            this.addNoteToolStripMenuItem});
-            this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(454, 192);
-            this.commitInfoContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.commitInfoContextMenuStrip_Opening);
+            commitInfoContextMenuStrip.Items.AddRange(new ToolStripItem[] {
+            copyLinkToolStripMenuItem,
+            copyCommitInfoToolStripMenuItem,
+            toolStripSeparator1,
+            showContainedInBranchesToolStripMenuItem,
+            showContainedInBranchesRemoteToolStripMenuItem,
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem,
+            showContainedInTagsToolStripMenuItem,
+            showMessagesOfAnnotatedTagsToolStripMenuItem,
+            showTagThisCommitDerivesFromMenuItem,
+            toolStripSeparator2,
+            addNoteToolStripMenuItem});
+            commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
+            commitInfoContextMenuStrip.Size = new Size(454, 192);
+            commitInfoContextMenuStrip.Opening += commitInfoContextMenuStrip_Opening;
             // 
             // copyLinkStripMenuItem
             // 
-            this.copyLinkToolStripMenuItem.Name = "copyLinkStripMenuItem";
-            this.copyLinkToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.copyLinkToolStripMenuItem.Text = "Copy link";
-            this.copyLinkToolStripMenuItem.Click += new System.EventHandler(this.copyLinkToolStripMenuItem_Click);
+            copyLinkToolStripMenuItem.Name = "copyLinkStripMenuItem";
+            copyLinkToolStripMenuItem.Size = new Size(453, 22);
+            copyLinkToolStripMenuItem.Text = "Copy link";
+            copyLinkToolStripMenuItem.Click += copyLinkToolStripMenuItem_Click;
             // 
             // copyCommitInfoToolStripMenuItem
             // 
-            this.copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
-            this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.copyCommitInfoToolStripMenuItem.Text = "&Copy commit info";
-            this.copyCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyCommitInfoToolStripMenuItem_Click);
+            copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
+            copyCommitInfoToolStripMenuItem.Size = new Size(453, 22);
+            copyCommitInfoToolStripMenuItem.Text = "&Copy commit info";
+            copyCommitInfoToolStripMenuItem.Click += copyCommitInfoToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(450, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(450, 6);
             // 
             // showContainedInBranchesToolStripMenuItem
             // 
-            this.showContainedInBranchesToolStripMenuItem.Name = "showContainedInBranchesToolStripMenuItem";
-            this.showContainedInBranchesToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.showContainedInBranchesToolStripMenuItem.Text = "Show local branches containing this commit";
-            this.showContainedInBranchesToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesToolStripMenuItem_Click);
+            showContainedInBranchesToolStripMenuItem.Name = "showContainedInBranchesToolStripMenuItem";
+            showContainedInBranchesToolStripMenuItem.Size = new Size(453, 22);
+            showContainedInBranchesToolStripMenuItem.Text = "Show local branches containing this commit";
+            showContainedInBranchesToolStripMenuItem.Click += showContainedInBranchesToolStripMenuItem_Click;
             // 
             // showContainedInBranchesRemoteToolStripMenuItem
             // 
-            this.showContainedInBranchesRemoteToolStripMenuItem.Name = "showContainedInBranchesRemoteToolStripMenuItem";
-            this.showContainedInBranchesRemoteToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.showContainedInBranchesRemoteToolStripMenuItem.Text = "Show remote branches containing this commit";
-            this.showContainedInBranchesRemoteToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesRemoteToolStripMenuItem_Click);
+            showContainedInBranchesRemoteToolStripMenuItem.Name = "showContainedInBranchesRemoteToolStripMenuItem";
+            showContainedInBranchesRemoteToolStripMenuItem.Size = new Size(453, 22);
+            showContainedInBranchesRemoteToolStripMenuItem.Text = "Show remote branches containing this commit";
+            showContainedInBranchesRemoteToolStripMenuItem.Click += showContainedInBranchesRemoteToolStripMenuItem_Click;
             // 
             // showContainedInBranchesRemoteIfNoLocalToolStripMenuItem
             // 
-            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Name = "showContainedInBranchesRemoteIfNoLocalToolStripMenuItem";
-            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Text = "Show remote branches only when no local branch contains this commit";
-            this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Click += new System.EventHandler(this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click);
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Name = "showContainedInBranchesRemoteIfNoLocalToolStripMenuItem";
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Size = new Size(453, 22);
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Text = "Show remote branches only when no local branch contains this commit";
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Click += showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click;
             // 
             // showContainedInTagsToolStripMenuItem
             // 
-            this.showContainedInTagsToolStripMenuItem.Name = "showContainedInTagsToolStripMenuItem";
-            this.showContainedInTagsToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.showContainedInTagsToolStripMenuItem.Text = "Show tags containing this commit";
-            this.showContainedInTagsToolStripMenuItem.Click += new System.EventHandler(this.showContainedInTagsToolStripMenuItem_Click);
+            showContainedInTagsToolStripMenuItem.Name = "showContainedInTagsToolStripMenuItem";
+            showContainedInTagsToolStripMenuItem.Size = new Size(453, 22);
+            showContainedInTagsToolStripMenuItem.Text = "Show tags containing this commit";
+            showContainedInTagsToolStripMenuItem.Click += showContainedInTagsToolStripMenuItem_Click;
             // 
             // showMessagesOfAnnotatedTagsToolStripMenuItem
             // 
-            this.showMessagesOfAnnotatedTagsToolStripMenuItem.Name = "showMessagesOfAnnotatedTagsToolStripMenuItem";
-            this.showMessagesOfAnnotatedTagsToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.showMessagesOfAnnotatedTagsToolStripMenuItem.Text = "Show messages of annotated tags";
-            this.showMessagesOfAnnotatedTagsToolStripMenuItem.Click += new System.EventHandler(this.showMessagesOfAnnotatedTagsToolStripMenuItem_Click);
+            showMessagesOfAnnotatedTagsToolStripMenuItem.Name = "showMessagesOfAnnotatedTagsToolStripMenuItem";
+            showMessagesOfAnnotatedTagsToolStripMenuItem.Size = new Size(453, 22);
+            showMessagesOfAnnotatedTagsToolStripMenuItem.Text = "Show messages of annotated tags";
+            showMessagesOfAnnotatedTagsToolStripMenuItem.Click += showMessagesOfAnnotatedTagsToolStripMenuItem_Click;
             // 
             // showTagThisCommitDerivesFromMenuItem
             // 
-            this.showTagThisCommitDerivesFromMenuItem.Name = "showTagThisCommitDerivesFromMenuItem";
-            this.showTagThisCommitDerivesFromMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.showTagThisCommitDerivesFromMenuItem.Text = "Show the most recent tag this commit derives from";
-            this.showTagThisCommitDerivesFromMenuItem.Click += new System.EventHandler(this.showTagThisCommitDerivesFromMenuItem_Click);
+            showTagThisCommitDerivesFromMenuItem.Name = "showTagThisCommitDerivesFromMenuItem";
+            showTagThisCommitDerivesFromMenuItem.Size = new Size(453, 22);
+            showTagThisCommitDerivesFromMenuItem.Text = "Show the most recent tag this commit derives from";
+            showTagThisCommitDerivesFromMenuItem.Click += showTagThisCommitDerivesFromMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(450, 6);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(450, 6);
             // 
             // addNoteToolStripMenuItem
             // 
-            this.addNoteToolStripMenuItem.Name = "addNoteToolStripMenuItem";
-            this.addNoteToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.addNoteToolStripMenuItem.Text = "Add &notes";
-            this.addNoteToolStripMenuItem.Click += new System.EventHandler(this.addNoteToolStripMenuItem_Click);
+            addNoteToolStripMenuItem.Name = "addNoteToolStripMenuItem";
+            addNoteToolStripMenuItem.Size = new Size(453, 22);
+            addNoteToolStripMenuItem.Text = "Add &notes";
+            addNoteToolStripMenuItem.Click += addNoteToolStripMenuItem_Click;
             // 
             // commitInfoHeader
             // 
-            this.commitInfoHeader.AutoSize = true;
-            this.commitInfoHeader.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.commitInfoHeader.BackColor = System.Drawing.SystemColors.Window;
-            this.commitInfoHeader.Location = new System.Drawing.Point(8, 8);
-            this.commitInfoHeader.Margin = new System.Windows.Forms.Padding(8, 8, 16, 8);
-            this.commitInfoHeader.Name = "commitInfoHeader";
-            this.commitInfoHeader.Size = new System.Drawing.Size(260, 96);
-            this.commitInfoHeader.TabIndex = 0;
+            commitInfoHeader.AutoSize = true;
+            commitInfoHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            commitInfoHeader.BackColor = SystemColors.Window;
+            commitInfoHeader.Location = new Point(8, 8);
+            commitInfoHeader.Margin = new Padding(8, 8, 16, 8);
+            commitInfoHeader.Name = "commitInfoHeader";
+            commitInfoHeader.Size = new Size(260, 96);
+            commitInfoHeader.TabIndex = 0;
             // 
             // RevisionInfo
             // 
-            this.RevisionInfo.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                | System.Windows.Forms.AnchorStyles.Left)
-                | System.Windows.Forms.AnchorStyles.Right)));
-            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this.RevisionInfo.Location = new System.Drawing.Point(8, 156);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(8, 8, 16, 8);
-            this.RevisionInfo.Name = "RevisionInfo";
-            this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.RevisionInfo.Size = new System.Drawing.Size(448, 98);
-            this.RevisionInfo.TabIndex = 2;
-            this.RevisionInfo.Text = "";
-            this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
-            this.RevisionInfo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichTextBox_KeyDown);
-            this.RevisionInfo.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
+            RevisionInfo.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            RevisionInfo.BackColor = SystemColors.Window;
+            RevisionInfo.BorderStyle = BorderStyle.None;
+            RevisionInfo.ContextMenuStrip = commitInfoContextMenuStrip;
+            RevisionInfo.Location = new Point(8, 156);
+            RevisionInfo.Margin = new Padding(8, 8, 16, 8);
+            RevisionInfo.Name = "RevisionInfo";
+            RevisionInfo.ReadOnly = true;
+            RevisionInfo.ScrollBars = RichTextBoxScrollBars.None;
+            RevisionInfo.Size = new Size(448, 98);
+            RevisionInfo.TabIndex = 2;
+            RevisionInfo.Text = "";
+            RevisionInfo.LinkClicked += LinkClicked;
+            RevisionInfo.KeyDown += RichTextBox_KeyDown;
+            RevisionInfo.MouseDown += _RevisionHeader_MouseDown;
             // 
             // CommitInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoScroll = true;
-            this.BackColor = System.Drawing.SystemColors.Window;
-            this.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this.Controls.Add(this.tableLayout);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "CommitInfo";
-            this.Size = new System.Drawing.Size(472, 262);
-            this.tableLayout.ResumeLayout(false);
-            this.tableLayout.PerformLayout();
-            this.pnlCommitMessage.ResumeLayout(false);
-            this.pnlCommitMessage.PerformLayout();
-            this.commitInfoContextMenuStrip.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScroll = true;
+            BackColor = SystemColors.Window;
+            ContextMenuStrip = commitInfoContextMenuStrip;
+            Controls.Add(tableLayout);
+            Margin = new Padding(0);
+            Name = "CommitInfo";
+            Size = new Size(472, 262);
+            tableLayout.ResumeLayout(false);
+            tableLayout.PerformLayout();
+            pnlCommitMessage.ResumeLayout(false);
+            pnlCommitMessage.PerformLayout();
+            commitInfoContextMenuStrip.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox RevisionInfo;
-        private System.Windows.Forms.ContextMenuStrip commitInfoContextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem copyLinkToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showContainedInTagsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyCommitInfoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteIfNoLocalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem addNoteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showMessagesOfAnnotatedTagsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showTagThisCommitDerivesFromMenuItem;
+        private RichTextBox RevisionInfo;
+        private ContextMenuStrip commitInfoContextMenuStrip;
+        private ToolStripMenuItem copyLinkToolStripMenuItem;
+        private ToolStripMenuItem showContainedInBranchesToolStripMenuItem;
+        private ToolStripMenuItem showContainedInTagsToolStripMenuItem;
+        private ToolStripMenuItem copyCommitInfoToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem showContainedInBranchesRemoteToolStripMenuItem;
+        private ToolStripMenuItem showContainedInBranchesRemoteIfNoLocalToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem addNoteToolStripMenuItem;
+        private ToolStripMenuItem showMessagesOfAnnotatedTagsToolStripMenuItem;
+        private ToolStripMenuItem showTagThisCommitDerivesFromMenuItem;
         private CommitInfoHeader commitInfoHeader;
-        private System.Windows.Forms.Panel pnlCommitMessage;
-        private System.Windows.Forms.RichTextBox rtbxCommitMessage;
-        private System.Windows.Forms.TableLayoutPanel tableLayout;
+        private Panel pnlCommitMessage;
+        private RichTextBox rtbxCommitMessage;
+        private TableLayoutPanel tableLayout;
     }
 }

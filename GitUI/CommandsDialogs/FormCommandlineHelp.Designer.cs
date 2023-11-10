@@ -29,68 +29,68 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCommandlineHelp));
-            this._NO_TRANSLATE_commands = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            _NO_TRANSLATE_commands = new Label();
+            label1 = new Label();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // _NO_TRANSLATE_commands
             // 
-            this._NO_TRANSLATE_commands.AutoSize = true;
-            this._NO_TRANSLATE_commands.Location = new System.Drawing.Point(3, 77);
-            this._NO_TRANSLATE_commands.Name = "_NO_TRANSLATE_commands";
-            this._NO_TRANSLATE_commands.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
-            this._NO_TRANSLATE_commands.Size = new System.Drawing.Size(337, 789);
-            this._NO_TRANSLATE_commands.TabIndex = 0;
-            this._NO_TRANSLATE_commands.Text = resources.GetString("_NO_TRANSLATE_commands.Text");
+            _NO_TRANSLATE_commands.AutoSize = true;
+            _NO_TRANSLATE_commands.Location = new Point(3, 77);
+            _NO_TRANSLATE_commands.Name = "_NO_TRANSLATE_commands";
+            _NO_TRANSLATE_commands.Padding = new Padding(10, 0, 10, 10);
+            _NO_TRANSLATE_commands.Size = new Size(337, 789);
+            _NO_TRANSLATE_commands.TabIndex = 0;
+            _NO_TRANSLATE_commands.Text = resources.GetString("_NO_TRANSLATE_commands.Text");
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(10);
-            this.label1.Size = new System.Drawing.Size(316, 77);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Supported commandline arguments for\r\ngitex.cmd / gitex (located in the same folde" +
+            label1.AutoSize = true;
+            label1.Location = new Point(3, 0);
+            label1.Name = "label1";
+            label1.Padding = new Padding(10);
+            label1.Size = new Size(316, 77);
+            label1.TabIndex = 1;
+            label1.Text = "Supported commandline arguments for\r\ngitex.cmd / gitex (located in the same folde" +
     "r as GitExtensions.exe):";
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.label1);
-            this.flowLayoutPanel1.Controls.Add(this._NO_TRANSLATE_commands);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(394, 662);
-            this.flowLayoutPanel1.TabIndex = 2;
-            this.flowLayoutPanel1.WrapContents = false;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.Controls.Add(label1);
+            flowLayoutPanel1.Controls.Add(_NO_TRANSLATE_commands);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(394, 662);
+            flowLayoutPanel1.TabIndex = 2;
+            flowLayoutPanel1.WrapContents = false;
             // 
             // FormCommandlineHelp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(394, 662);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(410, 700);
-            this.Name = "FormCommandlineHelp";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Commandline usage";
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(394, 662);
+            Controls.Add(flowLayoutPanel1);
+            MaximizeBox = false;
+            MinimumSize = new Size(410, 700);
+            Name = "FormCommandlineHelp";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Commandline usage";
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label _NO_TRANSLATE_commands;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private Label _NO_TRANSLATE_commands;
+        private Label label1;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

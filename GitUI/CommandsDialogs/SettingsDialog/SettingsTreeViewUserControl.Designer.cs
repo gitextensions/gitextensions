@@ -28,70 +28,70 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label lblSpacer1;
-            System.Windows.Forms.Label lblSpacer2;
-            this.textBoxFind = new System.Windows.Forms.TextBox();
-            this.treeView1 = new GitUI.UserControls.NativeTreeView();
-            lblSpacer1 = new System.Windows.Forms.Label();
-            lblSpacer2 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            Label lblSpacer1;
+            Label lblSpacer2;
+            textBoxFind = new TextBox();
+            treeView1 = new GitUI.UserControls.NativeTreeView();
+            lblSpacer1 = new Label();
+            lblSpacer2 = new Label();
+            SuspendLayout();
             // 
             // lblSpacer1
             // 
-            lblSpacer1.Dock = System.Windows.Forms.DockStyle.Top;
-            lblSpacer1.Location = new System.Drawing.Point(0, 0);
+            lblSpacer1.Dock = DockStyle.Top;
+            lblSpacer1.Location = new Point(0, 0);
             lblSpacer1.Name = "lblSpacer1";
-            lblSpacer1.Size = new System.Drawing.Size(200, 8);
+            lblSpacer1.Size = new Size(200, 8);
             lblSpacer1.TabIndex = 0;
             // 
             // lblSpacer2
             // 
-            lblSpacer2.Dock = System.Windows.Forms.DockStyle.Top;
-            lblSpacer2.Location = new System.Drawing.Point(0, 39);
+            lblSpacer2.Dock = DockStyle.Top;
+            lblSpacer2.Location = new Point(0, 39);
             lblSpacer2.Name = "lblSpacer2";
-            lblSpacer2.Size = new System.Drawing.Size(200, 8);
+            lblSpacer2.Size = new Size(200, 8);
             lblSpacer2.TabIndex = 2;
             // 
             // textBoxFind
             // 
-            this.textBoxFind.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBoxFind.Location = new System.Drawing.Point(0, 0);
-            this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(200, 31);
-            this.textBoxFind.TabIndex = 1;
-            this.textBoxFind.TextChanged += new System.EventHandler(this.textBoxFind_TextChanged);
-            this.textBoxFind.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxFind_KeyUp);
+            textBoxFind.Dock = DockStyle.Top;
+            textBoxFind.Location = new Point(0, 0);
+            textBoxFind.Name = "textBoxFind";
+            textBoxFind.Size = new Size(200, 31);
+            textBoxFind.TabIndex = 1;
+            textBoxFind.TextChanged += textBoxFind_TextChanged;
+            textBoxFind.KeyUp += textBoxFind_KeyUp;
             // 
             // treeView1
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.FullRowSelect = true;
-            this.treeView1.HideSelection = false;
-            this.treeView1.HotTracking = true;
-            this.treeView1.Location = new System.Drawing.Point(0, 31);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(200, 189);
-            this.treeView1.TabIndex = 3;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            treeView1.Dock = DockStyle.Fill;
+            treeView1.FullRowSelect = true;
+            treeView1.HideSelection = false;
+            treeView1.HotTracking = true;
+            treeView1.Location = new Point(0, 31);
+            treeView1.Name = "treeView1";
+            treeView1.Size = new Size(200, 189);
+            treeView1.TabIndex = 3;
+            treeView1.AfterSelect += treeView1_AfterSelect;
             // 
             // SettingsTreeViewUserControl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.treeView1);
-            this.Controls.Add(lblSpacer2);
-            this.Controls.Add(this.textBoxFind);
-            this.Controls.Add(lblSpacer1);
-            this.MinimumSize = new System.Drawing.Size(100, 220);
-            this.Name = "SettingsTreeViewUserControl";
-            this.Size = new System.Drawing.Size(200, 220);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(treeView1);
+            Controls.Add(lblSpacer2);
+            Controls.Add(textBoxFind);
+            Controls.Add(lblSpacer1);
+            MinimumSize = new Size(100, 220);
+            Name = "SettingsTreeViewUserControl";
+            Size = new Size(200, 220);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxFind;
+        private TextBox textBoxFind;
         private UserControls.NativeTreeView treeView1;
     }
 }

@@ -28,36 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonBrowse = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            buttonBrowse = new Button();
+            SuspendLayout();
             // 
             // buttonBrowse
             // 
-            this.buttonBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonBrowse.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
-            this.buttonBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonBrowse.Location = new System.Drawing.Point(0, 0);
-            this.buttonBrowse.MinimumSize = new System.Drawing.Size(100, 25);
-            this.buttonBrowse.Name = "buttonBrowse";
-            this.buttonBrowse.Size = new System.Drawing.Size(100, 25);
-            this.buttonBrowse.TabIndex = 5;
-            this.buttonBrowse.Text = "Browse...";
-            this.buttonBrowse.UseVisualStyleBackColor = true;
-            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
+            buttonBrowse.Dock = DockStyle.Fill;
+            buttonBrowse.Image = Properties.Images.BrowseFileExplorer;
+            buttonBrowse.ImageAlign = ContentAlignment.MiddleLeft;
+            buttonBrowse.Location = new Point(0, 0);
+            buttonBrowse.MinimumSize = new Size(100, 25);
+            buttonBrowse.Name = "buttonBrowse";
+            buttonBrowse.Size = new Size(100, 25);
+            buttonBrowse.TabIndex = 5;
+            buttonBrowse.Text = "Browse...";
+            buttonBrowse.UseVisualStyleBackColor = true;
+            buttonBrowse.Click += buttonBrowse_Click;
             // 
             // FolderBrowserButton
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.buttonBrowse);
-            this.Name = "FolderBrowserButton";
-            this.Size = new System.Drawing.Size(100, 25);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(buttonBrowse);
+            Name = "FolderBrowserButton";
+            Size = new Size(100, 25);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button buttonBrowse;
+        private Button buttonBrowse;
     }
 }

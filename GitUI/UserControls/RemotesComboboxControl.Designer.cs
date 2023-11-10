@@ -28,66 +28,64 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxRemotes = new System.Windows.Forms.ComboBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.buttonSelectMultipleRemotes = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            comboBoxRemotes = new ComboBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            buttonSelectMultipleRemotes = new Button();
+            tableLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // comboBoxRemotes
             // 
-            this.comboBoxRemotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxRemotes.FormattingEnabled = true;
-            this.comboBoxRemotes.Location = new System.Drawing.Point(0, 0);
-            this.comboBoxRemotes.Margin = new System.Windows.Forms.Padding(0);
-            this.comboBoxRemotes.Name = "comboBoxRemotes";
-            this.comboBoxRemotes.Size = new System.Drawing.Size(158, 23);
-            this.comboBoxRemotes.TabIndex = 0;
+            comboBoxRemotes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            comboBoxRemotes.FormattingEnabled = true;
+            comboBoxRemotes.Location = new Point(0, 0);
+            comboBoxRemotes.Margin = new Padding(0);
+            comboBoxRemotes.Name = "comboBoxRemotes";
+            comboBoxRemotes.Size = new Size(158, 23);
+            comboBoxRemotes.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.buttonSelectMultipleRemotes, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.comboBoxRemotes, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(181, 25);
-            this.tableLayoutPanel1.TabIndex = 1;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(buttonSelectMultipleRemotes, 1, 0);
+            tableLayoutPanel1.Controls.Add(comboBoxRemotes, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(181, 25);
+            tableLayoutPanel1.TabIndex = 1;
             // 
             // buttonSelectMultipleRemotes
             // 
-            this.buttonSelectMultipleRemotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSelectMultipleRemotes.Image = global::GitUI.Properties.Images.Select;
-            this.buttonSelectMultipleRemotes.Location = new System.Drawing.Point(158, 0);
-            this.buttonSelectMultipleRemotes.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonSelectMultipleRemotes.Name = "buttonSelectMultipleRemotes";
-            this.buttonSelectMultipleRemotes.Size = new System.Drawing.Size(23, 25);
-            this.buttonSelectMultipleRemotes.TabIndex = 2;
-            this.buttonSelectMultipleRemotes.UseVisualStyleBackColor = true;
+            buttonSelectMultipleRemotes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonSelectMultipleRemotes.Image = Properties.Images.Select;
+            buttonSelectMultipleRemotes.Location = new Point(158, 0);
+            buttonSelectMultipleRemotes.Margin = new Padding(0);
+            buttonSelectMultipleRemotes.Name = "buttonSelectMultipleRemotes";
+            buttonSelectMultipleRemotes.Size = new Size(23, 25);
+            buttonSelectMultipleRemotes.TabIndex = 2;
+            buttonSelectMultipleRemotes.UseVisualStyleBackColor = true;
             // 
             // RemotesComboboxControl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "RemotesComboboxControl";
-            this.Size = new System.Drawing.Size(181, 25);
-            this.Load += new System.EventHandler(this.RemotesComboboxControl_Load);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(tableLayoutPanel1);
+            Name = "RemotesComboboxControl";
+            Size = new Size(181, 25);
+            Load += RemotesComboboxControl_Load;
+            tableLayoutPanel1.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxRemotes;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button buttonSelectMultipleRemotes;
+        private ComboBox comboBoxRemotes;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Button buttonSelectMultipleRemotes;
     }
 }

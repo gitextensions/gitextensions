@@ -15,122 +15,122 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Ok = new System.Windows.Forms.Button();
-            this.ProgressBar = new System.Windows.Forms.ProgressBar();
-            this.KeepDialogOpen = new System.Windows.Forms.CheckBox();
-            this.Abort = new System.Windows.Forms.Button();
-            this.pnlOutput = new System.Windows.Forms.Panel();
-            this.MainPanel.SuspendLayout();
-            this.ControlsPanel.SuspendLayout();
-            this.SuspendLayout();
+            Ok = new Button();
+            ProgressBar = new ProgressBar();
+            KeepDialogOpen = new CheckBox();
+            Abort = new Button();
+            pnlOutput = new Panel();
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.pnlOutput);
-            this.MainPanel.Padding = new System.Windows.Forms.Padding(0);
-            this.MainPanel.Size = new System.Drawing.Size(549, 246);
+            MainPanel.Controls.Add(pnlOutput);
+            MainPanel.Padding = new Padding(0);
+            MainPanel.Size = new Size(549, 246);
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.Abort);
-            this.ControlsPanel.Controls.Add(this.Ok);
-            this.ControlsPanel.Controls.Add(this.KeepDialogOpen);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 249);
-            this.ControlsPanel.Size = new System.Drawing.Size(549, 39);
+            ControlsPanel.Controls.Add(Abort);
+            ControlsPanel.Controls.Add(Ok);
+            ControlsPanel.Controls.Add(KeepDialogOpen);
+            ControlsPanel.Location = new Point(0, 249);
+            ControlsPanel.Size = new Size(549, 39);
             // 
             // Ok
             // 
-            this.Ok.AutoSize = true;
-            this.Ok.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Ok.Location = new System.Drawing.Point(380, 8);
-            this.Ok.MinimumSize = new System.Drawing.Size(75, 23);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
-            this.Ok.TabIndex = 0;
-            this.Ok.Text = "OK";
-            this.Ok.UseCompatibleTextRendering = true;
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            Ok.AutoSize = true;
+            Ok.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Ok.Location = new Point(380, 8);
+            Ok.MinimumSize = new Size(75, 23);
+            Ok.Name = "Ok";
+            Ok.Size = new Size(75, 23);
+            Ok.TabIndex = 0;
+            Ok.Text = "OK";
+            Ok.UseCompatibleTextRendering = true;
+            Ok.UseVisualStyleBackColor = true;
+            Ok.Click += Ok_Click;
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ProgressBar.Location = new System.Drawing.Point(0, 246);
-            this.ProgressBar.Margin = new System.Windows.Forms.Padding(0);
-            this.ProgressBar.MarqueeAnimationSpeed = 1;
-            this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(549, 3);
-            this.ProgressBar.Step = 50;
-            this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.ProgressBar.TabIndex = 0;
+            ProgressBar.Dock = DockStyle.Bottom;
+            ProgressBar.Location = new Point(0, 246);
+            ProgressBar.Margin = new Padding(0);
+            ProgressBar.MarqueeAnimationSpeed = 1;
+            ProgressBar.Name = "ProgressBar";
+            ProgressBar.Size = new Size(549, 3);
+            ProgressBar.Step = 50;
+            ProgressBar.Style = ProgressBarStyle.Marquee;
+            ProgressBar.TabIndex = 0;
             // 
             // KeepDialogOpen
             // 
-            this.KeepDialogOpen.AutoSize = true;
-            this.KeepDialogOpen.Location = new System.Drawing.Point(254, 8);
-            this.KeepDialogOpen.Name = "KeepDialogOpen";
-            this.KeepDialogOpen.Size = new System.Drawing.Size(120, 22);
-            this.KeepDialogOpen.TabIndex = 2;
-            this.KeepDialogOpen.Text = "Keep dialog open";
-            this.KeepDialogOpen.UseCompatibleTextRendering = true;
-            this.KeepDialogOpen.UseVisualStyleBackColor = true;
-            this.KeepDialogOpen.CheckedChanged += new System.EventHandler(this.KeepDialogOpen_CheckedChanged);
+            KeepDialogOpen.AutoSize = true;
+            KeepDialogOpen.Location = new Point(254, 8);
+            KeepDialogOpen.Name = "KeepDialogOpen";
+            KeepDialogOpen.Size = new Size(120, 22);
+            KeepDialogOpen.TabIndex = 2;
+            KeepDialogOpen.Text = "Keep dialog open";
+            KeepDialogOpen.UseCompatibleTextRendering = true;
+            KeepDialogOpen.UseVisualStyleBackColor = true;
+            KeepDialogOpen.CheckedChanged += KeepDialogOpen_CheckedChanged;
             // 
             // Abort
             // 
-            this.Abort.AutoSize = true;
-            this.Abort.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Abort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Abort.Location = new System.Drawing.Point(461, 8);
-            this.Abort.MinimumSize = new System.Drawing.Size(75, 23);
-            this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(75, 23);
-            this.Abort.TabIndex = 1;
-            this.Abort.Text = "Abort";
-            this.Abort.UseCompatibleTextRendering = true;
-            this.Abort.UseVisualStyleBackColor = true;
-            this.Abort.Click += new System.EventHandler(this.Abort_Click);
+            Abort.AutoSize = true;
+            Abort.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Abort.DialogResult = DialogResult.Cancel;
+            Abort.Location = new Point(461, 8);
+            Abort.MinimumSize = new Size(75, 23);
+            Abort.Name = "Abort";
+            Abort.Size = new Size(75, 23);
+            Abort.TabIndex = 1;
+            Abort.Text = "Abort";
+            Abort.UseCompatibleTextRendering = true;
+            Abort.UseVisualStyleBackColor = true;
+            Abort.Click += Abort_Click;
             // 
             // pnlOutput
             // 
-            this.pnlOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlOutput.Location = new System.Drawing.Point(0, 0);
-            this.pnlOutput.Name = "pnlOutput";
-            this.pnlOutput.Padding = new System.Windows.Forms.Padding(12);
-            this.pnlOutput.Size = new System.Drawing.Size(549, 246);
-            this.pnlOutput.TabIndex = 0;
+            pnlOutput.Dock = DockStyle.Fill;
+            pnlOutput.Location = new Point(0, 0);
+            pnlOutput.Name = "pnlOutput";
+            pnlOutput.Padding = new Padding(12);
+            pnlOutput.Size = new Size(549, 246);
+            pnlOutput.TabIndex = 0;
             // 
             // FormStatus
             // 
-            this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.CancelButton = this.Abort;
-            this.ClientSize = new System.Drawing.Size(549, 288);
-            this.Controls.Add(this.ProgressBar);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(500, 200);
-            this.Name = "FormStatus";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Process";
-            this.Controls.SetChildIndex(this.ControlsPanel, 0);
-            this.Controls.SetChildIndex(this.ProgressBar, 0);
-            this.Controls.SetChildIndex(this.MainPanel, 0);
-            this.MainPanel.ResumeLayout(false);
-            this.ControlsPanel.ResumeLayout(false);
-            this.ControlsPanel.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = Ok;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            CancelButton = Abort;
+            ClientSize = new Size(549, 288);
+            Controls.Add(ProgressBar);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new Size(500, 200);
+            Name = "FormStatus";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Process";
+            Controls.SetChildIndex(ControlsPanel, 0);
+            Controls.SetChildIndex(ProgressBar, 0);
+            Controls.SetChildIndex(MainPanel, 0);
+            MainPanel.ResumeLayout(false);
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ProgressBar ProgressBar;
-        protected System.Windows.Forms.Button Ok;
-        protected System.Windows.Forms.CheckBox KeepDialogOpen;
-        protected System.Windows.Forms.Button Abort;
-        protected System.Windows.Forms.Panel pnlOutput;
+        private ProgressBar ProgressBar;
+        protected Button Ok;
+        protected CheckBox KeepDialogOpen;
+        protected Button Abort;
+        protected Panel pnlOutput;
     }
 }

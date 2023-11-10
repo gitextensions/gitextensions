@@ -28,35 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ChangeLog = new System.Windows.Forms.RichTextBox();
-            this.SuspendLayout();
+            ChangeLog = new RichTextBox();
+            SuspendLayout();
             // 
             // ChangeLog
             // 
-            this.ChangeLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChangeLog.Location = new System.Drawing.Point(0, 0);
-            this.ChangeLog.Name = "ChangeLog";
-            this.ChangeLog.ReadOnly = true;
-            this.ChangeLog.Size = new System.Drawing.Size(849, 411);
-            this.ChangeLog.TabIndex = 0;
-            this.ChangeLog.Text = "";
-            this.ChangeLog.WordWrap = false;
+            ChangeLog.Dock = DockStyle.Fill;
+            ChangeLog.Location = new Point(0, 0);
+            ChangeLog.Name = "ChangeLog";
+            ChangeLog.ReadOnly = true;
+            ChangeLog.Size = new Size(849, 411);
+            ChangeLog.TabIndex = 0;
+            ChangeLog.Text = "";
+            ChangeLog.WordWrap = false;
             // 
             // FormChangeLog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(849, 411);
-            this.Controls.Add(this.ChangeLog);
-            this.Name = "FormChangeLog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Change log";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(849, 411);
+            Controls.Add(ChangeLog);
+            Name = "FormChangeLog";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Change log";
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox ChangeLog;
+        private RichTextBox ChangeLog;
     }
 }

@@ -242,19 +242,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         #endregion
 
-        private System.Windows.Forms.Panel HeaderPanel;
-        private System.Windows.Forms.Panel settingsPagePanel;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Panel linePanel;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.RadioButton DistributedRB;
-        private System.Windows.Forms.Label arrowGlobal;
-        private System.Windows.Forms.Label arrowDistributed;
-        private System.Windows.Forms.RadioButton LocalRB;
-        private System.Windows.Forms.RadioButton GlobalRB;
-        private System.Windows.Forms.RadioButton EffectiveRB;
-        private System.Windows.Forms.Label arrowLocal;
+        private Panel HeaderPanel;
+        private Panel settingsPagePanel;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Panel linePanel;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Label label1;
+        private TableLayoutPanel tableLayoutPanel1;
+        private RadioButton DistributedRB;
+        private Label arrowGlobal;
+        private Label arrowDistributed;
+        private RadioButton LocalRB;
+        private RadioButton GlobalRB;
+        private RadioButton EffectiveRB;
+        private Label arrowLocal;
     }
 }

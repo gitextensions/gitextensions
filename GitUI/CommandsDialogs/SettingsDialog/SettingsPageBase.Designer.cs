@@ -6,14 +6,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            toolTip1 = new ToolTip(components);
+            SuspendLayout();
             // 
             // SettingsPageBase
             // 
-            this.Name = "SettingsPageBase";
-            this.ResumeLayout(false);
+            Name = "SettingsPageBase";
+            ResumeLayout(false);
 
         }
 

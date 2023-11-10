@@ -29,219 +29,217 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GourceStart));
-            this.button1 = new System.Windows.Forms.Button();
-            this.ArgumentsLabel = new System.Windows.Forms.Label();
-            this.Arguments = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.GourcePath = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.WorkingDir = new System.Windows.Forms.TextBox();
-            this.GourceBrowse = new System.Windows.Forms.Button();
-            this.WorkingDirBrowse = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            button1 = new Button();
+            ArgumentsLabel = new Label();
+            Arguments = new TextBox();
+            label1 = new Label();
+            GourcePath = new TextBox();
+            label2 = new Label();
+            WorkingDir = new TextBox();
+            GourceBrowse = new Button();
+            WorkingDirBrowse = new Button();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            linkLabel1 = new LinkLabel();
+            linkLabel2 = new LinkLabel();
+            tableLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(609, 125);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 29);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Start";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1Click);
+            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            button1.Location = new Point(609, 125);
+            button1.Margin = new Padding(4, 4, 4, 4);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 0;
+            button1.Text = "Start";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += Button1Click;
             // 
             // ArgumentsLabel
             // 
-            this.ArgumentsLabel.AutoSize = true;
-            this.ArgumentsLabel.Location = new System.Drawing.Point(4, 72);
-            this.ArgumentsLabel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 0);
-            this.ArgumentsLabel.Name = "ArgumentsLabel";
-            this.ArgumentsLabel.Size = new System.Drawing.Size(81, 20);
-            this.ArgumentsLabel.TabIndex = 1;
-            this.ArgumentsLabel.Text = "Arguments";
+            ArgumentsLabel.AutoSize = true;
+            ArgumentsLabel.Location = new Point(4, 72);
+            ArgumentsLabel.Margin = new Padding(4, 6, 4, 0);
+            ArgumentsLabel.Name = "ArgumentsLabel";
+            ArgumentsLabel.Size = new Size(81, 20);
+            ArgumentsLabel.TabIndex = 1;
+            ArgumentsLabel.Text = "Arguments";
             // 
             // Arguments
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.Arguments, 2);
-            this.Arguments.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Arguments.Location = new System.Drawing.Point(129, 70);
-            this.Arguments.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Arguments.Name = "Arguments";
-            this.Arguments.Size = new System.Drawing.Size(555, 27);
-            this.Arguments.TabIndex = 2;
+            tableLayoutPanel1.SetColumnSpan(Arguments, 2);
+            Arguments.Dock = DockStyle.Fill;
+            Arguments.Location = new Point(129, 70);
+            Arguments.Margin = new Padding(4, 4, 4, 4);
+            Arguments.Name = "Arguments";
+            Arguments.Size = new Size(555, 27);
+            Arguments.TabIndex = 2;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(105, 20);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Path to Gource";
+            label1.AutoSize = true;
+            label1.Location = new Point(4, 6);
+            label1.Margin = new Padding(4, 6, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(105, 20);
+            label1.TabIndex = 4;
+            label1.Text = "Path to Gource";
             // 
             // GourcePath
             // 
-            this.GourcePath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GourcePath.Location = new System.Drawing.Point(129, 4);
-            this.GourcePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.GourcePath.Name = "GourcePath";
-            this.GourcePath.Size = new System.Drawing.Size(430, 27);
-            this.GourcePath.TabIndex = 5;
+            GourcePath.Dock = DockStyle.Fill;
+            GourcePath.Location = new Point(129, 4);
+            GourcePath.Margin = new Padding(4, 4, 4, 4);
+            GourcePath.Name = "GourcePath";
+            GourcePath.Size = new Size(430, 27);
+            GourcePath.TabIndex = 5;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 39);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 6, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 20);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Repository";
+            label2.AutoSize = true;
+            label2.Location = new Point(4, 39);
+            label2.Margin = new Padding(4, 6, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(80, 20);
+            label2.TabIndex = 6;
+            label2.Text = "Repository";
             // 
             // WorkingDir
             // 
-            this.WorkingDir.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WorkingDir.Location = new System.Drawing.Point(129, 37);
-            this.WorkingDir.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.WorkingDir.Name = "WorkingDir";
-            this.WorkingDir.Size = new System.Drawing.Size(430, 27);
-            this.WorkingDir.TabIndex = 7;
+            WorkingDir.Dock = DockStyle.Fill;
+            WorkingDir.Location = new Point(129, 37);
+            WorkingDir.Margin = new Padding(4, 4, 4, 4);
+            WorkingDir.Name = "WorkingDir";
+            WorkingDir.Size = new Size(430, 27);
+            WorkingDir.TabIndex = 7;
             // 
             // GourceBrowse
             // 
-            this.GourceBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GourceBrowse.Location = new System.Drawing.Point(567, 4);
-            this.GourceBrowse.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.GourceBrowse.Name = "GourceBrowse";
-            this.GourceBrowse.Size = new System.Drawing.Size(117, 25);
-            this.GourceBrowse.TabIndex = 8;
-            this.GourceBrowse.Text = "Browse";
-            this.GourceBrowse.UseVisualStyleBackColor = true;
-            this.GourceBrowse.Click += new System.EventHandler(this.GourceBrowseClick);
+            GourceBrowse.Dock = DockStyle.Fill;
+            GourceBrowse.Location = new Point(567, 4);
+            GourceBrowse.Margin = new Padding(4, 4, 4, 4);
+            GourceBrowse.Name = "GourceBrowse";
+            GourceBrowse.Size = new Size(117, 25);
+            GourceBrowse.TabIndex = 8;
+            GourceBrowse.Text = "Browse";
+            GourceBrowse.UseVisualStyleBackColor = true;
+            GourceBrowse.Click += GourceBrowseClick;
             // 
             // WorkingDirBrowse
             // 
-            this.WorkingDirBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WorkingDirBrowse.Location = new System.Drawing.Point(567, 37);
-            this.WorkingDirBrowse.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.WorkingDirBrowse.Name = "WorkingDirBrowse";
-            this.WorkingDirBrowse.Size = new System.Drawing.Size(117, 25);
-            this.WorkingDirBrowse.TabIndex = 9;
-            this.WorkingDirBrowse.Text = "Browse";
-            this.WorkingDirBrowse.UseVisualStyleBackColor = true;
-            this.WorkingDirBrowse.Click += new System.EventHandler(this.WorkingDirBrowseClick);
+            WorkingDirBrowse.Dock = DockStyle.Fill;
+            WorkingDirBrowse.Location = new Point(567, 37);
+            WorkingDirBrowse.Margin = new Padding(4, 4, 4, 4);
+            WorkingDirBrowse.Name = "WorkingDirBrowse";
+            WorkingDirBrowse.Size = new Size(117, 25);
+            WorkingDirBrowse.TabIndex = 9;
+            WorkingDirBrowse.Text = "Browse";
+            WorkingDirBrowse.UseVisualStyleBackColor = true;
+            WorkingDirBrowse.Click += WorkingDirBrowseClick;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 125F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 125F));
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.WorkingDirBrowse, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.ArgumentsLabel, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.GourceBrowse, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.GourcePath, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.WorkingDir, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.Arguments, 1, 2);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(15, 15);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(688, 99);
-            this.tableLayoutPanel1.TabIndex = 11;
+            tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
+            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(label2, 0, 1);
+            tableLayoutPanel1.Controls.Add(WorkingDirBrowse, 2, 1);
+            tableLayoutPanel1.Controls.Add(ArgumentsLabel, 0, 2);
+            tableLayoutPanel1.Controls.Add(GourceBrowse, 2, 0);
+            tableLayoutPanel1.Controls.Add(GourcePath, 1, 0);
+            tableLayoutPanel1.Controls.Add(WorkingDir, 1, 1);
+            tableLayoutPanel1.Controls.Add(Arguments, 1, 2);
+            tableLayoutPanel1.Location = new Point(15, 15);
+            tableLayoutPanel1.Margin = new Padding(4, 4, 4, 4);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
+            tableLayoutPanel1.Size = new Size(688, 99);
+            tableLayoutPanel1.TabIndex = 11;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.linkLabel1);
-            this.flowLayoutPanel1.Controls.Add(this.linkLabel2);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(15, 128);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(587, 26);
-            this.flowLayoutPanel1.TabIndex = 12;
+            flowLayoutPanel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.Controls.Add(linkLabel1);
+            flowLayoutPanel1.Controls.Add(linkLabel2);
+            flowLayoutPanel1.Location = new Point(15, 128);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(587, 26);
+            flowLayoutPanel1.TabIndex = 12;
             // 
             // linkLabel1
             // 
-            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(4, 0);
-            this.linkLabel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(107, 20);
-            this.linkLabel1.TabIndex = 11;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Gource project";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            linkLabel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            linkLabel1.AutoSize = true;
+            linkLabel1.Location = new Point(4, 0);
+            linkLabel1.Margin = new Padding(4, 0, 4, 0);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new Size(107, 20);
+            linkLabel1.TabIndex = 11;
+            linkLabel1.TabStop = true;
+            linkLabel1.Text = "Gource project";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
             // linkLabel2
             // 
-            this.linkLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(119, 0);
-            this.linkLabel2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(155, 20);
-            this.linkLabel2.TabIndex = 12;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Gource command line";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            linkLabel2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            linkLabel2.AutoSize = true;
+            linkLabel2.Location = new Point(119, 0);
+            linkLabel2.Margin = new Padding(4, 0, 4, 0);
+            linkLabel2.Name = "linkLabel2";
+            linkLabel2.Size = new Size(155, 20);
+            linkLabel2.TabIndex = 12;
+            linkLabel2.TabStop = true;
+            linkLabel2.Text = "Gource command line";
+            linkLabel2.LinkClicked += linkLabel2_LinkClicked;
             // 
             // GourceStart
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(718, 165);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.button1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.MaximizeBox = false;
-            this.Name = "GourceStart";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Gource";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(120F, 120F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(718, 165);
+            Controls.Add(flowLayoutPanel1);
+            Controls.Add(tableLayoutPanel1);
+            Controls.Add(button1);
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            Margin = new Padding(4, 4, 4, 4);
+            MaximizeBox = false;
+            Name = "GourceStart";
+            SizeGripStyle = SizeGripStyle.Hide;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Gource";
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label ArgumentsLabel;
-        private System.Windows.Forms.TextBox Arguments;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox GourcePath;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox WorkingDir;
-        private System.Windows.Forms.Button GourceBrowse;
-        private System.Windows.Forms.Button WorkingDirBrowse;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.LinkLabel linkLabel2;
+        private Button button1;
+        private Label ArgumentsLabel;
+        private TextBox Arguments;
+        private Label label1;
+        private TextBox GourcePath;
+        private Label label2;
+        private TextBox WorkingDir;
+        private Button GourceBrowse;
+        private Button WorkingDirBrowse;
+        private TableLayoutPanel tableLayoutPanel1;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private LinkLabel linkLabel1;
+        private LinkLabel linkLabel2;
     }
 }

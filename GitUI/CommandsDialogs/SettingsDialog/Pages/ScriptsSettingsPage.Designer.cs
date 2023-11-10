@@ -28,202 +28,202 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnMoveUp = new System.Windows.Forms.Button();
-            this.btnMoveDown = new System.Windows.Forms.Button();
-            this.btnArgumentsHelp = new System.Windows.Forms.Button();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.lvScripts = new GitUI.UserControls.NativeListView();
-            this.chdrNames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chdrEvents = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chdrCommand = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.panelButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel2.SuspendLayout();
-            this.panelButtons.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            btnMoveUp = new Button();
+            btnMoveDown = new Button();
+            btnArgumentsHelp = new Button();
+            propertyGrid1 = new PropertyGrid();
+            panel2 = new Panel();
+            lvScripts = new GitUI.UserControls.NativeListView();
+            chdrNames = ((ColumnHeader)(new ColumnHeader()));
+            chdrEvents = ((ColumnHeader)(new ColumnHeader()));
+            chdrCommand = ((ColumnHeader)(new ColumnHeader()));
+            panelButtons = new FlowLayoutPanel();
+            btnAdd = new Button();
+            btnDelete = new Button();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            panel2.SuspendLayout();
+            panelButtons.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // btnMoveUp
             // 
-            this.btnMoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMoveUp.Enabled = false;
-            this.btnMoveUp.Image = global::GitUI.Properties.Images.ArrowUp;
-            this.btnMoveUp.Location = new System.Drawing.Point(7, 67);
-            this.btnMoveUp.Name = "btnMoveUp";
-            this.btnMoveUp.Size = new System.Drawing.Size(26, 26);
-            this.btnMoveUp.TabIndex = 0;
-            this.btnMoveUp.UseVisualStyleBackColor = true;
-            this.btnMoveUp.Click += new System.EventHandler(this.btnMoveUp_Click);
+            btnMoveUp.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnMoveUp.Enabled = false;
+            btnMoveUp.Image = Properties.Images.ArrowUp;
+            btnMoveUp.Location = new Point(7, 67);
+            btnMoveUp.Name = "btnMoveUp";
+            btnMoveUp.Size = new Size(26, 26);
+            btnMoveUp.TabIndex = 0;
+            btnMoveUp.UseVisualStyleBackColor = true;
+            btnMoveUp.Click += btnMoveUp_Click;
             // 
             // btnMoveDown
             // 
-            this.btnMoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMoveDown.Enabled = false;
-            this.btnMoveDown.Image = global::GitUI.Properties.Images.ArrowDown;
-            this.btnMoveDown.Location = new System.Drawing.Point(7, 99);
-            this.btnMoveDown.Name = "btnMoveDown";
-            this.btnMoveDown.Size = new System.Drawing.Size(26, 26);
-            this.btnMoveDown.TabIndex = 3;
-            this.btnMoveDown.UseVisualStyleBackColor = true;
-            this.btnMoveDown.Click += new System.EventHandler(this.btnMoveDown_Click);
+            btnMoveDown.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnMoveDown.Enabled = false;
+            btnMoveDown.Image = Properties.Images.ArrowDown;
+            btnMoveDown.Location = new Point(7, 99);
+            btnMoveDown.Name = "btnMoveDown";
+            btnMoveDown.Size = new Size(26, 26);
+            btnMoveDown.TabIndex = 3;
+            btnMoveDown.UseVisualStyleBackColor = true;
+            btnMoveDown.Click += btnMoveDown_Click;
             // 
             // btnArgumentsHelp
             // 
-            this.btnArgumentsHelp.Location = new System.Drawing.Point(7, 131);
-            this.btnArgumentsHelp.Name = "btnArgumentsHelp";
-            this.btnArgumentsHelp.Size = new System.Drawing.Size(26, 26);
-            this.btnArgumentsHelp.TabIndex = 13;
-            this.btnArgumentsHelp.Text = "?";
-            this.btnArgumentsHelp.UseVisualStyleBackColor = true;
-            this.btnArgumentsHelp.Click += new System.EventHandler(this.btnArgumentsHelp_Click);
+            btnArgumentsHelp.Location = new Point(7, 131);
+            btnArgumentsHelp.Name = "btnArgumentsHelp";
+            btnArgumentsHelp.Size = new Size(26, 26);
+            btnArgumentsHelp.TabIndex = 13;
+            btnArgumentsHelp.Text = "?";
+            btnArgumentsHelp.UseVisualStyleBackColor = true;
+            btnArgumentsHelp.Click += btnArgumentsHelp_Click;
             // 
             // propertyGrid1
             // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(3, 276);
-            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(3, 3, 40, 3);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(394, 259);
-            this.propertyGrid1.TabIndex = 2;
-            this.propertyGrid1.ToolbarVisible = false;
+            propertyGrid1.Dock = DockStyle.Fill;
+            propertyGrid1.Location = new Point(3, 276);
+            propertyGrid1.Margin = new Padding(3, 3, 40, 3);
+            propertyGrid1.Name = "propertyGrid1";
+            propertyGrid1.Size = new Size(394, 259);
+            propertyGrid1.TabIndex = 2;
+            propertyGrid1.ToolbarVisible = false;
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.lvScripts);
-            this.panel2.Controls.Add(this.panelButtons);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(431, 259);
-            this.panel2.TabIndex = 3;
+            panel2.Controls.Add(lvScripts);
+            panel2.Controls.Add(panelButtons);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(3, 3);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(431, 259);
+            panel2.TabIndex = 3;
             // 
             // lvScripts
             // 
-            this.lvScripts.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.lvScripts.CheckBoxes = true;
-            this.lvScripts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chdrNames,
-            this.chdrEvents,
-            this.chdrCommand});
-            this.lvScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvScripts.FullRowSelect = true;
-            this.lvScripts.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvScripts.HideSelection = false;
-            this.lvScripts.LabelWrap = false;
-            this.lvScripts.Location = new System.Drawing.Point(0, 0);
-            this.lvScripts.Margin = new System.Windows.Forms.Padding(0);
-            this.lvScripts.MultiSelect = false;
-            this.lvScripts.Name = "lvScripts";
-            this.lvScripts.ShowItemToolTips = true;
-            this.lvScripts.Size = new System.Drawing.Size(395, 259);
-            this.lvScripts.TabIndex = 1;
-            this.lvScripts.TileSize = new System.Drawing.Size(136, 18);
-            this.lvScripts.UseCompatibleStateImageBehavior = false;
-            this.lvScripts.View = System.Windows.Forms.View.Details;
+            lvScripts.Activation = ItemActivation.OneClick;
+            lvScripts.CheckBoxes = true;
+            lvScripts.Columns.AddRange(new ColumnHeader[] {
+            chdrNames,
+            chdrEvents,
+            chdrCommand});
+            lvScripts.Dock = DockStyle.Fill;
+            lvScripts.FullRowSelect = true;
+            lvScripts.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvScripts.HideSelection = false;
+            lvScripts.LabelWrap = false;
+            lvScripts.Location = new Point(0, 0);
+            lvScripts.Margin = new Padding(0);
+            lvScripts.MultiSelect = false;
+            lvScripts.Name = "lvScripts";
+            lvScripts.ShowItemToolTips = true;
+            lvScripts.Size = new Size(395, 259);
+            lvScripts.TabIndex = 1;
+            lvScripts.TileSize = new Size(136, 18);
+            lvScripts.UseCompatibleStateImageBehavior = false;
+            lvScripts.View = View.Details;
             // 
             // chdrNames
             // 
-            this.chdrNames.Text = "Name";
-            this.chdrNames.Width = 200;
+            chdrNames.Text = "Name";
+            chdrNames.Width = 200;
             // 
             // chdrEvents
             // 
-            this.chdrEvents.Text = "Event";
-            this.chdrEvents.Width = 130;
+            chdrEvents.Text = "Event";
+            chdrEvents.Width = 130;
             // 
             // chdrCommand
             // 
-            this.chdrCommand.Text = "Command";
-            this.chdrCommand.Width = 330;
+            chdrCommand.Text = "Command";
+            chdrCommand.Width = 330;
             // 
             // panelButtons
             // 
-            this.panelButtons.AutoSize = true;
-            this.panelButtons.Controls.Add(this.btnAdd);
-            this.panelButtons.Controls.Add(this.btnDelete);
-            this.panelButtons.Controls.Add(this.btnMoveUp);
-            this.panelButtons.Controls.Add(this.btnMoveDown);
-            this.panelButtons.Controls.Add(this.btnArgumentsHelp);
-            this.panelButtons.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.panelButtons.Location = new System.Drawing.Point(395, 0);
-            this.panelButtons.Margin = new System.Windows.Forms.Padding(8);
-            this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.panelButtons.Size = new System.Drawing.Size(36, 259);
-            this.panelButtons.TabIndex = 1;
+            panelButtons.AutoSize = true;
+            panelButtons.Controls.Add(btnAdd);
+            panelButtons.Controls.Add(btnDelete);
+            panelButtons.Controls.Add(btnMoveUp);
+            panelButtons.Controls.Add(btnMoveDown);
+            panelButtons.Controls.Add(btnArgumentsHelp);
+            panelButtons.Dock = DockStyle.Right;
+            panelButtons.FlowDirection = FlowDirection.TopDown;
+            panelButtons.Location = new Point(395, 0);
+            panelButtons.Margin = new Padding(8);
+            panelButtons.Name = "panelButtons";
+            panelButtons.Padding = new Padding(4, 0, 0, 0);
+            panelButtons.Size = new Size(36, 259);
+            panelButtons.TabIndex = 1;
             // 
             // btnAdd
             // 
-            this.btnAdd.Image = global::GitUI.Properties.Images.RemoteAdd;
-            this.btnAdd.Location = new System.Drawing.Point(7, 3);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(26, 26);
-            this.btnAdd.TabIndex = 0;
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            btnAdd.Image = Properties.Images.RemoteAdd;
+            btnAdd.Location = new Point(7, 3);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(26, 26);
+            btnAdd.TabIndex = 0;
+            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
             // 
             // btnDelete
             // 
-            this.btnDelete.Image = global::GitUI.Properties.Images.RemoteDelete;
-            this.btnDelete.Location = new System.Drawing.Point(7, 35);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(26, 26);
-            this.btnDelete.TabIndex = 1;
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            btnDelete.Image = Properties.Images.RemoteDelete;
+            btnDelete.Location = new Point(7, 35);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(26, 26);
+            btnDelete.TabIndex = 1;
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.propertyGrid1, 0, 2);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(437, 538);
-            this.tableLayoutPanel1.TabIndex = 4;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(panel2, 0, 0);
+            tableLayoutPanel1.Controls.Add(propertyGrid1, 0, 2);
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 8F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(437, 538);
+            tableLayoutPanel1.TabIndex = 4;
             // 
             // ScriptsSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "ScriptsSettingsPage";
-            this.Size = new System.Drawing.Size(1335, 885);
-            this.Text = "Scripts";
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.panelButtons.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(tableLayoutPanel1);
+            Name = "ScriptsSettingsPage";
+            Size = new Size(1335, 885);
+            Text = "Scripts";
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            panelButtons.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
     
-        private System.Windows.Forms.Button btnMoveUp;
-        private System.Windows.Forms.Button btnMoveDown;
-        private System.Windows.Forms.Button btnArgumentsHelp;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private System.Windows.Forms.Panel panel2;
+        private Button btnMoveUp;
+        private Button btnMoveDown;
+        private Button btnArgumentsHelp;
+        private PropertyGrid propertyGrid1;
+        private Panel panel2;
         private UserControls.NativeListView lvScripts;
-        private System.Windows.Forms.FlowLayoutPanel panelButtons;
-        private System.Windows.Forms.Button btnAdd;
-        private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.ColumnHeader chdrNames;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.ColumnHeader chdrEvents;
-        private System.Windows.Forms.ColumnHeader chdrCommand;
+        private FlowLayoutPanel panelButtons;
+        private Button btnAdd;
+        private Button btnDelete;
+        private ColumnHeader chdrNames;
+        private TableLayoutPanel tableLayoutPanel1;
+        private ColumnHeader chdrEvents;
+        private ColumnHeader chdrCommand;
     }
 }

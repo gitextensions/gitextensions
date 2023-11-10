@@ -30,31 +30,29 @@ namespace GitUI.HelperDialogs
         /// </summary>
         private void InitializeComponent()
         {
-            this.CommitDiff = new GitUI.UserControls.CommitDiff();
-            this.SuspendLayout();
+            CommitDiff = new GitUI.UserControls.CommitDiff();
+            SuspendLayout();
             // 
             // CommitDiff
             // 
-            this.CommitDiff.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.CommitDiff.Location = new System.Drawing.Point(0, 0);
-            this.CommitDiff.MinimumSize = new System.Drawing.Size(150, 148);
-            this.CommitDiff.Name = "CommitDiff";
-            this.CommitDiff.Size = new System.Drawing.Size(716, 528);
-            this.CommitDiff.TabIndex = 0;
+            CommitDiff.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            CommitDiff.Location = new Point(0, 0);
+            CommitDiff.MinimumSize = new Size(150, 148);
+            CommitDiff.Name = "CommitDiff";
+            CommitDiff.Size = new Size(716, 528);
+            CommitDiff.TabIndex = 0;
             // 
             // FormCommitDiff
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(717, 529);
-            this.Controls.Add(this.CommitDiff);
-            this.MinimumSize = new System.Drawing.Size(150, 148);
-            this.Name = "FormCommitDiff";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Diff";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(717, 529);
+            Controls.Add(CommitDiff);
+            MinimumSize = new Size(150, 148);
+            Name = "FormCommitDiff";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Diff";
+            ResumeLayout(false);
 
         }
 

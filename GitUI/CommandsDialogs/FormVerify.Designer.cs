@@ -15,467 +15,464 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.Panel panel1;
-            System.Windows.Forms.Panel panel2;
-            System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+            components = new System.ComponentModel.Container();
+            Panel panel1;
+            Panel panel2;
+            FlowLayoutPanel flowLayoutPanel1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVerify));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.btnCloseDialog = new System.Windows.Forms.Button();
-            this.btnRestoreSelectedObjects = new System.Windows.Forms.Button();
-            this.DeleteAllLostAndFoundTags = new System.Windows.Forms.Button();
-            this.Remove = new System.Windows.Forms.Button();
-            this.SaveObjects = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.ShowOtherObjects = new System.Windows.Forms.CheckBox();
-            this.ShowCommitsAndTags = new System.Windows.Forms.CheckBox();
-            this.NoReflogs = new System.Windows.Forms.CheckBox();
-            this.FullCheck = new System.Windows.Forms.CheckBox();
-            this.Unreachable = new System.Windows.Forms.CheckBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.Warnings = new System.Windows.Forms.DataGridView();
-            this.columnIsLostObjectSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.columnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.columnType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.columnSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.columnParent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mnuLostObjects = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuLostObjectsCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyParentHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileViewer = new GitUI.Editor.FileViewer();
-            panel1 = new System.Windows.Forms.Panel();
-            panel2 = new System.Windows.Forms.Panel();
-            flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            btnCloseDialog = new Button();
+            btnRestoreSelectedObjects = new Button();
+            DeleteAllLostAndFoundTags = new Button();
+            Remove = new Button();
+            SaveObjects = new Button();
+            label2 = new Label();
+            label1 = new Label();
+            ShowOtherObjects = new CheckBox();
+            ShowCommitsAndTags = new CheckBox();
+            NoReflogs = new CheckBox();
+            FullCheck = new CheckBox();
+            Unreachable = new CheckBox();
+            splitContainer1 = new SplitContainer();
+            Warnings = new DataGridView();
+            columnIsLostObjectSelected = new DataGridViewCheckBoxColumn();
+            columnDate = new DataGridViewTextBoxColumn();
+            columnType = new DataGridViewTextBoxColumn();
+            columnSubject = new DataGridViewTextBoxColumn();
+            columnAuthor = new DataGridViewTextBoxColumn();
+            columnHash = new DataGridViewTextBoxColumn();
+            columnParent = new DataGridViewTextBoxColumn();
+            mnuLostObjects = new ContextMenuStrip(components);
+            mnuLostObjectView = new ToolStripMenuItem();
+            mnuLostObjectsCreateTag = new ToolStripMenuItem();
+            mnuLostObjectsCreateBranch = new ToolStripMenuItem();
+            copyHashToolStripMenuItem = new ToolStripMenuItem();
+            copyParentHashToolStripMenuItem = new ToolStripMenuItem();
+            saveAsToolStripMenuItem = new ToolStripMenuItem();
+            fileViewer = new GitUI.Editor.FileViewer();
+            panel1 = new Panel();
+            panel2 = new Panel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Warnings)).BeginInit();
-            this.mnuLostObjects.SuspendLayout();
-            this.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(Warnings)).BeginInit();
+            mnuLostObjects.SuspendLayout();
+            SuspendLayout();
             // 
             // panel1
             // 
-            panel1.Controls.Add(this.btnCloseDialog);
-            panel1.Controls.Add(this.btnRestoreSelectedObjects);
-            panel1.Controls.Add(this.DeleteAllLostAndFoundTags);
-            panel1.Controls.Add(this.Remove);
-            panel1.Controls.Add(this.SaveObjects);
-            panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            panel1.Location = new System.Drawing.Point(0, 514);
+            panel1.Controls.Add(btnCloseDialog);
+            panel1.Controls.Add(btnRestoreSelectedObjects);
+            panel1.Controls.Add(DeleteAllLostAndFoundTags);
+            panel1.Controls.Add(Remove);
+            panel1.Controls.Add(SaveObjects);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 514);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(859, 61);
+            panel1.Size = new Size(859, 61);
             panel1.TabIndex = 1;
             // 
             // btnCloseDialog
             // 
-            this.btnCloseDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCloseDialog.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCloseDialog.Location = new System.Drawing.Point(647, 33);
-            this.btnCloseDialog.Name = "btnCloseDialog";
-            this.btnCloseDialog.Size = new System.Drawing.Size(208, 25);
-            this.btnCloseDialog.TabIndex = 9;
-            this.btnCloseDialog.Text = "Cancel";
-            this.btnCloseDialog.UseVisualStyleBackColor = true;
+            btnCloseDialog.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCloseDialog.DialogResult = DialogResult.Cancel;
+            btnCloseDialog.Location = new Point(647, 33);
+            btnCloseDialog.Name = "btnCloseDialog";
+            btnCloseDialog.Size = new Size(208, 25);
+            btnCloseDialog.TabIndex = 9;
+            btnCloseDialog.Text = "Cancel";
+            btnCloseDialog.UseVisualStyleBackColor = true;
             // 
             // btnRestoreSelectedObjects
             // 
-            this.btnRestoreSelectedObjects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRestoreSelectedObjects.Location = new System.Drawing.Point(298, 21);
-            this.btnRestoreSelectedObjects.Name = "btnRestoreSelectedObjects";
-            this.btnRestoreSelectedObjects.Size = new System.Drawing.Size(317, 25);
-            this.btnRestoreSelectedObjects.TabIndex = 5;
-            this.btnRestoreSelectedObjects.Text = "Recover selected objects";
-            this.btnRestoreSelectedObjects.UseVisualStyleBackColor = true;
-            this.btnRestoreSelectedObjects.Click += new System.EventHandler(this.btnRestoreSelectedObjects_Click);
+            btnRestoreSelectedObjects.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            btnRestoreSelectedObjects.Location = new Point(298, 21);
+            btnRestoreSelectedObjects.Name = "btnRestoreSelectedObjects";
+            btnRestoreSelectedObjects.Size = new Size(317, 25);
+            btnRestoreSelectedObjects.TabIndex = 5;
+            btnRestoreSelectedObjects.Text = "Recover selected objects";
+            btnRestoreSelectedObjects.UseVisualStyleBackColor = true;
+            btnRestoreSelectedObjects.Click += btnRestoreSelectedObjects_Click;
             // 
             // DeleteAllLostAndFoundTags
             // 
-            this.DeleteAllLostAndFoundTags.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DeleteAllLostAndFoundTags.Location = new System.Drawing.Point(3, 33);
-            this.DeleteAllLostAndFoundTags.Name = "DeleteAllLostAndFoundTags";
-            this.DeleteAllLostAndFoundTags.Size = new System.Drawing.Size(252, 25);
-            this.DeleteAllLostAndFoundTags.TabIndex = 7;
-            this.DeleteAllLostAndFoundTags.Text = "Delete all LOST_AND_FOUND tags";
-            this.DeleteAllLostAndFoundTags.UseVisualStyleBackColor = true;
-            this.DeleteAllLostAndFoundTags.Click += new System.EventHandler(this.DeleteAllLostAndFoundTagsClick);
+            DeleteAllLostAndFoundTags.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            DeleteAllLostAndFoundTags.Location = new Point(3, 33);
+            DeleteAllLostAndFoundTags.Name = "DeleteAllLostAndFoundTags";
+            DeleteAllLostAndFoundTags.Size = new Size(252, 25);
+            DeleteAllLostAndFoundTags.TabIndex = 7;
+            DeleteAllLostAndFoundTags.Text = "Delete all LOST_AND_FOUND tags";
+            DeleteAllLostAndFoundTags.UseVisualStyleBackColor = true;
+            DeleteAllLostAndFoundTags.Click += DeleteAllLostAndFoundTagsClick;
             // 
             // Remove
             // 
-            this.Remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Remove.Location = new System.Drawing.Point(3, 6);
-            this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(252, 25);
-            this.Remove.TabIndex = 6;
-            this.Remove.Text = "Remove all dangling objects";
-            this.Remove.UseVisualStyleBackColor = true;
-            this.Remove.Click += new System.EventHandler(this.RemoveClick);
+            Remove.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            Remove.Location = new Point(3, 6);
+            Remove.Name = "Remove";
+            Remove.Size = new Size(252, 25);
+            Remove.TabIndex = 6;
+            Remove.Text = "Remove all dangling objects";
+            Remove.UseVisualStyleBackColor = true;
+            Remove.Click += RemoveClick;
             // 
             // SaveObjects
             // 
-            this.SaveObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveObjects.Location = new System.Drawing.Point(647, 6);
-            this.SaveObjects.Name = "SaveObjects";
-            this.SaveObjects.Size = new System.Drawing.Size(208, 25);
-            this.SaveObjects.TabIndex = 8;
-            this.SaveObjects.Text = "Save objects to .git/lost-found";
-            this.SaveObjects.UseVisualStyleBackColor = true;
-            this.SaveObjects.Click += new System.EventHandler(this.SaveObjectsClick);
+            SaveObjects.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            SaveObjects.Location = new Point(647, 6);
+            SaveObjects.Name = "SaveObjects";
+            SaveObjects.Size = new Size(208, 25);
+            SaveObjects.TabIndex = 8;
+            SaveObjects.Text = "Save objects to .git/lost-found";
+            SaveObjects.UseVisualStyleBackColor = true;
+            SaveObjects.Click += SaveObjectsClick;
             // 
             // panel2
             // 
             panel2.AutoSize = true;
             panel2.Controls.Add(flowLayoutPanel1);
-            panel2.Controls.Add(this.ShowOtherObjects);
-            panel2.Controls.Add(this.ShowCommitsAndTags);
-            panel2.Controls.Add(this.NoReflogs);
-            panel2.Controls.Add(this.FullCheck);
-            panel2.Controls.Add(this.Unreachable);
-            panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            panel2.Location = new System.Drawing.Point(0, 0);
+            panel2.Controls.Add(ShowOtherObjects);
+            panel2.Controls.Add(ShowCommitsAndTags);
+            panel2.Controls.Add(NoReflogs);
+            panel2.Controls.Add(FullCheck);
+            panel2.Controls.Add(Unreachable);
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(859, 134);
+            panel2.Size = new Size(859, 134);
             panel2.TabIndex = 4;
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoSize = true;
-            flowLayoutPanel1.Controls.Add(this.label2);
-            flowLayoutPanel1.Controls.Add(this.label1);
-            flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
-            flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            flowLayoutPanel1.Controls.Add(label2);
+            flowLayoutPanel1.Controls.Add(label1);
+            flowLayoutPanel1.Dock = DockStyle.Left;
+            flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(5);
-            flowLayoutPanel1.Size = new System.Drawing.Size(318, 134);
+            flowLayoutPanel1.Padding = new Padding(5);
+            flowLayoutPanel1.Size = new Size(318, 134);
             flowLayoutPanel1.TabIndex = 13;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(302, 91);
-            this.label2.TabIndex = 15;
-            this.label2.Text = resources.GetString("label2.Text");
+            label2.AutoSize = true;
+            label2.Location = new Point(8, 5);
+            label2.Name = "label2";
+            label2.Size = new Size(302, 91);
+            label2.TabIndex = 15;
+            label2.Text = resources.GetString("label2.Text");
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 101);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(179, 13);
-            this.label1.TabIndex = 16;
-            this.label1.Text = "Double-click on a row for quick view";
+            label1.AutoSize = true;
+            label1.Location = new Point(8, 101);
+            label1.Margin = new Padding(3, 5, 3, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(179, 13);
+            label1.TabIndex = 16;
+            label1.Text = "Double-click on a row for quick view";
             // 
             // ShowOtherObjects
             // 
-            this.ShowOtherObjects.AutoSize = true;
-            this.ShowOtherObjects.Location = new System.Drawing.Point(588, 9);
-            this.ShowOtherObjects.Name = "ShowOtherObjects";
-            this.ShowOtherObjects.Size = new System.Drawing.Size(117, 17);
-            this.ShowOtherObjects.TabIndex = 0;
-            this.ShowOtherObjects.Text = "Show other objects";
-            this.ShowOtherObjects.UseVisualStyleBackColor = true;
-            this.ShowOtherObjects.CheckedChanged += new System.EventHandler(this.ShowOtherObjects_CheckedChanged);
+            ShowOtherObjects.AutoSize = true;
+            ShowOtherObjects.Location = new Point(588, 9);
+            ShowOtherObjects.Name = "ShowOtherObjects";
+            ShowOtherObjects.Size = new Size(117, 17);
+            ShowOtherObjects.TabIndex = 0;
+            ShowOtherObjects.Text = "Show other objects";
+            ShowOtherObjects.UseVisualStyleBackColor = true;
+            ShowOtherObjects.CheckedChanged += ShowOtherObjects_CheckedChanged;
             // 
             // ShowCommitsAndTags
             // 
-            this.ShowCommitsAndTags.AutoSize = true;
-            this.ShowCommitsAndTags.Checked = true;
-            this.ShowCommitsAndTags.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ShowCommitsAndTags.Location = new System.Drawing.Point(430, 9);
-            this.ShowCommitsAndTags.Name = "ShowCommitsAndTags";
-            this.ShowCommitsAndTags.Size = new System.Drawing.Size(138, 17);
-            this.ShowCommitsAndTags.TabIndex = 0;
-            this.ShowCommitsAndTags.Text = "Show commits and tags";
-            this.ShowCommitsAndTags.UseVisualStyleBackColor = true;
-            this.ShowCommitsAndTags.CheckedChanged += new System.EventHandler(this.ShowCommitsCheckedChanged);
+            ShowCommitsAndTags.AutoSize = true;
+            ShowCommitsAndTags.Checked = true;
+            ShowCommitsAndTags.CheckState = CheckState.Checked;
+            ShowCommitsAndTags.Location = new Point(430, 9);
+            ShowCommitsAndTags.Name = "ShowCommitsAndTags";
+            ShowCommitsAndTags.Size = new Size(138, 17);
+            ShowCommitsAndTags.TabIndex = 0;
+            ShowCommitsAndTags.Text = "Show commits and tags";
+            ShowCommitsAndTags.UseVisualStyleBackColor = true;
+            ShowCommitsAndTags.CheckedChanged += ShowCommitsCheckedChanged;
             // 
             // NoReflogs
             // 
-            this.NoReflogs.AutoSize = true;
-            this.NoReflogs.Checked = true;
-            this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NoReflogs.Location = new System.Drawing.Point(430, 35);
-            this.NoReflogs.Name = "NoReflogs";
-            this.NoReflogs.Size = new System.Drawing.Size(335, 30);
-            this.NoReflogs.TabIndex = 1;
-            this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
+            NoReflogs.AutoSize = true;
+            NoReflogs.Checked = true;
+            NoReflogs.CheckState = CheckState.Checked;
+            NoReflogs.Location = new Point(430, 35);
+            NoReflogs.Name = "NoReflogs";
+            NoReflogs.Size = new Size(335, 30);
+            NoReflogs.TabIndex = 1;
+            NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
     "reachable.";
-            this.NoReflogs.UseVisualStyleBackColor = true;
-            this.NoReflogs.CheckedChanged += new System.EventHandler(this.NoReflogsCheckedChanged);
+            NoReflogs.UseVisualStyleBackColor = true;
+            NoReflogs.CheckedChanged += NoReflogsCheckedChanged;
             // 
             // FullCheck
             // 
-            this.FullCheck.AutoSize = true;
-            this.FullCheck.Location = new System.Drawing.Point(430, 101);
-            this.FullCheck.Name = "FullCheck";
-            this.FullCheck.Size = new System.Drawing.Size(382, 30);
-            this.FullCheck.TabIndex = 3;
-            this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
+            FullCheck.AutoSize = true;
+            FullCheck.Location = new Point(430, 101);
+            FullCheck.Name = "FullCheck";
+            FullCheck.Size = new Size(382, 30);
+            FullCheck.TabIndex = 3;
+            FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
     " ones found in alternate object pools.\r\n";
-            this.FullCheck.UseVisualStyleBackColor = true;
-            this.FullCheck.CheckedChanged += new System.EventHandler(this.FullCheckCheckedChanged);
+            FullCheck.UseVisualStyleBackColor = true;
+            FullCheck.CheckedChanged += FullCheckCheckedChanged;
             // 
             // Unreachable
             // 
-            this.Unreachable.AutoSize = true;
-            this.Unreachable.Location = new System.Drawing.Point(430, 68);
-            this.Unreachable.Name = "Unreachable";
-            this.Unreachable.Size = new System.Drawing.Size(383, 30);
-            this.Unreachable.TabIndex = 2;
-            this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
+            Unreachable.AutoSize = true;
+            Unreachable.Location = new Point(430, 68);
+            Unreachable.Name = "Unreachable";
+            Unreachable.Size = new Size(383, 30);
+            Unreachable.TabIndex = 2;
+            Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
     "\nnodes.\r\n";
-            this.Unreachable.UseVisualStyleBackColor = true;
-            this.Unreachable.CheckedChanged += new System.EventHandler(this.UnreachableCheckedChanged);
+            Unreachable.UseVisualStyleBackColor = true;
+            Unreachable.CheckedChanged += UnreachableCheckedChanged;
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(0, 134);
-            this.splitContainer1.Name = "splitContainer1";
+            splitContainer1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            splitContainer1.Location = new Point(0, 134);
+            splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.Warnings);
+            splitContainer1.Panel1.Controls.Add(Warnings);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.fileViewer);
-            this.splitContainer1.Size = new System.Drawing.Size(859, 374);
-            this.splitContainer1.SplitterDistance = 700;
-            this.splitContainer1.TabIndex = 17;
+            splitContainer1.Panel2.Controls.Add(fileViewer);
+            splitContainer1.Size = new Size(859, 374);
+            splitContainer1.SplitterDistance = 700;
+            splitContainer1.TabIndex = 17;
             // 
             // Warnings
             // 
-            this.Warnings.AllowUserToAddRows = false;
-            this.Warnings.AllowUserToDeleteRows = false;
-            this.Warnings.AllowUserToOrderColumns = true;
-            this.Warnings.AllowUserToResizeRows = false;
-            this.Warnings.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.Warnings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Warnings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.columnIsLostObjectSelected,
-            this.columnDate,
-            this.columnType,
-            this.columnSubject,
-            this.columnAuthor,
-            this.columnHash,
-            this.columnParent});
-            this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Warnings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.Warnings.Location = new System.Drawing.Point(0, 0);
-            this.Warnings.MultiSelect = false;
-            this.Warnings.Name = "Warnings";
-            this.Warnings.RowHeadersVisible = false;
-            this.Warnings.RowTemplate.ContextMenuStrip = this.mnuLostObjects;
-            this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Warnings.ShowEditingIcon = false;
-            this.Warnings.Size = new System.Drawing.Size(700, 374);
-            this.Warnings.TabIndex = 4;
-            this.Warnings.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDoubleClick);
-            this.Warnings.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDown);
-            this.Warnings.SelectionChanged += new System.EventHandler(this.Warnings_SelectionChanged);
-            this.Warnings.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Warnings_KeyDown);
+            Warnings.AllowUserToAddRows = false;
+            Warnings.AllowUserToDeleteRows = false;
+            Warnings.AllowUserToOrderColumns = true;
+            Warnings.AllowUserToResizeRows = false;
+            Warnings.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            Warnings.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            Warnings.Columns.AddRange(new DataGridViewColumn[] {
+            columnIsLostObjectSelected,
+            columnDate,
+            columnType,
+            columnSubject,
+            columnAuthor,
+            columnHash,
+            columnParent});
+            Warnings.Dock = DockStyle.Fill;
+            Warnings.EditMode = DataGridViewEditMode.EditOnEnter;
+            Warnings.Location = new Point(0, 0);
+            Warnings.MultiSelect = false;
+            Warnings.Name = "Warnings";
+            Warnings.RowHeadersVisible = false;
+            Warnings.RowTemplate.ContextMenuStrip = mnuLostObjects;
+            Warnings.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            Warnings.ShowEditingIcon = false;
+            Warnings.Size = new Size(700, 374);
+            Warnings.TabIndex = 4;
+            Warnings.CellMouseDoubleClick += Warnings_CellMouseDoubleClick;
+            Warnings.CellMouseDown += Warnings_CellMouseDown;
+            Warnings.SelectionChanged += Warnings_SelectionChanged;
+            Warnings.KeyDown += Warnings_KeyDown;
             // 
             // columnIsLostObjectSelected
             // 
-            this.columnIsLostObjectSelected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnIsLostObjectSelected.HeaderText = "";
-            this.columnIsLostObjectSelected.MinimumWidth = 20;
-            this.columnIsLostObjectSelected.Name = "columnIsLostObjectSelected";
-            this.columnIsLostObjectSelected.Width = 20;
+            columnIsLostObjectSelected.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columnIsLostObjectSelected.HeaderText = "";
+            columnIsLostObjectSelected.MinimumWidth = 20;
+            columnIsLostObjectSelected.Name = "columnIsLostObjectSelected";
+            columnIsLostObjectSelected.Width = 20;
             // 
             // columnDate
             // 
-            this.columnDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnDate.HeaderText = "Date";
-            this.columnDate.Name = "columnDate";
-            this.columnDate.ReadOnly = true;
-            this.columnDate.Width = 55;
+            columnDate.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columnDate.HeaderText = "Date";
+            columnDate.Name = "columnDate";
+            columnDate.ReadOnly = true;
+            columnDate.Width = 55;
             // 
             // columnType
             // 
-            this.columnType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnType.HeaderText = "Type";
-            this.columnType.Name = "columnType";
-            this.columnType.ReadOnly = true;
-            this.columnType.Width = 56;
+            columnType.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            columnType.HeaderText = "Type";
+            columnType.Name = "columnType";
+            columnType.ReadOnly = true;
+            columnType.Width = 56;
             // 
             // columnSubject
             // 
-            this.columnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnSubject.DefaultCellStyle = dataGridViewCellStyle1;
-            this.columnSubject.HeaderText = "Subject";
-            this.columnSubject.Name = "columnSubject";
-            this.columnSubject.ReadOnly = true;
+            columnSubject.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            columnSubject.DefaultCellStyle = dataGridViewCellStyle1;
+            columnSubject.HeaderText = "Subject";
+            columnSubject.Name = "columnSubject";
+            columnSubject.ReadOnly = true;
             // 
             // columnAuthor
             // 
-            this.columnAuthor.HeaderText = "Author";
-            this.columnAuthor.Name = "columnAuthor";
-            this.columnAuthor.ReadOnly = true;
+            columnAuthor.HeaderText = "Author";
+            columnAuthor.Name = "columnAuthor";
+            columnAuthor.ReadOnly = true;
             // 
             // columnHash
             // 
-            this.columnHash.HeaderText = "Hash";
-            this.columnHash.Name = "columnHash";
-            this.columnHash.ReadOnly = true;
+            columnHash.HeaderText = "Hash";
+            columnHash.Name = "columnHash";
+            columnHash.ReadOnly = true;
             // 
             // columnParent
             // 
-            this.columnParent.HeaderText = "Parent(s) hashs";
-            this.columnParent.Name = "columnParent";
-            this.columnParent.ReadOnly = true;
+            columnParent.HeaderText = "Parent(s) hashs";
+            columnParent.Name = "columnParent";
+            columnParent.ReadOnly = true;
             // 
             // mnuLostObjects
             // 
-            this.mnuLostObjects.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuLostObjectView,
-            this.mnuLostObjectsCreateTag,
-            this.mnuLostObjectsCreateBranch,
-            this.copyHashToolStripMenuItem,
-            this.copyParentHashToolStripMenuItem,
-            this.saveAsToolStripMenuItem});
-            this.mnuLostObjects.Name = "mnuLostObjects";
-            this.mnuLostObjects.Size = new System.Drawing.Size(190, 136);
-            this.mnuLostObjects.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLostObjects_Opening);
+            mnuLostObjects.Items.AddRange(new ToolStripItem[] {
+            mnuLostObjectView,
+            mnuLostObjectsCreateTag,
+            mnuLostObjectsCreateBranch,
+            copyHashToolStripMenuItem,
+            copyParentHashToolStripMenuItem,
+            saveAsToolStripMenuItem});
+            mnuLostObjects.Name = "mnuLostObjects";
+            mnuLostObjects.Size = new Size(190, 136);
+            mnuLostObjects.Opening += mnuLostObjects_Opening;
             // 
             // mnuLostObjectView
             // 
-            this.mnuLostObjectView.Image = global::GitUI.Properties.Images.ViewFile;
-            this.mnuLostObjectView.Name = "mnuLostObjectView";
-            this.mnuLostObjectView.Size = new System.Drawing.Size(189, 22);
-            this.mnuLostObjectView.Text = "View";
-            this.mnuLostObjectView.Click += new System.EventHandler(this.mnuLostObjectView_Click);
+            mnuLostObjectView.Image = Properties.Images.ViewFile;
+            mnuLostObjectView.Name = "mnuLostObjectView";
+            mnuLostObjectView.Size = new Size(189, 22);
+            mnuLostObjectView.Text = "View";
+            mnuLostObjectView.Click += mnuLostObjectView_Click;
             // 
             // mnuLostObjectsCreateTag
             // 
-            this.mnuLostObjectsCreateTag.Image = global::GitUI.Properties.Images.TagCreate;
-            this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
-            this.mnuLostObjectsCreateTag.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(189, 22);
-            this.mnuLostObjectsCreateTag.Text = "Create tag";
-            this.mnuLostObjectsCreateTag.Click += new System.EventHandler(this.mnuLostObjectsCreateTag_Click);
+            mnuLostObjectsCreateTag.Image = Properties.Images.TagCreate;
+            mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
+            mnuLostObjectsCreateTag.ShortcutKeys = ((Keys)((Keys.Control | Keys.T)));
+            mnuLostObjectsCreateTag.Size = new Size(189, 22);
+            mnuLostObjectsCreateTag.Text = "Create tag";
+            mnuLostObjectsCreateTag.Click += mnuLostObjectsCreateTag_Click;
             // 
             // mnuLostObjectsCreateBranch
             // 
-            this.mnuLostObjectsCreateBranch.Image = global::GitUI.Properties.Images.BranchCreate;
-            this.mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
-            this.mnuLostObjectsCreateBranch.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(189, 22);
-            this.mnuLostObjectsCreateBranch.Text = "Create branch";
-            this.mnuLostObjectsCreateBranch.Click += new System.EventHandler(this.mnuLostObjectsCreateBranch_Click);
+            mnuLostObjectsCreateBranch.Image = Properties.Images.BranchCreate;
+            mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
+            mnuLostObjectsCreateBranch.ShortcutKeys = ((Keys)((Keys.Control | Keys.B)));
+            mnuLostObjectsCreateBranch.Size = new Size(189, 22);
+            mnuLostObjectsCreateBranch.Text = "Create branch";
+            mnuLostObjectsCreateBranch.Click += mnuLostObjectsCreateBranch_Click;
             // 
             // copyHashToolStripMenuItem
             // 
-            this.copyHashToolStripMenuItem.Image = global::GitUI.Properties.Images.CopyToClipboard;
-            this.copyHashToolStripMenuItem.Name = "copyHashToolStripMenuItem";
-            this.copyHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.copyHashToolStripMenuItem.Text = "Copy object hash";
-            this.copyHashToolStripMenuItem.Click += new System.EventHandler(this.copyHashToolStripMenuItem_Click);
+            copyHashToolStripMenuItem.Image = Properties.Images.CopyToClipboard;
+            copyHashToolStripMenuItem.Name = "copyHashToolStripMenuItem";
+            copyHashToolStripMenuItem.Size = new Size(189, 22);
+            copyHashToolStripMenuItem.Text = "Copy object hash";
+            copyHashToolStripMenuItem.Click += copyHashToolStripMenuItem_Click;
             // 
             // copyParentHashToolStripMenuItem
             // 
-            this.copyParentHashToolStripMenuItem.Image = global::GitUI.Properties.Images.CopyToClipboard;
-            this.copyParentHashToolStripMenuItem.Name = "copyParentHashToolStripMenuItem";
-            this.copyParentHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.copyParentHashToolStripMenuItem.Text = "Copy parent hash";
-            this.copyParentHashToolStripMenuItem.Click += new System.EventHandler(this.copyParentHashToolStripMenuItem_Click);
+            copyParentHashToolStripMenuItem.Image = Properties.Images.CopyToClipboard;
+            copyParentHashToolStripMenuItem.Name = "copyParentHashToolStripMenuItem";
+            copyParentHashToolStripMenuItem.Size = new Size(189, 22);
+            copyParentHashToolStripMenuItem.Text = "Copy parent hash";
+            copyParentHashToolStripMenuItem.Click += copyParentHashToolStripMenuItem_Click;
             // 
             // saveAsToolStripMenuItem
             // 
-            this.saveAsToolStripMenuItem.Image = global::GitUI.Properties.Images.SaveAs;
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.saveAsToolStripMenuItem.Text = "Save as...";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            saveAsToolStripMenuItem.Image = Properties.Images.SaveAs;
+            saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            saveAsToolStripMenuItem.Size = new Size(189, 22);
+            saveAsToolStripMenuItem.Text = "Save as...";
+            saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
             // 
             // fileViewer
             // 
-            this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fileViewer.Location = new System.Drawing.Point(0, 0);
-            this.fileViewer.Margin = new System.Windows.Forms.Padding(0);
-            this.fileViewer.Name = "fileViewer";
-            this.fileViewer.Size = new System.Drawing.Size(155, 374);
-            this.fileViewer.TabIndex = 0;
+            fileViewer.Dock = DockStyle.Fill;
+            fileViewer.Location = new Point(0, 0);
+            fileViewer.Margin = new Padding(0);
+            fileViewer.Name = "fileViewer";
+            fileViewer.Size = new Size(155, 374);
+            fileViewer.TabIndex = 0;
             // 
             // FormVerify
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.CancelButton = this.btnCloseDialog;
-            this.ClientSize = new System.Drawing.Size(859, 575);
-            this.Controls.Add(panel2);
-            this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(panel1);
-            this.MinimizeBox = false;
-            this.Name = "FormVerify";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Verify database";
-            this.Shown += new System.EventHandler(this.FormVerifyShown);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            CancelButton = btnCloseDialog;
+            ClientSize = new Size(859, 575);
+            Controls.Add(panel2);
+            Controls.Add(splitContainer1);
+            Controls.Add(panel1);
+            MinimizeBox = false;
+            Name = "FormVerify";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Verify database";
+            Shown += FormVerifyShown;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Warnings)).EndInit();
-            this.mnuLostObjects.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).EndInit();
+            splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(Warnings)).EndInit();
+            mnuLostObjects.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip mnuLostObjects;
-        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateTag;
-        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectView;
-        private System.Windows.Forms.ToolStripMenuItem mnuLostObjectsCreateBranch;
-        private System.Windows.Forms.Button btnCloseDialog;
-        private System.Windows.Forms.Button btnRestoreSelectedObjects;
-        private System.Windows.Forms.Button DeleteAllLostAndFoundTags;
-        private System.Windows.Forms.Button Remove;
-        private System.Windows.Forms.Button SaveObjects;
-        private System.Windows.Forms.DataGridView Warnings;
-        private System.Windows.Forms.CheckBox ShowCommitsAndTags;
-        private System.Windows.Forms.CheckBox NoReflogs;
-        private System.Windows.Forms.CheckBox FullCheck;
-        private System.Windows.Forms.CheckBox Unreachable;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ToolStripMenuItem copyHashToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyParentHashToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn columnIsLostObjectSelected;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnParent;
-        private System.Windows.Forms.CheckBox ShowOtherObjects;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private ContextMenuStrip mnuLostObjects;
+        private ToolStripMenuItem mnuLostObjectsCreateTag;
+        private ToolStripMenuItem mnuLostObjectView;
+        private ToolStripMenuItem mnuLostObjectsCreateBranch;
+        private Button btnCloseDialog;
+        private Button btnRestoreSelectedObjects;
+        private Button DeleteAllLostAndFoundTags;
+        private Button Remove;
+        private Button SaveObjects;
+        private DataGridView Warnings;
+        private CheckBox ShowCommitsAndTags;
+        private CheckBox NoReflogs;
+        private CheckBox FullCheck;
+        private CheckBox Unreachable;
+        private Label label2;
+        private Label label1;
+        private ToolStripMenuItem copyHashToolStripMenuItem;
+        private ToolStripMenuItem copyParentHashToolStripMenuItem;
+        private DataGridViewCheckBoxColumn columnIsLostObjectSelected;
+        private DataGridViewTextBoxColumn columnDate;
+        private DataGridViewTextBoxColumn columnType;
+        private DataGridViewTextBoxColumn columnSubject;
+        private DataGridViewTextBoxColumn columnAuthor;
+        private DataGridViewTextBoxColumn columnHash;
+        private DataGridViewTextBoxColumn columnParent;
+        private CheckBox ShowOtherObjects;
+        private ToolStripMenuItem saveAsToolStripMenuItem;
+        private SplitContainer splitContainer1;
         private Editor.FileViewer fileViewer;
     }
 }

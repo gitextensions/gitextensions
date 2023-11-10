@@ -28,70 +28,70 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.pictureBoxHelpIcon = new System.Windows.Forms.PictureBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelpIcon)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            linkLabelHelp = new LinkLabel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            pictureBoxHelpIcon = new PictureBox();
+            toolTip1 = new ToolTip(components);
+            flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(pictureBoxHelpIcon)).BeginInit();
+            SuspendLayout();
             // 
             // linkLabelHelp
             // 
-            this.linkLabelHelp.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.linkLabelHelp.AutoSize = true;
-            this.linkLabelHelp.Location = new System.Drawing.Point(22, 3);
-            this.linkLabelHelp.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.linkLabelHelp.Name = "linkLabelHelp";
-            this.linkLabelHelp.Size = new System.Drawing.Size(32, 15);
-            this.linkLabelHelp.TabIndex = 0;
-            this.linkLabelHelp.TabStop = true;
-            this.linkLabelHelp.Text = "Help";
-            this.linkLabelHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
+            linkLabelHelp.Anchor = AnchorStyles.Left;
+            linkLabelHelp.AutoSize = true;
+            linkLabelHelp.Location = new Point(22, 3);
+            linkLabelHelp.Margin = new Padding(0, 0, 3, 0);
+            linkLabelHelp.Name = "linkLabelHelp";
+            linkLabelHelp.Size = new Size(32, 15);
+            linkLabelHelp.TabIndex = 0;
+            linkLabelHelp.TabStop = true;
+            linkLabelHelp.Text = "Help";
+            linkLabelHelp.LinkClicked += linkLabelHelp_LinkClicked;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.pictureBoxHelpIcon);
-            this.flowLayoutPanel1.Controls.Add(this.linkLabelHelp);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(70, 20);
-            this.flowLayoutPanel1.TabIndex = 2;
+            flowLayoutPanel1.Controls.Add(pictureBoxHelpIcon);
+            flowLayoutPanel1.Controls.Add(linkLabelHelp);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(70, 20);
+            flowLayoutPanel1.TabIndex = 2;
             // 
             // pictureBoxHelpIcon
             // 
-            this.pictureBoxHelpIcon.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.pictureBoxHelpIcon.Image = global::GitUI.Properties.Images.GotoManual;
-            this.pictureBoxHelpIcon.Location = new System.Drawing.Point(3, 3);
-            this.pictureBoxHelpIcon.Name = "pictureBoxHelpIcon";
-            this.pictureBoxHelpIcon.Size = new System.Drawing.Size(16, 16);
-            this.pictureBoxHelpIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBoxHelpIcon.TabIndex = 2;
-            this.pictureBoxHelpIcon.TabStop = false;
+            pictureBoxHelpIcon.Anchor = AnchorStyles.Left;
+            pictureBoxHelpIcon.Image = Properties.Images.GotoManual;
+            pictureBoxHelpIcon.Location = new Point(3, 3);
+            pictureBoxHelpIcon.Name = "pictureBoxHelpIcon";
+            pictureBoxHelpIcon.Size = new Size(16, 16);
+            pictureBoxHelpIcon.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBoxHelpIcon.TabIndex = 2;
+            pictureBoxHelpIcon.TabStop = false;
             // 
             // GotoUserManualControl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.AutoSize = true;
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.MinimumSize = new System.Drawing.Size(70, 20);
-            this.Name = "GotoUserManualControl";
-            this.Size = new System.Drawing.Size(70, 20);
-            this.Load += new System.EventHandler(this.GotoUserManualControl_Load);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelpIcon)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            AutoSize = true;
+            Controls.Add(flowLayoutPanel1);
+            MinimumSize = new Size(70, 20);
+            Name = "GotoUserManualControl";
+            Size = new Size(70, 20);
+            Load += GotoUserManualControl_Load;
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(pictureBoxHelpIcon)).EndInit();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.LinkLabel linkLabelHelp;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.PictureBox pictureBoxHelpIcon;
+        private LinkLabel linkLabelHelp;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private ToolTip toolTip1;
+        private PictureBox pictureBoxHelpIcon;
     }
 }

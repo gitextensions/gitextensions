@@ -28,222 +28,222 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btStageCurrent = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tbBase = new System.Windows.Forms.TextBox();
-            this.tbLocal = new System.Windows.Forms.TextBox();
-            this.tbRemote = new System.Windows.Forms.TextBox();
-            this.tbCurrent = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btOpenSubmodule = new System.Windows.Forms.Button();
-            this.btRefresh = new System.Windows.Forms.Button();
-            this.lbSubmodule = new System.Windows.Forms.Label();
-            this.btCheckoutBranch = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            btStageCurrent = new Button();
+            label1 = new Label();
+            label2 = new Label();
+            label3 = new Label();
+            label4 = new Label();
+            tbBase = new TextBox();
+            tbLocal = new TextBox();
+            tbRemote = new TextBox();
+            tbCurrent = new TextBox();
+            label5 = new Label();
+            btOpenSubmodule = new Button();
+            btRefresh = new Button();
+            lbSubmodule = new Label();
+            btCheckoutBranch = new Button();
+            SuspendLayout();
             // 
             // btStageCurrent
             // 
-            this.btStageCurrent.Location = new System.Drawing.Point(392, 212);
-            this.btStageCurrent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btStageCurrent.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btStageCurrent.Name = "btStageCurrent";
-            this.btStageCurrent.Size = new System.Drawing.Size(190, 31);
-            this.btStageCurrent.TabIndex = 16;
-            this.btStageCurrent.Text = "Stage Current";
-            this.btStageCurrent.UseVisualStyleBackColor = true;
-            this.btStageCurrent.Click += new System.EventHandler(this.btStageCurrent_Click);
+            btStageCurrent.Location = new Point(392, 212);
+            btStageCurrent.Margin = new Padding(4, 4, 4, 4);
+            btStageCurrent.ForeColor = SystemColors.ControlText;
+            btStageCurrent.Name = "btStageCurrent";
+            btStageCurrent.Size = new Size(190, 31);
+            btStageCurrent.TabIndex = 16;
+            btStageCurrent.Text = "Stage Current";
+            btStageCurrent.UseVisualStyleBackColor = true;
+            btStageCurrent.Click += btStageCurrent_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(15, 52);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 20);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Base:";
+            label1.AutoSize = true;
+            label1.ForeColor = SystemColors.ControlText;
+            label1.Location = new Point(15, 52);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(43, 20);
+            label1.TabIndex = 1;
+            label1.Text = "Base:";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(46, 11);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(252, 20);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "There is a conflict on the submodule:";
+            label2.AutoSize = true;
+            label2.ForeColor = SystemColors.ControlText;
+            label2.Location = new Point(46, 11);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(252, 20);
+            label2.TabIndex = 0;
+            label2.Text = "There is a conflict on the submodule:";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(15, 86);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 20);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Local:";
+            label3.AutoSize = true;
+            label3.ForeColor = SystemColors.ControlText;
+            label3.Location = new Point(15, 86);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(47, 20);
+            label3.TabIndex = 5;
+            label3.Text = "Local:";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label4.Location = new System.Drawing.Point(15, 122);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 20);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Remote:";
+            label4.AutoSize = true;
+            label4.ForeColor = SystemColors.ControlText;
+            label4.Location = new Point(15, 122);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(64, 20);
+            label4.TabIndex = 6;
+            label4.Text = "Remote:";
             // 
             // tbBase
             // 
-            this.tbBase.Location = new System.Drawing.Point(106, 49);
-            this.tbBase.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tbBase.Name = "tbBase";
-            this.tbBase.ReadOnly = true;
-            this.tbBase.Size = new System.Drawing.Size(438, 27);
-            this.tbBase.TabIndex = 7;
+            tbBase.Location = new Point(106, 49);
+            tbBase.Margin = new Padding(4, 4, 4, 4);
+            tbBase.Name = "tbBase";
+            tbBase.ReadOnly = true;
+            tbBase.Size = new Size(438, 27);
+            tbBase.TabIndex = 7;
             // 
             // tbLocal
             // 
-            this.tbLocal.Location = new System.Drawing.Point(106, 82);
-            this.tbLocal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tbLocal.Name = "tbLocal";
-            this.tbLocal.ReadOnly = true;
-            this.tbLocal.Size = new System.Drawing.Size(438, 27);
-            this.tbLocal.TabIndex = 8;
+            tbLocal.Location = new Point(106, 82);
+            tbLocal.Margin = new Padding(4, 4, 4, 4);
+            tbLocal.Name = "tbLocal";
+            tbLocal.ReadOnly = true;
+            tbLocal.Size = new Size(438, 27);
+            tbLocal.TabIndex = 8;
             // 
             // tbRemote
             // 
-            this.tbRemote.Location = new System.Drawing.Point(106, 119);
-            this.tbRemote.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tbRemote.Name = "tbRemote";
-            this.tbRemote.ReadOnly = true;
-            this.tbRemote.Size = new System.Drawing.Size(438, 27);
-            this.tbRemote.TabIndex = 9;
+            tbRemote.Location = new Point(106, 119);
+            tbRemote.Margin = new Padding(4, 4, 4, 4);
+            tbRemote.Name = "tbRemote";
+            tbRemote.ReadOnly = true;
+            tbRemote.Size = new Size(438, 27);
+            tbRemote.TabIndex = 9;
             // 
             // tbCurrent
             // 
-            this.tbCurrent.Location = new System.Drawing.Point(106, 155);
-            this.tbCurrent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tbCurrent.Name = "tbCurrent";
-            this.tbCurrent.ReadOnly = true;
-            this.tbCurrent.Size = new System.Drawing.Size(438, 27);
-            this.tbCurrent.TabIndex = 10;
+            tbCurrent.Location = new Point(106, 155);
+            tbCurrent.Margin = new Padding(4, 4, 4, 4);
+            tbCurrent.Name = "tbCurrent";
+            tbCurrent.ReadOnly = true;
+            tbCurrent.Size = new Size(438, 27);
+            tbCurrent.TabIndex = 10;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label5.Location = new System.Drawing.Point(15, 159);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(60, 20);
-            this.label5.TabIndex = 11;
-            this.label5.Text = "Current:";
+            label5.AutoSize = true;
+            label5.ForeColor = SystemColors.ControlText;
+            label5.Location = new Point(15, 159);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(60, 20);
+            label5.TabIndex = 11;
+            label5.Text = "Current:";
             // 
             // btOpenSubmodule
             // 
-            this.btOpenSubmodule.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btOpenSubmodule.Image = global::GitUI.Properties.Images.FolderSubmodule;
-            this.btOpenSubmodule.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btOpenSubmodule.Location = new System.Drawing.Point(19, 212);
-            this.btOpenSubmodule.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btOpenSubmodule.Name = "btOpenSubmodule";
-            this.btOpenSubmodule.Size = new System.Drawing.Size(176, 31);
-            this.btOpenSubmodule.TabIndex = 12;
-            this.btOpenSubmodule.Text = "Open submodule";
-            this.btOpenSubmodule.UseVisualStyleBackColor = true;
-            this.btOpenSubmodule.Click += new System.EventHandler(this.btOpenSubmodule_Click);
+            btOpenSubmodule.ForeColor = SystemColors.ControlText;
+            btOpenSubmodule.Image = Properties.Images.FolderSubmodule;
+            btOpenSubmodule.ImageAlign = ContentAlignment.MiddleLeft;
+            btOpenSubmodule.Location = new Point(19, 212);
+            btOpenSubmodule.Margin = new Padding(4, 4, 4, 4);
+            btOpenSubmodule.Name = "btOpenSubmodule";
+            btOpenSubmodule.Size = new Size(176, 31);
+            btOpenSubmodule.TabIndex = 12;
+            btOpenSubmodule.Text = "Open submodule";
+            btOpenSubmodule.UseVisualStyleBackColor = true;
+            btOpenSubmodule.Click += btOpenSubmodule_Click;
             // 
             // btRefresh
             // 
-            this.btRefresh.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btRefresh.Image = global::GitUI.Properties.Images.ReloadRevisions;
-            this.btRefresh.Location = new System.Drawing.Point(552, 152);
-            this.btRefresh.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btRefresh.Name = "btRefresh";
-            this.btRefresh.Size = new System.Drawing.Size(34, 31);
-            this.btRefresh.TabIndex = 13;
-            this.btRefresh.UseVisualStyleBackColor = true;
-            this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
+            btRefresh.ForeColor = SystemColors.ControlText;
+            btRefresh.Image = Properties.Images.ReloadRevisions;
+            btRefresh.Location = new Point(552, 152);
+            btRefresh.Margin = new Padding(4, 4, 4, 4);
+            btRefresh.Name = "btRefresh";
+            btRefresh.Size = new Size(34, 31);
+            btRefresh.TabIndex = 13;
+            btRefresh.UseVisualStyleBackColor = true;
+            btRefresh.Click += btRefresh_Click;
             // 
             // lbSubmodule
             // 
-            this.lbSubmodule.AutoSize = true;
-            this.lbSubmodule.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lbSubmodule.Location = new System.Drawing.Point(308, 11);
-            this.lbSubmodule.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lbSubmodule.Name = "lbSubmodule";
-            this.lbSubmodule.Size = new System.Drawing.Size(85, 20);
-            this.lbSubmodule.TabIndex = 14;
-            this.lbSubmodule.Text = "Submodule";
+            lbSubmodule.AutoSize = true;
+            lbSubmodule.ForeColor = SystemColors.ControlText;
+            lbSubmodule.Location = new Point(308, 11);
+            lbSubmodule.Margin = new Padding(4, 0, 4, 0);
+            lbSubmodule.Name = "lbSubmodule";
+            lbSubmodule.Size = new Size(85, 20);
+            lbSubmodule.TabIndex = 14;
+            lbSubmodule.Text = "Submodule";
             // 
             // btCheckoutBranch
             // 
-            this.btCheckoutBranch.Location = new System.Drawing.Point(203, 212);
-            this.btCheckoutBranch.Margin = new System.Windows.Forms.Padding(4);
-            this.btCheckoutBranch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btCheckoutBranch.Name = "btCheckoutBranch";
-            this.btCheckoutBranch.Size = new System.Drawing.Size(181, 31);
-            this.btCheckoutBranch.TabIndex = 17;
-            this.btCheckoutBranch.Text = "Checkout Branch";
-            this.btCheckoutBranch.UseVisualStyleBackColor = true;
-            this.btCheckoutBranch.Click += new System.EventHandler(this.btCheckoutBranch_Click);
+            btCheckoutBranch.Location = new Point(203, 212);
+            btCheckoutBranch.Margin = new Padding(4);
+            btCheckoutBranch.ForeColor = SystemColors.ControlText;
+            btCheckoutBranch.Name = "btCheckoutBranch";
+            btCheckoutBranch.Size = new Size(181, 31);
+            btCheckoutBranch.TabIndex = 17;
+            btCheckoutBranch.Text = "Checkout Branch";
+            btCheckoutBranch.UseVisualStyleBackColor = true;
+            btCheckoutBranch.Click += btCheckoutBranch_Click;
             // 
             // FormMergeSubmodule
             // 
-            this.AcceptButton = this.btOpenSubmodule;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(595, 254);
-            this.Controls.Add(this.btCheckoutBranch);
-            this.Controls.Add(this.lbSubmodule);
-            this.Controls.Add(this.btRefresh);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.tbCurrent);
-            this.Controls.Add(this.tbRemote);
-            this.Controls.Add(this.tbLocal);
-            this.Controls.Add(this.tbBase);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.btStageCurrent);
-            this.Controls.Add(this.btOpenSubmodule);
-            this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FormMergeSubmodule";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Submodule conflict";
-            this.Load += new System.EventHandler(this.FormMergeSubmodule_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = btOpenSubmodule;
+            AutoScaleDimensions = new SizeF(120F, 120F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(595, 254);
+            Controls.Add(btCheckoutBranch);
+            Controls.Add(lbSubmodule);
+            Controls.Add(btRefresh);
+            Controls.Add(label5);
+            Controls.Add(tbCurrent);
+            Controls.Add(tbRemote);
+            Controls.Add(tbLocal);
+            Controls.Add(tbBase);
+            Controls.Add(label4);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(btStageCurrent);
+            Controls.Add(btOpenSubmodule);
+            Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Margin = new Padding(4, 4, 4, 4);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FormMergeSubmodule";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Submodule conflict";
+            Load += FormMergeSubmodule_Load;
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button btStageCurrent;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox tbBase;
-        private System.Windows.Forms.TextBox tbLocal;
-        private System.Windows.Forms.TextBox tbRemote;
-        private System.Windows.Forms.TextBox tbCurrent;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button btOpenSubmodule;
-        private System.Windows.Forms.Button btRefresh;
-        private System.Windows.Forms.Label lbSubmodule;
-        private System.Windows.Forms.Button btCheckoutBranch;
+        private Button btStageCurrent;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private TextBox tbBase;
+        private TextBox tbLocal;
+        private TextBox tbRemote;
+        private TextBox tbCurrent;
+        private Label label5;
+        private Button btOpenSubmodule;
+        private Button btRefresh;
+        private Label lbSubmodule;
+        private Button btCheckoutBranch;
     }
 }
