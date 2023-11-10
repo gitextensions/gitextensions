@@ -410,31 +410,31 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tlpnlMain;
-        private System.Windows.Forms.GroupBox gbConfirmations;
-        private System.Windows.Forms.TableLayoutPanel tlpnlConfirmations;
-        private System.Windows.Forms.CheckBox chkAmend;
-        private System.Windows.Forms.CheckBox chkAutoPopStashAfterPull;
-        private System.Windows.Forms.CheckBox chkPushNewBranch;
-        private System.Windows.Forms.CheckBox chkAddTrackingRef;
-        private System.Windows.Forms.CheckBox chkAutoPopStashAfterCheckout;
-        private System.Windows.Forms.CheckBox chkConfirmStashDrop;
-        private System.Windows.Forms.CheckBox chkUpdateModules;
-        private System.Windows.Forms.CheckBox chkCommitIfNoBranch;
-        private System.Windows.Forms.CheckBox chkCommitAfterConflictsResolved;
-        private System.Windows.Forms.CheckBox chkResolveConflicts;
-        private System.Windows.Forms.CheckBox chkSecondAbortConfirmation;
-        private System.Windows.Forms.CheckBox chkRebaseOnTopOfSelectedCommit;
-        private System.Windows.Forms.CheckBox chkUndoLastCommitConfirmation;
-        private System.Windows.Forms.CheckBox chkFetchAndPruneAllConfirmation;
-        private System.Windows.Forms.CheckBox chkSwitchWorktree;
-        private System.Windows.Forms.Label lblGroupCommits;
-        private System.Windows.Forms.Label lblGroupBranches;
-        private System.Windows.Forms.Label lblGroupStashes;
-        private System.Windows.Forms.Label lblGroupConflictResolution;
-        private System.Windows.Forms.Label lblGroupSubmodules;
-        private System.Windows.Forms.Label lblGroupWorktrees;
-        private System.Windows.Forms.CheckBox chkBranchDeleteUnmerged;
+        private TableLayoutPanel tlpnlMain;
+        private GroupBox gbConfirmations;
+        private TableLayoutPanel tlpnlConfirmations;
+        private CheckBox chkAmend;
+        private CheckBox chkAutoPopStashAfterPull;
+        private CheckBox chkPushNewBranch;
+        private CheckBox chkAddTrackingRef;
+        private CheckBox chkAutoPopStashAfterCheckout;
+        private CheckBox chkConfirmStashDrop;
+        private CheckBox chkUpdateModules;
+        private CheckBox chkCommitIfNoBranch;
+        private CheckBox chkCommitAfterConflictsResolved;
+        private CheckBox chkResolveConflicts;
+        private CheckBox chkSecondAbortConfirmation;
+        private CheckBox chkRebaseOnTopOfSelectedCommit;
+        private CheckBox chkUndoLastCommitConfirmation;
+        private CheckBox chkFetchAndPruneAllConfirmation;
+        private CheckBox chkSwitchWorktree;
+        private Label lblGroupCommits;
+        private Label lblGroupBranches;
+        private Label lblGroupStashes;
+        private Label lblGroupConflictResolution;
+        private Label lblGroupSubmodules;
+        private Label lblGroupWorktrees;
+        private CheckBox chkBranchDeleteUnmerged;
         private CheckBox chkBranchCheckoutConfirmation;
     }
 }

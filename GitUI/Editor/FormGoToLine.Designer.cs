@@ -18,36 +18,36 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGoToLine));
-            this.lineLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_LineNumberUpDown = new System.Windows.Forms.NumericUpDown();
-            this.cancelBtn = new System.Windows.Forms.Button();
-            this.okBtn = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_LineNumberUpDown)).BeginInit();
-            this.SuspendLayout();
+            lineLabel = new Label();
+            _NO_TRANSLATE_LineNumberUpDown = new NumericUpDown();
+            cancelBtn = new Button();
+            okBtn = new Button();
+            ((System.ComponentModel.ISupportInitialize)(_NO_TRANSLATE_LineNumberUpDown)).BeginInit();
+            SuspendLayout();
             // 
             // lineLabel
             // 
-            this.lineLabel.AutoEllipsis = true;
-            this.lineLabel.AutoSize = true;
-            this.lineLabel.Location = new System.Drawing.Point(12, 9);
-            this.lineLabel.Name = "lineLabel";
-            this.lineLabel.Size = new System.Drawing.Size(74, 15);
-            this.lineLabel.TabIndex = 5;
-            this.lineLabel.Text = "Line number";
+            lineLabel.AutoEllipsis = true;
+            lineLabel.AutoSize = true;
+            lineLabel.Location = new Point(12, 9);
+            lineLabel.Name = "lineLabel";
+            lineLabel.Size = new Size(74, 15);
+            lineLabel.TabIndex = 5;
+            lineLabel.Text = "Line number";
             // 
             // _NO_TRANSLATE_LineNumberUpDown
             // 
-            this._NO_TRANSLATE_LineNumberUpDown.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this._NO_TRANSLATE_LineNumberUpDown.Location = new System.Drawing.Point(15, 25);
-            this._NO_TRANSLATE_LineNumberUpDown.Minimum = new decimal(new int[] {
+            _NO_TRANSLATE_LineNumberUpDown.ImeMode = ImeMode.Off;
+            _NO_TRANSLATE_LineNumberUpDown.Location = new Point(15, 25);
+            _NO_TRANSLATE_LineNumberUpDown.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this._NO_TRANSLATE_LineNumberUpDown.Name = "_NO_TRANSLATE_LineNumberUpDown";
-            this._NO_TRANSLATE_LineNumberUpDown.Size = new System.Drawing.Size(210, 23);
-            this._NO_TRANSLATE_LineNumberUpDown.TabIndex = 0;
-            this._NO_TRANSLATE_LineNumberUpDown.Value = new decimal(new int[] {
+            _NO_TRANSLATE_LineNumberUpDown.Name = "_NO_TRANSLATE_LineNumberUpDown";
+            _NO_TRANSLATE_LineNumberUpDown.Size = new Size(210, 23);
+            _NO_TRANSLATE_LineNumberUpDown.TabIndex = 0;
+            _NO_TRANSLATE_LineNumberUpDown.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -55,49 +55,49 @@
             // 
             // cancelBtn
             // 
-            this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelBtn.Location = new System.Drawing.Point(121, 56);
-            this.cancelBtn.Name = "cancelBtn";
-            this.cancelBtn.Size = new System.Drawing.Size(75, 23);
-            this.cancelBtn.TabIndex = 6;
-            this.cancelBtn.Text = "Cancel";
-            this.cancelBtn.UseVisualStyleBackColor = true;
+            cancelBtn.DialogResult = DialogResult.Cancel;
+            cancelBtn.Location = new Point(121, 56);
+            cancelBtn.Name = "cancelBtn";
+            cancelBtn.Size = new Size(75, 23);
+            cancelBtn.TabIndex = 6;
+            cancelBtn.Text = "Cancel";
+            cancelBtn.UseVisualStyleBackColor = true;
             // 
             // okBtn
             // 
-            this.okBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okBtn.Location = new System.Drawing.Point(40, 56);
-            this.okBtn.Name = "okBtn";
-            this.okBtn.Size = new System.Drawing.Size(75, 23);
-            this.okBtn.TabIndex = 7;
-            this.okBtn.Text = "OK";
-            this.okBtn.UseVisualStyleBackColor = true;
+            okBtn.DialogResult = DialogResult.OK;
+            okBtn.Location = new Point(40, 56);
+            okBtn.Name = "okBtn";
+            okBtn.Size = new Size(75, 23);
+            okBtn.TabIndex = 7;
+            okBtn.Text = "OK";
+            okBtn.UseVisualStyleBackColor = true;
             // 
             // FormGoToLine
             // 
-            this.AcceptButton = this.okBtn;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(237, 91);
-            this.Controls.Add(this.okBtn);
-            this.Controls.Add(this.cancelBtn);
-            this.Controls.Add(this._NO_TRANSLATE_LineNumberUpDown);
-            this.Controls.Add(this.lineLabel);
-            this.Name = "FormGoToLine";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Go to line";
-            this.Load += new System.EventHandler(this.FormGoToLine_Load);
-            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_LineNumberUpDown)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = okBtn;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(237, 91);
+            Controls.Add(okBtn);
+            Controls.Add(cancelBtn);
+            Controls.Add(_NO_TRANSLATE_LineNumberUpDown);
+            Controls.Add(lineLabel);
+            Name = "FormGoToLine";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Go to line";
+            Load += FormGoToLine_Load;
+            ((System.ComponentModel.ISupportInitialize)(_NO_TRANSLATE_LineNumberUpDown)).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lineLabel;
-        private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_LineNumberUpDown;
-        private System.Windows.Forms.Button cancelBtn;
-        private System.Windows.Forms.Button okBtn;
+        private Label lineLabel;
+        private NumericUpDown _NO_TRANSLATE_LineNumberUpDown;
+        private Button cancelBtn;
+        private Button okBtn;
     }
 }

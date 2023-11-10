@@ -12,283 +12,283 @@ namespace GitUI.UserControls
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-            this.tsmiBranchLocal = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiBranchRemote = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiBranchTag = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCommitFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCommitterFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiAuthorFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiDiffContainsFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.tsbtnAdvancedFilter = new System.Windows.Forms.ToolStripSplitButton();
-            this.tsmiResetPathFilters = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiResetAllFilters = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparatorAdvancedFilter = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmiAdvancedFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.tssbtnShowBranches = new System.Windows.Forms.ToolStripSplitButton();
-            this.tsmiShowBranchesAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiShowBranchesCurrent = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiShowBranchesFiltered = new System.Windows.Forms.ToolStripMenuItem();
-            this.tscboBranchFilter = new System.Windows.Forms.ToolStripComboBox();
-            this.tsddbtnBranchFilter = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
-            this.tslblRevisionFilter = new System.Windows.Forms.ToolStripLabel();
-            this.tstxtRevisionFilter = new System.Windows.Forms.ToolStripComboBox();
-            this.tsddbtnRevisionFilter = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsbShowReflog = new System.Windows.Forms.ToolStripButton();
-            this.tsmiShowOnlyFirstParent = new System.Windows.Forms.ToolStripButton();
-            toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.SuspendLayout();
+            ToolStripSeparator toolStripSeparator1;
+            tsmiBranchLocal = new ToolStripMenuItem();
+            tsmiBranchRemote = new ToolStripMenuItem();
+            tsmiBranchTag = new ToolStripMenuItem();
+            tsmiCommitFilter = new ToolStripMenuItem();
+            tsmiCommitterFilter = new ToolStripMenuItem();
+            tsmiAuthorFilter = new ToolStripMenuItem();
+            tsmiDiffContainsFilter = new ToolStripMenuItem();
+            toolStripLabel1 = new ToolStripLabel();
+            tsbtnAdvancedFilter = new ToolStripSplitButton();
+            tsmiResetPathFilters = new ToolStripMenuItem();
+            tsmiResetAllFilters = new ToolStripMenuItem();
+            toolStripSeparatorAdvancedFilter = new ToolStripSeparator();
+            tsmiAdvancedFilter = new ToolStripMenuItem();
+            tssbtnShowBranches = new ToolStripSplitButton();
+            tsmiShowBranchesAll = new ToolStripMenuItem();
+            tsmiShowBranchesCurrent = new ToolStripMenuItem();
+            tsmiShowBranchesFiltered = new ToolStripMenuItem();
+            tscboBranchFilter = new ToolStripComboBox();
+            tsddbtnBranchFilter = new ToolStripDropDownButton();
+            toolStripSeparator19 = new ToolStripSeparator();
+            tslblRevisionFilter = new ToolStripLabel();
+            tstxtRevisionFilter = new ToolStripComboBox();
+            tsddbtnRevisionFilter = new ToolStripDropDownButton();
+            tsbShowReflog = new ToolStripButton();
+            tsmiShowOnlyFirstParent = new ToolStripButton();
+            toolStripSeparator1 = new ToolStripSeparator();
+            SuspendLayout();
             // 
             // tsmiCommitFilter
             // 
-            this.tsmiCommitFilter.Checked = true;
-            this.tsmiCommitFilter.CheckOnClick = true;
-            this.tsmiCommitFilter.Name = "tsmiCommitFilter";
-            this.tsmiCommitFilter.Text = "Commit &message";
-            this.tsmiCommitFilter.CheckedChanged += new System.EventHandler(this.revisionFilterBox_CheckedChanged); 
+            tsmiCommitFilter.Checked = true;
+            tsmiCommitFilter.CheckOnClick = true;
+            tsmiCommitFilter.Name = "tsmiCommitFilter";
+            tsmiCommitFilter.Text = "Commit &message";
+            tsmiCommitFilter.CheckedChanged += new System.EventHandler(revisionFilterBox_CheckedChanged); 
             // 
             // tsmiCommitter
             // 
-            this.tsmiCommitterFilter.CheckOnClick = true;
-            this.tsmiCommitterFilter.Name = "tsmiCommitter";
-            this.tsmiCommitterFilter.Text = "&Committer";
-            this.tsmiCommitterFilter.CheckedChanged += new System.EventHandler(this.revisionFilterBox_CheckedChanged);
+            tsmiCommitterFilter.CheckOnClick = true;
+            tsmiCommitterFilter.Name = "tsmiCommitter";
+            tsmiCommitterFilter.Text = "&Committer";
+            tsmiCommitterFilter.CheckedChanged += revisionFilterBox_CheckedChanged;
             // 
             // tsmiAuthor
             // 
-            this.tsmiAuthorFilter.CheckOnClick = true;
-            this.tsmiAuthorFilter.Name = "tsmiAuthor";
-            this.tsmiAuthorFilter.Text = "&Author";
-            this.tsmiAuthorFilter.CheckedChanged += new System.EventHandler(this.revisionFilterBox_CheckedChanged);
+            tsmiAuthorFilter.CheckOnClick = true;
+            tsmiAuthorFilter.Name = "tsmiAuthor";
+            tsmiAuthorFilter.Text = "&Author";
+            tsmiAuthorFilter.CheckedChanged += revisionFilterBox_CheckedChanged;
             // 
             // tsmiDiffContains
             // 
-            this.tsmiDiffContainsFilter.CheckOnClick = true;
-            this.tsmiDiffContainsFilter.Name = "tsmiDiffContains";
-            this.tsmiDiffContainsFilter.Text = "&Diff contains (SLOW)";
-            this.tsmiDiffContainsFilter.CheckedChanged += new System.EventHandler(this.revisionFilterBox_CheckedChanged);
+            tsmiDiffContainsFilter.CheckOnClick = true;
+            tsmiDiffContainsFilter.Name = "tsmiDiffContains";
+            tsmiDiffContainsFilter.Text = "&Diff contains (SLOW)";
+            tsmiDiffContainsFilter.CheckedChanged += revisionFilterBox_CheckedChanged;
             // 
             // toolStripLabel1
             // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(58, 22);
-            this.toolStripLabel1.Tag = "ToolBar_group:Branch filter";
-            this.toolStripLabel1.Text = "&Branches:";
-            this.toolStripLabel1.ToolTipText = "Branch filter";
+            toolStripLabel1.Name = "toolStripLabel1";
+            toolStripLabel1.Size = new Size(58, 22);
+            toolStripLabel1.Tag = "ToolBar_group:Branch filter";
+            toolStripLabel1.Text = "&Branches:";
+            toolStripLabel1.ToolTipText = "Branch filter";
             // 
             // tsbtnAdvancedFilter
             // 
-            this.tsbtnAdvancedFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbtnAdvancedFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiResetPathFilters,
-            this.tsmiResetAllFilters,
-            this.toolStripSeparatorAdvancedFilter,
-            this.tsmiAdvancedFilter});
-            this.tsbtnAdvancedFilter.Image = global::GitUI.Properties.Images.FunnelPencil;
-            this.tsbtnAdvancedFilter.Name = "tsbtnAdvancedFilter";
-            this.tsbtnAdvancedFilter.Size = new System.Drawing.Size(32, 22);
-            this.tsbtnAdvancedFilter.ToolTipText = "Advanced filter";
-            this.tsbtnAdvancedFilter.ButtonClick += new System.EventHandler(this.tsbtnAdvancedFilter_ButtonClick);
+            tsbtnAdvancedFilter.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbtnAdvancedFilter.DropDownItems.AddRange(new ToolStripItem[] {
+            tsmiResetPathFilters,
+            tsmiResetAllFilters,
+            toolStripSeparatorAdvancedFilter,
+            tsmiAdvancedFilter});
+            tsbtnAdvancedFilter.Image = Properties.Images.FunnelPencil;
+            tsbtnAdvancedFilter.Name = "tsbtnAdvancedFilter";
+            tsbtnAdvancedFilter.Size = new Size(32, 22);
+            tsbtnAdvancedFilter.ToolTipText = "Advanced filter";
+            tsbtnAdvancedFilter.ButtonClick += tsbtnAdvancedFilter_ButtonClick;
             // 
             // tsmiResetPathFilters
             // 
-            this.tsmiResetPathFilters.Name = "tsmiResetPathFilters";
-            this.tsmiResetPathFilters.Size = new System.Drawing.Size(259, 22);
-            this.tsmiResetPathFilters.Text = "Reset &path filter";
-            this.tsmiResetPathFilters.Click += new System.EventHandler(this.tsmiDisablePathFilters_Click);
+            tsmiResetPathFilters.Name = "tsmiResetPathFilters";
+            tsmiResetPathFilters.Size = new Size(259, 22);
+            tsmiResetPathFilters.Text = "Reset &path filter";
+            tsmiResetPathFilters.Click += tsmiDisablePathFilters_Click;
             // 
             // tsmiResetAllFilters
             // 
-            this.tsmiResetAllFilters.Name = "tsmiResetAllFilters";
-            this.tsmiResetAllFilters.Size = new System.Drawing.Size(259, 22);
-            this.tsmiResetAllFilters.Text = "&Reset revision filters";
-            this.tsmiResetAllFilters.Click += new System.EventHandler(this.tsmiDisableAllFilters_Click);
+            tsmiResetAllFilters.Name = "tsmiResetAllFilters";
+            tsmiResetAllFilters.Size = new Size(259, 22);
+            tsmiResetAllFilters.Text = "&Reset revision filters";
+            tsmiResetAllFilters.Click += tsmiDisableAllFilters_Click;
             // 
             // toolStripSeparatorAdvancedFilter
             // 
-            this.toolStripSeparatorAdvancedFilter.Name = "toolStripSeparatorAdvancedFilter";
-            this.toolStripSeparatorAdvancedFilter.Size = new System.Drawing.Size(6, 25);
+            toolStripSeparatorAdvancedFilter.Name = "toolStripSeparatorAdvancedFilter";
+            toolStripSeparatorAdvancedFilter.Size = new Size(6, 25);
             // 
             // tsmiAdvancedFilter
             // 
-            this.tsmiAdvancedFilter.Name = "tsmiAdvancedFilter";
-            this.tsmiAdvancedFilter.Size = new System.Drawing.Size(259, 22);
-            this.tsmiAdvancedFilter.Text = "&Advanced filter";
-            this.tsmiAdvancedFilter.Click += new System.EventHandler(this.tsmiAdvancedFilter_Click);
+            tsmiAdvancedFilter.Name = "tsmiAdvancedFilter";
+            tsmiAdvancedFilter.Size = new Size(259, 22);
+            tsmiAdvancedFilter.Text = "&Advanced filter";
+            tsmiAdvancedFilter.Click += tsmiAdvancedFilter_Click;
             // 
             // menuCommitInfoPosition
             // 
-            this.tssbtnShowBranches.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
-            this.tssbtnShowBranches.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiShowBranchesAll,
-            this.tsmiShowBranchesCurrent,
-            this.tsmiShowBranchesFiltered});
-            this.tssbtnShowBranches.Image = global::GitUI.Properties.Images.BranchLocal;
-            this.tssbtnShowBranches.Name = "tssbtnShowBranches";
-            this.tssbtnShowBranches.Size = new System.Drawing.Size(32, 22);
-            this.tssbtnShowBranches.Click += new System.EventHandler(this.tssbtnShowBranches_Click);
+            tssbtnShowBranches.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+            tssbtnShowBranches.DropDownItems.AddRange(new ToolStripItem[] {
+            tsmiShowBranchesAll,
+            tsmiShowBranchesCurrent,
+            tsmiShowBranchesFiltered});
+            tssbtnShowBranches.Image = Properties.Images.BranchLocal;
+            tssbtnShowBranches.Name = "tssbtnShowBranches";
+            tssbtnShowBranches.Size = new Size(32, 22);
+            tssbtnShowBranches.Click += tssbtnShowBranches_Click;
             // 
             // tsmiShowBranchesAll
             // 
-            this.tsmiShowBranchesAll.Image = global::GitUI.Properties.Images.BranchLocal;
-            this.tsmiShowBranchesAll.Name = "tsmiShowBranchesAll";
-            this.tsmiShowBranchesAll.Size = new System.Drawing.Size(259, 22);
-            this.tsmiShowBranchesAll.Text = "&All branches";
-            this.tsmiShowBranchesAll.ToolTipText = "Show all branches";
-            this.tsmiShowBranchesAll.Click += new System.EventHandler(this.tsmiShowBranchesAll_Click);
+            tsmiShowBranchesAll.Image = Properties.Images.BranchLocal;
+            tsmiShowBranchesAll.Name = "tsmiShowBranchesAll";
+            tsmiShowBranchesAll.Size = new Size(259, 22);
+            tsmiShowBranchesAll.Text = "&All branches";
+            tsmiShowBranchesAll.ToolTipText = "Show all branches";
+            tsmiShowBranchesAll.Click += tsmiShowBranchesAll_Click;
             // 
             // tsmiShowBranchesCurrent
             // 
-            this.tsmiShowBranchesCurrent.Image = global::GitUI.Properties.Images.BranchFilter;
-            this.tsmiShowBranchesCurrent.Name = "tsmiShowBranchesCurrent";
-            this.tsmiShowBranchesCurrent.Size = new System.Drawing.Size(259, 22);
-            this.tsmiShowBranchesCurrent.Text = "&Current branch only";
-            this.tsmiShowBranchesCurrent.ToolTipText = "Show current branch only";
-            this.tsmiShowBranchesCurrent.Click += new System.EventHandler(this.tsmiShowBranchesCurrent_Click);
+            tsmiShowBranchesCurrent.Image = Properties.Images.BranchFilter;
+            tsmiShowBranchesCurrent.Name = "tsmiShowBranchesCurrent";
+            tsmiShowBranchesCurrent.Size = new Size(259, 22);
+            tsmiShowBranchesCurrent.Text = "&Current branch only";
+            tsmiShowBranchesCurrent.ToolTipText = "Show current branch only";
+            tsmiShowBranchesCurrent.Click += tsmiShowBranchesCurrent_Click;
             // 
             // tsmiShowBranchesFiltered
             // 
-            this.tsmiShowBranchesFiltered.Image = global::GitUI.Properties.Images.BranchFilter;
-            this.tsmiShowBranchesFiltered.Name = "tsmiShowBranchesFiltered";
-            this.tsmiShowBranchesFiltered.Size = new System.Drawing.Size(259, 22);
-            this.tsmiShowBranchesFiltered.Text = "&Filtered branches";
-            this.tsmiShowBranchesFiltered.ToolTipText = "Show filtered branches";
-            this.tsmiShowBranchesFiltered.Click += new System.EventHandler(this.tsmiShowBranchesFiltered_Click);
+            tsmiShowBranchesFiltered.Image = Properties.Images.BranchFilter;
+            tsmiShowBranchesFiltered.Name = "tsmiShowBranchesFiltered";
+            tsmiShowBranchesFiltered.Size = new Size(259, 22);
+            tsmiShowBranchesFiltered.Text = "&Filtered branches";
+            tsmiShowBranchesFiltered.ToolTipText = "Show filtered branches";
+            tsmiShowBranchesFiltered.Click += tsmiShowBranchesFiltered_Click;
             // 
             // tsbShowReflog
             // 
-            this.tsbShowReflog.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
-            this.tsbShowReflog.Image = global::GitUI.Properties.Images.Book;
-            this.tsbShowReflog.Name = "tsbShowReflog";
-            this.tsbShowReflog.Size = new System.Drawing.Size(23, 22);
-            this.tsbShowReflog.Click += new System.EventHandler(this.tsmiShowReflog_Click);
+            tsbShowReflog.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+            tsbShowReflog.Image = Properties.Images.Book;
+            tsbShowReflog.Name = "tsbShowReflog";
+            tsbShowReflog.Size = new Size(23, 22);
+            tsbShowReflog.Click += tsmiShowReflog_Click;
             // 
             // tscboBranchFilter
             // 
-            this.tscboBranchFilter.AutoSize = false;
-            this.tscboBranchFilter.BackColor = System.Drawing.SystemColors.Control;
-            this.tscboBranchFilter.DropDownWidth = 300;
-            this.tscboBranchFilter.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.tscboBranchFilter.Name = "tscboBranchFilter";
-            this.tscboBranchFilter.Size = new System.Drawing.Size(100, 23);
-            this.tscboBranchFilter.Tag = "ToolBar_group:Branch filter";
-            this.tscboBranchFilter.Click += new System.EventHandler(this.tscboBranchFilter_Click);
-            this.tscboBranchFilter.DropDown += new System.EventHandler(this.tscboBranchFilter_DropDown);
-            this.tscboBranchFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tscboBranchFilter_KeyUp);
-            this.tscboBranchFilter.TextChanged += new System.EventHandler(this.tscboBranchFilter_TextChanged);
-            this.tscboBranchFilter.TextUpdate += new System.EventHandler(this.tscboBranchFilter_TextUpdate);
+            tscboBranchFilter.AutoSize = false;
+            tscboBranchFilter.BackColor = SystemColors.Control;
+            tscboBranchFilter.DropDownWidth = 300;
+            tscboBranchFilter.FlatStyle = FlatStyle.System;
+            tscboBranchFilter.Name = "tscboBranchFilter";
+            tscboBranchFilter.Size = new Size(100, 23);
+            tscboBranchFilter.Tag = "ToolBar_group:Branch filter";
+            tscboBranchFilter.Click += tscboBranchFilter_Click;
+            tscboBranchFilter.DropDown += tscboBranchFilter_DropDown;
+            tscboBranchFilter.KeyUp += tscboBranchFilter_KeyUp;
+            tscboBranchFilter.TextChanged += tscboBranchFilter_TextChanged;
+            tscboBranchFilter.TextUpdate += tscboBranchFilter_TextUpdate;
             // 
             // tsmiBranchLocal
             // 
-            this.tsmiBranchLocal.Checked = true;
-            this.tsmiBranchLocal.CheckOnClick = true;
-            this.tsmiBranchLocal.Name = "tsmiBranchLocal";
-            this.tsmiBranchLocal.Text = "&Local";
+            tsmiBranchLocal.Checked = true;
+            tsmiBranchLocal.CheckOnClick = true;
+            tsmiBranchLocal.Name = "tsmiBranchLocal";
+            tsmiBranchLocal.Text = "&Local";
             // 
             // tsmiBranchRemote
             // 
-            this.tsmiBranchRemote.CheckOnClick = true;
-            this.tsmiBranchRemote.Name = "tsmiBranchRemote";
-            this.tsmiBranchRemote.Text = "&Remote";
+            tsmiBranchRemote.CheckOnClick = true;
+            tsmiBranchRemote.Name = "tsmiBranchRemote";
+            tsmiBranchRemote.Text = "&Remote";
             // 
             // tsmiBranchTag
             // 
-            this.tsmiBranchTag.CheckOnClick = true;
-            this.tsmiBranchTag.Name = "tsmiBranchTag";
-            this.tsmiBranchTag.Text = "&Tag";
+            tsmiBranchTag.CheckOnClick = true;
+            tsmiBranchTag.Name = "tsmiBranchTag";
+            tsmiBranchTag.Text = "&Tag";
             // 
             // tsddbtnBranchFilter
             // 
-            this.tsddbtnBranchFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsddbtnBranchFilter.DropDownItems.AddRange(new ToolStripItem[] {
-            this.tsmiBranchLocal,
-            this.tsmiBranchRemote,
-            this.tsmiBranchTag});
-            this.tsddbtnBranchFilter.Image = global::GitUI.Properties.Images.EditFilter;
-            this.tsddbtnBranchFilter.Name = "tsddbtnBranchFilter";
-            this.tsddbtnBranchFilter.Size = new System.Drawing.Size(29, 22);
-            this.tsddbtnBranchFilter.Tag = "ToolBar_group:Branch filter";
-            this.tsddbtnBranchFilter.Text = "Branch type";
+            tsddbtnBranchFilter.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsddbtnBranchFilter.DropDownItems.AddRange(new ToolStripItem[] {
+            tsmiBranchLocal,
+            tsmiBranchRemote,
+            tsmiBranchTag});
+            tsddbtnBranchFilter.Image = Properties.Images.EditFilter;
+            tsddbtnBranchFilter.Name = "tsddbtnBranchFilter";
+            tsddbtnBranchFilter.Size = new Size(29, 22);
+            tsddbtnBranchFilter.Tag = "ToolBar_group:Branch filter";
+            tsddbtnBranchFilter.Text = "Branch type";
             // 
             // toolStripSeparator19
             // 
-            this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
+            toolStripSeparator19.Name = "toolStripSeparator19";
+            toolStripSeparator19.Size = new Size(6, 25);
             // 
             // tslblRevisionFilter
             // 
-            this.tslblRevisionFilter.Name = "tslblRevisionFilter";
-            this.tslblRevisionFilter.Size = new System.Drawing.Size(36, 22);
-            this.tslblRevisionFilter.Tag = "ToolBar_group:Text filter";
-            this.tslblRevisionFilter.Text = "&Filter:";
-            this.tslblRevisionFilter.ToolTipText = "Text filter";
+            tslblRevisionFilter.Name = "tslblRevisionFilter";
+            tslblRevisionFilter.Size = new Size(36, 22);
+            tslblRevisionFilter.Tag = "ToolBar_group:Text filter";
+            tslblRevisionFilter.Text = "&Filter:";
+            tslblRevisionFilter.ToolTipText = "Text filter";
             // 
             // tstxtRevisionFilter
             // 
-            this.tstxtRevisionFilter.AutoSize = false;
-            this.tstxtRevisionFilter.BackColor = System.Drawing.SystemColors.Control;
-            this.tstxtRevisionFilter.DropDownWidth = 300;
-            this.tstxtRevisionFilter.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.tstxtRevisionFilter.Name = "tstxtRevisionFilter";
-            this.tstxtRevisionFilter.Size = new System.Drawing.Size(100, 25);
-            this.tstxtRevisionFilter.Tag = "ToolBar_group:Text filter";
-            this.tstxtRevisionFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tstxtRevisionFilter_KeyUp);
+            tstxtRevisionFilter.AutoSize = false;
+            tstxtRevisionFilter.BackColor = SystemColors.Control;
+            tstxtRevisionFilter.DropDownWidth = 300;
+            tstxtRevisionFilter.FlatStyle = FlatStyle.System;
+            tstxtRevisionFilter.Name = "tstxtRevisionFilter";
+            tstxtRevisionFilter.Size = new Size(100, 25);
+            tstxtRevisionFilter.Tag = "ToolBar_group:Text filter";
+            tstxtRevisionFilter.KeyUp += tstxtRevisionFilter_KeyUp;
             // 
             // tsddbtnRevisionFilter
             // 
-            this.tsddbtnRevisionFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsddbtnRevisionFilter.Image = global::GitUI.Properties.Images.EditFilter;
-            this.tsddbtnRevisionFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiCommitFilter,
-            this.tsmiCommitterFilter,
-            this.tsmiAuthorFilter,
-            this.tsmiDiffContainsFilter});
-            this.tsddbtnRevisionFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbtnRevisionFilter.Name = "tsddbtnRevisionFilter";
-            this.tsddbtnRevisionFilter.Size = new System.Drawing.Size(29, 22);
-            this.tsddbtnRevisionFilter.Tag = "ToolBar_group:Text filter";
-            this.tsddbtnRevisionFilter.Text = "Filter type";
+            tsddbtnRevisionFilter.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsddbtnRevisionFilter.Image = Properties.Images.EditFilter;
+            tsddbtnRevisionFilter.DropDownItems.AddRange(new ToolStripItem[] {
+            tsmiCommitFilter,
+            tsmiCommitterFilter,
+            tsmiAuthorFilter,
+            tsmiDiffContainsFilter});
+            tsddbtnRevisionFilter.ImageTransparentColor = Color.Magenta;
+            tsddbtnRevisionFilter.Name = "tsddbtnRevisionFilter";
+            tsddbtnRevisionFilter.Size = new Size(29, 22);
+            tsddbtnRevisionFilter.Tag = "ToolBar_group:Text filter";
+            tsddbtnRevisionFilter.Text = "Filter type";
             // 
             // tsmiShowOnlyFirstParent
             // 
-            this.tsmiShowOnlyFirstParent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsmiShowOnlyFirstParent.Image = global::GitUI.Properties.Images.ShowOnlyFirstParent;
-            this.tsmiShowOnlyFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiShowOnlyFirstParent.Name = "tsmiShowOnlyFirstParent";
-            this.tsmiShowOnlyFirstParent.Size = new System.Drawing.Size(23, 20);
-            this.tsmiShowOnlyFirstParent.Click += new System.EventHandler(this.tsmiShowOnlyFirstParent_Click);
+            tsmiShowOnlyFirstParent.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsmiShowOnlyFirstParent.Image = Properties.Images.ShowOnlyFirstParent;
+            tsmiShowOnlyFirstParent.ImageTransparentColor = Color.Magenta;
+            tsmiShowOnlyFirstParent.Name = "tsmiShowOnlyFirstParent";
+            tsmiShowOnlyFirstParent.Size = new Size(23, 20);
+            tsmiShowOnlyFirstParent.Click += tsmiShowOnlyFirstParent_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new System.Drawing.Size(6, 6);
+            toolStripSeparator1.Size = new Size(6, 6);
             // 
             // FilterToolBar
             // 
-            this.Dock = System.Windows.Forms.DockStyle.None;
-            this.GripMargin = new System.Windows.Forms.Padding(0);
-            this.GripEnabled = false;
-            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbtnAdvancedFilter,
-            this.tsbShowReflog,
-            this.tssbtnShowBranches,
-            this.toolStripLabel1,
-            this.tscboBranchFilter,
-            this.tsddbtnBranchFilter,
-            this.toolStripSeparator19,
-            this.tslblRevisionFilter,
-            this.tstxtRevisionFilter,
-            this.tsddbtnRevisionFilter,
-            this.tsmiShowOnlyFirstParent});
-            this.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.Location = new System.Drawing.Point(584, 0);
-            this.Name = "ToolStripFilters";
-            this.Padding = new System.Windows.Forms.Padding(0);
-            this.Size = new System.Drawing.Size(339, 25);
-            this.ResumeLayout(false);
+            Dock = DockStyle.None;
+            GripMargin = new Padding(0);
+            GripEnabled = false;
+            ImeMode = ImeMode.NoControl;
+            Items.AddRange(new ToolStripItem[] {
+            tsbtnAdvancedFilter,
+            tsbShowReflog,
+            tssbtnShowBranches,
+            toolStripLabel1,
+            tscboBranchFilter,
+            tsddbtnBranchFilter,
+            toolStripSeparator19,
+            tslblRevisionFilter,
+            tstxtRevisionFilter,
+            tsddbtnRevisionFilter,
+            tsmiShowOnlyFirstParent});
+            LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            Location = new Point(584, 0);
+            Name = "ToolStripFilters";
+            Padding = new Padding(0);
+            Size = new Size(339, 25);
+            ResumeLayout(false);
 
         }
 

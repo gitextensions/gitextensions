@@ -272,20 +272,20 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private System.Windows.Forms.Label lblBranchInfo;
-        private System.Windows.Forms.Button btnPick;
-        private System.Windows.Forms.CheckBox cbxAutoCommit;
+        private Label lblBranchInfo;
+        private Button btnPick;
+        private CheckBox cbxAutoCommit;
         private UserControls.NativeListView lvParentsList;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.Label lblParents;
-        private System.Windows.Forms.CheckBox cbxAddReference;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private Label lblParents;
+        private CheckBox cbxAddReference;
         private GitUI.UserControls.CommitSummaryUserControl commitSummaryUserControl1;
-        private System.Windows.Forms.Button btnChooseRevision;
-        private System.Windows.Forms.TableLayoutPanel tlpnlMain;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private Button btnChooseRevision;
+        private TableLayoutPanel tlpnlMain;
+        private FlowLayoutPanel flowLayoutPanel1;
         private Button btnAbort;
     }
 }

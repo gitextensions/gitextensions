@@ -34,377 +34,377 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserRepositoriesList));
-            System.Windows.Forms.ListViewGroup lvgPinned = new System.Windows.Forms.ListViewGroup("Pinned", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup lvgAllRecent = new System.Windows.Forms.ListViewGroup("Recent", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup lvgOther = new System.Windows.Forms.ListViewGroup("Other", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            ListViewGroup lvgPinned = new ListViewGroup("Pinned", HorizontalAlignment.Left);
+            ListViewGroup lvgAllRecent = new ListViewGroup("Recent", HorizontalAlignment.Left);
+            ListViewGroup lvgOther = new ListViewGroup("Other", HorizontalAlignment.Left);
+            ListViewItem listViewItem1 = new ListViewItem(new string[] {
             "C:\\Users\\russkie\\AppData\\Roaming\\GitExtensions\\GitExtensions",
             "refs/heads/master",
             "Favourite"}, 0);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.pnlHeader = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblRecentRepositories = new System.Windows.Forms.Label();
-            this.pnlBody = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.contextMenuStripRepository = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiOpenFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCategories = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCategoryNone = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCategoryAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiRemoveFromList = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiRemoveMissingReposFromList = new System.Windows.Forms.ToolStripMenuItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.textBoxSearch = new System.Windows.Forms.TextBox();
-            this.contextMenuStripCategory = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiCategoryRename = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCategoryDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCategoryClear = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStripRecentMenu = new System.Windows.Forms.MenuStrip();
-            this.mnuTop = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuConfigure = new System.Windows.Forms.ToolStripMenuItem();
-            this.listView1 = new GitUI.UserControls.NativeListView();
-            this.clmhdrPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmhdrBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmhdrCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.pnlHeader.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.pnlBody.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.contextMenuStripRepository.SuspendLayout();
-            this.contextMenuStripCategory.SuspendLayout();
-            this.menuStripRecentMenu.SuspendLayout();
-            this.SuspendLayout();
+            toolStripMenuItem1 = new ToolStripSeparator();
+            toolStripMenuItem2 = new ToolStripSeparator();
+            pnlHeader = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            lblRecentRepositories = new Label();
+            pnlBody = new Panel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            contextMenuStripRepository = new ContextMenuStrip(components);
+            tsmiOpenFolder = new ToolStripMenuItem();
+            tsmiCategories = new ToolStripMenuItem();
+            tsmiCategoryNone = new ToolStripMenuItem();
+            tsmiCategoryAdd = new ToolStripMenuItem();
+            tsmiRemoveFromList = new ToolStripMenuItem();
+            tsmiRemoveMissingReposFromList = new ToolStripMenuItem();
+            imageList1 = new ImageList(components);
+            textBoxSearch = new TextBox();
+            contextMenuStripCategory = new ContextMenuStrip(components);
+            tsmiCategoryRename = new ToolStripMenuItem();
+            tsmiCategoryDelete = new ToolStripMenuItem();
+            tsmiCategoryClear = new ToolStripMenuItem();
+            menuStripRecentMenu = new MenuStrip();
+            mnuTop = new ToolStripMenuItem();
+            mnuConfigure = new ToolStripMenuItem();
+            listView1 = new GitUI.UserControls.NativeListView();
+            clmhdrPath = ((ColumnHeader)(new ColumnHeader()));
+            clmhdrBranch = ((ColumnHeader)(new ColumnHeader()));
+            clmhdrCategory = ((ColumnHeader)(new ColumnHeader()));
+            pnlHeader.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            pnlBody.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            contextMenuStripRepository.SuspendLayout();
+            contextMenuStripCategory.SuspendLayout();
+            menuStripRecentMenu.SuspendLayout();
+            SuspendLayout();
             // 
             // toolStripMenuItem1
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(270, 6);
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(270, 6);
             // 
             // toolStripMenuItem2
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(270, 6);
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(270, 6);
             // 
             // pnlHeader
             // 
-            this.pnlHeader.Controls.Add(this.tableLayoutPanel1);
-            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeader.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlHeader.MinimumSize = new System.Drawing.Size(450, 0);
-            this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Padding = new System.Windows.Forms.Padding(20, 0, 20, 11);
-            this.pnlHeader.Size = new System.Drawing.Size(451, 73);
-            this.pnlHeader.TabIndex = 0;
+            pnlHeader.Controls.Add(tableLayoutPanel1);
+            pnlHeader.Dock = DockStyle.Top;
+            pnlHeader.Location = new Point(0, 0);
+            pnlHeader.Margin = new Padding(0);
+            pnlHeader.MinimumSize = new Size(450, 0);
+            pnlHeader.Name = "pnlHeader";
+            pnlHeader.Padding = new Padding(20, 0, 20, 11);
+            pnlHeader.Size = new Size(451, 73);
+            pnlHeader.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.lblRecentRepositories, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(20, 30);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(411, 32);
-            this.tableLayoutPanel1.TabIndex = 3;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Controls.Add(lblRecentRepositories, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Bottom;
+            tableLayoutPanel1.Location = new Point(20, 30);
+            tableLayoutPanel1.Margin = new Padding(2);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(411, 32);
+            tableLayoutPanel1.TabIndex = 3;
             // 
             // lblRecentRepositories
             // 
-            this.lblRecentRepositories.AutoSize = true;
-            this.lblRecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblRecentRepositories.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblRecentRepositories.ForeColor = System.Drawing.Color.DimGray;
-            this.lblRecentRepositories.Location = new System.Drawing.Point(0, 0);
-            this.lblRecentRepositories.Margin = new System.Windows.Forms.Padding(0);
-            this.lblRecentRepositories.Name = "lblRecentRepositories";
-            this.lblRecentRepositories.Size = new System.Drawing.Size(411, 32);
-            this.lblRecentRepositories.TabIndex = 2;
-            this.lblRecentRepositories.Text = "Recent repositories";
+            lblRecentRepositories.AutoSize = true;
+            lblRecentRepositories.Dock = DockStyle.Fill;
+            lblRecentRepositories.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            lblRecentRepositories.ForeColor = Color.DimGray;
+            lblRecentRepositories.Location = new Point(0, 0);
+            lblRecentRepositories.Margin = new Padding(0);
+            lblRecentRepositories.Name = "lblRecentRepositories";
+            lblRecentRepositories.Size = new Size(411, 32);
+            lblRecentRepositories.TabIndex = 2;
+            lblRecentRepositories.Text = "Recent repositories";
             // 
             // pnlBody
             // 
-            this.pnlBody.Controls.Add(this.tableLayoutPanel2);
-            this.pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlBody.Location = new System.Drawing.Point(0, 73);
-            this.pnlBody.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlBody.Name = "pnlBody";
-            this.pnlBody.Padding = new System.Windows.Forms.Padding(20, 18, 20, 3);
-            this.pnlBody.Size = new System.Drawing.Size(451, 210);
-            this.pnlBody.TabIndex = 1;
+            pnlBody.Controls.Add(tableLayoutPanel2);
+            pnlBody.Dock = DockStyle.Fill;
+            pnlBody.Location = new Point(0, 73);
+            pnlBody.Margin = new Padding(0);
+            pnlBody.Name = "pnlBody";
+            pnlBody.Padding = new Padding(20, 18, 20, 3);
+            pnlBody.Size = new Size(451, 210);
+            pnlBody.TabIndex = 1;
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.listView1, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.textBoxSearch, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(20, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(411, 204);
-            this.tableLayoutPanel2.TabIndex = 4;
+            tableLayoutPanel2.ColumnCount = 1;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.Controls.Add(listView1, 0, 1);
+            tableLayoutPanel2.Controls.Add(textBoxSearch, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(20, 3);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 2;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.Size = new Size(411, 204);
+            tableLayoutPanel2.TabIndex = 4;
             // 
             // contextMenuStripRepository
             // 
-            this.contextMenuStripRepository.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiOpenFolder,
-            this.toolStripMenuItem1,
-            this.tsmiCategories,
-            this.toolStripMenuItem2,
-            this.tsmiRemoveFromList,
-            this.tsmiRemoveMissingReposFromList});
-            this.contextMenuStripRepository.Name = "contextMenuStripRepository";
-            this.contextMenuStripRepository.Size = new System.Drawing.Size(274, 104);
-            this.contextMenuStripRepository.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.contextMenuStrip_Closed);
-            this.contextMenuStripRepository.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
+            contextMenuStripRepository.Items.AddRange(new ToolStripItem[] {
+            tsmiOpenFolder,
+            toolStripMenuItem1,
+            tsmiCategories,
+            toolStripMenuItem2,
+            tsmiRemoveFromList,
+            tsmiRemoveMissingReposFromList});
+            contextMenuStripRepository.Name = "contextMenuStripRepository";
+            contextMenuStripRepository.Size = new Size(274, 104);
+            contextMenuStripRepository.Closed += contextMenuStrip_Closed;
+            contextMenuStripRepository.Opening += contextMenuStrip_Opening;
             // 
             // tsmiOpenFolder
             // 
-            this.tsmiOpenFolder.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
-            this.tsmiOpenFolder.Name = "tsmiOpenFolder";
-            this.tsmiOpenFolder.Size = new System.Drawing.Size(273, 22);
-            this.tsmiOpenFolder.Text = "Show in folder";
-            this.tsmiOpenFolder.Click += new System.EventHandler(this.tsmiOpenFolder_Click);
+            tsmiOpenFolder.Image = Properties.Images.BrowseFileExplorer;
+            tsmiOpenFolder.Name = "tsmiOpenFolder";
+            tsmiOpenFolder.Size = new Size(273, 22);
+            tsmiOpenFolder.Text = "Show in folder";
+            tsmiOpenFolder.Click += tsmiOpenFolder_Click;
             // 
             // tsmiCategories
             // 
-            this.tsmiCategories.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiCategoryNone,
-            this.tsmiCategoryAdd});
-            this.tsmiCategories.Name = "tsmiCategories";
-            this.tsmiCategories.Size = new System.Drawing.Size(273, 22);
-            this.tsmiCategories.Text = "Categories";
-            this.tsmiCategories.DropDownOpening += new System.EventHandler(this.tsmiCategories_DropDownOpening);
+            tsmiCategories.DropDownItems.AddRange(new ToolStripItem[] {
+            tsmiCategoryNone,
+            tsmiCategoryAdd});
+            tsmiCategories.Name = "tsmiCategories";
+            tsmiCategories.Size = new Size(273, 22);
+            tsmiCategories.Text = "Categories";
+            tsmiCategories.DropDownOpening += tsmiCategories_DropDownOpening;
             // 
             // tsmiCategoryNone
             // 
-            this.tsmiCategoryNone.Name = "tsmiCategoryNone";
-            this.tsmiCategoryNone.Size = new System.Drawing.Size(130, 22);
-            this.tsmiCategoryNone.Text = "(none)";
-            this.tsmiCategoryNone.Click += new System.EventHandler(this.tsmiCategory_Click);
+            tsmiCategoryNone.Name = "tsmiCategoryNone";
+            tsmiCategoryNone.Size = new Size(130, 22);
+            tsmiCategoryNone.Text = "(none)";
+            tsmiCategoryNone.Click += tsmiCategory_Click;
             // 
             // tsmiCategoryAdd
             // 
-            this.tsmiCategoryAdd.Image = global::GitUI.Properties.Images.BulletAdd;
-            this.tsmiCategoryAdd.Name = "tsmiCategoryAdd";
-            this.tsmiCategoryAdd.Size = new System.Drawing.Size(130, 22);
-            this.tsmiCategoryAdd.Text = "Add new...";
-            this.tsmiCategoryAdd.Click += new System.EventHandler(this.tsmiCategoryAdd_Click);
+            tsmiCategoryAdd.Image = Properties.Images.BulletAdd;
+            tsmiCategoryAdd.Name = "tsmiCategoryAdd";
+            tsmiCategoryAdd.Size = new Size(130, 22);
+            tsmiCategoryAdd.Text = "Add new...";
+            tsmiCategoryAdd.Click += tsmiCategoryAdd_Click;
             // 
             // tsmiRemoveFromList
             // 
-            this.tsmiRemoveFromList.Name = "tsmiRemoveFromList";
-            this.tsmiRemoveFromList.Size = new System.Drawing.Size(273, 22);
-            this.tsmiRemoveFromList.Text = "Remove project from the list";
-            this.tsmiRemoveFromList.Click += new System.EventHandler(this.tsmiRemoveFromList_Click);
+            tsmiRemoveFromList.Name = "tsmiRemoveFromList";
+            tsmiRemoveFromList.Size = new Size(273, 22);
+            tsmiRemoveFromList.Text = "Remove project from the list";
+            tsmiRemoveFromList.Click += tsmiRemoveFromList_Click;
             // 
             // tsmiRemoveMissingReposFromList
             // 
-            this.tsmiRemoveMissingReposFromList.Name = "tsmiRemoveMissingReposFromList";
-            this.tsmiRemoveMissingReposFromList.Size = new System.Drawing.Size(273, 22);
-            this.tsmiRemoveMissingReposFromList.Text = "Remove missing projects from the list";
-            this.tsmiRemoveMissingReposFromList.Click += new System.EventHandler(this.tsmiRemoveMissingReposFromList_Click);
+            tsmiRemoveMissingReposFromList.Name = "tsmiRemoveMissingReposFromList";
+            tsmiRemoveMissingReposFromList.Size = new Size(273, 22);
+            tsmiRemoveMissingReposFromList.Text = "Remove missing projects from the list";
+            tsmiRemoveMissingReposFromList.Click += tsmiRemoveMissingReposFromList_Click;
             // 
             // imageList1
             // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "source_code.png");
+            imageList1.ImageStream = ((ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            imageList1.TransparentColor = Color.Transparent;
+            imageList1.Images.SetKeyName(0, "source_code.png");
             // 
             // textBoxSearch
             // 
-            this.textBoxSearch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxSearch.Location = new System.Drawing.Point(3, 3);
-            this.textBoxSearch.Name = "textBoxSearch";
-            this.textBoxSearch.Size = new System.Drawing.Size(439, 20);
-            this.textBoxSearch.TabIndex = 0;
-            this.textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
-            this.textBoxSearch.KeyDown += TextBoxSearch_KeyDown;
+            textBoxSearch.Dock = DockStyle.Fill;
+            textBoxSearch.Location = new Point(3, 3);
+            textBoxSearch.Name = "textBoxSearch";
+            textBoxSearch.Size = new Size(439, 20);
+            textBoxSearch.TabIndex = 0;
+            textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
+            textBoxSearch.KeyDown += TextBoxSearch_KeyDown;
             // 
             // contextMenuStripCategory
             // 
-            this.contextMenuStripCategory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiCategoryRename,
-            this.tsmiCategoryDelete,
-            this.tsmiCategoryClear});
-            this.contextMenuStripCategory.Name = "contextMenuStripCategory";
-            this.contextMenuStripCategory.Size = new System.Drawing.Size(217, 70);
+            contextMenuStripCategory.Items.AddRange(new ToolStripItem[] {
+            tsmiCategoryRename,
+            tsmiCategoryDelete,
+            tsmiCategoryClear});
+            contextMenuStripCategory.Name = "contextMenuStripCategory";
+            contextMenuStripCategory.Size = new Size(217, 70);
             // 
             // tsmiCategoryRename
             // 
-            this.tsmiCategoryRename.Image = global::GitUI.Properties.Images.FileStatusModified;
-            this.tsmiCategoryRename.Name = "tsmiCategoryRename";
-            this.tsmiCategoryRename.Size = new System.Drawing.Size(216, 22);
-            this.tsmiCategoryRename.Text = "Rename category";
-            this.tsmiCategoryRename.Click += new System.EventHandler(this.tsmiCategoryRename_Click);
+            tsmiCategoryRename.Image = Properties.Images.FileStatusModified;
+            tsmiCategoryRename.Name = "tsmiCategoryRename";
+            tsmiCategoryRename.Size = new Size(216, 22);
+            tsmiCategoryRename.Text = "Rename category";
+            tsmiCategoryRename.Click += tsmiCategoryRename_Click;
             // 
             // tsmiCategoryDelete
             // 
-            this.tsmiCategoryDelete.Image = global::GitUI.Properties.Images.StarRemove;
-            this.tsmiCategoryDelete.Name = "tsmiCategoryDelete";
-            this.tsmiCategoryDelete.Size = new System.Drawing.Size(216, 22);
-            this.tsmiCategoryDelete.Text = "Delete category";
-            this.tsmiCategoryDelete.Click += new System.EventHandler(this.tsmiCategoryDelete_Click);
+            tsmiCategoryDelete.Image = Properties.Images.StarRemove;
+            tsmiCategoryDelete.Name = "tsmiCategoryDelete";
+            tsmiCategoryDelete.Size = new Size(216, 22);
+            tsmiCategoryDelete.Text = "Delete category";
+            tsmiCategoryDelete.Click += tsmiCategoryDelete_Click;
             // 
             // tsmiCategoryClear
             // 
-            this.tsmiCategoryClear.Image = global::GitUI.Properties.Images.CleanupRepo;
-            this.tsmiCategoryClear.Name = "tsmiCategoryClear";
-            this.tsmiCategoryClear.Size = new System.Drawing.Size(216, 22);
-            this.tsmiCategoryClear.Text = "Clear all recent repositories";
-            this.tsmiCategoryClear.Click += new System.EventHandler(this.tsmiCategoryClear_Click);
+            tsmiCategoryClear.Image = Properties.Images.CleanupRepo;
+            tsmiCategoryClear.Name = "tsmiCategoryClear";
+            tsmiCategoryClear.Size = new Size(216, 22);
+            tsmiCategoryClear.Text = "Clear all recent repositories";
+            tsmiCategoryClear.Click += tsmiCategoryClear_Click;
             // 
             // menuStripRecentMenu
             // 
-            this.menuStripRecentMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuTop});
-            this.menuStripRecentMenu.Location = new System.Drawing.Point(0, 73);
-            this.menuStripRecentMenu.Name = "menuStripRecentMenu";
-            this.menuStripRecentMenu.Size = new System.Drawing.Size(451, 24);
-            this.menuStripRecentMenu.TabIndex = 3;
-            this.menuStripRecentMenu.Visible = false;
+            menuStripRecentMenu.Items.AddRange(new ToolStripItem[] {
+            mnuTop});
+            menuStripRecentMenu.Location = new Point(0, 73);
+            menuStripRecentMenu.Name = "menuStripRecentMenu";
+            menuStripRecentMenu.Size = new Size(451, 24);
+            menuStripRecentMenu.TabIndex = 3;
+            menuStripRecentMenu.Visible = false;
             // 
             // mnuTop
             // 
-            this.mnuTop.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuConfigure});
-            this.mnuTop.Name = "mnuTop";
-            this.mnuTop.Size = new System.Drawing.Size(12, 20);
+            mnuTop.DropDownItems.AddRange(new ToolStripItem[] {
+            mnuConfigure});
+            mnuTop.Name = "mnuTop";
+            mnuTop.Size = new Size(12, 20);
             // 
             // mnuConfigure
             // 
-            this.mnuConfigure.Image = global::GitUI.Properties.Images.Settings;
-            this.mnuConfigure.Name = "mnuConfigure";
-            this.mnuConfigure.Size = new System.Drawing.Size(218, 22);
-            this.mnuConfigure.Text = "Recent repositories &settings";
-            this.mnuConfigure.Click += new System.EventHandler(this.mnuConfigure_Click);
+            mnuConfigure.Image = Properties.Images.Settings;
+            mnuConfigure.Name = "mnuConfigure";
+            mnuConfigure.Size = new Size(218, 22);
+            mnuConfigure.Text = "Recent repositories &settings";
+            mnuConfigure.Click += mnuConfigure_Click;
             // 
             // listView1
             // 
-            this.listView1.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.clmhdrPath,
-            this.clmhdrBranch,
-            this.clmhdrCategory});
-            this.listView1.ContextMenuStrip = this.contextMenuStripRepository;
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.FullRowSelect = true;
+            listView1.Activation = ItemActivation.OneClick;
+            listView1.BorderStyle = BorderStyle.None;
+            listView1.Columns.AddRange(new ColumnHeader[] {
+            clmhdrPath,
+            clmhdrBranch,
+            clmhdrCategory});
+            listView1.ContextMenuStrip = contextMenuStripRepository;
+            listView1.Dock = DockStyle.Fill;
+            listView1.FullRowSelect = true;
             lvgPinned.Header = "Pinned";
             lvgPinned.Name = "lvgPinned";
             lvgAllRecent.Header = "Recent";
             lvgAllRecent.Name = "lvgAllRecent";
             lvgOther.Header = "Other";
             lvgOther.Name = "lvgOther";
-            this.listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listView1.Groups.AddRange(new ListViewGroup[] {
             lvgPinned,
             lvgAllRecent,
             lvgOther});
-            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listView1.HideSelection = false;
-            this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listView1.HeaderStyle = ColumnHeaderStyle.None;
+            listView1.HideSelection = false;
+            listView1.Items.AddRange(new ListViewItem[] {
             listViewItem1});
-            this.listView1.LargeImageList = this.imageList1;
-            this.listView1.Location = new System.Drawing.Point(0, 33);
-            this.listView1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.OwnerDraw = true;
-            this.listView1.ShowItemToolTips = true;
-            this.listView1.Size = new System.Drawing.Size(445, 168);
-            this.listView1.TabIndex = 1;
-            this.listView1.TileSize = new System.Drawing.Size(350, 50);
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Tile;
-            this.listView1.GroupTaskLinkClick += new System.EventHandler<System.Windows.Forms.ListViewGroupEventArgs>(this.ListView1_GroupTaskLinkClick);
-            this.listView1.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView1_DrawItem);
-            this.listView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
-            this.listView1.MouseLeave += new System.EventHandler(this.listView1_MouseLeave);
-            this.listView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseMove);
-            this.listView1.GotFocus += new System.EventHandler(this.listView1_GotFocus);
-            this.listView1.KeyDown += listView1_KeyDown;
+            listView1.LargeImageList = imageList1;
+            listView1.Location = new Point(0, 33);
+            listView1.Margin = new Padding(0, 3, 0, 3);
+            listView1.MultiSelect = false;
+            listView1.Name = "listView1";
+            listView1.OwnerDraw = true;
+            listView1.ShowItemToolTips = true;
+            listView1.Size = new Size(445, 168);
+            listView1.TabIndex = 1;
+            listView1.TileSize = new Size(350, 50);
+            listView1.UseCompatibleStateImageBehavior = false;
+            listView1.View = View.Tile;
+            listView1.GroupTaskLinkClick += new System.EventHandler<ListViewGroupEventArgs>(ListView1_GroupTaskLinkClick);
+            listView1.DrawItem += listView1_DrawItem;
+            listView1.MouseClick += listView1_MouseClick;
+            listView1.MouseLeave += listView1_MouseLeave;
+            listView1.MouseMove += listView1_MouseMove;
+            listView1.GotFocus += listView1_GotFocus;
+            listView1.KeyDown += listView1_KeyDown;
             // 
             // clmhdrPath
             // 
-            this.clmhdrPath.Text = "Path";
+            clmhdrPath.Text = "Path";
             // 
             // clmhdrBranch
             // 
-            this.clmhdrBranch.Text = "Branch";
+            clmhdrBranch.Text = "Branch";
             // 
             // clmhdrCategory
             // 
-            this.clmhdrCategory.Text = "Category";
+            clmhdrCategory.Text = "Category";
             // 
             // UserRepositoriesList
             // 
-            this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.menuStripRecentMenu);
-            this.Controls.Add(this.pnlBody);
-            this.Controls.Add(this.pnlHeader);
-            this.DoubleBuffered = true;
-            this.Name = "UserRepositoriesList";
-            this.Size = new System.Drawing.Size(451, 283);
-            this.Load += new System.EventHandler(this.RecentRepositoriesList_Load);
-            this.pnlHeader.ResumeLayout(false);
-            this.pnlHeader.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.pnlBody.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.contextMenuStripRepository.ResumeLayout(false);
-            this.contextMenuStripCategory.ResumeLayout(false);
-            this.menuStripRecentMenu.ResumeLayout(false);
-            this.menuStripRecentMenu.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AllowDrop = true;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(menuStripRecentMenu);
+            Controls.Add(pnlBody);
+            Controls.Add(pnlHeader);
+            DoubleBuffered = true;
+            Name = "UserRepositoriesList";
+            Size = new Size(451, 283);
+            Load += RecentRepositoriesList_Load;
+            pnlHeader.ResumeLayout(false);
+            pnlHeader.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            pnlBody.ResumeLayout(false);
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
+            contextMenuStripRepository.ResumeLayout(false);
+            contextMenuStripCategory.ResumeLayout(false);
+            menuStripRecentMenu.ResumeLayout(false);
+            menuStripRecentMenu.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel pnlHeader;
-        private System.Windows.Forms.Panel pnlBody;
-        private System.Windows.Forms.Label lblRecentRepositories;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripRepository;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripCategory;
-        private System.Windows.Forms.ToolStripMenuItem tsmiRemoveFromList;
-        private System.Windows.Forms.ToolStripMenuItem tsmiOpenFolder;
-        private System.Windows.Forms.ToolStripMenuItem tsmiCategoryAdd;
-        private System.Windows.Forms.ToolStripMenuItem tsmiCategories;
-        private System.Windows.Forms.ToolStripMenuItem tsmiCategoryNone;
-        private System.Windows.Forms.ToolStripMenuItem tsmiRemoveMissingReposFromList;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem tsmiCategoryRename;
-        private System.Windows.Forms.ToolStripMenuItem tsmiCategoryDelete;
-        private System.Windows.Forms.ToolStripMenuItem tsmiCategoryClear;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private Panel pnlHeader;
+        private Panel pnlBody;
+        private Label lblRecentRepositories;
+        private ContextMenuStrip contextMenuStripRepository;
+        private ContextMenuStrip contextMenuStripCategory;
+        private ToolStripMenuItem tsmiRemoveFromList;
+        private ToolStripMenuItem tsmiOpenFolder;
+        private ToolStripMenuItem tsmiCategoryAdd;
+        private ToolStripMenuItem tsmiCategories;
+        private ToolStripMenuItem tsmiCategoryNone;
+        private ToolStripMenuItem tsmiRemoveMissingReposFromList;
+        private ToolStripSeparator toolStripMenuItem1;
+        private ToolStripSeparator toolStripMenuItem2;
+        private ToolStripMenuItem tsmiCategoryRename;
+        private ToolStripMenuItem tsmiCategoryDelete;
+        private ToolStripMenuItem tsmiCategoryClear;
+        private TableLayoutPanel tableLayoutPanel1;
         private GitUI.UserControls.NativeListView listView1;
-        private System.Windows.Forms.ColumnHeader clmhdrPath;
-        private System.Windows.Forms.ColumnHeader clmhdrBranch;
-        private System.Windows.Forms.ColumnHeader clmhdrCategory;
-        private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.MenuStrip menuStripRecentMenu;
-        private System.Windows.Forms.ToolStripMenuItem mnuTop;
-        private System.Windows.Forms.ToolStripMenuItem mnuConfigure;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TextBox textBoxSearch;
+        private ColumnHeader clmhdrPath;
+        private ColumnHeader clmhdrBranch;
+        private ColumnHeader clmhdrCategory;
+        private ImageList imageList1;
+        private MenuStrip menuStripRecentMenu;
+        private ToolStripMenuItem mnuTop;
+        private ToolStripMenuItem mnuConfigure;
+        private TableLayoutPanel tableLayoutPanel2;
+        private TextBox textBoxSearch;
     }
 }

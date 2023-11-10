@@ -28,597 +28,587 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.Tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.PullFromUrl = new System.Windows.Forms.RadioButton();
-            this.PullFromRemote = new System.Windows.Forms.RadioButton();
-            this.lblLocalBranch = new System.Windows.Forms.Label();
-            this.lblRemoteBranch = new System.Windows.Forms.Label();
-            this.Prune = new System.Windows.Forms.CheckBox();
-            this.PruneTags = new System.Windows.Forms.CheckBox();
-            this.Unshallow = new System.Windows.Forms.CheckBox();
-            this.Pull = new System.Windows.Forms.Button();
-            this.MainLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.PanelLeftImage = new GitUI.Help.HelpImageDisplayUserControl();
-            this.PanelRight = new System.Windows.Forms.Panel();
-            this.PanelRightInner = new System.Windows.Forms.TableLayoutPanel();
-            this.GroupPullFrom = new System.Windows.Forms.GroupBox();
-            this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
-            this.AddRemote = new System.Windows.Forms.Button();
-            this.comboBoxPullSource = new System.Windows.Forms.ComboBox();
-            this.folderBrowserButton1 = new GitUI.UserControls.FolderBrowserButton();
-            this.GroupMergeOptions = new System.Windows.Forms.GroupBox();
-            this.PanelMergeOptions = new System.Windows.Forms.FlowLayoutPanel();
-            this.Merge = new System.Windows.Forms.RadioButton();
-            this.Rebase = new System.Windows.Forms.RadioButton();
-            this.Fetch = new System.Windows.Forms.RadioButton();
-            this.GroupBranch = new System.Windows.Forms.GroupBox();
-            this.localBranch = new System.Windows.Forms.TextBox();
-            this.Branches = new System.Windows.Forms.ComboBox();
-            this.GroupTagOptions = new System.Windows.Forms.GroupBox();
-            this.PanelTagOptions = new System.Windows.Forms.FlowLayoutPanel();
-            this.ReachableTags = new System.Windows.Forms.RadioButton();
-            this.NoTags = new System.Windows.Forms.RadioButton();
-            this.AllTags = new System.Windows.Forms.RadioButton();
-            this.Mergetool = new System.Windows.Forms.Button();
-            this.Stash = new System.Windows.Forms.Button();
-            this.AutoStash = new System.Windows.Forms.CheckBox();
-            this.lblSpacer = new System.Windows.Forms.Label();
-            this.MainPanel.SuspendLayout();
-            this.ControlsPanel.SuspendLayout();
-            this.MainLayout.SuspendLayout();
-            this.PanelRight.SuspendLayout();
-            this.PanelRightInner.SuspendLayout();
-            this.GroupPullFrom.SuspendLayout();
-            this.GroupMergeOptions.SuspendLayout();
-            this.PanelMergeOptions.SuspendLayout();
-            this.GroupBranch.SuspendLayout();
-            this.GroupTagOptions.SuspendLayout();
-            this.PanelTagOptions.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            Tooltip = new ToolTip(components);
+            PullFromUrl = new RadioButton();
+            PullFromRemote = new RadioButton();
+            lblLocalBranch = new Label();
+            lblRemoteBranch = new Label();
+            Prune = new CheckBox();
+            PruneTags = new CheckBox();
+            Unshallow = new CheckBox();
+            Pull = new Button();
+            MainLayout = new TableLayoutPanel();
+            PanelLeftImage = new GitUI.Help.HelpImageDisplayUserControl();
+            PanelRight = new Panel();
+            PanelRightInner = new TableLayoutPanel();
+            GroupPullFrom = new GroupBox();
+            _NO_TRANSLATE_Remotes = new ComboBox();
+            AddRemote = new Button();
+            comboBoxPullSource = new ComboBox();
+            folderBrowserButton1 = new GitUI.UserControls.FolderBrowserButton();
+            GroupMergeOptions = new GroupBox();
+            PanelMergeOptions = new FlowLayoutPanel();
+            Merge = new RadioButton();
+            Rebase = new RadioButton();
+            Fetch = new RadioButton();
+            GroupBranch = new GroupBox();
+            localBranch = new TextBox();
+            Branches = new ComboBox();
+            GroupTagOptions = new GroupBox();
+            PanelTagOptions = new FlowLayoutPanel();
+            ReachableTags = new RadioButton();
+            NoTags = new RadioButton();
+            AllTags = new RadioButton();
+            Mergetool = new Button();
+            Stash = new Button();
+            AutoStash = new CheckBox();
+            lblSpacer = new Label();
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
+            MainLayout.SuspendLayout();
+            PanelRight.SuspendLayout();
+            PanelRightInner.SuspendLayout();
+            GroupPullFrom.SuspendLayout();
+            GroupMergeOptions.SuspendLayout();
+            PanelMergeOptions.SuspendLayout();
+            GroupBranch.SuspendLayout();
+            GroupTagOptions.SuspendLayout();
+            PanelTagOptions.SuspendLayout();
+            SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.MainLayout);
-            this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
-            this.MainPanel.Size = new System.Drawing.Size(674, 484);
+            MainPanel.Controls.Add(MainLayout);
+            MainPanel.Padding = new Padding(9);
+            MainPanel.Size = new Size(674, 484);
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.Pull);
-            this.ControlsPanel.Controls.Add(this.lblSpacer);
-            this.ControlsPanel.Controls.Add(this.AutoStash);
-            this.ControlsPanel.Controls.Add(this.Stash);
-            this.ControlsPanel.Controls.Add(this.Mergetool);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 484);
-            this.ControlsPanel.Size = new System.Drawing.Size(674, 41);
+            ControlsPanel.Controls.Add(Pull);
+            ControlsPanel.Controls.Add(lblSpacer);
+            ControlsPanel.Controls.Add(AutoStash);
+            ControlsPanel.Controls.Add(Stash);
+            ControlsPanel.Controls.Add(Mergetool);
+            ControlsPanel.Location = new Point(0, 484);
+            ControlsPanel.Size = new Size(674, 41);
             // 
             // PullFromUrl
             // 
-            this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
-            this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(46, 19);
-            this.PullFromUrl.TabIndex = 8;
-            this.PullFromUrl.Text = "&URL";
-            this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
-            this.PullFromUrl.UseVisualStyleBackColor = true;
-            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
+            PullFromUrl.AutoSize = true;
+            PullFromUrl.Location = new Point(7, 47);
+            PullFromUrl.Name = "PullFromUrl";
+            PullFromUrl.Size = new Size(46, 19);
+            PullFromUrl.TabIndex = 8;
+            PullFromUrl.Text = "&URL";
+            Tooltip.SetToolTip(PullFromUrl, "Url to pull from");
+            PullFromUrl.UseVisualStyleBackColor = true;
+            PullFromUrl.CheckedChanged += PullFromUrlCheckedChanged;
             // 
             // PullFromRemote
             // 
-            this.PullFromRemote.AutoSize = true;
-            this.PullFromRemote.Checked = true;
-            this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
-            this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
-            this.PullFromRemote.TabIndex = 5;
-            this.PullFromRemote.TabStop = true;
-            this.PullFromRemote.Text = "&Remote";
-            this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
-            this.PullFromRemote.UseVisualStyleBackColor = true;
-            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
+            PullFromRemote.AutoSize = true;
+            PullFromRemote.Checked = true;
+            PullFromRemote.Location = new Point(7, 19);
+            PullFromRemote.Name = "PullFromRemote";
+            PullFromRemote.Size = new Size(66, 19);
+            PullFromRemote.TabIndex = 5;
+            PullFromRemote.TabStop = true;
+            PullFromRemote.Text = "&Remote";
+            Tooltip.SetToolTip(PullFromRemote, "Remote repository to pull from");
+            PullFromRemote.UseVisualStyleBackColor = true;
+            PullFromRemote.CheckedChanged += PullFromRemoteCheckedChanged;
             // 
             // lblLocalBranch
             // 
-            this.lblLocalBranch.AutoSize = true;
-            this.lblLocalBranch.Location = new System.Drawing.Point(9, 22);
-            this.lblLocalBranch.Name = "lblLocalBranch";
-            this.lblLocalBranch.Size = new System.Drawing.Size(75, 15);
-            this.lblLocalBranch.TabIndex = 11;
-            this.lblLocalBranch.Text = "&Local branch";
-            this.Tooltip.SetToolTip(this.lblLocalBranch, "Local branch to create or reset to the remote branch selected.");
+            lblLocalBranch.AutoSize = true;
+            lblLocalBranch.Location = new Point(9, 22);
+            lblLocalBranch.Name = "lblLocalBranch";
+            lblLocalBranch.Size = new Size(75, 15);
+            lblLocalBranch.TabIndex = 11;
+            lblLocalBranch.Text = "&Local branch";
+            Tooltip.SetToolTip(lblLocalBranch, "Local branch to create or reset to the remote branch selected.");
             // 
             // lblRemoteBranch
             // 
-            this.lblRemoteBranch.AutoSize = true;
-            this.lblRemoteBranch.Location = new System.Drawing.Point(8, 49);
-            this.lblRemoteBranch.Name = "lblRemoteBranch";
-            this.lblRemoteBranch.Size = new System.Drawing.Size(88, 15);
-            this.lblRemoteBranch.TabIndex = 13;
-            this.lblRemoteBranch.Text = "Rem&ote branch";
-            this.Tooltip.SetToolTip(this.lblRemoteBranch, "Remote branch to pull. Leave empty to pull all branches.");
+            lblRemoteBranch.AutoSize = true;
+            lblRemoteBranch.Location = new Point(8, 49);
+            lblRemoteBranch.Name = "lblRemoteBranch";
+            lblRemoteBranch.Size = new Size(88, 15);
+            lblRemoteBranch.TabIndex = 13;
+            lblRemoteBranch.Text = "Rem&ote branch";
+            Tooltip.SetToolTip(lblRemoteBranch, "Remote branch to pull. Leave empty to pull all branches.");
             // 
             // Prune
             // 
-            this.Prune.AutoSize = true;
-            this.Prune.Location = new System.Drawing.Point(7, 437);
-            this.Prune.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
-            this.Prune.Name = "Prune";
-            this.Prune.Size = new System.Drawing.Size(149, 19);
-            this.Prune.TabIndex = 26;
-            this.Prune.Text = "&Prune remote branches";
-            this.Tooltip.SetToolTip(this.Prune, "Removes remote tracking branches that no longer exist on the remote (e.g. if some" +
+            Prune.AutoSize = true;
+            Prune.Location = new Point(7, 437);
+            Prune.Margin = new Padding(7, 2, 2, 2);
+            Prune.Name = "Prune";
+            Prune.Size = new Size(149, 19);
+            Prune.TabIndex = 26;
+            Prune.Text = "&Prune remote branches";
+            Tooltip.SetToolTip(Prune, "Removes remote tracking branches that no longer exist on the remote (e.g. if some" +
         "one else deleted them).\r\n\r\nActual command line (if checked): --prune --force\r\n");
-            this.Prune.CheckedChanged += new System.EventHandler(this.Prune_CheckedChanged);
+            Prune.CheckedChanged += Prune_CheckedChanged;
             // 
             // PruneTags
             // 
-            this.PruneTags.AutoSize = true;
-            this.PruneTags.Enabled = false;
-            this.PruneTags.Location = new System.Drawing.Point(7, 460);
-            this.PruneTags.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
-            this.PruneTags.Name = "PruneTags";
-            this.PruneTags.Size = new System.Drawing.Size(197, 19);
-            this.PruneTags.TabIndex = 27;
-            this.PruneTags.Text = "Prune remote branches an&d tags";
-            this.Tooltip.SetToolTip(this.PruneTags, "Before fetching, remove any local tags that no longer exist on the remote if --pr" +
+            PruneTags.AutoSize = true;
+            PruneTags.Enabled = false;
+            PruneTags.Location = new Point(7, 460);
+            PruneTags.Margin = new Padding(7, 2, 2, 2);
+            PruneTags.Name = "PruneTags";
+            PruneTags.Size = new Size(197, 19);
+            PruneTags.TabIndex = 27;
+            PruneTags.Text = "Prune remote branches an&d tags";
+            Tooltip.SetToolTip(PruneTags, "Before fetching, remove any local tags that no longer exist on the remote if --pr" +
         "une is enabled.");
-            this.PruneTags.CheckedChanged += new System.EventHandler(this.PruneTags_CheckedChanged);
+            PruneTags.CheckedChanged += PruneTags_CheckedChanged;
             // 
             // Unshallow
             // 
-            this.Unshallow.AutoSize = true;
-            this.Unshallow.Location = new System.Drawing.Point(7, 414);
-            this.Unshallow.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
-            this.Unshallow.Name = "Unshallow";
-            this.Unshallow.Size = new System.Drawing.Size(139, 19);
-            this.Unshallow.TabIndex = 25;
-            this.Unshallow.Text = "Do&wnload full history";
-            this.Unshallow.Visible = false;
+            Unshallow.AutoSize = true;
+            Unshallow.Location = new Point(7, 414);
+            Unshallow.Margin = new Padding(7, 2, 2, 2);
+            Unshallow.Name = "Unshallow";
+            Unshallow.Size = new Size(139, 19);
+            Unshallow.TabIndex = 25;
+            Unshallow.Text = "Do&wnload full history";
+            Unshallow.Visible = false;
             // 
             // Pull
             // 
-            this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.Pull.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Pull.Image = global::GitUI.Properties.Images.ArrowDown;
-            this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Pull.Location = new System.Drawing.Point(537, 8);
-            this.Pull.MinimumSize = new System.Drawing.Size(120, 25);
-            this.Pull.Name = "Pull";
-            this.Pull.Size = new System.Drawing.Size(124, 25);
-            this.Pull.TabIndex = 32;
-            this.Pull.Text = "Pull";
-            this.Pull.UseVisualStyleBackColor = true;
-            this.Pull.Click += new System.EventHandler(this.PullClick);
+            Pull.Anchor = AnchorStyles.Right;
+            Pull.DialogResult = DialogResult.OK;
+            Pull.Image = Properties.Images.ArrowDown;
+            Pull.ImageAlign = ContentAlignment.MiddleLeft;
+            Pull.Location = new Point(537, 8);
+            Pull.MinimumSize = new Size(120, 25);
+            Pull.Name = "Pull";
+            Pull.Size = new Size(124, 25);
+            Pull.TabIndex = 32;
+            Pull.Text = "Pull";
+            Pull.UseVisualStyleBackColor = true;
+            Pull.Click += PullClick;
             // 
             // MainLayout
             // 
-            this.MainLayout.ColumnCount = 2;
-            this.MainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.MainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.MainLayout.Controls.Add(this.PanelLeftImage, 0, 0);
-            this.MainLayout.Controls.Add(this.PanelRight, 1, 0);
-            this.MainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainLayout.Location = new System.Drawing.Point(9, 9);
-            this.MainLayout.Margin = new System.Windows.Forms.Padding(0);
-            this.MainLayout.Name = "MainLayout";
-            this.MainLayout.RowCount = 1;
-            this.MainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.MainLayout.Size = new System.Drawing.Size(656, 466);
-            this.MainLayout.TabIndex = 0;
+            MainLayout.ColumnCount = 2;
+            MainLayout.ColumnStyles.Add(new ColumnStyle());
+            MainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            MainLayout.Controls.Add(PanelLeftImage, 0, 0);
+            MainLayout.Controls.Add(PanelRight, 1, 0);
+            MainLayout.Dock = DockStyle.Fill;
+            MainLayout.Location = new Point(9, 9);
+            MainLayout.Margin = new Padding(0);
+            MainLayout.Name = "MainLayout";
+            MainLayout.RowCount = 1;
+            MainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            MainLayout.Size = new Size(656, 466);
+            MainLayout.TabIndex = 0;
             // 
             // PanelLeftImage
             // 
-            this.PanelLeftImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.PanelLeftImage.AutoSize = true;
-            this.PanelLeftImage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.PanelLeftImage.Image1 = null;
-            this.PanelLeftImage.Image2 = null;
-            this.PanelLeftImage.IsExpanded = true;
-            this.PanelLeftImage.IsOnHoverShowImage2 = false;
-            this.PanelLeftImage.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
-            this.PanelLeftImage.Location = new System.Drawing.Point(3, 3);
-            this.PanelLeftImage.MinimumSize = new System.Drawing.Size(40, 85);
-            this.PanelLeftImage.Name = "PanelLeftImage";
-            this.PanelLeftImage.Size = new System.Drawing.Size(40, 460);
-            this.PanelLeftImage.TabIndex = 1;
-            this.PanelLeftImage.UniqueIsExpandedSettingsId = "Pull";
+            PanelLeftImage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            PanelLeftImage.AutoSize = true;
+            PanelLeftImage.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            PanelLeftImage.Image1 = null;
+            PanelLeftImage.Image2 = null;
+            PanelLeftImage.IsExpanded = true;
+            PanelLeftImage.IsOnHoverShowImage2 = false;
+            PanelLeftImage.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
+            PanelLeftImage.Location = new Point(3, 3);
+            PanelLeftImage.MinimumSize = new Size(40, 85);
+            PanelLeftImage.Name = "PanelLeftImage";
+            PanelLeftImage.Size = new Size(40, 460);
+            PanelLeftImage.TabIndex = 1;
+            PanelLeftImage.UniqueIsExpandedSettingsId = "Pull";
             // 
             // PanelRight
             // 
-            this.PanelRight.Controls.Add(this.PanelRightInner);
-            this.PanelRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PanelRight.Location = new System.Drawing.Point(49, 3);
-            this.PanelRight.Name = "PanelRight";
-            this.PanelRight.Size = new System.Drawing.Size(604, 460);
-            this.PanelRight.TabIndex = 2;
+            PanelRight.Controls.Add(PanelRightInner);
+            PanelRight.Dock = DockStyle.Fill;
+            PanelRight.Location = new Point(49, 3);
+            PanelRight.Name = "PanelRight";
+            PanelRight.Size = new Size(604, 460);
+            PanelRight.TabIndex = 2;
             // 
             // PanelRightInner
             // 
-            this.PanelRightInner.ColumnCount = 1;
-            this.PanelRightInner.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.PanelRightInner.Controls.Add(this.GroupPullFrom, 0, 0);
-            this.PanelRightInner.Controls.Add(this.GroupMergeOptions, 0, 2);
-            this.PanelRightInner.Controls.Add(this.GroupBranch, 0, 1);
-            this.PanelRightInner.Controls.Add(this.GroupTagOptions, 0, 3);
-            this.PanelRightInner.Controls.Add(this.Unshallow, 0, 4);
-            this.PanelRightInner.Controls.Add(this.Prune, 0, 5);
-            this.PanelRightInner.Controls.Add(this.PruneTags, 0, 6);
-            this.PanelRightInner.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PanelRightInner.Location = new System.Drawing.Point(0, 0);
-            this.PanelRightInner.Margin = new System.Windows.Forms.Padding(0);
-            this.PanelRightInner.Name = "PanelRightInner";
-            this.PanelRightInner.RowCount = 8;
-            this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.PanelRightInner.Size = new System.Drawing.Size(604, 460);
-            this.PanelRightInner.TabIndex = 3;
+            PanelRightInner.ColumnCount = 1;
+            PanelRightInner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            PanelRightInner.Controls.Add(GroupPullFrom, 0, 0);
+            PanelRightInner.Controls.Add(GroupMergeOptions, 0, 2);
+            PanelRightInner.Controls.Add(GroupBranch, 0, 1);
+            PanelRightInner.Controls.Add(GroupTagOptions, 0, 3);
+            PanelRightInner.Controls.Add(Unshallow, 0, 4);
+            PanelRightInner.Controls.Add(Prune, 0, 5);
+            PanelRightInner.Controls.Add(PruneTags, 0, 6);
+            PanelRightInner.Dock = DockStyle.Fill;
+            PanelRightInner.Location = new Point(0, 0);
+            PanelRightInner.Margin = new Padding(0);
+            PanelRightInner.Name = "PanelRightInner";
+            PanelRightInner.RowCount = 8;
+            PanelRightInner.RowStyles.Add(new RowStyle());
+            PanelRightInner.RowStyles.Add(new RowStyle());
+            PanelRightInner.RowStyles.Add(new RowStyle());
+            PanelRightInner.RowStyles.Add(new RowStyle());
+            PanelRightInner.RowStyles.Add(new RowStyle());
+            PanelRightInner.RowStyles.Add(new RowStyle());
+            PanelRightInner.RowStyles.Add(new RowStyle());
+            PanelRightInner.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            PanelRightInner.Size = new Size(604, 460);
+            PanelRightInner.TabIndex = 3;
             // 
             // GroupPullFrom
             // 
-            this.GroupPullFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GroupPullFrom.AutoSize = true;
-            this.GroupPullFrom.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GroupPullFrom.Controls.Add(this.PullFromRemote);
-            this.GroupPullFrom.Controls.Add(this._NO_TRANSLATE_Remotes);
-            this.GroupPullFrom.Controls.Add(this.AddRemote);
-            this.GroupPullFrom.Controls.Add(this.PullFromUrl);
-            this.GroupPullFrom.Controls.Add(this.comboBoxPullSource);
-            this.GroupPullFrom.Controls.Add(this.folderBrowserButton1);
-            this.GroupPullFrom.Location = new System.Drawing.Point(3, 3);
-            this.GroupPullFrom.Name = "GroupPullFrom";
-            this.GroupPullFrom.Size = new System.Drawing.Size(598, 91);
-            this.GroupPullFrom.TabIndex = 4;
-            this.GroupPullFrom.TabStop = false;
-            this.GroupPullFrom.Text = "Pull from";
+            GroupPullFrom.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            GroupPullFrom.AutoSize = true;
+            GroupPullFrom.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            GroupPullFrom.Controls.Add(PullFromRemote);
+            GroupPullFrom.Controls.Add(_NO_TRANSLATE_Remotes);
+            GroupPullFrom.Controls.Add(AddRemote);
+            GroupPullFrom.Controls.Add(PullFromUrl);
+            GroupPullFrom.Controls.Add(comboBoxPullSource);
+            GroupPullFrom.Controls.Add(folderBrowserButton1);
+            GroupPullFrom.Location = new Point(3, 3);
+            GroupPullFrom.Name = "GroupPullFrom";
+            GroupPullFrom.Size = new Size(598, 91);
+            GroupPullFrom.TabIndex = 4;
+            GroupPullFrom.TabStop = false;
+            GroupPullFrom.Text = "Pull from";
             // 
             // _NO_TRANSLATE_Remotes
             // 
-            this._NO_TRANSLATE_Remotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this._NO_TRANSLATE_Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
-            this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(148, 16);
-            this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(288, 23);
-            this._NO_TRANSLATE_Remotes.TabIndex = 6;
-            this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
-            this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
+            _NO_TRANSLATE_Remotes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_Remotes.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            _NO_TRANSLATE_Remotes.AutoCompleteSource = AutoCompleteSource.ListItems;
+            _NO_TRANSLATE_Remotes.FormattingEnabled = true;
+            _NO_TRANSLATE_Remotes.Location = new Point(148, 16);
+            _NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
+            _NO_TRANSLATE_Remotes.Size = new Size(288, 23);
+            _NO_TRANSLATE_Remotes.TabIndex = 6;
+            _NO_TRANSLATE_Remotes.TextChanged += Remotes_TextChanged;
+            _NO_TRANSLATE_Remotes.Validating += RemotesValidating;
             // 
             // AddRemote
             // 
-            this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddRemote.Image = global::GitUI.Properties.Images.Remotes;
-            this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddRemote.Location = new System.Drawing.Point(442, 14);
-            this.AddRemote.Name = "AddRemote";
-            this.AddRemote.Size = new System.Drawing.Size(150, 25);
-            this.AddRemote.TabIndex = 7;
-            this.AddRemote.Text = "Mana&ge remotes";
-            this.AddRemote.UseVisualStyleBackColor = true;
-            this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
+            AddRemote.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AddRemote.Image = Properties.Images.Remotes;
+            AddRemote.ImageAlign = ContentAlignment.MiddleLeft;
+            AddRemote.Location = new Point(442, 14);
+            AddRemote.Name = "AddRemote";
+            AddRemote.Size = new Size(150, 25);
+            AddRemote.TabIndex = 7;
+            AddRemote.Text = "Mana&ge remotes";
+            AddRemote.UseVisualStyleBackColor = true;
+            AddRemote.Click += AddRemoteClick;
             // 
             // comboBoxPullSource
             // 
-            this.comboBoxPullSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxPullSource.Enabled = false;
-            this.comboBoxPullSource.FormattingEnabled = true;
-            this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
-            this.comboBoxPullSource.Name = "comboBoxPullSource";
-            this.comboBoxPullSource.Size = new System.Drawing.Size(288, 23);
-            this.comboBoxPullSource.TabIndex = 9;
-            this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
+            comboBoxPullSource.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            comboBoxPullSource.Enabled = false;
+            comboBoxPullSource.FormattingEnabled = true;
+            comboBoxPullSource.Location = new Point(148, 46);
+            comboBoxPullSource.Name = "comboBoxPullSource";
+            comboBoxPullSource.Size = new Size(288, 23);
+            comboBoxPullSource.TabIndex = 9;
+            comboBoxPullSource.Validating += PullSourceValidating;
             // 
             // folderBrowserButton1
             // 
-            this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.folderBrowserButton1.AutoSize = true;
-            this.folderBrowserButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.folderBrowserButton1.Enabled = false;
-            this.folderBrowserButton1.Location = new System.Drawing.Point(542, 45);
-            this.folderBrowserButton1.Name = "folderBrowserButton1";
-            this.folderBrowserButton1.PathShowingControl = this.comboBoxPullSource;
-            this.folderBrowserButton1.Size = new System.Drawing.Size(0, 0);
-            this.folderBrowserButton1.TabIndex = 5;
+            folderBrowserButton1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            folderBrowserButton1.AutoSize = true;
+            folderBrowserButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            folderBrowserButton1.Enabled = false;
+            folderBrowserButton1.Location = new Point(542, 45);
+            folderBrowserButton1.Name = "folderBrowserButton1";
+            folderBrowserButton1.PathShowingControl = comboBoxPullSource;
+            folderBrowserButton1.Size = new Size(0, 0);
+            folderBrowserButton1.TabIndex = 5;
             // 
             // GroupMergeOptions
             // 
-            this.GroupMergeOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GroupMergeOptions.AutoSize = true;
-            this.GroupMergeOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GroupMergeOptions.Controls.Add(this.PanelMergeOptions);
-            this.GroupMergeOptions.Location = new System.Drawing.Point(3, 197);
-            this.GroupMergeOptions.Name = "GroupMergeOptions";
-            this.GroupMergeOptions.Size = new System.Drawing.Size(598, 103);
-            this.GroupMergeOptions.TabIndex = 15;
-            this.GroupMergeOptions.TabStop = false;
-            this.GroupMergeOptions.Text = "Merge options";
+            GroupMergeOptions.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            GroupMergeOptions.AutoSize = true;
+            GroupMergeOptions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            GroupMergeOptions.Controls.Add(PanelMergeOptions);
+            GroupMergeOptions.Location = new Point(3, 197);
+            GroupMergeOptions.Name = "GroupMergeOptions";
+            GroupMergeOptions.Size = new Size(598, 103);
+            GroupMergeOptions.TabIndex = 15;
+            GroupMergeOptions.TabStop = false;
+            GroupMergeOptions.Text = "Merge options";
             // 
             // PanelMergeOptions
             // 
-            this.PanelMergeOptions.AutoSize = true;
-            this.PanelMergeOptions.Controls.Add(this.Merge);
-            this.PanelMergeOptions.Controls.Add(this.Rebase);
-            this.PanelMergeOptions.Controls.Add(this.Fetch);
-            this.PanelMergeOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PanelMergeOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.PanelMergeOptions.Location = new System.Drawing.Point(3, 19);
-            this.PanelMergeOptions.Name = "PanelMergeOptions";
-            this.PanelMergeOptions.Size = new System.Drawing.Size(592, 81);
-            this.PanelMergeOptions.TabIndex = 16;
-            this.PanelMergeOptions.WrapContents = false;
+            PanelMergeOptions.AutoSize = true;
+            PanelMergeOptions.Controls.Add(Merge);
+            PanelMergeOptions.Controls.Add(Rebase);
+            PanelMergeOptions.Controls.Add(Fetch);
+            PanelMergeOptions.Dock = DockStyle.Fill;
+            PanelMergeOptions.FlowDirection = FlowDirection.TopDown;
+            PanelMergeOptions.Location = new Point(3, 19);
+            PanelMergeOptions.Name = "PanelMergeOptions";
+            PanelMergeOptions.Size = new Size(592, 81);
+            PanelMergeOptions.TabIndex = 16;
+            PanelMergeOptions.WrapContents = false;
             // 
             // Merge
             // 
-            this.Merge.AutoSize = true;
-            this.Merge.Image = global::GitUI.Properties.Images.Merge;
-            this.Merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Merge.Location = new System.Drawing.Point(3, 3);
-            this.Merge.Name = "Merge";
-            this.Merge.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Merge.Size = new System.Drawing.Size(261, 21);
-            this.Merge.TabIndex = 17;
-            this.Merge.TabStop = true;
-            this.Merge.Text = "&Merge remote branch into current branch";
-            this.Merge.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.Merge.UseVisualStyleBackColor = true;
-            this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);
+            Merge.AutoSize = true;
+            Merge.Image = Properties.Images.Merge;
+            Merge.ImageAlign = ContentAlignment.MiddleLeft;
+            Merge.Location = new Point(3, 3);
+            Merge.Name = "Merge";
+            Merge.Padding = new Padding(0, 1, 0, 1);
+            Merge.Size = new Size(261, 21);
+            Merge.TabIndex = 17;
+            Merge.TabStop = true;
+            Merge.Text = "&Merge remote branch into current branch";
+            Merge.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Merge.UseVisualStyleBackColor = true;
+            Merge.CheckedChanged += MergeCheckedChanged;
             // 
             // Rebase
             // 
-            this.Rebase.AutoSize = true;
-            this.Rebase.Image = global::GitUI.Properties.Images.Rebase;
-            this.Rebase.Location = new System.Drawing.Point(3, 30);
-            this.Rebase.Name = "Rebase";
-            this.Rebase.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Rebase.Size = new System.Drawing.Size(504, 21);
-            this.Rebase.TabIndex = 18;
-            this.Rebase.Text = "R&ebase current branch on top of remote branch, creates linear history (use with " +
+            Rebase.AutoSize = true;
+            Rebase.Image = Properties.Images.Rebase;
+            Rebase.Location = new Point(3, 30);
+            Rebase.Name = "Rebase";
+            Rebase.Padding = new Padding(0, 1, 0, 1);
+            Rebase.Size = new Size(504, 21);
+            Rebase.TabIndex = 18;
+            Rebase.Text = "R&ebase current branch on top of remote branch, creates linear history (use with " +
     "caution)";
-            this.Rebase.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.Rebase.UseVisualStyleBackColor = true;
-            this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
+            Rebase.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Rebase.UseVisualStyleBackColor = true;
+            Rebase.CheckedChanged += RebaseCheckedChanged;
             // 
             // Fetch
             // 
-            this.Fetch.AutoSize = true;
-            this.Fetch.Location = new System.Drawing.Point(3, 57);
-            this.Fetch.Name = "Fetch";
-            this.Fetch.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Fetch.Size = new System.Drawing.Size(245, 21);
-            this.Fetch.TabIndex = 19;
-            this.Fetch.Text = "Do not merge, only &fetch remote changes";
-            this.Fetch.UseVisualStyleBackColor = true;
-            this.Fetch.CheckedChanged += new System.EventHandler(this.FetchCheckedChanged);
+            Fetch.AutoSize = true;
+            Fetch.Location = new Point(3, 57);
+            Fetch.Name = "Fetch";
+            Fetch.Padding = new Padding(0, 1, 0, 1);
+            Fetch.Size = new Size(245, 21);
+            Fetch.TabIndex = 19;
+            Fetch.Text = "Do not merge, only &fetch remote changes";
+            Fetch.UseVisualStyleBackColor = true;
+            Fetch.CheckedChanged += FetchCheckedChanged;
             // 
             // GroupBranch
             // 
-            this.GroupBranch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GroupBranch.AutoSize = true;
-            this.GroupBranch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GroupBranch.Controls.Add(this.localBranch);
-            this.GroupBranch.Controls.Add(this.lblLocalBranch);
-            this.GroupBranch.Controls.Add(this.Branches);
-            this.GroupBranch.Controls.Add(this.lblRemoteBranch);
-            this.GroupBranch.Location = new System.Drawing.Point(3, 100);
-            this.GroupBranch.Name = "GroupBranch";
-            this.GroupBranch.Size = new System.Drawing.Size(598, 91);
-            this.GroupBranch.TabIndex = 10;
-            this.GroupBranch.TabStop = false;
-            this.GroupBranch.Text = "Branch";
+            GroupBranch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            GroupBranch.AutoSize = true;
+            GroupBranch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            GroupBranch.Controls.Add(localBranch);
+            GroupBranch.Controls.Add(lblLocalBranch);
+            GroupBranch.Controls.Add(Branches);
+            GroupBranch.Controls.Add(lblRemoteBranch);
+            GroupBranch.Location = new Point(3, 100);
+            GroupBranch.Name = "GroupBranch";
+            GroupBranch.Size = new Size(598, 91);
+            GroupBranch.TabIndex = 10;
+            GroupBranch.TabStop = false;
+            GroupBranch.Text = "Branch";
             // 
             // localBranch
             // 
-            this.localBranch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.localBranch.Location = new System.Drawing.Point(150, 14);
-            this.localBranch.Name = "localBranch";
-            this.localBranch.Size = new System.Drawing.Size(288, 23);
-            this.localBranch.TabIndex = 12;
-            this.localBranch.Leave += new System.EventHandler(this.localBranch_Leave);
+            localBranch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            localBranch.Location = new Point(150, 14);
+            localBranch.Name = "localBranch";
+            localBranch.Size = new Size(288, 23);
+            localBranch.TabIndex = 12;
+            localBranch.Leave += localBranch_Leave;
             // 
             // Branches
             // 
-            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(150, 46);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(288, 23);
-            this.Branches.TabIndex = 14;
-            this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
+            Branches.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            Branches.FormattingEnabled = true;
+            Branches.Location = new Point(150, 46);
+            Branches.Name = "Branches";
+            Branches.Size = new Size(288, 23);
+            Branches.TabIndex = 14;
+            Branches.DropDown += BranchesDropDown;
             // 
             // GroupTagOptions
             // 
-            this.GroupTagOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GroupTagOptions.AutoSize = true;
-            this.GroupTagOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GroupTagOptions.Controls.Add(this.PanelTagOptions);
-            this.GroupTagOptions.Location = new System.Drawing.Point(3, 306);
-            this.GroupTagOptions.Name = "GroupTagOptions";
-            this.GroupTagOptions.Size = new System.Drawing.Size(598, 103);
-            this.GroupTagOptions.TabIndex = 20;
-            this.GroupTagOptions.TabStop = false;
-            this.GroupTagOptions.Text = "Tag options";
+            GroupTagOptions.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            GroupTagOptions.AutoSize = true;
+            GroupTagOptions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            GroupTagOptions.Controls.Add(PanelTagOptions);
+            GroupTagOptions.Location = new Point(3, 306);
+            GroupTagOptions.Name = "GroupTagOptions";
+            GroupTagOptions.Size = new Size(598, 103);
+            GroupTagOptions.TabIndex = 20;
+            GroupTagOptions.TabStop = false;
+            GroupTagOptions.Text = "Tag options";
             // 
             // PanelTagOptions
             // 
-            this.PanelTagOptions.AutoSize = true;
-            this.PanelTagOptions.Controls.Add(this.ReachableTags);
-            this.PanelTagOptions.Controls.Add(this.NoTags);
-            this.PanelTagOptions.Controls.Add(this.AllTags);
-            this.PanelTagOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PanelTagOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.PanelTagOptions.Location = new System.Drawing.Point(3, 19);
-            this.PanelTagOptions.Name = "PanelTagOptions";
-            this.PanelTagOptions.Size = new System.Drawing.Size(592, 81);
-            this.PanelTagOptions.TabIndex = 21;
-            this.PanelTagOptions.WrapContents = false;
+            PanelTagOptions.AutoSize = true;
+            PanelTagOptions.Controls.Add(ReachableTags);
+            PanelTagOptions.Controls.Add(NoTags);
+            PanelTagOptions.Controls.Add(AllTags);
+            PanelTagOptions.Dock = DockStyle.Fill;
+            PanelTagOptions.FlowDirection = FlowDirection.TopDown;
+            PanelTagOptions.Location = new Point(3, 19);
+            PanelTagOptions.Name = "PanelTagOptions";
+            PanelTagOptions.Size = new Size(592, 81);
+            PanelTagOptions.TabIndex = 21;
+            PanelTagOptions.WrapContents = false;
             // 
             // ReachableTags
             // 
-            this.ReachableTags.AutoSize = true;
-            this.ReachableTags.Checked = true;
-            this.ReachableTags.Location = new System.Drawing.Point(3, 3);
-            this.ReachableTags.Name = "ReachableTags";
-            this.ReachableTags.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.ReachableTags.Size = new System.Drawing.Size(398, 21);
-            this.ReachableTags.TabIndex = 22;
-            this.ReachableTags.TabStop = true;
-            this.ReachableTags.Text = "Follow &tagopt, if not specified, fetch tags reachable from remote HEAD";
-            this.ReachableTags.UseVisualStyleBackColor = true;
+            ReachableTags.AutoSize = true;
+            ReachableTags.Checked = true;
+            ReachableTags.Location = new Point(3, 3);
+            ReachableTags.Name = "ReachableTags";
+            ReachableTags.Padding = new Padding(0, 1, 0, 1);
+            ReachableTags.Size = new Size(398, 21);
+            ReachableTags.TabIndex = 22;
+            ReachableTags.TabStop = true;
+            ReachableTags.Text = "Follow &tagopt, if not specified, fetch tags reachable from remote HEAD";
+            ReachableTags.UseVisualStyleBackColor = true;
             // 
             // NoTags
             // 
-            this.NoTags.AutoSize = true;
-            this.NoTags.Location = new System.Drawing.Point(3, 30);
-            this.NoTags.Name = "NoTags";
-            this.NoTags.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.NoTags.Size = new System.Drawing.Size(91, 21);
-            this.NoTags.TabIndex = 23;
-            this.NoTags.Text = "Fetch &no tag";
-            this.NoTags.UseVisualStyleBackColor = true;
+            NoTags.AutoSize = true;
+            NoTags.Location = new Point(3, 30);
+            NoTags.Name = "NoTags";
+            NoTags.Padding = new Padding(0, 1, 0, 1);
+            NoTags.Size = new Size(91, 21);
+            NoTags.TabIndex = 23;
+            NoTags.Text = "Fetch &no tag";
+            NoTags.UseVisualStyleBackColor = true;
             // 
             // AllTags
             // 
-            this.AllTags.AutoSize = true;
-            this.AllTags.Location = new System.Drawing.Point(3, 57);
-            this.AllTags.Name = "AllTags";
-            this.AllTags.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.AllTags.Size = new System.Drawing.Size(94, 21);
-            this.AllTags.TabIndex = 24;
-            this.AllTags.Text = "Fetch &all tags";
-            this.AllTags.UseVisualStyleBackColor = true;
+            AllTags.AutoSize = true;
+            AllTags.Location = new Point(3, 57);
+            AllTags.Name = "AllTags";
+            AllTags.Padding = new Padding(0, 1, 0, 1);
+            AllTags.Size = new Size(94, 21);
+            AllTags.TabIndex = 24;
+            AllTags.Text = "Fetch &all tags";
+            AllTags.UseVisualStyleBackColor = true;
             // 
             // Mergetool
             // 
-            this.Mergetool.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Mergetool.Location = new System.Drawing.Point(58, 8);
-            this.Mergetool.Name = "Mergetool";
-            this.Mergetool.Size = new System.Drawing.Size(141, 25);
-            this.Mergetool.TabIndex = 29;
-            this.Mergetool.Text = "&Solve conflicts";
-            this.Mergetool.UseVisualStyleBackColor = true;
-            this.Mergetool.Click += new System.EventHandler(this.MergetoolClick);
+            Mergetool.Anchor = AnchorStyles.Left;
+            Mergetool.Location = new Point(58, 8);
+            Mergetool.Name = "Mergetool";
+            Mergetool.Size = new Size(141, 25);
+            Mergetool.TabIndex = 29;
+            Mergetool.Text = "&Solve conflicts";
+            Mergetool.UseVisualStyleBackColor = true;
+            Mergetool.Click += MergetoolClick;
             // 
             // Stash
             // 
-            this.Stash.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Stash.Location = new System.Drawing.Point(205, 8);
-            this.Stash.Name = "Stash";
-            this.Stash.Size = new System.Drawing.Size(132, 25);
-            this.Stash.TabIndex = 30;
-            this.Stash.Text = "Stash &changes";
-            this.Stash.UseVisualStyleBackColor = true;
-            this.Stash.Click += new System.EventHandler(this.StashClick);
+            Stash.Anchor = AnchorStyles.Left;
+            Stash.Location = new Point(205, 8);
+            Stash.Name = "Stash";
+            Stash.Size = new Size(132, 25);
+            Stash.TabIndex = 30;
+            Stash.Text = "Stash &changes";
+            Stash.UseVisualStyleBackColor = true;
+            Stash.Click += StashClick;
             // 
             // AutoStash
             // 
-            this.AutoStash.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(343, 11);
-            this.AutoStash.Name = "AutoStash";
-            this.AutoStash.Size = new System.Drawing.Size(82, 19);
-            this.AutoStash.TabIndex = 31;
-            this.AutoStash.Text = "Auto stas&h";
-            this.AutoStash.UseVisualStyleBackColor = true;
+            AutoStash.Anchor = AnchorStyles.Left;
+            AutoStash.AutoSize = true;
+            AutoStash.Location = new Point(343, 11);
+            AutoStash.Name = "AutoStash";
+            AutoStash.Size = new Size(82, 19);
+            AutoStash.TabIndex = 31;
+            AutoStash.Text = "Auto stas&h";
+            AutoStash.UseVisualStyleBackColor = true;
             // 
             // lblSpacer
             // 
-            this.lblSpacer.Location = new System.Drawing.Point(431, 5);
-            this.lblSpacer.Name = "lblSpacer";
-            this.lblSpacer.Size = new System.Drawing.Size(100, 23);
-            this.lblSpacer.TabIndex = 33;
+            lblSpacer.Location = new Point(431, 5);
+            lblSpacer.Name = "lblSpacer";
+            lblSpacer.Size = new Size(100, 23);
+            lblSpacer.TabIndex = 33;
             // 
             // FormPull
             // 
-            this.AcceptButton = this.Pull;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(674, 525);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(690, 564);
-            this.Name = "FormPull";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Pull";
-            this.Load += new System.EventHandler(this.FormPullLoad);
-            this.MainPanel.ResumeLayout(false);
-            this.ControlsPanel.ResumeLayout(false);
-            this.ControlsPanel.PerformLayout();
-            this.MainLayout.ResumeLayout(false);
-            this.MainLayout.PerformLayout();
-            this.PanelRight.ResumeLayout(false);
-            this.PanelRightInner.ResumeLayout(false);
-            this.PanelRightInner.PerformLayout();
-            this.GroupPullFrom.ResumeLayout(false);
-            this.GroupPullFrom.PerformLayout();
-            this.GroupMergeOptions.ResumeLayout(false);
-            this.GroupMergeOptions.PerformLayout();
-            this.PanelMergeOptions.ResumeLayout(false);
-            this.PanelMergeOptions.PerformLayout();
-            this.GroupBranch.ResumeLayout(false);
-            this.GroupBranch.PerformLayout();
-            this.GroupTagOptions.ResumeLayout(false);
-            this.GroupTagOptions.PerformLayout();
-            this.PanelTagOptions.ResumeLayout(false);
-            this.PanelTagOptions.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = Pull;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(674, 525);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new Size(690, 564);
+            Name = "FormPull";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Pull";
+            Load += FormPullLoad;
+            MainPanel.ResumeLayout(false);
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
+            MainLayout.ResumeLayout(false);
+            MainLayout.PerformLayout();
+            PanelRight.ResumeLayout(false);
+            PanelRightInner.ResumeLayout(false);
+            PanelRightInner.PerformLayout();
+            GroupPullFrom.ResumeLayout(false);
+            GroupPullFrom.PerformLayout();
+            GroupMergeOptions.ResumeLayout(false);
+            GroupMergeOptions.PerformLayout();
+            PanelMergeOptions.ResumeLayout(false);
+            PanelMergeOptions.PerformLayout();
+            GroupBranch.ResumeLayout(false);
+            GroupBranch.PerformLayout();
+            GroupTagOptions.ResumeLayout(false);
+            GroupTagOptions.PerformLayout();
+            PanelTagOptions.ResumeLayout(false);
+            PanelTagOptions.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ComboBox Branches;
-        private System.Windows.Forms.Label lblRemoteBranch;
-        private System.Windows.Forms.Button Pull;
-        private System.Windows.Forms.Button Mergetool;
-        private System.Windows.Forms.RadioButton Merge;
-        private System.Windows.Forms.RadioButton Rebase;
-        private System.Windows.Forms.GroupBox GroupMergeOptions;
-        private System.Windows.Forms.RadioButton Fetch;
-        private System.Windows.Forms.ComboBox comboBoxPullSource;
-        private System.Windows.Forms.Button Stash;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Remotes;
-        private System.Windows.Forms.GroupBox GroupPullFrom;
-        private System.Windows.Forms.RadioButton PullFromUrl;
-        private System.Windows.Forms.RadioButton PullFromRemote;
-        private System.Windows.Forms.GroupBox GroupBranch;
-        private System.Windows.Forms.CheckBox AutoStash;
-        private System.Windows.Forms.ToolTip Tooltip;
-        private System.Windows.Forms.Label lblLocalBranch;
-        private System.Windows.Forms.TextBox localBranch;
-        private System.Windows.Forms.TableLayoutPanel MainLayout;
-        private System.Windows.Forms.Panel PanelRight;
-        private System.Windows.Forms.TableLayoutPanel PanelRightInner;
-        private System.Windows.Forms.FlowLayoutPanel PanelMergeOptions;
+        private ComboBox Branches;
+        private Label lblRemoteBranch;
+        private Button Pull;
+        private Button Mergetool;
+        private RadioButton Merge;
+        private RadioButton Rebase;
+        private GroupBox GroupMergeOptions;
+        private RadioButton Fetch;
+        private ComboBox comboBoxPullSource;
+        private Button Stash;
+        private ComboBox _NO_TRANSLATE_Remotes;
+        private GroupBox GroupPullFrom;
+        private RadioButton PullFromUrl;
+        private RadioButton PullFromRemote;
+        private GroupBox GroupBranch;
+        private CheckBox AutoStash;
+        private ToolTip Tooltip;
+        private Label lblLocalBranch;
+        private TextBox localBranch;
+        private TableLayoutPanel MainLayout;
+        private Panel PanelRight;
+        private TableLayoutPanel PanelRightInner;
+        private FlowLayoutPanel PanelMergeOptions;
         private Help.HelpImageDisplayUserControl PanelLeftImage;
-        private System.Windows.Forms.FlowLayoutPanel PanelTagOptions;
-        private System.Windows.Forms.RadioButton ReachableTags;
-        private System.Windows.Forms.RadioButton NoTags;
-        private System.Windows.Forms.RadioButton AllTags;
-        private System.Windows.Forms.GroupBox GroupTagOptions;
-        private System.Windows.Forms.Button AddRemote;
+        private FlowLayoutPanel PanelTagOptions;
+        private RadioButton ReachableTags;
+        private RadioButton NoTags;
+        private RadioButton AllTags;
+        private GroupBox GroupTagOptions;
+        private Button AddRemote;
         private UserControls.FolderBrowserButton folderBrowserButton1;
-        private System.Windows.Forms.CheckBox Unshallow;
-        private System.Windows.Forms.CheckBox Prune;
-        private System.Windows.Forms.CheckBox PruneTags;
-        private System.Windows.Forms.Label lblSpacer;
+        private CheckBox Unshallow;
+        private CheckBox Prune;
+        private CheckBox PruneTags;
+        private Label lblSpacer;
     }
 }

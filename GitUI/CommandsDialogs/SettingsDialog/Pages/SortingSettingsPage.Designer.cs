@@ -267,21 +267,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         #endregion
 
-        private System.Windows.Forms.GroupBox gbGeneral;
-        private System.Windows.Forms.TableLayoutPanel tlpnlGeneral;
-        private System.Windows.Forms.Label lblRevisionsSortBy;
-        private System.Windows.Forms.Label lblBranchesSortBy;
-        private System.Windows.Forms.Label lblBranchesOrder;
-        private System.Windows.Forms.Label lblPrioBranchNames;
-        private System.Windows.Forms.Label lblPrioRemoteNames;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cmbRevisionsSortBy;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cmbBranchesSortBy;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cmbBranchesOrder;
-        private System.Windows.Forms.TextBox txtPrioBranchNames;
-        private System.Windows.Forms.TextBox txtPrioRemoteNames;
-        private System.Windows.Forms.PictureBox RevisionSortOrderHelp;
-        private System.Windows.Forms.PictureBox PrioBranchNamesHelp;
-        private System.Windows.Forms.PictureBox PrioRemoteNamesHelp;
+        private GroupBox gbGeneral;
+        private TableLayoutPanel tlpnlGeneral;
+        private Label lblRevisionsSortBy;
+        private Label lblBranchesSortBy;
+        private Label lblBranchesOrder;
+        private Label lblPrioBranchNames;
+        private Label lblPrioRemoteNames;
+        private ComboBox _NO_TRANSLATE_cmbRevisionsSortBy;
+        private ComboBox _NO_TRANSLATE_cmbBranchesSortBy;
+        private ComboBox _NO_TRANSLATE_cmbBranchesOrder;
+        private TextBox txtPrioBranchNames;
+        private TextBox txtPrioRemoteNames;
+        private PictureBox RevisionSortOrderHelp;
+        private PictureBox PrioBranchNamesHelp;
+        private PictureBox PrioRemoteNamesHelp;
         private TableLayoutPanel tlpnlMain;
     }
 }

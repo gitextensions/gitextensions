@@ -30,445 +30,430 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.Ok = new System.Windows.Forms.Button();
-            this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
-            this.localChangesGB = new System.Windows.Forms.GroupBox();
-            this.flpnlLocalOptions = new System.Windows.Forms.FlowLayoutPanel();
-            this.rbDontChange = new System.Windows.Forms.RadioButton();
-            this.rbMerge = new System.Windows.Forms.RadioButton();
-            this.rbStash = new System.Windows.Forms.RadioButton();
-            this.rbReset = new System.Windows.Forms.RadioButton();
-            this.chkSetLocalChangesActionAsDefault = new System.Windows.Forms.CheckBox();
-            this.tlpnlBranches = new System.Windows.Forms.TableLayoutPanel();
-            this.LocalBranch = new System.Windows.Forms.RadioButton();
-            this.Remotebranch = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.Branches = new System.Windows.Forms.ComboBox();
-            this.lbChanges = new System.Windows.Forms.Label();
-            this.horLine = new System.Windows.Forms.Label();
-            this.tlpnlRemoteOptions = new System.Windows.Forms.TableLayoutPanel();
-            this.rbDontCreate = new System.Windows.Forms.RadioButton();
-            this.txtCustomBranchName = new System.Windows.Forms.TextBox();
-            this.rbResetBranch = new System.Windows.Forms.RadioButton();
-            this.rbCreateBranchWithCustomName = new System.Windows.Forms.RadioButton();
-            this.branchName = new System.Windows.Forms.Label();
-            this.Errors = new System.Windows.Forms.ErrorProvider(this.components);
-            this.MainPanel.SuspendLayout();
-            this.ControlsPanel.SuspendLayout();
-            this.tlpnlMain.SuspendLayout();
-            this.localChangesGB.SuspendLayout();
-            this.flpnlLocalOptions.SuspendLayout();
-            this.tlpnlBranches.SuspendLayout();
-            this.tlpnlRemoteOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Errors)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            Ok = new Button();
+            tlpnlMain = new TableLayoutPanel();
+            localChangesGB = new GroupBox();
+            flpnlLocalOptions = new FlowLayoutPanel();
+            rbDontChange = new RadioButton();
+            rbMerge = new RadioButton();
+            rbStash = new RadioButton();
+            rbReset = new RadioButton();
+            chkSetLocalChangesActionAsDefault = new CheckBox();
+            tlpnlBranches = new TableLayoutPanel();
+            LocalBranch = new RadioButton();
+            Remotebranch = new RadioButton();
+            label1 = new Label();
+            Branches = new ComboBox();
+            lbChanges = new Label();
+            horLine = new Label();
+            tlpnlRemoteOptions = new TableLayoutPanel();
+            rbDontCreate = new RadioButton();
+            txtCustomBranchName = new TextBox();
+            rbResetBranch = new RadioButton();
+            rbCreateBranchWithCustomName = new RadioButton();
+            branchName = new Label();
+            Errors = new ErrorProvider(components);
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
+            tlpnlMain.SuspendLayout();
+            localChangesGB.SuspendLayout();
+            flpnlLocalOptions.SuspendLayout();
+            tlpnlBranches.SuspendLayout();
+            tlpnlRemoteOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(Errors)).BeginInit();
+            SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.tlpnlMain);
-            this.MainPanel.Padding = new System.Windows.Forms.Padding(14);
-            this.MainPanel.Size = new System.Drawing.Size(626, 219);
+            MainPanel.Controls.Add(tlpnlMain);
+            MainPanel.Padding = new Padding(14);
+            MainPanel.Size = new Size(626, 219);
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.Ok);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 219);
-            this.ControlsPanel.Size = new System.Drawing.Size(626, 41);
+            ControlsPanel.Controls.Add(Ok);
+            ControlsPanel.Location = new Point(0, 219);
+            ControlsPanel.Size = new Size(626, 41);
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(406, 151);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(74, 91);
-            this.flowLayoutPanel1.TabIndex = 28;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.FlowDirection = FlowDirection.BottomUp;
+            flowLayoutPanel1.Location = new Point(406, 151);
+            flowLayoutPanel1.Margin = new Padding(0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(74, 91);
+            flowLayoutPanel1.TabIndex = 28;
             // 
             // Ok
             // 
-            this.Ok.AutoSize = true;
-            this.Ok.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(538, 8);
-            this.Ok.MinimumSize = new System.Drawing.Size(75, 23);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 25);
-            this.Ok.TabIndex = 1;
-            this.Ok.Text = "&Checkout";
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.OkClick);
+            Ok.AutoSize = true;
+            Ok.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Ok.DialogResult = DialogResult.OK;
+            Ok.Location = new Point(538, 8);
+            Ok.MinimumSize = new Size(75, 23);
+            Ok.Name = "Ok";
+            Ok.Size = new Size(75, 25);
+            Ok.TabIndex = 1;
+            Ok.Text = "&Checkout";
+            Ok.UseVisualStyleBackColor = true;
+            Ok.Click += OkClick;
             // 
             // tlpnlMain
             // 
-            this.tlpnlMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpnlMain.ColumnCount = 1;
-            this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlMain.Controls.Add(this.localChangesGB, 0, 3);
-            this.tlpnlMain.Controls.Add(this.tlpnlBranches, 0, 0);
-            this.tlpnlMain.Controls.Add(this.horLine, 0, 1);
-            this.tlpnlMain.Controls.Add(this.tlpnlRemoteOptions, 0, 2);
-            this.tlpnlMain.Location = new System.Drawing.Point(12, 12);
-            this.tlpnlMain.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpnlMain.Name = "tlpnlMain";
-            this.tlpnlMain.RowCount = 4;
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.Size = new System.Drawing.Size(600, 202);
-            this.tlpnlMain.TabIndex = 0;
-            this.tlpnlMain.TabStop = true;
+            tlpnlMain.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tlpnlMain.ColumnCount = 1;
+            tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+            tlpnlMain.Controls.Add(localChangesGB, 0, 3);
+            tlpnlMain.Controls.Add(tlpnlBranches, 0, 0);
+            tlpnlMain.Controls.Add(horLine, 0, 1);
+            tlpnlMain.Controls.Add(tlpnlRemoteOptions, 0, 2);
+            tlpnlMain.Location = new Point(12, 12);
+            tlpnlMain.Margin = new Padding(0);
+            tlpnlMain.Name = "tlpnlMain";
+            tlpnlMain.RowCount = 4;
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.Size = new Size(600, 202);
+            tlpnlMain.TabIndex = 0;
+            tlpnlMain.TabStop = true;
             // 
             // localChangesGB
             // 
-            this.localChangesGB.Controls.Add(this.flpnlLocalOptions);
-            this.localChangesGB.Location = new System.Drawing.Point(0, 139);
-            this.localChangesGB.Margin = new System.Windows.Forms.Padding(0);
-            this.localChangesGB.Name = "localChangesGB";
-            this.localChangesGB.Size = new System.Drawing.Size(441, 58);
-            this.localChangesGB.TabIndex = 0;
-            this.localChangesGB.TabStop = false;
-            this.localChangesGB.Text = "Local changes";
+            localChangesGB.Controls.Add(flpnlLocalOptions);
+            localChangesGB.Location = new Point(0, 139);
+            localChangesGB.Margin = new Padding(0);
+            localChangesGB.Name = "localChangesGB";
+            localChangesGB.Size = new Size(441, 58);
+            localChangesGB.TabIndex = 0;
+            localChangesGB.TabStop = false;
+            localChangesGB.Text = "Local changes";
             // 
             // flpnlLocalOptions
             // 
-            this.flpnlLocalOptions.AutoSize = true;
-            this.flpnlLocalOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flpnlLocalOptions.Controls.Add(this.rbDontChange);
-            this.flpnlLocalOptions.Controls.Add(this.rbMerge);
-            this.flpnlLocalOptions.Controls.Add(this.rbStash);
-            this.flpnlLocalOptions.Controls.Add(this.rbReset);
-            this.flpnlLocalOptions.Controls.Add(this.chkSetLocalChangesActionAsDefault);
-            this.flpnlLocalOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpnlLocalOptions.Location = new System.Drawing.Point(3, 19);
-            this.flpnlLocalOptions.Name = "flpnlLocalOptions";
-            this.flpnlLocalOptions.Padding = new System.Windows.Forms.Padding(9, 4, 9, 4);
-            this.flpnlLocalOptions.Size = new System.Drawing.Size(435, 36);
-            this.flpnlLocalOptions.TabIndex = 1;
-            this.flpnlLocalOptions.WrapContents = false;
+            flpnlLocalOptions.AutoSize = true;
+            flpnlLocalOptions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flpnlLocalOptions.Controls.Add(rbDontChange);
+            flpnlLocalOptions.Controls.Add(rbMerge);
+            flpnlLocalOptions.Controls.Add(rbStash);
+            flpnlLocalOptions.Controls.Add(rbReset);
+            flpnlLocalOptions.Controls.Add(chkSetLocalChangesActionAsDefault);
+            flpnlLocalOptions.Dock = DockStyle.Fill;
+            flpnlLocalOptions.Location = new Point(3, 19);
+            flpnlLocalOptions.Name = "flpnlLocalOptions";
+            flpnlLocalOptions.Padding = new Padding(9, 4, 9, 4);
+            flpnlLocalOptions.Size = new Size(435, 36);
+            flpnlLocalOptions.TabIndex = 1;
+            flpnlLocalOptions.WrapContents = false;
             // 
             // rbDontChange
             // 
-            this.rbDontChange.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rbDontChange.AutoSize = true;
-            this.rbDontChange.Location = new System.Drawing.Point(11, 6);
-            this.rbDontChange.Margin = new System.Windows.Forms.Padding(2);
-            this.rbDontChange.Name = "rbDontChange";
-            this.rbDontChange.Size = new System.Drawing.Size(96, 21);
-            this.rbDontChange.TabIndex = 0;
-            this.rbDontChange.Text = "Do&n\'t change";
-            this.rbDontChange.UseVisualStyleBackColor = false;
+            rbDontChange.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            rbDontChange.AutoSize = true;
+            rbDontChange.Location = new Point(11, 6);
+            rbDontChange.Margin = new Padding(2);
+            rbDontChange.Name = "rbDontChange";
+            rbDontChange.Size = new Size(96, 21);
+            rbDontChange.TabIndex = 0;
+            rbDontChange.Text = "Do&n\'t change";
+            rbDontChange.UseVisualStyleBackColor = false;
             // 
             // rbMerge
             // 
-            this.rbMerge.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rbMerge.AutoSize = true;
-            this.rbMerge.Location = new System.Drawing.Point(111, 6);
-            this.rbMerge.Margin = new System.Windows.Forms.Padding(2);
-            this.rbMerge.Name = "rbMerge";
-            this.rbMerge.Size = new System.Drawing.Size(59, 21);
-            this.rbMerge.TabIndex = 1;
-            this.rbMerge.Text = "&Merge";
-            this.rbMerge.UseVisualStyleBackColor = false;
+            rbMerge.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            rbMerge.AutoSize = true;
+            rbMerge.Location = new Point(111, 6);
+            rbMerge.Margin = new Padding(2);
+            rbMerge.Name = "rbMerge";
+            rbMerge.Size = new Size(59, 21);
+            rbMerge.TabIndex = 1;
+            rbMerge.Text = "&Merge";
+            rbMerge.UseVisualStyleBackColor = false;
             // 
             // rbStash
             // 
-            this.rbStash.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rbStash.AutoSize = true;
-            this.rbStash.Location = new System.Drawing.Point(174, 6);
-            this.rbStash.Margin = new System.Windows.Forms.Padding(2);
-            this.rbStash.Name = "rbStash";
-            this.rbStash.Size = new System.Drawing.Size(53, 21);
-            this.rbStash.TabIndex = 2;
-            this.rbStash.Text = "S&tash";
-            this.rbStash.UseVisualStyleBackColor = false;
+            rbStash.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            rbStash.AutoSize = true;
+            rbStash.Location = new Point(174, 6);
+            rbStash.Margin = new Padding(2);
+            rbStash.Name = "rbStash";
+            rbStash.Size = new Size(53, 21);
+            rbStash.TabIndex = 2;
+            rbStash.Text = "S&tash";
+            rbStash.UseVisualStyleBackColor = false;
             // 
             // rbReset
             // 
-            this.rbReset.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rbReset.AutoSize = true;
-            this.rbReset.Location = new System.Drawing.Point(231, 6);
-            this.rbReset.Margin = new System.Windows.Forms.Padding(2);
-            this.rbReset.Name = "rbReset";
-            this.rbReset.Size = new System.Drawing.Size(53, 21);
-            this.rbReset.TabIndex = 3;
-            this.rbReset.Text = "&Reset";
-            this.rbReset.UseVisualStyleBackColor = false;
-            this.rbReset.CheckedChanged += new System.EventHandler(this.rbReset_CheckedChanged);
+            rbReset.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            rbReset.AutoSize = true;
+            rbReset.Location = new Point(231, 6);
+            rbReset.Margin = new Padding(2);
+            rbReset.Name = "rbReset";
+            rbReset.Size = new Size(53, 21);
+            rbReset.TabIndex = 3;
+            rbReset.Text = "&Reset";
+            rbReset.UseVisualStyleBackColor = false;
+            rbReset.CheckedChanged += rbReset_CheckedChanged;
             // 
             // chkSetLocalChangesActionAsDefault
             // 
-            this.chkSetLocalChangesActionAsDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkSetLocalChangesActionAsDefault.AutoSize = true;
-            this.chkSetLocalChangesActionAsDefault.Location = new System.Drawing.Point(289, 7);
-            this.chkSetLocalChangesActionAsDefault.Name = "chkSetLocalChangesActionAsDefault";
-            this.chkSetLocalChangesActionAsDefault.Size = new System.Drawing.Size(96, 19);
-            this.chkSetLocalChangesActionAsDefault.TabIndex = 4;
-            this.chkSetLocalChangesActionAsDefault.Text = "Set as &default";
-            this.chkSetLocalChangesActionAsDefault.UseVisualStyleBackColor = false;
+            chkSetLocalChangesActionAsDefault.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            chkSetLocalChangesActionAsDefault.AutoSize = true;
+            chkSetLocalChangesActionAsDefault.Location = new Point(289, 7);
+            chkSetLocalChangesActionAsDefault.Name = "chkSetLocalChangesActionAsDefault";
+            chkSetLocalChangesActionAsDefault.Size = new Size(96, 19);
+            chkSetLocalChangesActionAsDefault.TabIndex = 4;
+            chkSetLocalChangesActionAsDefault.Text = "Set as &default";
+            chkSetLocalChangesActionAsDefault.UseVisualStyleBackColor = false;
             // 
             // tlpnlBranches
             // 
-            this.tlpnlBranches.ColumnCount = 3;
-            this.tlpnlBranches.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlBranches.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlBranches.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlBranches.Controls.Add(this.LocalBranch, 0, 0);
-            this.tlpnlBranches.Controls.Add(this.Remotebranch, 1, 0);
-            this.tlpnlBranches.Controls.Add(this.label1, 0, 1);
-            this.tlpnlBranches.Controls.Add(this.Branches, 1, 1);
-            this.tlpnlBranches.Controls.Add(this.lbChanges, 2, 1);
-            this.tlpnlBranches.Location = new System.Drawing.Point(0, 0);
-            this.tlpnlBranches.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpnlBranches.Name = "tlpnlBranches";
-            this.tlpnlBranches.RowCount = 2;
-            this.tlpnlBranches.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlBranches.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.tlpnlBranches.Size = new System.Drawing.Size(441, 54);
-            this.tlpnlBranches.TabIndex = 0;
+            tlpnlBranches.ColumnCount = 3;
+            tlpnlBranches.ColumnStyles.Add(new ColumnStyle());
+            tlpnlBranches.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpnlBranches.ColumnStyles.Add(new ColumnStyle());
+            tlpnlBranches.Controls.Add(LocalBranch, 0, 0);
+            tlpnlBranches.Controls.Add(Remotebranch, 1, 0);
+            tlpnlBranches.Controls.Add(label1, 0, 1);
+            tlpnlBranches.Controls.Add(Branches, 1, 1);
+            tlpnlBranches.Controls.Add(lbChanges, 2, 1);
+            tlpnlBranches.Location = new Point(0, 0);
+            tlpnlBranches.Margin = new Padding(0);
+            tlpnlBranches.Name = "tlpnlBranches";
+            tlpnlBranches.RowCount = 2;
+            tlpnlBranches.RowStyles.Add(new RowStyle());
+            tlpnlBranches.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
+            tlpnlBranches.Size = new Size(441, 54);
+            tlpnlBranches.TabIndex = 0;
             // 
             // LocalBranch
             // 
-            this.LocalBranch.AutoSize = true;
-            this.LocalBranch.CausesValidation = false;
-            this.LocalBranch.Checked = true;
-            this.LocalBranch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LocalBranch.Location = new System.Drawing.Point(2, 2);
-            this.LocalBranch.Margin = new System.Windows.Forms.Padding(2);
-            this.LocalBranch.Name = "LocalBranch";
-            this.LocalBranch.Size = new System.Drawing.Size(93, 19);
-            this.LocalBranch.TabIndex = 0;
-            this.LocalBranch.TabStop = true;
-            this.LocalBranch.Text = "Local &branch";
-            this.LocalBranch.UseVisualStyleBackColor = true;
-            this.LocalBranch.CheckedChanged += new System.EventHandler(this.LocalBranchCheckedChanged);
+            LocalBranch.AutoSize = true;
+            LocalBranch.CausesValidation = false;
+            LocalBranch.Checked = true;
+            LocalBranch.Dock = DockStyle.Fill;
+            LocalBranch.Location = new Point(2, 2);
+            LocalBranch.Margin = new Padding(2);
+            LocalBranch.Name = "LocalBranch";
+            LocalBranch.Size = new Size(93, 19);
+            LocalBranch.TabIndex = 0;
+            LocalBranch.TabStop = true;
+            LocalBranch.Text = "Local &branch";
+            LocalBranch.UseVisualStyleBackColor = true;
+            LocalBranch.CheckedChanged += LocalBranchCheckedChanged;
             // 
             // Remotebranch
             // 
-            this.Remotebranch.AutoSize = true;
-            this.Remotebranch.CausesValidation = false;
-            this.Remotebranch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Remotebranch.Location = new System.Drawing.Point(99, 2);
-            this.Remotebranch.Margin = new System.Windows.Forms.Padding(2);
-            this.Remotebranch.Name = "Remotebranch";
-            this.Remotebranch.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.Remotebranch.Size = new System.Drawing.Size(322, 19);
-            this.Remotebranch.TabIndex = 1;
-            this.Remotebranch.Text = "Remote &branch";
-            this.Remotebranch.UseVisualStyleBackColor = true;
-            this.Remotebranch.CheckedChanged += new System.EventHandler(this.RemoteBranchCheckedChanged);
+            Remotebranch.AutoSize = true;
+            Remotebranch.CausesValidation = false;
+            Remotebranch.Dock = DockStyle.Fill;
+            Remotebranch.Location = new Point(99, 2);
+            Remotebranch.Margin = new Padding(2);
+            Remotebranch.Name = "Remotebranch";
+            Remotebranch.Padding = new Padding(6, 0, 0, 0);
+            Remotebranch.Size = new Size(322, 19);
+            Remotebranch.TabIndex = 1;
+            Remotebranch.Text = "Remote &branch";
+            Remotebranch.UseVisualStyleBackColor = true;
+            Remotebranch.CheckedChanged += RemoteBranchCheckedChanged;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(91, 31);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "&Select branch";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label1.AutoSize = true;
+            label1.Dock = DockStyle.Fill;
+            label1.Location = new Point(3, 23);
+            label1.Name = "label1";
+            label1.Size = new Size(91, 31);
+            label1.TabIndex = 2;
+            label1.Text = "&Select branch";
+            label1.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Branches
             // 
-            this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Branches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Branches.FormattingEnabled = true;
-            this.Errors.SetIconAlignment(this.Branches, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.Branches.Location = new System.Drawing.Point(100, 26);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(320, 23);
-            this.Branches.TabIndex = 3;
-            this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
-            this.Branches.TextChanged += new System.EventHandler(this.Branches_TextChanged);
-            this.Branches.Validating += new System.ComponentModel.CancelEventHandler(this.Branches_Validating);
+            Branches.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            Branches.AutoCompleteSource = AutoCompleteSource.ListItems;
+            Branches.Dock = DockStyle.Fill;
+            Branches.FormattingEnabled = true;
+            Errors.SetIconAlignment(Branches, ErrorIconAlignment.MiddleLeft);
+            Branches.Location = new Point(100, 26);
+            Branches.Name = "Branches";
+            Branches.Size = new Size(320, 23);
+            Branches.TabIndex = 3;
+            Branches.SelectedIndexChanged += Branches_SelectedIndexChanged;
+            Branches.TextChanged += Branches_TextChanged;
+            Branches.Validating += Branches_Validating;
             // 
             // lbChanges
             // 
-            this.lbChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbChanges.AutoSize = true;
-            this.lbChanges.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbChanges.Location = new System.Drawing.Point(426, 23);
-            this.lbChanges.Name = "lbChanges";
-            this.lbChanges.Size = new System.Drawing.Size(12, 31);
-            this.lbChanges.TabIndex = 4;
-            this.lbChanges.Text = "-";
-            this.lbChanges.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lbChanges.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbChanges.AutoSize = true;
+            lbChanges.ForeColor = SystemColors.GrayText;
+            lbChanges.Location = new Point(426, 23);
+            lbChanges.Name = "lbChanges";
+            lbChanges.Size = new Size(12, 31);
+            lbChanges.TabIndex = 4;
+            lbChanges.Text = "-";
+            lbChanges.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // horLine
             // 
-            this.horLine.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.horLine.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.horLine.Location = new System.Drawing.Point(3, 57);
-            this.horLine.Margin = new System.Windows.Forms.Padding(3);
-            this.horLine.Name = "horLine";
-            this.horLine.Size = new System.Drawing.Size(684, 2);
-            this.horLine.TabIndex = 1;
+            horLine.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            horLine.BorderStyle = BorderStyle.Fixed3D;
+            horLine.Location = new Point(3, 57);
+            horLine.Margin = new Padding(3);
+            horLine.Name = "horLine";
+            horLine.Size = new Size(684, 2);
+            horLine.TabIndex = 1;
             // 
             // tlpnlRemoteOptions
             // 
-            this.tlpnlRemoteOptions.AutoSize = true;
-            this.tlpnlRemoteOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpnlRemoteOptions.ColumnCount = 2;
-            this.tlpnlRemoteOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlRemoteOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlRemoteOptions.Controls.Add(this.rbDontCreate, 0, 4);
-            this.tlpnlRemoteOptions.Controls.Add(this.txtCustomBranchName, 1, 2);
-            this.tlpnlRemoteOptions.Controls.Add(this.rbResetBranch, 0, 0);
-            this.tlpnlRemoteOptions.Controls.Add(this.rbCreateBranchWithCustomName, 0, 2);
-            this.tlpnlRemoteOptions.Controls.Add(this.branchName, 1, 0);
-            this.tlpnlRemoteOptions.Location = new System.Drawing.Point(0, 62);
-            this.tlpnlRemoteOptions.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpnlRemoteOptions.Name = "tlpnlRemoteOptions";
-            this.tlpnlRemoteOptions.RowCount = 5;
-            this.tlpnlRemoteOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRemoteOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRemoteOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRemoteOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRemoteOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRemoteOptions.Size = new System.Drawing.Size(595, 77);
-            this.tlpnlRemoteOptions.TabIndex = 2;
+            tlpnlRemoteOptions.AutoSize = true;
+            tlpnlRemoteOptions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlRemoteOptions.ColumnCount = 2;
+            tlpnlRemoteOptions.ColumnStyles.Add(new ColumnStyle());
+            tlpnlRemoteOptions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpnlRemoteOptions.Controls.Add(rbDontCreate, 0, 4);
+            tlpnlRemoteOptions.Controls.Add(txtCustomBranchName, 1, 2);
+            tlpnlRemoteOptions.Controls.Add(rbResetBranch, 0, 0);
+            tlpnlRemoteOptions.Controls.Add(rbCreateBranchWithCustomName, 0, 2);
+            tlpnlRemoteOptions.Controls.Add(branchName, 1, 0);
+            tlpnlRemoteOptions.Location = new Point(0, 62);
+            tlpnlRemoteOptions.Margin = new Padding(0);
+            tlpnlRemoteOptions.Name = "tlpnlRemoteOptions";
+            tlpnlRemoteOptions.RowCount = 5;
+            tlpnlRemoteOptions.RowStyles.Add(new RowStyle());
+            tlpnlRemoteOptions.RowStyles.Add(new RowStyle());
+            tlpnlRemoteOptions.RowStyles.Add(new RowStyle());
+            tlpnlRemoteOptions.RowStyles.Add(new RowStyle());
+            tlpnlRemoteOptions.RowStyles.Add(new RowStyle());
+            tlpnlRemoteOptions.Size = new Size(595, 77);
+            tlpnlRemoteOptions.TabIndex = 2;
             // 
             // rbDontCreate
             // 
-            this.rbDontCreate.AutoSize = true;
-            this.rbDontCreate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rbDontCreate.Location = new System.Drawing.Point(3, 55);
-            this.rbDontCreate.Name = "rbDontCreate";
-            this.rbDontCreate.Size = new System.Drawing.Size(232, 19);
-            this.rbDontCreate.TabIndex = 4;
-            this.rbDontCreate.Text = "Ch&eckout remote branch";
-            this.rbDontCreate.UseVisualStyleBackColor = true;
+            rbDontCreate.AutoSize = true;
+            rbDontCreate.Dock = DockStyle.Fill;
+            rbDontCreate.Location = new Point(3, 55);
+            rbDontCreate.Name = "rbDontCreate";
+            rbDontCreate.Size = new Size(232, 19);
+            rbDontCreate.TabIndex = 4;
+            rbDontCreate.Text = "Ch&eckout remote branch";
+            rbDontCreate.UseVisualStyleBackColor = true;
             // 
             // txtCustomBranchName
             // 
-            this.txtCustomBranchName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtCustomBranchName.Enabled = false;
-            this.txtCustomBranchName.Location = new System.Drawing.Point(240, 27);
-            this.txtCustomBranchName.Margin = new System.Windows.Forms.Padding(2);
-            this.txtCustomBranchName.Name = "txtCustomBranchName";
-            this.txtCustomBranchName.Size = new System.Drawing.Size(353, 23);
-            this.txtCustomBranchName.TabIndex = 3;
-            this.txtCustomBranchName.Leave += new System.EventHandler(this.txtCustomBranchName_Leave);
+            txtCustomBranchName.Dock = DockStyle.Fill;
+            txtCustomBranchName.Enabled = false;
+            txtCustomBranchName.Location = new Point(240, 27);
+            txtCustomBranchName.Margin = new Padding(2);
+            txtCustomBranchName.Name = "txtCustomBranchName";
+            txtCustomBranchName.Size = new Size(353, 23);
+            txtCustomBranchName.TabIndex = 3;
+            txtCustomBranchName.Leave += txtCustomBranchName_Leave;
             // 
             // rbResetBranch
             // 
-            this.rbResetBranch.AutoSize = true;
-            this.rbResetBranch.Checked = true;
-            this.rbResetBranch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rbResetBranch.Location = new System.Drawing.Point(3, 3);
-            this.rbResetBranch.Name = "rbResetBranch";
-            this.rbResetBranch.Size = new System.Drawing.Size(232, 19);
-            this.rbResetBranch.TabIndex = 0;
-            this.rbResetBranch.TabStop = true;
-            this.rbResetBranch.Text = "R&eset local branch with the name:";
-            this.rbResetBranch.UseVisualStyleBackColor = true;
+            rbResetBranch.AutoSize = true;
+            rbResetBranch.Checked = true;
+            rbResetBranch.Dock = DockStyle.Fill;
+            rbResetBranch.Location = new Point(3, 3);
+            rbResetBranch.Name = "rbResetBranch";
+            rbResetBranch.Size = new Size(232, 19);
+            rbResetBranch.TabIndex = 0;
+            rbResetBranch.TabStop = true;
+            rbResetBranch.Text = "R&eset local branch with the name:";
+            rbResetBranch.UseVisualStyleBackColor = true;
             // 
             // rbCreateBranchWithCustomName
             // 
-            this.rbCreateBranchWithCustomName.AutoSize = true;
-            this.rbCreateBranchWithCustomName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rbCreateBranchWithCustomName.Location = new System.Drawing.Point(3, 28);
-            this.rbCreateBranchWithCustomName.Margin = new System.Windows.Forms.Padding(3, 3, 3, 4);
-            this.rbCreateBranchWithCustomName.Name = "rbCreateBranchWithCustomName";
-            this.rbCreateBranchWithCustomName.Size = new System.Drawing.Size(232, 20);
-            this.rbCreateBranchWithCustomName.TabIndex = 2;
-            this.rbCreateBranchWithCustomName.Text = "Cr&eate local branch with custom name:";
-            this.rbCreateBranchWithCustomName.UseVisualStyleBackColor = true;
-            this.rbCreateBranchWithCustomName.CheckedChanged += new System.EventHandler(this.rbCreateBranchWithCustomName_CheckedChanged);
+            rbCreateBranchWithCustomName.AutoSize = true;
+            rbCreateBranchWithCustomName.Dock = DockStyle.Fill;
+            rbCreateBranchWithCustomName.Location = new Point(3, 28);
+            rbCreateBranchWithCustomName.Margin = new Padding(3, 3, 3, 4);
+            rbCreateBranchWithCustomName.Name = "rbCreateBranchWithCustomName";
+            rbCreateBranchWithCustomName.Size = new Size(232, 20);
+            rbCreateBranchWithCustomName.TabIndex = 2;
+            rbCreateBranchWithCustomName.Text = "Cr&eate local branch with custom name:";
+            rbCreateBranchWithCustomName.UseVisualStyleBackColor = true;
+            rbCreateBranchWithCustomName.CheckedChanged += rbCreateBranchWithCustomName_CheckedChanged;
             // 
             // branchName
             // 
-            this.branchName.AutoEllipsis = true;
-            this.branchName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.branchName.Location = new System.Drawing.Point(241, 0);
-            this.branchName.Name = "branchName";
-            this.branchName.Size = new System.Drawing.Size(351, 25);
-            this.branchName.TabIndex = 24;
-            this.branchName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            branchName.AutoEllipsis = true;
+            branchName.Dock = DockStyle.Fill;
+            branchName.Location = new Point(241, 0);
+            branchName.Name = "branchName";
+            branchName.Size = new Size(351, 25);
+            branchName.TabIndex = 24;
+            branchName.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Errors
             // 
-            this.Errors.ContainerControl = this;
+            Errors.ContainerControl = this;
             // 
             // FormCheckoutBranch
             // 
-            this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(626, 260);
-            this.HelpButton = true;
-            this.ManualSectionAnchorName = "checkout-branch";
-            this.ManualSectionSubfolder = "branches";
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FormCheckoutBranch";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Checkout branch";
-            this.Activated += new System.EventHandler(this.FormCheckoutBranch_Activated);
-            this.MainPanel.ResumeLayout(false);
-            this.ControlsPanel.ResumeLayout(false);
-            this.ControlsPanel.PerformLayout();
-            this.tlpnlMain.ResumeLayout(false);
-            this.tlpnlMain.PerformLayout();
-            this.localChangesGB.ResumeLayout(false);
-            this.localChangesGB.PerformLayout();
-            this.flpnlLocalOptions.ResumeLayout(false);
-            this.flpnlLocalOptions.PerformLayout();
-            this.tlpnlBranches.ResumeLayout(false);
-            this.tlpnlBranches.PerformLayout();
-            this.tlpnlRemoteOptions.ResumeLayout(false);
-            this.tlpnlRemoteOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Errors)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = Ok;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(626, 260);
+            HelpButton = true;
+            ManualSectionAnchorName = "checkout-branch";
+            ManualSectionSubfolder = "branches";
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FormCheckoutBranch";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Checkout branch";
+            Activated += FormCheckoutBranch_Activated;
+            MainPanel.ResumeLayout(false);
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
+            tlpnlMain.ResumeLayout(false);
+            tlpnlMain.PerformLayout();
+            localChangesGB.ResumeLayout(false);
+            localChangesGB.PerformLayout();
+            flpnlLocalOptions.ResumeLayout(false);
+            flpnlLocalOptions.PerformLayout();
+            tlpnlBranches.ResumeLayout(false);
+            tlpnlBranches.PerformLayout();
+            tlpnlRemoteOptions.ResumeLayout(false);
+            tlpnlRemoteOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(Errors)).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ComboBox Branches;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.Label horLine;
-        private System.Windows.Forms.TableLayoutPanel tlpnlBranches;
-        private System.Windows.Forms.TableLayoutPanel tlpnlMain;
-        private System.Windows.Forms.TableLayoutPanel tlpnlRemoteOptions;
-        private System.Windows.Forms.RadioButton rbDontCreate;
-        private System.Windows.Forms.TextBox txtCustomBranchName;
-        private System.Windows.Forms.RadioButton rbResetBranch;
-        private System.Windows.Forms.RadioButton rbCreateBranchWithCustomName;
-        private System.Windows.Forms.Label branchName;
-        private System.Windows.Forms.GroupBox localChangesGB;
-        private System.Windows.Forms.RadioButton rbReset;
-        private System.Windows.Forms.RadioButton rbStash;
-        private System.Windows.Forms.RadioButton rbMerge;
-        private System.Windows.Forms.RadioButton rbDontChange;
-        private System.Windows.Forms.RadioButton LocalBranch;
-        private System.Windows.Forms.RadioButton Remotebranch;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lbChanges;
-        private System.Windows.Forms.CheckBox chkSetLocalChangesActionAsDefault;
+        private ComboBox Branches;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Button Ok;
+        private Label horLine;
+        private TableLayoutPanel tlpnlBranches;
+        private TableLayoutPanel tlpnlMain;
+        private TableLayoutPanel tlpnlRemoteOptions;
+        private RadioButton rbDontCreate;
+        private TextBox txtCustomBranchName;
+        private RadioButton rbResetBranch;
+        private RadioButton rbCreateBranchWithCustomName;
+        private Label branchName;
+        private GroupBox localChangesGB;
+        private RadioButton rbReset;
+        private RadioButton rbStash;
+        private RadioButton rbMerge;
+        private RadioButton rbDontChange;
+        private RadioButton LocalBranch;
+        private RadioButton Remotebranch;
+        private Label label1;
+        private Label lbChanges;
+        private CheckBox chkSetLocalChangesActionAsDefault;
         private FlowLayoutPanel flpnlLocalOptions;
         private ErrorProvider Errors;
     }

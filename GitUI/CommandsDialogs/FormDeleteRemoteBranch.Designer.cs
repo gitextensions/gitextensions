@@ -28,128 +28,128 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Delete = new System.Windows.Forms.Button();
-            this.labelSelectBranches = new System.Windows.Forms.Label();
-            this.Branches = new GitUI.BranchComboBox();
-            this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
-            this.DeleteRemote = new System.Windows.Forms.CheckBox();
-            this.MainPanel.SuspendLayout();
-            this.ControlsPanel.SuspendLayout();
-            this.tlpnlMain.SuspendLayout();
-            this.SuspendLayout();
+            Delete = new Button();
+            labelSelectBranches = new Label();
+            Branches = new GitUI.BranchComboBox();
+            tlpnlMain = new TableLayoutPanel();
+            DeleteRemote = new CheckBox();
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
+            tlpnlMain.SuspendLayout();
+            SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.tlpnlMain);
-            this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
-            this.MainPanel.Size = new System.Drawing.Size(394, 73);
+            MainPanel.Controls.Add(tlpnlMain);
+            MainPanel.Padding = new Padding(9);
+            MainPanel.Size = new Size(394, 73);
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.Delete);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 73);
-            this.ControlsPanel.Size = new System.Drawing.Size(394, 41);
+            ControlsPanel.Controls.Add(Delete);
+            ControlsPanel.Location = new Point(0, 73);
+            ControlsPanel.Size = new Size(394, 41);
             // 
             // Delete
             // 
-            this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Delete.AutoSize = true;
-            this.Delete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Delete.Enabled = false;
-            this.Delete.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Delete.Location = new System.Drawing.Point(306, 8);
-            this.Delete.MinimumSize = new System.Drawing.Size(75, 23);
-            this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(75, 25);
-            this.Delete.TabIndex = 2;
-            this.Delete.Text = "&Delete";
-            this.Delete.UseVisualStyleBackColor = true;
-            this.Delete.Click += new System.EventHandler(this.Delete_Click);
+            Delete.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Delete.AutoSize = true;
+            Delete.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Delete.Enabled = false;
+            Delete.ForeColor = SystemColors.ControlText;
+            Delete.Location = new Point(306, 8);
+            Delete.MinimumSize = new Size(75, 23);
+            Delete.Name = "Delete";
+            Delete.Size = new Size(75, 25);
+            Delete.TabIndex = 2;
+            Delete.Text = "&Delete";
+            Delete.UseVisualStyleBackColor = true;
+            Delete.Click += Delete_Click;
             // 
             // labelSelectBranches
             // 
-            this.labelSelectBranches.AutoSize = true;
-            this.labelSelectBranches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelSelectBranches.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelSelectBranches.Location = new System.Drawing.Point(3, 0);
-            this.labelSelectBranches.Name = "labelSelectBranches";
-            this.labelSelectBranches.Size = new System.Drawing.Size(89, 28);
-            this.labelSelectBranches.TabIndex = 0;
-            this.labelSelectBranches.Text = "Select &branches";
-            this.labelSelectBranches.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            labelSelectBranches.AutoSize = true;
+            labelSelectBranches.Dock = DockStyle.Fill;
+            labelSelectBranches.ForeColor = SystemColors.ControlText;
+            labelSelectBranches.Location = new Point(3, 0);
+            labelSelectBranches.Name = "labelSelectBranches";
+            labelSelectBranches.Size = new Size(89, 28);
+            labelSelectBranches.TabIndex = 0;
+            labelSelectBranches.Text = "Select &branches";
+            labelSelectBranches.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Branches
             // 
-            this.Branches.BranchesToSelect = null;
-            this.Branches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Branches.Location = new System.Drawing.Point(95, 0);
-            this.Branches.Margin = new System.Windows.Forms.Padding(0);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(286, 28);
-            this.Branches.TabIndex = 1;
+            Branches.BranchesToSelect = null;
+            Branches.Dock = DockStyle.Fill;
+            Branches.Location = new Point(95, 0);
+            Branches.Margin = new Padding(0);
+            Branches.Name = "Branches";
+            Branches.Size = new Size(286, 28);
+            Branches.TabIndex = 1;
             // 
             // tlpnlMain
             // 
-            this.tlpnlMain.ColumnCount = 2;
-            this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlMain.Controls.Add(this.labelSelectBranches, 0, 0);
-            this.tlpnlMain.Controls.Add(this.Branches, 1, 0);
-            this.tlpnlMain.Controls.Add(this.DeleteRemote, 1, 1);
-            this.tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlMain.Location = new System.Drawing.Point(9, 9);
-            this.tlpnlMain.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpnlMain.Name = "tlpnlMain";
-            this.tlpnlMain.RowCount = 3;
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.Size = new System.Drawing.Size(376, 55);
-            this.tlpnlMain.TabIndex = 0;
+            tlpnlMain.ColumnCount = 2;
+            tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+            tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+            tlpnlMain.Controls.Add(labelSelectBranches, 0, 0);
+            tlpnlMain.Controls.Add(Branches, 1, 0);
+            tlpnlMain.Controls.Add(DeleteRemote, 1, 1);
+            tlpnlMain.Dock = DockStyle.Fill;
+            tlpnlMain.Location = new Point(9, 9);
+            tlpnlMain.Margin = new Padding(0);
+            tlpnlMain.Name = "tlpnlMain";
+            tlpnlMain.RowCount = 3;
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.Size = new Size(376, 55);
+            tlpnlMain.TabIndex = 0;
             // 
             // DeleteRemote
             // 
-            this.DeleteRemote.AutoSize = true;
-            this.DeleteRemote.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DeleteRemote.Location = new System.Drawing.Point(98, 31);
-            this.DeleteRemote.Name = "DeleteRemote";
-            this.DeleteRemote.Size = new System.Drawing.Size(280, 19);
-            this.DeleteRemote.TabIndex = 3;
-            this.DeleteRemote.Text = "Delete branch(es) from &remote repository";
-            this.DeleteRemote.UseVisualStyleBackColor = true;
-            this.DeleteRemote.CheckedChanged += new System.EventHandler(this.DeleteRemote_CheckedChanged);
+            DeleteRemote.AutoSize = true;
+            DeleteRemote.Dock = DockStyle.Fill;
+            DeleteRemote.Location = new Point(98, 31);
+            DeleteRemote.Name = "DeleteRemote";
+            DeleteRemote.Size = new Size(280, 19);
+            DeleteRemote.TabIndex = 3;
+            DeleteRemote.Text = "Delete branch(es) from &remote repository";
+            DeleteRemote.UseVisualStyleBackColor = true;
+            DeleteRemote.CheckedChanged += DeleteRemote_CheckedChanged;
             // 
             // FormDeleteRemoteBranch
             // 
-            this.AcceptButton = this.Delete;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(394, 114);
-            this.HelpButton = true;
-            this.ManualSectionAnchorName = "delete-branch";
-            this.ManualSectionSubfolder = "branches";
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(410, 129);
-            this.Name = "FormDeleteRemoteBranch";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Delete branch";
-            this.MainPanel.ResumeLayout(false);
-            this.ControlsPanel.ResumeLayout(false);
-            this.ControlsPanel.PerformLayout();
-            this.tlpnlMain.ResumeLayout(false);
-            this.tlpnlMain.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = Delete;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(394, 114);
+            HelpButton = true;
+            ManualSectionAnchorName = "delete-branch";
+            ManualSectionSubfolder = "branches";
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new Size(410, 129);
+            Name = "FormDeleteRemoteBranch";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Delete branch";
+            MainPanel.ResumeLayout(false);
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
+            tlpnlMain.ResumeLayout(false);
+            tlpnlMain.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button Delete;
-        private System.Windows.Forms.Label labelSelectBranches;
-        private System.Windows.Forms.CheckBox DeleteRemote;
+        private Button Delete;
+        private Label labelSelectBranches;
+        private CheckBox DeleteRemote;
         private BranchComboBox Branches;
-        private System.Windows.Forms.TableLayoutPanel tlpnlMain;
+        private TableLayoutPanel tlpnlMain;
     }
 }

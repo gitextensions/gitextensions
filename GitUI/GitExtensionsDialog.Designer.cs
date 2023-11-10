@@ -30,45 +30,45 @@ namespace GitUI
         /// </summary>
         private void InitializeComponent()
         {
-            this.ControlsPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.MainPanel = new System.Windows.Forms.Panel();
-            this.SuspendLayout();
+            ControlsPanel = new FlowLayoutPanel();
+            MainPanel = new Panel();
+            SuspendLayout();
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.AutoSize = true;
-            this.ControlsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ControlsPanel.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ControlsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ControlsPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 305);
-            this.ControlsPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.ControlsPanel.MinimumSize = new System.Drawing.Size(0, 32);
-            this.ControlsPanel.Name = "ControlsPanel";
-            this.ControlsPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.ControlsPanel.Size = new System.Drawing.Size(553, 32);
-            this.ControlsPanel.TabIndex = 0;
+            ControlsPanel.AutoSize = true;
+            ControlsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ControlsPanel.BackColor = SystemColors.ControlLight;
+            ControlsPanel.Dock = DockStyle.Bottom;
+            ControlsPanel.FlowDirection = FlowDirection.RightToLeft;
+            ControlsPanel.Location = new Point(0, 305);
+            ControlsPanel.Margin = new Padding(0);
+            ControlsPanel.MinimumSize = new Size(0, 32);
+            ControlsPanel.Name = "ControlsPanel";
+            ControlsPanel.Padding = new Padding(5);
+            ControlsPanel.Size = new Size(553, 32);
+            ControlsPanel.TabIndex = 0;
             // 
             // MainPanel
             // 
-            this.MainPanel.BackColor = System.Drawing.SystemColors.Window;
-            this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainPanel.Location = new System.Drawing.Point(0, 0);
-            this.MainPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.MainPanel.Name = "MainPanel";
-            this.MainPanel.Padding = new System.Windows.Forms.Padding(12);
-            this.MainPanel.Size = new System.Drawing.Size(553, 305);
-            this.MainPanel.TabIndex = 1;
+            MainPanel.BackColor = SystemColors.Window;
+            MainPanel.Dock = DockStyle.Fill;
+            MainPanel.Location = new Point(0, 0);
+            MainPanel.Margin = new Padding(0);
+            MainPanel.Name = "MainPanel";
+            MainPanel.Padding = new Padding(12);
+            MainPanel.Size = new Size(553, 305);
+            MainPanel.TabIndex = 1;
             // 
             // GitExtensionsDialog
             // 
-            this.ClientSize = new System.Drawing.Size(553, 337);
-            this.Controls.Add(this.MainPanel);
-            this.Controls.Add(this.ControlsPanel);
-            this.DoubleBuffered = true;
-            this.Name = "GitExtensionsDialog";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ClientSize = new Size(553, 337);
+            Controls.Add(MainPanel);
+            Controls.Add(ControlsPanel);
+            DoubleBuffered = true;
+            Name = "GitExtensionsDialog";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

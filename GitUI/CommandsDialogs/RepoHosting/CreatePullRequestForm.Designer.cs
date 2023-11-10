@@ -15,188 +15,180 @@ namespace GitUI.CommandsDialogs.RepoHosting
         /// </summary>
         private void InitializeComponent()
         {
-            this._titleTB = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this._bodyTB = new GitUI.SpellChecker.EditNetSpell();
-            this._pullReqTargetsCB = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this._createBtn = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this._yourBranchesCB = new System.Windows.Forms.ComboBox();
-            this._remoteBranchesCB = new System.Windows.Forms.ComboBox();
-            this.groupBox1.SuspendLayout();
-            this.SuspendLayout();
+            _titleTB = new TextBox();
+            label1 = new Label();
+            label2 = new Label();
+            groupBox1 = new GroupBox();
+            _bodyTB = new GitUI.SpellChecker.EditNetSpell();
+            _pullReqTargetsCB = new ComboBox();
+            label3 = new Label();
+            _createBtn = new Button();
+            label4 = new Label();
+            label5 = new Label();
+            _yourBranchesCB = new ComboBox();
+            _remoteBranchesCB = new ComboBox();
+            groupBox1.SuspendLayout();
+            SuspendLayout();
             // 
             // _titleTB
             // 
-            this._titleTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._titleTB.Location = new System.Drawing.Point(58, 19);
-            this._titleTB.Name = "_titleTB";
-            this._titleTB.Size = new System.Drawing.Size(462, 20);
-            this._titleTB.TabIndex = 0;
+            _titleTB.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _titleTB.Location = new Point(58, 19);
+            _titleTB.Name = "_titleTB";
+            _titleTB.Size = new Size(462, 20);
+            _titleTB.TabIndex = 0;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Title:";
+            label1.AutoSize = true;
+            label1.Location = new Point(6, 22);
+            label1.Name = "label1";
+            label1.Size = new Size(30, 13);
+            label1.TabIndex = 1;
+            label1.Text = "Title:";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 48);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Body:";
+            label2.AutoSize = true;
+            label2.Location = new Point(6, 48);
+            label2.Name = "label2";
+            label2.Size = new Size(34, 13);
+            label2.TabIndex = 2;
+            label2.Text = "Body:";
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this._bodyTB);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this._titleTB);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 100);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(526, 175);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Pull request data";
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox1.Controls.Add(_bodyTB);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(_titleTB);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Location = new Point(12, 100);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(526, 175);
+            groupBox1.TabIndex = 3;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Pull request data";
             // 
             // _bodyTB
             // 
-            this._bodyTB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._bodyTB.Location = new System.Drawing.Point(58, 45);
-            this._bodyTB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this._bodyTB.Name = "_bodyTB";
-            this._bodyTB.Size = new System.Drawing.Size(462, 124);
-            this._bodyTB.TabIndex = 1;
-            this._bodyTB.WatermarkText = "";
+            _bodyTB.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            _bodyTB.Location = new Point(58, 45);
+            _bodyTB.Margin = new Padding(3, 4, 3, 4);
+            _bodyTB.Name = "_bodyTB";
+            _bodyTB.Size = new Size(462, 124);
+            _bodyTB.TabIndex = 1;
+            _bodyTB.WatermarkText = "";
             // 
             // _pullReqTargetsCB
             // 
-            this._pullReqTargetsCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._pullReqTargetsCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._pullReqTargetsCB.FormattingEnabled = true;
-            this._pullReqTargetsCB.Location = new System.Drawing.Point(141, 12);
-            this._pullReqTargetsCB.Name = "_pullReqTargetsCB";
-            this._pullReqTargetsCB.Size = new System.Drawing.Size(391, 21);
-            this._pullReqTargetsCB.TabIndex = 3;
-            this._pullReqTargetsCB.SelectedIndexChanged += new System.EventHandler(this._pullReqTargetsCB_SelectedIndexChanged);
+            _pullReqTargetsCB.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _pullReqTargetsCB.DropDownStyle = ComboBoxStyle.DropDownList;
+            _pullReqTargetsCB.FormattingEnabled = true;
+            _pullReqTargetsCB.Location = new Point(141, 12);
+            _pullReqTargetsCB.Name = "_pullReqTargetsCB";
+            _pullReqTargetsCB.Size = new Size(391, 21);
+            _pullReqTargetsCB.TabIndex = 3;
+            _pullReqTargetsCB.SelectedIndexChanged += _pullReqTargetsCB_SelectedIndexChanged;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 15);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Target repository:";
+            label3.AutoSize = true;
+            label3.Location = new Point(9, 15);
+            label3.Name = "label3";
+            label3.Size = new Size(89, 13);
+            label3.TabIndex = 5;
+            label3.Text = "Target repository:";
             // 
             // _createBtn
             // 
-            this._createBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._createBtn.Location = new System.Drawing.Point(426, 281);
-            this._createBtn.Name = "_createBtn";
-            this._createBtn.Size = new System.Drawing.Size(112, 33);
-            this._createBtn.TabIndex = 2;
-            this._createBtn.Text = "Create";
-            this._createBtn.UseVisualStyleBackColor = true;
-            this._createBtn.Click += new System.EventHandler(this._createBtn_Click);
+            _createBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            _createBtn.Location = new Point(426, 281);
+            _createBtn.Name = "_createBtn";
+            _createBtn.Size = new Size(112, 33);
+            _createBtn.TabIndex = 2;
+            _createBtn.Text = "Create";
+            _createBtn.UseVisualStyleBackColor = true;
+            _createBtn.Click += _createBtn_Click;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 42);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Your branch:";
+            label4.AutoSize = true;
+            label4.Location = new Point(9, 42);
+            label4.Name = "label4";
+            label4.Size = new Size(68, 13);
+            label4.TabIndex = 7;
+            label4.Text = "Your branch:";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 69);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Target branch:";
+            label5.AutoSize = true;
+            label5.Location = new Point(9, 69);
+            label5.Name = "label5";
+            label5.Size = new Size(77, 13);
+            label5.TabIndex = 8;
+            label5.Text = "Target branch:";
             // 
             // _yourBranchesCB
             // 
-            this._yourBranchesCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._yourBranchesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._yourBranchesCB.FormattingEnabled = true;
-            this._yourBranchesCB.Location = new System.Drawing.Point(141, 39);
-            this._yourBranchesCB.Name = "_yourBranchesCB";
-            this._yourBranchesCB.Size = new System.Drawing.Size(391, 21);
-            this._yourBranchesCB.TabIndex = 0;
-            this._yourBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
+            _yourBranchesCB.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _yourBranchesCB.DropDownStyle = ComboBoxStyle.DropDownList;
+            _yourBranchesCB.FormattingEnabled = true;
+            _yourBranchesCB.Location = new Point(141, 39);
+            _yourBranchesCB.Name = "_yourBranchesCB";
+            _yourBranchesCB.Size = new Size(391, 21);
+            _yourBranchesCB.TabIndex = 0;
+            _yourBranchesCB.SelectedIndexChanged += _yourBranchCB_SelectedIndexChanged;
             // 
             // _remoteBranchesCB
             // 
-            this._remoteBranchesCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._remoteBranchesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._remoteBranchesCB.FormattingEnabled = true;
-            this._remoteBranchesCB.Location = new System.Drawing.Point(141, 66);
-            this._remoteBranchesCB.Name = "_remoteBranchesCB";
-            this._remoteBranchesCB.Size = new System.Drawing.Size(391, 21);
-            this._remoteBranchesCB.TabIndex = 1;
-            this._remoteBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
+            _remoteBranchesCB.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _remoteBranchesCB.DropDownStyle = ComboBoxStyle.DropDownList;
+            _remoteBranchesCB.FormattingEnabled = true;
+            _remoteBranchesCB.Location = new Point(141, 66);
+            _remoteBranchesCB.Name = "_remoteBranchesCB";
+            _remoteBranchesCB.Size = new Size(391, 21);
+            _remoteBranchesCB.TabIndex = 1;
+            _remoteBranchesCB.SelectedIndexChanged += _yourBranchCB_SelectedIndexChanged;
             // 
             // CreatePullRequestForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(546, 323);
-            this.Controls.Add(this._remoteBranchesCB);
-            this.Controls.Add(this._yourBranchesCB);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this._createBtn);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this._pullReqTargetsCB);
-            this.Controls.Add(this.groupBox1);
-            this.MinimumSize = new System.Drawing.Size(552, 345);
-            this.Name = "CreatePullRequestForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Create Pull Request";
-            this.Load += new System.EventHandler(this.CreatePullRequestForm_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(546, 323);
+            Controls.Add(_remoteBranchesCB);
+            Controls.Add(_yourBranchesCB);
+            Controls.Add(label5);
+            Controls.Add(label4);
+            Controls.Add(_createBtn);
+            Controls.Add(label3);
+            Controls.Add(_pullReqTargetsCB);
+            Controls.Add(groupBox1);
+            MinimumSize = new Size(552, 345);
+            Name = "CreatePullRequestForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Create Pull Request";
+            Load += CreatePullRequestForm_Load;
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox _titleTB;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private TextBox _titleTB;
+        private Label label1;
+        private Label label2;
+        private GroupBox groupBox1;
         private GitUI.SpellChecker.EditNetSpell _bodyTB;
-        private System.Windows.Forms.ComboBox _pullReqTargetsCB;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button _createBtn;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox _yourBranchesCB;
-        private System.Windows.Forms.ComboBox _remoteBranchesCB;
+        private ComboBox _pullReqTargetsCB;
+        private Label label3;
+        private Button _createBtn;
+        private Label label4;
+        private Label label5;
+        private ComboBox _yourBranchesCB;
+        private ComboBox _remoteBranchesCB;
     }
 }

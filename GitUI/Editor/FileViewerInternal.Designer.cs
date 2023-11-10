@@ -28,27 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.TextEditor = new ICSharpCode.TextEditor.TextEditorControl();
-            this.SuspendLayout();
+            TextEditor = new ICSharpCode.TextEditor.TextEditorControl();
+            SuspendLayout();
             // 
             // TextEditor
             // 
-            this.TextEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextEditor.IsReadOnly = false;
-            this.TextEditor.Location = new System.Drawing.Point(0, 0);
-            this.TextEditor.Margin = new System.Windows.Forms.Padding(0);
-            this.TextEditor.Name = "TextEditor";
-            this.TextEditor.Size = new System.Drawing.Size(757, 519);
-            this.TextEditor.TabIndex = 3;
+            TextEditor.Dock = DockStyle.Fill;
+            TextEditor.IsReadOnly = false;
+            TextEditor.Location = new Point(0, 0);
+            TextEditor.Margin = new Padding(0);
+            TextEditor.Name = "TextEditor";
+            TextEditor.Size = new Size(757, 519);
+            TextEditor.TabIndex = 3;
             // 
             // FileViewerInternal
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.TextEditor);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "FileViewerInternal";
-            this.Size = new System.Drawing.Size(757, 519);
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(TextEditor);
+            Margin = new Padding(0);
+            Name = "FileViewerInternal";
+            Size = new Size(757, 519);
+            ResumeLayout(false);
         }
 
         #endregion

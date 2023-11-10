@@ -29,223 +29,223 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-            System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-            this.buttonOpenSelectedWorktree = new System.Windows.Forms.Button();
-            this.buttonDeleteSelectedWorktree = new System.Windows.Forms.Button();
-            this.Worktrees = new System.Windows.Forms.DataGridView();
-            this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Branch = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Sha1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonPruneWorktrees = new System.Windows.Forms.Button();
-            this.buttonCreateNewWorktree = new System.Windows.Forms.Button();
-            flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.MainPanel.SuspendLayout();
-            this.ControlsPanel.SuspendLayout();
+            FlowLayoutPanel flowLayoutPanel1;
+            TableLayoutPanel tableLayoutPanel1;
+            buttonOpenSelectedWorktree = new Button();
+            buttonDeleteSelectedWorktree = new Button();
+            Worktrees = new DataGridView();
+            Path = new DataGridViewTextBoxColumn();
+            Type = new DataGridViewTextBoxColumn();
+            Branch = new DataGridViewTextBoxColumn();
+            Sha1 = new DataGridViewTextBoxColumn();
+            buttonPruneWorktrees = new Button();
+            buttonCreateNewWorktree = new Button();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Worktrees)).BeginInit();
-            this.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(Worktrees)).BeginInit();
+            SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(tableLayoutPanel1);
-            this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
-            this.MainPanel.Size = new System.Drawing.Size(697, 320);
+            MainPanel.Controls.Add(tableLayoutPanel1);
+            MainPanel.Padding = new Padding(9);
+            MainPanel.Size = new Size(697, 320);
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.buttonCreateNewWorktree);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 320);
-            this.ControlsPanel.Size = new System.Drawing.Size(697, 41);
+            ControlsPanel.Controls.Add(buttonCreateNewWorktree);
+            ControlsPanel.Location = new Point(0, 320);
+            ControlsPanel.Size = new Size(697, 41);
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoSize = true;
-            flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            flowLayoutPanel1.Controls.Add(this.buttonOpenSelectedWorktree);
-            flowLayoutPanel1.Controls.Add(this.buttonDeleteSelectedWorktree);
-            flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            flowLayoutPanel1.Location = new System.Drawing.Point(0, 271);
-            flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(buttonOpenSelectedWorktree);
+            flowLayoutPanel1.Controls.Add(buttonDeleteSelectedWorktree);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
+            flowLayoutPanel1.Location = new Point(0, 271);
+            flowLayoutPanel1.Margin = new Padding(0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new System.Drawing.Size(680, 31);
+            flowLayoutPanel1.Size = new Size(680, 31);
             flowLayoutPanel1.TabIndex = 3;
             flowLayoutPanel1.WrapContents = false;
             // 
             // buttonOpenSelectedWorktree
             // 
-            this.buttonOpenSelectedWorktree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOpenSelectedWorktree.AutoSize = true;
-            this.buttonOpenSelectedWorktree.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
-            this.buttonOpenSelectedWorktree.Location = new System.Drawing.Point(569, 3);
-            this.buttonOpenSelectedWorktree.Name = "buttonOpenSelectedWorktree";
-            this.buttonOpenSelectedWorktree.Size = new System.Drawing.Size(108, 25);
-            this.buttonOpenSelectedWorktree.TabIndex = 1;
-            this.buttonOpenSelectedWorktree.Text = "&Open selected";
-            this.buttonOpenSelectedWorktree.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonOpenSelectedWorktree.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.buttonOpenSelectedWorktree.UseVisualStyleBackColor = true;
-            this.buttonOpenSelectedWorktree.Click += new System.EventHandler(this.buttonOpenSelectedWorktree_Click);
+            buttonOpenSelectedWorktree.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            buttonOpenSelectedWorktree.AutoSize = true;
+            buttonOpenSelectedWorktree.Image = Properties.Images.BrowseFileExplorer;
+            buttonOpenSelectedWorktree.Location = new Point(569, 3);
+            buttonOpenSelectedWorktree.Name = "buttonOpenSelectedWorktree";
+            buttonOpenSelectedWorktree.Size = new Size(108, 25);
+            buttonOpenSelectedWorktree.TabIndex = 1;
+            buttonOpenSelectedWorktree.Text = "&Open selected";
+            buttonOpenSelectedWorktree.TextAlign = ContentAlignment.MiddleRight;
+            buttonOpenSelectedWorktree.TextImageRelation = TextImageRelation.ImageBeforeText;
+            buttonOpenSelectedWorktree.UseVisualStyleBackColor = true;
+            buttonOpenSelectedWorktree.Click += buttonOpenSelectedWorktree_Click;
             // 
             // buttonDeleteSelectedWorktree
             // 
-            this.buttonDeleteSelectedWorktree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonDeleteSelectedWorktree.AutoSize = true;
-            this.buttonDeleteSelectedWorktree.Image = global::GitUI.Properties.Images.DeleteFile;
-            this.buttonDeleteSelectedWorktree.Location = new System.Drawing.Point(451, 3);
-            this.buttonDeleteSelectedWorktree.Name = "buttonDeleteSelectedWorktree";
-            this.buttonDeleteSelectedWorktree.Size = new System.Drawing.Size(112, 25);
-            this.buttonDeleteSelectedWorktree.TabIndex = 1;
-            this.buttonDeleteSelectedWorktree.Text = "&Delete selected";
-            this.buttonDeleteSelectedWorktree.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonDeleteSelectedWorktree.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.buttonDeleteSelectedWorktree.UseVisualStyleBackColor = true;
-            this.buttonDeleteSelectedWorktree.Click += new System.EventHandler(this.buttonDeleteSelectedWorktree_Click);
+            buttonDeleteSelectedWorktree.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            buttonDeleteSelectedWorktree.AutoSize = true;
+            buttonDeleteSelectedWorktree.Image = Properties.Images.DeleteFile;
+            buttonDeleteSelectedWorktree.Location = new Point(451, 3);
+            buttonDeleteSelectedWorktree.Name = "buttonDeleteSelectedWorktree";
+            buttonDeleteSelectedWorktree.Size = new Size(112, 25);
+            buttonDeleteSelectedWorktree.TabIndex = 1;
+            buttonDeleteSelectedWorktree.Text = "&Delete selected";
+            buttonDeleteSelectedWorktree.TextAlign = ContentAlignment.MiddleRight;
+            buttonDeleteSelectedWorktree.TextImageRelation = TextImageRelation.ImageBeforeText;
+            buttonDeleteSelectedWorktree.UseVisualStyleBackColor = true;
+            buttonDeleteSelectedWorktree.Click += buttonDeleteSelectedWorktree_Click;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            tableLayoutPanel1.Controls.Add(this.Worktrees, 0, 0);
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Controls.Add(Worktrees, 0, 0);
             tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 0, 1);
-            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel1.Location = new System.Drawing.Point(9, 9);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(9, 9);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.Size = new System.Drawing.Size(679, 302);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(679, 302);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // Worktrees
             // 
-            this.Worktrees.AllowUserToAddRows = false;
-            this.Worktrees.AllowUserToDeleteRows = false;
-            this.Worktrees.AllowUserToResizeRows = false;
-            this.Worktrees.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.Worktrees.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            this.Worktrees.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.Worktrees.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Worktrees.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Path,
-            this.Type,
-            this.Branch,
-            this.Sha1});
-            this.Worktrees.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Worktrees.Location = new System.Drawing.Point(3, 3);
-            this.Worktrees.MultiSelect = false;
-            this.Worktrees.Name = "Worktrees";
-            this.Worktrees.ReadOnly = true;
-            this.Worktrees.RowHeadersVisible = false;
-            this.Worktrees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Worktrees.Size = new System.Drawing.Size(674, 265);
-            this.Worktrees.TabIndex = 2;
-            this.Worktrees.SelectionChanged += new System.EventHandler(this.Worktrees_SelectionChanged);
+            Worktrees.AllowUserToAddRows = false;
+            Worktrees.AllowUserToDeleteRows = false;
+            Worktrees.AllowUserToResizeRows = false;
+            Worktrees.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            Worktrees.BackgroundColor = SystemColors.ControlLight;
+            Worktrees.BorderStyle = BorderStyle.Fixed3D;
+            Worktrees.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            Worktrees.Columns.AddRange(new DataGridViewColumn[] {
+            Path,
+            Type,
+            Branch,
+            Sha1});
+            Worktrees.Dock = DockStyle.Fill;
+            Worktrees.Location = new Point(3, 3);
+            Worktrees.MultiSelect = false;
+            Worktrees.Name = "Worktrees";
+            Worktrees.ReadOnly = true;
+            Worktrees.RowHeadersVisible = false;
+            Worktrees.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            Worktrees.Size = new Size(674, 265);
+            Worktrees.TabIndex = 2;
+            Worktrees.SelectionChanged += Worktrees_SelectionChanged;
             // 
             // Path
             // 
-            this.Path.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Path.HeaderText = "Path";
-            this.Path.Name = "Path";
-            this.Path.ReadOnly = true;
-            this.Path.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Path.Width = 37;
+            Path.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            Path.HeaderText = "Path";
+            Path.Name = "Path";
+            Path.ReadOnly = true;
+            Path.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Path.Width = 37;
             // 
             // Type
             // 
-            this.Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Type.HeaderText = "Type";
-            this.Type.Name = "Type";
-            this.Type.ReadOnly = true;
-            this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Type.Width = 37;
+            Type.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            Type.HeaderText = "Type";
+            Type.Name = "Type";
+            Type.ReadOnly = true;
+            Type.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Type.Width = 37;
             // 
             // Branch
             // 
-            this.Branch.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Branch.HeaderText = "Branch";
-            this.Branch.Name = "Branch";
-            this.Branch.ReadOnly = true;
-            this.Branch.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Branch.Width = 50;
+            Branch.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            Branch.HeaderText = "Branch";
+            Branch.Name = "Branch";
+            Branch.ReadOnly = true;
+            Branch.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Branch.Width = 50;
             // 
             // Sha1
             // 
-            this.Sha1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Sha1.HeaderText = "SHA-1";
-            this.Sha1.MinimumWidth = 90;
-            this.Sha1.Name = "Sha1";
-            this.Sha1.ReadOnly = true;
-            this.Sha1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            Sha1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Sha1.HeaderText = "SHA-1";
+            Sha1.MinimumWidth = 90;
+            Sha1.Name = "Sha1";
+            Sha1.ReadOnly = true;
+            Sha1.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // buttonPruneWorktrees
             // 
-            this.buttonPruneWorktrees.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonPruneWorktrees.AutoSize = true;
-            this.buttonPruneWorktrees.Location = new System.Drawing.Point(12, 327);
-            this.buttonPruneWorktrees.Name = "buttonPruneWorktrees";
-            this.buttonPruneWorktrees.Size = new System.Drawing.Size(144, 25);
-            this.buttonPruneWorktrees.TabIndex = 1;
-            this.buttonPruneWorktrees.Text = "&Prune deleted worktrees";
-            this.buttonPruneWorktrees.UseVisualStyleBackColor = true;
-            this.buttonPruneWorktrees.Click += new System.EventHandler(this.buttonPruneWorktrees_Click);
+            buttonPruneWorktrees.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            buttonPruneWorktrees.AutoSize = true;
+            buttonPruneWorktrees.Location = new Point(12, 327);
+            buttonPruneWorktrees.Name = "buttonPruneWorktrees";
+            buttonPruneWorktrees.Size = new Size(144, 25);
+            buttonPruneWorktrees.TabIndex = 1;
+            buttonPruneWorktrees.Text = "&Prune deleted worktrees";
+            buttonPruneWorktrees.UseVisualStyleBackColor = true;
+            buttonPruneWorktrees.Click += buttonPruneWorktrees_Click;
             // 
             // buttonCreateNewWorktree
             // 
-            this.buttonCreateNewWorktree.AutoSize = true;
-            this.buttonCreateNewWorktree.Image = global::GitUI.Properties.Images.FileStatusAdded;
-            this.buttonCreateNewWorktree.Location = new System.Drawing.Point(584, 8);
-            this.buttonCreateNewWorktree.Name = "buttonCreateNewWorktree";
-            this.buttonCreateNewWorktree.Size = new System.Drawing.Size(100, 25);
-            this.buttonCreateNewWorktree.TabIndex = 1;
-            this.buttonCreateNewWorktree.Text = "&Create...";
-            this.buttonCreateNewWorktree.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonCreateNewWorktree.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.buttonCreateNewWorktree.UseVisualStyleBackColor = true;
-            this.buttonCreateNewWorktree.Click += new System.EventHandler(this.buttonCreateNewWorktree_Click);
+            buttonCreateNewWorktree.AutoSize = true;
+            buttonCreateNewWorktree.Image = Properties.Images.FileStatusAdded;
+            buttonCreateNewWorktree.Location = new Point(584, 8);
+            buttonCreateNewWorktree.Name = "buttonCreateNewWorktree";
+            buttonCreateNewWorktree.Size = new Size(100, 25);
+            buttonCreateNewWorktree.TabIndex = 1;
+            buttonCreateNewWorktree.Text = "&Create...";
+            buttonCreateNewWorktree.TextAlign = ContentAlignment.MiddleRight;
+            buttonCreateNewWorktree.TextImageRelation = TextImageRelation.ImageBeforeText;
+            buttonCreateNewWorktree.UseVisualStyleBackColor = true;
+            buttonCreateNewWorktree.Click += buttonCreateNewWorktree_Click;
             // 
             // FormManageWorktree
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(697, 361);
-            this.Controls.Add(this.buttonPruneWorktrees);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(710, 200);
-            this.Name = "FormManageWorktree";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Existing worktrees";
-            this.Controls.SetChildIndex(this.ControlsPanel, 0);
-            this.Controls.SetChildIndex(this.MainPanel, 0);
-            this.Controls.SetChildIndex(this.buttonPruneWorktrees, 0);
-            this.MainPanel.ResumeLayout(false);
-            this.ControlsPanel.ResumeLayout(false);
-            this.ControlsPanel.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(697, 361);
+            Controls.Add(buttonPruneWorktrees);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new Size(710, 200);
+            Name = "FormManageWorktree";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Existing worktrees";
+            Controls.SetChildIndex(ControlsPanel, 0);
+            Controls.SetChildIndex(MainPanel, 0);
+            Controls.SetChildIndex(buttonPruneWorktrees, 0);
+            MainPanel.ResumeLayout(false);
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Worktrees)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(Worktrees)).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.DataGridView Worktrees;
-        private System.Windows.Forms.Button buttonPruneWorktrees;
-        private System.Windows.Forms.Button buttonDeleteSelectedWorktree;
-        private System.Windows.Forms.Button buttonOpenSelectedWorktree;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Path;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Branch;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Sha1;
-        private System.Windows.Forms.Button buttonCreateNewWorktree;
+        private DataGridView Worktrees;
+        private Button buttonPruneWorktrees;
+        private Button buttonDeleteSelectedWorktree;
+        private Button buttonOpenSelectedWorktree;
+        private DataGridViewTextBoxColumn Path;
+        private DataGridViewTextBoxColumn Type;
+        private DataGridViewTextBoxColumn Branch;
+        private DataGridViewTextBoxColumn Sha1;
+        private Button buttonCreateNewWorktree;
     }
 }

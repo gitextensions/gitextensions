@@ -28,65 +28,63 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Branches = new System.Windows.Forms.CheckedListBox();
-            this.okButton = new System.Windows.Forms.Button();
-            this.selectBranchesLabel = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            Branches = new CheckedListBox();
+            okButton = new Button();
+            selectBranchesLabel = new Label();
+            SuspendLayout();
             // 
             // Branches
             // 
-            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Branches.CheckOnClick = true;
-            this.Branches.ColumnWidth = 250;
-            this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(12, 32);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(239, 166);
-            this.Branches.TabIndex = 2;
+            Branches.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            Branches.CheckOnClick = true;
+            Branches.ColumnWidth = 250;
+            Branches.FormattingEnabled = true;
+            Branches.Location = new Point(12, 32);
+            Branches.Name = "Branches";
+            Branches.Size = new Size(239, 166);
+            Branches.TabIndex = 2;
             // 
             // okButton
             // 
-            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(176, 223);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 3;
-            this.okButton.Text = "OK";
-            this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            okButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            okButton.Location = new Point(176, 223);
+            okButton.Name = "okButton";
+            okButton.Size = new Size(75, 23);
+            okButton.TabIndex = 3;
+            okButton.Text = "OK";
+            okButton.UseVisualStyleBackColor = true;
+            okButton.Click += okButton_Click;
             // 
             // selectBranchesLabel
             // 
-            this.selectBranchesLabel.AutoSize = true;
-            this.selectBranchesLabel.Location = new System.Drawing.Point(12, 9);
-            this.selectBranchesLabel.Name = "selectBranchesLabel";
-            this.selectBranchesLabel.Size = new System.Drawing.Size(89, 15);
-            this.selectBranchesLabel.TabIndex = 4;
-            this.selectBranchesLabel.Text = "Select branches";
+            selectBranchesLabel.AutoSize = true;
+            selectBranchesLabel.Location = new Point(12, 9);
+            selectBranchesLabel.Name = "selectBranchesLabel";
+            selectBranchesLabel.Size = new Size(89, 15);
+            selectBranchesLabel.TabIndex = 4;
+            selectBranchesLabel.Text = "Select branches";
             // 
             // FormSelectMultipleBranches
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(263, 252);
-            this.Controls.Add(this.selectBranchesLabel);
-            this.Controls.Add(this.okButton);
-            this.Controls.Add(this.Branches);
-            this.MinimumSize = new System.Drawing.Size(200, 200);
-            this.Name = "FormSelectMultipleBranches";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Select multiple branches";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(263, 252);
+            Controls.Add(selectBranchesLabel);
+            Controls.Add(okButton);
+            Controls.Add(Branches);
+            MinimumSize = new Size(200, 200);
+            Name = "FormSelectMultipleBranches";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Select multiple branches";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.CheckedListBox Branches;
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Label selectBranchesLabel;
+        private CheckedListBox Branches;
+        private Button okButton;
+        private Label selectBranchesLabel;
     }
 }

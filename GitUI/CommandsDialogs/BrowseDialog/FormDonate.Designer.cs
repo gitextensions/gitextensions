@@ -30,71 +30,71 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private void InitializeComponent()
         {
-            this.pbxDonate = new System.Windows.Forms.PictureBox();
-            this.lblText = new System.Windows.Forms.Label();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)(this.pbxDonate)).BeginInit();
-            this.tableLayoutPanel.SuspendLayout();
-            this.SuspendLayout();
+            pbxDonate = new PictureBox();
+            lblText = new Label();
+            tableLayoutPanel = new TableLayoutPanel();
+            ((System.ComponentModel.ISupportInitialize)(pbxDonate)).BeginInit();
+            tableLayoutPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // pbxDonate
             // 
-            this.pbxDonate.BackgroundImage = global::GitUI.Properties.Images.DonateBadge;
-            this.pbxDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pbxDonate.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pbxDonate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbxDonate.Location = new System.Drawing.Point(12, 142);
-            this.pbxDonate.Margin = new System.Windows.Forms.Padding(12);
-            this.pbxDonate.MinimumSize = new System.Drawing.Size(90, 35);
-            this.pbxDonate.Name = "pbxDonate";
-            this.pbxDonate.Size = new System.Drawing.Size(452, 56);
-            this.pbxDonate.TabIndex = 0;
-            this.pbxDonate.TabStop = false;
-            this.pbxDonate.Click += new System.EventHandler(this.PictureBox1Click);
+            pbxDonate.BackgroundImage = Properties.Images.DonateBadge;
+            pbxDonate.BackgroundImageLayout = ImageLayout.Zoom;
+            pbxDonate.Cursor = Cursors.Hand;
+            pbxDonate.Dock = DockStyle.Fill;
+            pbxDonate.Location = new Point(12, 142);
+            pbxDonate.Margin = new Padding(12);
+            pbxDonate.MinimumSize = new Size(90, 35);
+            pbxDonate.Name = "pbxDonate";
+            pbxDonate.Size = new Size(452, 56);
+            pbxDonate.TabIndex = 0;
+            pbxDonate.TabStop = false;
+            pbxDonate.Click += PictureBox1Click;
             // 
             // lblText
             // 
-            this.lblText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblText.Location = new System.Drawing.Point(10, 10);
-            this.lblText.Margin = new System.Windows.Forms.Padding(10);
-            this.lblText.Name = "lblText";
-            this.lblText.Size = new System.Drawing.Size(456, 110);
-            this.lblText.TabIndex = 0;
+            lblText.Dock = DockStyle.Fill;
+            lblText.Location = new Point(10, 10);
+            lblText.Margin = new Padding(10);
+            lblText.Name = "lblText";
+            lblText.Size = new Size(456, 110);
+            lblText.TabIndex = 0;
             // 
             // tableLayoutPanel
             // 
-            this.tableLayoutPanel.AutoSize = true;
-            this.tableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel.ColumnCount = 1;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel.Controls.Add(this.lblText, 0, 0);
-            this.tableLayoutPanel.Controls.Add(this.pbxDonate, 0, 1);
-            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel.Location = new System.Drawing.Point(16, 16);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 3;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(476, 234);
-            this.tableLayoutPanel.TabIndex = 2;
+            tableLayoutPanel.AutoSize = true;
+            tableLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel.ColumnCount = 1;
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel.Controls.Add(lblText, 0, 0);
+            tableLayoutPanel.Controls.Add(pbxDonate, 0, 1);
+            tableLayoutPanel.Dock = DockStyle.Fill;
+            tableLayoutPanel.Location = new Point(16, 16);
+            tableLayoutPanel.Name = "tableLayoutPanel";
+            tableLayoutPanel.RowCount = 3;
+            tableLayoutPanel.RowStyles.Add(new RowStyle());
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel.Size = new Size(476, 234);
+            tableLayoutPanel.TabIndex = 2;
             // 
             // FormDonate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(508, 266);
-            this.Controls.Add(this.tableLayoutPanel);
-            this.Name = "FormDonate";
-            this.Padding = new System.Windows.Forms.Padding(16);
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Donate";
-            ((System.ComponentModel.ISupportInitialize)(this.pbxDonate)).EndInit();
-            this.tableLayoutPanel.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ClientSize = new Size(508, 266);
+            Controls.Add(tableLayoutPanel);
+            Name = "FormDonate";
+            Padding = new Padding(16);
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Donate";
+            ((System.ComponentModel.ISupportInitialize)(pbxDonate)).EndInit();
+            tableLayoutPanel.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

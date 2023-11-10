@@ -28,190 +28,190 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
-            this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
-            this.chkRememberShowNonPrintingCharsPreference = new System.Windows.Forms.CheckBox();
-            this.chkRememberShowEntireFilePreference = new System.Windows.Forms.CheckBox();
-            this.chkRememberNumberOfContextLines = new System.Windows.Forms.CheckBox();
-            this.chkRememberShowSyntaxHighlightingInDiff = new System.Windows.Forms.CheckBox();
-            this.chkOmitUninterestingDiff = new System.Windows.Forms.CheckBox();
-            this.chkContScrollToNextFileOnlyWithAlt = new System.Windows.Forms.CheckBox();
-            this.chkOpenSubmoduleDiffInSeparateWindow = new System.Windows.Forms.CheckBox();
-            this.chkShowDiffForAllParents = new GitUI.UserControls.Settings.SettingsCheckBox();
-            this.chkShowAllCustomDiffTools = new GitUI.UserControls.Settings.SettingsCheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.VerticalRulerPosition = new System.Windows.Forms.NumericUpDown();
-            this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
-            this.gbGeneral = new System.Windows.Forms.GroupBox();
-            this.tlpnlGeneral.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalRulerPosition)).BeginInit();
-            this.tlpnlMain.SuspendLayout();
-            this.gbGeneral.SuspendLayout();
-            this.SuspendLayout();
+            tlpnlGeneral = new TableLayoutPanel();
+            chkRememberIgnoreWhiteSpacePreference = new CheckBox();
+            chkRememberShowNonPrintingCharsPreference = new CheckBox();
+            chkRememberShowEntireFilePreference = new CheckBox();
+            chkRememberNumberOfContextLines = new CheckBox();
+            chkRememberShowSyntaxHighlightingInDiff = new CheckBox();
+            chkOmitUninterestingDiff = new CheckBox();
+            chkContScrollToNextFileOnlyWithAlt = new CheckBox();
+            chkOpenSubmoduleDiffInSeparateWindow = new CheckBox();
+            chkShowDiffForAllParents = new GitUI.UserControls.Settings.SettingsCheckBox();
+            chkShowAllCustomDiffTools = new GitUI.UserControls.Settings.SettingsCheckBox();
+            label1 = new Label();
+            VerticalRulerPosition = new NumericUpDown();
+            tlpnlMain = new TableLayoutPanel();
+            gbGeneral = new GroupBox();
+            tlpnlGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(VerticalRulerPosition)).BeginInit();
+            tlpnlMain.SuspendLayout();
+            gbGeneral.SuspendLayout();
+            SuspendLayout();
             // 
             // tlpnlGeneral
             // 
-            this.tlpnlGeneral.AutoSize = true;
-            this.tlpnlGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpnlGeneral.ColumnCount = 3;
-            this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlGeneral.Controls.Add(this.chkRememberIgnoreWhiteSpacePreference, 0, 0);
-            this.tlpnlGeneral.Controls.Add(this.chkRememberShowNonPrintingCharsPreference, 0, 1);
-            this.tlpnlGeneral.Controls.Add(this.chkRememberShowEntireFilePreference, 0, 2);
-            this.tlpnlGeneral.Controls.Add(this.chkRememberNumberOfContextLines, 0, 3);
-            this.tlpnlGeneral.Controls.Add(this.chkRememberShowSyntaxHighlightingInDiff, 0, 4);
-            this.tlpnlGeneral.Controls.Add(this.chkOmitUninterestingDiff, 0, 5);
-            this.tlpnlGeneral.Controls.Add(this.chkContScrollToNextFileOnlyWithAlt, 0, 6);
-            this.tlpnlGeneral.Controls.Add(this.chkOpenSubmoduleDiffInSeparateWindow, 0, 7);
-            this.tlpnlGeneral.Controls.Add(this.chkShowDiffForAllParents, 0, 8);
-            this.tlpnlGeneral.Controls.Add(this.chkShowAllCustomDiffTools, 0, 9);
-            this.tlpnlGeneral.Controls.Add(this.label1, 0, 10);
-            this.tlpnlGeneral.Controls.Add(this.VerticalRulerPosition, 1, 10);
-            this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlGeneral.Location = new System.Drawing.Point(8, 24);
-            this.tlpnlGeneral.Name = "tlpnlGeneral";
-            this.tlpnlGeneral.RowCount = 11;
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpnlGeneral.Size = new System.Drawing.Size(1725, 279);
+            tlpnlGeneral.AutoSize = true;
+            tlpnlGeneral.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlGeneral.ColumnCount = 3;
+            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
+            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
+            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpnlGeneral.Controls.Add(chkRememberIgnoreWhiteSpacePreference, 0, 0);
+            tlpnlGeneral.Controls.Add(chkRememberShowNonPrintingCharsPreference, 0, 1);
+            tlpnlGeneral.Controls.Add(chkRememberShowEntireFilePreference, 0, 2);
+            tlpnlGeneral.Controls.Add(chkRememberNumberOfContextLines, 0, 3);
+            tlpnlGeneral.Controls.Add(chkRememberShowSyntaxHighlightingInDiff, 0, 4);
+            tlpnlGeneral.Controls.Add(chkOmitUninterestingDiff, 0, 5);
+            tlpnlGeneral.Controls.Add(chkContScrollToNextFileOnlyWithAlt, 0, 6);
+            tlpnlGeneral.Controls.Add(chkOpenSubmoduleDiffInSeparateWindow, 0, 7);
+            tlpnlGeneral.Controls.Add(chkShowDiffForAllParents, 0, 8);
+            tlpnlGeneral.Controls.Add(chkShowAllCustomDiffTools, 0, 9);
+            tlpnlGeneral.Controls.Add(label1, 0, 10);
+            tlpnlGeneral.Controls.Add(VerticalRulerPosition, 1, 10);
+            tlpnlGeneral.Dock = DockStyle.Fill;
+            tlpnlGeneral.Location = new Point(8, 24);
+            tlpnlGeneral.Name = "tlpnlGeneral";
+            tlpnlGeneral.RowCount = 11;
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.Size = new Size(1725, 279);
             // 
             // chkRememberIgnoreWhiteSpacePreference
             // 
-            this.chkRememberIgnoreWhiteSpacePreference.AutoSize = true;
-            this.chkRememberIgnoreWhiteSpacePreference.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkRememberIgnoreWhiteSpacePreference.Location = new System.Drawing.Point(3, 3);
-            this.chkRememberIgnoreWhiteSpacePreference.Name = "chkRememberIgnoreWhiteSpacePreference";
-            this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(325, 19);
-            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the \'Ignore whitespaces\' preference";
-            this.chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
+            chkRememberIgnoreWhiteSpacePreference.AutoSize = true;
+            chkRememberIgnoreWhiteSpacePreference.Dock = DockStyle.Fill;
+            chkRememberIgnoreWhiteSpacePreference.Location = new Point(3, 3);
+            chkRememberIgnoreWhiteSpacePreference.Name = "chkRememberIgnoreWhiteSpacePreference";
+            chkRememberIgnoreWhiteSpacePreference.Size = new Size(325, 19);
+            chkRememberIgnoreWhiteSpacePreference.Text = "Remember the \'Ignore whitespaces\' preference";
+            chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
             // 
             // chkRememberShowNonPrintingCharsPreference
             // 
-            this.chkRememberShowNonPrintingCharsPreference.AutoSize = true;
-            this.chkRememberShowNonPrintingCharsPreference.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkRememberShowNonPrintingCharsPreference.Location = new System.Drawing.Point(3, 28);
-            this.chkRememberShowNonPrintingCharsPreference.Name = "chkRememberShowNonPrintingCharsPreference";
-            this.chkRememberShowNonPrintingCharsPreference.Size = new System.Drawing.Size(325, 19);
-            this.chkRememberShowNonPrintingCharsPreference.Text = "Remember the \'Show nonprinting characters\' preference";
-            this.chkRememberShowNonPrintingCharsPreference.UseVisualStyleBackColor = true;
+            chkRememberShowNonPrintingCharsPreference.AutoSize = true;
+            chkRememberShowNonPrintingCharsPreference.Dock = DockStyle.Fill;
+            chkRememberShowNonPrintingCharsPreference.Location = new Point(3, 28);
+            chkRememberShowNonPrintingCharsPreference.Name = "chkRememberShowNonPrintingCharsPreference";
+            chkRememberShowNonPrintingCharsPreference.Size = new Size(325, 19);
+            chkRememberShowNonPrintingCharsPreference.Text = "Remember the \'Show nonprinting characters\' preference";
+            chkRememberShowNonPrintingCharsPreference.UseVisualStyleBackColor = true;
             // 
             // chkRememberShowEntireFilePreference
             // 
-            this.chkRememberShowEntireFilePreference.AutoSize = true;
-            this.chkRememberShowEntireFilePreference.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkRememberShowEntireFilePreference.Location = new System.Drawing.Point(3, 53);
-            this.chkRememberShowEntireFilePreference.Name = "chkRememberShowEntireFilePreference";
-            this.chkRememberShowEntireFilePreference.Size = new System.Drawing.Size(325, 19);
-            this.chkRememberShowEntireFilePreference.Text = "Remember the \'Show entire file\' preference";
-            this.chkRememberShowEntireFilePreference.UseVisualStyleBackColor = true;
+            chkRememberShowEntireFilePreference.AutoSize = true;
+            chkRememberShowEntireFilePreference.Dock = DockStyle.Fill;
+            chkRememberShowEntireFilePreference.Location = new Point(3, 53);
+            chkRememberShowEntireFilePreference.Name = "chkRememberShowEntireFilePreference";
+            chkRememberShowEntireFilePreference.Size = new Size(325, 19);
+            chkRememberShowEntireFilePreference.Text = "Remember the \'Show entire file\' preference";
+            chkRememberShowEntireFilePreference.UseVisualStyleBackColor = true;
             // 
             // chkRememberNumberOfContextLines
             // 
-            this.chkRememberNumberOfContextLines.AutoSize = true;
-            this.chkRememberNumberOfContextLines.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkRememberNumberOfContextLines.Location = new System.Drawing.Point(3, 78);
-            this.chkRememberNumberOfContextLines.Name = "chkRememberNumberOfContextLines";
-            this.chkRememberNumberOfContextLines.Size = new System.Drawing.Size(325, 19);
-            this.chkRememberNumberOfContextLines.Text = "Remember the \'Number of context lines\' preference";
-            this.chkRememberNumberOfContextLines.UseVisualStyleBackColor = true;
+            chkRememberNumberOfContextLines.AutoSize = true;
+            chkRememberNumberOfContextLines.Dock = DockStyle.Fill;
+            chkRememberNumberOfContextLines.Location = new Point(3, 78);
+            chkRememberNumberOfContextLines.Name = "chkRememberNumberOfContextLines";
+            chkRememberNumberOfContextLines.Size = new Size(325, 19);
+            chkRememberNumberOfContextLines.Text = "Remember the \'Number of context lines\' preference";
+            chkRememberNumberOfContextLines.UseVisualStyleBackColor = true;
             // 
             // chkRememberShowSyntaxHighlightingInDiff
             // 
-            this.chkRememberShowSyntaxHighlightingInDiff.AutoSize = true;
-            this.chkRememberShowSyntaxHighlightingInDiff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkRememberShowSyntaxHighlightingInDiff.Location = new System.Drawing.Point(3, 103);
-            this.chkRememberShowSyntaxHighlightingInDiff.Name = "chkRememberShowSyntaxHighlightingInDiff";
-            this.chkRememberShowSyntaxHighlightingInDiff.Size = new System.Drawing.Size(325, 19);
-            this.chkRememberShowSyntaxHighlightingInDiff.Text = "Remember the \'Show syntax highlighting\' preference";
-            this.chkRememberShowSyntaxHighlightingInDiff.UseVisualStyleBackColor = true;
+            chkRememberShowSyntaxHighlightingInDiff.AutoSize = true;
+            chkRememberShowSyntaxHighlightingInDiff.Dock = DockStyle.Fill;
+            chkRememberShowSyntaxHighlightingInDiff.Location = new Point(3, 103);
+            chkRememberShowSyntaxHighlightingInDiff.Name = "chkRememberShowSyntaxHighlightingInDiff";
+            chkRememberShowSyntaxHighlightingInDiff.Size = new Size(325, 19);
+            chkRememberShowSyntaxHighlightingInDiff.Text = "Remember the \'Show syntax highlighting\' preference";
+            chkRememberShowSyntaxHighlightingInDiff.UseVisualStyleBackColor = true;
             // 
             // chkOmitUninterestingDiff
             // 
-            this.chkOmitUninterestingDiff.AutoSize = true;
-            this.chkOmitUninterestingDiff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkOmitUninterestingDiff.Location = new System.Drawing.Point(3, 128);
-            this.chkOmitUninterestingDiff.Name = "chkOmitUninterestingDiff";
-            this.chkOmitUninterestingDiff.Size = new System.Drawing.Size(325, 19);
-            this.chkOmitUninterestingDiff.Text = "Omit uninteresting changes from combined diff";
-            this.chkOmitUninterestingDiff.UseVisualStyleBackColor = true;
+            chkOmitUninterestingDiff.AutoSize = true;
+            chkOmitUninterestingDiff.Dock = DockStyle.Fill;
+            chkOmitUninterestingDiff.Location = new Point(3, 128);
+            chkOmitUninterestingDiff.Name = "chkOmitUninterestingDiff";
+            chkOmitUninterestingDiff.Size = new Size(325, 19);
+            chkOmitUninterestingDiff.Text = "Omit uninteresting changes from combined diff";
+            chkOmitUninterestingDiff.UseVisualStyleBackColor = true;
             // 
             // chkContScrollToNextFileOnlyWithAlt
             // 
-            this.chkContScrollToNextFileOnlyWithAlt.AutoSize = true;
-            this.chkContScrollToNextFileOnlyWithAlt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkContScrollToNextFileOnlyWithAlt.Location = new System.Drawing.Point(3, 153);
-            this.chkContScrollToNextFileOnlyWithAlt.Name = "chkContScrollToNextFileOnlyWithAlt";
-            this.chkContScrollToNextFileOnlyWithAlt.Size = new System.Drawing.Size(325, 19);
-            this.chkContScrollToNextFileOnlyWithAlt.Text = "Enable automatic continuous scroll (without ALT button)";
-            this.chkContScrollToNextFileOnlyWithAlt.UseVisualStyleBackColor = true;
+            chkContScrollToNextFileOnlyWithAlt.AutoSize = true;
+            chkContScrollToNextFileOnlyWithAlt.Dock = DockStyle.Fill;
+            chkContScrollToNextFileOnlyWithAlt.Location = new Point(3, 153);
+            chkContScrollToNextFileOnlyWithAlt.Name = "chkContScrollToNextFileOnlyWithAlt";
+            chkContScrollToNextFileOnlyWithAlt.Size = new Size(325, 19);
+            chkContScrollToNextFileOnlyWithAlt.Text = "Enable automatic continuous scroll (without ALT button)";
+            chkContScrollToNextFileOnlyWithAlt.UseVisualStyleBackColor = true;
             // 
             // chkOpenSubmoduleDiffInSeparateWindow
             // 
-            this.chkOpenSubmoduleDiffInSeparateWindow.AutoSize = true;
-            this.chkOpenSubmoduleDiffInSeparateWindow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkOpenSubmoduleDiffInSeparateWindow.Location = new System.Drawing.Point(3, 178);
-            this.chkOpenSubmoduleDiffInSeparateWindow.Name = "chkOpenSubmoduleDiffInSeparateWindow";
-            this.chkOpenSubmoduleDiffInSeparateWindow.Size = new System.Drawing.Size(325, 19);
-            this.chkOpenSubmoduleDiffInSeparateWindow.Text = "Open Submodule Diff in separate window";
-            this.chkOpenSubmoduleDiffInSeparateWindow.UseVisualStyleBackColor = true;
+            chkOpenSubmoduleDiffInSeparateWindow.AutoSize = true;
+            chkOpenSubmoduleDiffInSeparateWindow.Dock = DockStyle.Fill;
+            chkOpenSubmoduleDiffInSeparateWindow.Location = new Point(3, 178);
+            chkOpenSubmoduleDiffInSeparateWindow.Name = "chkOpenSubmoduleDiffInSeparateWindow";
+            chkOpenSubmoduleDiffInSeparateWindow.Size = new Size(325, 19);
+            chkOpenSubmoduleDiffInSeparateWindow.Text = "Open Submodule Diff in separate window";
+            chkOpenSubmoduleDiffInSeparateWindow.UseVisualStyleBackColor = true;
             // 
             // chkShowDiffForAllParents
             // 
-            this.chkShowDiffForAllParents.AutoSize = true;
-            this.chkShowDiffForAllParents.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.chkShowDiffForAllParents.Checked = false;
-            this.chkShowDiffForAllParents.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 203);
-            this.chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
-            this.chkShowDiffForAllParents.Size = new System.Drawing.Size(325, 19);
-            this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog";
-            this.chkShowDiffForAllParents.ToolTipText = null;
+            chkShowDiffForAllParents.AutoSize = true;
+            chkShowDiffForAllParents.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkShowDiffForAllParents.Checked = false;
+            chkShowDiffForAllParents.Dock = DockStyle.Fill;
+            chkShowDiffForAllParents.Location = new Point(3, 203);
+            chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
+            chkShowDiffForAllParents.Size = new Size(325, 19);
+            chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog";
+            chkShowDiffForAllParents.ToolTipText = null;
             // 
             // chkShowAllCustomDiffTools
             // 
-            this.chkShowAllCustomDiffTools.AutoSize = true;
-            this.chkShowAllCustomDiffTools.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.chkShowAllCustomDiffTools.Checked = false;
-            this.chkShowAllCustomDiffTools.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowAllCustomDiffTools.Location = new System.Drawing.Point(3, 228);
-            this.chkShowAllCustomDiffTools.Name = "chkShowAllCustomDiffTools";
-            this.chkShowAllCustomDiffTools.Size = new System.Drawing.Size(325, 19);
-            this.chkShowAllCustomDiffTools.Text = "Show all available difftools";
-            this.chkShowAllCustomDiffTools.ToolTipText = "Show all configured difftools in a dropdown.\nThe primary difftool can still be selected by clicking the main menu entry.";
+            chkShowAllCustomDiffTools.AutoSize = true;
+            chkShowAllCustomDiffTools.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkShowAllCustomDiffTools.Checked = false;
+            chkShowAllCustomDiffTools.Dock = DockStyle.Fill;
+            chkShowAllCustomDiffTools.Location = new Point(3, 228);
+            chkShowAllCustomDiffTools.Name = "chkShowAllCustomDiffTools";
+            chkShowAllCustomDiffTools.Size = new Size(325, 19);
+            chkShowAllCustomDiffTools.Text = "Show all available difftools";
+            chkShowAllCustomDiffTools.ToolTipText = "Show all configured difftools in a dropdown.\nThe primary difftool can still be selected by clicking the main menu entry.";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 250);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(325, 29);
-            this.label1.Text = "Vertical ruler position [chars]";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label1.AutoSize = true;
+            label1.Dock = DockStyle.Fill;
+            label1.Location = new Point(3, 250);
+            label1.Name = "label1";
+            label1.Size = new Size(325, 29);
+            label1.Text = "Vertical ruler position [chars]";
+            label1.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // VerticalRulerPosition
             // 
-            this.VerticalRulerPosition.Location = new System.Drawing.Point(334, 253);
-            this.VerticalRulerPosition.Maximum = new decimal(new int[] {
+            VerticalRulerPosition.Location = new Point(334, 253);
+            VerticalRulerPosition.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.VerticalRulerPosition.Name = "VerticalRulerPosition";
-            this.VerticalRulerPosition.Size = new System.Drawing.Size(120, 23);
-            this.VerticalRulerPosition.Value = new decimal(new int[] {
+            VerticalRulerPosition.Name = "VerticalRulerPosition";
+            VerticalRulerPosition.Size = new Size(120, 23);
+            VerticalRulerPosition.Value = new decimal(new int[] {
             80,
             0,
             0,
@@ -219,67 +219,67 @@
             // 
             // tlpnlMain
             // 
-            this.tlpnlMain.ColumnCount = 1;
-            this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlMain.Controls.Add(this.gbGeneral, 0, 0);
-            this.tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpnlMain.Location = new System.Drawing.Point(8, 8);
-            this.tlpnlMain.Name = "tlpnlMain";
-            this.tlpnlMain.RowCount = 2;
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpnlMain.Size = new System.Drawing.Size(1747, 1309);
+            tlpnlMain.ColumnCount = 1;
+            tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+            tlpnlMain.Controls.Add(gbGeneral, 0, 0);
+            tlpnlMain.Dock = DockStyle.Fill;
+            tlpnlMain.Location = new Point(8, 8);
+            tlpnlMain.Name = "tlpnlMain";
+            tlpnlMain.RowCount = 2;
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlMain.Size = new Size(1747, 1309);
             // 
             // gbGeneral
             // 
-            this.gbGeneral.AutoSize = true;
-            this.gbGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbGeneral.Controls.Add(this.tlpnlGeneral);
-            this.gbGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbGeneral.Location = new System.Drawing.Point(3, 3);
-            this.gbGeneral.Name = "gbGeneral";
-            this.gbGeneral.Padding = new System.Windows.Forms.Padding(8);
-            this.gbGeneral.Size = new System.Drawing.Size(1741, 311);
-            this.gbGeneral.TabStop = false;
-            this.gbGeneral.Text = "General";
+            gbGeneral.AutoSize = true;
+            gbGeneral.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gbGeneral.Controls.Add(tlpnlGeneral);
+            gbGeneral.Dock = DockStyle.Fill;
+            gbGeneral.Location = new Point(3, 3);
+            gbGeneral.Name = "gbGeneral";
+            gbGeneral.Padding = new Padding(8);
+            gbGeneral.Size = new Size(1741, 311);
+            gbGeneral.TabStop = false;
+            gbGeneral.Text = "General";
             // 
             // DiffViewerSettingsPage
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.tlpnlMain);
-            this.Name = "DiffViewerSettingsPage";
-            this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1763, 1325);
-            this.Text = "Diff viewer";
-            this.tlpnlGeneral.ResumeLayout(false);
-            this.tlpnlGeneral.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalRulerPosition)).EndInit();
-            this.tlpnlMain.ResumeLayout(false);
-            this.tlpnlMain.PerformLayout();
-            this.gbGeneral.ResumeLayout(false);
-            this.gbGeneral.PerformLayout();
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(tlpnlMain);
+            Name = "DiffViewerSettingsPage";
+            Padding = new Padding(8);
+            Size = new Size(1763, 1325);
+            Text = "Diff viewer";
+            tlpnlGeneral.ResumeLayout(false);
+            tlpnlGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(VerticalRulerPosition)).EndInit();
+            tlpnlMain.ResumeLayout(false);
+            tlpnlMain.PerformLayout();
+            gbGeneral.ResumeLayout(false);
+            gbGeneral.PerformLayout();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.GroupBox gbGeneral;
-        private System.Windows.Forms.TableLayoutPanel tlpnlGeneral;
-        private System.Windows.Forms.CheckBox chkRememberIgnoreWhiteSpacePreference;
-        private System.Windows.Forms.CheckBox chkRememberShowNonPrintingCharsPreference;
-        private System.Windows.Forms.CheckBox chkRememberShowEntireFilePreference;
-        private System.Windows.Forms.CheckBox chkRememberNumberOfContextLines;
-        private System.Windows.Forms.CheckBox chkRememberShowSyntaxHighlightingInDiff;
-        private System.Windows.Forms.CheckBox chkOmitUninterestingDiff;
-        private System.Windows.Forms.CheckBox chkOpenSubmoduleDiffInSeparateWindow;
-        private System.Windows.Forms.CheckBox chkContScrollToNextFileOnlyWithAlt;
+        private GroupBox gbGeneral;
+        private TableLayoutPanel tlpnlGeneral;
+        private CheckBox chkRememberIgnoreWhiteSpacePreference;
+        private CheckBox chkRememberShowNonPrintingCharsPreference;
+        private CheckBox chkRememberShowEntireFilePreference;
+        private CheckBox chkRememberNumberOfContextLines;
+        private CheckBox chkRememberShowSyntaxHighlightingInDiff;
+        private CheckBox chkOmitUninterestingDiff;
+        private CheckBox chkOpenSubmoduleDiffInSeparateWindow;
+        private CheckBox chkContScrollToNextFileOnlyWithAlt;
         private UserControls.Settings.SettingsCheckBox chkShowDiffForAllParents;
         private UserControls.Settings.SettingsCheckBox chkShowAllCustomDiffTools;
-        private System.Windows.Forms.NumericUpDown VerticalRulerPosition;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TableLayoutPanel tlpnlMain;
+        private NumericUpDown VerticalRulerPosition;
+        private Label label1;
+        private TableLayoutPanel tlpnlMain;
     }
 }

@@ -15,416 +15,410 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClone));
-            this.Central = new System.Windows.Forms.RadioButton();
-            this.Personal = new System.Windows.Forms.RadioButton();
-            this.Ok = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.repositoryLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_From = new System.Windows.Forms.ComboBox();
-            this.FromBrowse = new System.Windows.Forms.Button();
-            this.destinationLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_To = new System.Windows.Forms.ComboBox();
-            this.ToBrowse = new System.Windows.Forms.Button();
-            this.subdirectoryLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_NewDirectory = new System.Windows.Forms.TextBox();
-            this.brachLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Branches = new System.Windows.Forms.ComboBox();
-            this.cbIntializeAllSubmodules = new System.Windows.Forms.CheckBox();
-            this.cbDownloadFullHistory = new System.Windows.Forms.CheckBox();
-            this.Info = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.CentralRepository = new System.Windows.Forms.RadioButton();
-            this.PersonalRepository = new System.Windows.Forms.RadioButton();
-            this.LoadSSHKey = new System.Windows.Forms.Button();
-            this.tpnlMain = new System.Windows.Forms.TableLayoutPanel();
-            this.optionsPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.ttHints = new System.Windows.Forms.ToolTip(this.components);
-            this.MainPanel.SuspendLayout();
-            this.ControlsPanel.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.tpnlMain.SuspendLayout();
-            this.optionsPanel.SuspendLayout();
-            this.SuspendLayout();
+            Central = new RadioButton();
+            Personal = new RadioButton();
+            Ok = new Button();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            repositoryLabel = new Label();
+            _NO_TRANSLATE_From = new ComboBox();
+            FromBrowse = new Button();
+            destinationLabel = new Label();
+            _NO_TRANSLATE_To = new ComboBox();
+            ToBrowse = new Button();
+            subdirectoryLabel = new Label();
+            _NO_TRANSLATE_NewDirectory = new TextBox();
+            brachLabel = new Label();
+            _NO_TRANSLATE_Branches = new ComboBox();
+            cbIntializeAllSubmodules = new CheckBox();
+            cbDownloadFullHistory = new CheckBox();
+            Info = new Label();
+            groupBox1 = new GroupBox();
+            CentralRepository = new RadioButton();
+            PersonalRepository = new RadioButton();
+            LoadSSHKey = new Button();
+            tpnlMain = new TableLayoutPanel();
+            optionsPanel = new FlowLayoutPanel();
+            ttHints = new ToolTip(components);
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            groupBox1.SuspendLayout();
+            tpnlMain.SuspendLayout();
+            optionsPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.tpnlMain);
-            this.MainPanel.Size = new System.Drawing.Size(647, 310);
+            MainPanel.Controls.Add(tpnlMain);
+            MainPanel.Size = new Size(647, 310);
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.Ok);
-            this.ControlsPanel.Controls.Add(this.LoadSSHKey);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 310);
-            this.ControlsPanel.Size = new System.Drawing.Size(647, 41);
+            ControlsPanel.Controls.Add(Ok);
+            ControlsPanel.Controls.Add(LoadSSHKey);
+            ControlsPanel.Location = new Point(0, 310);
+            ControlsPanel.Size = new Size(647, 41);
             // 
             // Central
             // 
-            this.Central.AutoSize = true;
-            this.Central.Location = new System.Drawing.Point(6, 42);
-            this.Central.Name = "Central";
-            this.Central.Size = new System.Drawing.Size(274, 17);
-            this.Central.TabIndex = 0;
-            this.Central.Text = "Central repository, no working directory  (--bare --shared=all)";
-            this.Central.UseVisualStyleBackColor = true;
+            Central.AutoSize = true;
+            Central.Location = new Point(6, 42);
+            Central.Name = "Central";
+            Central.Size = new Size(274, 17);
+            Central.TabIndex = 0;
+            Central.Text = "Central repository, no working directory  (--bare --shared=all)";
+            Central.UseVisualStyleBackColor = true;
             // 
             // Personal
             // 
-            this.Personal.AutoSize = true;
-            this.Personal.Checked = true;
-            this.Personal.Location = new System.Drawing.Point(6, 19);
-            this.Personal.Name = "Personal";
-            this.Personal.Size = new System.Drawing.Size(114, 17);
-            this.Personal.TabIndex = 0;
-            this.Personal.TabStop = true;
-            this.Personal.Text = "Personal repository";
-            this.Personal.UseVisualStyleBackColor = true;
+            Personal.AutoSize = true;
+            Personal.Checked = true;
+            Personal.Location = new Point(6, 19);
+            Personal.Name = "Personal";
+            Personal.Size = new Size(114, 17);
+            Personal.TabIndex = 0;
+            Personal.TabStop = true;
+            Personal.Text = "Personal repository";
+            Personal.UseVisualStyleBackColor = true;
             // 
             // Ok
             // 
-            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.AutoSize = true;
-            this.Ok.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Ok.Location = new System.Drawing.Point(559, 8);
-            this.Ok.MinimumSize = new System.Drawing.Size(75, 23);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 25);
-            this.Ok.TabIndex = 0;
-            this.Ok.Text = "Clone";
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.OkClick);
+            Ok.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Ok.AutoSize = true;
+            Ok.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Ok.Location = new Point(559, 8);
+            Ok.MinimumSize = new Size(75, 23);
+            Ok.Name = "Ok";
+            Ok.Size = new Size(75, 25);
+            Ok.TabIndex = 0;
+            Ok.Text = "Clone";
+            Ok.UseVisualStyleBackColor = true;
+            Ok.Click += OkClick;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.repositoryLabel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_From, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.FromBrowse, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.destinationLabel, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_To, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.ToBrowse, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.subdirectoryLabel, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_NewDirectory, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.brachLabel, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_Branches, 1, 3);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(623, 125);
-            this.tableLayoutPanel1.TabIndex = 0;
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            tableLayoutPanel1.Controls.Add(repositoryLabel, 0, 0);
+            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_From, 1, 0);
+            tableLayoutPanel1.Controls.Add(FromBrowse, 2, 0);
+            tableLayoutPanel1.Controls.Add(destinationLabel, 0, 1);
+            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_To, 1, 1);
+            tableLayoutPanel1.Controls.Add(ToBrowse, 2, 1);
+            tableLayoutPanel1.Controls.Add(subdirectoryLabel, 0, 2);
+            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_NewDirectory, 1, 2);
+            tableLayoutPanel1.Controls.Add(brachLabel, 0, 3);
+            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_Branches, 1, 3);
+            tableLayoutPanel1.Dock = DockStyle.Top;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.Size = new Size(623, 125);
+            tableLayoutPanel1.TabIndex = 0;
             // 
             // repositoryLabel
             // 
-            this.repositoryLabel.AutoSize = true;
-            this.repositoryLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.repositoryLabel.Location = new System.Drawing.Point(3, 0);
-            this.repositoryLabel.Name = "repositoryLabel";
-            this.repositoryLabel.Size = new System.Drawing.Size(112, 31);
-            this.repositoryLabel.TabIndex = 0;
-            this.repositoryLabel.Text = "Repository to &clone:";
-            this.repositoryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            repositoryLabel.AutoSize = true;
+            repositoryLabel.Dock = DockStyle.Left;
+            repositoryLabel.Location = new Point(3, 0);
+            repositoryLabel.Name = "repositoryLabel";
+            repositoryLabel.Size = new Size(112, 31);
+            repositoryLabel.TabIndex = 0;
+            repositoryLabel.Text = "Repository to &clone:";
+            repositoryLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_From
             // 
-            this._NO_TRANSLATE_From.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_From.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this._NO_TRANSLATE_From.FormattingEnabled = true;
-            this._NO_TRANSLATE_From.Location = new System.Drawing.Point(135, 3);
-            this._NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
-            this._NO_TRANSLATE_From.Size = new System.Drawing.Size(385, 23);
-            this._NO_TRANSLATE_From.TabIndex = 1;
-            this._NO_TRANSLATE_From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
-            this._NO_TRANSLATE_From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
+            _NO_TRANSLATE_From.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_From.AutoCompleteSource = AutoCompleteSource.ListItems;
+            _NO_TRANSLATE_From.FormattingEnabled = true;
+            _NO_TRANSLATE_From.Location = new Point(135, 3);
+            _NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
+            _NO_TRANSLATE_From.Size = new Size(385, 23);
+            _NO_TRANSLATE_From.TabIndex = 1;
+            _NO_TRANSLATE_From.SelectedIndexChanged += FromSelectedIndexChanged;
+            _NO_TRANSLATE_From.TextUpdate += FromTextUpdate;
             // 
             // FromBrowse
             // 
-            this.FromBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FromBrowse.Location = new System.Drawing.Point(526, 3);
-            this.FromBrowse.Name = "FromBrowse";
-            this.FromBrowse.Size = new System.Drawing.Size(94, 24);
-            this.FromBrowse.TabIndex = 2;
-            this.FromBrowse.Text = "&Browse";
-            this.FromBrowse.UseVisualStyleBackColor = true;
-            this.FromBrowse.Click += new System.EventHandler(this.FromBrowseClick);
+            FromBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            FromBrowse.Location = new Point(526, 3);
+            FromBrowse.Name = "FromBrowse";
+            FromBrowse.Size = new Size(94, 24);
+            FromBrowse.TabIndex = 2;
+            FromBrowse.Text = "&Browse";
+            FromBrowse.UseVisualStyleBackColor = true;
+            FromBrowse.Click += FromBrowseClick;
             // 
             // destinationLabel
             // 
-            this.destinationLabel.AutoSize = true;
-            this.destinationLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.destinationLabel.Location = new System.Drawing.Point(3, 31);
-            this.destinationLabel.Name = "destinationLabel";
-            this.destinationLabel.Size = new System.Drawing.Size(70, 31);
-            this.destinationLabel.TabIndex = 3;
-            this.destinationLabel.Text = "&Destination:";
-            this.destinationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            destinationLabel.AutoSize = true;
+            destinationLabel.Dock = DockStyle.Left;
+            destinationLabel.Location = new Point(3, 31);
+            destinationLabel.Name = "destinationLabel";
+            destinationLabel.Size = new Size(70, 31);
+            destinationLabel.TabIndex = 3;
+            destinationLabel.Text = "&Destination:";
+            destinationLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_To
             // 
-            this._NO_TRANSLATE_To.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_To.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this._NO_TRANSLATE_To.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this._NO_TRANSLATE_To.FormattingEnabled = true;
-            this._NO_TRANSLATE_To.Location = new System.Drawing.Point(135, 34);
-            this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
-            this._NO_TRANSLATE_To.Size = new System.Drawing.Size(385, 23);
-            this._NO_TRANSLATE_To.TabIndex = 4;
-            this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
-            this._NO_TRANSLATE_To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
+            _NO_TRANSLATE_To.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_To.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            _NO_TRANSLATE_To.AutoCompleteSource = AutoCompleteSource.FileSystemDirectories;
+            _NO_TRANSLATE_To.FormattingEnabled = true;
+            _NO_TRANSLATE_To.Location = new Point(135, 34);
+            _NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
+            _NO_TRANSLATE_To.Size = new Size(385, 23);
+            _NO_TRANSLATE_To.TabIndex = 4;
+            _NO_TRANSLATE_To.SelectedIndexChanged += ToSelectedIndexChanged;
+            _NO_TRANSLATE_To.TextUpdate += ToTextUpdate;
             // 
             // ToBrowse
             // 
-            this.ToBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ToBrowse.Location = new System.Drawing.Point(526, 34);
-            this.ToBrowse.Name = "ToBrowse";
-            this.ToBrowse.Size = new System.Drawing.Size(94, 24);
-            this.ToBrowse.TabIndex = 5;
-            this.ToBrowse.Text = "B&rowse";
-            this.ToBrowse.UseVisualStyleBackColor = true;
-            this.ToBrowse.Click += new System.EventHandler(this.ToBrowseClick);
+            ToBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ToBrowse.Location = new Point(526, 34);
+            ToBrowse.Name = "ToBrowse";
+            ToBrowse.Size = new Size(94, 24);
+            ToBrowse.TabIndex = 5;
+            ToBrowse.Text = "B&rowse";
+            ToBrowse.UseVisualStyleBackColor = true;
+            ToBrowse.Click += ToBrowseClick;
             // 
             // subdirectoryLabel
             // 
-            this.subdirectoryLabel.AutoSize = true;
-            this.subdirectoryLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.subdirectoryLabel.Location = new System.Drawing.Point(3, 62);
-            this.subdirectoryLabel.Name = "subdirectoryLabel";
-            this.subdirectoryLabel.Size = new System.Drawing.Size(126, 31);
-            this.subdirectoryLabel.TabIndex = 6;
-            this.subdirectoryLabel.Text = "&Subdirectory to create:";
-            this.subdirectoryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            subdirectoryLabel.AutoSize = true;
+            subdirectoryLabel.Dock = DockStyle.Left;
+            subdirectoryLabel.Location = new Point(3, 62);
+            subdirectoryLabel.Name = "subdirectoryLabel";
+            subdirectoryLabel.Size = new Size(126, 31);
+            subdirectoryLabel.TabIndex = 6;
+            subdirectoryLabel.Text = "&Subdirectory to create:";
+            subdirectoryLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_NewDirectory
             // 
-            this._NO_TRANSLATE_NewDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(135, 65);
-            this._NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
-            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(385, 23);
-            this._NO_TRANSLATE_NewDirectory.TabIndex = 7;
-            this._NO_TRANSLATE_NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
+            _NO_TRANSLATE_NewDirectory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_NewDirectory.Location = new Point(135, 65);
+            _NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
+            _NO_TRANSLATE_NewDirectory.Size = new Size(385, 23);
+            _NO_TRANSLATE_NewDirectory.TabIndex = 7;
+            _NO_TRANSLATE_NewDirectory.TextChanged += NewDirectoryTextChanged;
             // 
             // brachLabel
             // 
-            this.brachLabel.AutoSize = true;
-            this.brachLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.brachLabel.Location = new System.Drawing.Point(3, 93);
-            this.brachLabel.Name = "brachLabel";
-            this.brachLabel.Size = new System.Drawing.Size(47, 32);
-            this.brachLabel.TabIndex = 8;
-            this.brachLabel.Text = "&Branch:";
-            this.brachLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            brachLabel.AutoSize = true;
+            brachLabel.Dock = DockStyle.Left;
+            brachLabel.Location = new Point(3, 93);
+            brachLabel.Name = "brachLabel";
+            brachLabel.Size = new Size(47, 32);
+            brachLabel.TabIndex = 8;
+            brachLabel.Text = "&Branch:";
+            brachLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_Branches
             // 
-            this._NO_TRANSLATE_Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_Branches.FormattingEnabled = true;
-            this._NO_TRANSLATE_Branches.Location = new System.Drawing.Point(135, 96);
-            this._NO_TRANSLATE_Branches.Name = "_NO_TRANSLATE_Branches";
-            this._NO_TRANSLATE_Branches.Size = new System.Drawing.Size(385, 23);
-            this._NO_TRANSLATE_Branches.TabIndex = 9;
-            this._NO_TRANSLATE_Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
+            _NO_TRANSLATE_Branches.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_Branches.FormattingEnabled = true;
+            _NO_TRANSLATE_Branches.Location = new Point(135, 96);
+            _NO_TRANSLATE_Branches.Name = "_NO_TRANSLATE_Branches";
+            _NO_TRANSLATE_Branches.Size = new Size(385, 23);
+            _NO_TRANSLATE_Branches.TabIndex = 9;
+            _NO_TRANSLATE_Branches.DropDown += Branches_DropDown;
             // 
             // cbIntializeAllSubmodules
             // 
-            this.cbIntializeAllSubmodules.AutoSize = true;
-            this.cbIntializeAllSubmodules.Checked = true;
-            this.cbIntializeAllSubmodules.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbIntializeAllSubmodules.Location = new System.Drawing.Point(15, 3);
-            this.cbIntializeAllSubmodules.Margin = new System.Windows.Forms.Padding(15, 3, 9, 3);
-            this.cbIntializeAllSubmodules.Name = "cbIntializeAllSubmodules";
-            this.cbIntializeAllSubmodules.Size = new System.Drawing.Size(152, 19);
-            this.cbIntializeAllSubmodules.TabIndex = 3;
-            this.cbIntializeAllSubmodules.Text = "Initialize all submodules";
-            this.cbIntializeAllSubmodules.UseVisualStyleBackColor = true;
+            cbIntializeAllSubmodules.AutoSize = true;
+            cbIntializeAllSubmodules.Checked = true;
+            cbIntializeAllSubmodules.CheckState = CheckState.Checked;
+            cbIntializeAllSubmodules.Location = new Point(15, 3);
+            cbIntializeAllSubmodules.Margin = new Padding(15, 3, 9, 3);
+            cbIntializeAllSubmodules.Name = "cbIntializeAllSubmodules";
+            cbIntializeAllSubmodules.Size = new Size(152, 19);
+            cbIntializeAllSubmodules.TabIndex = 3;
+            cbIntializeAllSubmodules.Text = "Initialize all submodules";
+            cbIntializeAllSubmodules.UseVisualStyleBackColor = true;
             // 
             // cbDownloadFullHistory
             // 
-            this.cbDownloadFullHistory.AutoSize = true;
-            this.cbDownloadFullHistory.Checked = true;
-            this.cbDownloadFullHistory.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbDownloadFullHistory.Location = new System.Drawing.Point(191, 3);
-            this.cbDownloadFullHistory.Margin = new System.Windows.Forms.Padding(15, 3, 9, 3);
-            this.cbDownloadFullHistory.Name = "cbDownloadFullHistory";
-            this.cbDownloadFullHistory.Size = new System.Drawing.Size(139, 19);
-            this.cbDownloadFullHistory.TabIndex = 4;
-            this.cbDownloadFullHistory.Text = "Download full &history";
-            this.ttHints.SetToolTip(this.cbDownloadFullHistory, resources.GetString("cbDownloadFullHistory.ToolTip"));
+            cbDownloadFullHistory.AutoSize = true;
+            cbDownloadFullHistory.Checked = true;
+            cbDownloadFullHistory.CheckState = CheckState.Checked;
+            cbDownloadFullHistory.Location = new Point(191, 3);
+            cbDownloadFullHistory.Margin = new Padding(15, 3, 9, 3);
+            cbDownloadFullHistory.Name = "cbDownloadFullHistory";
+            cbDownloadFullHistory.Size = new Size(139, 19);
+            cbDownloadFullHistory.TabIndex = 4;
+            cbDownloadFullHistory.Text = "Download full &history";
+            ttHints.SetToolTip(cbDownloadFullHistory, resources.GetString("cbDownloadFullHistory.ToolTip"));
             // 
             // Info
             // 
-            this.Info.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Info.BackColor = System.Drawing.SystemColors.Info;
-            this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Info.Location = new System.Drawing.Point(3, 138);
-            this.Info.Margin = new System.Windows.Forms.Padding(3, 13, 3, 0);
-            this.Info.Name = "Info";
-            this.Info.Size = new System.Drawing.Size(617, 42);
-            this.Info.TabIndex = 1;
-            this.Info.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            Info.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            Info.BackColor = SystemColors.Info;
+            Info.BorderStyle = BorderStyle.FixedSingle;
+            Info.Location = new Point(3, 138);
+            Info.Margin = new Padding(3, 13, 3, 0);
+            Info.Name = "Info";
+            Info.Size = new Size(617, 42);
+            Info.TabIndex = 1;
+            Info.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.CentralRepository);
-            this.groupBox1.Controls.Add(this.PersonalRepository);
-            this.groupBox1.Location = new System.Drawing.Point(3, 184);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(617, 78);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Repository type";
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox1.Controls.Add(CentralRepository);
+            groupBox1.Controls.Add(PersonalRepository);
+            groupBox1.Location = new Point(3, 184);
+            groupBox1.Margin = new Padding(3, 4, 3, 0);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(617, 78);
+            groupBox1.TabIndex = 2;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Repository type";
             // 
             // CentralRepository
             // 
-            this.CentralRepository.AutoSize = true;
-            this.CentralRepository.Location = new System.Drawing.Point(20, 48);
-            this.CentralRepository.Name = "CentralRepository";
-            this.CentralRepository.Size = new System.Drawing.Size(277, 19);
-            this.CentralRepository.TabIndex = 0;
-            this.CentralRepository.Text = "P&ublic repository, no working directory  (--bare)";
-            this.CentralRepository.UseVisualStyleBackColor = true;
+            CentralRepository.AutoSize = true;
+            CentralRepository.Location = new Point(20, 48);
+            CentralRepository.Name = "CentralRepository";
+            CentralRepository.Size = new Size(277, 19);
+            CentralRepository.TabIndex = 0;
+            CentralRepository.Text = "P&ublic repository, no working directory  (--bare)";
+            CentralRepository.UseVisualStyleBackColor = true;
             // 
             // PersonalRepository
             // 
-            this.PersonalRepository.AutoSize = true;
-            this.PersonalRepository.Checked = true;
-            this.PersonalRepository.Location = new System.Drawing.Point(20, 25);
-            this.PersonalRepository.Name = "PersonalRepository";
-            this.PersonalRepository.Size = new System.Drawing.Size(126, 19);
-            this.PersonalRepository.TabIndex = 1;
-            this.PersonalRepository.TabStop = true;
-            this.PersonalRepository.Text = "&Personal repository";
-            this.PersonalRepository.UseVisualStyleBackColor = true;
+            PersonalRepository.AutoSize = true;
+            PersonalRepository.Checked = true;
+            PersonalRepository.Location = new Point(20, 25);
+            PersonalRepository.Name = "PersonalRepository";
+            PersonalRepository.Size = new Size(126, 19);
+            PersonalRepository.TabIndex = 1;
+            PersonalRepository.TabStop = true;
+            PersonalRepository.Text = "&Personal repository";
+            PersonalRepository.UseVisualStyleBackColor = true;
             // 
             // LoadSSHKey
             // 
-            this.LoadSSHKey.AutoSize = true;
-            this.LoadSSHKey.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.LoadSSHKey.Image = global::GitUI.Properties.Images.Putty;
-            this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LoadSSHKey.Location = new System.Drawing.Point(433, 8);
-            this.LoadSSHKey.MinimumSize = new System.Drawing.Size(75, 23);
-            this.LoadSSHKey.Name = "LoadSSHKey";
-            this.LoadSSHKey.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
-            this.LoadSSHKey.Size = new System.Drawing.Size(120, 25);
-            this.LoadSSHKey.TabIndex = 1;
-            this.LoadSSHKey.Text = "&Load SSH key";
-            this.LoadSSHKey.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.LoadSSHKey.UseVisualStyleBackColor = true;
-            this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
+            LoadSSHKey.AutoSize = true;
+            LoadSSHKey.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            LoadSSHKey.Image = Properties.Images.Putty;
+            LoadSSHKey.ImageAlign = ContentAlignment.MiddleLeft;
+            LoadSSHKey.Location = new Point(433, 8);
+            LoadSSHKey.MinimumSize = new Size(75, 23);
+            LoadSSHKey.Name = "LoadSSHKey";
+            LoadSSHKey.Padding = new Padding(8, 0, 8, 0);
+            LoadSSHKey.Size = new Size(120, 25);
+            LoadSSHKey.TabIndex = 1;
+            LoadSSHKey.Text = "&Load SSH key";
+            LoadSSHKey.TextImageRelation = TextImageRelation.ImageBeforeText;
+            LoadSSHKey.UseVisualStyleBackColor = true;
+            LoadSSHKey.Click += LoadSshKeyClick;
             // 
             // tpnlMain
             // 
-            this.tpnlMain.AutoSize = true;
-            this.tpnlMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tpnlMain.ColumnCount = 1;
-            this.tpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tpnlMain.Controls.Add(this.tableLayoutPanel1);
-            this.tpnlMain.Controls.Add(this.Info);
-            this.tpnlMain.Controls.Add(this.groupBox1);
-            this.tpnlMain.Controls.Add(this.optionsPanel);
-            this.tpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tpnlMain.Location = new System.Drawing.Point(12, 12);
-            this.tpnlMain.Margin = new System.Windows.Forms.Padding(0);
-            this.tpnlMain.Name = "tpnlMain";
-            this.tpnlMain.RowCount = 5;
-            this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpnlMain.Size = new System.Drawing.Size(623, 286);
-            this.tpnlMain.TabIndex = 0;
+            tpnlMain.AutoSize = true;
+            tpnlMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tpnlMain.ColumnCount = 1;
+            tpnlMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tpnlMain.Controls.Add(tableLayoutPanel1);
+            tpnlMain.Controls.Add(Info);
+            tpnlMain.Controls.Add(groupBox1);
+            tpnlMain.Controls.Add(optionsPanel);
+            tpnlMain.Dock = DockStyle.Fill;
+            tpnlMain.Location = new Point(12, 12);
+            tpnlMain.Margin = new Padding(0);
+            tpnlMain.Name = "tpnlMain";
+            tpnlMain.RowCount = 5;
+            tpnlMain.RowStyles.Add(new RowStyle());
+            tpnlMain.RowStyles.Add(new RowStyle());
+            tpnlMain.RowStyles.Add(new RowStyle());
+            tpnlMain.RowStyles.Add(new RowStyle());
+            tpnlMain.RowStyles.Add(new RowStyle());
+            tpnlMain.Size = new Size(623, 286);
+            tpnlMain.TabIndex = 0;
             // 
             // optionsPanel
             // 
-            this.optionsPanel.AutoSize = true;
-            this.optionsPanel.Controls.Add(this.cbIntializeAllSubmodules);
-            this.optionsPanel.Controls.Add(this.cbDownloadFullHistory);
-            this.optionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.optionsPanel.Location = new System.Drawing.Point(0, 272);
-            this.optionsPanel.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.optionsPanel.Name = "optionsPanel";
-            this.optionsPanel.Size = new System.Drawing.Size(623, 25);
-            this.optionsPanel.TabIndex = 2;
+            optionsPanel.AutoSize = true;
+            optionsPanel.Controls.Add(cbIntializeAllSubmodules);
+            optionsPanel.Controls.Add(cbDownloadFullHistory);
+            optionsPanel.Dock = DockStyle.Fill;
+            optionsPanel.Location = new Point(0, 272);
+            optionsPanel.Margin = new Padding(0, 10, 0, 0);
+            optionsPanel.Name = "optionsPanel";
+            optionsPanel.Size = new Size(623, 25);
+            optionsPanel.TabIndex = 2;
             // 
             // FormClone
             // 
-            this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(647, 351);
-            this.HelpButton = true;
-            this.ManualSectionAnchorName = "clone-repository";
-            this.ManualSectionSubfolder = "getting_started";
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(950, 398);
-            this.MinimumSize = new System.Drawing.Size(450, 398);
-            this.Name = "FormClone";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Clone";
-            this.Load += new System.EventHandler(this.FormCloneLoad);
-            this.MainPanel.ResumeLayout(false);
-            this.MainPanel.PerformLayout();
-            this.ControlsPanel.ResumeLayout(false);
-            this.ControlsPanel.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.tpnlMain.ResumeLayout(false);
-            this.tpnlMain.PerformLayout();
-            this.optionsPanel.ResumeLayout(false);
-            this.optionsPanel.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = Ok;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(647, 351);
+            HelpButton = true;
+            ManualSectionAnchorName = "clone-repository";
+            ManualSectionSubfolder = "getting_started";
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MaximumSize = new Size(950, 398);
+            MinimumSize = new Size(450, 398);
+            Name = "FormClone";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Clone";
+            Load += FormCloneLoad;
+            MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            tpnlMain.ResumeLayout(false);
+            tpnlMain.PerformLayout();
+            optionsPanel.ResumeLayout(false);
+            optionsPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.Button ToBrowse;
-        private System.Windows.Forms.Button FromBrowse;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_To;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton CentralRepository;
-        private System.Windows.Forms.RadioButton PersonalRepository;
-        private System.Windows.Forms.RadioButton Central;
-        private System.Windows.Forms.RadioButton Personal;
-        private System.Windows.Forms.Button LoadSSHKey;
-        private System.Windows.Forms.TextBox _NO_TRANSLATE_NewDirectory;
-        private System.Windows.Forms.Label Info;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Branches;
-        private System.Windows.Forms.CheckBox cbIntializeAllSubmodules;
-        private System.Windows.Forms.CheckBox cbDownloadFullHistory;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label repositoryLabel;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_From;
-        private System.Windows.Forms.Label brachLabel;
-        private System.Windows.Forms.Label destinationLabel;
-        private System.Windows.Forms.Label subdirectoryLabel;
-        private System.Windows.Forms.TableLayoutPanel tpnlMain;
-        private System.Windows.Forms.ToolTip ttHints;
-        private System.Windows.Forms.FlowLayoutPanel optionsPanel;
+        private Button Ok;
+        private Button ToBrowse;
+        private Button FromBrowse;
+        private ComboBox _NO_TRANSLATE_To;
+        private GroupBox groupBox1;
+        private RadioButton CentralRepository;
+        private RadioButton PersonalRepository;
+        private RadioButton Central;
+        private RadioButton Personal;
+        private Button LoadSSHKey;
+        private TextBox _NO_TRANSLATE_NewDirectory;
+        private Label Info;
+        private ComboBox _NO_TRANSLATE_Branches;
+        private CheckBox cbIntializeAllSubmodules;
+        private CheckBox cbDownloadFullHistory;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Label repositoryLabel;
+        private ComboBox _NO_TRANSLATE_From;
+        private Label brachLabel;
+        private Label destinationLabel;
+        private Label subdirectoryLabel;
+        private TableLayoutPanel tpnlMain;
+        private ToolTip ttHints;
+        private FlowLayoutPanel optionsPanel;
     }
 }

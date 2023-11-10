@@ -20,514 +20,514 @@ namespace GitExtensions.Plugins.GitStatistics
 
         private void InitializeComponent()
         {
-            this.Tabs = new GitUI.CommandsDialogs.FullBleedTabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.TotalCommits = new System.Windows.Forms.Label();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.CommitStatistics = new System.Windows.Forms.Label();
-            this.CommitCountPie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.TotalLinesOfCode = new System.Windows.Forms.Label();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.LinesOfCodePerLanguageText = new System.Windows.Forms.Label();
-            this.LinesOfCodeExtensionPie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-            this.TotalLinesOfCode2 = new System.Windows.Forms.Label();
-            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
-            this.LinesOfCodePerTypeText = new System.Windows.Forms.Label();
-            this.LinesOfCodePie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.splitContainer7 = new System.Windows.Forms.SplitContainer();
-            this.TotalLinesOfTestCode = new System.Windows.Forms.Label();
-            this.splitContainer8 = new System.Windows.Forms.SplitContainer();
-            this.TestCodeText = new System.Windows.Forms.Label();
-            this.TestCodePie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
-            this.LoadingLabel = new System.Windows.Forms.Label();
-            this.Tabs.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
-            this.splitContainer4.Panel1.SuspendLayout();
-            this.splitContainer4.Panel2.SuspendLayout();
-            this.splitContainer4.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
-            this.splitContainer5.Panel1.SuspendLayout();
-            this.splitContainer5.Panel2.SuspendLayout();
-            this.splitContainer5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
-            this.splitContainer6.Panel1.SuspendLayout();
-            this.splitContainer6.Panel2.SuspendLayout();
-            this.splitContainer6.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
-            this.splitContainer7.Panel1.SuspendLayout();
-            this.splitContainer7.Panel2.SuspendLayout();
-            this.splitContainer7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer8)).BeginInit();
-            this.splitContainer8.Panel1.SuspendLayout();
-            this.splitContainer8.Panel2.SuspendLayout();
-            this.splitContainer8.SuspendLayout();
-            this.SuspendLayout();
+            Tabs = new GitUI.CommandsDialogs.FullBleedTabControl();
+            tabPage2 = new TabPage();
+            splitContainer3 = new SplitContainer();
+            TotalCommits = new Label();
+            splitContainer4 = new SplitContainer();
+            CommitStatistics = new Label();
+            CommitCountPie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
+            tabPage1 = new TabPage();
+            splitContainer2 = new SplitContainer();
+            TotalLinesOfCode = new Label();
+            splitContainer1 = new SplitContainer();
+            LinesOfCodePerLanguageText = new Label();
+            LinesOfCodeExtensionPie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
+            tabPage3 = new TabPage();
+            splitContainer5 = new SplitContainer();
+            TotalLinesOfCode2 = new Label();
+            splitContainer6 = new SplitContainer();
+            LinesOfCodePerTypeText = new Label();
+            LinesOfCodePie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
+            tabPage4 = new TabPage();
+            splitContainer7 = new SplitContainer();
+            TotalLinesOfTestCode = new Label();
+            splitContainer8 = new SplitContainer();
+            TestCodeText = new Label();
+            TestCodePie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
+            LoadingLabel = new Label();
+            Tabs.SuspendLayout();
+            tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer3)).BeginInit();
+            splitContainer3.Panel1.SuspendLayout();
+            splitContainer3.Panel2.SuspendLayout();
+            splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer4)).BeginInit();
+            splitContainer4.Panel1.SuspendLayout();
+            splitContainer4.Panel2.SuspendLayout();
+            splitContainer4.SuspendLayout();
+            tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer2)).BeginInit();
+            splitContainer2.Panel1.SuspendLayout();
+            splitContainer2.Panel2.SuspendLayout();
+            splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer5)).BeginInit();
+            splitContainer5.Panel1.SuspendLayout();
+            splitContainer5.Panel2.SuspendLayout();
+            splitContainer5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer6)).BeginInit();
+            splitContainer6.Panel1.SuspendLayout();
+            splitContainer6.Panel2.SuspendLayout();
+            splitContainer6.SuspendLayout();
+            tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer7)).BeginInit();
+            splitContainer7.Panel1.SuspendLayout();
+            splitContainer7.Panel2.SuspendLayout();
+            splitContainer7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer8)).BeginInit();
+            splitContainer8.Panel1.SuspendLayout();
+            splitContainer8.Panel2.SuspendLayout();
+            splitContainer8.SuspendLayout();
+            SuspendLayout();
             // 
             // Tabs
             // 
-            this.Tabs.Controls.Add(this.tabPage2);
-            this.Tabs.Controls.Add(this.tabPage1);
-            this.Tabs.Controls.Add(this.tabPage3);
-            this.Tabs.Controls.Add(this.tabPage4);
-            this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Tabs.Location = new System.Drawing.Point(0, 0);
-            this.Tabs.Margin = new System.Windows.Forms.Padding(0);
-            this.Tabs.Name = "Tabs";
-            this.Tabs.Padding = new System.Drawing.Point(0, 0);
-            this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(751, 465);
-            this.Tabs.TabIndex = 0;
-            this.Tabs.Visible = false;
-            this.Tabs.SelectedIndexChanged += new System.EventHandler(this.TabsSelectedIndexChanged);
+            Tabs.Controls.Add(tabPage2);
+            Tabs.Controls.Add(tabPage1);
+            Tabs.Controls.Add(tabPage3);
+            Tabs.Controls.Add(tabPage4);
+            Tabs.Dock = DockStyle.Fill;
+            Tabs.Location = new Point(0, 0);
+            Tabs.Margin = new Padding(0);
+            Tabs.Name = "Tabs";
+            Tabs.Padding = new Point(0, 0);
+            Tabs.SelectedIndex = 0;
+            Tabs.Size = new Size(751, 465);
+            Tabs.TabIndex = 0;
+            Tabs.Visible = false;
+            Tabs.SelectedIndexChanged += TabsSelectedIndexChanged;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.splitContainer3);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(743, 439);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Commits per contributor";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            tabPage2.Controls.Add(splitContainer3);
+            tabPage2.Location = new Point(4, 22);
+            tabPage2.Margin = new Padding(0);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Size = new Size(743, 439);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "Commits per contributor";
+            tabPage2.UseVisualStyleBackColor = true;
             // 
             // splitContainer3
             // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Margin = new System.Windows.Forms.Padding(0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer3.Dock = DockStyle.Fill;
+            splitContainer3.FixedPanel = FixedPanel.Panel1;
+            splitContainer3.Location = new Point(0, 0);
+            splitContainer3.Margin = new Padding(0);
+            splitContainer3.Name = "splitContainer3";
+            splitContainer3.Orientation = Orientation.Horizontal;
             // 
             // splitContainer3.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.TotalCommits);
+            splitContainer3.Panel1.Controls.Add(TotalCommits);
             // 
             // splitContainer3.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(737, 433);
-            this.splitContainer3.SplitterDistance = 29;
-            this.splitContainer3.TabIndex = 0;
+            splitContainer3.Panel2.Controls.Add(splitContainer4);
+            splitContainer3.Size = new Size(737, 433);
+            splitContainer3.SplitterDistance = 29;
+            splitContainer3.TabIndex = 0;
             // 
             // TotalCommits
             // 
-            this.TotalCommits.AutoSize = true;
-            this.TotalCommits.Location = new System.Drawing.Point(5, 2);
-            this.TotalCommits.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.TotalCommits.Name = "TotalCommits";
-            this.TotalCommits.Size = new System.Drawing.Size(72, 13);
-            this.TotalCommits.TabIndex = 1;
-            this.TotalCommits.Text = "Total commits";
+            TotalCommits.AutoSize = true;
+            TotalCommits.Location = new Point(5, 2);
+            TotalCommits.Margin = new Padding(0, 0, 0, 0);
+            TotalCommits.Name = "TotalCommits";
+            TotalCommits.Size = new Size(72, 13);
+            TotalCommits.TabIndex = 1;
+            TotalCommits.Text = "Total commits";
             // 
             // splitContainer4
             // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer4.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.splitContainer4.Name = "splitContainer4";
+            splitContainer4.Dock = DockStyle.Fill;
+            splitContainer4.Location = new Point(0, 0);
+            splitContainer4.Margin = new Padding(0, 0, 0, 0);
+            splitContainer4.Name = "splitContainer4";
             // 
             // splitContainer4.Panel1
             // 
-            this.splitContainer4.Panel1.AutoScroll = true;
-            this.splitContainer4.Panel1.Controls.Add(this.CommitStatistics);
-            this.splitContainer4.Panel1MinSize = 250;
+            splitContainer4.Panel1.AutoScroll = true;
+            splitContainer4.Panel1.Controls.Add(CommitStatistics);
+            splitContainer4.Panel1MinSize = 250;
             // 
             // splitContainer4.Panel2
             // 
-            this.splitContainer4.Panel2.Controls.Add(this.CommitCountPie);
-            this.splitContainer4.Size = new System.Drawing.Size(737, 400);
-            this.splitContainer4.SplitterDistance = 286;
-            this.splitContainer4.TabIndex = 1;
+            splitContainer4.Panel2.Controls.Add(CommitCountPie);
+            splitContainer4.Size = new Size(737, 400);
+            splitContainer4.SplitterDistance = 286;
+            splitContainer4.TabIndex = 1;
             // 
             // CommitStatistics
             // 
-            this.CommitStatistics.AutoSize = true;
-            this.CommitStatistics.Location = new System.Drawing.Point(9, 4);
-            this.CommitStatistics.Margin = new System.Windows.Forms.Padding(0);
-            this.CommitStatistics.Name = "CommitStatistics";
-            this.CommitStatistics.Size = new System.Drawing.Size(51, 13);
-            this.CommitStatistics.TabIndex = 0;
-            this.CommitStatistics.Text = "Loading..";
+            CommitStatistics.AutoSize = true;
+            CommitStatistics.Location = new Point(9, 4);
+            CommitStatistics.Margin = new Padding(0);
+            CommitStatistics.Name = "CommitStatistics";
+            CommitStatistics.Size = new Size(51, 13);
+            CommitStatistics.TabIndex = 0;
+            CommitStatistics.Text = "Loading..";
             // 
             // CommitCountPie
             // 
-            this.CommitCountPie.Dock = System.Windows.Forms.DockStyle.None;
-            this.CommitCountPie.InitialAngle = -30;
-            this.CommitCountPie.Location = new System.Drawing.Point(0, 0);
-            this.CommitCountPie.Margin = new System.Windows.Forms.Padding(0);
-            this.CommitCountPie.Name = "CommitCountPie";
-            this.CommitCountPie.Size = new System.Drawing.Size(447, 400);
-            this.CommitCountPie.TabIndex = 0;
-            this.CommitCountPie.ToolTips = null;
+            CommitCountPie.Dock = DockStyle.None;
+            CommitCountPie.InitialAngle = -30;
+            CommitCountPie.Location = new Point(0, 0);
+            CommitCountPie.Margin = new Padding(0);
+            CommitCountPie.Name = "CommitCountPie";
+            CommitCountPie.Size = new Size(447, 400);
+            CommitCountPie.TabIndex = 0;
+            CommitCountPie.ToolTips = null;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.splitContainer2);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(743, 439);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Lines of code per language";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Controls.Add(splitContainer2);
+            tabPage1.Location = new Point(4, 22);
+            tabPage1.Margin = new Padding(0, 0, 0, 0);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Size = new Size(743, 439);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Lines of code per language";
+            tabPage1.UseVisualStyleBackColor = true;
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer2.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer2.Dock = DockStyle.Fill;
+            splitContainer2.FixedPanel = FixedPanel.Panel1;
+            splitContainer2.Location = new Point(3, 3);
+            splitContainer2.Margin = new Padding(0, 0, 0, 0);
+            splitContainer2.Name = "splitContainer2";
+            splitContainer2.Orientation = Orientation.Horizontal;
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.TotalLinesOfCode);
+            splitContainer2.Panel1.Controls.Add(TotalLinesOfCode);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(737, 433);
-            this.splitContainer2.SplitterDistance = 29;
-            this.splitContainer2.TabIndex = 2;
+            splitContainer2.Panel2.Controls.Add(splitContainer1);
+            splitContainer2.Size = new Size(737, 433);
+            splitContainer2.SplitterDistance = 29;
+            splitContainer2.TabIndex = 2;
             // 
             // TotalLinesOfCode
             // 
-            this.TotalLinesOfCode.AutoSize = true;
-            this.TotalLinesOfCode.Location = new System.Drawing.Point(5, 2);
-            this.TotalLinesOfCode.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.TotalLinesOfCode.Name = "TotalLinesOfCode";
-            this.TotalLinesOfCode.Size = new System.Drawing.Size(94, 13);
-            this.TotalLinesOfCode.TabIndex = 0;
-            this.TotalLinesOfCode.Text = "Total lines of code";
+            TotalLinesOfCode.AutoSize = true;
+            TotalLinesOfCode.Location = new Point(5, 2);
+            TotalLinesOfCode.Margin = new Padding(0, 0, 0, 0);
+            TotalLinesOfCode.Name = "TotalLinesOfCode";
+            TotalLinesOfCode.Size = new Size(94, 13);
+            TotalLinesOfCode.TabIndex = 0;
+            TotalLinesOfCode.Text = "Total lines of code";
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Margin = new Padding(0, 0, 0, 0);
+            splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.LinesOfCodePerLanguageText);
-            this.splitContainer1.Panel1MinSize = 250;
+            splitContainer1.Panel1.Controls.Add(LinesOfCodePerLanguageText);
+            splitContainer1.Panel1MinSize = 250;
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.LinesOfCodeExtensionPie);
-            this.splitContainer1.Size = new System.Drawing.Size(737, 400);
-            this.splitContainer1.SplitterDistance = 286;
-            this.splitContainer1.TabIndex = 1;
+            splitContainer1.Panel2.Controls.Add(LinesOfCodeExtensionPie);
+            splitContainer1.Size = new Size(737, 400);
+            splitContainer1.SplitterDistance = 286;
+            splitContainer1.TabIndex = 1;
             // 
             // LinesOfCodePerLanguageText
             // 
-            this.LinesOfCodePerLanguageText.AutoSize = true;
-            this.LinesOfCodePerLanguageText.Location = new System.Drawing.Point(9, 4);
-            this.LinesOfCodePerLanguageText.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.LinesOfCodePerLanguageText.Name = "LinesOfCodePerLanguageText";
-            this.LinesOfCodePerLanguageText.Size = new System.Drawing.Size(54, 13);
-            this.LinesOfCodePerLanguageText.TabIndex = 1;
-            this.LinesOfCodePerLanguageText.Text = "Loading...";
+            LinesOfCodePerLanguageText.AutoSize = true;
+            LinesOfCodePerLanguageText.Location = new Point(9, 4);
+            LinesOfCodePerLanguageText.Margin = new Padding(0, 0, 0, 0);
+            LinesOfCodePerLanguageText.Name = "LinesOfCodePerLanguageText";
+            LinesOfCodePerLanguageText.Size = new Size(54, 13);
+            LinesOfCodePerLanguageText.TabIndex = 1;
+            LinesOfCodePerLanguageText.Text = "Loading...";
             // 
             // LinesOfCodeExtensionPie
             // 
-            this.LinesOfCodeExtensionPie.Dock = System.Windows.Forms.DockStyle.None;
-            this.LinesOfCodeExtensionPie.InitialAngle = -30;
-            this.LinesOfCodeExtensionPie.Location = new System.Drawing.Point(0, 0);
-            this.LinesOfCodeExtensionPie.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.LinesOfCodeExtensionPie.Name = "LinesOfCodeExtensionPie";
-            this.LinesOfCodeExtensionPie.Size = new System.Drawing.Size(447, 400);
-            this.LinesOfCodeExtensionPie.TabIndex = 0;
-            this.LinesOfCodeExtensionPie.ToolTips = null;
+            LinesOfCodeExtensionPie.Dock = DockStyle.None;
+            LinesOfCodeExtensionPie.InitialAngle = -30;
+            LinesOfCodeExtensionPie.Location = new Point(0, 0);
+            LinesOfCodeExtensionPie.Margin = new Padding(0, 0, 0, 0);
+            LinesOfCodeExtensionPie.Name = "LinesOfCodeExtensionPie";
+            LinesOfCodeExtensionPie.Size = new Size(447, 400);
+            LinesOfCodeExtensionPie.TabIndex = 0;
+            LinesOfCodeExtensionPie.ToolTips = null;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.splitContainer5);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(743, 439);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Lines of code per type";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            tabPage3.Controls.Add(splitContainer5);
+            tabPage3.Location = new Point(4, 22);
+            tabPage3.Margin = new Padding(0, 0, 0, 0);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Size = new Size(743, 439);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Lines of code per type";
+            tabPage3.UseVisualStyleBackColor = true;
             // 
             // splitContainer5
             // 
-            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer5.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer5.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.splitContainer5.Name = "splitContainer5";
-            this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer5.Dock = DockStyle.Fill;
+            splitContainer5.FixedPanel = FixedPanel.Panel1;
+            splitContainer5.Location = new Point(0, 0);
+            splitContainer5.Margin = new Padding(0, 0, 0, 0);
+            splitContainer5.Name = "splitContainer5";
+            splitContainer5.Orientation = Orientation.Horizontal;
             // 
             // splitContainer5.Panel1
             // 
-            this.splitContainer5.Panel1.Controls.Add(this.TotalLinesOfCode2);
+            splitContainer5.Panel1.Controls.Add(TotalLinesOfCode2);
             // 
             // splitContainer5.Panel2
             // 
-            this.splitContainer5.Panel2.Controls.Add(this.splitContainer6);
-            this.splitContainer5.Size = new System.Drawing.Size(737, 433);
-            this.splitContainer5.SplitterDistance = 29;
-            this.splitContainer5.TabIndex = 0;
+            splitContainer5.Panel2.Controls.Add(splitContainer6);
+            splitContainer5.Size = new Size(737, 433);
+            splitContainer5.SplitterDistance = 29;
+            splitContainer5.TabIndex = 0;
             // 
             // TotalLinesOfCode2
             // 
-            this.TotalLinesOfCode2.AutoSize = true;
-            this.TotalLinesOfCode2.Location = new System.Drawing.Point(5, 2);
-            this.TotalLinesOfCode2.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.TotalLinesOfCode2.Name = "TotalLinesOfCode2";
-            this.TotalLinesOfCode2.Size = new System.Drawing.Size(94, 13);
-            this.TotalLinesOfCode2.TabIndex = 1;
-            this.TotalLinesOfCode2.Text = "Total lines of code";
+            TotalLinesOfCode2.AutoSize = true;
+            TotalLinesOfCode2.Location = new Point(5, 2);
+            TotalLinesOfCode2.Margin = new Padding(0, 0, 0, 0);
+            TotalLinesOfCode2.Name = "TotalLinesOfCode2";
+            TotalLinesOfCode2.Size = new Size(94, 13);
+            TotalLinesOfCode2.TabIndex = 1;
+            TotalLinesOfCode2.Text = "Total lines of code";
             // 
             // splitContainer6
             // 
-            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer6.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer6.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.splitContainer6.Name = "splitContainer6";
+            splitContainer6.Dock = DockStyle.Fill;
+            splitContainer6.Location = new Point(0, 0);
+            splitContainer6.Margin = new Padding(0, 0, 0, 0);
+            splitContainer6.Name = "splitContainer6";
             // 
             // splitContainer6.Panel1
             // 
-            this.splitContainer6.Panel1.Controls.Add(this.LinesOfCodePerTypeText);
-            this.splitContainer6.Panel1MinSize = 250;
+            splitContainer6.Panel1.Controls.Add(LinesOfCodePerTypeText);
+            splitContainer6.Panel1MinSize = 250;
             // 
             // splitContainer6.Panel2
             // 
-            this.splitContainer6.Panel2.Controls.Add(this.LinesOfCodePie);
-            this.splitContainer6.Size = new System.Drawing.Size(737, 400);
-            this.splitContainer6.SplitterDistance = 286;
-            this.splitContainer6.TabIndex = 0;
+            splitContainer6.Panel2.Controls.Add(LinesOfCodePie);
+            splitContainer6.Size = new Size(737, 400);
+            splitContainer6.SplitterDistance = 286;
+            splitContainer6.TabIndex = 0;
             // 
             // LinesOfCodePerTypeText
             // 
-            this.LinesOfCodePerTypeText.AutoSize = true;
-            this.LinesOfCodePerTypeText.Location = new System.Drawing.Point(9, 4);
-            this.LinesOfCodePerTypeText.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.LinesOfCodePerTypeText.Name = "LinesOfCodePerTypeText";
-            this.LinesOfCodePerTypeText.Size = new System.Drawing.Size(54, 13);
-            this.LinesOfCodePerTypeText.TabIndex = 0;
-            this.LinesOfCodePerTypeText.Text = "Loading...";
+            LinesOfCodePerTypeText.AutoSize = true;
+            LinesOfCodePerTypeText.Location = new Point(9, 4);
+            LinesOfCodePerTypeText.Margin = new Padding(0, 0, 0, 0);
+            LinesOfCodePerTypeText.Name = "LinesOfCodePerTypeText";
+            LinesOfCodePerTypeText.Size = new Size(54, 13);
+            LinesOfCodePerTypeText.TabIndex = 0;
+            LinesOfCodePerTypeText.Text = "Loading...";
             // 
             // LinesOfCodePie
             // 
-            this.LinesOfCodePie.Dock = System.Windows.Forms.DockStyle.None;
-            this.LinesOfCodePie.InitialAngle = -30;
-            this.LinesOfCodePie.Location = new System.Drawing.Point(0, 0);
-            this.LinesOfCodePie.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.LinesOfCodePie.Name = "LinesOfCodePie";
-            this.LinesOfCodePie.Size = new System.Drawing.Size(447, 400);
-            this.LinesOfCodePie.TabIndex = 0;
-            this.LinesOfCodePie.ToolTips = null;
+            LinesOfCodePie.Dock = DockStyle.None;
+            LinesOfCodePie.InitialAngle = -30;
+            LinesOfCodePie.Location = new Point(0, 0);
+            LinesOfCodePie.Margin = new Padding(0, 0, 0, 0);
+            LinesOfCodePie.Name = "LinesOfCodePie";
+            LinesOfCodePie.Size = new Size(447, 400);
+            LinesOfCodePie.TabIndex = 0;
+            LinesOfCodePie.ToolTips = null;
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.splitContainer7);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(743, 439);
-            this.tabPage4.TabIndex = 0;
-            this.tabPage4.Text = "Lines of test code";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            tabPage4.Controls.Add(splitContainer7);
+            tabPage4.Location = new Point(4, 22);
+            tabPage4.Margin = new Padding(0, 0, 0, 0);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Size = new Size(743, 439);
+            tabPage4.TabIndex = 0;
+            tabPage4.Text = "Lines of test code";
+            tabPage4.UseVisualStyleBackColor = true;
             // 
             // splitContainer7
             // 
-            this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer7.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer7.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer7.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.splitContainer7.Name = "splitContainer7";
-            this.splitContainer7.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer7.Dock = DockStyle.Fill;
+            splitContainer7.FixedPanel = FixedPanel.Panel1;
+            splitContainer7.Location = new Point(0, 0);
+            splitContainer7.Margin = new Padding(0, 0, 0, 0);
+            splitContainer7.Name = "splitContainer7";
+            splitContainer7.Orientation = Orientation.Horizontal;
             // 
             // splitContainer7.Panel1
             // 
-            this.splitContainer7.Panel1.Controls.Add(this.TotalLinesOfTestCode);
+            splitContainer7.Panel1.Controls.Add(TotalLinesOfTestCode);
             // 
             // splitContainer7.Panel2
             // 
-            this.splitContainer7.Panel2.Controls.Add(this.splitContainer8);
-            this.splitContainer7.Size = new System.Drawing.Size(737, 433);
-            this.splitContainer7.SplitterDistance = 29;
-            this.splitContainer7.TabIndex = 0;
+            splitContainer7.Panel2.Controls.Add(splitContainer8);
+            splitContainer7.Size = new Size(737, 433);
+            splitContainer7.SplitterDistance = 29;
+            splitContainer7.TabIndex = 0;
             // 
             // TotalLinesOfTestCode
             // 
-            this.TotalLinesOfTestCode.AutoSize = true;
-            this.TotalLinesOfTestCode.Location = new System.Drawing.Point(5, 2);
-            this.TotalLinesOfTestCode.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.TotalLinesOfTestCode.Name = "TotalLinesOfTestCode";
-            this.TotalLinesOfTestCode.Size = new System.Drawing.Size(94, 13);
-            this.TotalLinesOfTestCode.TabIndex = 2;
-            this.TotalLinesOfTestCode.Text = "Total lines of code";
+            TotalLinesOfTestCode.AutoSize = true;
+            TotalLinesOfTestCode.Location = new Point(5, 2);
+            TotalLinesOfTestCode.Margin = new Padding(0, 0, 0, 0);
+            TotalLinesOfTestCode.Name = "TotalLinesOfTestCode";
+            TotalLinesOfTestCode.Size = new Size(94, 13);
+            TotalLinesOfTestCode.TabIndex = 2;
+            TotalLinesOfTestCode.Text = "Total lines of code";
             // 
             // splitContainer8
             // 
-            this.splitContainer8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer8.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer8.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.splitContainer8.Name = "splitContainer8";
+            splitContainer8.Dock = DockStyle.Fill;
+            splitContainer8.Location = new Point(0, 0);
+            splitContainer8.Margin = new Padding(0, 0, 0, 0);
+            splitContainer8.Name = "splitContainer8";
             // 
             // splitContainer8.Panel1
             // 
-            this.splitContainer8.Panel1.Controls.Add(this.TestCodeText);
-            this.splitContainer8.Panel1MinSize = 250;
+            splitContainer8.Panel1.Controls.Add(TestCodeText);
+            splitContainer8.Panel1MinSize = 250;
             // 
             // splitContainer8.Panel2
             // 
-            this.splitContainer8.Panel2.Controls.Add(this.TestCodePie);
-            this.splitContainer8.Size = new System.Drawing.Size(737, 400);
-            this.splitContainer8.SplitterDistance = 286;
-            this.splitContainer8.TabIndex = 0;
+            splitContainer8.Panel2.Controls.Add(TestCodePie);
+            splitContainer8.Size = new Size(737, 400);
+            splitContainer8.SplitterDistance = 286;
+            splitContainer8.TabIndex = 0;
             // 
             // TestCodeText
             // 
-            this.TestCodeText.AutoSize = true;
-            this.TestCodeText.Location = new System.Drawing.Point(9, 4);
-            this.TestCodeText.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.TestCodeText.Name = "TestCodeText";
-            this.TestCodeText.Size = new System.Drawing.Size(54, 13);
-            this.TestCodeText.TabIndex = 0;
-            this.TestCodeText.Text = "Loading...";
+            TestCodeText.AutoSize = true;
+            TestCodeText.Location = new Point(9, 4);
+            TestCodeText.Margin = new Padding(0, 0, 0, 0);
+            TestCodeText.Name = "TestCodeText";
+            TestCodeText.Size = new Size(54, 13);
+            TestCodeText.TabIndex = 0;
+            TestCodeText.Text = "Loading...";
             // 
             // TestCodePie
             // 
-            this.TestCodePie.Dock = System.Windows.Forms.DockStyle.None;
-            this.TestCodePie.InitialAngle = -30;
-            this.TestCodePie.Location = new System.Drawing.Point(0, 0);
-            this.TestCodePie.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.TestCodePie.Name = "TestCodePie";
-            this.TestCodePie.Size = new System.Drawing.Size(447, 400);
-            this.TestCodePie.TabIndex = 0;
-            this.TestCodePie.ToolTips = null;
+            TestCodePie.Dock = DockStyle.None;
+            TestCodePie.InitialAngle = -30;
+            TestCodePie.Location = new Point(0, 0);
+            TestCodePie.Margin = new Padding(0, 0, 0, 0);
+            TestCodePie.Name = "TestCodePie";
+            TestCodePie.Size = new Size(447, 400);
+            TestCodePie.TabIndex = 0;
+            TestCodePie.ToolTips = null;
             // 
             // LoadingLabel
             // 
-            this.LoadingLabel.AutoSize = true;
-            this.LoadingLabel.Location = new System.Drawing.Point(315, 26);
-            this.LoadingLabel.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.LoadingLabel.Name = "LoadingLabel";
-            this.LoadingLabel.Size = new System.Drawing.Size(54, 13);
-            this.LoadingLabel.TabIndex = 1;
-            this.LoadingLabel.Text = "Loading...";
+            LoadingLabel.AutoSize = true;
+            LoadingLabel.Location = new Point(315, 26);
+            LoadingLabel.Margin = new Padding(0, 0, 0, 0);
+            LoadingLabel.Name = "LoadingLabel";
+            LoadingLabel.Size = new Size(54, 13);
+            LoadingLabel.TabIndex = 1;
+            LoadingLabel.Text = "Loading...";
             // 
             // FormGitStatistics
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(751, 465);
-            this.Controls.Add(this.LoadingLabel);
-            this.Controls.Add(this.Tabs);
-            this.MinimumSize = new System.Drawing.Size(350, 250);
-            this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.Name = "FormGitStatistics";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Statistics";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitStatistics_FormClosing);
-            this.Shown += new System.EventHandler(this.FormGitStatisticsShown);
-            this.Tabs.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel1.PerformLayout();
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
-            this.splitContainer4.Panel1.ResumeLayout(false);
-            this.splitContainer4.Panel1.PerformLayout();
-            this.splitContainer4.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
-            this.splitContainer4.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.splitContainer5.Panel1.ResumeLayout(false);
-            this.splitContainer5.Panel1.PerformLayout();
-            this.splitContainer5.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
-            this.splitContainer5.ResumeLayout(false);
-            this.splitContainer6.Panel1.ResumeLayout(false);
-            this.splitContainer6.Panel1.PerformLayout();
-            this.splitContainer6.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
-            this.splitContainer6.ResumeLayout(false);
-            this.tabPage4.ResumeLayout(false);
-            this.splitContainer7.Panel1.ResumeLayout(false);
-            this.splitContainer7.Panel1.PerformLayout();
-            this.splitContainer7.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).EndInit();
-            this.splitContainer7.ResumeLayout(false);
-            this.splitContainer8.Panel1.ResumeLayout(false);
-            this.splitContainer8.Panel1.PerformLayout();
-            this.splitContainer8.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer8)).EndInit();
-            this.splitContainer8.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(751, 465);
+            Controls.Add(LoadingLabel);
+            Controls.Add(Tabs);
+            MinimumSize = new Size(350, 250);
+            Margin = new Padding(0, 0, 0, 0);
+            Name = "FormGitStatistics";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Statistics";
+            FormClosing += FormGitStatistics_FormClosing;
+            Shown += FormGitStatisticsShown;
+            Tabs.ResumeLayout(false);
+            tabPage2.ResumeLayout(false);
+            splitContainer3.Panel1.ResumeLayout(false);
+            splitContainer3.Panel1.PerformLayout();
+            splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer3)).EndInit();
+            splitContainer3.ResumeLayout(false);
+            splitContainer4.Panel1.ResumeLayout(false);
+            splitContainer4.Panel1.PerformLayout();
+            splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer4)).EndInit();
+            splitContainer4.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel1.PerformLayout();
+            splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer2)).EndInit();
+            splitContainer2.ResumeLayout(false);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel1.PerformLayout();
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).EndInit();
+            splitContainer1.ResumeLayout(false);
+            tabPage3.ResumeLayout(false);
+            splitContainer5.Panel1.ResumeLayout(false);
+            splitContainer5.Panel1.PerformLayout();
+            splitContainer5.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer5)).EndInit();
+            splitContainer5.ResumeLayout(false);
+            splitContainer6.Panel1.ResumeLayout(false);
+            splitContainer6.Panel1.PerformLayout();
+            splitContainer6.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer6)).EndInit();
+            splitContainer6.ResumeLayout(false);
+            tabPage4.ResumeLayout(false);
+            splitContainer7.Panel1.ResumeLayout(false);
+            splitContainer7.Panel1.PerformLayout();
+            splitContainer7.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer7)).EndInit();
+            splitContainer7.ResumeLayout(false);
+            splitContainer8.Panel1.ResumeLayout(false);
+            splitContainer8.Panel1.PerformLayout();
+            splitContainer8.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer8)).EndInit();
+            splitContainer8.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
         private GitUI.CommandsDialogs.FullBleedTabControl Tabs;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
         private PieChartControl LinesOfCodePie;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private SplitContainer splitContainer1;
         private PieChartControl LinesOfCodeExtensionPie;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.Label TotalLinesOfCode;
-        private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.Label TotalCommits;
+        private SplitContainer splitContainer2;
+        private Label TotalLinesOfCode;
+        private SplitContainer splitContainer3;
+        private Label TotalCommits;
         private PieChartControl CommitCountPie;
-        private System.Windows.Forms.SplitContainer splitContainer4;
-        private System.Windows.Forms.Label CommitStatistics;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.SplitContainer splitContainer5;
-        private System.Windows.Forms.Label TotalLinesOfCode2;
-        private System.Windows.Forms.SplitContainer splitContainer6;
-        private System.Windows.Forms.Label LinesOfCodePerTypeText;
-        private System.Windows.Forms.Label LinesOfCodePerLanguageText;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.SplitContainer splitContainer7;
-        private System.Windows.Forms.Label TotalLinesOfTestCode;
-        private System.Windows.Forms.SplitContainer splitContainer8;
+        private SplitContainer splitContainer4;
+        private Label CommitStatistics;
+        private TabPage tabPage3;
+        private SplitContainer splitContainer5;
+        private Label TotalLinesOfCode2;
+        private SplitContainer splitContainer6;
+        private Label LinesOfCodePerTypeText;
+        private Label LinesOfCodePerLanguageText;
+        private TabPage tabPage4;
+        private SplitContainer splitContainer7;
+        private Label TotalLinesOfTestCode;
+        private SplitContainer splitContainer8;
         private PieChartControl TestCodePie;
-        private System.Windows.Forms.Label TestCodeText;
-        private System.Windows.Forms.Label LoadingLabel;
+        private Label TestCodeText;
+        private Label LoadingLabel;
     }
 }

@@ -28,116 +28,115 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.UpdateLabel = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.linkChangeLog = new System.Windows.Forms.LinkLabel();
-            this.btnUpdateNow = new System.Windows.Forms.Button();
-            this.linkDirectDownload = new System.Windows.Forms.LinkLabel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            UpdateLabel = new Label();
+            progressBar1 = new ProgressBar();
+            linkChangeLog = new LinkLabel();
+            btnUpdateNow = new Button();
+            linkDirectDownload = new LinkLabel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // UpdateLabel
             // 
-            this.UpdateLabel.AutoSize = true;
-            this.UpdateLabel.Location = new System.Drawing.Point(13, 13);
-            this.UpdateLabel.Name = "UpdateLabel";
-            this.UpdateLabel.Size = new System.Drawing.Size(111, 13);
-            this.UpdateLabel.TabIndex = 0;
-            this.UpdateLabel.Text = "Searching for updates";
+            UpdateLabel.AutoSize = true;
+            UpdateLabel.Location = new Point(13, 13);
+            UpdateLabel.Name = "UpdateLabel";
+            UpdateLabel.Size = new Size(111, 13);
+            UpdateLabel.TabIndex = 0;
+            UpdateLabel.Text = "Searching for updates";
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(16, 35);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(424, 23);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBar1.TabIndex = 1;
+            progressBar1.Location = new Point(16, 35);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(424, 23);
+            progressBar1.Style = ProgressBarStyle.Continuous;
+            progressBar1.TabIndex = 1;
             // 
             // linkChangeLog
             // 
-            this.linkChangeLog.AutoSize = true;
-            this.linkChangeLog.Location = new System.Drawing.Point(13, 35);
-            this.linkChangeLog.Name = "linkChangeLog";
-            this.linkChangeLog.Size = new System.Drawing.Size(92, 13);
-            this.linkChangeLog.TabIndex = 2;
-            this.linkChangeLog.TabStop = true;
-            this.linkChangeLog.Text = "Show Change&Log";
-            this.linkChangeLog.Visible = false;
-            this.linkChangeLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkChangeLog_LinkClicked);
+            linkChangeLog.AutoSize = true;
+            linkChangeLog.Location = new Point(13, 35);
+            linkChangeLog.Name = "linkChangeLog";
+            linkChangeLog.Size = new Size(92, 13);
+            linkChangeLog.TabIndex = 2;
+            linkChangeLog.TabStop = true;
+            linkChangeLog.Text = "Show Change&Log";
+            linkChangeLog.Visible = false;
+            linkChangeLog.LinkClicked += linkChangeLog_LinkClicked;
             // 
             // btnUpdateNow
             // 
-            this.btnUpdateNow.AutoSize = true;
-            this.btnUpdateNow.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnUpdateNow.Location = new System.Drawing.Point(253, 3);
-            this.btnUpdateNow.MinimumSize = new System.Drawing.Size(100, 0);
-            this.btnUpdateNow.Name = "btnUpdateNow";
-            this.btnUpdateNow.Size = new System.Drawing.Size(100, 23);
-            this.btnUpdateNow.TabIndex = 0;
-            this.btnUpdateNow.Text = "&Update Now";
-            this.btnUpdateNow.Visible = false;
-            this.btnUpdateNow.UseVisualStyleBackColor = true;
-            this.btnUpdateNow.Click += new System.EventHandler(this.btnUpdateNow_Click);
+            btnUpdateNow.AutoSize = true;
+            btnUpdateNow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnUpdateNow.Location = new Point(253, 3);
+            btnUpdateNow.MinimumSize = new Size(100, 0);
+            btnUpdateNow.Name = "btnUpdateNow";
+            btnUpdateNow.Size = new Size(100, 23);
+            btnUpdateNow.TabIndex = 0;
+            btnUpdateNow.Text = "&Update Now";
+            btnUpdateNow.Visible = false;
+            btnUpdateNow.UseVisualStyleBackColor = true;
+            btnUpdateNow.Click += btnUpdateNow_Click;
             // 
             // linkDirectDownload
             // 
-            this.linkDirectDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkDirectDownload.AutoSize = true;
-            this.linkDirectDownload.Location = new System.Drawing.Point(359, 0);
-            this.linkDirectDownload.Name = "linkDirectDownload";
-            this.linkDirectDownload.Size = new System.Drawing.Size(86, 29);
-            this.linkDirectDownload.TabIndex = 1;
-            this.linkDirectDownload.TabStop = true;
-            this.linkDirectDownload.Text = "&Direct Download";
-            this.linkDirectDownload.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.linkDirectDownload.Visible = false;
-            this.linkDirectDownload.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDirectDownload_LinkClicked);
+            linkDirectDownload.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            linkDirectDownload.AutoSize = true;
+            linkDirectDownload.Location = new Point(359, 0);
+            linkDirectDownload.Name = "linkDirectDownload";
+            linkDirectDownload.Size = new Size(86, 29);
+            linkDirectDownload.TabIndex = 1;
+            linkDirectDownload.TabStop = true;
+            linkDirectDownload.Text = "&Direct Download";
+            linkDirectDownload.TextAlign = ContentAlignment.MiddleCenter;
+            linkDirectDownload.Visible = false;
+            linkDirectDownload.LinkClicked += linkDirectDownload_LinkClicked;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.linkDirectDownload);
-            this.flowLayoutPanel1.Controls.Add(this.btnUpdateNow);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 69);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(0, 0, 4, 2);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(452, 31);
-            this.flowLayoutPanel1.TabIndex = 3;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(linkDirectDownload);
+            flowLayoutPanel1.Controls.Add(btnUpdateNow);
+            flowLayoutPanel1.Dock = DockStyle.Bottom;
+            flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
+            flowLayoutPanel1.Location = new Point(0, 69);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Padding = new Padding(0, 0, 4, 2);
+            flowLayoutPanel1.Size = new Size(452, 31);
+            flowLayoutPanel1.TabIndex = 3;
             // 
             // FormUpdates
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(452, 100);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.linkChangeLog);
-            this.Controls.Add(this.UpdateLabel);
-            this.Controls.Add(this.progressBar1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FormUpdates";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Check for update";
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(452, 100);
+            Controls.Add(flowLayoutPanel1);
+            Controls.Add(linkChangeLog);
+            Controls.Add(UpdateLabel);
+            Controls.Add(progressBar1);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FormUpdates";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Check for update";
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label UpdateLabel;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.LinkLabel linkChangeLog;
-        private System.Windows.Forms.Button btnUpdateNow;
-        private System.Windows.Forms.LinkLabel linkDirectDownload;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private Label UpdateLabel;
+        private ProgressBar progressBar1;
+        private LinkLabel linkChangeLog;
+        private Button btnUpdateNow;
+        private LinkLabel linkDirectDownload;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

@@ -28,232 +28,230 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBoxBlameSettings = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanelBlameSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.cbIgnoreWhitespace = new System.Windows.Forms.CheckBox();
-            this.cbDetectMoveAndCopyInThisFile = new System.Windows.Forms.CheckBox();
-            this.cbDetectMoveAndCopyInAllFiles = new System.Windows.Forms.CheckBox();
-            this.groupBoxDisplayResult = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanelDisplayResult = new System.Windows.Forms.TableLayoutPanel();
-            this.cbDisplayAuthorFirst = new System.Windows.Forms.CheckBox();
-            this.cbShowAuthor = new System.Windows.Forms.CheckBox();
-            this.cbShowAuthorDate = new System.Windows.Forms.CheckBox();
-            this.cbShowAuthorTime = new System.Windows.Forms.CheckBox();
-            this.cbShowLineNumbers = new System.Windows.Forms.CheckBox();
-            this.cbShowOriginalFilePath = new System.Windows.Forms.CheckBox();
-            this.cbShowAuthorAvatar = new System.Windows.Forms.CheckBox();
-            this.groupBoxBlameSettings.SuspendLayout();
-            this.tableLayoutPanelBlameSettings.SuspendLayout();
-            this.groupBoxDisplayResult.SuspendLayout();
-            this.tableLayoutPanelDisplayResult.SuspendLayout();
-            this.SuspendLayout();
+            groupBoxBlameSettings = new GroupBox();
+            tableLayoutPanelBlameSettings = new TableLayoutPanel();
+            cbIgnoreWhitespace = new CheckBox();
+            cbDetectMoveAndCopyInThisFile = new CheckBox();
+            cbDetectMoveAndCopyInAllFiles = new CheckBox();
+            groupBoxDisplayResult = new GroupBox();
+            tableLayoutPanelDisplayResult = new TableLayoutPanel();
+            cbDisplayAuthorFirst = new CheckBox();
+            cbShowAuthor = new CheckBox();
+            cbShowAuthorDate = new CheckBox();
+            cbShowAuthorTime = new CheckBox();
+            cbShowLineNumbers = new CheckBox();
+            cbShowOriginalFilePath = new CheckBox();
+            cbShowAuthorAvatar = new CheckBox();
+            groupBoxBlameSettings.SuspendLayout();
+            tableLayoutPanelBlameSettings.SuspendLayout();
+            groupBoxDisplayResult.SuspendLayout();
+            tableLayoutPanelDisplayResult.SuspendLayout();
+            SuspendLayout();
             // 
             // groupBoxBlameSettings
             // 
-            this.groupBoxBlameSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxBlameSettings.AutoSize = true;
-            this.groupBoxBlameSettings.Controls.Add(this.tableLayoutPanelBlameSettings);
-            this.groupBoxBlameSettings.Location = new System.Drawing.Point(11, 11);
-            this.groupBoxBlameSettings.Name = "groupBoxBlameSettings";
-            this.groupBoxBlameSettings.Size = new System.Drawing.Size(319, 97);
-            this.groupBoxBlameSettings.TabIndex = 0;
-            this.groupBoxBlameSettings.TabStop = false;
-            this.groupBoxBlameSettings.Text = "Blame settings";
+            groupBoxBlameSettings.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBoxBlameSettings.AutoSize = true;
+            groupBoxBlameSettings.Controls.Add(tableLayoutPanelBlameSettings);
+            groupBoxBlameSettings.Location = new Point(11, 11);
+            groupBoxBlameSettings.Name = "groupBoxBlameSettings";
+            groupBoxBlameSettings.Size = new Size(319, 97);
+            groupBoxBlameSettings.TabIndex = 0;
+            groupBoxBlameSettings.TabStop = false;
+            groupBoxBlameSettings.Text = "Blame settings";
             // 
             // tableLayoutPanelBlameSettings
             // 
-            this.tableLayoutPanelBlameSettings.AutoSize = true;
-            this.tableLayoutPanelBlameSettings.ColumnCount = 1;
-            this.tableLayoutPanelBlameSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelBlameSettings.Controls.Add(this.cbIgnoreWhitespace, 0, 0);
-            this.tableLayoutPanelBlameSettings.Controls.Add(this.cbDetectMoveAndCopyInThisFile, 1, 0);
-            this.tableLayoutPanelBlameSettings.Controls.Add(this.cbDetectMoveAndCopyInAllFiles, 2, 0);
-            this.tableLayoutPanelBlameSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelBlameSettings.Location = new System.Drawing.Point(3, 19);
-            this.tableLayoutPanelBlameSettings.Name = "tableLayoutPanelBlameSettings";
-            this.tableLayoutPanelBlameSettings.RowCount = 3;
-            this.tableLayoutPanelBlameSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelBlameSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelBlameSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelBlameSettings.Size = new System.Drawing.Size(313, 75);
-            this.tableLayoutPanelBlameSettings.TabIndex = 0;
+            tableLayoutPanelBlameSettings.AutoSize = true;
+            tableLayoutPanelBlameSettings.ColumnCount = 1;
+            tableLayoutPanelBlameSettings.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanelBlameSettings.Controls.Add(cbIgnoreWhitespace, 0, 0);
+            tableLayoutPanelBlameSettings.Controls.Add(cbDetectMoveAndCopyInThisFile, 1, 0);
+            tableLayoutPanelBlameSettings.Controls.Add(cbDetectMoveAndCopyInAllFiles, 2, 0);
+            tableLayoutPanelBlameSettings.Dock = DockStyle.Fill;
+            tableLayoutPanelBlameSettings.Location = new Point(3, 19);
+            tableLayoutPanelBlameSettings.Name = "tableLayoutPanelBlameSettings";
+            tableLayoutPanelBlameSettings.RowCount = 3;
+            tableLayoutPanelBlameSettings.RowStyles.Add(new RowStyle());
+            tableLayoutPanelBlameSettings.RowStyles.Add(new RowStyle());
+            tableLayoutPanelBlameSettings.RowStyles.Add(new RowStyle());
+            tableLayoutPanelBlameSettings.Size = new Size(313, 75);
+            tableLayoutPanelBlameSettings.TabIndex = 0;
             // 
             // cbIgnoreWhitespace
             // 
-            this.cbIgnoreWhitespace.AutoSize = true;
-            this.cbIgnoreWhitespace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbIgnoreWhitespace.Location = new System.Drawing.Point(3, 3);
-            this.cbIgnoreWhitespace.Name = "cbIgnoreWhitespace";
-            this.cbIgnoreWhitespace.Size = new System.Drawing.Size(297, 19);
-            this.cbIgnoreWhitespace.TabIndex = 0;
-            this.cbIgnoreWhitespace.Text = "Ignore whitespace";
+            cbIgnoreWhitespace.AutoSize = true;
+            cbIgnoreWhitespace.Dock = DockStyle.Fill;
+            cbIgnoreWhitespace.Location = new Point(3, 3);
+            cbIgnoreWhitespace.Name = "cbIgnoreWhitespace";
+            cbIgnoreWhitespace.Size = new Size(297, 19);
+            cbIgnoreWhitespace.TabIndex = 0;
+            cbIgnoreWhitespace.Text = "Ignore whitespace";
             // 
             // cbDetectMoveAndCopyInThisFile
             // 
-            this.cbDetectMoveAndCopyInThisFile.AutoSize = true;
-            this.cbDetectMoveAndCopyInThisFile.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbDetectMoveAndCopyInThisFile.Location = new System.Drawing.Point(3, 28);
-            this.cbDetectMoveAndCopyInThisFile.Name = "cbDetectMoveAndCopyInThisFile";
-            this.cbDetectMoveAndCopyInThisFile.Size = new System.Drawing.Size(297, 19);
-            this.cbDetectMoveAndCopyInThisFile.TabIndex = 1;
-            this.cbDetectMoveAndCopyInThisFile.Text = "Detect move and copy in this file";
+            cbDetectMoveAndCopyInThisFile.AutoSize = true;
+            cbDetectMoveAndCopyInThisFile.Dock = DockStyle.Fill;
+            cbDetectMoveAndCopyInThisFile.Location = new Point(3, 28);
+            cbDetectMoveAndCopyInThisFile.Name = "cbDetectMoveAndCopyInThisFile";
+            cbDetectMoveAndCopyInThisFile.Size = new Size(297, 19);
+            cbDetectMoveAndCopyInThisFile.TabIndex = 1;
+            cbDetectMoveAndCopyInThisFile.Text = "Detect move and copy in this file";
             // 
             // cbDetectMoveAndCopyInAllFiles
             // 
-            this.cbDetectMoveAndCopyInAllFiles.AutoSize = true;
-            this.cbDetectMoveAndCopyInAllFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbDetectMoveAndCopyInAllFiles.Location = new System.Drawing.Point(3, 53);
-            this.cbDetectMoveAndCopyInAllFiles.Name = "cbDetectMoveAndCopyInAllFiles";
-            this.cbDetectMoveAndCopyInAllFiles.Size = new System.Drawing.Size(297, 19);
-            this.cbDetectMoveAndCopyInAllFiles.TabIndex = 2;
-            this.cbDetectMoveAndCopyInAllFiles.Text = "Detect move and copy in all files";
+            cbDetectMoveAndCopyInAllFiles.AutoSize = true;
+            cbDetectMoveAndCopyInAllFiles.Dock = DockStyle.Fill;
+            cbDetectMoveAndCopyInAllFiles.Location = new Point(3, 53);
+            cbDetectMoveAndCopyInAllFiles.Name = "cbDetectMoveAndCopyInAllFiles";
+            cbDetectMoveAndCopyInAllFiles.Size = new Size(297, 19);
+            cbDetectMoveAndCopyInAllFiles.TabIndex = 2;
+            cbDetectMoveAndCopyInAllFiles.Text = "Detect move and copy in all files";
             // 
             // groupBoxDisplayResult
             // 
-            this.groupBoxDisplayResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxDisplayResult.AutoSize = true;
-            this.groupBoxDisplayResult.Controls.Add(this.tableLayoutPanelDisplayResult);
-            this.groupBoxDisplayResult.Location = new System.Drawing.Point(11, 114);
-            this.groupBoxDisplayResult.Name = "groupBoxDisplayResult";
-            this.groupBoxDisplayResult.Size = new System.Drawing.Size(319, 197);
-            this.groupBoxDisplayResult.TabIndex = 1;
-            this.groupBoxDisplayResult.TabStop = false;
-            this.groupBoxDisplayResult.Text = "Display result settings";
+            groupBoxDisplayResult.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBoxDisplayResult.AutoSize = true;
+            groupBoxDisplayResult.Controls.Add(tableLayoutPanelDisplayResult);
+            groupBoxDisplayResult.Location = new Point(11, 114);
+            groupBoxDisplayResult.Name = "groupBoxDisplayResult";
+            groupBoxDisplayResult.Size = new Size(319, 197);
+            groupBoxDisplayResult.TabIndex = 1;
+            groupBoxDisplayResult.TabStop = false;
+            groupBoxDisplayResult.Text = "Display result settings";
             // 
             // tableLayoutPanelDisplayResult
             // 
-            this.tableLayoutPanelDisplayResult.AutoSize = true;
-            this.tableLayoutPanelDisplayResult.ColumnCount = 1;
-            this.tableLayoutPanelDisplayResult.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelDisplayResult.Controls.Add(this.cbDisplayAuthorFirst, 0, 0);
-            this.tableLayoutPanelDisplayResult.Controls.Add(this.cbShowAuthor, 1, 0);
-            this.tableLayoutPanelDisplayResult.Controls.Add(this.cbShowAuthorDate, 2, 0);
-            this.tableLayoutPanelDisplayResult.Controls.Add(this.cbShowAuthorTime, 3, 0);
-            this.tableLayoutPanelDisplayResult.Controls.Add(this.cbShowLineNumbers, 4, 0);
-            this.tableLayoutPanelDisplayResult.Controls.Add(this.cbShowOriginalFilePath, 5, 0);
-            this.tableLayoutPanelDisplayResult.Controls.Add(this.cbShowAuthorAvatar, 6, 0);
-            this.tableLayoutPanelDisplayResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelDisplayResult.Location = new System.Drawing.Point(3, 19);
-            this.tableLayoutPanelDisplayResult.Name = "tableLayoutPanelDisplayResult";
-            this.tableLayoutPanelDisplayResult.RowCount = 7;
-            this.tableLayoutPanelDisplayResult.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDisplayResult.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDisplayResult.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDisplayResult.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDisplayResult.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDisplayResult.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDisplayResult.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDisplayResult.Size = new System.Drawing.Size(313, 175);
-            this.tableLayoutPanelDisplayResult.TabIndex = 0;
+            tableLayoutPanelDisplayResult.AutoSize = true;
+            tableLayoutPanelDisplayResult.ColumnCount = 1;
+            tableLayoutPanelDisplayResult.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanelDisplayResult.Controls.Add(cbDisplayAuthorFirst, 0, 0);
+            tableLayoutPanelDisplayResult.Controls.Add(cbShowAuthor, 1, 0);
+            tableLayoutPanelDisplayResult.Controls.Add(cbShowAuthorDate, 2, 0);
+            tableLayoutPanelDisplayResult.Controls.Add(cbShowAuthorTime, 3, 0);
+            tableLayoutPanelDisplayResult.Controls.Add(cbShowLineNumbers, 4, 0);
+            tableLayoutPanelDisplayResult.Controls.Add(cbShowOriginalFilePath, 5, 0);
+            tableLayoutPanelDisplayResult.Controls.Add(cbShowAuthorAvatar, 6, 0);
+            tableLayoutPanelDisplayResult.Dock = DockStyle.Fill;
+            tableLayoutPanelDisplayResult.Location = new Point(3, 19);
+            tableLayoutPanelDisplayResult.Name = "tableLayoutPanelDisplayResult";
+            tableLayoutPanelDisplayResult.RowCount = 7;
+            tableLayoutPanelDisplayResult.RowStyles.Add(new RowStyle());
+            tableLayoutPanelDisplayResult.RowStyles.Add(new RowStyle());
+            tableLayoutPanelDisplayResult.RowStyles.Add(new RowStyle());
+            tableLayoutPanelDisplayResult.RowStyles.Add(new RowStyle());
+            tableLayoutPanelDisplayResult.RowStyles.Add(new RowStyle());
+            tableLayoutPanelDisplayResult.RowStyles.Add(new RowStyle());
+            tableLayoutPanelDisplayResult.RowStyles.Add(new RowStyle());
+            tableLayoutPanelDisplayResult.Size = new Size(313, 175);
+            tableLayoutPanelDisplayResult.TabIndex = 0;
             // 
             // cbDisplayAuthorFirst
             // 
-            this.cbDisplayAuthorFirst.AutoSize = true;
-            this.cbDisplayAuthorFirst.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbDisplayAuthorFirst.Location = new System.Drawing.Point(3, 3);
-            this.cbDisplayAuthorFirst.Name = "cbDisplayAuthorFirst";
-            this.cbDisplayAuthorFirst.Size = new System.Drawing.Size(297, 19);
-            this.cbDisplayAuthorFirst.TabIndex = 0;
-            this.cbDisplayAuthorFirst.Text = "Display author first";
+            cbDisplayAuthorFirst.AutoSize = true;
+            cbDisplayAuthorFirst.Dock = DockStyle.Fill;
+            cbDisplayAuthorFirst.Location = new Point(3, 3);
+            cbDisplayAuthorFirst.Name = "cbDisplayAuthorFirst";
+            cbDisplayAuthorFirst.Size = new Size(297, 19);
+            cbDisplayAuthorFirst.TabIndex = 0;
+            cbDisplayAuthorFirst.Text = "Display author first";
             // 
             // cbShowAuthor
             // 
-            this.cbShowAuthor.AutoSize = true;
-            this.cbShowAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbShowAuthor.Location = new System.Drawing.Point(3, 28);
-            this.cbShowAuthor.Name = "cbShowAuthor";
-            this.cbShowAuthor.Size = new System.Drawing.Size(297, 19);
-            this.cbShowAuthor.TabIndex = 1;
-            this.cbShowAuthor.Text = "Show author";
+            cbShowAuthor.AutoSize = true;
+            cbShowAuthor.Dock = DockStyle.Fill;
+            cbShowAuthor.Location = new Point(3, 28);
+            cbShowAuthor.Name = "cbShowAuthor";
+            cbShowAuthor.Size = new Size(297, 19);
+            cbShowAuthor.TabIndex = 1;
+            cbShowAuthor.Text = "Show author";
             // 
             // cbShowAuthorDate
             // 
-            this.cbShowAuthorDate.AutoSize = true;
-            this.cbShowAuthorDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbShowAuthorDate.Location = new System.Drawing.Point(3, 53);
-            this.cbShowAuthorDate.Name = "cbShowAuthorDate";
-            this.cbShowAuthorDate.Size = new System.Drawing.Size(297, 19);
-            this.cbShowAuthorDate.TabIndex = 2;
-            this.cbShowAuthorDate.Text = "Show author date";
+            cbShowAuthorDate.AutoSize = true;
+            cbShowAuthorDate.Dock = DockStyle.Fill;
+            cbShowAuthorDate.Location = new Point(3, 53);
+            cbShowAuthorDate.Name = "cbShowAuthorDate";
+            cbShowAuthorDate.Size = new Size(297, 19);
+            cbShowAuthorDate.TabIndex = 2;
+            cbShowAuthorDate.Text = "Show author date";
             // 
             // cbShowAuthorTime
             // 
-            this.cbShowAuthorTime.AutoSize = true;
-            this.cbShowAuthorTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbShowAuthorTime.Location = new System.Drawing.Point(3, 78);
-            this.cbShowAuthorTime.Name = "cbShowAuthorTime";
-            this.cbShowAuthorTime.Size = new System.Drawing.Size(297, 19);
-            this.cbShowAuthorTime.TabIndex = 3;
-            this.cbShowAuthorTime.Text = "Show author time";
+            cbShowAuthorTime.AutoSize = true;
+            cbShowAuthorTime.Dock = DockStyle.Fill;
+            cbShowAuthorTime.Location = new Point(3, 78);
+            cbShowAuthorTime.Name = "cbShowAuthorTime";
+            cbShowAuthorTime.Size = new Size(297, 19);
+            cbShowAuthorTime.TabIndex = 3;
+            cbShowAuthorTime.Text = "Show author time";
             // 
             // cbShowLineNumbers
             // 
-            this.cbShowLineNumbers.AutoSize = true;
-            this.cbShowLineNumbers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbShowLineNumbers.Location = new System.Drawing.Point(3, 103);
-            this.cbShowLineNumbers.Name = "cbShowLineNumbers";
-            this.cbShowLineNumbers.Size = new System.Drawing.Size(297, 19);
-            this.cbShowLineNumbers.TabIndex = 4;
-            this.cbShowLineNumbers.Text = "Show line numbers";
+            cbShowLineNumbers.AutoSize = true;
+            cbShowLineNumbers.Dock = DockStyle.Fill;
+            cbShowLineNumbers.Location = new Point(3, 103);
+            cbShowLineNumbers.Name = "cbShowLineNumbers";
+            cbShowLineNumbers.Size = new Size(297, 19);
+            cbShowLineNumbers.TabIndex = 4;
+            cbShowLineNumbers.Text = "Show line numbers";
             // 
             // cbShowOriginalFilePath
             // 
-            this.cbShowOriginalFilePath.AutoSize = true;
-            this.cbShowOriginalFilePath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbShowOriginalFilePath.Location = new System.Drawing.Point(3, 128);
-            this.cbShowOriginalFilePath.Name = "cbShowOriginalFilePath";
-            this.cbShowOriginalFilePath.Size = new System.Drawing.Size(297, 19);
-            this.cbShowOriginalFilePath.TabIndex = 5;
-            this.cbShowOriginalFilePath.Text = "Show original file path";
+            cbShowOriginalFilePath.AutoSize = true;
+            cbShowOriginalFilePath.Dock = DockStyle.Fill;
+            cbShowOriginalFilePath.Location = new Point(3, 128);
+            cbShowOriginalFilePath.Name = "cbShowOriginalFilePath";
+            cbShowOriginalFilePath.Size = new Size(297, 19);
+            cbShowOriginalFilePath.TabIndex = 5;
+            cbShowOriginalFilePath.Text = "Show original file path";
             // 
             // cbShowAuthorAvatar
             // 
-            this.cbShowAuthorAvatar.AutoSize = true;
-            this.cbShowAuthorAvatar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbShowAuthorAvatar.Location = new System.Drawing.Point(3, 153);
-            this.cbShowAuthorAvatar.Name = "cbShowAuthorAvatar";
-            this.cbShowAuthorAvatar.Size = new System.Drawing.Size(297, 19);
-            this.cbShowAuthorAvatar.TabIndex = 6;
-            this.cbShowAuthorAvatar.Text = "Show author avatar";
+            cbShowAuthorAvatar.AutoSize = true;
+            cbShowAuthorAvatar.Dock = DockStyle.Fill;
+            cbShowAuthorAvatar.Location = new Point(3, 153);
+            cbShowAuthorAvatar.Name = "cbShowAuthorAvatar";
+            cbShowAuthorAvatar.Size = new Size(297, 19);
+            cbShowAuthorAvatar.TabIndex = 6;
+            cbShowAuthorAvatar.Text = "Show author avatar";
             // 
             // BlameViewerSettingsPage
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.groupBoxDisplayResult);
-            this.Controls.Add(this.groupBoxBlameSettings);
-            this.Name = "BlameViewerSettingsPage";
-            this.Size = new System.Drawing.Size(341, 272);
-            this.Text = "Blame viewer";
-            this.groupBoxBlameSettings.ResumeLayout(false);
-            this.groupBoxBlameSettings.PerformLayout();
-            this.tableLayoutPanelBlameSettings.ResumeLayout(false);
-            this.tableLayoutPanelBlameSettings.PerformLayout();
-            this.groupBoxDisplayResult.ResumeLayout(false);
-            this.groupBoxDisplayResult.PerformLayout();
-            this.tableLayoutPanelDisplayResult.ResumeLayout(false);
-            this.tableLayoutPanelDisplayResult.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(groupBoxDisplayResult);
+            Controls.Add(groupBoxBlameSettings);
+            Name = "BlameViewerSettingsPage";
+            Size = new Size(341, 272);
+            Text = "Blame viewer";
+            groupBoxBlameSettings.ResumeLayout(false);
+            groupBoxBlameSettings.PerformLayout();
+            tableLayoutPanelBlameSettings.ResumeLayout(false);
+            tableLayoutPanelBlameSettings.PerformLayout();
+            groupBoxDisplayResult.ResumeLayout(false);
+            groupBoxDisplayResult.PerformLayout();
+            tableLayoutPanelDisplayResult.ResumeLayout(false);
+            tableLayoutPanelDisplayResult.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBoxBlameSettings;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelBlameSettings;
-        private System.Windows.Forms.CheckBox cbIgnoreWhitespace;
-        private System.Windows.Forms.CheckBox cbDetectMoveAndCopyInThisFile;
-        private System.Windows.Forms.CheckBox cbDetectMoveAndCopyInAllFiles;
-        private System.Windows.Forms.GroupBox groupBoxDisplayResult;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelDisplayResult;
-        private System.Windows.Forms.CheckBox cbDisplayAuthorFirst;
-        private System.Windows.Forms.CheckBox cbShowAuthorDate;
-        private System.Windows.Forms.CheckBox cbShowAuthorTime;
-        private System.Windows.Forms.CheckBox cbShowLineNumbers;
-        private System.Windows.Forms.CheckBox cbShowAuthor;
-        private System.Windows.Forms.CheckBox cbShowOriginalFilePath;
-        private System.Windows.Forms.CheckBox cbShowAuthorAvatar;
+        private GroupBox groupBoxBlameSettings;
+        private TableLayoutPanel tableLayoutPanelBlameSettings;
+        private CheckBox cbIgnoreWhitespace;
+        private CheckBox cbDetectMoveAndCopyInThisFile;
+        private CheckBox cbDetectMoveAndCopyInAllFiles;
+        private GroupBox groupBoxDisplayResult;
+        private TableLayoutPanel tableLayoutPanelDisplayResult;
+        private CheckBox cbDisplayAuthorFirst;
+        private CheckBox cbShowAuthorDate;
+        private CheckBox cbShowAuthorTime;
+        private CheckBox cbShowLineNumbers;
+        private CheckBox cbShowAuthor;
+        private CheckBox cbShowOriginalFilePath;
+        private CheckBox cbShowAuthorAvatar;
     }
 }

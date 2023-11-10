@@ -28,17 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // FormRemoteProcess
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(565, 327);
-            this.Name = "FormRemoteProcess";
-            this.Text = "FormRemoteProcess";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(565, 327);
+            Name = "FormRemoteProcess";
+            Text = "FormRemoteProcess";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

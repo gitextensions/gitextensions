@@ -30,28 +30,28 @@ namespace GitUI.HelperDialogs
         /// </summary>
         private void InitializeComponent()
         {
-            this.Viewer = new GitUI.Editor.FileViewer();
-            this.SuspendLayout();
+            Viewer = new GitUI.Editor.FileViewer();
+            SuspendLayout();
             // 
             // Viewer
             // 
-            this.Viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Viewer.Location = new System.Drawing.Point(0, 0);
-            this.Viewer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Viewer.Name = "Viewer";
-            this.Viewer.Size = new System.Drawing.Size(733, 571);
-            this.Viewer.TabIndex = 0;
+            Viewer.Dock = DockStyle.Fill;
+            Viewer.Location = new Point(0, 0);
+            Viewer.Margin = new Padding(3, 2, 3, 2);
+            Viewer.Name = "Viewer";
+            Viewer.Size = new Size(733, 571);
+            Viewer.TabIndex = 0;
             // 
             // FormEdit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(733, 571);
-            this.Controls.Add(this.Viewer);
-            this.Name = "FormEdit";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "View";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(733, 571);
+            Controls.Add(Viewer);
+            Name = "FormEdit";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "View";
+            ResumeLayout(false);
 
         }
 

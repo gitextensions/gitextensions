@@ -17,142 +17,142 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void InitializeComponent()
         {
-            this.buildServerSettingsPanel = new System.Windows.Forms.Panel();
-            this.BuildServerType = new System.Windows.Forms.ComboBox();
-            this.labelBuildServerType = new System.Windows.Forms.Label();
-            this.checkBoxEnableBuildServerIntegration = new System.Windows.Forms.CheckBox();
-            this.labelBuildServerSettingsInfo = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.checkBoxShowBuildResultPage = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            buildServerSettingsPanel = new Panel();
+            BuildServerType = new ComboBox();
+            labelBuildServerType = new Label();
+            checkBoxEnableBuildServerIntegration = new CheckBox();
+            labelBuildServerSettingsInfo = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            checkBoxShowBuildResultPage = new CheckBox();
+            tableLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // buildServerSettingsPanel
             // 
-            this.buildServerSettingsPanel.AutoSize = true;
-            this.buildServerSettingsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.SetColumnSpan(this.buildServerSettingsPanel, 2);
-            this.buildServerSettingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buildServerSettingsPanel.Location = new System.Drawing.Point(0, 120);
-            this.buildServerSettingsPanel.Margin = new System.Windows.Forms.Padding(0, 10, 3, 2);
-            this.buildServerSettingsPanel.MinimumSize = new System.Drawing.Size(343, 197);
-            this.buildServerSettingsPanel.Name = "buildServerSettingsPanel";
-            this.buildServerSettingsPanel.Size = new System.Drawing.Size(1549, 197);
-            this.buildServerSettingsPanel.TabIndex = 5;
+            buildServerSettingsPanel.AutoSize = true;
+            buildServerSettingsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.SetColumnSpan(buildServerSettingsPanel, 2);
+            buildServerSettingsPanel.Dock = DockStyle.Fill;
+            buildServerSettingsPanel.Location = new Point(0, 120);
+            buildServerSettingsPanel.Margin = new Padding(0, 10, 3, 2);
+            buildServerSettingsPanel.MinimumSize = new Size(343, 197);
+            buildServerSettingsPanel.Name = "buildServerSettingsPanel";
+            buildServerSettingsPanel.Size = new Size(1549, 197);
+            buildServerSettingsPanel.TabIndex = 5;
             // 
             // BuildServerType
             // 
-            this.BuildServerType.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BuildServerType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BuildServerType.Enabled = false;
-            this.BuildServerType.FormattingEnabled = true;
-            this.BuildServerType.Location = new System.Drawing.Point(94, 87);
-            this.BuildServerType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.BuildServerType.Name = "BuildServerType";
-            this.BuildServerType.Size = new System.Drawing.Size(1455, 21);
-            this.BuildServerType.TabIndex = 3;
-            this.BuildServerType.SelectedIndexChanged += new System.EventHandler(this.BuildServerType_SelectedIndexChanged);
+            BuildServerType.Dock = DockStyle.Fill;
+            BuildServerType.DropDownStyle = ComboBoxStyle.DropDownList;
+            BuildServerType.Enabled = false;
+            BuildServerType.FormattingEnabled = true;
+            BuildServerType.Location = new Point(94, 87);
+            BuildServerType.Margin = new Padding(3, 2, 3, 2);
+            BuildServerType.Name = "BuildServerType";
+            BuildServerType.Size = new Size(1455, 21);
+            BuildServerType.TabIndex = 3;
+            BuildServerType.SelectedIndexChanged += BuildServerType_SelectedIndexChanged;
             // 
             // labelBuildServerType
             // 
-            this.labelBuildServerType.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelBuildServerType.AutoSize = true;
-            this.labelBuildServerType.Location = new System.Drawing.Point(3, 91);
-            this.labelBuildServerType.Name = "labelBuildServerType";
-            this.labelBuildServerType.Size = new System.Drawing.Size(85, 13);
-            this.labelBuildServerType.TabIndex = 3;
-            this.labelBuildServerType.Text = "Build server type";
+            labelBuildServerType.Anchor = AnchorStyles.Left;
+            labelBuildServerType.AutoSize = true;
+            labelBuildServerType.Location = new Point(3, 91);
+            labelBuildServerType.Name = "labelBuildServerType";
+            labelBuildServerType.Size = new Size(85, 13);
+            labelBuildServerType.TabIndex = 3;
+            labelBuildServerType.Text = "Build server type";
             // 
             // checkBoxEnableBuildServerIntegration
             // 
-            this.checkBoxEnableBuildServerIntegration.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.checkBoxEnableBuildServerIntegration, 2);
-            this.checkBoxEnableBuildServerIntegration.Enabled = false;
-            this.checkBoxEnableBuildServerIntegration.Location = new System.Drawing.Point(3, 45);
-            this.checkBoxEnableBuildServerIntegration.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.checkBoxEnableBuildServerIntegration.Name = "checkBoxEnableBuildServerIntegration";
-            this.checkBoxEnableBuildServerIntegration.Size = new System.Drawing.Size(168, 17);
-            this.checkBoxEnableBuildServerIntegration.TabIndex = 1;
-            this.checkBoxEnableBuildServerIntegration.Text = "Enable build server integration";
-            this.checkBoxEnableBuildServerIntegration.ThreeState = true;
-            this.checkBoxEnableBuildServerIntegration.UseVisualStyleBackColor = true;
+            checkBoxEnableBuildServerIntegration.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(checkBoxEnableBuildServerIntegration, 2);
+            checkBoxEnableBuildServerIntegration.Enabled = false;
+            checkBoxEnableBuildServerIntegration.Location = new Point(3, 45);
+            checkBoxEnableBuildServerIntegration.Margin = new Padding(3, 2, 3, 2);
+            checkBoxEnableBuildServerIntegration.Name = "checkBoxEnableBuildServerIntegration";
+            checkBoxEnableBuildServerIntegration.Size = new Size(168, 17);
+            checkBoxEnableBuildServerIntegration.TabIndex = 1;
+            checkBoxEnableBuildServerIntegration.Text = "Enable build server integration";
+            checkBoxEnableBuildServerIntegration.ThreeState = true;
+            checkBoxEnableBuildServerIntegration.UseVisualStyleBackColor = true;
             // 
             // labelBuildServerSettingsInfo
             // 
-            this.labelBuildServerSettingsInfo.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.labelBuildServerSettingsInfo, 2);
-            this.labelBuildServerSettingsInfo.Location = new System.Drawing.Point(3, 0);
-            this.labelBuildServerSettingsInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 30);
-            this.labelBuildServerSettingsInfo.Name = "labelBuildServerSettingsInfo";
-            this.labelBuildServerSettingsInfo.Size = new System.Drawing.Size(488, 13);
-            this.labelBuildServerSettingsInfo.TabIndex = 0;
-            this.labelBuildServerSettingsInfo.Text = "Git Extensions can integrate with build servers to supply per-commit Continuous I" +
+            labelBuildServerSettingsInfo.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(labelBuildServerSettingsInfo, 2);
+            labelBuildServerSettingsInfo.Location = new Point(3, 0);
+            labelBuildServerSettingsInfo.Margin = new Padding(3, 0, 3, 30);
+            labelBuildServerSettingsInfo.Name = "labelBuildServerSettingsInfo";
+            labelBuildServerSettingsInfo.Size = new Size(488, 13);
+            labelBuildServerSettingsInfo.TabIndex = 0;
+            labelBuildServerSettingsInfo.Text = "Git Extensions can integrate with build servers to supply per-commit Continuous I" +
     "ntegration information.";
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.labelBuildServerSettingsInfo, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.checkBoxEnableBuildServerIntegration, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.checkBoxShowBuildResultPage, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.labelBuildServerType, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.buildServerSettingsPanel, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.BuildServerType, 1, 2);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 6;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1552, 894);
-            this.tableLayoutPanel1.TabIndex = 6;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(labelBuildServerSettingsInfo, 0, 0);
+            tableLayoutPanel1.Controls.Add(checkBoxEnableBuildServerIntegration, 0, 1);
+            tableLayoutPanel1.Controls.Add(checkBoxShowBuildResultPage, 1, 1);
+            tableLayoutPanel1.Controls.Add(labelBuildServerType, 0, 2);
+            tableLayoutPanel1.Controls.Add(buildServerSettingsPanel, 0, 3);
+            tableLayoutPanel1.Controls.Add(BuildServerType, 1, 2);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 6;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(1552, 894);
+            tableLayoutPanel1.TabIndex = 6;
             // 
             // checkBoxShowBuildResultPage
             // 
-            this.checkBoxShowBuildResultPage.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.checkBoxShowBuildResultPage, 2);
-            this.checkBoxShowBuildResultPage.Enabled = false;
-            this.checkBoxShowBuildResultPage.Location = new System.Drawing.Point(3, 66);
-            this.checkBoxShowBuildResultPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.checkBoxShowBuildResultPage.Name = "checkBoxShowBuildResultPage";
-            this.checkBoxShowBuildResultPage.Size = new System.Drawing.Size(133, 17);
-            this.checkBoxShowBuildResultPage.TabIndex = 2;
-            this.checkBoxShowBuildResultPage.Text = "Show build result page";
-            this.checkBoxShowBuildResultPage.ThreeState = true;
-            this.checkBoxShowBuildResultPage.UseVisualStyleBackColor = true;
+            checkBoxShowBuildResultPage.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(checkBoxShowBuildResultPage, 2);
+            checkBoxShowBuildResultPage.Enabled = false;
+            checkBoxShowBuildResultPage.Location = new Point(3, 66);
+            checkBoxShowBuildResultPage.Margin = new Padding(3, 2, 3, 2);
+            checkBoxShowBuildResultPage.Name = "checkBoxShowBuildResultPage";
+            checkBoxShowBuildResultPage.Size = new Size(133, 17);
+            checkBoxShowBuildResultPage.TabIndex = 2;
+            checkBoxShowBuildResultPage.Text = "Show build result page";
+            checkBoxShowBuildResultPage.ThreeState = true;
+            checkBoxShowBuildResultPage.UseVisualStyleBackColor = true;
             // 
             // BuildServerIntegrationSettingsPage
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(454, 286);
-            this.Name = "BuildServerIntegrationSettingsPage";
-            this.Size = new System.Drawing.Size(1552, 894);
-            this.Text = "Build server integration";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(tableLayoutPanel1);
+            Margin = new Padding(3, 2, 3, 2);
+            MinimumSize = new Size(454, 286);
+            Name = "BuildServerIntegrationSettingsPage";
+            Size = new Size(1552, 894);
+            Text = "Build server integration";
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel buildServerSettingsPanel;
-        private System.Windows.Forms.ComboBox BuildServerType;
-        private System.Windows.Forms.Label labelBuildServerType;
-        private System.Windows.Forms.CheckBox checkBoxEnableBuildServerIntegration;
-        private System.Windows.Forms.Label labelBuildServerSettingsInfo;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.CheckBox checkBoxShowBuildResultPage;
+        private Panel buildServerSettingsPanel;
+        private ComboBox BuildServerType;
+        private Label labelBuildServerType;
+        private CheckBox checkBoxEnableBuildServerIntegration;
+        private Label labelBuildServerSettingsInfo;
+        private TableLayoutPanel tableLayoutPanel1;
+        private CheckBox checkBoxShowBuildResultPage;
     }
 }

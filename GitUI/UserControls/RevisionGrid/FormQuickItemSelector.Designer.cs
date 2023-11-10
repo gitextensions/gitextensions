@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lbxRefs = new System.Windows.Forms.ListBox();
-            this.btnAction = new System.Windows.Forms.Button();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            lbxRefs = new ListBox();
+            btnAction = new Button();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // lbxRefs
             // 
-            this.lbxRefs.FormattingEnabled = true;
-            this.lbxRefs.Items.AddRange(new object[] {
+            lbxRefs.FormattingEnabled = true;
+            lbxRefs.Items.AddRange(new object[] {
             "local1 (ref)",
             "local2 (ref)",
             "tag1 (tag)",
@@ -46,61 +46,61 @@
             "2",
             "3",
             "4"});
-            this.lbxRefs.Location = new System.Drawing.Point(2, 2);
-            this.lbxRefs.Name = "lbxRefs";
-            this.lbxRefs.Size = new System.Drawing.Size(275, 108);
-            this.lbxRefs.TabIndex = 0;
-            this.lbxRefs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbxRefs_MouseDoubleClick);
+            lbxRefs.Location = new Point(2, 2);
+            lbxRefs.Name = "lbxRefs";
+            lbxRefs.Size = new Size(275, 108);
+            lbxRefs.TabIndex = 0;
+            lbxRefs.MouseDoubleClick += lbxRefs_MouseDoubleClick;
             // 
             // btnAction
             // 
-            this.btnAction.AutoSize = true;
-            this.btnAction.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnAction.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnAction.Location = new System.Drawing.Point(197, 3);
-            this.btnAction.MinimumSize = new System.Drawing.Size(75, 0);
-            this.btnAction.Name = "btnAction";
-            this.btnAction.Size = new System.Drawing.Size(75, 23);
-            this.btnAction.TabIndex = 1;
-            this.btnAction.Text = "Action";
-            this.btnAction.UseVisualStyleBackColor = true;
+            btnAction.AutoSize = true;
+            btnAction.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnAction.DialogResult = DialogResult.OK;
+            btnAction.Location = new Point(197, 3);
+            btnAction.MinimumSize = new Size(75, 0);
+            btnAction.Name = "btnAction";
+            btnAction.Size = new Size(75, 23);
+            btnAction.TabIndex = 1;
+            btnAction.Text = "Action";
+            btnAction.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.btnAction);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(2, 117);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(275, 29);
-            this.flowLayoutPanel1.TabIndex = 2;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(btnAction);
+            flowLayoutPanel1.Dock = DockStyle.Bottom;
+            flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
+            flowLayoutPanel1.Location = new Point(2, 117);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(275, 29);
+            flowLayoutPanel1.TabIndex = 2;
             // 
             // FormQuickGitRefSelector
             // 
-            this.AcceptButton = this.btnAction;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(279, 146);
-            this.Controls.Add(this.lbxRefs);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "FormQuickGitRefSelector";
-            this.Padding = new System.Windows.Forms.Padding(2, 2, 2, 0);
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = btnAction;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(279, 146);
+            Controls.Add(lbxRefs);
+            Controls.Add(flowLayoutPanel1);
+            DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "FormQuickGitRefSelector";
+            Padding = new Padding(2, 2, 2, 0);
+            StartPosition = FormStartPosition.Manual;
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListBox lbxRefs;
-        private System.Windows.Forms.Button btnAction;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private ListBox lbxRefs;
+        private Button btnAction;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

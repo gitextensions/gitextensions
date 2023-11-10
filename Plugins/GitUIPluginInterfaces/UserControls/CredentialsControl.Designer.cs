@@ -28,100 +28,100 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.userNameLabel = new System.Windows.Forms.Label();
-            this.userNameTextBox = new System.Windows.Forms.TextBox();
-            this.passwordTextBox = new System.Windows.Forms.TextBox();
-            this.passwordLabel = new System.Windows.Forms.Label();
-            this.mainTableLayoutPanel.SuspendLayout();
-            this.SuspendLayout();
+            mainTableLayoutPanel = new TableLayoutPanel();
+            userNameLabel = new Label();
+            userNameTextBox = new TextBox();
+            passwordTextBox = new TextBox();
+            passwordLabel = new Label();
+            mainTableLayoutPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // mainTableLayoutPanel
             // 
-            this.mainTableLayoutPanel.ColumnCount = 4;
-            this.mainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.mainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.mainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainTableLayoutPanel.Controls.Add(this.userNameLabel, 0, 0);
-            this.mainTableLayoutPanel.Controls.Add(this.userNameTextBox, 1, 0);
-            this.mainTableLayoutPanel.Controls.Add(this.passwordTextBox, 3, 0);
-            this.mainTableLayoutPanel.Controls.Add(this.passwordLabel, 2, 0);
-            this.mainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.mainTableLayoutPanel.Name = "mainTableLayoutPanel";
-            this.mainTableLayoutPanel.RowCount = 6;
-            this.mainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.mainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.mainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.mainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.mainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.mainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.mainTableLayoutPanel.Size = new System.Drawing.Size(800, 21);
-            this.mainTableLayoutPanel.TabIndex = 0;
+            mainTableLayoutPanel.ColumnCount = 4;
+            mainTableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            mainTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            mainTableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            mainTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            mainTableLayoutPanel.Controls.Add(userNameLabel, 0, 0);
+            mainTableLayoutPanel.Controls.Add(userNameTextBox, 1, 0);
+            mainTableLayoutPanel.Controls.Add(passwordTextBox, 3, 0);
+            mainTableLayoutPanel.Controls.Add(passwordLabel, 2, 0);
+            mainTableLayoutPanel.Dock = DockStyle.Fill;
+            mainTableLayoutPanel.Location = new Point(0, 0);
+            mainTableLayoutPanel.Name = "mainTableLayoutPanel";
+            mainTableLayoutPanel.RowCount = 6;
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle());
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle());
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle());
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle());
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle());
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            mainTableLayoutPanel.Size = new Size(800, 21);
+            mainTableLayoutPanel.TabIndex = 0;
             // 
             // userNameLabel
             // 
-            this.userNameLabel.AutoSize = true;
-            this.userNameLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.userNameLabel.Location = new System.Drawing.Point(0, 3);
-            this.userNameLabel.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
-            this.userNameLabel.Name = "userNameLabel";
-            this.userNameLabel.Size = new System.Drawing.Size(58, 17);
-            this.userNameLabel.TabIndex = 0;
-            this.userNameLabel.Text = "User name";
+            userNameLabel.AutoSize = true;
+            userNameLabel.Dock = DockStyle.Fill;
+            userNameLabel.Location = new Point(0, 3);
+            userNameLabel.Margin = new Padding(0, 3, 3, 0);
+            userNameLabel.Name = "userNameLabel";
+            userNameLabel.Size = new Size(58, 17);
+            userNameLabel.TabIndex = 0;
+            userNameLabel.Text = "User name";
             // 
             // userNameTextBox
             // 
-            this.userNameTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.userNameTextBox.Location = new System.Drawing.Point(64, 0);
-            this.userNameTextBox.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.userNameTextBox.Name = "userNameTextBox";
-            this.userNameTextBox.Size = new System.Drawing.Size(334, 20);
-            this.userNameTextBox.TabIndex = 2;
+            userNameTextBox.Dock = DockStyle.Fill;
+            userNameTextBox.Location = new Point(64, 0);
+            userNameTextBox.Margin = new Padding(3, 0, 3, 0);
+            userNameTextBox.Name = "userNameTextBox";
+            userNameTextBox.Size = new Size(334, 20);
+            userNameTextBox.TabIndex = 2;
             // 
             // passwordTextBox
             // 
-            this.passwordTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.passwordTextBox.Location = new System.Drawing.Point(463, 0);
-            this.passwordTextBox.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.Size = new System.Drawing.Size(337, 20);
-            this.passwordTextBox.TabIndex = 3;
+            passwordTextBox.Dock = DockStyle.Fill;
+            passwordTextBox.Location = new Point(463, 0);
+            passwordTextBox.Margin = new Padding(3, 0, 0, 0);
+            passwordTextBox.Name = "passwordTextBox";
+            passwordTextBox.Size = new Size(337, 20);
+            passwordTextBox.TabIndex = 3;
             // 
             // passwordLabel
             // 
-            this.passwordLabel.AutoSize = true;
-            this.passwordLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.passwordLabel.Location = new System.Drawing.Point(404, 3);
-            this.passwordLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.passwordLabel.Name = "passwordLabel";
-            this.passwordLabel.Size = new System.Drawing.Size(53, 17);
-            this.passwordLabel.TabIndex = 1;
-            this.passwordLabel.Text = "API token/Password";
+            passwordLabel.AutoSize = true;
+            passwordLabel.Dock = DockStyle.Fill;
+            passwordLabel.Location = new Point(404, 3);
+            passwordLabel.Margin = new Padding(3, 3, 3, 0);
+            passwordLabel.Name = "passwordLabel";
+            passwordLabel.Size = new Size(53, 17);
+            passwordLabel.TabIndex = 1;
+            passwordLabel.Text = "API token/Password";
             // 
             // CredentialsControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.mainTableLayoutPanel);
-            this.MaximumSize = new System.Drawing.Size(1900, 20);
-            this.MinimumSize = new System.Drawing.Size(0, 21);
-            this.Name = "CredentialsControl";
-            this.Size = new System.Drawing.Size(800, 21);
-            this.Load += new System.EventHandler(this.CredentialsControl_Load);
-            this.mainTableLayoutPanel.ResumeLayout(false);
-            this.mainTableLayoutPanel.PerformLayout();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(mainTableLayoutPanel);
+            MaximumSize = new Size(1900, 20);
+            MinimumSize = new Size(0, 21);
+            Name = "CredentialsControl";
+            Size = new Size(800, 21);
+            Load += CredentialsControl_Load;
+            mainTableLayoutPanel.ResumeLayout(false);
+            mainTableLayoutPanel.PerformLayout();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel mainTableLayoutPanel;
-        private System.Windows.Forms.Label userNameLabel;
-        private System.Windows.Forms.Label passwordLabel;
-        private System.Windows.Forms.TextBox userNameTextBox;
-        private System.Windows.Forms.TextBox passwordTextBox;
+        private TableLayoutPanel mainTableLayoutPanel;
+        private Label userNameLabel;
+        private Label passwordLabel;
+        private TextBox userNameTextBox;
+        private TextBox passwordTextBox;
     }
 }

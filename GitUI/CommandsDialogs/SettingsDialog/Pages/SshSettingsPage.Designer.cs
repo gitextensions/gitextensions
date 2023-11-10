@@ -28,344 +28,344 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+            TableLayoutPanel tableLayoutPanel2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SshSettingsPage));
-            System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-            this.Putty = new System.Windows.Forms.RadioButton();
-            this.OtherSsh = new System.Windows.Forms.TextBox();
-            this.OpenSSH = new System.Windows.Forms.RadioButton();
-            this.Other = new System.Windows.Forms.RadioButton();
-            this.label18 = new System.Windows.Forms.Label();
-            this.OtherSshBrowse = new System.Windows.Forms.Button();
-            this.label15 = new System.Windows.Forms.Label();
-            this.PageantBrowse = new System.Windows.Forms.Button();
-            this.AutostartPageant = new System.Windows.Forms.CheckBox();
-            this.PuttygenBrowse = new System.Windows.Forms.Button();
-            this.label16 = new System.Windows.Forms.Label();
-            this.PlinkBrowse = new System.Windows.Forms.Button();
-            this.PageantPath = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.PlinkPath = new System.Windows.Forms.TextBox();
-            this.PuttygenPath = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            TableLayoutPanel tableLayoutPanel3;
+            Putty = new RadioButton();
+            OtherSsh = new TextBox();
+            OpenSSH = new RadioButton();
+            Other = new RadioButton();
+            label18 = new Label();
+            OtherSshBrowse = new Button();
+            label15 = new Label();
+            PageantBrowse = new Button();
+            AutostartPageant = new CheckBox();
+            PuttygenBrowse = new Button();
+            label16 = new Label();
+            PlinkBrowse = new Button();
+            PageantPath = new TextBox();
+            label17 = new Label();
+            PlinkPath = new TextBox();
+            PuttygenPath = new TextBox();
+            groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            tableLayoutPanel3 = new TableLayoutPanel();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.SuspendLayout();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            SuspendLayout();
             // 
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel2.ColumnCount = 3;
-            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel2.Controls.Add(this.Putty, 0, 0);
-            tableLayoutPanel2.Controls.Add(this.OtherSsh, 1, 2);
-            tableLayoutPanel2.Controls.Add(this.OpenSSH, 0, 1);
-            tableLayoutPanel2.Controls.Add(this.Other, 0, 2);
-            tableLayoutPanel2.Controls.Add(this.label18, 1, 0);
-            tableLayoutPanel2.Controls.Add(this.OtherSshBrowse, 2, 2);
-            tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel2.Location = new System.Drawing.Point(8, 22);
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.Controls.Add(Putty, 0, 0);
+            tableLayoutPanel2.Controls.Add(OtherSsh, 1, 2);
+            tableLayoutPanel2.Controls.Add(OpenSSH, 0, 1);
+            tableLayoutPanel2.Controls.Add(Other, 0, 2);
+            tableLayoutPanel2.Controls.Add(label18, 1, 0);
+            tableLayoutPanel2.Controls.Add(OtherSshBrowse, 2, 2);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(8, 22);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 3;
-            tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel2.Size = new System.Drawing.Size(883, 78);
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.Size = new Size(883, 78);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // Putty
             // 
-            this.Putty.AutoSize = true;
-            this.Putty.Checked = true;
-            this.Putty.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Putty.Location = new System.Drawing.Point(3, 3);
-            this.Putty.Name = "Putty";
-            this.Putty.Size = new System.Drawing.Size(134, 17);
-            this.Putty.TabIndex = 0;
-            this.Putty.TabStop = true;
-            this.Putty.Text = "PuTTY";
-            this.Putty.UseVisualStyleBackColor = true;
-            this.Putty.CheckedChanged += new System.EventHandler(this.Putty_CheckedChanged);
+            Putty.AutoSize = true;
+            Putty.Checked = true;
+            Putty.Dock = DockStyle.Fill;
+            Putty.Location = new Point(3, 3);
+            Putty.Name = "Putty";
+            Putty.Size = new Size(134, 17);
+            Putty.TabIndex = 0;
+            Putty.TabStop = true;
+            Putty.Text = "PuTTY";
+            Putty.UseVisualStyleBackColor = true;
+            Putty.CheckedChanged += Putty_CheckedChanged;
             // 
             // OtherSsh
             // 
-            this.OtherSsh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.OtherSsh.Location = new System.Drawing.Point(143, 51);
-            this.OtherSsh.MaxLength = 300;
-            this.OtherSsh.MinimumSize = new System.Drawing.Size(300, 4);
-            this.OtherSsh.Name = "OtherSsh";
-            this.OtherSsh.Size = new System.Drawing.Size(656, 21);
-            this.OtherSsh.TabIndex = 4;
+            OtherSsh.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            OtherSsh.Location = new Point(143, 51);
+            OtherSsh.MaxLength = 300;
+            OtherSsh.MinimumSize = new Size(300, 4);
+            OtherSsh.Name = "OtherSsh";
+            OtherSsh.Size = new Size(656, 21);
+            OtherSsh.TabIndex = 4;
             // 
             // OpenSSH
             // 
-            this.OpenSSH.AutoSize = true;
-            this.OpenSSH.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OpenSSH.Location = new System.Drawing.Point(3, 26);
-            this.OpenSSH.Name = "OpenSSH";
-            this.OpenSSH.Size = new System.Drawing.Size(134, 17);
-            this.OpenSSH.TabIndex = 2;
-            this.OpenSSH.Text = "OpenSSH";
-            this.OpenSSH.UseVisualStyleBackColor = true;
-            this.OpenSSH.CheckedChanged += new System.EventHandler(this.OpenSSH_CheckedChanged);
+            OpenSSH.AutoSize = true;
+            OpenSSH.Dock = DockStyle.Fill;
+            OpenSSH.Location = new Point(3, 26);
+            OpenSSH.Name = "OpenSSH";
+            OpenSSH.Size = new Size(134, 17);
+            OpenSSH.TabIndex = 2;
+            OpenSSH.Text = "OpenSSH";
+            OpenSSH.UseVisualStyleBackColor = true;
+            OpenSSH.CheckedChanged += OpenSSH_CheckedChanged;
             // 
             // Other
             // 
-            this.Other.AutoSize = true;
-            this.Other.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Other.Location = new System.Drawing.Point(3, 49);
-            this.Other.Name = "Other";
-            this.Other.Size = new System.Drawing.Size(134, 26);
-            this.Other.TabIndex = 3;
-            this.Other.Text = "Other ssh client";
-            this.Other.UseVisualStyleBackColor = true;
-            this.Other.CheckedChanged += new System.EventHandler(this.Other_CheckedChanged);
+            Other.AutoSize = true;
+            Other.Dock = DockStyle.Fill;
+            Other.Location = new Point(3, 49);
+            Other.Name = "Other";
+            Other.Size = new Size(134, 26);
+            Other.TabIndex = 3;
+            Other.Text = "Other ssh client";
+            Other.UseVisualStyleBackColor = true;
+            Other.CheckedChanged += Other_CheckedChanged;
             // 
             // label18
             // 
-            this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label18.AutoSize = true;
-            this.label18.BackColor = System.Drawing.SystemColors.Info;
-            tableLayoutPanel2.SetColumnSpan(this.label18, 2);
-            this.label18.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.label18.Location = new System.Drawing.Point(143, 3);
-            this.label18.Name = "label18";
-            tableLayoutPanel2.SetRowSpan(this.label18, 2);
-            this.label18.Size = new System.Drawing.Size(737, 39);
-            this.label18.TabIndex = 1;
-            this.label18.Text = resources.GetString("label18.Text");
-            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label18.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            label18.AutoSize = true;
+            label18.BackColor = SystemColors.Info;
+            tableLayoutPanel2.SetColumnSpan(label18, 2);
+            label18.ForeColor = SystemColors.InfoText;
+            label18.Location = new Point(143, 3);
+            label18.Name = "label18";
+            tableLayoutPanel2.SetRowSpan(label18, 2);
+            label18.Size = new Size(737, 39);
+            label18.TabIndex = 1;
+            label18.Text = resources.GetString("label18.Text");
+            label18.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // OtherSshBrowse
             // 
-            this.OtherSshBrowse.AutoSize = true;
-            this.OtherSshBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OtherSshBrowse.Location = new System.Drawing.Point(805, 49);
-            this.OtherSshBrowse.Name = "OtherSshBrowse";
-            this.OtherSshBrowse.Size = new System.Drawing.Size(75, 26);
-            this.OtherSshBrowse.TabIndex = 5;
-            this.OtherSshBrowse.Text = "Browse";
-            this.OtherSshBrowse.UseVisualStyleBackColor = true;
-            this.OtherSshBrowse.Click += new System.EventHandler(this.OtherSshBrowse_Click);
+            OtherSshBrowse.AutoSize = true;
+            OtherSshBrowse.Dock = DockStyle.Fill;
+            OtherSshBrowse.Location = new Point(805, 49);
+            OtherSshBrowse.Name = "OtherSshBrowse";
+            OtherSshBrowse.Size = new Size(75, 26);
+            OtherSshBrowse.TabIndex = 5;
+            OtherSshBrowse.Text = "Browse";
+            OtherSshBrowse.UseVisualStyleBackColor = true;
+            OtherSshBrowse.Click += OtherSshBrowse_Click;
             // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.AutoSize = true;
-            tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-            tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel3.Controls.Add(this.label15, 0, 0);
-            tableLayoutPanel3.Controls.Add(this.PageantBrowse, 2, 2);
-            tableLayoutPanel3.Controls.Add(this.AutostartPageant, 1, 3);
-            tableLayoutPanel3.Controls.Add(this.PuttygenBrowse, 2, 1);
-            tableLayoutPanel3.Controls.Add(this.label16, 0, 1);
-            tableLayoutPanel3.Controls.Add(this.PlinkBrowse, 2, 0);
-            tableLayoutPanel3.Controls.Add(this.PageantPath, 1, 2);
-            tableLayoutPanel3.Controls.Add(this.label17, 0, 2);
-            tableLayoutPanel3.Controls.Add(this.PlinkPath, 1, 0);
-            tableLayoutPanel3.Controls.Add(this.PuttygenPath, 1, 1);
-            tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel3.Location = new System.Drawing.Point(8, 22);
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.Controls.Add(label15, 0, 0);
+            tableLayoutPanel3.Controls.Add(PageantBrowse, 2, 2);
+            tableLayoutPanel3.Controls.Add(AutostartPageant, 1, 3);
+            tableLayoutPanel3.Controls.Add(PuttygenBrowse, 2, 1);
+            tableLayoutPanel3.Controls.Add(label16, 0, 1);
+            tableLayoutPanel3.Controls.Add(PlinkBrowse, 2, 0);
+            tableLayoutPanel3.Controls.Add(PageantPath, 1, 2);
+            tableLayoutPanel3.Controls.Add(label17, 0, 2);
+            tableLayoutPanel3.Controls.Add(PlinkPath, 1, 0);
+            tableLayoutPanel3.Controls.Add(PuttygenPath, 1, 1);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(8, 22);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 4;
-            tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel3.Size = new System.Drawing.Size(883, 116);
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.Size = new Size(883, 116);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label15.Location = new System.Drawing.Point(3, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(134, 31);
-            this.label15.TabIndex = 0;
-            this.label15.Text = "Path to plink";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label15.AutoSize = true;
+            label15.Dock = DockStyle.Fill;
+            label15.Location = new Point(3, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(134, 31);
+            label15.TabIndex = 0;
+            label15.Text = "Path to plink";
+            label15.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // PageantBrowse
             // 
-            this.PageantBrowse.AutoSize = true;
-            this.PageantBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PageantBrowse.Location = new System.Drawing.Point(805, 65);
-            this.PageantBrowse.Name = "PageantBrowse";
-            this.PageantBrowse.Size = new System.Drawing.Size(75, 25);
-            this.PageantBrowse.TabIndex = 8;
-            this.PageantBrowse.Text = "Browse";
-            this.PageantBrowse.UseVisualStyleBackColor = true;
-            this.PageantBrowse.Click += new System.EventHandler(this.PageantBrowse_Click);
+            PageantBrowse.AutoSize = true;
+            PageantBrowse.Dock = DockStyle.Fill;
+            PageantBrowse.Location = new Point(805, 65);
+            PageantBrowse.Name = "PageantBrowse";
+            PageantBrowse.Size = new Size(75, 25);
+            PageantBrowse.TabIndex = 8;
+            PageantBrowse.Text = "Browse";
+            PageantBrowse.UseVisualStyleBackColor = true;
+            PageantBrowse.Click += PageantBrowse_Click;
             // 
             // AutostartPageant
             // 
-            this.AutostartPageant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.AutostartPageant.AutoSize = true;
-            this.AutostartPageant.Checked = true;
-            this.AutostartPageant.CheckState = System.Windows.Forms.CheckState.Checked;
-            tableLayoutPanel3.SetColumnSpan(this.AutostartPageant, 2);
-            this.AutostartPageant.Location = new System.Drawing.Point(143, 96);
-            this.AutostartPageant.Name = "AutostartPageant";
-            this.AutostartPageant.Size = new System.Drawing.Size(737, 17);
-            this.AutostartPageant.TabIndex = 9;
-            this.AutostartPageant.Text = "Automatically start authentication client when a private key is configured for a " +
+            AutostartPageant.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            AutostartPageant.AutoSize = true;
+            AutostartPageant.Checked = true;
+            AutostartPageant.CheckState = CheckState.Checked;
+            tableLayoutPanel3.SetColumnSpan(AutostartPageant, 2);
+            AutostartPageant.Location = new Point(143, 96);
+            AutostartPageant.Name = "AutostartPageant";
+            AutostartPageant.Size = new Size(737, 17);
+            AutostartPageant.TabIndex = 9;
+            AutostartPageant.Text = "Automatically start authentication client when a private key is configured for a " +
     "remote";
-            this.AutostartPageant.UseVisualStyleBackColor = true;
+            AutostartPageant.UseVisualStyleBackColor = true;
             // 
             // PuttygenBrowse
             // 
-            this.PuttygenBrowse.AutoSize = true;
-            this.PuttygenBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PuttygenBrowse.Location = new System.Drawing.Point(805, 34);
-            this.PuttygenBrowse.Name = "PuttygenBrowse";
-            this.PuttygenBrowse.Size = new System.Drawing.Size(75, 25);
-            this.PuttygenBrowse.TabIndex = 5;
-            this.PuttygenBrowse.Text = "Browse";
-            this.PuttygenBrowse.UseVisualStyleBackColor = true;
-            this.PuttygenBrowse.Click += new System.EventHandler(this.PuttygenBrowse_Click);
+            PuttygenBrowse.AutoSize = true;
+            PuttygenBrowse.Dock = DockStyle.Fill;
+            PuttygenBrowse.Location = new Point(805, 34);
+            PuttygenBrowse.Name = "PuttygenBrowse";
+            PuttygenBrowse.Size = new Size(75, 25);
+            PuttygenBrowse.TabIndex = 5;
+            PuttygenBrowse.Text = "Browse";
+            PuttygenBrowse.UseVisualStyleBackColor = true;
+            PuttygenBrowse.Click += PuttygenBrowse_Click;
             // 
             // label16
             // 
-            this.label16.AutoSize = true;
-            this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label16.Location = new System.Drawing.Point(3, 31);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(134, 31);
-            this.label16.TabIndex = 3;
-            this.label16.Text = "Path to puttygen";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label16.AutoSize = true;
+            label16.Dock = DockStyle.Fill;
+            label16.Location = new Point(3, 31);
+            label16.Name = "label16";
+            label16.Size = new Size(134, 31);
+            label16.TabIndex = 3;
+            label16.Text = "Path to puttygen";
+            label16.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // PlinkBrowse
             // 
-            this.PlinkBrowse.AutoSize = true;
-            this.PlinkBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PlinkBrowse.Location = new System.Drawing.Point(805, 3);
-            this.PlinkBrowse.Name = "PlinkBrowse";
-            this.PlinkBrowse.Size = new System.Drawing.Size(75, 25);
-            this.PlinkBrowse.TabIndex = 2;
-            this.PlinkBrowse.Text = "Browse";
-            this.PlinkBrowse.UseVisualStyleBackColor = true;
-            this.PlinkBrowse.Click += new System.EventHandler(this.PuttyBrowse_Click);
+            PlinkBrowse.AutoSize = true;
+            PlinkBrowse.Dock = DockStyle.Fill;
+            PlinkBrowse.Location = new Point(805, 3);
+            PlinkBrowse.Name = "PlinkBrowse";
+            PlinkBrowse.Size = new Size(75, 25);
+            PlinkBrowse.TabIndex = 2;
+            PlinkBrowse.Text = "Browse";
+            PlinkBrowse.UseVisualStyleBackColor = true;
+            PlinkBrowse.Click += PuttyBrowse_Click;
             // 
             // PageantPath
             // 
-            this.PageantPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.PageantPath.Location = new System.Drawing.Point(143, 67);
-            this.PageantPath.MaxLength = 300;
-            this.PageantPath.MinimumSize = new System.Drawing.Size(300, 4);
-            this.PageantPath.Name = "PageantPath";
-            this.PageantPath.Size = new System.Drawing.Size(656, 21);
-            this.PageantPath.TabIndex = 7;
+            PageantPath.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            PageantPath.Location = new Point(143, 67);
+            PageantPath.MaxLength = 300;
+            PageantPath.MinimumSize = new Size(300, 4);
+            PageantPath.Name = "PageantPath";
+            PageantPath.Size = new Size(656, 21);
+            PageantPath.TabIndex = 7;
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label17.Location = new System.Drawing.Point(3, 62);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(134, 31);
-            this.label17.TabIndex = 6;
-            this.label17.Text = "Path to pageant";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label17.AutoSize = true;
+            label17.Dock = DockStyle.Fill;
+            label17.Location = new Point(3, 62);
+            label17.Name = "label17";
+            label17.Size = new Size(134, 31);
+            label17.TabIndex = 6;
+            label17.Text = "Path to pageant";
+            label17.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // PlinkPath
             // 
-            this.PlinkPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.PlinkPath.Location = new System.Drawing.Point(143, 5);
-            this.PlinkPath.MaxLength = 300;
-            this.PlinkPath.MinimumSize = new System.Drawing.Size(300, 4);
-            this.PlinkPath.Name = "PlinkPath";
-            this.PlinkPath.Size = new System.Drawing.Size(656, 21);
-            this.PlinkPath.TabIndex = 1;
+            PlinkPath.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            PlinkPath.Location = new Point(143, 5);
+            PlinkPath.MaxLength = 300;
+            PlinkPath.MinimumSize = new Size(300, 4);
+            PlinkPath.Name = "PlinkPath";
+            PlinkPath.Size = new Size(656, 21);
+            PlinkPath.TabIndex = 1;
             // 
             // PuttygenPath
             // 
-            this.PuttygenPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.PuttygenPath.Location = new System.Drawing.Point(143, 36);
-            this.PuttygenPath.MaxLength = 300;
-            this.PuttygenPath.MinimumSize = new System.Drawing.Size(300, 4);
-            this.PuttygenPath.Name = "PuttygenPath";
-            this.PuttygenPath.Size = new System.Drawing.Size(656, 21);
-            this.PuttygenPath.TabIndex = 4;
+            PuttygenPath.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            PuttygenPath.Location = new Point(143, 36);
+            PuttygenPath.MaxLength = 300;
+            PuttygenPath.MinimumSize = new Size(300, 4);
+            PuttygenPath.Name = "PuttygenPath";
+            PuttygenPath.Size = new Size(656, 21);
+            PuttygenPath.TabIndex = 4;
             // 
             // groupBox1
             // 
-            this.groupBox1.AutoSize = true;
-            this.groupBox1.Controls.Add(tableLayoutPanel2);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBox1.Size = new System.Drawing.Size(899, 108);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Specify which ssh client to use";
+            groupBox1.AutoSize = true;
+            groupBox1.Controls.Add(tableLayoutPanel2);
+            groupBox1.Dock = DockStyle.Top;
+            groupBox1.Location = new Point(0, 0);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(8);
+            groupBox1.Size = new Size(899, 108);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Specify which ssh client to use";
             // 
             // groupBox2
             // 
-            this.groupBox2.AutoSize = true;
-            this.groupBox2.Controls.Add(tableLayoutPanel3);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(0, 108);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBox2.Size = new System.Drawing.Size(899, 146);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Configure PuTTY";
+            groupBox2.AutoSize = true;
+            groupBox2.Controls.Add(tableLayoutPanel3);
+            groupBox2.Dock = DockStyle.Top;
+            groupBox2.Location = new Point(0, 108);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(8);
+            groupBox2.Size = new Size(899, 146);
+            groupBox2.TabIndex = 1;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Configure PuTTY";
             // 
             // SshSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Name = "SshSettingsPage";
-            this.Size = new System.Drawing.Size(899, 633);
-            this.Text = "SSH";
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(groupBox2);
+            Controls.Add(groupBox1);
+            Name = "SshSettingsPage";
+            Size = new Size(899, 633);
+            Text = "SSH";
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox AutostartPageant;
-        private System.Windows.Forms.TextBox PageantPath;
-        private System.Windows.Forms.Button PageantBrowse;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox PuttygenPath;
-        private System.Windows.Forms.Button PuttygenBrowse;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TextBox PlinkPath;
-        private System.Windows.Forms.Button PlinkBrowse;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox OtherSsh;
-        private System.Windows.Forms.Button OtherSshBrowse;
-        private System.Windows.Forms.RadioButton Other;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.RadioButton OpenSSH;
-        private System.Windows.Forms.RadioButton Putty;
+        private GroupBox groupBox2;
+        private CheckBox AutostartPageant;
+        private TextBox PageantPath;
+        private Button PageantBrowse;
+        private Label label17;
+        private TextBox PuttygenPath;
+        private Button PuttygenBrowse;
+        private Label label16;
+        private Label label15;
+        private TextBox PlinkPath;
+        private Button PlinkBrowse;
+        private GroupBox groupBox1;
+        private TextBox OtherSsh;
+        private Button OtherSshBrowse;
+        private RadioButton Other;
+        private Label label18;
+        private RadioButton OpenSSH;
+        private RadioButton Putty;
     }
 }

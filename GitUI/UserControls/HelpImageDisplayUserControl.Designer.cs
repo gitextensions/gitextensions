@@ -28,139 +28,135 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.linkLabelShowHelp = new System.Windows.Forms.LinkLabel();
-            this.buttonShowHelp = new System.Windows.Forms.Button();
-            this.linkLabelHide = new System.Windows.Forms.LinkLabel();
-            this.labelHoverText = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.SuspendLayout();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            linkLabelShowHelp = new LinkLabel();
+            buttonShowHelp = new Button();
+            linkLabelHide = new LinkLabel();
+            labelHoverText = new Label();
+            pictureBox1 = new PictureBox();
+            tableLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(pictureBox1)).BeginInit();
+            SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.labelHoverText, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(150, 150);
-            this.tableLayoutPanel1.TabIndex = 2;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 0, 0);
+            tableLayoutPanel1.Controls.Add(pictureBox1, 0, 2);
+            tableLayoutPanel1.Controls.Add(labelHoverText, 0, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(150, 150);
+            tableLayoutPanel1.TabIndex = 2;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.linkLabelShowHelp);
-            this.flowLayoutPanel1.Controls.Add(this.buttonShowHelp);
-            this.flowLayoutPanel1.Controls.Add(this.linkLabelHide);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(150, 30);
-            this.flowLayoutPanel1.TabIndex = 2;
+            flowLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.Controls.Add(linkLabelShowHelp);
+            flowLayoutPanel1.Controls.Add(buttonShowHelp);
+            flowLayoutPanel1.Controls.Add(linkLabelHide);
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Margin = new Padding(0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(150, 30);
+            flowLayoutPanel1.TabIndex = 2;
             // 
             // linkLabelShowHelp
             // 
-            this.linkLabelShowHelp.AutoSize = true;
-            this.linkLabelShowHelp.Location = new System.Drawing.Point(3, 0);
-            this.linkLabelShowHelp.Name = "linkLabelShowHelp";
-            this.linkLabelShowHelp.Size = new System.Drawing.Size(36, 30);
-            this.linkLabelShowHelp.TabIndex = 3;
-            this.linkLabelShowHelp.TabStop = true;
-            this.linkLabelShowHelp.Text = "Show\r\nhelp";
-            this.linkLabelShowHelp.Visible = false;
-            this.linkLabelShowHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelShowHelp_LinkClicked);
+            linkLabelShowHelp.AutoSize = true;
+            linkLabelShowHelp.Location = new Point(3, 0);
+            linkLabelShowHelp.Name = "linkLabelShowHelp";
+            linkLabelShowHelp.Size = new Size(36, 30);
+            linkLabelShowHelp.TabIndex = 3;
+            linkLabelShowHelp.TabStop = true;
+            linkLabelShowHelp.Text = "Show\r\nhelp";
+            linkLabelShowHelp.Visible = false;
+            linkLabelShowHelp.LinkClicked += linkLabelShowHelp_LinkClicked;
             // 
             // buttonShowHelp
             // 
-            this.buttonShowHelp.AutoSize = true;
-            this.buttonShowHelp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonShowHelp.Image = global::GitUI.Properties.Images.Information;
-            this.buttonShowHelp.Location = new System.Drawing.Point(42, 0);
-            this.buttonShowHelp.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonShowHelp.Name = "buttonShowHelp";
-            this.buttonShowHelp.Padding = new System.Windows.Forms.Padding(2);
-            this.buttonShowHelp.Size = new System.Drawing.Size(26, 26);
-            this.buttonShowHelp.TabIndex = 2;
-            this.buttonShowHelp.UseVisualStyleBackColor = true;
-            this.buttonShowHelp.Click += new System.EventHandler(this.buttonShowHelp_Click);
+            buttonShowHelp.AutoSize = true;
+            buttonShowHelp.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonShowHelp.Image = Properties.Images.Information;
+            buttonShowHelp.Location = new Point(42, 0);
+            buttonShowHelp.Margin = new Padding(0);
+            buttonShowHelp.Name = "buttonShowHelp";
+            buttonShowHelp.Padding = new Padding(2);
+            buttonShowHelp.Size = new Size(26, 26);
+            buttonShowHelp.TabIndex = 2;
+            buttonShowHelp.UseVisualStyleBackColor = true;
+            buttonShowHelp.Click += buttonShowHelp_Click;
             // 
             // linkLabelHide
             // 
-            this.linkLabelHide.AutoSize = true;
-            this.linkLabelHide.Location = new System.Drawing.Point(71, 0);
-            this.linkLabelHide.Name = "linkLabelHide";
-            this.linkLabelHide.Size = new System.Drawing.Size(58, 15);
-            this.linkLabelHide.TabIndex = 1;
-            this.linkLabelHide.TabStop = true;
-            this.linkLabelHide.Text = "Hide help";
-            this.linkLabelHide.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHide_LinkClicked);
+            linkLabelHide.AutoSize = true;
+            linkLabelHide.Location = new Point(71, 0);
+            linkLabelHide.Name = "linkLabelHide";
+            linkLabelHide.Size = new Size(58, 15);
+            linkLabelHide.TabIndex = 1;
+            linkLabelHide.TabStop = true;
+            linkLabelHide.Text = "Hide help";
+            linkLabelHide.LinkClicked += linkLabelHide_LinkClicked;
             // 
             // labelHoverText
             // 
-            this.labelHoverText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelHoverText.AutoSize = true;
-            this.labelHoverText.Location = new System.Drawing.Point(3, 30);
-            this.labelHoverText.Name = "labelHoverText";
-            this.labelHoverText.Size = new System.Drawing.Size(144, 20);
-            this.labelHoverText.TabIndex = 1;
+            labelHoverText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            labelHoverText.AutoSize = true;
+            labelHoverText.Location = new Point(3, 30);
+            labelHoverText.Name = "labelHoverText";
+            labelHoverText.Size = new Size(144, 20);
+            labelHoverText.TabIndex = 1;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.Window;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 53);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(144, 94);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseEnter += new System.EventHandler(this.HelpImageDisplayUserControl_MouseEnter);
-            this.pictureBox1.MouseLeave += new System.EventHandler(this.HelpImageDisplayUserControl_MouseLeave);
+            pictureBox1.BackColor = SystemColors.Window;
+            pictureBox1.Dock = DockStyle.Fill;
+            pictureBox1.Location = new Point(3, 53);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(144, 94);
+            pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
+            pictureBox1.MouseEnter += HelpImageDisplayUserControl_MouseEnter;
+            pictureBox1.MouseLeave += HelpImageDisplayUserControl_MouseLeave;
             // 
             // HelpImageDisplayUserControl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.MinimumSize = new System.Drawing.Size(50, 150);
-            this.Name = "HelpImageDisplayUserControl";
-            this.Load += new System.EventHandler(this.HelpImageDisplayUserControl_Load);
-            this.MouseEnter += new System.EventHandler(this.HelpImageDisplayUserControl_MouseEnter);
-            this.MouseLeave += new System.EventHandler(this.HelpImageDisplayUserControl_MouseLeave);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleMode = AutoScaleMode.Inherit;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Controls.Add(tableLayoutPanel1);
+            MinimumSize = new Size(50, 150);
+            Name = "HelpImageDisplayUserControl";
+            Load += HelpImageDisplayUserControl_Load;
+            MouseEnter += HelpImageDisplayUserControl_MouseEnter;
+            MouseLeave += HelpImageDisplayUserControl_MouseLeave;
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(pictureBox1)).EndInit();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label labelHoverText;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.LinkLabel linkLabelHide;
-        private System.Windows.Forms.Button buttonShowHelp;
-        private System.Windows.Forms.LinkLabel linkLabelShowHelp;
+        private PictureBox pictureBox1;
+        private Label labelHoverText;
+        private TableLayoutPanel tableLayoutPanel1;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private LinkLabel linkLabelHide;
+        private Button buttonShowHelp;
+        private LinkLabel linkLabelShowHelp;
     }
 }

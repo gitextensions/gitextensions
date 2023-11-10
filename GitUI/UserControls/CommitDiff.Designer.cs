@@ -15,113 +15,113 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.commitInfo = new GitUI.CommitInfo.CommitInfo();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.DiffFiles = new GitUI.FileStatusList();
-            this.DiffText = new GitUI.Editor.FileViewer();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.SuspendLayout();
+            splitContainer1 = new SplitContainer();
+            commitInfo = new GitUI.CommitInfo.CommitInfo();
+            splitContainer2 = new SplitContainer();
+            DiffFiles = new GitUI.FileStatusList();
+            DiffText = new GitUI.Editor.FileViewer();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(splitContainer2)).BeginInit();
+            splitContainer2.Panel1.SuspendLayout();
+            splitContainer2.Panel2.SuspendLayout();
+            splitContainer2.SuspendLayout();
+            SuspendLayout();
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.FixedPanel = FixedPanel.Panel1;
+            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.commitInfo);
+            splitContainer1.Panel1.Controls.Add(commitInfo);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(717, 529);
-            this.splitContainer1.SplitterDistance = 160;
-            this.splitContainer1.TabIndex = 1;
+            splitContainer1.Panel2.Controls.Add(splitContainer2);
+            splitContainer1.Size = new Size(717, 529);
+            splitContainer1.SplitterDistance = 160;
+            splitContainer1.TabIndex = 1;
             // 
             // commitInfo
             // 
-            this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commitInfo.Location = new System.Drawing.Point(0, 0);
-            this.commitInfo.Margin = new System.Windows.Forms.Padding(0);
-            this.commitInfo.Name = "commitInfo";
-            this.commitInfo.Size = new System.Drawing.Size(717, 160);
-            this.commitInfo.TabIndex = 0;
+            commitInfo.Dock = DockStyle.Fill;
+            commitInfo.Location = new Point(0, 0);
+            commitInfo.Margin = new Padding(0);
+            commitInfo.Name = "commitInfo";
+            commitInfo.Size = new Size(717, 160);
+            commitInfo.TabIndex = 0;
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
-            this.splitContainer2.Name = "splitContainer2";
+            splitContainer2.Dock = DockStyle.Fill;
+            splitContainer2.Location = new Point(0, 0);
+            splitContainer2.Margin = new Padding(0);
+            splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.DiffFiles);
+            splitContainer2.Panel1.Controls.Add(DiffFiles);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.DiffText);
-            this.splitContainer2.Size = new System.Drawing.Size(717, 365);
-            this.splitContainer2.SplitterDistance = 238;
-            this.splitContainer2.TabIndex = 0;
+            splitContainer2.Panel2.Controls.Add(DiffText);
+            splitContainer2.Size = new Size(717, 365);
+            splitContainer2.SplitterDistance = 238;
+            splitContainer2.TabIndex = 0;
             // 
             // DiffFiles
             // 
-            this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.Location = new System.Drawing.Point(0, 0);
-            this.DiffFiles.Margin = new System.Windows.Forms.Padding(0);
-            this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(238, 365);
-            this.DiffFiles.TabIndex = 0;
-            this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
+            DiffFiles.Dock = DockStyle.Fill;
+            DiffFiles.Location = new Point(0, 0);
+            DiffFiles.Margin = new Padding(0);
+            DiffFiles.Name = "DiffFiles";
+            DiffFiles.Size = new Size(238, 365);
+            DiffFiles.TabIndex = 0;
+            DiffFiles.SelectedIndexChanged += DiffFiles_SelectedIndexChanged;
             // 
             // DiffText
             // 
-            this.DiffText.AutoSize = true;
-            this.DiffText.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffText.Location = new System.Drawing.Point(0, 0);
-            this.DiffText.Margin = new System.Windows.Forms.Padding(0);
-            this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(475, 365);
-            this.DiffText.TabIndex = 0;
+            DiffText.AutoSize = true;
+            DiffText.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            DiffText.Dock = DockStyle.Fill;
+            DiffText.Location = new Point(0, 0);
+            DiffText.Margin = new Padding(0);
+            DiffText.Name = "DiffText";
+            DiffText.Size = new Size(475, 365);
+            DiffText.TabIndex = 0;
             // 
             // CommitDiff
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.splitContainer1);
-            this.MinimumSize = new System.Drawing.Size(150, 148);
-            this.Name = "CommitDiff";
-            this.Size = new System.Drawing.Size(885, 578);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(splitContainer1);
+            MinimumSize = new Size(150, 148);
+            Name = "CommitDiff";
+            Size = new Size(885, 578);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).EndInit();
+            splitContainer1.ResumeLayout(false);
+            splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(splitContainer2)).EndInit();
+            splitContainer2.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private SplitContainer splitContainer1;
         private CommitInfo.CommitInfo commitInfo;
-        private System.Windows.Forms.SplitContainer splitContainer2;
+        private SplitContainer splitContainer2;
         private FileStatusList DiffFiles;
         private Editor.FileViewer DiffText;
     }

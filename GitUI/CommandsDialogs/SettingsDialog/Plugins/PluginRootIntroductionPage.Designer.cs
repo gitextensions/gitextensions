@@ -29,33 +29,33 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            label1 = new Label();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(12, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(284, 132);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Select one of the subnodes to view or edit the settings of a Git Extensions Plugi" +
+            label1.Location = new Point(12, 13);
+            label1.Name = "label1";
+            label1.Size = new Size(284, 132);
+            label1.TabIndex = 0;
+            label1.Text = "Select one of the subnodes to view or edit the settings of a Git Extensions Plugi" +
     "n.";
             // 
             // PluginRootIntroductionPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.label1);
-            this.Name = "PluginRootIntroductionPage";
-            this.Size = new System.Drawing.Size(473, 229);
-            this.Text = "Plugins Settings";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(label1);
+            Name = "PluginRootIntroductionPage";
+            Size = new Size(473, 229);
+            Text = "Plugins Settings";
+            ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private Label label1;
 
     }
 }

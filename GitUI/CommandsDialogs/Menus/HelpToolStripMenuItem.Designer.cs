@@ -29,107 +29,107 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.userManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changelogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-            this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiTelemetryEnabled = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportAnIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            userManualToolStripMenuItem = new ToolStripMenuItem();
+            changelogToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
+            translateToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator16 = new ToolStripSeparator();
+            donateToolStripMenuItem = new ToolStripMenuItem();
+            tsmiTelemetryEnabled = new ToolStripMenuItem();
+            reportAnIssueToolStripMenuItem = new ToolStripMenuItem();
+            checkForUpdatesToolStripMenuItem = new ToolStripMenuItem();
+            aboutToolStripMenuItem = new ToolStripMenuItem();
             // 
             // userManualToolStripMenuItem
             // 
-            this.userManualToolStripMenuItem.Image = global::GitUI.Properties.Images.GotoManual;
-            this.userManualToolStripMenuItem.Name = "userManualToolStripMenuItem";
-            this.userManualToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.userManualToolStripMenuItem.Text = "User &manual";
-            this.userManualToolStripMenuItem.Click += new System.EventHandler(this.UserManualToolStripMenuItemClick);
+            userManualToolStripMenuItem.Image = Properties.Images.GotoManual;
+            userManualToolStripMenuItem.Name = "userManualToolStripMenuItem";
+            userManualToolStripMenuItem.Size = new Size(184, 22);
+            userManualToolStripMenuItem.Text = "User &manual";
+            userManualToolStripMenuItem.Click += UserManualToolStripMenuItemClick;
             // 
             // changelogToolStripMenuItem
             // 
-            this.changelogToolStripMenuItem.Image = global::GitUI.Properties.Images.Changelog;
-            this.changelogToolStripMenuItem.Name = "changelogToolStripMenuItem";
-            this.changelogToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.changelogToolStripMenuItem.Text = "&Changelog";
-            this.changelogToolStripMenuItem.Click += new System.EventHandler(this.ChangelogToolStripMenuItemClick);
+            changelogToolStripMenuItem.Image = Properties.Images.Changelog;
+            changelogToolStripMenuItem.Name = "changelogToolStripMenuItem";
+            changelogToolStripMenuItem.Size = new Size(184, 22);
+            changelogToolStripMenuItem.Text = "&Changelog";
+            changelogToolStripMenuItem.Click += ChangelogToolStripMenuItemClick;
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(181, 6);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(181, 6);
             // 
             // translateToolStripMenuItem
             // 
-            this.translateToolStripMenuItem.Image = global::GitUI.Properties.Images.Translate;
-            this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.translateToolStripMenuItem.Text = "&Translate";
-            this.translateToolStripMenuItem.Click += new System.EventHandler(this.TranslateToolStripMenuItemClick);
+            translateToolStripMenuItem.Image = Properties.Images.Translate;
+            translateToolStripMenuItem.Name = "translateToolStripMenuItem";
+            translateToolStripMenuItem.Size = new Size(184, 22);
+            translateToolStripMenuItem.Text = "&Translate";
+            translateToolStripMenuItem.Click += TranslateToolStripMenuItemClick;
             // 
             // toolStripSeparator16
             // 
-            this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(181, 6);
+            toolStripSeparator16.Name = "toolStripSeparator16";
+            toolStripSeparator16.Size = new Size(181, 6);
             // 
             // donateToolStripMenuItem
             // 
-            this.donateToolStripMenuItem.Image = global::GitUI.Properties.Images.DollarSign;
-            this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.donateToolStripMenuItem.Text = "&Donate";
-            this.donateToolStripMenuItem.Click += new System.EventHandler(this.DonateToolStripMenuItemClick);
+            donateToolStripMenuItem.Image = Properties.Images.DollarSign;
+            donateToolStripMenuItem.Name = "donateToolStripMenuItem";
+            donateToolStripMenuItem.Size = new Size(184, 22);
+            donateToolStripMenuItem.Text = "&Donate";
+            donateToolStripMenuItem.Click += DonateToolStripMenuItemClick;
             // 
             // tsmiTelemetryEnabled
             // 
-            this.tsmiTelemetryEnabled.Checked = true;
-            this.tsmiTelemetryEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tsmiTelemetryEnabled.Name = "tsmiTelemetryEnabled";
-            this.tsmiTelemetryEnabled.Size = new System.Drawing.Size(184, 22);
-            this.tsmiTelemetryEnabled.Text = "&Yes, I allow telemetry";
-            this.tsmiTelemetryEnabled.Click += new System.EventHandler(this.TsmiTelemetryEnabled_Click);
+            tsmiTelemetryEnabled.Checked = true;
+            tsmiTelemetryEnabled.CheckState = CheckState.Checked;
+            tsmiTelemetryEnabled.Name = "tsmiTelemetryEnabled";
+            tsmiTelemetryEnabled.Size = new Size(184, 22);
+            tsmiTelemetryEnabled.Text = "&Yes, I allow telemetry";
+            tsmiTelemetryEnabled.Click += TsmiTelemetryEnabled_Click;
             // 
             // reportAnIssueToolStripMenuItem
             // 
-            this.reportAnIssueToolStripMenuItem.Image = global::GitUI.Properties.Images.BugReport;
-            this.reportAnIssueToolStripMenuItem.Name = "reportAnIssueToolStripMenuItem";
-            this.reportAnIssueToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.reportAnIssueToolStripMenuItem.Text = "&Report an issue";
-            this.reportAnIssueToolStripMenuItem.Click += new System.EventHandler(this.reportAnIssueToolStripMenuItem_Click);
+            reportAnIssueToolStripMenuItem.Image = Properties.Images.BugReport;
+            reportAnIssueToolStripMenuItem.Name = "reportAnIssueToolStripMenuItem";
+            reportAnIssueToolStripMenuItem.Size = new Size(184, 22);
+            reportAnIssueToolStripMenuItem.Text = "&Report an issue";
+            reportAnIssueToolStripMenuItem.Click += reportAnIssueToolStripMenuItem_Click;
             // 
             // checkForUpdatesToolStripMenuItem
             // 
-            this.checkForUpdatesToolStripMenuItem.Image = global::GitUI.Properties.Images.CheckForUpdates;
-            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.checkForUpdatesToolStripMenuItem.Text = "Check for &updates";
-            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            checkForUpdatesToolStripMenuItem.Image = Properties.Images.CheckForUpdates;
+            checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            checkForUpdatesToolStripMenuItem.Size = new Size(184, 22);
+            checkForUpdatesToolStripMenuItem.Text = "Check for &updates";
+            checkForUpdatesToolStripMenuItem.Click += checkForUpdatesToolStripMenuItem_Click;
             // 
             // aboutToolStripMenuItem
             // 
-            this.aboutToolStripMenuItem.Image = global::GitUI.Properties.Images.Information;
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.aboutToolStripMenuItem.Text = "&About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
+            aboutToolStripMenuItem.Image = Properties.Images.Information;
+            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            aboutToolStripMenuItem.Size = new Size(184, 22);
+            aboutToolStripMenuItem.Text = "&About";
+            aboutToolStripMenuItem.Click += AboutToolStripMenuItemClick;
             // 
             // HelpToolStripMenuItem
             // 
-            this.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.userManualToolStripMenuItem,
-            this.changelogToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.translateToolStripMenuItem,
-            this.toolStripSeparator16,
-            this.donateToolStripMenuItem,
-            this.tsmiTelemetryEnabled,
-            this.reportAnIssueToolStripMenuItem,
-            this.checkForUpdatesToolStripMenuItem,
-            this.aboutToolStripMenuItem});
-            this.Text = "&Help";
-            this.DropDownOpening += new System.EventHandler(this.this_DropDownOpening);
+            DropDownItems.AddRange(new ToolStripItem[] {
+            userManualToolStripMenuItem,
+            changelogToolStripMenuItem,
+            toolStripSeparator3,
+            translateToolStripMenuItem,
+            toolStripSeparator16,
+            donateToolStripMenuItem,
+            tsmiTelemetryEnabled,
+            reportAnIssueToolStripMenuItem,
+            checkForUpdatesToolStripMenuItem,
+            aboutToolStripMenuItem});
+            Text = "&Help";
+            DropDownOpening += this_DropDownOpening;
         }
 
         #endregion
