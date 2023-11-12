@@ -13,7 +13,7 @@ namespace GitUITests.UserManual
         public void GetUrl(string subFolder, string anchor, string expected)
         {
             AppSettings.GetTestAccessor().ResetDocumentationBaseUrl();
-            AppSettings.SetDocumentationBaseUrl("master");
+            AppSettings.SetDocumentationBaseUrl("33.33.33");
 
             StandardHtmlUserManual sut = new(subFolder, anchor);
 

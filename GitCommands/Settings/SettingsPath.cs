@@ -6,17 +6,17 @@ namespace GitCommands.Settings
     public class SettingsPath : ISettingsSource
     {
         private readonly ISettingsSource? _parent;
-        private readonly string _pathName;
+        private readonly string _pathNameWithSeparator;
 
         public SettingsPath(ISettingsSource? parent, string pathName)
         {
             _parent = parent;
-            _pathName = pathName;
+            _pathNameWithSeparator = string.IsNullOrWhiteSpace(pathName) ? "" : $"{pathName}.";
         }
 
         public string PathFor(string subPath)
         {
-            return $"{_pathName}.{subPath}";
+            return $"{_pathNameWithSeparator}{subPath}";
         }
 
         public override string? GetValue(string name)

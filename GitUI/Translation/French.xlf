@@ -165,11 +165,6 @@ Cette action sera effectuée sans avertissement durant le chargement d'une branc
         <target>Apparence</target>
         
       </trans-unit>
-      <trans-unit id="AvatarProvider.Text">
-        <source>Default</source>
-        <target>Par défaut</target>
-        
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target>Vider le cache d'images</target>
@@ -1601,13 +1596,16 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
         
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
-        <source>Push window</source>
-        <target>Fenêtre d'envoi</target>
+        <source>&amp;Push window</source>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
         <target>Ajouter des messages de log</target>
+        
+      </trans-unit>
+      <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
+        <source>Merge graph lanes having common parent</source>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1620,9 +1618,12 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
         <target>Utiliser SSL/TLS</target>
         
       </trans-unit>
+      <trans-unit id="gbRevisionGraph.Text">
+        <source>&amp;Revision graph</source>
+        
+      </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
-        <target>Paramètres d'email pour envoyer les patches</target>
+        <source>&amp;Email settings for sending patches</source>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1636,8 +1637,7 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
-        <source>Merge window</source>
-        <target>Fenêtre de fusion</target>
+        <source>&amp;Merge window</source>
         
       </trans-unit>
     </body>
@@ -1701,20 +1701,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>Afficher les différences du fichier pour tous les parents dans la fenêtre de parcours.</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE), show the difference
-between the commits as well as the difference from BASE to the selected commits.
-See documentation for more details about icons and range diffs.
-- For multiple selected commits (up to four), show the difference for
-all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to
-the last selected commit.</source>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -11808,12 +11794,6 @@ Current Branch:
       </trans-unit>
       <trans-unit id="lblMenuEntries.Text">
         <source>Configuration of items in the context menu</source>
-        
-      </trans-unit>
-      <trans-unit id="menuHelp.toolTip1">
-        <source>* Checked: at top level for direct access
-* Intermediate: in a cascaded context menu
-* Unchecked: not added to the menu</source>
         
       </trans-unit>
     </body>

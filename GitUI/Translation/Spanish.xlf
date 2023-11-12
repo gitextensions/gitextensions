@@ -167,11 +167,6 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
         <target>Apariencia</target>
         
       </trans-unit>
-      <trans-unit id="AvatarProvider.Text">
-        <source>Default</source>
-        <target>Por defecto</target>
-        
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target>Borrar caché de imágenes</target>
@@ -1600,13 +1595,16 @@ Por favor, verifica que Git para Windows se ha instalado o establece el comando 
         
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
-        <source>Push window</source>
-        <target>Ventana de push</target>
+        <source>&amp;Push window</source>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
         <target>Agregar mensajes de registro</target>
+        
+      </trans-unit>
+      <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
+        <source>Merge graph lanes having common parent</source>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1619,9 +1617,12 @@ Por favor, verifica que Git para Windows se ha instalado o establece el comando 
         <target>Usar SSL/TLS</target>
         
       </trans-unit>
+      <trans-unit id="gbRevisionGraph.Text">
+        <source>&amp;Revision graph</source>
+        
+      </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
-        <target>Ajustes de e-mail para enviar parches</target>
+        <source>&amp;Email settings for sending patches</source>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1635,8 +1636,7 @@ Por favor, verifica que Git para Windows se ha instalado o establece el comando 
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
-        <source>Merge window</source>
-        <target>Combinar ventanas</target>
+        <source>&amp;Merge window</source>
         
       </trans-unit>
     </body>
@@ -1702,31 +1702,6 @@ La herramienta principal se podrá seleccionar pulsando en la entrada del menú 
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>Mostrar diferencias de archivos para todos los padres en el diálogo de navegación</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE), show the difference
-between the commits as well as the difference from BASE to the selected commits.
-See documentation for more details about icons and range diffs.
-- For multiple selected commits (up to four), show the difference for
-all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to
-the last selected commit.</source>
-        <target>Mostrar todas las diferencias ente los commits seleccionados, no limitar solo a una diferencia.
-
-- Para un commit individual seleccionado, muestra la diferencia con los commits padres.
-- Para un commit individual agregado seleccionado, muestra la diferencia con sus padres.
-- Para dos commits seleccionados con un precedente común (BASE), muestra la diferencia
-entre los commits como la diferencia de BASE a los commits seleccionados.
-Revisa la documentación para mas detalles sobre los iconos y las diferencias de rangos.
-- Para multiples commits seleccionados (Hasta cuatro), muestra la diferencia para
-de todos los primeros seleccionados con los últimos seleccionados del commit.
-- Para más de cuatro commits seleccionados, muestra la diferencia del primer, al
-ultimo commit selecionado.</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -12144,12 +12119,6 @@ Rama actual:
       <trans-unit id="lblMenuEntries.Text">
         <source>Configuration of items in the context menu</source>
         <target>Configuración de elementos en el menú contextual</target>
-        
-      </trans-unit>
-      <trans-unit id="menuHelp.toolTip1">
-        <source>* Checked: at top level for direct access
-* Intermediate: in a cascaded context menu
-* Unchecked: not added to the menu</source>
         
       </trans-unit>
     </body>

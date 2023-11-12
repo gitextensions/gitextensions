@@ -168,11 +168,6 @@ This action will be performed without warning while checking out branch.</source
         <target>தோற்றம்</target>
         
       </trans-unit>
-      <trans-unit id="AvatarProvider.Text">
-        <source>Default</source>
-        <target>இயல்புநிலை</target>
-        
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target>படத் தற்காலிக சேமிப்பை அழி</target>
@@ -1602,13 +1597,16 @@ Please make sure that Git for Windows is installed or set the correct command ma
         
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
-        <source>Push window</source>
-        <target>தள்ளு சாளரம்</target>
+        <source>&amp;Push window</source>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
         <target>பதிவு செய்திகளைச் சேர்</target>
+        
+      </trans-unit>
+      <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
+        <source>Merge graph lanes having common parent</source>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1621,9 +1619,12 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>பாதுகாக்குகுழிஅடுக்கு/போக்குவரத்துஅடுக்குபாதுகாப்பைப் பயன்படுத்து</target>
         
       </trans-unit>
+      <trans-unit id="gbRevisionGraph.Text">
+        <source>&amp;Revision graph</source>
+        
+      </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
-        <target>ஒட்டுகளை அனுப்புவதற்கான மின்னஞ்சல் அமைப்புகள்</target>
+        <source>&amp;Email settings for sending patches</source>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1637,8 +1638,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
-        <source>Merge window</source>
-        <target>ஒன்றிணை சாளரம்</target>
+        <source>&amp;Merge window</source>
         
       </trans-unit>
     </body>
@@ -1705,29 +1705,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>உலாவல் உரையாடலில் அனைத்து பெற்றோர்களுக்கும் கோப்பு வேறுபாடுகளைக் காட்டு</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE), show the difference
-between the commits as well as the difference from BASE to the selected commits.
-See documentation for more details about icons and range diffs.
-- For multiple selected commits (up to four), show the difference for
-all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to
-the last selected commit.</source>
-        <target>ஒரே ஒரு வேறுபாடிற்கு மட்டுப்படுத்தாமல், தேர்ந்தெடுக்கப்பட்ட உறுதிமொழிகளுக்கு இடையே உள்ள அனைத்து வேறுபாடுகளையும் காட்டு.
-
-- தேர்ந்தெடுக்கப்பட்ட ஒரு உறுதிமொழிக்கு, அதன் பெற்றோரின் உறுதிமொழியுடன் வேறுபாடைக் காட்டு.
-- ஒரு தேர்ந்தெடுக்கப்பட்ட ஒன்றிணைப்பு உறுதிமொழிக்கு, எல்லா பெற்றோருடனும் வேறுபாடைக் காட்டு.
-- பொதுவான மூதாதையருடன் (அடிப்படை) தேர்ந்தெடுக்கப்பட்ட இரண்டு உறுதிமொழிகளுக்கு, உறுதிமொழிகளுக்கு இடையே உள்ள வேறுபாட்டையும், அடிப்படை இலிருந்து தேர்ந்தெடுக்கப்பட்ட உறுதிமொழிகளுக்கான வேறுபாட்டையும் காட்டவும்.
-சின்னங்கள் மற்றும் வரம்பு வேறுபாடுகள்பற்றிய கூடுதல் விவரங்களுக்கு ஆவணங்களைப் பார்க்கவும்.
-
-- பல தேர்ந்தெடுக்கப்பட்ட உறுதிமொழிகளுக்கு (நான்கு வரை), கடைசியாகத் தேர்ந்தெடுக்கப்பட்ட உறுதிமொழி உடன் முதலில் தேர்ந்தெடுக்கப்பட்ட அனைத்திற்கும் வேறுபாட்டைக் காட்டவும்.
-- தேர்ந்தெடுக்கப்பட்ட நான்குக்கும் மேற்பட்ட உறுதிமொழிகளுக்கு, முதலிலிருந்து கடைசியாகத் தேர்ந்தெடுக்கப்பட்ட உறுதிமொழிவரை வேறுபாட்டைக் காட்டு.</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -12190,15 +12167,6 @@ Current Branch:
       <trans-unit id="lblMenuEntries.Text">
         <source>Configuration of items in the context menu</source>
         <target>சூழல் பட்டியலில் உள்ள உருப்படிகளின் கட்டமைப்பு</target>
-        
-      </trans-unit>
-      <trans-unit id="menuHelp.toolTip1">
-        <source>* Checked: at top level for direct access
-* Intermediate: in a cascaded context menu
-* Unchecked: not added to the menu</source>
-        <target>* தேர்வு செய்யப்பட்டது: நேரடி அணுகலுக்கான மேல் மட்டத்தில்
-* இடைநிலை: அடுக்கடுக்கான சூழல் பட்டியலில்
-* தேர்வு செய்யப்படவில்லை: பட்டியலில் சேர்க்கப்படவில்லை</target>
         
       </trans-unit>
     </body>

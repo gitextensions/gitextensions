@@ -133,7 +133,7 @@
             _NO_TRANSLATE_labelCopyright.Name = "_NO_TRANSLATE_labelCopyright";
             _NO_TRANSLATE_labelCopyright.Size = new Size(420, 15);
             _NO_TRANSLATE_labelCopyright.TabIndex = 2;
-            _NO_TRANSLATE_labelCopyright.Text = "Proudly presented by Henk Westhuis and Team";
+            _NO_TRANSLATE_labelCopyright.Text = "Proudly presented by Git Extensions team";
             _NO_TRANSLATE_labelCopyright.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // thanksTo

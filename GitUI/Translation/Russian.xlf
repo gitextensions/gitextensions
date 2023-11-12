@@ -167,11 +167,6 @@ This action will be performed without warning while checking out branch.</source
         <target>Внешний вид</target>
         
       </trans-unit>
-      <trans-unit id="AvatarProvider.Text">
-        <source>Default</source>
-        <target>По умолчанию</target>
-        
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target>Очистить кэш картинок</target>
@@ -1604,13 +1599,16 @@ Please make sure that Git for Windows is installed or set the correct command ma
         
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
-        <source>Push window</source>
-        <target>Окно отправки</target>
+        <source>&amp;Push window</source>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
         <target>Добавить сообщения лога</target>
+        
+      </trans-unit>
+      <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
+        <source>Merge graph lanes having common parent</source>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1623,9 +1621,12 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>Использовать SSL/TLS</target>
         
       </trans-unit>
+      <trans-unit id="gbRevisionGraph.Text">
+        <source>&amp;Revision graph</source>
+        
+      </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
-        <target>Настройки электронной почты для отправки патчей</target>
+        <source>&amp;Email settings for sending patches</source>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1639,8 +1640,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
-        <source>Merge window</source>
-        <target>Окно слияния</target>
+        <source>&amp;Merge window</source>
         
       </trans-unit>
     </body>
@@ -1707,29 +1707,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>Показать различия между файлами для всех родителей в окне обзора</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE), show the difference
-between the commits as well as the difference from BASE to the selected commits.
-See documentation for more details about icons and range diffs.
-- For multiple selected commits (up to four), show the difference for
-all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to
-the last selected commit.</source>
-        <target>Показать все различия между выбранными коммитами, не ограничиваясь только одним отличием. 
-- Для одного выбранного коммита будет показана разница с его родительским коммитом.
-- Для одного выбранного коммита будет показана разница со всеми родителями.
- - Для двух выбранных коммитов с общим предком (BASE), будет показана разницу
- между коммитами, а также разницу между BASE и выбранными коммитами.
-См. документацию для получения более подробной информации о значках и различиях диапазонов.
-- Для нескольких выбранных коммитов (до четырех) показать разницу для всех первых выбранных с последней выбранной фиксацией.
-- Для более чем четырех выбранных коммитов показать разницу между первым и
-и последним коммитом.</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -12193,12 +12170,6 @@ Current Branch:
       </trans-unit>
       <trans-unit id="lblMenuEntries.Text">
         <source>Configuration of items in the context menu</source>
-        
-      </trans-unit>
-      <trans-unit id="menuHelp.toolTip1">
-        <source>* Checked: at top level for direct access
-* Intermediate: in a cascaded context menu
-* Unchecked: not added to the menu</source>
         
       </trans-unit>
     </body>

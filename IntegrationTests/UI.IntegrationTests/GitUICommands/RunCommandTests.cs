@@ -46,7 +46,7 @@ namespace GitUITests.GitUICommandsTests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            AppSettings.SetDocumentationBaseUrl("master");
+            AppSettings.SetDocumentationBaseUrl("33.33.33");
         }
 
         [OneTimeTearDown]

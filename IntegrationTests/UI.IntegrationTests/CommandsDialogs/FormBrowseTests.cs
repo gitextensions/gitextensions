@@ -73,9 +73,9 @@ namespace GitExtensions.UITests.CommandsDialogs
             bool branchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool showCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.BranchFilterEnabled = false;
-            AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
             AppSettings.RevisionGraphShowArtificialCommits = false;
 
             RunFormTest(
@@ -90,23 +90,23 @@ namespace GitExtensions.UITests.CommandsDialogs
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
-                        AppSettings.BranchFilterEnabled.Should().BeFalse();
-                        AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+                        AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
+                        AppSettings.ShowCurrentBranchOnly.Value.Should().BeFalse();
 
                         Console.WriteLine("Scenario 1: set 'Show current branch'");
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesCurrent.PerformClick();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.BranchFilterEnabled.Should().BeFalse();
-                        AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
+                        AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
+                        AppSettings.ShowCurrentBranchOnly.Value.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(2);
 
                         Console.WriteLine("Scenario 1: set 'Show filtered branches'");
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesFiltered.PerformClick();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.BranchFilterEnabled.Should().BeTrue();
-                        AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+                        AppSettings.BranchFilterEnabled.Value.Should().BeTrue();
+                        AppSettings.ShowCurrentBranchOnly.Value.Should().BeFalse();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
 
                         // 2. Apply a branch filter
@@ -116,16 +116,16 @@ namespace GitExtensions.UITests.CommandsDialogs
                         form.GetTestAccessor().ToolStripFilters.SetBranchFilter("Branch2");
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.BranchFilterEnabled.Should().BeTrue();
-                        AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+                        AppSettings.BranchFilterEnabled.Value.Should().BeTrue();
+                        AppSettings.ShowCurrentBranchOnly.Value.Should().BeFalse();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(3);
 
                         Console.WriteLine("Scenario 2: set 'Show current branch'");
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesCurrent.PerformClick();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.BranchFilterEnabled.Should().BeFalse();
-                        AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
+                        AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
+                        AppSettings.ShowCurrentBranchOnly.Value.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(2);
                         // The filter text is still present
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().Be("Branch2");
@@ -140,15 +140,15 @@ namespace GitExtensions.UITests.CommandsDialogs
                         form.RevisionGridControl.Invalidate();
                         UITest.ProcessEventsFor(1000);
                         // Assert
-                        AppSettings.BranchFilterEnabled.Should().BeFalse();
-                        AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
+                        AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
+                        AppSettings.ShowCurrentBranchOnly.Value.Should().BeTrue();
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().BeEmpty();
                     }
                     finally
                     {
-                        AppSettings.ShowReflogReferences = reflogEnabled;
-                        AppSettings.BranchFilterEnabled = branchFilterEnabled;
-                        AppSettings.ShowCurrentBranchOnly = showCurrentBranchOnly;
+                        AppSettings.ShowReflogReferences.Value = reflogEnabled;
+                        AppSettings.BranchFilterEnabled.Value = branchFilterEnabled;
+                        AppSettings.ShowCurrentBranchOnly.Value = showCurrentBranchOnly;
                         AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
                     }
                 });

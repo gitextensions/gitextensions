@@ -36,6 +36,7 @@ namespace GitCommands
         private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
+        private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
 
         private static Mutex _globalMutex;
 
@@ -123,7 +124,7 @@ namespace GitCommands
             get => _documentationBaseUrl ?? throw new InvalidOperationException($"Call {nameof(SetDocumentationBaseUrl)} first to set the documentation base URL.");
         }
 
-        internal static void SetDocumentationBaseUrl(string currentGitBranch)
+        internal static void SetDocumentationBaseUrl(string version)
         {
             if (_documentationBaseUrl is not null)
             {
@@ -131,14 +132,14 @@ namespace GitCommands
             }
 
             string? docVersion = "en/main/";
-
-            if (!string.IsNullOrWhiteSpace(currentGitBranch))
+            const string defaultDevelopmentVersion = "33.33";
+            if (!string.IsNullOrWhiteSpace(version) && !version.StartsWith(defaultDevelopmentVersion))
             {
-                // We expect current branch to be something line "release/X.Y"
-                Match match = Regex.Match(currentGitBranch, "release/\\d*\\.\\d*");
+                // We expect version to be something starting with "X.Y" (ignore patch versions)
+                Match match = Regex.Match(version, @"^(\d+)\.(\d+)");
                 if (match.Success)
                 {
-                    docVersion = $"en/{currentGitBranch.Replace("/", "-")}/";
+                    docVersion = $"en/release-{match.Groups[1]}.{match.Groups[2]}/";
                 }
             }
 
@@ -451,12 +452,12 @@ namespace GitCommands
             set => SetBool("showresetallchanges", value);
         }
 
-        public static ISetting<bool> ShowConEmuTab => Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
-        public static ISetting<string> ConEmuStyle => Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
-        public static ISetting<string> ConEmuTerminal => Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
-        public static ISetting<bool> UseBrowseForFileHistory => Setting.Create(DetailedSettingsPath, nameof(UseBrowseForFileHistory), true);
-        public static ISetting<bool> UseDiffViewerForBlame => Setting.Create(DetailedSettingsPath, nameof(UseDiffViewerForBlame), false);
-        public static ISetting<bool> ShowGpgInformation => Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
+        public static ISetting<bool> ShowConEmuTab { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
+        public static ISetting<string> ConEmuStyle { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
+        public static ISetting<string> ConEmuTerminal { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
+        public static ISetting<bool> UseBrowseForFileHistory { get; } = Setting.Create(DetailedSettingsPath, nameof(UseBrowseForFileHistory), true);
+        public static ISetting<bool> UseDiffViewerForBlame { get; } = Setting.Create(DetailedSettingsPath, nameof(UseDiffViewerForBlame), false);
+        public static ISetting<bool> ShowGpgInformation { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
 
         public static CommitInfoPosition CommitInfoPosition
         {
@@ -497,11 +498,7 @@ namespace GitCommands
             set => SetBool("showgitstatusforartificialcommits", value);
         }
 
-        public static RevisionSortOrder RevisionSortOrder
-        {
-            get => GetEnum("RevisionSortOrder", RevisionSortOrder.GitDefault);
-            set => SetEnum("RevisionSortOrder", value);
-        }
+        public static EnumRuntimeSetting<RevisionSortOrder> RevisionSortOrder { get; } = new(RootSettingsPath, nameof(RevisionSortOrder), GitCommands.RevisionSortOrder.GitDefault);
 
         public static bool CommitInfoShowContainedInBranches => CommitInfoShowContainedInBranchesLocal ||
                                                                 CommitInfoShowContainedInBranchesRemote ||
@@ -1006,7 +1003,7 @@ namespace GitCommands
             set => SetBool("DontConfirmCommitIfNoBranch", value);
         }
 
-        public static readonly ISetting<bool> ConfirmBranchCheckout = Setting.Create(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), false);
+        public static ISetting<bool> ConfirmBranchCheckout { get; } = Setting.Create(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), false);
 
         public static bool? AutoPopStashAfterPull
         {
@@ -1098,11 +1095,7 @@ namespace GitCommands
             set => SetBool("showRemoteBranches", value);
         }
 
-        public static bool ShowReflogReferences
-        {
-            get => GetBool("showReflogReferences", false);
-            set => SetBool("showReflogReferences", value);
-        }
+        public static BoolRuntimeSetting ShowReflogReferences { get; } = new(RootSettingsPath, nameof(ShowReflogReferences), false);
 
         public static bool ShowStashes
         {
@@ -1265,11 +1258,7 @@ namespace GitCommands
             set => SetBool("closeprocessdialog", value);
         }
 
-        public static bool ShowCurrentBranchOnly
-        {
-            get => GetBool("showcurrentbranchonly", false);
-            set => SetBool("showcurrentbranchonly", value);
-        }
+        public static BoolRuntimeSetting ShowCurrentBranchOnly { get; } = new(RootSettingsPath, nameof(ShowCurrentBranchOnly), false);
 
         public static bool ShowSimplifyByDecoration
         {
@@ -1277,11 +1266,7 @@ namespace GitCommands
             set => SetBool("showsimplifybydecoration", value);
         }
 
-        public static bool BranchFilterEnabled
-        {
-            get => GetBool("branchfilterenabled", false);
-            set => SetBool("branchfilterenabled", value);
-        }
+        public static BoolRuntimeSetting BranchFilterEnabled { get; } = new(RootSettingsPath, nameof(BranchFilterEnabled), false);
 
         public static bool ShowOnlyFirstParent
         {
@@ -1530,11 +1515,7 @@ namespace GitCommands
             set => SetString("lastformatpatchdir", value);
         }
 
-        public static IgnoreWhitespaceKind IgnoreWhitespaceKind
-        {
-            get => GetEnum("IgnoreWhitespaceKind", IgnoreWhitespaceKind.None);
-            set => SetEnum("IgnoreWhitespaceKind", value);
-        }
+        public static EnumRuntimeSetting<IgnoreWhitespaceKind> IgnoreWhitespaceKind { get; } = new(RootSettingsPath, nameof(IgnoreWhitespaceKind), Settings.IgnoreWhitespaceKind.None);
 
         public static bool RememberIgnoreWhiteSpacePreference
         {
@@ -1542,17 +1523,7 @@ namespace GitCommands
             set => SetBool("rememberIgnoreWhiteSpacePreference", value);
         }
 
-        public static bool ShowNonPrintingChars
-        {
-            get => RememberShowNonPrintingCharsPreference && GetBool("ShowNonPrintingChars", false);
-            set
-            {
-                if (RememberShowNonPrintingCharsPreference)
-                {
-                    SetBool("ShowNonPrintingChars", value);
-                }
-            }
-        }
+        public static BoolRuntimeSetting ShowNonPrintingChars { get; } = new(RootSettingsPath, nameof(ShowNonPrintingChars), false);
 
         public static bool RememberShowNonPrintingCharsPreference
         {
@@ -1560,17 +1531,7 @@ namespace GitCommands
             set => SetBool("RememberShowNonPrintableCharsPreference", value);
         }
 
-        public static bool ShowEntireFile
-        {
-            get => RememberShowEntireFilePreference && GetBool("ShowEntireFile", false);
-            set
-            {
-                if (RememberShowEntireFilePreference)
-                {
-                    SetBool("ShowEntireFile", value);
-                }
-            }
-        }
+        public static BoolRuntimeSetting ShowEntireFile { get; } = new(RootSettingsPath, nameof(ShowEntireFile), false);
 
         public static bool RememberShowEntireFilePreference
         {
@@ -1600,17 +1561,7 @@ namespace GitCommands
             set => SetBool("RememberNumberOfContextLines", value);
         }
 
-        public static bool ShowSyntaxHighlightingInDiff
-        {
-            get => RememberShowSyntaxHighlightingInDiff && GetBool("ShowSyntaxHighlightingInDiff", true);
-            set
-            {
-                if (RememberShowSyntaxHighlightingInDiff)
-                {
-                    SetBool("ShowSyntaxHighlightingInDiff", value);
-                }
-            }
-        }
+        public static BoolRuntimeSetting ShowSyntaxHighlightingInDiff { get; } = new(RootSettingsPath, nameof(ShowSyntaxHighlightingInDiff), true);
 
         public static bool RememberShowSyntaxHighlightingInDiff
         {

@@ -17,20 +17,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new(@"Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -47,7 +47,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}

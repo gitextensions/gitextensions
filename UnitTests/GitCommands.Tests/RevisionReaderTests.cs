@@ -63,6 +63,7 @@ namespace GitCommandsTests
         [TestCase("reflogselector_empty", true, true)]
         [TestCase("notes_data", true, false, true, true)]
         [TestCase("notes_empty", true, false, true, true)]
+        [TestCase("subject_starts_with_newline", true)]
         public async Task TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false, bool hasEmptyReflogSelector = true, bool hasNotes = false)
         {
             string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");

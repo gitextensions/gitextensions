@@ -1,4 +1,9 @@
-﻿using Microsoft;
+﻿// Disabled hotfix of #11292 for release 4.2: Due to heavy performance issues with the Linux repo, do not determine the kind of LaneSharing of secondary segments.
+// This deactivated #10915 which avoided the multiple drawing of shared graph segments.
+// This reactivated a minor hyperactivity of line-straightening over commits (#11059).
+////#define ALL_PRIMARY_LANES
+
+using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -125,7 +130,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         }
                         else
                         {
+#if ALL_PRIMARY_LANES
+                            laneSharing = LaneSharing.ExclusiveOrPrimary;
+#else
                             laneSharing = LaneSharing.DifferentEnd;
+#endif
                         }
 
                         return new Lane(_revisionLane, laneSharing);
@@ -194,12 +203,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                     LaneSharing GetSecondarySharingOfContinuedSegment()
                     {
+#if ALL_PRIMARY_LANES
+                        return LaneSharing.ExclusiveOrPrimary;
+#else
                         return _previousRow.GetLaneForSegment(segment).Sharing switch
                         {
                             LaneSharing.ExclusiveOrPrimary or LaneSharing.DifferentEnd => LaneSharing.DifferentStart,
                             LaneSharing.Entire or LaneSharing.DifferentStart => LaneSharing.Entire,
                             _ => throw new NotImplementedException()
                         };
+#endif
                     }
                 }
 

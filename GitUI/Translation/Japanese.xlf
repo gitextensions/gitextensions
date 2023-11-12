@@ -168,11 +168,6 @@ This action will be performed without warning while checking out branch.</source
         <target>外観</target>
         
       </trans-unit>
-      <trans-unit id="AvatarProvider.Text">
-        <source>Default</source>
-        <target>デフォルト</target>
-        
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target>画像キャッシュをクリア</target>
@@ -1611,13 +1606,18 @@ Git for Windowsがインストールされているか確認し、正しいコ�
         
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
-        <source>Push window</source>
-        <target>プッシュウィンドウ</target>
+        <source>&amp;Push window</source>
+        <target>プッシュウィンドウ(&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
         <target>ログメッセージを追加</target>
+        
+      </trans-unit>
+      <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
+        <source>Merge graph lanes having common parent</source>
+        <target>共通の親を持つグラフレーンをマージ</target>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1630,9 +1630,14 @@ Git for Windowsがインストールされているか確認し、正しいコ�
         <target>SSL/TLSを使う</target>
         
       </trans-unit>
+      <trans-unit id="gbRevisionGraph.Text">
+        <source>&amp;Revision graph</source>
+        <target>リビジョングラフ(&amp;R)</target>
+        
+      </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
-        <target>パッチ送信用メール設定</target>
+        <source>&amp;Email settings for sending patches</source>
+        <target>パッチ送信用メール設定(&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1646,8 +1651,8 @@ Git for Windowsがインストールされているか確認し、正しいコ�
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
-        <source>Merge window</source>
-        <target>マージウィンドウ</target>
+        <source>&amp;Merge window</source>
+        <target>マージウィンドウ(&amp;M)</target>
         
       </trans-unit>
     </body>
@@ -1714,31 +1719,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>すべての親のファイルの差異をダイアログに表示</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE), show the difference
-between the commits as well as the difference from BASE to the selected commits.
-See documentation for more details about icons and range diffs.
-- For multiple selected commits (up to four), show the difference for
-all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to
-the last selected commit.</source>
-        <target>選択したコミット間のすべての差分を表示します。差分は1つだけに限定されません。
-
-- 単一のコミットを選択した場合、その親コミットとの差分を示します。
-- 単一のマージコミットを選択した場合、すべての親との差分を示します。
-- 選択した2つのコミットが共通の祖先(BASE)を持つ場合、
-コミット間の差分だけでなく、BASEから選択コミットまでの差分も表示されます。
-アイコンや範囲の差分についての詳細は説明文書を参照してください。
-- 複数のコミット(最大4つ)を選択した場合、
-最初に選択したすべてのコミットと最後に選択したコミットの差分を表示します。
-- 4つを超えるコミットを選択した場合は、
-最初に選択したコミットから最後に選択したコミットまでの差分を表示します。</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -12206,15 +12186,6 @@ Current Branch:
       <trans-unit id="lblMenuEntries.Text">
         <source>Configuration of items in the context menu</source>
         <target>コンテキストメニューの項目の設定</target>
-        
-      </trans-unit>
-      <trans-unit id="menuHelp.toolTip1">
-        <source>* Checked: at top level for direct access
-* Intermediate: in a cascaded context menu
-* Unchecked: not added to the menu</source>
-        <target>* チェック済: 直接使用できるように最上位に配置します
-* 中間: カスケードコンテキストメニューに配置します
-* 未チェック: メニューに追加されません</target>
         
       </trans-unit>
     </body>

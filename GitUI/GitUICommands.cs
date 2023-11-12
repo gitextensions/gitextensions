@@ -707,6 +707,13 @@ namespace GitUI
             return DoActionOnRepo(owner, Action, changesRepo: false);
         }
 
+        /// <summary>
+        /// Reset all changes to HEAD.
+        /// </summary>
+        /// <param name="owner">Owner window.</param>
+        /// <param name="workTreeFiles">Worktree files, to determine the status for the popup dialog.</param>
+        /// <param name="onlyWorkTree">Only reset worktree files.</param>
+        /// <returns><see langword="true"/> if executed.</returns>
         public bool StartResetChangesDialog(IWin32Window? owner, IReadOnlyCollection<GitItemStatus> workTreeFiles, bool onlyWorkTree)
         {
             // Show a form asking the user if they want to reset the changes.

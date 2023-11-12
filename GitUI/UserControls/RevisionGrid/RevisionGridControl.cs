@@ -878,7 +878,7 @@ namespace GitUI
 
             // Reset the "cache" for current branch
             CurrentBranch = new(() => Module.IsValidGitWorkingDir()
-                      ? Module.GetSelectedBranch(setDefaultIfEmpty: false)
+                      ? Module.GetSelectedBranch(emptyIfDetached: true)
                       : "");
 
             // Revision info is read in three parallel steps:
@@ -2238,13 +2238,13 @@ namespace GitUI
 
         internal void ToggleAuthorDateSort()
         {
-            AppSettings.RevisionSortOrder = AppSettings.RevisionSortOrder != RevisionSortOrder.AuthorDate ? RevisionSortOrder.AuthorDate : RevisionSortOrder.GitDefault;
+            AppSettings.RevisionSortOrder.Value = AppSettings.RevisionSortOrder != RevisionSortOrder.AuthorDate ? RevisionSortOrder.AuthorDate : RevisionSortOrder.GitDefault;
             PerformRefreshRevisions();
         }
 
         internal void ToggleTopoOrder()
         {
-            AppSettings.RevisionSortOrder = AppSettings.RevisionSortOrder != RevisionSortOrder.Topology ? RevisionSortOrder.Topology : RevisionSortOrder.GitDefault;
+            AppSettings.RevisionSortOrder.Value = AppSettings.RevisionSortOrder != RevisionSortOrder.Topology ? RevisionSortOrder.Topology : RevisionSortOrder.GitDefault;
             PerformRefreshRevisions();
         }
 

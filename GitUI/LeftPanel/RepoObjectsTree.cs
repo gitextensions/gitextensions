@@ -566,6 +566,16 @@ namespace GitUI.LeftPanel
             e.Handled = true;
         }
 
+        public override bool ProcessHotkey(Keys keyData)
+        {
+            if (_txtBranchCriterion.ContainsFocus && IsTextEditKey(keyData))
+            {
+                return false;
+            }
+
+            return base.ProcessHotkey(keyData);
+        }
+
         protected override bool ExecuteCommand(int cmd)
         {
             switch ((Command)cmd)

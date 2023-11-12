@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Concurrent;
+using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient;
@@ -15,7 +16,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
     public class GitlabAdapter : IBuildServerAdapter
     {
         public const string PluginName = "Gitlab";
-        private readonly Dictionary<string, DateTime> _loadedItems = new();
+        private readonly ConcurrentDictionary<string, DateTime> _loadedItems = new();
 
         private readonly IGitlabApiClientFactory _apiClientFactory;
         private IGitlabApiClient? _apiClient;
@@ -129,7 +130,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
         {
             foreach (GitlabPipeline item in items)
             {
-                if (_loadedItems.ContainsKey(item.Sha) == false || _loadedItems[item.Sha] < item.UpdatedAt)
+                if (!_loadedItems.TryGetValue(item.Sha, out DateTime dateTime) || dateTime < item.UpdatedAt)
                 {
                     _loadedItems[item.Sha] = item.UpdatedAt;
                     observer.OnNext(item.ToBuildInfo());

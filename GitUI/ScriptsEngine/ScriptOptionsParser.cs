@@ -13,6 +13,8 @@ namespace GitUI.ScriptsEngine
         /// </summary>
         private const string currentMessage = "cMessage";
 
+        private const string head = "HEAD";
+
         /// <summary>
         /// Gets the list of available script options.
         /// </summary>
@@ -34,6 +36,7 @@ namespace GitUI.ScriptsEngine
             "sCommitter",
             "sAuthorDate",
             "sCommitDate",
+            head,
             "cTag",
             "cBranch",
             "cLocalBranch",
@@ -113,7 +116,7 @@ namespace GitUI.ScriptsEngine
                     continue;
                 }
 
-                if (currentRevision is null && option.StartsWith("c"))
+                if (currentRevision is null && (option.StartsWith("c") || option == head))
                 {
                     currentRevision = GetCurrentRevision(uiCommands.GitModule, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
                         loadBody: Contains(arguments, currentMessage));
@@ -371,6 +374,15 @@ namespace GitUI.ScriptsEngine
 
                 case "cTag":
                     newString = SelectOneRef(currentTags);
+                    break;
+
+                case head:
+                    newString = uiCommands.GitModule.GetSelectedBranch(emptyIfDetached: true);
+                    if (string.IsNullOrEmpty(newString))
+                    {
+                        newString = currentRevision.Guid;
+                    }
+
                     break;
 
                 case "cBranch":

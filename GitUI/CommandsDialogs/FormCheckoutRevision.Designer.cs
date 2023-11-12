@@ -122,6 +122,7 @@
             // 
             // FormCheckoutRevision
             // 
+            AcceptButton = OkCheckout;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(481, 131);

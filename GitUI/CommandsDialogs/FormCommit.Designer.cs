@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
         {
             components = new System.ComponentModel.Container();
             UnstagedFileContext = new ContextMenuStrip(components);
-            resetChanges = new ToolStripMenuItem();
+            tsmiResetUnstagedChanges = new ToolStripMenuItem();
             resetPartOfFileToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator12 = new ToolStripSeparator();
             openToolStripMenuItem = new ToolStripMenuItem();
@@ -121,8 +121,8 @@ namespace GitUI.CommandsDialogs
             ResetAuthor = new CheckBox();
             ResetSoft = new Button();
             StashStaged = new Button();
-            Reset = new Button();
-            ResetUnStaged = new Button();
+            btnResetAllChanges = new Button();
+            btnResetUnstagedChanges = new Button();
             toolbarCommit = new GitUI.ToolStripEx();
             commitMessageToolStripMenuItem = new ToolStripDropDownButton();
             ShowOnlyMyMessagesToolStripMenuItem = new ToolStripMenuItem();
@@ -189,7 +189,7 @@ namespace GitUI.CommandsDialogs
             // 
             UnstagedFileContext.Items.AddRange(new ToolStripItem[] {
             stageToolStripMenuItem,
-            resetChanges,
+            tsmiResetUnstagedChanges,
             resetPartOfFileToolStripMenuItem,
             interactiveAddToolStripMenuItem,
             toolStripSeparator12,
@@ -215,13 +215,13 @@ namespace GitUI.CommandsDialogs
             UnstagedFileContext.Size = new Size(233, 414);
             UnstagedFileContext.Opening += UnstagedFileContext_Opening;
             // 
-            // resetChanges
+            // tsmiResetUnstagedChanges
             // 
-            resetChanges.Image = Properties.Images.ResetWorkingDirChanges;
-            resetChanges.Name = "resetChanges";
-            resetChanges.Size = new Size(232, 22);
-            resetChanges.Text = "Reset file or directory changes";
-            resetChanges.Click += ResetFilesClick;
+            tsmiResetUnstagedChanges.Image = Properties.Images.ResetWorkingDirChanges;
+            tsmiResetUnstagedChanges.Name = "tsmiResetUnstagedChanges";
+            tsmiResetUnstagedChanges.Size = new Size(232, 22);
+            tsmiResetUnstagedChanges.Text = "Reset file or directory changes";
+            tsmiResetUnstagedChanges.Click += ResetFilesClick;
             // 
             // resetPartOfFileToolStripMenuItem
             // 
@@ -1087,8 +1087,8 @@ namespace GitUI.CommandsDialogs
             flowCommitButtons.Controls.Add(Amend);
             flowCommitButtons.Controls.Add(AmendPanel);
             flowCommitButtons.Controls.Add(StashStaged);
-            flowCommitButtons.Controls.Add(Reset);
-            flowCommitButtons.Controls.Add(ResetUnStaged);
+            flowCommitButtons.Controls.Add(btnResetAllChanges);
+            flowCommitButtons.Controls.Add(btnResetUnstagedChanges);
             flowCommitButtons.Dock = DockStyle.Fill;
             flowCommitButtons.FlowDirection = FlowDirection.TopDown;
             flowCommitButtons.Location = new Point(0, 0);
@@ -1174,31 +1174,31 @@ namespace GitUI.CommandsDialogs
             StashStaged.UseVisualStyleBackColor = true;
             StashStaged.Click += StashStagedClick;
             // 
-            // Reset
+            // btnResetAllChanges
             // 
-            Reset.Image = Properties.Images.ResetWorkingDirChanges;
-            Reset.ImageAlign = ContentAlignment.MiddleLeft;
-            Reset.Location = new Point(0, 142);
-            Reset.Margin = new Padding(0, 3, 0, 3);
-            Reset.Name = "Reset";
-            Reset.Size = new Size(171, 26);
-            Reset.TabIndex = 108;
-            Reset.Text = "&Reset all changes";
-            Reset.UseVisualStyleBackColor = true;
-            Reset.Click += ResetClick;
+            btnResetAllChanges.Image = Properties.Images.ResetWorkingDirChanges;
+            btnResetAllChanges.ImageAlign = ContentAlignment.MiddleLeft;
+            btnResetAllChanges.Location = new Point(0, 142);
+            btnResetAllChanges.Margin = new Padding(0, 3, 0, 3);
+            btnResetAllChanges.Name = "btnResetAllChanges";
+            btnResetAllChanges.Size = new Size(171, 26);
+            btnResetAllChanges.TabIndex = 108;
+            btnResetAllChanges.Text = "&Reset all changes";
+            btnResetAllChanges.UseVisualStyleBackColor = true;
+            btnResetAllChanges.Click += btnResetAllChanges_Click;
             // 
-            // ResetUnStaged
+            // btnResetUnstagedChanges
             // 
-            ResetUnStaged.Image = Properties.Images.ResetWorkingDirChanges;
-            ResetUnStaged.ImageAlign = ContentAlignment.MiddleLeft;
-            ResetUnStaged.Location = new Point(0, 174);
-            ResetUnStaged.Margin = new Padding(0, 3, 0, 3);
-            ResetUnStaged.Name = "ResetUnStaged";
-            ResetUnStaged.Size = new Size(171, 26);
-            ResetUnStaged.TabIndex = 109;
-            ResetUnStaged.Text = "Reset u&nstaged changes";
-            ResetUnStaged.UseVisualStyleBackColor = true;
-            ResetUnStaged.Click += ResetUnStagedClick;
+            btnResetUnstagedChanges.Image = Properties.Images.ResetWorkingDirChanges;
+            btnResetUnstagedChanges.ImageAlign = ContentAlignment.MiddleLeft;
+            btnResetUnstagedChanges.Location = new Point(0, 174);
+            btnResetUnstagedChanges.Margin = new Padding(0, 3, 0, 3);
+            btnResetUnstagedChanges.Name = "btnResetUnstagedChanges";
+            btnResetUnstagedChanges.Size = new Size(171, 26);
+            btnResetUnstagedChanges.TabIndex = 109;
+            btnResetUnstagedChanges.Text = "Reset u&nstaged changes";
+            btnResetUnstagedChanges.UseVisualStyleBackColor = true;
+            btnResetUnstagedChanges.Click += btnResetUnstagedChanges_Click;
             // 
             // toolbarCommit
             // 
@@ -1563,7 +1563,7 @@ namespace GitUI.CommandsDialogs
         private SplitContainer splitRight;
         private BindingSource gitItemStatusBindingSource;
         private ContextMenuStrip UnstagedFileContext;
-        private ToolStripMenuItem resetChanges;
+        private ToolStripMenuItem tsmiResetUnstagedChanges;
         private ToolStripMenuItem deleteFileToolStripMenuItem;
         private Button SolveMergeconflicts;
         private FileViewer SelectedDiff;
@@ -1674,11 +1674,11 @@ namespace GitUI.CommandsDialogs
         private Button CommitAndPush;
         private Button ResetSoft;
         private Button StashStaged;
-        private Button Reset;
+        private Button btnResetAllChanges;
         private CheckBox Amend;
         private CheckBox ResetAuthor;
         private CheckBox StageInSuperproject;
-        private Button ResetUnStaged;
+        private Button btnResetUnstagedChanges;
         private ToolStripMenuItem noVerifyToolStripMenuItem;
         private ToolStripButton createBranchToolStripButton;
         private ToolStripStatusLabel toolStripStatusBranchIcon;

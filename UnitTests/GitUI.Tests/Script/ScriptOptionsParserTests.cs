@@ -355,6 +355,40 @@ namespace GitUITests.Script
         }
 
         [Test]
+        public void ParseScriptArguments_resolve_HEAD_with_checkedout_branch_name()
+        {
+            string option = "HEAD";
+            string branchName = "this_is_my_branch_name";
+            _module.GetSelectedBranch(emptyIfDetached: true).Returns(branchName);
+
+            string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
+                arguments: "{" + option + "}", option,
+                owner: null, scriptOptionsProvider: null, uiCommands: _commands, allSelectedRevisions: null, selectedTags: null,
+                selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
+                currentTags: null,
+                currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
+
+            result.Should().Be(branchName);
+        }
+
+        [Test]
+        public void ParseScriptArguments_resolve_HEAD_with_detached_head_hash()
+        {
+            string option = "HEAD";
+            string detachedHeadHash = "d54e5cf78a403d5ace3299549be0f6cabee50a63";
+            _module.GetSelectedBranch(emptyIfDetached: true).Returns(string.Empty);
+
+            string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
+                arguments: "{" + option + "}", option,
+                owner: null, scriptOptionsProvider: null, uiCommands: _commands, allSelectedRevisions: null, selectedTags: null,
+                selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
+                currentTags: null, currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null,
+                currentRevision: new GitRevision(ObjectId.Parse(detachedHeadHash)), currentRemote: null);
+
+            result.Should().Be(detachedHeadHash);
+        }
+
+        [Test]
         public void ParseScriptArguments_resolve_QuotedWithBackslashAtEnd()
         {
             _module.WorkingDir.Returns("C:\\test path with whitespaces\\");

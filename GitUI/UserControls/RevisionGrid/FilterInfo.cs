@@ -98,7 +98,7 @@ namespace GitUI.UserControls.RevisionGrid
         public bool ByBranchFilter
         {
             get => AppSettings.BranchFilterEnabled;
-            set => AppSettings.BranchFilterEnabled = value;
+            set => AppSettings.BranchFilterEnabled.Value = value;
         }
 
         public string BranchFilter
@@ -127,7 +127,7 @@ namespace GitUI.UserControls.RevisionGrid
         public bool ShowCurrentBranchOnly
         {
             get => AppSettings.ShowCurrentBranchOnly;
-            set => AppSettings.ShowCurrentBranchOnly = value;
+            set => AppSettings.ShowCurrentBranchOnly.Value = value;
         }
 
         public bool ShowOnlyFirstParent
@@ -139,7 +139,7 @@ namespace GitUI.UserControls.RevisionGrid
         public bool ShowReflogReferences
         {
             get => AppSettings.ShowReflogReferences;
-            set => AppSettings.ShowReflogReferences = value;
+            set => AppSettings.ShowReflogReferences.Value = value;
         }
 
         public bool ShowSimplifyByDecoration

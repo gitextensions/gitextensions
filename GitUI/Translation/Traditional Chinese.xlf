@@ -166,11 +166,6 @@ This action will be performed without warning while checking out branch.</source
         <target>外觀</target>
         
       </trans-unit>
-      <trans-unit id="AvatarProvider.Text">
-        <source>Default</source>
-        <target>預設</target>
-        
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target>清除圖片緩存</target>
@@ -1606,13 +1601,16 @@ Please make sure that Git for Windows is installed or set the correct command ma
         
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
-        <source>Push window</source>
-        <target>推送視窗</target>
+        <source>&amp;Push window</source>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
         <target>添加日志信息</target>
+        
+      </trans-unit>
+      <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
+        <source>Merge graph lanes having common parent</source>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1625,9 +1623,12 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>使用SSL/TLS</target>
         
       </trans-unit>
+      <trans-unit id="gbRevisionGraph.Text">
+        <source>&amp;Revision graph</source>
+        
+      </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
-        <target>寄信上patch</target>
+        <source>&amp;Email settings for sending patches</source>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1641,8 +1642,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
-        <source>Merge window</source>
-        <target>合并窗口</target>
+        <source>&amp;Merge window</source>
         
       </trans-unit>
     </body>
@@ -1709,28 +1709,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>在浏览对话框中显示所有父提交的文件差异</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE), show the difference
-between the commits as well as the difference from BASE to the selected commits.
-See documentation for more details about icons and range diffs.
-- For multiple selected commits (up to four), show the difference for
-all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to
-the last selected commit.</source>
-        <target>显示所选提交之间的所有差异，但不限于一个差异。
-
--对于单个选定提交，显示其与父提交的差异。
--对于单个选定的合并提交，显示与所有父级的差异。
--对于具有共同祖先（基）的两个选定提交，显示提交之间差异，包括从基提交到所选提交之间的差异。
-有关图标和范围差异的详细信息，请参阅文档。
--对于多个选定提交（最多四个），显示从第一个选择的提交到最后一个选择的提交的差异。
--对于四个以上的选定提交，显示从第一个选择的提交到最后一个选择的提交的差异。</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -6142,14 +6120,17 @@ weirdchars.txt text
       </trans-unit>
       <trans-unit id="mnuClear.Text">
         <source>C&amp;lear</source>
+        <target>清除(&amp;L)</target>
         
       </trans-unit>
       <trans-unit id="mnuCopyCommandLine.Text">
         <source>&amp;Copy full command line</source>
+        <target>复制完整命令行(&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="mnuSaveToFile.Text">
         <source>&amp;Save to file</source>
+        <target>保存到文件(&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="tabPageCommandCache.Text">
@@ -12174,15 +12155,6 @@ Current Branch:
       <trans-unit id="lblMenuEntries.Text">
         <source>Configuration of items in the context menu</source>
         <target>右鍵選單中項目的設定</target>
-        
-      </trans-unit>
-      <trans-unit id="menuHelp.toolTip1">
-        <source>* Checked: at top level for direct access
-* Intermediate: in a cascaded context menu
-* Unchecked: not added to the menu</source>
-        <target>* 已勾選：位於頂層以直接存取
-* 中介：在層疊的上下文選單中
-* 未勾選：不會新增至選單中</target>
         
       </trans-unit>
     </body>

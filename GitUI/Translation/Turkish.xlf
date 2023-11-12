@@ -167,11 +167,6 @@ Bu eylem, daldan çıkış yapılırken, uyarı yapılmadan gerçekleştirilecek
         <target>Görünüm</target>
         
       </trans-unit>
-      <trans-unit id="AvatarProvider.Text">
-        <source>Default</source>
-        <target>Varsayılan</target>
-        
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target>Resim önbelleğini temizle</target>
@@ -1605,13 +1600,16 @@ Lütfen, Windows için Git'in kurulu olduğuna emin ol veya doğru komutu elle a
         
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
-        <source>Push window</source>
-        <target>İtme penceresi</target>
+        <source>&amp;Push window</source>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
         <target>Günlük mesajları ekle</target>
+        
+      </trans-unit>
+      <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
+        <source>Merge graph lanes having common parent</source>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1624,9 +1622,12 @@ Lütfen, Windows için Git'in kurulu olduğuna emin ol veya doğru komutu elle a
         <target>SSL/TLS kullan</target>
         
       </trans-unit>
+      <trans-unit id="gbRevisionGraph.Text">
+        <source>&amp;Revision graph</source>
+        
+      </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
-        <source>Email settings for sending patches</source>
-        <target>Yama dosyalarını göndermek için e-posta ayarları</target>
+        <source>&amp;Email settings for sending patches</source>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1640,8 +1641,7 @@ Lütfen, Windows için Git'in kurulu olduğuna emin ol veya doğru komutu elle a
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
-        <source>Merge window</source>
-        <target>Birleştirme penceresi</target>
+        <source>&amp;Merge window</source>
         
       </trans-unit>
     </body>
@@ -1708,28 +1708,6 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>Gözat iletişim kutusundaki tüm ebeveynler için dosya farklılıklarını göster</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.ToolTipText">
-        <source>Show all differences between the selected commits, not limiting to only one difference.
-
-- For a single selected commit, show the difference with its parent commit.
-- For a single selected merge commit, show the difference with all parents.
-- For two selected commits with a common ancestor (BASE), show the difference
-between the commits as well as the difference from BASE to the selected commits.
-See documentation for more details about icons and range diffs.
-- For multiple selected commits (up to four), show the difference for
-all the first selected with the last selected commit.
-- For more than four selected commits, show the difference from the first to
-the last selected commit.</source>
-        <target>Yalnızca bir farkla sınırlandırmadan, seçili teslimler arasındaki tüm farklılıkları göster.
-
-- Seçili tek bir teslim için, teslimin ebeveyn ile olan farkını göster.
-- Seçili tek bir birleştirme teslimi için, tüm ebeveynlerle olan farkını göster.
-- Ortak bir ataya (BASE-TEMEL) sahip iki seçili teslim için, teslimler arasındaki farkı ve BASE ile seçili teslimler arasındaki farkı göster.
-Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bak.
-- Birden fazla seçili teslim için (dörde kadar), son seçilen teslim ile ilk seçilen teslimle olan tüm farkını göster.
-- Dörtten fazla seçili teslim için, ilk seçilen teslimden son seçilen teslime kadar olan farkı göster.</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -5516,6 +5494,7 @@ Bir dalı silmek, teslimlerin de silinmesine neden olabilir!</target>
       </trans-unit>
       <trans-unit id="firstCommitGroup.Text">
         <source>BASE</source>
+        <target>BASE (TEMEL)</target>
         
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
@@ -8806,6 +8785,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="HideMergeCommitsCheck.Text">
         <source>Hide merge commi&amp;ts</source>
+        <target>Birleştirme teslimlerini gizle</target>
         
       </trans-unit>
       <trans-unit id="IgnoreCase.Text">
@@ -10102,7 +10082,7 @@ Onları kaydetmek ister misin?</target>
     <body>
       <trans-unit id="_gotoUserManualControlTooltip.Text">
         <source>Read more about this feature at {0}</source>
-        <target>Bu özellikle ilgili daha fazla bilgiyi, {0} adresinde bulabilirsin. </target>
+        <target>Bu özellikle ilgili daha fazla bilgiyi, {0} adresinde bulabilirsin.</target>
         
       </trans-unit>
       <trans-unit id="linkLabelHelp.Text">
@@ -10852,6 +10832,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="tsbShowStashes.Text">
         <source>St&amp;ashes</source>
+        <target>Zulalar</target>
         
       </trans-unit>
       <trans-unit id="tsbShowStashes.ToolTipText">
@@ -12154,12 +12135,6 @@ Geçerli Dal:
         <target>Bağlam menüsündeki öğeleri yapılandır</target>
         
       </trans-unit>
-      <trans-unit id="menuHelp.toolTip1">
-        <source>* Checked: at top level for direct access
-* Intermediate: in a cascaded context menu
-* Unchecked: not added to the menu</source>
-        
-      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="SortingSettingsPage" source-language="en" target-language="tr">
@@ -12336,10 +12311,12 @@ OpenSSH kullanıldığında, komut satırı iletişim kutuları gösterilir!
       </trans-unit>
       <trans-unit id="Rebase.Text">
         <source>&amp;Rebase current branch on this tag revision...</source>
+        <target>Geçerli dalı bu etiket revizyonuna göre yeniden temellendir...</target>
         
       </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
         <source>Rebase current branch on this tag</source>
+        <target>Geçerli dalı bu etikete göre yeniden temellendir</target>
         
       </trans-unit>
       <trans-unit id="ResetTooltip.Text">
@@ -12653,10 +12630,12 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_failedToLoadAnAssembly.Text">
         <source>Failed to load an assembly</source>
+        <target>Bir derleme(assembly) yüklenemedi</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
         <source>Could not load file or assembly '{0}'.</source>
+        <target>'{0}' dosyası veya derlemesi(assembly) yüklenemedi.</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
