@@ -133,7 +133,7 @@ namespace GitCommands
             const string defaultDevelopmentVersion = "33.33";
             if (!string.IsNullOrWhiteSpace(version) && !version.StartsWith(defaultDevelopmentVersion))
             {
-                // We expect version to be something starting with "X.Y"
+                // We expect version to be something starting with "X.Y" (ignore patch versions)
                 Match match = Regex.Match(version, @"^(\d+)\.(\d+)");
                 if (match.Success)
                 {
