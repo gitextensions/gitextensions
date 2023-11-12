@@ -30,7 +30,7 @@ namespace GitUI.Editor
         Task FindNextAsync(bool searchForwardOrOpenWithDifftool);
 
         string GetText();
-        void SetText(string text, Action? openWithDifftool, bool isDiff = false);
+        void SetText(string text, Action? openWithDifftool);
         void SetHighlighting(string syntax);
         void SetHighlightingForFile(string filename);
         void HighlightLines(int startLine, int endLine, Color color);
@@ -38,7 +38,6 @@ namespace GitUI.Editor
         string GetSelectedText();
         int GetSelectionPosition();
         int GetSelectionLength();
-        void AddTextHighlighting();
         Action? OpenWithDifftool { get; }
         int VScrollPosition { get; set; }
 
@@ -48,12 +47,8 @@ namespace GitUI.Editor
         bool ShowTabs { get; set; }
         int VRulerPosition { get; set; }
         bool IsReadOnly { get; set; }
-        bool Visible { get; set; }
 
-        int FirstVisibleLine { get; set; }
         int GetLineFromVisualPosY(int visualPosY);
-        int LineAtCaret { get; set; }
-        string GetLineText(int line);
         int TotalNumberOfLines { get; }
 
         /// <summary>

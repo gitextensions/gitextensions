@@ -48,7 +48,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         Assert.False(form.GetTestAccessor().HasChanges);
 
                         FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
-                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, isDiff: false);
+                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null);
 
                         Assert.True(form.GetTestAccessor().HasChanges);
 
@@ -86,7 +86,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         Assert.False(form.GetTestAccessor().HasChanges);
 
                         FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
-                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, isDiff: false);
+                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null);
 
                         Assert.True(form.GetTestAccessor().HasChanges);
 
@@ -94,7 +94,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                         Assert.False(form.GetTestAccessor().HasChanges);
 
-                        Assert.AreEqual(lineNumerDefault, fileViewerInternal.CurrentFileLine(false));
+                        Assert.AreEqual(lineNumerDefault, fileViewerInternal.CurrentFileLine());
 
                         return Task.CompletedTask;
                     });
@@ -138,7 +138,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     form =>
                     {
                         FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
-                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, isDiff: false);
+                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null);
                         form.GetTestAccessor().SaveChanges();
                         return Task.CompletedTask;
                     });

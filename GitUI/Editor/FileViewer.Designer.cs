@@ -408,7 +408,6 @@ namespace GitUI.Editor
             // internalFileViewerControl
             // 
             internalFileViewer.Dock = DockStyle.Fill;
-            internalFileViewer.FirstVisibleLine = 0;
             internalFileViewer.IsReadOnly = false;
             internalFileViewer.Location = new Point(0, 40);
             internalFileViewer.Margin = new Padding(0);

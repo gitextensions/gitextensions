@@ -1,5 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Patches;
+using GitCommands.Settings;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
@@ -47,6 +49,7 @@ namespace GitUI.Editor
                 _findAndReplaceForm.Dispose();
             };
 
+            FirstVisibleLine = 0;
             _currentViewPositionCache = new CurrentViewPositionCache(this);
             TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectionChanged += SelectionManagerSelectionChanged;
 
@@ -225,11 +228,23 @@ namespace GitUI.Editor
 
         public bool? ShowLineNumbers { get; set; }
 
-        public void SetText(string text, Action? openWithDifftool, bool isDiff = false)
+        /// <summary>
+        /// Set plain text in the editor.
+        /// </summary>
+        /// <param name="text">The text to set in the editor.</param>
+        /// <param name="openWithDifftool">The command to open the difftool.</param>
+        public void SetText(string text, Action? openWithDifftool)
         {
-            SetText(text, openWithDifftool, isDiff, false);
+            SetText(text, openWithDifftool, isDiff: false, isRangeDiff: false);
         }
 
+        /// <summary>
+        /// Set plain text in the editor.
+        /// </summary>
+        /// <param name="text">The text to set in the editor.</param>
+        /// <param name="openWithDifftool">The command to open the difftool.</param>
+        /// <param name="isDiff"><c>true</c> if the text is in diff format.</param>
+        /// <param name="isRangeDiff"><c>true</c> if the text is in git-range-diff format.</param>
         public void SetText(string text, Action? openWithDifftool, bool isDiff, bool isRangeDiff)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -403,7 +418,7 @@ namespace GitUI.Editor
         /// <returns>An array with the prefixes.</returns>
         /// <param name="line">The line to check.</param>
         /// <exception cref="ArgumentException"></exception>
-        public bool IsSearchMatch(string line)
+        private bool IsSearchMatch(string line)
         {
             if (_textHighlightService is not DiffHighlightService highlightService)
             {
@@ -411,6 +426,161 @@ namespace GitUI.Editor
             }
 
             return highlightService.IsSearchMatch(line);
+        }
+
+        /// <summary>
+        /// Go to next change
+        /// For normal diffs, this is the next diff
+        /// For range-diff, it is the next commit summary header.
+        /// </summary>
+        /// <param name="contextLines">Number of context lines, to include header for new diff.</param>
+        public void GoToNextChange(int contextLines)
+        {
+            bool isRangeDiff = _textHighlightService is RangeDiffHighlightService;
+            int totalNumberOfLines = TotalNumberOfLines;
+            if (isRangeDiff)
+            {
+                int line = LineAtCaret + 1;
+                while (line < totalNumberOfLines && !IsSearchMatch(GetLineText(line)))
+                {
+                    line++;
+                }
+
+                // Avoid going to the last empty line
+                if (line < totalNumberOfLines
+                    && GetLineText(line) is string lineContent
+                    && IsSearchMatch(lineContent)
+                    && !string.IsNullOrWhiteSpace(lineContent))
+                {
+                    FirstVisibleLine = line;
+                    LineAtCaret = line;
+                }
+
+                return;
+            }
+
+            // Skip the file header
+            const int firstValidIndex = 4;
+            int startLine = Math.Max(firstValidIndex, LineAtCaret);
+
+            bool emptyLineCheck = false;
+            for (int line = startLine; line < totalNumberOfLines; line++)
+            {
+                string lineContent = GetLineText(line);
+
+                if (IsSearchMatch(lineContent))
+                {
+                    if (emptyLineCheck)
+                    {
+                        // Include the header with the (possible) function summary line
+                        FirstVisibleLine = Math.Max(line - contextLines - 1, 0);
+                        LineAtCaret = line;
+                        return;
+                    }
+                }
+                else
+                {
+                    emptyLineCheck = true;
+                }
+            }
+        }
+
+        public void GoToPreviousChange(int contextLines)
+        {
+            bool isRangeDiff = _textHighlightService is RangeDiffHighlightService;
+            if (isRangeDiff)
+            {
+                int line = LineAtCaret - 1;
+                while (line >= 0 && !IsSearchMatch(GetLineText(line)))
+                {
+                    line--;
+                }
+
+                if (line >= 0 && IsSearchMatch(GetLineText(line)))
+                {
+                    FirstVisibleLine = line;
+                    LineAtCaret = line;
+                }
+
+                return;
+            }
+
+            // Skip the file header
+            const int firstValidIndex = 4;
+            int startLine = LineAtCaret;
+            while (startLine > firstValidIndex && IsSearchMatch(GetLineText(startLine)))
+            {
+                // Go to line before of current diff block
+                startLine--;
+            }
+
+            // Find the start of previous diff
+            bool emptyLineCheck = false;
+            for (int line = startLine; line >= firstValidIndex; line--)
+            {
+                if (IsSearchMatch(GetLineText(line)))
+                {
+                    emptyLineCheck = true;
+                    continue;
+                }
+
+                if (!emptyLineCheck)
+                {
+                    continue;
+                }
+
+                // Restore to last diff
+                line++;
+
+                // Include the header with the (possible) function summary line
+                FirstVisibleLine = Math.Max(line - contextLines - 1, 0);
+                LineAtCaret = line;
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Copy the the text selected in the editor, filtering out lines starting with the given character.
+        /// </summary>
+        /// <param name="startChar">The start character to ignore for diffs.</param>
+        public void CopyNotStartingWith(char startChar)
+        {
+            string text = GetSelectedText();
+            bool noSelection = false;
+
+            if (string.IsNullOrEmpty(text))
+            {
+                text = GetText();
+                noSelection = true;
+            }
+
+            bool isDiff = _textHighlightService is DiffHighlightService;
+            if (isDiff)
+            {
+                // add artificial space if selected text is not starting from line beginning, it will be removed later
+                int pos = noSelection ? 0 : GetSelectionPosition();
+                string fileText = GetText();
+
+                if (pos > 0 && fileText[pos - 1] != '\n')
+                {
+                    text = " " + text;
+                }
+
+                IEnumerable<string> lines = text.LazySplit('\n')
+                    .Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
+                int hpos = fileText.IndexOf("\n@@");
+
+                // if header is selected then don't remove diff extra chars
+                if (hpos <= pos)
+                {
+                    char[] specials = { ' ', '-', '+' };
+                    lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s[1..] : s);
+                }
+
+                text = string.Join("\n", lines);
+            }
+
+            ClipboardUtil.TrySetText(text.AdjustLineEndings(Module.GetEffectiveSettingsByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
         }
 
         public int HScrollPosition
@@ -471,7 +641,7 @@ namespace GitUI.Editor
             set => TextEditor.VRulerRow = value;
         }
 
-        public int FirstVisibleLine
+        private int FirstVisibleLine
         {
             get => TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
             set => TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = value;
@@ -482,7 +652,7 @@ namespace GitUI.Editor
             return TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(visualPosY);
         }
 
-        public string GetLineText(int line)
+        private string GetLineText(int line)
         {
             if (line >= TextEditor.Document.TotalNumberOfLines)
             {
@@ -532,13 +702,14 @@ namespace GitUI.Editor
 
         public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxLineNumber;
 
-        public int CurrentFileLine(bool isDiff)
+        public int CurrentFileLine()
         {
+            bool isDiff = _textHighlightService is DiffHighlightService;
             _currentViewPositionCache.Capture();
             return _currentViewPositionCache.CurrentFileLine(isDiff);
         }
 
-        public int LineAtCaret
+        private int LineAtCaret
         {
             get => TextEditor.ActiveTextAreaControl.Caret.Position.Line;
             set => TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(TextEditor.ActiveTextAreaControl.Caret.Position.Column, value);
@@ -682,7 +853,7 @@ namespace GitUI.Editor
                                             currentViewPosition.CaretPosition.Line :
                                             currentViewPosition.FirstVisibleLine;
 
-                // search downwards for a code line, i.e. a line with line numbers
+                // search downwards for a text line, i.e. a line with line numbers
                 int activeLine = initialActiveLine;
                 while (activeLine < currentViewPosition.TotalNumberOfLines && currentViewPosition.ActiveLineNum is null)
                 {
