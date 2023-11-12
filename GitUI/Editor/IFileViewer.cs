@@ -33,13 +33,12 @@ namespace GitUI.Editor
         void SetText(string text, Action? openWithDifftool, bool isDiff = false);
         void SetHighlighting(string syntax);
         void SetHighlightingForFile(string filename);
-        void HighlightLine(int line, Color color);
         void HighlightLines(int startLine, int endLine, Color color);
         void ClearHighlighting();
         string GetSelectedText();
         int GetSelectionPosition();
         int GetSelectionLength();
-        void AddPatchHighlighting();
+        void AddTextHighlighting();
         Action? OpenWithDifftool { get; }
         int VScrollPosition { get; set; }
 

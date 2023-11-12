@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Patches;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
@@ -25,7 +26,7 @@ namespace GitUI.Editor
         private readonly FindAndReplaceForm _findAndReplaceForm = new();
         private readonly CurrentViewPositionCache _currentViewPositionCache;
         private DiffViewerLineNumberControl _lineNumbersControl;
-        private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
+        private ITextHighlightService _textHighlightService = TextHighlightService.Instance;
         private bool _shouldScrollToTop = false;
         private bool _shouldScrollToBottom = false;
         private readonly int _bottomBlankHeight = DpiUtil.Scale(300);
@@ -40,7 +41,7 @@ namespace GitUI.Editor
 
             Disposed += (sender, e) =>
             {
-                //// _diffHighlightService not disposable
+                //// _textHighlightService not disposable
                 //// _lineNumbersControl not disposable
                 //// _currentViewPositionCache not disposable
                 _findAndReplaceForm.Dispose();
@@ -100,7 +101,7 @@ namespace GitUI.Editor
                 TextEditor.Document.MarkerStrategy.AddMarker(selectionMarker);
             }
 
-            _diffHighlightService.AddPatchHighlighting(TextEditor.Document);
+            _textHighlightService.AddTextHighlighting(TextEditor.Document);
             TextEditor.ActiveTextAreaControl.TextArea.Invalidate();
         }
 
@@ -236,34 +237,42 @@ namespace GitUI.Editor
             _currentViewPositionCache.Capture();
 
             OpenWithDifftool = openWithDifftool;
-            _lineNumbersControl.Clear(isDiff && !isRangeDiff);
-            _lineNumbersControl.SetVisibility(isDiff && !isRangeDiff);
+            bool hasLineNumberControl = isDiff && !isRangeDiff;
+            _lineNumbersControl.Clear(hasLineNumberControl);
+            _lineNumbersControl.SetVisibility(hasLineNumberControl);
 
-            if (isDiff)
+            if (hasLineNumberControl)
             {
                 int index = TextEditor.ActiveTextAreaControl.TextArea.LeftMargins.IndexOf(_lineNumbersControl);
                 if (index == -1)
                 {
                     TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
                 }
+            }
 
-                _diffHighlightService = isRangeDiff
-                    ? RangeDiffHighlightService.Instance
-                    : DiffHighlightService.IsCombinedDiff(text)
+            if (isRangeDiff)
+            {
+                _textHighlightService = RangeDiffHighlightService.Instance;
+            }
+            else if (isDiff)
+            {
+                // Get if the given diff is a combined diff, with changes from all parents.
+                // <see href="https://git-scm.com/docs/git-diff#_combined_diff_format"/> for more information.
+                _textHighlightService = PatchProcessor.IsCombinedDiff(text)
                         ? CombinedDiffHighlightService.Instance
                         : DiffHighlightService.Instance;
-
-                if (!isRangeDiff)
-                {
-                    _lineNumbersControl.DisplayLineNumFor(text);
-                }
+                _lineNumbersControl.DisplayLineNumFor(text);
+            }
+            else
+            {
+                _textHighlightService = TextHighlightService.Instance;
             }
 
             TextEditor.Text = text;
 
             // important to set after the text was changed
             // otherwise the may be rendering artifacts as noted in #5568
-            TextEditor.ShowLineNumbers = ShowLineNumbers ?? !isDiff;
+            TextEditor.ShowLineNumbers = ShowLineNumbers ?? !hasLineNumberControl && !isRangeDiff;
             if (ShowLineNumbers.HasValue && !ShowLineNumbers.Value)
             {
                 Padding = new Padding(DpiUtil.Scale(5), Padding.Top, Padding.Right, Padding.Bottom);
@@ -361,10 +370,47 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.Dock = DockStyle.Fill;
         }
 
-        public void AddPatchHighlighting()
+        /// <summary>
+        /// Add text highlighting to the document.
+        /// This is primarily used to highlight changed files for diffs.
+        /// </summary>
+        public void AddTextHighlighting()
         {
             TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
-            _diffHighlightService.AddPatchHighlighting(TextEditor.Document);
+            _textHighlightService.AddTextHighlighting(TextEditor.Document);
+        }
+
+        /// <summary>
+        /// Get the full prefix for lines with differences.
+        /// </summary>
+        /// <returns>An array with the prefixes.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public string[] GetFullDiffPrefixes()
+        {
+            if (_textHighlightService is not DiffHighlightService highlightService)
+            {
+                throw new ArgumentException($"Unexpected highlight service {_textHighlightService.GetType()}, not a diff type.");
+            }
+
+            return highlightService.GetFullDiffPrefixes();
+        }
+
+        /// <summary>
+        /// Check if the line is a search match.
+        /// For normal diff, this a added deleted line.
+        /// For range-diff, this is a header.
+        /// </summary>
+        /// <returns>An array with the prefixes.</returns>
+        /// <param name="line">The line to check.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public bool IsSearchMatch(string line)
+        {
+            if (_textHighlightService is not DiffHighlightService highlightService)
+            {
+                throw new ArgumentException($"Unexpected highlight service {_textHighlightService.GetType()}, not a diff type.");
+            }
+
+            return highlightService.IsSearchMatch(line);
         }
 
         public int HScrollPosition
@@ -498,14 +544,20 @@ namespace GitUI.Editor
             set => TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(TextEditor.ActiveTextAreaControl.Caret.Position.Column, value);
         }
 
-        public void HighlightLine(int line, Color color)
-        {
-            _diffHighlightService.HighlightLine(TextEditor.Document, line, color);
-        }
-
         public void HighlightLines(int startLine, int endLine, Color color)
         {
-            _diffHighlightService.HighlightLines(TextEditor.Document, startLine, endLine, color);
+            IDocument document = TextEditor.Document;
+            if (startLine > endLine || endLine >= document.TotalNumberOfLines)
+            {
+                return;
+            }
+
+            MarkerStrategy markerStrategy = document.MarkerStrategy;
+            LineSegment startLineSegment = document.GetLineSegment(startLine);
+            LineSegment endLineSegment = document.GetLineSegment(endLine);
+            markerStrategy.AddMarker(new TextMarker(startLineSegment.Offset,
+                                                    endLineSegment.Offset - startLineSegment.Offset + endLineSegment.Length,
+                                                    TextMarkerType.SolidBlock, color));
         }
 
         public void ClearHighlighting()
@@ -621,7 +673,7 @@ namespace GitUI.Editor
 
                 if (_viewer.TextEditor.ShowLineNumbers)
                 {
-                    // a diff was displayed
+                    // Full contents is shown, just set the line number
                     _currentViewPosition = currentViewPosition;
                     return;
                 }

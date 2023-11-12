@@ -12,7 +12,6 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
-using GitUI.Editor.Diff;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.UserControls;
@@ -74,14 +73,6 @@ namespace GitUI.Editor
         private readonly ContinuousScrollEventManager _continuousScrollEventManager;
         private FileStatusItem? _viewItem;
         private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
-
-        private static string[] _rangeDiffFullPrefixes = { "      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    " };
-        private static string[] _combinedDiffFullPrefixes = { "  ", "++", "+ ", " +", "--", "- ", " -" };
-        private static string[] _normalDiffFullPrefixes = { " ", "+", "-" };
-
-        private static string[] _rangeDiffPrefixes = { "    " };
-        private static string[] _combinedDiffPrefixes = { "+", "-", " +", " -" };
-        private static string[] _normalDiffPrefixes = { "+", "-" };
 
         [GeneratedRegex("warning: .*has type .* expected .*")]
         private static partial Regex FileModeWarningRegex();
@@ -175,10 +166,7 @@ namespace GitUI.Editor
             };
             internalFileViewer.TextChanged += (sender, e) =>
             {
-                if (IsDiffView(_viewMode))
-                {
-                    internalFileViewer.AddPatchHighlighting();
-                }
+                internalFileViewer.AddTextHighlighting();
 
                 TextChanged?.Invoke(sender, e);
             };
@@ -764,9 +752,7 @@ namespace GitUI.Editor
         // Private methods
 
         private static bool IsDiffView(ViewMode viewMode)
-        {
-            return viewMode is (ViewMode.Diff or ViewMode.FixedDiff or ViewMode.RangeDiff);
-        }
+            => viewMode is (ViewMode.Diff or ViewMode.FixedDiff or ViewMode.RangeDiff);
 
         private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode)
         {
@@ -1717,11 +1703,7 @@ namespace GitUI.Editor
 
             string RemovePrefix(string line)
             {
-                string[] specials = _viewMode == ViewMode.RangeDiff
-                    ? _rangeDiffFullPrefixes
-                    : DiffHighlightService.IsCombinedDiff(internalFileViewer.GetText())
-                        ? _combinedDiffFullPrefixes
-                        : _normalDiffFullPrefixes;
+                string[] specials = internalFileViewer.GetFullDiffPrefixes();
 
                 foreach (string special in specials.Where(line.StartsWith))
                 {
@@ -1776,12 +1758,6 @@ namespace GitUI.Editor
         {
             Focus();
 
-            string[] inChange = _viewMode == ViewMode.RangeDiff
-                ? _rangeDiffPrefixes
-                : DiffHighlightService.IsCombinedDiff(internalFileViewer.GetText())
-                    ? _combinedDiffPrefixes
-                    : _normalDiffPrefixes;
-
             // skip the first pseudo-change containing the file names for normal diffs
             int headerEndLine = _viewMode == ViewMode.RangeDiff ? 0 : 4;
             int currentVisibleLine = internalFileViewer.LineAtCaret;
@@ -1792,7 +1768,7 @@ namespace GitUI.Editor
             {
                 string lineContent = internalFileViewer.GetLineText(line);
 
-                if (_viewMode == ViewMode.RangeDiff ^ lineContent.StartsWithAny(inChange))
+                if (internalFileViewer.IsSearchMatch(lineContent))
                 {
                     if (emptyLineCheck)
                     {
@@ -1816,11 +1792,6 @@ namespace GitUI.Editor
             Focus();
 
             int startLine = internalFileViewer.LineAtCaret;
-            string[] inChange = _viewMode == ViewMode.RangeDiff
-                ? _rangeDiffPrefixes
-                : DiffHighlightService.IsCombinedDiff(internalFileViewer.GetText())
-                    ? _combinedDiffPrefixes
-                    : _normalDiffPrefixes;
 
             // go to the top of change block
             if (_viewMode == ViewMode.RangeDiff)
@@ -1831,7 +1802,7 @@ namespace GitUI.Editor
 
             int headerEndLine = _viewMode == ViewMode.RangeDiff ? 0 : 4;
             while (startLine > headerEndLine &&
-                   internalFileViewer.GetLineText(startLine).StartsWithAny(inChange))
+                   (_viewMode == ViewMode.RangeDiff) ^ internalFileViewer.IsSearchMatch(internalFileViewer.GetLineText(startLine)))
             {
                 startLine--;
             }
@@ -1848,7 +1819,7 @@ namespace GitUI.Editor
             {
                 string lineContent = internalFileViewer.GetLineText(line);
 
-                if (lineContent.StartsWithAny(inChange))
+                if (internalFileViewer.IsSearchMatch(lineContent))
                 {
                     emptyLineCheck = true;
                     continue;
