@@ -16,21 +16,24 @@ namespace GitCommandsTests.Settings
         [TestCase(null, "https://git-extensions-documentation.readthedocs.org/en/main/")]
         [TestCase("", "https://git-extensions-documentation.readthedocs.org/en/main/")]
         [TestCase("\t", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("master", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("feature/test/mystuff", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("releases", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("releases/4.5", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("release", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("release/a", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("release/5", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("release/a4.5", "https://git-extensions-documentation.readthedocs.org/en/main/")]
-        [TestCase("release/4.5", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
-        [TestCase("release/40.501", "https://git-extensions-documentation.readthedocs.org/en/release-40.501/")]
-        public void SetDocumentationBaseUrl_should_currectly_append_verison(string currentGitBranch, string expected)
+        [TestCase("33.33", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("33.33.33", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("33.33.33.33", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("a", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("5", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("v4.5", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("4.5", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
+        [TestCase("4.5.", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
+        [TestCase("4.5.0", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
+        [TestCase("4.5.2", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
+        [TestCase("4.5.2.1", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
+        [TestCase("4.5.2x", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
+        [TestCase("40.501.123", "https://git-extensions-documentation.readthedocs.org/en/release-40.501/")]
+        public void SetDocumentationBaseUrl_should_currectly_append_version(string version, string expected)
         {
             AppSettings.GetTestAccessor().ResetDocumentationBaseUrl();
 
-            AppSettings.SetDocumentationBaseUrl(currentGitBranch);
+            AppSettings.SetDocumentationBaseUrl(version);
             AppSettings.DocumentationBaseUrl.Should().Be(expected);
         }
 

@@ -122,7 +122,7 @@ namespace GitCommands
             get => _documentationBaseUrl ?? throw new InvalidOperationException($"Call {nameof(SetDocumentationBaseUrl)} first to set the documentation base URL.");
         }
 
-        internal static void SetDocumentationBaseUrl(string currentGitBranch)
+        internal static void SetDocumentationBaseUrl(string version)
         {
             if (_documentationBaseUrl is not null)
             {
@@ -130,14 +130,14 @@ namespace GitCommands
             }
 
             string? docVersion = "en/main/";
-
-            if (!string.IsNullOrWhiteSpace(currentGitBranch))
+            const string defaultDevelopmentVersion = "33.33";
+            if (!string.IsNullOrWhiteSpace(version) && !version.StartsWith(defaultDevelopmentVersion))
             {
-                // We expect current branch to be something line "release/X.Y"
-                Match match = Regex.Match(currentGitBranch, "release/\\d*\\.\\d*");
+                // We expect version to be something starting with "X.Y" (ignore patch versions)
+                Match match = Regex.Match(version, @"^(\d+)\.(\d+)");
                 if (match.Success)
                 {
-                    docVersion = $"en/{currentGitBranch.Replace("/", "-")}/";
+                    docVersion = $"en/release-{match.Groups[1]}.{match.Groups[2]}/";
                 }
             }
 
