@@ -6,6 +6,9 @@ namespace GitUI.Editor.Diff
 {
     public class CombinedDiffHighlightService : DiffHighlightService
     {
+        private static readonly string[] _diffFullPrefixes = { "  ", "++", "+ ", " +", "--", "- ", " -" };
+        private static readonly string[] _diffSearchPrefixes = { "+", "-", " +", " -" };
+
         public static new CombinedDiffHighlightService Instance { get; } = new();
 
         protected CombinedDiffHighlightService()
@@ -15,6 +18,16 @@ namespace GitUI.Editor.Diff
         protected override int GetDiffContentOffset()
         {
             return 2;
+        }
+
+        public override string[] GetFullDiffPrefixes()
+        {
+            return _diffFullPrefixes;
+        }
+
+        public override bool IsSearchMatch(string line)
+        {
+            return line.StartsWithAny(_diffSearchPrefixes);
         }
 
         protected override int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)

@@ -1,14 +1,16 @@
-﻿using GitCommands.Patches;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
-using JetBrains.Annotations;
 
 namespace GitUI.Editor.Diff
 {
-    public class DiffHighlightService
+    public class DiffHighlightService : TextHighlightService
     {
-        public static DiffHighlightService Instance { get; } = new();
+        // Patterns to check for patches in diff files
+        private static readonly string[] _diffFullPrefixes = { " ", "+", "-" };
+        private static readonly string[] _diffSearchPrefixes = { "+", "-" };
+
+        public static new DiffHighlightService Instance { get; } = new();
 
         protected readonly LinePrefixHelper LinePrefixHelper = new(new LineSegmentGetter());
 
@@ -16,10 +18,19 @@ namespace GitUI.Editor.Diff
         {
         }
 
-        [ContractAnnotation("diff:null=>false")]
-        public static bool IsCombinedDiff(string? diff)
+        protected virtual int GetDiffContentOffset()
         {
-            return PatchProcessor.IsCombinedDiff(diff);
+            return 1;
+        }
+
+        public virtual string[] GetFullDiffPrefixes()
+        {
+            return _diffFullPrefixes;
+        }
+
+        public virtual bool IsSearchMatch(string line)
+        {
+            return line.StartsWithAny(_diffSearchPrefixes);
         }
 
         private static void MarkDifference(IDocument document, List<ISegment> linesRemoved, List<ISegment> linesAdded, int beginOffset)
@@ -128,11 +139,6 @@ namespace GitUI.Editor.Diff
             }
         }
 
-        protected virtual int GetDiffContentOffset()
-        {
-            return 1;
-        }
-
         protected virtual List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
         {
             return LinePrefixHelper.GetLinesStartingWith(document, ref line, "+", ref found);
@@ -175,7 +181,7 @@ namespace GitUI.Editor.Diff
                 => invertMatch ^ LinePrefixHelper.DoesLineStartWith(document, offset, prefixStr);
         }
 
-        public virtual void AddPatchHighlighting(IDocument document)
+        public override void AddTextHighlighting(IDocument document)
         {
             bool forceAbort = false;
 
@@ -207,34 +213,6 @@ namespace GitUI.Editor.Diff
             ProcessLineSegment(document, ref line, lineSegment, "+", AppColor.DiffAdded.GetThemeColor());
             ProcessLineSegment(document, ref line, lineSegment, "-", AppColor.DiffRemoved.GetThemeColor());
             return line;
-        }
-
-        public void HighlightLine(IDocument document, int line, Color color)
-        {
-            if (line >= document.TotalNumberOfLines)
-            {
-                return;
-            }
-
-            MarkerStrategy markerStrategy = document.MarkerStrategy;
-            LineSegment lineSegment = document.GetLineSegment(line);
-            markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
-                                                    lineSegment.Length, TextMarkerType.SolidBlock, color));
-        }
-
-        public void HighlightLines(IDocument document, int startLine, int endLine, Color color)
-        {
-            if (startLine > endLine || endLine >= document.TotalNumberOfLines)
-            {
-                return;
-            }
-
-            MarkerStrategy markerStrategy = document.MarkerStrategy;
-            LineSegment startLineSegment = document.GetLineSegment(startLine);
-            LineSegment endLineSegment = document.GetLineSegment(endLine);
-            markerStrategy.AddMarker(new TextMarker(startLineSegment.Offset,
-                                                    endLineSegment.Offset - startLineSegment.Offset + endLineSegment.Length,
-                                                    TextMarkerType.SolidBlock, color));
         }
     }
 }

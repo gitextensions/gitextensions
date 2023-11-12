@@ -6,6 +6,9 @@ namespace GitUI.Editor.Diff
 {
     public class RangeDiffHighlightService : DiffHighlightService
     {
+        private static readonly string[] _diffFullPrefixes = { "      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    " };
+        private static readonly string[] _diffSearchPrefixes = { "    " };
+
         public static new RangeDiffHighlightService Instance { get; } = new();
 
         protected RangeDiffHighlightService()
@@ -18,7 +21,18 @@ namespace GitUI.Editor.Diff
             return 6;
         }
 
-        public override void AddPatchHighlighting(IDocument document)
+        public override string[] GetFullDiffPrefixes()
+        {
+            return _diffFullPrefixes;
+        }
+
+        // For range-diff, this is a negative check, search is for headers
+        public override bool IsSearchMatch(string line)
+        {
+            return !line.StartsWithAny(_diffSearchPrefixes);
+        }
+
+        public override void AddTextHighlighting(IDocument document)
         {
             bool forceAbort = false;
 
