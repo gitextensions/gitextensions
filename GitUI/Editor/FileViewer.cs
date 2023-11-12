@@ -398,7 +398,7 @@ namespace GitUI.Editor
             return internalFileViewer.GetLineFromVisualPosY(visualPosY);
         }
 
-        public int CurrentFileLine => internalFileViewer.CurrentFileLine(IsDiffView(_viewMode));
+        public int CurrentFileLine => internalFileViewer.CurrentFileLine();
 
         public void HighlightLines(int startLine, int endLine, Color color)
         {
@@ -770,45 +770,6 @@ namespace GitUI.Editor
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
                 });
-        }
-
-        private void CopyNotStartingWith(char startChar)
-        {
-            string code = internalFileViewer.GetSelectedText();
-            bool noSelection = false;
-
-            if (string.IsNullOrEmpty(code))
-            {
-                code = internalFileViewer.GetText();
-                noSelection = true;
-            }
-
-            if (IsDiffView(_viewMode))
-            {
-                // add artificial space if selected text is not starting from line beginning, it will be removed later
-                int pos = noSelection ? 0 : internalFileViewer.GetSelectionPosition();
-                string fileText = internalFileViewer.GetText();
-
-                if (pos > 0 && fileText[pos - 1] != '\n')
-                {
-                    code = " " + code;
-                }
-
-                IEnumerable<string> lines = code.LazySplit('\n')
-                    .Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
-                int hpos = fileText.IndexOf("\n@@");
-
-                // if header is selected then don't remove diff extra chars
-                if (hpos <= pos)
-                {
-                    char[] specials = { ' ', '-', '+' };
-                    lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s[1..] : s);
-                }
-
-                code = string.Join("\n", lines);
-            }
-
-            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSettingsByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
         }
 
         private StagedStatus ViewItemStagedStatus()
@@ -1739,105 +1700,32 @@ namespace GitUI.Editor
 
         private void copyNewVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CopyNotStartingWith('-');
+            internalFileViewer.CopyNotStartingWith('-');
         }
 
         private void copyOldVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CopyNotStartingWith('+');
+            internalFileViewer.CopyNotStartingWith('+');
         }
 
         /// <summary>
         /// Go to next change
-        /// For normal diffs, this is the next diff
+        /// For normal diffs, this is the next block of lines with a difference.
         /// For range-diff, it is the next commit summary header.
         /// </summary>
-        /// <param name="sender">sender object.</param>
-        /// <param name="e">event args.</param>
         private void NextChangeButtonClick(object sender, EventArgs e)
         {
             Focus();
 
-            // skip the first pseudo-change containing the file names for normal diffs
-            int headerEndLine = _viewMode == ViewMode.RangeDiff ? 0 : 4;
-            int currentVisibleLine = internalFileViewer.LineAtCaret;
-            int startLine = Math.Max(headerEndLine, currentVisibleLine + 1);
-            int totalNumberOfLines = internalFileViewer.TotalNumberOfLines;
-            bool emptyLineCheck = _viewMode == ViewMode.RangeDiff;
-            for (int line = startLine; line < totalNumberOfLines; line++)
-            {
-                string lineContent = internalFileViewer.GetLineText(line);
-
-                if (internalFileViewer.IsSearchMatch(lineContent))
-                {
-                    if (emptyLineCheck)
-                    {
-                        internalFileViewer.FirstVisibleLine = Math.Max(line - headerEndLine, 0);
-                        internalFileViewer.LineAtCaret = line;
-                        return;
-                    }
-                }
-                else
-                {
-                    emptyLineCheck = true;
-                }
-            }
-
-            // Do not go to the end of the file if no change is found
-            ////TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+            internalFileViewer.GoToNextChange(NumberOfContextLines);
         }
 
         private void PreviousChangeButtonClick(object sender, EventArgs e)
         {
             Focus();
 
-            int startLine = internalFileViewer.LineAtCaret;
-
-            // go to the top of change block
-            if (_viewMode == ViewMode.RangeDiff)
-            {
-                // Start checking line above current
-                startLine--;
-            }
-
-            int headerEndLine = _viewMode == ViewMode.RangeDiff ? 0 : 4;
-            while (startLine > headerEndLine &&
-                   (_viewMode == ViewMode.RangeDiff) ^ internalFileViewer.IsSearchMatch(internalFileViewer.GetLineText(startLine)))
-            {
-                startLine--;
-            }
-
-            if (_viewMode == ViewMode.RangeDiff)
-            {
-                internalFileViewer.FirstVisibleLine = startLine;
-                internalFileViewer.LineAtCaret = startLine;
-                return;
-            }
-
-            bool emptyLineCheck = false;
-            for (int line = startLine; line > headerEndLine; line--)
-            {
-                string lineContent = internalFileViewer.GetLineText(line);
-
-                if (internalFileViewer.IsSearchMatch(lineContent))
-                {
-                    emptyLineCheck = true;
-                    continue;
-                }
-
-                if (!emptyLineCheck)
-                {
-                    continue;
-                }
-
-                internalFileViewer.FirstVisibleLine = Math.Max(0, line - 3);
-                internalFileViewer.LineAtCaret = line + 1;
-                return;
-            }
-
-            // Do not go to the start of the file if no change is found
-            ////TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 0;
-        }
+            internalFileViewer.GoToPreviousChange(NumberOfContextLines);
+         }
 
         private void ContinuousScrollToolStripMenuItemClick(object sender, EventArgs e)
         {
