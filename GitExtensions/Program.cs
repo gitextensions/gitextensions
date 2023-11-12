@@ -61,7 +61,7 @@ namespace GitExtensions
             // There's no perf hit calling Initialise() multiple times.
             UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
 
-            AppSettings.SetDocumentationBaseUrl(ThisAssembly.Git.Branch);
+            AppSettings.SetDocumentationBaseUrl(AppSettings.ProductVersion);
 
             ThemeModule.Load();
 #if SUPPORT_THEME_HOOKS
