@@ -4313,11 +4313,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target>コミット</target>
         
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target>変更をすべてリセット(&amp;R)</target>
-        
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         <target>作者を再設定(&amp;E)</target>
@@ -4331,11 +4326,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
         <target>直前のコミットへソフトリセットを実行します。作業ディレクトリとインデックスは変更されません。</target>
-        
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
-        <target>未ステージの変更をリセット(&amp;N)</target>
         
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -4723,6 +4713,16 @@ You can unset the template:
         <target>(ブランチ名)</target>
         
       </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        <target>変更をすべてリセット(&amp;R)</target>
+        
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        <target>未ステージの変更をリセット(&amp;N)</target>
+        
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target>すべての変更をコミット後にダイアログを閉じる</target>
@@ -4883,11 +4883,6 @@ You can unset the template:
         <target>(リモート名)</target>
         
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>ファイルまたはディレクトリの変更をリセット</target>
-        
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target>チャンクレベルでファイルの変更をリセット</target>
@@ -5011,6 +5006,11 @@ You can unset the template:
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>ステージの取り消し(&amp;U)</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>ファイルまたはディレクトリの変更をリセット</target>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -11435,6 +11435,16 @@ See the changes in the commit form.</source>
         <target>クイックサーチを開始するには、リビジョングリッド上でタイプしてください。</target>
         
       </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        <target>現在の表示設定をデフォルトとして保存</target>
+        
+      </trans-unit>
+      <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
+        <source>Settings persistence</source>
+        <target>設定の永続性</target>
+        
+      </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show &amp;all branches</source>
         <target>ブランチをすべて表示(&amp;A)</target>
@@ -12011,20 +12021,20 @@ See the changes in the commit form.</source>
         <source>Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -12041,7 +12051,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -12073,7 +12084,7 @@ Current Branch:
 選択したコミット:
 {sHashes}
 
-選択したブランチ:
+選択したリビジョン:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -12089,7 +12100,8 @@ Current Branch:
 {sAuthorDate}
 {sCommitDate}
 
-現在のブランチ:
+現在チェックアウトされているリビジョン:
+{HEAD} (チェックアウトされているブランチ名またはコミットハッシュ)
 {cTag}
 {cBranch}
 {cLocalBranch}

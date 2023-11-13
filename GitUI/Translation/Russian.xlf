@@ -4303,11 +4303,6 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
         <target>Зафиксировать</target>
         
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target>Сбросить все правки</target>
-        
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         <target>С&amp;бросить автора</target>
@@ -4321,11 +4316,6 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
         <target>Выполняется сброс к предыдущему коммиту мягко, оставляя рабочий каталог и индекс неизменными</target>
-        
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
-        <target>Сброс лишних правок</target>
         
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -4712,6 +4702,14 @@ $ git config --unset commit.template</target>
         <target>(имя ветки)</target>
         
       </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target>Закрыть диалог после коммита всех изменений</target>
@@ -4872,11 +4870,6 @@ $ git config --unset commit.template</target>
         <target>(Внешнее имя)</target>
         
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>Сбросить изменения</target>
-        
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target>Сбросить часть файла</target>
@@ -5000,6 +4993,10 @@ $ git config --unset commit.template</target>
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>&amp;Убрать из индекса</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -11424,6 +11421,14 @@ See the changes in the commit form.</source>
         <target>Начните вводить в графе ревизий, чтобы начать быстрый поиск.</target>
         
       </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        
+      </trans-unit>
+      <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
+        <source>Settings persistence</source>
+        
+      </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show &amp;all branches</source>
         <target>Показывать все ветки</target>
@@ -12000,20 +12005,20 @@ See the changes in the commit form.</source>
         <source>Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -12030,7 +12035,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -12046,55 +12052,6 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
-        <target>Использовать {option} для обычной замены.
-Использовать {{option}} для замены в кавычках.
-
-Ввод пользователем:
-{UserInput}
-{UserFiles}
-
-Рабочий каталог:
-{WorkingDir}
-
-Репозиторий:
-{RepoName}
-
-Выбранные коммиты:
-{sHashes}
-
-Выбранная ветка:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemoteBranchName}   (без внешнего имени)
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sSubject}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-Текущая ветка:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cRemoteBranchName}   (без внешнего имени)
-{cHash}
-{cMessage}
-{cSubject}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">

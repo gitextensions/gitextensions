@@ -4290,11 +4290,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target>உறுதிமொழி</target>
         
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target>அனைத்து மாற்றங்களையும் மீட்டமை</target>
-        
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         <target>ஆசிரியர் மீட்டமை</target>
@@ -4308,11 +4303,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
         <target>முந்தைய உறுதிமொழிக்கு மென்மையான மீட்டமைப்பைச் செய்யவும்; வேலை செய்யும் அடைவு மற்றும் குறியீட்டைத் தொடாமல் விட்டுவிடும்</target>
-        
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
-        <target>மேடையற்ற மாற்றங்களை மீட்டமை</target>
         
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -4699,6 +4689,14 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>(கிளை பெயர்)</target>
         
       </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target>எல்லா மாற்றங்களும் உறுதிமொழியப்பட்டவுடன் உரையாடலை மூடு</target>
@@ -4859,11 +4857,6 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>(தொலை பெயர்)</target>
         
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>கோப்பு அல்லது அடைவு மாற்றங்களை மீட்டமை</target>
-        
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target>கோப்பின் பகுதியை மீட்டமைக்கவும்</target>
@@ -4987,6 +4980,10 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>&amp;மேடையற்றதாக்கு</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -11417,6 +11414,14 @@ See the changes in the commit form.</source>
         <target>விரைவான தேடலைத் தொடங்க மீள்திருத்தக் கட்டத்தில் தட்டச்சு செய்யத் தொடங்கவும்.</target>
         
       </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        
+      </trans-unit>
+      <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
+        <source>Settings persistence</source>
+        
+      </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show &amp;all branches</source>
         <target>அனைத்து கிளைகளையும் காட்டு</target>
@@ -11993,20 +11998,20 @@ See the changes in the commit form.</source>
         <source>Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -12023,7 +12028,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -12039,55 +12045,6 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
-        <target>சாதாரண மாற்றத்திற்கு {option} ஐப் பயன்படுத்தவும்.
-மேற்கோள் மாற்றத்திற்கு {{option}} ஐப் பயன்படுத்தவும்.
-
-பயனர் உள்ளீடு:
-{UserInput}
-{UserFiles}
-
-பணிபுரியும் இயக்குனர்:
-{WorkingDir}
-
-களஞ்சியம்:
-{RepoName}
-
-தேர்ந்தெடுக்கப்பட்ட உறுதிமொழிகள்:
-{sHashes}
-
-தேர்ந்தெடுக்கப்பட்ட கிளை:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemoteBranchName}   (தொலையின் பெயர் இல்லாமல்)
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sSubject}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-தற்போதைய கிளை:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cRemoteBranchName}   (தொலையின் பெயர் இல்லாமல்)
-{cHash}
-{cMessage}
-{cSubject}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">

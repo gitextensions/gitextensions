@@ -1,9 +1,21 @@
 Changelog
 =========
 
-### Version 4.2 (21 Oct 2023)
+### Version 4.2 (13 Nov 2023)
 
 #### Changes:
+* [#11348] SetDocumentationBaseUrl using ProductVersion
+* [#11341] Fixup ISettings<T> tests
+* [#11340] Git 2.42.0
+* [#11326] Improve performance of AppSettings of type ISetting<T>
+* [#11313] Fix commit graph crash when commit message started with a new line
+* [#11307] Correctly reset unstaged changes without affecting staged
+* [#11294] Deactivate very slow handling of lane sharing
+* [#11290] Bypass hotkeys processing when inside SearchControl
+* [#11283] GitLab exception with concurrent access
+* [#11277] Checkout: fix git error when branch name is ambiguous
+* [#11264] Scripts: add new option {Head}
+* [#11256] Set FormCheckoutRevision default button
 * [#11247] editor: Add feature to move line up/down with ALT + UP/DOWN
 * [#11245] Use RevisionReader to read GitRevision with Notes
 * [#11243] Add comment for skip worktree together with assume unchanged
@@ -115,9 +127,22 @@ Changelog
 * [#10964] Select the good (or better) line when blaming from context menu
 * [#10961] Allow "save as..." multiple files
 * [#10864] Do not straighten re-used graph lanes
+* [#10851] Store view settings on request only
 * [#10649] Add support to build GE for Windows on Arm64 (WoA)
 
 
+[#11348]:https://github.com/gitextensions/gitextensions/pull/11348
+[#11341]:https://github.com/gitextensions/gitextensions/pull/11341
+[#11340]:https://github.com/gitextensions/gitextensions/pull/11340
+[#11326]:https://github.com/gitextensions/gitextensions/pull/11326
+[#11313]:https://github.com/gitextensions/gitextensions/pull/11313
+[#11307]:https://github.com/gitextensions/gitextensions/pull/11307
+[#11294]:https://github.com/gitextensions/gitextensions/pull/11294
+[#11290]:https://github.com/gitextensions/gitextensions/pull/11290
+[#11283]:https://github.com/gitextensions/gitextensions/pull/11283
+[#11277]:https://github.com/gitextensions/gitextensions/pull/11277
+[#11264]:https://github.com/gitextensions/gitextensions/pull/11264
+[#11256]:https://github.com/gitextensions/gitextensions/pull/11256
 [#11247]:https://github.com/gitextensions/gitextensions/pull/11247
 [#11245]:https://github.com/gitextensions/gitextensions/pull/11245
 [#11243]:https://github.com/gitextensions/gitextensions/pull/11243
@@ -229,7 +254,9 @@ Changelog
 [#10964]:https://github.com/gitextensions/gitextensions/pull/10964
 [#10961]:https://github.com/gitextensions/gitextensions/pull/10961
 [#10864]:https://github.com/gitextensions/gitextensions/pull/10864
+[#10851]:https://github.com/gitextensions/gitextensions/pull/10851
 [#10649]:https://github.com/gitextensions/gitextensions/pull/10649
+
 
 
 ### Version 4.1 (01 May 2023)

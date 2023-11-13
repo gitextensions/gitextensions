@@ -4302,11 +4302,6 @@ komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde
         <target>Teslim Et</target>
         
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target>Tüm &amp;değişiklikleri sıfırla</target>
-        
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         <target>&amp;Yazarı Sıfırla</target>
@@ -4319,11 +4314,6 @@ komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde
       </trans-unit>
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
-        
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
-        <target>S.lenmemiş d. sı&amp;fırla</target>
         
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -4704,6 +4694,14 @@ You can unset the template:
         <target>(Dal adı)</target>
         
       </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target>Tüm değişiklikler, teslim edildiğinde iletişim kutusunu kapat</target>
@@ -4864,11 +4862,6 @@ You can unset the template:
         <target>(Uzak ad)</target>
         
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>Dosya veya dizin değişikliklerini sıfırla</target>
-        
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target>Dosya yığınını (chunk) sıfırla</target>
@@ -4992,6 +4985,10 @@ You can unset the template:
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>Sahneden &amp;Kaldır</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -5516,6 +5513,7 @@ Bir dalı silmek, teslimlerin de silinmesine neden olabilir!</target>
       </trans-unit>
       <trans-unit id="firstCommitGroup.Text">
         <source>BASE</source>
+        <target>BASE (TEMEL)</target>
         
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
@@ -8806,6 +8804,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="HideMergeCommitsCheck.Text">
         <source>Hide merge commi&amp;ts</source>
+        <target>Birleştirme teslimlerini gizle</target>
         
       </trans-unit>
       <trans-unit id="IgnoreCase.Text">
@@ -10102,7 +10101,7 @@ Onları kaydetmek ister misin?</target>
     <body>
       <trans-unit id="_gotoUserManualControlTooltip.Text">
         <source>Read more about this feature at {0}</source>
-        <target>Bu özellikle ilgili daha fazla bilgiyi, {0} adresinde bulabilirsin. </target>
+        <target>Bu özellikle ilgili daha fazla bilgiyi, {0} adresinde bulabilirsin.</target>
         
       </trans-unit>
       <trans-unit id="linkLabelHelp.Text">
@@ -10852,6 +10851,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="tsbShowStashes.Text">
         <source>St&amp;ashes</source>
+        <target>Zulalar</target>
         
       </trans-unit>
       <trans-unit id="tsbShowStashes.ToolTipText">
@@ -11383,6 +11383,14 @@ Teslim formundaki değişikliklere bak.</target>
       <trans-unit id="QuickSearch.ToolTipText">
         <source>Start typing in revision grid to start quick search.</source>
         <target>Hızlı aramayı başlatmak için revizyon grafiğine yazmaya başlayın.</target>
+        
+      </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        
+      </trans-unit>
+      <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
+        <source>Settings persistence</source>
         
       </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
@@ -11959,20 +11967,20 @@ Teslim formundaki değişikliklere bak.</target>
         <source>Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -11989,7 +11997,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -12005,55 +12014,6 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
-        <target>Normali değiştirmek için {option} kullan.
-Alıntılanan değiştirmek için {{option}} kullan.
-
-Kullanıcı Çıktısı:
-{UserInput}
-{UserFiles}
-
-Çalışma Dizini:
-{WorkingDir}
-
-Depo:
-{RepoName}
-
-Seçili Teslimler:
-{sHashes}
-
-Seçili Dal:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemoteBranchName} (without the remote's name)
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sSubject}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-Geçerli Dal:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cRemoteBranchName} (uzak bağlantı adı olmadan)
-{cHash}
-{cMessage}
-{cSubject}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">
@@ -12336,10 +12296,12 @@ OpenSSH kullanıldığında, komut satırı iletişim kutuları gösterilir!
       </trans-unit>
       <trans-unit id="Rebase.Text">
         <source>&amp;Rebase current branch on this tag revision...</source>
+        <target>Geçerli dalı bu etiket revizyonuna göre yeniden temellendir...</target>
         
       </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
         <source>Rebase current branch on this tag</source>
+        <target>Geçerli dalı bu etikete göre yeniden temellendir</target>
         
       </trans-unit>
       <trans-unit id="ResetTooltip.Text">
@@ -12653,10 +12615,12 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_failedToLoadAnAssembly.Text">
         <source>Failed to load an assembly</source>
+        <target>Bir derleme(assembly) yüklenemedi</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
         <source>Could not load file or assembly '{0}'.</source>
+        <target>'{0}' dosyası veya derlemesi(assembly) yüklenemedi.</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
