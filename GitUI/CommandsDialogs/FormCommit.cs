@@ -1381,6 +1381,7 @@ namespace GitUI.CommandsDialogs
                         toolAuthor.Text,
                         _useFormCommitMessage,
                         _commitMessageManager.CommitMessagePath,
+                        Module.GetPathForGitExecution,
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
                         toolStripGpgKeyTextBox.Text,

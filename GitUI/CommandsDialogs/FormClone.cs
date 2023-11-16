@@ -207,16 +207,17 @@ namespace GitUI.CommandsDialogs
                     branch = null;
                 }
 
-                string sourceRepo = PathUtil.IsLocalFile(_NO_TRANSLATE_From.Text)
-                    ? UICommands.Module.GetPathForGitExecution(_NO_TRANSLATE_From.Text)
-                    : _NO_TRANSLATE_From.Text;
-                GitExtUtils.ArgumentString cloneCmd = Commands.Clone(sourceRepo,
-                    UICommands.Module.GetPathForGitExecution(dirTo),
+                GitExtUtils.ArgumentString cloneCmd = Commands.Clone(_NO_TRANSLATE_From.Text,
+                    dirTo,
+                    UICommands.Module.GetPathForGitExecution,
                     CentralRepository.Checked,
                     cbIntializeAllSubmodules.Checked,
                     branch, depth, isSingleBranch);
                 using (FormRemoteProcess fromProcess = new(UICommands, cloneCmd))
                 {
+                    string sourceRepo = PathUtil.IsLocalFile(_NO_TRANSLATE_From.Text)
+                        ? UICommands.Module.GetPathForGitExecution(_NO_TRANSLATE_From.Text)
+                        : _NO_TRANSLATE_From.Text;
                     fromProcess.SetUrlTryingToConnect(sourceRepo);
                     fromProcess.ShowDialog(this);
 
@@ -228,7 +229,7 @@ namespace GitUI.CommandsDialogs
 
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    await RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(sourceRepo);
+                    await RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(_NO_TRANSLATE_From.Text);
                     await RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo);
                 });
 

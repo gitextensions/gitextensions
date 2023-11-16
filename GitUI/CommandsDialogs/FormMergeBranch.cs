@@ -109,7 +109,8 @@ namespace GitUI.CommandsDialogs
                                                             noCommit.Checked,
                                                             _NO_TRANSLATE_mergeStrategy.Text,
                                                             allowUnrelatedHistories.Checked,
-                                                            Module.GetPathForGitExecution(mergeMessagePath),
+                                                            mergeMessagePath,
+                                                            Module.GetPathForGitExecution,
                                                             addLogMessages.Checked ? (int)nbMessages.Value : (int?)null);
             success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 

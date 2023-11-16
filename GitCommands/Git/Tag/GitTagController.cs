@@ -53,7 +53,7 @@ namespace GitCommands.Git.Tag
 
             try
             {
-                return _uiCommands.StartCommandLineProcessDialog(parentWindow, Commands.CreateTag(args, _uiCommands.GitModule.GetPathForGitExecution(tagMessageFileName)));
+                return _uiCommands.StartCommandLineProcessDialog(parentWindow, Commands.CreateTag(args, tagMessageFileName, _uiCommands.GitModule.GetPathForGitExecution));
             }
             finally
             {

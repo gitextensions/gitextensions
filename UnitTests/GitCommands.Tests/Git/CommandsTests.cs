@@ -46,10 +46,10 @@ namespace GitCommandsTests_Git
         {
             Assert.AreEqual(
                 "apply \"hello/world.patch\"",
-                Commands.ApplyDiffPatch(false, "hello\\world.patch").Arguments);
+                Commands.ApplyDiffPatch(false, "hello\\world.patch", PathUtil.ToPosixPath).Arguments);
             Assert.AreEqual(
                 "apply --ignore-whitespace \"hello/world.patch\"",
-                Commands.ApplyDiffPatch(true, "hello\\world.patch").Arguments);
+                Commands.ApplyDiffPatch(true, "hello\\world.patch", PathUtil.ToPosixPath).Arguments);
         }
 
         [TestCase(false, false, "hello\\world.patch", "am --3way \"hello/world.patch\"")]
@@ -61,7 +61,7 @@ namespace GitCommandsTests_Git
         {
             Assert.AreEqual(
                 expected,
-                Commands.ApplyMailboxPatch(signOff, ignoreWhitespace, patchFile).Arguments);
+                Commands.ApplyMailboxPatch(signOff, ignoreWhitespace, patchFile, PathUtil.ToPosixPath).Arguments);
         }
 
         [Test]
@@ -136,34 +136,34 @@ namespace GitCommandsTests_Git
         {
             Assert.AreEqual(
                 "clone -v --progress \"from\" \"to\"",
-                Commands.Clone("from", "to").Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath).Arguments);
             Assert.AreEqual(
                 "clone -v --progress \"from/path\" \"to/path\"",
-                Commands.Clone("from/path", "to/path").Arguments);
+                Commands.Clone("from/path", "to/path", PathUtil.ToPosixPath).Arguments);
             Assert.AreEqual(
                 "clone -v --bare --progress \"from\" \"to\"",
-                Commands.Clone("from", "to", central: true).Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath, central: true).Arguments);
             Assert.AreEqual(
                 "clone -v --recurse-submodules --progress \"from\" \"to\"",
-                Commands.Clone("from", "to", initSubmodules: true).Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath, initSubmodules: true).Arguments);
             Assert.AreEqual(
                 "clone -v --recurse-submodules --progress \"from\" \"to\"",
-                Commands.Clone("from", "to", initSubmodules: true).Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath, initSubmodules: true).Arguments);
             Assert.AreEqual(
                 "clone -v --depth 2 --progress \"from\" \"to\"",
-                Commands.Clone("from", "to", depth: 2).Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath, depth: 2).Arguments);
             Assert.AreEqual(
                 "clone -v --single-branch --progress \"from\" \"to\"",
-                Commands.Clone("from", "to", isSingleBranch: true).Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath, isSingleBranch: true).Arguments);
             Assert.AreEqual(
                 "clone -v --no-single-branch --progress \"from\" \"to\"",
-                Commands.Clone("from", "to", isSingleBranch: false).Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath, isSingleBranch: false).Arguments);
             Assert.AreEqual(
                 "clone -v --progress --branch branch \"from\" \"to\"",
-                Commands.Clone("from", "to", branch: "branch").Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath, branch: "branch").Arguments);
             Assert.AreEqual(
                 "clone -v --progress --no-checkout \"from\" \"to\"",
-                Commands.Clone("from", "to", branch: null).Arguments);
+                Commands.Clone("from", "to", PathUtil.ToPosixPath, branch: null).Arguments);
         }
 
         [Test]
@@ -171,28 +171,31 @@ namespace GitCommandsTests_Git
         {
             Assert.AreEqual(
                 "commit -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath).Arguments);
+            Assert.AreEqual(
+                "commit -F \"adapted_commit_message_path\"",
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", path => "adapted_commit_message_path").Arguments);
             Assert.AreEqual(
                 "commit --amend -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: true, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+                Commands.Commit(amend: true, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath).Arguments);
             Assert.AreEqual(
                 "commit --signoff -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, signOff: true, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+                Commands.Commit(amend: false, signOff: true, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath).Arguments);
             Assert.AreEqual(
                 "commit --author=\"foo\" -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, author: "foo", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "foo", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath).Arguments);
             Assert.AreEqual(
                 "commit",
-                Commands.Commit(amend: false, useExplicitCommitMessage: false).Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: false, commitMessageFile: null, PathUtil.ToPosixPath).Arguments);
             Assert.AreEqual(
                 "commit --no-verify -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, noVerify: true, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify: true).Arguments);
             Assert.AreEqual(
                 "commit -S -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, gpgSign: true, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: true).Arguments);
             Assert.AreEqual(
                 "commit -Skey -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, gpgSign: true, gpgKeyId: "key", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE").Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: true, gpgKeyId: "key").Arguments);
         }
 
         [TestCase(@"  ""author <author@mail.com>""  ", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
@@ -200,7 +203,7 @@ namespace GitCommandsTests_Git
         [TestCase(@"author <author@mail.com>", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
         public void CommitCmdShouldTrimAuthor(string input, string expected)
         {
-            ArgumentString actual = Commands.Commit(false, author: input, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE");
+            ArgumentString actual = Commands.Commit(amend: false, signOff: false, author: input, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath);
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
@@ -217,7 +220,7 @@ namespace GitCommandsTests_Git
         [TestCase(true, true, @"", true, true, true, @"12345678", @"commit --amend --no-verify --signoff -S12345678 -F ""COMMITMESSAGE""")]
         public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool gpgSign, string gpgKeyId, string expected)
         {
-            ArgumentString actual = Commands.Commit(amend, signOff, author, useExplicitCommitMessage, "COMMITMESSAGE", noVerify, gpgSign, gpgKeyId);
+            ArgumentString actual = Commands.Commit(amend, signOff, author, useExplicitCommitMessage, "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify, gpgSign, gpgKeyId);
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
@@ -359,7 +362,7 @@ namespace GitCommandsTests_Git
         [TestCase(false, true, false, null, false, "\t", null, "merge --no-ff --squash branch")]
         [TestCase(false, true, false, null, false, "\n", null, "merge --no-ff --squash branch")]
         [TestCase(false, true, false, null, false, "foo", null, "merge --no-ff --squash -F \"foo\" branch")]
-        [TestCase(false, true, false, null, false, "D:\\myrepo\\.git\\file", null, "merge --no-ff --squash -F \"D:\\myrepo\\.git\\file\" branch")]
+        [TestCase(false, true, false, null, false, "D:\\myrepo\\.git\\file", null, "merge --no-ff --squash -F \"D:/myrepo/.git/file\" branch")]
 
         // log parameter
         [TestCase(true, true, false, null, false, null, -1, "merge --squash branch")]
@@ -367,7 +370,7 @@ namespace GitCommandsTests_Git
         [TestCase(true, true, false, null, false, null, 5, "merge --squash --log=5 branch")]
         public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log, string expected)
         {
-            Assert.AreEqual(expected, Commands.MergeBranch("branch", allowFastForward, squash, noCommit, strategy, allowUnrelatedHistories, mergeCommitFilePath, log).Arguments);
+            Assert.AreEqual(expected, Commands.MergeBranch("branch", allowFastForward, squash, noCommit, strategy, allowUnrelatedHistories, mergeCommitFilePath, PathUtil.ToPosixPath, log).Arguments);
         }
 
         [Test]
@@ -442,7 +445,7 @@ namespace GitCommandsTests_Git
         [TestCase("branchx", @"c:/my/path", true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force")]
         public string PushLocalCmd(string gitRef, string repoDir, bool force)
         {
-            return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, force).Arguments;
+            return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, PathUtil.ToPosixPath, force).Arguments;
         }
 
         [Test]

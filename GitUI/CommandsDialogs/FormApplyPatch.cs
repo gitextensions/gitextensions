@@ -184,10 +184,9 @@ namespace GitUI.CommandsDialogs
 
                 if (PatchFileMode.Checked)
                 {
-                    string gitPatch = Module.GetPathForGitExecution(patchFile);
                     ArgumentString arguments = IsDiffFile(patchFile)
-                        ? Commands.ApplyDiffPatch(ignoreWhiteSpace, gitPatch)
-                        : Commands.ApplyMailboxPatch(signOff, ignoreWhiteSpace, gitPatch);
+                        ? Commands.ApplyDiffPatch(ignoreWhiteSpace, patchFile, Module.GetPathForGitExecution)
+                        : Commands.ApplyMailboxPatch(signOff, ignoreWhiteSpace, patchFile, Module.GetPathForGitExecution);
 
                     FormProcess.ShowDialog(this, UICommands, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
                 }

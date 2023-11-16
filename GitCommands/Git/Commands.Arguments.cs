@@ -49,23 +49,26 @@ namespace GitCommands.Git
             return argsBuilder;
         }
 
-        public static ArgumentString ApplyDiffPatch(bool ignoreWhiteSpace, string patchFile)
+        public static ArgumentString ApplyDiffPatch(bool ignoreWhiteSpace, string patchFile, Func<string, string?> getPathForGitExecution)
         {
             return new GitArgumentBuilder("apply")
             {
                 { ignoreWhiteSpace, "--ignore-whitespace" },
-                patchFile.ToPosixPath().Quote()
+                getPathForGitExecution(patchFile).QuoteNE()
             };
         }
 
-        public static ArgumentString ApplyMailboxPatch(bool signOff, bool ignoreWhiteSpace, string? patchFile = null)
+        public static ArgumentString ApplyMailboxPatch(bool signOff, bool ignoreWhiteSpace)
+            => ApplyMailboxPatch(signOff, ignoreWhiteSpace, patchFile: null, path => path);
+
+        public static ArgumentString ApplyMailboxPatch(bool signOff, bool ignoreWhiteSpace, string? patchFile, Func<string, string?> getPathForGitExecution)
         {
             return new GitArgumentBuilder("am")
             {
                 "--3way",
                 { signOff, "--signoff" },
                 { ignoreWhiteSpace, "--ignore-whitespace" },
-                patchFile?.ToPosixPath().Quote()
+                getPathForGitExecution(patchFile).QuoteNE()
             };
         }
 
@@ -155,8 +158,16 @@ namespace GitCommands.Git
         /// <para><c>False</c>: --no-single-branch.</para>
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
-        public static ArgumentString Clone(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
+        public static ArgumentString Clone(string fromPath, string toPath, Func<string, string?> getPathForGitExecution, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
         {
+            fromPath = fromPath.Trim();
+            if (PathUtil.IsLocalFile(fromPath))
+            {
+                fromPath = getPathForGitExecution(fromPath);
+            }
+
+            toPath = getPathForGitExecution(toPath.Trim());
+
             DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                $"'CloneCmd' must be called with 'fromPath' in Posix format");
             DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
@@ -173,12 +184,12 @@ namespace GitCommands.Git
                 "--progress",
                 { branch is null, "--no-checkout" },
                 { !string.IsNullOrEmpty(branch), $"--branch {branch}" },
-                fromPath.Trim().Quote(),
-                toPath.Trim().Quote()
+                fromPath.Quote(),
+                toPath.Quote()
             };
         }
 
-        public static ArgumentString Commit(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = false, string commitMessageFile = null, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
+        public static ArgumentString Commit(bool amend, bool signOff, string author, bool useExplicitCommitMessage, string? commitMessageFile, Func<string, string?> getPathForGitExecution, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
         {
             if (useExplicitCommitMessage && string.IsNullOrEmpty(commitMessageFile))
             {
@@ -193,7 +204,7 @@ namespace GitCommands.Git
                 { !string.IsNullOrEmpty(author), $"--author=\"{author?.Trim().Trim('"')}\"" },
                 { gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
                 { gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
-                { useExplicitCommitMessage, $"-F \"{commitMessageFile}\"" },
+                { useExplicitCommitMessage, $"-F {getPathForGitExecution(commitMessageFile).Quote()}" },
                 { allowEmpty, "--allow-empty" },
                 { resetAuthor && amend, "--reset-author" }
             };
@@ -360,7 +371,7 @@ namespace GitCommands.Git
             }
         }
 
-        public static ArgumentString MergeBranch(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, int? log)
+        public static ArgumentString MergeBranch(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, Func<string, string?> getPathForGitExecution, int? log)
         {
             return new GitArgumentBuilder("merge")
             {
@@ -371,7 +382,7 @@ namespace GitCommands.Git
                 { allowUnrelatedHistories, "--allow-unrelated-histories" },
 
                  // let git fail, if the file doesn't exist
-                { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F \"{mergeCommitFilePath}\"" },
+                { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F {getPathForGitExecution(mergeCommitFilePath).Quote()}" },
                 { log is not null && log.Value > 0, $"--log={log}" },
                 branch
             };
@@ -463,14 +474,14 @@ namespace GitCommands.Git
         /// <param name="repoDir">Directory to the current repo in Posix format.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
         /// <returns>The Git command to execute.</returns>
-        public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, bool force = false)
+        public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, Func<string, string?> getPathForGitExecution, bool force = false)
         {
             DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                 $"'PushLocalCmd' must be called with 'repoDir' in Posix format");
 
             return new GitArgumentBuilder("push")
             {
-                $@"""file://{repoDir}""",
+                $@"""file://{getPathForGitExecution(repoDir)}""",
                 $"{targetId}:{gitRef}".QuoteNE(),
                 { force, "--force" }
             };

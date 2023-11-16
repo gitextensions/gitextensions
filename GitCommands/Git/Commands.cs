@@ -25,7 +25,7 @@ public static partial class Commands
             });
     }
 
-    public static IGitCommand CreateTag(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName)
+    public static IGitCommand CreateTag(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName, Func<string, string?> getPathForGitExecution)
     {
         Validate(gitCreateTagArgs, tagMessageFileName);
 
@@ -34,7 +34,7 @@ public static partial class Commands
             {
                     { gitCreateTagArgs.Force, "-f" },
                     GetArgumentForOperation(gitCreateTagArgs),
-                    { gitCreateTagArgs.Operation.CanProvideMessage(), $"-F {tagMessageFileName.Quote()}" },
+                    { gitCreateTagArgs.Operation.CanProvideMessage(), $"-F {getPathForGitExecution(tagMessageFileName).Quote()}" },
                     gitCreateTagArgs.TagName.Trim().Quote(),
                     "--",
                     gitCreateTagArgs.ObjectId

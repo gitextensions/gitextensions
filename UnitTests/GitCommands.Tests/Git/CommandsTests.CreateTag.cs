@@ -1,3 +1,4 @@
+using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Tag;
 using GitUIPluginInterfaces;
@@ -18,14 +19,14 @@ namespace GitCommandsTests_Git
         public void Validate_should_throw_if_tag_name_invalid(string tagName)
         {
             GitCreateTagArgs args = new(tagName, Revision);
-            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile));
+            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
         }
 
         [Test]
         public void Validate_should_throw_if_tag_revision_invalid()
         {
             GitCreateTagArgs args = new(TagName, null);
-            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile));
+            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
         }
 
         [TestCase(null)]
@@ -34,14 +35,14 @@ namespace GitCommandsTests_Git
         public void Validate_should_throw_for_SignWithSpecificKey_if_tag_keyId_invalid(string signKeyId)
         {
             GitCreateTagArgs args = new(TagName, Revision, TagOperation.SignWithSpecificKey, signKeyId: signKeyId);
-            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile));
+            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
         }
 
         [Test]
         public void ToLine_should_throw_if_operation_not_supported()
         {
             GitCreateTagArgs args = new(TagName, Revision, (TagOperation)10);
-            Assert.Throws<NotSupportedException>(() => Commands.CreateTag(args, TagMessageFile));
+            Assert.Throws<NotSupportedException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
         }
 
         [TestCase(true, "tag -f -s -F \"c:/.git/TAGMESSAGE\" \"bla\" -- 0123456789012345678901234567890123456789")]
@@ -49,7 +50,7 @@ namespace GitCommandsTests_Git
         public void ToLine_should_render_force_flag(bool force, string expected)
         {
             GitCreateTagArgs args = new(TagName, Revision, TagOperation.SignWithDefaultKey, TagMessage, KeyId, force);
-            IGitCommand cmd = Commands.CreateTag(args, TagMessageFile);
+            IGitCommand cmd = Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath);
 
             string cmdLine = cmd.Arguments;
 
@@ -63,7 +64,7 @@ namespace GitCommandsTests_Git
         public void ToLine_should_render_different_operations(TagOperation operation, string expected)
         {
             GitCreateTagArgs args = new(TagName, Revision, operation, signKeyId: KeyId, force: true);
-            IGitCommand cmd = Commands.CreateTag(args, TagMessageFile);
+            IGitCommand cmd = Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath);
 
             string actualCmdLine = cmd.Arguments;
 
