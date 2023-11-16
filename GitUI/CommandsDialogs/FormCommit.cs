@@ -168,7 +168,7 @@ namespace GitUI.CommandsDialogs
         private readonly List<string> _formattedLines = new();
 
         private CommitKind _commitKind;
-        private FileStatusList? _currentFilesList;
+        private FileStatusList _currentFilesList;
         private bool _skipUpdate;
         private FileStatusItem? _currentItem;
         private bool _currentItemStaged;
@@ -213,6 +213,8 @@ namespace GitUI.CommandsDialogs
             _editedCommit = editedCommit;
 
             InitializeComponent();
+
+            _currentFilesList = Unstaged;
 
             CommitAndPush.Text = _commitAndPush.Text;
 
@@ -652,18 +654,15 @@ namespace GitUI.CommandsDialogs
 
         private void MoveSelection(int direction)
         {
-            FileStatusList list = Message.Focused ? Staged : _currentFilesList;
-            if (list is null)
+            if (Message.Focused)
             {
-                // If a user is keyboard-happy, we may receive KeyUp event before we have selected a file list control.
-                return;
+                _currentFilesList = Staged;
             }
 
-            _currentFilesList = list;
-            int itemsCount = list.AllItemsCount;
+            int itemsCount = _currentFilesList.AllItemsCount;
             if (itemsCount != 0)
             {
-                list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
+                _currentFilesList.SelectedIndex = (_currentFilesList.SelectedIndex + direction + itemsCount) % itemsCount;
             }
         }
 
@@ -828,8 +827,6 @@ namespace GitUI.CommandsDialogs
             {
                 return false;
             }
-
-            Validates.NotNull(_currentFilesList);
 
             if (_currentFilesList.SelectedItem?.Item is not null)
             {
@@ -1131,7 +1128,7 @@ namespace GitUI.CommandsDialogs
 
         private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus>? lastSelection)
         {
-            if (_currentFilesList?.IsEmpty is not false)
+            if (!_currentFilesList.IsEmpty)
             {
                 SelectStoredNextIndex();
                 return;
@@ -2085,7 +2082,7 @@ namespace GitUI.CommandsDialogs
             _shouldRescanChanges = false;
             try
             {
-                if (_currentFilesList is null || !_currentFilesList.SelectedItems.Any())
+                if (!_currentFilesList.SelectedItems.Any())
                 {
                     return;
                 }
