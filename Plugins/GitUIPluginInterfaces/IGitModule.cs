@@ -77,7 +77,7 @@ namespace GitUIPluginInterfaces
         /// </summary>
         /// <param name="path">The Windows (native) path as seen by the application.</param>
         /// <returns>The Posix path if Windows Git, WSL path for WSL Git.</returns>
-        public string GetGitExecPath(string? path);
+        public string GetPathForGitExecution(string? path);
 
         /// <summary>
         /// Convert a path to Windows application (native) format.

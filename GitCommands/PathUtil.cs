@@ -284,7 +284,7 @@ namespace GitCommands
         /// <param name="path">The path as seen by the Git Extensions Windows (native) application.</param>
         /// <param name="wslDistro">The name of the distro or empty for non WSL paths.</param>
         /// <returns>The Posix path if Windows Git (not a WSL distro), WSL path for WSL Git.</returns>
-        public static string GetGitExecPath(string? path, string? wslDistro)
+        public static string GetPathForGitExecution(string? path, string? wslDistro)
         {
             if (string.IsNullOrEmpty(path))
             {

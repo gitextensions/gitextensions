@@ -188,7 +188,7 @@ namespace GitCommands
         public string WorkingDirGitDir { get; private set; }
 
         /// <inherit/>
-        public string GetGitExecPath(string? path) => PathUtil.GetGitExecPath(path, _wslDistro);
+        public string GetPathForGitExecution(string? path) => PathUtil.GetPathForGitExecution(path, _wslDistro);
 
         /// <inherit/>
         public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, _wslDistro);
@@ -1461,7 +1461,7 @@ namespace GitCommands
                     "--break-rewrites",
                     { start is not null, $"--start-number {start}" },
                     { !string.IsNullOrEmpty(from), $"{from.Quote()}..{to.Quote()}", $"--root {to.Quote()}" },
-                    $"-o {GetGitExecPath(output).Quote()}"
+                    $"-o {GetPathForGitExecution(output).Quote()}"
                 });
         }
 
@@ -2029,7 +2029,7 @@ namespace GitCommands
                 {
                     "add",
                     name.Quote(),
-                    GetGitExecPath(path).QuoteNE()
+                    GetPathForGitExecution(path).QuoteNE()
                 });
         }
 

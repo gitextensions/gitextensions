@@ -329,13 +329,13 @@ namespace GitCommands.Remotes
             // If URL is in a Windows path, it may need to be converted to WSL Git path
             if (remoteUrl is not null && !Uri.IsWellFormedUriString(remoteUrl, UriKind.RelativeOrAbsolute))
             {
-                remoteUrl = module.GetGitExecPath(remoteUrl);
+                remoteUrl = module.GetPathForGitExecution(remoteUrl);
             }
 
             UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemoteUrl, remoteUrl);
             if (remotePushUrl is not null && !Uri.IsWellFormedUriString(remotePushUrl, UriKind.RelativeOrAbsolute))
             {
-                remotePushUrl = module.GetGitExecPath(remotePushUrl);
+                remotePushUrl = module.GetPathForGitExecution(remotePushUrl);
             }
 
             UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePushUrl, remotePushUrl);

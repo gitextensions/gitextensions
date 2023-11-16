@@ -371,10 +371,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             GitUICommands uiCommands = new(GitUICommands.EmptyServiceProvider, new GitModule(null));
 
             string repoSrc = PathUtil.IsLocalFile(repo.CloneUrl)
-                ? uiCommands.Module.GetGitExecPath(repo.CloneUrl)
+                ? uiCommands.Module.GetPathForGitExecution(repo.CloneUrl)
                 : repo.CloneUrl;
 
-            GitExtUtils.ArgumentString cmd = Commands.Clone(repoSrc, uiCommands.Module.GetGitExecPath(targetDir), depth: GetDepth());
+            GitExtUtils.ArgumentString cmd = Commands.Clone(repoSrc, uiCommands.Module.GetPathForGitExecution(targetDir), depth: GetDepth());
 
             FormRemoteProcess formRemoteProcess = new(uiCommands, cmd)
             {

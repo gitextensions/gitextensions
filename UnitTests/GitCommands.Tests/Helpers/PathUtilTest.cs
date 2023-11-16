@@ -305,9 +305,9 @@ namespace GitCommandsTests.Helpers
         [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions\", "", @"//wsl$/Ubuntu/work/../GitExtensions/")]
         [TestCase(@"C:\work\..\GitExtensions\", "", @"C:/work/../GitExtensions/")]
         [TestCase(@"work\..\GitExtensions\", "", @"work/../GitExtensions/")]
-        public void GetGitExecPath_GetWindowsPath_default(string path, string wslDistro, string expected)
+        public void GetPathForGitExecution_GetWindowsPath_default(string path, string wslDistro, string expected)
         {
-            PathUtil.GetGitExecPath(path, wslDistro).Should().Be(expected);
+            PathUtil.GetPathForGitExecution(path, wslDistro).Should().Be(expected);
             PathUtil.GetWindowsPath(expected, wslDistro).Should().Be(path);
         }
 
@@ -316,16 +316,16 @@ namespace GitCommandsTests.Helpers
         [TestCase(@"\\wsl$\Ubuntu-20.04\work\..\GitExtensions\", "Ubuntu-20.04", @"/work/../GitExtensions/")]
         [TestCase(@"C:\work\..\GitExtensions\", "Ubuntu", @"/mnt/c/work/../GitExtensions/")]
         [TestCase(@"work\..\GitExtensions\", "Ubuntu", @"work/../GitExtensions/")]
-        public void GetGitExecPath_wsl(string path, string wslDistro, string expected)
+        public void GetPathForGitExecution_wsl(string path, string wslDistro, string expected)
         {
-            PathUtil.GetGitExecPath(path, wslDistro).Should().Be(expected);
+            PathUtil.GetPathForGitExecution(path, wslDistro).Should().Be(expected);
         }
 
         [TestCase(@"\\wsl$/Ubuntu/work/../GitExtensions", "Ubuntu", @"//wsl$/Ubuntu/work/../GitExtensions")]
         [TestCase(@"\\wsl$\Ubuntu-20.04\work\..\GitExtensions\", "Ubuntu", @"//wsl$/Ubuntu-20.04/work/../GitExtensions/")]
-        public void GetGitExecPath_unexpected_usage(string path, string wslDistro, string expected)
+        public void GetPathForGitExecution_unexpected_usage(string path, string wslDistro, string expected)
         {
-            PathUtil.GetGitExecPath(path, wslDistro).Should().Be(expected);
+            PathUtil.GetPathForGitExecution(path, wslDistro).Should().Be(expected);
         }
 
         // Mostly opposite to GetRepoPath_wsl
