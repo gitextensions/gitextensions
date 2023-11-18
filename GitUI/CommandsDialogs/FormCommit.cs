@@ -2713,14 +2713,29 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.FileAndForget(async () =>
                 {
                     // Do not cache results in order to update the info on FormActivate
-                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false);
-                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false);
+                    string userName = GetSetting(SettingKeyString.UserName);
+                    string userEmail = GetSetting(SettingKeyString.UserEmail);
                     string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
 
                     await this.SwitchToMainThreadAsync();
                     commitAuthorStatus.Text = string.IsNullOrWhiteSpace(toolAuthor.Text)
                         ? committer
                         : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
+
+                    return;
+
+                    string GetSetting(string key)
+                    {
+                        try
+                        {
+                            return Module.GetEffectiveGitSetting(key, cache: false);
+                        }
+                        catch (ExternalOperationException ex)
+                        {
+                            Trace.WriteLine(ex);
+                            return "INVALID";
+                        }
+                    }
                 });
         }
 
