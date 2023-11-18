@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using GitCommands;
-using GitCommands.Git;
-using GitCommands.Patches;
 using GitExtUtils;
 
 namespace GitUIPluginInterfaces

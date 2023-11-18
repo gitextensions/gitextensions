@@ -1,3 +1,5 @@
+using GitUIPluginInterfaces;
+
 namespace GitCommands
 {
     public sealed class FullPathResolver : IFullPathResolver

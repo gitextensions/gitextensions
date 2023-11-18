@@ -1,4 +1,6 @@
-﻿namespace GitCommands.Git
+﻿using GitUIPluginInterfaces;
+
+namespace GitCommands.Git
 {
     /// <summary>
     /// Compares the file names/>.

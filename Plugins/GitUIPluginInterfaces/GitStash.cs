@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
-namespace GitCommands.Git
+namespace GitUIPluginInterfaces
 {
     /// <summary>Stored local modifications.</summary>
     public sealed class GitStash

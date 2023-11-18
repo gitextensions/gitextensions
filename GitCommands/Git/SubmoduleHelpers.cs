@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using GitCommands.Patches;
 using GitUIPluginInterfaces;
 using Microsoft;
 

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+﻿using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

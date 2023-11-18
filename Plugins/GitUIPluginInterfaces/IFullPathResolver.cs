@@ -1,6 +1,4 @@
-﻿using GitUIPluginInterfaces;
-
-namespace GitCommands;
+﻿namespace GitUIPluginInterfaces;
 
 /// <summary>
 /// Provides the ability to resolve full path.

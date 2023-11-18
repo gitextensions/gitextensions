@@ -1,6 +1,4 @@
-using GitUIPluginInterfaces;
-
-namespace GitCommands.Git
+namespace GitUIPluginInterfaces
 {
     public readonly struct ConflictedFileData
     {

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using GitExtensions.Plugins.Bitbucket.Properties;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.Bitbucket

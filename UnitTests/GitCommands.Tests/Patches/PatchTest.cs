@@ -1,4 +1,4 @@
-﻿using GitCommands.Patches;
+﻿using GitUIPluginInterfaces;
 
 namespace GitCommandsTests.Patches
 {

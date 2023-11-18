@@ -1,4 +1,4 @@
-﻿namespace GitCommands.Patches
+﻿namespace GitUIPluginInterfaces
 {
     public sealed class Patch
     {

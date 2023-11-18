@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitExtensions;

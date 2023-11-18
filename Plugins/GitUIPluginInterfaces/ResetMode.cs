@@ -1,4 +1,4 @@
-﻿namespace GitCommands
+﻿namespace GitUIPluginInterfaces
 {
     /// <summary>Arguments to 'git reset'.</summary>
     public enum ResetMode

@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormMergeSubmodule_Load(object sender, EventArgs e)
         {
-            GitCommands.Git.ConflictData item = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictAsync(_filename));
+            ConflictData item = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictAsync(_filename));
 
             tbBase.Text = item.Base.ObjectId?.ToString() ?? _deleted.Text;
             tbLocal.Text = item.Local.ObjectId?.ToString() ?? _deleted.Text;

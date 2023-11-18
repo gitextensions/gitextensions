@@ -1,5 +1,4 @@
 using System.Net;
-using GitCommands;
 using GitUIPluginInterfaces;
 
 namespace ResourceManager.CommitDataRenders

@@ -1,6 +1,6 @@
 ﻿using Microsoft;
 
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces.Settings
 {
     /// <summary>
     /// Not a real setting (as it save no setting value). It is used to display a control that is not a setting (linklabel, text,...)
@@ -15,7 +15,7 @@ namespace GitUIPluginInterfaces
             CustomControl = control;
         }
 
-        public PseudoSetting(string text, string caption = "    ", int? height = null,  Action<TextBox>? textboxSettings = null)
+        public PseudoSetting(string text, string caption = "    ", int? height = null, Action<TextBox>? textboxSettings = null)
         {
             Caption = caption;
 

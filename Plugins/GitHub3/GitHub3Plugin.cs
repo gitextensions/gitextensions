@@ -6,6 +6,7 @@ using GitCommands.Remotes;
 using GitExtensions.Plugins.GitHub3.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
+using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using ResourceManager;
 

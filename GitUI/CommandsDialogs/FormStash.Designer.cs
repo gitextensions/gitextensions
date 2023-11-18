@@ -1,6 +1,7 @@
 using System.Windows.Forms;
 using GitUI.Editor;
 using GitUI.UserControls.RevisionGrid;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -58,7 +59,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitStashBindingSource
             // 
-            gitStashBindingSource.DataSource = typeof(GitCommands.Git.GitStash);
+            gitStashBindingSource.DataSource = typeof(GitStash);
             // 
             // splitContainer1
             // 

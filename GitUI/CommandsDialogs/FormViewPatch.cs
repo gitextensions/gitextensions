@@ -2,6 +2,7 @@
 using GitCommands;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

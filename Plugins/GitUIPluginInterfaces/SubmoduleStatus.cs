@@ -1,4 +1,4 @@
-namespace GitCommands.Git
+namespace GitUIPluginInterfaces
 {
     public enum SubmoduleStatus
     {

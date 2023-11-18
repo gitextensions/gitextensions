@@ -6,6 +6,7 @@ using GitExtensions.Plugins.JiraCommitHintPlugin.Properties;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using GitUIPluginInterfaces.UserControls;
 using Microsoft;
 using NString;

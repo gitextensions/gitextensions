@@ -1,4 +1,6 @@
-﻿namespace GitCommands.Git
+﻿using GitUIPluginInterfaces;
+
+namespace GitCommands.Git
 {
     /// <summary>
     /// Compares the file extension of <see cref="GitItemStatus.Name"/> and then by path/>.

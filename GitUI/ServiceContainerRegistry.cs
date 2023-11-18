@@ -2,6 +2,7 @@
 using GitCommands.UserRepositoryHistory;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI;

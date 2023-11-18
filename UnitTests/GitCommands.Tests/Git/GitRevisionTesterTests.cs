@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions;
 using FluentAssertions;
-using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;

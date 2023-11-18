@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces.Settings
 {
     public class ChoiceSetting : ISetting
     {

@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using GitUIPluginInterfaces.UserControls;
 
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces.Settings
 {
     public class CredentialsSetting : CredentialsManager, ISetting
     {
