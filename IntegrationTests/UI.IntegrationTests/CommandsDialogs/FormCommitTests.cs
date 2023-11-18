@@ -78,7 +78,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         }
 
         [Test]
-        public void Should_update_committer_info_on_form_activated()
+        public void Should_not_update_committer_info_on_form_activated()
         {
             RunFormTest(async form =>
             {
@@ -103,7 +103,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Assert.AreEqual("Committer new author <new_author@mail.com>", commitAuthorStatus.Text);
+                Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
             });
         }
 
