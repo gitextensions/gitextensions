@@ -82,7 +82,7 @@ Currently checked out revision:
             ColorDepth = ColorDepth.Depth32Bit
         };
 
-        private readonly BindingList<ScriptInfoProxy> _scripts = new();
+        private readonly BindingList<ScriptInfoProxy> _scripts = [];
         private readonly IScriptsManager _scriptsManager;
         private SimpleHelpDisplayDialog? _argumentsCheatSheet;
         private bool _handlingCheck;

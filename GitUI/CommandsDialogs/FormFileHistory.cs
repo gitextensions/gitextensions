@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.SelectedId = revision?.ObjectId;
             RevisionGrid.ShowBuildServerInfo = true;
-            RevisionGrid.FilePathByObjectId = new();
+            RevisionGrid.FilePathByObjectId = [];
 
             FileName = fileName;
             SetTitle();
@@ -190,11 +190,11 @@ namespace GitUI.CommandsDialogs
 
         public void LoadCustomDifftools()
         {
-            List<CustomDiffMergeTool> menus = new()
-            {
+            List<CustomDiffMergeTool> menus =
+            [
                 new(openWithDifftoolToolStripMenuItem, OpenWithDifftoolToolStripMenuItem_Click),
                 new(diffToolRemoteLocalStripMenuItem, diffToolRemoteLocalStripMenuItem_Click),
-            };
+            ];
 
             new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
         }

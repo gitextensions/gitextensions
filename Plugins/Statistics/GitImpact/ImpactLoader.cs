@@ -111,15 +111,15 @@ namespace GitExtensions.Plugins.GitImpact
             string authorName = RespectMailmap ? "%aN" : "%an";
             string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=iso -C --all --no-merges";
 
-            List<JoinableTask> tasks = new()
-            {
+            List<JoinableTask> tasks =
+            [
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
                         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                         LoadModuleInfo(command, _module, token);
                     })
-            };
+            ];
 
             if (ShowSubmodules)
             {

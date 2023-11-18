@@ -10,7 +10,7 @@ namespace GitExtensions.Plugins.GitHub3
         public GitHubPullRequestDiscussion(PullRequest pullRequest)
         {
             _pullRequest = pullRequest;
-            Entries = new List<IDiscussionEntry>();
+            Entries = [];
             ForceReload();
         }
 

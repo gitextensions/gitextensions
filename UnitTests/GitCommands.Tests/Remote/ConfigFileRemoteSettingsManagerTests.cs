@@ -69,7 +69,7 @@ namespace GitCommandsTests.Remote
             const string remoteName1 = "name1";
             const string remoteName2 = "name2";
             _module.GetRemoteNames().Returns(x => new[] { null, "", " ", "    ", remoteName1, "\t" });
-            List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{remoteName2}", true) };
+            List<IConfigSection> sections = [new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{remoteName2}", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
             IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(loadDisabled);
@@ -235,7 +235,7 @@ namespace GitCommandsTests.Remote
         [TestCase("name2", true)]
         public void SetRemoteState_should_call_ToggleRemoteState(string remoteName, bool remoteDisabled)
         {
-            List<IConfigSection> sections = new() { new ConfigSection("-remote.name1", true), new ConfigSection("remote.name2", true) };
+            List<IConfigSection> sections = [new ConfigSection("-remote.name1", true), new ConfigSection("remote.name2", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
             _remotesManager.ToggleRemoteState(remoteName, remoteDisabled);
@@ -356,7 +356,7 @@ namespace GitCommandsTests.Remote
 
             _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
 
-            List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true) };
+            List<IConfigSection> sections = [new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
             IReadOnlyList<GitUIPluginInterfaces.Remote> disabledRemotes = _remotesManager.GetDisabledRemotes();
@@ -376,7 +376,7 @@ namespace GitCommandsTests.Remote
 
             _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
 
-            List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true) };
+            List<IConfigSection> sections = [new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
             IReadOnlyList<string> enabledRemoteNames = _remotesManager.GetEnabledRemoteNames();
@@ -392,7 +392,7 @@ namespace GitCommandsTests.Remote
 
             _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
 
-            List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true) };
+            List<IConfigSection> sections = [new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
             Assert.IsTrue(_remotesManager.EnabledRemoteExists(enabledRemoteName));
@@ -407,7 +407,7 @@ namespace GitCommandsTests.Remote
 
             _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
 
-            List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true) };
+            List<IConfigSection> sections = [new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
             Assert.IsTrue(_remotesManager.DisabledRemoteExists(disabledRemoteName));

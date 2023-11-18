@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _removeSelectedSubmodule = new("Are you sure you want remove the selected submodule?");
         private readonly TranslationString _removeSelectedSubmoduleCaption = new("Remove");
 
-        private readonly BindingList<IGitSubmoduleInfo?> _modules = new();
+        private readonly BindingList<IGitSubmoduleInfo?> _modules = [];
         private GitSubmoduleInfo? _oldSubmoduleInfo;
 
         public FormSubmodules(GitUICommands commands)

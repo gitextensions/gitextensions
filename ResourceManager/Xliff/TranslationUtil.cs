@@ -15,7 +15,7 @@ namespace ResourceManager.Xliff
             = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
               BindingFlags.NonPublic | BindingFlags.SetField;
 
-        private static readonly HashSet<string> _processedAssemblies = new();
+        private static readonly HashSet<string> _processedAssemblies = [];
 
         private static readonly HashSet<string> _translatableItemInComponentNames = new(StringComparer.Ordinal)
         {
@@ -350,7 +350,7 @@ namespace ResourceManager.Xliff
 
         public static Dictionary<string, List<Type>> GetTranslatableTypes()
         {
-            Dictionary<string, List<Type>> dictionary = new();
+            Dictionary<string, List<Type>> dictionary = [];
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic))
             {
                 if (_processedAssemblies.Contains(assembly.FullName))
@@ -370,7 +370,7 @@ namespace ResourceManager.Xliff
 
                 if (!dictionary.TryGetValue(key, out List<Type> list))
                 {
-                    list = new();
+                    list = [];
                     dictionary.Add(key, list);
                 }
 

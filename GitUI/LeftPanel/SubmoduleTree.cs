@@ -194,7 +194,7 @@ namespace GitUI.LeftPanel
 
             Validates.NotNull(threadModule);
 
-            List<SubmoduleNode> submoduleNodes = new();
+            List<SubmoduleNode> submoduleNodes = [];
 
             // We always want to display submodules rooted from the top project.
             CreateSubmoduleNodes(result, threadModule, ref submoduleNodes);
@@ -291,7 +291,7 @@ namespace GitUI.LeftPanel
             GitModule topModule = threadModule.GetTopModule();
 
             // Build a mapping of top-module-relative path to node
-            Dictionary<string, Node> pathToNodes = new();
+            Dictionary<string, Node> pathToNodes = [];
 
             // Add existing SubmoduleNodes
             foreach (SubmoduleNode node in submoduleNodes)
@@ -317,7 +317,7 @@ namespace GitUI.LeftPanel
 
             // Now build the tree
             DummyNode rootNode = new();
-            HashSet<Node> nodesInTree = new();
+            HashSet<Node> nodesInTree = [];
             foreach (SubmoduleNode node in submoduleNodes)
             {
                 Node parentNode = rootNode;

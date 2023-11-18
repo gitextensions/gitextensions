@@ -217,7 +217,7 @@ namespace GitCommandsTests
 
                 foreach (T member in Enum.GetValues(typeof(T)))
                 {
-                    ArgumentBuilder args = new();
+                    ArgumentBuilder args = [];
 
                     Assert.DoesNotThrow(() => method.Invoke(null, new object[] { args, member }));
                 }
@@ -244,10 +244,10 @@ namespace GitCommandsTests
         [TestCase(null)]
         public void Handle_null_objectid(ObjectId id)
         {
-            ArgumentBuilder args = new()
-            {
+            ArgumentBuilder args =
+            [
                 id
-            };
+            ];
             Assert.AreEqual(args.ToString(), "");
         }
 
@@ -257,10 +257,10 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(ForcePushOptions)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                ArgumentBuilder args = new()
-                {
+                ArgumentBuilder args =
+                [
                     (ForcePushOptions)mode
-                };
+                ];
             }
         }
 
@@ -270,10 +270,10 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(GitBisectOption)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                ArgumentBuilder args = new()
-                {
+                ArgumentBuilder args =
+                [
                     (GitBisectOption)mode
-                };
+                ];
             }
         }
 
@@ -283,10 +283,10 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(IgnoreSubmodulesMode)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                ArgumentBuilder args = new()
-                {
+                ArgumentBuilder args =
+                [
                     (IgnoreSubmodulesMode)mode
-                };
+                ];
             }
         }
 
@@ -296,10 +296,10 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(CleanMode)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                ArgumentBuilder args = new()
-                {
+                ArgumentBuilder args =
+                [
                     (CleanMode)mode
-                };
+                ];
             }
         }
 
@@ -309,10 +309,10 @@ namespace GitCommandsTests
             foreach (int mode in Enum.GetValues(typeof(ResetMode)))
             {
                 // unimplemented switches will result in InvalidEnumArgumentException
-                ArgumentBuilder args = new()
-                {
+                ArgumentBuilder args =
+                [
                     (ResetMode)mode
-                };
+                ];
             }
         }
 

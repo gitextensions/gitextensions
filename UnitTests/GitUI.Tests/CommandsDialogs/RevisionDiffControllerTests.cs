@@ -35,7 +35,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void SaveFiles_should_not_throw_if_userSelection_null_when_files_empty()
         {
-            List<FileStatusItem> files = new();
+            List<FileStatusItem> files = [];
 
             ((Action)(() => _controller.SaveFiles(files, userSelection: null))).Should().NotThrow();
         }
@@ -43,10 +43,10 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void SaveFiles_should_throw_if_userSelection_null_when_files_notnull()
         {
-            List<FileStatusItem> files = new()
-            {
+            List<FileStatusItem> files =
+            [
                 new(default, new(ObjectId.Random()), new(""))
-            };
+            ];
 
             ((Action)(() => _controller.SaveFiles(files, userSelection: null))).Should()
                 .Throw<ArgumentNullException>()
@@ -57,10 +57,10 @@ namespace GitUITests.CommandsDialogs
         public void SaveFiles_should_not_save_single_file_if_selection_cancelled()
         {
             FileStatusItem item = new(default, new(ObjectId.Random()), new(""));
-            List<FileStatusItem> files = new()
-            {
+            List<FileStatusItem> files =
+            [
                 item
-            };
+            ];
 
             // User cancelled the dialog
             Func<string, string?> userSelection = (_) => null;
@@ -75,10 +75,10 @@ namespace GitUITests.CommandsDialogs
         public void SaveFiles_should_save_single_file()
         {
             FileStatusItem item = new(default, new(ObjectId.Random()), new(""));
-            List<FileStatusItem> files = new()
-            {
+            List<FileStatusItem> files =
+            [
                 item
-            };
+            ];
 
             Func<string, string?> userSelection = (_) => "c:\\temp\\file.txt";
 
@@ -93,11 +93,11 @@ namespace GitUITests.CommandsDialogs
         {
             FileStatusItem item1 = new(default, new(ObjectId.Random()), new("item1"));
             FileStatusItem item2 = new(default, new(ObjectId.Random()), new("item2"));
-            List<FileStatusItem> files = new()
-            {
+            List<FileStatusItem> files =
+            [
                 item1,
                 item2
-            };
+            ];
 
             // User cancelled the dialog
             Func<string, string?> userSelection = (_) => null;
@@ -116,12 +116,12 @@ namespace GitUITests.CommandsDialogs
             FileStatusItem item1 = new(default, new(ObjectId.Random()), new("item1"));
             FileStatusItem item2 = new(default, new(ObjectId.Random()), new("item2"));
             FileStatusItem item3 = new(default, new(ObjectId.Random()), new("item3"));
-            List<FileStatusItem> files = new()
-            {
+            List<FileStatusItem> files =
+            [
                 item1,
                 item2,
                 item3,
-            };
+            ];
 
             _fullPathResolver.Resolve(item1.Item.Name).Returns(x => "c:\\temp\\item1.txt");
             _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\item2.txt");
@@ -147,12 +147,12 @@ namespace GitUITests.CommandsDialogs
             FileStatusItem item1 = new(default, new(ObjectId.Random()), new("item1"));
             FileStatusItem item2 = new(default, new(ObjectId.Random()), new("item2"));
             FileStatusItem item3 = new(default, new(ObjectId.Random()), new("item3"));
-            List<FileStatusItem> files = new()
-            {
+            List<FileStatusItem> files =
+            [
                 item1,
                 item2,
                 item3,
-            };
+            ];
 
             _fullPathResolver.Resolve(item1.Item.Name).Returns(x => "c:\\temp\\item1.txt");
             _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\item2.txt");

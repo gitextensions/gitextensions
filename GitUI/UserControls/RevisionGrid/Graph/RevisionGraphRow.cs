@@ -276,7 +276,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            _gaps ??= new();
+            _gaps ??= [];
             _gaps.Add(fromLane);
             if (nextGap < int.MaxValue)
             {

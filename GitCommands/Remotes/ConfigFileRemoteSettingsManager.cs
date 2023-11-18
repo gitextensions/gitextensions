@@ -196,7 +196,7 @@ namespace GitCommands.Remotes
         // TODO: candidate for Async implementations
         public IEnumerable<ConfigFileRemote> LoadRemotes(bool loadDisabled)
         {
-            List<ConfigFileRemote> remotes = new();
+            List<ConfigFileRemote> remotes = [];
             IGitModule module = _getModule();
             if (module is null)
             {

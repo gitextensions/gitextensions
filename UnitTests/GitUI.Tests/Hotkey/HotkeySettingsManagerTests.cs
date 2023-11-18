@@ -17,7 +17,7 @@ namespace GitUITests.Hotkey
         public void SetUp()
         {
             IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
-            scriptsManager.GetScripts().Returns(new BindingList<ScriptInfo>());
+            scriptsManager.GetScripts().Returns([]);
 
             _settingsManager = new(scriptsManager);
         }

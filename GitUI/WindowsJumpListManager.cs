@@ -27,7 +27,7 @@ namespace GitUI
     /// <inheritdoc />
     public sealed class WindowsJumpListManager : IWindowsJumpListManager
     {
-        private static readonly Dictionary<Image, Icon> _iconByImage = new();
+        private static readonly Dictionary<Image, Icon> _iconByImage = [];
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
         private ThumbnailToolBarButton? _closeAllButton;
         private ThumbnailToolBarButton? _commitButton;

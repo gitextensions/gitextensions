@@ -31,7 +31,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
 
         public IEnumerable<LogLine> Parse(IEnumerable<string>? lines)
         {
-            List<LogLine> resultList = new();
+            List<LogLine> resultList = [];
             if (lines is null)
             {
                 return resultList;

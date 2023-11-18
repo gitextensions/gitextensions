@@ -98,13 +98,13 @@ namespace GitUITests
         public void PopulateFavouriteRepositoriesMenu_should_order_favourites_alphabetically()
         {
             ToolStripMenuItem tsmiFavouriteRepositories = new();
-            List<Repository> repositoryHistory = new()
-            {
+            List<Repository> repositoryHistory =
+            [
                 new Repository(@"c:\") { Category = "D" },
                 new Repository(@"c:\") { Category = "A" },
                 new Repository(@"c:\") { Category = "C" },
                 new Repository(@"c:\") { Category = "B" }
-            };
+            ];
 
             using Form form = new();
             form.Show();

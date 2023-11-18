@@ -21,10 +21,10 @@ namespace GitUI.LeftPanel
         {
             // More than one local can point to a single remote branch, pick one of them.
             Nodes nodes = new(this);
-            Dictionary<string, BaseRevisionNode> pathToNodes = new();
+            Dictionary<string, BaseRevisionNode> pathToNodes = [];
             IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData()?.DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
 
-            List<RemoteRepoNode> enabledRemoteRepoNodes = new();
+            List<RemoteRepoNode> enabledRemoteRepoNodes = [];
             Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToDictionary(r => r.Name);
 
             ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
@@ -77,7 +77,7 @@ namespace GitUI.LeftPanel
             IReadOnlyList<Remote> disabledRemotes = remotesManager.GetDisabledRemotes();
             if (disabledRemotes.Count > 0)
             {
-                List<RemoteRepoNode> disabledRemoteRepoNodes = new();
+                List<RemoteRepoNode> disabledRemoteRepoNodes = [];
                 foreach (Remote remote in disabledRemotes)
                 {
                     RemoteRepoNode node = new(this, remote.Name, remotesManager, remote, false);

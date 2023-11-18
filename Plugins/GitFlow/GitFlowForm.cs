@@ -17,7 +17,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         private readonly GitUIEventArgs _gitUiCommands;
 
-        private Dictionary<string, IReadOnlyList<string>> Branches { get; } = new Dictionary<string, IReadOnlyList<string>>();
+        private Dictionary<string, IReadOnlyList<string>> Branches { get; } = [];
 
         private readonly AsyncLoader _task = new();
 
@@ -89,8 +89,7 @@ namespace GitExtensions.Plugins.GitFlow
                 btnPull.Enabled = btnPublish.Enabled = remotes.Any();
 
                 cbType.DataSource = BranchTypes;
-                List<string> types = new() { string.Empty };
-                types.AddRange(BranchTypes);
+                List<string> types = [string.Empty, .. BranchTypes];
                 cbManageType.DataSource = types;
 
                 cbBasedOn.Checked = false;

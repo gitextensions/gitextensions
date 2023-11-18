@@ -15,7 +15,7 @@ namespace GitCommands.ExternalLinks
 
         public ExternalLink Apply(Match? remoteMatch, Match? revisionMatch, GitRevision revision)
         {
-            List<string> groups = new();
+            List<string> groups = [];
             AddGroupsFromMatches(remoteMatch);
             AddGroupsFromMatches(revisionMatch);
             object[] groupsArray = groups.ToArray<object>();

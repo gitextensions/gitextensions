@@ -6,7 +6,7 @@ namespace AzureDevOpsIntegration
     {
         public string? Id { get; set; }
         public string? BuildDefinitions { get; init; }
-        public List<BuildInfo> FinishedBuilds { get; } = new List<BuildInfo>();
+        public List<BuildInfo> FinishedBuilds { get; } = [];
         public DateTime LastCall { get; set; } = DateTime.MinValue;
     }
 }

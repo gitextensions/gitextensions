@@ -101,8 +101,8 @@ namespace GitCommandsTests.UserRepositoryHistory
         [Test]
         public async Task Serialize_recent_repositories()
         {
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository(@"C:\Development\gitextensions\"),
                 new Repository(@"C:\Development\gitextensions\Externals\NBug\")
                 {
@@ -112,7 +112,8 @@ namespace GitCommandsTests.UserRepositoryHistory
                 {
                     Anchor = Repository.RepositoryAnchor.AllRecent,
                 }
-            };
+
+            ];
 
             string xml = _repositoryXmlSerialiser.Serialize(history);
             await Verifier.VerifyXml(xml);

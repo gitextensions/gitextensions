@@ -108,8 +108,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 PinnedLB.Items.Clear();
                 AllRecentLB.Items.Clear();
 
-                List<RecentRepoInfo> pinnedRepos = new();
-                List<RecentRepoInfo> allRecentRepos = new();
+                List<RecentRepoInfo> pinnedRepos = [];
+                List<RecentRepoInfo> allRecentRepos = [];
 
                 RecentRepoSplitter splitter = new()
                 {
@@ -267,7 +267,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 lb = null;
             }
 
-            repos = new List<RecentRepoInfo>();
+            repos = [];
             if (lb?.SelectedItems.Count > 0)
             {
                 foreach (ListViewItem item in lb.SelectedItems)

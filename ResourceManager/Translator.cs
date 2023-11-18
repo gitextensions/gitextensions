@@ -46,7 +46,7 @@ namespace ResourceManager
 
         public static string[] GetAllTranslations()
         {
-            List<string> translations = new();
+            List<string> translations = [];
             try
             {
                 string translationDir = GetTranslationDir();

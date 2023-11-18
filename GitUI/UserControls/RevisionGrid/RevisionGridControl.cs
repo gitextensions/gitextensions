@@ -558,10 +558,10 @@ namespace GitUI
 
         public void LoadCustomDifftools()
         {
-            List<CustomDiffMergeTool> menus = new()
-            {
+            List<CustomDiffMergeTool> menus =
+            [
                 new(openCommitsWithDiffToolMenuItem, diffSelectedCommitsMenuItem_Click)
-            };
+            ];
 
             new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
         }
@@ -1175,7 +1175,7 @@ namespace GitUI
                     path
                 };
 
-                HashSet<string?> setOfFileNames = new();
+                HashSet<string?> setOfFileNames = [];
                 ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
                 LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
 

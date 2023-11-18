@@ -21,11 +21,11 @@ namespace GitUI
                 }
 
                 Executable executable = new(vswhere);
-                ArgumentBuilder arguments = new()
-                {
+                ArgumentBuilder arguments =
+                [
                     "-latest",
                     "-property productPath"
-                };
+                ];
                 _devEnvPath = await executable.GetOutputAsync(arguments);
             });
         }

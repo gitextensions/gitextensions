@@ -79,7 +79,7 @@ namespace GitCommands.Config
             }
             else
             {
-                _configKeys[key] = new List<string> { value };
+                _configKeys[key] = [value];
             }
         }
 
@@ -87,7 +87,7 @@ namespace GitCommands.Config
         {
             if (!_configKeys.ContainsKey(key))
             {
-                _configKeys[key] = new List<string>();
+                _configKeys[key] = [];
             }
 
             _configKeys[key].Add(value);

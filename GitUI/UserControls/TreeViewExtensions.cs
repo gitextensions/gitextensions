@@ -35,7 +35,7 @@
         /// </summary>
         public static HashSet<string> GetExpandedNodesState(this TreeNode node)
         {
-            HashSet<string> result = new();
+            HashSet<string> result = [];
             node.DoGetExpandedNodesState(result);
             return result;
         }

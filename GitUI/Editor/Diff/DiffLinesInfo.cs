@@ -2,7 +2,7 @@
 {
     public sealed class DiffLinesInfo
     {
-        private readonly Dictionary<int, DiffLineInfo> _diffLines = new();
+        private readonly Dictionary<int, DiffLineInfo> _diffLines = [];
 
         public IReadOnlyDictionary<int, DiffLineInfo> DiffLines => _diffLines;
 

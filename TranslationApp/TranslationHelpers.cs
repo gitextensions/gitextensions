@@ -57,7 +57,7 @@ namespace TranslationApp
 
         public static IDictionary<string, List<TranslationItemWithCategory>> GetItemsDictionary(IDictionary<string, TranslationFile> translations)
         {
-            Dictionary<string, List<TranslationItemWithCategory>> items = new();
+            Dictionary<string, List<TranslationItemWithCategory>> items = [];
             foreach ((string key, TranslationFile file) in translations)
             {
                 IEnumerable<TranslationItemWithCategory> list = from item in file.TranslationCategories
@@ -73,7 +73,7 @@ namespace TranslationApp
         {
             if (!dictionary.TryGetValue(key, out List<T> list))
             {
-                list = new List<T>();
+                list = [];
                 dictionary.Add(key, list);
             }
 
@@ -83,7 +83,7 @@ namespace TranslationApp
         public static IDictionary<string, List<TranslationItemWithCategory>> LoadTranslation(
             IDictionary<string, TranslationFile> translation, IDictionary<string, List<TranslationItemWithCategory>> neutralItems)
         {
-            Dictionary<string, List<TranslationItemWithCategory>> translateItems = new();
+            Dictionary<string, List<TranslationItemWithCategory>> translateItems = [];
 
             IDictionary<string, List<TranslationItemWithCategory>> oldTranslationItems = GetItemsDictionary(translation);
 
@@ -91,7 +91,7 @@ namespace TranslationApp
             {
                 List<TranslationItemWithCategory> oldItems = oldTranslationItems.Find(key);
                 List<TranslationItemWithCategory> transItems = translateItems.Find(key);
-                Dictionary<string, string> dict = new();
+                Dictionary<string, string> dict = [];
                 foreach (TranslationItemWithCategory item in items)
                 {
                     IEnumerable<TranslationItemWithCategory> curItems = oldItems.Where(

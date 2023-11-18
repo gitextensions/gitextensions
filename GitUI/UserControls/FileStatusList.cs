@@ -56,7 +56,7 @@ namespace GitUI
         [DefaultValue(false)]
         public bool DisableSubmoduleMenuItemBold { get; set; }
 
-        private readonly Dictionary<string, int> _stateImageIndexDict = new();
+        private readonly Dictionary<string, int> _stateImageIndexDict = [];
 
         public FileStatusList()
         {
@@ -551,7 +551,7 @@ namespace GitUI
 
             ListViewItem? FindPrevItemInGroups()
             {
-                List<ListViewGroup> searchInGroups = new();
+                List<ListViewGroup> searchInGroups = [];
                 bool foundCurrentGroup = false;
                 for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
                 {
@@ -586,7 +586,7 @@ namespace GitUI
 
             ListViewItem? FindNextItemInGroups()
             {
-                List<ListViewGroup> searchInGroups = new();
+                List<ListViewGroup> searchInGroups = [];
                 bool foundCurrentGroup = false;
                 for (int i = 0; i < FileStatusListView.Groups.Count; i++)
                 {
@@ -1015,7 +1015,7 @@ namespace GitUI
             FileStatusListView.Groups.Clear();
             FileStatusListView.Items.Clear();
 
-            List<ListViewItem> list = new();
+            List<ListViewItem> list = [];
             foreach (FileStatusWithDescription i in GitItemStatusesWithDescription)
             {
                 string name = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
@@ -1628,7 +1628,7 @@ namespace GitUI
             {
                 if (SelectedItems.Any())
                 {
-                    StringCollection fileList = new();
+                    StringCollection fileList = [];
 
                     foreach (FileStatusItem item in SelectedItems)
                     {

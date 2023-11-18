@@ -11,27 +11,27 @@ namespace GitExtUtilsTests
         {
             Test(
                 "",
-                new ArgumentBuilder());
+                []);
 
             Test(
                 "foo",
-                new ArgumentBuilder { "foo" });
+                ["foo"]);
 
             Test(
                 "foo bar",
-                new ArgumentBuilder { "foo", "bar" });
+                ["foo", "bar"]);
 
             Test(
                 "foo bar",
-                new ArgumentBuilder { "foo", null, "bar" });
+                ["foo", null, "bar"]);
 
             Test(
                 "foo bar",
-                new ArgumentBuilder { "foo", "", "bar" });
+                ["foo", "", "bar"]);
 
             Test(
                 "",
-                new ArgumentBuilder { null });
+                [null]);
 
             void Test(string expected, ArgumentBuilder command)
             {
@@ -42,7 +42,7 @@ namespace GitExtUtilsTests
         [Test]
         public void IsEmpty()
         {
-            ArgumentBuilder builder = new();
+            ArgumentBuilder builder = [];
             builder.IsEmpty.Should().BeTrue();
 
             builder.Add("test");
@@ -52,7 +52,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Length()
         {
-            ArgumentBuilder builder = new();
+            ArgumentBuilder builder = [];
             builder.GetTestAccessor().Arguments.Length.Should().Be(0);
 
             builder.Add("test");
@@ -73,12 +73,7 @@ namespace GitExtUtilsTests
         [TestCase(new[] { "test", null, "test" }, 9, "test test")]
         public void Add(string[] args, int expectedLength, string expected)
         {
-            ArgumentBuilder builder = new();
-
-            foreach (string arg in args)
-            {
-                builder.Add(arg);
-            }
+            ArgumentBuilder builder = [.. args];
 
             builder.GetTestAccessor().Arguments.Length.Should().Be(expectedLength);
             builder.ToString().Should().Be(expected);

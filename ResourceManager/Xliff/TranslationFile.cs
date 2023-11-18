@@ -9,7 +9,7 @@ namespace ResourceManager.Xliff
         public TranslationFile()
         {
             Version = "1.0";
-            TranslationCategories = new List<TranslationCategory>();
+            TranslationCategories = [];
         }
 
         public TranslationFile(string gitExVersion, string sourceLanguage, string targetLanguage)

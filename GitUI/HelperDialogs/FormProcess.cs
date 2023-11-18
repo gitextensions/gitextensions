@@ -17,7 +17,7 @@ namespace GitUI.HelperDialogs
         public string? ProcessInput { get; }
         public readonly string WorkingDirectory;
         public HandleOnExit? HandleOnExitCallback { get; set; }
-        public readonly Dictionary<string, string> ProcessEnvVariables = new();
+        public readonly Dictionary<string, string> ProcessEnvVariables = [];
 
         private FormProcess(GitUICommands commands, ConsoleOutputControl? outputControl, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process)
             : base(commands, outputControl, useDialogSettings)

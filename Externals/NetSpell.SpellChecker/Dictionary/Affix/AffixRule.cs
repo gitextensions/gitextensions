@@ -17,7 +17,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
         /// <summary>
         ///     Collection of text entries that make up this rule
         /// </summary>
-        public AffixEntryCollection AffixEntries { get; set; } = new();
+        public AffixEntryCollection AffixEntries { get; set; } = [];
 
         /// <summary>
         ///     Name of the Affix rule

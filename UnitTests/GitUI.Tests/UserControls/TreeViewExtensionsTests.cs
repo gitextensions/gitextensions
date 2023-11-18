@@ -61,7 +61,7 @@ namespace GitUITests.UserControls
         [Test]
         public void RestoreExpandedNodesState_should_restore_no_nodes()
         {
-            HashSet<string> expandedNodes = new();
+            HashSet<string> expandedNodes = [];
             _root.RestoreExpandedNodesState(expandedNodes);
 
             HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
@@ -71,7 +71,7 @@ namespace GitUITests.UserControls
         [Test]
         public void RestoreExpandedNodesState_should_restore_one_node()
         {
-            HashSet<string> expandedNodes = new() { @"Root\B" };
+            HashSet<string> expandedNodes = [@"Root\B"];
             _root.RestoreExpandedNodesState(expandedNodes);
 
             HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
@@ -82,8 +82,8 @@ namespace GitUITests.UserControls
         [Test]
         public void RestoreExpandedNodesState_should_restore_all_nodes()
         {
-            HashSet<string> expandedNodes = new()
-            {
+            HashSet<string> expandedNodes =
+            [
                 $"{_root.GetFullNamePath()}",
                 $"{_a.GetFullNamePath()}",
                 $"{_b.GetFullNamePath()}",
@@ -92,7 +92,7 @@ namespace GitUITests.UserControls
                 $"{_b2_1.GetFullNamePath()}",
                 $"{_b3.GetFullNamePath()}",
                 $"{_c.GetFullNamePath()}",
-            };
+            ];
 
             _root.RestoreExpandedNodesState(expandedNodes);
 

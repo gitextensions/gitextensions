@@ -18,6 +18,6 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         {
         }
 
-        public List<UserRepositoryHistory.Repository> Repositories { get; } = new List<UserRepositoryHistory.Repository>();
+        public List<UserRepositoryHistory.Repository> Repositories { get; } = [];
     }
 }

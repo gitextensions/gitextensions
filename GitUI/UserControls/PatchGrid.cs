@@ -93,7 +93,7 @@ namespace GitUI
                 .Where(p => p.Length >= 3)
                 .ToArray();
 
-            List<PatchFile> patchFiles = new();
+            List<PatchFile> patchFiles = [];
             if (commitsInfos.Length == 0)
             {
                 return patchFiles;
@@ -110,7 +110,7 @@ namespace GitUI
             catch (OperationCanceledException)
             {
                 // If retrieve of commit range failed, fall back on getting data commit by commit
-                rebasedCommitsRevisions = new Dictionary<string, GitRevision>();
+                rebasedCommitsRevisions = [];
             }
 
             string? currentCommitShortHash = File.Exists(currentFilePath) ? File.ReadAllText(currentFilePath).Trim() : null;
@@ -190,7 +190,7 @@ namespace GitUI
 
         private IReadOnlyList<PatchFile> GetRebasePatchFiles()
         {
-            List<PatchFile> patchFiles = new();
+            List<PatchFile> patchFiles = [];
 
             string nextFile = GetNextRebasePatch();
 

@@ -5,7 +5,7 @@ namespace GitUI
 {
     internal sealed class ToolStripExThemeAwareRenderer : ToolStripExProfessionalRenderer
     {
-        private static readonly ConditionalWeakTable<Bitmap, Bitmap> AdaptedImagesCache = new();
+        private static readonly ConditionalWeakTable<Bitmap, Bitmap> AdaptedImagesCache = [];
 
         public ToolStripExThemeAwareRenderer()
         {

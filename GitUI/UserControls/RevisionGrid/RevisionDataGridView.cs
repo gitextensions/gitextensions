@@ -27,7 +27,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Stopwatch _lastRepaint = Stopwatch.StartNew();
         private readonly Stopwatch _lastScroll = Stopwatch.StartNew();
         private readonly Stopwatch _consecutiveScroll = Stopwatch.StartNew();
-        private readonly List<ColumnProvider> _columnProviders = new();
+        private readonly List<ColumnProvider> _columnProviders = [];
 
         internal RevisionGraph _revisionGraph = new();
 
@@ -572,7 +572,7 @@ namespace GitUI.UserControls.RevisionGrid
             DebugHelpers.Assert(_loadedToBeSelectedRevisionsCount == ToBeSelectedObjectIds.Count,
                 $"{nameof(CalculateGraphIndices)}() was called before all expected revisions were loaded.");
 
-            List<int> toBeSelectedGraphIndexes = new();
+            List<int> toBeSelectedGraphIndexes = [];
             foreach (ObjectId objectId in ToBeSelectedObjectIds)
             {
                 if (_revisionGraph.TryGetRowIndex(objectId, out int rowIndexToBeSelected))

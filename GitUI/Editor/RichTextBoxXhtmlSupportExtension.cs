@@ -682,7 +682,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             try
             {
                 // to store formatting
-                List<KeyValuePair<int, string>> colFormat = new();
+                List<KeyValuePair<int, string>> colFormat = [];
                 string strT = ProcessTags(rtb, colFormat, bParaFormat);
 
                 // apply format by replacing and inserting HTML tags
@@ -1226,7 +1226,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             {
                 scf = new Stack<CHARFORMAT>();
                 spf = new Stack<PARAFORMAT>();
-                links = new List<KeyValuePair<int, int>>();
+                links = [];
                 hyperlink = null;
                 hyperlinkStart = -1;
                 charFormatChanged = false;

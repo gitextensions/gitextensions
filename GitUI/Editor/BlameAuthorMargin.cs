@@ -12,7 +12,7 @@ namespace GitUI.Editor
         private List<Image?>? _avatars;
         private readonly Color _backgroundColor;
         private List<GitBlameEntry>? _blameLines;
-        private readonly Dictionary<int, SolidBrush> _brushs = new();
+        private readonly Dictionary<int, SolidBrush> _brushs = [];
         private bool _isVisible = true;
 
         public BlameAuthorMargin(TextArea textArea) : base(textArea)

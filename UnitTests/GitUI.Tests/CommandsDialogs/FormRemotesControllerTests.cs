@@ -20,11 +20,11 @@ namespace GitUITests.CommandsDialogs
         [TestCase("\t")]
         public void RemoteDelete_should_not_throw_or_mutate_list_of_remotes_if_oldRemoteUrl_null_or_empty(string oldRemoteUrl)
         {
-            List<Repository> remotes = new()
-            {
+            List<Repository> remotes =
+            [
                 new Repository("a"),
                 new Repository("b")
-            };
+            ];
 
             _controller.RemoteDelete(remotes, oldRemoteUrl);
 
@@ -34,11 +34,11 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void RemoteDelete_should_not_throw_or_mutate_list_of_remotes_if_oldRemoteUrl_not_in_list()
         {
-            List<Repository> remotes = new()
-            {
+            List<Repository> remotes =
+            [
                 new Repository("a"),
                 new Repository("b")
-            };
+            ];
 
             _controller.RemoteDelete(remotes, "foo");
 
@@ -48,11 +48,11 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void RemoteDelete_should_remove_remotes_matching_oldRemoteUrl()
         {
-            List<Repository> remotes = new()
-            {
+            List<Repository> remotes =
+            [
                 new Repository("a"),
                 new Repository("b")
-            };
+            ];
 
             _controller.RemoteDelete(remotes, "b");
 
@@ -65,11 +65,11 @@ namespace GitUITests.CommandsDialogs
         [TestCase("\t")]
         public void RemoteUpdate_should_not_throw_or_mutate_list_of_remotes_if_newRemoteUrl_null_or_empty(string newRemoteUrl)
         {
-            List<Repository> remotes = new()
-            {
+            List<Repository> remotes =
+            [
                 new Repository("a"),
                 new Repository("b")
-            };
+            ];
 
             _controller.RemoteUpdate(remotes, "who cares", newRemoteUrl);
 
@@ -81,11 +81,11 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void RemoteDelete_should_replace_matching_oldRemoteUrl()
         {
-            List<Repository> remotes = new()
-            {
+            List<Repository> remotes =
+            [
                 new Repository("a"),
                 new Repository("b")
-            };
+            ];
 
             _controller.RemoteUpdate(remotes, "a", "a1");
 
@@ -96,12 +96,12 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void RemoteDelete_should_place_newRemoteUrl_as_first()
         {
-            List<Repository> remotes = new()
-            {
+            List<Repository> remotes =
+            [
                 new Repository("a"),
                 new Repository("b"),
                 new Repository("c")
-            };
+            ];
 
             _controller.RemoteUpdate(remotes, "c", "a1");
 

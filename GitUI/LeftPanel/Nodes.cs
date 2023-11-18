@@ -2,7 +2,7 @@
 {
     internal sealed class Nodes : IEnumerable<Node>
     {
-        private readonly List<Node> _nodesList = new();
+        private readonly List<Node> _nodesList = [];
 
         public Tree? Tree { get; }
 
@@ -65,7 +65,7 @@
         /// </summary>
         internal void FillTreeViewNode(TreeNode treeViewNode)
         {
-            HashSet<Node> prevNodes = new();
+            HashSet<Node> prevNodes = [];
 
             for (int i = 0; i < treeViewNode.Nodes.Count; i++)
             {

@@ -298,7 +298,7 @@ namespace GitCommands
             }
 
             // Clone command as argument builder
-            List<BatchArgumentItem> batches = new();
+            List<BatchArgumentItem> batches = [];
             int currentBatchItemCount = 0;
             int currentArgumentLength = baseArgument.Length;
             ArgumentBuilder lastBatchBuilder = arguments.Aggregate(builder, (currentBatchBuilder, argument) =>
@@ -319,7 +319,7 @@ namespace GitCommands
                     // Return new argument builder
                     currentBatchItemCount = 1;
                     currentArgumentLength = baseArgument.Length + 1 + argument.Length;
-                    return new ArgumentBuilder() { baseArgument, argument };
+                    return [baseArgument, argument];
                 }
 
                 currentBatchBuilder.Add(argument);

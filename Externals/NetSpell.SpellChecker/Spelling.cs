@@ -980,14 +980,14 @@ namespace NetSpell.SpellChecker
 
             Initialize();
 
-            List<Word> tempSuggestion = new();
+            List<Word> tempSuggestion = [];
 
             if ((SuggestionMode == SuggestionEnum.PhoneticNearMiss
                 || SuggestionMode == SuggestionEnum.Phonetic)
                 && _dictionary.PhoneticRules.Count > 0)
             {
                 // generate phonetic code for possible root word
-                Dictionary<string, string> codes = new();
+                Dictionary<string, string> codes = [];
                 foreach (string tempWord in _dictionary.PossibleBaseWords)
                 {
                     string tempCode = _dictionary.PhoneticCode(tempWord);
@@ -1145,7 +1145,7 @@ namespace NetSpell.SpellChecker
         #region public properties
 
         private WordDictionary _dictionary;
-        private readonly HashSet<string> _autoCompleteWords = new();
+        private readonly HashSet<string> _autoCompleteWords = [];
         private string _replacementWord = "";
         private StringBuilder _text = new();
         private int _wordIndex;
@@ -1244,7 +1244,7 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<string> IgnoreList { get; } = new List<string>();
+        public List<string> IgnoreList { get; } = [];
 
         /// <summary>
         ///     Ignore words with digits when spell checking
@@ -1270,7 +1270,7 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Dictionary<string, string> ReplaceList { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> ReplaceList { get; } = [];
 
         /// <summary>
         ///     The word to used when replacing the misspelled word
@@ -1310,7 +1310,7 @@ namespace NetSpell.SpellChecker
         /// <seealso cref="MaxSuggestions"/>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<string> Suggestions { get; } = new List<string>();
+        public List<string> Suggestions { get; } = [];
 
         /// <summary>
         ///     The text to spell check

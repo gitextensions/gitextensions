@@ -8,7 +8,7 @@ namespace ResourceManager.Xliff
     {
         public TranslationBody()
         {
-            TranslationItems = new List<TranslationItem>();
+            TranslationItems = [];
         }
 
         [XmlElement(ElementName = "trans-unit")]

@@ -11,7 +11,7 @@
         public int BlankLineCount { get; private set; }
         public int CodeLineCount { get; private set; }
 
-        public Dictionary<string, int> LinesOfCodePerExtension { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> LinesOfCodePerExtension { get; } = [];
 
         public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore, IEnumerable<string> filesToCheck)
         {

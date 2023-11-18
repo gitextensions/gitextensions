@@ -7,7 +7,7 @@ namespace GitCommands.Settings
     [DebuggerDisplay("{_byNameMap.Count} cached {" + nameof(SettingsFilePath) + ",nq}")]
     public class GitExtSettingsCache : FileSettingsCache
     {
-        private readonly XmlSerializableDictionary<string, string> _encodedNameMap = new();
+        private readonly XmlSerializableDictionary<string, string> _encodedNameMap = [];
 
         public GitExtSettingsCache(string settingsFilePath, bool autoSave = true)
             : base(settingsFilePath, autoSave)

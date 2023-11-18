@@ -198,7 +198,7 @@ namespace GitCommands
         /// <returns>List with GitRevisions.</returns>
         private IReadOnlyCollection<GitRevision> GetRevisionsFromArguments(GitArgumentBuilder arguments, CancellationToken cancellationToken)
         {
-            List<GitRevision> revisions = new();
+            List<GitRevision> revisions = [];
 
             using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding);
             foreach (ReadOnlyMemory<byte> chunk in process.StandardOutput.BaseStream.SplitLogOutput())

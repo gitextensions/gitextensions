@@ -57,24 +57,30 @@ namespace GitExtensions.Plugins.Bitbucket
             Validates.NotNull(_info.TargetBranch);
             Validates.NotNull(_info.Reviewers);
 
-            JObject resource = new();
-            resource["title"] = _info.Title;
-            resource["description"] = _info.Description;
+            JObject resource = new()
+            {
+                ["title"] = _info.Title,
+                ["description"] = _info.Description,
 
-            resource["fromRef"] = CreatePullRequestRef(
+                ["fromRef"] = CreatePullRequestRef(
                 _info.SourceRepo.ProjectKey,
-                _info.SourceRepo.RepoName, _info.SourceBranch);
+                _info.SourceRepo.RepoName, _info.SourceBranch),
 
-            resource["toRef"] = CreatePullRequestRef(
+                ["toRef"] = CreatePullRequestRef(
                 _info.TargetRepo.ProjectKey,
-                _info.TargetRepo.RepoName, _info.TargetBranch);
+                _info.TargetRepo.RepoName, _info.TargetBranch)
+            };
 
-            JArray reviewers = new();
+            JArray reviewers = [];
             foreach (BitbucketUser reviewer in _info.Reviewers)
             {
-                JObject r = new();
-                r["user"] = new JObject();
-                r["user"]["name"] = reviewer.Slug;
+                JObject r = new()
+                {
+                    ["user"] = new JObject
+                    {
+                        ["name"] = reviewer.Slug
+                    }
+                };
 
                 reviewers.Add(r);
             }
@@ -86,12 +92,18 @@ namespace GitExtensions.Plugins.Bitbucket
 
         private static JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
         {
-            JObject reference = new();
-            reference["id"] = branchName;
-            reference["repository"] = new JObject();
-            reference["repository"]["slug"] = repoName;
-            reference["repository"]["project"] = new JObject();
-            reference["repository"]["project"]["key"] = projectKey;
+            JObject reference = new()
+            {
+                ["id"] = branchName,
+                ["repository"] = new JObject
+                {
+                    ["slug"] = repoName
+                }
+            };
+            reference["repository"]["project"] = new JObject
+            {
+                ["key"] = projectKey
+            };
             return reference;
         }
     }

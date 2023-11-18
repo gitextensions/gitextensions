@@ -10,8 +10,8 @@ namespace GitUI.SpellChecker
         public bool IsImeStartingComposition { get; private set; }
 
         private readonly RichTextBox _richTextBox;
-        public List<TextPos> IllFormedLines { get; } = new List<TextPos>();
-        public List<TextPos> Lines { get; } = new List<TextPos>();
+        public List<TextPos> IllFormedLines { get; } = [];
+        public List<TextPos> Lines { get; } = [];
         private Bitmap? _bitmap;
         private Graphics? _bufferGraphics;
         private int _lineHeight;
@@ -156,7 +156,7 @@ namespace GitUI.SpellChecker
             int waveHalfWidth = waveWidth >> 1;
             if ((end.X - start.X) > waveWidth)
             {
-                List<Point> pl = new();
+                List<Point> pl = [];
                 for (int i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
                 {
                     pl.Add(new Point(i, start.Y));

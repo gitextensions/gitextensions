@@ -93,7 +93,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             if (json["errors"] is not null)
             {
-                List<string> messages = new();
+                List<string> messages = [];
                 BitbucketResponse<T> errorResponse = new() { Success = false };
                 foreach (JToken error in json["errors"])
                 {

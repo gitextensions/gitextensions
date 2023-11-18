@@ -96,16 +96,16 @@ namespace GitUI.ScriptsEngine
             GitRevision? currentRevision = null;
 
             IReadOnlyList<GitRevision> allSelectedRevisions = Array.Empty<GitRevision>();
-            List<IGitRef> selectedLocalBranches = new();
-            List<IGitRef> selectedRemoteBranches = new();
-            List<string> selectedRemotes = new();
-            List<IGitRef> selectedBranches = new();
-            List<IGitRef> selectedTags = new();
-            List<IGitRef> currentLocalBranches = new();
-            List<IGitRef> currentRemoteBranches = new();
+            List<IGitRef> selectedLocalBranches = [];
+            List<IGitRef> selectedRemoteBranches = [];
+            List<string> selectedRemotes = [];
+            List<IGitRef> selectedBranches = [];
+            List<IGitRef> selectedTags = [];
+            List<IGitRef> currentLocalBranches = [];
+            List<IGitRef> currentRemoteBranches = [];
             string currentRemote = "";
-            List<IGitRef> currentBranches = new();
-            List<IGitRef> currentTags = new();
+            List<IGitRef> currentBranches = [];
+            List<IGitRef> currentTags = [];
 
             foreach (string option in GetOptions(Options, scriptOptionsProvider))
             {

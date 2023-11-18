@@ -11,7 +11,7 @@ namespace CommonTestUtils
     {
         private readonly ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode, string? error)>> _outputStackByArguments = new();
         private readonly ConcurrentDictionary<string, int> _commandArgumentsSet = new();
-        private readonly List<MockProcess> _processes = new();
+        private readonly List<MockProcess> _processes = [];
         private int _nextCommandId;
 
         public IDisposable StageOutput(string arguments, string output, int? exitCode = 0, string? error = null)

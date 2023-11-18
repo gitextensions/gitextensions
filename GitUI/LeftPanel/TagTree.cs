@@ -13,7 +13,7 @@ namespace GitUI.LeftPanel
         protected override Nodes FillTree(IReadOnlyList<IGitRef> tags, CancellationToken token)
         {
             Nodes nodes = new(this);
-            Dictionary<string, BaseRevisionNode> pathToNodes = new();
+            Dictionary<string, BaseRevisionNode> pathToNodes = [];
 
             foreach (IGitRef tag in tags)
             {

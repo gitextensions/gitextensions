@@ -28,7 +28,7 @@ namespace GitUI.ScriptsEngine
 
             static void FixAmbiguousHotkeyCommandIdentifiers(BindingList<ScriptInfo> loadedScripts)
             {
-                HashSet<int> ids = new();
+                HashSet<int> ids = [];
 
                 foreach (ScriptInfo script in loadedScripts)
                 {
@@ -189,7 +189,7 @@ namespace GitUI.ScriptsEngine
                 const string paramSeparator = "<_PARAM_SEPARATOR_>";
                 const string scriptSeparator = "<_SCRIPT_SEPARATOR_>";
 
-                BindingList<ScriptInfo> scripts = new();
+                BindingList<ScriptInfo> scripts = [];
 
                 if (inputString.Contains(paramSeparator) || inputString.Contains(scriptSeparator))
                 {

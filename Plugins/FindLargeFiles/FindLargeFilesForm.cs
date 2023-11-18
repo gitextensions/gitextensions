@@ -17,8 +17,8 @@ namespace GitExtensions.Plugins.FindLargeFiles
         private readonly GitUIEventArgs _gitUiCommands;
         private readonly IGitModule _gitCommands;
         private string[] _revList = Array.Empty<string>();
-        private readonly Dictionary<string, GitObject> _list = new();
-        private readonly SortableObjectsList _gitObjects = new();
+        private readonly Dictionary<string, GitObject> _list = [];
+        private readonly SortableObjectsList _gitObjects = [];
 
         public FindLargeFilesForm(float threshold, GitUIEventArgs gitUiEventArgs)
         {
@@ -55,7 +55,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
             try
             {
                 IEnumerable<GitObject> data = GetLargeFiles(_threshold);
-                Dictionary<string, DateTime> revData = new();
+                Dictionary<string, DateTime> revData = [];
                 foreach (GitObject d in data)
                 {
                     string commit = d.Commit.First();

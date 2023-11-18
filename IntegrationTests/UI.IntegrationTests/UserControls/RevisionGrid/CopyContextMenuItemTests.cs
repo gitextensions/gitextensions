@@ -68,11 +68,11 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         public void Should_show_info_if_commit_has_defined_branches()
         {
             GitRevision revision = new(ObjectId.Random());
-            List<IGitRef> refs = new()
-            {
+            List<IGitRef> refs =
+            [
                 new GitRef(null, revision.ObjectId, "refs/heads/branch1"),
                 new GitRef(null, revision.ObjectId, "refs/heads/branch2")
-            };
+            ];
             revision.Refs = refs;
             GitRevision[] revisions = new[] { revision };
             _copyContextMenuItem.SetRevisionFunc(() => revisions);
@@ -94,11 +94,11 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         public void Should_show_info_if_commit_has_defined_tags()
         {
             GitRevision revision = new(ObjectId.Random());
-            List<IGitRef> refs = new()
-            {
+            List<IGitRef> refs =
+            [
                 new GitRef(null, revision.ObjectId, "refs/tags/tag1"),
                 new GitRef(null, revision.ObjectId, "refs/tags/tag2")
-            };
+            ];
             revision.Refs = refs;
             GitRevision[] revisions = new[] { revision };
             _copyContextMenuItem.SetRevisionFunc(() => revisions);
@@ -120,13 +120,13 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         public void Should_show_info_if_commit_has_defined_branches_and_tags()
         {
             GitRevision revision = new(ObjectId.Random());
-            List<IGitRef> refs = new()
-            {
+            List<IGitRef> refs =
+            [
                 new GitRef(null, revision.ObjectId, "refs/tags/tag1"),
                 new GitRef(null, revision.ObjectId, "refs/heads/branch1"),
                 new GitRef(null, revision.ObjectId, "refs/tags/tag2"),
                 new GitRef(null, revision.ObjectId, "refs/heads/branch2"),
-            };
+            ];
             revision.Refs = refs;
             GitRevision[] revisions = new[] { revision };
             _copyContextMenuItem.SetRevisionFunc(() => revisions);

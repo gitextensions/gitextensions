@@ -30,7 +30,7 @@ namespace GitUI
             new("Replaced {0} occurrences.");
 
         private readonly Dictionary<TextEditorControl, HighlightGroup> _highlightGroups =
-            new();
+            [];
 
         private readonly TextEditorSearcher _search;
         private TextEditorControl? _editor;
@@ -700,7 +700,7 @@ namespace GitUI
     {
         private readonly IDocument _document;
         private readonly TextEditorControl _editor;
-        private readonly List<TextMarker> _markers = new();
+        private readonly List<TextMarker> _markers = [];
 
         public HighlightGroup(TextEditorControl editor)
         {

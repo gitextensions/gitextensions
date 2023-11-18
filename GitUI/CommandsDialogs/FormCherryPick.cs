@@ -107,7 +107,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnPick_Click(object sender, EventArgs e)
         {
-            ArgumentBuilder args = new();
+            ArgumentBuilder args = [];
             bool canExecute = true;
 
             if (_isMerge)

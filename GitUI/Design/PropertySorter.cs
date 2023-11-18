@@ -12,7 +12,7 @@ namespace GitUI.Design
         public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
         {
             PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(value, attributes);
-            List<(string, int)> orderedProperties = new();
+            List<(string, int)> orderedProperties = [];
             foreach (PropertyDescriptor pd in pdc)
             {
                 Attribute attribute = pd.Attributes[typeof(PropertyOrderAttribute)];

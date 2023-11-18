@@ -362,10 +362,12 @@ namespace GitCommands.Git
                     return string.Empty;
                 }
 
-                ArgumentBuilder builder = new();
-                builder.Add((option & RefsFilter.Heads) != 0, "refs/heads/");
-                builder.Add((option & RefsFilter.Remotes) != 0, "refs/remotes/");
-                builder.Add((option & RefsFilter.Tags) != 0, "refs/tags/");
+                ArgumentBuilder builder = new()
+                {
+                    { (option & RefsFilter.Heads) != 0, "refs/heads/" },
+                    { (option & RefsFilter.Remotes) != 0, "refs/remotes/" },
+                    { (option & RefsFilter.Tags) != 0, "refs/tags/" }
+                };
 
                 return builder;
             }

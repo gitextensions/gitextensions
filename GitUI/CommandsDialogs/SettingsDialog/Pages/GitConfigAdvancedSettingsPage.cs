@@ -14,14 +14,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             InitializeComplete();
 
-            _gitSettings = new List<GitSettingUiMapping>
-            {
+            _gitSettings =
+            [
                 new("pull.rebase", checkBoxPullRebase),
                 new("fetch.prune", checkBoxFetchPrune),
                 new("rebase.autoStash", checkBoxRebaseAutostash),
                 new("rebase.autosquash", checkBoxRebaseAutosquash),
                 new("rebase.updateRefs", checkBoxUpdateRefs)
-            };
+            ];
 
             checkBoxUpdateRefs.Visible = GitVersion.Current.SupportUpdateRefs;
 

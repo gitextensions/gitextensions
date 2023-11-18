@@ -42,8 +42,8 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         public void LoadLegacy_should_return_collection()
         {
             AppSettings.SetString("repositories", "repos");
-            List<RepositoryCategory> history = new()
-            {
+            List<RepositoryCategory> history =
+            [
                 new RepositoryCategory
                 {
                     Repositories = new List<Repository>(
@@ -65,7 +65,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
                     CategoryType = "Repositories",
                     Description = "Test"
                 },
-            };
+            ];
             _repositoryCategorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => history);
 
             IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();

@@ -34,13 +34,13 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task AddAsMostRecentAsync_should_add_new_path_as_top_entry()
         {
             const string repoToAdd = "https://path.to/add";
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository("http://path1/"),
                 new Repository("http://path3/"),
                 new Repository("http://path4/"),
                 new Repository("http://path5/"),
-            };
+            ];
             _repositoryStorage.Load(Key).Returns(x => history);
 
             IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
@@ -53,14 +53,14 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task AddAsMostRecentAsync_should_move_existing_path_as_top_entry()
         {
             const string repoToAdd = "https://path.to/add";
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository("git://path1/"),
                 new Repository("git://path3/"),
                 new Repository("git://path4/"),
                 new Repository(repoToAdd),
                 new Repository("git://path5/"),
-            };
+            ];
             _repositoryStorage.Load(Key).Returns(x => history);
 
             IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
@@ -73,15 +73,15 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task AddAsMostRecentAsync_should_move_only_first_existing_path_as_top_entry()
         {
             const string repoToAdd = "https://path.to/add";
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository("ssh://path1/"),
                 new Repository("ssh://path3/"),
                 new Repository(repoToAdd),
                 new Repository("ssh://path4/"),
                 new Repository(repoToAdd),
                 new Repository("http://path5/"),
-            };
+            ];
             _repositoryStorage.Load(Key).Returns(x => history);
 
             IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
@@ -95,14 +95,14 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task AddAsMostRecentAsync_should_not_move_if_path_already_as_top_entry()
         {
             const string repoToAdd = "https://path.to/add";
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository(repoToAdd),
                 new Repository("http://path1/"),
                 new Repository("http://path3/"),
                 new Repository("http://path4/"),
                 new Repository("http://path5/"),
-            };
+            ];
             _repositoryStorage.Load(Key).Returns(x => history);
 
             IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
@@ -116,14 +116,14 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task RemoveRecentAsync_should_remove_if_exists()
         {
             const string repoToDelete = "path to delete";
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository("path1"),
                 new Repository(repoToDelete),
                 new Repository("path3"),
                 new Repository("path4"),
                 new Repository("path5"),
-            };
+            ];
             _repositoryStorage.Load(Key).Returns(x => history);
 
             IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
@@ -139,14 +139,14 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task RemoveRecentAsync_should_not_crash_if_not_exists()
         {
             const string repoToDelete = "path to delete";
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository("path1"),
                 new Repository("path2"),
                 new Repository("path3"),
                 new Repository("path4"),
                 new Repository("path5"),
-            };
+            ];
             _repositoryStorage.Load(Key).Returns(x => history);
 
             IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
@@ -170,14 +170,14 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             const int size = 3;
             AppSettings.RecentRepositoriesHistorySize = size;
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository("path1"),
                 new Repository("path2"),
                 new Repository("path3"),
                 new Repository("path4"),
                 new Repository("path5"),
-            };
+            ];
 
             await _manager.SaveRecentHistoryAsync(history);
 

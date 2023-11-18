@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                _mergedBranches = new();
+                _mergedBranches = [];
                 foreach (string branch in Module.GetMergedBranches())
                 {
                     if (branch.StartsWith("* "))

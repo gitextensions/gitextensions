@@ -311,8 +311,8 @@ namespace GitUITests.UserControls.RevisionGrid
         /// </summary>
         private static RevisionGraph CreateGraph(string commitSpecs)
         {
-            List<GitRevision> commits = new();
-            Dictionary<string, GitRevision> commitsById = new();
+            List<GitRevision> commits = [];
+            Dictionary<string, GitRevision> commitsById = [];
 
             // Parse and create commits
             foreach (string spec in commitSpecs.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
@@ -354,7 +354,7 @@ namespace GitUITests.UserControls.RevisionGrid
         /// </summary>
         private static List<string> AsciiGraphFor(RevisionGraph revisionGraph)
         {
-            List<string> graph = new();
+            List<string> graph = [];
 
             int rowIndex = 0;
             while (true)
@@ -386,7 +386,7 @@ namespace GitUITests.UserControls.RevisionGrid
                 line = Enumerable.Repeat(' ', (Math.Max(row.GetLaneCount(), nextRow.GetLaneCount()) * 2) + 1).ToArray();
 
                 // These drawing actions are done last, to appear on top
-                List<Action> actions = new();
+                List<Action> actions = [];
 
                 foreach (RevisionGraphSegment segment in row.Segments)
                 {

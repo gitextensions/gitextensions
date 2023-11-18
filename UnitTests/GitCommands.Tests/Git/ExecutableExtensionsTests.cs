@@ -95,7 +95,7 @@ namespace GitCommandsTests.Git
             // 9: 'reset -- '
             // 1: ' ' added after second Add in ArgumentBuilder
             int appLength = _appPath.Length + 3;
-            ArgumentBuilder builder = new() { "reset --" };
+            ArgumentBuilder builder = ["reset --"];
             int len = builder.ToString().Length;
             List<BatchArgumentItem> args = builder.BuildBatchArguments(new string[]
             {

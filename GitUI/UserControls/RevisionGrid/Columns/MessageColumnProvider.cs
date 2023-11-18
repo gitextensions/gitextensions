@@ -43,7 +43,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             MultilineIndicator indicator = new(e, revision);
             Rectangle messageBounds = indicator.RemainingCellBounds;
-            List<IGitRef> superprojectRefs = new();
+            List<IGitRef> superprojectRefs = [];
             int offset = ColumnLeftMargin;
 
             if (_grid.TryGetSuperProjectInfo(out SuperProjectInfo? spi))

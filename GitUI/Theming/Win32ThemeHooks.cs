@@ -35,7 +35,7 @@ namespace GitUI.Theming
 
         internal static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
-        private static readonly HashSet<NativeListView> InitializingListViews = new();
+        private static readonly HashSet<NativeListView> InitializingListViews = [];
         private static ScrollBarRenderer? _scrollBarRenderer;
         private static readonly SystemBrushesCache _systemBrushesCache = new();
         private static ListViewRenderer? _listViewRenderer;

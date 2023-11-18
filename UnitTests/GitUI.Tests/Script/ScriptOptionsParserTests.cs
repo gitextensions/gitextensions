@@ -225,7 +225,7 @@ namespace GitUITests.Script
         [Test]
         public void ParseScriptArguments_resolve_sRemotePathFromUrl_selectedRemotes_empty()
         {
-            List<string> noSelectedRemotes = new();
+            List<string> noSelectedRemotes = [];
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
@@ -241,7 +241,7 @@ namespace GitUITests.Script
         public void ParseScriptArguments_resolve_sRemotePathFromUrl_currentRemote_set()
         {
             string currentRemote = "myRemote";
-            List<string> selectedRemotes = new() { currentRemote };
+            List<string> selectedRemotes = [currentRemote];
             _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote)).Returns("https://gitlab.com/gitlabhq/gitlabhq.git");
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
@@ -261,7 +261,7 @@ namespace GitUITests.Script
         {
             string option = "sRemoteBranch";
             string branch = remoteName + '/' + branchName;
-            List<IGitRef> remoteBranches = new() { new GitRef(null, null, branch) };
+            List<IGitRef> remoteBranches = [new GitRef(null, null, branch)];
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
@@ -280,7 +280,7 @@ namespace GitUITests.Script
         {
             string option = "sRemoteBranchName";
             string branch = remoteName + '/' + branchName;
-            List<IGitRef> remoteBranches = new() { new GitRef(null, null, branch) };
+            List<IGitRef> remoteBranches = [new GitRef(null, null, branch)];
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
@@ -299,7 +299,7 @@ namespace GitUITests.Script
         {
             string option = "cRemoteBranch";
             string branch = remoteName + '/' + branchName;
-            List<IGitRef> remoteBranches = new() { new GitRef(null, null, branch) };
+            List<IGitRef> remoteBranches = [new GitRef(null, null, branch)];
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
@@ -318,7 +318,7 @@ namespace GitUITests.Script
         {
             string option = "cRemoteBranchName";
             string branch = remoteName + '/' + branchName;
-            List<IGitRef> remoteBranches = new() { new GitRef(null, null, branch) };
+            List<IGitRef> remoteBranches = [new GitRef(null, null, branch)];
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,

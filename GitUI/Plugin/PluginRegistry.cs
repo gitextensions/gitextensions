@@ -9,7 +9,7 @@ namespace GitUI
     {
         public static IList<IGitPlugin> Plugins { get; } = new List<IGitPlugin>();
 
-        public static List<IRepositoryHostPlugin> GitHosters { get; } = new List<IRepositoryHostPlugin>();
+        public static List<IRepositoryHostPlugin> GitHosters { get; } = [];
 
         public static bool PluginsRegistered { get; private set; }
 

@@ -46,7 +46,7 @@ namespace BugReporter.Serialization
                         if (entry.Value is not null)
                         {
                             // Assign 'Data' property only if there is at least one entry with non-null value
-                            Data ??= new SerializableDictionary<object, object>();
+                            Data ??= [];
 
                             Data.Add(entry.Key, entry.Value);
                         }
@@ -65,7 +65,7 @@ namespace BugReporter.Serialization
 
                 if (exception is AggregateException)
                 {
-                    InnerExceptions = new List<SerializableException>();
+                    InnerExceptions = [];
 
                     foreach (Exception innerException in ((AggregateException)exception).InnerExceptions)
                     {
@@ -195,7 +195,7 @@ namespace BugReporter.Serialization
 
             if (extendedProperties.Any())
             {
-                SerializableDictionary<string, object> extendedInformation = new();
+                SerializableDictionary<string, object> extendedInformation = [];
 
                 foreach (PropertyInfo property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
                 {

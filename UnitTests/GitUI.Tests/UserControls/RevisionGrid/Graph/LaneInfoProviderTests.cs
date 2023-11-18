@@ -15,8 +15,8 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         /// for testing the LaneInfoProvider.References.MergeRegex
         /// "(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$"
         /// </summary>
-        private static readonly List<string> MergeSubjectsWithDecoding = new()
-        {
+        private static readonly List<string> MergeSubjectsWithDecoding =
+        [
             "Merge Branch xxx", // case-insignificance
             "xxx", "master",
 
@@ -79,7 +79,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
 
             "Merged tag yyy of remote/branch into zz.z.", // sentence with tag, remote and dot in into
             "yyy", "zz.z"
-        };
+        ];
 
         private RevisionGraphRevision _artificialCommitNode;
         private RevisionGraphRevision _realCommitNode;

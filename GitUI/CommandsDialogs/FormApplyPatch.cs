@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private static readonly List<PatchFile> Skipped = new();
+        private static readonly List<PatchFile> Skipped = [];
 
         public FormApplyPatch(GitUICommands commands)
             : base(commands)

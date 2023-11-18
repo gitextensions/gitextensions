@@ -33,7 +33,7 @@ namespace GitUI.LeftPanel
         private Nodes FillStashTree(IReadOnlyCollection<GitRevision> stashes, CancellationToken token)
         {
             Nodes nodes = new(this);
-            Dictionary<string, BaseRevisionNode> pathToNodes = new();
+            Dictionary<string, BaseRevisionNode> pathToNodes = [];
 
             foreach (GitRevision stash in stashes)
             {

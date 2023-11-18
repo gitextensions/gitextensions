@@ -89,8 +89,8 @@ namespace GitUI
 
         private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
         {
-            List<RecentRepoInfo> pinnedRepos = new();
-            List<RecentRepoInfo> allRecentRepos = new();
+            List<RecentRepoInfo> pinnedRepos = [];
+            List<RecentRepoInfo> allRecentRepos = [];
 
             using (Graphics graphics = OwnerForm.CreateGraphics())
             {
@@ -133,8 +133,8 @@ namespace GitUI
 
         public void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container)
         {
-            List<RecentRepoInfo> pinnedRepos = new();
-            List<RecentRepoInfo> allRecentRepos = new();
+            List<RecentRepoInfo> pinnedRepos = [];
+            List<RecentRepoInfo> allRecentRepos = [];
 
             IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
             if (repositoryHistory.Count < 1)

@@ -66,7 +66,7 @@ namespace GitUITests
             // Skip header
             cursor = cursor[header.Length..];
 
-            List<string> sectionTypes = new();
+            List<string> sectionTypes = [];
 
             // Iterate sections
             while (cursor.Length > 0)

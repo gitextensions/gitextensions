@@ -18,25 +18,25 @@ namespace GitExtensions.Plugins.GitImpact
         private ImpactLoader? _impactLoader;
 
         // <Author, <Commits, Added Lines, Deleted Lines>>
-        private readonly Dictionary<string, ImpactLoader.DataPoint> _authors = new();
+        private readonly Dictionary<string, ImpactLoader.DataPoint> _authors = [];
 
         // <First weekday of commit date, <Author, <Commits, Added Lines, Deleted Lines>>>
-        private SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>> _impact = new();
+        private SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>> _impact = [];
 
         // List of authors that determines the drawing order
-        private readonly List<string> _authorStack = new();
+        private readonly List<string> _authorStack = [];
 
         // The paths for each author
-        private readonly Dictionary<string, GraphicsPath> _paths = new();
+        private readonly Dictionary<string, GraphicsPath> _paths = [];
 
         // The brush for each author
-        private readonly Dictionary<string, SolidBrush> _brushes = new();
+        private readonly Dictionary<string, SolidBrush> _brushes = [];
 
         // The changed-lines-labels for each author
-        private readonly Dictionary<string, List<(PointF point, int size)>> _lineLabels = new();
+        private readonly Dictionary<string, List<(PointF point, int size)>> _lineLabels = [];
 
         // The week-labels
-        private readonly List<(PointF point, DateTime date)> _weekLabels = new();
+        private readonly List<(PointF point, DateTime date)> _weekLabels = [];
 
         public ImpactControl()
         {
@@ -100,7 +100,7 @@ namespace GitExtensions.Plugins.GitImpact
                 if (!_impact.ContainsKey(commit.Week))
                 {
                     // Create it
-                    _impact.Add(commit.Week, new Dictionary<string, ImpactLoader.DataPoint>());
+                    _impact.Add(commit.Week, []);
                 }
 
                 // If author does not exist yet for this week in the impact dictionary
@@ -285,7 +285,7 @@ namespace GitExtensions.Plugins.GitImpact
         {
             int h_max = 0;
             int x = 0;
-            Dictionary<string, List<(Rectangle, int changeCount)>> author_points_dict = new();
+            Dictionary<string, List<(Rectangle, int changeCount)>> author_points_dict = [];
 
             lock (_dataLock)
             {

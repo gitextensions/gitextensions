@@ -230,7 +230,7 @@ namespace GitExtensions.Plugins.GitHub3
 
             IEnumerable<IHostedRemote> Remotes()
             {
-                HashSet<IHostedRemote> set = new();
+                HashSet<IHostedRemote> set = [];
 
                 foreach (string remote in gitModule.GetRemoteNames())
                 {

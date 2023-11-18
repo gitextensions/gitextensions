@@ -34,7 +34,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// List of formats to be applied for each revision part matched by SearchPattern
         /// </summary>
-        public BindingList<ExternalLinkFormat> LinkFormats { get; } = new BindingList<ExternalLinkFormat>();
+        public BindingList<ExternalLinkFormat> LinkFormats { get; } = [];
 
         /// <summary>Short name for this link def</summary>
         public string? Name { get; set; }
@@ -64,7 +64,7 @@ namespace GitCommands.ExternalLinks
             }
         }
 
-        public HashSet<RemotePart> RemoteSearchInParts { get; } = new HashSet<RemotePart>();
+        public HashSet<RemotePart> RemoteSearchInParts { get; } = [];
 
         /// <summary>
         /// RegEx for remote parts that have to be transformed into links
@@ -91,7 +91,7 @@ namespace GitCommands.ExternalLinks
             }
         }
 
-        public HashSet<RevisionPart> SearchInParts { get; } = new HashSet<RevisionPart>();
+        public HashSet<RevisionPart> SearchInParts { get; } = [];
 
         /// <summary>
         /// RegEx for revision parts that have to be transformed into links

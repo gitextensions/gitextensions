@@ -264,7 +264,7 @@ namespace GitUI.CommitInfo
             }
 
             int i = 0;
-            Dictionary<string, int> dict = new();
+            Dictionary<string, int> dict = [];
             foreach (string entry in tree.LazySplit('\n'))
             {
                 if (dict.ContainsKey(entry))
@@ -371,11 +371,10 @@ namespace GitUI.CommitInfo
 
                 ThreadHelper.FileAndForget(async () =>
                 {
-                    List<Task> tasks = new()
-                    {
+                    List<Task> tasks = [
                         UpdateCommitMessageAsync().WithCancellation(cancellationToken),
                         LoadLinksForRevisionAsync(initialRevision, settings).WithCancellation(cancellationToken)
-                    };
+                    ];
 
                     // No branch/tag data for artificial commands
                     if (AppSettings.CommitInfoShowContainedInBranches)
@@ -466,7 +465,7 @@ namespace GitUI.CommitInfo
                             return null;
                         }
 
-                        Dictionary<string, string> result = new();
+                        Dictionary<string, string> result = [];
 
                         foreach (IGitRef gitRef in refs)
                         {
@@ -833,7 +832,7 @@ namespace GitUI.CommitInfo
             private const string _remoteBranchPrefix = "remotes/";
             private readonly string _currentBranch;
             private readonly bool _isDetachedHead;
-            private readonly Dictionary<string, int> _orderByBranch = new();
+            private readonly Dictionary<string, int> _orderByBranch = [];
 
             public BranchComparer(List<string> branches, string currentBranch)
             {

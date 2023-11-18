@@ -13,8 +13,8 @@ namespace GitUITests.UserControls.CommitInfo
             AppSettings.PrioritizedBranchNames = "master;dummy;main[^/]*|master[^/]*;release/.*";
             AppSettings.PrioritizedRemoteNames = "zzz;origin|upstream";
 
-            List<string> expectedBranches = new()
-            {
+            List<string> expectedBranches =
+            [
                 currentBranch,
 
                 // local branch important
@@ -67,7 +67,7 @@ namespace GitUITests.UserControls.CommitInfo
                 "remotes/other/b2",
                 "remotes/z_other/b1",
                 "remotes/z_other/b2",
-            };
+            ];
 
             if (currentBranch is null)
             {

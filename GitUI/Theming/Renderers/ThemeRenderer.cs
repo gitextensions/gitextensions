@@ -20,7 +20,7 @@ namespace GitUI.Theming
         /// </summary>
         public const int Handled = 0;
 
-        private readonly HashSet<IntPtr> _themeDataHandles = new();
+        private readonly HashSet<IntPtr> _themeDataHandles = [];
 
         protected abstract string Clsid { get; }
 

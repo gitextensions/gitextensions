@@ -13,7 +13,7 @@
         [Test]
         public void AsReadOnlyList_copies_to_new_list_if_required()
         {
-            HashSet<int> set = new() { 1, 2, 3 };
+            HashSet<int> set = [1, 2, 3];
 
             Assert.AreEqual(new[] { 1, 2, 3 }, set.AsReadOnlyList());
         }

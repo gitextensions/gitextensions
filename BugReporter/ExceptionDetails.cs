@@ -10,7 +10,7 @@ namespace BugReporter
 {
     internal partial class ExceptionDetails : UserControl
     {
-        private readonly Dictionary<TreeNode, SerializableException> _exceptionDetailsList = new();
+        private readonly Dictionary<TreeNode, SerializableException> _exceptionDetailsList = [];
 
         public ExceptionDetails()
         {

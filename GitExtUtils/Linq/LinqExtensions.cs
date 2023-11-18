@@ -125,7 +125,7 @@ namespace System.Linq
                 return Array.Empty<T>();
             }
 
-            List<T> list = new();
+            List<T> list = [];
 
             do
             {

@@ -163,9 +163,9 @@ namespace GitUI.Theming
 
         private class ThemeColors
         {
-            public readonly Dictionary<AppColor, Color> AppColors = new();
-            public readonly Dictionary<KnownColor, Color> SysColors = new();
-            public readonly Dictionary<string, int> SpecificityByColor = new();
+            public readonly Dictionary<AppColor, Color> AppColors = [];
+            public readonly Dictionary<KnownColor, Color> SysColors = [];
+            public readonly Dictionary<string, int> SpecificityByColor = [];
         }
     }
 }
