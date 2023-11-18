@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace GitCommands.Git
+namespace GitUIPluginInterfaces
 {
     [DebuggerDisplay("{" + nameof(Filename) + "}")]
     public readonly struct ConflictData

@@ -1,4 +1,4 @@
-﻿namespace GitCommands
+﻿namespace GitUIPluginInterfaces
 {
     public enum DiffBranchStatus
     {

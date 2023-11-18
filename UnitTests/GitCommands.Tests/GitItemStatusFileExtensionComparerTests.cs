@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using GitCommands;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 
 namespace GitCommandsTests
 {

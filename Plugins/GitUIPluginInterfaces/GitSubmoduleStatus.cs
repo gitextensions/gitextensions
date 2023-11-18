@@ -1,7 +1,4 @@
-﻿using GitCommands.Git;
-using GitUIPluginInterfaces;
-
-namespace GitCommands
+﻿namespace GitUIPluginInterfaces
 {
     public sealed class GitSubmoduleStatus
     {

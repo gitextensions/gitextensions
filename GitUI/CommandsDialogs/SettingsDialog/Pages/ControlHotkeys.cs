@@ -1,4 +1,5 @@
 ﻿using GitUI.Hotkey;
+using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 

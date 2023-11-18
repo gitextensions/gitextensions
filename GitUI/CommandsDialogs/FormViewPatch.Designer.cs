@@ -1,4 +1,5 @@
 ﻿using GitUI.Editor;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -119,7 +120,7 @@ namespace GitUI.CommandsDialogs
             // 
             // patchBindingSource
             // 
-            patchBindingSource.DataSource = typeof(GitCommands.Patches.Patch);
+            patchBindingSource.DataSource = typeof(Patch);
             // 
             // ChangesList
             // 

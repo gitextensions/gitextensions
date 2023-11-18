@@ -5,6 +5,7 @@ using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Shells;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands.Submodules;
+using GitUIPluginInterfaces;
 
 namespace GitCommands;
 

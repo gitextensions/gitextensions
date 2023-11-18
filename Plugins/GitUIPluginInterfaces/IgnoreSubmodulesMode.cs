@@ -1,4 +1,4 @@
-﻿namespace GitCommands
+﻿namespace GitUIPluginInterfaces
 {
     /// <summary>Specifies whether to ignore changes to submodules when looking for changes (e.g. via 'git status').</summary>
     public enum IgnoreSubmodulesMode

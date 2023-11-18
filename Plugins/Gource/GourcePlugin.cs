@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Plugins.Gource.Properties;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using ICSharpCode.SharpZipLib.Zip;
 using ResourceManager;
 

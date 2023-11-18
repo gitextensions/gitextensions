@@ -1,10 +1,8 @@
 ﻿using System.Text;
-using GitCommands.Git;
-using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
-namespace GitCommands
+namespace GitUIPluginInterfaces
 {
     /// <summary>
     /// Status if the file can be staged (worktree->index), unstaged or None (normal commits).

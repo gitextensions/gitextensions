@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;

@@ -5,6 +5,7 @@ using GitCommands;
 using GitExtensions.Plugins.BackgroundFetch.Properties;
 using GitExtUtils;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using ResourceManager;
 

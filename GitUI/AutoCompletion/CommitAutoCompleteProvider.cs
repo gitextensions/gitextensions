@@ -157,7 +157,7 @@ namespace GitUI.AutoCompletion
         {
             if (file.IsTracked)
             {
-                GitCommands.Patches.Patch? changes = null;
+                Patch? changes = null;
                 try
                 {
                     changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000", noLocks: true)

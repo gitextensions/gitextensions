@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using GitUI.Editor;
 using GitUI.SpellChecker;
 using GitUI.UserControls.RevisionGrid;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -591,7 +592,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitItemStatusBindingSource
             // 
-            gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
+            gitItemStatusBindingSource.DataSource = typeof(GitItemStatus);
             // 
             // Cancel
             // 

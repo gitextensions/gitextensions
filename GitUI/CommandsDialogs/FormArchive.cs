@@ -1,5 +1,4 @@
 ﻿using System.Threading;
-using GitCommands;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;

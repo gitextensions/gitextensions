@@ -1,4 +1,4 @@
-﻿namespace GitCommands
+﻿namespace GitUIPluginInterfaces
 {
     /// <summary>
     /// Event arguments for batch progress updating

@@ -5,6 +5,7 @@ using FluentAssertions;
 using GitUI;
 using GitUI.Editor;
 using GitUI.ScriptsEngine;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using NSubstitute;

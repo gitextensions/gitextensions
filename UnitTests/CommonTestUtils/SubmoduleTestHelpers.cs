@@ -1,4 +1,3 @@
-using GitCommands;
 using GitCommands.Submodules;
 using GitUIPluginInterfaces;
 

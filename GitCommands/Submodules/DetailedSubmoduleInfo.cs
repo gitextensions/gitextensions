@@ -1,4 +1,4 @@
-﻿using GitCommands.Git;
+﻿using GitUIPluginInterfaces;
 
 namespace GitCommands.Submodules
 {

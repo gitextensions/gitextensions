@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using GitExtensions.Plugins.GitStatistics.Properties;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.GitStatistics

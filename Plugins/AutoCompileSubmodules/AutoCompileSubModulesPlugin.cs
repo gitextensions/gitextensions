@@ -2,6 +2,7 @@
 using System.Text;
 using GitExtensions.Plugins.AutoCompileSubmodules.Properties;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.AutoCompileSubmodules

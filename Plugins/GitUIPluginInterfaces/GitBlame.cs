@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
-using GitUIPluginInterfaces;
 
-namespace GitCommands
+namespace GitUIPluginInterfaces
 {
     public sealed class GitBlame
     {

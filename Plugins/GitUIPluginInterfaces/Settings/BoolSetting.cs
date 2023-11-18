@@ -1,6 +1,6 @@
 ﻿using GitUI;
 
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces.Settings
 {
     public class BoolSetting : ISetting
     {

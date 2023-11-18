@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 

@@ -2,6 +2,7 @@
 using GitCommands.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using JetBrains.Annotations;
 using ResourceManager;
 
