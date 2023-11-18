@@ -451,16 +451,6 @@ namespace GitUI.CommandsDialogs
             base.OnApplicationActivated();
         }
 
-        protected override void OnActivated(EventArgs e)
-        {
-            if (!_bypassActivatedEventHandler)
-            {
-                UpdateAuthorInfo();
-            }
-
-            base.OnActivated(e);
-        }
-
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             // Do not attempt to store again if the form has already been closed. Unfortunately, OnFormClosed is always called by Close.
@@ -2713,29 +2703,14 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.FileAndForget(async () =>
                 {
                     // Do not cache results in order to update the info on FormActivate
-                    string userName = GetSetting(SettingKeyString.UserName);
-                    string userEmail = GetSetting(SettingKeyString.UserEmail);
+                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false) ?? "USER NOT CONFIGURED";
+                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false) ?? "E-MAIL NOT CONFIGURED";
                     string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
 
                     await this.SwitchToMainThreadAsync();
                     commitAuthorStatus.Text = string.IsNullOrWhiteSpace(toolAuthor.Text)
                         ? committer
                         : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
-
-                    return;
-
-                    string GetSetting(string key)
-                    {
-                        try
-                        {
-                            return Module.GetEffectiveGitSetting(key, cache: false);
-                        }
-                        catch (ExternalOperationException ex)
-                        {
-                            Trace.WriteLine(ex);
-                            return "INVALID";
-                        }
-                    }
                 });
         }
 
