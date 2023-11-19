@@ -129,10 +129,11 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 return Array.Empty<string>();
             }
 
+            bool withoutRegexFilter = string.IsNullOrEmpty(context.RegexFilter);
             return _commandOutputParser.GetBranchNames(result.StandardOutput)
                                         .Where(branchName => branchName != curBranch && branchName != context.ReferenceBranch)
                                         .Where(branchName => (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/"))
-                                                            && (string.IsNullOrEmpty(context.RegexFilter) || Regex.IsMatch(branchName, context.RegexFilter, options) == regexMustMatch));
+                                                            && (withoutRegexFilter || Regex.IsMatch(branchName, context.RegexFilter, options) == regexMustMatch));
         }
 
         private void Delete_Click(object sender, EventArgs e)
