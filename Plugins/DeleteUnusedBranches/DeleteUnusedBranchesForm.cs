@@ -111,17 +111,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
         private IEnumerable<string> GetObsoleteBranchNames(RefreshContext context, string curBranch)
         {
-            RegexOptions options;
-            if (context.RegexIgnoreCase)
-            {
-                options = RegexOptions.Compiled | RegexOptions.IgnoreCase;
-            }
-            else
-            {
-                options = RegexOptions.Compiled;
-            }
-
-            Regex regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, options);
+            RegexOptions options = context.RegexIgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
             bool regexMustMatch = !context.RegexDoesNotMatch;
 
             GitArgumentBuilder args = new("branch")
@@ -142,7 +132,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             return _commandOutputParser.GetBranchNames(result.StandardOutput)
                                         .Where(branchName => branchName != curBranch && branchName != context.ReferenceBranch)
                                         .Where(branchName => (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/"))
-                                                            && (regex is null || regex.IsMatch(branchName) == regexMustMatch));
+                                                            && (string.IsNullOrEmpty(context.RegexFilter) || Regex.IsMatch(branchName, context.RegexFilter, options) == regexMustMatch));
         }
 
         private void Delete_Click(object sender, EventArgs e)
