@@ -850,16 +850,8 @@ namespace GitUI
 
         public int SetSelectionFilter(string selectionFilter)
         {
-            Regex regex = RegexForSelecting(selectionFilter);
-            SelectItems(item => regex.IsMatch(item.Name));
+            SelectItems(item => string.IsNullOrEmpty(selectionFilter) || Regex.IsMatch(item.Name, selectionFilter, RegexOptions.IgnoreCase));
             return FileStatusListView.SelectedIndices.Count;
-
-            Regex RegexForSelecting(string value)
-            {
-                return string.IsNullOrEmpty(value)
-                    ? new Regex("^$", RegexOptions.Compiled)
-                    : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            }
         }
 
         public void StoreNextIndexToSelect()
@@ -1900,7 +1892,7 @@ namespace GitUI
 
             try
             {
-                _filter = new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                _filter = new Regex(value, RegexOptions.IgnoreCase);
                 FilterComboBox.BackColor = _activeInputColor;
             }
             catch

@@ -81,8 +81,7 @@ namespace AzureDevOpsIntegration
 
             buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl);
 
-            Regex tfsBuildDefinitionNameFilter = new(buildDefinitionNameFilter, RegexOptions.Compiled);
-            return GetBuildDefinitionsIds(buildDefinitions.Value.Where(b => tfsBuildDefinitionNameFilter.IsMatch(b.Name)));
+            return GetBuildDefinitionsIds(buildDefinitions.Value.Where(b => Regex.IsMatch(b.Name, buildDefinitionNameFilter)));
         }
 
         private static string? GetBuildDefinitionsIds(IEnumerable<BuildDefinition>? buildDefinitions)
