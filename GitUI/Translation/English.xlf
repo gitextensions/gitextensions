@@ -10285,6 +10285,10 @@ following command.
         <source>Git revision does not exist</source>
         <target />
       </trans-unit>
+      <trans-unit id="_notConfigured.Text">
+        <source>{0} not configured</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_okText.Text">
         <source>OK</source>
         <target />
