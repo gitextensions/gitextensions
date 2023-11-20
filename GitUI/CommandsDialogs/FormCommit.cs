@@ -451,16 +451,6 @@ namespace GitUI.CommandsDialogs
             base.OnApplicationActivated();
         }
 
-        protected override void OnActivated(EventArgs e)
-        {
-            if (!_bypassActivatedEventHandler)
-            {
-                UpdateAuthorInfo();
-            }
-
-            base.OnActivated(e);
-        }
-
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             // Do not attempt to store again if the form has already been closed. Unfortunately, OnFormClosed is always called by Close.
@@ -2712,15 +2702,17 @@ namespace GitUI.CommandsDialogs
         {
             ThreadHelper.FileAndForget(async () =>
                 {
-                    // Do not cache results in order to update the info on FormActivate
-                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false);
-                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false);
-                    string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
+                    string committer = $"{_commitCommitterInfo.Text} {GetSetting(SettingKeyString.UserName)} <{GetSetting(SettingKeyString.UserEmail)}>";
 
                     await this.SwitchToMainThreadAsync();
                     commitAuthorStatus.Text = string.IsNullOrWhiteSpace(toolAuthor.Text)
                         ? committer
                         : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
+
+                    return;
+
+                    // Do not cache results in order to update the info on FormActivate
+                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key, cache: false) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
                 });
         }
 

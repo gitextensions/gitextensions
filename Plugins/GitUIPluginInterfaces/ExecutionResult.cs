@@ -2,6 +2,8 @@
 {
     public readonly struct ExecutionResult
     {
+        public const int Success = 0;
+
         public string StandardOutput { get; }
         public string StandardError { get; }
         public int? ExitCode { get; }
@@ -13,7 +15,7 @@
             ExitCode = exitCode;
         }
 
-        public bool ExitedSuccessfully => ExitCode == 0;
+        public bool ExitedSuccessfully => ExitCode == Success;
 
         public string AllOutput => string.Concat(StandardOutput, Environment.NewLine, StandardError);
     }

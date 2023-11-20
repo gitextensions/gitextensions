@@ -126,7 +126,14 @@ namespace GitUIPluginInterfaces
 
         string GetSetting(string setting);
         string GetEffectiveSetting(string setting);
-        string GetEffectiveGitSetting(string setting, bool cache = true);
+
+        /// <summary>
+        /// Get the effective config setting from git.
+        /// </summary>
+        /// <param name="setting">The setting key.</param>
+        /// <param name="cache"><see langword="true"/> if the result shall be cached.</param>
+        /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
+        string? GetEffectiveGitSetting(string setting, bool cache = true);
 
         /// <summary>
         /// Gets the name of the currently checked out branch.
