@@ -90,6 +90,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
         private IEnumerable<Branch> GetObsoleteBranches(RefreshContext context, string curBranch)
         {
+            DateTime oldBranchLimitDate = DateTime.Now - context.ObsolescenceDuration;
             foreach (string branchName in GetObsoleteBranchNames(context, curBranch))
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
@@ -97,7 +98,9 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 GitArgumentBuilder args = new("log")
                 {
                     "--pretty=%ci\n%an\n%s",
-                    $"{branchName}^1..{branchName}"
+                    "--max-count=1",
+                    branchName,
+                    "--"
                 };
 
                 var commitLog = context.Commands.GitExecutable.GetOutput(args).Split('\n');
@@ -105,7 +108,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 var authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
                 var message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
 
-                yield return new Branch(branchName, commitDate, authorName, message, commitDate < DateTime.Now - context.ObsolescenceDuration);
+                yield return new Branch(branchName, commitDate, authorName, message, commitDate < oldBranchLimitDate);
             }
         }
 
