@@ -51,6 +51,7 @@ namespace GitUI.CommandsDialogs
             chkStash = new CheckBox();
             chkIgnoreDate = new CheckBox();
             chkCommitterDateIsAuthorDate = new CheckBox();
+            checkBoxUpdateRefs = new CheckBox();
             flpnlOptionsPanelBottom = new FlowLayoutPanel();
             chkSpecificRange = new CheckBox();
             lblRangeFrom = new Label();
@@ -287,12 +288,12 @@ namespace GitUI.CommandsDialogs
             flpnlOptionsPanelTop.Controls.Add(chkStash);
             flpnlOptionsPanelTop.Controls.Add(chkIgnoreDate);
             flpnlOptionsPanelTop.Controls.Add(chkCommitterDateIsAuthorDate);
+            flpnlOptionsPanelTop.Controls.Add(checkBoxUpdateRefs);
             flpnlOptionsPanelTop.Dock = DockStyle.Fill;
             flpnlOptionsPanelTop.Location = new Point(3, 78);
             flpnlOptionsPanelTop.Name = "flpnlOptionsPanelTop";
             flpnlOptionsPanelTop.Size = new Size(709, 25);
             flpnlOptionsPanelTop.TabIndex = 11;
-            flpnlOptionsPanelTop.WrapContents = false;
             // 
             // chkInteractive
             // 
@@ -367,6 +368,16 @@ namespace GitUI.CommandsDialogs
             toolTip1.SetToolTip(chkCommitterDateIsAuthorDate, "Sets the commit date to the original author date\r\n(instead of the current date).");
             chkCommitterDateIsAuthorDate.UseVisualStyleBackColor = true;
             chkCommitterDateIsAuthorDate.CheckedChanged += chkCommitterDateIsAuthorDate_CheckedChanged;
+            // 
+            // checkBoxUpdateRefs
+            // 
+            checkBoxUpdateRefs.AutoSize = true;
+            checkBoxUpdateRefs.Location = new Point(714, 3);
+            checkBoxUpdateRefs.Name = "checkBoxUpdateRefs";
+            checkBoxUpdateRefs.Size = new Size(146, 19);
+            checkBoxUpdateRefs.TabIndex = 18;
+            checkBoxUpdateRefs.Text = "Update dependent r&efs";
+            checkBoxUpdateRefs.UseVisualStyleBackColor = true;
             // 
             // flpnlOptionsPanelBottom
             // 
@@ -700,5 +711,6 @@ namespace GitUI.CommandsDialogs
         private ToolTip toolTip1;
         private CheckBox chkCommitterDateIsAuthorDate;
         private TableLayoutPanel tlpnlSecondaryControls;
+        private CheckBox checkBoxUpdateRefs;
     }
 }
