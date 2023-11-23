@@ -518,15 +518,21 @@ namespace GitCommandsTests_Git
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"",
                 Commands.Rebase("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: true).Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --update-refs \"branch\"",
+                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false, updateRefs: true).Arguments);
+            Assert.AreEqual(
+                "-c rebase.autoSquash=false rebase --no-update-refs \"branch\"",
+                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false, updateRefs: false).Arguments);
 
             // TODO quote 'onto'?
 
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase \"from\" \"branch\" --onto onto",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false, "from", "onto").Arguments);
+                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false, updateRefs: null, "from", "onto").Arguments);
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase --ignore-date \"from\" \"branch\" --onto onto",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: true, committerDateIsAuthorDate: false, "from", "onto").Arguments);
+                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: true, committerDateIsAuthorDate: false, updateRefs: null, "from", "onto").Arguments);
 
             Assert.Throws<ArgumentException>(
                 () => Commands.Rebase("branch", false, false, false, false, false, false, from: null, onto: "onto"));
