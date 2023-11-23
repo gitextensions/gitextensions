@@ -49,6 +49,40 @@ public class FormFileHistoryTests
             }, Path.Combine(fileRelativePath, fileName), _commands);
     }
 
+    [Test]
+    public void File_history_should_display_contents_in_all_revisions()
+    {
+        const string text = "This text will appear in a file that shall be renamed";
+
+        string initialRevision = _referenceRepository.CreateCommitRelative(string.Empty, "a.txt", "Create 'a.txt'", text);
+        string renameRevision = _referenceRepository.RenameRepoFile(string.Empty, "a.txt", "b.txt", commitMessage: "Rename to 'b.txt'");
+        string anotherRenameRevision = _referenceRepository.RenameRepoFile(string.Empty, "b.txt", "c.txt", commitMessage: "Rename to 'c.txt'");
+
+        AppSettings.FollowRenamesInFileHistory = true;
+
+        bool textLoaded;
+
+        RunFormTest(
+            form =>
+            {
+                WaitForRevisionsToBeLoaded(form);
+                form.GetTestAccessor().SelectViewTab();
+                form.GetTestAccessor().FileViewer.TextLoaded += (_, _) => textLoaded = true;
+
+                AssertFileViewerTextIsCorrect(form, initialRevision);
+                AssertFileViewerTextIsCorrect(form, renameRevision);
+                AssertFileViewerTextIsCorrect(form, anotherRenameRevision);
+            }, Path.Combine(string.Empty, "c.txt"), _commands);
+
+        void AssertFileViewerTextIsCorrect(FormFileHistory form, string revision)
+        {
+            textLoaded = false;
+            form.GetTestAccessor().RevisionGrid.SetSelectedRevision(ObjectId.Parse(revision)).Should().BeTrue();
+            UITest.ProcessUntil("Loading file text", () => textLoaded);
+            form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal.GetTestAccessor().TextEditor.Text.Should().Be(text);
+        }
+    }
+
     private static void RunFormTest(Action<FormFileHistory> testDriver, string fileName, GitUICommands commands)
     {
         UITest.RunForm(

@@ -696,6 +696,10 @@ namespace GitUI.CommandsDialogs
             }
 
             public RevisionGridControl RevisionGrid => _form.RevisionGrid;
+
+            public Editor.FileViewer FileViewer => _form.View;
+
+            public void SelectViewTab() => _form.tabControl1.SelectedTab = _form.ViewTab;
         }
     }
 }
