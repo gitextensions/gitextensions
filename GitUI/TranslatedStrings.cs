@@ -326,6 +326,8 @@ following command.
         private readonly TranslationString _scriptErrorOptionWithoutRevisionGridText = new("option is only supported when invoked from the revision grid");
         private readonly TranslationString _scriptErrorOptionWithoutRevisionText = new("A valid revision is required to substitute the argument options");
         private readonly TranslationString _scriptText = new("Script");
+        private readonly TranslationString _scriptUserInputCaption = new("User input for script '{0}'");
+        private readonly TranslationString _scriptUserCanceledRun = new("Script not started.");
 
         public static string ScriptConfirmExecute => _instance.Value._scriptConfirmExecuteText.Text;
         public static string ScriptErrorCantFind => _instance.Value._scriptErrorCantFindText.Text;
@@ -333,6 +335,8 @@ following command.
         public static string ScriptErrorOptionWithoutRevisionGridText => _instance.Value._scriptErrorOptionWithoutRevisionGridText.Text;
         public static string ScriptErrorOptionWithoutRevisionText => _instance.Value._scriptErrorOptionWithoutRevisionText.Text;
         public static string ScriptText => _instance.Value._scriptText.Text;
+        public static string ScriptUserInputCaption => _instance.Value._scriptUserInputCaption.Text;
+        public static string ScriptUserCanceledRun => _instance.Value._scriptUserCanceledRun.Text;
 
         #endregion
 

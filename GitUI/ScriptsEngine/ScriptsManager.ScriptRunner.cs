@@ -14,6 +14,11 @@ namespace GitUI.ScriptsEngine
         {
             private const string PluginPrefix = "plugin:";
             private const string NavigateToPrefix = "navigateTo:";
+            private const string userInput = "UserInput";
+            private const string userFiles = "UserFiles";
+
+            // Regex that ensure that in the default value, there is the same number of '{' than '}' to find the right end of the default value expression.
+            private static readonly Regex userInputRegex = new(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}");
 
             public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
             {
@@ -25,6 +30,70 @@ namespace GitUI.ScriptsEngine
                 {
                     throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorFailedToExecute}: '{script.Name}'", ex);
                 }
+            }
+
+            internal static (string? arguments, bool abort, bool cancel) ParseUserInputs(string scriptName, string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
+            {
+                string userInputCaption = string.Format(TranslatedStrings.ScriptUserInputCaption, scriptName);
+
+                // Specific handling of "UserInput" because the value entered should replace only "UserInput" with same label
+                Match match;
+                while ((match = userInputRegex.Match(arguments)).Success)
+                {
+                    Group defaultValueMatch = match.Groups["defaultValue"];
+                    (string? arguments, bool abort) defaultValue = defaultValueMatch is null
+                        ? (string.Empty, false)
+                        : ScriptOptionsParser.Parse(defaultValueMatch.Value ?? string.Empty, uiCommands, owner, scriptOptionsProvider);
+
+                    if (defaultValue.abort)
+                    {
+                        return (arguments: null, abort: true, cancel: false);
+                    }
+
+                    string label = match.Groups["label"].Value;
+
+                    using (IUserInputPrompt prompt = uiCommands.GetService<ISimplePromptCreator>().Create(userInputCaption, label, defaultValue.arguments))
+                    {
+                        DialogResult result = prompt.ShowDialog(owner);
+                        if (result != DialogResult.OK)
+                        {
+                            return (arguments: null, abort: false, cancel: true);
+                        }
+
+                        arguments = ScriptOptionsParser.ReplaceOption($"UserInput:{label}", arguments, prompt.UserInput);
+                        arguments = ScriptOptionsParser.ReplaceOption(match.Value.Substring(1, match.Value.Length - 2), arguments, prompt.UserInput);
+                    }
+                }
+
+                if (ScriptOptionsParser.Contains(arguments, userInput))
+                {
+                    userInputCaption = string.Format(TranslatedStrings.ScriptUserInputCaption, scriptName);
+                    using (IUserInputPrompt prompt = uiCommands.GetService<ISimplePromptCreator>().Create(userInputCaption, label: null, defaultValue: string.Empty))
+                    {
+                        DialogResult result = prompt.ShowDialog(owner);
+                        if (result == DialogResult.Cancel)
+                        {
+                            return (arguments: null, abort: false, cancel: true);
+                        }
+
+                        arguments = ScriptOptionsParser.ReplaceOption(userInput, arguments, prompt.UserInput);
+                    }
+                }
+
+                if (ScriptOptionsParser.Contains(arguments, userFiles))
+                {
+                    using (IUserInputPrompt prompt = uiCommands.GetService<IFilePromptCreator>().Create())
+                    {
+                        if (prompt.ShowDialog(owner) != DialogResult.OK)
+                        {
+                            return (arguments: null, abort: false, cancel: true);
+                        }
+
+                        arguments = ScriptOptionsParser.ReplaceOption(userFiles, arguments, prompt.UserInput);
+                    }
+                }
+
+                return (arguments, abort: false, cancel: false);
             }
 
             private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider? scriptOptionsProvider)
@@ -55,7 +124,18 @@ namespace GitUI.ScriptsEngine
                 }
 
                 string? originalCommand = script.Command;
-                (string? argument, bool abort) = ScriptOptionsParser.Parse(script.Arguments, uiCommands, owner, scriptOptionsProvider);
+
+                (arguments, bool abort, bool cancelled) = ParseUserInputs(script.Name, script.Arguments, uiCommands, owner, scriptOptionsProvider);
+
+                if (cancelled)
+                {
+                    MessageBox.Show(owner, TranslatedStrings.ScriptUserCanceledRun, script.Name, MessageBoxButtons.OK);
+                    return false;
+                }
+
+                (string? argument, abort) = abort
+                    ? (null, true)
+                    : ScriptOptionsParser.Parse(arguments, uiCommands, owner, scriptOptionsProvider);
                 if (abort)
                 {
                     throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.Name}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",

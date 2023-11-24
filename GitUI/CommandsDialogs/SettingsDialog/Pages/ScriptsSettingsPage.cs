@@ -19,6 +19,9 @@ Use {{option}} for quoted replacement.
 
 User inputs:
 {UserInput}
+{UserInput:a popup label}
+{UserInput:a popup label=a default value}
+{UserInput:a popup label=a default value using {sLocalBranch}}
 {UserFiles}
 
 Working directory:

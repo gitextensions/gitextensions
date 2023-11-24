@@ -402,13 +402,13 @@ namespace GitUITests.Script
         public void ParseScriptArguments_resolve_StringWithDoubleQuotes()
         {
             GitRevision gitRevision = new(ObjectId.Random());
-            gitRevision.Subject = "test string with \"double qoutes\" and escaped \\\"double qoutes\\\"";
+            gitRevision.Subject = "test string with \"double quotes\" and escaped \\\"double quotes\\\"";
 
             string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{{sMessage}}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
-            result.Should().Be("\"test string with \\\"double qoutes\\\" and escaped \\\"double qoutes\\\"\"");
+            result.Should().Be("\"test string with \\\"double quotes\\\" and escaped \\\"double quotes\\\"\"");
 
             result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{sMessage}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
-            result.Should().Be("test string with \"double qoutes\" and escaped \\\"double qoutes\\\"");
+            result.Should().Be("test string with \"double quotes\" and escaped \\\"double quotes\\\"");
         }
 
         [Test]
