@@ -977,7 +977,7 @@ namespace GitCommands
 
         public GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false)
         {
-            GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId?.ToString(), hasNotes: !shortFormat, cancellationToken: default);
+            GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId?.ToString(), hasNotes: !shortFormat, throwOnError: true, cancellationToken: default)!;
 
             if (loadRefs)
             {
