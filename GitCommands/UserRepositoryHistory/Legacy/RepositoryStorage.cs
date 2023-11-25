@@ -44,7 +44,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         public IReadOnlyList<RepositoryCategory> Load()
         {
             string? legacySetting = AppSettings.GetString(KeyHistory, null);
-            if (legacySetting is null)
+            if (string.IsNullOrWhiteSpace(legacySetting))
             {
                 return Array.Empty<RepositoryCategory>();
             }
