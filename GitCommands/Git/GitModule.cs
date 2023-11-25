@@ -1377,6 +1377,12 @@ namespace GitCommands
 
                 if (resetId == ObjectId.IndexId)
                 {
+                    if (!postUnstageStatus.Value.Any(i => i.Name == item.Name))
+                    {
+                        // Already removed (for instance new file)
+                        continue;
+                    }
+
                     if (UnmergedIndex(item, postUnstageStatus))
                     {
                         filesCannotCheckout.Add(item.Name);
