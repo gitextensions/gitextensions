@@ -8,9 +8,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public sealed partial class SettingsTreeViewUserControl : UserControl
     {
         private bool _isSelectionChangeTriggeredByGoto;
-        private List<TreeNode> _nodesFoundByTextBox = new();
-        private readonly Dictionary<SettingsPageReference, TreeNode> _pages2NodeMap = new();
-        private readonly List<ISettingsPage> _settingsPages = new();
+        private List<TreeNode> _nodesFoundByTextBox = [];
+        private readonly Dictionary<SettingsPageReference, TreeNode> _pages2NodeMap = [];
+        private readonly List<ISettingsPage> _settingsPages = [];
 
         public event EventHandler<SettingsPageSelectedEventArgs>? SettingsPageSelected;
         public IEnumerable<ISettingsPage> SettingsPages => _settingsPages;

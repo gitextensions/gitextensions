@@ -204,7 +204,7 @@ namespace GitCommandsTests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                List<Exception> observed = new();
+                List<Exception> observed = [];
 
                 _loader.LoadingError += (_, e) =>
                 {
@@ -239,7 +239,7 @@ namespace GitCommandsTests
         [Test]
         public void Error_raised_via_event_and_not_marked_as_handled_faults_task()
         {
-            List<Exception> observed = new();
+            List<Exception> observed = [];
 
             _loader.LoadingError += (_, e) =>
             {

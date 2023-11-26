@@ -547,7 +547,7 @@ namespace GitCommandsTests
         [Test]
         public void GetSubmodulesLocalPaths()
         {
-            List<GitModuleTestHelper> moduleTestHelpers = new();
+            List<GitModuleTestHelper> moduleTestHelpers = [];
             try
             {
                 const int numModules = 4;

@@ -12,7 +12,7 @@
             FetchUrl = fetchUrl ?? throw new ArgumentNullException(nameof(fetchUrl));
 
             // At least one push URL must be added
-            PushUrls = firstPushUrl is not null ? new List<string>() { firstPushUrl } : throw new ArgumentNullException(nameof(firstPushUrl));
+            PushUrls = firstPushUrl is not null ? [firstPushUrl] : throw new ArgumentNullException(nameof(firstPushUrl));
         }
     }
 }

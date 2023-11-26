@@ -33,7 +33,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// These revisions are only accessed from the update thread and are normally empty
         /// when the loading is completed.
         /// </summary>
-        private readonly Dictionary<ObjectId, RevisionGraphRevision> _incompleteRevisionByObjectId = new();
+        private readonly Dictionary<ObjectId, RevisionGraphRevision> _incompleteRevisionByObjectId = [];
 
         /// <summary>
         /// The loading is completed when all revisions are loaded from the log,

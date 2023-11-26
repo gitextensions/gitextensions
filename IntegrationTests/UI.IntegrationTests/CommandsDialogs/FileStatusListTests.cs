@@ -38,7 +38,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             GitItemStatus item0 = new(name: "z.0");
             GitItemStatus item1 = new(name: "x.1");
             GitItemStatus item2 = new(name: "y.2");
-            List<GitItemStatus> items = new() { item0, item1, item2 };
+            List<GitItemStatus> items = [item0, item1, item2];
 
             // alphabetical order
             GitItemStatus itemAt0 = item1;

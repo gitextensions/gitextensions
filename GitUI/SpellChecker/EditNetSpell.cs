@@ -36,7 +36,7 @@ namespace GitUI.SpellChecker
         private static WordDictionary? _wordDictionary;
 
         private CancellationTokenSource _autoCompleteCancellationTokenSource = new();
-        private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new();
+        private readonly List<IAutoCompleteProvider> _autoCompleteProviders = [];
         private AsyncLazy<IEnumerable<AutoCompleteWord>?>? _autoCompleteListTask;
         private bool _autoCompleteWasUserActivated;
         private bool _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press

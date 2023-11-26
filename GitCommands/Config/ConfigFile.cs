@@ -9,7 +9,7 @@ namespace GitCommands.Config
         private static Encoding GetEncoding() => GitModule.SystemEncoding;
         public static readonly char[] CommentChars = { ';', '#' };
 
-        private readonly List<IConfigSection> _configSections = new();
+        private readonly List<IConfigSection> _configSections = [];
 
         public string FileName { get; }
 

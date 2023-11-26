@@ -18,7 +18,7 @@ namespace GitUI.Editor.Diff
 
         public List<ISegment> GetLinesStartingWith(IDocument document, ref int beginIndex, string[] prefixStrs, ref bool found)
         {
-            List<ISegment> result = new();
+            List<ISegment> result = [];
 
             while (beginIndex < document.TotalNumberOfLines)
             {

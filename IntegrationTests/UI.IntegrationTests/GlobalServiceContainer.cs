@@ -20,7 +20,7 @@ namespace GitExtensions.UITests
             serviceContainer.AddService(Substitute.For<ILinkFactory>());
 
             IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
-            scriptsManager.GetScripts().Returns(new BindingList<ScriptInfo>());
+            scriptsManager.GetScripts().Returns([]);
             serviceContainer.AddService(scriptsManager);
 
             serviceContainer.AddService(Substitute.For<IScriptsRunner>());

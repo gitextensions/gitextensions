@@ -297,7 +297,7 @@ namespace GitUI.UserControls.RevisionGrid
                 DebugHelpers.Fail("Not supported");
             }
 
-            ArgumentBuilder filter = new();
+            ArgumentBuilder filter = [];
 
             // Separate the filters in groups
             GetCommitRevisionFilter(filter);

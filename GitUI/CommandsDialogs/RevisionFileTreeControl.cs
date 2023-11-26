@@ -188,7 +188,7 @@ See the changes in the commit form.");
                 tvGitTree.BeginUpdate();
 
                 // Save state only when there is selected node
-                List<string> tryNodes = new();
+                List<string> tryNodes = [];
 
                 // When blame control is visible, taking the filename from the revision selected to blame
                 // because the file could have been renamed in between
@@ -502,7 +502,7 @@ See the changes in the commit form.");
         {
             if (e.Item is TreeNode { Tag: GitItem gitItem })
             {
-                StringCollection fileList = new();
+                StringCollection fileList = [];
                 string fileName = _fullPathResolver.Resolve(gitItem.FileName);
 
                 fileList.Add(fileName.ToNativePath());

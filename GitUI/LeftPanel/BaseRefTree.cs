@@ -124,7 +124,7 @@ namespace GitUI.LeftPanel
                 Regex.CacheSize = (regexes.Length * 2) + additionalRegexCacheEntries;
             }
 
-            Dictionary<string, int> orderByNodeKey = new();
+            Dictionary<string, int> orderByNodeKey = [];
             foreach (T node in references)
             {
                 int currentOrder = 0;

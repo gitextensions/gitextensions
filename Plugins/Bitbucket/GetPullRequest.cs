@@ -107,7 +107,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
         protected override List<PullRequest> ParseResponse(JObject json)
         {
-            List<PullRequest> result = new();
+            List<PullRequest> result = [];
             foreach (JObject val in json["values"])
             {
                 result.Add(PullRequest.Parse(val));

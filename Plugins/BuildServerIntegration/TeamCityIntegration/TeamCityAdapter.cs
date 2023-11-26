@@ -56,7 +56,7 @@ namespace TeamCityIntegration
 
         private string? _httpClientHostSuffix;
 
-        private readonly List<JoinableTask<IEnumerable<string>>> _getBuildTypesTask = new();
+        private readonly List<JoinableTask<IEnumerable<string>>> _getBuildTypesTask = [];
 
         private CookieContainer? _teamCityNtlmAuthCookie;
 
@@ -547,7 +547,7 @@ namespace TeamCityIntegration
 
         private Task<XDocument> GetFilteredBuildsXmlResponseAsync(string buildTypeId, CancellationToken cancellationToken, DateTime? sinceDate = null, bool? running = null)
         {
-            List<string> values = new() { "branch:(default:any)" };
+            List<string> values = [ "branch:(default:any)"];
 
             if (sinceDate.HasValue)
             {

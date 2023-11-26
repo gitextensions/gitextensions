@@ -14,7 +14,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         [Test]
         public void MoveLanesRight_should_do_nothing_if_empty([Values(-1, 0, 1)] int fromLane)
         {
-            List<RevisionGraphSegment> segments = new();
+            List<RevisionGraphSegment> segments = [];
             IRevisionGraphRow revisionGraphRow = new RevisionGraphRow(_segment.Child, segments, previousRow: null, mergeGraphLanesHavingCommonParent: true);
             revisionGraphRow.GetLaneCount().Should().Be(1);
 
@@ -30,7 +30,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         [TestCase(2, 0)]
         public void MoveLanesRight_should_move_single_segment(int fromLane, int expectedLane)
         {
-            List<RevisionGraphSegment> segments = new() { _segment };
+            List<RevisionGraphSegment> segments = [_segment];
             IRevisionGraphRow revisionGraphRow = new RevisionGraphRow(_segment.Child, segments, previousRow: null, mergeGraphLanesHavingCommonParent: true);
             revisionGraphRow.GetLaneCount().Should().Be(segments.Count);
 
@@ -48,7 +48,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         [TestCase(4, 0, 1, 2)]
         public void MoveLanesRight_should_move_segments(int fromLane, int expectedLane, int expectedLane1, int expectedLane2)
         {
-            List<RevisionGraphSegment> segments = new() { _segment, _segment1, _segment2 };
+            List<RevisionGraphSegment> segments = [_segment, _segment1, _segment2];
             IRevisionGraphRow revisionGraphRow = new RevisionGraphRow(_segment.Child, segments, previousRow: null, mergeGraphLanesHavingCommonParent: true);
             revisionGraphRow.GetLaneCount().Should().Be(3);
 
@@ -82,7 +82,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         [TestCase(4, 3, 0, 1, 2)]
         public void MoveLanesRight_should_move_segments_twice(int fromLane1, int fromLane2, int expectedLane, int expectedLane1, int expectedLane2)
         {
-            List<RevisionGraphSegment> segments = new() { _segment, _segment1, _segment2 };
+            List<RevisionGraphSegment> segments = [_segment, _segment1, _segment2];
             IRevisionGraphRow revisionGraphRow = new RevisionGraphRow(_segment.Child, segments, previousRow: null, mergeGraphLanesHavingCommonParent: true);
             revisionGraphRow.GetLaneCount().Should().Be(3);
 

@@ -22,7 +22,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// <summary>
         ///   Collection of reordered pie slices mapped to original order.
         /// </summary>
-        protected List<int> PieSlicesMapping { get; } = new List<int>();
+        protected List<int> PieSlicesMapping { get; } = [];
 
         /// <summary>
         ///   Array of colors used for rendering.
@@ -645,7 +645,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             SizeF largestDisplacementEllipseSize = LargestDisplacementEllipseSize;
             int maxDisplacementIndex = SliceRelativeDisplacements.Length - 1;
             float largestDisplacement = LargestDisplacement;
-            List<PieSlice> listPieSlices = new();
+            List<PieSlice> listPieSlices = [];
             PieSlicesMapping.Clear();
             int colorIndex = 0;
             int backPieIndex = -1;

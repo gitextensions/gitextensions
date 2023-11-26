@@ -1816,7 +1816,7 @@ namespace GitUI
 
         private static IReadOnlyDictionary<string, string?> InitializeArguments(IReadOnlyList<string> args)
         {
-            Dictionary<string, string?> arguments = new();
+            Dictionary<string, string?> arguments = [];
 
             for (int i = 2; i < args.Count; i++)
             {

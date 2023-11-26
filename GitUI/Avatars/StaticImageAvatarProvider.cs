@@ -3,7 +3,7 @@
     public sealed class StaticImageAvatarProvider : IAvatarProvider
     {
         private readonly Image _image;
-        private readonly Dictionary<int, Image> _sizeCache = new();
+        private readonly Dictionary<int, Image> _sizeCache = [];
 
         public StaticImageAvatarProvider(Image image)
         {

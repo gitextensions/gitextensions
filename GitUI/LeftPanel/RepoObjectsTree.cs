@@ -24,7 +24,7 @@ namespace GitUI.LeftPanel
 
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
-        private readonly List<Tree> _rootNodes = new();
+        private readonly List<Tree> _rootNodes = [];
         private readonly SearchControl<string> _txtBranchCriterion;
         private LocalBranchTree _branchesTree;
         private RemoteBranchTree _remotesTree;
@@ -169,7 +169,7 @@ namespace GitUI.LeftPanel
 
                 IEnumerable<string> CollectFilterCandidates()
                 {
-                    List<string> list = new();
+                    List<string> list = [];
 
                     foreach (TreeNode rootNode in treeMain.Nodes)
                     {
@@ -308,7 +308,7 @@ namespace GitUI.LeftPanel
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 HashSet<string> mergedBranches = selectedGuid is null
-                    ? new HashSet<string>()
+                    ? []
                     : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid)).ToHashSet();
 
                 selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
@@ -509,7 +509,7 @@ namespace GitUI.LeftPanel
             List<TreeNode> SearchTree(string text, IEnumerable<TreeNode> nodes)
             {
                 Queue<TreeNode> queue = new(nodes);
-                List<TreeNode> ret = new();
+                List<TreeNode> ret = [];
 
                 while (queue.Count != 0)
                 {

@@ -31,7 +31,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
         protected override List<Commit> ParseResponse(JObject json)
         {
-            List<Commit> result = new();
+            List<Commit> result = [];
             foreach (JObject commit in json["values"])
             {
                 result.Add(Commit.Parse(commit));

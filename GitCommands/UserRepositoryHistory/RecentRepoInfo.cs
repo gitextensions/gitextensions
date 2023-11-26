@@ -60,9 +60,9 @@
 
         public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> pinnedRepoList, List<RecentRepoInfo> allRecentRepoList)
         {
-            SortedList<string, List<RecentRepoInfo>> orderedRepos = new();
-            List<RecentRepoInfo> pinnedRepos = new();
-            List<RecentRepoInfo> allRecentRepos = new();
+            SortedList<string, List<RecentRepoInfo>> orderedRepos = [];
+            List<RecentRepoInfo> pinnedRepos = [];
+            List<RecentRepoInfo> allRecentRepos = [];
 
             bool middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
             bool signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
@@ -176,11 +176,11 @@
             bool existsShortName = orderedRepos.TryGetValue(repoInfo.Caption!, out List<RecentRepoInfo> list);
             if (!existsShortName)
             {
-                list = new List<RecentRepoInfo>();
+                list = [];
                 orderedRepos.Add(repoInfo.Caption!, list);
             }
 
-            List<RecentRepoInfo> tmpList = new();
+            List<RecentRepoInfo> tmpList = [];
             if (existsShortName)
             {
                 for (int i = list.Count - 1; i >= 0; i--)
@@ -351,7 +351,7 @@
 
             if (!orderedRepos.TryGetValue(repoInfo.Caption!, out List<RecentRepoInfo> list))
             {
-                list = new List<RecentRepoInfo>();
+                list = [];
                 orderedRepos.Add(repoInfo.Caption!, list);
             }
 

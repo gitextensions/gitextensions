@@ -23,7 +23,7 @@ namespace GitExtensions.Plugins.Bitbucket
         private readonly string _NO_TRANSLATE_LinkViewPull = "pull-requests";
 
         private readonly Settings? _settings;
-        private readonly BindingList<BitbucketUser> _reviewers = new();
+        private readonly BindingList<BitbucketUser> _reviewers = [];
 
         public BitbucketPullRequestForm(Settings? settings, IGitModule? module)
         {
@@ -83,7 +83,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 Validates.NotNull(_settings.ProjectKey);
                 Validates.NotNull(_settings.RepoSlug);
 
-                List<Repository> list = new();
+                List<Repository> list = [];
                 GetRepoRequest getDefaultRepo = new(_settings.ProjectKey, _settings.RepoSlug, _settings);
                 BitbucketResponse<Repository> defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
                 if (defaultRepo.Success)
@@ -117,7 +117,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 Validates.NotNull(_settings.ProjectKey);
                 Validates.NotNull(_settings.RepoSlug);
 
-                List<PullRequest> list = new();
+                List<PullRequest> list = [];
                 GetPullRequest getPullRequests = new(_settings.ProjectKey, _settings.RepoSlug, _settings);
                 BitbucketResponse<List<PullRequest>> result = await getPullRequests.SendAsync().ConfigureAwait(false);
                 if (result.Success)
@@ -166,7 +166,7 @@ namespace GitExtensions.Plugins.Bitbucket
             }
         }
 
-        private readonly Dictionary<Repository, IEnumerable<string>> _branches = new();
+        private readonly Dictionary<Repository, IEnumerable<string>> _branches = [];
         private async Task<IEnumerable<string>> GetBitbucketBranchesAsync(Repository selectedRepo)
         {
             lock (_branches)
@@ -179,7 +179,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             Validates.NotNull(_settings);
 
-            List<string> list = new();
+            List<string> list = [];
             GetBranchesRequest getBranches = new(selectedRepo, _settings);
             BitbucketResponse<Newtonsoft.Json.Linq.JObject> result = await getBranches.SendAsync().ConfigureAwait(false);
             if (result.Success)

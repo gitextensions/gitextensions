@@ -57,7 +57,7 @@ namespace GitUI.Editor
 
         public string[] Extensions => Array.Empty<string>();
 
-        public Dictionary<string, string> Properties { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Properties { get; } = [];
 
         public HighlightColor GetColorFor(string name)
         {

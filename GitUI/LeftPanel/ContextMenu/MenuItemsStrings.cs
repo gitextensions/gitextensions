@@ -21,7 +21,7 @@ namespace GitUI.LeftPanel.ContextMenu
         /// <see cref="ICanDelete"/>
         internal TranslationString Delete;
 
-        internal Dictionary<MenuItemKey, TranslationString> Tooltips { get; } = new Dictionary<MenuItemKey, TranslationString>();
+        internal Dictionary<MenuItemKey, TranslationString> Tooltips { get; } = [];
 
         public MenuItemsStrings()
         {

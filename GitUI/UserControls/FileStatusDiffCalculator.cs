@@ -40,7 +40,7 @@ namespace GitUI
             }
 
             GitModule module = GetModule();
-            List<FileStatusWithDescription> fileStatusDescs = new();
+            List<FileStatusWithDescription> fileStatusDescs = [];
             if (revisions.Count == 1)
             {
                 // If the grid is filtered, parents may be rewritten

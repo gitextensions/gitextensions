@@ -25,7 +25,7 @@ namespace GitUITests.Editor
         {
             ServiceContainer serviceContainer = new();
             IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
-            scriptsManager.GetScripts().Returns(new BindingList<ScriptInfo>());
+            scriptsManager.GetScripts().Returns([]);
             serviceContainer.AddService(scriptsManager);
             serviceContainer.AddService(Substitute.For<IHotkeySettingsLoader>());
             _serviceProvider = serviceContainer;

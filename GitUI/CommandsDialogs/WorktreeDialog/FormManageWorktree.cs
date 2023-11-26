@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             };
             string lines = Module.GitExecutable.GetOutput(args);
 
-            _worktrees = new List<WorkTree>();
+            _worktrees = [];
             WorkTree? currentWorktree = null;
             foreach (string line in lines.LazySplit('\n'))
             {

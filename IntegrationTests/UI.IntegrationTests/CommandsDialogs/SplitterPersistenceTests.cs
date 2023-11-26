@@ -160,7 +160,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private async Task RunFormTestAsync(Func<FormBrowse, Task> testDriverAsync)
         {
-            Dictionary<string, string> splitters = new();
+            Dictionary<string, string> splitters = [];
 
             UITest.RunForm(
                 showForm: () =>

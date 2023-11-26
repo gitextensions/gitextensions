@@ -65,8 +65,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public (IReadOnlyList<RecentRepoInfo> recentRepositories, IReadOnlyList<RecentRepoInfo> favouriteRepositories) PreRenderRepositories(Graphics g, string pattern)
         {
-            List<RecentRepoInfo> pinnedRepos = new();
-            List<RecentRepoInfo> allRecentRepos = new();
+            List<RecentRepoInfo> pinnedRepos = [];
+            List<RecentRepoInfo> allRecentRepos = [];
 
             RecentRepoSplitter splitter = new()
             {

@@ -5,7 +5,7 @@ namespace GitUI.Theming
 {
     internal class SystemBrushesCache : IDisposable
     {
-        private readonly Dictionary<int, HandleRef> _cache = new();
+        private readonly Dictionary<int, HandleRef> _cache = [];
 
         public void Dispose()
         {

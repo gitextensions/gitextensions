@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// </summary>
     public abstract partial class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
-        private readonly List<ISettingControlBinding> _controlBindings = new();
+        private readonly List<ISettingControlBinding> _controlBindings = [];
         private IReadOnlyList<string>? _childrenText;
         private ISettingsPageHost? _pageHost;
 
@@ -174,7 +174,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         /// </summary>
         private static IReadOnlyList<string> GetChildrenText(Control control)
         {
-            List<string> texts = new();
+            List<string> texts = [];
 
             Queue<Control> queue = new();
             queue.Enqueue(control);

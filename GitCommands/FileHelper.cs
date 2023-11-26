@@ -79,7 +79,7 @@ namespace GitCommands
             }
 
             string[] lines = result.StandardOutput.Split(Delimiters.NullAndLineFeed);
-            Dictionary<string, string> attributes = new();
+            Dictionary<string, string> attributes = [];
             for (int i = 0; i < lines.Length - 2; i += 3)
             {
                 attributes[lines[i + 1].Trim()] = lines[i + 2].Trim();

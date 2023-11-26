@@ -8,7 +8,7 @@
             Path = path;
             SizeInBytes = size;
             CompressedSizeInBytes = -1;
-            Commit = new HashSet<string> { commit };
+            Commit = [commit];
         }
 
         public string SHA { get; set; }

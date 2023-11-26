@@ -68,7 +68,7 @@ namespace GitUITests.UserControls
                 "Receiving: 100%\nReceived data\n"
             };
 
-            List<string> received = new();
+            List<string> received = [];
 
             void FireDataReceived(TextEventArgs e)
             {
@@ -113,7 +113,7 @@ namespace GitUITests.UserControls
                 "Receiving: 100%\nReceived\r\ndata\n"
             };
 
-            List<string> received = new();
+            List<string> received = [];
 
             void FireDataReceived(TextEventArgs e)
             {

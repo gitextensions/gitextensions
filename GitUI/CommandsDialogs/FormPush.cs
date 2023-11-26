@@ -410,7 +410,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 // Push Multiple Branches Tab selected
-                List<GitPushAction> pushActions = new();
+                List<GitPushAction> pushActions = [];
                 Validates.NotNull(_branchTable);
                 foreach (DataRow row in _branchTable.Rows)
                 {

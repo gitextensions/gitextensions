@@ -39,7 +39,7 @@ namespace GitCommands.Submodules
 
         private readonly CancellationTokenSequence _submodulesStructureSequence = new();
         private readonly CancellationTokenSequence _submodulesStatusSequence = new();
-        private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = new();
+        private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = [];
         private DateTime _previousSubmoduleUpdateTime;
         private SubmoduleInfoResult? _submoduleInfoResult;
 

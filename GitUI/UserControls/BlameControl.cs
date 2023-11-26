@@ -363,9 +363,9 @@ namespace GitUI.Blame
             StringBuilder lineBuilder = new(lineLength + 2);
             StringBuilder gutter = new(capacity: lineBuilder.Capacity * _blame.Lines.Count);
             string emptyLine = new(' ', lineLength);
-            Dictionary<string, Image?> cacheAvatars = new();
+            Dictionary<string, Image?> cacheAvatars = [];
             Image noAuthorImage = (Image)new Bitmap(Images.User80, avatarSize, avatarSize);
-            Dictionary<ObjectId, string> authorLineCache = new();
+            Dictionary<ObjectId, string> authorLineCache = [];
             for (int index = 0; index < _blame.Lines.Count; index++)
             {
                 GitBlameLine line = _blame.Lines[index];

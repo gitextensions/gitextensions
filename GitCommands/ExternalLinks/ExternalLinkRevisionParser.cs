@@ -43,7 +43,7 @@ namespace GitCommands.ExternalLinks
 
         private IEnumerable<Match?> ParseRemotes(ExternalLinkDefinition definition)
         {
-            List<Match?> allMatches = new();
+            List<Match?> allMatches = [];
 
             if (string.IsNullOrWhiteSpace(definition.RemoteSearchPattern) || definition.RemoteSearchPatternRegex?.Value is null)
             {
@@ -51,7 +51,7 @@ namespace GitCommands.ExternalLinks
                 return allMatches;
             }
 
-            List<string> remoteUrls = new();
+            List<string> remoteUrls = [];
 
             IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(false);
             IEnumerable<ConfigFileRemote> matchingRemotes = GetMatchingRemotes(definition, remotes);
@@ -93,7 +93,7 @@ namespace GitCommands.ExternalLinks
 
         private static IEnumerable<ExternalLink> ParseRevision(GitRevision revision, ExternalLinkDefinition definition, Match? remoteMatch)
         {
-            List<IEnumerable<ExternalLink>> links = new();
+            List<IEnumerable<ExternalLink>> links = [];
 
             if (definition.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.LocalBranches))
             {
@@ -126,7 +126,7 @@ namespace GitCommands.ExternalLinks
                 yield break;
             }
 
-            List<Match> allMatches = new();
+            List<Match> allMatches = [];
 
             MatchCollection matches = definition.SearchPatternRegex.Value.Matches(part);
             for (int i = 0; i < matches.Count; i++)

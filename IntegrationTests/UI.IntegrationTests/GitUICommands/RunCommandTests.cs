@@ -176,7 +176,7 @@ namespace GitUITests.GitUICommandsTests
         {
             string expectedTab = command.Contains("blame") ? "Blame" : "Diff";
 
-            List<string> args = new() { "ge.exe", command, "filename" };
+            List<string> args = ["ge.exe", command, "filename"];
             if (commit)
             {
                 args.Add(_referenceRepository.CommitHash);

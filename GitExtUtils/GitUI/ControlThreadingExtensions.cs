@@ -15,7 +15,7 @@ namespace GitUI
             cts.Cancel();
             _preCancelledToken = cts.Token;
 
-            _controlDisposed = new ConditionalWeakTable<IComponent, StrongBox<CancellationToken>>();
+            _controlDisposed = [];
         }
 
 #pragma warning disable VSTHRD004 // Await SwitchToMainThreadAsync

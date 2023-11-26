@@ -454,7 +454,7 @@ namespace GitCommands
         /// <inheritdoc />
         public IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
-            List<string> localPaths = new();
+            List<string> localPaths = [];
             try
             {
                 DoGetSubmodulesLocalPaths(this, "", localPaths, recursive);
@@ -740,7 +740,7 @@ namespace GitCommands
         {
             filename = filename.ToPosixPath();
 
-            List<ConflictData> list = new();
+            List<ConflictData> list = [];
             GitArgumentBuilder args = new("ls-files")
             {
                 "-z",
@@ -797,7 +797,7 @@ namespace GitCommands
                 | (AppSettings.ShowSuperprojectTags ? RefsFilter.Tags : RefsFilter.NoFilter);
             if (refsFilter == RefsFilter.NoFilter)
             {
-                return new Dictionary<IGitRef, IGitItem?>();
+                return [];
             }
 
             string? command = Commands.GetRefs(refsFilter, noLocks: noLocks, GitRefsSortBy.committerdate, GitRefsSortOrder.Descending, maxSuperRefCount);
@@ -918,12 +918,12 @@ namespace GitCommands
             }
             else
             {
-                args = new ArgumentBuilder()
-                {
+                args =
+                [
                     "/c",
                     $"\"{AppSettings.GitCommand.QuoteNE()}",
                     "gui\""
-                };
+                ];
                 new Executable("cmd.exe", WorkingDir).Start(args);
             }
         }
@@ -1336,7 +1336,7 @@ namespace GitCommands
             if (resetId != ObjectId.IndexId)
             {
                 Lazy<List<GitItemStatus>> initialStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
-                List<GitItemStatus> filesToUnstage = new();
+                List<GitItemStatus> filesToUnstage = [];
                 foreach (GitItemStatus item in selectedItems)
                 {
                     if (item.Staged == StagedStatus.Index)
@@ -1352,10 +1352,10 @@ namespace GitCommands
                 BatchUnstageFiles(filesToUnstage, progressAction);
             }
 
-            List<string> filesInUse = new();
-            List<string> filesToCheckout = new();
-            List<string> filesToReset = new();
-            List<string> filesCannotCheckout = new();
+            List<string> filesInUse = [];
+            List<string> filesToCheckout = [];
+            List<string> filesToReset = [];
+            List<string> filesCannotCheckout = [];
             output = new();
             Lazy<List<GitItemStatus>> postUnstageStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
 
@@ -1853,8 +1853,8 @@ namespace GitCommands
         /// <returns><see langword="true" /> if changes should be rescanned; otherwise <see langword="false" />.</returns>.
         public bool BatchUnstageFiles(IEnumerable<GitItemStatus> selectedItems, Action<BatchProgressEventArgs>? action = null)
         {
-            List<GitItemStatus> files = new();
-            List<string> filesToRemove = new();
+            List<GitItemStatus> files = [];
+            List<string> filesToRemove = [];
             bool shouldRescanChanges = false;
             foreach (GitItemStatus item in selectedItems)
             {
@@ -2055,7 +2055,7 @@ namespace GitCommands
             IReadOnlyList<Remote> ParseRemotes(ExecutionResult result)
             {
                 IEnumerable<string> lines = result.StandardOutput.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries);
-                List<Remote> remotes = new();
+                List<Remote> remotes = [];
 
                 // See tests for explanation of the format
 
@@ -2489,7 +2489,7 @@ namespace GitCommands
 
             static IReadOnlyList<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
             {
-                List<GitItemStatus> result = new();
+                List<GitItemStatus> result = [];
 
                 foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
                 {
@@ -2512,7 +2512,7 @@ namespace GitCommands
 
             static IReadOnlyList<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString, bool excludeAssumeUnchangedFiles)
             {
-                List<GitItemStatus> result = new();
+                List<GitItemStatus> result = [];
 
                 foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
                 {
@@ -2912,8 +2912,8 @@ namespace GitCommands
         {
             MatchCollection matches = _refRegex.Matches(refList);
 
-            List<IGitRef> gitRefs = new();
-            Dictionary<string, GitRef> headByRemote = new();
+            List<IGitRef> gitRefs = [];
+            Dictionary<string, GitRef> headByRemote = [];
 
             foreach (Match match in matches)
             {
@@ -3212,7 +3212,7 @@ namespace GitCommands
             // We see the content of the chunks, where the first is a markdown header, the second
             // is a blank line, and third is an introductory paragraph about the project.
 
-            Dictionary<ObjectId, GitBlameCommit> commitByObjectId = new();
+            Dictionary<ObjectId, GitBlameCommit> commitByObjectId = [];
 
             // Pre-allocate the list with a capacity estimated from the approximate git blame length to describe a file line
             const int GitBlameLengthPerLineHeuristicValue = 120;
@@ -3999,7 +3999,7 @@ namespace GitCommands
 
         public (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null)
         {
-            Dictionary<string, int> countByName = new();
+            Dictionary<string, int> countByName = [];
             int totalCommits = 0;
 
             Regex regex = new(@"^\s*(?<count>\d+)\s+(?<name>.*)$");

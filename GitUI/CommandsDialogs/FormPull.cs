@@ -325,7 +325,7 @@ namespace GitUI.CommandsDialogs
                         // It only returns the heads that are already known to the repository. This
                         // doesn't return heads that are new on the server. This can be updated using
                         // update branch info in the manage remotes dialog.
-                        _heads = new List<IGitRef>();
+                        _heads = [];
                         foreach (IGitRef head in Module.GetRefs(RefsFilter.Remotes))
                         {
                             if (!head.Name.StartsWith(_NO_TRANSLATE_Remotes.Text, StringComparison.CurrentCultureIgnoreCase))

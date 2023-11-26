@@ -98,8 +98,8 @@ namespace GitUI.UserControls.RevisionGrid
             DropDown.SuspendLayout();
             DropDownItems.Clear();
 
-            List<string> branchNames = new();
-            List<string> tagNames = new();
+            List<string> branchNames = [];
+            List<string> tagNames = [];
             foreach (GitRevision revision in revisions)
             {
                 GitRefListsForRevision refLists = new(revision);

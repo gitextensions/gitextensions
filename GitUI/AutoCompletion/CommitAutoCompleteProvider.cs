@@ -25,7 +25,7 @@ namespace GitUI.AutoCompletion
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            HashSet<string> autoCompleteWords = new();
+            HashSet<string> autoCompleteWords = [];
 
             IGitModule module = GetModule();
             ArgumentString cmd = Commands.GetAllChangedFiles(true, UntrackedFilesMode.Default, noLocks: true);
@@ -133,7 +133,7 @@ namespace GitUI.AutoCompletion
         {
             IEnumerable<string> autoCompleteRegexes = ReadOrInitializeAutoCompleteRegexes();
 
-            Dictionary<string, Regex> regexes = new();
+            Dictionary<string, Regex> regexes = [];
 
             foreach (string line in autoCompleteRegexes)
             {

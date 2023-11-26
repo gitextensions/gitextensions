@@ -900,7 +900,7 @@ namespace GitCommands
             set => SetBool("revisiongraphdrawnonrelativestextgray", value);
         }
 
-        public static readonly Dictionary<string, Encoding> AvailableEncodings = new();
+        public static readonly Dictionary<string, Encoding> AvailableEncodings = [];
 
         public enum PullAction
         {

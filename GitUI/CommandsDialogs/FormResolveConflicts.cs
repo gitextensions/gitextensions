@@ -301,10 +301,10 @@ namespace GitUI.CommandsDialogs
 
         private void LoadCustomMergetools()
         {
-            List<CustomDiffMergeTool> menus = new()
-            {
+            List<CustomDiffMergeTool> menus =
+            [
                 new(customMergetool, customMergetool_Click),
-            };
+            ];
 
             const int ToolDelay = 500;
             new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: false, ToolDelay, cancellationToken: _customDiffToolsSequence.Next());
@@ -366,14 +366,14 @@ namespace GitUI.CommandsDialogs
             string filePath = _fullPathResolver.Resolve(fileName);
             DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
-            ArgumentBuilder args = new()
-            {
+            ArgumentBuilder args =
+            [
                 mergeScript.Quote(),
                 FixPath(filePath).Quote(),
                 FixPath(remoteFileName).Quote(),
                 FixPath(localFileName).Quote(),
                 FixPath(baseFileName).Quote()
-            };
+            ];
 
             new Executable("wscript", Module.WorkingDir).Start(args);
 
@@ -1189,9 +1189,9 @@ namespace GitUI.CommandsDialogs
                     IReadOnlyList<ConflictData> items = GetConflicts();
                     _conflictItemsCount = items.Count;
 
-                    List<ConflictData> filesDeletedLocallyAndModifiedRemotely = new();
-                    List<ConflictData> filesModifiedLocallyAndDeletedRemotely = new();
-                    List<ConflictData> filesRemaining = new();
+                    List<ConflictData> filesDeletedLocallyAndModifiedRemotely = [];
+                    List<ConflictData> filesModifiedLocallyAndDeletedRemotely = [];
+                    List<ConflictData> filesRemaining = [];
 
                     // Insert(0, conflictData) is needed the task dialog shows the same order of files as selected in the grid
                     foreach (ConflictData conflictData in items)

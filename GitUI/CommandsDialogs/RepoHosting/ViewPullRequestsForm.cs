@@ -371,10 +371,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void SplitAndLoadDiff(string diffData, string baseSha, string secondSha)
         {
-            _diffCache = new Dictionary<string, string>();
+            _diffCache = [];
 
             List<string> fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el?.Trim().Length is > 10).ToList();
-            List<GitItemStatus> giss = new();
+            List<GitItemStatus> giss = [];
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
             GitRevision? firstRev = ObjectId.TryParse(baseSha, out ObjectId? firstId) ? new GitRevision(firstId) : null;

@@ -66,7 +66,7 @@ namespace GitUI.UserControls
             string filter = tscboBranchFilter.Text == TranslatedStrings.NoResultsFound ? string.Empty : tscboBranchFilter.Text;
             if (checkBranch && !string.IsNullOrWhiteSpace(filter))
             {
-                List<string> newFilter = new();
+                List<string> newFilter = [];
                 IReadOnlyList<IGitRef> refs = _getRefs(RefsFilter.NoFilter);
 
                 // Split at whitespace (char[])null is default) but with split options.
@@ -345,13 +345,13 @@ namespace GitUI.UserControls
             tsbShowReflog.Checked = e.ShowReflogReferences;
             InitBranchSelectionFilter(e);
 
-            List<(string filter, ToolStripMenuItem menuItem)> revFilters = new()
-            {
+            List<(string filter, ToolStripMenuItem menuItem)> revFilters =
+            [
                 (e.MessageFilter, tsmiCommitFilter),
                 (e.CommitterFilter, tsmiCommitterFilter),
                 (e.AuthorFilter, tsmiAuthorFilter),
                 (e.DiffContentFilter, tsmiDiffContainsFilter),
-            };
+            ];
 
             // If there is no filter in filterInfo, clear text but retain checks
             tstxtRevisionFilter.Text = "";

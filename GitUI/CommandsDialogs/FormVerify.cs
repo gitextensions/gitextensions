@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _selectLostObjectsToRestoreMessage = new("Select objects to restore.");
         private readonly TranslationString _selectLostObjectsToRestoreCaption = new("Restore lost objects");
 
-        private readonly List<LostObject> _lostObjects = new();
+        private readonly List<LostObject> _lostObjects = [];
         private readonly SortableLostObjectsList _filteredLostObjects = new();
         private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new();
         private readonly IGitTagController _gitTagController;

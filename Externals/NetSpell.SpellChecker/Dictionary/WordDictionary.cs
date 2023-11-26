@@ -224,10 +224,11 @@ namespace NetSpell.SpellChecker.Dictionary
             // Step 3 Remove suffix, Search BaseWords
 
             // save suffixed words for use when removing prefix
-            List<string> suffixWords = new();
-
-            // Add word to suffix word list
-            suffixWords.Add(word);
+            List<string> suffixWords =
+            [
+                // Add word to suffix word list
+                word,
+            ];
 
             foreach (AffixRule rule in SuffixRules.Values)
             {
@@ -306,8 +307,8 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </returns>
         public List<string> ExpandWord(Word word)
         {
-            List<string> suffixWords = new();
-            List<string> words = new();
+            List<string> suffixWords = [];
+            List<string> words = [];
 
             suffixWords.Add(word.Text);
             string prefixKeys = "";
@@ -644,7 +645,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Dictionary<string, Word> BaseWords { get; } = new Dictionary<string, Word>();
+        public Dictionary<string, Word> BaseWords { get; } = [];
 
         /// <summary>
         ///     Copyright text for the dictionary
@@ -710,28 +711,28 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public PhoneticRuleCollection PhoneticRules { get; } = new();
+        public PhoneticRuleCollection PhoneticRules { get; } = [];
 
         /// <summary>
         ///     Collection of affix prefixes for the base words in this dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public AffixRuleCollection PrefixRules { get; } = new();
+        public AffixRuleCollection PrefixRules { get; } = [];
 
         /// <summary>
         ///     List of characters to use when generating suggestions using the near miss strategy
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<string> ReplaceCharacters { get; } = new List<string>();
+        public List<string> ReplaceCharacters { get; } = [];
 
         /// <summary>
         ///     Collection of affix suffixes for the base words in this dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public AffixRuleCollection SuffixRules { get; } = new();
+        public AffixRuleCollection SuffixRules { get; } = [];
 
         /// <summary>
         ///     List of characters to try when generating suggestions using the near miss strategy
@@ -754,7 +755,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Dictionary<string, string> UserWords { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> UserWords { get; } = [];
 
         /// <summary>
         ///     List of text saved from when 'Contains' is called.
@@ -764,7 +765,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// <remarks>
         ///     These are not actual words.
         /// </remarks>
-        internal List<string> PossibleBaseWords { get; } = new List<string>();
+        internal List<string> PossibleBaseWords { get; } = [];
 
         #region Component Designer generated code
 

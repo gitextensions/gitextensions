@@ -9,7 +9,7 @@ namespace GitUI
     /// <remarks>The class is abstract so that it is not used directly.<br/>Instead, it is expected to be derived, with a static constructor adding sortable properties through the <see cref="AddSortableProperty{TValue}"/> method</remarks>
     public abstract class SortableBindingList<T> : BindingList<T>
     {
-        public static Dictionary<string, Comparison<T>> PropertyComparers { get; } = new();
+        public static Dictionary<string, Comparison<T>> PropertyComparers { get; } = [];
 
         private List<T> Elements => (List<T>)Items;
 

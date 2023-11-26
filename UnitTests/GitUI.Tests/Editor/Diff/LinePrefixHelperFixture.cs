@@ -106,7 +106,7 @@ namespace GitUITests.Editor.Diff
 
         private static List<ISegment> GetSegmentsForDiffText(string diffText)
         {
-            List<ISegment> lineSegments = new();
+            List<ISegment> lineSegments = [];
             foreach (string diffLine in diffText.Split('\n'))
             {
                 ISegment seg = Substitute.For<ISegment>();

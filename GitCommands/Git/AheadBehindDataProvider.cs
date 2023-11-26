@@ -84,7 +84,7 @@ namespace GitCommands.Git
             }
 
             MatchCollection matches = _aheadBehindRegEx.Matches(result.StandardOutput);
-            Dictionary<string, AheadBehindData> aheadBehindForBranchesData = new();
+            Dictionary<string, AheadBehindData> aheadBehindForBranchesData = [];
             foreach (Match match in matches)
             {
                 string branch = match.Groups["branch"].Value;

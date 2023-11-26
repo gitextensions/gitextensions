@@ -8,7 +8,7 @@ namespace GitUI.Editor
     {
         private static HighlightColor ColorSummary { get; } = new(SystemColors.WindowText, bold: true, italic: false);
 
-        private readonly List<TextMarker> _overlengthDescriptionMarkers = new();
+        private readonly List<TextMarker> _overlengthDescriptionMarkers = [];
 
         private readonly TextMarker _markerSummaryTooLong = new(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "Summary line is too long." };
         private readonly TextMarker _markerSpacerNeeded = new(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "There must be a blank line after the summary." };

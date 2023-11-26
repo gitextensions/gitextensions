@@ -165,7 +165,7 @@ namespace GitUI.CommandsDialogs
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("CommitDialog"));
         private readonly Subject<string> _selectionFilterSubject = new();
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly List<string> _formattedLines = new();
+        private readonly List<string> _formattedLines = [];
 
         private CommitKind _commitKind;
         private FileStatusList _currentFilesList;
@@ -619,11 +619,11 @@ namespace GitUI.CommandsDialogs
 
         public void LoadCustomDifftools()
         {
-            List<CustomDiffMergeTool> menus = new()
-            {
+            List<CustomDiffMergeTool> menus =
+            [
                 new(openWithDifftoolToolStripMenuItem, openWithDifftoolToolStripMenuItem_Click),
                 new(stagedOpenDifftoolToolStripMenuItem9, stagedOpenDifftoolToolStripMenuItem9_Click),
-            };
+            ];
 
             new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
         }
@@ -1038,8 +1038,8 @@ namespace GitUI.CommandsDialogs
         {
             IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
-            List<GitItemStatus> unstagedFiles = new();
-            List<GitItemStatus> stagedFiles = new();
+            List<GitItemStatus> unstagedFiles = [];
+            List<GitItemStatus> stagedFiles = [];
 
             foreach (GitItemStatus fileStatus in allChangedFiles)
             {
@@ -1959,7 +1959,7 @@ namespace GitUI.CommandsDialogs
                     toolStripProgressBar1.Maximum = items.Count * 2;
                     toolStripProgressBar1.Value = 0;
 
-                    List<GitItemStatus> files = new();
+                    List<GitItemStatus> files = [];
 
                     foreach (GitItemStatus item in items)
                     {
@@ -1983,14 +1983,14 @@ namespace GitUI.CommandsDialogs
                         InitializedStaged();
                         List<GitItemStatus> unstagedFiles = Unstaged.GitItemStatuses.ToList();
                         _skipUpdate = true;
-                        HashSet<string?> names = new();
+                        HashSet<string?> names = [];
                         foreach (GitItemStatus item in files)
                         {
                             names.Add(item.Name);
                             names.Add(item.OldName);
                         }
 
-                        HashSet<GitItemStatus> unstagedItems = new();
+                        HashSet<GitItemStatus> unstagedItems = [];
 
                         foreach (GitItemStatus item in unstagedFiles)
                         {

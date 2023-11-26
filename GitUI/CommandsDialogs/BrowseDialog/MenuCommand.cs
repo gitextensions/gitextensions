@@ -71,7 +71,7 @@
             return toolStripMenuItem;
         }
 
-        private readonly List<ToolStripMenuItem> _registeredMenuItems = new();
+        private readonly List<ToolStripMenuItem> _registeredMenuItems = [];
 
         /// <summary>
         /// if true all other properties have no meaning.

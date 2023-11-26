@@ -212,14 +212,14 @@ namespace GitUI.CommandsDialogs
 
         public void LoadCustomDifftools()
         {
-            List<CustomDiffMergeTool> menus = new()
-            {
+            List<CustomDiffMergeTool> menus =
+            [
                 new(firstToSelectedToolStripMenuItem, firstToSelectedToolStripMenuItem_Click),
                 new(selectedToLocalToolStripMenuItem, selectedToLocalToolStripMenuItem_Click),
                 new(firstToLocalToolStripMenuItem, firstToLocalToolStripMenuItem_Click),
                 new(diffWithRememberedDifftoolToolStripMenuItem, diffWithRememberedDiffToolToolStripMenuItem_Click),
                 new(diffTwoSelectedDifftoolToolStripMenuItem, diffTwoSelectedDiffToolToolStripMenuItem_Click)
-            };
+            ];
 
             new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
         }

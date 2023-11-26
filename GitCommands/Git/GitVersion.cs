@@ -28,7 +28,7 @@ namespace GitCommands
         /// </summary>
         public static readonly GitVersion LastVersionWithoutKnownLimitations = new("2.15.2");
 
-        private static readonly Dictionary<string, GitVersion> _current = new();
+        private static readonly Dictionary<string, GitVersion> _current = [];
 
         /// <summary>
         /// GitVersion for the native ("Windows") Git

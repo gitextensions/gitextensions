@@ -8,10 +8,11 @@ namespace GitlabIntegrationTests
     {
         static GitlabAdapterTestData()
         {
-            Builds = new Dictionary<int, Tuple<BuildInfo, GitlabPipeline>>();
-
-            Builds.Add(1,
-                new Tuple<BuildInfo, GitlabPipeline>(
+            Builds = new Dictionary<int, Tuple<BuildInfo, GitlabPipeline>>
+            {
+                {
+                    1,
+                    new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "1",
@@ -23,10 +24,11 @@ namespace GitlabIntegrationTests
                     {
                         Id = 1,
                         Sha = "ea6e12b9fbf6da0a558f62e1dc6eaf9d52c22f74"
-                    }));
-
-            Builds.Add(2,
-                new Tuple<BuildInfo, GitlabPipeline>(
+                    })
+                },
+                {
+                    2,
+                    new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "2",
@@ -38,10 +40,11 @@ namespace GitlabIntegrationTests
                     {
                         Id = 2,
                         Sha = "0ecc29cbb3ceaa4d12411ceadae9c500e93c9255"
-                    }));
-
-            Builds.Add(3,
-                new Tuple<BuildInfo, GitlabPipeline>(
+                    })
+                },
+                {
+                    3,
+                    new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "3",
@@ -53,10 +56,11 @@ namespace GitlabIntegrationTests
                     {
                         Id = 3,
                         Sha = "4ed8079785c070fdaf273771511901e4746c7164"
-                    }));
-
-            Builds.Add(4,
-                new Tuple<BuildInfo, GitlabPipeline>(
+                    })
+                },
+                {
+                    4,
+                    new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "4",
@@ -68,10 +72,11 @@ namespace GitlabIntegrationTests
                     {
                         Id = 4,
                         Sha = "afe7fd31ae5156f1aff74874693c0fec7b8cd50a"
-                    }));
-
-            Builds.Add(5,
-                new Tuple<BuildInfo, GitlabPipeline>(
+                    })
+                },
+                {
+                    5,
+                    new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "5",
@@ -83,10 +88,11 @@ namespace GitlabIntegrationTests
                     {
                         Id = 5,
                         Sha = "df0b59d03b11ee5d70c0db11bfcf99fc862df56f"
-                    }));
-
-            Builds.Add(6,
-                new Tuple<BuildInfo, GitlabPipeline>(
+                    })
+                },
+                {
+                    6,
+                    new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "6",
@@ -98,10 +104,11 @@ namespace GitlabIntegrationTests
                     {
                         Id = 6,
                         Sha = "2b2fb529ba9f24646e5a3a6daf1c42a27940ac26"
-                    }));
-
-            Builds.Add(-7,
-                new Tuple<BuildInfo, GitlabPipeline>(
+                    })
+                },
+                {
+                    -7,
+                    new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "7",
@@ -117,10 +124,11 @@ namespace GitlabIntegrationTests
                         Status = "running",
                         CreatedAt = new DateTime(2023, 7, 16, 13, 0, 0),
                         UpdatedAt = new DateTime(2023, 7, 16, 13, 1, 0)
-                    }));
-
-            Builds.Add(7,
-                new Tuple<BuildInfo, GitlabPipeline>(
+                    })
+                },
+                {
+                    7,
+                    new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "7",
@@ -136,7 +144,9 @@ namespace GitlabIntegrationTests
                         Status = "success",
                         CreatedAt = new DateTime(2023, 7, 16, 13, 0, 0),
                         UpdatedAt = new DateTime(2023, 7, 16, 13, 1, 30)
-                    }));
+                    })
+                }
+            };
         }
 
         public static Dictionary<int, Tuple<BuildInfo, GitlabPipeline>> Builds;

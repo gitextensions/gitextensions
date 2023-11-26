@@ -48,8 +48,8 @@ namespace GitCommandsTests.UserRepositoryHistory
         public void Load_should_return_collection()
         {
             AppSettings.SetString("a", "repos");
-            List<Repository> history = new()
-            {
+            List<Repository> history =
+            [
                 new Repository(@"C:\Development\gitextensions\"),
                 new Repository(@"C:\Development\gitextensions\Externals\NBug\")
                 {
@@ -59,7 +59,8 @@ namespace GitCommandsTests.UserRepositoryHistory
                 {
                     Anchor = Repository.RepositoryAnchor.AllRecent,
                 }
-            };
+
+            ];
             _repositorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => history);
 
             IReadOnlyList<Repository> repositories = _repositoryStorage.Load("a");

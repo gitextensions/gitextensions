@@ -223,7 +223,7 @@ namespace GitCommands.Patches
             string diff = text[(patchPos - 1)..];
 
             string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
-            List<Chunk> selectedChunks = new();
+            List<Chunk> selectedChunks = [];
             int i = 0;
             int currentPos = patchPos - 1;
 
@@ -324,10 +324,10 @@ namespace GitCommands.Patches
 
     internal sealed class SubChunk
     {
-        public List<PatchLine> PreContext { get; } = new List<PatchLine>();
-        public List<PatchLine> RemovedLines { get; } = new List<PatchLine>();
-        public List<PatchLine> AddedLines { get; } = new List<PatchLine>();
-        public List<PatchLine> PostContext { get; } = new List<PatchLine>();
+        public List<PatchLine> PreContext { get; } = [];
+        public List<PatchLine> RemovedLines { get; } = [];
+        public List<PatchLine> AddedLines { get; } = [];
+        public List<PatchLine> PostContext { get; } = [];
         public string? WasNoNewLineAtTheEnd { get; set; }
         public string? IsNoNewLineAtTheEnd { get; set; }
 
@@ -511,7 +511,7 @@ namespace GitCommands.Patches
     internal sealed class Chunk
     {
         private int _startLine;
-        private readonly List<SubChunk> _subChunks = new();
+        private readonly List<SubChunk> _subChunks = [];
         private SubChunk? _currentSubChunk;
 
         private SubChunk CurrentSubChunk

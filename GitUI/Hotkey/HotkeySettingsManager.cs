@@ -43,7 +43,7 @@ namespace GitUI.Hotkey
     internal class HotkeySettingsManager : IHotkeySettingsManager
     {
         private static readonly XmlSerializer? _serializer = new(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
-        private readonly HashSet<Keys> _usedKeys = new();
+        private readonly HashSet<Keys> _usedKeys = [];
         private readonly IScriptsManager _scriptsManager;
 
         public HotkeySettingsManager(IScriptsManager scriptsManager)
@@ -110,7 +110,7 @@ namespace GitUI.Hotkey
                 return;
             }
 
-            Dictionary<string, HotkeyCommand> defaultCommands = new();
+            Dictionary<string, HotkeyCommand> defaultCommands = [];
 
             FillDictionaryWithCommands();
             AssignHotkeysFromLoaded();

@@ -30,7 +30,7 @@ namespace GitUITests
 
             Dictionary<string, List<Type>> translatableTypes = TranslationUtil.GetTranslatableTypes();
 
-            List<(string typeName, Exception exception)> problems = new();
+            List<(string typeName, Exception exception)> problems = [];
 
             foreach (List<Type> types in translatableTypes.Values)
             {

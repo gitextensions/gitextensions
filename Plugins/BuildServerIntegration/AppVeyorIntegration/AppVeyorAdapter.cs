@@ -48,7 +48,7 @@ namespace AppVeyorIntegration
 
         private HttpClient? _httpClientAppVeyor;
 
-        private List<AppVeyorBuildInfo>? _allBuilds = new();
+        private List<AppVeyorBuildInfo>? _allBuilds = [];
         private HashSet<ObjectId>? _fetchBuilds;
         private Func<ObjectId, bool>? _isCommitInRevisionGrid;
         private bool _shouldLoadTestResults;
@@ -70,7 +70,7 @@ namespace AppVeyorIntegration
             string? accountToken = config.GetString("AppVeyorAccountToken", null);
             _shouldLoadTestResults = config.GetBool("AppVeyorLoadTestsResults", false);
 
-            _fetchBuilds = new HashSet<ObjectId>();
+            _fetchBuilds = [];
 
             _httpClientAppVeyor = GetHttpClient(WebSiteUrl, accountToken);
 
@@ -136,7 +136,7 @@ namespace AppVeyorIntegration
 
             List<AppVeyorBuildInfo> FilterBuilds(IEnumerable<AppVeyorBuildInfo> allBuilds)
             {
-                List<AppVeyorBuildInfo> filteredBuilds = new();
+                List<AppVeyorBuildInfo> filteredBuilds = [];
                 foreach (AppVeyorBuildInfo build in allBuilds.OrderByDescending(b => b.StartDate))
                 {
                     Validates.NotNull(build.CommitId);
@@ -185,7 +185,7 @@ namespace AppVeyorIntegration
             string baseWebUrl = $"{WebSiteUrl}/project/{projectId}/build/";
             string baseApiUrl = $"{ApiBaseUrl}{projectId}/";
 
-            List<AppVeyorBuildInfo> buildDetails = new();
+            List<AppVeyorBuildInfo> buildDetails = [];
             foreach (JToken b in builds)
             {
                 try

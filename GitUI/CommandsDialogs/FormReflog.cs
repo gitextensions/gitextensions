@@ -57,9 +57,12 @@ namespace GitUI.CommandsDialogs
             lblDirtyWorkingDirectory.Visible = _isDirtyDir;
             resetCurrentBranchOnThisCommitToolStripMenuItem.Enabled = _isBranchCheckedOut;
 
-            List<string> branches = new() { "HEAD" };
-            branches.AddRange(UICommands.Module.GetRefs(RefsFilter.Heads).Select(r => r.Name).OrderBy(n => n));
-            branches.AddRange(UICommands.Module.GetRemoteBranches().Select(r => r.Name).OrderBy(n => n));
+            List<string> branches =
+            [
+                "HEAD",
+                .. UICommands.Module.GetRefs(RefsFilter.Heads).Select(r => r.Name).OrderBy(n => n),
+                .. UICommands.Module.GetRemoteBranches().Select(r => r.Name).OrderBy(n => n),
+            ];
             Branches.DataSource = branches;
         }
 

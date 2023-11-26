@@ -39,7 +39,7 @@ namespace GitCommandsTests_Git
                 const string name = "local_branch";
 
                 // Test local branches only
-                List<IGitRef> localRefs = new();
+                List<IGitRef> localRefs = [];
                 IGitModule localGitModule = Substitute.For<IGitModule>();
                 IConfigFileSettings localConfigFileSettings = Substitute.For<IConfigFileSettings>();
                 localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns(string.Empty);
@@ -57,16 +57,13 @@ namespace GitCommandsTests_Git
                 string completeName = $"refs/remotes/{remoteName}/{name}";
                 GitRef remoteBranchRef = SetupRawRemoteRef(remoteName, completeName);
 
-                List<IGitRef> mixedRefs = new();
-                mixedRefs.Add(localBranchRef);
-                mixedRefs.Add(remoteBranchRef);
+                List<IGitRef> mixedRefs = [localBranchRef, remoteBranchRef];
 
                 yield return new TestCaseData(mixedRefs, /* force */ false, /* expected */ $"branch --delete --all \"{name}\" \"origin/{name}\"");
                 yield return new TestCaseData(mixedRefs, /* force */ true, /* expected */ $"branch --delete --force --all \"{name}\" \"origin/{name}\"");
 
                 // Test remote branches only
-                List<IGitRef> remoteRefs = new();
-                remoteRefs.Add(remoteBranchRef);
+                List<IGitRef> remoteRefs = [remoteBranchRef];
 
                 yield return new TestCaseData(remoteRefs, /* force */ false, /* expected */ $"branch --delete --remotes \"origin/{name}\"");
                 yield return new TestCaseData(remoteRefs, /* force */ true, /* expected */ $"branch --delete --force --remotes \"origin/{name}\"");

@@ -64,8 +64,8 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         [Test]
         public async Task Verify_backwards_compatibility_of_object_graph()
         {
-            List<RepositoryCategory> surrogate = new()
-            {
+            List<RepositoryCategory> surrogate =
+            [
                 new RepositoryCategory
                 {
                     Repositories = new List<Repository>(
@@ -87,7 +87,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
                     CategoryType = "Repositories",
                     Description = "Test"
                 },
-            };
+            ];
 
             string xml;
             using StringWriter sw = new();

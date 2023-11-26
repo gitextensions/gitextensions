@@ -22,7 +22,7 @@
 
         internal static Brush NonRelativeBrush { get; }
 
-        internal static readonly List<Brush> PresetGraphBrushes = new();
+        internal static readonly List<Brush> PresetGraphBrushes = [];
 
         static RevisionGraphLaneColor()
         {

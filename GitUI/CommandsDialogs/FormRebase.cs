@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
         #endregion
 
-        private static readonly List<PatchFile> Skipped = new();
+        private static readonly List<PatchFile> Skipped = [];
 
         private readonly string? _defaultBranch;
         private readonly string? _defaultToBranch;
@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs
 
             // Offer rebase on refs also for tags (but not stash, notes etc)
             List<GitRef> refs = _startRebaseImmediately
-                ? new()
+                ? []
                 : Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags).OfType<GitRef>().ToList();
             cboBranches.DataSource = refs;
             cboBranches.DisplayMember = nameof(GitRef.Name);

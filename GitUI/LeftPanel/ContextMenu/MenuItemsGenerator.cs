@@ -22,14 +22,14 @@ namespace GitUI.LeftPanel.ContextMenu
 
         private Dictionary<MenuItemKey, ToolStripItem> CreateItemsIndex()
         {
-            Dictionary<MenuItemKey, ToolStripItem> itemsIndex = new();
+            Dictionary<MenuItemKey, ToolStripItem> itemsIndex = [];
             _items.Value.ForEach(r => itemsIndex.Add(r.Key, r.Item));
             return itemsIndex;
         }
 
         private List<ToolStripItemWithKey> CreateItems()
         {
-            List<ToolStripItemWithKey> items = new();
+            List<ToolStripItemWithKey> items = [];
             Generate(items);
             return items;
         }

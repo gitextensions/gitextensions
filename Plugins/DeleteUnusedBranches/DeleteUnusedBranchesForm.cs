@@ -28,7 +28,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
         private readonly TranslationString _branchesSelected = new("{0}/{1} branches selected.");
         private readonly DeleteUnusedBranchesFormSettings _settings;
 
-        private readonly SortableBranchesList _branches = new();
+        private readonly SortableBranchesList _branches = [];
         private readonly IGitModule _gitCommands;
         private readonly IGitUICommands? _gitUiCommands;
         private readonly IGitPlugin _gitPlugin;

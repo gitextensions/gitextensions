@@ -52,7 +52,7 @@ namespace JenkinsIntegration
         private HttpClient? _httpClient;
 
         // last known build per project
-        private readonly Dictionary<string, long> _lastProjectBuildTime = new();
+        private readonly Dictionary<string, long> _lastProjectBuildTime = [];
         private Regex? _ignoreBuilds;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
@@ -206,8 +206,8 @@ namespace JenkinsIntegration
         {
             try
             {
-                List<JoinableTask<ResponseInfo>> allBuildInfos = new();
-                List<JoinableTask<ResponseInfo>> latestBuildInfos = new();
+                List<JoinableTask<ResponseInfo>> allBuildInfos = [];
+                List<JoinableTask<ResponseInfo>> latestBuildInfos = [];
 
                 foreach (string projectUrl in _lastProjectBuildTime.Keys)
                 {
@@ -246,7 +246,7 @@ namespace JenkinsIntegration
                     return;
                 }
 
-                Dictionary<ObjectId, BuildInfo.BuildStatus> builds = new();
+                Dictionary<ObjectId, BuildInfo.BuildStatus> builds = [];
                 foreach (JoinableTask<ResponseInfo> build in allBuildInfos)
                 {
                     if (build.Task.IsFaulted)
@@ -381,7 +381,7 @@ namespace JenkinsIntegration
             string webUrl = buildDescription["url"].ToObject<string>();
 
             JToken action = buildDescription["actions"];
-            List<ObjectId> commitHashList = new();
+            List<ObjectId> commitHashList = [];
             string testResults = string.Empty;
             foreach (JToken element in action)
             {

@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
         private string _localBranchName = "";
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
         private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
-        private readonly Dictionary<Control, int> _controls = new();
+        private readonly Dictionary<Control, int> _controls = [];
 
         private IReadOnlyList<IGitRef>? _localBranches;
         private IReadOnlyList<IGitRef>? _remoteBranches;
@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
 
             IReadOnlyList<string> GetContainsRevisionBranches()
             {
-                HashSet<string> result = new();
+                HashSet<string> result = [];
                 if (_containRevisions.Count > 0)
                 {
                     IEnumerable<string> branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,

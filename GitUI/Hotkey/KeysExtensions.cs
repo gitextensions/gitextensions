@@ -24,7 +24,7 @@ namespace GitUI.Hotkey
             // Retrieve the modifiers, mask away the rest
             Keys modifier = key & Keys.Modifiers;
 
-            List<Keys> modifierList = new();
+            List<Keys> modifierList = [];
 
             void AddIfContains(Keys m)
             {

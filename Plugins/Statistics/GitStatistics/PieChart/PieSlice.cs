@@ -981,7 +981,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         private IEnumerable<PeripherySurfaceBounds> GetVisiblePeripherySurfaceBounds()
         {
-            List<PeripherySurfaceBounds> peripherySurfaceBounds = new();
+            List<PeripherySurfaceBounds> peripherySurfaceBounds = [];
 
             // outer periphery side is visible only when startAngle or endAngle
             // is between 0 and 180 degrees

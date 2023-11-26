@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         private class WrapperState
         {
-            private readonly List<string> _wordList = new();
+            private readonly List<string> _wordList = [];
             private int _wordsLength;
             private readonly int _lineLimit;
 
