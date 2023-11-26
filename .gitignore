@@ -77,3 +77,6 @@ artifacts/
 .tools/vswhere/
 .dotnet/
 *.svclog
+scripts/wsb/TestResults/*
+scripts/wsb/psr.exe
+scripts/wsb/Sandbox.wsb
