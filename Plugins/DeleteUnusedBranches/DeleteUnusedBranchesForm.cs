@@ -286,7 +286,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             if (IsRefreshing)
             {
                 Validates.NotNull(_refreshCancellation);
-                _refreshCancellation.Cancel();
+                await _refreshCancellation.CancelAsync();
                 IsRefreshing = false;
                 return;
             }

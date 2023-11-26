@@ -295,7 +295,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             Brush backBrush = GetBackground(e.State, e.RowIndex, revision);
-            e.Graphics.FillRectangle(backBrush, e.CellBounds);
+            e.Graphics!.FillRectangle(backBrush, e.CellBounds);
 
             if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
             {

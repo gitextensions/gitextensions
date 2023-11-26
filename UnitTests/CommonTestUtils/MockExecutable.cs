@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Text;
 using GitExtUtils;
 using GitUI;
@@ -143,7 +143,9 @@ namespace CommonTestUtils
                 {
                     CancellationTokenSource cts = new();
                     CancellationToken ct = cts.Token;
+#pragma warning disable VSTHRD103 // Cancel synchronously blocks. Await CancelAsync instead.
                     cts.Cancel();
+#pragma warning restore VSTHRD103
                     return Task.FromCanceled<int>(ct);
                 }
             }

@@ -5,7 +5,6 @@
     <RootNamespace>$([System.String]::Copy('$(MSBuildProjectName)').Replace('.IntegrationTests', 'Tests'))</RootNamespace>
 
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <Prefer32Bit>false</Prefer32Bit>
     <DebugType>full</DebugType>
 
     <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
