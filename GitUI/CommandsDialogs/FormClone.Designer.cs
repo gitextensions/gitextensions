@@ -41,6 +41,8 @@
             tpnlMain = new TableLayoutPanel();
             optionsPanel = new FlowLayoutPanel();
             ttHints = new ToolTip(components);
+            cbAddCategory = new CheckBox();
+            categories = new ComboBox();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -353,12 +355,34 @@
             optionsPanel.AutoSize = true;
             optionsPanel.Controls.Add(cbIntializeAllSubmodules);
             optionsPanel.Controls.Add(cbDownloadFullHistory);
+            optionsPanel.Controls.Add(cbAddCategory);
+            optionsPanel.Controls.Add(categories);
             optionsPanel.Dock = DockStyle.Fill;
             optionsPanel.Location = new Point(0, 272);
             optionsPanel.Margin = new Padding(0, 10, 0, 0);
             optionsPanel.Name = "optionsPanel";
             optionsPanel.Size = new Size(623, 25);
             optionsPanel.TabIndex = 2;
+            // 
+            // cbAddCategory
+            // 
+            cbAddCategory.AutoSize = true;
+            cbAddCategory.Location = new Point(342, 3);
+            cbAddCategory.Name = "cbAddCategory";
+            cbAddCategory.Size = new Size(100, 19);
+            cbAddCategory.TabIndex = 5;
+            cbAddCategory.Text = "Add category:";
+            cbAddCategory.UseVisualStyleBackColor = true;
+            cbAddCategory.CheckStateChanged += cbAddCategory_CheckStateChanged;
+            // 
+            // categories
+            // 
+            categories.Enabled = false;
+            categories.FormattingEnabled = true;
+            categories.Location = new Point(448, 3);
+            categories.Name = "categories";
+            categories.Size = new Size(172, 23);
+            categories.TabIndex = 6;
             // 
             // FormClone
             // 
@@ -420,5 +444,7 @@
         private TableLayoutPanel tpnlMain;
         private ToolTip ttHints;
         private FlowLayoutPanel optionsPanel;
+        private CheckBox cbAddCategory;
+        private ComboBox categories;
     }
 }
