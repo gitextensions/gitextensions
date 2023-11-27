@@ -13,9 +13,9 @@ namespace AzureDevOpsIntegration.Settings
         private const string ApiTokenKey = "RestApiToken";
 
         /// <summary>
-        /// Reads these settings from the given <see cref="ISettingsSource"/>
+        /// Reads these settings from the given <see cref="SettingsSource"/>
         /// </summary>
-        public static IntegrationSettings ReadFrom(ISettingsSource config)
+        public static IntegrationSettings ReadFrom(SettingsSource config)
         {
             string projectUrl = config?.GetString(ProjectUrlKey, "") ?? "";
             string buildDefinitionFilter = config?.GetString(BuildDefinitionFilterKey, "") ?? "";
@@ -45,9 +45,9 @@ namespace AzureDevOpsIntegration.Settings
         public string ApiToken { get; set; } = "";
 
         /// <summary>
-        /// Writes these settings to the given <see cref="ISettingsSource"/>
+        /// Writes these settings to the given <see cref="SettingsSource"/>
         /// </summary>
-        public void WriteTo(ISettingsSource config)
+        public void WriteTo(SettingsSource config)
         {
             config.SetString(ProjectUrlKey, ProjectUrl);
             config.SetString(BuildDefinitionFilterKey, BuildDefinitionFilter);

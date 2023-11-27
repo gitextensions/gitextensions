@@ -58,7 +58,7 @@ namespace GitCommandsTests.Settings
             buildServerSettings.ShowBuildResultPage.Should().BeNull();
 
             // Explicitly set
-            ISettingsSource settingsSource = buildServerSettings.SettingsSource;
+            SettingsSource settingsSource = buildServerSettings.SettingsSource;
             settingsSource.Should().BeOfType<SettingsPath>();
             ((SettingsPath)settingsSource).PathFor("").Should().Be("BuildServer.Azure DevOps and Team Foundation Server (since TFS2015).");
         }
@@ -76,7 +76,7 @@ namespace GitCommandsTests.Settings
             buildServerSettings.ShowBuildResultPage.Should().BeFalse();
 
             // No explicit settings, inheriting from the repo local
-            ISettingsSource settingsSource = buildServerSettings.SettingsSource;
+            SettingsSource settingsSource = buildServerSettings.SettingsSource;
             settingsSource.Should().BeOfType<SettingsPath>();
             ((SettingsPath)settingsSource).PathFor("").Should().Be("BuildServer.AppVeyor.");
         }
@@ -93,7 +93,7 @@ namespace GitCommandsTests.Settings
             // No explicit settings, inheriting from the repo distributed
             buildServerSettings.ShowBuildResultPage.Should().BeFalse();
 
-            ISettingsSource settingsSource = buildServerSettings.SettingsSource;
+            SettingsSource settingsSource = buildServerSettings.SettingsSource;
             settingsSource.Should().BeOfType<SettingsPath>();
             ((SettingsPath)settingsSource).PathFor("").Should().Be("BuildServer.AppVeyor.");
         }

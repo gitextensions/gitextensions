@@ -42,7 +42,7 @@
                 return Setting.CustomControl;
             }
 
-            public override void LoadSetting(ISettingsSource settings, TextBox control)
+            public override void LoadSetting(SettingsSource settings, TextBox control)
             {
                 if (control.ReadOnly)
                 {
@@ -65,7 +65,7 @@
                     : settingVal;
             }
 
-            public override void SaveSetting(ISettingsSource settings, TextBox control)
+            public override void SaveSetting(SettingsSource settings, TextBox control)
             {
                 string controlValue = control.Text;
                 if (settings.SettingLevel == SettingLevel.Effective)
@@ -80,13 +80,13 @@
             }
         }
 
-        public string? this[ISettingsSource settings]
+        public string? this[SettingsSource settings]
         {
             get => settings.GetString(Name, null);
             set => settings.SetString(Name, value);
         }
 
-        public string ValueOrDefault(ISettingsSource settings)
+        public string ValueOrDefault(SettingsSource settings)
         {
             return this[settings] ?? DefaultValue;
         }

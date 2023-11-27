@@ -32,7 +32,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
             _apiClientFactory = apiClientFactory;
         }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, SettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
             _apiClient = _apiClientFactory.CreateGitlabApiClient(
                 config.GetString("InstanceUrl", string.Empty),

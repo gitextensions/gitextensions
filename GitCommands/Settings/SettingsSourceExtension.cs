@@ -6,16 +6,16 @@ namespace GitCommands.Settings
 {
     public static class SettingsSourceExtension
     {
-        public static ISettingsSource ByPath(this ISettingsSource settingsSource, string pathName)
+        public static SettingsSource ByPath(this SettingsSource settingsSource, string pathName)
             => new SettingsPath(settingsSource, pathName);
 
-        public static IDetailedSettings Detailed(this ISettingsSource settingsSource)
+        public static IDetailedSettings Detailed(this SettingsSource settingsSource)
             => new DetailedSettings(settingsSource);
 
-        public static IBuildServerSettings GetBuildServerSettings(this ISettingsSource settingsSource)
+        public static IBuildServerSettings GetBuildServerSettings(this SettingsSource settingsSource)
             => new BuildServerSettings(settingsSource);
 
-        public static IDetachedSettings Detached(this ISettingsSource settingsSource)
+        public static IDetachedSettings Detached(this SettingsSource settingsSource)
             => new DetachedSettings(settingsSource);
     }
 }

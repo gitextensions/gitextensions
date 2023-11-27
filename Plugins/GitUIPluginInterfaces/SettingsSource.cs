@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace GitUIPluginInterfaces
 {
-    public abstract class ISettingsSource
+    public abstract class SettingsSource
     {
         public virtual SettingLevel SettingLevel { get; set; } = SettingLevel.Unknown;
 
@@ -11,7 +11,7 @@ namespace GitUIPluginInterfaces
 
         public abstract void SetValue(string name, string? value);
 
-        [return: NotNullIfNotNull("defaultValue")]
+        [return: NotNullIfNotNull(nameof(defaultValue))]
         public string? GetString(string name, string? defaultValue) => GetValue(name) ?? defaultValue;
 
         public void SetString(string name, string? value) => SetValue(name, value);

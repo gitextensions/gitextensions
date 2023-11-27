@@ -3,12 +3,12 @@ using Microsoft;
 
 namespace GitCommands.Settings
 {
-    public class SettingsPath : ISettingsSource
+    public class SettingsPath : SettingsSource
     {
-        private readonly ISettingsSource? _parent;
+        private readonly SettingsSource? _parent;
         private readonly string _pathNameWithSeparator;
 
-        public SettingsPath(ISettingsSource? parent, string pathName)
+        public SettingsPath(SettingsSource? parent, string pathName)
         {
             _parent = parent;
             _pathNameWithSeparator = string.IsNullOrWhiteSpace(pathName) ? "" : $"{pathName}.";

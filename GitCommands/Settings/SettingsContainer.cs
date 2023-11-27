@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
-    public class SettingsContainer<TLowerPriority, TCache> : ISettingsSource
+    public class SettingsContainer<TLowerPriority, TCache> : SettingsSource
         where TLowerPriority : SettingsContainer<TLowerPriority, TCache>
         where TCache : SettingsCache
     {

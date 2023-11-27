@@ -37,7 +37,7 @@ namespace ResourceManager
         public bool HasSettings { get; }
 
         // Store settings to use later
-        public ISettingsSource Settings
+        public SettingsSource Settings
         {
             get
             {

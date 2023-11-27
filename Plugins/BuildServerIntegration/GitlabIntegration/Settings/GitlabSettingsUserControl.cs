@@ -30,7 +30,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
             _remotes = remotes;
         }
 
-        public void LoadSettings(ISettingsSource buildServerConfig)
+        public void LoadSettings(SettingsSource buildServerConfig)
         {
             string? host = buildServerConfig.GetValue("InstanceUrl");
             int? projectId = buildServerConfig.GetInt("ProjectId");
@@ -103,7 +103,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
             return 0;
         }
 
-        public void SaveSettings(ISettingsSource buildServerConfig)
+        public void SaveSettings(SettingsSource buildServerConfig)
         {
             buildServerConfig.SetString("InstanceUrl", InstanceUrlTextBox.Text.NullIfEmpty());
             if (int.TryParse(ProjectIdTextBox.Text, out int projectId))

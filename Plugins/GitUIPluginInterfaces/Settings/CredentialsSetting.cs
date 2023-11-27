@@ -17,12 +17,12 @@ namespace GitUIPluginInterfaces.Settings
         public string Caption { get; }
         public CredentialsControl? CustomControl { get; set; }
 
-        public NetworkCredential GetValueOrDefault(ISettingsSource settings)
+        public NetworkCredential GetValueOrDefault(SettingsSource settings)
         {
             return GetCredentialOrDefault(settings.SettingLevel, Name, _defaultValue);
         }
 
-        public void SaveValue(ISettingsSource settings, string userName, string password)
+        public void SaveValue(SettingsSource settings, string userName, string password)
         {
             if (settings.SettingLevel == SettingLevel.Effective)
             {
@@ -57,7 +57,7 @@ namespace GitUIPluginInterfaces.Settings
                 return Setting.CustomControl;
             }
 
-            public override void LoadSetting(ISettingsSource settings, CredentialsControl control)
+            public override void LoadSetting(SettingsSource settings, CredentialsControl control)
             {
                 if (SettingLevelSupported(settings.SettingLevel))
                 {
@@ -74,7 +74,7 @@ namespace GitUIPluginInterfaces.Settings
                 }
             }
 
-            public override void SaveSetting(ISettingsSource settings, CredentialsControl control)
+            public override void SaveSetting(SettingsSource settings, CredentialsControl control)
             {
                 if (SettingLevelSupported(settings.SettingLevel))
                 {

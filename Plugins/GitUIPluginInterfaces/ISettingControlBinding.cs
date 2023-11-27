@@ -11,12 +11,12 @@
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
-        void LoadSetting(ISettingsSource settings);
+        void LoadSetting(SettingsSource settings);
 
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        void SaveSetting(ISettingsSource settings);
+        void SaveSetting(SettingsSource settings);
 
         /// <summary>
         /// returns caption associated with this control or null if the control layouts
@@ -56,7 +56,7 @@
             return Control;
         }
 
-        public void LoadSetting(ISettingsSource settings)
+        public void LoadSetting(SettingsSource settings)
         {
             LoadSetting(settings, Control);
         }
@@ -64,7 +64,7 @@
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        public void SaveSetting(ISettingsSource settings)
+        public void SaveSetting(SettingsSource settings)
         {
             SaveSetting(settings, Control);
         }
@@ -88,11 +88,11 @@
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
-        public abstract void LoadSetting(ISettingsSource settings, TControl control);
+        public abstract void LoadSetting(SettingsSource settings, TControl control);
 
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        public abstract void SaveSetting(ISettingsSource settings, TControl control);
+        public abstract void SaveSetting(SettingsSource settings, TControl control);
     }
 }

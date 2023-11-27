@@ -44,7 +44,7 @@
                 return Setting.CustomControl;
             }
 
-            public override void LoadSetting(ISettingsSource settings, ComboBox control)
+            public override void LoadSetting(SettingsSource settings, ComboBox control)
             {
                 string? settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
@@ -58,7 +58,7 @@
                 }
             }
 
-            public override void SaveSetting(ISettingsSource settings, ComboBox control)
+            public override void SaveSetting(SettingsSource settings, ComboBox control)
             {
                 string controlValue = control.SelectedItem?.ToString();
                 if (settings.SettingLevel == SettingLevel.Effective)
@@ -73,12 +73,12 @@
             }
         }
 
-        public string? ValueOrDefault(ISettingsSource settings)
+        public string? ValueOrDefault(SettingsSource settings)
         {
             return this[settings] ?? DefaultValue;
         }
 
-        public string? this[ISettingsSource settings]
+        public string? this[SettingsSource settings]
         {
             get => settings.GetString(Name, null);
             set => settings.SetString(Name, value);

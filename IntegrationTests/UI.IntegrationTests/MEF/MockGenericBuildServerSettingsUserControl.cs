@@ -25,7 +25,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
             _defaultProjectName = defaultProjectName;
         }
 
-        public void LoadSettings(ISettingsSource buildServerConfig)
+        public void LoadSettings(SettingsSource buildServerConfig)
         {
             txtProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
             txtAccountName.Text = buildServerConfig.GetString("AccountName", null);
@@ -40,7 +40,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        public void SaveSettings(ISettingsSource buildServerConfig)
+        public void SaveSettings(SettingsSource buildServerConfig)
         {
             buildServerConfig.SetString("ProjectName", txtProjectName.Text.NullIfEmpty());
             buildServerConfig.SetString("AccountName", txtAccountName.Text.NullIfEmpty());

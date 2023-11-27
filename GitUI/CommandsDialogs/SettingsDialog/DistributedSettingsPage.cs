@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             CurrentSettings = DistributedSettingsSet.EffectiveSettings;
         }
 
-        protected override ISettingsSource GetCurrentSettings()
+        protected override SettingsSource GetCurrentSettings()
         {
             Validates.NotNull(CurrentSettings);
 

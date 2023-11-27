@@ -6,9 +6,9 @@ namespace GitUI
     public sealed class SplitterManager
     {
         private readonly List<SplitterData> _splitters = [];
-        private readonly ISettingsSource _settings;
+        private readonly SettingsSource _settings;
 
-        public SplitterManager(ISettingsSource settings)
+        public SplitterManager(SettingsSource settings)
         {
             _settings = settings;
         }
@@ -61,7 +61,7 @@ namespace GitUI
             internal string Panel1CollapsedSettingsKey => _settingName + "_Panel1Collapsed";
             internal string Panel2CollapsedSettingsKey => _settingName + "_Panel2Collapsed";
 
-            public void RestoreFromSettings(ISettingsSource settings)
+            public void RestoreFromSettings(SettingsSource settings)
             {
                 _splitter.BeginInit();
                 _splitter.SuspendLayout();
@@ -108,7 +108,7 @@ namespace GitUI
                 _splitter.EndInit();
             }
 
-            public void SaveToSettings(ISettingsSource settings)
+            public void SaveToSettings(SettingsSource settings)
             {
                 settings.SetInt(DpiSettingsKey, _dpi);
                 settings.SetInt(SizeSettingsKey, SplitterSize);

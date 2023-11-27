@@ -14,9 +14,9 @@ namespace GitCommands.Settings
         private const bool AddMergeLogMessagesDefault = false;
         private const int MergeLogMessagesCountDefault = 20;
 
-        private readonly ISettingsSource _settingsSource;
+        private readonly SettingsSource _settingsSource;
 
-        public DetailedSettings(ISettingsSource settingsSource)
+        public DetailedSettings(SettingsSource settingsSource)
         {
             _settingsSource = settingsSource;
         }

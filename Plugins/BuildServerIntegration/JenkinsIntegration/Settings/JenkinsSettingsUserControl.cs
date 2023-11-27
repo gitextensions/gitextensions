@@ -25,14 +25,14 @@ namespace JenkinsIntegration.Settings
             _defaultProjectName = defaultProjectName;
         }
 
-        public void LoadSettings(ISettingsSource buildServerConfig)
+        public void LoadSettings(SettingsSource buildServerConfig)
         {
             JenkinsServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", null);
             JenkinsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
             IgnoreBuildBranch.Text = buildServerConfig.GetString("IgnoreBuildBranch", null);
         }
 
-        public void SaveSettings(ISettingsSource buildServerConfig)
+        public void SaveSettings(SettingsSource buildServerConfig)
         {
             buildServerConfig.SetString("BuildServerUrl", JenkinsServerUrl.Text.NullIfEmpty());
             buildServerConfig.SetString("ProjectName", JenkinsProjectName.Text.NullIfEmpty());
