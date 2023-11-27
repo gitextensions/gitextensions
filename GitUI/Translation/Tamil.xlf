@@ -12872,6 +12872,10 @@ following command.
         <target>அறிவிலி திருத்தம் இல்லை</target>
         
       </trans-unit>
+      <trans-unit id="_notConfigured.Text">
+        <source>{0} not configured</source>
+        
+      </trans-unit>
       <trans-unit id="_okText.Text">
         <source>OK</source>
         <target>சரி</target>

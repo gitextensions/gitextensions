@@ -1,6 +1,25 @@
 Changelog
 =========
 
+### Version 4.2.1 (28 Nov 2023)
+
+#### Changes:
+* [#11393] Avoid popup resetting new file to index
+* [#11389] GPG: don't crash on artificial commits
+* [#11384] Do not migrate empty settings
+* [#11381] GitExtSshAskPass: Ensure chars are outputed as UTF8 chars
+* [#11376] Delete unused branch plugin: Makes GetBranchNames() support worktrees
+* [#11369] Let git deny the commit if committer is not specified
+
+
+[#11393]:https://github.com/gitextensions/gitextensions/pull/11393
+[#11389]:https://github.com/gitextensions/gitextensions/pull/11389
+[#11384]:https://github.com/gitextensions/gitextensions/pull/11384
+[#11381]:https://github.com/gitextensions/gitextensions/pull/11381
+[#11376]:https://github.com/gitextensions/gitextensions/pull/11376
+[#11369]:https://github.com/gitextensions/gitextensions/pull/11369
+
+
 ### Version 4.2 (13 Nov 2023)
 
 #### Changes:

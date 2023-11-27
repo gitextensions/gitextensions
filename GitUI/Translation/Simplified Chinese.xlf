@@ -12887,6 +12887,10 @@ following command.
         <target>Git 修訂版本不存在</target>
         
       </trans-unit>
+      <trans-unit id="_notConfigured.Text">
+        <source>{0} not configured</source>
+        
+      </trans-unit>
       <trans-unit id="_okText.Text">
         <source>OK</source>
         <target>确定</target>

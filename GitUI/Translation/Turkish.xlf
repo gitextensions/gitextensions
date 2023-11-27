@@ -4189,6 +4189,7 @@ Emin misin?</target>
       </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
         <source>(Directory already exists)</source>
+        <target>(Dizin zaten mevcut)</target>
         
       </trans-unit>
       <trans-unit id="_infoDirectoryNew.Text">
@@ -4696,10 +4697,12 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="btnResetAllChanges.Text">
         <source>&amp;Reset all changes</source>
+        <target>Tüm değişiklikleri sıfırla</target>
         
       </trans-unit>
       <trans-unit id="btnResetUnstagedChanges.Text">
         <source>Reset u&amp;nstaged changes</source>
+        <target>S.lenmemiş d. sıfırla</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -4989,6 +4992,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="tsmiResetUnstagedChanges.Text">
         <source>Reset file or directory changes</source>
+        <target>Dosya veya dizin değişikliklerini sıfırla</target>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -10267,6 +10271,7 @@ göster</target>
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
         <source>The directory &quot;{0}&quot; does not exist.</source>
+        <target>&quot;{0}&quot; dizini mevcut değil.</target>
         
       </trans-unit>
       <trans-unit id="_failedToRunShell.Text">
@@ -10340,6 +10345,7 @@ Bu ana bilgisayar(host) anahtarına güvenip yeniden denemek istiyor musun?</tar
       </trans-unit>
       <trans-unit id="_submoduleDirectoryDoesNotExist.Text">
         <source>The directory &quot;{0}&quot; does not exist for submodule &quot;{1}&quot;.</source>
+        <target>Alt modül &quot;{1}&quot; için &quot;{0}&quot; dizini mevcut değil.</target>
         
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
@@ -12083,6 +12089,9 @@ Currently checked out revision:
         <source>* Checked: at top level for direct access
 * Intermediate: in a cascaded context menu
 * Unchecked: not added to the menu</source>
+        <target>* İşaretli: doğrudan erişim için en üst düzeyde
+* Orta düzey: basamaklı içerik menüsünde 
+* İşaretli değil: menüye eklenmedi</target>
         
       </trans-unit>
       <trans-unit id="_noItems.Text">
@@ -12102,6 +12111,7 @@ Currently checked out revision:
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
         <source>Windows Explorer integration</source>
+        <target>Windows Explorer entegrasyonu</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -12118,6 +12128,9 @@ Currently checked out revision:
         <source>* Checked: at top level for direct access
 * Intermediate: in a cascaded context menu
 * Unchecked: not added to the menu</source>
+        <target>* İşaretli: doğrudan erişim için en üst düzeyde
+* Orta düzey: basamaklı içerik menüsünde 
+* İşaretli değil: menüye eklenmedi</target>
         
       </trans-unit>
     </body>
@@ -12664,6 +12677,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
         <source>Open repository in Explorer</source>
+        <target>Depoyu Explorer'da aç</target>
         
       </trans-unit>
       <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
@@ -12724,6 +12738,7 @@ following command.
       </trans-unit>
       <trans-unit id="_ignoringReference.Text">
         <source>&quot;{0}&quot; is not a Git revision and will be ignored.</source>
+        <target>&quot;{0}&quot; bir Git revizyonu değil ve yok sayılacaktır.</target>
         
       </trans-unit>
       <trans-unit id="_indexText.Text">
@@ -12814,6 +12829,11 @@ following command.
       <trans-unit id="_nonexistingGitRevision.Text">
         <source>Git revision does not exist</source>
         <target>Git revizyonu yok</target>
+        
+      </trans-unit>
+      <trans-unit id="_notConfigured.Text">
+        <source>{0} not configured</source>
+        <target>{0} yapılandırılmadı</target>
         
       </trans-unit>
       <trans-unit id="_okText.Text">
