@@ -884,7 +884,7 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
       </trans-unit>
       <trans-unit id="_opensshUsed.Text">
         <source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</source>
-        <target>デフォルトのSSHクライアント OpenSSHが使われます。(Pull，Push，Cloneを行なう際に、コマンドラインウィンドウが現れます)</target>
+        <target>デフォルトの SSH クライアント OpenSSH が使われます。(プル、プッシュ、クローンを行なう際に、コマンドラインウィンドウが現れます)</target>
         
       </trans-unit>
       <trans-unit id="_otherSshClient.Text">
@@ -894,7 +894,7 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
       </trans-unit>
       <trans-unit id="_plinkputtyGenpageantNotFound.Text">
         <source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</source>
-        <target>SSHクライアントとしてPuTTYが設定されていますが、plink.exe, puttygen.exe または pageant.exeが見つかりません。</target>
+        <target>SSHクライアントとしてPuTTYが構成されていますが、plink.exe, puttygen.exe または pageant.exeが見つかりません。</target>
         
       </trans-unit>
       <trans-unit id="_puttyConfigured.Text">
@@ -1681,7 +1681,7 @@ Git for Windowsがインストールされているか確認し、正しいコ�
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
         <source>Remember the 'Ignore whitespaces' preference</source>
-        <target>'空白の無視'の設定を記憶</target>
+        <target>「空白の無視」の設定を記憶</target>
         
       </trans-unit>
       <trans-unit id="chkRememberNumberOfContextLines.Text">
@@ -1691,17 +1691,17 @@ Git for Windowsがインストールされているか確認し、正しいコ�
       </trans-unit>
       <trans-unit id="chkRememberShowEntireFilePreference.Text">
         <source>Remember the 'Show entire file' preference</source>
-        <target>'すべてのファイルを表示'についての設定を記憶</target>
+        <target>「すべてのファイルを表示」の設定を記憶</target>
         
       </trans-unit>
       <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
         <source>Remember the 'Show nonprinting characters' preference</source>
-        <target>'非表示文字の表示'についての設定を記憶</target>
+        <target>「非表示文字の表示」の設定を記憶</target>
         
       </trans-unit>
       <trans-unit id="chkRememberShowSyntaxHighlightingInDiff.Text">
         <source>Remember the 'Show syntax highlighting' preference</source>
-        <target>シンタックスハイライト設定を保存</target>
+        <target>「シンタックスハイライトの表示」の設定を記憶</target>
         
       </trans-unit>
       <trans-unit id="chkShowAllCustomDiffTools.Text">
@@ -2135,7 +2135,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
     <body>
       <trans-unit id="$this.Text">
         <source>Remote repository fork and clone</source>
-        <target>リモート リポジトリのForkとClone</target>
+        <target>リモート リポジトリのフォークとクローン</target>
         
       </trans-unit>
       <trans-unit id="ProtocolLabel.Text">
@@ -2206,15 +2206,15 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       <trans-unit id="_strWillCloneInfo.Text">
         <source>Will clone {0} into {1}.
 You can not push unless you are a collaborator. {2}</source>
-        <target>{0}を{1}にCloneします。
-あなたがcollaboratorでなければ、Pushはできません。{2}</target>
+        <target>{0}を{1}にクローンします。
+あなたがcollaboratorでなければ、プッシュはできません。{2}</target>
         
       </trans-unit>
       <trans-unit id="_strWillCloneWithPushAccess.Text">
         <source>Will clone {0} into {1}.
 You will have push access. {2}</source>
-        <target>{0}を{1}にCloneします。
-あなたはPush権限を持っています。{2}</target>
+        <target>{0}を{1}にクローンします。
+あなたにはプッシュ権限があります。{2}</target>
         
       </trans-unit>
       <trans-unit id="browseForCloneToDirbtn.Text">
@@ -3797,7 +3797,7 @@ Enter valid branch name or select predefined value.</source>
 Are you sure?</source>
         <target>{1} リビジョン以降のコミット済みの変更をすべて破棄して、ブランチ「{0}」を新しい場所にリセットしようとしています。
 
-実行してよろしいですか？</target>
+本当に実行しますか?</target>
         
       </trans-unit>
       <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
@@ -4062,7 +4062,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="_reallyCleanupQuestion.Text">
         <source>Are you sure you want to cleanup the repository?</source>
-        <target>リポジトリをクリーンアップしてよろしいですか？</target>
+        <target>リポジトリを本当にクリーンアップしますか?</target>
         
       </trans-unit>
       <trans-unit id="_reallyCleanupQuestionCaption.Text">
@@ -4187,7 +4187,7 @@ Are you sure?</source>
       <trans-unit id="_infoNewRepositoryLocation.Text">
         <source>The repository will be cloned to a new directory located here:
 {0}</source>
-        <target>リポジトリは以下のディレクトリにCloneされます:
+        <target>リポジトリは以下のディレクトリにクローンされます:
 {0}</target>
         
       </trans-unit>
@@ -4293,11 +4293,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target>コミット</target>
         
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target>変更をすべてリセット(&amp;R)</target>
-        
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         <target>作者を再設定(&amp;E)</target>
@@ -4311,11 +4306,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
         <target>直前のコミットへソフトリセットを実行します。作業ディレクトリとインデックスは変更されません。</target>
-        
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
-        <target>未ステージの変更をリセット(&amp;N)</target>
         
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -4467,7 +4457,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteSelectedFiles.Text">
         <source>Are you sure you want to delete the selected file(s)?</source>
-        <target>選択したファイルを削除してよろしいですか？</target>
+        <target>選択したファイルを本当に削除しますか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteSelectedFilesCaption.Text">
@@ -4477,7 +4467,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteUntrackedFiles.Text">
         <source>Are you sure you want to delete all untracked files?</source>
-        <target>Git管理外のファイルをすべて削除してよろしいですか？</target>
+        <target>Git管理外のファイルを本当にすべて削除しますか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteUntrackedFilesCaption.Text">
@@ -4526,7 +4516,7 @@ i.e. it may no longer be a fixup or an autosquash commit.</source>
         <source>There are no files staged for this commit.
 Are you sure you want to commit?</source>
         <target>ステージされたファイルがありません。
-コミットしてよろしいですか？</target>
+本当にコミットしますか?</target>
         
       </trans-unit>
       <trans-unit id="_noFilesStagedCommitAllFilteredUnstagedOption.Text">
@@ -4583,7 +4573,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_resetSelectedChangesText.Text">
         <source>Are you sure you want to reset all selected files?</source>
-        <target>選択したファイルへの変更をリセットしてよろしいですか？</target>
+        <target>選択したファイルへの変更を本当にリセットしますか?</target>
         
       </trans-unit>
       <trans-unit id="_resetStageChunkOfFileCaption.Text">
@@ -4635,12 +4625,12 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="_statusBarBranchWithoutRemote.Text">
         <source>(remote not configured)</source>
-        <target>(リモートが設定されていません)</target>
+        <target>(リモートが構成されていません)</target>
         
       </trans-unit>
       <trans-unit id="_stopTrackingFail.Text">
         <source>Fail to stop tracking the file '{0}'.</source>
-        <target>ファイル'{0}'の追跡停止に失敗しました。</target>
+        <target>ファイル「{0}」の追跡停止に失敗しました。</target>
         
       </trans-unit>
       <trans-unit id="_templateLoadErrorCaption.Text">
@@ -4701,6 +4691,16 @@ You can unset the template:
       <trans-unit id="branchNameLabel.Text">
         <source>(Branch name)</source>
         <target>(ブランチ名)</target>
+        
+      </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        <target>変更をすべてリセット(&amp;R)</target>
+        
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        <target>未ステージの変更をリセット(&amp;N)</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -4863,11 +4863,6 @@ You can unset the template:
         <target>(リモート名)</target>
         
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>ファイルまたはディレクトリの変更をリセット</target>
-        
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target>チャンクレベルでファイルの変更をリセット</target>
@@ -4991,6 +4986,11 @@ You can unset the template:
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>ステージの取り消し(&amp;U)</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>ファイルまたはディレクトリの変更をリセット</target>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -5210,7 +5210,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_pushToCaption.Text">
         <source>Push tag to '{0}'</source>
-        <target>タグを{0}にプッシュ</target>
+        <target>タグを「{0}」にプッシュ</target>
         
       </trans-unit>
       <trans-unit id="_trsAnnotated.Text">
@@ -5255,7 +5255,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="pushTag.Text">
         <source>Push tag to '{0}'</source>
-        <target>タグを{0}にプッシュ</target>
+        <target>タグを「{0}」にプッシュ</target>
         
       </trans-unit>
     </body>
@@ -5406,7 +5406,7 @@ Proceed?</source>
       <trans-unit id="_confirmDeleteUnmergedRemoteBranchMessage.Text">
         <source>At least one remote branch is unmerged. Are you sure you want to delete it?
 Deleting a branch can cause commits to be deleted too!</source>
-        <target>少なくとも1つのリモートブランチがマージされていません。削除してよろしいですか?
+        <target>少なくとも1つのリモートブランチがマージされていません。本当に削除しますか?
 ブランチを削除すると、コミットも削除される可能性があります!</target>
         
       </trans-unit>
@@ -6492,7 +6492,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       </trans-unit>
       <trans-unit id="_deleteWorktreeText.Text">
         <source>Are you sure you want to delete this worktree?</source>
-        <target>このワークツリーを削除してよろしいですか？</target>
+        <target>このワークツリーを本当に削除しますか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteWorktreeTitle.Text">
@@ -6502,7 +6502,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       </trans-unit>
       <trans-unit id="_switchWorktreeText.Text">
         <source>Are you sure you want to switch to this worktree?</source>
-        <target>このワークツリーに切り替えてよろしいですか？</target>
+        <target>このワークツリーに本当に切り替えますか?</target>
         
       </trans-unit>
       <trans-unit id="_switchWorktreeTitle.Text">
@@ -6876,7 +6876,7 @@ Actual command line (if checked): --prune --force
         <source>The current commit is a merge.
 Are you sure you want to rebase this merge?</source>
         <target>現在のコミットはマージです。
-このマージをリベースしてよろしいですか？</target>
+このマージを本当にリベースしますか?</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureYouWantToRebaseMergeCaption.Text">
@@ -6942,7 +6942,7 @@ If you want to fetch and merge a branch, choose a specific branch.</source>
         <source>You asked to fetch from the remote '{0}',
 but did not specify a remote branch.
 Because this is not the current branch, you must specify a remote branch.</source>
-        <target>リモートから'{0}'をフェッチしようとしましたが、
+        <target>リモートから「{0}」をフェッチしようとしましたが、
 リモートブランチを特定できませんでした。
 現在のブランチと指定ブランチが異なるため、リモートブランチを指定してください。</target>
         
@@ -6952,7 +6952,7 @@ Because this is not the current branch, you must specify a remote branch.</sourc
 but did not specify a remote branch.
 Because this is not the default configured remote for your local branch,
 you must specify a remote branch.</source>
-        <target>リモートから'{0}'をプルしようとしましたが、
+        <target>リモートから「{0}」をプルしようとしましたが、
 リモートブランチを特定できませんでした。
 現在のブランチと指定ブランチが異なるため、
 リモートブランチを指定してください。</target>
@@ -7174,7 +7174,7 @@ submoduleを使えるようにしますか？
         <source>The branch you are about to push seems to be a new branch for the remote.
 Are you sure you want to push this branch?</source>
         <target>プッシュでリモートにブランチが新規作成されます。
-このブランチをプッシュしてよろしいですか？</target>
+このブランチを本当にプッシュしますか?</target>
         
       </trans-unit>
       <trans-unit id="_configureRemote.Text">
@@ -7983,7 +7983,7 @@ Do you want to automatically configure the default push and pull behavior for th
       </trans-unit>
       <trans-unit id="_questionDeleteRemote.Text">
         <source>Are you sure you want to delete this remote?</source>
-        <target>このリモートを削除してよろしいですか？</target>
+        <target>このリモートを本当に削除しますか?</target>
         
       </trans-unit>
       <trans-unit id="_questionDeleteRemoteCaption.Text">
@@ -8138,7 +8138,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_localRefInvalid.Text">
         <source>The entered value '{0}' is not the name of an existing local branch.</source>
-        <target>入力された値 '{0}' は既存ローカルブランチの名前ではありません。</target>
+        <target>入力された値「{0}」は既存ローカルブランチの名前ではありません。</target>
         
       </trans-unit>
       <trans-unit id="labelResetBranchWarning.Text">
@@ -8174,7 +8174,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Are you sure you want to reset your changes?</source>
-        <target>変更をリセットしてよろしいですか？</target>
+        <target>変更を本当にリセットしますか?</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -8234,7 +8234,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="_branchInfo.Text">
         <source>Reset branch '{0}' to revision:</source>
-        <target>ブランチ'{0}'の移動先リビジョン:</target>
+        <target>ブランチ「{0}」の移動先リビジョン:</target>
         
       </trans-unit>
       <trans-unit id="_resetCaption.Text">
@@ -8244,7 +8244,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="_resetHardWarning.Text">
         <source>You are about to discard ALL local changes, are you sure?</source>
-        <target>ローカルで行った変更をすべて破棄してよろしいですか？</target>
+        <target>ローカルで行った変更を本当にすべて破棄しますか?</target>
         
       </trans-unit>
     </body>
@@ -8358,7 +8358,7 @@ Do you want to commit now?</source>
         <source>Are you sure you want to DELETE all changes?
 
 This action cannot be made undone.</source>
-        <target>変更をすべて「削除」してよろしいですか？
+        <target>変更を本当にすべて「削除」しますか?
 
 この操作は取り消せません。</target>
         
@@ -8522,7 +8522,7 @@ Choose to delete the file or keep the modified version.</source>
         <source>The selected file appears to be a binary file.
 Are you sure you want to open this file in {0}?</source>
         <target>選択したファイルはおそらくバイナリファイルです。
-{0}でこのファイルを開いてよろしいですか？</target>
+本当に{0}でこのファイルを開きますか?</target>
         
       </trans-unit>
       <trans-unit id="_fileModifiedLocallyAndDeletedRemotely.Text">
@@ -9140,7 +9140,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="_removeSelectedSubmodule.Text">
         <source>Are you sure you want remove the selected submodule?</source>
-        <target>選択したサブモジュールを除去してよろしいですか？</target>
+        <target>選択したサブモジュールを本当に除去しますか?</target>
         
       </trans-unit>
       <trans-unit id="_removeSelectedSubmoduleCaption.Text">
@@ -9304,7 +9304,7 @@ nodes.
       </trans-unit>
       <trans-unit id="_removeDanglingObjectsQuestion.Text">
         <source>Are you sure you want to delete all dangling objects?</source>
-        <target>遊離オブジェクトをすべて削除してよろしいですか？</target>
+        <target>遊離オブジェクトを本当にすべて削除しますか?</target>
         
       </trans-unit>
       <trans-unit id="_selectLostObjectsToRestoreCaption.Text">
@@ -10280,7 +10280,7 @@ help</source>
       </trans-unit>
       <trans-unit id="_confirmBranchCheckout.Text">
         <source>Are you sure you want to check out branch &quot;{0}&quot;?</source>
-        <target>ブランチ「{0}」をチェックアウトしてよろしいですか?</target>
+        <target>ブランチ「{0}」を本当にチェックアウトしますか?</target>
         
       </trans-unit>
       <trans-unit id="_confirmBranchCheckoutCaption.Text">
@@ -10919,7 +10919,7 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
       </trans-unit>
       <trans-unit id="_deleteSelectedFiles.Text">
         <source>Are you sure you want to delete the selected file(s)?</source>
-        <target>選択したファイルを削除してよろしいですか？</target>
+        <target>選択したファイルを本当に削除しますか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteSelectedFilesCaption.Text">
@@ -10939,7 +10939,7 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
       </trans-unit>
       <trans-unit id="_resetSelectedChangesText.Text">
         <source>Are you sure you want to reset all selected files to {0}?</source>
-        <target>選択したファイルへの変更をすべて{0}にリセットしてよろしいですか？</target>
+        <target>選択したファイルへの変更を本当にすべて{0}にリセットしますか?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -11113,7 +11113,7 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
       </trans-unit>
       <trans-unit id="_assumeUnchangedFail.Text">
         <source>Fail to assume unchanged the file '{0}'.</source>
-        <target>ファイル'{0}'を変更なしと見なすのを失敗しました。</target>
+        <target>ファイル「{0}」を変更なしと見なすのに失敗しました。</target>
         
       </trans-unit>
       <trans-unit id="_assumeUnchangedMessage.Text">
@@ -11149,7 +11149,7 @@ Are you sure to assume this file won't change ?</source>
       </trans-unit>
       <trans-unit id="_resetFileText.Text">
         <source>Are you sure you want to reset this file or directory?</source>
-        <target>このファイルまたはディレクトリをリセットしてよろしいですか？</target>
+        <target>このファイルまたはディレクトリを本当にリセットしますか?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -11169,13 +11169,13 @@ Are you sure to assume this file won't change ?</source>
       </trans-unit>
       <trans-unit id="_stopTrackingFail.Text">
         <source>Fail to stop tracking the file '{0}'.</source>
-        <target>ファイル'{0}'の追跡停止に失敗しました。</target>
+        <target>ファイル「{0}」の追跡停止に失敗しました。</target>
         
       </trans-unit>
       <trans-unit id="_stopTrackingMessage.Text">
         <source>Are you sure you want to stop tracking the file
 '{0}'?</source>
-        <target>ファイル'{0}'の追跡を停止してよろしいですか？</target>
+        <target>ファイル「{0}」の追跡を本当に停止しますか?</target>
         
       </trans-unit>
       <trans-unit id="_stopTrackingSuccess.Text">
@@ -11415,6 +11415,16 @@ See the changes in the commit form.</source>
         <target>クイックサーチを開始するには、リビジョングリッド上でタイプしてください。</target>
         
       </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        <target>現在の表示設定をデフォルトとして保存</target>
+        
+      </trans-unit>
+      <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
+        <source>Settings persistence</source>
+        <target>設定の永続性</target>
+        
+      </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show &amp;all branches</source>
         <target>ブランチをすべて表示(&amp;A)</target>
@@ -11561,7 +11571,7 @@ See the changes in the commit form.</source>
     <body>
       <trans-unit id="_areYouSureRebase.Text">
         <source>Are you sure you want to rebase? This action will rewrite commit history.</source>
-        <target>リベースしてよろしいですか？この操作を実行するとコミットの履歴を書き換えます。</target>
+        <target>本当にリベースしますか? この操作を実行するとコミットの履歴を書き換えます。</target>
         
       </trans-unit>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
@@ -11991,20 +12001,23 @@ See the changes in the commit form.</source>
         <source>Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
+{UserInput:a popup label}
+{UserInput:a popup label=a default value}
+{UserInput:a popup label=a default value using {sLocalBranch}}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -12021,7 +12034,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -12042,6 +12056,9 @@ Current Branch:
 
 ユーザ入力:
 {UserInput}
+{UserInput:ポップアップのラベル}
+{UserInput:ポップアップのラベル=デフォルト値}
+{UserInput:ポップアップのラベル={sLocalBranch}を使用したデフォルト値}
 {UserFiles}
 
 作業ディレクトリ:
@@ -12053,7 +12070,7 @@ Current Branch:
 選択したコミット:
 {sHashes}
 
-選択したブランチ:
+選択したリビジョン:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -12069,7 +12086,8 @@ Current Branch:
 {sAuthorDate}
 {sCommitDate}
 
-現在のブランチ:
+現在チェックアウトされているリビジョン:
+{HEAD} (チェックアウトされているブランチ名またはコミットハッシュ)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -12395,7 +12413,7 @@ OpenSSHを使う場合、コマンドラインダイアログが表示されま�
       </trans-unit>
       <trans-unit id="_areYouSure.Text">
         <source>Are you sure you want to drop the stash? This action cannot be undone.</source>
-        <target>このスタッシュを削除してよろしいですか？この操作は取り返しがつきません。</target>
+        <target>このスタッシュを本当に削除しますか? この操作は取り返しがつきません。</target>
         
       </trans-unit>
       <trans-unit id="_argumentsText.Text">
@@ -12556,7 +12574,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_containedInCurrentCommitText.Text">
         <source>'{0}' is contained in the currently selected commit</source>
-        <target>'{0}' は現在選択されているコミットに含まれています</target>
+        <target>「{0}」は現在選択されているコミットに含まれています</target>
         
       </trans-unit>
       <trans-unit id="_containedInNoBranchText.Text">
@@ -12696,7 +12714,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
         <source>Could not load file or assembly '{0}'.</source>
-        <target>ファイルまたはアセンブリを読み込めませんでした。'{0}'</target>
+        <target>ファイルまたはアセンブリ「{0}」を読み込めませんでした。</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
@@ -12716,7 +12734,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_forkCloneRepo.Text">
         <source>Fork or clone a repository</source>
-        <target>リポジトリをForkもしくはCloneする</target>
+        <target>リポジトリをフォークまたはクローンする</target>
         
       </trans-unit>
       <trans-unit id="_generalGitConfigExceptionCaption.Text">
@@ -12831,7 +12849,7 @@ following command.
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
         <source>'{0}' is not currently visible</source>
-        <target>'{0}' は現在表示されていません</target>
+        <target>「{0}」は現在表示されていません</target>
         
       </trans-unit>
       <trans-unit id="_loadingDataText.Text">
@@ -12907,6 +12925,11 @@ following command.
       <trans-unit id="_nonexistingGitRevision.Text">
         <source>Git revision does not exist</source>
         <target>Git リビジョンは存在しません</target>
+        
+      </trans-unit>
+      <trans-unit id="_notConfigured.Text">
+        <source>{0} not configured</source>
+        <target>{0} が構成されていません</target>
         
       </trans-unit>
       <trans-unit id="_okText.Text">
@@ -13005,7 +13028,7 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_resetSelectedLinesConfirmation.Text">
         <source>Are you sure you want to reset the changes to the selected lines?</source>
-        <target>選択行の変更をリセットしてよろしいですか？</target>
+        <target>選択行の変更を本当にリセットしますか?</target>
         
       </trans-unit>
       <trans-unit id="_restartApplication.Text">
@@ -13053,6 +13076,16 @@ Windows の再起動が必要な場合もあります。</target>
       <trans-unit id="_scriptText.Text">
         <source>Script</source>
         <target>スクリプト</target>
+        
+      </trans-unit>
+      <trans-unit id="_scriptUserCanceledRun.Text">
+        <source>Script not started.</source>
+        <target>スクリプトは実行されませんでした。</target>
+        
+      </trans-unit>
+      <trans-unit id="_scriptUserInputCaption.Text">
+        <source>User input for script '{0}'</source>
+        <target>スクリプト「{0}」のユーザ入力</target>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

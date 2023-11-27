@@ -1239,6 +1239,22 @@ namespace GitUI.CommandsDialogs
 
         private async Task FillGpgInfoAsync(GitRevision? revision)
         {
+            // Don't show the "GPG" tab for artificial commits
+            bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation.Value;
+
+            if (!showGpgInfoTab)
+            {
+                GpgInfoTabPage.Parent = null;
+                return;
+            }
+
+            if (GpgInfoTabPage.Parent is null)
+            {
+                int index = CommitInfoTabControl.TabPages.IndexOf(TreeTabPage);
+                Debug.Assert(index != -1, "TabControl should contain file tree tab page");
+                CommitInfoTabControl.TabPages.Insert(index + 1, GpgInfoTabPage);
+            }
+
             if (!AppSettings.ShowGpgInformation.Value || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
             {
                 return;

@@ -9,11 +9,12 @@
                 yield break;
             }
 
-            foreach (string line in commandOutput.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)))
+            foreach (string line in commandOutput.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line) && line.Length > 2))
             {
-                string branchName = line.Trim('*', ' ', '\n', '\r');
+                // Removing first 2 chars: 1st is '*' for current branch or '+' for a worktree branch followed by a space
+                string branchName = line[2..].Trim(' ', '\n', '\r');
 
-                if (branchName != "HEAD")
+                if (branchName != "HEAD" && !branchName.StartsWith("(") && branchName.Length != 0)
                 {
                     yield return branchName;
                 }

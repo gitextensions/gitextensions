@@ -4234,11 +4234,6 @@ gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe) :</ta
         <target>Commiter</target>
         
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target>Réinit. toutes les modifs</target>
-        
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         
@@ -4249,10 +4244,6 @@ gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe) :</ta
       </trans-unit>
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
-        
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
         
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -4626,6 +4617,14 @@ $ git config --unset commit.template</target>
         <target>(Nom de la branche)</target>
         
       </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target>Fermer la fenêtre quand tous les changements auront été commités</target>
@@ -4786,11 +4785,6 @@ $ git config --unset commit.template</target>
         <target>(nom distant)</target>
         
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>Réinitialiser les modifications de fichier ou répertoire</target>
-        
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target>Réinitialiser des parties de fichier</target>
@@ -4914,6 +4908,10 @@ $ git config --unset commit.template</target>
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>&amp;Désindexer</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -11106,6 +11104,14 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
         <target>Commencez à taper dans la grille pour démarrer la recherche rapide.</target>
         
       </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        
+      </trans-unit>
+      <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
+        <source>Settings persistence</source>
+        
+      </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show &amp;all branches</source>
         
@@ -11653,20 +11659,23 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
         <source>Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
+{UserInput:a popup label}
+{UserInput:a popup label=a default value}
+{UserInput:a popup label=a default value using {sLocalBranch}}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -11683,7 +11692,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -12464,6 +12474,10 @@ following command.
         <source>Git revision does not exist</source>
         
       </trans-unit>
+      <trans-unit id="_notConfigured.Text">
+        <source>{0} not configured</source>
+        
+      </trans-unit>
       <trans-unit id="_okText.Text">
         <source>OK</source>
         <target>OK</target>
@@ -12596,6 +12610,14 @@ Sometimes Windows may need to be restarted too.</source>
       <trans-unit id="_scriptText.Text">
         <source>Script</source>
         <target>Script</target>
+        
+      </trans-unit>
+      <trans-unit id="_scriptUserCanceledRun.Text">
+        <source>Script not started.</source>
+        
+      </trans-unit>
+      <trans-unit id="_scriptUserInputCaption.Text">
+        <source>User input for script '{0}'</source>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

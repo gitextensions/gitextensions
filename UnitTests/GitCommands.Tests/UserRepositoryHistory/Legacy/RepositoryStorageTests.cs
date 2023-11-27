@@ -19,10 +19,14 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             _repositoryStorage = new RepositoryStorage(_repositoryCategorySerialiser);
         }
 
-        [Test]
-        public void LoadLegacy_should_return_empty_collection_if_settings_value_null()
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("   ")]
+        public void LoadLegacy_should_return_empty_collection_if_settings_empty(string setting)
         {
-            IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();
+            AppSettings.SetString("repositories", setting);
+            RepositoryStorage repositoryStorage = new();
+            var repositories = repositoryStorage.Load();
 
             repositories.Should().BeEmpty();
         }

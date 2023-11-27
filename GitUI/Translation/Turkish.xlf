@@ -1601,6 +1601,7 @@ Lütfen, Windows için Git'in kurulu olduğuna emin ol veya doğru komutu elle a
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
         <source>&amp;Push window</source>
+        <target>İtme penceresi</target>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
@@ -1610,6 +1611,7 @@ Lütfen, Windows için Git'in kurulu olduğuna emin ol veya doğru komutu elle a
       </trans-unit>
       <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
         <source>Merge graph lanes having common parent</source>
+        <target>Ortak ebeveyne sahip grafik hatlarını birleştir</target>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1624,10 +1626,12 @@ Lütfen, Windows için Git'in kurulu olduğuna emin ol veya doğru komutu elle a
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>&amp;Revision graph</source>
+        <target>Düzeltme(revizyon) grafiği</target>
         
       </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
         <source>&amp;Email settings for sending patches</source>
+        <target>Yama dosyalarını göndermek için e-posta ayarları</target>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1642,6 +1646,7 @@ Lütfen, Windows için Git'in kurulu olduğuna emin ol veya doğru komutu elle a
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
         <source>&amp;Merge window</source>
+        <target>Birleştirme penceresi</target>
         
       </trans-unit>
     </body>
@@ -4167,6 +4172,7 @@ Emin misin?</target>
       </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
         <source>(Directory already exists)</source>
+        <target>(Dizin zaten mevcut)</target>
         
       </trans-unit>
       <trans-unit id="_infoDirectoryNew.Text">
@@ -4280,11 +4286,6 @@ komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde
         <target>Teslim Et</target>
         
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target>Tüm &amp;değişiklikleri sıfırla</target>
-        
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         <target>&amp;Yazarı Sıfırla</target>
@@ -4297,11 +4298,6 @@ komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde
       </trans-unit>
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
-        
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
-        <target>S.lenmemiş d. sı&amp;fırla</target>
         
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -4682,6 +4678,16 @@ You can unset the template:
         <target>(Dal adı)</target>
         
       </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        <target>Tüm değişiklikleri sıfırla</target>
+        
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        <target>S.lenmemiş d. sıfırla</target>
+        
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target>Tüm değişiklikler, teslim edildiğinde iletişim kutusunu kapat</target>
@@ -4842,11 +4848,6 @@ You can unset the template:
         <target>(Uzak ad)</target>
         
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>Dosya veya dizin değişikliklerini sıfırla</target>
-        
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target>Dosya yığınını (chunk) sıfırla</target>
@@ -4970,6 +4971,11 @@ You can unset the template:
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>Sahneden &amp;Kaldır</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>Dosya veya dizin değişikliklerini sıfırla</target>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -10248,6 +10254,7 @@ göster</target>
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
         <source>The directory &quot;{0}&quot; does not exist.</source>
+        <target>&quot;{0}&quot; dizini mevcut değil.</target>
         
       </trans-unit>
       <trans-unit id="_failedToRunShell.Text">
@@ -10321,6 +10328,7 @@ Bu ana bilgisayar(host) anahtarına güvenip yeniden denemek istiyor musun?</tar
       </trans-unit>
       <trans-unit id="_submoduleDirectoryDoesNotExist.Text">
         <source>The directory &quot;{0}&quot; does not exist for submodule &quot;{1}&quot;.</source>
+        <target>Alt modül &quot;{1}&quot; için &quot;{0}&quot; dizini mevcut değil.</target>
         
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
@@ -11366,6 +11374,14 @@ Teslim formundaki değişikliklere bak.</target>
         <target>Hızlı aramayı başlatmak için revizyon grafiğine yazmaya başlayın.</target>
         
       </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        
+      </trans-unit>
+      <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
+        <source>Settings persistence</source>
+        
+      </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show &amp;all branches</source>
         <target>Tüm &amp;dalları göster</target>
@@ -11940,20 +11956,23 @@ Teslim formundaki değişikliklere bak.</target>
         <source>Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
+{UserInput:a popup label}
+{UserInput:a popup label=a default value}
+{UserInput:a popup label=a default value using {sLocalBranch}}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -11970,7 +11989,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -11986,55 +12006,6 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
-        <target>Normali değiştirmek için {option} kullan.
-Alıntılanan değiştirmek için {{option}} kullan.
-
-Kullanıcı Çıktısı:
-{UserInput}
-{UserFiles}
-
-Çalışma Dizini:
-{WorkingDir}
-
-Depo:
-{RepoName}
-
-Seçili Teslimler:
-{sHashes}
-
-Seçili Dal:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemoteBranchName} (without the remote's name)
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sSubject}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-Geçerli Dal:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cRemoteBranchName} (uzak bağlantı adı olmadan)
-{cHash}
-{cMessage}
-{cSubject}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">
@@ -12104,6 +12075,9 @@ Geçerli Dal:
         <source>* Checked: at top level for direct access
 * Intermediate: in a cascaded context menu
 * Unchecked: not added to the menu</source>
+        <target>* İşaretli: doğrudan erişim için en üst düzeyde
+* Orta düzey: basamaklı içerik menüsünde 
+* İşaretli değil: menüye eklenmedi</target>
         
       </trans-unit>
       <trans-unit id="_noItems.Text">
@@ -12123,6 +12097,7 @@ Geçerli Dal:
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
         <source>Windows Explorer integration</source>
+        <target>Windows Explorer entegrasyonu</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -12679,6 +12654,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
         <source>Open repository in Explorer</source>
+        <target>Depoyu Explorer'da aç</target>
         
       </trans-unit>
       <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
@@ -12739,6 +12715,7 @@ following command.
       </trans-unit>
       <trans-unit id="_ignoringReference.Text">
         <source>&quot;{0}&quot; is not a Git revision and will be ignored.</source>
+        <target>&quot;{0}&quot; bir Git revizyonu değil ve yok sayılacaktır.</target>
         
       </trans-unit>
       <trans-unit id="_indexText.Text">
@@ -12829,6 +12806,11 @@ following command.
       <trans-unit id="_nonexistingGitRevision.Text">
         <source>Git revision does not exist</source>
         <target>Git revizyonu yok</target>
+        
+      </trans-unit>
+      <trans-unit id="_notConfigured.Text">
+        <source>{0} not configured</source>
+        <target>{0} yapılandırılmadı</target>
         
       </trans-unit>
       <trans-unit id="_okText.Text">
@@ -12968,6 +12950,16 @@ Sometimes Windows may need to be restarted too.</source>
       <trans-unit id="_scriptText.Text">
         <source>Script</source>
         <target>Komut</target>
+        
+      </trans-unit>
+      <trans-unit id="_scriptUserCanceledRun.Text">
+        <source>Script not started.</source>
+        <target>Komut dosyası başlatılmadı.</target>
+        
+      </trans-unit>
+      <trans-unit id="_scriptUserInputCaption.Text">
+        <source>User input for script '{0}'</source>
+        <target>'{0}' script için kullanıcı girişi</target>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

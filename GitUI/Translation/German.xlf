@@ -4256,11 +4256,6 @@ gitex.cmd / gitex (befinden sich im gleichen Ordner wie GitExtensions.exe):</tar
         <target>Committen</target>
         
       </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>&amp;Reset all changes</source>
-        <target>Alle Änderungen zu&amp;rücksetzen</target>
-        
-      </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
         
@@ -4271,11 +4266,6 @@ gitex.cmd / gitex (befinden sich im gleichen Ordner wie GitExtensions.exe):</tar
       </trans-unit>
       <trans-unit id="ResetSoft.fileTooltip">
         <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
-        
-      </trans-unit>
-      <trans-unit id="ResetUnStaged.Text">
-        <source>Reset u&amp;nstaged changes</source>
-        <target>U&amp;ngestagte Änderungen zurücksetzen</target>
         
       </trans-unit>
       <trans-unit id="ShowOnlyMyMessagesToolStripMenuItem.Text">
@@ -4659,6 +4649,14 @@ Sie können das Template zurücksetzen:
         <target>(Branch Name)</target>
         
       </trans-unit>
+      <trans-unit id="btnResetAllChanges.Text">
+        <source>&amp;Reset all changes</source>
+        
+      </trans-unit>
+      <trans-unit id="btnResetUnstagedChanges.Text">
+        <source>Reset u&amp;nstaged changes</source>
+        
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target>Dialog schließen wenn alle Änderungen commitet wurden</target>
@@ -4819,11 +4817,6 @@ Sie können das Template zurücksetzen:
         <target>(Remote-Name)</target>
         
       </trans-unit>
-      <trans-unit id="resetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>Dateiänderungen zurücksetzen</target>
-        
-      </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
         <source>Reset chunk of file</source>
         <target>Änderungen teilweise zurücksetzen</target>
@@ -4947,6 +4940,10 @@ Sie können das Template zurücksetzen:
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>&amp;Unstagen</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetUnstagedChanges.Text">
+        <source>Reset file or directory changes</source>
         
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
@@ -11234,6 +11231,14 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
         <target>Anfangen im Revisionsgrid zu tippen, um die Schnellsuche zu starten</target>
         
       </trans-unit>
+      <trans-unit id="SaveAsDefault.Text">
+        <source>Save current view settings as default</source>
+        
+      </trans-unit>
+      <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
+        <source>Settings persistence</source>
+        
+      </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show &amp;all branches</source>
         
@@ -11782,20 +11787,23 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
         <source>Use {option} for normal replacement.
 Use {{option}} for quoted replacement.
 
-User Input:
+User inputs:
 {UserInput}
+{UserInput:a popup label}
+{UserInput:a popup label=a default value}
+{UserInput:a popup label=a default value using {sLocalBranch}}
 {UserFiles}
 
-Working Dir:
+Working directory:
 {WorkingDir}
 
 Repository:
 {RepoName}
 
-Selected Commits:
+Selected commits:
 {sHashes}
 
-Selected Branch:
+Selected revision:
 {sTag}
 {sBranch}
 {sLocalBranch}
@@ -11812,7 +11820,8 @@ Selected Branch:
 {sAuthorDate}
 {sCommitDate}
 
-Current Branch:
+Currently checked out revision:
+{HEAD}   (checked out branch name or checked out commit hash)
 {cTag}
 {cBranch}
 {cLocalBranch}
@@ -11828,55 +11837,6 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
-        <target>Verwende {option} für normale Ersetzung.
-Verwende {{option}} für Ersetzung mit Anführungszeichen.
-
-Benutzereingabe:
-{UserInput}
-{UserFiles}
-
-Arbeitsverzeichnis:
-{WorkingDir}
-
-Repository:
-{RepoName}
-
-Ausgewählte Commits:
-{sHashes}
-
-Gewählter Branch:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemoteBranchName}   (without the remote's name)
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sSubject}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-Aktueller Branch:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cRemoteBranchName}   (without the remote's name)
-{cHash}
-{cMessage}
-{cSubject}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">
@@ -12661,6 +12621,10 @@ Wenn es gewünscht ist allen Repositories zu vertrauen, auch wenn sie einem ande
         <source>Git revision does not exist</source>
         
       </trans-unit>
+      <trans-unit id="_notConfigured.Text">
+        <source>{0} not configured</source>
+        
+      </trans-unit>
       <trans-unit id="_okText.Text">
         <source>OK</source>
         <target>OK</target>
@@ -12798,6 +12762,14 @@ Sometimes Windows may need to be restarted too.</source>
       <trans-unit id="_scriptText.Text">
         <source>Script</source>
         <target>Skript</target>
+        
+      </trans-unit>
+      <trans-unit id="_scriptUserCanceledRun.Text">
+        <source>Script not started.</source>
+        
+      </trans-unit>
+      <trans-unit id="_scriptUserInputCaption.Text">
+        <source>User input for script '{0}'</source>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

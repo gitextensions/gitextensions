@@ -32,6 +32,8 @@
 #include <tchar.h>
 
 #include <atlbase.h>
+#include <io.h>
+#include <fcntl.h>
 
 #include <commctrl.h>
 #pragma comment(linker, "\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -63,6 +65,11 @@ int APIENTRY _tWinMain(HINSTANCE	/*hInstance*/,
 	SetDllDirectory(L"");
 
 	InitCommonControls();
+
+    // !!! Ensure windows console display characters as unicode/UTF8
+    // https://stackoverflow.com/a/15450250/717372
+    // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/setmode?view=msvc-170&redirectedfrom=MSDN#example-use-_setmode-to-change-stdout
+    _setmode(_fileno(stdout), _O_U8TEXT);
 
 	if( _tcslen(lpCmdLine) == 0 )
 	{

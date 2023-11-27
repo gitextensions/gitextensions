@@ -341,7 +341,7 @@
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>選択した{0}のブランチを削除してよろしいですか？</target>
+        <target>選択した{0}のブランチを本当に削除しますか?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
@@ -356,16 +356,16 @@
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>削除するブランチを選択してください。完全に'{0}'にマージされているブランチのみ削除されます。</target>
+        <target>削除するブランチを選択してください。完全に「{0}」にマージされているブランチのみ削除されます。</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危険な操作です!
-リモート '{0}' のブランチを削除しようとしています。
-これはやり直せませんが、続行してよろしいですか?</target>
+        <target>危険な操作です！
+リモート「{0}」のブランチを削除しようとしています。
+これは取り消せませんが、本当に続行しますか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -390,7 +390,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
-        <target>'{0}' で削除したいブランチを検索</target>
+        <target>「{0}」で削除したいブランチを検索</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -400,7 +400,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' 列のチェックボックスで削除するブランチを選択</target>
+        <target>「{0}」列のチェックボックスで削除するブランチを選択</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -533,7 +533,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>選択したファイルを削除してよろしいですか？</target>
+        <target>選択したファイルを本当に削除しますか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -1071,7 +1071,7 @@ Gourceをダウンロードし、プラグイン設定ダイアログからパ�
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>設定されたパスにGourceが見つかりませんでした:
+        <target>構成されたパスにGourceが見つかりませんでした:
 {0}
 
 パスをリセットしますか？</target>
@@ -1313,17 +1313,17 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>'{0}'から'{1}'へのコミットログ ({2}):</target>
+        <target>「{0}」から「{1}」へのコミットログ ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
-        <target>'From'コミットは必ず指定する必要があります</target>
+        <target>「From」コミットは必ず指定する必要があります</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
-        <target>'To'コミットは必ず指定する必要があります</target>
+        <target>「To」コミットは必ず指定する必要があります</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1492,14 +1492,14 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
         <source>You need to create a token with the following scopes:
  - 'Build (read)'
  - 'Project and team (read)'</source>
-        <target>以下のスコープでトークンを作成する必要があります。
-  - 'ビルド（読み取り）'
-  - 'プロジェクトとチーム（読み取り）'</target>
+        <target>以下のスコープでトークンを作成する必要があります:
+ - 「ビルド(読み取り)」
+ - 「プロジェクトとチーム(読み取り)」</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'ビルド定義名'の正規表現は無効なため保存されません。</target>
+        <target>「ビルド定義名」の正規表現は無効なため保存されません。</target>
         
       </trans-unit>
     </body>
