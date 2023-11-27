@@ -93,7 +93,7 @@ namespace GitUI.Hotkey
             }
 
             // var str = key.ToString(); // OLD: this is culture unspecific
-            CultureInfo culture = CultureInfo.CurrentCulture; // TODO: replace this with the GitExtensions language setting
+            CultureInfo culture = CultureInfo.CurrentUICulture; // TODO: replace this with the GitExtensions language setting
 
             // for modifier keys this yields for example "Ctrl+None" thus we have to strip the rest after the +
             return new KeysConverter().ConvertToString(null, culture, key)?.SubstringUntil('+');
