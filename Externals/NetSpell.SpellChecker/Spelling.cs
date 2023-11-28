@@ -17,18 +17,22 @@ namespace NetSpell.SpellChecker
     ///     the spelling of inputted text.
     /// </summary>
     [ToolboxBitmap(typeof(Spelling), "Spelling.bmp")]
-    public class Spelling : Component
+    public partial class Spelling : Component
     {
         #region Global Regex
-        // Regex are class scope and compiled to improve performance on reuse
-        private readonly Regex _digitRegex = new(@"^\d", RegexOptions.Compiled);
-        private readonly Regex _htmlRegex = new(@"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", RegexOptions.IgnoreCase & RegexOptions.Compiled);
-        private MatchCollection _htmlTags;
-        private readonly Regex _letterRegex = new(@"\D", RegexOptions.Compiled);
-        private readonly Regex _upperRegex = new(@"[^\p{Lu}]", RegexOptions.Compiled); // @"[^A-Z]
-        private readonly Regex _wordEx = new(@"\b[\w']+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
-        private MatchCollection _words;
+        [GeneratedRegex(@"^\d")]
+        private static partial Regex DigitRegex();
+        [GeneratedRegex(@"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", RegexOptions.IgnoreCase)]
+        private static partial Regex HtmlRegex();
+        [GeneratedRegex(@"\D")]
+        private static partial Regex LetterRegex();
+        [GeneratedRegex(@"[^\p{Lu}]")]
+        private static partial Regex UpperRegex(); // @"[^A-Z]
+        [GeneratedRegex(@"\b[\w']+\b")]
+        private static partial Regex WordRegex(); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
 
+        private MatchCollection _htmlTags;
+        private MatchCollection _words;
         #endregion
 
         #region private variables
@@ -173,7 +177,7 @@ namespace NetSpell.SpellChecker
         private void CalculateWords()
         {
             // splits the text into words
-            _words = _wordEx.Matches(_text.ToString());
+            _words = WordRegex().Matches(_text.ToString());
 
             // remark html
             MarkHtml();
@@ -197,17 +201,17 @@ namespace NetSpell.SpellChecker
                 return false;
             }
 
-            if (IgnoreAllCapsWords && !_upperRegex.IsMatch(characters))
+            if (IgnoreAllCapsWords && !UpperRegex().IsMatch(characters))
             {
                 return false;
             }
 
-            if (IgnoreWordsWithDigits && _digitRegex.IsMatch(characters))
+            if (IgnoreWordsWithDigits && DigitRegex().IsMatch(characters))
             {
                 return false;
             }
 
-            if (!_letterRegex.IsMatch(characters))
+            if (!LetterRegex().IsMatch(characters))
             {
                 return false;
             }
@@ -252,7 +256,7 @@ namespace NetSpell.SpellChecker
         private void MarkHtml()
         {
             // splits the text into words
-            _htmlTags = _htmlRegex.Matches(_text.ToString());
+            _htmlTags = HtmlRegex().Matches(_text.ToString());
         }
 
         /// <summary>

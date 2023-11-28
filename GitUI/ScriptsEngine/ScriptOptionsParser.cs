@@ -6,7 +6,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.ScriptsEngine
 {
-    public sealed class ScriptOptionsParser
+    public sealed partial class ScriptOptionsParser
     {
         /// <summary>
         /// Name of the option which requires the full commit message.
@@ -14,6 +14,9 @@ namespace GitUI.ScriptsEngine
         private const string currentMessage = "cMessage";
 
         private const string head = "HEAD";
+
+        [GeneratedRegex(@"(?<!\\)""")]
+        private static partial Regex QuoteRegex();
 
         /// <summary>
         /// Gets the list of available script options.
@@ -490,14 +493,14 @@ namespace GitUI.ScriptsEngine
         {
             if (newString is not null)
             {
-                string newStringQuoted = Regex.Replace(newString, @"(?<!\\)""", "\\\"");
+                string newStringQuoted = QuoteRegex().Replace(newString, "\\\"");
                 newStringQuoted = "\"" + newStringQuoted;
                 if (newStringQuoted.EndsWith("\\"))
                 {
-                    newStringQuoted = newStringQuoted + "\\";
+                    newStringQuoted += "\\";
                 }
 
-                newStringQuoted = newStringQuoted + "\"";
+                newStringQuoted += "\"";
 
                 arguments = arguments.Replace(CreateOption(option, quoted: true), newStringQuoted);
                 arguments = arguments.Replace(CreateOption(option, quoted: false), newString);

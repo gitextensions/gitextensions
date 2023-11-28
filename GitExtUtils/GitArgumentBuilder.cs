@@ -32,13 +32,14 @@ namespace GitExtUtils
     /// };
     /// </code>
     /// </example>
-    public sealed class GitArgumentBuilder : ArgumentBuilder
+    public sealed partial class GitArgumentBuilder : ArgumentBuilder
     {
-        private static readonly Regex CommandRegex = new("^[a-z0-9_.-]+$", RegexOptions.Compiled);
-
         private readonly List<GitConfigItem> _configItems;
         private readonly ArgumentString _gitArgs;
         private readonly string _command;
+
+        [GeneratedRegex("^[a-z0-9_.-]+$")]
+        private static partial Regex CommandRegex();
 
         /// <summary>
         /// Initialises a new <see cref="GitArgumentBuilder"/> for the given <paramref name="command"/>.
@@ -55,7 +56,7 @@ namespace GitExtUtils
                 throw new ArgumentNullException(nameof(command));
             }
 
-            if (!CommandRegex.IsMatch(command))
+            if (!CommandRegex().IsMatch(command))
             {
                 throw new ArgumentException($"Git command \"{command}\" contains invalid characters.", nameof(command));
             }

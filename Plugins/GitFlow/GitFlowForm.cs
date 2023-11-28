@@ -25,6 +25,9 @@ namespace GitExtensions.Plugins.GitFlow
 
         private string? CurrentBranch { get; set; }
 
+        [GeneratedRegex(@"\r\n?|\n")]
+        private static partial Regex LineEndRegex();
+
         private enum Branch
         {
             feature,
@@ -321,7 +324,7 @@ namespace GitExtensions.Plugins.GitFlow
             ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + result.ExitCode);
 
             // TODO Can AllOutput be replaced with StandardOutput?
-            string resultText = Regex.Replace(result.AllOutput, @"\r\n?|\n", Environment.NewLine);
+            string resultText = LineEndRegex().Replace(result.AllOutput, Environment.NewLine);
 
             if (result.ExitedSuccessfully)
             {

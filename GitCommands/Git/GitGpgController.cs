@@ -49,7 +49,7 @@ namespace GitCommands.Gpg
         string? GetTagVerifyMessage(GitRevision revision);
     }
 
-    public class GitGpgController : IGitGpgController
+    public partial class GitGpgController : IGitGpgController
     {
         private readonly Func<IGitModule> _getModule;
 
@@ -69,10 +69,14 @@ namespace GitCommands.Gpg
         private const string NoTagPubKey = "NO_PUBKEY";
         private const string NoSignatureFound = "error: no signature found";
 
-        private static readonly Regex ValidSignatureTagRegex = new(ValidTagSign, RegexOptions.Compiled);
-        private static readonly Regex GoodSignatureTagRegex = new(GoodSignature, RegexOptions.Compiled);
-        private static readonly Regex NoPubKeyTagRegex = new(NoTagPubKey, RegexOptions.Compiled);
-        private static readonly Regex NoSignatureFoundTagRegex = new(NoSignatureFound, RegexOptions.Compiled);
+        [GeneratedRegex(ValidTagSign)]
+        private static partial Regex ValidSignatureTagRegex();
+        [GeneratedRegex(GoodSignature)]
+        private static partial Regex GoodSignatureTagRegex();
+        [GeneratedRegex(NoTagPubKey)]
+        private static partial Regex NoPubKeyTagRegex();
+        [GeneratedRegex(NoSignatureFound)]
+        private static partial Regex NoSignatureFoundTagRegex();
 
         /// <summary>
         /// Obtain the tag verification message for all the tag in current git revision
@@ -165,19 +169,19 @@ namespace GitCommands.Gpg
                 string? rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
 
                 /* Look for icon to be shown */
-                if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
+                if (GoodSignatureTagRegex().IsMatch(rawGpgMessage) && ValidSignatureTagRegex().IsMatch(rawGpgMessage))
                 {
                     /* It's only one good tag */
                     return TagStatus.OneGood;
                 }
 
-                if (NoSignatureFoundTagRegex.IsMatch(rawGpgMessage))
+                if (NoSignatureFoundTagRegex().IsMatch(rawGpgMessage))
                 {
                     /* One tag, but not signed */
                     return TagStatus.TagNotSigned;
                 }
 
-                if (NoPubKeyTagRegex.IsMatch(rawGpgMessage))
+                if (NoPubKeyTagRegex().IsMatch(rawGpgMessage))
                 {
                     /* One tag, signed, but user has not the public key */
                     return TagStatus.NoPubKey;

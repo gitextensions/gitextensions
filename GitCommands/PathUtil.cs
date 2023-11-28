@@ -4,7 +4,7 @@ using GitCommands.Utils;
 
 namespace GitCommands
 {
-    public static class PathUtil
+    public static partial class PathUtil
     {
         private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
@@ -15,6 +15,9 @@ namespace GitCommands
 
         public static readonly char PosixDirectorySeparatorChar = '/';
         public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
+
+        [GeneratedRegex(@"^(\w+):\/\/([\S]+)")]
+        private static partial Regex DriveLetterRegex();
 
         /// <summary>Replaces native path separator with posix path separator (/).</summary>
         [return: NotNullIfNotNull("path")]
@@ -103,7 +106,7 @@ namespace GitCommands
 
         public static bool IsLocalFile(string fileName)
         {
-            return !Regex.IsMatch(fileName, @"^(\w+):\/\/([\S]+)");
+            return !DriveLetterRegex().IsMatch(fileName);
         }
 
         public static bool CanBeGitURL(string? url)

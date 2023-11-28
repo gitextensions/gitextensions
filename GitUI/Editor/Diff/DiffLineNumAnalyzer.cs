@@ -4,11 +4,10 @@ using GitCommands.Patches;
 
 namespace GitUI.Editor.Diff
 {
-    public class DiffLineNumAnalyzer
+    public partial class DiffLineNumAnalyzer
     {
-        private static readonly Regex regex = new(
-            @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        [GeneratedRegex(@"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})", RegexOptions.IgnoreCase)]
+        private static partial Regex DiffRegex();
 
         public DiffLinesInfo Analyze(string diffContent)
         {
@@ -38,7 +37,7 @@ namespace GitUI.Editor.Diff
                         LineType = DiffLineType.Header
                     };
 
-                    Match lineNumbers = regex.Match(line);
+                    Match lineNumbers = DiffRegex().Match(line);
                     leftLineNum = int.Parse(lineNumbers.Groups["leftStart"].Value);
                     rightLineNum = int.Parse(lineNumbers.Groups["rightStart"].Value);
 

@@ -3,10 +3,10 @@ using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
-    internal class BranchFinder
+    internal partial class BranchFinder
     {
-        private static readonly Regex MergeRegex = new("(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        [GeneratedRegex("(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$", RegexOptions.CultureInvariant)]
+        private static partial Regex MergeRegex();
 
         internal BranchFinder(RevisionGraphRevision node)
         {
@@ -74,7 +74,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             string? into = null;
             string? with = null;
-            Match match = MergeRegex.Match(commitSubject);
+            Match match = MergeRegex().Match(commitSubject);
             if (match.Success)
             {
                 Group matchPullRequest = match.Groups[2];

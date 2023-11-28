@@ -3,11 +3,14 @@ using System.Text.RegularExpressions;
 
 namespace GitCommands.Git
 {
-    public static class DetachedHeadParser
+    public static partial class DetachedHeadParser
     {
         public static readonly string DetachedBranch = "(no branch)";
 
         private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from ", "(HEAD detached at " };
+
+        [GeneratedRegex(@"^\(.* (?<sha1>.*)\)$")]
+        private static partial Regex ShaRegex();
 
         public static bool IsDetachedHead(string branch)
         {
@@ -22,7 +25,7 @@ namespace GitCommands.Git
                 return false;
             }
 
-            Match sha1Match = new Regex(@"^\(.* (?<sha1>.*)\)$").Match(text);
+            Match sha1Match = ShaRegex().Match(text);
             if (!sha1Match.Success)
             {
                 return false;

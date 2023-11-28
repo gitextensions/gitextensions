@@ -135,11 +135,14 @@ namespace GitUI.UserControls
         }
     }
 
-    public class ConsoleCommandLineOutputProcessor
+    public partial class ConsoleCommandLineOutputProcessor
     {
         private readonly Action<TextEventArgs> _fireDataReceived;
         private int _commandLineCharsInOutput;
         private string? _lineChunk;
+
+        [GeneratedRegex(@"(?<=[\n\r])")]
+        private static partial Regex NewLineRegex();
 
         public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
         {
@@ -184,7 +187,7 @@ namespace GitUI.UserControls
                 _lineChunk = null;
             }
 
-            string[] outputLines = Regex.Split(output, @"(?<=[\n\r])");
+            string[] outputLines = NewLineRegex().Split(output);
             int lineCount = outputLines.Length;
             if (string.IsNullOrEmpty(outputLines[^1]))
             {

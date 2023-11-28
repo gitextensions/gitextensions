@@ -8,5 +8,5 @@
    at BugReporterTests.SerializableExceptionTests.Code.DoubleNestedException()
    --- End of inner exception stack trace ---
    at BugReporterTests.SerializableExceptionTests.Code.DoubleNestedException()
-   at BugReporterTests.SerializableExceptionTests.<>c.<get_TestCases>b__3_1()
+   at BugReporterTests.SerializableExceptionTests.<>c.<get_TestCases>b__4_1()
    at BugReporterTests.SerializableExceptionTests.ToString(String testName, Action action)

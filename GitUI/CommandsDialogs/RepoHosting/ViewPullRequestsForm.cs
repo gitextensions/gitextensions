@@ -33,6 +33,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
         private readonly AsyncLoader _loader = new();
 
+        [GeneratedRegex(@"(?:\n|^)diff --git ")]
+        private static partial Regex DiffCommandRegex();
+        [GeneratedRegex(@"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline)]
+        private static partial Regex FilePartRegex();
+
         public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)
             : base(commands)
         {
@@ -373,7 +378,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _diffCache = [];
 
-            List<string> fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el?.Trim().Length is > 10).ToList();
+            List<string> fileParts = DiffCommandRegex().Split(diffData).Where(el => el?.Trim().Length is > 10).ToList();
             List<GitItemStatus> giss = [];
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
@@ -387,7 +392,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             foreach (string part in fileParts)
             {
-                Match match = Regex.Match(part, @"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline);
+                Match match = FilePartRegex().Match(part);
                 if (!match.Success)
                 {
                     MessageBox.Show(this, _strUnableUnderstandPatch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);

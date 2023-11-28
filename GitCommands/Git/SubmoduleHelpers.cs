@@ -5,8 +5,13 @@ using Microsoft;
 
 namespace GitCommands.Git
 {
-    public static class SubmoduleHelpers
+    public static partial class SubmoduleHelpers
     {
+        [GeneratedRegex(@"diff --git [abic]/(.+)\s[abwi]/(.+)")]
+        private static partial Regex DiffCommandRegex();
+        [GeneratedRegex(@"diff --cc (.+)")]
+        private static partial Regex CombinedDiffCommandRegex();
+
         public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
         {
             (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true).ConfigureAwait(false);
@@ -60,7 +65,7 @@ namespace GitCommands.Git
 
                 if (line is not null)
                 {
-                    Match match = Regex.Match(line, @"diff --git [abic]/(.+)\s[abwi]/(.+)");
+                    Match match = DiffCommandRegex().Match(line);
                     if (match.Groups.Count > 1)
                     {
                         name = match.Groups[1].Value;
@@ -68,7 +73,7 @@ namespace GitCommands.Git
                     }
                     else
                     {
-                        match = Regex.Match(line, @"diff --cc (.+)");
+                        match = CombinedDiffCommandRegex().Match(line);
                         if (match.Groups.Count > 1)
                         {
                             name = match.Groups[1].Value;

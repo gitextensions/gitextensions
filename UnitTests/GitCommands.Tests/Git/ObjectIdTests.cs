@@ -8,8 +8,15 @@ namespace GitCommandsTests.Git
     // TODO SUT is in GitUIPluginInterfaces but no test assembly exists for that assembly
 
     [TestFixture]
-    public sealed class ObjectIdTests
+    public sealed partial class ObjectIdTests
     {
+        [GeneratedRegex("[a-f0-9]{40}")]
+        private static partial Regex Sha40Regex();
+        [GeneratedRegex("[a-f0-9]{39}")]
+        private static partial Regex Sha39Regex();
+        [GeneratedRegex("[XYZa-f0-9]{39}")]
+        private static partial Regex ShaXYZRegex();
+
         [TestCase("0000000000000000000000000000000000000000")]
         [TestCase("0102030405060708091011121314151617181920")]
         [TestCase("0123456789abcdef0123456789abcdef01234567")]
@@ -103,9 +110,9 @@ namespace GitCommandsTests.Git
             ObjectId objectId = ObjectId.Random();
             string str = "XYZ" + objectId + "XYZ";
 
-            Assert.AreEqual(objectId, ObjectId.Parse(str, Regex.Match(str, "[a-f0-9]{40}")));
-            Assert.Throws<FormatException>(() => ObjectId.Parse(str, Regex.Match(str, "[a-f0-9]{39}")));
-            Assert.Throws<FormatException>(() => ObjectId.Parse(str, Regex.Match(str, "[XYZa-f0-9]{39}")));
+            Assert.AreEqual(objectId, ObjectId.Parse(str, Sha40Regex().Match(str)));
+            Assert.Throws<FormatException>(() => ObjectId.Parse(str, Sha39Regex().Match(str)));
+            Assert.Throws<FormatException>(() => ObjectId.Parse(str, ShaXYZRegex().Match(str)));
         }
 
         [Test]

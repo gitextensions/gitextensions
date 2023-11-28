@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
-    public sealed class GitRevision : IGitItem, INotifyPropertyChanged
+    public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     {
         /// <summary>40 characters of 1's</summary>
         public const string WorkTreeGuid = "1111111111111111111111111111111111111111";
@@ -18,8 +18,10 @@ namespace GitUIPluginInterfaces
         /// Artificial commit for the combined diff</summary>
         public const string CombinedDiffGuid = "3333333333333333333333333333333333333333";
 
-        public static readonly Regex Sha1HashRegex = new(@"^[a-f\d]{40}$", RegexOptions.Compiled);
-        public static readonly Regex Sha1HashShortRegex = new(@"\b[a-f\d]{7,40}\b(?![^@\s]*@)", RegexOptions.Compiled);
+        [GeneratedRegex(@"^[a-f\d]{40}$")]
+        public static partial Regex Sha1HashRegex();
+        [GeneratedRegex(@"\b[a-f\d]{7,40}\b(?![^@\s]*@)")]
+        public static partial Regex Sha1HashShortRegex();
 
         private BuildInfo? _buildStatus;
         private string? _body;
@@ -141,7 +143,7 @@ namespace GitUIPluginInterfaces
         /// <returns><c>true</c> if <paramref name="id"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
         public static bool IsFullSha1Hash(string id)
         {
-            return Sha1HashRegex.IsMatch(id);
+            return Sha1HashRegex().IsMatch(id);
         }
     }
 }

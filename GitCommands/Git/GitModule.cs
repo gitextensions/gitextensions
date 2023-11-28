@@ -21,10 +21,9 @@ namespace GitCommands
     /// <summary>Provides manipulation with git module.
     /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
-    public sealed class GitModule : IGitModule
+    public sealed partial class GitModule : IGitModule
     {
         private const string GitError = "Git Error";
-        private static readonly Regex CpEncodingPattern = new("cp\\d+", RegexOptions.Compiled);
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
         // the amount of lines we must skip in order to get to an annotated tag's message when doing git cat-file -p <tag_name>
@@ -53,9 +52,23 @@ namespace GitCommands
         // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
         //
         // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
-        private static readonly Regex _refRegex = new(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
+        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline)]
+        private static partial Regex RefRegex();
 
-        private static readonly Regex _headerRegex = new(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.Compiled);
+        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)")]
+        private static partial Regex HeaderRegex();
+
+        [GeneratedRegex(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$")]
+        private static partial Regex RemoteVerboseLineRegex();
+
+        [GeneratedRegex(@"(\\([0-7]{3}))+")]
+        private static partial Regex EscapedOctalCodePointRegex();
+
+        [GeneratedRegex(@"^([ -+U])([0-9a-f]{40}) (.+) \((.+)\)$")]
+        private static partial Regex ShaRegex();
+
+        [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$")]
+        private static partial Regex ShortlogRegex();
 
         /// <summary>
         /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
@@ -1203,7 +1216,7 @@ namespace GitCommands
                 // - the submodule path
                 // - the output of git describe for the SHA-1
 
-                Match match = Regex.Match(s, @"^([ -+U])([0-9a-f]{40}) (.+) \((.+)\)$");
+                Match match = ShaRegex().Match(s);
 
                 if (!match.Success)
                 {
@@ -2011,8 +2024,6 @@ namespace GitCommands
                 .ToList();
         }
 
-        private static readonly Regex _remoteVerboseLineRegex = new(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
-
         public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
         {
             ExecutionResult result = await _gitExecutable.ExecuteAsync(new GitArgumentBuilder("remote") { "-v" }, throwOnErrorExit: false);
@@ -2032,7 +2043,7 @@ namespace GitCommands
                 while (enumerator.MoveNext())
                 {
                     string remoteLine = enumerator.Current;
-                    Match remoteMatch = _remoteVerboseLineRegex.Match(remoteLine);
+                    Match remoteMatch = RemoteVerboseLineRegex().Match(remoteLine);
                     if (!remoteMatch.Success
                         || (remoteMatch.Groups["direction"].Value != "fetch"
                            && remoteMatch.Groups["direction"].Value != "push"))
@@ -2065,7 +2076,7 @@ namespace GitCommands
                     }
 
                     string pushLine = enumerator.Current;
-                    Match pushMatch = _remoteVerboseLineRegex.Match(pushLine);
+                    Match pushMatch = RemoteVerboseLineRegex().Match(pushLine);
                     if (!pushMatch.Success || pushMatch.Groups["direction"].Value != "push")
                     {
                         throw new Exception("Unable to parse git remote push URL line: " + pushLine);
@@ -2866,7 +2877,7 @@ namespace GitCommands
 
         public IReadOnlyList<IGitRef> ParseRefs(string refList)
         {
-            MatchCollection matches = _refRegex.Matches(refList);
+            MatchCollection matches = RefRegex().Matches(refList);
 
             List<IGitRef> gitRefs = [];
             Dictionary<string, GitRef> headByRemote = [];
@@ -3177,7 +3188,7 @@ namespace GitCommands
 
             foreach (string line in output.LazySplit('\n').Select(l => l.TrimEnd('\r')))
             {
-                Match match = _headerRegex.Match(line);
+                Match match = HeaderRegex().Match(line);
 
                 if (match.Success)
                 {
@@ -3666,8 +3677,6 @@ namespace GitCommands
             return false;
         }
 
-        private static readonly Regex _escapedOctalCodePointRegex = new(@"(\\([0-7]{3}))+", RegexOptions.Compiled);
-
         /// <summary>
         /// Un-escapes any octal code points embedded within <paramref name="s"/>.
         /// </summary>
@@ -3689,7 +3698,7 @@ namespace GitCommands
                 return null;
             }
 
-            return _escapedOctalCodePointRegex.Replace(
+            return EscapedOctalCodePointRegex().Replace(
                 s,
                 match =>
                 {
@@ -3921,7 +3930,6 @@ namespace GitCommands
             Dictionary<string, int> countByName = [];
             int totalCommits = 0;
 
-            Regex regex = new(@"^\s*(?<count>\d+)\s+(?<name>.*)$");
             GitArgumentBuilder args = new("shortlog")
             {
                 "--all",
@@ -3937,7 +3945,7 @@ namespace GitCommands
 
             foreach (string line in lines)
             {
-                Match match = regex.Match(line);
+                Match match = ShortlogRegex().Match(line);
 
                 if (!match.Success)
                 {

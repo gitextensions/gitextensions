@@ -10,11 +10,10 @@ namespace GitCommands.Git
         GitItem? ParseSingle(string? rawItem);
     }
 
-    public sealed class GitTreeParser : IGitTreeParser
+    public sealed partial class GitTreeParser : IGitTreeParser
     {
-        private static readonly Regex _treeLineRegex = new(
-            @"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\s+(?<name>.+)$",
-            RegexOptions.Compiled);
+        [GeneratedRegex(@"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\s+(?<name>.+)$")]
+        private static partial Regex TreeLineRegex();
 
         public IEnumerable<GitItem> Parse(string? tree)
         {
@@ -46,7 +45,7 @@ namespace GitCommands.Git
                 return null;
             }
 
-            Match match = _treeLineRegex.Match(rawItem);
+            Match match = TreeLineRegex().Match(rawItem);
 
             if (!match.Success)
             {

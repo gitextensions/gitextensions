@@ -34,12 +34,17 @@ namespace ResourceManager.CommitDataRenders
     /// <summary>
     /// Renders commit information in a tabular format with data columns aligned with spaces.
     /// </summary>
-    public sealed class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
+    public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
     {
         private readonly IHeaderLabelFormatter _labelFormatter;
         private readonly IDateFormatter _dateFormatter;
         private readonly IHeaderRenderStyleProvider _headerRendererStyleProvider;
         private readonly ILinkFactory? _linkFactory;
+
+        [GeneratedRegex(@"[ \t]+")]
+        private static partial Regex SpacesRegex();
+        [GeneratedRegex(@"(\n[^:]+: ).* ago \(([^)]+)\)")]
+        private static partial Regex RemoveAgoRegex();
 
         public CommitDataHeaderRenderer(IHeaderLabelFormatter labelFormatter, IDateFormatter dateFormatter, IHeaderRenderStyleProvider headerRendererStyleProvider, ILinkFactory? linkFactory)
         {
@@ -53,8 +58,8 @@ namespace ResourceManager.CommitDataRenders
         {
             string children = $"({TranslatedStrings.GetChildren(1)})|({TranslatedStrings.GetChildren(2)})|({TranslatedStrings.GetChildren(10)})";
             string parents = $"({TranslatedStrings.GetParents(1)})|({TranslatedStrings.GetParents(2)})|({TranslatedStrings.GetParents(10)})";
-            header = Regex.Replace(header, @"[ \t]+", " ");
-            header = Regex.Replace(header, @"(\n[^:]+: ).* ago \(([^)]+)\)", "$1$2");
+            header = SpacesRegex().Replace(header, " ");
+            header = RemoveAgoRegex().Replace(header, "$1$2");
             header = Regex.Replace(header, @$"\n({children}|{parents})[^\n]*", "");
             return header;
         }

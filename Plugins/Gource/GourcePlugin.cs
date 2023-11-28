@@ -11,7 +11,7 @@ using ResourceManager;
 namespace GitExtensions.Plugins.Gource
 {
     [Export(typeof(IGitPlugin))]
-    public class GourcePlugin : GitPluginBase, IGitPluginForRepository
+    public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
     {
         #region Translation
         private readonly TranslationString _currentDirectoryIsNotValidGit = new("The current directory is not a valid git repository.\n\n" +
@@ -30,6 +30,14 @@ namespace GitExtensions.Plugins.Gource
             "Please download Gource and set the path in the plugins settings dialog.");
         #endregion
 
+        private readonly StringSetting _gourcePath = new("Path to Gource", "");
+        private readonly StringSetting _gourceArguments = new("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+
+        // find http://gource.googlecode.com/files/gource-0.26b.win32.zip
+        // find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
+        [GeneratedRegex(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""")]
+        private static partial Regex GourceRegex();
+
         public GourcePlugin() : base(true)
         {
             Id = new Guid("F0A6A769-6DCC-4452-9A43-343347015EEC");
@@ -37,9 +45,6 @@ namespace GitExtensions.Plugins.Gource
             Translate();
             Icon = Resources.IconGource;
         }
-
-        private readonly StringSetting _gourcePath = new("Path to Gource", "");
-        private readonly StringSetting _gourceArguments = new("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
 
@@ -244,11 +249,7 @@ namespace GitExtensions.Plugins.Gource
 
                 string response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/latest");
 
-                // find http://gource.googlecode.com/files/gource-0.26b.win32.zip
-                // find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
-                Regex regEx = new(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""");
-
-                MatchCollection matches = regEx.Matches(response);
+                MatchCollection matches = GourceRegex().Matches(response);
 
                 foreach (Match match in matches)
                 {
@@ -257,9 +258,7 @@ namespace GitExtensions.Plugins.Gource
 
                 response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/tag/gource-0.42");
 
-                regEx = new Regex(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""");
-
-                matches = regEx.Matches(response);
+                matches = GourceRegex().Matches(response);
 
                 foreach (Match match in matches)
                 {

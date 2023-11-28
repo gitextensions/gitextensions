@@ -118,7 +118,7 @@ namespace TeamCityIntegration
                 return;
             }
 
-            BuildIdFilter = new Regex(buildIdFilerSetting, RegexOptions.Compiled);
+            BuildIdFilter = new Regex(buildIdFilerSetting);
             HostName = config.GetString("BuildServerUrl", null);
             LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
 

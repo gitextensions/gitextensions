@@ -10,11 +10,13 @@ namespace GitCommands
     /// Provides extension methods for <see cref="IExecutable"/> that provider operations on executables
     /// at a higher level than <see cref="IExecutable.Start"/>.
     /// </summary>
-    public static class ExecutableExtensions
+    public static partial class ExecutableExtensions
     {
         public const string DubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
-        private static readonly Regex _ansiCodePattern = new(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding, false);
+
+        [GeneratedRegex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]")]
+        private static partial Regex AnsiCodeRegex();
 
         /// <summary>
         /// Launches a process for the executable and returns its output.
@@ -372,7 +374,7 @@ namespace GitCommands
         {
             // NOTE Regex returns the original string if no ANSI codes are found (no allocation)
             return stripAnsiEscapeCodes
-                ? _ansiCodePattern.Replace(s, "")
+                ? AnsiCodeRegex().Replace(s, "")
                 : s;
         }
     }

@@ -18,6 +18,9 @@ namespace GitExtensions.Plugins.ProxySwitcher
         private readonly TranslationString _pleaseSetProxy = new("There is no proxy configured. Please set the proxy host in the plugin settings.");
         #endregion
 
+        [GeneratedRegex(":(.*)@")]
+        private static partial Regex PasswordRegex();
+
         /// <summary>
         /// Default constructor added to register all strings to be translated
         /// Use the other constructor:
@@ -76,7 +79,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         private static string HidePassword(string httpProxy)
         {
-            return Regex.Replace(httpProxy, ":(.*)@", ":****@");
+            return PasswordRegex().Replace(httpProxy, ":****@");
         }
 
         private string BuildHttpProxy()

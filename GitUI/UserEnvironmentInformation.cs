@@ -7,12 +7,17 @@ using GitExtUtils.GitUI;
 
 namespace GitUI
 {
-    public static class UserEnvironmentInformation
+    public static partial class UserEnvironmentInformation
     {
         private static readonly string DOTNET_CMD = "dotnet";
         private static bool _alreadySet;
         private static bool _dirty;
         private static string? _sha;
+
+        [GeneratedRegex(@"^(?=.*\bMicrosoft\.WindowsDesktop\.App\b)[^\n\r]*", RegexOptions.Multiline)]
+        private static partial Regex DesktopAppRegex();
+        [GeneratedRegex("^", RegexOptions.Multiline)]
+        private static partial Regex LineStartRegex();
 
         public static void CopyInformation() => ClipboardUtil.TrySetText(GetInformation() + GetDotnetVersionInfo());
 
@@ -85,15 +90,15 @@ namespace GitUI
             try
             {
                 string output = dotnet.GetOutput(args);
-                IEnumerable<Match> desktopAppMatches = Regex.Matches(output, @"^(?=.*\bMicrosoft\.WindowsDesktop\.App\b)[^\n\r]*", RegexOptions.Multiline).Cast<Match>();
+                IEnumerable<Match> desktopAppMatches = DesktopAppRegex().Matches(output).Cast<Match>();
                 string desktopAppLines = string.Join(Environment.NewLine, desktopAppMatches);
 
-                desktopAppLines = Regex.Replace(desktopAppLines, "^", "    ", RegexOptions.Multiline);
+                desktopAppLines = LineStartRegex().Replace(desktopAppLines, "    ");
                 sb.AppendLine($"{desktopAppLines}");
             }
             catch (Exception ex)
             {
-                sb.AppendLine(Regex.Replace(ex.Message, "^", "    ", RegexOptions.Multiline));
+                sb.AppendLine(LineStartRegex().Replace(ex.Message, "    "));
             }
             finally
             {

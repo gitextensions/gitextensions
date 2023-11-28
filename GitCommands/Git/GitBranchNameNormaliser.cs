@@ -64,8 +64,25 @@ namespace GitCommands.Git
     /// <summary>
     /// Ensures compliance with the GIT branch naming conventions.
     /// </summary>
-    public sealed class GitBranchNameNormaliser : IGitBranchNameNormaliser
+    public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     {
+        [GeneratedRegex("^(\\.)*")]
+        private static partial Regex PeriodRegex();
+        [GeneratedRegex("(\\.lock)$")]
+        private static partial Regex LockRegex();
+        [GeneratedRegex("\\.{2,}")]
+        private static partial Regex Rule03Regex();
+        [GeneratedRegex("(\\?|\\*|\\[)")]
+        private static partial Regex Rule05Regex();
+        [GeneratedRegex(@"(\/{2,})")]
+        private static partial Regex Rule06Regex();
+        [GeneratedRegex("(\\.{1,})$")]
+        private static partial Regex Rule07Regex();
+        [GeneratedRegex("(@\\{)")]
+        private static partial Regex Rule08Regex();
+        [GeneratedRegex(@"(\\{1,})")]
+        private static partial Regex Rule10Regex();
+
         /// <summary>
         /// Ensures that the branch name meets the GIT branch naming conventions.
         /// For more details refer to <see href="https://www.git-scm.com/docs/git-check-ref-format/1.8.2"/>.
@@ -121,14 +138,14 @@ namespace GitCommands.Git
             string[] tokens = branchName.Split(Delimiters.ForwardSlash);
             for (int i = 0; i < tokens.Length; i++)
             {
-                if (tokens[i].StartsWith("."))
+                if (tokens[i].StartsWith('.'))
                 {
-                    tokens[i] = Regex.Replace(tokens[i], "^(\\.)*", options.ReplacementToken);
+                    tokens[i] = PeriodRegex().Replace(tokens[i], options.ReplacementToken);
                 }
 
                 if (tokens[i].EndsWith(".lock", StringComparison.OrdinalIgnoreCase))
                 {
-                    tokens[i] = Regex.Replace(tokens[i], "(\\.lock)$", options.ReplacementToken + "lock");
+                    tokens[i] = LockRegex().Replace(tokens[i], options.ReplacementToken + "lock");
                 }
             }
 
@@ -143,7 +160,7 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         internal string Rule03(string branchName, GitBranchNameOptions options)
         {
-            return Regex.Replace(branchName, "\\.{2,}", options.ReplacementToken);
+            return Rule03Regex().Replace(branchName, options.ReplacementToken);
         }
 
         /// <summary>
@@ -180,7 +197,7 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         internal string Rule05(string branchName, GitBranchNameOptions options)
         {
-            return Regex.Replace(branchName, "(\\?|\\*|\\[)", options.ReplacementToken);
+            return Rule05Regex().Replace(branchName, options.ReplacementToken);
         }
 
         /// <summary>
@@ -190,13 +207,13 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         internal string Rule06(string branchName)
         {
-            branchName = Regex.Replace(branchName, @"(\/{2,})", "/");
-            if (branchName.StartsWith("/"))
+            branchName = Rule06Regex().Replace(branchName, "/");
+            if (branchName.StartsWith('/'))
             {
                 branchName = branchName[1..];
             }
 
-            if (branchName.EndsWith("/"))
+            if (branchName.EndsWith('/'))
             {
                 branchName = branchName[..^1];
             }
@@ -212,7 +229,7 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         internal string Rule07(string branchName, GitBranchNameOptions options)
         {
-            return Regex.Replace(branchName, "(\\.{1,})$", options.ReplacementToken);
+            return Rule07Regex().Replace(branchName, options.ReplacementToken);
         }
 
         /// <summary>
@@ -223,7 +240,7 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         internal string Rule08(string branchName, GitBranchNameOptions options)
         {
-            return Regex.Replace(branchName, "(@\\{)", options.ReplacementToken);
+            return Rule08Regex().Replace(branchName, options.ReplacementToken);
         }
 
         /// <summary>
@@ -245,7 +262,7 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         internal string Rule10(string branchName, GitBranchNameOptions options)
         {
-            return Regex.Replace(branchName, @"(\\{1,})", options.ReplacementToken);
+            return Rule10Regex().Replace(branchName, options.ReplacementToken);
         }
     }
 }
