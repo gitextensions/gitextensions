@@ -53,12 +53,12 @@
                 return Setting.CustomControl as NumericUpDown;
             }
 
-            public override void LoadSetting(ISettingsSource settings, NumericUpDown control)
+            public override void LoadSetting(SettingsSource settings, NumericUpDown control)
             {
                 control.Value = Setting.ValueOrDefault(settings);
             }
 
-            public override void SaveSetting(ISettingsSource settings, NumericUpDown control)
+            public override void SaveSetting(SettingsSource settings, NumericUpDown control)
             {
                 decimal controlValue = control.Value;
 
@@ -84,7 +84,7 @@
                 return Setting.CustomControl as TextBox;
             }
 
-            public override void LoadSetting(ISettingsSource settings, TextBox control)
+            public override void LoadSetting(SettingsSource settings, TextBox control)
             {
                 object? settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
@@ -93,7 +93,7 @@
                 control.Text = ConvertToString(settingVal);
             }
 
-            public override void SaveSetting(ISettingsSource settings, TextBox control)
+            public override void SaveSetting(SettingsSource settings, TextBox control)
             {
                 string controlValue = control.Text;
 
@@ -150,7 +150,7 @@
             return null;
         }
 
-        public object? this[ISettingsSource settings]
+        public object? this[SettingsSource settings]
         {
             get
             {
@@ -167,7 +167,7 @@
             }
         }
 
-        public T ValueOrDefault(ISettingsSource settings)
+        public T ValueOrDefault(SettingsSource settings)
         {
             object? settingVal = this[settings];
             if (settingVal is null)

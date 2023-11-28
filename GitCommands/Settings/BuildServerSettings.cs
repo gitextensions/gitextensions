@@ -8,14 +8,14 @@ namespace GitCommands.Settings
         private const string BuildServerGroupName = "BuildServer";
         private const string BuildServerTypeName = "Type";
         private const string BuildServerIntegrationEnabledName = "EnableIntegration";
-        private readonly ISettingsSource _settingsSource;
+        private readonly SettingsSource _settingsSource;
 
-        public BuildServerSettings(ISettingsSource settingsSource)
+        public BuildServerSettings(SettingsSource settingsSource)
         {
             _settingsSource = settingsSource;
         }
 
-        public ISettingsSource SettingsSource => new SettingsPath(_settingsSource, $"{BuildServerGroupName}.{ServerName}");
+        public SettingsSource SettingsSource => new SettingsPath(_settingsSource, $"{BuildServerGroupName}.{ServerName}");
 
         public string? ServerName
         {

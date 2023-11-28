@@ -124,7 +124,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
         }
 
-        protected abstract ISettingsSource GetCurrentSettings();
+        protected abstract SettingsSource GetCurrentSettings();
 
         public void AddControlBinding(ISettingControlBinding binding)
         {

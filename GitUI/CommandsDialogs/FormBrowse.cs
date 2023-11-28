@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
         }
 
         [Obsolete("Test only!")]
-        internal FormBrowse(GitUICommands commands, BrowseArguments args, ISettingsSource settingsSource)
+        internal FormBrowse(GitUICommands commands, BrowseArguments args, SettingsSource settingsSource)
             : base(commands)
         {
             _splitterManager = new(settingsSource);

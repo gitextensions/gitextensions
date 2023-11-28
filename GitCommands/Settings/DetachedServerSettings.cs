@@ -8,9 +8,9 @@ namespace GitCommands.Settings
         private const string DictionaryDefault = "en-US";
         private const bool NoFastForwardMergeDefault = false;
 
-        private readonly ISettingsSource _settingsSource;
+        private readonly SettingsSource _settingsSource;
 
-        public DetachedSettings(ISettingsSource settingsSource)
+        public DetachedSettings(SettingsSource settingsSource)
         {
             _settingsSource = settingsSource;
         }

@@ -232,12 +232,12 @@ namespace GitCommands
             }
         }
 
-        public ISettingsSource GetEffectiveSettings()
+        public SettingsSource GetEffectiveSettings()
         {
             return EffectiveSettings;
         }
 
-        public ISettingsSource GetLocalSettings()
+        public SettingsSource GetLocalSettings()
         {
             return LocalSettings;
         }
@@ -2105,7 +2105,7 @@ namespace GitCommands
             return EffectiveConfigFile.GetValue(setting);
         }
 
-        public ISettingsSource GetEffectiveSettingsByPath(string path)
+        public SettingsSource GetEffectiveSettingsByPath(string path)
         {
             return ((ConfigFileSettings)EffectiveConfigFile).ByPath(path);
         }

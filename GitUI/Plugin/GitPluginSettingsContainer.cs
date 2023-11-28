@@ -3,11 +3,11 @@ using GitUIPluginInterfaces;
 
 namespace GitUI
 {
-    public class GitPluginSettingsContainer : ISettingsSource, IGitPluginSettingsContainer
+    public class GitPluginSettingsContainer : SettingsSource, IGitPluginSettingsContainer
     {
         private readonly Guid _pluginId;
         private readonly string _pluginName;
-        private ISettingsSource? _settingsSource;
+        private SettingsSource? _settingsSource;
 
         public GitPluginSettingsContainer(Guid pluginId, string pluginName)
         {
@@ -15,17 +15,17 @@ namespace GitUI
             _pluginName = pluginName;
         }
 
-        public ISettingsSource GetSettingsSource()
+        public SettingsSource GetSettingsSource()
         {
             return this;
         }
 
-        public void SetSettingsSource(ISettingsSource? settingsSource)
+        public void SetSettingsSource(SettingsSource? settingsSource)
         {
             _settingsSource = settingsSource;
         }
 
-        private ISettingsSource ExternalSettings => _settingsSource ?? AppSettings.SettingsContainer;
+        private SettingsSource ExternalSettings => _settingsSource ?? AppSettings.SettingsContainer;
 
         public override SettingLevel SettingLevel
         {

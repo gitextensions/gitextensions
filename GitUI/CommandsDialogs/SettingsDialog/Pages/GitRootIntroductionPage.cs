@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
         }
 
-        protected override ISettingsSource GetCurrentSettings()
+        protected override SettingsSource GetCurrentSettings()
         {
             return AppSettings.SettingsContainer;
         }

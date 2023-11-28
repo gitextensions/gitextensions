@@ -88,7 +88,7 @@ namespace AzureDevOpsIntegration.Settings
             }
         }
 
-        public void LoadSettings(ISettingsSource buildServerConfig)
+        public void LoadSettings(SettingsSource buildServerConfig)
         {
             IntegrationSettings settings = IntegrationSettings.ReadFrom(buildServerConfig);
 
@@ -107,7 +107,7 @@ namespace AzureDevOpsIntegration.Settings
             UpdateView();
         }
 
-        public void SaveSettings(ISettingsSource buildServerConfig)
+        public void SaveSettings(SettingsSource buildServerConfig)
         {
             if (_currentSettings.IsValid())
             {

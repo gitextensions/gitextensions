@@ -166,7 +166,7 @@ namespace GitUIPluginInterfaces
         /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
         string? GetEffectiveGitSetting(string setting, bool cache = true);
 
-        ISettingsSource GetEffectiveSettingsByPath(string path);
+        SettingsSource GetEffectiveSettingsByPath(string path);
 
         /// <summary>
         /// Gets the name of the currently checked out branch.
@@ -182,8 +182,8 @@ namespace GitUIPluginInterfaces
 
         bool IsRunningGitProcess();
 
-        ISettingsSource GetEffectiveSettings();
-        ISettingsSource GetLocalSettings();
+        SettingsSource GetEffectiveSettings();
+        SettingsSource GetLocalSettings();
 
         string? ReEncodeStringFromLossless(string? s);
 

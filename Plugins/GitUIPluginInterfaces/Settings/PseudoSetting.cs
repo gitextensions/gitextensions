@@ -62,11 +62,11 @@ namespace GitUIPluginInterfaces.Settings
                 return Setting.CustomControl;
             }
 
-            public override void LoadSetting(ISettingsSource settings, Control control)
+            public override void LoadSetting(SettingsSource settings, Control control)
             {
             }
 
-            public override void SaveSetting(ISettingsSource settings, Control control)
+            public override void SaveSetting(SettingsSource settings, Control control)
             {
             }
         }

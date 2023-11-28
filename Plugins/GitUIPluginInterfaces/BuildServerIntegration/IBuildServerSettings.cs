@@ -33,6 +33,6 @@
         /// <summary>
         ///  Gets the settings source for the build server.
         /// </summary>
-        ISettingsSource SettingsSource { get; }
+        SettingsSource SettingsSource { get; }
     }
 }

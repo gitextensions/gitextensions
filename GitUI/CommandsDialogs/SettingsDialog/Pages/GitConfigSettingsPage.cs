@@ -148,7 +148,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 _diffMergeToolConfigurationManager.UnsetCurrentTool(DiffMergeToolType.Merge);
             }
 
-            ISettingsSource coreSectionSettingsSource = CurrentSettings.ByPath("core");
+            SettingsSource coreSectionSettingsSource = CurrentSettings.ByPath("core");
 
             if (globalAutoCrlfFalse.Checked)
             {

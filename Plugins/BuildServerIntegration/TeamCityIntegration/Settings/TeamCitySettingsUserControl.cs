@@ -34,7 +34,7 @@ namespace TeamCityIntegration.Settings
             SetChooseBuildButtonState();
         }
 
-        public void LoadSettings(ISettingsSource buildServerConfig)
+        public void LoadSettings(SettingsSource buildServerConfig)
         {
             TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", null);
             TeamCityProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
@@ -50,7 +50,7 @@ namespace TeamCityIntegration.Settings
             }
         }
 
-        public void SaveSettings(ISettingsSource buildServerConfig)
+        public void SaveSettings(SettingsSource buildServerConfig)
         {
             if (!BuildServerSettingsHelper.IsRegexValid(TeamCityBuildIdFilter.Text))
             {

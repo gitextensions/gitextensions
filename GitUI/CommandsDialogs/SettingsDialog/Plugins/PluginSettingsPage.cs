@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             return result;
         }
 
-        protected override ISettingsSource GetCurrentSettings()
+        protected override SettingsSource GetCurrentSettings()
         {
             Validates.NotNull(_settingsContainer);
 

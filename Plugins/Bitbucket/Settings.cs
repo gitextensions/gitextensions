@@ -11,7 +11,7 @@ namespace GitExtensions.Plugins.Bitbucket
         private const string BitbucketSshRegex =
             @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([^\/]+))\/(?<repo>(.*?)).git";
 
-        public static Settings? Parse(IGitModule module, ISettingsSource settings, BitbucketPlugin plugin)
+        public static Settings? Parse(IGitModule module, SettingsSource settings, BitbucketPlugin plugin)
         {
             Settings result = new()
             {
