@@ -48,6 +48,13 @@ namespace GitUI.AutoCompletion
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
+                autoCompleteWords.Add(Path.GetFileName(file.Name));
+
+                if (file.IsSubmodule)
+                {
+                    continue;
+                }
+
                 Regex regex = GetRegexForExtension(Path.GetExtension(file.Name) ?? "");
 
                 if (regex is not null)
@@ -69,7 +76,6 @@ namespace GitUI.AutoCompletion
                 }
 
                 autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
-                autoCompleteWords.Add(Path.GetFileName(file.Name));
                 if (!string.IsNullOrWhiteSpace(file.OldName))
                 {
                     autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.OldName));
@@ -160,7 +166,7 @@ namespace GitUI.AutoCompletion
                 Patch? changes = null;
                 try
                 {
-                    changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000", noLocks: true)
+                    changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U5", noLocks: true)
                         .ConfigureAwait(false);
                 }
                 catch
