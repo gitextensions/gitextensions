@@ -1029,7 +1029,6 @@ namespace GitUI.CommandsDialogs
             pullToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeys(Command.PullOrFetch).ToShortcutKeyDisplayString();
             pushToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Push).ToShortcutKeyDisplayString();
             rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
-            rebaseToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
 
             helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
             toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
