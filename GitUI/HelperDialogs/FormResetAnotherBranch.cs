@@ -109,5 +109,13 @@ namespace GitUI.HelperDialogs
         {
             Close();
         }
+
+        private void Branches_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!Branches.DroppedDown)
+            {
+                Branches.DroppedDown = true;
+            }
+        }
     }
 }
