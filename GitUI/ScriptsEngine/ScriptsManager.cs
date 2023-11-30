@@ -74,7 +74,7 @@ namespace GitUI.ScriptsEngine
             if (scriptInfo is null)
             {
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorCantFind}: '{scriptId}'",
-                    new ExternalOperationException(workingDirectory: commands.GitModule.WorkingDir));
+                    new ExternalOperationException(workingDirectory: commands.Module.WorkingDir));
             }
 
             return ScriptRunner.RunScript(scriptInfo, owner, commands, scriptOptionsProvider);

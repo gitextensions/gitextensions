@@ -57,7 +57,7 @@ namespace GitExtensions.UITests.ScriptEngine
             _module.GetCurrentCheckout().ReturnsForAnyArgs(ObjectId.WorkTreeId);
 
             _commands = Substitute.For<IGitUICommands>();
-            _commands.GitModule.Returns(_module);
+            _commands.Module.Returns(_module);
 
             _mockForm = new(_commands);
 

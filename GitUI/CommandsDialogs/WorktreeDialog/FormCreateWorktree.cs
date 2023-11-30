@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             void LoadBranchesAsync()
             {
-                string selectedBranch = UICommands.GitModule.GetSelectedBranch();
+                string selectedBranch = UICommands.Module.GetSelectedBranch();
                 ExistingBranches = Module.GetRefs(RefsFilter.Heads);
                 comboBoxBranches.Text = TranslatedStrings.LoadingData;
                 ThreadHelper.FileAndForget(async () =>

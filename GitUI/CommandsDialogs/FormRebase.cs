@@ -381,7 +381,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 AppSettings.ShowStashes = false;
-                ObjectId firstParent = UICommands.GitModule.RevParse("HEAD~");
+                ObjectId firstParent = UICommands.Module.RevParse("HEAD~");
                 string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
                 using FormChooseCommit chooseForm = new(UICommands, preSelectedCommit, showCurrentBranchOnly: true);
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)

@@ -25,7 +25,7 @@ namespace GitUIPluginInterfaces
 
         public IWin32Window? OwnerForm { get; }
 
-        public IGitModule GitModule => GitUICommands.GitModule;
+        public IGitModule GitModule => GitUICommands.Module;
 
         public IReadOnlyList<IGitRef> GetRefs(RefsFilter filter) => _getRefs.GetRefs(filter);
     }

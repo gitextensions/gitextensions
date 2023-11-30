@@ -53,7 +53,7 @@ namespace GitCommands.Git.Tag
 
             try
             {
-                return _uiCommands.StartCommandLineProcessDialog(parentWindow, Commands.CreateTag(args, tagMessageFileName, _uiCommands.GitModule.GetPathForGitExecution));
+                return _uiCommands.StartCommandLineProcessDialog(parentWindow, Commands.CreateTag(args, tagMessageFileName, _uiCommands.Module.GetPathForGitExecution));
             }
             finally
             {
@@ -66,7 +66,7 @@ namespace GitCommands.Git.Tag
 
         private string GetWorkingDirPath()
         {
-            return _uiCommands.GitModule.WorkingDir;
+            return _uiCommands.Module.WorkingDir;
         }
     }
 }

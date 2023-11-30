@@ -300,7 +300,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             IsRefreshing = true;
             Validates.NotNull(_refreshCancellation);
 
-            string curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
+            string curBranch = _gitUiCommands.Module.GetSelectedBranch();
             RefreshContext context = new(
                 _gitCommands,
                 IncludeRemoteBranches.Checked,

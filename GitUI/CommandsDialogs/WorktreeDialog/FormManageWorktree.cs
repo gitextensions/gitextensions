@@ -236,7 +236,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         }
 
         private bool IsCurrentlyOpenedWorktree(WorkTree workTree)
-            => new DirectoryInfo(UICommands.GitModule.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
+            => new DirectoryInfo(UICommands.Module.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
 
         private void buttonCreateNewWorktree_Click(object sender, EventArgs e)
         {
