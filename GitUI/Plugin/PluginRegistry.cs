@@ -1,4 +1,5 @@
-using GitCommands;
+using System.Diagnostics;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
@@ -27,7 +28,22 @@ namespace GitUI
 
                 try
                 {
-                    foreach (IGitPlugin plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
+                    IEnumerable<IGitPlugin> plugins = ManagedExtensibility.GetExports<IGitPlugin>()
+                        .Select(lazy =>
+                            {
+                                try
+                                {
+                                    return lazy.Value;
+                                }
+                                catch (Exception ex)
+                                {
+                                    FailedPluginWrapper wrapper = new(ex);
+                                    DebugHelpers.Fail($"{wrapper.Name}. Error: {ex.Demystify()}");
+                                    return wrapper;
+                                }
+                            });
+
+                    foreach (IGitPlugin plugin in plugins)
                     {
                         Validates.NotNull(plugin.Description);
 
@@ -42,9 +58,9 @@ namespace GitUI
                         Plugins.Add(plugin);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // no-op
+                    DebugHelpers.Fail($"Fail to load plugins. Error: {ex.Demystify()}");
                 }
             }
         }
