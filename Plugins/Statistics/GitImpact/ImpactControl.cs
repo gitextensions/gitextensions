@@ -202,8 +202,13 @@ namespace GitExtensions.Plugins.GitImpact
                 // Nothing to draw
                 if (_impact.Count == 0)
                 {
+                    // Show this cursor until we get some results painted
+                    UseWaitCursor = true;
                     return;
                 }
+
+                // Now we have results, don't show waiting cursor
+                UseWaitCursor = false;
 
                 // Activate AntiAliasing
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
