@@ -93,7 +93,7 @@ namespace GitUI.ScriptsEngine
             }
 
             ArgumentNullException.ThrowIfNull(uiCommands);
-            ArgumentNullException.ThrowIfNull(uiCommands.GitModule);
+            ArgumentNullException.ThrowIfNull(uiCommands.Module);
 
             GitRevision? selectedRevision = null;
             GitRevision? currentRevision = null;
@@ -119,7 +119,7 @@ namespace GitUI.ScriptsEngine
 
                 if (currentRevision is null && (option.StartsWith("c") || option == head))
                 {
-                    currentRevision = GetCurrentRevision(uiCommands.GitModule, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
+                    currentRevision = GetCurrentRevision(uiCommands.Module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
                         loadBody: Contains(arguments, currentMessage));
                     if (currentRevision is null)
                     {
@@ -128,14 +128,14 @@ namespace GitUI.ScriptsEngine
 
                     if (currentLocalBranches.Count == 1)
                     {
-                        currentRemote = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
+                        currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
                     }
                     else
                     {
-                        currentRemote = uiCommands.GitModule.GetCurrentRemote();
+                        currentRemote = uiCommands.Module.GetCurrentRemote();
                         if (string.IsNullOrEmpty(currentRemote))
                         {
-                            currentRemote = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.BranchRemote,
+                            currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote,
                                 AskToSpecify(currentLocalBranches, uiCommands, owner)));
                         }
                     }
@@ -329,7 +329,7 @@ namespace GitUI.ScriptsEngine
                     if (!string.IsNullOrEmpty(newString))
                     {
                         remote = newString;
-                        newString = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        newString = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                     }
 
                     break;
@@ -339,7 +339,7 @@ namespace GitUI.ScriptsEngine
                     if (!string.IsNullOrEmpty(newString))
                     {
                         remote = newString;
-                        url = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        url = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         newString = GetRemotePath(url);
                     }
 
@@ -378,7 +378,7 @@ namespace GitUI.ScriptsEngine
                     break;
 
                 case head:
-                    newString = uiCommands.GitModule.GetSelectedBranch(emptyIfDetached: true);
+                    newString = uiCommands.Module.GetSelectedBranch(emptyIfDetached: true);
                     if (string.IsNullOrEmpty(newString))
                     {
                         newString = currentRevision.Guid;
@@ -449,7 +449,7 @@ namespace GitUI.ScriptsEngine
                     }
                     else
                     {
-                        newString = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        newString = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                     }
 
                     break;
@@ -461,18 +461,18 @@ namespace GitUI.ScriptsEngine
                     }
                     else
                     {
-                        url = uiCommands.GitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        url = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         newString = GetRemotePath(url);
                     }
 
                     break;
 
                 case "RepoName":
-                    newString = uiCommands.GetRequiredService<IRepositoryDescriptionProvider>().Get(uiCommands.GitModule.WorkingDir);
+                    newString = uiCommands.GetRequiredService<IRepositoryDescriptionProvider>().Get(uiCommands.Module.WorkingDir);
                     break;
 
                 case "WorkingDir":
-                    newString = uiCommands.GitModule.WorkingDir;
+                    newString = uiCommands.Module.WorkingDir;
                     break;
 
                 default:

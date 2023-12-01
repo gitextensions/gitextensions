@@ -51,8 +51,6 @@ namespace GitUI
             _findFilePredicateProvider = new FindFilePredicateProvider();
         }
 
-        public IGitModule GitModule => Module;
-
         #region Events
 
         public event EventHandler<GitUIEventArgs>? PreCheckoutRevision;

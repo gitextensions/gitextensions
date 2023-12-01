@@ -69,7 +69,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
 
             Validates.NotNull(_currentGitUiCommands);
 
-            IGitModule gitModule = _currentGitUiCommands.GitModule;
+            IGitModule gitModule = _currentGitUiCommands.Module;
             if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())
             {
                 _cancellationToken =
@@ -108,7 +108,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
 
                                           try
                                           {
-                                              _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                              _currentGitUiCommands.Module.GitExecutable.GetOutput(args);
                                           }
                                           catch
                                           {
@@ -130,7 +130,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
                                           // git fetch is writing result details into standard error and not standard output, see:
                                           // https://github.com/gitextensions/gitextensions/pull/10793
                                           // https://lore.kernel.org/git/xmqq7cvqrdu6.fsf@gitster.g/
-                                          msg = _currentGitUiCommands.GitModule.GitExecutable.Execute(args).StandardError;
+                                          msg = _currentGitUiCommands.Module.GitExecutable.Execute(args).StandardError;
                                       }
                                       catch
                                       {

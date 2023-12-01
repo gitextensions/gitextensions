@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
                     "--no-abbrev",
                     item
                 };
-                string output = UICommands.GitModule.GitExecutable.GetOutput(arguments);
+                string output = UICommands.Module.GitExecutable.GetOutput(arguments);
                 List<RefLine> refLines = ConvertReflogOutput().ToList();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _lastHitRowIndex = 0;

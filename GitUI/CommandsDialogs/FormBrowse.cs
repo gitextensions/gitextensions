@@ -613,7 +613,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void RefreshRevisions()
         {
-            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs);
+            RefreshRevisions(new FilteredGitRefsProvider(UICommands.Module).GetRefs);
         }
 
         /// <summary>
@@ -2735,9 +2735,9 @@ namespace GitUI.CommandsDialogs
                 Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                     !AppSettings.ShowStashes
                     ? Array.Empty<GitRevision>()
-                    : new RevisionReader(new GitModule(UICommands.GitModule.WorkingDir)).GetStashes(CancellationToken.None));
+                    : new RevisionReader(new GitModule(UICommands.Module.WorkingDir)).GetStashes(CancellationToken.None));
 
-                RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs, getStashRevs, forceRefresh: true);
+                RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.Module).GetRefs, getStashRevs, forceRefresh: true);
                 repoObjectsTree.RefreshRevisionsLoaded();
             }
         }

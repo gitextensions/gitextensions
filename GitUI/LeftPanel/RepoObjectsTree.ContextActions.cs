@@ -196,8 +196,8 @@ namespace GitUI.LeftPanel
             RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
 
             // Sort by / order
-            _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
-            _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
+            _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
+            _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
             menuMain.InsertItems(new ToolStripItem[] { new ToolStripSeparator(), _sortByContextMenuItem, _sortOrderContextMenuItem }, after: mnubtnMoveDown);
         }
 
