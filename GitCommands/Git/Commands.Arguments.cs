@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using GitCommands.Config;
 using GitCommands.Utils;
 using GitExtUtils;
@@ -473,14 +472,11 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="gitRef">The branch to move.</param>
         /// <param name="targetId">The commit to move to.</param>
-        /// <param name="repoDir">Directory to the current repo in Posix format.</param>
+        /// <param name="repoDir">Directory to the current repo.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
         /// <returns>The Git command to execute.</returns>
         public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, Func<string, string?> getPathForGitExecution, bool force = false)
         {
-            DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
-                $"'PushLocalCmd' must be called with 'repoDir' in Posix format");
-
             return new GitArgumentBuilder("push")
             {
                 $@"""file://{getPathForGitExecution(repoDir)}""",
