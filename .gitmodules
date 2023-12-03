@@ -10,3 +10,6 @@
 [submodule "Externals/EasyHook"]
 	path = Externals/EasyHook
 	url = ../../gitextensions/EasyHook.git
+[submodule "Externals/GitExtensions.Extensibility"]
+	path = Externals/GitExtensions.Extensibility
+	url = ../../gitextensions/gitextensions.extensibility.git
