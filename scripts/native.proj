@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="vswhere" IsImplicitlyDefined="true" GeneratePathProperty="true" />
+    <PackageReference Include="vswhere" GeneratePathProperty="true" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
