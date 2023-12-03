@@ -298,7 +298,7 @@
 
     <!-- Determine WiX version from the referenced package -->
     <ItemGroup>
-      <_WiX Include="@(PackageReference)"  Condition="$([System.String]::Copy('%(Identity)')) == 'WiX'" />
+      <_WiX Include="@(PackageVersion)"  Condition="$([System.String]::Copy('%(Identity)')) == 'WiX'" />
     </ItemGroup>
     <Error Text="WiX package reference can't be found" Condition="'@(_WiX->Count())' != 1" />
 
