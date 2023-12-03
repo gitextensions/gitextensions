@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 

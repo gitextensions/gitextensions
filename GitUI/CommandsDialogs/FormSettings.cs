@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -166,12 +167,12 @@ namespace GitUI.CommandsDialogs
 
             lock (PluginRegistry.Plugins)
             {
-                IOrderedEnumerable<(GitUIPluginInterfaces.IGitPlugin plugin, PluginSettingsPage page)> pluginEntries = PluginRegistry.Plugins
+                IOrderedEnumerable<(IGitPlugin plugin, PluginSettingsPage page)> pluginEntries = PluginRegistry.Plugins
                     .Where(p => p.HasSettings)
                     .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin, UICommands)))
                     .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
 
-                foreach ((GitUIPluginInterfaces.IGitPlugin plugin, PluginSettingsPage page) entry in pluginEntries)
+                foreach ((IGitPlugin plugin, PluginSettingsPage page) entry in pluginEntries)
                 {
                     settingsTreeView.AddSettingsPage(entry.page, pluginsPageRef, entry.plugin.Icon as Bitmap);
                 }

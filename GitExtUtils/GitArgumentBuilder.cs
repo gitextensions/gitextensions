@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
+using GitExtensions.Extensibility;
 
 namespace GitExtUtils
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace GitUI.UserControls

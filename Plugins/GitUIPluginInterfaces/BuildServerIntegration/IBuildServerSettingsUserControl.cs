@@ -1,3 +1,5 @@
+using GitExtensions.Extensibility.Settings;
+
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerSettingsUserControl

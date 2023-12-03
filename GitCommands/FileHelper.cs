@@ -1,5 +1,6 @@
-﻿using GitExtUtils;
-using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 
 namespace GitCommands
 {
@@ -73,7 +74,7 @@ namespace GitCommands
                 "--",
                 fileName.Quote()
             };
-            GitUIPluginInterfaces.ExecutionResult result = module.GitExecutable.Execute(cmd, throwOnErrorExit: false);
+            ExecutionResult result = module.GitExecutable.Execute(cmd, throwOnErrorExit: false);
             if (!result.ExitedSuccessfully)
             {
                 return null;

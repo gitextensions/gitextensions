@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Plugins.GitFlow.Properties;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.GitFlow

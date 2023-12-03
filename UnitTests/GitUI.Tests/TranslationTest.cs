@@ -1,7 +1,4 @@
-﻿using CommonTestUtils.MEF;
-using GitUI;
-using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
+﻿using GitUI;
 using ResourceManager;
 using ResourceManager.Xliff;
 

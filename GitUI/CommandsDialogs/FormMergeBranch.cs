@@ -1,12 +1,11 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

@@ -5,9 +5,9 @@ using System.Text;
 using BugReporter;
 using BugReporter.Serialization;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
-using GitUIPluginInterfaces.Settings;
 
 namespace GitUI.NBugReports
 {

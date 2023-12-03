@@ -1,6 +1,6 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.Hotkey;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.Menus

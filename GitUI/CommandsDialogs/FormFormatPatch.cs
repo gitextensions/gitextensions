@@ -2,6 +2,7 @@
 using System.Net.Mail;
 using GitCommands;
 using GitCommands.Config;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.FormatPatchDialog;
 using GitUIPluginInterfaces;
 using ResourceManager;

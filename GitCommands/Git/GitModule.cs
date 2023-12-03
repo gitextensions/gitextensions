@@ -10,6 +10,10 @@ using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
@@ -676,7 +680,7 @@ namespace GitCommands
             return side;
         }
 
-        public (string? baseFile, string? localFile, string? remoteFile) CheckoutConflictedFiles(ConflictData unmergedData)
+        public (string? BaseFile, string? LocalFile, string? RemoteFile) CheckoutConflictedFiles(ConflictData unmergedData)
         {
             Directory.SetCurrentDirectory(WorkingDir);
 
@@ -850,7 +854,7 @@ namespace GitCommands
             return null;
         }
 
-        public (int? first, int? second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
+        public (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
         {
             if (firstId == secondId)
             {
@@ -1066,7 +1070,7 @@ namespace GitCommands
             return false;
         }
 
-        public async Task<(char code, ObjectId? commitId)> GetSuperprojectCurrentCheckoutAsync()
+        public async Task<(char Code, ObjectId? CommitId)> GetSuperprojectCurrentCheckoutAsync()
         {
             if (SuperprojectModule is null)
             {
@@ -2166,7 +2170,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public async Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(
+        public async Task<(Patch? Patch, string? ErrorMessage)> GetSingleDiffAsync(
             ObjectId? firstId, ObjectId? secondId,
             string? fileName, string? oldFileName,
             string extraDiffArguments, Encoding encoding,
@@ -2204,13 +2208,13 @@ namespace GitCommands
                 throwOnErrorExit: false);
             if (!result.ExitedSuccessfully)
             {
-                return (patch: null, errorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
+                return (Patch: null, ErrorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
             }
 
             string patch = result.StandardOutput;
             IReadOnlyList<Patch> patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
 
-            return (patch: GetPatch(patches, fileName, oldFileName), errorMessage: null);
+            return (Patch: GetPatch(patches, fileName, oldFileName), ErrorMessage: null);
         }
 
         public async Task<string> GetRangeDiffAsync(
@@ -3921,7 +3925,7 @@ namespace GitCommands
             return new GitItemStatus(name: GitError) { IsStatusOnly = true, ErrorMessage = gitOutput.Replace('\0', '\t') };
         }
 
-        public (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null)
+        public (int TotalCount, Dictionary<string, int> CountByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null)
         {
             Dictionary<string, int> countByName = [];
             int totalCommits = 0;

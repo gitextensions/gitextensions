@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Plugins.GitFlow.Properties;
 using GitExtUtils;
 using GitExtUtils.GitUI;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.GitFlow

@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
+﻿using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {

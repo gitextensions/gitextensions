@@ -2,7 +2,7 @@
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Configurations;
 using NSubstitute;
 
 namespace GitCommandsTests.DiffMergeTools

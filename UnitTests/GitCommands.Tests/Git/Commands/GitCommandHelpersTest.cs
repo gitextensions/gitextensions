@@ -1,9 +1,6 @@
 ﻿using GitCommands;
-using GitCommands.Git;
 using GitCommands.Settings;
-using GitCommands.Utils;
-using GitExtUtils;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 using ResourceManager;
 
 namespace GitCommandsTests.Git_Commands

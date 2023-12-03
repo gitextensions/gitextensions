@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Concurrency;
 using FluentAssertions;
+using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Plugins.GitlabIntegration;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;

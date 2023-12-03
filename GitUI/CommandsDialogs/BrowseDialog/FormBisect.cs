@@ -1,4 +1,6 @@
 ﻿using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandDialogs;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -53,7 +55,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void BisectRange(ObjectId startRevision, ObjectId endRevision)
             {
-                GitExtUtils.ArgumentString command = Commands.ContinueBisect(GitBisectOption.Good, startRevision);
+                ArgumentString command = Commands.ContinueBisect(GitBisectOption.Good, startRevision);
                 bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (!success)
                 {

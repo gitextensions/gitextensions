@@ -1,5 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.NBugReports;

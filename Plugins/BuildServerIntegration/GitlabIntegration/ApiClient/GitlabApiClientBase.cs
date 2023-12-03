@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Threading;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 using Microsoft;
 using Newtonsoft.Json;

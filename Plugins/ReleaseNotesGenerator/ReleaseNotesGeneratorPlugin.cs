@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Plugins.ReleaseNotesGenerator.Properties;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.ReleaseNotesGenerator

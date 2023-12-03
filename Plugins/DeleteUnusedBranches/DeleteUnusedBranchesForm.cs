@@ -1,11 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Plugins.DeleteUnusedBranches.Properties;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUI.NBugReports;
-using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;

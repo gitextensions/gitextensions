@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using GitExtUtils;
 
 namespace ResourceManager.Xliff

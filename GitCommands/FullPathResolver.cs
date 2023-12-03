@@ -1,4 +1,4 @@
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
 
 namespace GitCommands
 {

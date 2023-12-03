@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI
 {

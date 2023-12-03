@@ -30,6 +30,7 @@
     <PackageVersion Include="System.Reactive.Linq" Version="5.0.0" />
     <PackageVersion Include="System.Reactive.Interfaces" Version="5.0.0" />
     <PackageVersion Include="System.ValueTuple" Version="4.5.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
+    <PackageVersion Include="GitExtensions.Extensibility" Version="0.3.0.57" />
 
     <!-- Analyzers -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0-beta1.23364.2" PrivateAssets="all" />

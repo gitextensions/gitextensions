@@ -1,5 +1,5 @@
-﻿using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
+﻿using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
 using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
@@ -30,19 +30,19 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
             switch (Status)
             {
                 case "running":
-                    result.Status = BuildInfo.BuildStatus.InProgress;
+                    result.Status = BuildStatus.InProgress;
                     break;
                 case "success":
-                    result.Status = BuildInfo.BuildStatus.Success;
+                    result.Status = BuildStatus.Success;
                     break;
                 case "failed":
-                    result.Status = BuildInfo.BuildStatus.Failure;
+                    result.Status = BuildStatus.Failure;
                     break;
                 case "canceled":
-                    result.Status = BuildInfo.BuildStatus.Stopped;
+                    result.Status = BuildStatus.Stopped;
                     break;
                 default:
-                    result.Status = BuildInfo.BuildStatus.Unknown;
+                    result.Status = BuildStatus.Unknown;
                     break;
             }
 

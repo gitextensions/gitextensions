@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitCommands.Settings
 {
@@ -79,7 +81,7 @@ namespace GitCommands.Settings
         /// <typeparam name="T">The expected type of the git setting.</typeparam>
         /// <param name="setting">The git setting key.</param>
         /// <returns>The value converted to the <typeparamref name="T" /> type; <see langword="null"/> if the settings is not set.</returns>
-        /// <exception cref="GitUIPluginInterfaces.Settings.GitConfigFormatException">
+        /// <exception cref="GitExtensions.Extensibility.GitConfigFormatException">
         ///  The value of the git setting <paramref name="setting" /> cannot be converted in the specified type <typeparamref name="T" />.
         /// </exception>
         public T? GetValue<T>(string setting) where T : struct => ConvertValue<T>(GetValue(setting), setting);

@@ -3,8 +3,11 @@ using System.Globalization;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using AzureDevOpsIntegration.Settings;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitUI;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -263,7 +266,7 @@ Detail of the error:");
             void DisplayInitializationErrorInRevisionGrid(string errorMessage)
             {
                 _apiClient = null;
-                observer.OnNext(new BuildInfo { CommitHashList = new[] { ObjectId.WorkTreeId }, Description = errorMessage, Status = BuildInfo.BuildStatus.Failure });
+                observer.OnNext(new BuildInfo { CommitHashList = new[] { ObjectId.WorkTreeId }, Description = errorMessage, Status = BuildStatus.Failure });
                 observer.OnCompleted();
             }
         }
@@ -316,7 +319,7 @@ Detail of the error:");
             {
                 Id = buildDetail.BuildNumber,
                 StartDate = buildDetail.StartTime ?? DateTime.MinValue,
-                Status = buildDetail.IsInProgress ? BuildInfo.BuildStatus.InProgress : MapResult(buildDetail.Result),
+                Status = buildDetail.IsInProgress ? BuildStatus.InProgress : MapResult(buildDetail.Result),
                 Description = duration + " " + buildDetail.BuildNumber,
                 Tooltip = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + Environment.NewLine + duration + Environment.NewLine + buildDetail.BuildNumber,
                 CommitHashList = new[] { ObjectId.Parse(buildDetail.SourceVersion) },
@@ -327,15 +330,15 @@ Detail of the error:");
             return buildInfo;
         }
 
-        private static BuildInfo.BuildStatus MapResult(string? status)
+        private static BuildStatus MapResult(string? status)
         {
             return status switch
             {
-                "failed" => BuildInfo.BuildStatus.Failure,
-                "canceled" => BuildInfo.BuildStatus.Stopped,
-                "succeeded" => BuildInfo.BuildStatus.Success,
-                "partiallySucceeded" => BuildInfo.BuildStatus.Unstable,
-                _ => BuildInfo.BuildStatus.Unknown
+                "failed" => BuildStatus.Failure,
+                "canceled" => BuildStatus.Stopped,
+                "succeeded" => BuildStatus.Success,
+                "partiallySucceeded" => BuildStatus.Unstable,
+                _ => BuildStatus.Unknown
             };
         }
 

@@ -5,9 +5,10 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
-using GitUIPluginInterfaces;
 using Newtonsoft.Json;
 
 namespace GitCommandsTests
@@ -372,7 +373,7 @@ namespace GitCommandsTests
 
                 using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
                 {
-                    IReadOnlyList<GitUIPluginInterfaces.Remote> remotes = await _gitModule.GetRemotesAsync();
+                    IReadOnlyList<GitExtensions.Extensibility.Git.Remote> remotes = await _gitModule.GetRemotesAsync();
 
                     Assert.AreEqual(6, remotes.Count);
 

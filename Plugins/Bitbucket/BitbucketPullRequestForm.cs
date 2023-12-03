@@ -2,9 +2,9 @@
 using System.Text;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
-using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;

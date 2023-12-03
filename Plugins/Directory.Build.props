@@ -30,4 +30,12 @@
     <OutDir>$(BaseOutputPath)</OutDir>
   </PropertyGroup>
 
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ProjectReference Include="$(RepoRoot)\Externals\GitExtensions.Extensibility\src\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PackageReference Include="GitExtensions.Extensibility" />
+  </ItemGroup>
+
 </Project>

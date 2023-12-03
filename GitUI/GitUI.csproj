@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Compile Include="..\GitExtUtils\Delimiters.cs" Link="Utils\Delimiters.cs" />
-    <Compile Include="..\GitExtUtils\LazyStringSplit.cs" Link="Utils\LazyStringSplit.cs" />
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Utils\Validates.cs" />
   </ItemGroup>
 

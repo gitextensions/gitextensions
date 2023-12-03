@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.Composition;
-using GitCommands.UserRepositoryHistory;
-using GitUIPluginInterfaces;
+﻿using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommands
 {

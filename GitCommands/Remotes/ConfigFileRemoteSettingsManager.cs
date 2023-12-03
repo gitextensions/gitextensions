@@ -1,5 +1,7 @@
 ﻿using GitCommands.Config;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 
 namespace GitCommands.Remotes

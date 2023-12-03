@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUI.LeftPanel

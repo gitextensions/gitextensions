@@ -1,4 +1,5 @@
-﻿using GitUI;
+﻿using GitExtensions.Extensibility.Settings;
+using GitUI;
 
 namespace GitUIPluginInterfaces.Settings
 {

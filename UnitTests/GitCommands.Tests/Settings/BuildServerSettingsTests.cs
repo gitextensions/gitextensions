@@ -2,7 +2,7 @@
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitCommandsTests.Settings

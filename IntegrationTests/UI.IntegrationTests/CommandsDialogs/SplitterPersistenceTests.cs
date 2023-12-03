@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GitCommands;
@@ -7,7 +6,6 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUITests;
 using NSubstitute;
-using ResourceManager;
 using static GitUI.CommandsDialogs.FormBrowse;
 
 namespace GitExtensions.UITests.CommandsDialogs

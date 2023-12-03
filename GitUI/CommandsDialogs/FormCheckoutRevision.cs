@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
@@ -29,7 +30,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                GitUIPluginInterfaces.ObjectId selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
+                ObjectId selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
 
                 if (selectedObjectId is null)
                 {
@@ -37,7 +38,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                GitUIPluginInterfaces.ObjectId checkedOutObjectId = Module.GetCurrentCheckout();
+                ObjectId checkedOutObjectId = Module.GetCurrentCheckout();
 
                 DebugHelpers.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 

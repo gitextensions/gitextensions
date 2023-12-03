@@ -1,5 +1,7 @@
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using JetBrains.Annotations;
 using Microsoft;
 

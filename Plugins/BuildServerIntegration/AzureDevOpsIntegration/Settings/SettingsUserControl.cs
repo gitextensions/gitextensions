@@ -1,7 +1,7 @@
 using System.ComponentModel.Composition;
 using GitCommands;
+using GitExtensions.Extensibility.Settings;
 using GitUI;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 using ResourceManager;

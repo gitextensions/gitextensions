@@ -1,8 +1,9 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace GitUI.LeftPanel

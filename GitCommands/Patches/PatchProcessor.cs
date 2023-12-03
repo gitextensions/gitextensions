@@ -2,7 +2,7 @@ using System.Diagnostics.Contracts;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommands.Patches
 {

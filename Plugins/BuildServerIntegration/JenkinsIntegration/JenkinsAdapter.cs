@@ -1,5 +1,4 @@
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
@@ -7,9 +6,12 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -246,7 +248,7 @@ namespace JenkinsIntegration
                     return;
                 }
 
-                Dictionary<ObjectId, BuildInfo.BuildStatus> builds = [];
+                Dictionary<ObjectId, BuildStatus> builds = [];
                 foreach (JoinableTask<ResponseInfo> build in allBuildInfos)
                 {
                     if (build.Task.IsFaulted)
@@ -284,7 +286,7 @@ namespace JenkinsIntegration
                                 continue;
                             }
 
-                            if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
+                            if (buildInfo.Status == BuildStatus.InProgress)
                             {
                                 // Need to make a full request next time
                                 _lastProjectBuildTime[buildResponse.Url] = 0;
@@ -336,7 +338,7 @@ namespace JenkinsIntegration
             return;
 
             // Priority: Completed > InProgress > Aborted/Stopped > None
-            static bool StatusIsBetter(BuildInfo.BuildStatus newStatus, ObjectId commit, Dictionary<ObjectId, BuildInfo.BuildStatus> builds)
+            static bool StatusIsBetter(BuildStatus newStatus, ObjectId commit, Dictionary<ObjectId, BuildStatus> builds)
             {
                 // No existing status
                 if (!builds.ContainsKey(commit))
@@ -344,7 +346,7 @@ namespace JenkinsIntegration
                     return true;
                 }
 
-                BuildInfo.BuildStatus existingStatus = builds[commit];
+                BuildStatus existingStatus = builds[commit];
 
                 // Completed status is never replaced
                 if (IsBuildCompleted(existingStatus))
@@ -359,15 +361,15 @@ namespace JenkinsIntegration
                 }
 
                 // Replace existing aborted/stopped if new is InProgress
-                return existingStatus != BuildInfo.BuildStatus.InProgress
-                       && newStatus == BuildInfo.BuildStatus.InProgress;
+                return existingStatus != BuildStatus.InProgress
+                       && newStatus == BuildStatus.InProgress;
             }
 
-            static bool IsBuildCompleted(BuildInfo.BuildStatus status)
+            static bool IsBuildCompleted(BuildStatus status)
             {
-                return status == BuildInfo.BuildStatus.Success
-                    || status == BuildInfo.BuildStatus.Failure
-                    || status == BuildInfo.BuildStatus.Unstable;
+                return status == BuildStatus.Success
+                    || status == BuildStatus.Failure
+                    || status == BuildStatus.Unstable;
             }
         }
 
@@ -434,7 +436,7 @@ namespace JenkinsIntegration
                 buildDuration = buildDescription["duration"].ToObject<long>();
             }
 
-            BuildInfo.BuildStatus status = isRunning ? BuildInfo.BuildStatus.InProgress : ParseBuildStatus(statusValue);
+            BuildStatus status = isRunning ? BuildStatus.InProgress : ParseBuildStatus(statusValue);
             string statusText = status.ToString("G");
             BuildInfo buildInfo = new()
             {
@@ -461,17 +463,17 @@ namespace JenkinsIntegration
             return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
 
-        private static BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
+        private static BuildStatus ParseBuildStatus(string statusValue)
         {
             return statusValue switch
             {
-                "SUCCESS" => BuildInfo.BuildStatus.Success,
-                "FAILURE" => BuildInfo.BuildStatus.Failure,
-                "UNSTABLE" => BuildInfo.BuildStatus.Unstable,
-                "ABORTED" => BuildInfo.BuildStatus.Stopped,
+                "SUCCESS" => BuildStatus.Success,
+                "FAILURE" => BuildStatus.Failure,
+                "UNSTABLE" => BuildStatus.Unstable,
+                "ABORTED" => BuildStatus.Stopped,
 
                 // Jenkins status "NOT_BUILT"
-                _ => BuildInfo.BuildStatus.Unknown
+                _ => BuildStatus.Unknown
             };
         }
 

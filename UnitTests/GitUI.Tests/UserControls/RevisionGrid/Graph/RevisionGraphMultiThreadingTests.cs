@@ -1,4 +1,5 @@
-﻿using GitUI.UserControls.RevisionGrid.Graph;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 
 namespace GitUITests.UserControls.RevisionGrid

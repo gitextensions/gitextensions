@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace UITests.CommandsDialogs.SettingsDialog.Pages

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs

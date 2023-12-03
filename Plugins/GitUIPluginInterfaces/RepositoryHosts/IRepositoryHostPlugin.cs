@@ -1,4 +1,6 @@
-﻿namespace GitUIPluginInterfaces.RepositoryHosts
+﻿using GitExtensions.Extensibility.Plugins;
+
+namespace GitUIPluginInterfaces.RepositoryHosts
 {
     public interface IRepositoryHostPlugin : IGitPlugin
     {

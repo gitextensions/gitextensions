@@ -1,10 +1,10 @@
 using System.Diagnostics.Contracts;
 using System.Drawing.Drawing2D;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 
 namespace GitUI
 {

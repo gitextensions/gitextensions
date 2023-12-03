@@ -2,9 +2,11 @@
 using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 

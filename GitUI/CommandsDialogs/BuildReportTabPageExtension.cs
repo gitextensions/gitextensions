@@ -2,6 +2,7 @@
 using System.Net;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;

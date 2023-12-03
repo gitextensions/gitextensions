@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using AdysTech.CredentialManager;
+using GitExtensions.Extensibility.Settings;
 using Microsoft;
 
 namespace GitUIPluginInterfaces

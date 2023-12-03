@@ -3,11 +3,10 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Submodules;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
-using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {

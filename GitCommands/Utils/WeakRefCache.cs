@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Timers;
+﻿using System.Timers;
 using GitExtUtils;
 using Timer = System.Timers.Timer;
 

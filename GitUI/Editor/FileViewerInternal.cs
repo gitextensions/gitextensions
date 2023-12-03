@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Patches;
 using GitCommands.Settings;
+using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;

@@ -1,6 +1,6 @@
 ﻿using GitCommands.Config;
+using GitExtensions.Extensibility.Configurations;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 
 namespace GitCommands.DiffMergeTools
 {
