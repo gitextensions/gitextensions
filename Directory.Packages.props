@@ -36,6 +36,8 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
 
     <!-- Setup infra -->
+    <PackageVersion Include="GitExtensions.Extensibility" Version="0.3.0.57" />
+    <PackageVersion Include="GitExtensions.PluginManager" Version="2.0.1.195" />
     <PackageVersion Include="vswhere" Version="2.8.4" />
     <PackageVersion Include="WiX" Version="3.11.2" />
 
