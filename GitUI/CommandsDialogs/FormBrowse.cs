@@ -1099,6 +1099,7 @@ namespace GitUI.CommandsDialogs
             pushToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Push).ToShortcutKeyDisplayString();
             rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
 
+            fileToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
             helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
             toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
 
@@ -1202,7 +1203,7 @@ namespace GitUI.CommandsDialogs
 
             ToolStripMenuItem mnuOpenLocalRepository = new(fileToolStripMenuItem.OpenRepositoryMenuItem.Text, fileToolStripMenuItem.OpenRepositoryMenuItem.Image)
             {
-                ShortcutKeys = fileToolStripMenuItem.OpenRepositoryMenuItem.ShortcutKeys
+                ShortcutKeyDisplayString = fileToolStripMenuItem.OpenRepositoryMenuItem.ShortcutKeyDisplayString
             };
             mnuOpenLocalRepository.Click += (s, e) => fileToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
             _NO_TRANSLATE_WorkingDir.DropDownItems.Add(mnuOpenLocalRepository);
