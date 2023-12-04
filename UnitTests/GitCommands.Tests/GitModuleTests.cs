@@ -499,14 +499,17 @@ namespace GitCommandsTests
                     "ignoreunknown\tgit@github.com:drewnoakes/gitextensions.git (unknownType)",
                     "ignorenotab git@github.com:drewnoakes/gitextensions.git (fetch)",
                     "ignoremissingtype\tgit@gitlab.com:drewnoakes/gitextensions.git",
-                    "git@gitlab.com:drewnoakes/gitextensions.git"
+                    "git@gitlab.com:drewnoakes/gitextensions.git",
+
+                    "with_option\thttps://github.com/flannelhead/jsmn-stream.git (fetch) [blob:none]",
+                    "with_option\thttps://github.com/flannelhead/jsmn-stream.git (push) [ignored]"
                 };
 
                 using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
                 {
                     var remotes = await _gitModule.GetRemotesAsync();
 
-                    Assert.AreEqual(6, remotes.Count);
+                    Assert.AreEqual(7, remotes.Count);
 
                     Assert.AreEqual("RussKie", remotes[0].Name);
                     Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].FetchUrl);
@@ -538,6 +541,11 @@ namespace GitCommandsTests
                     Assert.AreEqual(2, remotes[5].PushUrls.Count);
                     Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[5].PushUrls[0]);
                     Assert.AreEqual("git@gitlab.com:drewnoakes/gitextensions.git", remotes[5].PushUrls[1]);
+
+                    Assert.AreEqual("with_option", remotes[6].Name);
+                    Assert.AreEqual("https://github.com/flannelhead/jsmn-stream.git", remotes[6].FetchUrl);
+                    Assert.AreEqual(1, remotes[6].PushUrls.Count);
+                    Assert.AreEqual("https://github.com/flannelhead/jsmn-stream.git", remotes[6].PushUrls[0]);
                 }
             });
         }
