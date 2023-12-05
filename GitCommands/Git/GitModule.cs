@@ -2327,7 +2327,8 @@ namespace GitCommands
                 .ToList();
         }
 
-        private static readonly Regex _remoteVerboseLineRegex = new(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
+        // Ignore trailing options
+        private static readonly Regex _remoteVerboseLineRegex = new(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:\s*\[[^\]]*])?$", RegexOptions.Compiled);
 
         public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
         {
