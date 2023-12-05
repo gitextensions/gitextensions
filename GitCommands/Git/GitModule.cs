@@ -58,7 +58,7 @@ namespace GitCommands
         [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)")]
         private static partial Regex HeaderRegex();
 
-        [GeneratedRegex(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$")]
+        [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]\]*])?$")]
         private static partial Regex RemoteVerboseLineRegex();
 
         [GeneratedRegex(@"(\\([0-7]{3}))+")]
