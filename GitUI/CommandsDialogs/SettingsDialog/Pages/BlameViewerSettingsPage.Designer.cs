@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbDetectMoveAndCopyInThisFile.Name = "cbDetectMoveAndCopyInThisFile";
             cbDetectMoveAndCopyInThisFile.Size = new Size(297, 19);
             cbDetectMoveAndCopyInThisFile.TabIndex = 1;
-            cbDetectMoveAndCopyInThisFile.Text = "Detect move and copy in this file";
+            cbDetectMoveAndCopyInThisFile.Text = "Detect moved or copied lines within blamed file";
             cbDetectMoveAndCopyInThisFile.ToolTipText = null;
             cbDetectMoveAndCopyInThisFile.ToolTipIcon = UserControls.Settings.ToolTipIcon.Warning;
             // 
@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbDetectMoveAndCopyInAllFiles.Name = "cbDetectMoveAndCopyInAllFiles";
             cbDetectMoveAndCopyInAllFiles.Size = new Size(297, 19);
             cbDetectMoveAndCopyInAllFiles.TabIndex = 2;
-            cbDetectMoveAndCopyInAllFiles.Text = "Detect move and copy in all files";
+            cbDetectMoveAndCopyInAllFiles.Text = "Detect moved or copied lines from all files in same commit";
             cbDetectMoveAndCopyInAllFiles.ToolTipText = null;
             cbDetectMoveAndCopyInAllFiles.ToolTipIcon = UserControls.Settings.ToolTipIcon.Warning;
             // 

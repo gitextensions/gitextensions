@@ -313,11 +313,11 @@ Click this info icon for more details.</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
-        <source>Detect move and copy in all files</source>
+        <source>Detect moved or copied lines from all files in same commit</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInThisFile.Text">
-        <source>Detect move and copy in this file</source>
+        <source>Detect moved or copied lines within blamed file</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDisplayAuthorFirst.Text">
