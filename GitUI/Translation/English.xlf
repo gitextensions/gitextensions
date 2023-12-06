@@ -10115,6 +10115,18 @@ Select this commit to populate the full message.</source>
         <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_failedToLoadPlugin.Text">
+        <source>Plugin loading failure</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failedToLoadPluginPopupText.Text">
+        <source>Fail to load a plugin. Error:
+
+{0}
+
+Copy error details to clipboard?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
         <source>Filter file in &amp;grid</source>
         <target />
