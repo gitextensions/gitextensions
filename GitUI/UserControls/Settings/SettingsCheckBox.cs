@@ -5,6 +5,7 @@ namespace GitUI.UserControls.Settings
     public partial class SettingsCheckBox : UserControl
     {
         private string? _toolTipText;
+        private ToolTipIcon _toolTipIcon;
         private ToolTip? _tooltip;
 
         public SettingsCheckBox()
@@ -38,6 +39,21 @@ namespace GitUI.UserControls.Settings
                 _tooltip.SetToolTip(checkBox, _toolTipText);
                 _tooltip.SetToolTip(pictureBox, _toolTipText);
                 pictureBox.Visible = !string.IsNullOrEmpty(_toolTipText);
+            }
+        }
+
+        public ToolTipIcon ToolTipIcon
+        {
+            get => _toolTipIcon;
+            set
+            {
+                _toolTipIcon = value;
+                pictureBox.Image = _toolTipIcon switch
+                {
+                    ToolTipIcon.Warning => Properties.Resources.Warning,
+                    ToolTipIcon.Information => Properties.Resources.information,
+                    _ => throw new NotImplementedException(),
+                };
             }
         }
 

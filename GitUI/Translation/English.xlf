@@ -308,6 +308,10 @@ Click this info icon for more details.</source>
         <source>Blame viewer</source>
         <target />
       </trans-unit>
+      <trans-unit id="_blameWarningTooltip.Text">
+        <source>Could prevent blame to calculate the accurate line number when blaming previous revisions.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
         <source>Detect move and copy in all files</source>
         <target />
