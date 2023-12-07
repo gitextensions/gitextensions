@@ -94,7 +94,7 @@ namespace GitExtensions.Plugins.GitHub3
         {
             Id = new Guid("2EC3E1F0-EF37-413F-BEA5-B8FE1F9C505C");
             Name = "GitHub";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
 
             Instance ??= this;
 

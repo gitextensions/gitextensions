@@ -1,4 +1,5 @@
 using GitCommands;
+using GitExtensions.Extensibility.Translations;
 using SmartFormat;
 using SmartFormat.Core.Settings;
 

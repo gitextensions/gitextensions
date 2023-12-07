@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\GitExtUtils\Delimiters.cs" Link="Utils\Delimiters.cs" />
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
   </ItemGroup>
   

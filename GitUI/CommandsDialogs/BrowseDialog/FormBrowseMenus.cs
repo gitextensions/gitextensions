@@ -1,8 +1,8 @@
 ﻿using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.BrowseDialog;
 using Microsoft;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
-using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft;

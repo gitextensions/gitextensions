@@ -1,5 +1,5 @@
-﻿using GitExtensions.Extensibility.Git;
-using GitExtUtils;
+﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommands.Git
 {

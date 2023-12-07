@@ -6,11 +6,10 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
+using GitExtensions.Extensibility.Settings.UserControls;
 using GitExtensions.Plugins.JiraCommitHintPlugin.Properties;
 using GitExtUtils.GitUI;
 using GitUI;
-using GitUIPluginInterfaces.Settings;
-using GitUIPluginInterfaces.UserControls;
 using Microsoft;
 using NString;
 using ResourceManager;
@@ -56,7 +55,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
         {
             Id = new Guid("B0128E39-D312-47DA-B18A-43F5CA726D7D");
             Name = "Jira Commit Hint";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconJira;
 
             _credentialsSettings = new CredentialsSetting("JiraCredentials", "Jira credentials", () => _gitModule?.WorkingDir);

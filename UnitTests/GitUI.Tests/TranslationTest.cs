@@ -1,6 +1,6 @@
-﻿using GitUI;
-using ResourceManager;
-using ResourceManager.Xliff;
+﻿using GitExtensions.Extensibility.Translations;
+using GitExtensions.Extensibility.Translations.Xliff;
+using GitUI;
 
 namespace GitUITests
 {

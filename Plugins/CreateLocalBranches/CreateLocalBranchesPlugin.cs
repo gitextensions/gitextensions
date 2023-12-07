@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.Composition;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Plugins.CreateLocalBranches.Properties;
-using ResourceManager;
 
 namespace GitExtensions.Plugins.CreateLocalBranches
 {
@@ -13,7 +13,7 @@ namespace GitExtensions.Plugins.CreateLocalBranches
         {
             Id = new Guid("BE7BEE10-21B5-489F-9664-957945C203DC");
             Name = "Create local tracking branches";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconCreateLocalBranches;
         }
 

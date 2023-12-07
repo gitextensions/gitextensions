@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Submodules;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
 using Microsoft;

@@ -1,7 +1,6 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Hotkey;
 using GitUI.Properties;

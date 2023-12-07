@@ -3,7 +3,8 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+
 
 #pragma warning disable SA1305 // Field names should not use Hungarian notation
 

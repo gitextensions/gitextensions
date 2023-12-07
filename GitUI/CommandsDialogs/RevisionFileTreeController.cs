@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.UserControls;

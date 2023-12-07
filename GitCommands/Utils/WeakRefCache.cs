@@ -1,5 +1,5 @@
 ﻿using System.Timers;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using Timer = System.Timers.Timer;
 
 namespace GitCommands.Utils

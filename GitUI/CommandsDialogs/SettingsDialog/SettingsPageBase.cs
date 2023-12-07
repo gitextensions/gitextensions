@@ -2,7 +2,6 @@
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
-using GitUIPluginInterfaces.Settings;
 using JetBrains.Annotations;
 using ResourceManager;
 

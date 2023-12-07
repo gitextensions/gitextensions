@@ -1,7 +1,8 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitExtUtils;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 

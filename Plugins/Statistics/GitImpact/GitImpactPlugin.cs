@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.Composition;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Plugins.GitImpact.Properties;
-using ResourceManager;
 
 namespace GitExtensions.Plugins.GitImpact
 {
@@ -13,7 +13,7 @@ namespace GitExtensions.Plugins.GitImpact
         {
             Id = new Guid("F1ACFE42-6A5E-4C30-AC10-9A7C4BB8B480");
             Name = "Impact Graph";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconGitImpact;
         }
 

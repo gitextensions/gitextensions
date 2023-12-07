@@ -1,4 +1,6 @@
-﻿namespace ResourceManager
+﻿using GitExtensions.Extensibility.Translations;
+
+namespace ResourceManager
 {
     /// <summary>Provides translation capabilities.</summary>
     public class Translate : ITranslate

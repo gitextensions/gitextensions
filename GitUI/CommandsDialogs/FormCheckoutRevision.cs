@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
 using ResourceManager;
