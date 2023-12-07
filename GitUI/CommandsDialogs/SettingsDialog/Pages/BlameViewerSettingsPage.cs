@@ -1,14 +1,20 @@
 ﻿using GitCommands;
+using GitUI.UserControls.Settings;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class BlameViewerSettingsPage : SettingsPageWithHeader
     {
+        private readonly TranslationString _blameWarningTooltip = new("Could prevent blame to calculate the accurate line number when blaming previous revisions.");
+
         public BlameViewerSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
             InitializeComponent();
             InitializeComplete();
+            cbDetectMoveAndCopyInThisFile.ToolTipText = _blameWarningTooltip.Text;
+            cbDetectMoveAndCopyInAllFiles.ToolTipText = _blameWarningTooltip.Text;
         }
 
         protected override void SettingsToPage()

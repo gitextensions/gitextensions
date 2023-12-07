@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitUI.UserControls.Settings;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class BlameViewerSettingsPage
     {
@@ -31,8 +33,8 @@
             groupBoxBlameSettings = new GroupBox();
             tableLayoutPanelBlameSettings = new TableLayoutPanel();
             cbIgnoreWhitespace = new CheckBox();
-            cbDetectMoveAndCopyInThisFile = new CheckBox();
-            cbDetectMoveAndCopyInAllFiles = new CheckBox();
+            cbDetectMoveAndCopyInThisFile = new SettingsCheckBox();
+            cbDetectMoveAndCopyInAllFiles = new SettingsCheckBox();
             groupBoxDisplayResult = new GroupBox();
             tableLayoutPanelDisplayResult = new TableLayoutPanel();
             cbDisplayAuthorFirst = new CheckBox();
@@ -91,22 +93,32 @@
             // cbDetectMoveAndCopyInThisFile
             // 
             cbDetectMoveAndCopyInThisFile.AutoSize = true;
+            cbDetectMoveAndCopyInThisFile.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            cbDetectMoveAndCopyInThisFile.Checked = false;
             cbDetectMoveAndCopyInThisFile.Dock = DockStyle.Fill;
             cbDetectMoveAndCopyInThisFile.Location = new Point(3, 28);
+            cbDetectMoveAndCopyInThisFile.Margin = new Padding(3, 3, 3, 3);
             cbDetectMoveAndCopyInThisFile.Name = "cbDetectMoveAndCopyInThisFile";
             cbDetectMoveAndCopyInThisFile.Size = new Size(297, 19);
             cbDetectMoveAndCopyInThisFile.TabIndex = 1;
             cbDetectMoveAndCopyInThisFile.Text = "Detect move and copy in this file";
+            cbDetectMoveAndCopyInThisFile.ToolTipText = null;
+            cbDetectMoveAndCopyInThisFile.ToolTipIcon = UserControls.Settings.ToolTipIcon.Warning;
             // 
             // cbDetectMoveAndCopyInAllFiles
             // 
             cbDetectMoveAndCopyInAllFiles.AutoSize = true;
+            cbDetectMoveAndCopyInAllFiles.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            cbDetectMoveAndCopyInAllFiles.Checked = false;
             cbDetectMoveAndCopyInAllFiles.Dock = DockStyle.Fill;
             cbDetectMoveAndCopyInAllFiles.Location = new Point(3, 53);
+            cbDetectMoveAndCopyInAllFiles.Margin = new Padding(3, 3, 3, 3);
             cbDetectMoveAndCopyInAllFiles.Name = "cbDetectMoveAndCopyInAllFiles";
             cbDetectMoveAndCopyInAllFiles.Size = new Size(297, 19);
             cbDetectMoveAndCopyInAllFiles.TabIndex = 2;
             cbDetectMoveAndCopyInAllFiles.Text = "Detect move and copy in all files";
+            cbDetectMoveAndCopyInAllFiles.ToolTipText = null;
+            cbDetectMoveAndCopyInAllFiles.ToolTipIcon = UserControls.Settings.ToolTipIcon.Warning;
             // 
             // groupBoxDisplayResult
             // 
@@ -242,8 +254,8 @@
         private GroupBox groupBoxBlameSettings;
         private TableLayoutPanel tableLayoutPanelBlameSettings;
         private CheckBox cbIgnoreWhitespace;
-        private CheckBox cbDetectMoveAndCopyInThisFile;
-        private CheckBox cbDetectMoveAndCopyInAllFiles;
+        private SettingsCheckBox cbDetectMoveAndCopyInThisFile;
+        private SettingsCheckBox cbDetectMoveAndCopyInAllFiles;
         private GroupBox groupBoxDisplayResult;
         private TableLayoutPanel tableLayoutPanelDisplayResult;
         private CheckBox cbDisplayAuthorFirst;
