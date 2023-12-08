@@ -12,11 +12,16 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
         }
 
-        public FormChooseCommit(GitUICommands commands, string? preselectCommit, bool showArtificial = false, bool showCurrentBranchOnly = false)
+        public FormChooseCommit(GitUICommands commands, string? preselectCommit, bool showArtificial = false, bool showCurrentBranchOnly = false, string? lastRevisionToDisplayHash = null)
             : this(commands)
         {
             revisionGrid.MultiSelect = false;
             revisionGrid.ShowUncommittedChangesIfPossible = showArtificial;
+            if (lastRevisionToDisplayHash is not null)
+            {
+                revisionGrid.SetLastRevisionToDisplayHash(lastRevisionToDisplayHash);
+            }
+
             if (showCurrentBranchOnly)
             {
                 revisionGrid.ShowCurrentBranchOnly();
@@ -83,7 +88,12 @@ namespace GitUI.HelperDialogs
         {
             IReadOnlyList<GitRevision> revisions = revisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count != 1)
+            bool singleCommitSelected = revisions.Count == 1;
+            labelParents.Visible = singleCommitSelected;
+            linkLabelParent.Visible = singleCommitSelected;
+            linkLabelParent2.Visible = singleCommitSelected;
+
+            if (!singleCommitSelected)
             {
                 return;
             }

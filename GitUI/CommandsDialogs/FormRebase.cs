@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -408,7 +409,24 @@ namespace GitUI.CommandsDialogs
                 AppSettings.ShowStashes = false;
                 ObjectId firstParent = UICommands.Module.RevParse("HEAD~");
                 string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
-                using FormChooseCommit chooseForm = new(UICommands, preSelectedCommit, showCurrentBranchOnly: true);
+
+                string mergeBaseCommitId = null;
+
+                if (!string.IsNullOrWhiteSpace(cboBranches.Text))
+                {
+                    try
+                    {
+                        ObjectId commit1 = UICommands.Module.RevParse(cboBranches.Text);
+                        ObjectId commit2 = UICommands.Module.RevParse("HEAD");
+                        mergeBaseCommitId = UICommands.Module.GetMergeBase(commit1, commit2)?.ToString();
+                    }
+                    catch (Exception)
+                    {
+                        // if an exception occurs, display whole history
+                    }
+                }
+
+                using FormChooseCommit chooseForm = new(UICommands, preSelectedCommit, showCurrentBranchOnly: true, lastRevisionToDisplayHash: mergeBaseCommitId);
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
