@@ -4312,7 +4312,8 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranchQuestion.Text">
-        <source>The selected branch(es) have not been merged into HEAD.
+        <source>The selected branch(es) have not been merged into any local branch.
+
 Proceed?</source>
         <target />
       </trans-unit>

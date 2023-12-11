@@ -11,12 +11,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _deleteBranchCaption = new("Delete Branches");
         private readonly TranslationString _cannotDeleteCurrentBranchMessage = new("Cannot delete the branch “{0}” which you are currently on.");
         private readonly TranslationString _deleteBranchConfirmTitle = new("Delete Confirmation");
-        private readonly TranslationString _deleteBranchQuestion = new("The selected branch(es) have not been merged into HEAD.\r\nProceed?");
         private readonly TranslationString _useReflogHint = new("Did you know you can use reflog to restore deleted branches?");
+        private readonly TranslationString _deleteBranchQuestion = new("The selected branch(es) have not been merged into any local branch.\r\n\r\nProceed?");
 
         private readonly IEnumerable<string> _defaultBranches;
         private string? _currentBranch;
-        private HashSet<string>? _mergedBranches;
+        private IReadOnlyList<string> _reflogHashes;
 
         public FormDeleteBranch(GitUICommands commands, IEnumerable<string> defaultBranches)
             : base(commands, enablePositionRestore: false)
@@ -35,26 +35,7 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
 
             Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads).ToList();
-            if (AppSettings.DontConfirmDeleteUnmergedBranch)
-            {
-                // no need to fill _mergedBranches
-                _currentBranch = Module.GetSelectedBranch();
-            }
-            else
-            {
-                _mergedBranches = [];
-                foreach (string branch in Module.GetMergedBranches())
-                {
-                    if (branch.StartsWith("* "))
-                    {
-                        _currentBranch = branch.Trim('*', ' ');
-                    }
-                    else
-                    {
-                        _mergedBranches.Add(branch.Trim());
-                    }
-                }
-            }
+            _currentBranch = Module.GetSelectedBranch();
 
             if (_defaultBranches is not null)
             {
@@ -78,14 +59,24 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (!AppSettings.DontConfirmDeleteUnmergedBranch)
-            {
-                Validates.NotNull(_mergedBranches);
+            // Detect if commits will be dangling (i.e. no remaining local refs left handling commit)
+            string[] deletedCandidates = selectedBranches.Select(b => b.Name).ToArray();
+            bool atLeastOneHeadCommitWillBeDangling = false;
 
-                // always treat branches as unmerged if there is no current branch (HEAD is detached)
-                bool hasUnmergedBranches = _currentBranch is null || DetachedHeadParser.IsDetachedHead(_currentBranch)
-                    || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
-                if (hasUnmergedBranches)
+            foreach (IGitRef selectedBranch in selectedBranches)
+            {
+                atLeastOneHeadCommitWillBeDangling = !Module.GetAllBranchesWhichContainGivenCommit(selectedBranch.ObjectId, true, false) // include also remotes?
+                    .Any(b2 => !deletedCandidates.Contains(b2));
+
+                if (atLeastOneHeadCommitWillBeDangling)
+                {
+                    break;
+                }
+            }
+
+            if (atLeastOneHeadCommitWillBeDangling)
+            {
+                if (!AppSettings.DontConfirmDeleteUnmergedBranch)
                 {
                     TaskDialogPage page = new()
                     {
