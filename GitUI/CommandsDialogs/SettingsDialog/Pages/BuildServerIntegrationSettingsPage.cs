@@ -56,9 +56,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             ThreadHelper.FileAndForget(async () =>
                 {
-                    Validates.NotNull(_populateBuildServerTypeTask);
-
-                    await _populateBuildServerTypeTask.JoinAsync();
+                    await Validates.NotNull(_populateBuildServerTypeTask).JoinAsync();
 
                     await this.SwitchToMainThreadAsync();
 
