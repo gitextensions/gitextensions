@@ -4311,14 +4311,34 @@ You can unset the template:
         <source>Delete Confirmation</source>
         <target />
       </trans-unit>
+      <trans-unit id="_deleteBranchNotInReflogQuestion.Text">
+        <source>The selected branch(es) have not been merged into any local branch
+ and is(are) not in the reflog so you won't be able to recover the commit(s) easily.
+
+Proceed?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_deleteBranchQuestion.Text">
         <source>The selected branch(es) have not been merged into any local branch.
 
 Proceed?</source>
         <target />
       </trans-unit>
+      <trans-unit id="_restoreUsingReflogAvailable.Text">
+        <source>This branch can be restored using the reflog</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_useRecoverLostObjectsHint.Text">
+        <source>This commit will only be recoverable using "Recover lost objects" feature but could be cleaned by git at any time!</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_useReflogHint.Text">
-        <source>Did you know you can use reflog to restore deleted branches?</source>
+        <source>This commit is available from the reflog that you could use to restore this deleted branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_warningNotInReflog.Text">
+        <source>Warning! The head of this branch is not in the reflog!
+Commits won't be recoverable easily!!</source>
         <target />
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">

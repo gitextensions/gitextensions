@@ -445,5 +445,6 @@ namespace GitUIPluginInterfaces
         string RenameBranch(string name, string newName);
 
         GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines = null, CancellationToken cancellationToken = default);
+        IReadOnlyList<string> GetReflogHashes();
     }
 }

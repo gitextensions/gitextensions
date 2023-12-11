@@ -32,6 +32,7 @@
             labelSelectBranches = new Label();
             Branches = new GitUI.BranchComboBox();
             tlpnlMain = new TableLayoutPanel();
+            labelWarning = new Label();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
             tlpnlMain.SuspendLayout();
@@ -46,6 +47,7 @@
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(Delete);
+            ControlsPanel.Controls.Add(labelWarning);
             ControlsPanel.Location = new Point(0, 50);
             ControlsPanel.Size = new Size(412, 41);
             // 
@@ -85,6 +87,7 @@
             Branches.Name = "Branches";
             Branches.Size = new Size(299, 28);
             Branches.TabIndex = 1;
+            Branches.SelectedValueChanged += Branches_SelectedValueChanged;
             // 
             // tlpnlMain
             // 
@@ -104,6 +107,18 @@
             tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlpnlMain.Size = new Size(394, 32);
             tlpnlMain.TabIndex = 0;
+            // 
+            // labelWarning
+            // 
+            labelWarning.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            labelWarning.AutoSize = true;
+            labelWarning.ForeColor = Color.Red;
+            labelWarning.Location = new Point(272, 5);
+            labelWarning.Name = "labelWarning";
+            labelWarning.Size = new Size(46, 31);
+            labelWarning.TabIndex = 3;
+            labelWarning.Text = "             ";
+            labelWarning.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // FormDeleteBranch
             // 
@@ -138,5 +153,6 @@
         private Label labelSelectBranches;
         private BranchComboBox Branches;
         private TableLayoutPanel tlpnlMain;
+        private Label labelWarning;
     }
 }
