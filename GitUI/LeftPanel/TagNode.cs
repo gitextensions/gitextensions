@@ -63,9 +63,7 @@ namespace GitUI.LeftPanel
 
         public bool Checkout()
         {
-            using FormCheckoutRevision form = new(UICommands);
-            form.SetRevision(FullPath);
-            return form.ShowDialog(TreeViewNode.TreeView) != DialogResult.Cancel;
+            return UICommands.StartCheckoutRevisionDialog(TreeViewNode.TreeView, FullPath);
         }
     }
 }
