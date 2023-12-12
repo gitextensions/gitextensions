@@ -204,7 +204,9 @@ Detail of the error:");
 
             try
             {
-                _buildDefinitions = await Validates.NotNull(_buildDefinitionsTask).JoinAsync();
+                Validates.NotNull(_buildDefinitionsTask);
+
+                _buildDefinitions = await _buildDefinitionsTask.JoinAsync();
 
                 if (_buildDefinitions is null)
                 {

@@ -70,22 +70,25 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                FileInfoExtensions.MakeFileTemporaryWritable(Validates.NotNull(ExcludeFile), fileName =>
+                var fileName = ExcludeFile;
+                Validates.NotNull(fileName);
+                FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
                 {
                     StringBuilder gitIgnoreFileAddition = new();
 
                     if (File.Exists(fileName) && !File.ReadAllText(fileName, GitModule.SystemEncoding).EndsWith(Environment.NewLine))
                     {
-                        gitIgnoreFileAddition.AppendLine();
+                        gitIgnoreFileAddition.Append(Environment.NewLine);
                     }
 
-                    foreach (string pattern in patterns)
+                    foreach (var pattern in patterns)
                     {
-                        gitIgnoreFileAddition.AppendLine(pattern);
+                        gitIgnoreFileAddition.Append(pattern);
+                        gitIgnoreFileAddition.Append(Environment.NewLine);
                     }
 
-                    Directory.CreateDirectory(Path.GetDirectoryName(fileName));
-                    using StreamWriter writer = new(fileName, append: true, GitModule.SystemEncoding);
+                    Directory.CreateDirectory(Path.GetDirectoryName(x));
+                    using StreamWriter writer = new(x, append: true, GitModule.SystemEncoding);
                     writer.Write(gitIgnoreFileAddition);
                 });
             }

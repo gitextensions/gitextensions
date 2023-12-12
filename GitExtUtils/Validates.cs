@@ -12,15 +12,13 @@ namespace Microsoft
         // Extensions.
 
         [DebuggerStepThrough]
-        public static T NotNull<T>([ValidatedNotNull, NotNull] T? value)
+        public static void NotNull<T>([ValidatedNotNull, NotNull] T? value)
             where T : class
         {
             if (value == null)
             {
                 Fail("Value must not be null.");
             }
-
-            return value;
         }
 
         [DebuggerStepThrough]
