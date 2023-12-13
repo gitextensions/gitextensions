@@ -701,10 +701,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            foreach (IGitRef head in GetLocalBranches())
-            {
-                _NO_TRANSLATE_Branch.Items.Add(head);
-            }
+            _NO_TRANSLATE_Branch.Items.AddRange(GetLocalBranches().ToArray());
 
             _NO_TRANSLATE_Branch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
@@ -737,24 +734,12 @@ namespace GitUI.CommandsDialogs
 
             if (_selectedRemote is not null)
             {
-                foreach (IGitRef head in GetRemoteBranches(_selectedRemote.Name))
-                {
-                    if (_NO_TRANSLATE_Branch.Text != head.LocalName)
-                    {
-                        RemoteBranch.Items.Add(head.LocalName);
-                    }
-                }
+                RemoteBranch.Items.AddRange(GetRemoteBranches(_selectedRemote.Name).Select(head => head.LocalName).Where(head => _NO_TRANSLATE_Branch.Text != head).ToArray());
 
                 HashSet<string> remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).Select(b => b.LocalName).ToHashSet();
                 IEnumerable<IGitRef> onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
 
-                foreach (IGitRef head in onlyLocalBranches)
-                {
-                    if (_NO_TRANSLATE_Branch.Text != head.LocalName)
-                    {
-                        RemoteBranch.Items.Add(head.LocalName);
-                    }
-                }
+                RemoteBranch.Items.AddRange(onlyLocalBranches.Select(head => head.LocalName).Where(head => _NO_TRANSLATE_Branch.Text != head).ToArray());
             }
 
             RemoteBranch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
