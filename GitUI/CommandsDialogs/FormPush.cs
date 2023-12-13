@@ -735,11 +735,6 @@ namespace GitUI.CommandsDialogs
             if (_selectedRemote is not null)
             {
                 RemoteBranch.Items.AddRange(GetRemoteBranches(_selectedRemote.Name).Select(head => head.LocalName).Where(head => _NO_TRANSLATE_Branch.Text != head).ToArray());
-
-                HashSet<string> remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).Select(b => b.LocalName).ToHashSet();
-                IEnumerable<IGitRef> onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
-
-                RemoteBranch.Items.AddRange(onlyLocalBranches.Select(head => head.LocalName).Where(head => _NO_TRANSLATE_Branch.Text != head).ToArray());
             }
 
             RemoteBranch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
@@ -781,6 +776,11 @@ namespace GitUI.CommandsDialogs
                             }
                         }
                     }
+                }
+
+                if (!RemoteBranch.Items.Contains(_NO_TRANSLATE_Branch.Text))
+                {
+                    RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
                 }
 
                 RemoteBranch.Text = _NO_TRANSLATE_Branch.Text;
