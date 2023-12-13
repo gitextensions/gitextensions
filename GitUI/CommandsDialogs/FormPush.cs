@@ -119,9 +119,11 @@ namespace GitUI.CommandsDialogs
 
                 // refresh registered git remotes
                 UserGitRemotes = _remotesManager.LoadRemotes(false).ToList();
+
+                _NO_TRANSLATE_Branch.Text = IsDetachedHead(_currentBranchName) ? HeadText : _currentBranchName;
+
                 BindRemotesDropDown(null);
 
-                UpdateBranchDropDown();
                 UpdateRemoteBranchDropDown();
 
                 Push.Focus();
@@ -140,6 +142,8 @@ namespace GitUI.CommandsDialogs
                 BranchGrid.ColumnHeaderMouseClick += BranchGrid_ColumnHeaderMouseClick;
             }
         }
+
+        private bool IsDetachedHead(string branchName) => branchName.IndexOfAny(['(', ' ', ')']) != -1;
 
         /// <summary>
         /// Gets the list of remotes configured in .git/config file.
@@ -682,24 +686,44 @@ namespace GitUI.CommandsDialogs
             return (onRejectedPullAction ?? AppSettings.PullAction.None, forcePush);
         }
 
-        private void UpdateBranchDropDown()
+        private void _NO_TRANSLATE_Branch_Enter(object sender, EventArgs e)
+        {
+            if (_NO_TRANSLATE_Branch.Items.Count != 0)
+            {
+                return;
+            }
+
+            FillDropDownContentKeepingSelection();
+
+            void FillDropDownContentKeepingSelection()
+            {
+                // Trick to load items while interacting with dropdown
+                // while keeping same behavior as if the items
+                // were already loaded
+                string curBranch = _NO_TRANSLATE_Branch.Text;
+
+                // Fill dropdown with all local branches
+                // (using `.Clear()` would close the dropdown when user opened it)
+                UpdateBranchDropDown(clear: false);
+
+                // and re-select the corresponding branch in the new items added
+                _NO_TRANSLATE_Branch.Text = curBranch;
+            }
+        }
+
+        private void UpdateBranchDropDown(bool clear = true)
         {
             string curBranch = _NO_TRANSLATE_Branch.Text;
 
             _NO_TRANSLATE_Branch.DisplayMember = nameof(IGitRef.Name);
-            _NO_TRANSLATE_Branch.Items.Clear();
+
+            if (clear)
+            {
+                _NO_TRANSLATE_Branch.Items.Clear();
+            }
+
             _NO_TRANSLATE_Branch.Items.Add(AllRefs);
             _NO_TRANSLATE_Branch.Items.Add(HeadText);
-
-            if (string.IsNullOrEmpty(curBranch))
-            {
-                Validates.NotNull(_currentBranchName);
-                curBranch = _currentBranchName;
-                if (curBranch.IndexOfAny("() ".ToCharArray()) != -1)
-                {
-                    curBranch = HeadText;
-                }
-            }
 
             _NO_TRANSLATE_Branch.Items.AddRange(GetLocalBranches().ToArray());
 
@@ -727,7 +751,7 @@ namespace GitUI.CommandsDialogs
         {
             RemoteBranch.Items.Clear();
 
-            if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
+            if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text) && !IsDetachedHead(_NO_TRANSLATE_Branch.Text) && _NO_TRANSLATE_Branch.Text != HeadText)
             {
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
             }
