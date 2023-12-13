@@ -19,6 +19,7 @@ namespace GitUI.LeftPanel
                 throw new ArgumentNullException(nameof(fullPath));
             }
 
+            FullPath = fullPath;
             int nameIndex = fullPath.LastIndexOf(PathSeparator);
             if (nameIndex == -1)
             {
@@ -44,7 +45,7 @@ namespace GitUI.LeftPanel
         /// <summary>
         /// Full path of the branch. <example>"issues/issue1344"</example>.
         /// </summary>
-        public string FullPath => ParentPath.Combine(PathSeparator.ToString(), Name)!;
+        public string FullPath { get; }
 
         /// <summary>
         /// ObjectId for nodes with a revision.
