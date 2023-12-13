@@ -19,9 +19,18 @@ namespace GitUI.LeftPanel
                 throw new ArgumentNullException(nameof(fullPath));
             }
 
-            string[] dirs = fullPath.Split(PathSeparator);
-            Name = dirs[^1];
-            ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
+            int nameIndex = fullPath.LastIndexOf(PathSeparator);
+            if (nameIndex == -1)
+            {
+                Name = fullPath;
+                ParentPath = null;
+            }
+            else
+            {
+                Name = fullPath.Substring(nameIndex + 1);
+                ParentPath = fullPath.Substring(0, nameIndex);
+            }
+
             Visible = visible;
         }
 
