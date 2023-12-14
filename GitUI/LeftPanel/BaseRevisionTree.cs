@@ -30,7 +30,7 @@ namespace GitUI.LeftPanel
         {
             TreeView treeView = TreeViewNode.TreeView;
 
-            if (treeView is null || !IsAttached)
+            if (treeView is null || !IsAttached || IsLoading)
             {
                 return;
             }
