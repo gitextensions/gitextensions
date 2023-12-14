@@ -72,6 +72,11 @@ namespace GitUI.LeftPanel
         {
         }
 
+        public void ClearTree()
+        {
+            TreeViewNode.Nodes.Clear();
+        }
+
         public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase
             => Nodes.DepthEnumerator<TNode>();
 

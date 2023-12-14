@@ -85,6 +85,15 @@ namespace GitUI.LeftPanel
             ShowEnabledTrees();
         }
 
+        public void ClearTrees()
+        {
+            _branchesTree.ClearTree();
+            _remotesTree.ClearTree();
+            _tagTree.ClearTree();
+            _submoduleTree.ClearTree();
+            _stashTree.ClearTree();
+        }
+
         private void ShowEnabledTrees()
         {
             if (tsbShowBranches.Checked)

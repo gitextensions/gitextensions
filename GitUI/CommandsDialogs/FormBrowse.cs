@@ -1656,6 +1656,8 @@ namespace GitUI.CommandsDialogs
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
 
+            repoObjectsTree.ClearTrees();
+
             UICommands = UICommands.WithGitModule(e.GitModule);
             if (Module.IsValidGitWorkingDir())
             {
