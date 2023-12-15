@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs
         private readonly IEnumerable<string> _defaultBranches;
         private string? _currentBranch;
         private IReadOnlyList<string> _reflogHashes;
+        private Dictionary<ObjectId, IReadOnlyList<string>> _containedInBranch = new();
 
         public FormDeleteBranch(GitUICommands commands, IEnumerable<string> defaultBranches)
             : base(commands, enablePositionRestore: false)
@@ -50,7 +51,7 @@ namespace GitUI.CommandsDialogs
 
             Branches.Focus();
 
-            CheckSelectedBranches();
+            ProcessSelectedBranches();
         }
 
         private void Delete_Click(object sender, EventArgs e)
@@ -75,7 +76,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (IGitRef selectedBranch in selectedBranches)
             {
-                atLeastOneHeadCommitWillBeDangling = !Module.GetAllBranchesWhichContainGivenCommit(selectedBranch.ObjectId, true, false) // include also remotes?
+                atLeastOneHeadCommitWillBeDangling = !GetAllBranchesWhichContainGivenCommit(selectedBranch.ObjectId)
                     .Any(b2 => !deletedCandidates.Contains(b2));
 
                 if (atLeastOneHeadCommitWillBeDangling)
@@ -115,14 +116,53 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Branches_SelectedValueChanged(object sender, EventArgs e)
+        private IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId commitId)
         {
-            CheckSelectedBranches();
+            lock (_containedInBranch)
+            {
+                if (_containedInBranch.TryGetValue(commitId, out IReadOnlyList<string> branches))
+                {
+                    return branches;
+                }
+
+                branches = Module.GetAllBranchesWhichContainGivenCommit(commitId, true, false); // include also remotes?
+
+                _containedInBranch.Add(commitId, branches);
+                return branches;
+            }
         }
 
-        private void CheckSelectedBranches()
+        private void BuildContainedInBranchData(IGitRef[] selectedBranches)
+        {
+            if (!selectedBranches.Any())
+            {
+                return;
+            }
+
+            foreach (IGitRef selectedBranch in selectedBranches)
+            {
+                GetAllBranchesWhichContainGivenCommit(selectedBranch.ObjectId);
+            }
+        }
+
+        private void Branches_SelectedValueChanged(object sender, EventArgs e)
+        {
+            ProcessSelectedBranches();
+        }
+
+        private void ProcessSelectedBranches()
         {
             IGitRef[] selectedBranches = Branches.GetSelectedBranches().ToArray();
+            CheckSelectedBranches(selectedBranches);
+
+            Task.Run(() =>
+            {
+                BuildContainedInBranchData(selectedBranches);
+            });
+        }
+
+        private void CheckSelectedBranches(IGitRef[] selectedBranches)
+        {
             if (!selectedBranches.Any())
             {
                 return;
