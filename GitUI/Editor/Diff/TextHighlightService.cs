@@ -1,6 +1,4 @@
-﻿using GitExtUtils.GitUI.Theming;
-using GitUI.Theming;
-using ICSharpCode.TextEditor.Document;
+﻿using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff
 {

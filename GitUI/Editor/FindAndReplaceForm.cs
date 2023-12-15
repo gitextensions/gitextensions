@@ -1,4 +1,4 @@
-﻿using GitExtUtils;
+﻿using GitExtensions.Extensibility;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using Microsoft;

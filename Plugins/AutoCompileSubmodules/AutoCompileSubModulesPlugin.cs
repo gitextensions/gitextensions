@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.Composition;
 using System.Text;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.AutoCompileSubmodules.Properties;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.AutoCompileSubmodules
@@ -19,7 +21,7 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
         {
             Id = new Guid("D4D1ACB7-0B6B-4A3C-B0DB-A25056A277D9");
             Name = "Auto compile submodules";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconAutoCompileSubmodules;
         }
 

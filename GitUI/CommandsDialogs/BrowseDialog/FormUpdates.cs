@@ -4,7 +4,7 @@ using System.Net;
 using Git.hub;
 using GitCommands;
 using GitCommands.Config;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Configurations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog

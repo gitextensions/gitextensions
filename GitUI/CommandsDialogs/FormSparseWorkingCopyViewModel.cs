@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitUI.HelperDialogs;
 
 namespace GitUI.CommandsDialogs

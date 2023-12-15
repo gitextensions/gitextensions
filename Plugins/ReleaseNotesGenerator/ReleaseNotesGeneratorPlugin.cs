@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.Composition;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Plugins.ReleaseNotesGenerator.Properties;
-using GitUIPluginInterfaces;
-using ResourceManager;
 
 namespace GitExtensions.Plugins.ReleaseNotesGenerator
 {
@@ -12,7 +13,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
         {
             Id = new Guid("49E7F2D6-AD79-489E-80A4-5CD212AE6DF3");
             Name = "Release Notes Generator";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconReleaseNotesGenerator;
         }
 

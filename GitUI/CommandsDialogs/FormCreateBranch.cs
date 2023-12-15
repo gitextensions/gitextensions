@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -122,7 +124,7 @@ namespace GitUI.CommandsDialogs
             {
                 ObjectId originalHash = Module.GetCurrentCheckout();
 
-                GitExtUtils.ArgumentString command = Orphan.Checked
+                ArgumentString command = Orphan.Checked
                     ? Commands.CreateOrphan(branchName, objectId)
                     : Commands.Branch(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 

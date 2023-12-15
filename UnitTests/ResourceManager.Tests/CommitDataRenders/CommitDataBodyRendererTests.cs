@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 using NSubstitute;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;

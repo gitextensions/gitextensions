@@ -1,7 +1,7 @@
 ﻿using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls
 {

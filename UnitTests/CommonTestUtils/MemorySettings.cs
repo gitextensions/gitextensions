@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitUITests
 {

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 
 namespace GitCommands.Git

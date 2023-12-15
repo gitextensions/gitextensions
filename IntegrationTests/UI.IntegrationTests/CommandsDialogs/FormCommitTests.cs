@@ -3,6 +3,8 @@ using System.ComponentModel.Design;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;

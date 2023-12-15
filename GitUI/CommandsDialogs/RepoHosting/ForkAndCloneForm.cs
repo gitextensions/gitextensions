@@ -1,6 +1,7 @@
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces.RepositoryHosts;
@@ -370,7 +371,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             GitUICommands uiCommands = new(GitUICommands.EmptyServiceProvider, new GitModule(null));
 
-            GitExtUtils.ArgumentString cmd = Commands.Clone(repo.CloneUrl, targetDir, uiCommands.Module.GetPathForGitExecution, depth: GetDepth());
+            ArgumentString cmd = Commands.Clone(repo.CloneUrl, targetDir, uiCommands.Module.GetPathForGitExecution, depth: GetDepth());
 
             FormRemoteProcess formRemoteProcess = new(uiCommands, cmd)
             {

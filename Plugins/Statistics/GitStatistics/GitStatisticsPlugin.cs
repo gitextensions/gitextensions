@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.Composition;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.GitStatistics.Properties;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
-using ResourceManager;
 
 namespace GitExtensions.Plugins.GitStatistics
 {
@@ -21,7 +22,7 @@ namespace GitExtensions.Plugins.GitStatistics
         {
             Id = new Guid("17D1507D-C00D-4A10-AB75-DECB2EA5FCBF");
             Name = "Statistics";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconGitStatistics;
         }
 

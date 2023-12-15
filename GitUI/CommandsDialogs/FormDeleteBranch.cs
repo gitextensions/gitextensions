@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 using ResourceManager;
 

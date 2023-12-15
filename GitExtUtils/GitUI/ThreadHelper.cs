@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI

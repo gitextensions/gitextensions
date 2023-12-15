@@ -1,6 +1,5 @@
-﻿using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
-using Microsoft.Toolkit.HighPerformance;
+﻿using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
 
 namespace GitlabIntegrationTests
 {

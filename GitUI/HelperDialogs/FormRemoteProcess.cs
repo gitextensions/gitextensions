@@ -1,6 +1,6 @@
 using GitCommands;
 using GitCommands.Config;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitUI.Infrastructure;
 using GitUI.UserControls;
 using ResourceManager;

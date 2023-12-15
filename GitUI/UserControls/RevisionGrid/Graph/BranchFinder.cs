@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -26,7 +27,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             Validates.NotNull(node.GitRevision);
 
-            foreach (GitUIPluginInterfaces.IGitRef gitReference in node.GitRevision.Refs)
+            foreach (IGitRef gitReference in node.GitRevision.Refs)
             {
                 if (gitReference.IsHead || gitReference.IsRemote || gitReference.IsStash)
                 {

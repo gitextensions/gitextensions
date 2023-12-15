@@ -3,7 +3,8 @@ using System.IO.Abstractions;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests

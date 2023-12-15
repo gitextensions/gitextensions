@@ -1,5 +1,5 @@
 ﻿using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 
 namespace GitUI.Avatars
 {

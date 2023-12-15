@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 
 namespace GitUI.UserControls.RevisionGrid
 {

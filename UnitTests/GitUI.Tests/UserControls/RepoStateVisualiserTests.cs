@@ -1,5 +1,5 @@
-﻿using GitUI.UserControls;
-using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI.UserControls;
 
 namespace GitUITests.UserControls
 {

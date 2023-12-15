@@ -1,8 +1,7 @@
-﻿using GitCommands;
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using JetBrains.Annotations;
 using ResourceManager;
 

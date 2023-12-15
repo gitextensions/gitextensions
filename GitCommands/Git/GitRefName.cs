@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitUIPluginInterfaces;
 
 namespace GitCommands

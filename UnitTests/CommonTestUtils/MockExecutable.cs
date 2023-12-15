@@ -1,8 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitUI;
-using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace CommonTestUtils

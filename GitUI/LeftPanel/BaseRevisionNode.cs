@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 
 namespace GitUI.LeftPanel
 {

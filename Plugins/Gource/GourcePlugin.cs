@@ -2,9 +2,11 @@
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.Gource.Properties;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using ICSharpCode.SharpZipLib.Zip;
 using ResourceManager;
 
@@ -42,7 +44,7 @@ namespace GitExtensions.Plugins.Gource
         {
             Id = new Guid("F0A6A769-6DCC-4452-9A43-343347015EEC");
             Name = "Gource";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconGource;
         }
 

@@ -2,8 +2,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
-using GitExtUtils;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 

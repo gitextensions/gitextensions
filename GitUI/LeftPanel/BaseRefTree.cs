@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.LeftPanel

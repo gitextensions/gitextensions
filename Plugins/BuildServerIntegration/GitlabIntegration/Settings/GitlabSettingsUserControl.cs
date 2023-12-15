@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Composition;
 using GitCommands;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 using GitUI;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 

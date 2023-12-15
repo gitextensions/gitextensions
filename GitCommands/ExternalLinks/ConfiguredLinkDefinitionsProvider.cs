@@ -1,5 +1,5 @@
 ﻿using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
 using Microsoft;
 
 namespace GitCommands.ExternalLinks

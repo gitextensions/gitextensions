@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
-using System.Timers;
-using GitExtUtils;
+﻿using System.Timers;
+using GitExtensions.Extensibility;
 using Timer = System.Timers.Timer;
 
 namespace GitCommands.Utils

@@ -1,5 +1,5 @@
-﻿using GitExtUtils.GitUI;
-using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Settings;
+using GitExtUtils.GitUI;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

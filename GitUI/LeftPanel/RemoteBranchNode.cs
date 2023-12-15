@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 
 namespace GitUI.LeftPanel
 {

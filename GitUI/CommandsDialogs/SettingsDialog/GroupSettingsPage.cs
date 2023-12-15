@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using GitExtensions.Extensibility.Translations;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

@@ -1,10 +1,10 @@
 ﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using GitCommands.Patches;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.UITests;
 using GitUI;
-using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace UITests.UserControls

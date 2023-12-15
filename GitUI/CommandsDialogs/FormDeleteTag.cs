@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {

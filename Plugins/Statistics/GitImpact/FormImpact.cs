@@ -1,5 +1,5 @@
-﻿using GitUI;
-using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.GitImpact

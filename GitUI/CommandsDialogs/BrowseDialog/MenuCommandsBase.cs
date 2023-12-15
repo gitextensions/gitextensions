@@ -1,6 +1,6 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Translations;
 using Microsoft;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

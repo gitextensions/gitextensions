@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
 using Microsoft;
 using ResourceManager;
 

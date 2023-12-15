@@ -1,6 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using GitCommands.Config;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitExtensions.Plugins.Bitbucket
 {

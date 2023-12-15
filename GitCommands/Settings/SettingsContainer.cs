@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitCommands.Settings
 {

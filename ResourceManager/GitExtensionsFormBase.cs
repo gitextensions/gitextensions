@@ -1,7 +1,10 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
+using GitExtensions.Extensibility.Translations.Xliff;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUIPluginInterfaces;
@@ -196,7 +199,7 @@ namespace ResourceManager
 
         protected void TranslateItem(string itemName, object item)
         {
-            IDictionary<string, Xliff.TranslationFile> translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+            IDictionary<string, TranslationFile> translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
 
             if (translation.Count == 0)
             {
@@ -205,7 +208,7 @@ namespace ResourceManager
 
             (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
 
-            foreach (KeyValuePair<string, Xliff.TranslationFile> pair in translation)
+            foreach (KeyValuePair<string, TranslationFile> pair in translation)
             {
                 TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
             }

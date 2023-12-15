@@ -1,4 +1,5 @@
-﻿using GitUI;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitUITests.Helpers

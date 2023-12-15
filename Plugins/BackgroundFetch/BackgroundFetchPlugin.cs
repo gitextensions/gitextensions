@@ -2,12 +2,13 @@ using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.BackgroundFetch.Properties;
 using GitExtUtils;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using Microsoft;
-using ResourceManager;
 
 namespace GitExtensions.Plugins.BackgroundFetch
 {
@@ -18,7 +19,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
         {
             Id = new Guid("D19A7905-8AAD-4271-ACA9-817669B94A1D");
             Name = "Periodic background fetch";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconBackgroundFetch;
         }
 

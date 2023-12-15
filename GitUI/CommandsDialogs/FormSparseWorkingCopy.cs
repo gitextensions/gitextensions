@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using GitCommands;
+using GitExtensions.Extensibility.Translations;
 using GitUI.Editor;
 using ResourceManager;
 

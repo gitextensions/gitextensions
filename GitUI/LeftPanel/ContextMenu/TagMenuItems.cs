@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Translations;
 using GitUI.LeftPanel.Interfaces;
 using ResourceManager;
 

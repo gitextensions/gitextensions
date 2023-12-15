@@ -1,4 +1,6 @@
-﻿using GitExtUtils.GitUI;
+﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls

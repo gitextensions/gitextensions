@@ -1,7 +1,8 @@
 ﻿using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandDialogs;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace GitUI.LeftPanel

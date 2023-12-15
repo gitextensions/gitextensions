@@ -1,5 +1,5 @@
-﻿using ResourceManager;
-using ResourceManager.Xliff;
+﻿using GitExtensions.Extensibility.Translations;
+using GitExtensions.Extensibility.Translations.Xliff;
 
 namespace TranslationApp
 {

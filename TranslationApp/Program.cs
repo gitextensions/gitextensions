@@ -1,9 +1,9 @@
 ﻿using BugReporter;
+using GitExtensions.Extensibility.Translations;
+using GitExtensions.Extensibility.Translations.Xliff;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
-using ResourceManager;
-using ResourceManager.Xliff;
 
 namespace TranslationApp
 {

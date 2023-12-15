@@ -3,10 +3,12 @@ using Git.hub;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.GitHub3.Properties;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
-using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using ResourceManager;
 
@@ -92,7 +94,7 @@ namespace GitExtensions.Plugins.GitHub3
         {
             Id = new Guid("2EC3E1F0-EF37-413F-BEA5-B8FE1F9C505C");
             Name = "GitHub";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
 
             Instance ??= this;
 

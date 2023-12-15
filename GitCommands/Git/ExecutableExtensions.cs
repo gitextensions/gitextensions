@@ -1,7 +1,8 @@
 using System.Text;
 using System.Text.RegularExpressions;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands

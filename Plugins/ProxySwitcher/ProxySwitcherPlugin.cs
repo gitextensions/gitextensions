@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.Composition;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.ProxySwitcher.Properties;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
-using ResourceManager;
 
 namespace GitExtensions.Plugins.ProxySwitcher
 {
@@ -18,7 +19,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
         {
             Id = new Guid("C2A1C7A4-D519-4BD1-859B-6CE7DB9325FB");
             Name = "Proxy Switcher";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconProxySwitcher;
         }
 

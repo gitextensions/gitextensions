@@ -1,5 +1,7 @@
 using GitCommands.Config;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
