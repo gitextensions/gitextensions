@@ -38,6 +38,12 @@ namespace GitExtensions.Plugins.GitImpact
         // The week-labels
         private readonly List<(PointF point, DateTime date)> _weekLabels = [];
 
+        private readonly Font _weekFont = new("Arial", WeekFontSize);
+        private readonly Brush _weekBrush = Brushes.Gray;
+        private readonly Font _linesFont = new("Arial", LinesFontSize);
+        private readonly Brush _linesBrush = Brushes.White;
+        private readonly Pen _selectedAuthorPen = new(SystemColors.WindowText, 2);
+
         public ImpactControl()
         {
             Clear();
@@ -99,28 +105,28 @@ namespace GitExtensions.Plugins.GitImpact
                     // UPDATE IMPACT
 
                     // If week does not exist yet in the impact dictionary
-                    if (!_impact.ContainsKey(commit.Week))
+                    if (!_impact.TryGetValue(commit.Week, out Dictionary<string, ImpactLoader.DataPoint> weekData))
                     {
                         // Create it
-                        _impact.Add(commit.Week, []);
+                        _impact.Add(commit.Week, weekData = []);
                     }
 
                     // If author does not exist yet for this week in the impact dictionary
-                    if (!_impact[commit.Week].ContainsKey(commit.Author))
+                    if (!weekData.TryGetValue(commit.Author, out ImpactLoader.DataPoint authorWeekData))
                     {
                         // Create it
-                        _impact[commit.Week].Add(commit.Author, commit.Data);
+                        weekData.Add(commit.Author, commit.Data);
                     }
                     else
                     {
                         // Otherwise just add the changes
-                        _impact[commit.Week][commit.Author] += commit.Data;
+                        weekData[commit.Author] = authorWeekData + commit.Data;
                     }
 
                     // UPDATE AUTHORS
 
                     // If author does not exist yet in the authors dictionary
-                    if (!_authors.ContainsKey(commit.Author))
+                    if (!_authors.TryGetValue(commit.Author, out ImpactLoader.DataPoint authorData))
                     {
                         // Create it
                         _authors.Add(commit.Author, commit.Data);
@@ -128,7 +134,7 @@ namespace GitExtensions.Plugins.GitImpact
                     else
                     {
                         // Otherwise just add the changes
-                        _authors[commit.Author] += commit.Data;
+                        _authors[commit.Author] = authorData + commit.Data;
                     }
 
                     // UPDATE AUTHOR STACK
@@ -223,17 +229,17 @@ namespace GitExtensions.Plugins.GitImpact
                 // Default: person with least number of changed lines first, others on top
                 foreach (string author in _authorStack)
                 {
-                    if (_brushes.ContainsKey(author) && _paths.TryGetValue(author, out GraphicsPath? authorPath))
+                    if (_brushes.TryGetValue(author, out SolidBrush authorBrush) && _paths.TryGetValue(author, out GraphicsPath? authorPath))
                     {
-                        e.Graphics.FillPath(_brushes[author], authorPath);
+                        e.Graphics.FillPath(authorBrush, authorPath);
                     }
                 }
 
                 // Draw black border around selected author
                 string selectedAuthor = _authorStack[^1];
-                if (_brushes.ContainsKey(selectedAuthor) && _paths.TryGetValue(selectedAuthor, out GraphicsPath? selectedAuthorPath))
+                if (_paths.TryGetValue(selectedAuthor, out GraphicsPath? selectedAuthorPath))
                 {
-                    e.Graphics.DrawPath(new Pen(SystemColors.WindowText, 2), selectedAuthorPath);
+                    e.Graphics.DrawPath(_selectedAuthorPen, selectedAuthorPath);
                 }
 
                 foreach (string author in _authorStack)
@@ -249,19 +255,17 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                if (!_lineLabels.ContainsKey(author))
+                if (!_lineLabels.TryGetValue(author, out List<(PointF point, int size)> authorData))
                 {
                     return;
                 }
 
-                using Font font = new("Arial", LinesFontSize);
-                Brush brush = Brushes.White;
-
-                foreach ((PointF point, int size) in _lineLabels[author])
+                foreach ((PointF point, int size) in authorData)
                 {
-                    SizeF sz = g.MeasureString(size.ToString(), font);
+                    string sizeText = size.ToString();
+                    SizeF sz = g.MeasureString(sizeText, _linesFont);
                     PointF pt = new(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
-                    g.DrawString(size.ToString(), font, brush, pt);
+                    g.DrawString(sizeText, _linesFont, _linesBrush, pt);
                 }
             }
         }
@@ -270,14 +274,12 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                using Font font = new("Arial", WeekFontSize);
-                Brush brush = Brushes.Gray;
-
                 foreach ((PointF point, DateTime date) in _weekLabels)
                 {
-                    SizeF sz = g.MeasureString(date.ToString("dd. MMM yy"), font);
+                    string formatedDate = date.ToShortDateString();
+                    SizeF sz = g.MeasureString(formatedDate, _weekFont);
                     PointF pt = new(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
-                    g.DrawString(date.ToString("dd. MMM yy"), font, brush, pt);
+                    g.DrawString(formatedDate, _weekFont, _weekBrush, pt);
                 }
             }
         }
@@ -374,25 +376,26 @@ namespace GitExtensions.Plugins.GitImpact
                         points[i] = (rect, num);
 
                         // Add lines-changed-labels
-                        if (!_lineLabels.ContainsKey(author))
+                        if (!_lineLabels.TryGetValue(author, out List<(PointF point, int size)> authorLineLabels))
                         {
-                            _lineLabels.Add(author, new List<(PointF, int)>());
+                            _lineLabels.Add(author, authorLineLabels = new List<(PointF, int)>());
                         }
 
                         if (rect.Height > LinesFontSize * 1.5)
                         {
                             PointF adjustedPoint = new(rect.Left + (BlockWidth / 2), rect.Top + (rect.Height / 2));
 
-                            _lineLabels[author].Add((adjustedPoint, num));
+                            authorLineLabels.Add((adjustedPoint, num));
                         }
                     }
 
-                    _paths.Add(author, new GraphicsPath());
+                    GraphicsPath authorGraphicsPath = new();
+                    _paths.Add(author, authorGraphicsPath);
 
                     (Rectangle firstRect, int _) = points[0];
 
                     // Left border
-                    _paths[author].AddLine(firstRect.Left, firstRect.Bottom,
+                    authorGraphicsPath.AddLine(firstRect.Left, firstRect.Bottom,
                                            firstRect.Left, firstRect.Top);
 
                     // Top borders
@@ -400,14 +403,14 @@ namespace GitExtensions.Plugins.GitImpact
                     {
                         (Rectangle rect, int _) = points[i];
 
-                        _paths[author].AddLine(rect.Left, rect.Top,
+                        authorGraphicsPath.AddLine(rect.Left, rect.Top,
                                                rect.Right, rect.Top);
 
                         if (i < points.Count - 1)
                         {
                             (Rectangle nextRect, int _) = points[i + 1];
 
-                            _paths[author].AddBezier(rect.Right, rect.Top,
+                            authorGraphicsPath.AddBezier(rect.Right, rect.Top,
                                                      rect.Right + (TransitionWidth / 2), rect.Top,
                                                      rect.Right + (TransitionWidth / 2), nextRect.Top,
                                                      nextRect.Left, nextRect.Top);
@@ -417,7 +420,7 @@ namespace GitExtensions.Plugins.GitImpact
                     (Rectangle lastRect, int _) = points[^1];
 
                     // Right border
-                    _paths[author].AddLine(lastRect.Right,
+                    authorGraphicsPath.AddLine(lastRect.Right,
                                            lastRect.Top,
                                            lastRect.Right,
                                            lastRect.Bottom);
@@ -427,14 +430,14 @@ namespace GitExtensions.Plugins.GitImpact
                     {
                         (Rectangle rect, int _) = points[i];
 
-                        _paths[author].AddLine(rect.Right, rect.Bottom,
+                        authorGraphicsPath.AddLine(rect.Right, rect.Bottom,
                                                rect.Left, rect.Bottom);
 
                         if (i > 0)
                         {
                             (Rectangle prevRect, int _) = points[i - 1];
 
-                            _paths[author].AddBezier(rect.Left, rect.Bottom,
+                            authorGraphicsPath.AddBezier(rect.Left, rect.Bottom,
                                                      rect.Left - (TransitionWidth / 2), rect.Bottom,
                                                      rect.Left - (TransitionWidth / 2), prevRect.Bottom,
                                                      prevRect.Right, prevRect.Bottom);
@@ -454,16 +457,18 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                foreach (string author in _authorStack.Reverse<string>())
+                for (int i = _authorStack.Count - 1; i >= 0; i--)
                 {
-                    if (_paths.ContainsKey(author) && _paths[author].IsVisible(x + _scrollBar.Value, y))
+                    string author = _authorStack[i];
+                    if (_paths.TryGetValue(author, out GraphicsPath authorGraphicsPath)
+                        && authorGraphicsPath.IsVisible(x + _scrollBar.Value, y))
                     {
                         return author;
                     }
                 }
             }
 
-            return "";
+            return string.Empty;
         }
 
         /// <summary>
