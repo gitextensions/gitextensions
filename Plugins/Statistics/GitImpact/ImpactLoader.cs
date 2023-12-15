@@ -54,15 +54,25 @@ namespace GitExtensions.Plugins.GitImpact
         public event Action<IList<Commit>>? CommitLoaded;
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
+        private readonly CancellationTokenSource _closingPluginCancellationToken = new();
         private readonly IGitModule _module;
+        private readonly JoinableTask _mainModuleLoadingTask;
+        private readonly Dictionary<string, List<Commit>> _modulesCommits = new(1);
 
         public ImpactLoader(IGitModule module)
         {
             _module = module;
+            _mainModuleLoadingTask = ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    LoadModuleInfoData(_module, _closingPluginCancellationToken.Token);
+                });
         }
 
         public void Dispose()
         {
+            _closingPluginCancellationToken.Cancel();
             Stop();
             _cancellationTokenSequence.Dispose();
         }
@@ -108,18 +118,12 @@ namespace GitExtensions.Plugins.GitImpact
 
         private IReadOnlyList<JoinableTask> GetTasks(CancellationToken token)
         {
-            string authorName = RespectMailmap ? "%aN" : "%an";
-            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=iso -C --all --no-merges";
-
-            List<JoinableTask> tasks =
-            [
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
-                    {
-                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                        LoadModuleInfo(command, _module, token);
-                    })
-            ];
+            List<JoinableTask> tasks = [ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    await _mainModuleLoadingTask.JoinAsync(token);
+                    LoadModuleInfo(_module, token);
+                })];
 
             if (ShowSubmodules)
             {
@@ -132,15 +136,32 @@ namespace GitExtensions.Plugins.GitImpact
                         async () =>
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                            LoadModuleInfo(command, submodule, token);
+                            LoadModuleInfo(submodule, token);
                         }));
             }
 
             return tasks;
         }
 
-        private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
+        private void LoadModuleInfo(IGitModule module, CancellationToken token)
         {
+            if (_modulesCommits.TryGetValue(module.WorkingDir, out List<Commit> commitsBatch))
+            {
+                CommitLoaded(commitsBatch);
+                return;
+            }
+
+            commitsBatch = LoadModuleInfoData(module, token);
+            if (!token.IsCancellationRequested)
+            {
+                CommitLoaded(commitsBatch);
+            }
+        }
+
+        private List<Commit> LoadModuleInfoData(IGitModule module, CancellationToken token)
+        {
+            string authorName = RespectMailmap ? "%aN" : "%an";
+            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=iso -C --all --no-merges";
             ExecutionResult result = module.GitExecutable.Execute(command, cancellationToken: token);
             List<string> lines = result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();
 
@@ -223,10 +244,9 @@ namespace GitExtensions.Plugins.GitImpact
                 }
             }
 
-            if (!token.IsCancellationRequested)
-            {
-                CommitLoaded(commitsBatch);
-            }
+            _modulesCommits.Add(module.WorkingDir, commitsBatch);
+
+            return commitsBatch;
         }
 
         public static void AddIntermediateEmptyWeeks(
