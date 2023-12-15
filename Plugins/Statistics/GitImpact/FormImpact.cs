@@ -34,7 +34,7 @@ namespace GitExtensions.Plugins.GitImpact
                 async () =>
                 {
                     await this.SwitchToMainThreadAsync();
-                    UpdateAuthorInfo(Impact.GetSelectedAuthor());
+                    UpdateAuthorInfo(Impact.SelectedAuthor);
                 });
         }
 
@@ -55,13 +55,8 @@ namespace GitExtensions.Plugins.GitImpact
 
         private void Impact_MouseMove(object sender, MouseEventArgs e)
         {
-            // Are we hovering above an author path?
-            string author = Impact.GetAuthorByScreenPosition(e.X, e.Y);
-            if (!string.IsNullOrEmpty(author))
+            if (Impact.TrySetAuthorByScreenPosition(e.X, e.Y))
             {
-                // Push that author to the top of the stack
-                // -> Draw it above all others
-                Impact.SelectAuthor(author);
                 Impact.Invalidate();
             }
         }
