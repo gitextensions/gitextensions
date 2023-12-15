@@ -51,7 +51,7 @@ namespace GitExtensions.Plugins.GitImpact
         public bool RespectMailmap { get; set; }
 
         public event EventHandler? Exited;
-        public event Action<Commit>? CommitLoaded;
+        public event Action<IList<Commit>>? CommitLoaded;
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
         private readonly IGitModule _module;
@@ -141,8 +141,14 @@ namespace GitExtensions.Plugins.GitImpact
 
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
-            ExecutionResult result = module.GitExecutable.Execute(command);
-            using List<string>.Enumerator lineEnumerator = result.StandardOutput.Split('\n').ToList().GetEnumerator();
+            ExecutionResult result = module.GitExecutable.Execute(command, cancellationToken: token);
+            List<string> lines = result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            const int linePerCommitEstimationInGitLogOutput = 6; // chosen by fair dice roll, guaranted to be random ;) ( https://xkcd.com/221/ )
+            int estimatedCommitCount = lines.Count / linePerCommitEstimationInGitLogOutput;
+            List<Commit> commitsBatch = new(estimatedCommitCount);
+
+            using List<string>.Enumerator lineEnumerator = lines.GetEnumerator();
 
             // Analyze commit listing
             while (!token.IsCancellationRequested && lineEnumerator.MoveNext())
@@ -213,8 +219,13 @@ namespace GitExtensions.Plugins.GitImpact
 
                 if (!token.IsCancellationRequested)
                 {
-                    CommitLoaded?.Invoke(new Commit(week, author, new DataPoint(commits, added, deleted)));
+                    commitsBatch.Add(new Commit(week, author, new DataPoint(commits, added, deleted)));
                 }
+            }
+
+            if (!token.IsCancellationRequested)
+            {
+                CommitLoaded(commitsBatch);
             }
         }
 
