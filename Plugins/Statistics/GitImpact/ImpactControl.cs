@@ -44,6 +44,8 @@ namespace GitExtensions.Plugins.GitImpact
         private readonly Brush _linesBrush = Brushes.White;
         private readonly Pen _selectedAuthorPen = new(SystemColors.WindowText, 2);
 
+        public string SelectedAuthor { get; private set; } = string.Empty;
+
         public ImpactControl()
         {
             Clear();
@@ -229,15 +231,17 @@ namespace GitExtensions.Plugins.GitImpact
                 // Default: person with least number of changed lines first, others on top
                 foreach (string author in _authorStack)
                 {
-                    if (_brushes.TryGetValue(author, out SolidBrush authorBrush) && _paths.TryGetValue(author, out GraphicsPath? authorPath))
+                    if (author == SelectedAuthor)
                     {
-                        e.Graphics.FillPath(authorBrush, authorPath);
+                        continue;
                     }
+
+                    DrawAuthorContribution(author);
                 }
 
-                // Draw black border around selected author
-                string selectedAuthor = _authorStack[^1];
-                if (_paths.TryGetValue(selectedAuthor, out GraphicsPath? selectedAuthorPath))
+                // Draw selected author data
+                DrawAuthorContribution(SelectedAuthor);
+                if (_paths.TryGetValue(SelectedAuthor, out GraphicsPath? selectedAuthorPath))
                 {
                     e.Graphics.DrawPath(_selectedAuthorPen, selectedAuthorPath);
                 }
@@ -245,6 +249,14 @@ namespace GitExtensions.Plugins.GitImpact
                 foreach (string author in _authorStack)
                 {
                     DrawAuthorLinesLabels(e.Graphics, author);
+                }
+
+                void DrawAuthorContribution(string author)
+                {
+                    if (_brushes.TryGetValue(author, out SolidBrush authorBrush) && _paths.TryGetValue(author, out GraphicsPath? authorPath))
+                    {
+                        e.Graphics.FillPath(authorBrush, authorPath);
+                    }
                 }
             }
 
@@ -452,8 +464,9 @@ namespace GitExtensions.Plugins.GitImpact
         /// </summary>
         /// <param name="x">x coordinate</param>
         /// <param name="y">y coordinate</param>
-        /// <returns>Name of the author</returns>
-        public string GetAuthorByScreenPosition(int x, int y)
+        /// <returns>true if author has changed and graph should be redrawn
+        /// false, otherwise</returns>
+        public bool TrySetAuthorByScreenPosition(int x, int y)
         {
             lock (_dataLock)
             {
@@ -463,51 +476,20 @@ namespace GitExtensions.Plugins.GitImpact
                     if (_paths.TryGetValue(author, out GraphicsPath authorGraphicsPath)
                         && authorGraphicsPath.IsVisible(x + _scrollBar.Value, y))
                     {
-                        return author;
+                        if (SelectedAuthor != author)
+                        {
+                            SelectedAuthor = author;
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
             }
 
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Pushes the author to the top of the author_stack
-        /// </summary>
-        /// <param name="author">Name of the author</param>
-        public bool SelectAuthor(string author)
-        {
-            lock (_dataLock)
-            {
-                if (!_authorStack.Contains(author))
-                {
-                    return false;
-                }
-
-                // Remove author from the stack
-                _authorStack.Remove(author);
-
-                // and add it again at the end
-                _authorStack.Add(author);
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Returns the selected author
-        /// </summary>
-        public string GetSelectedAuthor()
-        {
-            if (_authorStack.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            lock (_dataLock)
-            {
-                return _authorStack[^1];
-            }
+            return false;
         }
 
         private void OnScroll(object sender, ScrollEventArgs e)
