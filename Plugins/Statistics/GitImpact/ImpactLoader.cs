@@ -236,8 +236,8 @@ namespace GitExtensions.Plugins.GitImpact
             foreach (string author in authors)
             {
                 // Determine first and last commit week of each author
-                DateTime start = new();
-                DateTime end = new();
+                DateTime start = DateTime.MinValue;
+                DateTime end = DateTime.MinValue;
                 bool startFound = false;
 
                 foreach ((DateTime weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
