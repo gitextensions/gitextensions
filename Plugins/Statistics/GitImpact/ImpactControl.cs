@@ -90,56 +90,59 @@ namespace GitExtensions.Plugins.GitImpact
             Invalidate();
         }
 
-        private void OnImpactUpdate(ImpactLoader.Commit commit)
+        private void OnImpactUpdate(IList<ImpactLoader.Commit> commits)
         {
             lock (_dataLock)
             {
-                // UPDATE IMPACT
+                foreach (ImpactLoader.Commit commit in commits)
+                {
+                    // UPDATE IMPACT
 
-                // If week does not exist yet in the impact dictionary
-                if (!_impact.ContainsKey(commit.Week))
-                {
-                    // Create it
-                    _impact.Add(commit.Week, []);
-                }
+                    // If week does not exist yet in the impact dictionary
+                    if (!_impact.ContainsKey(commit.Week))
+                    {
+                        // Create it
+                        _impact.Add(commit.Week, []);
+                    }
 
-                // If author does not exist yet for this week in the impact dictionary
-                if (!_impact[commit.Week].ContainsKey(commit.Author))
-                {
-                    // Create it
-                    _impact[commit.Week].Add(commit.Author, commit.Data);
-                }
-                else
-                {
-                    // Otherwise just add the changes
-                    _impact[commit.Week][commit.Author] += commit.Data;
-                }
+                    // If author does not exist yet for this week in the impact dictionary
+                    if (!_impact[commit.Week].ContainsKey(commit.Author))
+                    {
+                        // Create it
+                        _impact[commit.Week].Add(commit.Author, commit.Data);
+                    }
+                    else
+                    {
+                        // Otherwise just add the changes
+                        _impact[commit.Week][commit.Author] += commit.Data;
+                    }
 
-                // UPDATE AUTHORS
+                    // UPDATE AUTHORS
 
-                // If author does not exist yet in the authors dictionary
-                if (!_authors.ContainsKey(commit.Author))
-                {
-                    // Create it
-                    _authors.Add(commit.Author, commit.Data);
-                }
-                else
-                {
-                    // Otherwise just add the changes
-                    _authors[commit.Author] += commit.Data;
+                    // If author does not exist yet in the authors dictionary
+                    if (!_authors.ContainsKey(commit.Author))
+                    {
+                        // Create it
+                        _authors.Add(commit.Author, commit.Data);
+                    }
+                    else
+                    {
+                        // Otherwise just add the changes
+                        _authors[commit.Author] += commit.Data;
+                    }
+
+                    // UPDATE AUTHOR STACK
+
+                    // If author does not exist yet in the author_stack
+                    if (!_authorStack.Contains(commit.Author))
+                    {
+                        // Add it to the front (drawn first)
+                        _authorStack.Insert(0, commit.Author);
+                    }
                 }
 
                 // Add authors to intermediate weeks where they didn't create commits
                 ImpactLoader.AddIntermediateEmptyWeeks(ref _impact, _authors.Keys);
-
-                // UPDATE AUTHOR STACK
-
-                // If author does not exist yet in the author_stack
-                if (!_authorStack.Contains(commit.Author))
-                {
-                    // Add it to the front (drawn first)
-                    _authorStack.Insert(0, commit.Author);
-                }
             }
 
             UpdatePathsAndLabels();
