@@ -57,6 +57,7 @@ namespace GitExtensions.Plugins.GitImpact
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
             MouseWheel += ImpactControl_MouseWheel;
+            Disposed += ImpactControl_Disposed;
         }
 
         public void Init(IGitModule module)
@@ -78,8 +79,8 @@ namespace GitExtensions.Plugins.GitImpact
                 _impact.Clear();
 
                 _authorStack.Clear();
-                _paths.Clear();
-                _brushes.Clear();
+                ClearPaths();
+                ClearBrushes();
                 _lineLabels.Clear();
                 _weekLabels.Clear();
             }
@@ -369,7 +370,7 @@ namespace GitExtensions.Plugins.GitImpact
                 }
 
                 // Clear previous paths
-                _paths.Clear();
+                ClearPaths();
 
                 // Clear previous labels
                 _lineLabels.Clear();
@@ -401,6 +402,7 @@ namespace GitExtensions.Plugins.GitImpact
                         }
                     }
 
+                    // Will be disposed when ClearPaths() is called
                     GraphicsPath authorGraphicsPath = new();
                     _paths.Add(author, authorGraphicsPath);
 
@@ -534,6 +536,37 @@ namespace GitExtensions.Plugins.GitImpact
 
                 return new ImpactLoader.DataPoint(0, 0, 0);
             }
+        }
+
+        private void ImpactControl_Disposed(object? sender, EventArgs e)
+        {
+            lock (_dataLock)
+            {
+                _impactLoader?.Dispose();
+
+                ClearBrushes();
+                ClearPaths();
+            }
+        }
+
+        private void ClearBrushes()
+        {
+            foreach (SolidBrush brush in _brushes.Values)
+            {
+                brush.Dispose();
+            }
+
+            _brushes.Clear();
+        }
+
+        private void ClearPaths()
+        {
+            foreach (GraphicsPath path in _paths.Values)
+            {
+                path.Dispose();
+            }
+
+            _paths.Clear();
         }
     }
 }
