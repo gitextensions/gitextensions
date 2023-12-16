@@ -54,7 +54,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 catch (Exception ex)
                 {
                     // Consume the exception since it does not bubble up to our handlers
-                    Debug.Write(ex);
+                    Trace.Write(ex);
 #if DEBUG
                     BugReportInvoker.LogError(ex);
 #endif
