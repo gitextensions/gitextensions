@@ -26,6 +26,8 @@ namespace GitExtensions.Plugins.GitImpact
             Impact.Stop();
 
             base.OnClosed(e);
+
+            Impact.Dispose();
         }
 
         private void Impact_Invalidated(object sender, InvalidateEventArgs e)

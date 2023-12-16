@@ -75,6 +75,7 @@ namespace GitExtensions.Plugins.GitImpact
             _closingPluginCancellationToken.Cancel();
             Stop();
             _cancellationTokenSequence.Dispose();
+            _closingPluginCancellationToken.Dispose();
         }
 
         public void Stop()
