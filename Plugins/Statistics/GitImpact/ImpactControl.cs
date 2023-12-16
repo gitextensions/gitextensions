@@ -21,7 +21,7 @@ namespace GitExtensions.Plugins.GitImpact
         private readonly Dictionary<string, ImpactLoader.DataPoint> _authors = [];
 
         // <First weekday of commit date, <Author, <Commits, Added Lines, Deleted Lines>>>
-        private SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>> _impact = [];
+        private SortedDictionary<DateOnly, Dictionary<string, ImpactLoader.DataPoint>> _impact = [];
 
         // List of authors that determines the drawing order
         private readonly List<string> _authorStack = [];
@@ -36,7 +36,7 @@ namespace GitExtensions.Plugins.GitImpact
         private readonly Dictionary<string, List<(PointF point, int size)>> _lineLabels = [];
 
         // The week-labels
-        private readonly List<(PointF point, DateTime date)> _weekLabels = [];
+        private readonly List<(PointF point, DateOnly date)> _weekLabels = [];
 
         private readonly Font _weekFont = new("Arial", WeekFontSize);
         private readonly Brush _weekBrush = Brushes.Gray;
@@ -286,7 +286,7 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                foreach ((PointF point, DateTime date) in _weekLabels)
+                foreach ((PointF point, DateOnly date) in _weekLabels)
                 {
                     string formatedDate = date.ToShortDateString();
                     SizeF sz = g.MeasureString(formatedDate, _weekFont);
@@ -315,7 +315,7 @@ namespace GitExtensions.Plugins.GitImpact
                 _weekLabels.Clear();
 
                 // Iterate through weeks
-                foreach ((DateTime weekDate, Dictionary<string, ImpactLoader.DataPoint> dataByAuthor) in _impact)
+                foreach ((DateOnly weekDate, Dictionary<string, ImpactLoader.DataPoint> dataByAuthor) in _impact)
                 {
                     int y = 0;
 
@@ -361,7 +361,7 @@ namespace GitExtensions.Plugins.GitImpact
                 // Scale week label coordinates
                 for (int i = 0; i < _weekLabels.Count; i++)
                 {
-                    (PointF point, DateTime date) = _weekLabels[i];
+                    (PointF point, DateOnly date) = _weekLabels[i];
 
                     PointF adjustedPoint = new(point.X, point.Y * (float)height_factor);
 

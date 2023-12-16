@@ -9,11 +9,11 @@ namespace GitExtensions.Plugins.GitImpact
     {
         public readonly struct Commit
         {
-            public DateTime Week { get; }
+            public DateOnly Week { get; }
             public string Author { get; }
             public DataPoint Data { get; }
 
-            public Commit(DateTime week, string author, DataPoint data)
+            public Commit(DateOnly week, string author, DataPoint data)
             {
                 Week = week;
                 Author = author;
@@ -161,7 +161,7 @@ namespace GitExtensions.Plugins.GitImpact
         private List<Commit> LoadModuleInfoData(IGitModule module, CancellationToken token)
         {
             string authorName = RespectMailmap ? "%aN" : "%an";
-            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=iso -C --all --no-merges";
+            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=short -C --all --no-merges";
             ExecutionResult result = module.GitExecutable.Execute(command, cancellationToken: token);
             List<string> lines = result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();
 
@@ -204,10 +204,10 @@ namespace GitExtensions.Plugins.GitImpact
                 string author = header[1];
 
                 // Parse commit date
-                DateTime date = DateTime.Parse(header[0]).Date;
+                DateOnly date = DateOnly.Parse(header[0]);
 
                 // Calculate first day of the commit week
-                DateTime week = date.AddDays(-(int)date.DayOfWeek);
+                DateOnly week = date.AddDays(-(int)date.DayOfWeek);
 
                 // Reset commit data
                 int commits = 1;
@@ -250,17 +250,17 @@ namespace GitExtensions.Plugins.GitImpact
         }
 
         public static void AddIntermediateEmptyWeeks(
-            ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact,
+            ref SortedDictionary<DateOnly, Dictionary<string, DataPoint>> impact,
             IEnumerable<string> authors)
         {
             foreach (string author in authors)
             {
                 // Determine first and last commit week of each author
-                DateTime start = DateTime.MinValue;
-                DateTime end = DateTime.MinValue;
+                DateOnly start = DateOnly.MinValue;
+                DateOnly end = DateOnly.MinValue;
                 bool startFound = false;
 
-                foreach ((DateTime weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
+                foreach ((DateOnly weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
                 {
                     if (weekDataByAuthor.ContainsKey(author))
                     {
@@ -280,7 +280,7 @@ namespace GitExtensions.Plugins.GitImpact
                 }
 
                 // Add 0 commits weeks in between
-                foreach ((DateTime weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
+                foreach ((DateOnly weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
                 {
                     if (!weekDataByAuthor.ContainsKey(author) &&
                         weekDate > start && weekDate < end)
