@@ -461,11 +461,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // The list containing the segments is created later. We can set the correct capacity then, to prevent resizing
                 List<RevisionGraphSegment> segments;
 
-                RevisionGraphRow? previousRevisionGraphRow;
                 if (nextIndex == 0)
                 {
-                    previousRevisionGraphRow = null;
-
                     // This is the first row. Start with only the startsegments of this row
                     segments = new List<RevisionGraphSegment>(revisionStartSegments);
 
@@ -479,7 +476,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 else
                 {
                     // Copy lanes from last row
-                    previousRevisionGraphRow = localOrderedRowCache[nextIndex - 1];
+                    RevisionGraphRow previousRevisionGraphRow = localOrderedRowCache[nextIndex - 1];
 
                     // Create segments list with the correct capacity
                     segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revisionStartSegments.Length);
@@ -544,7 +541,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     }
                 }
 
-                localOrderedRowCache.Add(new RevisionGraphRow(revision, segments, previousRevisionGraphRow, Config.MergeGraphLanesHavingCommonParent));
+                localOrderedRowCache.Add(new RevisionGraphRow(revision, segments, Config.MergeGraphLanesHavingCommonParent));
             }
 
             // Straightening does not apply to the first and the last row. The single node there shall not be moved.

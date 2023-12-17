@@ -25,11 +25,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
-        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, RevisionGraphRow previousRow, bool mergeGraphLanesHavingCommonParent)
+        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, bool mergeGraphLanesHavingCommonParent)
         {
             Revision = revision;
             Segments = segments;
-            _previousRow = previousRow;
             _mergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
         }
 
@@ -38,8 +37,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
         private readonly bool _mergeGraphLanesHavingCommonParent;
-
-        private readonly RevisionGraphRow _previousRow;
 
         /// <summary>
         /// This dictionary contains a cached list of all segments and the lane index the segment is in for this row.
@@ -119,6 +116,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             _revisionLane = CreateLane();
                         }
 
+                        segment.IsSecondarySharedLaneAtLeastSinceScore = int.MaxValue;
                         LaneSharing laneSharing;
                         if (!hasStart)
                         {
@@ -150,11 +148,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         if (!hasEnd)
                         {
                             hasEnd = true;
+                            segment.IsSecondarySharedLaneAtLeastSinceScore = int.MaxValue;
                             laneSharing = LaneSharing.ExclusiveOrPrimary;
                         }
                         else
                         {
-                            laneSharing = GetSecondarySharingOfContinuedSegment();
+                            laneSharing = SecondarySharing(segment, Revision.Score);
                         }
 
                         return new Lane(_revisionLane, laneSharing);
@@ -186,22 +185,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
                             if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
                             {
-                                return new Lane(searchParent.Value.Index, GetSecondarySharingOfContinuedSegment());
+                                return new Lane(searchParent.Value.Index, SecondarySharing(segment, Revision.Score));
                             }
                         }
                     }
 
                     // Segment has not been assigned a lane yet
+                    segment.IsSecondarySharedLaneAtLeastSinceScore = int.MaxValue;
                     return new Lane(CreateLane(), LaneSharing.ExclusiveOrPrimary);
 
-                    LaneSharing GetSecondarySharingOfContinuedSegment()
+                    static LaneSharing SecondarySharing(RevisionGraphSegment segment, int revisionScore)
                     {
-                        return _previousRow.GetLaneForSegment(segment).Sharing switch
+                        if (revisionScore > segment.IsSecondarySharedLaneAtLeastSinceScore)
                         {
-                            LaneSharing.ExclusiveOrPrimary or LaneSharing.DifferentEnd => LaneSharing.DifferentStart,
-                            LaneSharing.Entire or LaneSharing.DifferentStart => LaneSharing.Entire,
-                            _ => throw new NotImplementedException()
-                        };
+                            return LaneSharing.Entire;
+                        }
+
+                        segment.IsSecondarySharedLaneAtLeastSinceScore = Math.Min(segment.IsSecondarySharedLaneAtLeastSinceScore, revisionScore);
+                        return LaneSharing.DifferentStart;
                     }
                 }
 
