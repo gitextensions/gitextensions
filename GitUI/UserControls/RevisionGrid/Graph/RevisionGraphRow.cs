@@ -23,18 +23,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
-        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, RevisionGraphRow previousRow)
+        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments)
         {
             Revision = revision;
             Segments = segments;
-            _previousRow = previousRow;
         }
 
         public RevisionGraphRevision Revision { get; }
 
         public IReadOnlyList<RevisionGraphSegment> Segments { get; }
-
-        private readonly RevisionGraphRow _previousRow;
 
         /// <summary>
         /// This dictionary contains a cached list of all segments and the lane index the segment is in for this row.
@@ -114,6 +111,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             _revisionLane = CreateLane();
                         }
 
+                        segment.IsSecondarySharedLane = false;
                         LaneSharing laneSharing;
                         if (!hasStart)
                         {
@@ -145,11 +143,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         if (!hasEnd)
                         {
                             hasEnd = true;
+                            segment.IsSecondarySharedLane = false;
                             laneSharing = LaneSharing.ExclusiveOrPrimary;
                         }
                         else
                         {
-                            laneSharing = GetSecondarySharingOfContinuedSegment();
+                            laneSharing = SecondarySharing(segment);
                         }
 
                         return new Lane(_revisionLane, laneSharing);
@@ -179,21 +178,23 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
                         if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
                         {
-                            return new Lane(searchParent.Value.Index, GetSecondarySharingOfContinuedSegment());
+                            return new Lane(searchParent.Value.Index, SecondarySharing(segment));
                         }
                     }
 
                     // Segment has not been assigned a lane yet
+                    segment.IsSecondarySharedLane = false;
                     return new Lane(CreateLane(), LaneSharing.ExclusiveOrPrimary);
 
-                    LaneSharing GetSecondarySharingOfContinuedSegment()
+                    static LaneSharing SecondarySharing(RevisionGraphSegment segment)
                     {
-                        return _previousRow.GetLaneForSegment(segment).Sharing switch
+                        if (segment.IsSecondarySharedLane)
                         {
-                            LaneSharing.ExclusiveOrPrimary or LaneSharing.DifferentEnd => LaneSharing.DifferentStart,
-                            LaneSharing.Entire or LaneSharing.DifferentStart => LaneSharing.Entire,
-                            _ => throw new NotImplementedException()
-                        };
+                            return LaneSharing.Entire;
+                        }
+
+                        segment.IsSecondarySharedLane = true;
+                        return LaneSharing.DifferentStart;
                     }
                 }
 
