@@ -468,10 +468,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 for (int currentIndex = startIndex; currentIndex <= lastStraightenIndex;)
                 {
                     goBackLimit = Math.Max(goBackLimit, currentIndex - _straightenLanesLookAhead);
-                    bool moved = false;
                     IRevisionGraphRow currentRow = localOrderedRowCache[currentIndex];
+                    if (currentRow.Segments.Count >= MaxLanes)
+                    {
+                        ++currentIndex;
+                        continue;
+                    }
+
+                    bool moved = false;
                     IRevisionGraphRow previousRow = localOrderedRowCache[currentIndex - 1];
-                    foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Take(MaxLanes))
+                    foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments)
                     {
                         Lane currentRowLane = currentRow.GetLaneForSegment(revisionGraphSegment);
                         if (currentRowLane.Sharing != LaneSharing.ExclusiveOrPrimary)
