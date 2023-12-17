@@ -559,29 +559,23 @@ namespace GitUI.UserControls.RevisionGrid
         private void ResetGraphIndices()
         {
             _toBeSelectedGraphIndexesCache = new(() => CalculateGraphIndices());
-        }
+            return;
 
-        /// <summary>
-        /// Get the revision graph row indexes for the ToBeSelectedObjectIds.
-        /// (In filtering situations, all may no longer be in the grid).
-        /// </summary>
-        private IList<int> CalculateGraphIndices()
-        {
-            // This will assert if switching from one repo with no checkout but with a revision selected
-            // to a repo also without a checkout. This is handled below.
-            DebugHelpers.Assert(_loadedToBeSelectedRevisionsCount == ToBeSelectedObjectIds.Count,
-                $"{nameof(CalculateGraphIndices)}() was called before all expected revisions were loaded.");
-
-            List<int> toBeSelectedGraphIndexes = [];
-            foreach (ObjectId objectId in ToBeSelectedObjectIds)
+            // Get the revision graph row indexes for the ToBeSelectedObjectIds.
+            // (In filtering situations, all previous commits may no longer be in the grid).
+            IList<int> CalculateGraphIndices()
             {
-                if (_revisionGraph.TryGetRowIndex(objectId, out int rowIndexToBeSelected))
+                List<int> toBeSelectedGraphIndexes = [];
+                foreach (ObjectId objectId in ToBeSelectedObjectIds)
                 {
-                    toBeSelectedGraphIndexes.Add(rowIndexToBeSelected);
+                    if (_revisionGraph.TryGetRowIndex(objectId, out int rowIndexToBeSelected))
+                    {
+                        toBeSelectedGraphIndexes.Add(rowIndexToBeSelected);
+                    }
                 }
-            }
 
-            return toBeSelectedGraphIndexes;
+                return toBeSelectedGraphIndexes;
+            }
         }
 
         private void SelectRowsIfReady(int rowCount)
