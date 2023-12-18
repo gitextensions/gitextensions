@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Globalization;
+using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -58,6 +59,7 @@ namespace GitExtensions.Plugins.GitImpact
         private readonly IGitModule _module;
         private readonly JoinableTask _mainModuleLoadingTask;
         private readonly Dictionary<string, List<Commit>> _modulesCommits = new(1);
+        private readonly int _firstDayOfWeek = (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
 
         public ImpactLoader(IGitModule module)
         {
@@ -208,7 +210,7 @@ namespace GitExtensions.Plugins.GitImpact
                 DateOnly date = DateOnly.Parse(header[0]);
 
                 // Calculate first day of the commit week
-                DateOnly week = date.AddDays(-(int)date.DayOfWeek);
+                DateOnly week = date.AddDays(_firstDayOfWeek - (int)date.DayOfWeek);
 
                 // Reset commit data
                 int commits = 1;
