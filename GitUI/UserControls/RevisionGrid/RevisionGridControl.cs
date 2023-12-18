@@ -1231,55 +1231,59 @@ namespace GitUI
 
             void OnRevisionRead(GitRevision revision)
             {
-                if (!firstRevisionReceived)
+                try
                 {
-                    // Wait for refs,CurrentCheckout and stashes as second step
-                    this.InvokeAndForget(() => ShowLoading(showSpinner: false));
-                    semaphoreUpdateGrid.Wait(cancellationToken);
-                    semaphoreUpdateGrid.Wait(cancellationToken);
-                    firstRevisionReceived = true;
-                }
-
-                if (stashesById is not null)
-                {
-                    if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
+                    if (!firstRevisionReceived)
                     {
-                        revision.ReflogSelector = gridStash.ReflogSelector;
-
-                        // Do not add this again (when the main commit is handled)
-                        stashesById.Remove(revision.ObjectId);
+                        // Wait for refs,CurrentCheckout and stashes as second step
+                        this.InvokeAndForget(() => ShowLoading(showSpinner: false));
+                        semaphoreUpdateGrid.Wait(cancellationToken);
+                        semaphoreUpdateGrid.Wait(cancellationToken);
+                        firstRevisionReceived = true;
                     }
-                    else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+
+                    if (stashesById is not null)
                     {
-                        foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
+                        if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
                         {
-                            // Add if not already added (reflogs etc list before parent commit)
-                            if (stashesById.ContainsKey(stash.ObjectId))
+                            revision.ReflogSelector = gridStash.ReflogSelector;
+
+                            // Do not add this again (when the main commit is handled)
+                            stashesById.Remove(revision.ObjectId);
+                        }
+                        else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+                        {
+                            foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
                             {
-                                _gridView.Add(stash);
-                                if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                // Add if not already added (reflogs etc list before parent commit)
+                                if (stashesById.ContainsKey(stash.ObjectId))
                                 {
-                                    _gridView.Add(untracked);
+                                    _gridView.Add(stash);
+                                    if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                    {
+                                        _gridView.Add(untracked);
+                                    }
                                 }
                             }
                         }
                     }
+
+                    // Look up any refs associated with this revision
+                    revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
+
+                    if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
+                    {
+                        // Insert artificial worktree/index just before HEAD (CurrentCheckout)
+                        // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
+                        headIsHandled = true;
+                        AddArtificialRevisions();
+                    }
+
+                    _gridView.Add(revision);
                 }
-
-                // Look up any refs associated with this revision
-                revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
-
-                if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
+                catch (OperationCanceledException)
                 {
-                    // Insert artificial worktree/index just before HEAD (CurrentCheckout)
-                    // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
-                    headIsHandled = true;
-                    AddArtificialRevisions();
                 }
-
-                _gridView.Add(revision);
-
-                return;
             }
 
             bool ShowArtificialRevisions()
