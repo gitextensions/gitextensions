@@ -143,6 +143,7 @@ namespace GitUI.CommandsDialogs
                                 fileContent += Environment.NewLine;
                             }
 
+                            Directory.CreateDirectory(Path.GetDirectoryName(x));
                             File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(fileContent));
                             _originalGitIgnoreFileContent = fileContent;
                         });
