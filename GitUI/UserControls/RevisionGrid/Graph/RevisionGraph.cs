@@ -550,14 +550,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             loadingCompleted = loadingCompleted && lastToCacheRowIndex == lastOrderedNodeIndex;
             int straightenLanesStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead);
             int straightenLanesLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead;
-            StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, localOrderedRowCache);
+            StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, localOrderedRowCache, Config.StraightenGraphSegmentsLimit);
 
             int straightenDiagonalsLookAhead = _straightenDiagonalsLookAhead;
             if (straightenDiagonalsLookAhead > 0)
             {
                 int straightenDiagonalsStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead);
                 int straightenDiagonalsLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead;
-                StraightenDiagonals(straightenDiagonalsStartIndex, straightenDiagonalsLastIndex, lastLookAheadIndex: lastToCacheRowIndex, straightenDiagonalsLookAhead, localOrderedRowCache);
+                StraightenDiagonals(straightenDiagonalsStartIndex, straightenDiagonalsLastIndex, lastLookAheadIndex: lastToCacheRowIndex, straightenDiagonalsLookAhead, localOrderedRowCache, Config.StraightenGraphSegmentsLimit);
             }
 
             _orderedRowCache = localOrderedRowCache.ToImmutable();
@@ -633,7 +633,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     .ToArray();
             }
 
-            static void StraightenLanes(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, IReadOnlyList<RevisionGraphRow> localOrderedRowCache)
+            static void StraightenLanes(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, IReadOnlyList<RevisionGraphRow> localOrderedRowCache, int straightenGraphSegmentsLimit)
             {
                 // Try to detect this:
                 // | | |<-- previous lane
@@ -661,8 +661,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 for (int currentIndex = startIndex; currentIndex <= lastStraightenIndex;)
                 {
                     goBackLimit = Math.Max(goBackLimit, currentIndex - _straightenLanesLookAhead);
-                    bool moved = false;
                     RevisionGraphRow currentRow = localOrderedRowCache[currentIndex];
+                    if (currentRow.Segments.Count > straightenGraphSegmentsLimit)
+                    {
+                        ++currentIndex;
+                        continue;
+                    }
+
+                    bool moved = false;
                     RevisionGraphRow previousRow = localOrderedRowCache[currentIndex - 1];
                     foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Take(MaxLanes))
                     {
@@ -711,7 +717,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 }
             }
 
-            static void StraightenDiagonals(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, int straightenDiagonalsLookAhead, IList<RevisionGraphRow> localOrderedRowCache)
+            static void StraightenDiagonals(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, int straightenDiagonalsLookAhead, IList<RevisionGraphRow> localOrderedRowCache, int straightenGraphSegmentsLimit)
             {
                 List<MoveLaneBy> moveLaneBy = new(capacity: straightenDiagonalsLookAhead);
                 int goBackLimit = 1;
@@ -719,8 +725,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     goBackLimit = Math.Max(goBackLimit, currentIndex - straightenDiagonalsLookAhead);
                     int currentLastLookAheadIndex = Math.Min(currentIndex + straightenDiagonalsLookAhead, lastLookAheadIndex);
-                    bool moved = false;
                     IRevisionGraphRow currentRow = localOrderedRowCache[currentIndex];
+                    if (currentRow.Segments.Count > straightenGraphSegmentsLimit)
+                    {
+                        ++currentIndex;
+                        continue;
+                    }
+
+                    bool moved = false;
                     IRevisionGraphRow previousRow = localOrderedRowCache[currentIndex - 1];
                     foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Take(MaxLanes))
                     {

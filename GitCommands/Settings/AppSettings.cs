@@ -1517,6 +1517,8 @@ namespace GitCommands
 
         public static ISetting<bool> StraightenGraphDiagonals { get; } = Setting.Create(ExperimentalSettingsPath, nameof(StraightenGraphDiagonals), true);
 
+        public static ISetting<int> StraightenGraphSegmentsLimit { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphSegmentsLimit), 80);
+
         public static string LastFormatPatchDir
         {
             get => GetString("lastformatpatchdir", "");

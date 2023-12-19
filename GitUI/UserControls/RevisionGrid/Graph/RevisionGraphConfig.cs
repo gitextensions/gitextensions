@@ -12,10 +12,13 @@ internal readonly struct RevisionGraphConfig
 
     public bool StraightenGraphDiagonals { get; }
 
+    public int StraightenGraphSegmentsLimit { get; }
+
     public RevisionGraphConfig()
     {
         MergeGraphLanesHavingCommonParent = AppSettings.MergeGraphLanesHavingCommonParent.Value;
         RenderGraphWithDiagonals = AppSettings.RenderGraphWithDiagonals.Value;
         StraightenGraphDiagonals = AppSettings.StraightenGraphDiagonals.Value;
+        StraightenGraphSegmentsLimit = AppSettings.StraightenGraphSegmentsLimit.Value;
     }
 }
