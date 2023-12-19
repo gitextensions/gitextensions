@@ -1512,6 +1512,8 @@ namespace GitCommands
 
         public static ISetting<bool> MergeGraphLanesHavingCommonParent { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(MergeGraphLanesHavingCommonParent), true);
 
+        public static ISetting<int> StraightenGraphSegmentsLimit { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphSegmentsLimit), 80);
+
         public static string LastFormatPatchDir
         {
             get => GetString("lastformatpatchdir", "");
