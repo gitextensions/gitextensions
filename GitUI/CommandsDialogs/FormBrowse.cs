@@ -314,7 +314,7 @@ namespace GitUI.CommandsDialogs
             }
 
             _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
-            toolStripButtonPush.Initialize(_aheadBehindDataProvider);
+            toolStripButtonPush.ResetToDefaultState();
             repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid);
             revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
 
@@ -879,6 +879,7 @@ namespace GitUI.CommandsDialogs
 
                 toolStripButtonPull.Enabled = validBrowseDir;
                 toolStripButtonPush.Enabled = validBrowseDir;
+                toolStripButtonPush.ResetBeforeUpdate();
                 dashboardToolStripMenuItem.Visible = isDashboard;
                 pluginsToolStripMenuItem.Visible = validBrowseDir;
                 repositoryToolStripMenuItem.Visible = validBrowseDir;
@@ -952,9 +953,22 @@ namespace GitUI.CommandsDialogs
 
                     _formBrowseMenus.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
 
-                    // Request all branches if left panel is shown
-                    IDictionary<string, AheadBehindData> aheadBehindData = _aheadBehindDataProvider?.GetData(MainSplitContainer.Panel1Collapsed ? RevisionGrid.CurrentBranch.Value : "");
-                    toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, RevisionGrid.CurrentBranch.Value);
+                    if (AppSettings.ShowAheadBehindData)
+                    {
+                        string currentBranch = RevisionGrid.CurrentBranch.Value;
+                        ThreadHelper.FileAndForget(async () =>
+                        {
+                            // Always query only current branch here
+                            // because, due to race condition with left panel async refresh:
+                            // * when there are a lot of branches, we end up here 1st (and so, we want only the current branch data
+                            // because getting ahead - behind data for all branches will be (very ?) long
+                            // * when there are few branches, we will end up here not in 1st
+                            // and the data will be taken from cache (so what we pass as argument is kind of useless)
+                            IDictionary<string, AheadBehindData> aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
+                            await this.SwitchToMainThreadAsync();
+                            toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, currentBranch);
+                        });
+                    }
 
                     ActiveControl = RevisionGrid;
                 }

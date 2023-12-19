@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Text.RegularExpressions;
 using GitExtUtils;
 using GitUIPluginInterfaces;
@@ -25,6 +26,7 @@ namespace GitCommands.Git
         private readonly string _refFormat = @"%(push:track,nobracket)::%(upstream:track,nobracket)::%(push)::%(upstream)::%(refname:short)";
         private Lazy<IDictionary<string, AheadBehindData>?> _lazyData;
         private string _branchName;
+        private object _lock = new();
 
         public AheadBehindDataProvider(Func<IExecutable> getGitExecutable)
         {
@@ -44,17 +46,24 @@ namespace GitCommands.Git
                 return null;
             }
 
-            // Callers setting branch name has the responsibility to ensure that not all are needed
-            if (string.IsNullOrWhiteSpace(branchName) && !string.IsNullOrWhiteSpace(_branchName))
+            lock (_lock)
             {
-                DebugHelpers.Fail($"Unexpectedly call for all branches after cache filled with specific branch {_branchName}");
-                ResetCache();
-            }
+                // Callers setting branch name has the responsibility to ensure that not all are needed
+                if (string.IsNullOrWhiteSpace(branchName) && !string.IsNullOrWhiteSpace(_branchName))
+                {
+                    Trace.WriteLine($"Call for all branches after cache filled with specific branch {_branchName}");
+                    ResetCache();
+                }
 
-            // Use Lazy<> to synchronize callers
-            _lazyData ??= new(() => GetData(null, branchName));
-            _branchName = branchName;
-            return _lazyData.Value;
+                // Use Lazy<> to synchronize callers
+                if (_lazyData == null)
+                {
+                    _lazyData = new(() => GetData(null, branchName));
+                    _branchName = branchName;
+                }
+
+                return _lazyData.Value;
+            }
         }
 
         // This method is required to facilitate unit tests
