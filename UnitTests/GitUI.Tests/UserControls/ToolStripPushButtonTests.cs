@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Castle.Core.Internal;
+using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
@@ -25,7 +26,7 @@ namespace GitUITests.UserControls
             _aheadBehindDataProvider = Substitute.For<IAheadBehindDataProvider>();
 
             _sut = new ToolStripPushButton();
-            _sut.Initialize(_aheadBehindDataProvider);
+            _sut.ResetToDefaultState();
         }
 
         [TearDown]
@@ -37,7 +38,7 @@ namespace GitUITests.UserControls
         [Test]
         public void DisplayAheadBehindInformation_should_not_display_anything_if_does_not_support_ahead_behind()
         {
-            _sut.Initialize(null);
+            _sut.ResetToDefaultState();
 
             _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(), "any-branchName");
 
@@ -154,6 +155,24 @@ namespace GitUITests.UserControls
             _sut.ToolTipText.Should().NotContain("99 new commit(s) will be pushed");
             _sut.ToolTipText.Should().NotContain("3 commit(s) should be integrated");
             _sut.Image.RawFormat.GetHashCode().Should().Be(Images.Unstage.RawFormat.GetHashCode());
+        }
+
+        [Test]
+        public void PushButton_should_keep_size_before_update_and_decrease_if_fewer_changes()
+        {
+            string branchName = "my-branch";
+            Dictionary<string, AheadBehindData> data = new()
+            {
+                { branchName, new AheadBehindData { AheadCount = "99", BehindCount = "33", Branch = branchName } }
+            };
+            _aheadBehindDataProvider.GetData(branchName).Returns(x => data);
+
+            _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName);
+            int updatedSize = _sut.GetTestAccessor().GetButtonWidth();
+            _sut.ResetBeforeUpdate();
+            _sut.GetTestAccessor().GetButtonWidth().Should().Be(updatedSize);
+            _sut.GetTestAccessor().GetButtonText().IsNullOrEmpty().Should().BeTrue();
+            _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
         }
     }
 }
