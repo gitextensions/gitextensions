@@ -214,7 +214,6 @@ namespace GitUI.CommandsDialogs
             FileName = FileName.ToPosixPath();
 
             RevisionGrid.SetAndApplyPathFilter(FileName);
-            RevisionGrid.Load();
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
