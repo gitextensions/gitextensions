@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.ExceptionServices;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -1340,7 +1341,7 @@ namespace GitUI
                 _isRefreshingRevisions = false;
 
                 // Rethrow the exception on the UI thread
-                ThreadHelper.FileAndForget(() => throw exception);
+                ThreadHelper.FileAndForget(() => ExceptionDispatchInfo.Throw(exception));
             }
 
             void OnRevisionReadCompleted()
