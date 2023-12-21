@@ -164,7 +164,7 @@ namespace GitExtensions.Plugins.GitImpact
         private List<Commit> LoadModuleInfoData(IGitModule module, CancellationToken token)
         {
             string authorName = RespectMailmap ? "%aN" : "%an";
-            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=short -C --all --no-merges";
+            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=short --find-copies --all --no-merges";
             ExecutionResult result = module.GitExecutable.Execute(command, cancellationToken: token);
             List<string> lines = result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();
 
