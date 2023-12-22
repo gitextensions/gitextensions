@@ -8,7 +8,9 @@ namespace GitExtensions.Plugins.GitImpact
     public partial class ImpactControl : UserControl
     {
         private static readonly int BlockWidth = DpiUtil.Scale(60);
+        private static readonly int BlockHalfWidth = BlockWidth / 2;
         private static readonly int TransitionWidth = DpiUtil.Scale(50);
+        private static readonly int TransitionHalfWidth = TransitionWidth / 2;
 
         private const int LinesFontSize = 10;
         private const int WeekFontSize = 8;
@@ -350,7 +352,7 @@ namespace GitExtensions.Plugins.GitImpact
                     h_max = Math.Max(h_max, y);
 
                     // Add week date label
-                    _weekLabels.Add((new PointF(x + (BlockWidth / 2f), y), weekDate));
+                    _weekLabels.Add((new PointF(x + BlockHalfWidth, y), weekDate));
 
                     // Increase x for next week
                     x += BlockWidth + TransitionWidth;
@@ -396,7 +398,7 @@ namespace GitExtensions.Plugins.GitImpact
 
                         if (rect.Height > LinesFontSize * 1.5)
                         {
-                            PointF adjustedPoint = new(rect.Left + (BlockWidth / 2), rect.Top + (rect.Height / 2));
+                            PointF adjustedPoint = new(rect.Left + BlockHalfWidth, rect.Top + (rect.Height / 2));
 
                             authorLineLabels.Add((adjustedPoint, num));
                         }
@@ -418,26 +420,24 @@ namespace GitExtensions.Plugins.GitImpact
                         (Rectangle rect, int _) = points[i];
 
                         authorGraphicsPath.AddLine(rect.Left, rect.Top,
-                                               rect.Right, rect.Top);
+                                                   rect.Right, rect.Top);
 
                         if (i < points.Count - 1)
                         {
                             (Rectangle nextRect, int _) = points[i + 1];
 
                             authorGraphicsPath.AddBezier(rect.Right, rect.Top,
-                                                     rect.Right + (TransitionWidth / 2), rect.Top,
-                                                     rect.Right + (TransitionWidth / 2), nextRect.Top,
-                                                     nextRect.Left, nextRect.Top);
+                                                         rect.Right + TransitionHalfWidth, rect.Top,
+                                                         rect.Right + TransitionHalfWidth, nextRect.Top,
+                                                         nextRect.Left, nextRect.Top);
                         }
                     }
 
                     (Rectangle lastRect, int _) = points[^1];
 
                     // Right border
-                    authorGraphicsPath.AddLine(lastRect.Right,
-                                           lastRect.Top,
-                                           lastRect.Right,
-                                           lastRect.Bottom);
+                    authorGraphicsPath.AddLine(lastRect.Right, lastRect.Top,
+                                               lastRect.Right, lastRect.Bottom);
 
                     // Bottom borders
                     for (int i = points.Count - 1; i >= 0; i--)
@@ -445,15 +445,15 @@ namespace GitExtensions.Plugins.GitImpact
                         (Rectangle rect, int _) = points[i];
 
                         authorGraphicsPath.AddLine(rect.Right, rect.Bottom,
-                                               rect.Left, rect.Bottom);
+                                                   rect.Left, rect.Bottom);
 
                         if (i > 0)
                         {
                             (Rectangle prevRect, int _) = points[i - 1];
 
                             authorGraphicsPath.AddBezier(rect.Left, rect.Bottom,
-                                                     rect.Left - (TransitionWidth / 2), rect.Bottom,
-                                                     rect.Left - (TransitionWidth / 2), prevRect.Bottom,
+                                                     rect.Left - TransitionHalfWidth, rect.Bottom,
+                                                     rect.Left - TransitionHalfWidth, prevRect.Bottom,
                                                      prevRect.Right, prevRect.Bottom);
                         }
                     }
