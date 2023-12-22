@@ -35,10 +35,10 @@ namespace GitExtensions.Plugins.GitImpact
         private readonly Dictionary<string, SolidBrush> _brushes = [];
 
         // The changed-lines-labels for each author
-        private readonly Dictionary<string, List<(PointF point, int size)>> _lineLabels = [];
+        private readonly Dictionary<string, List<(PointF point, string changeCount)>> _lineLabels = [];
 
         // The week-labels
-        private readonly List<(PointF point, DateOnly date)> _weekLabels = [];
+        private readonly List<(PointF point, string date)> _weekLabels = [];
 
         private readonly Font _weekFont = new("Arial", WeekFontSize);
         private readonly Brush _weekBrush = Brushes.Gray;
@@ -270,17 +270,14 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                if (!_lineLabels.TryGetValue(author, out List<(PointF point, int size)> authorData))
+                if (!_lineLabels.TryGetValue(author, out List<(PointF position, string changeCount)> authorData))
                 {
                     return;
                 }
 
-                foreach ((PointF point, int size) in authorData)
+                foreach ((PointF position, string changeCount) in authorData)
                 {
-                    string sizeText = size.ToString();
-                    SizeF sz = g.MeasureString(sizeText, _linesFont);
-                    PointF pt = new(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
-                    g.DrawString(sizeText, _linesFont, _linesBrush, pt);
+                    g.DrawString(changeCount, _linesFont, _linesBrush, position);
                 }
             }
         }
@@ -289,12 +286,9 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                foreach ((PointF point, DateOnly date) in _weekLabels)
+                foreach ((PointF point, string date) in _weekLabels)
                 {
-                    string formatedDate = date.ToShortDateString();
-                    SizeF sz = g.MeasureString(formatedDate, _weekFont);
-                    PointF pt = new(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
-                    g.DrawString(formatedDate, _weekFont, _weekBrush, pt);
+                    g.DrawString(date, _weekFont, _weekBrush, point);
                 }
             }
         }
@@ -311,6 +305,8 @@ namespace GitExtensions.Plugins.GitImpact
             int h_max = 0;
             int x = 0;
             Dictionary<string, List<(Rectangle, int changeCount)>> author_points_dict = [];
+
+            using Graphics g = CreateGraphics();
 
             lock (_dataLock)
             {
@@ -352,7 +348,9 @@ namespace GitExtensions.Plugins.GitImpact
                     h_max = Math.Max(h_max, y);
 
                     // Add week date label
-                    _weekLabels.Add((new PointF(x + BlockHalfWidth, y), weekDate));
+                    string formatedWeekDate = weekDate.ToShortDateString();
+
+                    _weekLabels.Add((new PointF(x + BlockHalfWidth, y), formatedWeekDate));
 
                     // Increase x for next week
                     x += BlockWidth + TransitionWidth;
@@ -364,11 +362,14 @@ namespace GitExtensions.Plugins.GitImpact
                 // Scale week label coordinates
                 for (int i = 0; i < _weekLabels.Count; i++)
                 {
-                    (PointF point, DateOnly date) = _weekLabels[i];
+                    (PointF point, string formatedWeekDate) = _weekLabels[i];
 
                     PointF adjustedPoint = new(point.X, point.Y * (float)height_factor);
 
-                    _weekLabels[i] = (adjustedPoint, date);
+                    SizeF sz = g.MeasureString(formatedWeekDate, _weekFont);
+                    PointF centeredAdjustedPoint = new(adjustedPoint.X - (sz.Width / 2), adjustedPoint.Y + (sz.Height / 2));
+
+                    _weekLabels[i] = (centeredAdjustedPoint, formatedWeekDate);
                 }
 
                 // Clear previous paths
@@ -383,24 +384,28 @@ namespace GitExtensions.Plugins.GitImpact
                     // Scale heights
                     for (int i = 0; i < points.Count; i++)
                     {
-                        (Rectangle unscaledRect, int num) = points[i];
+                        (Rectangle unscaledRect, int changeCount) = points[i];
 
                         Rectangle rect = new(unscaledRect.Left, (int)(unscaledRect.Top * height_factor),
                             unscaledRect.Width, Math.Max(1, (int)(unscaledRect.Height * height_factor)));
 
-                        points[i] = (rect, num);
+                        points[i] = (rect, changeCount);
 
                         // Add lines-changed-labels
-                        if (!_lineLabels.TryGetValue(author, out List<(PointF point, int size)> authorLineLabels))
+                        if (!_lineLabels.TryGetValue(author, out List<(PointF point, string changeCount)> authorLineLabels))
                         {
-                            _lineLabels.Add(author, authorLineLabels = new List<(PointF, int)>());
+                            _lineLabels.Add(author, authorLineLabels = new List<(PointF, string)>());
                         }
 
                         if (rect.Height > LinesFontSize * 1.5)
                         {
                             PointF adjustedPoint = new(rect.Left + BlockHalfWidth, rect.Top + (rect.Height / 2));
 
-                            authorLineLabels.Add((adjustedPoint, num));
+                            string changeCountText = changeCount.ToString();
+                            SizeF sz = g.MeasureString(changeCountText, _linesFont);
+                            PointF centeredAdjustedPosition = new(adjustedPoint.X - (sz.Width / 2), adjustedPoint.Y - (sz.Height / 2));
+
+                            authorLineLabels.Add((centeredAdjustedPosition, changeCountText));
                         }
                     }
 
