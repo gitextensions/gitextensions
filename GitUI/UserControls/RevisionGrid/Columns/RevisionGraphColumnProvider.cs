@@ -23,8 +23,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             _revisionGraph = revisionGraph;
             _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(_revisionGraph), gitRevisionSummaryBuilder);
 
-            // TODO is it worth creating a lighter-weight column type?
-
             Column = new DataGridViewTextBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
@@ -75,7 +73,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return false;
                 }
 
-                _graphCache.Allocate(width, height, GraphRenderer.LaneWidth);
+                _graphCache.Allocate(Math.Max(width, GraphRenderer.LaneWidth * 3), height);
 
                 // Compute how much the head needs to move to show the requested item.
                 int neededHeadAdjustment = rowIndex - _graphCache.Head;
@@ -93,11 +91,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     : 0;
 
                 // Adjust the head of the cache
-                _graphCache.Head = _graphCache.Head + neededHeadAdjustment;
-                _graphCache.HeadRow = (_graphCache.HeadRow + neededHeadAdjustment) % _graphCache.Capacity;
+                _graphCache.Head += neededHeadAdjustment;
+                _graphCache.HeadRow += neededHeadAdjustment;
+                _graphCache.HeadRow %= _graphCache.Capacity;
                 if (_graphCache.HeadRow < 0)
                 {
-                    _graphCache.HeadRow = _graphCache.Capacity + _graphCache.HeadRow;
+                    _graphCache.HeadRow += _graphCache.Capacity;
                 }
 
                 int start;
@@ -121,15 +120,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 else
                 {
                     // Item already in the cache
-                    CreateRectangle();
+                    DrawRectangleFromCache();
                     return true;
                 }
 
-                DrawVisibleGraph();
-                CreateRectangle();
+                RenderVisibleGraphToCache();
+                DrawRectangleFromCache();
                 return true;
 
-                void CreateRectangle()
+                void DrawRectangleFromCache()
                 {
                     Rectangle cellRect = new(
                         0,
@@ -144,7 +143,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         GraphicsUnit.Pixel);
                 }
 
-                void DrawVisibleGraph()
+                void RenderVisibleGraphToCache()
                 {
                     for (int index = start; index < end; index++)
                     {
@@ -193,7 +192,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public override void Clear()
         {
             _revisionGraph.Clear();
-            _graphCache.Clear();
             _graphCache.Reset();
         }
 
@@ -207,7 +205,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
 
             _graphCache.Reset();
-            Column.Width = CalculateGraphColumnWidth(range, Column.Width, Column.MinimumWidth);
+            Column.Width = CalculateGraphColumnWidth(range);
         }
 
         public override void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
@@ -229,27 +227,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             // Keep an extra page in the cache
             _graphCache.AdjustCapacity((range.Count * 2) + 1);
-            Column.Width = CalculateGraphColumnWidth(range, Column.Width, Column.MinimumWidth);
+            Column.Width = CalculateGraphColumnWidth(range);
         }
 
-        // TODO when rendering, if we notice a row has too many lanes, trigger updating the column's width
-
-        private int CalculateGraphColumnWidth(in VisibleRowRange range, int currentWidth, int minimumWidth)
+        private int CalculateGraphColumnWidth(in VisibleRowRange range)
         {
-            int laneCount = range.Select(index => _revisionGraph.GetSegmentsForRow(index))
-                                 .WhereNotNull()
-                                 .Select(laneRow => laneRow.GetLaneCount())
-                                 .DefaultIfEmpty()
-                                 .Max();
-
-            laneCount = Math.Min(laneCount, GraphRenderer.MaxLanes);
-            int columnWidth = (GraphRenderer.LaneWidth * laneCount) + ColumnLeftMargin;
-            if (columnWidth > minimumWidth)
-            {
-                return columnWidth;
-            }
-
-            return minimumWidth + ColumnLeftMargin;
+            int maxLaneCount = range.Max(index => _revisionGraph.GetSegmentsForRow(index)?.GetLaneCount()) ?? 0;
+            int visibleLaneCount = Math.Min(maxLaneCount, GraphRenderer.MaxLanes);
+            int lanesWidth = GraphRenderer.LaneWidth * visibleLaneCount;
+            return ColumnLeftMargin + Math.Max(lanesWidth, Column.MinimumWidth);
         }
 
         public bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision)
@@ -272,85 +258,68 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         }
     }
 
-    public sealed class GraphCache
+    internal sealed class GraphCache
     {
-        private Bitmap? _graphBitmap;
-        private Graphics? _graphBitmapGraphics;
-
-        public Bitmap? GraphBitmap => _graphBitmap;
-        public Graphics? GraphBitmapGraphics => _graphBitmapGraphics;
+        internal Bitmap? GraphBitmap { get; private set; }
+        internal Graphics? GraphBitmapGraphics { get; private set; }
 
         /// <summary>
         /// The 'slot' that is the head of the circular bitmap.
         /// </summary>
-        public int Head { get; set; } = -1;
+        internal int Head { get; set; }
 
         /// <summary>
         /// The node row that is in the head slot.
         /// </summary>
-        public int HeadRow { get; set; }
+        internal int HeadRow { get; set; }
 
         /// <summary>
         /// Number of elements in the cache.
         /// </summary>
-        public int Count { get; set; }
+        internal int Count { get; set; }
 
         /// <summary>
         /// Number of elements allowed in the cache. Is based on control height.
         /// </summary>
-        public int Capacity { get; private set; }
+        internal int Capacity { get; private set; }
 
-        public void AdjustCapacity(int capacity)
+        internal void AdjustCapacity(int capacity)
         {
-            if (capacity < 1)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
+            ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
             Capacity = capacity;
         }
 
-        public void Allocate(int width, int height, int laneWidth)
+        internal void Allocate(int width, int height)
         {
-            if (_graphBitmap is not null && _graphBitmap.Width >= width && _graphBitmap.Height == height)
+            if (GraphBitmap is not null && GraphBitmap.Width >= width && GraphBitmap.Height >= height)
             {
                 return;
             }
 
-            if (_graphBitmap is not null)
+            if (GraphBitmap is not null)
             {
-                _graphBitmap.Dispose();
-                _graphBitmap = null;
+                GraphBitmap.Dispose();
+                GraphBitmap = null;
             }
 
-            if (_graphBitmapGraphics is not null)
+            if (GraphBitmapGraphics is not null)
             {
-                _graphBitmapGraphics.Dispose();
-                _graphBitmapGraphics = null;
+                GraphBitmapGraphics.Dispose();
+                GraphBitmapGraphics = null;
             }
 
-            _graphBitmap = new Bitmap(
-                Math.Max(width, laneWidth * 3),
-                height,
-                PixelFormat.Format32bppPArgb);
-            _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
-            _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+            GraphBitmap = new Bitmap(width, height, PixelFormat.Format32bppPArgb);
+            GraphBitmapGraphics = Graphics.FromImage(GraphBitmap);
+            GraphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             // With SmoothingMode != None it is better to use PixelOffsetMode.HighQuality
             // e.g. to avoid shrinking rectangles, ellipses and etc. by 1 px from right bottom
-            _graphBitmapGraphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            GraphBitmapGraphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-            Head = 0;
-            Count = 0;
+            Reset();
         }
 
-        public void Clear()
-        {
-            Head = -1;
-            HeadRow = 0;
-        }
-
-        public void Reset()
+        internal void Reset()
         {
             Head = 0;
             Count = 0;
