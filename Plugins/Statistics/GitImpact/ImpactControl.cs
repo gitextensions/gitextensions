@@ -183,27 +183,18 @@ namespace GitExtensions.Plugins.GitImpact
             }
         }
 
-        private int GetGraphWidth()
-        {
-            lock (_dataLock)
-            {
-                return Math.Max(0, (_impact.Count * (BlockWidth + TransitionWidth)) - TransitionWidth);
-            }
-        }
+        private int GetGraphWidth() => Math.Max(0, (_impact.Count * (BlockWidth + TransitionWidth)) - TransitionWidth);
 
         private void UpdateScrollbar()
         {
-            lock (_dataLock)
-            {
-                int rightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
+            int rightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
 
-                _scrollBar.Minimum = 0;
-                _scrollBar.Maximum = (int)(Math.Max(0, GetGraphWidth() - ClientSize.Width) * 1.1);
-                _scrollBar.SmallChange = _scrollBar.Maximum / 22;
-                _scrollBar.LargeChange = _scrollBar.Maximum / 11;
+            _scrollBar.Minimum = 0;
+            _scrollBar.Maximum = (int)(Math.Max(0, GetGraphWidth() - ClientSize.Width) * 1.1);
+            _scrollBar.SmallChange = _scrollBar.Maximum / 22;
+            _scrollBar.LargeChange = _scrollBar.Maximum / 11;
 
-                _scrollBar.Value = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - rightValue);
-            }
+            _scrollBar.Value = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - rightValue);
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
@@ -211,25 +202,26 @@ namespace GitExtensions.Plugins.GitImpact
             // White background
             e.Graphics.Clear(SystemColors.Window);
             UpdateScrollbar();
+
+            // Nothing to draw
+            if (_impact.Count == 0)
+            {
+                // Show this cursor until we get some results painted
+                UseWaitCursor = true;
+                return;
+            }
+
+            // Now we have results, don't show waiting cursor
+            UseWaitCursor = false;
+
+            // Activate AntiAliasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // "Scroll" to the right position
+            e.Graphics.TranslateTransform(-_scrollBar.Value, 0);
+
             lock (_dataLock)
             {
-                // Nothing to draw
-                if (_impact.Count == 0)
-                {
-                    // Show this cursor until we get some results painted
-                    UseWaitCursor = true;
-                    return;
-                }
-
-                // Now we have results, don't show waiting cursor
-                UseWaitCursor = false;
-
-                // Activate AntiAliasing
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-                // "Scroll" to the right position
-                e.Graphics.TranslateTransform(-_scrollBar.Value, 0);
-
                 // Draw paths in order of the author_stack
                 // Default: person with least number of changed lines first, others on top
                 foreach (string author in _authorStack)
@@ -251,7 +243,7 @@ namespace GitExtensions.Plugins.GitImpact
 
                 foreach (string author in _authorStack)
                 {
-                    DrawAuthorLinesLabels(e.Graphics, author);
+                    DrawAuthorLinesLabels(author);
                 }
 
                 void DrawAuthorContribution(string author)
@@ -263,12 +255,9 @@ namespace GitExtensions.Plugins.GitImpact
                 }
             }
 
-            DrawWeekLabels(e.Graphics);
-        }
+            DrawWeekLabels();
 
-        private void DrawAuthorLinesLabels(Graphics g, string author)
-        {
-            lock (_dataLock)
+            void DrawAuthorLinesLabels(string author)
             {
                 if (!_lineLabels.TryGetValue(author, out List<(PointF position, string changeCount)> authorData))
                 {
@@ -277,18 +266,15 @@ namespace GitExtensions.Plugins.GitImpact
 
                 foreach ((PointF position, string changeCount) in authorData)
                 {
-                    g.DrawString(changeCount, _linesFont, _linesBrush, position);
+                    e.Graphics.DrawString(changeCount, _linesFont, _linesBrush, position);
                 }
             }
-        }
 
-        private void DrawWeekLabels(Graphics g)
-        {
-            lock (_dataLock)
+            void DrawWeekLabels()
             {
                 foreach ((PointF point, string date) in _weekLabels)
                 {
-                    g.DrawString(date, _weekFont, _weekBrush, point);
+                    e.Graphics.DrawString(date, _weekFont, _weekBrush, point);
                 }
             }
         }
@@ -519,16 +505,7 @@ namespace GitExtensions.Plugins.GitImpact
         }
 
         [Browsable(false)]
-        public List<string> Authors
-        {
-            get
-            {
-                lock (_dataLock)
-                {
-                    return _authorStack;
-                }
-            }
-        }
+        public List<string> Authors => _authorStack;
 
         public ImpactLoader.DataPoint GetAuthorInfo(string author)
         {
