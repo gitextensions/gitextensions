@@ -16,9 +16,12 @@ namespace CommonTestUtils
         // We don't expect any failures so that we won't be switching to the main thread or showing messages
         public static Control DummyOwner { get; } = new();
 
-        public ReferenceRepository()
+        public ReferenceRepository(bool createCommit = true)
         {
-            CreateCommit("A commit message", "A");
+            if (createCommit)
+            {
+                CreateCommit("A commit message", "A");
+            }
         }
 
         /// <summary>
@@ -117,6 +120,22 @@ namespace CommonTestUtils
         }
 
         public string DeleteRepoFile(string fileName) => _moduleTestHelper.DeleteRepoFile(fileName);
+
+        public string RenameRepoFile(string fileRelativePath, string oldFileName, string newFileName, string? newContent = null, string? commitMessage = null)
+        {
+            using Repository repository = new(Module.WorkingDir);
+            newContent ??= File.ReadAllText(Path.Combine(Module.WorkingDir, fileRelativePath, oldFileName));
+            DeleteRepoFile(oldFileName);
+            CreateRepoFile(newFileName, newContent);
+
+            Commands.Stage(repository, Path.Combine(fileRelativePath, oldFileName));
+            Commands.Stage(repository, Path.Combine(fileRelativePath, newFileName));
+
+            CommitHash = Commit(repository, commitMessage);
+            Console.WriteLine($"Created commit: {CommitHash}, message: {commitMessage}");
+
+            return CommitHash;
+        }
 
         public void CreateAnnotatedTag(string tagName, string commitHash, string message)
         {
