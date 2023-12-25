@@ -1590,7 +1590,7 @@ namespace GitUI
                     {
                         RevFilter = GetParameterOrEmptyStringAsDefault(args, "-filter"),
                         PathFilter = GetParameterOrEmptyStringAsDefault(args, PathFilterArg),
-                        IsFileBlameHistory = args.Any(arg => arg.StartsWith(PathFilterArg))
+                        IsFileHistoryMode = args.Any(arg => arg.StartsWith(PathFilterArg))
                     });
             }
 
@@ -1603,7 +1603,7 @@ namespace GitUI
                         PathFilter = GetParameterOrEmptyStringAsDefault(args, PathFilterArg),
                         SelectedId = selectedId,
                         FirstId = firstId,
-                        IsFileBlameHistory = args.Any(arg => arg.StartsWith(PathFilterArg))
+                        IsFileHistoryMode = args.Any(arg => arg.StartsWith(PathFilterArg))
                     });
             }
 
@@ -1761,7 +1761,7 @@ namespace GitUI
                                      RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
                                      PathFilter = fileHistoryFileName,
                                      SelectedId = revision?.ObjectId,
-                                     IsFileBlameHistory = true
+                                     IsFileHistoryMode = true
                                  }));
             }
             else

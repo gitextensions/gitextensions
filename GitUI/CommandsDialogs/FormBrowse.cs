@@ -219,7 +219,7 @@ namespace GitUI.CommandsDialogs
         private readonly RepositoryHistoryUIService _repositoryHistoryUIService = new();
         private ConEmuControl? _terminal;
         private Dashboard? _dashboard;
-        private bool _isFileBlameHistory;
+        private bool _isFileHistoryMode;
         private bool _fileBlameHistoryLeftPanelStartupState;
 
         private TabPage? _consoleTabPage;
@@ -250,7 +250,7 @@ namespace GitUI.CommandsDialogs
 
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
-            _isFileBlameHistory = args.IsFileBlameHistory;
+            _isFileHistoryMode = args.IsFileHistoryMode;
             InitializeComponent();
 
             fileToolStripMenuItem.Initialize(() => UICommands);
@@ -288,7 +288,7 @@ namespace GitUI.CommandsDialogs
             ToolStripFilters.Bind(() => Module, RevisionGrid);
             InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
 
-            InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileBlameHistory);
+            InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
             InitCommitDetails();
 
             InitializeComplete();
@@ -318,8 +318,7 @@ namespace GitUI.CommandsDialogs
             repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid);
             revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
 
-            // Show blame by default if not started from command line
-            fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, RefreshGitStatusMonitor, _isFileBlameHistory);
+            fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, RefreshGitStatusMonitor);
             RevisionGrid.ResumeRefreshRevisions();
 
             // Application is init, the repo related operations are triggered in OnLoad()
@@ -511,7 +510,7 @@ namespace GitUI.CommandsDialogs
         protected override void OnClosing(CancelEventArgs e)
         {
             // Restore state at startup if file history mode, ignore the forced setting
-            if (_isFileBlameHistory)
+            if (_isFileHistoryMode)
             {
                 MainSplitContainer.Panel1Collapsed = _fileBlameHistoryLeftPanelStartupState;
             }
@@ -2221,7 +2220,7 @@ namespace GitUI.CommandsDialogs
 
             _splitterManager.RestoreSplitters();
             RefreshLayoutToggleButtonStates();
-            if (_isFileBlameHistory)
+            if (_isFileHistoryMode)
             {
                 _fileBlameHistoryLeftPanelStartupState = MainSplitContainer.Panel1Collapsed;
                 MainSplitContainer.Panel1Collapsed = true;
