@@ -1065,7 +1065,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateStashCount()
         {
-            if (AppSettings.ShowStashCount)
+            if (AppSettings.ShowStashCount && !Module.IsBareRepository())
             {
                 ThreadHelper.FileAndForget(async () =>
                 {
