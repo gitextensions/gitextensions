@@ -3412,7 +3412,7 @@ namespace GitCommands
                 "-z",
                 $"-n {count}",
                 revision,
-                "--pretty=format:%B",
+                @"--pretty=""format:%B""",
                 { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
             };
 
