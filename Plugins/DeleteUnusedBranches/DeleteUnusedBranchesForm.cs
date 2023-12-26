@@ -120,7 +120,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             GitArgumentBuilder args = new("branch")
             {
                  "--list",
-                 { context.IncludeRemotes, "-r" },
+                 { context.RemoteBranches, "-r" },
                  { !context.IncludeUnmerged, $"--merged {context.ReferenceBranch}" }
             };
 
@@ -133,9 +133,9 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             }
 
             bool withoutRegexFilter = string.IsNullOrEmpty(context.RegexFilter);
-            return _commandOutputParser.GetBranchNames(result.StandardOutput)
+            return _commandOutputParser.GetBranchNames(result.StandardOutput, context.RemoteBranches)
                                         .Where(branchName => branchName != curBranch && branchName != context.ReferenceBranch)
-                                        .Where(branchName => (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/"))
+                                        .Where(branchName => (!context.RemoteBranches || branchName.StartsWith(context.RemoteRepositoryName + "/"))
                                                             && (withoutRegexFilter || Regex.IsMatch(branchName, context.RegexFilter, options) == regexMustMatch));
         }
 
@@ -374,7 +374,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 TimeSpan obsolescenceDuration, CancellationToken cancellationToken)
             {
                 Commands = commands;
-                IncludeRemotes = includeRemotes;
+                RemoteBranches = includeRemotes;
                 IncludeUnmerged = includeUnmerged;
                 ReferenceBranch = referenceBranch;
                 RemoteRepositoryName = remoteRepositoryName;
@@ -386,7 +386,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             }
 
             public IGitModule Commands { get; }
-            public bool IncludeRemotes { get; }
+            public bool RemoteBranches { get; }
             public bool IncludeUnmerged { get; }
             public string ReferenceBranch { get; }
             public string RemoteRepositoryName { get; }
