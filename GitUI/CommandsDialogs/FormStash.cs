@@ -165,7 +165,6 @@ namespace GitUI.CommandsDialogs
         {
             GitStash? gitStash = Stashes.SelectedItem as GitStash;
 
-            Stashed.GroupByRevision = false;
             Stashed.ClearDiffs();
 
             Loading.Visible = true;

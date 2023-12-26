@@ -260,7 +260,7 @@ namespace GitUI.CommandsDialogs
             // 
             Stashed.ContextMenuStrip = contextMenuStripStashedFiles;
             Stashed.Dock = DockStyle.Fill;
-            Stashed.GroupByRevision = false;
+            Stashed.GroupByRevision = true;
             Stashed.Location = new Point(0, 0);
             Stashed.Margin = new Padding(0);
             Stashed.Name = "Stashed";
