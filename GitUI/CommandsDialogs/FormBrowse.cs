@@ -318,7 +318,8 @@ namespace GitUI.CommandsDialogs
             repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid);
             revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
 
-            fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, RefreshGitStatusMonitor);
+            // Show blame by default in file tree if not started from command line
+            fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, RefreshGitStatusMonitor, _isFileHistoryMode);
             RevisionGrid.ResumeRefreshRevisions();
 
             // Application is init, the repo related operations are triggered in OnLoad()

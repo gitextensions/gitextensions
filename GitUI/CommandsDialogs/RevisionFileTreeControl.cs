@@ -69,11 +69,12 @@ See the changes in the commit form.");
             copyPathsToolStripMenuItem.Initialize(() => UICommands, () => new string[] { (tvGitTree.SelectedNode?.Tag as GitItem)?.FileName });
         }
 
-        public void Bind(IRevisionGridInfo revisionGridInfo, IRevisionGridUpdate revisionGridUpdate, Action? refreshGitStatus)
+        public void Bind(IRevisionGridInfo revisionGridInfo, IRevisionGridUpdate revisionGridUpdate, Action? refreshGitStatus, bool isBlame)
         {
             _revisionGridInfo = revisionGridInfo;
             _revisionGridUpdate = revisionGridUpdate;
             _refreshGitStatus = refreshGitStatus;
+            blameToolStripMenuItem1.Checked = isBlame;
         }
 
         /// <summary>
