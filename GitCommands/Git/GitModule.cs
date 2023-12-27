@@ -3066,6 +3066,7 @@ namespace GitCommands
             GitArgumentBuilder args = new("blame")
             {
                 "--porcelain",
+                $"--diff-algorithm={(AppSettings.UseHistogramDiffAlgorithm ? "histogram" : "default")}",
                 { AppSettings.DetectCopyInFileOnBlame, "-M" },
                 { AppSettings.DetectCopyInAllOnBlame, "-C" },
                 { AppSettings.IgnoreWhitespaceOnBlame, "-w" },
