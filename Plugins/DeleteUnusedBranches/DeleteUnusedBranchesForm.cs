@@ -97,7 +97,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
                 GitArgumentBuilder args = new("log")
                 {
-                    @"--pretty=""format:%ci\n%an\n%s""",
+                    "--pretty=\"format:%ci\n%an\n%s\"",
                     "--max-count=1",
                     branchName,
                     "--"
