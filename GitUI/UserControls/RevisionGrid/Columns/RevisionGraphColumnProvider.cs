@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Drawing2D;
 using GitCommands;
 using GitUI.NBugReports;
 using GitUI.UserControls.RevisionGrid.Graph;
@@ -133,11 +134,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 DrawRectangleFromCache();
                 return true;
 
+                int GetCacheRow(int rowIndex) => (_graphCache.HeadRow + rowIndex - _graphCache.Head) % _graphCache.Capacity;
+
                 void DrawRectangleFromCache()
                 {
                     Rectangle cellRect = new(
                         0,
-                        ((_graphCache.HeadRow + rowIndex - _graphCache.Head) % _graphCache.Capacity) * rowHeight,
+                        GetCacheRow(rowIndex) * rowHeight,
                         width,
                         rowHeight);
 
@@ -150,46 +153,32 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 void RenderVisibleGraphToCache()
                 {
-                    for (int index = start; index < end; index++)
+                    Validates.NotNull(_graphCache.GraphBitmapGraphics);
+                    SmoothingMode oldSmoothingMode = _graphCache.GraphBitmapGraphics.SmoothingMode;
+                    Region oldClip = _graphCache.GraphBitmapGraphics.Clip;
+                    try
                     {
-                        // Get the x,y value of the current item's upper left in the cache
-                        int curCacheRow = (_graphCache.HeadRow + index - _graphCache.Head) % _graphCache.Capacity;
                         int x = ColumnLeftMargin;
-                        int y = curCacheRow * rowHeight;
-
-                        Validates.NotNull(_graphCache.GraphBitmapGraphics);
-
-                        Rectangle laneRect = new(0, y, width, rowHeight);
-                        Region oldClip = _graphCache.GraphBitmapGraphics.Clip;
-
-                        if (index > 0 && (index == start || curCacheRow == 0))
+                        int cellWidth = width - ColumnLeftMargin;
+                        Rectangle laneRect = new(x, 0, cellWidth, rowHeight);
+                        for (int index = start; index < end; index++)
                         {
-                            // Draw previous row first. Clip top to row. We also need to clear the area
-                            // before we draw since nothing else would clear the top 1/2 of the item to draw.
-                            _graphCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, y - rowHeight);
-                            _graphCache.GraphBitmapGraphics.Clip = new Region(laneRect);
-                            _graphCache.GraphBitmapGraphics.Clear(Color.Transparent);
-                            DrawItem(index - 1);
-                            _graphCache.GraphBitmapGraphics.Clip = oldClip;
+                            // Get the y coordinate of the current item's upper left in the cache
+                            laneRect.Y = GetCacheRow(index) * rowHeight;
+
+                            using Region newClip = new(laneRect);
+                            _graphCache.GraphBitmapGraphics.Clip = newClip;
+
+                            _graphCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, laneRect.Y);
+
+                            GraphRenderer.DrawItem(_revisionGraph.Config, _graphCache.GraphBitmapGraphics, index, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
                         }
-
-                        if (index == end - 1)
-                        {
-                            // Use a custom clip for the last row
-                            _graphCache.GraphBitmapGraphics.Clip = new Region(laneRect);
-                        }
-
-                        _graphCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, y);
-
-                        DrawItem(index);
-
+                    }
+                    finally
+                    {
+                        _graphCache.GraphBitmapGraphics.SmoothingMode = oldSmoothingMode;
                         _graphCache.GraphBitmapGraphics.Clip = oldClip;
                     }
-                }
-
-                void DrawItem(int index)
-                {
-                    GraphRenderer.DrawItem(_revisionGraph.Config, _graphCache.GraphBitmapGraphics, index, width, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
                 }
             }
         }

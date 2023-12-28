@@ -17,26 +17,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 
         private const int _noLane = -10;
 
-        public static void DrawItem(RevisionGraphConfig config, Graphics g, int index, int width, int rowHeight,
+        public static void DrawItem(RevisionGraphConfig config, Graphics g, int index, int rowHeight,
             Func<int, IRevisionGraphRow?> getSegmentsForRow,
             RevisionGraphDrawStyle revisionGraphDrawStyle,
             ObjectId headId)
         {
-            SmoothingMode oldSmoothingMode = g.SmoothingMode;
-            Region oldClip = g.Clip;
-
-            int top = g.RenderingOrigin.Y;
-            Rectangle laneRect = new(0, top, width, rowHeight);
-            using Region newClip = new(laneRect);
-            newClip.Intersect(oldClip);
-            g.Clip = newClip;
             g.Clear(Color.Transparent);
 
             DrawItem();
-
-            // Restore graphics options
-            g.Clip = oldClip;
-            g.SmoothingMode = oldSmoothingMode;
 
             return;
 
@@ -52,7 +40,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
                 IRevisionGraphRow? nextRow = getSegmentsForRow(index + 1);
 
                 SegmentPointsInfo p = new();
-                p.Center.Y = top + (rowHeight / 2);
+                p.Center.Y = g.RenderingOrigin.Y + (rowHeight / 2);
                 p.Start.Y = p.Center.Y - rowHeight;
                 p.End.Y = p.Center.Y + rowHeight;
 
