@@ -225,7 +225,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             // Keep an extra page in the cache
             _graphCache.AdjustCapacity((range.Count * 2) + 1);
-            Column.Width = CalculateGraphColumnWidth(range);
+            int width = CalculateGraphColumnWidth(range);
+            if (Column.Width != width)
+            {
+                Column.Width = width;
+                Column.DataGridView.InvalidateColumn(Column.Index);
+            }
         }
 
         private int CalculateGraphColumnWidth(in VisibleRowRange range)
