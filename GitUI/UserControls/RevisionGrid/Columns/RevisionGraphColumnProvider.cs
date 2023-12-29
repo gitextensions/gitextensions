@@ -43,7 +43,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 try
                 {
-                    if (PaintGraphCell(e.RowIndex, e.CellBounds, e.Graphics))
+                    if (PaintGraphCell(e.RowIndex, rowHeight, e.CellBounds, e.Graphics))
                     {
                         e.Handled = true;
                     }
@@ -57,128 +57,129 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 #endif
                 }
             }
+        }
 
-            return;
+        private bool PaintGraphCell(int rowIndex, int rowHeight, Rectangle cellBounds, Graphics graphics)
+        {
+            // Renders the required row into _graphCache.GraphBitmap if the row is available and not yet cached, and draws it from the cache.
 
-            bool PaintGraphCell(int rowIndex, Rectangle cellBounds, Graphics graphics)
+            int height = _graphCache.Capacity * rowHeight;
+            int width = Column.Width;
+
+            if (width <= 0 || height <= 0)
             {
-                // Renders the required row into _graphCache.GraphBitmap if the row is available and not yet cached, and draws it from the cache.
+                // Nothing to be drawn
+                return true;
+            }
 
-                int height = _graphCache.Capacity * rowHeight;
-                int width = Column.Width;
+            if (_revisionGraph.GetSegmentsForRow(rowIndex) is null)
+            {
+                // Needs to be refreshed when available
+                return false;
+            }
 
-                if (width <= 0 || height <= 0)
-                {
-                    // Nothing to be drawn
-                    return true;
-                }
+            _graphCache.Allocate(Math.Max(width, GraphRenderer.LaneWidth * 3), height);
 
-                if (_revisionGraph.GetSegmentsForRow(rowIndex) is null)
-                {
-                    // Needs to be refreshed when available
-                    return false;
-                }
-
-                _graphCache.Allocate(Math.Max(width, GraphRenderer.LaneWidth * 3), height);
-
-                // Compute how much the head needs to move to show the requested item.
-                int neededHeadAdjustment = rowIndex - _graphCache.Head;
-                if (neededHeadAdjustment > 0)
-                {
-                    neededHeadAdjustment -= _graphCache.Capacity - 1;
-                    if (neededHeadAdjustment < 0)
-                    {
-                        neededHeadAdjustment = 0;
-                    }
-                }
-
-                int newRows = _graphCache.Count < _graphCache.Capacity
-                    ? (rowIndex - _graphCache.Count) + 1
-                    : 0;
-
-                // Adjust the head of the cache
-                _graphCache.Head += neededHeadAdjustment;
-                _graphCache.HeadRow += neededHeadAdjustment;
-                _graphCache.HeadRow %= _graphCache.Capacity;
-                if (_graphCache.HeadRow < 0)
-                {
-                    _graphCache.HeadRow += _graphCache.Capacity;
-                }
-
-                int start;
-                int end;
-                if (newRows > 0)
-                {
-                    start = _graphCache.Head + _graphCache.Count;
-                    _graphCache.Count = Math.Min(_graphCache.Count + newRows, _graphCache.Capacity);
-                    end = _graphCache.Head + _graphCache.Count;
-                }
-                else if (neededHeadAdjustment > 0)
-                {
-                    end = _graphCache.Head + _graphCache.Count;
-                    start = Math.Max(_graphCache.Head, end - neededHeadAdjustment);
-                }
-                else if (neededHeadAdjustment < 0)
-                {
-                    start = _graphCache.Head;
-                    end = start + Math.Min(_graphCache.Capacity, -neededHeadAdjustment);
-                }
-                else
+            int startRow;
+            int endRow;
+            if (_graphCache.Count == 0)
+            {
+                // Start the cache with this line
+                startRow = rowIndex;
+                endRow = rowIndex + 1;
+                _graphCache.HeadRow = startRow;
+                _graphCache.Count = 1;
+            }
+            else
+            {
+                int offsetToHead = rowIndex - _graphCache.HeadRow;
+                if (offsetToHead >= 0 && offsetToHead < _graphCache.Count)
                 {
                     // Item already in the cache
                     DrawRectangleFromCache();
                     return true;
                 }
 
-                RenderVisibleGraphToCache();
-                DrawRectangleFromCache();
-                return true;
-
-                int GetCacheRow(int rowIndex) => (_graphCache.HeadRow + rowIndex - _graphCache.Head) % _graphCache.Capacity;
-
-                void DrawRectangleFromCache()
+                if (Math.Abs(offsetToHead) >= _graphCache.Capacity)
                 {
-                    Rectangle cellRect = new(
-                        0,
-                        GetCacheRow(rowIndex) * rowHeight,
-                        width,
-                        rowHeight);
-
-                    graphics.DrawImage(
-                        _graphCache.GraphBitmap,
-                        cellBounds,
-                        cellRect,
-                        GraphicsUnit.Pixel);
+                    // Restart the cache with this line
+                    startRow = rowIndex;
+                    endRow = rowIndex + 1;
+                    _graphCache.HeadRow = startRow;
+                    _graphCache.Count = 1;
                 }
-
-                void RenderVisibleGraphToCache()
+                else if (offsetToHead < 0)
                 {
-                    Validates.NotNull(_graphCache.GraphBitmapGraphics);
-                    SmoothingMode oldSmoothingMode = _graphCache.GraphBitmapGraphics.SmoothingMode;
-                    Region oldClip = _graphCache.GraphBitmapGraphics.Clip;
-                    try
+                    // Scroll back, make the current row the head row
+                    startRow = rowIndex;
+                    endRow = _graphCache.HeadRow;
+                    _graphCache.HeadRow = startRow;
+                    _graphCache.Count = Math.Min(_graphCache.Count + endRow - startRow, _graphCache.Capacity);
+                    _graphCache.Head += _graphCache.Capacity + offsetToHead;
+                    _graphCache.Head %= _graphCache.Capacity;
+                }
+                else
+                {
+                    // Scroll forward
+                    startRow = _graphCache.HeadRow + _graphCache.Count;
+                    endRow = rowIndex + 1;
+                    _graphCache.Count += endRow - startRow;
+                    int neededHeadAdjustment = Math.Max(0, _graphCache.Count - _graphCache.Capacity);
+                    _graphCache.Count -= neededHeadAdjustment;
+                    _graphCache.HeadRow += neededHeadAdjustment;
+                    _graphCache.Head += neededHeadAdjustment;
+                    _graphCache.Head %= _graphCache.Capacity;
+                }
+            }
+
+            RenderVisibleGraphToCache();
+            DrawRectangleFromCache();
+            return true;
+
+            int GetCacheRow(int rowIndex) => (_graphCache.Head + rowIndex - _graphCache.HeadRow) % _graphCache.Capacity;
+
+            void DrawRectangleFromCache()
+            {
+                Rectangle cellRect = new(
+                    0,
+                    GetCacheRow(rowIndex) * rowHeight,
+                    width,
+                    rowHeight);
+
+                graphics.DrawImage(
+                    _graphCache.GraphBitmap,
+                    cellBounds,
+                    cellRect,
+                    GraphicsUnit.Pixel);
+            }
+
+            void RenderVisibleGraphToCache()
+            {
+                Validates.NotNull(_graphCache.GraphBitmapGraphics);
+                SmoothingMode oldSmoothingMode = _graphCache.GraphBitmapGraphics.SmoothingMode;
+                Region oldClip = _graphCache.GraphBitmapGraphics.Clip;
+                try
+                {
+                    int x = ColumnLeftMargin;
+                    int cellWidth = width - ColumnLeftMargin;
+                    Rectangle laneRect = new(x, 0, cellWidth, rowHeight);
+                    for (int rowIndex = startRow; rowIndex < endRow; ++rowIndex)
                     {
-                        int x = ColumnLeftMargin;
-                        int cellWidth = width - ColumnLeftMargin;
-                        Rectangle laneRect = new(x, 0, cellWidth, rowHeight);
-                        for (int index = start; index < end; index++)
-                        {
-                            // Get the y coordinate of the current item's upper left in the cache
-                            laneRect.Y = GetCacheRow(index) * rowHeight;
+                        // Get the y coordinate of the current item's upper left in the cache
+                        laneRect.Y = GetCacheRow(rowIndex) * rowHeight;
 
-                            using Region newClip = new(laneRect);
-                            _graphCache.GraphBitmapGraphics.Clip = newClip;
+                        using Region newClip = new(laneRect);
+                        _graphCache.GraphBitmapGraphics.Clip = newClip;
 
-                            _graphCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, laneRect.Y);
+                        _graphCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, laneRect.Y);
 
-                            GraphRenderer.DrawItem(_revisionGraph.Config, _graphCache.GraphBitmapGraphics, index, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
-                        }
+                        GraphRenderer.DrawItem(_revisionGraph.Config, _graphCache.GraphBitmapGraphics, rowIndex, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
                     }
-                    finally
-                    {
-                        _graphCache.GraphBitmapGraphics.SmoothingMode = oldSmoothingMode;
-                        _graphCache.GraphBitmapGraphics.Clip = oldClip;
-                    }
+                }
+                finally
+                {
+                    _graphCache.GraphBitmapGraphics.SmoothingMode = oldSmoothingMode;
+                    _graphCache.GraphBitmapGraphics.Clip = oldClip;
                 }
             }
         }
@@ -217,7 +218,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             if (Column.Width != width)
             {
                 Column.Width = width;
-                Column.DataGridView.InvalidateColumn(Column.Index);
+                Column.DataGridView?.InvalidateColumn(Column.Index);
             }
         }
 
@@ -246,6 +247,23 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             toolTip = default;
             return false;
+        }
+
+        internal TestAccessor GetTestAccessor() => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            internal TestAccessor(RevisionGraphColumnProvider revisionGraphColumnProvider)
+            {
+                RevisionGraphColumnProvider = revisionGraphColumnProvider;
+            }
+
+            internal RevisionGraphColumnProvider RevisionGraphColumnProvider { get; }
+
+            internal GraphCache GraphCache => RevisionGraphColumnProvider._graphCache;
+
+            internal bool PaintGraphCell(int rowIndex, int rowHeight, Rectangle cellBounds, Graphics graphics)
+                => RevisionGraphColumnProvider.PaintGraphCell(rowIndex, rowHeight, cellBounds, graphics);
         }
     }
 }
