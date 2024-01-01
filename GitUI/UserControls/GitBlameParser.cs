@@ -36,13 +36,14 @@ internal partial class GitBlameParser : IGitBlameParser
         {
             // Get the git diff of changes introduced by the blamed selected commit
             // *without context lines* to make starting line value more accurate and possibly have more distincts chunks!
+            // git-config diff algorithm option must be overridden for user preferences and tests
             GitArgumentBuilder args = new("diff")
             {
                 $"-U0",
                 $"--diff-algorithm={(AppSettings.UseHistogramDiffAlgorithm ? "histogram" : "default")}",
-                { AppSettings.DetectCopyInFileOnBlame, "-M" },
-                { AppSettings.DetectCopyInAllOnBlame, "-C" },
-                { AppSettings.IgnoreWhitespaceOnBlame, "-w" },
+                { AppSettings.DetectCopyInFileOnBlame, "--find-renames" }, // git-blame only has -M
+                { AppSettings.DetectCopyInAllOnBlame, "--find-copies" }, // git-blame only has -C
+                { AppSettings.IgnoreWhitespaceOnBlame, "--ignore-all-space" }, // git-blame only has -w
                 parentId,
                 selectedBlamedRevision.ObjectId,
                 "--",

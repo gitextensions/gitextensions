@@ -3066,10 +3066,9 @@ namespace GitCommands
             GitArgumentBuilder args = new("blame")
             {
                 "--porcelain",
-                $"--diff-algorithm={(AppSettings.UseHistogramDiffAlgorithm ? "histogram" : "default")}",
-                { AppSettings.DetectCopyInFileOnBlame, "-M" },
-                { AppSettings.DetectCopyInAllOnBlame, "-C" },
-                { AppSettings.IgnoreWhitespaceOnBlame, "-w" },
+                { AppSettings.DetectCopyInFileOnBlame, "-M" }, // as git-diff --find-renames
+                { AppSettings.DetectCopyInAllOnBlame, "-C" }, // as git-diff --find-copies
+                { AppSettings.IgnoreWhitespaceOnBlame, "-w" }, // as git-diff --ignore-all-space
                 "-l",
                 { lines is not null, $"-L {lines}" },
                 from.ToPosixPath().Quote(),
