@@ -1578,6 +1578,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Previous change</source>
         <target />
       </trans-unit>
+      <trans-unit id="replaceToolStripMenuItem.Text">
+        <source>Replace</source>
+        <target />
+      </trans-unit>
       <trans-unit id="resetSelectedLinesToolStripMenuItem.Text">
         <source>Reset selected line(s)</source>
         <target />

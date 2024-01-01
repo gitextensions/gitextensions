@@ -187,9 +187,9 @@ namespace GitUI.Editor
             }
         }
 
-        public void Find()
+        public void Find(bool replace)
         {
-            _findAndReplaceForm.ShowFor(TextEditor, false);
+            _findAndReplaceForm.ShowFor(TextEditor, replace && !IsReadOnly);
             OnVScrollPositionChanged(EventArgs.Empty);
         }
 

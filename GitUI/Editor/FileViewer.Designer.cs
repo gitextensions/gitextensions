@@ -27,6 +27,7 @@ namespace GitUI.Editor
             copyNewVersionToolStripMenuItem = new ToolStripMenuItem();
             copyOldVersionToolStripMenuItem = new ToolStripMenuItem();
             findToolStripMenuItem = new ToolStripMenuItem();
+            replaceToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             ignoreWhitespaceAtEolToolStripMenuItem = new ToolStripMenuItem();
             ignoreWhitespaceChangesToolStripMenuItem = new ToolStripMenuItem();
@@ -84,6 +85,7 @@ namespace GitUI.Editor
             automaticContinuousScrollToolStripMenuItem,
             showNonprintableCharactersToolStripMenuItem,
             findToolStripMenuItem,
+            replaceToolStripMenuItem,
             goToLineToolStripMenuItem});
             contextMenu.Name = "ContextMenu";
             contextMenu.Size = new Size(244, 346);
@@ -147,6 +149,13 @@ namespace GitUI.Editor
             findToolStripMenuItem.Size = new Size(243, 22);
             findToolStripMenuItem.Text = "Find";
             findToolStripMenuItem.Click += FindToolStripMenuItemClick;
+            // 
+            // replaceToolStripMenuItem
+            // 
+            replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
+            replaceToolStripMenuItem.Size = new Size(243, 22);
+            replaceToolStripMenuItem.Text = "Replace";
+            replaceToolStripMenuItem.Click += FindToolStripMenuItemClick;
             // 
             // toolStripSeparator1
             // 
@@ -453,6 +462,7 @@ namespace GitUI.Editor
 
         private ContextMenuStrip contextMenu;
         private ToolStripMenuItem findToolStripMenuItem;
+        private ToolStripMenuItem replaceToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem ignoreWhitespaceAtEolToolStripMenuItem;
         private ToolStripMenuItem ignoreWhitespaceChangesToolStripMenuItem;
