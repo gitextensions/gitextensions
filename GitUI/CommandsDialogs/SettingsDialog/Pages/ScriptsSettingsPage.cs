@@ -255,6 +255,12 @@ Currently checked out revision:
                 }
 
                 lvScripts.Select();
+
+                // Last column size fit the content
+                if (lvScripts.Items.Count > 0)
+                {
+                    chdrCommand.Width = -1;
+                }
             }
             finally
             {
