@@ -310,14 +310,13 @@ namespace GitUI.CommandsDialogs
             toolStripButtonPull.ToolTipText += GetShortcutKeys(Command.QuickPullOrFetch).ToShortcutKeyToolTipString();
         }
 
-        private Brush? UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
+        private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
         {
-            Brush brush = null;
             try
             {
                 ToolStripMain.SuspendLayout();
                 RepoStateVisualiser repoStateVisualiser = new();
-                (Image image, brush) = repoStateVisualiser.Invoke(status);
+                (Image image, Brush brush) = repoStateVisualiser.Invoke(status);
 
                 if (showCount)
                 {
@@ -346,13 +345,13 @@ namespace GitUI.CommandsDialogs
                     toolStripButtonCommit.Text = _commitButtonText.Text;
                     toolStripButtonCommit.AutoSize = true;
                 }
+
+                return brush;
             }
             finally
             {
                 ToolStripMain.ResumeLayout();
             }
-
-            return brush;
         }
     }
 }

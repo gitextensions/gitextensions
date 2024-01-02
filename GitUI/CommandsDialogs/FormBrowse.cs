@@ -359,7 +359,7 @@ namespace GitUI.CommandsDialogs
                     bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
                     bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits;
 
-                    Brush? brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
+                    Brush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
 
@@ -390,7 +390,7 @@ namespace GitUI.CommandsDialogs
 
                     void UpdateStatusInTaskbar()
                     {
-                        if (!EnvUtils.RunningOnWindowsWithMainWindow() || brush is null)
+                        if (!EnvUtils.RunningOnWindowsWithMainWindow())
                         {
                             return;
                         }
