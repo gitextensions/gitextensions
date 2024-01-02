@@ -182,12 +182,21 @@ namespace GitUIPluginInterfaces
         T? GetEffectiveSetting<T>(string setting) where T : struct;
 
         /// <summary>
+        /// Get the config setting from git according to the scope.
+        /// </summary>
+        /// <param name="setting">The setting key.</param>
+        /// <param name="scopeArg">The scope for the config like "--global" according to https://git-scm.com/docs/git-config#_description. An empty string is the effective settings.</param>
+        /// <param name="cache"><see langword="true"/> if the result shall be cached.</param>
+        /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
+        string? GetGitSetting(string setting, string scopeArg, bool cache = false);
+
+        /// <summary>
         /// Get the effective config setting from git.
         /// </summary>
         /// <param name="setting">The setting key.</param>
         /// <param name="cache"><see langword="true"/> if the result shall be cached.</param>
         /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
-        string? GetEffectiveGitSetting(string setting, bool cache = true);
+        string? GetEffectiveGitSetting(string setting, bool cache = false);
 
         SettingsSource GetEffectiveSettingsByPath(string path);
 

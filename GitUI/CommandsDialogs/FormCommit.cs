@@ -2714,7 +2714,7 @@ namespace GitUI.CommandsDialogs
                     return;
 
                     // Do not cache results in order to update the info on FormActivate
-                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key, cache: false) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
+                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
                 });
         }
 

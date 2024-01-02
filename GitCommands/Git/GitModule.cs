@@ -2117,9 +2117,9 @@ namespace GitCommands
             return ((ConfigFileSettings)EffectiveConfigFile).ByPath(path);
         }
 
-        public string? GetEffectiveGitSetting(string setting, bool cache = true)
+        public string? GetGitSetting(string setting, string scopeArg, bool cache = false)
         {
-            GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
+            GitArgumentBuilder args = new("config") { "--includes", scopeArg, "--get", setting };
             ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
 
             // Handle no value set, is error code 1: https://git-scm.com/docs/git-config#_description
@@ -2130,6 +2130,11 @@ namespace GitCommands
                 ConfigKeyInvalidOrNotSet => null,
                 _ => throw new ExternalOperationException("git", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException("Error getting config value"))
             };
+        }
+
+        public string? GetEffectiveGitSetting(string setting, bool cache = false)
+        {
+            return GetGitSetting(setting, scopeArg: "", cache);
         }
 
         public void UnsetSetting(string setting)
