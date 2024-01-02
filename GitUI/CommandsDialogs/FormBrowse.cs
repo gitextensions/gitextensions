@@ -362,7 +362,6 @@ namespace GitUI.CommandsDialogs
                     Brush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
-                    toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                     if (countToolbar || countArtificial)
                     {
@@ -944,6 +943,7 @@ namespace GitUI.CommandsDialogs
 
                 if (validBrowseDir)
                 {
+                    toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
                     _windowsJumpListManager.AddToRecent(Module.WorkingDir);
 
                     // add Navigate and View menu

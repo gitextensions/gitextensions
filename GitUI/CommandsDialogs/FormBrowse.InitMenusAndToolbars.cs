@@ -312,6 +312,7 @@ namespace GitUI.CommandsDialogs
 
         private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
         {
+            ToolStripMain.SuspendLayout();
             RepoStateVisualiser repoStateVisualiser = new();
             (Image image, Brush brush) = repoStateVisualiser.Invoke(status);
 
@@ -343,6 +344,7 @@ namespace GitUI.CommandsDialogs
                 toolStripButtonCommit.AutoSize = true;
             }
 
+            ToolStripMain.ResumeLayout();
             return brush;
         }
     }
