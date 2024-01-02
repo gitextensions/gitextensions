@@ -310,41 +310,48 @@ namespace GitUI.CommandsDialogs
             toolStripButtonPull.ToolTipText += GetShortcutKeys(Command.QuickPullOrFetch).ToShortcutKeyToolTipString();
         }
 
-        private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
+        private Brush? UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
         {
-            ToolStripMain.SuspendLayout();
-            RepoStateVisualiser repoStateVisualiser = new();
-            (Image image, Brush brush) = repoStateVisualiser.Invoke(status);
-
-            if (showCount)
+            Brush brush = null;
+            try
             {
-                toolStripButtonCommit.Image = image;
+                ToolStripMain.SuspendLayout();
+                RepoStateVisualiser repoStateVisualiser = new();
+                (Image image, brush) = repoStateVisualiser.Invoke(status);
 
-                if (status is not null)
+                if (showCount)
                 {
-                    toolStripButtonCommit.Text = string.Format("{0} ({1})", _commitButtonText, status.Count);
-                    toolStripButtonCommit.AutoSize = true;
+                    toolStripButtonCommit.Image = image;
+
+                    if (status is not null)
+                    {
+                        toolStripButtonCommit.Text = string.Format("{0} ({1})", _commitButtonText, status.Count);
+                        toolStripButtonCommit.AutoSize = true;
+                    }
+                    else
+                    {
+                        int width = toolStripButtonCommit.Width;
+                        toolStripButtonCommit.Text = _commitButtonText.Text;
+                        if (width > toolStripButtonCommit.Width)
+                        {
+                            toolStripButtonCommit.AutoSize = false;
+                            toolStripButtonCommit.Width = width;
+                        }
+                    }
                 }
                 else
                 {
-                    int width = toolStripButtonCommit.Width;
+                    toolStripButtonCommit.Image = repoStateVisualiser.Invoke(new List<GitItemStatus>()).image;
+
                     toolStripButtonCommit.Text = _commitButtonText.Text;
-                    if (width > toolStripButtonCommit.Width)
-                    {
-                        toolStripButtonCommit.AutoSize = false;
-                        toolStripButtonCommit.Width = width;
-                    }
+                    toolStripButtonCommit.AutoSize = true;
                 }
             }
-            else
+            finally
             {
-                toolStripButtonCommit.Image = repoStateVisualiser.Invoke(new List<GitItemStatus>()).image;
-
-                toolStripButtonCommit.Text = _commitButtonText.Text;
-                toolStripButtonCommit.AutoSize = true;
+                ToolStripMain.ResumeLayout();
             }
 
-            ToolStripMain.ResumeLayout();
             return brush;
         }
     }

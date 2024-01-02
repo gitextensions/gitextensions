@@ -359,7 +359,7 @@ namespace GitUI.CommandsDialogs
                     bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
                     bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits;
 
-                    Brush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
+                    Brush? brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
 
@@ -390,7 +390,7 @@ namespace GitUI.CommandsDialogs
 
                     void UpdateStatusInTaskbar()
                     {
-                        if (!EnvUtils.RunningOnWindowsWithMainWindow())
+                        if (!EnvUtils.RunningOnWindowsWithMainWindow() || brush is null)
                         {
                             return;
                         }
@@ -940,10 +940,10 @@ namespace GitUI.CommandsDialogs
                 OnActivate();
 
                 LoadUserMenu();
+                toolStripButtonLevelUp.Image = validBrowseDir && Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                 if (validBrowseDir)
                 {
-                    toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
                     _windowsJumpListManager.AddToRecent(Module.WorkingDir);
 
                     // add Navigate and View menu
