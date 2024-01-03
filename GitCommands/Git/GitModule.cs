@@ -2838,10 +2838,10 @@ namespace GitCommands
                 : Array.Empty<IGitRef>();
         }
 
-        public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string? commit = null)
+        public async Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken)
         {
             ExecutionResult result = await _gitExecutable
-                .ExecuteAsync(Commands.MergedBranches(includeRemote, fullRefname, commit), throwOnErrorExit: false)
+                .ExecuteAsync(Commands.MergedBranches(includeRemote, fullRefname, commit), throwOnErrorExit: false, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             ////TODO: Handle non-empty result.StandardError
             return result.StandardOutput.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
@@ -2910,7 +2910,7 @@ namespace GitCommands
             return gitRefs;
         }
 
-        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote)
+        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote, CancellationToken cancellationToken = default)
         {
             if (!getLocal && !getRemote)
             {
@@ -2924,7 +2924,7 @@ namespace GitCommands
                 "--contains",
                 objectId
             };
-            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -2959,9 +2959,9 @@ namespace GitCommands
             return result;
         }
 
-        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId)
+        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId, CancellationToken cancellationToken)
         {
-            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -2971,7 +2971,7 @@ namespace GitCommands
             return exec.StandardOutput.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public string? GetTagMessage(string? tag)
+        public string? GetTagMessage(string? tag, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(tag))
             {
@@ -2980,7 +2980,7 @@ namespace GitCommands
 
             tag = tag.Trim();
 
-            ExecutionResult exec = _gitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no message (no error presented to the user)
@@ -3900,7 +3900,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitId">The commit where to start searching</param>
         /// <returns>Tag name if it exists, otherwise null</returns>
-        public string? GetDescribe(ObjectId commitId)
+        public string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken = default)
         {
             GitArgumentBuilder args = new("describe")
             {

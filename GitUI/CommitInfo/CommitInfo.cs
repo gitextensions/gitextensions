@@ -503,7 +503,7 @@ namespace GitUI.CommitInfo
 
                             if (gitRef is { IsTag: true, IsDereference: true })
                             {
-                                string? content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
+                                string? content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName, cancellationToken));
                                 if (content is not null)
                                 {
                                     result.Add(gitRef.LocalName, content);
@@ -519,7 +519,7 @@ namespace GitUI.CommitInfo
                 {
                     await TaskScheduler.Default;
 
-                    List<string> tags = Module.GetAllTagsWhichContainGivenCommit(objectId).ToList();
+                    List<string> tags = Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken).ToList();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _tags = tags;
@@ -536,7 +536,7 @@ namespace GitUI.CommitInfo
                     // Include remote branches if requested
                     bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                                      AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                    List<string> branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
+                    List<string> branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken).ToList();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _branches = branches;
@@ -562,7 +562,7 @@ namespace GitUI.CommitInfo
 
                     string GetDescribeInfoForRevision()
                     {
-                        (string precedingTag, string commitCount) = _gitDescribeProvider.Get(commitId);
+                        (string precedingTag, string commitCount) = _gitDescribeProvider.Get(commitId, cancellationToken);
 
                         StringBuilder gitDescribeInfo = new();
                         if (!string.IsNullOrEmpty(precedingTag))
