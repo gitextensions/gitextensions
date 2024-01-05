@@ -362,7 +362,6 @@ namespace GitUI.CommandsDialogs
                     Brush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
-                    toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                     if (countToolbar || countArtificial)
                     {
@@ -941,6 +940,7 @@ namespace GitUI.CommandsDialogs
                 OnActivate();
 
                 LoadUserMenu();
+                toolStripButtonLevelUp.Image = validBrowseDir && Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                 if (validBrowseDir)
                 {
