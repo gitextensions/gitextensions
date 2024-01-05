@@ -484,9 +484,14 @@ namespace GitUI.CommandsDialogs
             {
                 ThreadHelper.FileAndForget(async () =>
                     {
-                        var currentCheckout = Module.GetCurrentCheckout();
+                        ObjectId? currentCheckout = Module.GetCurrentCheckout();
 
-                        Validates.NotNull(currentCheckout);
+                        // If there is no checkout yet, ahead/behind info is not applicable
+                        if (currentCheckout is null)
+                        {
+                            lbChanges.Text = "";
+                            return;
+                        }
 
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
 
