@@ -212,7 +212,7 @@ namespace GitUIPluginInterfaces
 
         string ReEncodeCommitMessage(string s);
 
-        string? GetDescribe(ObjectId commitId);
+        string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken = default);
 
         (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null);
 
@@ -230,6 +230,7 @@ namespace GitUIPluginInterfaces
         /// This normally requires long time (up to tenths of seconds)
         /// </summary>
         /// <param name="isDiff">diff or merge.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>the Git output.</returns>
         string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken);
         Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked);
@@ -280,7 +281,8 @@ namespace GitUIPluginInterfaces
         /// <param name="objectId">The sha1.</param>
         /// <param name="getLocal">Pass true to include local branches.</param>
         /// <param name="getRemote">Pass true to include remote branches.</param>
-        IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote);
+        /// <param name="cancellationToken">A cancellation token.</param>
+        IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Uses check-ref-format to ensure that a branch name is well formed.
@@ -305,7 +307,7 @@ namespace GitUIPluginInterfaces
         /// Returns tag's message. If the lightweight tag is passed, corresponding commit message
         /// is returned.
         /// </summary>
-        string? GetTagMessage(string? tag);
+        string? GetTagMessage(string? tag, CancellationToken cancellationToken = default);
         void UnstageFile(string file);
         bool UnstageFiles(IReadOnlyList<GitItemStatus> files, out string allOutput);
         bool StageFile(string file);
@@ -392,7 +394,7 @@ namespace GitUIPluginInterfaces
         string? GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding);
         bool IsMerge(ObjectId objectId);
         IEnumerable<string> GetMergedBranches(bool includeRemote = false);
-        Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string? commit = null);
+        Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken);
         IReadOnlyList<string> GetMergedRemoteBranches();
         IReadOnlyList<IGitRef> GetRemoteServerRefs(string remote, bool tags, bool branches, out string? errorOutput, CancellationToken cancellationToken);
 
@@ -420,7 +422,8 @@ namespace GitUIPluginInterfaces
         /// Gets all tags which contain the given commit.
         /// </summary>
         /// <param name="objectId">The sha1.</param>
-        IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId);
+        /// <param name="cancellationToken">A cancellation token.</param>
+        IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId, CancellationToken cancellationToken);
 
         /// <summary>
         ///  Gets the remote branch.

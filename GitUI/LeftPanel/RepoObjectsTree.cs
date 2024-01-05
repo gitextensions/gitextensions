@@ -309,7 +309,7 @@ namespace GitUI.LeftPanel
                 cancellationToken.ThrowIfCancellationRequested();
                 HashSet<string> mergedBranches = selectedGuid is null
                     ? []
-                    : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid)).ToHashSet();
+                    : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid, cancellationToken)).ToHashSet();
 
                 selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
 
