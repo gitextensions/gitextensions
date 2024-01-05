@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly IEnumerable<string> _defaultBranches;
         private string? _currentBranch;
-        private IReadOnlyList<string> _reflogHashes;
+        private IReadOnlySet<string> _reflogHashes;
         private Dictionary<ObjectId, IReadOnlyList<string>> _containedInBranch = new();
 
         public FormDeleteBranch(GitUICommands commands, IEnumerable<string> defaultBranches)
@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            bool areAllInReflog = selectedBranches.All(b => _reflogHashes.Contains(b.ObjectId.ToString()));
+            bool areAllInReflog = selectedBranches.All(b => _reflogHashes.Any(b.ObjectId.Equals));
 
             // Detect if commits will be dangling (i.e. no remaining local refs left handling commit)
             string[] deletedCandidates = selectedBranches.Select(b => b.Name).ToArray();
@@ -170,7 +170,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (IGitRef selectedBranch in selectedBranches)
             {
-                if (!_reflogHashes.Contains(selectedBranch.ObjectId.ToString()))
+                if (!_reflogHashes.Any(selectedBranch.ObjectId.Equals))
                 {
                     labelWarning.Text = _warningNotInReflog.Text;
                     labelWarning.ForeColor = Color.Orange;

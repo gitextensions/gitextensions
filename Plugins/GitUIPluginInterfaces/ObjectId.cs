@@ -1,4 +1,5 @@
-﻿using System.Buffers.Binary;
+﻿using System;
+using System.Buffers.Binary;
 using System.Buffers.Text;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -14,7 +15,7 @@ namespace GitUIPluginInterfaces
     /// <para>Instances are immutable and are guaranteed to contain valid, 160-bit (20-byte) SHA1 hashes.</para>
     /// <para>String forms of this object must be in lower case.</para>
     /// </remarks>
-    public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
+    public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, IEquatable<string>
     {
         private static readonly ThreadLocal<byte[]> _buffer = new(() => new byte[_sha1ByteCount], trackAllValues: false);
         private static readonly Random _random = new();
@@ -325,6 +326,45 @@ namespace GitUIPluginInterfaces
 
         /// <inheritdoc />
         public override int GetHashCode() => unchecked((int)_i2);
+
+        public bool Equals(string? other)
+        {
+            if (other == null || other.Length != Sha1CharCount)
+            {
+                return false;
+            }
+
+            return PartToString(1).AsSpan().CompareTo(other.AsSpan(0, 16), StringComparison.InvariantCulture) == 0
+                && PartToString(2).AsSpan().CompareTo(other.AsSpan(16, 16), StringComparison.InvariantCulture) == 0
+                && PartToString(3).AsSpan().CompareTo(other.AsSpan(32), StringComparison.InvariantCulture) == 0;
+
+            string PartToString(int part)
+            {
+                int allocSize = part == 3 ? 4 : 8;
+                Span<byte> buffer = stackalloc byte[allocSize];
+
+                switch (part)
+                {
+                    case 1:
+                        BinaryPrimitives.WriteUInt64BigEndian(buffer, _i1);
+                        break;
+                    case 2:
+                        BinaryPrimitives.WriteUInt64BigEndian(buffer, _i2);
+                        break;
+                    case 3:
+                        BinaryPrimitives.WriteUInt32BigEndian(buffer, _i3);
+                        break;
+                    default:
+                        break;
+                }
+
+#if NET9_0_OR_GREATER
+                return Convert.ToHexStringLower(buffer);
+#else
+                return Convert.ToHexString(buffer).ToLowerInvariant();
+#endif
+            }
+        }
 
         public static bool operator ==(ObjectId? left, ObjectId? right) => Equals(left, right);
         public static bool operator !=(ObjectId? left, ObjectId? right) => !Equals(left, right);

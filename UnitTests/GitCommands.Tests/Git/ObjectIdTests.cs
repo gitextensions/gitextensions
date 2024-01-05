@@ -306,5 +306,14 @@ namespace GitCommandsTests.Git
             Assert.IsFalse(ObjectId.Parse(objectIdString) == ObjectId.Random());
             Assert.IsTrue(ObjectId.Parse(objectIdString) != ObjectId.Random());
         }
+
+        [Test]
+        public void Equals_against_hash_string()
+        {
+            string objectIdString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            Assert.IsTrue(ObjectId.Parse(objectIdString).Equals(objectIdString));
+            Assert.IsFalse(ObjectId.Parse(objectIdString).Equals("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"));
+            Assert.IsFalse(ObjectId.Parse(objectIdString).Equals("baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+        }
     }
 }

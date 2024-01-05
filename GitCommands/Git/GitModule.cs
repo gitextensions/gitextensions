@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -2822,12 +2823,12 @@ namespace GitCommands
             return Array.Empty<IGitRef>();
         }
 
-        public IReadOnlyList<string> GetReflogHashes()
+        public IReadOnlySet<string> GetReflogHashes()
         {
             ExecutionResult result = _gitExecutable.Execute("reflog show HEAD --pretty=format:\"%H\"", throwOnErrorExit: false);
             return result.ExitedSuccessfully
-                ? result.StandardOutput.Split('\n')
-                : Array.Empty<string>();
+                ? result.StandardOutput.Split('\n').ToHashSet()
+                : [];
         }
 
         /// <summary>
