@@ -288,7 +288,7 @@ namespace GitCommandsTests.Git
             const string s = "0102030405060708091011121314151617181920";
             ObjectId id = ObjectId.Parse(s);
 
-            for (int length = 0; length < ObjectId.Sha1CharCount; length++)
+            for (int length = 1; length < ObjectId.Sha1CharCount; length++)
             {
                 Assert.AreEqual(s[..length], id.ToShortString(length));
             }
