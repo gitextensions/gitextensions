@@ -285,14 +285,14 @@ namespace GitUIPluginInterfaces
         /// Returns the first <paramref name="length"/> characters of the SHA-1 hash.
         /// </summary>
         /// <param name="length">The length of the returned string. Defaults to <c>8</c>.</param>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than zero, or more than 40.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than one, or more than 40.</exception>
         [Pure]
         [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         public unsafe string ToShortString(int length = 8)
         {
-            if (length < 0)
+            if (length < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(length), length, "Cannot be less than zero.");
+                throw new ArgumentOutOfRangeException(nameof(length), length, "Cannot be less than one.");
             }
 
             if (length > Sha1CharCount)
@@ -300,13 +300,24 @@ namespace GitUIPluginInterfaces
                 throw new ArgumentOutOfRangeException(nameof(length), length, $"Cannot be greater than {Sha1CharCount}.");
             }
 
+            int neededBytesCount = (length + 1) / 2; // equivalent to Math.Ceiling(length / 2.0) with only int calculation
             Span<byte> buffer = stackalloc byte[_sha1ByteCount];
 
-            BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(0, 8), _i1);
-            BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
-            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
+            BinaryPrimitives.WriteUInt64BigEndian(buffer, _i1);
+            if (neededBytesCount > 8)
+            {
+                BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
+                BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
+            }
 
-            return Convert.ToHexString(buffer).Substring(0, length).ToLowerInvariant();
+            // Operate on the smaller buffer possible
+            Span<byte> bufferSlice = buffer.Slice(0, neededBytesCount);
+
+#if NET9_0_OR_GREATER
+            return Convert.ToHexStringLower(bufferSlice).Substring(0, length);
+#else
+            return Convert.ToHexString(bufferSlice).Substring(0, length).ToLowerInvariant();
+#endif
         }
 
         #region Equality and hashing
