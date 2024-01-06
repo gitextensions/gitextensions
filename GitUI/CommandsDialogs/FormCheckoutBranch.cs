@@ -484,20 +484,18 @@ namespace GitUI.CommandsDialogs
             {
                 ThreadHelper.FileAndForget(async () =>
                     {
+                        // not applicable if there is no checkout yet
+                        string aheadBehindInfo = "";
+
                         ObjectId? currentCheckout = Module.GetCurrentCheckout();
-
-                        // If there is no checkout yet, ahead/behind info is not applicable
-                        if (currentCheckout is null)
+                        if (currentCheckout is not null)
                         {
-                            lbChanges.Text = "";
-                            return;
+                            aheadBehindInfo = Module.GetCommitCountString(currentCheckout.ToString(), branch);
                         }
-
-                        var text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
 
                         await this.SwitchToMainThreadAsync();
 
-                        lbChanges.Text = text;
+                        lbChanges.Text = aheadBehindInfo;
                     });
             }
 
