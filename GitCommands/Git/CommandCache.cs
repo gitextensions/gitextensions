@@ -102,5 +102,10 @@ namespace GitCommands
 
             Changed?.Invoke(this, EventArgs.Empty);
         }
+
+        internal void Clear()
+        {
+            _cache.Clear();
+        }
     }
 }

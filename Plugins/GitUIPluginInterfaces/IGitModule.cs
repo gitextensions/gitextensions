@@ -7,6 +7,7 @@ namespace GitUIPluginInterfaces
     /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
+        void ClearGitCommandBetweenRefreshCache();
         IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string remoteName, string? path);

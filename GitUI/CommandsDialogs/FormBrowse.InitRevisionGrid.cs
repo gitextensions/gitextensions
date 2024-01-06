@@ -13,6 +13,11 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.IndexWatcher.Changed += (_, args) =>
             {
                 bool indexChanged = args.IsIndexChanged;
+                if (indexChanged)
+                {
+                    UICommands.Module.ClearGitCommandBetweenRefreshCache();
+                }
+
                 this.InvokeAndForget(() =>
                     RefreshButton.Image = indexChanged && AppSettings.ShowGitStatusInBrowseToolbar && Module.IsValidGitWorkingDir()
                         ? Images.ReloadRevisionsDirty

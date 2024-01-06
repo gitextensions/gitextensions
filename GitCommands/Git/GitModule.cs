@@ -32,6 +32,7 @@ namespace GitCommands
 
         public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
         public static CommandCache GitCommandCache { get; } = new();
+        public static CommandCache GitCommandCacheBetweenRefresh { get; } = new();
 
         private readonly object _lock = new();
         private readonly IIndexLockManager _indexLockManager;
@@ -2938,7 +2939,7 @@ namespace GitCommands
                 "--contains",
                 objectId
             };
-            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken, cache: GitCommandCacheBetweenRefresh);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -3986,6 +3987,11 @@ namespace GitCommands
                     ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""
                     : "";
             }
+        }
+
+        public void ClearGitCommandBetweenRefreshCache()
+        {
+            GitCommandCacheBetweenRefresh.Clear();
         }
 
         internal TestAccessor GetTestAccessor() => new(this);
