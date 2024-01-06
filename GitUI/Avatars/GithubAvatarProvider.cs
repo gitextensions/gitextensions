@@ -20,7 +20,7 @@ namespace GitUI.Avatars
         private readonly IAvatarDownloader _downloader;
         private readonly bool _onlySupplyNoReply;
 
-        [GeneratedRegex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.IgnoreCase)]
+        [GeneratedRegex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
         private static partial Regex GitHubEmailRegex();
 
         public GithubAvatarProvider([NotNull] IAvatarDownloader downloader, bool onlySupplyNoReply = false)

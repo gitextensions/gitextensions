@@ -25,7 +25,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         private string? CurrentBranch { get; set; }
 
-        [GeneratedRegex(@"\r\n?|\n")]
+        [GeneratedRegex(@"\r\n?|\n", RegexOptions.ExplicitCapture)]
         private static partial Regex LineEndRegex();
 
         private enum Branch

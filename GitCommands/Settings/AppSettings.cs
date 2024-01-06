@@ -40,7 +40,7 @@ namespace GitCommands
 
         private static Mutex _globalMutex;
 
-        [GeneratedRegex(@"^(\d+)\.(\d+)")]
+        [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex VersionRegex();
 
         public static readonly int BranchDropDownMinWidth = 300;
@@ -142,7 +142,7 @@ namespace GitCommands
                 Match match = VersionRegex().Match(version);
                 if (match.Success)
                 {
-                    docVersion = $"en/release-{match.Groups[1]}.{match.Groups[2]}/";
+                    docVersion = $"en/release-{match.Groups["major"]}.{match.Groups["minor"]}/";
                 }
             }
 

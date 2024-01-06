@@ -38,7 +38,7 @@ namespace GitExtUtils
         private readonly ArgumentString _gitArgs;
         private readonly string _command;
 
-        [GeneratedRegex("^[a-z0-9_.-]+$")]
+        [GeneratedRegex(@"^[a-z0-9_.-]+$", RegexOptions.ExplicitCapture)]
         private static partial Regex CommandRegex();
 
         /// <summary>

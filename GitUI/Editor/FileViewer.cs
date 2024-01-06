@@ -74,7 +74,7 @@ namespace GitUI.Editor
         private FileStatusItem? _viewItem;
         private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
 
-        [GeneratedRegex("warning: .*has type .* expected .*")]
+        [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
         private static partial Regex FileModeWarningRegex();
 
         public FileViewer()

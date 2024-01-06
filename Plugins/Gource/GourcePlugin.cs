@@ -35,7 +35,7 @@ namespace GitExtensions.Plugins.Gource
 
         // find http://gource.googlecode.com/files/gource-0.26b.win32.zip
         // find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
-        [GeneratedRegex(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""")]
+        [GeneratedRegex(@"(?:<a .*href="")(?<path>.*gource-.{3,15}win32\.zip)""", RegexOptions.ExplicitCapture)]
         private static partial Regex GourceRegex();
 
         public GourcePlugin() : base(true)
@@ -253,7 +253,7 @@ namespace GitExtensions.Plugins.Gource
 
                 foreach (Match match in matches)
                 {
-                    return "https://github.com" + match.Groups[1].Value;
+                    return "https://github.com" + match.Groups["path"].Value;
                 }
 
                 response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/tag/gource-0.42");
@@ -262,7 +262,7 @@ namespace GitExtensions.Plugins.Gource
 
                 foreach (Match match in matches)
                 {
-                    return "https://github.com" + match.Groups[1].Value;
+                    return "https://github.com" + match.Groups["path"].Value;
                 }
 
                 return string.Empty;

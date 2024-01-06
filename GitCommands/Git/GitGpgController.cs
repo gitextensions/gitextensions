@@ -69,13 +69,13 @@ namespace GitCommands.Gpg
         private const string NoTagPubKey = "NO_PUBKEY";
         private const string NoSignatureFound = "error: no signature found";
 
-        [GeneratedRegex(ValidTagSign)]
+        [GeneratedRegex(ValidTagSign, RegexOptions.ExplicitCapture)]
         private static partial Regex ValidSignatureTagRegex();
-        [GeneratedRegex(GoodSignature)]
+        [GeneratedRegex(GoodSignature, RegexOptions.ExplicitCapture)]
         private static partial Regex GoodSignatureTagRegex();
-        [GeneratedRegex(NoTagPubKey)]
+        [GeneratedRegex(NoTagPubKey, RegexOptions.ExplicitCapture)]
         private static partial Regex NoPubKeyTagRegex();
-        [GeneratedRegex(NoSignatureFound)]
+        [GeneratedRegex(NoSignatureFound, RegexOptions.ExplicitCapture)]
         private static partial Regex NoSignatureFoundTagRegex();
 
         /// <summary>

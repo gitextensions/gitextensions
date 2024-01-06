@@ -66,21 +66,21 @@ namespace GitCommands.Git
     /// </summary>
     public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     {
-        [GeneratedRegex("^(\\.)*")]
+        [GeneratedRegex(@"^(\.)*", RegexOptions.ExplicitCapture)]
         private static partial Regex PeriodRegex();
-        [GeneratedRegex("(\\.lock)$")]
+        [GeneratedRegex(@"(\.lock)$", RegexOptions.ExplicitCapture)]
         private static partial Regex LockRegex();
-        [GeneratedRegex("\\.{2,}")]
+        [GeneratedRegex(@"\.{2,}", RegexOptions.ExplicitCapture)]
         private static partial Regex Rule03Regex();
-        [GeneratedRegex("(\\?|\\*|\\[)")]
+        [GeneratedRegex(@"(\?|\*|\[)", RegexOptions.ExplicitCapture)]
         private static partial Regex Rule05Regex();
-        [GeneratedRegex(@"(\/{2,})")]
+        [GeneratedRegex(@"(\/{2,})", RegexOptions.ExplicitCapture)]
         private static partial Regex Rule06Regex();
-        [GeneratedRegex("(\\.{1,})$")]
+        [GeneratedRegex(@"(\.{1,})$", RegexOptions.ExplicitCapture)]
         private static partial Regex Rule07Regex();
-        [GeneratedRegex("(@\\{)")]
+        [GeneratedRegex(@"(@\{)", RegexOptions.ExplicitCapture)]
         private static partial Regex Rule08Regex();
-        [GeneratedRegex(@"(\\{1,})")]
+        [GeneratedRegex(@"(\\{1,})", RegexOptions.ExplicitCapture)]
         private static partial Regex Rule10Regex();
 
         /// <summary>

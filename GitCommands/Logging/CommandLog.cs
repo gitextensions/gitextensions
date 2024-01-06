@@ -66,7 +66,7 @@ namespace GitCommands.Logging
 
     public sealed partial class CommandLogEntry
     {
-        [GeneratedRegex(@"((-c +[^ ]+)|(--no-optional-locks)) *")]
+        [GeneratedRegex(@"((-c +[^ ]+)|(--no-optional-locks)) *", RegexOptions.ExplicitCapture)]
         private static partial Regex GitArgumentsWithoutConfigurationRegex();
 
         public string FileName { get; }

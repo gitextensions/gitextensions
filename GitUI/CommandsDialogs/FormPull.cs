@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
         private List<IGitRef>? _heads;
         private bool _bInternalUpdate;
 
-        [GeneratedRegex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.")]
+        [GeneratedRegex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.", RegexOptions.ExplicitCapture)]
         private static partial Regex IsRefRemoved();
 
         public bool ErrorOccurred { get; private set; }

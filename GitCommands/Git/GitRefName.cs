@@ -8,9 +8,9 @@ namespace GitCommands
 {
     public static partial class GitRefName
     {
-        [GeneratedRegex(@"^refs/remotes/[^/]+/HEAD$")]
+        [GeneratedRegex(@"^refs/remotes/[^/]+/HEAD$", RegexOptions.ExplicitCapture)]
         private static partial Regex RemoteHeadRegex();
-        [GeneratedRegex(@"^refs/remotes/([^/]+)")]
+        [GeneratedRegex(@"^refs/remotes/(?<remote>[^/]+)", RegexOptions.ExplicitCapture)]
         private static partial Regex RemoteNameRegex();
 
         /// <summary>"refs/tags/".</summary>
@@ -47,7 +47,7 @@ namespace GitCommands
 
             if (match.Success)
             {
-                return match.Groups[1].Value;
+                return match.Groups["remote"].Value;
             }
 
             // This method requires the full form of the ref path, which begins with "refs/".

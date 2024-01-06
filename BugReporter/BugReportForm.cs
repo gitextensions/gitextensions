@@ -40,7 +40,7 @@ Send report?");
         private string _exceptionInfo;
         private string? _environmentInfo;
 
-        [GeneratedRegex(@"\s|\r|\n")]
+        [GeneratedRegex(@"\s|\r|\n", RegexOptions.ExplicitCapture)]
         private static partial Regex WhitespaceRegex();
 
         static BugReportForm()
