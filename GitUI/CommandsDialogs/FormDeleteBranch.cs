@@ -1,7 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
-using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -22,6 +21,7 @@ namespace GitUI.CommandsDialogs
         private string? _currentBranch;
         private IReadOnlySet<string> _reflogHashes;
         private Dictionary<ObjectId, IReadOnlyList<string>> _containedInBranch = new();
+        private Dictionary<ObjectId, bool> _cacheRefInReflog = new(1);
 
         public FormDeleteBranch(GitUICommands commands, IEnumerable<string> defaultBranches)
             : base(commands, enablePositionRestore: false)
@@ -50,8 +50,6 @@ namespace GitUI.CommandsDialogs
             }
 
             Branches.Focus();
-
-            ProcessSelectedBranches();
         }
 
         private void Delete_Click(object sender, EventArgs e)
@@ -68,7 +66,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            bool areAllInReflog = selectedBranches.All(b => _reflogHashes.Any(b.ObjectId.Equals));
+            bool areAllInReflog = AreAllRefsInReflog(selectedBranches);
 
             // Detect if commits will be dangling (i.e. no remaining local refs left handling commit)
             string[] deletedCandidates = selectedBranches.Select(b => b.Name).ToArray();
@@ -161,6 +159,31 @@ namespace GitUI.CommandsDialogs
             });
         }
 
+        private bool AreAllRefsInReflog(IGitRef[] refs)
+        {
+            foreach (IGitRef gitRef in refs)
+            {
+                if (_cacheRefInReflog.TryGetValue(gitRef.ObjectId, out bool isInReflog))
+                {
+                    if (!isInReflog)
+                    {
+                        return false;
+                    }
+
+                    continue;
+                }
+
+                isInReflog = _reflogHashes.Any(gitRef.ObjectId.Equals);
+                _cacheRefInReflog.Add(gitRef.ObjectId, isInReflog);
+                if (!isInReflog)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private void CheckSelectedBranches(IGitRef[] selectedBranches)
         {
             if (!selectedBranches.Any())
@@ -168,18 +191,16 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            foreach (IGitRef selectedBranch in selectedBranches)
+            if (!AreAllRefsInReflog(selectedBranches))
             {
-                if (!_reflogHashes.Any(selectedBranch.ObjectId.Equals))
-                {
-                    labelWarning.Text = _warningNotInReflog.Text;
-                    labelWarning.ForeColor = Color.Orange;
-                    return;
-                }
+                labelWarning.Text = _warningNotInReflog.Text;
+                labelWarning.ForeColor = Color.Orange;
             }
-
-            labelWarning.Text = _restoreUsingReflogAvailable.Text;
-            labelWarning.ForeColor = Color.Green;
+            else
+            {
+                labelWarning.Text = _restoreUsingReflogAvailable.Text;
+                labelWarning.ForeColor = Color.Green;
+            }
         }
     }
 }
