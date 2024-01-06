@@ -51,8 +51,8 @@ namespace GitCommandsTests.Git
 
             cache.Add(
                 arguments,
-                output: GitModule.SystemEncoding.GetBytes("Hello"),
-                error: GitModule.SystemEncoding.GetBytes("World!"));
+                output: "Hello",
+                error: "World!");
 
             string output = _executable.GetOutput(arguments, cache: cache);
 
@@ -80,7 +80,7 @@ namespace GitCommandsTests.Git
 
             // Validate data stored in cache afterwards
             Assert.AreEqual(1, cache.GetCachedCommands().Count);
-            Assert.IsTrue(cache.TryGet(arguments, out byte[]? outputBytes, out byte[]? errorBytes));
+            Assert.IsTrue(cache.TryGet(arguments, out string? outputBytes, out string? errorBytes));
             Assert.AreEqual(GitModule.SystemEncoding.GetBytes(commandOutput), outputBytes);
             Assert.IsEmpty(errorBytes);
         }

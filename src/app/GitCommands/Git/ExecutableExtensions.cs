@@ -97,9 +97,9 @@ namespace GitCommands
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            if (cache?.TryGet(arguments, out byte[]? output, out byte[]? error) is true)
+            if (cache?.TryGet(arguments, out string? output, out string? _) is true)
             {
-                return ComposeOutput();
+                return output;
             }
 
             using IProcess process = executable.Start(
@@ -130,22 +130,13 @@ namespace GitCommands
 
             await Task.WhenAll(outputTask, exitTask);
 
-            output = outputBuffer.ToArray();
-            error = Array.Empty<byte>();
-
+            string outputStr = CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(outputBuffer.ToArray(), Array.Empty<byte>(), ref outputEncoding));
             if (cache is not null && await exitTask == 0)
             {
-                cache.Add(arguments, output, error);
+                cache.Add(arguments, outputStr, "");
             }
 
-            return ComposeOutput();
-
-            string ComposeOutput()
-            {
-                return CleanString(
-                    stripAnsiEscapeCodes,
-                    EncodingHelper.DecodeString(output, error, ref outputEncoding));
-            }
+            return outputStr;
         }
 
         /// <summary>
@@ -266,7 +257,7 @@ namespace GitCommands
             CancellationToken cancellationToken = default)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes, throwOnErrorExit, cancellationToken));
+                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, "", stripAnsiEscapeCodes, throwOnErrorExit, cancellationToken));
         }
 
         /// <summary>
@@ -286,19 +277,21 @@ namespace GitCommands
             Action<StreamWriter>? writeInput = null,
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
+            string extraCacheKeys = "",
             bool stripAnsiEscapeCodes = true,
             bool throwOnErrorExit = true,
             CancellationToken cancellationToken = default)
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            if (cache?.TryGet(arguments, out byte[]? cachedOutput, out byte[]? cachedError) is true)
+            string cacheKey = $"{arguments}::{executable.GetWorkingDirectory()}::{stripAnsiEscapeCodes}::{extraCacheKeys}";
+            if (cache?.TryGet(cacheKey, out string? cachedOutput, out string? cachedError) is true)
             {
                 return new ExecutionResult(
                     executable,
                     arguments,
-                    CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(cachedOutput, error: null, ref outputEncoding)),
-                    CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(output: null, cachedError, ref outputEncoding)),
+                    cachedOutput,
+                    cachedError,
                     exitCode: 0);
             }
 
@@ -359,19 +352,18 @@ namespace GitCommands
                 throw;
             }
 
-            string output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
-            string error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
-
+            string output = CleanString(stripAnsiEscapeCodes, outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length));
+            string error = CleanString(stripAnsiEscapeCodes, outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length));
             if (cache is not null && exitCode == 0)
             {
-                cache.Add(arguments, outputBuffer.ToArray(), errorBuffer.ToArray());
+                cache.Add(cacheKey, output, error);
             }
 
             return new ExecutionResult(
                 executable,
                 arguments,
-                CleanString(stripAnsiEscapeCodes, output),
-                CleanString(stripAnsiEscapeCodes, error),
+                output,
+                error,
                 exitCode);
         }
 

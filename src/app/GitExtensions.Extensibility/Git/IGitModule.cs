@@ -254,6 +254,7 @@ public interface IGitModule
         string? oldFileName,
         ArgumentString extraDiffArguments,
         bool cacheResult,
+        string extraCacheKey,
         bool isTracked,
         bool useGitColoring,
         CancellationToken cancellationToken);

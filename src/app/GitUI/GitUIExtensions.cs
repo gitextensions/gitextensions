@@ -156,14 +156,15 @@ namespace GitUI
             if (!item.Item.IsSubmodule && AppSettings.DiffDisplayAppearance.Value == GitCommands.Settings.DiffDisplayAppearance.Difftastic && fileViewer.IsDifftasticEnabled.Value)
             {
                 bool isTracked = item.Item.IsTracked || (item.Item.TreeGuid is not null && item.SecondRevision.ObjectId is not null);
-                string diffArgs = fileViewer.GetDifftasticArguments();
+                (ArgumentString diffArgs, string extraCacheKey) = fileViewer.GetDifftasticArguments();
 
                 // set file name as null to not change the restore lineno
                 await fileViewer.ViewTextAsync(fileName: null, $"git difftool {diffArgs} -- {item.Item.Name}");
 
                 ExecutionResult result = await fileViewer.Module.GetSingleDifftoolAsync(firstId, item.SecondRevision.ObjectId, item.Item.Name, item.Item.OldName,
                     diffArgs,
-                    cacheResult: false,
+                    cacheResult: true,
+                    extraCacheKey,
                     isTracked,
                     useGitColoring: true,
                     cancellationToken);

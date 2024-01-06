@@ -425,34 +425,43 @@ namespace GitUI.Editor
             };
         }
 
-        public ArgumentString GetDifftasticArguments(bool isRangeDiff = false)
+        public (ArgumentString args, string extraCacheKey) GetDifftasticArguments(bool isRangeDiff = false)
         {
             EnvironmentAbstraction env = new();
+            StringBuilder sb = new();
 
             // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
             // Allow user to override with difftool command line options.
-            env.SetEnvironmentVariable("DFT_COLOR", "always");
-            env.SetEnvironmentVariable("DFT_BACKGROUND", ThemeModule.IsDarkTheme ? "dark" : "light");
-            env.SetEnvironmentVariable("DFT_SYNTAX_HIGHLIGHT", ShowSyntaxHighlightingInDiff ? "on" : "off");
+            SetEnvironmentVariable("DFT_COLOR", "always");
+            SetEnvironmentVariable("DFT_BACKGROUND", ThemeModule.IsDarkTheme ? "dark" : "light");
+            SetEnvironmentVariable("DFT_SYNTAX_HIGHLIGHT", ShowSyntaxHighlightingInDiff ? "on" : "off");
             int contextLines = ShowEntireFile ? 9000 : NumberOfContextLines;
-            env.SetEnvironmentVariable("DFT_CONTEXT", contextLines.ToString());
+            SetEnvironmentVariable("DFT_CONTEXT", contextLines.ToString());
 
             // Reasonable similar to IgnoreWhitespaceKind.Eol
-            env.SetEnvironmentVariable("DFT_STRIP_CR", IgnoreWhitespace == IgnoreWhitespaceKind.None ? "off" : "on");
+            SetEnvironmentVariable("DFT_STRIP_CR", IgnoreWhitespace == IgnoreWhitespaceKind.None ? "off" : "on");
 
             // Guess a reasonable even column number from viewer width, so scrollbar is (barely) activated.
             // At least 2*(2+linenoLength) of the width is used for difftastic lineno.
+            // DFT_WIDTH is also used when parsing in GE, must be in environment.
             int width = Math.Max(88, Math.Min(200, DpiUtil.Scale(internalFileViewer.Width) / 7)) / 2 * 2;
-            env.SetEnvironmentVariable("DFT_WIDTH", width.ToString());
+            SetEnvironmentVariable("DFT_WIDTH", width.ToString());
 
-            // Also export to WSL environment (DFT_WIDTH is also used when parsing in GE).
+            // Also export to WSL environment.
             env.SetEnvironmentVariable("WSLENV", "DFT_COLOR:DFT_BACKGROUND:DFT_SYNTAX_HIGHLIGHT:DFT_CONTEXT:DFT_STRIP_CR:DFT_WIDTH");
 
-            return new ArgumentBuilder
+            return (new ArgumentBuilder
             {
                 "--tool=difftastic",
                 { TreatAllFilesAsText, "--text" },
-            };
+            },
+            sb.ToString());
+
+            void SetEnvironmentVariable(string variable, string value)
+            {
+                env.SetEnvironmentVariable(variable, value);
+                sb.Append(';').Append(variable).Append('=').Append(value);
+            }
         }
 
         public ArgumentString GetExtraGrepArguments()

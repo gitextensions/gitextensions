@@ -36,4 +36,6 @@ public interface IExecutable
                    bool useShellExecute = false,
                    bool throwOnErrorExit = true,
                    CancellationToken cancellationToken = default);
+
+    string GetWorkingDirectory();
 }
