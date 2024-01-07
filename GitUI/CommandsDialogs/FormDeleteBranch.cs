@@ -20,6 +20,7 @@ namespace GitUI.CommandsDialogs
         private readonly IEnumerable<string> _defaultBranches;
         private string? _currentBranch;
         private IReadOnlySet<string> _reflogHashes;
+        private HashSet<string>? _mergedBranches;
         private Dictionary<ObjectId, IReadOnlyList<string>> _containedInBranch = new();
         private Dictionary<ObjectId, bool> _cacheRefInReflog = new(1);
 
@@ -42,7 +43,25 @@ namespace GitUI.CommandsDialogs
             _reflogHashes = Module.GetReflogHashes();
 
             Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads).ToList();
-            _currentBranch = Module.GetSelectedBranch();
+
+            _currentBranch = Module.GetSelectedBranch(emptyIfDetached: true);
+
+            _mergedBranches = [];
+
+            if (!string.IsNullOrEmpty(_currentBranch))
+            {
+                foreach (string branch in Module.GetMergedBranches())
+                {
+                    if (branch.StartsWith("* "))
+                    {
+                        _currentBranch = branch.Trim('*', ' ');
+                    }
+                    else
+                    {
+                        _mergedBranches.Add(branch.Trim());
+                    }
+                }
+            }
 
             if (_defaultBranches is not null)
             {
@@ -74,6 +93,11 @@ namespace GitUI.CommandsDialogs
 
             foreach (IGitRef selectedBranch in selectedBranches)
             {
+                if (_mergedBranches.Contains(selectedBranch.Name))
+                {
+                    continue;
+                }
+
                 atLeastOneHeadCommitWillBeDangling = !GetAllBranchesWhichContainGivenCommit(selectedBranch.ObjectId)
                     .Any(b2 => !deletedCandidates.Contains(b2));
 
@@ -155,7 +179,7 @@ namespace GitUI.CommandsDialogs
 
             Task.Run(() =>
             {
-                BuildContainedInBranchData(selectedBranches);
+                BuildContainedInBranchData(selectedBranches.Where(b => !_mergedBranches.Contains(b.Name)).ToArray());
             });
         }
 
