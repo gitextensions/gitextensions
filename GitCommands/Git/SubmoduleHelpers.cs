@@ -77,7 +77,7 @@ namespace GitCommands.Git
                         if (match.Groups.Count > 1)
                         {
                             name = match.Groups["filenamea"].Value;
-                            oldName = match.Groups["filenamea"].Value;
+                            oldName = name;
                         }
                     }
                 }
