@@ -141,7 +141,9 @@ namespace GitUI.CommandsDialogs
                         Images.ViewFile,
                         Images.Blame
                     }
-                };
+                }
+                .FixImageTransparencyRegression();
+
                 tabControl1.TabPages[0].ImageIndex = 0;
                 tabControl1.TabPages[1].ImageIndex = 1;
                 tabControl1.TabPages[2].ImageIndex = 2;
