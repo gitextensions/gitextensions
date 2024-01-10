@@ -41,9 +41,9 @@ namespace ResourceManager.CommitDataRenders
         private readonly IHeaderRenderStyleProvider _headerRendererStyleProvider;
         private readonly ILinkFactory? _linkFactory;
 
-        [GeneratedRegex(@"[ \t]+")]
+        [GeneratedRegex(@"[ \t]+", RegexOptions.ExplicitCapture)]
         private static partial Regex SpacesRegex();
-        [GeneratedRegex(@"(\n[^:]+: ).* ago \(([^)]+)\)")]
+        [GeneratedRegex(@"(?<reltime>\n[^:]+: ).* ago \((?<unit>[^)]+)\)", RegexOptions.ExplicitCapture)]
         private static partial Regex RemoveAgoRegex();
 
         public CommitDataHeaderRenderer(IHeaderLabelFormatter labelFormatter, IDateFormatter dateFormatter, IHeaderRenderStyleProvider headerRendererStyleProvider, ILinkFactory? linkFactory)

@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new("You have changes in your working directory that could be lost.\n\nDo you want to continue?");
         private readonly TranslationString _continueResetCurrentBranchCaptionText = new("Changes not committed...");
 
-        [GeneratedRegex("^([^ ]+) ([^:]+): (.+)$")]
+        [GeneratedRegex(@"^(?<sha>[^ ]+) (?<ref>[^:]+): (?<action>.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ReflogRegex();
 
         private string? _currentBranch;
@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs
                         select ReflogRegex().Match(line)
                         into match
                         where match.Success
-                        select new RefLine(ObjectId.Parse(match.Groups[1].Value), match.Groups[2].Value, match.Groups[3].Value);
+                        select new RefLine(ObjectId.Parse(match.Groups["sha"].Value), match.Groups["ref"].Value, match.Groups["action"].Value);
             }
         }
 

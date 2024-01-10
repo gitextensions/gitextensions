@@ -18,7 +18,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
         private readonly TranslationString _pleaseSetProxy = new("There is no proxy configured. Please set the proxy host in the plugin settings.");
         #endregion
 
-        [GeneratedRegex(":(.*)@")]
+        [GeneratedRegex(@":(.*)@", RegexOptions.ExplicitCapture)]
         private static partial Regex PasswordRegex();
 
         /// <summary>

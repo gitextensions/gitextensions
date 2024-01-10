@@ -6,9 +6,9 @@ namespace GitExtensions.Plugins.Bitbucket
 {
     public partial class Settings
     {
-        [GeneratedRegex(@"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([^\/]+?))\/(?<repo>(.*?)).git")]
+        [GeneratedRegex(@"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([^\/]+?))\/(?<repo>(.*?)).git", RegexOptions.ExplicitCapture)]
         private static partial Regex BitbucketHttpRegex();
-        [GeneratedRegex(@"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([^\/]+))\/(?<repo>(.*?)).git")]
+        [GeneratedRegex(@"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([^\/]+))\/(?<repo>(.*?)).git", RegexOptions.ExplicitCapture)]
         private static partial Regex BitbucketSshRegex();
 
         public static Settings? Parse(IGitModule module, SettingsSource settings, BitbucketPlugin plugin)

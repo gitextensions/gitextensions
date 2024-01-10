@@ -6,7 +6,7 @@ namespace GitUI.Editor.Diff
 {
     public partial class DiffLineNumAnalyzer
     {
-        [GeneratedRegex(@"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})", RegexOptions.IgnoreCase)]
+        [GeneratedRegex(@"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
         private static partial Regex DiffRegex();
 
         public DiffLinesInfo Analyze(string diffContent)

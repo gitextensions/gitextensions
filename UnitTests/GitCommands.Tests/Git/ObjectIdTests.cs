@@ -10,11 +10,11 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public sealed partial class ObjectIdTests
     {
-        [GeneratedRegex("[a-f0-9]{40}")]
+        [GeneratedRegex(@"[a-f0-9]{40}", RegexOptions.ExplicitCapture)]
         private static partial Regex Sha40Regex();
-        [GeneratedRegex("[a-f0-9]{39}")]
+        [GeneratedRegex(@"[a-f0-9]{39}", RegexOptions.ExplicitCapture)]
         private static partial Regex Sha39Regex();
-        [GeneratedRegex("[XYZa-f0-9]{39}")]
+        [GeneratedRegex(@"[XYZa-f0-9]{39}", RegexOptions.ExplicitCapture)]
         private static partial Regex ShaXYZRegex();
 
         [TestCase("0000000000000000000000000000000000000000")]

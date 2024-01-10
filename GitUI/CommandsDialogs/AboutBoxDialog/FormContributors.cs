@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         private readonly TranslationString _contributors = new("Contributors");
         private readonly TranslationString _caption = new("The application would not be possible without...");
 
-        [GeneratedRegex(@"\r\n?|\n")]
+        [GeneratedRegex(@"\r\n?|\n", RegexOptions.ExplicitCapture)]
         private static partial Regex NewlineRegex();
 
         public FormContributors()

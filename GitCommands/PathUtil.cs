@@ -16,11 +16,11 @@ namespace GitCommands
         public static readonly char PosixDirectorySeparatorChar = '/';
         public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
 
-        [GeneratedRegex(@"^(\w+):\/\/([\S]+)")]
+        [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
         private static partial Regex DriveLetterRegex();
 
         /// <summary>Replaces native path separator with posix path separator (/).</summary>
-        [return: NotNullIfNotNull("path")]
+        [return: NotNullIfNotNull(nameof(path))]
         public static string? ToPosixPath(this string? path)
         {
             return path?.Replace(NativeDirectorySeparatorChar, PosixDirectorySeparatorChar);

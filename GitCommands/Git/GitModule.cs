@@ -52,22 +52,22 @@ namespace GitCommands
         // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
         //
         // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
-        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline)]
+        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
         private static partial Regex RefRegex();
 
-        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)")]
+        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex HeaderRegex();
 
-        [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$")]
+        [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$", RegexOptions.ExplicitCapture)]
         private static partial Regex RemoteVerboseLineRegex();
 
-        [GeneratedRegex(@"(\\([0-7]{3}))+")]
+        [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
         private static partial Regex EscapedOctalCodePointRegex();
 
-        [GeneratedRegex(@"^([ -+U])([0-9a-f]{40}) (.+) \((.+)\)$")]
+        [GeneratedRegex(@"^(?<code>[ -+U])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShaRegex();
 
-        [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$")]
+        [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShortlogRegex();
 
         /// <summary>
@@ -1224,11 +1224,11 @@ namespace GitCommands
                     return false;
                 }
 
-                char code = match.Groups[1].Value[0];
-                string localPath = match.Groups[3].Value;
-                string branch = match.Groups[4].Value;
+                char code = match.Groups["code"].Value[0];
+                string localPath = match.Groups["path"].Value;
+                string branch = match.Groups["branch"].Value;
 
-                if (!ObjectId.TryParse(match.Groups[2].Value, out ObjectId? currentCommitId))
+                if (!ObjectId.TryParse(match.Groups["sha"].Value, out ObjectId? currentCommitId))
                 {
                     info = default;
                     return false;
@@ -3706,7 +3706,7 @@ namespace GitCommands
                     try
                     {
                         return SystemEncoding.GetString(
-                            match.Groups[2]
+                            match.Groups["octal"]
                                 .Captures.Cast<Capture>()
                                 .Select(c => Convert.ToByte(c.Value, 8))
                                 .ToArray());

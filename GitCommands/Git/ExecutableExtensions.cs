@@ -15,7 +15,7 @@ namespace GitCommands
         public const string DubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
         private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding, false);
 
-        [GeneratedRegex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]")]
+        [GeneratedRegex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.ExplicitCapture)]
         private static partial Regex AnsiCodeRegex();
 
         /// <summary>

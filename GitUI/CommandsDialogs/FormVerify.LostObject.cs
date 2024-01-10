@@ -18,11 +18,11 @@ namespace GitUI.CommandsDialogs
 
         private sealed partial class LostObject
         {
-            [GeneratedRegex(@"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$")]
+            [GeneratedRegex(@"^(?<rawtype>(dangling|missing|unreachable) (?<objecttype>commit|blob|tree|tag)|warning in tree) (?<objectid>[a-f\d]{40})(.)*$", RegexOptions.ExplicitCapture)]
             private static partial Regex RawDataRegex();
-            [GeneratedRegex("^(?<author>[^\u001F]+)\u001F(?<subject>.*)\u001F(?<date>\\d+)\u001F(?<first_parent>[^ ]+)?( .+)?$", RegexOptions.Singleline)]
+            [GeneratedRegex(@"^(?<author>[^\u001F]+)\u001F(?<subject>.*)\u001F(?<date>\d+)\u001F(?<first_parent>[^ ]+)?( .+)?$", RegexOptions.Singleline | RegexOptions.ExplicitCapture)]
             private static partial Regex LogRegex();
-            [GeneratedRegex(@"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n", RegexOptions.Multiline)]
+            [GeneratedRegex(@"^object (?<parent>.+)\ntype commit\ntag (?<tagname>.+)\ntagger (?<author>.+) <.*> (?<date>.+) .*\n\n(?<subject>.*)\n", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
             private static partial Regex TagRegex();
 
             /// <summary>
@@ -98,10 +98,9 @@ namespace GitUI.CommandsDialogs
                     return null;
                 }
 
-                GroupCollection matchedGroups = patternMatch.Groups;
-                string rawType = matchedGroups[1].Value;
-                LostObjectType objectType = GetObjectType(matchedGroups[3]);
-                ObjectId objectId = ObjectId.Parse(raw, matchedGroups[4]);
+                string rawType = patternMatch.Groups["rawtype"].Value;
+                LostObjectType objectType = GetObjectType(patternMatch.Groups["objecttype"]);
+                ObjectId objectId = ObjectId.Parse(raw, patternMatch.Groups["objectid"]);
                 LostObject result = new(objectType, rawType, objectId);
 
                 if (objectType == LostObjectType.Commit)
@@ -126,11 +125,11 @@ namespace GitUI.CommandsDialogs
                     Match tagPatternMatch = TagRegex().Match(tagData);
                     if (tagPatternMatch.Success)
                     {
-                        result.Parent = ObjectId.Parse(tagData, tagPatternMatch.Groups[1]);
-                        result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups[3].Value);
-                        result.TagName = tagPatternMatch.Groups[2].Value;
-                        result.Subject = result.TagName + ":" + tagPatternMatch.Groups[5].Value;
-                        result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups[4].Value);
+                        result.Parent = ObjectId.Parse(tagData, tagPatternMatch.Groups["parent"]);
+                        result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups["author"].Value);
+                        result.TagName = tagPatternMatch.Groups["tagname"].Value;
+                        result.Subject = result.TagName + ":" + tagPatternMatch.Groups["subject"].Value;
+                        result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups["date"].Value);
                     }
                 }
                 else if (objectType == LostObjectType.Blob)

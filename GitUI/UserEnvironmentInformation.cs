@@ -14,9 +14,9 @@ namespace GitUI
         private static bool _dirty;
         private static string? _sha;
 
-        [GeneratedRegex(@"^(?=.*\bMicrosoft\.WindowsDesktop\.App\b)[^\n\r]*", RegexOptions.Multiline)]
+        [GeneratedRegex(@"^(?=.*\bMicrosoft\.WindowsDesktop\.App\b)[^\n\r]*", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
         private static partial Regex DesktopAppRegex();
-        [GeneratedRegex("^", RegexOptions.Multiline)]
+        [GeneratedRegex(@"^", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
         private static partial Regex LineStartRegex();
 
         public static void CopyInformation() => ClipboardUtil.TrySetText(GetInformation() + GetDotnetVersionInfo());
