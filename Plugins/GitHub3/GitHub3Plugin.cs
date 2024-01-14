@@ -189,7 +189,7 @@ namespace GitExtensions.Plugins.GitHub3
         {
             Validates.NotNull(_currentGitUiCommands);
 
-            IGitModule gitModule = _currentGitUiCommands.GitModule;
+            IGitModule gitModule = _currentGitUiCommands.Module;
             IHostedRemote hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
             if (hostedRemote is null)
             {
@@ -221,12 +221,12 @@ namespace GitExtensions.Plugins.GitHub3
         /// </summary>
         public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule()
         {
-            if (_currentGitUiCommands?.GitModule is null)
+            if (_currentGitUiCommands?.Module is null)
             {
                 return Array.Empty<IHostedRemote>();
             }
 
-            IGitModule gitModule = _currentGitUiCommands.GitModule;
+            IGitModule gitModule = _currentGitUiCommands.Module;
             return Remotes().ToList();
 
             IEnumerable<IHostedRemote> Remotes()

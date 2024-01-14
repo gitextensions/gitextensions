@@ -7,6 +7,7 @@ using BugReporter.Serialization;
 using GitCommands;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces.Settings;
 
 namespace GitUI.NBugReports
 {
@@ -128,7 +129,8 @@ namespace GitUI.NBugReports
                 return;
             }
 
-            bool isUserExternalOperation = exception is UserExternalOperationException;
+            bool isUserExternalOperation = exception is UserExternalOperationException
+                                                     or GitConfigFormatException;
             bool isExternalOperation = exception is ExternalOperationException
                                                  or IOException
                                                  or SecurityException
@@ -149,7 +151,7 @@ namespace GitUI.NBugReports
 
             TaskDialogPage page = new()
             {
-                Icon = isExternalOperation ? TaskDialogIcon.Warning : TaskDialogIcon.Error,
+                Icon = isExternalOperation || isUserExternalOperation ? TaskDialogIcon.Warning : TaskDialogIcon.Error,
                 Caption = TranslatedStrings.Error,
                 Heading = rootError,
                 AllowCancel = true,

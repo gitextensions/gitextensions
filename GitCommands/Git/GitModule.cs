@@ -52,22 +52,22 @@ namespace GitCommands
         // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
         //
         // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
-        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline)]
+        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
         private static partial Regex RefRegex();
 
-        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)")]
+        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex HeaderRegex();
 
-        [GeneratedRegex(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$")]
+        [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$", RegexOptions.ExplicitCapture)]
         private static partial Regex RemoteVerboseLineRegex();
 
-        [GeneratedRegex(@"(\\([0-7]{3}))+")]
+        [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
         private static partial Regex EscapedOctalCodePointRegex();
 
-        [GeneratedRegex(@"^([ -+U])([0-9a-f]{40}) (.+) \((.+)\)$")]
+        [GeneratedRegex(@"^(?<code>[ -+U])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShaRegex();
 
-        [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$")]
+        [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShortlogRegex();
 
         /// <summary>
@@ -1224,11 +1224,11 @@ namespace GitCommands
                     return false;
                 }
 
-                char code = match.Groups[1].Value[0];
-                string localPath = match.Groups[3].Value;
-                string branch = match.Groups[4].Value;
+                char code = match.Groups["code"].Value[0];
+                string localPath = match.Groups["path"].Value;
+                string branch = match.Groups["branch"].Value;
 
-                if (!ObjectId.TryParse(match.Groups[2].Value, out ObjectId? currentCommitId))
+                if (!ObjectId.TryParse(match.Groups["sha"].Value, out ObjectId? currentCommitId))
                 {
                     info = default;
                     return false;
@@ -2106,24 +2106,20 @@ namespace GitCommands
             return ((ConfigFileSettings)LocalConfigFile).GetValues(setting);
         }
 
-        public string GetSetting(string setting)
-        {
-            return LocalConfigFile.GetValue(setting);
-        }
+        public string GetSetting(string setting) => LocalConfigFile.GetValue(setting);
+        public T? GetSetting<T>(string setting) where T : struct => LocalConfigFile.GetValue<T>(setting);
 
-        public string GetEffectiveSetting(string setting)
-        {
-            return EffectiveConfigFile.GetValue(setting);
-        }
+        public string GetEffectiveSetting(string setting) => EffectiveConfigFile.GetValue(setting);
+        public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveConfigFile.GetValue<T>(setting);
 
         public SettingsSource GetEffectiveSettingsByPath(string path)
         {
             return ((ConfigFileSettings)EffectiveConfigFile).ByPath(path);
         }
 
-        public string? GetEffectiveGitSetting(string setting, bool cache = true)
+        public string? GetGitSetting(string setting, string scopeArg, bool cache = false)
         {
-            GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
+            GitArgumentBuilder args = new("config") { "--includes", scopeArg, "--get", setting };
             ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
 
             // Handle no value set, is error code 1: https://git-scm.com/docs/git-config#_description
@@ -2134,6 +2130,11 @@ namespace GitCommands
                 ConfigKeyInvalidOrNotSet => null,
                 _ => throw new ExternalOperationException("git", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException("Error getting config value"))
             };
+        }
+
+        public string? GetEffectiveGitSetting(string setting, bool cache = false)
+        {
+            return GetGitSetting(setting, scopeArg: "", cache);
         }
 
         public void UnsetSetting(string setting)
@@ -2842,10 +2843,10 @@ namespace GitCommands
                 : Array.Empty<IGitRef>();
         }
 
-        public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string? commit = null)
+        public async Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken)
         {
             ExecutionResult result = await _gitExecutable
-                .ExecuteAsync(Commands.MergedBranches(includeRemote, fullRefname, commit), throwOnErrorExit: false)
+                .ExecuteAsync(Commands.MergedBranches(includeRemote, fullRefname, commit), throwOnErrorExit: false, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             ////TODO: Handle non-empty result.StandardError
             return result.StandardOutput.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
@@ -2914,7 +2915,7 @@ namespace GitCommands
             return gitRefs;
         }
 
-        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote)
+        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote, CancellationToken cancellationToken = default)
         {
             if (!getLocal && !getRemote)
             {
@@ -2928,7 +2929,7 @@ namespace GitCommands
                 "--contains",
                 objectId
             };
-            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -2963,9 +2964,9 @@ namespace GitCommands
             return result;
         }
 
-        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId)
+        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId, CancellationToken cancellationToken)
         {
-            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -2975,7 +2976,7 @@ namespace GitCommands
             return exec.StandardOutput.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public string? GetTagMessage(string? tag)
+        public string? GetTagMessage(string? tag, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(tag))
             {
@@ -2984,7 +2985,7 @@ namespace GitCommands
 
             tag = tag.Trim();
 
-            ExecutionResult exec = _gitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no message (no error presented to the user)
@@ -3070,9 +3071,9 @@ namespace GitCommands
             GitArgumentBuilder args = new("blame")
             {
                 "--porcelain",
-                { AppSettings.DetectCopyInFileOnBlame, "-M" },
-                { AppSettings.DetectCopyInAllOnBlame, "-C" },
-                { AppSettings.IgnoreWhitespaceOnBlame, "-w" },
+                { AppSettings.DetectCopyInFileOnBlame, "-M" }, // as git-diff --find-renames
+                { AppSettings.DetectCopyInAllOnBlame, "-C" }, // as git-diff --find-copies
+                { AppSettings.IgnoreWhitespaceOnBlame, "-w" }, // as git-diff --ignore-all-space
                 "-l",
                 { lines is not null, $"-L {lines}" },
                 from.ToPosixPath().Quote(),
@@ -3416,7 +3417,7 @@ namespace GitCommands
                 "-z",
                 $"-n {count}",
                 revision,
-                "--pretty=format:%B",
+                @"--pretty=""format:%B""",
                 { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
             };
 
@@ -3705,7 +3706,7 @@ namespace GitCommands
                     try
                     {
                         return SystemEncoding.GetString(
-                            match.Groups[2]
+                            match.Groups["octal"]
                                 .Captures.Cast<Capture>()
                                 .Select(c => Convert.ToByte(c.Value, 8))
                                 .ToArray());
@@ -3904,7 +3905,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitId">The commit where to start searching</param>
         /// <returns>Tag name if it exists, otherwise null</returns>
-        public string? GetDescribe(ObjectId commitId)
+        public string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken = default)
         {
             GitArgumentBuilder args = new("describe")
             {

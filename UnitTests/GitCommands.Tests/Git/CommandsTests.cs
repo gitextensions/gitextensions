@@ -476,63 +476,72 @@ namespace GitCommandsTests_Git
                 Commands.PushTag("path", "", all: false).Arguments);
         }
 
-        [Test]
-        public void RebaseCmd()
+        [TestCase(null, "onto")]
+        [TestCase("from", null)]
+        public void RebaseCmd_throws_ArgumentException_if_from_or_onto_null(string from, string onto)
         {
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase \"branch\"",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase -i --no-autosquash \"branch\"",
-                Commands.Rebase("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --rebase-merges \"branch\"",
-                Commands.Rebase("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: true).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase \"branch\"",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --autostash \"branch\"",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase -i --autosquash \"branch\"",
-                Commands.Rebase("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --ignore-date \"branch\"",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: true, committerDateIsAuthorDate: false).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --committer-date-is-author-date \"branch\"",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: true).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --ignore-date --autostash \"branch\"",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true, ignoreDate: true, committerDateIsAuthorDate: false).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: true).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --ignore-date --autostash \"branch\"",
-                Commands.Rebase("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: true, committerDateIsAuthorDate: false).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"",
-                Commands.Rebase("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: true).Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"",
-                Commands.Rebase("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: true).Arguments);
+            Commands.RebaseOptions rebaseOptions = new()
+            {
+                BranchName = "branch",
+                From = from,
+                OnTo = onto
+            };
 
-            // TODO quote 'onto'?
+            Assert.Throws<ArgumentException>(() => Commands.Rebase(rebaseOptions));
+        }
 
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase \"from\" \"branch\" --onto onto",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false, "from", "onto").Arguments);
-            Assert.AreEqual(
-                "-c rebase.autoSquash=false rebase --ignore-date \"from\" \"branch\" --onto onto",
-                Commands.Rebase("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: true, committerDateIsAuthorDate: false, "from", "onto").Arguments);
+        [TestCase(false, false, false, false, false, false, true, null, "-c rebase.autoSquash=false rebase \"branch\"")]
+        [TestCase(true, false, false, false, false, false, true, null, "-c rebase.autoSquash=false rebase -i --no-autosquash \"branch\"")]
+        [TestCase(false, true, false, false, false, false, true, null, "-c rebase.autoSquash=false rebase --rebase-merges \"branch\"")]
+        [TestCase(false, false, true, false, false, false, true, null, "-c rebase.autoSquash=false rebase \"branch\"")]
+        [TestCase(false, false, false, true, false, false, true, null, "-c rebase.autoSquash=false rebase --autostash \"branch\"")]
+        [TestCase(true, false, true, false, false, false, true, null, "-c rebase.autoSquash=false rebase -i --autosquash \"branch\"")]
+        [TestCase(false, false, false, false, true, false, true, null, "-c rebase.autoSquash=false rebase --ignore-date \"branch\"")]
+        [TestCase(false, false, false, false, false, true, true, null, "-c rebase.autoSquash=false rebase --committer-date-is-author-date \"branch\"")]
+        [TestCase(false, false, false, true, true, false, true, null, "-c rebase.autoSquash=false rebase --ignore-date --autostash \"branch\"")]
+        [TestCase(false, false, false, true, false, true, true, null, "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"")]
+        [TestCase(true, true, true, true, true, false, true, null, "-c rebase.autoSquash=false rebase --ignore-date --autostash \"branch\"")]
+        [TestCase(true, true, true, true, false, true, true, null, "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"")]
+        [TestCase(true, true, true, true, false, false, true, null, "-c rebase.autoSquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"")]
+        [TestCase(false, false, false, false, false, false, true, false, "-c rebase.autoSquash=false rebase --no-update-refs \"branch\"")]
+        [TestCase(false, false, false, false, false, false, true, true, "-c rebase.autoSquash=false rebase --update-refs \"branch\"")]
+        public void RebaseCmd(bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, bool supportRebaseMerges, bool? updateRefs, string expected)
+        {
+            Commands.RebaseOptions rebaseOptions = new()
+            {
+                BranchName = "branch",
+                Interactive = interactive,
+                PreserveMerges = preserveMerges,
+                AutoSquash = autosquash,
+                AutoStash = autoStash,
+                IgnoreDate = ignoreDate,
+                CommitterDateIsAuthorDate = committerDateIsAuthorDate,
+                SupportRebaseMerges = supportRebaseMerges,
+                UpdateRefs = updateRefs
+            };
 
-            Assert.Throws<ArgumentException>(
-                () => Commands.Rebase("branch", false, false, false, false, false, false, from: null, onto: "onto"));
+            Assert.AreEqual(expected, Commands.Rebase(rebaseOptions).Arguments);
+        }
 
-            Assert.Throws<ArgumentException>(
-                () => Commands.Rebase("branch", false, false, false, false, false, false, from: "from", onto: null));
+        [TestCase(false, false, false, false, false, false, null, "from", "onto", "-c rebase.autoSquash=false rebase --onto onto \"from\" \"branch\"")]
+        [TestCase(false, false, false, false, true, false, null, "from", "onto", "-c rebase.autoSquash=false rebase --ignore-date --onto onto \"from\" \"branch\"")]
+        public void RebaseCmd_specific_range(bool interactive, bool preserveMerges, bool autoSquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, bool? updateRefs, string from, string onto, string expected)
+        {
+            Commands.RebaseOptions rebaseOptions = new()
+            {
+                BranchName = "branch",
+                Interactive = interactive,
+                PreserveMerges = preserveMerges,
+                AutoSquash = autoSquash,
+                AutoStash = autoStash,
+                IgnoreDate = ignoreDate,
+                CommitterDateIsAuthorDate = committerDateIsAuthorDate,
+                UpdateRefs = updateRefs,
+                From = from,
+                OnTo = onto
+            };
+
+            Assert.AreEqual(expected, Commands.Rebase(rebaseOptions).Arguments);
         }
 
         [Test]

@@ -322,6 +322,7 @@ namespace GitUI.Hotkey
                 new HotkeySettings(
                     FileViewer.HotkeySettingsName,
                     Hk(FileViewer.Command.Find, Keys.Control | Keys.F),
+                    Hk(FileViewer.Command.Replace, Keys.Control | Keys.H),
                     Hk(FileViewer.Command.FindNextOrOpenWithDifftool, OpenWithDifftoolHotkey),
                     Hk(FileViewer.Command.FindPrevious, Keys.Shift | OpenWithDifftoolHotkey),
                     Hk(FileViewer.Command.GoToLine, Keys.Control | Keys.G),

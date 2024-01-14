@@ -65,7 +65,13 @@ namespace GitUI.LeftPanel
             Validates.NotNull(_treeViewNode);
 
             _treeViewNode.Name = NodeName();
-            _treeViewNode.Text = DisplayText();
+
+            // Check before if value has changed because that's a costly operation
+            string updatedText = DisplayText();
+            if (updatedText != _treeViewNode.Text)
+            {
+                _treeViewNode.Text = updatedText;
+            }
         }
 
         internal virtual void OnSelected()

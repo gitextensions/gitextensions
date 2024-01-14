@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using GitCommands.Config;
 using GitCommands.Utils;
 using GitExtUtils;
@@ -473,14 +472,11 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="gitRef">The branch to move.</param>
         /// <param name="targetId">The commit to move to.</param>
-        /// <param name="repoDir">Directory to the current repo in Posix format.</param>
+        /// <param name="repoDir">Directory to the current repo.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
         /// <returns>The Git command to execute.</returns>
         public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, Func<string, string?> getPathForGitExecution, bool force = false)
         {
-            DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
-                $"'PushLocalCmd' must be called with 'repoDir' in Posix format");
-
             return new GitArgumentBuilder("push")
             {
                 $@"""file://{getPathForGitExecution(repoDir)}""",
@@ -516,43 +512,47 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString Rebase(
-            string? branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, string? from = null, string? onto = null, bool supportRebaseMerges = true)
+        public static ArgumentString Rebase(in RebaseOptions rebaseOptions)
         {
             // TODO-NULLABLE does it make sense for 'branch' to be null here?
 
-            if (from is null ^ onto is null)
+            if (rebaseOptions.From is null ^ rebaseOptions.OnTo is null)
             {
-                throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
+                throw new ArgumentException($"For arguments \"{nameof(rebaseOptions.From)}\" and \"{nameof(rebaseOptions.OnTo)}\", either both must have values, or neither may.");
             }
 
             GitArgumentBuilder builder = new("rebase");
-            if (ignoreDate)
+            if (rebaseOptions.IgnoreDate)
             {
                 builder.Add("--ignore-date");
             }
-            else if (committerDateIsAuthorDate)
+            else if (rebaseOptions.CommitterDateIsAuthorDate)
             {
                 builder.Add("--committer-date-is-author-date");
             }
             else
             {
-                if (interactive)
+                if (rebaseOptions.Interactive)
                 {
                     builder.Add("-i");
-                    builder.Add(autosquash ? "--autosquash" : "--no-autosquash");
+                    builder.Add(rebaseOptions.AutoSquash ? "--autosquash" : "--no-autosquash");
                 }
 
-                if (preserveMerges)
+                if (rebaseOptions.PreserveMerges)
                 {
-                    builder.Add(supportRebaseMerges ? "--rebase-merges" : "--preserve-merges");
+                    builder.Add(rebaseOptions.SupportRebaseMerges ? "--rebase-merges" : "--preserve-merges");
                 }
             }
 
-            builder.Add(autoStash, "--autostash");
-            builder.Add(from.QuoteNE());
-            builder.Add(branch.Quote());
-            builder.Add(onto is not null, $"--onto {onto}");
+            if (rebaseOptions.UpdateRefs.HasValue)
+            {
+                builder.Add(rebaseOptions.UpdateRefs.Value ? "--update-refs" : "--no-update-refs");
+            }
+
+            builder.Add(rebaseOptions.AutoStash, "--autostash");
+            builder.Add(rebaseOptions.OnTo is not null, $"--onto {rebaseOptions.OnTo}");
+            builder.Add(rebaseOptions.From.QuoteNE());
+            builder.Add(rebaseOptions.BranchName.Quote());
 
             return builder;
         }

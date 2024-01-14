@@ -10,7 +10,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
 
     public sealed partial class GitLogLineParser : IGitLogLineParser
     {
-        [GeneratedRegex("^([a-zA-Z0-9]{1,})@(.*)")]
+        [GeneratedRegex(@"^(?<before>[a-zA-Z0-9]{1,})@(?<after>.*)", RegexOptions.ExplicitCapture)]
         private static partial Regex LogLineRegex();
 
         public LogLine? Parse(string line)
@@ -26,7 +26,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
                 return null;
             }
 
-            LogLine logLine = new(m.Groups[1].Value, m.Groups[2].Value);
+            LogLine logLine = new(m.Groups["before"].Value, m.Groups["after"].Value);
             return logLine;
         }
 

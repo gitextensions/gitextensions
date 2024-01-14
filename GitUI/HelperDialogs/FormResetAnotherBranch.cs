@@ -53,11 +53,26 @@ namespace GitUI.HelperDialogs
 
             List<IGitRef> selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
 
-            return Module.GetRefs(RefsFilter.Heads)
+            IGitRef[] resetableLocalRefs = Module.GetRefs(RefsFilter.Heads)
                 .Where(r => r.IsHead)
                 .Where(r => isDetachedHead || r.LocalName != currentBranch)
+                .Where(r => _revision.ObjectId != r.ObjectId) // Don't display local branches already at this revision
                 .OrderByDescending(r => selectedRevisionRemotes.Any(r.IsTrackingRemote)) // Put local branches that track these remotes first
+                .ThenByDescending(r => selectedRevisionRemotes.Any(r2 => r2.LocalName == r.LocalName)) // Put local branches with same name as remotes first
                 .ToArray();
+
+            if (selectedRevisionRemotes.Count == 1)
+            {
+                IGitRef availableRemote = selectedRevisionRemotes[0];
+                IGitRef[] defaultCandidateRefs = resetableLocalRefs
+                    .Where(r => r.IsTrackingRemote(availableRemote) || r.LocalName == availableRemote.LocalName).ToArray();
+                if (defaultCandidateRefs.Length == 1)
+                {
+                    Branches.Text = defaultCandidateRefs[0].Name;
+                }
+            }
+
+            return resetableLocalRefs;
         }
 
         private void FormResetAnotherBranch_Load(object sender, EventArgs e)
@@ -93,6 +108,14 @@ namespace GitUI.HelperDialogs
         private void Cancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void Branches_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!Branches.DroppedDown)
+            {
+                Branches.DroppedDown = true;
+            }
         }
     }
 }

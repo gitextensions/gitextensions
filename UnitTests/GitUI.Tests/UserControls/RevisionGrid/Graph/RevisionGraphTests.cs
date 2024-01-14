@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using FluentAssertions;
+using GitCommands;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 
@@ -9,13 +10,13 @@ namespace GitUITests.UserControls.RevisionGrid
     {
         private RevisionGraph _revisionGraph;
 
-        public void Setup(bool mergeGraphLanesHavingCommonParent)
+        public void Setup(bool mergeGraphLanesHavingCommonParent, bool finishLoading = false, IEnumerable<GitRevision>? revisions = null)
         {
             AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
 
             _revisionGraph = new RevisionGraph();
 
-            foreach (GitRevision revision in Revisions)
+            foreach (GitRevision revision in revisions ?? Revisions)
             {
                 // Mark the first revision as the current checkout
                 if (_revisionGraph.Count == 0)
@@ -24,6 +25,13 @@ namespace GitUITests.UserControls.RevisionGrid
                 }
 
                 _revisionGraph.Add(revision);
+            }
+
+            if (finishLoading)
+            {
+                _revisionGraph.LoadingCompleted();
+                int lastRowIndex = _revisionGraph.Count - 1;
+                _revisionGraph.CacheTo(lastRowIndex, lastRowIndex);
             }
         }
 
@@ -163,8 +171,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetCurrentRevisionLane());
 
-            string actualGraph = AsciiGraphFor(_revisionGraph).Join("\n");
-            await Verify(actualGraph);
+            await VerifyGraphLayoutAsync(_revisionGraph);
         }
 
         [Test]
@@ -174,8 +181,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:4  6:5  7:5,6  8:7,2 ");
 
-            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-            await Verify(actualGraph);
+            await VerifyGraphLayoutAsync(revisionGraph);
         }
 
         [Test]
@@ -185,8 +191,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:5  7:4  8:4,7  9:8,6 ");
 
-            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-            await Verify(actualGraph);
+            await VerifyGraphLayoutAsync(revisionGraph);
         }
 
         [Test]
@@ -196,8 +201,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:4,5  7:6  8:6,7  9:8,5 ");
 
-            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-            await Verify(actualGraph);
+            await VerifyGraphLayoutAsync(revisionGraph);
         }
 
         [Test]
@@ -207,8 +211,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2,4  6:4  7:4,6  8:7,5 ");
 
-            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-            await Verify(actualGraph);
+            await VerifyGraphLayoutAsync(revisionGraph);
         }
 
         [Test]
@@ -218,8 +221,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1  5:1,4  6:2  7:2,6  8:5  9:5,8,3,7 ");
 
-            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-            await Verify(actualGraph);
+            await VerifyGraphLayoutAsync(revisionGraph);
         }
 
         [Test]
@@ -229,8 +231,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  6:1  7:1,6  8:3,2  9:7  10:7,9,8 ");
 
-            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-            await Verify(actualGraph);
+            await VerifyGraphLayoutAsync(revisionGraph);
         }
 
         [Test]
@@ -243,8 +244,47 @@ namespace GitUITests.UserControls.RevisionGrid
             // Two segments cross at the 'X'. The one going '/' could be straightened,
             // but then it would shift the parent node causing an unwanted gap.
 
-            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-            await Verify(actualGraph);
+            await VerifyGraphLayoutAsync(revisionGraph);
+        }
+
+        [Test]
+        public async Task MoveVisibleAndInvisibleLanesRight([Values] bool moveFirstLane)
+        {
+            List<GitRevision> laneCommits = [];
+            Setup(mergeGraphLanesHavingCommonParent: false, finishLoading: true, GetRevisions().ToArray());
+
+            for (int lane = 0; lane < laneCommits.Count; ++lane)
+            {
+                GitRevision moveLaneCommit = laneCommits[lane];
+                _revisionGraph.TryGetRowIndex(moveLaneCommit.ObjectId, out int lastLaneCommitIndex).Should().BeTrue();
+                RevisionGraphRevision revisionGraphRevision = _revisionGraph.GetNodeForRow(lastLaneCommitIndex);
+                IRevisionGraphRow? revisionGraphRow = _revisionGraph.GetSegmentsForRow(lastLaneCommitIndex);
+                revisionGraphRow.Should().NotBeNull();
+                int initialLaneCount = lane + 1;
+                revisionGraphRow.GetLaneCount().Should().Be(initialLaneCount);
+                revisionGraphRow.MoveLanesRight(moveFirstLane ? 0 : lane);
+                revisionGraphRow.GetLaneCount().Should().Be(initialLaneCount + 1);
+            }
+
+            await VerifyGraphLayoutAsync(_revisionGraph);
+
+            return;
+
+            IEnumerable<GitRevision> GetRevisions()
+            {
+                GitRevision baseCommit = new(ObjectId.Random()) { Subject = "B", ParentIds = [] };
+
+                for (int lane = 0; lane < RevisionGraph.MaxLanes + 10; ++lane)
+                {
+                    GitRevision laneCommit = new(ObjectId.Random()) { Subject = $"{lane % 10}", ParentIds = [baseCommit.ObjectId] };
+                    laneCommits.Add(laneCommit);
+                    yield return laneCommit;
+
+                    baseCommit.ParentIds.Append(laneCommit.ObjectId);
+                }
+
+                yield return baseCommit;
+            }
         }
 
         private const int LookAhead = 20 * 2;
@@ -321,6 +361,7 @@ namespace GitUITests.UserControls.RevisionGrid
                 string id = parts[0];
 
                 GitRevision commit = new(ObjectId.Random());
+                commit.Subject = id;
                 commits.Add(commit);
                 commitsById.Add(id, commit);
 
@@ -371,9 +412,10 @@ namespace GitUITests.UserControls.RevisionGrid
                 }
 
                 // Show '*' in lane of actual commit
-                line[row.GetCurrentRevisionLane() * 2] = '*';
+                string? subject = row.Revision.GitRevision.Subject;
+                line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
 
-                graph.Add(new string(line).Trim());
+                graph.Add(new string(line).TrimEnd());
 
                 IRevisionGraphRow nextRow = revisionGraph.GetSegmentsForRow(rowIndex + 1);
                 if (nextRow == null)
@@ -438,8 +480,8 @@ namespace GitUITests.UserControls.RevisionGrid
                     else if (toPos > fromPos)
                     {
                         // Segment shifts multiple lanes to the right
-                        line[fromPos + 1] = '\\';
-                        line[toPos] = '\\';
+                        line[fromPos + 1] = '`';
+                        line[toPos] = 'ˎ';
                         for (int pos = fromPos + 2; pos < toPos; ++pos)
                         {
                             line[pos] = '-';
@@ -448,8 +490,8 @@ namespace GitUITests.UserControls.RevisionGrid
                     else if (toPos < fromPos)
                     {
                         // Segment shifts multiple lanes to the left
-                        line[fromPos - 1] = '/';
-                        line[toPos] = '/';
+                        line[fromPos - 1] = '´';
+                        line[toPos] = ',';
                         for (int pos = toPos + 1; pos < fromPos - 1; ++pos)
                         {
                             line[pos] = '-';
@@ -462,11 +504,17 @@ namespace GitUITests.UserControls.RevisionGrid
                     action();
                 }
 
-                graph.Add(new string(line).Trim());
+                graph.Add(new string(line).TrimEnd());
                 ++rowIndex;
             }
 
             return graph;
+        }
+
+        private static async Task VerifyGraphLayoutAsync(RevisionGraph revisionGraph)
+        {
+            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
+            await Verify(actualGraph);
         }
     }
 }

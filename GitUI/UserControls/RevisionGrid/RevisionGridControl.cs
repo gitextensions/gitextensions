@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.ExceptionServices;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -121,6 +122,11 @@ namespace GitUI
         private SuperProjectInfo? _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
 
+        /// <summary>
+        /// A prefix to use in git log output for parsing file names for individual revisions
+        /// </summary>
+        private const string _objectIdPrefix = "????";
+
         // NOTE internal properties aren't serialised by the WinForms designer
 
         internal ObjectId? CurrentCheckout { get; private set; }
@@ -226,6 +232,7 @@ namespace GitUI
             _gridView.MouseDoubleClick += OnGridViewDoubleClick;
             _gridView.MouseClick += OnGridViewMouseClick;
             _gridView.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e);
+            _gridView.CellMouseEnter += _gridView_CellMouseEnter;
 
             // Allow to drop patch file on revision grid
             _gridView.AllowDrop = true;
@@ -1162,12 +1169,10 @@ namespace GitUI
                 //  1. use git log --follow to get all previous filenames of the file we are interested in
                 //  2. use git log "list of files names" to get the history graph
 
-                const string startOfObjectId = "????";
                 GitArgumentBuilder args = new("log")
                 {
                     // --name-only will list each filename on a separate line, ending with an empty line
-                    // Find start of a new commit with a sequence impossible in a filename
-                    $"--format=\"{startOfObjectId}%H\"",
+                    $"--format=\"{_objectIdPrefix}%H\"",
                     "--name-only",
                     "--follow",
                     FindRenamesAndCopiesOpts(),
@@ -1176,41 +1181,10 @@ namespace GitUI
                 };
 
                 HashSet<string?> setOfFileNames = [];
-                ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
-                LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
 
-                // TODO Check the exit code and warn the user that rename detection could not be done.
-
-                ObjectId currentObjectId = null;
-                foreach (string line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
+                foreach (string fileName in ParseFileNames(args))
                 {
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        // empty line after sha
-                        continue;
-                    }
-
-                    if (line.StartsWith(startOfObjectId))
-                    {
-                        if (line.Length < ObjectId.Sha1CharCount + startOfObjectId.Length
-                            || !ObjectId.TryParse(line, offset: startOfObjectId.Length, out currentObjectId))
-                        {
-                            // Parse error, ignore
-                            currentObjectId = null;
-                        }
-
-                        continue;
-                    }
-
-                    if (currentObjectId == null)
-                    {
-                        // Parsing has failed, ignore
-                        continue;
-                    }
-
-                    // Add only the first file to the dictionary
-                    FilePathByObjectId?.TryAdd(currentObjectId, line);
-                    setOfFileNames.Add(line);
+                    setOfFileNames.Add(fileName);
                 }
 
                 // Add path in case of no matches so result is never empty
@@ -1340,7 +1314,7 @@ namespace GitUI
                 _isRefreshingRevisions = false;
 
                 // Rethrow the exception on the UI thread
-                ThreadHelper.FileAndForget(() => throw exception);
+                ThreadHelper.FileAndForget(() => ExceptionDispatchInfo.Throw(exception));
             }
 
             void OnRevisionReadCompleted()
@@ -1537,6 +1511,87 @@ namespace GitUI
             }
         }
 
+        /// <summary>
+        /// Returns the name of a file in a specific revision (following renames and merge commits).
+        /// </summary>
+        /// <param name="path">The path to the file to get the name of</param>
+        /// <param name="objectId">The revision to get the file name in</param>
+        /// <returns>The name of the file at <paramref name="path"/> in revision identified by <paramref name="objectId"/>; <see langword="null"/> if not available.</returns>
+        public string? GetRevisionFileName(string path, ObjectId? objectId)
+        {
+            if (objectId is null)
+            {
+                return null;
+            }
+
+            if (FilePathByObjectId?.TryGetValue(objectId, out string? fileName) is true)
+            {
+                return fileName;
+            }
+
+            GitArgumentBuilder args = new("log")
+            {
+                // --name-only will list each filename on a separate line, ending with an empty line
+                $"--format=\"{_objectIdPrefix}%H\"",
+                "--name-only",
+                "--follow",
+                "--diff-merges=separate",
+                FindRenamesAndCopiesOpts(),
+                objectId.ToString(),
+                "--max-count=1",
+                "--",
+                path,
+            };
+
+            return ParseFileNames(args).FirstOrDefault();
+        }
+
+        private IEnumerable<string> ParseFileNames(GitArgumentBuilder args)
+        {
+            ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
+
+            if (!result.ExitedSuccessfully)
+            {
+                yield break;
+            }
+
+            LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
+
+            ObjectId? currentObjectId = null;
+
+            foreach (string line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
+            {
+                if (string.IsNullOrEmpty(line))
+                {
+                    // empty line after sha
+                    continue;
+                }
+
+                if (line.StartsWith(_objectIdPrefix))
+                {
+                    if (line.Length < ObjectId.Sha1CharCount + _objectIdPrefix.Length
+                        || !ObjectId.TryParse(line, offset: _objectIdPrefix.Length, out currentObjectId))
+                    {
+                        // Parse error, ignore
+                        currentObjectId = null;
+                    }
+
+                    continue;
+                }
+
+                if (currentObjectId is null)
+                {
+                    // Parsing has failed, ignore
+                    continue;
+                }
+
+                // Add only the first file to the dictionary
+                FilePathByObjectId?.TryAdd(currentObjectId, line);
+
+                yield return line;
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -1688,10 +1743,29 @@ namespace GitUI
             }
         }
 
+        private void _gridView_CellMouseEnter(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == _buildServerWatcher.ColumnProvider.Index)
+            {
+                GitRevision revision = GetRevision(e.RowIndex);
+                _gridView.Cursor = string.IsNullOrWhiteSpace(revision?.BuildStatus?.Url) ? Cursors.Default : Cursors.Hand;
+            }
+            else
+            {
+                _gridView.Cursor = Cursors.Default;
+            }
+        }
+
         private void OnGridViewCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             try
             {
+                if (e.Button == MouseButtons.Left && e.ColumnIndex == _buildServerWatcher.ColumnProvider.Index)
+                {
+                    OpenBuildReport(GetRevision(e.RowIndex));
+                    return;
+                }
+
                 if (e.Button != MouseButtons.Right)
                 {
                     return;
@@ -2723,7 +2797,7 @@ namespace GitUI
                 revisions
             };
 
-            string mergeBaseCommitId = UICommands.GitModule.GitExecutable.GetOutput(args).TrimEnd('\n');
+            string mergeBaseCommitId = UICommands.Module.GitExecutable.GetOutput(args).TrimEnd('\n');
             if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
             {
                 MessageBox.Show(_noMergeBaseCommit.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2929,7 +3003,11 @@ namespace GitUI
 
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitRevision? revision = GetSelectedRevisionOrDefault();
+            OpenBuildReport(GetSelectedRevisionOrDefault());
+        }
+
+        private void OpenBuildReport(GitRevision? revision)
+        {
             if (string.IsNullOrWhiteSpace(revision?.BuildStatus?.Url))
             {
                 return;
@@ -2966,9 +3044,13 @@ namespace GitUI
                 return;
             }
 
-            string rebaseCmd = Commands.Rebase(
-                GetActualRevision(LatestSelectedRevision)?.FirstParentId?.ToString(), interactive: true, preserveMerges: false,
-                autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: Module.GitVersion.SupportRebaseMerges);
+            string rebaseCmd = Commands.Rebase(new Commands.RebaseOptions()
+            {
+                BranchName = GetActualRevision(LatestSelectedRevision)?.FirstParentId?.ToString(),
+                Interactive = true,
+                AutoStash = true,
+                SupportRebaseMerges = Module.GitVersion.SupportRebaseMerges
+            });
 
             using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
             formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));

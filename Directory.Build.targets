@@ -17,6 +17,4 @@
     <!-- Stop transitive consumption of JetBrains annotations -->
     <PackageReference Update="JetBrains.Annotations" PrivateAssets="all" />
   </ItemGroup>
-
-  <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.79" />
 </Project>

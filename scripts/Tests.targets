@@ -16,19 +16,16 @@
     <!-- VS TestExplorer uses this to identify a test project -->
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
 
-    <PackageReference Include="Microsoft.NET.Test.Sdk" IsImplicitlyDefined="true" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
 
-    <PackageReference Include="FluentAssertions" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
-    <PackageReference Include="NSubstitute" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
-    <PackageReference Include="NUnit" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
-    <PackageReference Include="NUnit3TestAdapter" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
-    <PackageReference Include="Verify.NUnit" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="FluentAssertions" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NSubstitute" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit3TestAdapter" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="Verify.NUnit" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="Appveyor.TestLogger" PrivateAssets="all" Publish="true" />
 
-    <PackageReference Include="Appveyor.TestLogger" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
-
-    <PackageReference Include="Codecov" Version="1.10.0" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
-    <PackageReference Include="NUnit.ConsoleRunner" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
-    <PackageReference Include="OpenCover" Version="4.7.922" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit.ConsoleRunner" PrivateAssets="all" Publish="true" />
   </ItemGroup>
 
 </Project>

@@ -219,7 +219,7 @@ namespace GitUI.CommandsDialogs
         private readonly RepositoryHistoryUIService _repositoryHistoryUIService = new();
         private ConEmuControl? _terminal;
         private Dashboard? _dashboard;
-        private bool _isFileBlameHistory;
+        private bool _isFileHistoryMode;
         private bool _fileBlameHistoryLeftPanelStartupState;
 
         private TabPage? _consoleTabPage;
@@ -250,7 +250,7 @@ namespace GitUI.CommandsDialogs
 
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
-            _isFileBlameHistory = args.IsFileBlameHistory;
+            _isFileHistoryMode = args.IsFileHistoryMode;
             InitializeComponent();
 
             fileToolStripMenuItem.Initialize(() => UICommands);
@@ -288,7 +288,7 @@ namespace GitUI.CommandsDialogs
             ToolStripFilters.Bind(() => Module, RevisionGrid);
             InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
 
-            InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileBlameHistory);
+            InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
             InitCommitDetails();
 
             InitializeComplete();
@@ -314,12 +314,12 @@ namespace GitUI.CommandsDialogs
             }
 
             _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
-            toolStripButtonPush.Initialize(_aheadBehindDataProvider);
+            toolStripButtonPush.ResetToDefaultState();
             repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid);
             revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
 
-            // Show blame by default if not started from command line
-            fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, RefreshGitStatusMonitor, _isFileBlameHistory);
+            // Show blame by default in file tree if not started from command line
+            fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, RefreshGitStatusMonitor, _isFileHistoryMode);
             RevisionGrid.ResumeRefreshRevisions();
 
             // Application is init, the repo related operations are triggered in OnLoad()
@@ -362,7 +362,6 @@ namespace GitUI.CommandsDialogs
                     Brush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
-                    toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                     if (countToolbar || countArtificial)
                     {
@@ -511,7 +510,7 @@ namespace GitUI.CommandsDialogs
         protected override void OnClosing(CancelEventArgs e)
         {
             // Restore state at startup if file history mode, ignore the forced setting
-            if (_isFileBlameHistory)
+            if (_isFileHistoryMode)
             {
                 MainSplitContainer.Panel1Collapsed = _fileBlameHistoryLeftPanelStartupState;
             }
@@ -613,7 +612,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void RefreshRevisions()
         {
-            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs);
+            RefreshRevisions(new FilteredGitRefsProvider(UICommands.Module).GetRefs);
         }
 
         /// <summary>
@@ -879,6 +878,7 @@ namespace GitUI.CommandsDialogs
 
                 toolStripButtonPull.Enabled = validBrowseDir;
                 toolStripButtonPush.Enabled = validBrowseDir;
+                toolStripButtonPush.ResetBeforeUpdate();
                 dashboardToolStripMenuItem.Visible = isDashboard;
                 pluginsToolStripMenuItem.Visible = validBrowseDir;
                 repositoryToolStripMenuItem.Visible = validBrowseDir;
@@ -940,6 +940,7 @@ namespace GitUI.CommandsDialogs
                 OnActivate();
 
                 LoadUserMenu();
+                toolStripButtonLevelUp.Image = validBrowseDir && Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                 if (validBrowseDir)
                 {
@@ -952,9 +953,22 @@ namespace GitUI.CommandsDialogs
 
                     _formBrowseMenus.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
 
-                    // Request all branches if left panel is shown
-                    IDictionary<string, AheadBehindData> aheadBehindData = _aheadBehindDataProvider?.GetData(MainSplitContainer.Panel1Collapsed ? RevisionGrid.CurrentBranch.Value : "");
-                    toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, RevisionGrid.CurrentBranch.Value);
+                    if (AppSettings.ShowAheadBehindData)
+                    {
+                        string currentBranch = RevisionGrid.CurrentBranch.Value;
+                        ThreadHelper.FileAndForget(async () =>
+                        {
+                            // Always query only current branch here
+                            // because, due to race condition with left panel async refresh:
+                            // * when there are a lot of branches, we end up here 1st (and so, we want only the current branch data
+                            // because getting ahead - behind data for all branches will be (very ?) long
+                            // * when there are few branches, we will end up here not in 1st
+                            // and the data will be taken from cache (so what we pass as argument is kind of useless)
+                            IDictionary<string, AheadBehindData> aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
+                            await this.SwitchToMainThreadAsync();
+                            toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, currentBranch);
+                        });
+                    }
 
                     ActiveControl = RevisionGrid;
                 }
@@ -1051,7 +1065,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateStashCount()
         {
-            if (AppSettings.ShowStashCount)
+            if (AppSettings.ShowStashCount && !Module.IsBareRepository())
             {
                 ThreadHelper.FileAndForget(async () =>
                 {
@@ -1656,6 +1670,8 @@ namespace GitUI.CommandsDialogs
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
 
+            repoObjectsTree.ClearTrees();
+
             UICommands = UICommands.WithGitModule(e.GitModule);
             if (Module.IsValidGitWorkingDir())
             {
@@ -2205,7 +2221,7 @@ namespace GitUI.CommandsDialogs
 
             _splitterManager.RestoreSplitters();
             RefreshLayoutToggleButtonStates();
-            if (_isFileBlameHistory)
+            if (_isFileHistoryMode)
             {
                 _fileBlameHistoryLeftPanelStartupState = MainSplitContainer.Panel1Collapsed;
                 MainSplitContainer.Panel1Collapsed = true;
@@ -2735,9 +2751,9 @@ namespace GitUI.CommandsDialogs
                 Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                     !AppSettings.ShowStashes
                     ? Array.Empty<GitRevision>()
-                    : new RevisionReader(new GitModule(UICommands.GitModule.WorkingDir)).GetStashes(CancellationToken.None));
+                    : new RevisionReader(new GitModule(UICommands.Module.WorkingDir)).GetStashes(CancellationToken.None));
 
-                RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs, getStashRevs, forceRefresh: true);
+                RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.Module).GetRefs, getStashRevs, forceRefresh: true);
                 repoObjectsTree.RefreshRevisionsLoaded();
             }
         }

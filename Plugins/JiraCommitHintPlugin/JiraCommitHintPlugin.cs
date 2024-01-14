@@ -226,7 +226,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
         public override void Register(IGitUICommands gitUiCommands)
         {
             base.Register(gitUiCommands);
-            _gitModule = gitUiCommands.GitModule;
+            _gitModule = gitUiCommands.Module;
             gitUiCommands.PostSettings += gitUiCommands_PostSettings;
             gitUiCommands.PreCommit += gitUiCommands_PreCommit;
             gitUiCommands.PostCommit += gitUiCommands_PostRepositoryChanged;

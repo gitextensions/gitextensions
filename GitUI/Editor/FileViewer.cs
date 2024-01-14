@@ -74,7 +74,7 @@ namespace GitUI.Editor
         private FileStatusItem? _viewItem;
         private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
 
-        [GeneratedRegex("warning: .*has type .* expected .*")]
+        [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
         private static partial Regex FileModeWarningRegex();
 
         public FileViewer()
@@ -220,7 +220,11 @@ namespace GitUI.Editor
         public bool IsReadOnly
         {
             get => internalFileViewer.IsReadOnly;
-            set => internalFileViewer.IsReadOnly = value;
+            set
+            {
+                internalFileViewer.IsReadOnly = value;
+                replaceToolStripMenuItem.Visible = !value;
+            }
         }
 
         [DefaultValue(true)]
@@ -333,6 +337,7 @@ namespace GitUI.Editor
         {
             LoadHotkeys(HotkeySettingsName);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
+            replaceToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Replace);
             stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageLines);
             unstageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnstageLines);
             resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetLines);
@@ -1744,7 +1749,7 @@ namespace GitUI.Editor
 
         private void FindToolStripMenuItemClick(object sender, EventArgs e)
         {
-            internalFileViewer.Find();
+            internalFileViewer.Find(sender == replaceToolStripMenuItem && !IsReadOnly);
         }
 
         private void encodingToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1796,6 +1801,7 @@ namespace GitUI.Editor
         internal enum Command
         {
             Find = 0,
+            Replace = 16,
             FindNextOrOpenWithDifftool = 8,
             FindPrevious = 9,
             GoToLine = 1,
@@ -1819,7 +1825,14 @@ namespace GitUI.Editor
 
             switch (command)
             {
-                case Command.Find: internalFileViewer.Find(); break;
+                case Command.Find: internalFileViewer.Find(replace: false); break;
+                case Command.Replace:
+                    if (!IsReadOnly)
+                    {
+                        internalFileViewer.Find(replace: true);
+                    }
+
+                    break;
                 case Command.FindNextOrOpenWithDifftool: internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true)); break;
                 case Command.FindPrevious: internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false)); break;
                 case Command.GoToLine: return PerformClickIfAvailable(goToLineToolStripMenuItem);

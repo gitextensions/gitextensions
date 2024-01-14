@@ -22,7 +22,7 @@ public class ScriptsManagerScriptRunnerTests
         _scriptOptionsProvider = Substitute.For<IScriptOptionsProvider>();
 
         _commands = Substitute.For<IGitUICommands>();
-        _commands.GitModule.Returns(_module);
+        _commands.Module.Returns(_module);
     }
 
     [Test]

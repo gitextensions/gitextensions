@@ -141,7 +141,9 @@ namespace GitUI.CommandsDialogs
                         Images.ViewFile,
                         Images.Blame
                     }
-                };
+                }
+                .FixImageTransparencyRegression();
+
                 tabControl1.TabPages[0].ImageIndex = 0;
                 tabControl1.TabPages[1].ImageIndex = 1;
                 tabControl1.TabPages[2].ImageIndex = 2;
@@ -214,7 +216,6 @@ namespace GitUI.CommandsDialogs
             FileName = FileName.ToPosixPath();
 
             RevisionGrid.SetAndApplyPathFilter(FileName);
-            RevisionGrid.Load();
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
@@ -224,9 +225,9 @@ namespace GitUI.CommandsDialogs
                 return null;
             }
 
-            ObjectId objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
+            ObjectId? objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
 
-            return RevisionGrid.FilePathByObjectId.TryGetValue(objectId, out string? path) ? path : null;
+            return RevisionGrid.GetRevisionFileName(FileName, objectId);
         }
 
         private void FileChangesSelectionChanged(object sender, EventArgs e)
@@ -696,6 +697,10 @@ namespace GitUI.CommandsDialogs
             }
 
             public RevisionGridControl RevisionGrid => _form.RevisionGrid;
+
+            public Editor.FileViewer FileViewer => _form.View;
+
+            public void SelectViewTab() => _form.tabControl1.SelectedTab = _form.ViewTab;
         }
     }
 }

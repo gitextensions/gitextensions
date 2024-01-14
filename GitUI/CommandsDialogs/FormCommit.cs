@@ -225,6 +225,7 @@ namespace GitUI.CommandsDialogs
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
             Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(() => Module));
+            Message.AddAutoCompleteProvider(new CommitMessageMetadataProvider());
             _commitTemplateManager = new CommitTemplateManager(() => Module);
 
             SolveMergeconflicts.Font = new Font(SolveMergeconflicts.Font, FontStyle.Bold);
@@ -2713,7 +2714,7 @@ namespace GitUI.CommandsDialogs
                     return;
 
                     // Do not cache results in order to update the info on FormActivate
-                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key, cache: false) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
+                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
                 });
         }
 

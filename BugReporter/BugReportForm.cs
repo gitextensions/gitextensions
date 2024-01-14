@@ -40,7 +40,7 @@ Send report?");
         private string _exceptionInfo;
         private string? _environmentInfo;
 
-        [GeneratedRegex(@"\s|\r|\n")]
+        [GeneratedRegex(@"\s|\r|\n", RegexOptions.ExplicitCapture)]
         private static partial Regex WhitespaceRegex();
 
         static BugReportForm()
@@ -58,9 +58,7 @@ Send report?");
             // Scaling
             exceptionTypeLabel.Image = DpiUtil.Scale(exceptionTypeLabel.Image);
             exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
-            exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
-            DpiUtil.Scale(sendAndQuitButton.MinimumSize);
-            DpiUtil.Scale(btnCopy.MinimumSize);
+            exceptionDetails.InformationColumnWidth = DpiUtil.Scale(350);
 
             warningLabel.MaximumSize = new Size(warningLabel.Width, 0);
             warningLabel.AutoSize = true;

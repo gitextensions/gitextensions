@@ -16,29 +16,18 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _behindCommitsTointegrateOrForcePush =
             new("{0} commit(s) should be integrated (or will be lost if force pushed)");
 
-        private IAheadBehindDataProvider? _aheadBehindDataProvider;
-
-        public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider)
-        {
-            _aheadBehindDataProvider = aheadBehindDataProvider;
-            ResetToDefaultState();
-        }
-
         public void DisplayAheadBehindInformation(IDictionary<string, AheadBehindData>? aheadBehindData, string branchName)
         {
-            ResetToDefaultState();
-
-            if (string.IsNullOrWhiteSpace(branchName) || !AppSettings.ShowAheadBehindData)
+            if (string.IsNullOrWhiteSpace(branchName)
+                || !AppSettings.ShowAheadBehindData
+                || aheadBehindData?.TryGetValue(branchName, out AheadBehindData data) is not true)
             {
+                ResetToDefaultState();
                 return;
             }
 
-            if (aheadBehindData?.ContainsKey(branchName) is not true)
-            {
-                return;
-            }
-
-            AheadBehindData data = aheadBehindData[branchName];
+            ImageAlign = ContentAlignment.MiddleLeft;
+            AutoSize = true;
             Text = data.ToDisplay();
             DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             ToolTipText = GetToolTipText(data);
@@ -49,8 +38,19 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void ResetToDefaultState()
+        /// <summary>
+        /// Reset the contents keeping the size the same, to avoid toolbar resizing.
+        /// </summary>
+        public void ResetBeforeUpdate()
         {
+            AutoSize = false;
+            Text = "";
+            ToolTipText = _push.Text;
+        }
+
+        public void ResetToDefaultState()
+        {
+            AutoSize = true;
             DisplayStyle = ToolStripItemDisplayStyle.Image;
             Image = Images.Push.AdaptLightness();
             ToolTipText = _push.Text;
@@ -89,7 +89,8 @@ namespace GitUI.CommandsDialogs
                 _button = button;
             }
 
-            public string? GetToolTipText(AheadBehindData data) => _button.GetToolTipText(data);
+            public string GetButtonText() => _button.Text;
+            public int GetButtonWidth() => _button.Width;
         }
     }
 }

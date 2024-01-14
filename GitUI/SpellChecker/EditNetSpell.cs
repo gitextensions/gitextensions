@@ -750,7 +750,22 @@ namespace GitUI.SpellChecker
 
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            _disableAutoCompleteTriggerOnTextUpdate = e.KeyChar.IsSeparator();
+            bool isSeparator = e.KeyChar.IsSeparator();
+            _disableAutoCompleteTriggerOnTextUpdate = isSeparator;
+
+            if (e.KeyChar == (char)Keys.Back)
+            {
+               // When a character is deleted...
+               if (TextBox.SelectionStart == 0
+                    || TextBox.Text[TextBox.SelectionStart - 1].IsSeparator())
+                {
+                    CloseAutoComplete();
+                }
+            }
+            else if (isSeparator)
+            {
+                CloseAutoComplete();
+            }
 
             OnKeyPress(e);
         }

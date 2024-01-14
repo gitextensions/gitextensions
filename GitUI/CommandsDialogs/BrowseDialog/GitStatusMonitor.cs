@@ -128,7 +128,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             Init(commandsSource);
 
-            _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => commandsSource.UICommands.GitModule);
+            _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => commandsSource.UICommands.Module);
 
             return;
 

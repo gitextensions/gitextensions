@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing.Drawing2D;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtUtils.GitUI;
@@ -20,6 +19,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         // Increase contrast to selected rows
         private readonly Color _lightBlue = Color.FromArgb(130, 180, 240);
+        private Font? _fontWithUnicodeCache = null;
 
         public BuildStatusColumnProvider(RevisionGridControl grid, RevisionDataGridView gridView, Func<IGitModule> module)
             : base("Build Status")
@@ -79,36 +79,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            Size size;
+            string text = (AppSettings.ShowBuildStatusIconColumn ? revision.BuildStatus.StatusSymbol : string.Empty)
+                + (AppSettings.ShowBuildStatusTextColumn ? (string)e.FormattedValue : string.Empty);
 
-            if (AppSettings.ShowBuildStatusIconColumn)
+            if (_fontWithUnicodeCache?.Size != style.NormalFont.Size)
             {
-                size = DpiUtil.Scale(new Size(8, 8));
-
-                Point location = new(
-                    e.CellBounds.Left + (size.Width / 2),
-                    e.CellBounds.Top + ((e.CellBounds.Height - size.Height) / 2));
-
-                GraphicsContainer container = e.Graphics.BeginContainer();
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                using Brush brush = CreateCircleBrush();
-                e.Graphics.FillEllipse(brush, new Rectangle(location, size));
-                e.Graphics.EndContainer(container);
-            }
-            else
-            {
-                size = default;
+                _fontWithUnicodeCache = new Font(FontFamily.GenericMonospace, style.NormalFont.Size);
             }
 
-            if (AppSettings.ShowBuildStatusTextColumn)
-            {
-                _grid.DrawColumnText(
-                    e,
-                    (string)e.FormattedValue,
-                    style.NormalFont,
-                    GetColor(style.ForeColor),
-                    bounds: e.CellBounds.ReduceLeft(size.Width * 2));
-            }
+            _grid.DrawColumnText(e, text, _fontWithUnicodeCache, GetColor(style.ForeColor), bounds: e.CellBounds);
 
             Color GetColor(Color foreColor)
             {
@@ -133,42 +112,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         customColor = Color.OrangeRed;
                         break;
                     case BuildInfo.BuildStatus.Stopped:
+                    default:
                         customColor = isSelected ? Color.LightGray : Color.Gray;
                         break;
-
-                    default:
-                        throw new InvalidOperationException("Unsupported build status enum value.");
                 }
 
                 return customColor.AdaptTextColor();
-            }
-
-            Brush CreateCircleBrush()
-            {
-                Color color;
-                switch (revision.BuildStatus.Status)
-                {
-                    case BuildInfo.BuildStatus.Success:
-                        color = Color.LightGreen;
-                        break;
-                    case BuildInfo.BuildStatus.Failure:
-                        color = Color.Red;
-                        break;
-                    case BuildInfo.BuildStatus.InProgress:
-                        color = _lightBlue;
-                        break;
-                    case BuildInfo.BuildStatus.Unstable:
-                        color = Color.DarkOrange;
-                        break;
-                    case BuildInfo.BuildStatus.Stopped:
-                    case BuildInfo.BuildStatus.Unknown:
-                        color = Color.Gray;
-                        break;
-                    default:
-                        throw new InvalidOperationException("Unsupported build status enum value.");
-                }
-
-                return new SolidBrush(color.AdaptBackColor());
             }
         }
 

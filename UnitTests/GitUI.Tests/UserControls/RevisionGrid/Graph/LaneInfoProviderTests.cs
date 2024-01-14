@@ -12,8 +12,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
     {
         /// <summary>
         /// triples of merge subject, merged branch and destination branch ("into")
-        /// for testing the LaneInfoProvider.References.MergeRegex
-        /// "(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$"
+        /// for testing the GitUI.UserControls.RevisionGrid.Graph.MergeRegex()
         /// </summary>
         private static readonly List<string> MergeSubjectsWithDecoding =
         [

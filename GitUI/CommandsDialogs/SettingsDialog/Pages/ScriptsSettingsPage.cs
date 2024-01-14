@@ -270,6 +270,8 @@ Currently checked out revision:
             script.Enabled = true;
 
             BindScripts(_scripts, script);
+
+            propertyGrid1.Focus();
         }
 
         private void btnArgumentsHelp_Click(object sender, EventArgs e)

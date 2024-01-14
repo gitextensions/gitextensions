@@ -25,7 +25,8 @@ namespace GitUI.CommandsDialogs
                     { nameof(Images.Key), Images.Key },
                     { nameof(Images.Console), Images.Console }
                 }
-            };
+            }
+            .FixImageTransparencyRegression();
 
             CommitInfoTabPage.ImageKey = nameof(Images.CommitSummary);
             DiffTabPage.ImageKey = nameof(Images.Diff);

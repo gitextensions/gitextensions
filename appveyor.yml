@@ -104,7 +104,7 @@ after_test:
     Invoke-Expression $cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 - ps: |
-    if ([bool]$env:APPVEYOR_PULL_REQUEST_TITLE -and [bool]$env:ARTIFACT_PUBLISH_PULL_REQUEST_MSI) {
+    if ($env:APPVEYOR_PULL_REQUEST_NUMBER -ne $null -and $env:ARTIFACT_PUBLISH_PULL_REQUEST_MSI -eq 'true') {
         $msi = (Resolve-Path .\artifacts\Release\publish\GitExtensions-*.msi)[0].Path;
         Get-ChildItem $msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
     }

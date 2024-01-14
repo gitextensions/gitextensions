@@ -515,7 +515,7 @@ namespace GitCommands.Patches
         private readonly List<SubChunk> _subChunks = [];
         private SubChunk? _currentSubChunk;
 
-        [GeneratedRegex(@".*-(\d+),")]
+        [GeneratedRegex(@".*-(?<startline>\d+),", RegexOptions.ExplicitCapture)]
         private static partial Regex HeaderRegex();
 
         private SubChunk CurrentSubChunk
@@ -578,7 +578,7 @@ namespace GitCommands.Patches
 
             if (match.Success)
             {
-                _startLine = int.Parse(match.Groups[1].Value);
+                _startLine = int.Parse(match.Groups["startline"].Value);
             }
         }
 

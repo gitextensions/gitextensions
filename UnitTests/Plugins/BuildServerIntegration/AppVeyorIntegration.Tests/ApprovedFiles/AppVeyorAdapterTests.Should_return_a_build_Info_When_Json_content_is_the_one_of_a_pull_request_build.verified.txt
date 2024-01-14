@@ -19,3 +19,4 @@
   ShowInBuildReportTab: true
   Tooltip: 
   PullRequestUrl: https://github.com/gitextensions/gitextensions/pull/6326
+  StatusSymbol: ✔

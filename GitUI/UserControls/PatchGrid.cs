@@ -19,9 +19,9 @@ namespace GitUI
         private IList<PatchFile> _skipped = Array.Empty<PatchFile>();
         private bool _isManagingRebase;
 
-        [GeneratedRegex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$")]
+        [GeneratedRegex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.ExplicitCapture)]
         private static partial Regex HeadersRegex();
-        [GeneratedRegex(@"=\?([\w-]+)\?q\?(.*)\?=$")]
+        [GeneratedRegex(@"=\?(?<qr1>[\w-]+)\?q\?(<qr2>.*)\?=$", RegexOptions.ExplicitCapture)]
         private static partial Regex QuotedRegex();
 
         public PatchGrid()
@@ -273,8 +273,8 @@ namespace GitUI
 
                         if (m.Success)
                         {
-                            key = m.Groups[1].Value;
-                            value = m.Groups[2].Value;
+                            key = m.Groups["header_key"].Value;
+                            value = m.Groups["header_value"].Value;
                         }
                         else if (!string.IsNullOrEmpty(line))
                         {
@@ -296,7 +296,7 @@ namespace GitUI
 
             return patchFiles;
 
-            string AppendQuotedString(string str1, string str2)
+            static string AppendQuotedString(string str1, string str2)
             {
                 Match m1 = QuotedRegex().Match(str1);
                 Match m2 = QuotedRegex().Match(str2);
@@ -305,8 +305,8 @@ namespace GitUI
                     return str1 + str2;
                 }
 
-                DebugHelpers.Assert(m1.Groups[1].Value == m2.Groups[1].Value, "m1.Groups[1].Value == m2.Groups[1].Value");
-                return str1[..^2] + m2.Groups[2].Value + "?=";
+                DebugHelpers.Assert(m1.Groups["qr1"].Value == m2.Groups["qr1"].Value, @"m1.Groups[""qr1""].Value == m2.Groups[""qr2""].Value");
+                return str1[..^2] + m2.Groups["qr2"].Value + "?=";
             }
         }
 

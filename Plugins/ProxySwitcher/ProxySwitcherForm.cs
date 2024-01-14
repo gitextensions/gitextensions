@@ -18,7 +18,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
         private readonly TranslationString _pleaseSetProxy = new("There is no proxy configured. Please set the proxy host in the plugin settings.");
         #endregion
 
-        [GeneratedRegex(":(.*)@")]
+        [GeneratedRegex(@":(.*)@", RegexOptions.ExplicitCapture)]
         private static partial Regex PasswordRegex();
 
         /// <summary>
@@ -61,19 +61,8 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         private void RefreshProxy()
         {
-            GitArgumentBuilder args = new("config")
-            {
-                "--get",
-                "http.proxy"
-            };
-            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GitExecutable.GetOutput(args));
-            args = new GitArgumentBuilder("config")
-            {
-                "--global",
-                "--get",
-                "http.proxy"
-            };
-            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GitExecutable.GetOutput(args));
+            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetEffectiveGitSetting("http.proxy") ?? "");
+            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetGitSetting("http.proxy", "--global") ?? "");
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 

@@ -133,6 +133,7 @@
             Branches.Name = "Branches";
             Branches.Size = new Size(499, 21);
             Branches.TabIndex = 1;
+            Branches.KeyDown += Branches_KeyDown;
             // 
             // tableLayoutPanel1
             // 

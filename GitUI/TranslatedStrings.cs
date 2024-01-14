@@ -178,6 +178,13 @@ following command.
         private readonly TranslationString _failedToLoadFileOrAssemblyText = new("Most of the times the error is temporary, likely caused by Windows Update.");
         private readonly TranslationString _notConfigured = new("{0} not configured");
 
+        private readonly TranslationString _failedToLoadPlugin = new("Plugin loading failure");
+        private readonly TranslationString _failedToLoadPluginPopupText = new(@"Fail to load a plugin. Error:
+
+{0}
+
+Copy error details to clipboard?");
+
         // public only because of FormTranslate
         public TranslatedStrings()
         {
@@ -366,5 +373,7 @@ following command.
         public static string FailedToLoadFileOrAssemblyFormat => _instance.Value._failedToLoadFileOrAssemblyFormat.Text;
         public static string FailedToLoadFileOrAssemblyText => _instance.Value._failedToLoadFileOrAssemblyText.Text;
         public static string NotConfigured => _instance.Value._notConfigured.Text;
+        public static string FailedToLoadPlugin => _instance.Value._failedToLoadPlugin.Text;
+        public static string FailedToLoadPluginPopupText => _instance.Value._failedToLoadPluginPopupText.Text;
     }
 }

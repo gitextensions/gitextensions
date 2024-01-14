@@ -10,4 +10,9 @@
     <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
+  <!-- https://learn.microsoft.com/nuget/consume-packages/Central-Package-Management -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
 </Project>

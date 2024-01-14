@@ -1,6 +1,5 @@
 ﻿using GitCommands;
 using GitCommands.Git;
-using GitCommands.Patches;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -11,16 +10,17 @@ namespace GitUI.CommandsDialogs
     public partial class FormRebase : GitExtensionsDialog
     {
         #region Mnemonics
-        // Available: GHJLNVWXYZ
+        // Available: GHJLVWXYZ
         // A Add files
         // B Abort
         // C Continue rebase
         // D Ignore date
-        // E Specific range
+        // E Update dependent refs
         // F From
         // I Interactive
         // K Skip
         // M Committer date
+        // N Specific range
         // O Commit...
         // P Preserve Merges
         // Q Autosquash
@@ -69,6 +69,11 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.AlwaysShowAdvOpt)
             {
                 ShowOptions_LinkClicked(this, null!);
+            }
+
+            if (!Module.GitVersion.SupportUpdateRefs)
+            {
+                checkBoxUpdateRefs.Visible = false;
             }
 
             InitializeComplete();
@@ -123,8 +128,11 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
 
             // Honor the rebase.autosquash configuration.
-            string autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
-            chkAutosquash.Checked = autosquashSetting.Trim().ToLower() == "true";
+            chkAutosquash.Checked = Module.GetEffectiveSetting<bool>("rebase.autosquash") is true;
+            if (Module.GitVersion.SupportUpdateRefs && Module.GetEffectiveSetting<bool>("rebase.updateRefs") is true)
+            {
+                checkBoxUpdateRefs.Checked = true;
+            }
 
             chkStash.Checked = AppSettings.RebaseAutoStash;
             if (_startRebaseImmediately)
@@ -321,19 +329,36 @@ namespace GitUI.CommandsDialogs
 
                 Skipped.Clear();
 
-                string rebaseCmd;
+                bool? updateRefChoice = null;
+                if (Module.GitVersion.SupportUpdateRefs && Module.GetEffectiveSetting<bool>("rebase.updateRefs") != checkBoxUpdateRefs.Checked)
+                {
+                    updateRefChoice = checkBoxUpdateRefs.Checked;
+                }
+
+                Commands.RebaseOptions rebaseOptions = new()
+                {
+                    Interactive = chkInteractive.Checked,
+                    PreserveMerges = chkPreserveMerges.Checked,
+                    AutoSquash = chkAutosquash.Checked,
+                    AutoStash = chkStash.Checked,
+                    IgnoreDate = chkIgnoreDate.Checked,
+                    CommitterDateIsAuthorDate = chkCommitterDateIsAuthorDate.Checked,
+                    UpdateRefs = updateRefChoice,
+                };
+
                 if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
                 {
-                    rebaseCmd = Commands.Rebase(
-                        cboTo.Text, chkInteractive.Checked, chkPreserveMerges.Checked,
-                        chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, cboBranches.Text);
+                    // Rebase onto
+                    rebaseOptions.OnTo = cboBranches.Text;
+                    rebaseOptions.From = txtFrom.Text;
+                    rebaseOptions.BranchName = cboTo.Text;
                 }
                 else
                 {
-                    rebaseCmd = Commands.Rebase(
-                        cboBranches.Text, chkInteractive.Checked,
-                        chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked);
+                    rebaseOptions.BranchName = cboBranches.Text;
                 }
+
+                string rebaseCmd = Commands.Rebase(rebaseOptions);
 
                 string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (cmdOutput.Trim() == "Current branch a is up to date.")
@@ -381,7 +406,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 AppSettings.ShowStashes = false;
-                ObjectId firstParent = UICommands.GitModule.RevParse("HEAD~");
+                ObjectId firstParent = UICommands.Module.RevParse("HEAD~");
                 string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
                 using FormChooseCommit chooseForm = new(UICommands, preSelectedCommit, showCurrentBranchOnly: true);
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)

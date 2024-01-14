@@ -18,9 +18,9 @@ namespace GitUI.ScriptsEngine
             private const string userFiles = "UserFiles";
 
             // Regex that ensure that in the default value, there is the same number of '{' than '}' to find the right end of the default value expression.
-            [GeneratedRegex(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}")]
+            [GeneratedRegex(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}", RegexOptions.ExplicitCapture)]
             private static partial Regex UserInputRegex();
-            [GeneratedRegex(@"\{plugin.(.+)\}", RegexOptions.IgnoreCase)]
+            [GeneratedRegex(@"\{plugin.(?<name>.+)\}", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
             private static partial Regex PluginRegex();
 
             public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
@@ -115,7 +115,7 @@ namespace GitUI.ScriptsEngine
                     if (optionDependingOnSelectedRevision is not null)
                     {
                         throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.Name}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {TranslatedStrings.ScriptErrorOptionWithoutRevisionGridText}",
-                            new ExternalOperationException(script.Command, arguments, uiCommands.GitModule.WorkingDir));
+                            new ExternalOperationException(script.Command, arguments, uiCommands.Module.WorkingDir));
                     }
                 }
 
@@ -142,15 +142,15 @@ namespace GitUI.ScriptsEngine
                 if (abort)
                 {
                     throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.Name}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",
-                        new ExternalOperationException(script.Command, arguments, uiCommands.GitModule.WorkingDir));
+                        new ExternalOperationException(script.Command, arguments, uiCommands.Module.WorkingDir));
                 }
 
                 string command = OverrideCommandWhenNecessary(originalCommand);
-                command = ExpandCommandVariables(command, uiCommands.GitModule);
+                command = ExpandCommandVariables(command, uiCommands.Module);
 
                 if (script.IsPowerShell)
                 {
-                    PowerShellHelper.RunPowerShell(command, argument, uiCommands.GitModule.WorkingDir, script.RunInBackground);
+                    PowerShellHelper.RunPowerShell(command, argument, uiCommands.Module.WorkingDir, script.RunInBackground);
 
                     // 'RunPowerShell' always runs the script detached (yet).
                     // Hence currently, it does not make sense to trigger the 'RepoChangedNotifier' if '!scriptInfo.RunInBackground'.
@@ -191,7 +191,7 @@ namespace GitUI.ScriptsEngine
                     command = command.Replace(NavigateToPrefix, string.Empty);
                     if (!string.IsNullOrEmpty(command))
                     {
-                        ExecutionResult result = new Executable(command, uiCommands.GitModule.WorkingDir).Execute(argument);
+                        ExecutionResult result = new Executable(command, uiCommands.Module.WorkingDir).Execute(argument);
                         string revisionRef = result.StandardOutput.Split('\n').FirstOrDefault();
 
                         if (revisionRef is not null)
@@ -206,7 +206,7 @@ namespace GitUI.ScriptsEngine
                 if (!script.RunInBackground)
                 {
                     // TODO: Remove downcast from IGitUICommands to GitUICommands after https://github.com/gitextensions/gitextensions/pull/11269
-                    bool success = FormProcess.ShowDialog(owner, uiCommands as GitUICommands, argument, uiCommands.GitModule.WorkingDir, null, true, process: command);
+                    bool success = FormProcess.ShowDialog(owner, uiCommands as GitUICommands, argument, uiCommands.Module.WorkingDir, null, true, process: command);
                     if (!success)
                     {
                         return false;
@@ -225,7 +225,7 @@ namespace GitUI.ScriptsEngine
                         // It is totally valid to have a command without an argument, e.g.:
                         //    Command  : myscript.cmd
                         //    Arguments: <blank>
-                        new Executable(command, uiCommands.GitModule.WorkingDir).Start(argument ?? string.Empty);
+                        new Executable(command, uiCommands.Module.WorkingDir).Start(argument ?? string.Empty);
                     }
                 }
 
@@ -263,7 +263,7 @@ namespace GitUI.ScriptsEngine
                 Match match = PluginRegex().Match(originalCommand);
                 if (match.Success && match.Groups.Count > 1)
                 {
-                    originalCommand = $"{PluginPrefix}{match.Groups[1].Value.ToLower()}";
+                    originalCommand = $"{PluginPrefix}{match.Groups["name"].Value.ToLower()}";
                 }
 
                 return originalCommand;

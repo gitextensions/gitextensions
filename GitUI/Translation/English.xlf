@@ -308,12 +308,16 @@ Click this info icon for more details.</source>
         <source>Blame viewer</source>
         <target />
       </trans-unit>
+      <trans-unit id="_blameWarningTooltip.Text">
+        <source>Could prevent blame to calculate the accurate line number when blaming previous revisions.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
-        <source>Detect move and copy in all files</source>
+        <source>Detect moved or copied lines from all files in same commit</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInThisFile.Text">
-        <source>Detect move and copy in this file</source>
+        <source>Detect moved or copied lines within blamed file</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDisplayAuthorFirst.Text">
@@ -1572,6 +1576,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="previousChangeButton.ToolTipText">
         <source>Previous change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="replaceToolStripMenuItem.Text">
+        <source>Replace</source>
         <target />
       </trans-unit>
       <trans-unit id="resetSelectedLinesToolStripMenuItem.Text">
@@ -6001,6 +6009,10 @@ Nothing to rebase.</source>
 </source>
         <target />
       </trans-unit>
+      <trans-unit id="checkBoxUpdateRefs.Text">
+        <source>Update dependent r&amp;efs</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkAutosquash.Text">
         <source>Autos&amp;quash</source>
         <target />
@@ -10113,6 +10125,18 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
         <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failedToLoadPlugin.Text">
+        <source>Plugin loading failure</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failedToLoadPluginPopupText.Text">
+        <source>Fail to load a plugin. Error:
+
+{0}
+
+Copy error details to clipboard?</source>
         <target />
       </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
