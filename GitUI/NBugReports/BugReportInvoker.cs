@@ -261,7 +261,7 @@ namespace GitUI.NBugReports
                 SizeToContent = true,
             };
             int startIndex = error.IndexOf(ExecutableExtensions.DubiousOwnershipSecurityConfigString);
-            string gitConfigTrustRepoCommand = error[startIndex..];
+            string gitConfigTrustRepoCommand = error[startIndex..].Trim();
             string folderPath = error[(startIndex + ExecutableExtensions.DubiousOwnershipSecurityConfigString.Length + 1)..];
 
             TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);
