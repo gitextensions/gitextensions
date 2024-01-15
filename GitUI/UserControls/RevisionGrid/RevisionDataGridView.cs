@@ -437,54 +437,50 @@ namespace GitUI.UserControls.RevisionGrid
             if (_revisionGraph.Count == 0)
             {
                 MarkAsDataLoadingComplete();
+                return;
             }
-            else
+
+            // Rows have not been selected yet
+            this.InvokeAndForget(async () =>
             {
-                // Rows have not been selected yet
-                this.InvokeAndForget(async () =>
+                SetRowCountAndSelectRowsIfReady();
+
+                if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
                 {
-                    SetRowCountAndSelectRowsIfReady();
-
-                    if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
-                    {
-                        // Nothing to select or interrupted
-                        MarkAsDataLoadingComplete();
-                        return;
-                    }
-
-                    int scrollTo = _toBeSelectedGraphIndexesCache.Value.Max();
-                    int firstGraphIndex = _toBeSelectedGraphIndexesCache.Value[0];
-                    if (RowCount - 1 < scrollTo)
-                    {
-                        // Wait for the periodic background thread to load all rows in the grid
-                        while (RowCount - 1 < scrollTo && firstGraphIndex >= Rows.Count)
-                        {
-                            // Force loading of rows
-                            int maxScroll = Math.Min(RowCount - 1, scrollTo);
-                            EnsureRowVisible(maxScroll);
-
-                            // Wait for background thread to update grid rows
-                            UpdateVisibleRowRange();
-                            await Task.Delay(BackgroundThreadUpdatePeriod);
-                            if (_loadedToBeSelectedRevisionsCount == 0)
-                            {
-                                // Selection done or aborted
-                                break;
-                            }
-                        }
-                    }
-
-                    // Scroll to first selected only if selection is not changed
-                    if (firstGraphIndex >= 0 && firstGraphIndex < Rows.Count && Rows[firstGraphIndex].Selected)
-                    {
-                        EnsureRowVisible(firstGraphIndex);
-                    }
-
+                    // Nothing to select or interrupted
                     MarkAsDataLoadingComplete();
-                });
-            }
+                    return;
+                }
 
-            return;
+                int rowCount;
+
+                // Wait for the periodic background thread to load the first selected grid row, stop if aborted
+                int firstGraphIndex = _toBeSelectedGraphIndexesCache.Value[0];
+                do
+                {
+                    rowCount = RowCount;
+                    if (firstGraphIndex < rowCount)
+                    {
+                        break;
+                    }
+
+                    // Scroll to currently last loaded row
+                    EnsureRowVisible(rowCount - 1);
+
+                    // Wait for background thread to load grid rows
+                    UpdateVisibleRowRange();
+                    await Task.Delay(BackgroundThreadUpdatePeriod);
+                }
+                while (_loadedToBeSelectedRevisionsCount > 0);
+
+                // Scroll to first selected only if selection is not changed
+                if (firstGraphIndex >= 0 && firstGraphIndex < rowCount && Rows[firstGraphIndex].Selected)
+                {
+                    EnsureRowVisible(firstGraphIndex);
+                }
+
+                MarkAsDataLoadingComplete();
+            });
         }
 
         public void MarkAsDataLoadingComplete()
