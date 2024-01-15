@@ -316,13 +316,13 @@ namespace GitUI.UserControls.RevisionGrid
         /// <param name="revision">The revision to add.</param>
         public void Add(GitRevision revision)
         {
-            _forceRefresh = _revisionGraph.Add(revision) || _forceRefresh;
+            _forceRefresh |= _revisionGraph.Add(revision);
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
                 ++_loadedToBeSelectedRevisionsCount;
             }
 
-            UpdateVisibleRowRange();
+            TriggerRowCountUpdate();
         }
 
         /// <summary>
@@ -344,7 +344,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             // Insert at matching parent.
-            _forceRefresh = _revisionGraph.Insert(workTreeRev, indexRev, parents) || _forceRefresh;
+            _forceRefresh |= _revisionGraph.Insert(workTreeRev, indexRev, parents);
 
             if (ToBeSelectedObjectIds.Contains(workTreeRev.ObjectId))
             {
@@ -356,13 +356,16 @@ namespace GitUI.UserControls.RevisionGrid
                 ++_loadedToBeSelectedRevisionsCount;
             }
 
-            UpdateVisibleRowRange();
+            TriggerRowCountUpdate();
         }
 
         public void Clear()
         {
+            ThreadHelper.AssertOnUIThread();
+
             _backgroundScrollTo = -1;
             _forceRefresh = false;
+            _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0);
 
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about to delete the data
             SetRowCount(0);
@@ -376,7 +379,6 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             // Redraw
-            UpdateVisibleRowRange();
             Invalidate(invalidateChildren: true);
         }
 
@@ -465,10 +467,10 @@ namespace GitUI.UserControls.RevisionGrid
                     }
 
                     // Scroll to currently last loaded row
+                    SetRowCount(rowCount);
                     EnsureRowVisible(rowCount - 1);
 
                     // Wait for background thread to load grid rows
-                    UpdateVisibleRowRange();
                     await Task.Delay(BackgroundThreadUpdatePeriod);
                 }
                 while (_loadedToBeSelectedRevisionsCount > 0);
@@ -554,7 +556,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         private void ResetGraphIndices()
         {
-            _toBeSelectedGraphIndexesCache = new(() => CalculateGraphIndices());
+            _toBeSelectedGraphIndexesCache = new Lazy<IList<int>>(CalculateGraphIndices);
             return;
 
             // Get the revision graph row indexes for the ToBeSelectedObjectIds.
@@ -640,6 +642,11 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             _lastScroll.Restart();
+        }
+
+        private void TriggerRowCountUpdate()
+        {
+            UpdateVisibleRowRange();
         }
 
         private void UpdateVisibleRowRange()
