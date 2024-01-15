@@ -361,7 +361,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void Clear()
         {
-            _backgroundScrollTo = 0;
+            _backgroundScrollTo = -1;
             _forceRefresh = false;
 
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about to delete the data
@@ -662,8 +662,8 @@ namespace GitUI.UserControls.RevisionGrid
         {
             int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
             int visibleRowCount = _rowHeight <= 0 ? 0 : (Height + _rowHeight - 1) / _rowHeight; // Rounding up integer division: (a+b-1)/b = ceil(a/b)
-
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
+
             if (_forceRefresh)
             {
                 _backgroundScrollTo = -1;
@@ -695,14 +695,15 @@ namespace GitUI.UserControls.RevisionGrid
                                 // Take changes to _backgroundScrollTo and IsDataLoadComplete by another thread into account
                                 if (IsDataLoadComplete)
                                 {
-                                    _backgroundScrollTo = Math.Min(_backgroundScrollTo, _revisionGraph.Count);
+                                    _backgroundScrollTo = Math.Min(_backgroundScrollTo, _revisionGraph.Count - 1);
                                 }
                             }
-                            while (curCount < _backgroundScrollTo);
+                            while (curCount <= _backgroundScrollTo);
                         }
                         else
                         {
-                            await UpdateGraphAsync(fromIndex: _revisionGraph.Count, toIndex: _revisionGraph.Count);
+                            int maxRowIndex = _revisionGraph.Count - 1;
+                            await UpdateGraphAsync(fromIndex: maxRowIndex, toIndex: maxRowIndex);
                         }
                     }
 
