@@ -24,9 +24,8 @@ namespace GitUI.UserControls
             // Select an option until we get a filter bound.
             SelectShowBranchesFilterOption(selectedIndex: 0);
 
-            tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
-            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
             tstxtRevisionFilter.Items.AddRange(AppSettings.RevisionFilterDropdowns);
+            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private IRevisionGridFilter RevisionGridFilter
@@ -329,6 +328,7 @@ namespace GitUI.UserControls
                 tscboBranchFilter.Items.Clear();
                 tscboBranchFilter.Items.AddRange(matches);
                 tscboBranchFilter.SelectionStart = index;
+                tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
             }
         }
 
