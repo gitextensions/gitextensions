@@ -1744,7 +1744,6 @@ namespace GitUI.CommandsDialogs
             {
                 RevisionGrid.SuspendRefreshRevisions();
                 string path = Module.WorkingDir;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
 
                 HideDashboard();
