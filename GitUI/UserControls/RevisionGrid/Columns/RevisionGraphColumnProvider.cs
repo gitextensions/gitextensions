@@ -194,22 +194,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
+        public override void ApplySettings()
+        {
+            Column.Visible = AppSettings.ShowRevisionGridGraphColumn;
+        }
+
         public override void Clear()
         {
             _graphCache.Reset();
-        }
-
-        public override void Refresh(int rowHeight, in VisibleRowRange range)
-        {
-            // Hide graph column when there it is disabled
-            Column.Visible = AppSettings.ShowRevisionGridGraphColumn;
-            if (!Column.Visible)
-            {
-                return;
-            }
-
-            _graphCache.Reset();
-            Column.Width = CalculateGraphColumnWidth(range);
         }
 
         public override void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
@@ -231,6 +223,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             // Keep an extra page in the cache
             _graphCache.AdjustCapacity((range.Count * 2) + 1);
+
             int width = CalculateGraphColumnWidth(range);
             if (Column.Width != width)
             {
