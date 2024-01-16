@@ -1655,6 +1655,12 @@ namespace GitCommands
             set => SetInt("history size", value);
         }
 
+        // (Currently) hidden configuration
+        public static int RemotesCacheLength
+        {
+            get => GetInt("RemotesCacheLength", 30);
+        }
+
         public static int RecentReposComboMinWidth
         {
             get => GetInt("RecentReposComboMinWidth", 0);
