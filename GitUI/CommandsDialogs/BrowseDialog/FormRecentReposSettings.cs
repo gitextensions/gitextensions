@@ -119,17 +119,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     SortPinnedRepos = sortPinnedRepos.Checked,
                     RecentReposComboMinWidth = (int)comboMinWidthEdit.Value,
                     MeasureFont = PinnedLB.Font,
-                    Graphics = PinnedLB.CreateGraphics()
                 };
 
-                try
-                {
-                    splitter.SplitRecentRepos(_repositoryHistory, pinnedRepos, allRecentRepos);
-                }
-                finally
-                {
-                    splitter.Graphics.Dispose();
-                }
+                splitter.SplitRecentRepos(_repositoryHistory, pinnedRepos, allRecentRepos);
 
                 foreach (RecentRepoInfo repo in pinnedRepos)
                 {

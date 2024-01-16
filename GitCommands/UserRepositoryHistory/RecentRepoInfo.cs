@@ -45,8 +45,6 @@
         public bool SortAllRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
 
-        // need to be set before shortening using middleDots strategy
-        public Graphics? Graphics { get; set; }
         public Font? MeasureFont { get; set; }
 
         public RecentRepoSplitter()
@@ -357,7 +355,7 @@
                     {
                         canShorten = ShortenPath(skipCount);
                         skipCount++;
-                        captionSize = Graphics!.MeasureString(repoInfo.Caption, MeasureFont);
+                        captionSize = TextRenderer.MeasureText(repoInfo.Caption, MeasureFont);
                     }
                     while (captionSize.Width > RecentReposComboMinWidth - 10 && canShorten);
                 }

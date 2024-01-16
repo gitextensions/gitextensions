@@ -92,16 +92,12 @@ namespace GitUI
             List<RecentRepoInfo> pinnedRepos = [];
             List<RecentRepoInfo> allRecentRepos = [];
 
-            using (Graphics graphics = OwnerForm.CreateGraphics())
+            RecentRepoSplitter splitter = new()
             {
-                RecentRepoSplitter splitter = new()
-                {
-                    MeasureFont = container.Font,
-                    Graphics = graphics
-                };
+                MeasureFont = container.Font,
+            };
 
-                splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
-            }
+            splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
             foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
             {
@@ -142,16 +138,12 @@ namespace GitUI
                 return;
             }
 
-            using (Graphics graphics = OwnerForm.CreateGraphics())
+            RecentRepoSplitter splitter = new()
             {
-                RecentRepoSplitter splitter = new()
-                {
-                    MeasureFont = container.Font,
-                    Graphics = graphics
-                };
+                MeasureFont = container.Font,
+            };
 
-                splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
-            }
+            splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
             foreach (RecentRepoInfo repo in pinnedRepos)
             {
