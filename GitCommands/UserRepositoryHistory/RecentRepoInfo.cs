@@ -249,6 +249,7 @@
                 string? repository = null;
                 string workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
+
                 if (dirInfo is not null)
                 {
                     repository = dirInfo.Name;
@@ -257,18 +258,31 @@
 
                 bool addDots = false;
 
+                bool isInUserProfile = PathUtil.IsInUserProfile(repoInfo.Repo.Path);
+
                 if (dirInfo is not null)
                 {
-                    while (dirInfo.Parent?.Parent is not null)
+                    if (dirInfo.FullName != PathUtil.UserProfilePath)
                     {
-                        dirInfo = dirInfo.Parent;
-                        addDots = true;
+                        while (dirInfo.Parent?.Parent is not null && (isInUserProfile && dirInfo.Parent?.FullName != PathUtil.UserProfilePath))
+                        {
+                            dirInfo = dirInfo.Parent;
+                            addDots = true;
+                        }
+
+                        company = dirInfo.Name;
                     }
 
-                    company = dirInfo.Name;
-                    if (dirInfo.Parent is not null)
+                    if (isInUserProfile)
                     {
-                        root = dirInfo.Parent.Name;
+                        root = "~" + Path.DirectorySeparatorChar;
+                    }
+                    else
+                    {
+                        if (dirInfo.Parent is not null)
+                        {
+                            root = dirInfo.Parent.Name;
+                        }
                     }
                 }
 
@@ -287,7 +301,7 @@
                         r = repository[skipCount..];
                     }
 
-                    repoInfo.Caption = MakePath(root, c!);
+                    repoInfo.Caption = c is null ? root : MakePath(root, c!);
 
                     if (addDots)
                     {
