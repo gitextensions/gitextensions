@@ -16,6 +16,11 @@ namespace GitCommands
         public static readonly char PosixDirectorySeparatorChar = '/';
         public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
 
+        /// <summary>The user's profile folder path.</summary>
+        // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
+        public static readonly string UserProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        private static StringComparison _pathComparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
         [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
         private static partial Regex DriveLetterRegex();
 
@@ -436,22 +441,25 @@ namespace GitCommands
             return false;
         }
 
+        /// <summary>
+        /// Check if a folder path is inside the user's profile folder.
+        /// </summary>
+        /// <param name="path">a folder path</param>
+        /// <returns><see langword="true"/> if folder is inside the user's profile folder; otherwise, <see langword="false"/>.</returns>
+        public static bool IsInUserProfile(string path)
+            => path.StartsWith(UserProfilePath, _pathComparison);
+
         public static string GetDisplayPath(string path)
         {
-            // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
-            string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-            StringComparison comparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-            if (path.StartsWith(userProfile, comparison))
+            if (IsInUserProfile(path))
             {
-                int length = path.Length - userProfile.Length;
+                int length = path.Length - UserProfilePath.Length;
                 if (path.EndsWith("/") || path.EndsWith("\\"))
                 {
                     length--;
                 }
 
-                return $"~{path.Substring(userProfile.Length, length)}";
+                return $"~{path.Substring(UserProfilePath.Length, length)}";
             }
 
             return path;
