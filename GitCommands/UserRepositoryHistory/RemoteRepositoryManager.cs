@@ -72,16 +72,8 @@ namespace GitCommands.UserRepositoryHistory
         {
             await TaskScheduler.Default;
 
-            // BUG: this must be a separate settings
-            // TODO: to be addressed separately
-            int size = AppSettings.RecentRepositoriesHistorySize;
             IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRemoteHistory);
-            if (history is null)
-            {
-                return Array.Empty<Repository>();
-            }
-
-            return AdjustHistorySize(history, size).ToList();
+            return history is null ? Array.Empty<Repository>() : AdjustHistorySize(history, AppSettings.RemotesCacheLength).ToList();
         }
 
         /// <summary>
