@@ -1169,11 +1169,9 @@ namespace GitUI.CommandsDialogs
                 () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
 
             List<RecentRepoInfo> pinnedRepos = new();
-            using Graphics graphics = CreateGraphics();
             RecentRepoSplitter splitter = new()
             {
                 MeasureFont = _NO_TRANSLATE_WorkingDir.Font,
-                Graphics = graphics
             };
 
             splitter.SplitRecentRepos(recentRepositoryHistory, pinnedRepos, pinnedRepos);
@@ -1185,9 +1183,9 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.RecentReposComboMinWidth > 0)
             {
                 _NO_TRANSLATE_WorkingDir.AutoSize = false;
-                float captionWidth = graphics.MeasureString(_NO_TRANSLATE_WorkingDir.Text, _NO_TRANSLATE_WorkingDir.Font).Width;
+                int captionWidth = TextRenderer.MeasureText(_NO_TRANSLATE_WorkingDir.Text, _NO_TRANSLATE_WorkingDir.Font).Width;
                 captionWidth = captionWidth + _NO_TRANSLATE_WorkingDir.DropDownButtonWidth + 5;
-                _NO_TRANSLATE_WorkingDir.Width = Math.Max(AppSettings.RecentReposComboMinWidth, (int)captionWidth);
+                _NO_TRANSLATE_WorkingDir.Width = Math.Max(AppSettings.RecentReposComboMinWidth, captionWidth);
             }
             else
             {

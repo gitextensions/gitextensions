@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         Task AssignCategoryAsync(Repository repository, string? category);
         string GetCurrentBranchName(string path);
         bool IsValidGitWorkingDir(string path);
-        (IReadOnlyList<RecentRepoInfo> recentRepositories, IReadOnlyList<RecentRepoInfo> favouriteRepositories) PreRenderRepositories(Graphics g, string filter);
+        (IReadOnlyList<RecentRepoInfo> recentRepositories, IReadOnlyList<RecentRepoInfo> favouriteRepositories) PreRenderRepositories(string filter);
         bool RemoveInvalidRepository(string path);
         void ClearCache();
     }
@@ -63,14 +63,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             return GitModule.IsValidGitWorkingDir(path);
         }
 
-        public (IReadOnlyList<RecentRepoInfo> recentRepositories, IReadOnlyList<RecentRepoInfo> favouriteRepositories) PreRenderRepositories(Graphics g, string pattern)
+        public (IReadOnlyList<RecentRepoInfo> recentRepositories, IReadOnlyList<RecentRepoInfo> favouriteRepositories) PreRenderRepositories(string pattern)
         {
             List<RecentRepoInfo> pinnedRepos = [];
             List<RecentRepoInfo> allRecentRepos = [];
 
             RecentRepoSplitter splitter = new()
             {
-                Graphics = g,
                 MeasureFont = AppSettings.Font,
 
                 MaxPinnedRepositories = AppSettings.MaxPinnedRepositories,
