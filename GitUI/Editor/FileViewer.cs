@@ -336,11 +336,17 @@ namespace GitUI.Editor
         public void ReloadHotkeys()
         {
             LoadHotkeys(HotkeySettingsName);
-            findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
-            replaceToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Replace);
             stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageLines);
             unstageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnstageLines);
             resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetLines);
+            ignoreAllWhitespaceChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.IgnoreAllWhitespace);
+            increaseNumberOfLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.IncreaseNumberOfVisibleLines);
+            decreaseNumberOfLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DecreaseNumberOfVisibleLines);
+            showEntireFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowEntireFile);
+            treatAllFilesAsTextToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.TreatFileAsText);
+            findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
+            replaceToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Replace);
+            goToLineToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.GoToLine);
         }
 
         public ToolStripSeparator AddContextMenuSeparator()
