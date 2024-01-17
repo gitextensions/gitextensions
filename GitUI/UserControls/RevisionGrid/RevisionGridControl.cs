@@ -997,6 +997,7 @@ namespace GitUI
                         ? getUnfilteredRefs.Value.Where(r => r.CompleteName != GitRefName.RefsStashPrefix)
                         : getUnfilteredRefs.Value)
                         .ToLookup(gitRef => gitRef.ObjectId);
+                    cancellationToken.ThrowIfCancellationRequested();
                     ResetNavigationHistory();
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef.Value);
                     _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(CurrentCheckout, currentlySelectedObjectIds);
@@ -1074,6 +1075,7 @@ namespace GitUI
                     {
                         RevisionReader reader = new(capturedModule);
                         string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
+                        cancellationToken.ThrowIfCancellationRequested();
                         ParentsAreRewritten = _filterInfo.HasRevisionFilter;
 
                         cancellationToken.ThrowIfCancellationRequested();
@@ -1123,6 +1125,7 @@ namespace GitUI
 
             string BuildPathFilter(string? path)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 FilePathByObjectId?.Clear();
 
                 if (string.IsNullOrWhiteSpace(path))
@@ -1182,7 +1185,7 @@ namespace GitUI
 
                 HashSet<string?> setOfFileNames = [];
 
-                foreach (string fileName in ParseFileNames(args))
+                foreach (string fileName in ParseFileNames(args, cancellationToken))
                 {
                     setOfFileNames.Add(fileName);
                 }
@@ -1543,10 +1546,10 @@ namespace GitUI
                 path,
             };
 
-            return ParseFileNames(args).FirstOrDefault();
+            return ParseFileNames(args, cancellationToken: default).FirstOrDefault();
         }
 
-        private IEnumerable<string> ParseFileNames(GitArgumentBuilder args)
+        private IEnumerable<string> ParseFileNames(GitArgumentBuilder args, CancellationToken cancellationToken)
         {
             ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
 
@@ -1586,6 +1589,7 @@ namespace GitUI
                 }
 
                 // Add only the first file to the dictionary
+                cancellationToken.ThrowIfCancellationRequested();
                 FilePathByObjectId?.TryAdd(currentObjectId, line);
 
                 yield return line;
