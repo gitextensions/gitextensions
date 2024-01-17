@@ -1184,6 +1184,8 @@ namespace GitCommands
             set => SetBool("showgitnotes", value);
         }
 
+        public static ISetting<bool> ShowGitNotesColumn { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowGitNotesColumn), false);
+
         public static bool ShowAnnotatedTagsMessages
         {
             get => GetBool("showannotatedtagsmessages", true);

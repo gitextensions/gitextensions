@@ -659,11 +659,11 @@ namespace GitUI.CommandsDialogs
             FillFileTree(selectedRevision);
             FillDiff(selectedRevisions);
 
-            string oldBody = selectedRevision?.Body;
+            (string? body, string? notes) old = (selectedRevision?.Body, selectedRevision?.Notes);
             FillCommitInfo(selectedRevision);
 
             // If the revision's body has been updated then the grid needs to be refreshed to display it
-            if (AppSettings.ShowCommitBodyInRevisionGrid && selectedRevision?.HasMultiLineMessage is true && oldBody != selectedRevision.Body)
+            if (AppSettings.ShowCommitBodyInRevisionGrid && selectedRevision?.HasMultiLineMessage is true && old != (selectedRevision.Body, selectedRevision.Notes))
             {
                 RevisionGrid.Refresh();
             }

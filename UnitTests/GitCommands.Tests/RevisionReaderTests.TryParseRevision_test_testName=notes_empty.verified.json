@@ -29,7 +29,7 @@
   "Subject": "Notes subject",
   "Body": "Notes subject\n\nline",
   "HasMultiLineMessage": true,
-  "HasNotes": true,
+  "Notes": "",
   "IsArtificial": false,
   "IsStash": false,
   "ReflogSelector": null,

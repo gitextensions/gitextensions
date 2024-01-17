@@ -1,4 +1,5 @@
 using System.Net;
+using GitUI;
 using GitUIPluginInterfaces;
 
 namespace ResourceManager.CommitDataRenders
@@ -38,7 +39,7 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            string body = WebUtility.HtmlEncode((commitData.Body ?? "").Trim());
+            string body = WebUtility.HtmlEncode((UIExtensions.FormatBodyAndNotes(commitData.Body, commitData.Notes) ?? "").Trim());
 
             if (showRevisionsAsLinks)
             {

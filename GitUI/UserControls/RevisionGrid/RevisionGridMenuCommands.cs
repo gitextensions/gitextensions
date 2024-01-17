@@ -406,6 +406,13 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
+                    Name = "showGitNotesColumnToolStripMenuItem",
+                    Text = "Show git &notes column",
+                    ExecuteAction = () => _revisionGrid.ToggleShowGitNotesColumn(),
+                    IsCheckedFunc = () => AppSettings.ShowGitNotesColumn.Value
+                },
+                new MenuCommand
+                {
                     Name = "showAuthorAvatarColumnToolStripMenuItem",
                     Text = "Show aut&hor avatar column",
                     ExecuteAction = () => _revisionGrid.ToggleAuthorAvatarColumn(),
