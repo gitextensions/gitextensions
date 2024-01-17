@@ -2,6 +2,7 @@
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
@@ -23,6 +24,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     private readonly RevisionGridControl _grid;
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
+    private bool _notesInSeparateColumn;
 
     public MessageColumnProvider(RevisionGridControl grid, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
         : base("Message")
@@ -39,6 +41,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Width = DpiUtil.Scale(500),
             MinimumWidth = DpiUtil.Scale(25)
         };
+    }
+
+    public override void ApplySettings()
+    {
+        _notesInSeparateColumn = AppSettings.ShowGitNotesColumn.Value;
     }
 
     public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
@@ -121,7 +128,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
         {
             // The body is not stored for older commits (to save memory)
-            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(revision.Body)
+            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetBody(revision))
                 ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
             int initialLength = bodySummary.Length + 10;
             _toolTipBuilder.EnsureCapacity(initialLength);
@@ -525,6 +532,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
     }
 
-    private static string[] GetCommitMessageLines(GitRevision revision) =>
-        (revision.Body?.Trim() ?? revision.Subject).Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+    private string[] GetCommitMessageLines(GitRevision revision)
+        => GetBody(revision)?.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries) ?? [revision.Subject];
+
+    private string? GetBody(GitRevision revision)
+        => _notesInSeparateColumn || /*Body & Notes not loaded yet*/ revision.Body is null
+            ? revision.Body
+            : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
 }

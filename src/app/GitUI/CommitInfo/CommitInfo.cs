@@ -363,11 +363,11 @@ public partial class CommitInfo : GitModuleControl
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (_revision.Body is null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
+            if (_revision.Body is null || ((AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes) && _revision.Notes is null))
             {
                 _commitDataManager.UpdateBody(data, appendNotesOnly: _revision.Body is not null, out _);
                 _revision.Body = data.Body;
-                _revision.HasNotes = true;
+                _revision.Notes = data.Notes ?? "";
             }
 
             ICommitDataBodyRenderer? commitDataBodyRenderer = _commitDataBodyRenderer;
@@ -735,8 +735,8 @@ public partial class CommitInfo : GitModuleControl
         }
 
         Module.EditNotes(_revision.ObjectId);
-        _revision.HasNotes = false;
         _revision.Body = null;
+        _revision.Notes = null;
         ReloadCommitInfo();
     }
 

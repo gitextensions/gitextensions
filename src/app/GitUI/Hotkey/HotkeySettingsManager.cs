@@ -313,6 +313,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
                 Hk(RevisionGridControl.Command.ToggleOrderRevisionsByDate, Keys.None),
                 Hk(RevisionGridControl.Command.ToggleRevisionGraph, Keys.None),
                 Hk(RevisionGridControl.Command.ToggleShowGitNotes, Keys.None),
+                Hk(RevisionGridControl.Command.ToggleShowGitNotesColumn, Keys.None),
                 Hk(RevisionGridControl.Command.ToggleHideMergeCommits, Keys.Control | Keys.Shift | Keys.M),
                 Hk(RevisionGridControl.Command.ToggleShowRelativeDate, Keys.None),
                 Hk(RevisionGridControl.Command.ToggleShowTags, Keys.Control | Keys.Alt | Keys.T)),
