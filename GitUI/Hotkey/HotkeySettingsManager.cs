@@ -331,6 +331,7 @@ namespace GitUI.Hotkey
                     Hk(FileViewer.Command.NextChange, Keys.Alt | Keys.Down),
                     Hk(FileViewer.Command.PreviousChange, Keys.Alt | Keys.Up),
                     Hk(FileViewer.Command.ShowEntireFile, Keys.None),
+                    Hk(FileViewer.Command.ShowSyntaxHighlighting, Keys.None),
                     Hk(FileViewer.Command.TreatFileAsText, Keys.None),
                     Hk(FileViewer.Command.NextOccurrence, Keys.Alt | Keys.Right),
                     Hk(FileViewer.Command.PreviousOccurrence, Keys.Alt | Keys.Left),

@@ -1610,6 +1610,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Show syntax highlighting</source>
         <target />
       </trans-unit>
+      <trans-unit id="showSyntaxHighlightingToolStripMenuItem.Text">
+        <source>Show syntax highlighting</source>
+        <target />
+      </trans-unit>
       <trans-unit id="stageSelectedLinesToolStripMenuItem.Text">
         <source>Stage selected line(s)</source>
         <target />

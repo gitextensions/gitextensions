@@ -35,6 +35,7 @@ namespace GitUI.Editor
             increaseNumberOfLinesToolStripMenuItem = new ToolStripMenuItem();
             decreaseNumberOfLinesToolStripMenuItem = new ToolStripMenuItem();
             showEntireFileToolStripMenuItem = new ToolStripMenuItem();
+            showSyntaxHighlightingToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             treatAllFilesAsTextToolStripMenuItem = new ToolStripMenuItem();
             automaticContinuousScrollToolStripMenuItem = new ToolStripMenuItem();
@@ -80,6 +81,7 @@ namespace GitUI.Editor
             increaseNumberOfLinesToolStripMenuItem,
             decreaseNumberOfLinesToolStripMenuItem,
             showEntireFileToolStripMenuItem,
+            showSyntaxHighlightingToolStripMenuItem,
             toolStripSeparator2,
             treatAllFilesAsTextToolStripMenuItem,
             automaticContinuousScrollToolStripMenuItem,
@@ -206,6 +208,15 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Size = new Size(243, 22);
             showEntireFileToolStripMenuItem.Text = "Show entire file";
             showEntireFileToolStripMenuItem.Click += ShowEntireFileToolStripMenuItemClick;
+            // 
+            // showSyntaxHighlightingToolStripMenuItem
+            // 
+            showSyntaxHighlightingToolStripMenuItem.Image = Properties.Resources.SyntaxHighlighting;
+            showSyntaxHighlightingToolStripMenuItem.ImageTransparentColor = Color.Magenta;
+            showSyntaxHighlightingToolStripMenuItem.Name = "showSyntaxHighlightingToolStripMenuItem";
+            showSyntaxHighlightingToolStripMenuItem.Size = new Size(243, 22);
+            showSyntaxHighlightingToolStripMenuItem.Text = "Show syntax highlighting";
+            showSyntaxHighlightingToolStripMenuItem.Click += ShowSyntaxHighlighting_Click;
             // 
             // toolStripSeparator2
             // 
@@ -469,6 +480,7 @@ namespace GitUI.Editor
         private ToolStripMenuItem increaseNumberOfLinesToolStripMenuItem;
         private ToolStripMenuItem decreaseNumberOfLinesToolStripMenuItem;
         private ToolStripMenuItem showEntireFileToolStripMenuItem;
+        private ToolStripMenuItem showSyntaxHighlightingToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
         private ToolStripMenuItem copyToolStripMenuItem;
