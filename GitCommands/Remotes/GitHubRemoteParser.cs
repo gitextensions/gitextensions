@@ -3,11 +3,14 @@ using System.Text.RegularExpressions;
 
 namespace GitCommands.Remotes
 {
-    public sealed class GitHubRemoteParser : RemoteParser
+    public sealed partial class GitHubRemoteParser : RemoteParser
     {
-        private static readonly string GitHubSshUrlRegex = @"git(?:@|://)github.com[:/](?<owner>[^/]+)/(?<repo>[\w_\.\-]+)\.git";
-        private static readonly string GitHubHttpsUrlRegex = @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/(?<owner>[^/]+)/(?<repo>[\w_\.\-]+)(?:.git)?";
-        private static readonly string[] GitHubRegexes = { GitHubHttpsUrlRegex, GitHubSshUrlRegex };
+        [GeneratedRegex(@"git(?:@|://)github.com[:/](?<owner>[^/]+)/(?<repo>[\w_\.\-]+)\.git")]
+        private static partial Regex GitHubSshUrlRegex();
+
+        [GeneratedRegex(@"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/(?<owner>[^/]+)/(?<repo>[\w_\.\-]+)(?:.git)?")]
+        private static partial Regex GitHubHttpsUrlRegex();
+        private static readonly Regex[] GitHubRegexes = { GitHubHttpsUrlRegex(), GitHubSshUrlRegex() };
 
         public bool IsValidRemoteUrl(string remoteUrl)
         {
