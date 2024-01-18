@@ -61,13 +61,20 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             bool PaintGraphCell(int rowIndex, Rectangle cellBounds, Graphics graphics)
             {
-                // Draws the required row into _graphBitmap, or retrieves an equivalent one from the cache.
+                // Renders the required row into _graphCache.GraphBitmap if the row is available and not yet cached, and draws it from the cache.
 
                 int height = _graphCache.Capacity * rowHeight;
                 int width = Column.Width;
 
                 if (width <= 0 || height <= 0)
                 {
+                    // Nothing to be drawn
+                    return true;
+                }
+
+                if (_revisionGraph.GetSegmentsForRow(rowIndex) is null)
+                {
+                    // Needs to be refreshed when available
                     return false;
                 }
 
