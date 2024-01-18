@@ -205,7 +205,7 @@ namespace GitCommands
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (TryParseRevision(chunk.Span, out GitRevision? revision))
+                if (TryParseRevision(chunk, out GitRevision? revision))
                 {
                     revisions.Add(revision);
                 }
@@ -244,7 +244,7 @@ namespace GitCommands
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (TryParseRevision(chunk.Span, out GitRevision? revision))
+                if (TryParseRevision(chunk, out GitRevision? revision))
                 {
 #if TRACE_REVISIONREADER
                     revisionCount++;
@@ -281,8 +281,10 @@ namespace GitCommands
             };
         }
 
+        private (ReadOnlyMemory<byte> buffer, ObjectId objectId) _cache = (null, null);
+
         [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
-        private bool TryParseRevision(in ReadOnlySpan<byte> buffer, [NotNullWhen(returnValue: true)] out GitRevision? revision)
+        private bool TryParseRevision(in ReadOnlyMemory<byte> buffer, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -301,18 +303,36 @@ namespace GitCommands
             #region Object ID, Tree ID, Parent IDs
 
             // The first 40 bytes are the revision ID and the tree ID back to back
-            if (!ObjectId.TryParse(buffer.Slice(0, ObjectId.Sha1CharCount), out ObjectId? objectId) ||
-                !ObjectId.TryParse(buffer.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out ObjectId? treeId))
+            ReadOnlyMemory<byte> commitHash = buffer.Slice(0, ObjectId.Sha1CharCount);
+            ReadOnlySpan<byte> commitHashSpan = commitHash.Span;
+            ObjectId? objectId;
+            if (_cache.objectId is not null && commitHashSpan.SequenceEqual(_cache.buffer.Span))
             {
-                ParseAssert($"Log parse error, object id: {buffer.Length}({buffer.Slice(0, ObjectId.Sha1CharCount).ToString()}");
+                objectId = _cache.objectId;
+            }
+            else
+            {
+                if (!ObjectId.TryParse(commitHashSpan, out objectId))
+                {
+                    ParseAssert($"Log parse error, object id: {buffer.Length}({commitHash}");
+                    revision = default;
+                    return false;
+                }
+            }
+
+            ReadOnlyMemory<byte> parentCommitHash = buffer.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount);
+            if (!ObjectId.TryParse(parentCommitHash.Span, out ObjectId? treeId))
+            {
+                ParseAssert($"Log parse error, object id: {buffer.Length}({parentCommitHash}");
                 revision = default;
                 return false;
             }
 
             int offset = ObjectId.Sha1CharCount * 2;
+            ReadOnlySpan<byte> bufferSpan = buffer.Span;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
-            int noParents = CountParents(in buffer, offset);
+            int noParents = CountParents(in bufferSpan, offset);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             int CountParents(in ReadOnlySpan<byte> array, int baseOffset)
@@ -352,11 +372,16 @@ namespace GitCommands
 
                 for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
-                    if (!ObjectId.TryParse(buffer.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
+                    ReadOnlyMemory<byte> hashParent = buffer.Slice(offset, ObjectId.Sha1CharCount);
+                    if (!ObjectId.TryParse(hashParent.Span, out ObjectId parentId))
                     {
                         ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                         revision = default;
                         return false;
+                    }
+                    else
+                    {
+                        _cache = (hashParent, parentId);
                     }
 
                     parentIds[parentIndex] = parentId;
@@ -369,7 +394,7 @@ namespace GitCommands
             #region Timestamps
 
             // Decimal ASCII seconds since the unix epoch
-            if (!Utf8Parser.TryParse(buffer.Slice(offset), out long authorUnixTime, out int bytesConsumed))
+            if (!Utf8Parser.TryParse(bufferSpan.Slice(offset), out long authorUnixTime, out int bytesConsumed))
             {
                 ParseAssert($"Log parse error, not enough data for authortime: {buffer.Length} {offset} {buffer.Slice(offset).ToString()}");
                 revision = default;
@@ -377,7 +402,7 @@ namespace GitCommands
             }
 
             offset += bytesConsumed + 1;
-            if (!Utf8Parser.TryParse(buffer.Slice(offset), out long commitUnixTime, out bytesConsumed))
+            if (!Utf8Parser.TryParse(bufferSpan.Slice(offset), out long commitUnixTime, out bytesConsumed))
             {
                 ParseAssert($"Log parse error, not enough data for committime: {buffer.Length} {offset} {buffer.Slice(offset).ToString()}");
                 revision = default;
@@ -398,11 +423,11 @@ namespace GitCommands
                 ParentIds = parentIds,
                 TreeGuid = treeId,
 
-                Author = GetNextLine(buffer),
-                AuthorEmail = GetNextLine(buffer),
+                Author = GetNextLine(bufferSpan),
+                AuthorEmail = GetNextLine(bufferSpan),
                 AuthorUnixTime = authorUnixTime,
-                Committer = GetNextLine(buffer),
-                CommitterEmail = GetNextLine(buffer),
+                Committer = GetNextLine(bufferSpan),
+                CommitterEmail = GetNextLine(bufferSpan),
                 CommitUnixTime = commitUnixTime
             };
 
@@ -422,7 +447,7 @@ namespace GitCommands
                 _decodeBuffer = new char[newSize];
             }
 
-            int decodedLength = _logOutputEncoding.GetChars(buffer.Slice(offset), _decodeBuffer);
+            int decodedLength = _logOutputEncoding.GetChars(bufferSpan.Slice(offset), _decodeBuffer);
             Span<char> decoded = _decodeBuffer.AsSpan(0, decodedLength).TrimEnd();
 
             // reflogSelector are only used when listing stashes
@@ -587,7 +612,7 @@ namespace GitCommands
             internal ArgumentBuilder BuildArguments(string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(revisionFilter, pathFilter, hasNotes: false);
 
-            internal bool TryParseRevision(ReadOnlySpan<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
+            internal bool TryParseRevision(ReadOnlyMemory<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
                 _revisionReader.TryParseRevision(chunk, out revision);
 
             internal int NoOfParseError
