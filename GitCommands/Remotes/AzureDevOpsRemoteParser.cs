@@ -1,19 +1,26 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace GitCommands.Remotes
 {
-    public sealed class AzureDevOpsRemoteParser : RemoteParser
+    public sealed partial class AzureDevOpsRemoteParser : RemoteParser
     {
-        private static readonly string VstsHttpsRemoteRegex = @"^https:\/\/(?<owner>[^.]*)\.visualstudio\.com\/(?<project>[^\/]*)\/_git\/(?<repo>.*)$";
-        private static readonly string VstsSshRemoteRegex = @"^[^@]*@vs-ssh\.visualstudio\.com:v\d\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/(?<repo>.*)$";
-        private static readonly string AzureDevopsHttpsRemoteRegex = @"^https:\/\/[^@]*@dev\.azure\.com\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/_git\/(?<repo>.*)$";
-        private static readonly string AzureDevopsSshRemoteRegex = @"^git@ssh\.dev\.azure\.com:v\d\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/(?<repo>.*)$";
-        private static readonly string[] AzureDevopsRegexes = { AzureDevopsHttpsRemoteRegex, AzureDevopsSshRemoteRegex, VstsHttpsRemoteRegex, VstsSshRemoteRegex };
+        [GeneratedRegex(@"^https:\/\/(?<owner>[^.]*)\.visualstudio\.com\/(?<project>[^\/]*)\/_git\/(?<repo>.*)$")]
+        private static partial Regex VstsHttpsRemoteRegex();
+
+        [GeneratedRegex(@"^[^@]*@vs-ssh\.visualstudio\.com:v\d\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/(?<repo>.*)$")]
+        private static partial Regex VstsSshRemoteRegex();
+
+        [GeneratedRegex(@"^https:\/\/[^@]*@dev\.azure\.com\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/_git\/(?<repo>.*)$")]
+        private static partial Regex AzureDevopsHttpsRemoteRegex();
+
+        [GeneratedRegex(@"^git@ssh\.dev\.azure\.com:v\d\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/(?<repo>.*)$")]
+        private static partial Regex AzureDevopsSshRemoteRegex();
+
+        private static readonly Regex[] _azureDevopsRegexes = [ AzureDevopsHttpsRemoteRegex(), AzureDevopsSshRemoteRegex(), VstsHttpsRemoteRegex(), VstsSshRemoteRegex()];
 
         public bool IsValidRemoteUrl(string remoteUrl)
-        {
-            return TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out _, out _, out _);
-        }
+            => TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out _, out _, out _);
 
         public bool TryExtractAzureDevopsDataFromRemoteUrl(string remoteUrl, [NotNullWhen(returnValue: true)] out string? owner, [NotNullWhen(returnValue: true)] out string? project, [NotNullWhen(returnValue: true)] out string? repository)
         {
@@ -21,7 +28,7 @@ namespace GitCommands.Remotes
             project = null;
             repository = null;
 
-            System.Text.RegularExpressions.Match m = MatchRegExes(remoteUrl, AzureDevopsRegexes);
+            Match m = MatchRegExes(remoteUrl, _azureDevopsRegexes);
 
             if (m is null || !m.Success)
             {
