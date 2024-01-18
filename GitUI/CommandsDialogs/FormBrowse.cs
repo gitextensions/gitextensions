@@ -2231,7 +2231,14 @@ namespace GitUI.CommandsDialogs
             // Account for this shift. This is a workaround at best in the same way as for FormCommit.
             if (!RevisionsSplitContainer.Panel2Collapsed && RevisionsSplitContainer.FixedPanel == FixedPanel.Panel2)
             {
-                RevisionsSplitContainer.SplitterDistance -= 4;
+                try
+                {
+                    RevisionsSplitContainer.SplitterDistance -= 4;
+                }
+                catch (Exception)
+                {
+                    // Catching because bad value can raise an exception
+                }
             }
         }
 
