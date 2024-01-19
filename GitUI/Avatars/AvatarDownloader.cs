@@ -65,6 +65,11 @@ namespace GitUI.Avatars
             try
             {
                 using HttpResponseMessage response = await _client.GetAsync(imageUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
                 using Stream imageStream = await response.Content.ReadAsStreamAsync();
                 return Image.FromStream(imageStream);
             }
