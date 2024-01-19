@@ -122,5 +122,10 @@ namespace GitUI.Avatars
 
             return (mainProvider, cacheCleaner);
         }
+
+        public static void UpdateAvatarInitialFontsSettings()
+        {
+            InitialsAvatarProvider.UpdateFontsSettings();
+        }
     }
 }

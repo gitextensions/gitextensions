@@ -14,6 +14,7 @@ using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Avatars;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
@@ -1492,6 +1493,7 @@ namespace GitUI.CommandsDialogs
             revisionDiff.ReloadHotkeys();
             repoObjectsTree.ReloadHotkeys();
             SetShortcutKeyDisplayStringsFromHotkeySettings();
+            AvatarService.UpdateAvatarInitialFontsSettings();
 
             // Clear the separate caches for diff/merge tools
             ThreadHelper.FileAndForget(() => new CustomDiffMergeToolProvider().ClearAsync(isDiff: false));

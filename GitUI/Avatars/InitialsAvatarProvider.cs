@@ -11,8 +11,16 @@ namespace GitUI.Avatars
     /// </summary>
     public class InitialsAvatarProvider : IAvatarProvider
     {
+        private const float _fontSizeEstimation = 20f;
         private int _unkownCounter = 0;
-        private static readonly char[] _emailInitialSeparator = new[] { '.', '-', '_' };
+        private static readonly char[] _emailInitialSeparator = ['.', '-', '_'];
+        private FontFamily _fontFamily;
+        private Font _estimationFont;
+
+        public InitialsAvatarProvider()
+        {
+            UpdateFontsSettings();
+        }
 
         /// <inheritdoc/>
         public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
@@ -126,8 +134,6 @@ namespace GitUI.Avatars
             return $"{name[0]}{names[^1][0]}".ToUpper();
         }
 
-        private readonly Graphics _graphics = Graphics.FromImage(new Bitmap(1, 1));
-
         private readonly (Brush foregroundBrush, Color backgroundColor)[] _avatarColors = AppSettings.AvatarAuthorInitialsPalette.Split(",").Select(GetAvatarDrawingMaterial).ToArray();
 
         private static (Brush foregroundBrush, Color backgroundColor) GetAvatarDrawingMaterial(string colorCode)
@@ -149,34 +155,37 @@ namespace GitUI.Avatars
             }
         }
 
-        private Image DrawText(string? text, Brush foreColor, Color backColor, int size)
+        private Image DrawText(string? text, Brush foreColor, Color backColor, int avatarSize)
         {
-            lock (_avatarColors)
-            {
-                float fontSizeEstimation = size / 4.0f;
-                Font font = new(AppSettings.CommitFont.FontFamily, fontSizeEstimation);
+            Bitmap bitmap = new(avatarSize, avatarSize);
+            using Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.Clear(backColor);
+            graphics.SmoothingMode = SmoothingMode.HighSpeed;
+            graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-                SizeF textSize = _graphics.MeasureString(text, font);
+            SizeF estimatedSize = graphics.MeasureString(text, _estimationFont);
 
-                // Adjust font size with the measure
-                int sizeSquare = Math.Max((int)textSize.Width, (int)textSize.Height);
-                font = new Font(AppSettings.CommitFont.FontFamily, fontSizeEstimation * size / sizeSquare);
-                textSize = _graphics.MeasureString(text, font);
+            // Adjust font size based on the estimated measure of input text
+            int squareSize = Math.Max((int)estimatedSize.Width, (int)estimatedSize.Height);
+            float ratio = (float)avatarSize / squareSize;
+            using Font drawingFont = new(_fontFamily, _fontSizeEstimation * ratio);
+            SizeF displayedSize = estimatedSize * ratio;
 
-                Bitmap img = new(size, size);
+            // centering horizontally and vertically
+            float xOffset = Math.Max((avatarSize - displayedSize.Width) / 2, 0);
+            float yOffset = Math.Max((avatarSize - displayedSize.Height) / 2, 0);
+            graphics.DrawString(text, drawingFont, foreColor, xOffset, yOffset);
+            graphics.Save();
 
-                using Graphics drawing = Graphics.FromImage(img);
-                drawing.Clear(backColor);
-                drawing.SmoothingMode = SmoothingMode.AntiAlias;
-                drawing.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            return bitmap;
+        }
 
-                float x = textSize.Width >= textSize.Height ? 0 : (textSize.Height - textSize.Width) / 2;
-                float y = textSize.Width >= textSize.Height ? (textSize.Width - textSize.Height) / 2 : 0;
-                drawing.DrawString(text, font, foreColor, x, y);
-                drawing.Save();
-
-                return img;
-            }
+        public void UpdateFontsSettings()
+        {
+            Font oldFont = _estimationFont;
+            _fontFamily = AppSettings.Font.FontFamily;
+            _estimationFont = new(_fontFamily, _fontSizeEstimation);
+            oldFont?.Dispose();
         }
     }
 }
