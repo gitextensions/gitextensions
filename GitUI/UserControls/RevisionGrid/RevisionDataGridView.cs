@@ -48,6 +48,13 @@ namespace GitUI.UserControls.RevisionGrid
         private Font _boldFont;
         private Font _monospaceFont;
 
+        private bool _revisionGraphDrawNonRelativesTextGray;
+        private bool _highlightAuthoredRevisions;
+        private bool _revisionGraphDrawAlternateBackColor;
+        private Color _highlightedGrayTextColor;
+        private Color _grayTextColor;
+        private Color _highlightedGrayTextColorCustom;
+
         /// <summary>
         /// Force refresh the gridview, set when revision graph is changed while loading revisions.
         /// </summary>
@@ -226,50 +233,45 @@ namespace GitUI.UserControls.RevisionGrid
             Columns.Add(columnProvider.Column);
         }
 
-        private Color GetForeground(DataGridViewElementStates state, int rowIndex)
+        private Color GetForeground(bool isSelected, bool isNonRelativeGray)
         {
-            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
-            bool isSelectedAndFocused = state.HasFlag(DataGridViewElementStates.Selected) && Focused;
-            return (isNonRelativeGray, isSelectedAndFocused) switch
+            return (isNonRelativeGray, isSelectedAndFocused: isSelected && Focused) switch
             {
                 (isNonRelativeGray: false, isSelectedAndFocused: false) => SystemColors.ControlText,
                 (isNonRelativeGray: false, isSelectedAndFocused: true) => SystemColors.HighlightText,
                 (isNonRelativeGray: true, isSelectedAndFocused: false) => SystemColors.GrayText,
 
                 // (isGray: true, isSelected: true)
-                _ => getHighlightedGrayTextColor()
+                _ => _highlightedGrayTextColor
             };
         }
 
-        private Color GetCommitBodyForeground(DataGridViewElementStates state, int rowIndex)
+        private Color GetCommitBodyForeground(bool isSelected, bool isNonRelativeGray)
         {
-            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex);
-            bool isSelected = state.HasFlag(DataGridViewElementStates.Selected);
-
             return (isNonRelativeGray, isSelected) switch
             {
                 (isNonRelativeGray: false, isSelected: false) => SystemColors.GrayText,
-                (isNonRelativeGray: false, isSelected: true) => getHighlightedGrayTextColor(),
-                (isNonRelativeGray: true, isSelected: false) => getGrayTextColor(degreeOfGrayness: 1.4f),
+                (isNonRelativeGray: false, isSelected: true) => _highlightedGrayTextColor,
+                (isNonRelativeGray: true, isSelected: false) => _grayTextColor,
 
                 // (isGray: true, isSelected: true)
-                _ => getHighlightedGrayTextColor(degreeOfGrayness: 1.4f)
+                _ => _highlightedGrayTextColorCustom
             };
         }
 
-        private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision? revision)
+        private Brush GetBackground(bool isSelected, int rowIndex, GitRevision? revision)
         {
-            if (state.HasFlag(DataGridViewElementStates.Selected))
+            if (isSelected)
             {
                 return Focused ? SystemBrushes.Highlight : OtherColors.InactiveSelectionHighlightBrush;
             }
 
-            if (AppSettings.HighlightAuthoredRevisions && revision is not null && !revision.IsArtificial && AuthorHighlighting?.IsHighlighted(revision) != false)
+            if (_highlightAuthoredRevisions && !revision?.IsArtificial is false && AuthorHighlighting?.IsHighlighted(revision) is true)
             {
                 return _authoredHighlightBrush;
             }
 
-            if (rowIndex % 2 == 0 && AppSettings.RevisionGraphDrawAlternateBackColor)
+            if (_revisionGraphDrawAlternateBackColor && rowIndex % 2 == 0)
             {
                 return _alternatingRowBackgroundBrush;
             }
@@ -293,13 +295,15 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            Brush backBrush = GetBackground(e.State, e.RowIndex, revision);
+            bool isSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
+            Brush backBrush = GetBackground(isSelected, e.RowIndex, revision);
             e.Graphics!.FillRectangle(backBrush, e.CellBounds);
 
             if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
             {
-                Color foreColor = GetForeground(e.State, e.RowIndex);
-                Color commitBodyForeColor = GetCommitBodyForeground(e.State, e.RowIndex);
+                bool isNonRelativeGray = _revisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex);
+                Color foreColor = GetForeground(isSelected, isNonRelativeGray);
+                Color commitBodyForeColor = GetCommitBodyForeground(isSelected, isNonRelativeGray);
                 CellStyle cellStyle = new(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
 
                 provider.OnCellPainting(e, revision, _rowHeight, cellStyle);
@@ -381,6 +385,14 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 columnProvider.Clear();
             }
+
+            // Reload settings that will be used during drawing
+            _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
+            _highlightedGrayTextColor = getHighlightedGrayTextColor();
+            _grayTextColor = getGrayTextColor(degreeOfGrayness: 1.4f);
+            _highlightedGrayTextColorCustom = getHighlightedGrayTextColor(degreeOfGrayness: 1.4f);
+            _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;
+            _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
 
             // Redraw
             Invalidate(invalidateChildren: true);
