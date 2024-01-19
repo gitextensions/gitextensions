@@ -9,15 +9,28 @@ namespace GitUI.Avatars
     /// </summary>
     public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
     {
-        private const int DefaultCacheDays = 30;
-
         private readonly IAvatarProvider _inner;
         private readonly IFileSystem _fileSystem;
+        private readonly string _cacheDir;
+        private readonly int _cacheDays;
 
         public FileSystemAvatarCache(IAvatarProvider inner, IFileSystem? fileSystem = null)
         {
             _inner = inner;
             _fileSystem = fileSystem ?? new FileSystem();
+
+            _cacheDays = AppSettings.AvatarImageCacheDays;
+            if (_cacheDays < 1)
+            {
+                const int DefaultCacheDays = 30;
+                _cacheDays = DefaultCacheDays;
+            }
+
+            _cacheDir = AppSettings.AvatarImageCachePath;
+            if (!_fileSystem.Directory.Exists(_cacheDir))
+            {
+                _fileSystem.Directory.CreateDirectory(_cacheDir);
+            }
         }
 
         /// <inheritdoc />
@@ -26,8 +39,7 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            string cacheDir = AppSettings.AvatarImageCachePath;
-            string path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
+            string path = Path.Combine(_cacheDir, $"{email}.{imageSize}px.png");
 
             Image image = ReadImage();
 
@@ -47,11 +59,6 @@ namespace GitUI.Avatars
 
             void WriteImage()
             {
-                if (!_fileSystem.Directory.Exists(cacheDir))
-                {
-                    _fileSystem.Directory.CreateDirectory(cacheDir);
-                }
-
                 try
                 {
                     // Workaround to avoid the "A generic error occurred in GDI+." exception when saving
@@ -80,7 +87,6 @@ namespace GitUI.Avatars
                     }
                 }
 
-                TryDelete();
                 return null;
 
                 bool HasExpired()
@@ -98,13 +104,13 @@ namespace GitUI.Avatars
                         return false;
                     }
 
-                    int cacheDays = AppSettings.AvatarImageCacheDays;
-                    if (cacheDays < 1)
+                    if (info.LastWriteTime < DateTime.Now.AddDays(-_cacheDays))
                     {
-                        cacheDays = DefaultCacheDays;
+                        TryDelete();
+                        return true;
                     }
 
-                    return info.LastWriteTime < DateTime.Now.AddDays(-cacheDays);
+                    return false;
                 }
 
                 void TryDelete()
