@@ -301,6 +301,11 @@ See the changes in the commit form.");
 
         public void ReloadHotkeys()
         {
+            if (!Visible)
+            {
+                return;
+            }
+
             LoadHotkeys(HotkeySettingsName);
             fileHistoryToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             blameToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
