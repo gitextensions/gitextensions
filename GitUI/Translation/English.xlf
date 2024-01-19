@@ -1507,19 +1507,19 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
-        <source>Copy new version</source>
+        <source>Copy &amp;new version</source>
         <target />
       </trans-unit>
       <trans-unit id="copyOldVersionToolStripMenuItem.Text">
-        <source>Copy old version</source>
+        <source>Copy &amp;old version</source>
         <target />
       </trans-unit>
       <trans-unit id="copyPatchToolStripMenuItem.Text">
-        <source>Copy patch</source>
+        <source>Copy &amp;patch</source>
         <target />
       </trans-unit>
       <trans-unit id="copyToolStripMenuItem.Text">
-        <source>Copy</source>
+        <source>&amp;Copy</source>
         <target />
       </trans-unit>
       <trans-unit id="decreaseNumberOfLines.ToolTipText">
@@ -1527,19 +1527,19 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="decreaseNumberOfLinesToolStripMenuItem.Text">
-        <source>Decrease the number of lines of context</source>
+        <source>&amp;Decrease the number of lines of context</source>
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
-        <source>Find</source>
+        <source>&amp;Find</source>
         <target />
       </trans-unit>
       <trans-unit id="goToLineToolStripMenuItem.Text">
-        <source>Go to line</source>
+        <source>&amp;Go to line</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaceChangesToolStripMenuItem.Text">
-        <source>Ignore all whitespace changes</source>
+        <source>Ignore all &amp;whitespace changes</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaces.ToolTipText">
@@ -1555,11 +1555,11 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="ignoreWhitespaceAtEolToolStripMenuItem.Text">
-        <source>Ignore whitespace changes at end of line</source>
+        <source>Ignore whitespace changes at end of &amp;line</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
-        <source>Ignore changes in amount of whitespace</source>
+        <source>Ignore changes in &amp;amount of whitespace</source>
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -1567,7 +1567,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLinesToolStripMenuItem.Text">
-        <source>Increase the number of lines of context</source>
+        <source>&amp;Increase the number of lines of context</source>
         <target />
       </trans-unit>
       <trans-unit id="nextChangeButton.ToolTipText">
@@ -1579,7 +1579,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="replaceToolStripMenuItem.Text">
-        <source>Replace</source>
+        <source>&amp;Replace</source>
         <target />
       </trans-unit>
       <trans-unit id="resetSelectedLinesToolStripMenuItem.Text">
@@ -1595,7 +1595,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="showEntireFileToolStripMenuItem.Text">
-        <source>Show entire file</source>
+        <source>Show &amp;entire file</source>
         <target />
       </trans-unit>
       <trans-unit id="showNonPrintChars.ToolTipText">
@@ -1603,11 +1603,15 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="showNonprintableCharactersToolStripMenuItem.Text">
-        <source>Show nonprinting characters</source>
+        <source>S&amp;how nonprinting characters</source>
         <target />
       </trans-unit>
       <trans-unit id="showSyntaxHighlighting.ToolTipText">
         <source>Show syntax highlighting</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showSyntaxHighlightingToolStripMenuItem.Text">
+        <source>Show synta&amp;x highlighting</source>
         <target />
       </trans-unit>
       <trans-unit id="stageSelectedLinesToolStripMenuItem.Text">
@@ -1615,7 +1619,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
-        <source>Treat all files as text</source>
+        <source>&amp;Treat all files as text</source>
         <target />
       </trans-unit>
       <trans-unit id="unstageSelectedLinesToolStripMenuItem.Text">

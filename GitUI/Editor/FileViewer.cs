@@ -143,6 +143,8 @@ namespace GitUI.Editor
             ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(reload: !AppSettings.RememberShowSyntaxHighlightingInDiff);
             showSyntaxHighlighting.Image = Resources.SyntaxHighlighting.AdaptLightness();
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
+            showSyntaxHighlightingToolStripMenuItem.Image = Resources.SyntaxHighlighting.AdaptLightness();
+            showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
             automaticContinuousScrollToolStripMenuItem.Text = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
 
             IsReadOnly = true;
@@ -343,6 +345,7 @@ namespace GitUI.Editor
             increaseNumberOfLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.IncreaseNumberOfVisibleLines);
             decreaseNumberOfLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DecreaseNumberOfVisibleLines);
             showEntireFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowEntireFile);
+            showSyntaxHighlightingToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowSyntaxHighlighting);
             treatAllFilesAsTextToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.TreatFileAsText);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
             replaceToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Replace);
@@ -820,6 +823,7 @@ namespace GitUI.Editor
             increaseNumberOfLinesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
             decreaseNumberOfLinesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
             showEntireFileToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            showSyntaxHighlightingToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
             toolStripSeparator2.Visible = IsDiffView(viewMode);
             treatAllFilesAsTextToolStripMenuItem.Visible = IsDiffView(viewMode);
 
@@ -1258,6 +1262,7 @@ namespace GitUI.Editor
         {
             ShowSyntaxHighlightingInDiff = !ShowSyntaxHighlightingInDiff;
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
+            showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
             AppSettings.ShowSyntaxHighlightingInDiff.Value = ShowSyntaxHighlightingInDiff;
             OnExtraDiffArgumentsChanged();
         }
@@ -1814,6 +1819,7 @@ namespace GitUI.Editor
             IncreaseNumberOfVisibleLines = 2,
             DecreaseNumberOfVisibleLines = 3,
             ShowEntireFile = 4,
+            ShowSyntaxHighlighting = 17,
             TreatFileAsText = 5,
             NextChange = 6,
             PreviousChange = 7,
@@ -1845,6 +1851,7 @@ namespace GitUI.Editor
                 case Command.IncreaseNumberOfVisibleLines: return PerformClickIfAvailable(increaseNumberOfLinesToolStripMenuItem);
                 case Command.DecreaseNumberOfVisibleLines: return PerformClickIfAvailable(decreaseNumberOfLinesToolStripMenuItem);
                 case Command.ShowEntireFile: return PerformClickIfAvailable(showEntireFileToolStripMenuItem);
+                case Command.ShowSyntaxHighlighting: return PerformClickIfAvailable(showSyntaxHighlightingToolStripMenuItem);
                 case Command.TreatFileAsText: return PerformClickIfAvailable(treatAllFilesAsTextToolStripMenuItem);
                 case Command.NextChange: return PerformClickIfAvailable(nextChangeButton);
                 case Command.PreviousChange: return PerformClickIfAvailable(previousChangeButton);
