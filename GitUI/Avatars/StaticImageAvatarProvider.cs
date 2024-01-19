@@ -26,7 +26,7 @@
                     return image;
                 }
 
-                Bitmap resizedImage = new(_image, new Size(imageSize, imageSize));
+                Bitmap resizedImage = new(_image, imageSize, imageSize);
                 _sizeCache.Add(imageSize, resizedImage);
 
                 return resizedImage;
