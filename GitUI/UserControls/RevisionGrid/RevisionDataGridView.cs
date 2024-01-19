@@ -233,9 +233,9 @@ namespace GitUI.UserControls.RevisionGrid
             Columns.Add(columnProvider.Column);
         }
 
-        private Color GetForeground(bool isSelected, bool isNonRelativeGray)
+        private Color GetForeground(bool isSelected, bool isFocused, bool isNonRelativeGray)
         {
-            return (isNonRelativeGray, isSelectedAndFocused: isSelected && Focused) switch
+            return (isNonRelativeGray, isSelectedAndFocused: isSelected && isFocused) switch
             {
                 (isNonRelativeGray: false, isSelectedAndFocused: false) => SystemColors.ControlText,
                 (isNonRelativeGray: false, isSelectedAndFocused: true) => SystemColors.HighlightText,
@@ -259,11 +259,11 @@ namespace GitUI.UserControls.RevisionGrid
             };
         }
 
-        private Brush GetBackground(bool isSelected, int rowIndex, GitRevision? revision)
+        private Brush GetBackground(bool isSelected, bool isFocused, int rowIndex, GitRevision? revision)
         {
             if (isSelected)
             {
-                return Focused ? SystemBrushes.Highlight : OtherColors.InactiveSelectionHighlightBrush;
+                return isFocused ? SystemBrushes.Highlight : OtherColors.InactiveSelectionHighlightBrush;
             }
 
             if (_highlightAuthoredRevisions && !revision?.IsArtificial is false && AuthorHighlighting?.IsHighlighted(revision) is true)
@@ -279,34 +279,60 @@ namespace GitUI.UserControls.RevisionGrid
             return SystemBrushes.Window;
         }
 
+        private CellStyle? _cellStyle = null;
+        private GitRevision? _revision = null;
+        private bool _isSelected = false;
+        private bool _isFocused = false;
+
         private void OnCellPainting(object? sender, DataGridViewCellPaintingEventArgs e)
         {
             _lastRepaint.Restart();
 
             DebugHelpers.Assert(_rowHeight != 0, "_rowHeight != 0");
 
-            GitRevision? revision = GetRevision(e.RowIndex);
-
             if (e.RowIndex < 0 ||
                 e.RowIndex >= RowCount ||
-                !e.State.HasFlag(DataGridViewElementStates.Visible) ||
-                revision is null)
+                !e.State.HasFlag(DataGridViewElementStates.Visible))
             {
                 return;
             }
 
+            GitRevision? revision = GetRevision(e.RowIndex);
             bool isSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
-            Brush backBrush = GetBackground(isSelected, e.RowIndex, revision);
-            e.Graphics!.FillRectangle(backBrush, e.CellBounds);
+            if (revision != _revision || _isSelected != isSelected || _isFocused != Focused)
+            {
+                _revision = revision;
+                _isSelected = isSelected;
+                _isFocused = Focused;
+                if (_revision is null)
+                {
+                    _cellStyle = null;
+
+                    return;
+                }
+
+                Brush backBrush = GetBackground(_isSelected, _isFocused, e.RowIndex, _revision);
+                bool isNonRelativeGray = _revisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex);
+                Color foreColor = GetForeground(_isSelected, _isFocused, isNonRelativeGray);
+                Color commitBodyForeColor = GetCommitBodyForeground(_isSelected, isNonRelativeGray);
+                _cellStyle = new(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
+            }
+
+            if (_cellStyle is null)
+            {
+                return;
+            }
+
+            e.Graphics!.FillRectangle(_cellStyle.Value.BackBrush, e.CellBounds);
+
+            if (_revision is null)
+            {
+                return;
+            }
 
             if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
             {
-                bool isNonRelativeGray = _revisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex);
-                Color foreColor = GetForeground(isSelected, isNonRelativeGray);
-                Color commitBodyForeColor = GetCommitBodyForeground(isSelected, isNonRelativeGray);
-                CellStyle cellStyle = new(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
-
-                provider.OnCellPainting(e, revision, _rowHeight, cellStyle);
+                provider.OnCellPainting(e, _revision, _rowHeight, _cellStyle.Value);
             }
 
             if (!e.Handled)
