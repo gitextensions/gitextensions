@@ -63,18 +63,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (imageTask.Status != TaskStatus.RanToCompletion)
             {
-                // First time, draw at the good size the placeholder image and cache it
-                if (_placeholderImage is null)
-                {
-                    _placeholderImage = new Bitmap(imageSize, imageSize);
-                    using Graphics g = Graphics.FromImage(_placeholderImage);
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    g.DrawImage(Images.User80, 0, 0, imageSize, imageSize);
-                }
-
-                // and draw this placeholder for now
-                e.Graphics.DrawImageUnscaled(_placeholderImage, rect);
-
                 // Once the image has loaded, invalidate only the avatar area for repaint
                 imageTask.ContinueWith(
                     t =>
@@ -82,6 +70,20 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         if (t.Status == TaskStatus.RanToCompletion)
                         {
                             _revisionGridView.Invalidate(rect);
+                        }
+                        else
+                        {
+                            // draw the placeholder
+                            // First time, draw at the good size the placeholder image and cache it
+                            if (_placeholderImage is null)
+                            {
+                                _placeholderImage = new Bitmap(imageSize, imageSize);
+                                using Graphics g = Graphics.FromImage(_placeholderImage);
+                                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                g.DrawImage(Images.User80, 0, 0, imageSize, imageSize);
+                            }
+
+                            e.Graphics.DrawImageUnscaled(_placeholderImage, rect);
                         }
 
                         imageTask.Dispose();
