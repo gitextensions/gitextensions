@@ -1,4 +1,5 @@
-﻿using System.Drawing.Imaging;
+﻿using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO.Abstractions;
 using GitCommands;
 
@@ -134,24 +135,34 @@ namespace GitUI.Avatars
 
             if (_fileSystem.Directory.Exists(cachePath))
             {
-                await Task.Run(
-                    () =>
+                try
+                {
+                    foreach (string file in _fileSystem.Directory.GetFiles(cachePath))
                     {
-                        foreach (string file in _fileSystem.Directory.GetFiles(cachePath))
+                        try
                         {
-                            try
-                            {
-                                _fileSystem.File.Delete(file);
-                            }
-                            catch
-                            {
-                                // do nothing
-                            }
+                            _fileSystem.File.Delete(file);
                         }
-                    });
+                        catch (Exception ex)
+                        {
+                            // do nothing
+                            Trace.WriteLine($"Failed to delete file '{file}'. Error: {ex}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // do nothing
+                    Trace.WriteLine($"Failed to enumerate files. Error: {ex}");
+                }
             }
 
-            CacheCleared?.Invoke(this, EventArgs.Empty);
+            if (CacheCleared is not null)
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                CacheCleared.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }
