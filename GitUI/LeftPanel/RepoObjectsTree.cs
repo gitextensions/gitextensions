@@ -276,6 +276,11 @@ namespace GitUI.LeftPanel
 
         public void ReloadHotkeys()
         {
+            if (!Visible)
+            {
+                return;
+            }
+
             LoadHotkeys(HotkeySettingsName);
         }
 

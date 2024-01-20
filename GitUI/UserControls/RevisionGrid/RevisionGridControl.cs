@@ -828,6 +828,11 @@ namespace GitUI
 
         public void ReloadHotkeys()
         {
+            if (!Visible)
+            {
+                return;
+            }
+
             LoadHotkeys(HotkeySettingsName);
             MenuCommands.CreateOrUpdateMenuCommands();
         }

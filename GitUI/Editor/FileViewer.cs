@@ -335,6 +335,11 @@ namespace GitUI.Editor
 
         public void ReloadHotkeys()
         {
+            if (!Visible)
+            {
+                return;
+            }
+
             LoadHotkeys(HotkeySettingsName);
             stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageLines);
             unstageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnstageLines);

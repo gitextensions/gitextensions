@@ -176,6 +176,11 @@ namespace GitUI.CommitInfo
 
         internal void ReloadHotkeys()
         {
+            if (!Visible)
+            {
+                return;
+            }
+
             LoadHotkeys(FormBrowse.HotkeySettingsName);
         }
 
