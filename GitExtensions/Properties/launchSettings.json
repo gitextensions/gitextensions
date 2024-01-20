@@ -19,9 +19,13 @@
       "commandName": "Project",
       "commandLineArgs": "fileeditor GitExtensions.settings"
     },
-    "pull": {
+    "Pull dialog": {
       "commandName": "Project",
       "commandLineArgs": "pull"
+    },
+    "Commit dialog": {
+      "commandName": "Project",
+      "commandLineArgs": "commit ."
     }
   }
 }
