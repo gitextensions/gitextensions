@@ -65,6 +65,7 @@ namespace GitExtensions.Plugins.GitHub3
     }
 
     [Export(typeof(IGitPlugin))]
+    [Export(typeof(IRepositoryHostPlugin))]
     public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
         private readonly TranslationString _viewInWebSite = new("View in {0}");
