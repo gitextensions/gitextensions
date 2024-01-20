@@ -19,7 +19,7 @@ namespace GitUI
 
         public static void InitializeGitHostersOnly()
         {
-            LoadPlugin<IRepositoryHostPlugin>();
+            LoadPlugins<IRepositoryHostPlugin>();
         }
 
         /// <summary>
@@ -33,10 +33,21 @@ namespace GitUI
             }
 
             _isLoaded = true;
-            LoadPlugin<IGitPlugin>();
+            LoadPlugins<IGitPlugin>();
         }
 
-        private static void LoadPlugin<T>() where T : IGitPlugin
+        public static void InitializeForCommitForm()
+        {
+            if (_isLoaded)
+            {
+                return;
+            }
+
+            _isLoaded = true;
+            LoadPlugins<IGitPluginForCommit>();
+        }
+
+        private static void LoadPlugins<T>() where T : IGitPlugin
         {
             try
             {
