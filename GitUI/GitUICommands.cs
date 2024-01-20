@@ -540,7 +540,7 @@ namespace GitUI
                     // if the dialog is loaded on its own, plugins need to be loaded before we load the form
                     if (!werePluginsRegistered)
                     {
-                        PluginRegistry.Initialize();
+                        PluginRegistry.InitializeAll();
                         PluginRegistry.Register(this);
                     }
 

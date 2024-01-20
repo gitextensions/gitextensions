@@ -151,6 +151,7 @@ namespace GitUI.CommandsDialogs
             _addUpstreamRemoteToolStripMenuItem = new ToolStripMenuItem();
             ToolStripFilters = new GitUI.UserControls.FilterToolBar();
             ToolStripScripts = new GitUI.ToolStripEx();
+            pluginsLoadingToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator14 = new ToolStripSeparator();
             toolStripSeparator11 = new ToolStripSeparator();
             ToolStripMain.SuspendLayout();
@@ -1280,9 +1281,7 @@ namespace GitUI.CommandsDialogs
             // 
             // pluginsToolStripMenuItem
             // 
-            pluginsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-            toolStripSeparator15,
-            pluginSettingsToolStripMenuItem});
+            pluginsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pluginsLoadingToolStripMenuItem, toolStripSeparator15, pluginSettingsToolStripMenuItem });
             pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
             pluginsToolStripMenuItem.Size = new Size(58, 20);
             pluginsToolStripMenuItem.Text = "&Plugins";
@@ -1385,6 +1384,13 @@ namespace GitUI.CommandsDialogs
             ToolStripScripts.Size = new Size(43, 25);
             ToolStripScripts.TabIndex = 2;
             ToolStripScripts.Text = "Scripts";
+            // 
+            // pluginsLoadingToolStripMenuItem
+            // 
+            pluginsLoadingToolStripMenuItem.Enabled = false;
+            pluginsLoadingToolStripMenuItem.Name = "pluginsLoadingToolStripMenuItem";
+            pluginsLoadingToolStripMenuItem.Size = new Size(180, 22);
+            pluginsLoadingToolStripMenuItem.Text = "Loading...";
             // 
             // FormBrowse
             // 
@@ -1567,5 +1573,6 @@ namespace GitUI.CommandsDialogs
         private Panel RevisionGridContainer;
         private UserControls.InteractiveGitActionControl notificationBarBisectInProgress;
         private UserControls.InteractiveGitActionControl notificationBarGitActionInProgress;
+        private ToolStripMenuItem pluginsLoadingToolStripMenuItem;
     }
 }

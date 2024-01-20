@@ -8,41 +8,55 @@ namespace GitUI
 {
     public static class PluginRegistry
     {
-        public static IList<IGitPlugin> Plugins { get; } = new List<IGitPlugin>();
+        private const int _initialPluginCapacity = 20;
+        public static List<IGitPlugin> Plugins { get; } = new(_initialPluginCapacity);
 
         public static List<IRepositoryHostPlugin> GitHosters { get; } = [];
 
         public static bool PluginsRegistered { get; private set; }
 
+        private static bool _isLoaded = false;
+
+        public static void InitializeGitHostersOnly()
+        {
+            LoadPlugin<IRepositoryHostPlugin>();
+        }
+
         /// <summary>
         /// Initialises all available plugins on the background thread.
         /// </summary>
-        public static void Initialize()
+        public static void InitializeAll()
         {
-            lock (Plugins)
+            if (_isLoaded)
             {
-                if (Plugins.Count > 0)
-                {
-                    return;
-                }
+                return;
+            }
 
-                try
-                {
-                    IEnumerable<IGitPlugin> plugins = ManagedExtensibility.GetExports<IGitPlugin>()
-                        .Select(lazy =>
+            _isLoaded = true;
+            LoadPlugin<IGitPlugin>();
+        }
+
+        private static void LoadPlugin<T>() where T : IGitPlugin
+        {
+            try
+            {
+                IGitPlugin[] plugins = ManagedExtensibility.GetExports<T>()
+                    .Select(lazy =>
+                        {
+                            try
                             {
-                                try
-                                {
-                                    return lazy.Value;
-                                }
-                                catch (Exception ex)
-                                {
-                                    FailedPluginWrapper wrapper = new(ex);
-                                    DebugHelpers.Fail($"{wrapper.Name}. Error: {ex.Demystify()}");
-                                    return wrapper;
-                                }
-                            });
+                                return (IGitPlugin)lazy.Value;
+                            }
+                            catch (Exception ex)
+                            {
+                                FailedPluginWrapper wrapper = new(ex);
+                                DebugHelpers.Fail($"{wrapper.Name}. Error: {ex.Demystify()}");
+                                return wrapper;
+                            }
+                        }).ToArray();
 
+                lock (Plugins)
+                {
                     foreach (IGitPlugin plugin in plugins)
                     {
                         Validates.NotNull(plugin.Description);
@@ -50,18 +64,21 @@ namespace GitUI
                         // Description for old plugin setting processing as key
                         plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Id, plugin.Description);
 
-                        if (plugin is IRepositoryHostPlugin repositoryHostPlugin)
+                        if (plugin is IRepositoryHostPlugin repositoryHostPlugin && !GitHosters.Contains(repositoryHostPlugin))
                         {
                             GitHosters.Add(repositoryHostPlugin);
                         }
 
-                        Plugins.Add(plugin);
+                        if (!Plugins.Contains(plugin))
+                        {
+                            Plugins.Add(plugin);
+                        }
                     }
                 }
-                catch (Exception ex)
-                {
-                    DebugHelpers.Fail($"Fail to load plugins. Error: {ex.Demystify()}");
-                }
+            }
+            catch (Exception ex)
+            {
+                DebugHelpers.Fail($"Fail to load plugins. Error: {ex.Demystify()}");
             }
         }
 

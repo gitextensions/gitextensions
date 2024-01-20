@@ -2681,6 +2681,10 @@ Do you want to continue?</source>
         <source>Plugin &amp;Settings</source>
         <target />
       </trans-unit>
+      <trans-unit id="pluginsLoadingToolStripMenuItem.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="pluginsToolStripMenuItem.Text">
         <source>&amp;Plugins</source>
         <target />
