@@ -716,6 +716,10 @@ namespace GitUI.CommandsDialogs
             _dashboard.Visible = true;
             _dashboard.BringToFront();
 
+            _createPullRequestsToolStripMenuItem.Enabled = false;
+            _viewPullRequestsToolStripMenuItem.Enabled = false;
+            _addUpstreamRemoteToolStripMenuItem.Enabled = false;
+
             DiagnosticsClient.TrackPageView("Dashboard");
         }
 
@@ -902,6 +906,7 @@ namespace GitUI.CommandsDialogs
                 toolStripSplitStash.Enabled = validBrowseDir && !bareRepository;
                 _createPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
+                _addUpstreamRemoteToolStripMenuItem.Enabled = validBrowseDir;
 
                 // repositoryToolStripMenuItem.Visible
                 if (validBrowseDir)
