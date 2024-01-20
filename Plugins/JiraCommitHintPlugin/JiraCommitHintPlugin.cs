@@ -16,7 +16,8 @@ using RestSharp.Authenticators;
 namespace GitExtensions.Plugins.JiraCommitHintPlugin
 {
     [Export(typeof(IGitPlugin))]
-    public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForRepository
+    [Export(typeof(IGitPluginForCommit))]
+    public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
     {
         private static readonly TranslationString JiraFieldsLabel = new("Jira fields");
         private static readonly TranslationString QueryHelperLinkText = new("Open the query helper inside Jira");
