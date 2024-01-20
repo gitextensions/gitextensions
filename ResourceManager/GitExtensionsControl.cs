@@ -14,6 +14,8 @@ namespace ResourceManager
         private readonly GitExtensionsControlInitialiser _initialiser;
         private IReadOnlyList<HotkeyCommand>? _hotkeys;
 
+        private bool _loaded = false;
+
         protected GitExtensionsControl()
         {
             _initialiser = new GitExtensionsControlInitialiser(this);
@@ -36,6 +38,8 @@ namespace ResourceManager
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            _loaded = true;
 
             if (!IsDesignMode)
             {
@@ -74,31 +78,21 @@ namespace ResourceManager
         /// <summary>
         ///  Attempts to find an instance of <see cref="IGitUICommands"/>.
         /// </summary>
-        /// <param name="commands">
-        ///  The instance of <see cref="IGitUICommands"/> either directly assigned to the control
-        ///  (if the control implements <see cref="IGitModuleControl"/>) or to the parent form
-        ///  (if the form implements <see cref="IGitModuleForm"/>); <see langword="null"/>, otherwise.
-        /// </param>
+        /// <remark>
+        ///  The instance of <see cref="IGitUICommands"/>
+        ///  either directly assigned to the control (if the control implements <see cref="IGitModuleControl"/>)
+        ///  or to the parent form (if the form implements <see cref="IGitModuleForm"/>).
+        /// </remark>>
         /// <returns>
         ///  <see langword="true"/>, if an instance of <see cref="IGitUICommands"/> is found; <see langword="false"/>, otherwise.
         /// </returns>
-        public bool TryGetUICommands([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
-        {
-            if (this is IGitModuleControl control)
-            {
-                commands = control.UICommands;
-                return commands is not null;
-            }
-
-            if (FindForm() is IGitModuleForm form)
-            {
-                commands = form.UICommands;
-                return commands is not null;
-            }
-
-            commands = null;
-            return false;
-        }
+        /// <exception cref="InvalidOperationException">
+        ///  If this control is not a <see cref="IGitModuleControl"/>) and is not placed in a <see cref="IGitModuleForm"/>.
+        /// </exception>
+        public virtual IGitUICommands UICommands
+            => this is IGitModuleControl control ? control.UICommands
+                : FindForm() is IGitModuleForm form ? form.UICommands
+                : throw new InvalidOperationException($"no chance to get {nameof(UICommands)}");
 
         #region Hotkeys
 
@@ -132,18 +126,13 @@ namespace ResourceManager
         {
             _hotkeys = null;
 
-            if (!HotkeysEnabled)
+            if (!HotkeysEnabled || !_loaded)
             {
+                // Hotkeys shall be loaded by all controls in OnRuntimeLoad
                 return;
             }
 
-            if (!TryGetUICommands(out IGitUICommands commands))
-            {
-                DebugHelpers.Fail($"{GetType().FullName}: service provider is unavailable.");
-                return;
-            }
-
-            _hotkeys = commands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
+            _hotkeys = UICommands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
         }
 
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>

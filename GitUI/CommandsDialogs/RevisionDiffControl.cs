@@ -189,11 +189,6 @@ namespace GitUI.CommandsDialogs
 
         public void ReloadHotkeys()
         {
-            if (!Visible)
-            {
-                return;
-            }
-
             LoadHotkeys(HotkeySettingsName);
             diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
             fileHistoryDiffToolstripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
