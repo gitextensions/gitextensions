@@ -272,13 +272,6 @@ namespace GitUI.CommandsDialogs
             MainSplitContainer.Visible = false;
             MainSplitContainer.SplitterDistance = DpiUtil.Scale(260);
 
-            ThreadHelper.FileAndForget(async () =>
-            {
-                PluginRegistry.Initialize();
-                await this.SwitchToMainThreadAsync();
-                RegisterPlugins();
-            });
-
             InitCountArtificial(out _gitStatusMonitor);
 
             _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
@@ -474,6 +467,13 @@ namespace GitUI.CommandsDialogs
 
             // All app init is done, make all repo related similar to switching repos
             SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
+
+            ThreadHelper.FileAndForget(async () =>
+            {
+                PluginRegistry.Initialize();
+                await this.SwitchToMainThreadAsync();
+                RegisterPlugins();
+            });
         }
 
         protected override void OnActivated(EventArgs e)
