@@ -14,7 +14,7 @@ namespace ResourceManager
         private readonly GitExtensionsControlInitialiser _initialiser;
         private IReadOnlyList<HotkeyCommand>? _hotkeys;
 
-        private bool _loaded = false;
+        private bool _serviceProviderLoaded = false;
 
         protected GitExtensionsControl()
         {
@@ -39,7 +39,7 @@ namespace ResourceManager
         {
             base.OnLoad(e);
 
-            _loaded = true;
+            _serviceProviderLoaded = true;
 
             if (!IsDesignMode)
             {
@@ -76,23 +76,23 @@ namespace ResourceManager
         }
 
         /// <summary>
-        ///  Attempts to find an instance of <see cref="IGitUICommands"/>.
+        ///  Attempts to find an instance of <see cref="IServiceProvider"/>.
         /// </summary>
         /// <remark>
-        ///  The instance of <see cref="IGitUICommands"/>
+        ///  The instance of <see cref="IServiceProvider"/>
         ///  either directly assigned to the control (if the control implements <see cref="IGitModuleControl"/>)
         ///  or to the parent form (if the form implements <see cref="IGitModuleForm"/>).
         /// </remark>>
         /// <returns>
-        ///  <see langword="true"/>, if an instance of <see cref="IGitUICommands"/> is found; <see langword="false"/>, otherwise.
+        ///  The found instance of <see cref="IServiceProvider"/>.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///  If this control is not a <see cref="IGitModuleControl"/>) and is not placed in a <see cref="IGitModuleForm"/>.
+        ///  If this control is not a <see cref="IGitModuleControl"/>) and is not placed on a <see cref="IGitModuleForm"/>.
         /// </exception>
-        public virtual IGitUICommands UICommands
+        protected IServiceProvider ServiceProvider
             => this is IGitModuleControl control ? control.UICommands
                 : FindForm() is IGitModuleForm form ? form.UICommands
-                : throw new InvalidOperationException($"no chance to get {nameof(UICommands)}");
+                : throw new InvalidOperationException($"no chance to get {nameof(ServiceProvider)}");
 
         #region Hotkeys
 
@@ -126,13 +126,13 @@ namespace ResourceManager
         {
             _hotkeys = null;
 
-            if (!HotkeysEnabled || !_loaded)
+            if (!HotkeysEnabled || !_serviceProviderLoaded)
             {
                 // Hotkeys shall be loaded by all controls in OnRuntimeLoad
                 return;
             }
 
-            _hotkeys = UICommands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
+            _hotkeys = ServiceProvider.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
         }
 
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>

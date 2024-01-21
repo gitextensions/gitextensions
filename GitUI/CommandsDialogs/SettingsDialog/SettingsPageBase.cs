@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
 
-        protected internal IServiceProvider ServiceProvider { get; }
+        protected internal new IServiceProvider ServiceProvider { get; }
 
         protected ToolTip ToolTip => toolTip1;
 
