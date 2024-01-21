@@ -2175,7 +2175,8 @@ namespace GitCommands
             ObjectId? firstId, ObjectId? secondId,
             string? fileName, string? oldFileName,
             string extraDiffArguments, Encoding encoding,
-            bool cacheResult, bool isTracked = true)
+            bool cacheResult, bool isTracked = true,
+            CancellationToken cancellationToken = default)
         {
             // fix refs slashes
             fileName = fileName.ToPosixPath();
@@ -2206,7 +2207,8 @@ namespace GitCommands
                 args,
                 cache: cache,
                 outputEncoding: LosslessEncoding,
-                throwOnErrorExit: false);
+                throwOnErrorExit: false,
+                cancellationToken: cancellationToken);
             if (!result.ExitedSuccessfully)
             {
                 return (patch: null, errorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
@@ -2218,7 +2220,7 @@ namespace GitCommands
             return (patch: GetPatch(patches, fileName, oldFileName), errorMessage: null);
         }
 
-        public async Task<string> GetRangeDiffAsync(
+        public async Task<ExecutionResult> GetRangeDiffAsync(
             ObjectId firstId,
             ObjectId secondId,
             ObjectId? firstBase,
@@ -2254,7 +2256,7 @@ namespace GitCommands
                 outputEncoding: LosslessEncoding,
                 cancellationToken: cancellationToken);
 
-            return result.StandardOutput;
+            return result;
         }
 
         private static Patch? GetPatch(IReadOnlyList<Patch> patches, string? fileName, string? oldFileName)
@@ -2310,7 +2312,7 @@ namespace GitCommands
         {
             StagedStatus stagedStatus = GetStagedStatus(firstId, secondId, parentToSecond);
             IReadOnlyList<GitItemStatus> status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus, cancellationToken: cancellationToken);
-            GetSubmoduleStatus(status, firstId, secondId);
+            GetSubmoduleStatus(status, firstId, secondId, cancellationToken);
             return status;
         }
 
@@ -2544,7 +2546,7 @@ namespace GitCommands
             }
         }
 
-        private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, ObjectId? firstId, ObjectId? secondId)
+        private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
         {
             foreach (GitItemStatus item in status.Where(i => i.IsSubmodule))
             {
@@ -2553,7 +2555,7 @@ namespace GitCommands
                         async () =>
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                            return await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, item.Name, item.OldName, firstId, secondId)
+                            return await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, item.Name, item.OldName, firstId, secondId, cancellationToken)
                                 .ConfigureAwait(false);
                         }));
             }
@@ -3865,7 +3867,7 @@ namespace GitCommands
                 }).ToList();
         }
 
-        public string? GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding)
+        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, CancellationToken cancellationToken = default)
         {
             GitArgumentBuilder args = new("diff-tree")
             {
@@ -3878,16 +3880,29 @@ namespace GitCommands
                 filePath.ToPosixPath().Quote()
             };
 
-            string patch = _gitExecutable.GetOutput(args, cache: GitCommandCache, outputEncoding: LosslessEncoding);
+            ExecutionResult result = _gitExecutable.Execute(
+                args,
+                cache: GitCommandCache,
+                outputEncoding: LosslessEncoding,
+                cancellationToken: cancellationToken);
 
-            if (string.IsNullOrWhiteSpace(patch))
+            if (!result.ExitedSuccessfully)
             {
-                return "";
+                diffOfConflict = "";
+                return false;
             }
 
-            List<Patch> patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
+            List<Patch> patches = PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding)).ToList();
 
-            return GetPatch(patches, filePath, filePath)?.Text;
+            Patch? patch = GetPatch(patches, filePath, filePath);
+            if (patch is null)
+            {
+                diffOfConflict = "";
+                return false;
+            }
+
+            diffOfConflict = GetPatch(patches, filePath, filePath).Text ?? "";
+            return true;
         }
 
         public bool StopTrackingFile(string filename)
