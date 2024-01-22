@@ -283,7 +283,7 @@ namespace GitUI.Hotkey
                     Hk(RevisionGridControl.Command.CompareToWorkingDirectory, Keys.Control | Keys.D),
                     Hk(RevisionGridControl.Command.CreateAmendCommit, Keys.None),
                     Hk(RevisionGridControl.Command.CreateFixupCommit, Keys.Control | Keys.X),
-                    Hk(RevisionGridControl.Command.CreateSquashCommit, Keys.None),
+                    Hk(RevisionGridControl.Command.CreateSquashCommit, Keys.Control | Keys.Shift | Keys.X),
                     Hk(RevisionGridControl.Command.DeleteRef, Keys.Delete),
                     Hk(RevisionGridControl.Command.GoToChild, Keys.Control | Keys.N),
                     Hk(RevisionGridControl.Command.GoToCommit, Keys.Control | Keys.Shift | Keys.G),
