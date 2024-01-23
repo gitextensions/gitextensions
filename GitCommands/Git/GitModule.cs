@@ -2175,8 +2175,8 @@ namespace GitCommands
             ObjectId? firstId, ObjectId? secondId,
             string? fileName, string? oldFileName,
             string extraDiffArguments, Encoding encoding,
-            bool cacheResult, bool isTracked = true,
-            CancellationToken cancellationToken = default)
+            bool cacheResult, bool isTracked,
+            CancellationToken cancellationToken)
         {
             // fix refs slashes
             fileName = fileName.ToPosixPath();
@@ -3867,7 +3867,7 @@ namespace GitCommands
                 }).ToList();
         }
 
-        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, CancellationToken cancellationToken = default)
+        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, CancellationToken cancellationToken)
         {
             GitArgumentBuilder args = new("diff-tree")
             {
@@ -3901,7 +3901,7 @@ namespace GitCommands
                 return false;
             }
 
-            diffOfConflict = GetPatch(patches, filePath, filePath).Text ?? "";
+            diffOfConflict = patch.Text ?? "";
             return true;
         }
 

@@ -242,7 +242,7 @@ namespace GitUIPluginInterfaces
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>the Git output.</returns>
         string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken);
-        Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked, CancellationToken cancellationToken = default);
+        Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked, CancellationToken cancellationToken);
         int? GetCommitCount(string parent, string child, bool cache, bool throwOnErrorExit);
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace GitUIPluginInterfaces
         /// </summary>
         IGitVersion GitVersion { get; }
 
-        bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, CancellationToken cancellationToken = default);
+        bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, CancellationToken cancellationToken);
         bool IsMerge(ObjectId objectId);
         IEnumerable<string> GetMergedBranches(bool includeRemote = false);
         Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken);

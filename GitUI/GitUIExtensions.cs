@@ -82,13 +82,13 @@ namespace GitUI
 
                 if (!result.ExitedSuccessfully)
                 {
-                    string output = $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {result}{Environment.NewLine}";
+                    string output = $"{result.StandardError}{Environment.NewLine}Git output (exit code: {result.ExitCode}): {Environment.NewLine}{result.StandardOutput}";
                     await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
                     return;
                 }
 
                 // Try set highlighting from first found filename
-                Match match = FileNameRegex().Match(result.StandardOutput ?? "");
+                Match match = FileNameRegex().Match(result.StandardOutput);
                 string filename = match.Groups["file"].Success ? match.Groups["file"].Value : item.Item.Name;
 
                 cancellationToken.ThrowIfCancellationRequested();
