@@ -9,6 +9,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     {
         private readonly Dictionary<Font, int[]> _widthByLengthByFont = new(capacity: 4);
         private readonly RevisionGridControl _grid;
+        private int? _charCount = null;
 
         public CommitIdColumnProvider(RevisionGridControl grid)
             : base("Commit ID")
@@ -33,9 +34,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Column.Visible = AppSettings.ShowObjectIdColumn;
         }
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
+        private int GetCharLengthForColumnWidth(int width)
         {
-            Font monospaceFont = style.MonospaceFont;
+            Font monospaceFont = AppSettings.MonospaceFont;
             if (!_widthByLengthByFont.TryGetValue(monospaceFont, out int[] widthByLength))
             {
                 widthByLength = Enumerable.Range(0, ObjectId.Sha1CharCount + 1).Select(c => TextRenderer.MeasureText(new string('8', c), monospaceFont).Width).ToArray();
@@ -43,19 +44,33 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 _widthByLengthByFont[monospaceFont] = widthByLength;
             }
 
-            if (!revision.IsArtificial)
-            {
-                int i = Array.FindIndex(widthByLength, w => w > Column.Width);
+            int i = Array.FindIndex(widthByLength, w => w > width);
 
-                if (i == -1 && Column.Width > widthByLength[^1])
-                {
-                    _grid.DrawColumnText(e, revision.ObjectId.ToString(), monospaceFont, style.ForeColor, e.CellBounds, useEllipsis: false);
-                }
-                else if (i > 1)
-                {
-                    _grid.DrawColumnText(e, revision.ObjectId.ToShortString(i - 1), monospaceFont, style.ForeColor, e.CellBounds, useEllipsis: false);
-                }
+            if (i == -1 && width >= widthByLength[^1])
+            {
+                return ObjectId.Sha1CharCount;
             }
+            else if (i > 1)
+            {
+                return i - 1;
+            }
+
+            return 0;
+        }
+
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
+        {
+            if (e.FormattedValue is null)
+            {
+                return;
+            }
+
+            _grid.DrawColumnText(e, (string)e.FormattedValue, style.MonospaceFont, style.ForeColor, e.CellBounds, useEllipsis: false);
+        }
+
+        public override void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
+        {
+            _charCount = GetCharLengthForColumnWidth(e.Column.Width);
         }
 
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
@@ -63,7 +78,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             // Set the grid cell's accessibility text
             if (!revision.IsArtificial)
             {
-                e.Value = revision.ObjectId.ToShortString();
+                if (!_charCount.HasValue)
+                {
+                    _charCount = GetCharLengthForColumnWidth(Column.Width);
+                }
+
+                if (_charCount > 0)
+                {
+                    e.Value = revision.ObjectId.ToShortString(_charCount.Value);
+                }
             }
         }
 
