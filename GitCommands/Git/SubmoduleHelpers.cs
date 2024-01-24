@@ -12,9 +12,9 @@ namespace GitCommands.Git
         [GeneratedRegex(@"diff --cc (?<filenamea>.+)", RegexOptions.ExplicitCapture)]
         private static partial Regex CombinedDiffCommandRegex();
 
-        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
+        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
         {
-            (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true).ConfigureAwait(false);
+            (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true, cancellationToken: cancellationToken).ConfigureAwait(false);
             return patch is null
                 ? new GitSubmoduleStatus(errorMessage ?? "", null, false, null, null, null, null)
                 : ParseSubmodulePatchStatus(patch, module, fileName);
