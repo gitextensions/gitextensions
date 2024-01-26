@@ -106,6 +106,7 @@ namespace GitUI
         private readonly ArtificialCommitChangeCount _indexChangeCount = new();
         private readonly CancellationTokenSequence _customDiffToolsSequence = new();
         private readonly CancellationTokenSequence _refreshRevisionsSequence = new();
+        private readonly FullPathResolver _fullPathResolver;
 
         /// <summary>
         /// The set of ref names that are ambiguous.
@@ -252,6 +253,8 @@ namespace GitUI
             _gridView.AddColumn(_buildServerWatcher.ColumnProvider);
             _maximizedColumn = _gridView.Columns.Cast<DataGridViewColumn>()
                 .FirstOrDefault(column => column.Resizable == DataGridViewTriState.True && column.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill);
+
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         protected override void Dispose(bool disposing)
@@ -1629,6 +1632,7 @@ namespace GitUI
             compareWithCurrentBranchToolStripMenuItem.Enabled = !string.IsNullOrWhiteSpace(CurrentBranch.Value);
             compareSelectedCommitsMenuItem.Enabled = first is not null && selected is not null;
             openCommitsWithDiffToolMenuItem.Enabled = first is not null && selected is not null;
+            openFilterPathInCommitsWithDiffToolMenuItem.Enabled = first is not null && selected is not null;
 
             IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
             HighlightRevisionsByAuthor(selectedRevisions);
@@ -2871,6 +2875,7 @@ namespace GitUI
             SetShortcutString(amendCommitToolStripMenuItem, Command.CreateAmendCommit);
             SetShortcutString(selectAsBaseToolStripMenuItem, Command.SelectAsBaseToCompare);
             SetShortcutString(openCommitsWithDiffToolMenuItem, Command.OpenCommitsWithDifftool);
+            SetShortcutString(openFilterPathInCommitsWithDiffToolMenuItem, Command.OpenFilterPathInCommitsWithDifftool);
             SetShortcutString(compareToBaseToolStripMenuItem, Command.CompareToBase);
             SetShortcutString(compareToWorkingDirectoryMenuItem, Command.CompareToWorkingDirectory);
             SetShortcutString(compareSelectedCommitsMenuItem, Command.CompareSelectedCommits);
@@ -2990,12 +2995,49 @@ namespace GitUI
             DiffSelectedCommitsWithDifftool(toolName);
         }
 
+        private void diffFilterPathInSelectedCommitsMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            if (item?.DropDownItems != null)
+            {
+                // "main menu" clicked, cancel dropdown manually, invoke default difftool
+                item.HideDropDown();
+            }
+
+            string toolName = item?.Tag as string;
+            DiffFilterPathInSelectedCommitsWithDifftool(toolName);
+        }
+
         public void DiffSelectedCommitsWithDifftool(string? customTool = null)
         {
             (ObjectId first, GitRevision selected) = GetFirstAndSelected();
             if (selected is not null)
             {
                 Module.OpenWithDifftoolDirDiff(first?.ToString(), selected.ObjectId.ToString(), customTool: customTool);
+            }
+        }
+
+        public void DiffFilterPathInSelectedCommitsWithDifftool(string? customTool = null)
+        {
+            (ObjectId first, GitRevision selected) = GetFirstAndSelected();
+            if (selected is null || _filterInfo.PathFilter.Length < 1)
+            {
+                return;
+            }
+
+            string? filterPath = _fullPathResolver.Resolve(_filterInfo.PathFilter[1..^1]);
+            if (filterPath is null)
+            {
+                return;
+            }
+
+            if (File.GetAttributes(filterPath).HasFlag(FileAttributes.Directory))
+            {
+                // TODO: Open diff between the commits for the specified folder (Module.OpenWithDifftoolDirDiff?)
+            }
+            else
+            {
+                Module.OpenWithDifftool(filterPath, null, first.ToString(), selected.ObjectId.ToString());
             }
         }
 
@@ -3161,6 +3203,7 @@ namespace GitUI
                 case Command.CreateSquashCommit: SquashCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
                 case Command.CreateAmendCommit: AmendCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
                 case Command.OpenCommitsWithDifftool: DiffSelectedCommitsWithDifftool(); break;
+                case Command.OpenFilterPathInCommitsWithDifftool: DiffFilterPathInSelectedCommitsWithDifftool(); break;
                 case Command.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareToBranch: CompareToBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;

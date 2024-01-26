@@ -49,6 +49,7 @@
             RenameRef = 42,
             CreateSquashCommit = 43,
             CreateAmendCommit = 44,
+            OpenFilterPathInCommitsWithDifftool = 45,
         }
     }
 }

@@ -45,6 +45,7 @@ namespace GitUI
             renameBranchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             openCommitsWithDiffToolMenuItem = new ToolStripMenuItem();
+            openFilterPathInCommitsWithDiffToolMenuItem = new ToolStripMenuItem();
             compareStripSeparator = new ToolStripSeparator();
             compareToBranchToolStripMenuItem = new ToolStripMenuItem();
             compareToolStripMenuItem = new ToolStripMenuItem();
@@ -319,6 +320,13 @@ namespace GitUI
             openCommitsWithDiffToolMenuItem.Text = "Open selected commits with &difftool";
             openCommitsWithDiffToolMenuItem.Click += diffSelectedCommitsMenuItem_Click;
             // 
+            // openFilterPathInCommitsWithDiffToolMenuItem
+            // 
+            openFilterPathInCommitsWithDiffToolMenuItem.Name = "openFilterPathInCommitsWithDiffToolMenuItem";
+            openFilterPathInCommitsWithDiffToolMenuItem.Size = new Size(230, 22);
+            openFilterPathInCommitsWithDiffToolMenuItem.Text = "Open filtered file/folder in selected commits with &difftool";
+            openFilterPathInCommitsWithDiffToolMenuItem.Click += diffFilterPathInSelectedCommitsMenuItem_Click;
+            // 
             // compareStripSeparator
             // 
             compareStripSeparator.Name = "compareStripSeparator";
@@ -376,6 +384,7 @@ namespace GitUI
             compareToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
                 openCommitsWithDiffToolMenuItem,
+                openFilterPathInCommitsWithDiffToolMenuItem,
                 compareStripSeparator,
                 compareToBranchToolStripMenuItem,
                 compareWithCurrentBranchToolStripMenuItem,
@@ -615,6 +624,7 @@ namespace GitUI
         private ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem openCommitsWithDiffToolMenuItem;
+        private ToolStripMenuItem openFilterPathInCommitsWithDiffToolMenuItem;
         private ToolStripMenuItem compareToBranchToolStripMenuItem;
         private ToolStripMenuItem compareToolStripMenuItem;
         private ToolStripMenuItem compareWithCurrentBranchToolStripMenuItem;

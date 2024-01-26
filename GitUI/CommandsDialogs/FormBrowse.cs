@@ -1938,7 +1938,8 @@ namespace GitUI.CommandsDialogs
             OpenCommitsWithDifftool = 35,
             ToggleBetweenArtificialAndHeadCommits = 36,
             GoToChild = 37,
-            GoToParent = 38
+            GoToParent = 38,
+            OpenFilterPathInCommitsWithDifftool = 49,
 
             /* deprecated: RotateApplicationIcon = 14, */
         }
@@ -2055,6 +2056,7 @@ namespace GitUI.CommandsDialogs
                 case Command.StashStaged: UICommands.StashStaged(this); break;
                 case Command.StashPop: UICommands.StashPop(this); break;
                 case Command.OpenCommitsWithDifftool: RevisionGrid.DiffSelectedCommitsWithDifftool(); break;
+                case Command.OpenFilterPathInCommitsWithDifftool: RevisionGrid.DiffFilterPathInSelectedCommitsWithDifftool(); break;
                 case Command.OpenWithDifftool: OpenWithDifftool(); break;
                 case Command.OpenWithDifftoolFirstToLocal: OpenWithDifftoolFirstToLocal(); break;
                 case Command.OpenWithDifftoolSelectedToLocal: OpenWithDifftoolSelectedToLocal(); break;
