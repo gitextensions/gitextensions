@@ -9407,6 +9407,10 @@ See the changes in the commit form.</source>
         <source>Open selected commits with &amp;difftool</source>
         <target />
       </trans-unit>
+      <trans-unit id="openFilterPathInCommitsWithDiffToolMenuItem.Text">
+        <source>Open &amp;filtered file in selected commits with difftool</source>
+        <target />
+      </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
         <source>Vie&amp;w pull request in a browser</source>
         <target />
