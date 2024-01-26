@@ -324,7 +324,7 @@ namespace GitUI
             // 
             openFilterPathInCommitsWithDiffToolMenuItem.Name = "openFilterPathInCommitsWithDiffToolMenuItem";
             openFilterPathInCommitsWithDiffToolMenuItem.Size = new Size(230, 22);
-            openFilterPathInCommitsWithDiffToolMenuItem.Text = "Open filtered file/folder in selected commits with &difftool";
+            openFilterPathInCommitsWithDiffToolMenuItem.Text = "Open &filtered file in selected commits with difftool";
             openFilterPathInCommitsWithDiffToolMenuItem.Click += diffFilterPathInSelectedCommitsMenuItem_Click;
             // 
             // compareStripSeparator
