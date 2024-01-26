@@ -205,3 +205,4 @@ YYYY/MM/DD, github id, Full name, email
 2023/11/30, snelltheta, Steve Samons, snelltheta(at)gmail.com
 2023/12/01, pmgiant, Pawel Marchewka, ppmmggiiaanntt(at)gmail.com
 2024/01/01, qgppl, Grzegorz Pachocki, g.pachocki(at)wp.pl
+2024/01/26, nikolaosginos, Nikolaos Ginos, nikolaos.gkinos@googlemail.com
