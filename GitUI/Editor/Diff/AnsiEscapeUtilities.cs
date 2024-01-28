@@ -452,7 +452,7 @@ public partial class AnsiEscapeUtilities
     /// Add pre-parsed highlight info (parsed ANSI escape sequences) as markers in the document.
     /// </summary>
     /// <param name="hl">Info to set.</param>
-    private static bool TryGetTextMarker(HighlightInfo hl, out TextMarker? textMarker)
+    public static bool TryGetTextMarker(HighlightInfo hl, out TextMarker? textMarker)
     {
         if (hl.DocOffset < 0 || hl.Length < 0)
         {

@@ -2297,6 +2297,81 @@ namespace GitCommands
             });
         }
 
+        private ExecutionResult GetGrepFiles(ObjectId id, string grepString, CancellationToken cancellationToken = default)
+        {
+            bool noCache = id.IsArtificial;
+
+            return _gitExecutable.Execute(
+                new GitArgumentBuilder("grep")
+                {
+                    "--files-with-matches",
+                    "-z",
+                    AppSettings.GitGrepUserArguments.Value,
+                    { AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
+                    { AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+                    grepString,
+                    !id.IsArtificial ? id.ToString() : id == ObjectId.IndexId ? "--cached" : "",
+                    "--"
+                },
+                cache: noCache ? null : GitCommandCache,
+                throwOnErrorExit: false,
+                cancellationToken: cancellationToken);
+        }
+
+        public IReadOnlyList<GitItemStatus>? GetGrepFilesStatus(GitRevision revision, string grepString, CancellationToken cancellationToken = default)
+        {
+            List<GitItemStatus> result = [];
+            ExecutionResult exec = GetGrepFiles(revision.ObjectId, grepString, cancellationToken);
+            if (!exec.ExitedSuccessfully)
+            {
+                // Cannot see difference from error and no matches
+                return Array.Empty<GitItemStatus>();
+            }
+
+            foreach (string file in exec.StandardOutput.LazySplit('\0', StringSplitOptions.RemoveEmptyEntries))
+            {
+                int colon = file.IndexOf(':') + 1;
+                result.Add(new GitItemStatus(file[colon..])
+                {
+                    GrepString = grepString,
+
+                    // Assume this file is handled by Git, may not be entirely correct for worktree
+                    IsTracked = true
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<ExecutionResult> GetGrepFileAsync(GitRevision revision, string fileName, ArgumentString extraArgs, string grepString, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken = default)
+        {
+            ObjectId id = revision.ObjectId;
+            bool noCache = id.IsArtificial;
+
+            GitArgumentBuilder args = new("grep", commandConfiguration: commandConfiguration)
+            {
+                "--line-number",
+                { !useGitColoring, "--column" },
+                { useGitColoring, "--color=always" },
+                extraArgs,
+                AppSettings.GitGrepUserArguments.Value,
+                { AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
+                { AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+                grepString,
+                !id.IsArtificial ? id.ToString() : id == ObjectId.IndexId ? "--cached" : "",
+                "--",
+                fileName
+            };
+            ExecutionResult result = await _gitExecutable.ExecuteAsync(
+                args,
+                cache: noCache ? null : GitCommandCache,
+                throwOnErrorExit: false,
+                stripAnsiEscapeCodes: !useGitColoring,
+                cancellationToken: cancellationToken);
+
+            return result;
+        }
+
         public ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache = false, bool nullSeparated = false, CancellationToken cancellationToken = default)
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();

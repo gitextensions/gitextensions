@@ -21,6 +21,9 @@ public enum ViewMode
     // <see href="https://git-scm.com/docs/git-diff#_combined_diff_format"/> for more information.
     CombinedDiff,
 
+    // output from git-grep
+    Grep,
+
     // Image viewer
     Image
 }

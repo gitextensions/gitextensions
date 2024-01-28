@@ -374,6 +374,16 @@ namespace GitUI.Editor
             };
         }
 
+        public ArgumentString GetExtraGrepArguments()
+        {
+            return new ArgumentBuilder
+            {
+                "-h",
+                { ShowEntireFile, "--context=9000", $"--context={NumberOfContextLines}" },
+                { TreatAllFilesAsText, "--text" },
+            };
+        }
+
         public string GetSelectedText()
         {
             return internalFileViewer.GetSelectedText();
@@ -445,6 +455,9 @@ namespace GitUI.Editor
 
         public Task ViewRangeDiffAsync(string fileName, string text, bool useGitColoring)
             => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff, useGitColoring);
+
+        public Task ViewGrepAsync(FileStatusItem item, string text, bool useGitColoring, string grepString)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line: null, openWithDifftool: null, ViewMode.Grep, useGitColoring: useGitColoring, grepString);
 
         public void ViewText(string? fileName,
             string text,
@@ -755,14 +768,14 @@ namespace GitUI.Editor
 
         // Private methods
 
-        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring = false)
+        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring = false, string? grepString = null)
         {
             return ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
                     ResetView(viewMode, fileName, item: item, text: text);
-                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring);
+                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, grepString);
                     if (line is not null)
                     {
                         GoToLine(line.Value);

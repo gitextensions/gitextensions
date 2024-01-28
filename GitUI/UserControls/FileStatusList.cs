@@ -33,6 +33,7 @@ namespace GitUI
         private int _nextIndexToSelect = -1;
         private bool _enableSelectedIndexChangeEvent = true;
         private bool _mouseEntered;
+        private bool _searchEnabledForList = false;
         private Rectangle _dragBoxFromMouseDown;
         private IDisposable? _selectedIndexChangeSubscription;
         private IDisposable? _diffListSortSubscription;
@@ -41,6 +42,9 @@ namespace GitUI
         private bool _enableDisablingShowDiffForAllParents = false;
 
         private bool _updatingColumnWidth;
+
+        [GeneratedRegex(@"(^|\s)-e(\s|\s+['""])", RegexOptions.ExplicitCapture)]
+        private static partial Regex GrepStringRegex();
 
         public delegate void EnterEventHandler(object sender, EnterEventArgs e);
 
@@ -80,16 +84,17 @@ namespace GitUI
 
             NoFiles.Text = TranslatedStrings.NoChanges;
             LoadingFiles.Text = TranslatedStrings.LoadingData;
-            Controls.SetChildIndex(NoFiles, 0);
-            Controls.SetChildIndex(LoadingFiles, 0);
-            Controls.SetChildIndex(DeleteFilterButton, 0);
-            Controls.SetChildIndex(FilterWatermarkLabel, 0);
 
             NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
             LoadingFiles.Font = new Font(LoadingFiles.Font, FontStyle.Italic);
             FilterWatermarkLabel.Font = new Font(FilterWatermarkLabel.Font, FontStyle.Italic);
             FilterComboBox.Font = new Font(FilterComboBox.Font, FontStyle.Bold);
-            SetFileStatusListVisibility(filesPresent: false);
+            SearchWatermarkLabel.Font = new Font(SearchWatermarkLabel.Font, FontStyle.Italic);
+            SearchComboBox.Font = new Font(SearchComboBox.Font, FontStyle.Bold);
+
+            // Trigger initialisation of Search and Filter boxes
+            NoFiles.Visible = true;
+            SearchEnabledForList = false;
 
             _diffCalculator = new FileStatusDiffCalculator(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
@@ -156,6 +161,7 @@ namespace GitUI
                     (nameof(Images.SubmoduleRevisionSemiUpDirty), ScaleHeight(Images.SubmoduleRevisionSemiUpDirty)),
                     (nameof(Images.SubmoduleRevisionSemiDown), ScaleHeight(Images.SubmoduleRevisionSemiDown)),
                     (nameof(Images.SubmoduleRevisionSemiDownDirty), ScaleHeight(Images.SubmoduleRevisionSemiDownDirty)),
+                    (nameof(Images.ViewFile), ScaleHeight(Images.ViewFile)),
                     (nameof(Images.Diff), ScaleHeight(Images.Diff))
                 };
 
@@ -296,15 +302,63 @@ namespace GitUI
         public Func<ObjectId?, string>? DescribeRevision { get; set; }
 
         public bool FilterFocused => FilterComboBox.Focused;
+        public bool SearchFocused => SearchComboBox.Focused;
+
+        /// <summary>
+        /// Enable Search Commit combobox for the file list.
+        /// Refresh of list must be called explicitly.
+        /// </summary>
+        public bool SearchEnabledForList
+        {
+            private get => _searchEnabledForList;
+            set
+            {
+                _searchEnabledForList = value;
+                EnableSearchForList(value && AppSettings.ShowSearchCommit);
+            }
+        }
+
+        private void EnableSearchForList(bool enable)
+        {
+            if (SearchComboBox.Visible == enable)
+            {
+                return;
+            }
+
+            SearchComboBox.Visible = enable;
+            if (enable)
+            {
+                // Adjust sizes "automatically" changed by visibility
+                SearchComboBox.Top = 0;
+            }
+
+            // Adjust locations
+            // Note that 'LoadingFiles' location depends on visibility of Filter box, must be set each time made visible
+            int top = !enable ? 0 : SearchComboBox.Bottom + SearchComboBox.Margin.Bottom;
+            FilterComboBox.Top = top;
+            FilterComboBox.Width = FileStatusListView.Width;
+            FilterWatermarkLabel.Top = FilterComboBox.Top;
+            DeleteFilterButton.Top = FilterComboBox.Top;
+
+            SetFileStatusListVisibility(!NoFiles.Visible);
+        }
 
         private void SetFileStatusListVisibility(bool filesPresent)
         {
             LoadingFiles.Visible = false;
-            NoFiles.Visible = !filesPresent;
-            FilterComboBox.Visible = filesPresent;
+            FilterComboBox.Visible = filesPresent || (SearchComboBox.Visible && !string.IsNullOrEmpty(SearchComboBox.Text));
+            NoFiles.Visible = !FilterComboBox.Visible;
+            if (NoFiles.Visible)
+            {
+                // Workaround for startup issue if set in EnableSearchForList()
+                NoFiles.Top = FilterComboBox.Top;
+                NoFiles.BringToFront();
+            }
 
             SetDeleteFilterButtonVisibility();
             SetFilterWatermarkLabelVisibility();
+            SetDeleteSearchButtonVisibility();
+            SetSearchWatermarkLabelVisibility();
 
             int top = FilterComboBox.Visible ? FilterComboBox.Bottom + FilterComboBox.Margin.Top + FilterComboBox.Margin.Bottom : 0;
             int height = ClientRectangle.Height - top - FileStatusListView.Margin.Top - FileStatusListView.Margin.Bottom;
@@ -728,7 +782,7 @@ namespace GitUI
             FileStatusListLoading();
             _enableDisablingShowDiffForAllParents = true;
             _diffCalculator.SetDiff(revisions, headId: null, allowMultiDiff: false);
-            UpdateFileStatusListView(_diffCalculator.Calculate(cancellationToken));
+            UpdateFileStatusListView(_diffCalculator.Calculate(Array.Empty<FileStatusWithDescription>(), refreshDiff: true, refreshGrep: false, cancellationToken));
         }
 
         public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
@@ -740,7 +794,21 @@ namespace GitUI
             await TaskScheduler.Default;
             cancellationToken.ThrowIfCancellationRequested();
             _diffCalculator.SetDiff(revisions, headId, allowMultiDiff: true);
-            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(cancellationToken);
+            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(Array.Empty<FileStatusWithDescription>(), refreshDiff: true, refreshGrep: false, cancellationToken);
+
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            UpdateFileStatusListView(gitItemStatusesWithDescription);
+
+            // git grep, fetched as a separate step
+            if (string.IsNullOrEmpty(SearchComboBox.Text))
+            {
+                return;
+            }
+
+            await TaskScheduler.Default;
+            cancellationToken.ThrowIfCancellationRequested();
+            gitItemStatusesWithDescription = _diffCalculator.Calculate(GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
@@ -946,11 +1014,37 @@ namespace GitUI
         private void SetDeleteFilterButtonVisibility()
         {
             DeleteFilterButton.Visible = FilterComboBox.Visible && !string.IsNullOrEmpty(FilterComboBox.Text);
+            if (DeleteFilterButton.Visible)
+            {
+                DeleteFilterButton.BringToFront();
+            }
         }
 
         private void SetFilterWatermarkLabelVisibility()
         {
             FilterWatermarkLabel.Visible = FilterComboBox.Visible && !FilterComboBox.Focused && string.IsNullOrEmpty(FilterComboBox.Text);
+            if (FilterWatermarkLabel.Visible)
+            {
+                FilterWatermarkLabel.BringToFront();
+            }
+        }
+
+        private void SetSearchWatermarkLabelVisibility()
+        {
+            SearchWatermarkLabel.Visible = SearchComboBox.Visible && !SearchComboBox.Focused && string.IsNullOrEmpty(SearchComboBox.Text);
+            if (SearchWatermarkLabel.Visible)
+            {
+                SearchWatermarkLabel.BringToFront();
+            }
+        }
+
+        private void SetDeleteSearchButtonVisibility()
+        {
+            DeleteSearchButton.Visible = SearchComboBox.Visible && !string.IsNullOrEmpty(SearchComboBox.Text);
+            if (DeleteSearchButton.Visible)
+            {
+                DeleteSearchButton.BringToFront();
+            }
         }
 
         private void FileStatusListLoading()
@@ -960,6 +1054,7 @@ namespace GitUI
             int top = FilterComboBox.Visible ? FilterComboBox.Bottom + FilterComboBox.Margin.Top + FilterComboBox.Margin.Bottom : 0;
             LoadingFiles.Top = top;
             LoadingFiles.Visible = true;
+            LoadingFiles.BringToFront();
 
             FileStatusListView.BeginUpdate();
             FileStatusListView.Groups.Clear();
@@ -970,8 +1065,10 @@ namespace GitUI
         private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false)
         {
             GitItemStatusesWithDescription = items ?? throw new ArgumentNullException(nameof(items));
-            bool filesPresent = GitItemStatusesWithDescription.Any(x => x.Statuses.Count > 0);
-            bool hasChangesOrMultipleGroups = filesPresent || GitItemStatusesWithDescription.Count > 1;
+            bool hasGrepGroup = GitItemStatusesWithDescription.Any(FileStatusDiffCalculator.IsGrepItemStatuses);
+            bool filesPresent = GitItemStatusesWithDescription.Any(x => x.Statuses.Count > 0 && !FileStatusDiffCalculator.IsGrepItemStatuses(x));
+            bool showGroupLabel = (filesPresent && (GitItemStatusesWithDescription.Count > 1 || GroupByRevision)) || !string.IsNullOrEmpty(SearchComboBox.Text);
+            bool hasChangesOrMultipleGroups = filesPresent || GitItemStatusesWithDescription.Count > 1 || GroupByRevision;
             if (filesPresent)
             {
                 EnsureSelectedIndexChangeSubscription();
@@ -1003,7 +1100,9 @@ namespace GitUI
                 ListViewGroup group = new(name)
                 {
                     // Collapse some groups for diffs with common BASE
-                    CollapsedState = (i.Statuses.Count <= 7 || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0])
+                    // Always expand grep results
+                    CollapsedState = ((i.Statuses.Count <= 7 || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0]) && !hasGrepGroup)
+                        || FileStatusDiffCalculator.IsGrepItemStatuses(i)
                             ? ListViewGroupCollapsedState.Expanded
                             : ListViewGroupCollapsedState.Collapsed,
                     Tag = i.FirstRev
@@ -1011,7 +1110,7 @@ namespace GitUI
                 FileStatusListView.Groups.Add(group);
 
                 IReadOnlyList<GitItemStatus> itemStatuses;
-                if (hasChangesOrMultipleGroups && i.Statuses.Count == 0)
+                if (showGroupLabel && i.Statuses.Count == 0)
                 {
                     itemStatuses = _noItemStatuses;
                     if (group is not null)
@@ -1117,6 +1216,11 @@ namespace GitUI
                 if (gitItemStatus.IsRangeDiff)
                 {
                     return nameof(Images.Diff);
+                }
+
+                if (!string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
+                {
+                    return nameof(Images.ViewFile);
                 }
 
                 if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
@@ -1410,7 +1514,7 @@ namespace GitUI
                     FileStatusListLoading();
                     ThreadHelper.FileAndForget(async () =>
                     {
-                        IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(cancellationToken);
+                        IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(GitItemStatusesWithDescription, refreshDiff: true, refreshGrep: false, cancellationToken);
 
                         await this.SwitchToMainThreadAsync(cancellationToken);
                         UpdateFileStatusListView(gitItemStatusesWithDescription);
@@ -1429,6 +1533,32 @@ namespace GitUI
                     sepItem[0].Visible = mayBeMultipleRevs;
                 }
             }
+        }
+
+        public void SearchCommit_Click(string text)
+        {
+            if (!SearchEnabledForList)
+            {
+                return;
+            }
+
+            SearchCommitForm search = new()
+            {
+                SearchFor = !string.IsNullOrEmpty(text) ? text : SearchComboBox.Text,
+                SearchFunc = (text, delay) =>
+                {
+                    SearchFiles(text, delay);
+                    SearchComboBox.Text = text;
+                },
+                EnableSearchBoxFunc = (enable) =>
+                {
+                    EnableSearchForList(enable);
+                },
+                SearchItems = SearchComboBox.Items,
+                Location = new Point(TopLevelControl.Location.X + 100, TopLevelControl.Location.Y + 100),
+                Owner = (Form)TopLevelControl
+            };
+            search.Show();
         }
 
         private void FileStatusListView_DoubleClick(object sender, EventArgs e)
@@ -1833,6 +1963,98 @@ namespace GitUI
         {
             // strangely it does not invalidate itself on resize so its look becomes distorted
             FilterComboBox.Invalidate();
+        }
+
+        private void SearchComboBox_TextUpdate(object sender, EventArgs e)
+        {
+            SearchFiles(SearchComboBox.Text);
+        }
+
+        private void SearchFiles(string search, int delay = 200)
+        {
+            SetSearchWatermarkLabelVisibility();
+            SetDeleteSearchButtonVisibility();
+
+            if (!string.IsNullOrWhiteSpace(search) && !GrepStringRegex().IsMatch(search))
+            {
+                search = $@"-e ""{search}""";
+            }
+
+            CancellationToken cancellationToken = _reloadSequence.Next();
+            ThreadHelper.FileAndForget(async () =>
+            {
+                // delay to handle keypresses
+                await Task.Delay(delay, cancellationToken);
+                _diffCalculator.SetGrep(search);
+                IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
+
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                SearchComboBox.BackColor = string.IsNullOrEmpty(search) ? SystemColors.Window : _activeInputColor;
+                UpdateFileStatusListView(gitItemStatusesWithDescription);
+
+                if (string.IsNullOrEmpty(search))
+                {
+                    return;
+                }
+
+                AddToSearchFilter(search);
+                return;
+
+                void AddToSearchFilter(string search)
+                {
+                    if (SearchComboBox.Items.IndexOf(search) is int index && index >= 0)
+                    {
+                        if (index == 0)
+                        {
+                            return;
+                        }
+
+                        SearchComboBox.Items.Insert(0, search);
+                        SearchComboBox.Items.RemoveAt(index + 1);
+                        SearchComboBox.Text = search;
+                        return;
+                    }
+
+                    const int SearchFilterMaxLength = 30;
+                    if (SearchComboBox.Items.Count == SearchFilterMaxLength)
+                    {
+                        SearchComboBox.Items.RemoveAt(SearchFilterMaxLength - 1);
+                    }
+
+                    SearchComboBox.Items.Insert(0, search);
+                }
+            });
+        }
+
+        private void SearchComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SearchFiles(SearchComboBox.Text, 0);
+        }
+
+        private void SearchWatermarkLabel_Click(object sender, EventArgs e)
+        {
+            SearchComboBox.Focus();
+        }
+
+        private void SearchComboBox_GotFocus(object sender, EventArgs e)
+        {
+            SetSearchWatermarkLabelVisibility();
+        }
+
+        private void SearchComboBox_LostFocus(object sender, EventArgs e)
+        {
+            SetSearchWatermarkLabelVisibility();
+        }
+
+        private void SearchComboBox_SizeChanged(object sender, EventArgs e)
+        {
+            SearchComboBox.Invalidate();
+        }
+
+        private void DeleteSearchButton_Click(object sender, EventArgs e)
+        {
+            SearchComboBox.Text = "";
+            SearchFiles(SearchComboBox.Text, 0);
         }
 
         private void SortByFilePath()

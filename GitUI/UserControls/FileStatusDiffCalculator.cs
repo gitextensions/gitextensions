@@ -10,6 +10,7 @@ namespace GitUI
 
         // Currently bound revisions etc. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
         private FileStatusDiffCalculatorInfo _fileStatusDiffCalculatorInfo = new();
+        private const string _grepSummaryPrefix = "grep: ";
 
         public FileStatusDiffCalculator(Func<IGitModule> getModule)
         {
@@ -19,6 +20,9 @@ namespace GitUI
         // Default helper functions, can be set
         public Func<ObjectId, string>? DescribeRevision { get; set; }
         public Func<GitRevision, GitRevision>? GetActualRevision { get; set; }
+
+        public static bool IsGrepItemStatuses(FileStatusWithDescription itemStatuses)
+            => itemStatuses.Summary.StartsWith(_grepSummaryPrefix);
 
         public void SetDiff(
             IReadOnlyList<GitRevision> revisions,
@@ -30,7 +34,12 @@ namespace GitUI
             _fileStatusDiffCalculatorInfo.AllowMultiDiff = allowMultiDiff;
         }
 
-        public IReadOnlyList<FileStatusWithDescription> Calculate(CancellationToken cancellationToken)
+        public void SetGrep(string grepArguments)
+        {
+            _fileStatusDiffCalculatorInfo.GrepArguments = grepArguments;
+        }
+
+        public IReadOnlyList<FileStatusWithDescription> Calculate(IReadOnlyList<FileStatusWithDescription> prevList, bool refreshDiff, bool refreshGrep, CancellationToken cancellationToken)
         {
             if (_fileStatusDiffCalculatorInfo.Revisions?.Count is not > 0
                 || _fileStatusDiffCalculatorInfo.Revisions[0] is not GitRevision selectedRev)
@@ -38,8 +47,21 @@ namespace GitUI
                 return Array.Empty<FileStatusWithDescription>();
             }
 
-            return CalculateDiffs(_fileStatusDiffCalculatorInfo.Revisions, selectedRev,
-                    _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken);
+            List<FileStatusWithDescription> fileStatusDescs = refreshDiff
+                ? CalculateDiffs(_fileStatusDiffCalculatorInfo.Revisions, selectedRev,
+                    _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken)
+                : prevList.Where(p => !p.Summary.StartsWith(_grepSummaryPrefix)).ToList();
+
+            FileStatusWithDescription? grepItemStatuses = refreshGrep
+                ? GetGrepItemStatuses(selectedRev, cancellationToken)
+                : prevList.FirstOrDefault(IsGrepItemStatuses);
+
+            if (grepItemStatuses is not null)
+            {
+                fileStatusDescs.Add(grepItemStatuses);
+            }
+
+            return fileStatusDescs;
         }
 
         private List<FileStatusWithDescription> CalculateDiffs(
@@ -277,12 +299,33 @@ namespace GitUI
             static ObjectId GetRevisionOrHead(GitRevision rev, ObjectId headId)
                 => rev.IsArtificial ? headId : rev.ObjectId;
 
-            string GetDescriptionForRevision(ObjectId objectId)
-                => DescribeRevision is not null ? DescribeRevision(objectId) : objectId.ToShortString();
-
             GitRevision GetActualRevisionForRevision(GitRevision revision)
                 => GetActualRevision is not null ? GetActualRevision(revision) : revision;
         }
+
+        private FileStatusWithDescription? GetGrepItemStatuses(GitRevision selectedRev, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(_fileStatusDiffCalculatorInfo.GrepArguments))
+            {
+                return null;
+            }
+
+            IReadOnlyList<GitItemStatus>? statuses = GetModule().GetGrepFilesStatus(selectedRev, _fileStatusDiffCalculatorInfo.GrepArguments, cancellationToken);
+            if (statuses is null)
+            {
+                // error executing Git, ignore
+                return null;
+            }
+
+            return new FileStatusWithDescription(
+                               firstRev: null,
+                               secondRev: selectedRev,
+                               summary: $"{_grepSummaryPrefix}{_fileStatusDiffCalculatorInfo.GrepArguments} {GetDescriptionForRevision(selectedRev.ObjectId)}",
+                               statuses);
+        }
+
+        private string GetDescriptionForRevision(ObjectId objectId)
+            => DescribeRevision is not null ? DescribeRevision(objectId) : objectId.ToShortString();
 
         private IGitModule GetModule()
             => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");

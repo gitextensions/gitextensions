@@ -69,6 +69,11 @@ namespace GitUIPluginInterfaces
         public StagedStatus Staged { get; set; }
         public DiffBranchStatus DiffStatus { get; set; } = DiffBranchStatus.Unknown;
 
+        /// <summary>
+        /// The git-grep arguments used to match this file.
+        /// </summary>
+        public string? GrepString { get; set; }
+
         #region Flags
 
         public bool IsTracked

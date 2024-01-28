@@ -98,7 +98,29 @@ namespace GitUI
                 cancellationToken.ThrowIfCancellationRequested();
 
                 await fileViewer.ViewRangeDiffAsync(filename, result.StandardOutput, AppSettings.UseGitColoring.Value);
+                return;
+            }
 
+            if (!string.IsNullOrWhiteSpace(item.Item.GrepString))
+            {
+                GitCommandConfiguration commandConfiguration = GrepHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring.Value);
+                ExecutionResult result = await fileViewer.Module.GetGrepFileAsync(
+                        item.SecondRevision,
+                        item.Item.Name,
+                        fileViewer.GetExtraGrepArguments(),
+                        item.Item.GrepString,
+                        useGitColoring: AppSettings.UseGitColoring.Value,
+                        commandConfiguration: commandConfiguration,
+                        cancellationToken);
+
+                if (!result.ExitedSuccessfully)
+                {
+                    string output = $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {result}{Environment.NewLine}";
+                    await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
+                    return;
+                }
+
+                await fileViewer.ViewGrepAsync(item, text: result.StandardOutput, useGitColoring: AppSettings.UseGitColoring.Value, item.Item.GrepString);
                 return;
             }
 

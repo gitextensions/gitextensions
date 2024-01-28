@@ -291,6 +291,9 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.MaxRevisionGraphCommits)], 100000, false, false);
                 yield return (properties[nameof(AppSettings.ShowDiffForAllParents)], true, false, false);
                 yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, false, false);
+                yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", false, false);
+                yield return (properties[nameof(AppSettings.GitGrepIgnoreCase)], false, false, false);
+                yield return (properties[nameof(AppSettings.GitGrepMatchWholeWord)], false, false, false);
                 yield return (properties[nameof(AppSettings.RecentWorkingDir)], null, true, false);
                 yield return (properties[nameof(AppSettings.StartWithRecentWorkingDir)], false, false, false);
                 yield return (properties[nameof(AppSettings.AutoStartPageant)], true, false, false);

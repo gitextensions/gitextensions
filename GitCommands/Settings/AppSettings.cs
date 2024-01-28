@@ -1342,6 +1342,12 @@ namespace GitCommands
             set => SetBool("showdiffforallparents", value);
         }
 
+        public static bool ShowSearchCommit
+        {
+            get => GetBool("showsearchcommit", false);
+            set => SetBool("showsearchcommit", value);
+        }
+
         public static bool ShowAvailableDiffTools
         {
             get => GetBool("difftools.showavailable", true);
@@ -1353,6 +1359,12 @@ namespace GitCommands
             get => GetInt("diffverticalrulerposition", 0);
             set => SetInt("diffverticalrulerposition", value);
         }
+
+        public static ISetting<string> GitGrepUserArguments { get; } = Setting.Create(AppearanceSettingsPath, nameof(GitGrepUserArguments), "");
+
+        public static ISetting<bool> GitGrepIgnoreCase { get; } = Setting.Create(AppearanceSettingsPath, nameof(GitGrepIgnoreCase), false);
+
+        public static ISetting<bool> GitGrepMatchWholeWord { get; } = Setting.Create(AppearanceSettingsPath, nameof(GitGrepMatchWholeWord), false);
 
         [MaybeNull]
         public static string RecentWorkingDir

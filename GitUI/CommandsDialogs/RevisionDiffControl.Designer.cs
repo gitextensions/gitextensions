@@ -60,6 +60,7 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem = new ToolStripMenuItem();
             blameToolStripMenuItem = new ToolStripMenuItem();
             findInDiffToolStripMenuItem = new ToolStripMenuItem();
+            showSearchCommitToolStripMenuItem = new ToolStripMenuItem();
             DiffText = new GitUI.Editor.FileViewer();
             BlameControl = new Blame.BlameControl();
             saveToolStripMenuItem = new ToolStripMenuItem();
@@ -144,7 +145,8 @@ namespace GitUI.CommandsDialogs
             diffFilterFileInGridToolStripMenuItem,
             fileHistoryDiffToolstripMenuItem,
             blameToolStripMenuItem,
-            findInDiffToolStripMenuItem});
+            findInDiffToolStripMenuItem,
+            showSearchCommitToolStripMenuItem});
             DiffContextMenu.Name = "DiffContextMenu";
             DiffContextMenu.Size = new Size(263, 534);
             DiffContextMenu.Opening += DiffContextMenu_Opening;
@@ -434,6 +436,14 @@ namespace GitUI.CommandsDialogs
             findInDiffToolStripMenuItem.Text = "&Find file...";
             findInDiffToolStripMenuItem.Click += findInDiffToolStripMenuItem_Click;
             // 
+            // showSearchCommitToolStripMenuItem
+            // 
+            showSearchCommitToolStripMenuItem.Image = Properties.Images.ViewFile;
+            showSearchCommitToolStripMenuItem.Name = "showSearchCommitToolStripMenuItem";
+            showSearchCommitToolStripMenuItem.Size = new Size(262, 22);
+            showSearchCommitToolStripMenuItem.Text = "S&earch commit...";
+            showSearchCommitToolStripMenuItem.Click += showSearchCommitToolStripMenuItem_Click;
+            // 
             // DiffText
             // 
             DiffText.Dock = DockStyle.Fill;
@@ -479,6 +489,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem firstToLocalToolStripMenuItem;
         private ToolStripMenuItem firstToSelectedToolStripMenuItem;
         private ToolStripMenuItem findInDiffToolStripMenuItem;
+        private ToolStripMenuItem showSearchCommitToolStripMenuItem;
         private ToolStripMenuItem diffFilterFileInGridToolStripMenuItem;
         private ToolStripMenuItem blameToolStripMenuItem;
         private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;

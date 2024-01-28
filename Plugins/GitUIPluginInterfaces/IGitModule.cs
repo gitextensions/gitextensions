@@ -445,5 +445,8 @@ namespace GitUIPluginInterfaces
         string RenameBranch(string name, string newName);
 
         GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines = null, CancellationToken cancellationToken = default);
+
+        IReadOnlyList<GitItemStatus>? GetGrepFilesStatus(GitRevision revision, string greps, CancellationToken cancellationToken = default);
+        Task<ExecutionResult> GetGrepFileAsync(GitRevision revision, string fileName, ArgumentString extraArgs, string grepString, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken = default);
     }
 }
