@@ -118,8 +118,6 @@ namespace GitUI.UserControls
             {
                 EnvironmentConfiguration.SetEnvironmentVariables();
 
-                bool ssh = UseSsh(arguments);
-
                 KillProcess();
 
                 _logProcessKilled = () => operation.LogProcessEnd(new Exception("Process killed"));
@@ -130,7 +128,7 @@ namespace GitUI.UserControls
                 {
                     UseShellExecute = false,
                     ErrorDialog = false,
-                    CreateNoWindow = !ssh && !AppSettings.ShowGitCommandLine,
+                    CreateNoWindow = !AppSettings.ShowGitCommandLine,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -263,25 +261,6 @@ namespace GitUI.UserControls
             }
 
             base.Dispose(disposing);
-        }
-
-        private static bool UseSsh(string arguments)
-        {
-            return arguments.Contains("plink")
-                || (!GitSshHelpers.IsPlink && DoArgumentsRequireSsh());
-
-            bool DoArgumentsRequireSsh()
-            {
-                return (arguments.Contains('@') && arguments.Contains("://")) ||
-                       (arguments.Contains('@') && arguments.Contains(':')) ||
-                       arguments.Contains("ssh://") ||
-                       arguments.Contains("http://") ||
-                       arguments.Contains("git://") ||
-                       arguments.Contains("push") ||
-                       arguments.Contains("remote") ||
-                       arguments.Contains("fetch") ||
-                       arguments.Contains("pull");
-            }
         }
 
         #region ProcessOutputThrottle
