@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.Models;
@@ -160,6 +161,18 @@ namespace GitUI.HelperDialogs
         private protected void AppendMessage(string text)
         {
             ConsoleOutput.AppendMessageFreeThreaded(text);
+
+            if (!text.EndsWith(Delimiters.LineFeed))
+            {
+                this.InvokeAndForget(() =>
+                {
+                    if (ShowPassword.CheckState == CheckState.Unchecked)
+                    {
+                        ShowPassword.CheckState = CheckState.Indeterminate;
+                        PasswordInput.Focus();
+                    }
+                });
+            }
         }
 
         private protected void Done(bool isSuccess)
