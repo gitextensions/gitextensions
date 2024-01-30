@@ -28,7 +28,7 @@ namespace GitUI.UserControls
         {
             _editbox = new RichTextBox
             {
-                BackColor = SystemColors.Window,
+                BackColor = SystemColors.Info,
                 BorderStyle = BorderStyle.FixedSingle,
                 Dock = DockStyle.Fill,
                 Font = AppSettings.MonospaceFont,
