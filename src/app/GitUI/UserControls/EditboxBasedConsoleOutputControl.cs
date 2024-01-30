@@ -169,9 +169,8 @@ namespace GitUI.UserControls
                             operation.LogProcessEnd(_exitcode);
                             _process = null;
                             _input = null;
-                            _outputThrottle?.FlushOutput();
-                            FireProcessExited();
                             _outputThrottle?.Stop(flush: true);
+                            FireProcessExited();
                         });
                 };
 
@@ -235,18 +234,19 @@ namespace GitUI.UserControls
             {
                 _doOutput = doOutput;
 
-                _timer = new Timer { Interval = 600, Enabled = true };
+                _timer = new Timer { Interval = 1 };
                 _timer.Tick += delegate { FlushOutput(); };
+                _timer.Start();
             }
 
             public void Stop(bool flush)
             {
-                _timer.Stop();
-
                 if (flush)
                 {
                     FlushOutput();
                 }
+
+                _timer.Stop();
             }
 
             /// <remarks>Can be called on any thread.</remarks>
@@ -260,14 +260,23 @@ namespace GitUI.UserControls
 
             public void FlushOutput()
             {
+                _timer.Stop();
+                _timer.Interval = 100;
+                _timer.Start();
+
+                string textToAdd = "";
                 lock (_textToAdd)
                 {
                     if (_textToAdd.Length > 0)
                     {
-                        _doOutput?.Invoke(_textToAdd.ToString());
+                        textToAdd = _textToAdd.ToString();
+                        _textToAdd.Clear();
                     }
+                }
 
-                    _textToAdd.Clear();
+                if (textToAdd.Length > 0)
+                {
+                    _doOutput?.Invoke(textToAdd);
                 }
             }
 
