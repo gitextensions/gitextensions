@@ -31,6 +31,7 @@ namespace GitUI.UserControls
                 BackColor = SystemColors.Window,
                 BorderStyle = BorderStyle.FixedSingle,
                 Dock = DockStyle.Fill,
+                Font = AppSettings.MonospaceFont,
                 ReadOnly = true
             };
             Controls.Add(_editbox);
