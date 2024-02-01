@@ -15,7 +15,7 @@ public static class EditorHelper
             "vi",
             "notepad",
             GetNotepadPlusPlus(),
-            GetSublimeText3(),
+            GetSublimeText(),
             GetVsCode(),
         };
     }
@@ -27,8 +27,8 @@ public static class EditorHelper
         => GetEditorCommandLine("code.exe", "--new-window --wait", "Microsoft VS Code");
 
     // http://stackoverflow.com/questions/8951275/git-config-core-editor-how-to-make-sublime-text-the-default-editor-for-git-on
-    private static string GetSublimeText3()
-        => GetEditorCommandLine("sublime_text.exe", "-w --multiinstance", "Sublime Text 3");
+    private static string GetSublimeText()
+        => GetEditorCommandLine("sublime_text.exe", "--new-window --wait", "Sublime Text");
 
     private static string GetEditorCommandLine(string executableName, string commandLineParameter, params string[] installFolders)
     {
