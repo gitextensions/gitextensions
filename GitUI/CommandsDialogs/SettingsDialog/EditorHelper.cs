@@ -22,27 +22,28 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private static string GetNotepadPP()
         {
-            return GetEditorCommandLine("Notepad++", "notepad++.exe", " -multiInst -nosession", "notepad++");
+            return GetEditorCommandLine("notepad++.exe", " -multiInst -nosession", "notepad++");
         }
 
         private static string GetVsCode()
         {
-            return GetEditorCommandLine("Visual Studio Code", "code.exe", " --new-window --wait", "Microsoft VS Code");
+            return GetEditorCommandLine("code.exe", " --new-window --wait", "Microsoft VS Code");
         }
 
         private static string GetSublimeText3()
         {
             // http://stackoverflow.com/questions/8951275/git-config-core-editor-how-to-make-sublime-text-the-default-editor-for-git-on
-            return GetEditorCommandLine("SublimeText", "sublime_text.exe", " -w --multiinstance", "Sublime Text 3");
+            return GetEditorCommandLine("sublime_text.exe", " -w --multiinstance", "Sublime Text 3");
         }
 
-        private static string GetEditorCommandLine(string editorName, string executableName, string commandLineParameter, params string[] installFolders)
+        private static string GetEditorCommandLine(string executableName, string commandLineParameter, params string[] installFolders)
         {
             string exec = executableName.FindInFolders(installFolders);
 
             if (string.IsNullOrEmpty(exec))
             {
-                exec = editorName;
+                // hoping the tool is available in the PATH
+                exec = Path.GetExtension(executableName) == ".exe" ? Path.GetFileNameWithoutExtension(executableName) : executableName;
             }
             else
             {
