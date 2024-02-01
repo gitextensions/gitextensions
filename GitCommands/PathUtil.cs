@@ -500,13 +500,9 @@ namespace GitCommands
                     continue;
                 }
 
-                fullName = FindFileInEnvVarFolder("ProgramFiles", location, fileName);
-                if (fullName is not null)
-                {
-                    return fullName;
-                }
-
-                fullName = FindFileInEnvVarFolder("ProgramW6432", location, fileName);
+                fullName = FindFileInEnvVarFolder("LOCALAPPDATA", Path.Combine("Programs", location), fileName)
+                    ?? FindFileInEnvVarFolder("ProgramFiles", location, fileName)
+                    ?? FindFileInEnvVarFolder("ProgramW6432", location, fileName);
                 if (fullName is not null)
                 {
                     return fullName;
