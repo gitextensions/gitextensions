@@ -335,6 +335,7 @@ namespace GitUI.CommandsDialogs
             NestedSplitterManager nested = new(splitterManager, Name);
             nested.AddSplitter(DiffSplitContainer);
             nested.AddSplitter(LeftSplitContainer);
+            BlameControl.InitSplitterManager(splitterManager, "RevisionDiff");
         }
 
         public SplitContainer HorizontalSplitter => DiffSplitContainer;
