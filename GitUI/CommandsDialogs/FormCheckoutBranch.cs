@@ -480,7 +480,7 @@ namespace GitUI.CommandsDialogs
                         ObjectId? currentCheckout = Module.GetCurrentCheckout();
                         if (currentCheckout is not null)
                         {
-                            aheadBehindInfo = Module.GetCommitCountString(currentCheckout.ToString(), branch);
+                            aheadBehindInfo = Module.GetCommitCountString(currentCheckout, branch);
                         }
 
                         await this.SwitchToMainThreadAsync();

@@ -57,7 +57,8 @@ namespace GitUI.UserControls
 
                         Validates.NotNull(currentCheckout);
 
-                        string text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
+                        string toRef = SelectedObjectId.IsArtificial ? "HEAD" : SelectedObjectId.ToString();
+                        string text = Module.GetCommitCountString(currentCheckout, toRef);
 
                         await this.SwitchToMainThreadAsync();
 
