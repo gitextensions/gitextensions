@@ -143,11 +143,11 @@ namespace GitUI.UserControls
                 process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.Exited += delegate
                 {
-                    this.InvokeAndForget(
-                        () =>
+                    ThreadHelper.FileAndForget(async () =>
                         {
                             if (_process is null)
                             {
+                                await this.SwitchToMainThreadAsync();
                                 operation.LogProcessEnd(new Exception("Process instance is null in Exited event"));
                                 return;
                             }
@@ -162,10 +162,12 @@ namespace GitUI.UserControls
                             }
                             catch (Exception ex)
                             {
+                                await this.SwitchToMainThreadAsync();
                                 operation.LogProcessEnd(ex);
                             }
 
                             _exitcode = _process.ExitCode;
+                            await this.SwitchToMainThreadAsync();
                             operation.LogProcessEnd(_exitcode);
                             _process = null;
                             _input = null;
