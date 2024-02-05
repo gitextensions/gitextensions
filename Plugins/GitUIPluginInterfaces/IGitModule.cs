@@ -300,7 +300,7 @@ namespace GitUIPluginInterfaces
         /// <returns>true if <paramref name="branchName"/> is valid reference name, otherwise false.</returns>
         bool CheckBranchFormat(string branchName);
         string? GetLocalTrackingBranchName(string remoteName, string branch);
-        string GetCommitCountString(string from, string to);
+        string GetCommitCountString(ObjectId fromId, string to);
         IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(CancellationToken cancellationToken);
         IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool excludeAssumeUnchangedFiles, bool excludeSkipWorktreeFiles, UntrackedFilesMode untrackedFiles, CancellationToken cancellationToken);
         bool ResetChanges(ObjectId? resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction);

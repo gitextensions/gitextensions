@@ -119,7 +119,7 @@ namespace GitUI.UserControls
 
                 ThreadHelper.FileAndForget(async () =>
                     {
-                        string text = Module.GetCommitCountString(currentCheckout.ToString(), branchName);
+                        string text = Module.GetCommitCountString(currentCheckout, branchName);
                         await this.SwitchToMainThreadAsync();
                         lbChanges.Text = text;
                     });

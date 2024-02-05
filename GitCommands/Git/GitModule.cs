@@ -874,8 +874,9 @@ namespace GitCommands
             return (null, null);
         }
 
-        public string GetCommitCountString(string from, string to)
+        public string GetCommitCountString(ObjectId fromId, string to)
         {
+            string from = fromId.IsArtificial ? "HEAD" : fromId.ToString();
             int? removed = GetCommitCount(from, to);
             int? added = GetCommitCount(to, from);
 
