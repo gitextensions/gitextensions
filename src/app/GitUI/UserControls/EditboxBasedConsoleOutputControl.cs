@@ -137,11 +137,11 @@ namespace GitUI.UserControls
                     startInfo.EnvironmentVariables.Add(name, value);
                 }
 
-                Process process = new() { StartInfo = startInfo, EnableRaisingEvents = true };
+                _process = new() { StartInfo = startInfo, EnableRaisingEvents = true };
 
-                process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
-                process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
-                process.Exited += delegate
+                _process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
+                _process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
+                _process.Exited += delegate
                 {
                     ThreadHelper.FileAndForget(async () =>
                         {
@@ -158,7 +158,17 @@ namespace GitUI.UserControls
                             // we wait for exit, probably a timing issue...
                             try
                             {
-                                _process.WaitForExit();
+                                // WaitForExit[Async] blocks here for unknown reason if the process has already exited
+                                if (!_process.HasExited)
+                                {
+                                    await _process.WaitForExitAsync();
+                                }
+
+                                if (_process is null)
+                                {
+                                    // The process has been killed meanwhile.
+                                    return;
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -176,12 +186,11 @@ namespace GitUI.UserControls
                         });
                 };
 
-                process.Start();
-                operation.SetProcessId(process.Id);
-                _process = process;
-                _input = process.StandardInput;
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+                _process.Start();
+                operation.SetProcessId(_process.Id);
+                _input = _process.StandardInput;
+                _process.BeginOutputReadLine();
+                _process.BeginErrorReadLine();
             }
             catch (Exception ex)
             {
