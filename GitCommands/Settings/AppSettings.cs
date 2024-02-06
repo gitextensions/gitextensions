@@ -2015,6 +2015,11 @@ namespace GitCommands
             set => SetInt("DiffViewer.AutomaticContinuousScrollDelay", value);
         }
 
+        public static IEnumerable<string> CustomGenericRemoteNames
+        {
+            get => GetString("CustomGenericRemoteNames", string.Empty).Split(',', StringSplitOptions.RemoveEmptyEntries);
+        }
+
         public static bool LogCaptureCallStacks
         {
             get => GetBool("Log.CaptureCallStacks", false);

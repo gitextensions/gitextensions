@@ -1,10 +1,12 @@
-﻿using GitCommands;
+﻿using System.Collections.Generic;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.Infrastructure;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
@@ -28,6 +30,8 @@ namespace GitUI.CommandsDialogs
         private ConfigFileRemote? _selectedRemote;
         private readonly ListViewGroup _lvgEnabled;
         private readonly ListViewGroup _lvgDisabled;
+
+        private string[] _genericRemotesNames = ["origin", "upstream", "fork", "remote", "internal", .. AppSettings.CustomGenericRemoteNames];
 
         #region Translation
         private readonly TranslationString _remoteBranchDataError =
@@ -92,6 +96,7 @@ Inactive remote is completely invisible to git.");
 
         private readonly TranslationString _disabledRemoteAlreadyExists =
             new("An inactive remote named \"{0}\" already exists.");
+        private IList<Repository> _repositoryHistory;
         #endregion
 
         public FormRemotes(GitUICommands commands)
@@ -137,6 +142,12 @@ Inactive remote is completely invisible to git.");
         /// Gets the list of remotes configured in .git/config file.
         /// </summary>
         private List<ConfigFileRemote>? UserGitRemotes { get; set; }
+
+        private void Url_Enter(object sender, EventArgs e)
+            => FillWithSomeGeneratedRemoteUrls(Url, r => r.Url);
+
+        private void ComboBoxPushUrl_Enter(object sender, EventArgs e)
+            => FillWithSomeGeneratedRemoteUrls(comboBoxPushUrl, r => r.PushUrl);
 
         private void BindRemotes(string? preselectRemote)
         {
@@ -244,6 +255,7 @@ Inactive remote is completely invisible to git.");
                 comboBoxPushUrl.BeginUpdate();
                 Remotes.BeginUpdate();
 
+                _repositoryHistory = repositoryHistory;
                 Url.DataSource = repositoryHistory.ToList();
                 Url.DisplayMember = nameof(Repository.Path);
                 Url.SelectedItem = null;
@@ -667,6 +679,79 @@ Inactive remote is completely invisible to git.");
             label2.Text = visible
                 ? _labelUrlAsFetch.Text
                 : _labelUrlAsFetchPush.Text;
+        }
+
+        private void FillWithSomeGeneratedRemoteUrls(CaseSensitiveComboBox combobox, Func<ConfigFileRemote, string> urlGetter)
+        {
+            string remoteName = RemoteName.Text;
+            bool fillEmptyUrl = true;
+
+            if (string.IsNullOrWhiteSpace(RemoteName.Text) || _genericRemotesNames.Contains(RemoteName.Text))
+            {
+                remoteName = "TO_REPLACE";
+                fillEmptyUrl = false;
+            }
+
+            if (UserGitRemotes?.Count != 0)
+            {
+                HashSet<string> candidates = new(UserGitRemotes.Count);
+
+                // TODO: Same thing for AzureDevOpsRemoteParser (that doesn't have the same url format!) ???
+                GitHostingRemoteParser gitHostingRemoteParser = new();
+                foreach (ConfigFileRemote remote in UserGitRemotes)
+                {
+                    string url = urlGetter(remote);
+
+                    if (string.IsNullOrEmpty(url))
+                    {
+                        continue;
+                    }
+
+                    // Simple replace tentative
+                    if (url.Contains(remote.Name))
+                    {
+                        candidates.Add(urlGetter(remote).Replace($"{remote.Name}/", $"{remoteName}/"));
+                    }
+
+                    // Extract from "known" git hosting pattern
+                    if (gitHostingRemoteParser.TryExtractGitHostingDataFromRemoteUrl(remote.Url, out _, out string owner, out _))
+                    {
+                        candidates.Add(url.Replace($"{owner}/", $"{remoteName}/"));
+                    }
+                }
+
+                if (candidates.Count > 0)
+                {
+                    string previousValues = combobox.Text;
+                    IList<Repository> proposedRepositories = _repositoryHistory.ToList();
+                    bool added = false;
+                    foreach (string url in candidates)
+                    {
+                        if (!proposedRepositories.Any(r => r.Path == url))
+                        {
+                            added = true;
+                            proposedRepositories.Insert(0, new Repository(url));
+                        }
+                    }
+
+                    if (added)
+                    {
+                        // if there is a previous value, keep it
+                        if (!string.IsNullOrEmpty(previousValues))
+                        {
+                            proposedRepositories.Insert(0, new Repository(previousValues));
+                        }
+
+                        combobox.DataSource = proposedRepositories;
+
+                        // Don't auto select a value when generic remote name entered or more than 1 result added.
+                        if (string.IsNullOrEmpty(previousValues) && (!fillEmptyUrl || candidates.Count > 1))
+                        {
+                            combobox.Text = string.Empty;
+                        }
+                    }
+                }
+            }
         }
     }
 }
