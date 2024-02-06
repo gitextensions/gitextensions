@@ -27,7 +27,13 @@ namespace GitUI.UserControls
             // Select an option until we get a filter bound.
             SelectShowBranchesFilterOption(selectedIndex: 0);
 
-            tstxtRevisionFilter.Items.AddRange(AppSettings.RevisionFilterDropdowns);
+            tstxtRevisionFilter.Items.AddRange(AppSettings.RevisionFilterDropdowns
+                .Union([
+                    @"--invert-grep --grep=""EXCLUDE_COMMIT_MESSAGE_REGEX_PATTERN""",
+                    @"--perl-regexp --author=""^(?!.*EXCLUDE_AUTHOR_REGEX_PATTERN)""",
+                    @"--exclude=refs/remotes/EXCLUDE_REMOTE_REGEX_PATTERN"
+                    ])
+                .ToArray());
             tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
