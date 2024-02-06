@@ -156,8 +156,7 @@ namespace ResourceManager
                     {
                         sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" +
                                       GetFullDateString(oldCommitData.CommitDate) + ")");
-                        char[] delimiter = new[] { '\n', '\r' };
-                        string[] lines = oldCommitData.Body.Trim(delimiter).Split(new[] { "\r\n" }, StringSplitOptions.None);
+                        string[] lines = oldCommitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split("\r\n", StringSplitOptions.None);
                         foreach (string line in lines)
                         {
                             sb.AppendLine("\t\t" + line);

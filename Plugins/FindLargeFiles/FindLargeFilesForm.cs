@@ -161,7 +161,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
             base.OnLoad(e);
 
             GitArgumentBuilder args = new("rev-list") { "HEAD" };
-            _revList = _gitCommands.GitExecutable.GetOutput(args).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            _revList = _gitCommands.GitExecutable.GetOutput(args).Split('\n', StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(_revList.Length * 1.1f);
             BranchesGrid.DataSource = _gitObjects;
             Thread thread = new(FindLargeFilesFunction);

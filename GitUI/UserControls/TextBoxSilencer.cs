@@ -7,8 +7,6 @@
     /// because they are implemented using SendMessage calls.
     internal sealed class TextBoxSilencer
     {
-        private static readonly char[] _lineEndChars = { '\r', '\n' };
-
         private RichTextBox _textBox;
 
         private bool _isAtFirstColumn;
@@ -51,12 +49,12 @@
             _isAtFirstColumn = position == _textBox.GetFirstCharIndexOfCurrentLine();
             _isAtEndColumn = position == GetLineEnd(text, startIndex: position);
             _isAtFirstLine = position <= GetLineEnd(text, startIndex: 0);
-            _isAtLastLine = text.IndexOfAny(_lineEndChars, startIndex: position) < 0;
+            _isAtLastLine = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex: position) < 0;
         }
 
         private static int GetLineEnd(string text, int startIndex)
         {
-            int eol = text.IndexOfAny(_lineEndChars, startIndex);
+            int eol = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex);
             return eol >= startIndex ? eol : text.Length;
         }
     }

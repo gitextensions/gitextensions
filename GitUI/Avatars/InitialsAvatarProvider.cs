@@ -136,7 +136,7 @@ namespace GitUI.Avatars
             return $"{name[0]}{names[^1][0]}".ToUpper();
         }
 
-        private readonly (Brush foregroundBrush, Color backgroundColor)[] _avatarColors = AppSettings.AvatarAuthorInitialsPalette.Split(",").Select(GetAvatarDrawingMaterial).ToArray();
+        private readonly (Brush foregroundBrush, Color backgroundColor)[] _avatarColors = AppSettings.AvatarAuthorInitialsPalette.Split(',').Select(GetAvatarDrawingMaterial).ToArray();
 
         private static (Brush foregroundBrush, Color backgroundColor) GetAvatarDrawingMaterial(string colorCode)
         {
