@@ -275,7 +275,7 @@ namespace GitCommands
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
 
-                revisionFilter.Quote(),
+                revisionFilter,
                 "--",
                 { !string.IsNullOrWhiteSpace(pathFilter), pathFilter }
             };
