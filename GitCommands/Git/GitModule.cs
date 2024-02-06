@@ -2952,7 +2952,7 @@ namespace GitCommands
                 return Array.Empty<string>();
             }
 
-            string[] result = exec.StandardOutput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] result = exec.StandardOutput.Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
 
             // Remove symlink targets as in "origin/HEAD -> origin/master"
             for (int i = 0; i < result.Length; i++)
@@ -2989,7 +2989,7 @@ namespace GitCommands
                 return Array.Empty<string>();
             }
 
-            return exec.StandardOutput.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return exec.StandardOutput.Split(Delimiters.GitOutput, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public string? GetTagMessage(string? tag, CancellationToken cancellationToken = default)

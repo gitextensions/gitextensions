@@ -221,8 +221,6 @@ namespace GitUI.HelperDialogs
         }
 
         public static bool IsOperationAborted(string dialogResult)
-        {
-            return dialogResult.Trim('\r', '\n') == "Aborted";
-        }
+            => dialogResult.Trim(Delimiters.LineFeedAndCarriageReturn) == "Aborted";
     }
 }

@@ -275,7 +275,7 @@ namespace GitUI.CommandsDialogs
                 _lostObjects.Clear();
                 _lostObjects.AddRange(
                     cmdOutput
-                        .Split('\r', '\n')
+                        .Split(Delimiters.LineFeedAndCarriageReturn)
                         .Where(s => !string.IsNullOrEmpty(s))
                         .Select(s => LostObject.TryParse(Module, s))
                         .WhereNotNull()

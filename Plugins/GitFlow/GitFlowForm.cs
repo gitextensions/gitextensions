@@ -159,8 +159,8 @@ namespace GitExtensions.Plugins.GitFlow
             }
 
             return result.StandardOutput
-                .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(e => e.Trim('*', ' ', '\n', '\r'))
+                .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                .Select(e => e.Trim(Delimiters.GitOutput))
                 .ToList();
         }
 
@@ -203,7 +203,8 @@ namespace GitExtensions.Plugins.GitFlow
                 GitArgumentBuilder args = new("branch");
                 return _gitUiCommands.GitModule
                     .GitExecutable.GetOutput(args)
-                    .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(e => e.Trim('*', ' ', '\n', '\r'))
+                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(e => e.Trim(Delimiters.GitOutput))
                     .ToList();
             }
         }
@@ -407,7 +408,7 @@ namespace GitExtensions.Plugins.GitFlow
             ExecutionResult result = _gitUiCommands.GitModule.GitExecutable.Execute(args, throwOnErrorExit: false);
 
             string head = result.ExitedSuccessfully
-                ? result.StandardOutput.Trim('*', ' ', '\n', '\r')
+                ? result.StandardOutput.Trim(Delimiters.GitOutput)
                 : "";
 
             lblHead.Text = head;

@@ -1447,7 +1447,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
                     {
-                        string firstLine = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                        string firstLine = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.RemoveEmptyEntries)[0];
                         if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine &&
                             MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
@@ -1457,7 +1457,7 @@ namespace GitUI.CommandsDialogs
 
                     if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
                     {
-                        string[] lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] lines = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string line in lines)
                         {
                             if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine &&
@@ -1470,7 +1470,7 @@ namespace GitUI.CommandsDialogs
 
                     if (AppSettings.CommitValidationSecondLineMustBeEmpty)
                     {
-                        string[] lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                        string[] lines = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.None);
                         if (lines.Length > 2 &&
                             lines[1].Length != 0 &&
                             MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
@@ -1501,7 +1501,7 @@ namespace GitUI.CommandsDialogs
 
                 static string GetTextToValidate(string text)
                 {
-                    string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    string[] lines = text.Split(Delimiters.NewLines, StringSplitOptions.None);
                     if (text.StartsWith(CommitKind.Amend.GetPrefix()) && lines.Length > 2 && lines[1].Length == 0)
                     {
                         return string.Join(Environment.NewLine, lines.Skip(2));

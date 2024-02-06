@@ -20,7 +20,7 @@ namespace GitExtensions.Plugins.CreateLocalBranches
         {
             GitArgumentBuilder args = new("branch") { "-a" };
             string[] references = _gitUiCommands.GitModule.GitExecutable.GetOutput(args)
-                .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                .Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
             if (references.Length == 0)
             {
@@ -33,7 +33,7 @@ namespace GitExtensions.Plugins.CreateLocalBranches
             {
                 try
                 {
-                    string branchName = reference.Trim('*', ' ', '\n', '\r');
+                    string branchName = reference.Trim(Delimiters.GitOutput);
 
                     if (branchName.StartsWith("remotes/" + _NO_TRANSLATE_Remote.Text + "/"))
                     {
