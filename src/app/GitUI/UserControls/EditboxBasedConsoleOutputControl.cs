@@ -20,6 +20,8 @@ namespace GitUI.UserControls
 
         private Process? _process;
 
+        private Action? _logProcessKilled;
+
         private ProcessOutputThrottle? _outputThrottle;
 
         private StreamWriter? _input;
@@ -82,6 +84,8 @@ namespace GitUI.UserControls
                 return;
             }
 
+            _logProcessKilled();
+
             try
             {
                 _process.TerminateTree();
@@ -91,7 +95,9 @@ namespace GitUI.UserControls
                 Trace.WriteLine(ex);
             }
 
+            _process.Dispose();
             _process = null;
+            _input?.Dispose();
             _input = null;
             FireProcessExited();
         }
@@ -114,6 +120,8 @@ namespace GitUI.UserControls
                 bool ssh = UseSsh(arguments);
 
                 KillProcess();
+
+                _logProcessKilled = () => operation.LogProcessEnd(new Exception("Process killed"));
 
                 // process used to execute external commands
                 Encoding outputEncoding = GitModule.SystemEncoding;
@@ -164,6 +172,8 @@ namespace GitUI.UserControls
                                     await _process.WaitForExitAsync();
                                 }
 
+                                _logProcessKilled = null;
+
                                 if (_process is null)
                                 {
                                     // The process has been killed meanwhile.
@@ -179,7 +189,9 @@ namespace GitUI.UserControls
                             _exitcode = _process.ExitCode;
                             await this.SwitchToMainThreadAsync();
                             operation.LogProcessEnd(_exitcode);
+                            _process.Dispose();
                             _process = null;
+                            await _input.DisposeAsync();
                             _input = null;
                             _outputThrottle?.Stop(flush: true);
                             FireProcessExited();
@@ -204,10 +216,14 @@ namespace GitUI.UserControls
         protected override void Dispose(bool disposing)
         {
             KillProcess();
-            if (disposing && _outputThrottle is not null)
+            if (disposing)
             {
-                _outputThrottle.Dispose();
+                _outputThrottle?.Dispose();
                 _outputThrottle = null;
+                _process?.Dispose();
+                _process = null;
+                _input?.Dispose();
+                _input = null;
             }
 
             base.Dispose(disposing);
