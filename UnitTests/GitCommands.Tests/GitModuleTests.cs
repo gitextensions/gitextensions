@@ -436,7 +436,7 @@ namespace GitCommandsTests
         {
             GitArgumentBuilder args = new("rev-parse")
             {
-                $"{Sha1}^@"
+                $"{Sha1}^@".Quote()
             };
 
             using (_executable.StageOutput(

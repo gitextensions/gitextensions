@@ -182,7 +182,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
                 GitArgumentBuilder args = new("ls-tree")
                 {
                     "-zrl",
-                    rev
+                    rev.Quote()
                 };
                 string[] objects = _gitCommands.GitExecutable.GetOutput(args).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string objData in objects)
