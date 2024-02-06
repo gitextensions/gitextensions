@@ -816,7 +816,7 @@ namespace GitCommands
         {
             GitArgumentBuilder args = new("ls-tree")
             {
-                refName,
+                refName.Quote(),
                 { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
             };
