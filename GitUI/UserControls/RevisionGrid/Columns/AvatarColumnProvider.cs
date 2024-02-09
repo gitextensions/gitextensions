@@ -42,6 +42,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Column.Visible = AppSettings.ShowAuthorAvatarColumn;
         }
 
+        private string _email = null;
+        private string _author = null;
+        private Task<Image?> _getLastAvatarTask = null;
+
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
             if (revision.IsArtificial || revision.AuthorEmail is null)
@@ -53,7 +57,35 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             int imageSize = e.CellBounds.Height - _padding - _padding;
 
-            Task<Image?> imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, revision.Author, imageSize);
+            Task<Image?> imageTask;
+
+            if (_email == revision.AuthorEmail && _author == revision.Author)
+            {
+                imageTask = _getLastAvatarTask;
+                if (imageTask.Status == TaskStatus.RanToCompletion)
+                {
+                    // Manage exceptional case where cached image have been cleaned by user
+                    try
+                    {
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+                        if (imageTask.Result.PixelFormat == System.Drawing.Imaging.PixelFormat.DontCare)
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+                        {
+                            GetAvatar();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        GetAvatar();
+                    }
+                }
+            }
+            else
+            {
+                GetAvatar();
+                _email = revision.AuthorEmail;
+                _author = revision.Author;
+            }
 
             Rectangle rect = new(
                 e.CellBounds.Left + _padding,
@@ -117,6 +149,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             // Bottom right corner
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Bottom - 1, 2, 1);
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Bottom - 2, 1, 2);
+
+            return;
+
+            void GetAvatar() =>
+                _getLastAvatarTask = imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, revision.Author, imageSize);
         }
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
