@@ -598,7 +598,7 @@ namespace GitCommands
 
         public static int AvatarCacheSize
         {
-            get => GetInt("Appearance.AvatarCacheSize", 50);
+            get => GetInt("Appearance.AvatarCacheSize", 200);
             set => SetInt("Appearance.AvatarCacheSize", value);
         }
 
