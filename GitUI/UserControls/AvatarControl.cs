@@ -19,8 +19,6 @@ namespace GitUI
             InitializeComponent();
             InitializeComplete();
 
-            clearImagecacheToolStripMenuItem.Click += delegate { ClearCache(); };
-
             foreach (AvatarProvider avatarProvider in EnumHelper.GetValues<AvatarProvider>())
             {
                 ToolStripMenuItem item = new()
@@ -141,13 +139,6 @@ namespace GitUI
 
         private void OnClearCacheClick(object sender, EventArgs e)
         {
-            string email = Email;
-
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return;
-            }
-
             ClearCache();
         }
 
