@@ -25,9 +25,9 @@ namespace GitUI.Avatars
         /// <inheritdoc/>
         public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            (string initials, int hashCode) = GetInitialsAndHashCode(email, name);
+            (string initials, int colorIndex) = GetInitialsAndColorIndex(email, name);
 
-            (Brush foregroundBrush, Color backgroundColor) = _avatarColors[hashCode];
+            (Brush foregroundBrush, Color backgroundColor) = _avatarColors[colorIndex];
             Image avatar = DrawText(initials, foregroundBrush, backgroundColor, imageSize);
 
             return Task.FromResult<Image?>(avatar);
@@ -55,7 +55,7 @@ namespace GitUI.Avatars
             }
         }
 
-        protected internal (string? initials, int hashCode) GetInitialsAndHashCode(string email, string? name)
+        protected internal (string? initials, int hashCode) GetInitialsAndColorIndex(string email, string? name)
         {
             (string selectedName, char[] separator) = NameSelector(name, email);
 
