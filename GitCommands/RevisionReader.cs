@@ -140,7 +140,7 @@ namespace GitCommands
             {
                 "-z",
                 $"--pretty=format:\"{GetLogFormat()}\"",
-                $"{olderCommitHash}~..{newerCommitHash}"
+                $"{olderCommitHash}~..{newerCommitHash}".Quote()
             };
 
             return GetRevisionsFromArguments(arguments, cancellationToken);
@@ -160,7 +160,7 @@ namespace GitCommands
                 "-z",
                 "-1",
                 $"--pretty=format:\"{GetLogFormat(hasNotes: hasNotes)}\"",
-                commitHash
+                commitHash.Quote()
             };
 
             // output can be cached if Git Notes is not included

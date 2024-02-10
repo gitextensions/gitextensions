@@ -816,7 +816,7 @@ namespace GitCommands
         {
             GitArgumentBuilder args = new("ls-tree")
             {
-                refName,
+                refName.Quote(),
                 { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
             };
@@ -834,8 +834,8 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("rev-list")
             {
-                parent,
-                $"^{child}",
+                parent.Quote(),
+                $"^{child}".Quote(),
                 "--count",
                 "--"
             };
@@ -859,7 +859,7 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("rev-list")
             {
-                $"{firstId}...{secondId}",
+                $"{firstId}...{secondId}".Quote(),
                 "--count",
                 "--left-right"
             };
@@ -995,7 +995,7 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("rev-parse")
             {
-                $"{objectId}^@"
+                $"{objectId}^@".Quote()
             };
             return _gitExecutable.Execute(args, cache: GitCommandCache)
                 .StandardOutput
@@ -1053,7 +1053,7 @@ namespace GitCommands
             {
                 "--verify",
                 "--quiet",
-                $"{objectIdPrefix}^{{commit}}"
+                $"{objectIdPrefix}^{{commit}}".Quote()
             };
             ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
             string output = result.StandardOutput.Trim();
@@ -1111,7 +1111,7 @@ namespace GitCommands
                 "--parents",
                 "--no-walk",
                 "--min-parents=2",
-                $"{startRev}..{endRev}"
+                $"{startRev}..{endRev}".Quote(),
             };
 
             // Could fail if pulling interactively from remote where the specified branch does not exist
@@ -2397,7 +2397,7 @@ namespace GitCommands
             // add - optionally stashed - untracked files
             GitArgumentBuilder args = new("log")
             {
-                $"{stashName}^3",
+                $"{stashName}^3".Quote(),
                 "--pretty=format:\"%T\"",
                 "--max-count=1"
             };
@@ -3050,7 +3050,7 @@ namespace GitCommands
         public IReadOnlyList<string> GetFullTree(string id)
         {
             return _gitExecutable.GetOutput(
-                    $"ls-tree -z -r --name-only {id}",
+                    $"ls-tree -z -r --name-only {id.Quote()}",
                     cache: GitCommandCache)
                 .Split(Delimiters.NullAndLineFeed);
         }
@@ -3419,7 +3419,7 @@ namespace GitCommands
             {
                 "-z",
                 $"-n {count}",
-                revision,
+                revision.Quote(),
                 @"--pretty=""format:%B""",
                 { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
             };
@@ -3507,7 +3507,7 @@ namespace GitCommands
             {
                 "--quiet",
                 "--verify",
-                $"\"{revisionExpression}~0\""
+                $"{revisionExpression}~0".Quote()
             };
             ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 

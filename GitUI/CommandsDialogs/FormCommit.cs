@@ -2381,7 +2381,7 @@ namespace GitUI.CommandsDialogs
                     {
                         "--pretty=format:\"    %m %h - %s\"",
                         "--no-merges",
-                        $"{from}...{to}"
+                        $"{from}...{to}".Quote()
                     };
 
                     string log = module.GitExecutable.GetOutput(args);

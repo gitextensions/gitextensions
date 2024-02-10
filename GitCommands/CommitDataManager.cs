@@ -124,7 +124,7 @@ namespace GitCommands
             {
                 "-1",
                 $"--pretty=\"format:{format}\"",
-                commitId
+                commitId.Quote()
             };
 
             // This command can be cached if commitId is a git sha and Notes are ignored
