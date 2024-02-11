@@ -196,7 +196,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Clear()
         {
-            _revisionGraph.Clear();
             _graphCache.Reset();
         }
 

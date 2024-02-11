@@ -28,7 +28,7 @@
                     {
                         // if not running, start it
                         _executing = true;
-                        Task.Run(WrappedOperationAsync);
+                        ThreadHelper.FileAndForget(WrappedOperationAsync);
                     }
                     else
                     {
@@ -55,7 +55,7 @@
                     {
                         if (_rerunRequested)
                         {
-                            Task.Run(WrappedOperationAsync);
+                            ThreadHelper.FileAndForget(WrappedOperationAsync);
                             _rerunRequested = false;
                         }
                         else
