@@ -28,6 +28,12 @@ namespace GitUI.CommandsDialogs
         {
             Revision = revision;
             InitializeComponent();
+
+            columnHeader1.Width = DpiUtil.Scale(columnHeader1.Width);
+            columnHeader2.Width = DpiUtil.Scale(columnHeader2.Width);
+            columnHeader3.Width = DpiUtil.Scale(columnHeader3.Width);
+            columnHeader4.Width = DpiUtil.Scale(columnHeader4.Width);
+
             InitializeComplete();
 
             _lblParentsControlHeight = lblParents.Size.Height;
