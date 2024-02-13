@@ -558,7 +558,7 @@ namespace GitCommands
 
         #region Avatars
 
-        public static string AvatarImageCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
+        public static string AvatarImageCachePath => Path.Combine(LocalApplicationDataPath.Value, "Images\\");
 
         public static AvatarFallbackType AvatarFallbackType
         {
