@@ -28,6 +28,8 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Stopwatch _lastScroll = Stopwatch.StartNew();
         private readonly Stopwatch _consecutiveScroll = Stopwatch.StartNew();
         private readonly List<ColumnProvider> _columnProviders = [];
+        private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
+        private readonly CancellationTokenSequence _updateVisibleRowRangeSequence = new();
 
         internal RevisionGraph _revisionGraph = new();
 
@@ -81,7 +83,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             InitFonts();
 
-            _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, BackgroundThreadUpdatePeriod);
+            _backgroundUpdater = new BackgroundUpdater(_taskManager, UpdateVisibleRowRangeInternalAsync, BackgroundThreadUpdatePeriod);
 
             InitializeComponent();
             DoubleBuffered = true;
@@ -179,8 +181,21 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
+        internal void CancelBackgroundTasks()
+        {
+            _columnProviders.Clear();
+            _backgroundScrollTo = -1;
+            _updateVisibleRowRangeSequence.CancelCurrent();
+            _taskManager.JoinPendingOperations();
+        }
+
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                CancelBackgroundTasks();
+            }
+
             base.Dispose(disposing);
         }
 
@@ -668,6 +683,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         private async Task UpdateVisibleRowRangeInternalAsync()
         {
+            CancellationToken cancellationToken = _updateVisibleRowRangeSequence.Next();
+
             int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
             int visibleRowCount = _rowHeight <= 0 ? 0 : (Height + _rowHeight - 1) / _rowHeight; // Rounding up integer division: (a+b-1)/b = ceil(a/b)
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
@@ -715,7 +732,12 @@ namespace GitUI.UserControls.RevisionGrid
                         }
                     }
 
-                    await this.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync(cancellationToken);
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
                     NotifyProvidersVisibleRowRangeChanged();
                 }
             }
@@ -724,12 +746,24 @@ namespace GitUI.UserControls.RevisionGrid
 
             async Task UpdateGraphAsync(int fromIndex, int toIndex)
             {
-                // Cache the next item; build the cache in limited chunks in order to update intermittently
-                _revisionGraph.CacheTo(currentRowIndex: toIndex, lastToCacheRowIndex: Math.Min(fromIndex + 1500, toIndex));
+                try
+                {
+                    // Cache the next item; build the cache in limited chunks in order to update intermittently
+                    _revisionGraph.CacheTo(currentRowIndex: toIndex, lastToCacheRowIndex: Math.Min(fromIndex + 1500, toIndex));
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
-                SetRowCountAndSelectRowsIfReady();
+                    SetRowCountAndSelectRowsIfReady();
+                }
+                catch (Exception exception)
+                {
+                    _backgroundScrollTo = -1;
+                    Trace.WriteLine(exception);
+                }
             }
         }
 

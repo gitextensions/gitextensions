@@ -522,6 +522,7 @@ namespace GitUI.CommandsDialogs
         protected override void OnClosed(EventArgs e)
         {
             PluginRegistry.Unregister(UICommands);
+            RevisionGrid.CancelBackgroundTasks();
             base.OnClosed(e);
         }
 

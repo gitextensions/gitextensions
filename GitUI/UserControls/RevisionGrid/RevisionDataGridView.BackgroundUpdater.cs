@@ -10,12 +10,14 @@
             private readonly Func<Task> _operation;
             private readonly int _cooldownMilliseconds;
             private readonly object _sync = new();
+            private readonly TaskManager _taskManager;
 
             private volatile bool _executing;
             private volatile bool _rerunRequested;
 
-            public BackgroundUpdater(Func<Task> operation, int cooldownMilliseconds)
+            public BackgroundUpdater(TaskManager taskManager, Func<Task> operation, int cooldownMilliseconds)
             {
+                _taskManager = taskManager ?? throw new ArgumentNullException(nameof(taskManager));
                 _operation = operation ?? throw new ArgumentNullException(nameof(operation));
                 _cooldownMilliseconds = cooldownMilliseconds;
             }
@@ -28,7 +30,7 @@
                     {
                         // if not running, start it
                         _executing = true;
-                        ThreadHelper.FileAndForget(WrappedOperationAsync);
+                        _taskManager.FileAndForget(WrappedOperationAsync);
                     }
                     else
                     {
@@ -55,7 +57,7 @@
                     {
                         if (_rerunRequested)
                         {
-                            ThreadHelper.FileAndForget(WrappedOperationAsync);
+                            _taskManager.FileAndForget(WrappedOperationAsync);
                             _rerunRequested = false;
                         }
                         else

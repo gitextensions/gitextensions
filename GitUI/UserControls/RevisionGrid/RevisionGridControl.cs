@@ -254,6 +254,13 @@ namespace GitUI
                 .FirstOrDefault(column => column.Resizable == DataGridViewTriState.True && column.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill);
         }
 
+        internal void CancelBackgroundTasks()
+        {
+            _customDiffToolsSequence.CancelCurrent();
+            _refreshRevisionsSequence.CancelCurrent();
+            _gridView.CancelBackgroundTasks();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
