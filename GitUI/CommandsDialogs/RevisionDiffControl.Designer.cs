@@ -96,8 +96,7 @@ namespace GitUI.CommandsDialogs
             // 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
             DiffFiles.Dock = DockStyle.Fill;
-            DiffFiles.FilterVisible = true;
-            DiffFiles.GroupByRevision = false;
+            DiffFiles.GroupByRevision = true;
             DiffFiles.Location = new Point(0, 0);
             DiffFiles.Margin = new Padding(0);
             DiffFiles.Name = "DiffFiles";

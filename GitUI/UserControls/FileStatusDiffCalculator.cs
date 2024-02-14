@@ -11,34 +11,44 @@ namespace GitUI
         // Currently bound revisions etc. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
         private FileStatusDiffCalculatorInfo _fileStatusDiffCalculatorInfo = new();
 
-        // Default helper functions, can be set
-        public Func<ObjectId, string>? DescribeRevision { get; set; }
-        public Func<GitRevision, GitRevision>? GetActualRevision { get; set; }
-
         public FileStatusDiffCalculator(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
 
-        public IReadOnlyList<FileStatusWithDescription> Reload()
-            => SetDiffs(_fileStatusDiffCalculatorInfo.Revisions,
-                _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken: default);
+        // Default helper functions, can be set
+        public Func<ObjectId, string>? DescribeRevision { get; set; }
+        public Func<GitRevision, GitRevision>? GetActualRevision { get; set; }
 
-        public IReadOnlyList<FileStatusWithDescription> SetDiffs(
+        public void SetDiff(
             IReadOnlyList<GitRevision> revisions,
             ObjectId? headId,
-            bool allowMultiDiff,
-            CancellationToken cancellationToken)
+            bool allowMultiDiff)
         {
             _fileStatusDiffCalculatorInfo.Revisions = revisions;
             _fileStatusDiffCalculatorInfo.HeadId = headId;
             _fileStatusDiffCalculatorInfo.AllowMultiDiff = allowMultiDiff;
+        }
 
-            if (revisions?.Count is not > 0 || revisions[0] is not GitRevision selectedRev)
+        public IReadOnlyList<FileStatusWithDescription> Calculate(CancellationToken cancellationToken)
+        {
+            if (_fileStatusDiffCalculatorInfo.Revisions?.Count is not > 0
+                || _fileStatusDiffCalculatorInfo.Revisions[0] is not GitRevision selectedRev)
             {
                 return Array.Empty<FileStatusWithDescription>();
             }
 
+            return CalculateDiffs(_fileStatusDiffCalculatorInfo.Revisions, selectedRev,
+                    _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken);
+        }
+
+        private List<FileStatusWithDescription> CalculateDiffs(
+            IReadOnlyList<GitRevision> revisions,
+            GitRevision selectedRev,
+            ObjectId? headId,
+            bool allowMultiDiff,
+            CancellationToken cancellationToken)
+        {
             IGitModule module = GetModule();
             List<FileStatusWithDescription> fileStatusDescs = [];
             if (revisions.Count == 1)
@@ -275,15 +285,6 @@ namespace GitUI
         }
 
         private IGitModule GetModule()
-        {
-            IGitModule module = _getModule();
-
-            if (module is null)
-            {
-                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-            }
-
-            return module;
-        }
+            => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
     }
 }
