@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitExtUtils;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -15,6 +16,10 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         private bool _isMerge;
+        private int _lblParentsControlHeight;
+        private int _lvParentsListControlHeight;
+
+        private const int _parentsListItemHeight = 18;
 
         public GitRevision? Revision { get; set; }
 
@@ -23,8 +28,16 @@ namespace GitUI.CommandsDialogs
         {
             Revision = revision;
             InitializeComponent();
-            Size = MinimumSize;
+
+            columnHeader1.Width = DpiUtil.Scale(columnHeader1.Width);
+            columnHeader2.Width = DpiUtil.Scale(columnHeader2.Width);
+            columnHeader3.Width = DpiUtil.Scale(columnHeader3.Width);
+            columnHeader4.Width = DpiUtil.Scale(columnHeader4.Width);
+
             InitializeComplete();
+
+            _lblParentsControlHeight = lblParents.Size.Height;
+            _lvParentsListControlHeight = lvParentsList.Size.Height;
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -57,7 +70,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                tlpnlMain.SuspendLayout();
+                SuspendLayout();
 
                 commitSummaryUserControl1.Revision = Revision;
 
@@ -68,8 +81,22 @@ namespace GitUI.CommandsDialogs
                     _isMerge = Module.IsMerge(Revision.ObjectId);
                 }
 
-                lblParents.Visible = _isMerge;
-                lvParentsList.Visible = _isMerge;
+                // We need to hide these optional components first to get a correct base value of PreferredMinimumHeight
+                lblParents.Visible = false;
+                lvParentsList.Visible = false;
+
+                if (_isMerge)
+                {
+                    MinimumSize = new Size(MinimumSize.Width, PreferredMinimumHeight + _lblParentsControlHeight + _lvParentsListControlHeight);
+                    Size = MinimumSize;
+                    lblParents.Visible = true;
+                    lvParentsList.Visible = true;
+                }
+                else
+                {
+                    MinimumSize = new Size(MinimumSize.Width, PreferredMinimumHeight - _lblParentsControlHeight - _lvParentsListControlHeight);
+                    Size = MinimumSize;
+                }
 
                 if (_isMerge && Revision is not null)
                 {
@@ -80,23 +107,24 @@ namespace GitUI.CommandsDialogs
                         lvParentsList.Items.Add(new ListViewItem((i + 1).ToString())
                         {
                             SubItems =
-                        {
-                            parents[i].Subject,
-                            parents[i].Author,
-                            parents[i].CommitDate.ToShortDateString()
-                        }
+                            {
+                                parents[i].Subject,
+                                parents[i].Author,
+                                parents[i].CommitDate.ToShortDateString()
+                            }
                         });
                     }
 
                     lvParentsList.TopItem.Selected = true;
                     Size size = MinimumSize;
-                    size.Height += 100;
+                    size.Height += DpiUtil.Scale(_parentsListItemHeight * (parents.Count - 1));
+                    Size = size;
                     MinimumSize = size;
                 }
             }
             finally
             {
-                tlpnlMain.ResumeLayout(performLayout: true);
+                ResumeLayout(performLayout: true);
             }
         }
 

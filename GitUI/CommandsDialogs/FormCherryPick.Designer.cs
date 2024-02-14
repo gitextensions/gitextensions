@@ -55,6 +55,8 @@ namespace GitUI.CommandsDialogs
             // 
             // MainPanel
             // 
+            MainPanel.AutoSize = true;
+            MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             MainPanel.Controls.Add(tlpnlMain);
             MainPanel.Size = new Size(614, 379);
             MainPanel.TabIndex = 0;
