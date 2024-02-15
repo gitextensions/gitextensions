@@ -20,6 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference;
             chkOmitUninterestingDiff.Checked = AppSettings.OmitUninterestingDiff;
             chkRememberShowEntireFilePreference.Checked = AppSettings.RememberShowEntireFilePreference;
+            chkRememberShowGitWordColoringPreference.Checked = AppSettings.RememberShowGitWordColoring.Value;
             chkRememberShowNonPrintingCharsPreference.Checked = AppSettings.RememberShowNonPrintingCharsPreference;
             chkRememberNumberOfContextLines.Checked = AppSettings.RememberNumberOfContextLines;
             chkRememberShowSyntaxHighlightingInDiff.Checked = AppSettings.RememberShowSyntaxHighlightingInDiff;
@@ -37,6 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RememberIgnoreWhiteSpacePreference = chkRememberIgnoreWhiteSpacePreference.Checked;
             AppSettings.OmitUninterestingDiff = chkOmitUninterestingDiff.Checked;
             AppSettings.RememberShowEntireFilePreference = chkRememberShowEntireFilePreference.Checked;
+            AppSettings.RememberShowGitWordColoring.Value = chkRememberShowGitWordColoringPreference.Checked;
             AppSettings.RememberShowNonPrintingCharsPreference = chkRememberShowNonPrintingCharsPreference.Checked;
             AppSettings.RememberNumberOfContextLines = chkRememberNumberOfContextLines.Checked;
             AppSettings.RememberShowSyntaxHighlightingInDiff = chkRememberShowSyntaxHighlightingInDiff.Checked;

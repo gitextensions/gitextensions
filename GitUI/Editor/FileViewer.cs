@@ -107,6 +107,8 @@ namespace GitUI.Editor
             ShowEntireFile = AppSettings.ShowEntireFile.GetValue(reload: !AppSettings.RememberShowEntireFilePreference);
             showEntireFileButton.Checked = ShowEntireFile;
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
+            showGitWordColoringToolStripMenuItem.Checked = AppSettings.ShowGitWordColoring.GetValue(reload: !AppSettings.RememberShowGitWordColoring.Value);
+            showGitWordColoringToolStripMenuItem.Visible = AppSettings.UseGitColoring.Value;
             SetStateOfContextLinesButtons();
 
             automaticContinuousScrollToolStripMenuItem.Image = Images.UiScrollBar.AdaptLightness();
@@ -289,6 +291,10 @@ namespace GitUI.Editor
         [DefaultValue(false)]
         private bool ShowEntireFile { get; set; }
 
+        [Description("Show Git word diff coloring.")]
+        [DefaultValue(false)]
+        private bool ShowGitWordColoring => showGitWordColoringToolStripMenuItem.Checked && AppSettings.UseGitColoring.Value;
+
         [Description("Treat all files as text.")]
         [DefaultValue(false)]
         private bool TreatAllFilesAsText { get; set; }
@@ -325,6 +331,7 @@ namespace GitUI.Editor
             decreaseNumberOfLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DecreaseNumberOfVisibleLines);
             showEntireFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowEntireFile);
             showSyntaxHighlightingToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowSyntaxHighlighting);
+            showGitWordColoringToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowGitWordColoring);
             treatAllFilesAsTextToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.TreatFileAsText);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
             replaceToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Replace);
@@ -363,6 +370,7 @@ namespace GitUI.Editor
                 // Handle zero context as showing no file changes, to get the summary only
                 { isRangeDiff && NumberOfContextLines == 0, "--no-patch " },
                 { TreatAllFilesAsText, "--text" },
+                { ShowGitWordColoring, "--word-diff=color" },
             };
         }
 
@@ -792,7 +800,7 @@ namespace GitUI.Editor
             resetSelectedLinesToolStripMenuItem.Visible = SupportLinePatching;
 
             // RangeDiff patch is undefined, could be new/old commit or to parents
-            bool isCopyPatch = viewMode.IsNormalDiffView();
+            bool isCopyPatch = viewMode.IsNormalDiffView() && !ShowGitWordColoring;
             copyPatchToolStripMenuItem.Visible = isCopyPatch;
             copyNewVersionToolStripMenuItem.Visible = isCopyPatch;
             copyOldVersionToolStripMenuItem.Visible = isCopyPatch;
@@ -807,12 +815,12 @@ namespace GitUI.Editor
             decreaseNumberOfLinesToolStripMenuItem.Visible = isPartialFlexibleView;
             showEntireFileToolStripMenuItem.Visible = isPartialFlexibleView;
             showSyntaxHighlightingToolStripMenuItem.Visible = isPartialFlexibleView;
-
+            showGitWordColoringToolStripMenuItem.Visible = viewMode is ViewMode.Diff or ViewMode.CombinedDiff && AppSettings.UseGitColoring.Value;
             toolStripSeparator2.Visible = viewMode.IsPartialTextView();
             treatAllFilesAsTextToolStripMenuItem.Visible = viewMode.IsPartialTextView();
 
             // toolbar
-            bool hasNextPreviousButton = viewMode.IsPartialTextView();
+            bool hasNextPreviousButton = viewMode.IsPartialTextView() && !ShowGitWordColoring;
             nextChangeButton.Visible = hasNextPreviousButton;
             previousChangeButton.Visible = hasNextPreviousButton;
 
@@ -970,7 +978,8 @@ namespace GitUI.Editor
 
                 // Diffs, currently requires that the file to update exists
                 ((_viewMode.IsDiffView() && (text?.Contains("@@") ?? false)
-                        && File.Exists(_fullPathResolver.Resolve(fileName)))
+                        && File.Exists(_fullPathResolver.Resolve(fileName))
+                        && !ShowGitWordColoring)
 
                 // New files, patches only applies for artificial or if the file does not exist
                     || ((item?.Item.IsNew ?? false)
@@ -1261,6 +1270,13 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
             SetStateOfContextLinesButtons();
             AppSettings.ShowEntireFile.Value = ShowEntireFile;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void ShowGitWordColoringToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            showGitWordColoringToolStripMenuItem.Checked = !showGitWordColoringToolStripMenuItem.Checked;
+            AppSettings.ShowGitWordColoring.Value = showGitWordColoringToolStripMenuItem.Checked;
             OnExtraDiffArgumentsChanged();
         }
 
@@ -1807,6 +1823,7 @@ namespace GitUI.Editor
             DecreaseNumberOfVisibleLines = 3,
             ShowEntireFile = 4,
             ShowSyntaxHighlighting = 17,
+            ShowGitWordColoring = 18,
             TreatFileAsText = 5,
             NextChange = 6,
             PreviousChange = 7,
@@ -1839,6 +1856,7 @@ namespace GitUI.Editor
                 case Command.DecreaseNumberOfVisibleLines: return PerformClickIfAvailable(decreaseNumberOfLinesToolStripMenuItem);
                 case Command.ShowEntireFile: return PerformClickIfAvailable(showEntireFileToolStripMenuItem);
                 case Command.ShowSyntaxHighlighting: return PerformClickIfAvailable(showSyntaxHighlightingToolStripMenuItem);
+                case Command.ShowGitWordColoring: return PerformClickIfAvailable(showGitWordColoringToolStripMenuItem);
                 case Command.TreatFileAsText: return PerformClickIfAvailable(treatAllFilesAsTextToolStripMenuItem);
                 case Command.NextChange: return PerformClickIfAvailable(nextChangeButton);
                 case Command.PreviousChange: return PerformClickIfAvailable(previousChangeButton);

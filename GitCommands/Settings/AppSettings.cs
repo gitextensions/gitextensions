@@ -1567,6 +1567,16 @@ namespace GitCommands
             set => SetBool("RememberShowEntireFilePreference", value);
         }
 
+        /// <summary>
+        /// Enable git-word-diff instead of normal "patch" viewer.
+        /// </summary>
+        public static BoolRuntimeSetting ShowGitWordColoring { get; } = new(RootSettingsPath, nameof(ShowGitWordColoring), false);
+
+        /// <summary>
+        /// Gets or sets whether to remember the preference for showing git word coloring.
+        /// </summary>
+        public static ISetting<bool> RememberShowGitWordColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(RememberShowGitWordColoring), false);
+
         public static int NumberOfContextLines
         {
             get

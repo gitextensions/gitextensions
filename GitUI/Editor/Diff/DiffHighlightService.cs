@@ -50,6 +50,13 @@ public abstract class DiffHighlightService : TextHighlightService
             commandConfiguration.Add(new GitConfigItem("diff.colorMovedWS", "no"), command);
         }
 
+        if (string.IsNullOrEmpty(module.GetEffectiveSetting("diff.wordRegex")))
+        {
+            // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt-diffwordRegex
+            // Set to "minimal" diff unless configured.
+            commandConfiguration.Add(new GitConfigItem("diff.wordRegex", "."), command);
+        }
+
         // Override Git default coloring to "theme" colors for those that are defined
         if (AppSettings.UseGEThemeGitColoring.Value)
         {
@@ -70,6 +77,12 @@ public abstract class DiffHighlightService : TextHighlightService
     {
         if (_useGitColoring)
         {
+            // Apply GE wordhighlighting unless Git coloring is already applied
+            if (!AppSettings.ShowGitWordColoring.Value)
+            {
+                AddExtraPatchHighlighting(document);
+            }
+
             foreach (TextMarker tm in _textMarkers)
             {
                 document.MarkerStrategy.AddMarker(tm);
