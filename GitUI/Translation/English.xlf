@@ -1385,6 +1385,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Remember the 'Show entire file' preference</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkRememberShowGitWordColoringPreference.Text">
+        <source>Remember the 'Show Git word coloring' preference</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
         <source>Remember the 'Show nonprinting characters' preference</source>
         <target />
@@ -1616,6 +1620,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="showEntireFileToolStripMenuItem.Text">
         <source>Show &amp;entire file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showGitWordColoringToolStripMenuItem.Text">
+        <source>Show Git wor&amp;d coloring</source>
         <target />
       </trans-unit>
       <trans-unit id="showNonPrintChars.ToolTipText">

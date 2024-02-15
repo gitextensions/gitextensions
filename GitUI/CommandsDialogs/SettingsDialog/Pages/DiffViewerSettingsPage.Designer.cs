@@ -32,6 +32,7 @@
             chkRememberIgnoreWhiteSpacePreference = new CheckBox();
             chkRememberShowNonPrintingCharsPreference = new CheckBox();
             chkRememberShowEntireFilePreference = new CheckBox();
+            chkRememberShowGitWordColoringPreference = new CheckBox();
             chkRememberNumberOfContextLines = new CheckBox();
             chkRememberShowSyntaxHighlightingInDiff = new CheckBox();
             chkOmitUninterestingDiff = new CheckBox();
@@ -60,19 +61,21 @@
             tlpnlGeneral.Controls.Add(chkRememberIgnoreWhiteSpacePreference, 0, 0);
             tlpnlGeneral.Controls.Add(chkRememberShowNonPrintingCharsPreference, 0, 1);
             tlpnlGeneral.Controls.Add(chkRememberShowEntireFilePreference, 0, 2);
-            tlpnlGeneral.Controls.Add(chkRememberNumberOfContextLines, 0, 3);
-            tlpnlGeneral.Controls.Add(chkRememberShowSyntaxHighlightingInDiff, 0, 4);
-            tlpnlGeneral.Controls.Add(chkOmitUninterestingDiff, 0, 5);
-            tlpnlGeneral.Controls.Add(chkContScrollToNextFileOnlyWithAlt, 0, 6);
-            tlpnlGeneral.Controls.Add(chkOpenSubmoduleDiffInSeparateWindow, 0, 7);
-            tlpnlGeneral.Controls.Add(chkShowDiffForAllParents, 0, 8);
-            tlpnlGeneral.Controls.Add(chkShowAllCustomDiffTools, 0, 9);
-            tlpnlGeneral.Controls.Add(label1, 0, 10);
-            tlpnlGeneral.Controls.Add(VerticalRulerPosition, 1, 10);
+            tlpnlGeneral.Controls.Add(chkRememberShowGitWordColoringPreference, 0, 3);
+            tlpnlGeneral.Controls.Add(chkRememberNumberOfContextLines, 0, 4);
+            tlpnlGeneral.Controls.Add(chkRememberShowSyntaxHighlightingInDiff, 0, 5);
+            tlpnlGeneral.Controls.Add(chkOmitUninterestingDiff, 0, 6);
+            tlpnlGeneral.Controls.Add(chkContScrollToNextFileOnlyWithAlt, 0, 7);
+            tlpnlGeneral.Controls.Add(chkOpenSubmoduleDiffInSeparateWindow, 0, 8);
+            tlpnlGeneral.Controls.Add(chkShowDiffForAllParents, 0, 9);
+            tlpnlGeneral.Controls.Add(chkShowAllCustomDiffTools, 0, 10);
+            tlpnlGeneral.Controls.Add(label1, 0, 11);
+            tlpnlGeneral.Controls.Add(VerticalRulerPosition, 1, 11);
             tlpnlGeneral.Dock = DockStyle.Fill;
             tlpnlGeneral.Location = new Point(8, 24);
             tlpnlGeneral.Name = "tlpnlGeneral";
-            tlpnlGeneral.RowCount = 11;
+            tlpnlGeneral.RowCount = 12;
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
             tlpnlGeneral.RowStyles.Add(new RowStyle());
             tlpnlGeneral.RowStyles.Add(new RowStyle());
             tlpnlGeneral.RowStyles.Add(new RowStyle());
@@ -116,6 +119,16 @@
             chkRememberShowEntireFilePreference.Size = new Size(325, 19);
             chkRememberShowEntireFilePreference.Text = "Remember the \'Show entire file\' preference";
             chkRememberShowEntireFilePreference.UseVisualStyleBackColor = true;
+            // 
+            // chkRememberShowGitWordColoringPreference
+            // 
+            chkRememberShowGitWordColoringPreference.AutoSize = true;
+            chkRememberShowGitWordColoringPreference.Dock = DockStyle.Fill;
+            chkRememberShowGitWordColoringPreference.Location = new Point(3, 53);
+            chkRememberShowGitWordColoringPreference.Name = "chkRememberShowGitWordColoringPreference";
+            chkRememberShowGitWordColoringPreference.Size = new Size(325, 19);
+            chkRememberShowGitWordColoringPreference.Text = "Remember the \'Show Git word coloring\' preference";
+            chkRememberShowGitWordColoringPreference.UseVisualStyleBackColor = true;
             // 
             // chkRememberNumberOfContextLines
             // 
@@ -271,6 +284,7 @@
         private CheckBox chkRememberIgnoreWhiteSpacePreference;
         private CheckBox chkRememberShowNonPrintingCharsPreference;
         private CheckBox chkRememberShowEntireFilePreference;
+        private CheckBox chkRememberShowGitWordColoringPreference;
         private CheckBox chkRememberNumberOfContextLines;
         private CheckBox chkRememberShowSyntaxHighlightingInDiff;
         private CheckBox chkOmitUninterestingDiff;

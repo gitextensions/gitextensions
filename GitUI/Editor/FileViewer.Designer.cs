@@ -36,6 +36,7 @@ namespace GitUI.Editor
             decreaseNumberOfLinesToolStripMenuItem = new ToolStripMenuItem();
             showEntireFileToolStripMenuItem = new ToolStripMenuItem();
             showSyntaxHighlightingToolStripMenuItem = new ToolStripMenuItem();
+            showGitWordColoringToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             treatAllFilesAsTextToolStripMenuItem = new ToolStripMenuItem();
             automaticContinuousScrollToolStripMenuItem = new ToolStripMenuItem();
@@ -83,6 +84,7 @@ namespace GitUI.Editor
             ignoreWhitespaceAtEolToolStripMenuItem,
             ignoreWhitespaceChangesToolStripMenuItem,
             ignoreAllWhitespaceChangesToolStripMenuItem,
+            showGitWordColoringToolStripMenuItem,
             toolStripSeparator2,
             treatAllFilesAsTextToolStripMenuItem,
             automaticContinuousScrollToolStripMenuItem,
@@ -218,6 +220,14 @@ namespace GitUI.Editor
             showSyntaxHighlightingToolStripMenuItem.Size = new Size(243, 22);
             showSyntaxHighlightingToolStripMenuItem.Text = "Show synta&x highlighting";
             showSyntaxHighlightingToolStripMenuItem.Click += ShowSyntaxHighlighting_Click;
+            // 
+            // showGitWordColoringToolStripMenuItem
+            // 
+            showGitWordColoringToolStripMenuItem.Image = Properties.Images.Colors;
+            showGitWordColoringToolStripMenuItem.Name = "showGitWordColoringToolStripMenuItem";
+            showGitWordColoringToolStripMenuItem.Size = new Size(243, 22);
+            showGitWordColoringToolStripMenuItem.Text = "Show Git wor&d coloring";
+            showGitWordColoringToolStripMenuItem.Click += ShowGitWordColoringToolStripMenuItemClick;
             // 
             // toolStripSeparator2
             // 
@@ -482,6 +492,7 @@ namespace GitUI.Editor
         private ToolStripMenuItem decreaseNumberOfLinesToolStripMenuItem;
         private ToolStripMenuItem showEntireFileToolStripMenuItem;
         private ToolStripMenuItem showSyntaxHighlightingToolStripMenuItem;
+        private ToolStripMenuItem showGitWordColoringToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
         private ToolStripMenuItem copyToolStripMenuItem;

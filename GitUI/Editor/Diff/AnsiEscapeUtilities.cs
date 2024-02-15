@@ -156,34 +156,41 @@ public partial class AnsiEscapeUtilities
             }
             else
             {
-                // Reset escape sequence, end of segment
-
-                if (currentHighlight.Length < 0)
-                {
-                    // Previous was a reset, just ignore.
-                    continue;
-                }
-
-                if (currentHighlight.Length > 0)
-                {
-                    // This could be escapeCodes setting without any effect,
-                    // Git also ends "configured with empty" (like diff context set in GE) without start with end segment.
-                    Debug.WriteLineIf(sb.Length < 256, $"Debug: Unexpected no ongoing marker at {sb.Length}.");
-                    continue;
-                }
-
-                currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
-                if (TryGetTextMarker(currentHighlight, out TextMarker tm))
-                {
-                    textMarkers.Add(tm);
-                }
-
-                currentHighlight.Length = -1;
+                EndCurrentHighlight();
             }
         }
 
         sb.Append(text.AsSpan(prevLineOffset));
-        sb.Append('\n');
+        EndCurrentHighlight();
+
+        return;
+
+        void EndCurrentHighlight()
+        {
+            // Reset escape sequence, end of segment
+
+            if (currentHighlight.Length < 0)
+            {
+                // Previous was a reset, just ignore.
+                return;
+            }
+
+            if (currentHighlight.Length > 0)
+            {
+                // This could be escapeCodes setting without any effect,
+                // Git also ends "configured with empty" (like diff context set in GE) without start with end segment.
+                Debug.WriteLineIf(sb.Length < 256, $"Debug: Unexpected no ongoing marker at {sb.Length}.");
+                return;
+            }
+
+            currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
+            if (TryGetTextMarker(currentHighlight, out TextMarker tm))
+            {
+                textMarkers.Add(tm);
+            }
+
+            currentHighlight.Length = -1;
+        }
     }
 
     /// <summary>
@@ -243,14 +250,14 @@ public partial class AnsiEscapeUtilities
                     break;
                 case >= 30 and <= 37: // Set foreground color
                 case >= 90 and <= 97: // Set bright foreground color
-                    bold = escapeCodes[i] >= 90;
-                    currentColorId = escapeCodes[i] - (bold ? 90 : 30);
+                    bold = bold || escapeCodes[i] >= 90;
+                    currentColorId = escapeCodes[i] - (escapeCodes[i] >= 90 ? 90 : 30);
                     foreColor = Get8bitColor(currentColorId + GetBoldDimOffset(), out _);
                     break;
                 case >= 40 and <= 47: // Set background color
                 case >= 100 and <= 107: // Set bright background color
-                    bold = escapeCodes[i] >= 100;
-                    int backColorId = escapeCodes[i] - (bold ? 100 : 40);
+                    bold = bold || escapeCodes[i] >= 100;
+                    int backColorId = escapeCodes[i] - (escapeCodes[i] >= 100 ? 100 : 40);
                     backColor = Get8bitColor(backColorId + GetBoldDimOffset(), out _);
                     break;
                 case 38: // Set foreground color with sequence
@@ -276,15 +283,15 @@ public partial class AnsiEscapeUtilities
                     else if (escapeCodes[i] == 2)
                     {
                         // ESC[38;2;⟨r⟩;⟨g⟩;⟨b⟩ m Select RGB foreground color
-                        ++i;
-                        if (i >= escapeCodes.Count - 2)
+                        if (i >= escapeCodes.Count - 3)
                         {
                             Trace.WriteLine($"Unexpected too few arguments for {i} {escapeCodes}");
                             DebugHelpers.Fail($"Unexpected too few arguments for {i} {escapeCodes}");
                             break;
                         }
 
-                        color = Color.FromArgb(escapeCodes[i], escapeCodes[i + 1], escapeCodes[i + 2]);
+                        color = Color.FromArgb(escapeCodes[i + 1], escapeCodes[i + 2], escapeCodes[i + 3]);
+                        i += 3;
 
                         // Unknown fixed identifier, reset id
                         // Reset also for background to avoid CS0165
@@ -422,16 +429,21 @@ public partial class AnsiEscapeUtilities
         static Color Get216Colors(int level)
         {
             int i = level - 16;
-            int blue = i % 6;
-            int green = i % 36;
-            int red = i / 36;
+            int blue = Get8bitFrom6over3bit(i % 6);
+            int green = Get8bitFrom6over3bit((i % 36) / 6);
+            int red = Get8bitFrom6over3bit(i / 36);
 
             return Color.FromArgb(red, green, blue);
+
+            // Convert 0-5 to 0-255
+            static int Get8bitFrom6over3bit(int color)
+                => color * 51;
         }
 
         static Color Get24StepGray(int level)
         {
-            int i = 8 + ((level - 232) * 10);
+            // Convert 0-23 to 0-253
+            int i = (level - 232) * 11;
             return Color.FromArgb(i, i, i);
         }
     }
@@ -461,5 +473,17 @@ public partial class AnsiEscapeUtilities
             ? new TextMarker(hl.DocOffset, hl.Length, TextMarkerType.SolidBlock, (Color)hl.BackColor)
             : new TextMarker(hl.DocOffset, hl.Length, TextMarkerType.SolidBlock, (Color)hl.BackColor, (Color)hl.ForeColor);
         return true;
+    }
+
+    internal readonly struct TestAccessor
+    {
+        public static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId)
+            => AnsiEscapeUtilities.TryGetColorsFromEscapeSequence(escapeCodes, out backColor, out foreColor, ref currentColorId);
+
+        public static Color Get8bitColor(int colorCode, out int colorId)
+            => AnsiEscapeUtilities.Get8bitColor(colorCode, out colorId);
+
+        public static int GetBoldOffset() => _boldOffset;
+        public static int GetDimOffset() => _dimOffset;
     }
 }
