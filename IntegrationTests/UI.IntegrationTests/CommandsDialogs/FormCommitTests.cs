@@ -271,20 +271,14 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(async form =>
             {
-                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Stage all", form.GetTestAccessor().StageAllToolItem.ToolTipText);
             });
 
             RunFormTest(async form =>
             {
-                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 FormCommit.TestAccessor testform = form.GetTestAccessor();
 
@@ -314,20 +308,14 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(async form =>
             {
-                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Unstage all", form.GetTestAccessor().UnstageAllToolItem.ToolTipText);
             });
 
             RunFormTest(async form =>
             {
-                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 FormCommit.TestAccessor testform = form.GetTestAccessor();
 

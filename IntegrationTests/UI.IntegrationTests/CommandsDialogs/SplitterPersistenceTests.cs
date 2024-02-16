@@ -219,7 +219,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             UITest.ProcessUntil("Loading Revisions", () => revisionGridControl.GetTestAccessor().IsDataLoadComplete);
             try
             {
-                await AsyncTestHelper.JoinPendingOperationsAsync(TimeSpan.FromSeconds(5));
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
             }
             catch
             {
