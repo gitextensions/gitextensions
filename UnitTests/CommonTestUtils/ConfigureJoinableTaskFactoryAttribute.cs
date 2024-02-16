@@ -67,6 +67,8 @@ namespace CommonTestUtils
                     using CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout);
                     try
                     {
+                        ThreadHelper.CancelSwitchToMainThread();
+
                         // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
                         // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
                         // never complete.

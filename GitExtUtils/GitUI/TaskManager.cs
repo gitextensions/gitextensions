@@ -5,6 +5,10 @@ namespace GitUI
 {
     public class TaskManager
     {
+        private static readonly CancellationTokenSequence _switchToMainThreadCancellationTokenSequence = new();
+
+        private static CancellationToken _switchToMainThreadCancellationToken = _switchToMainThreadCancellationTokenSequence.Next();
+
         private readonly JoinableTaskCollection _joinableTaskCollection;
 
         public TaskManager(JoinableTaskContext joinableTaskContext)
@@ -65,6 +69,11 @@ namespace GitUI
                 };
         }
 
+        internal static void CancelSwitchToMainThread()
+        {
+            _switchToMainThreadCancellationToken = _switchToMainThreadCancellationTokenSequence.Next();
+        }
+
         /// <summary>
         /// Asynchronously run <paramref name="asyncAction"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
@@ -104,7 +113,7 @@ namespace GitUI
                     {
                         if (!JoinableTaskContext.IsOnMainThread)
                         {
-                            await control.SwitchToMainThreadAsync(cancellationToken);
+                            await control.SwitchToMainThreadAsync(cancellationToken.CombineWith(_switchToMainThreadCancellationToken).Token);
                         }
 
                         await asyncAction();
@@ -142,7 +151,7 @@ namespace GitUI
             {
                 if (!JoinableTaskContext.IsOnMainThread)
                 {
-                    await JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await JoinableTaskFactory.SwitchToMainThreadAsync(_switchToMainThreadCancellationToken);
                 }
 
                 Application.OnThreadException(ex.Demystify());

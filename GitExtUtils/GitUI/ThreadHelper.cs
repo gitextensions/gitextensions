@@ -22,6 +22,9 @@ namespace GitUI
 
         public static JoinableTaskFactory JoinableTaskFactory => _taskManager.JoinableTaskFactory;
 
+        internal static void CancelSwitchToMainThread()
+            => TaskManager.CancelSwitchToMainThread();
+
         public static ExclusiveTaskRunner CreateExclusiveTaskRunner()
             => new(_taskManager);
 
