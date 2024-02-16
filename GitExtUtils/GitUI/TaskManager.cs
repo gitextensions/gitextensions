@@ -131,7 +131,14 @@ namespace GitUI
 
         public async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
         {
-            await _joinableTaskCollection.JoinTillEmptyAsync(cancellationToken);
+            try
+            {
+                await _joinableTaskCollection.JoinTillEmptyAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+            }
         }
 
         public void JoinPendingOperations()
@@ -141,7 +148,7 @@ namespace GitUI
 
             // Note that JoinableTaskContext.Factory must be used to bypass the default behavior of JoinableTaskFactory
             // since the latter adds new tasks to the collection and would therefore never complete.
-            JoinableTaskContext.Factory.Run(() => _joinableTaskCollection.JoinTillEmptyAsync(cancellationTokenSource.Token));
+            JoinableTaskContext.Factory.Run(() => JoinPendingOperationsAsync(cancellationTokenSource.Token));
         }
 
         /// <summary>
