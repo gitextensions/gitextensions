@@ -136,9 +136,12 @@ namespace GitUI
 
         public void JoinPendingOperations()
         {
+            const int maxWaitMilliseconds = 60_000;
+            using CancellationTokenSource cancellationTokenSource = new(maxWaitMilliseconds);
+
             // Note that JoinableTaskContext.Factory must be used to bypass the default behavior of JoinableTaskFactory
             // since the latter adds new tasks to the collection and would therefore never complete.
-            JoinableTaskContext.Factory.Run(_joinableTaskCollection.JoinTillEmptyAsync);
+            JoinableTaskContext.Factory.Run(() => _joinableTaskCollection.JoinTillEmptyAsync(cancellationTokenSource.Token));
         }
 
         /// <summary>
