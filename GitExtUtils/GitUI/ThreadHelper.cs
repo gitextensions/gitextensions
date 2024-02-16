@@ -105,9 +105,6 @@ namespace GitUI
         public static async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
             => await _taskManager.JoinPendingOperationsAsync(cancellationToken);
 
-        public static void JoinPendingOperations()
-            => _taskManager.JoinPendingOperations();
-
         public static T CompletedResult<T>(this Task<T> task)
         {
             if (!task.IsCompleted)

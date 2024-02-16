@@ -178,7 +178,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             Assert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
 
             // Await all async operation such as load of branches and remotes in the left panel
-            ThreadHelper.JoinPendingOperations();
+            AsyncTestHelper.JoinPendingOperations();
 
             GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
             TreeNode remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
