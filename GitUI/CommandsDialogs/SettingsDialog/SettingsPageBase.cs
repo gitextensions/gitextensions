@@ -48,6 +48,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
 
+        /// <summary>
+        ///  Gets the instance of <see cref="IServiceProvider"/> as assigned in the constructor.
+        ///  This property replaces the property <see cref="GitExtensionsControl.ServiceProvider"/>,
+        ///  which would be available only for controls implementing <see cref="IGitModuleControl"/>
+        ///  or for controls placed on a <see cref="IGitModuleForm"/>. Neither is the case for settings pages.
+        /// </summary>
         protected internal new IServiceProvider ServiceProvider { get; }
 
         protected ToolTip ToolTip => toolTip1;
