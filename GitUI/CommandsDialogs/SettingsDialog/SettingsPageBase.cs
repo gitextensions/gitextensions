@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// <summary>
     /// set Text property in derived classes to set the title.
     /// </summary>
-    public abstract partial class SettingsPageBase : GitExtensionsControl, ISettingsPage
+    public abstract partial class SettingsPageBase : TranslatedControl, ISettingsPage
     {
         private readonly List<ISettingControlBinding> _controlBindings = [];
         private IReadOnlyList<string>? _childrenText;
@@ -50,11 +50,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         /// <summary>
         ///  Gets the instance of <see cref="IServiceProvider"/> as assigned in the constructor.
-        ///  This property replaces the property <see cref="GitExtensionsControl.ServiceProvider"/>,
-        ///  which would be available only for controls implementing <see cref="IGitModuleControl"/>
-        ///  or for controls placed on a <see cref="IGitModuleForm"/>. Neither is the case for settings pages.
         /// </summary>
-        protected internal new IServiceProvider ServiceProvider { get; }
+        protected internal IServiceProvider ServiceProvider { get; }
 
         protected ToolTip ToolTip => toolTip1;
 
