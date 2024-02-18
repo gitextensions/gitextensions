@@ -26,7 +26,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public override void Refresh(int rowHeight, in VisibleRowRange range) => Column.Visible = AppSettings.ShowDateColumn;
+        public override void ApplySettings()
+        {
+            Column.Visible = AppSettings.ShowDateColumn;
+        }
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {

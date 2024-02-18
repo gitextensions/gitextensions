@@ -121,23 +121,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             };
 
-            _revisionGraph.Updated += () =>
-            {
-                // We have to post this since the thread owns a lock on GraphData that we'll
-                // need in order to re-draw the graph.
-                this.InvokeAndForget(() =>
-                    {
-                        DebugHelpers.Assert(_rowHeight != 0, "_rowHeight != 0");
-
-                        // Refresh column providers
-                        foreach (ColumnProvider columnProvider in _columnProviders)
-                        {
-                            columnProvider.Refresh(_rowHeight, _visibleRowRange);
-                        }
-
-                        Invalidate();
-                    });
-            };
+            _revisionGraph.Updated += () => this.InvokeAndForget(Invalidate);
 
             VirtualMode = true;
             Clear();
@@ -678,6 +662,18 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
+            if (_forceRefresh)
+            {
+                // Always set _backgroundScrollTo in order to stop the background thread
+                _backgroundScrollTo = -1;
+
+                // The graph cache must be cleared at once
+                foreach (ColumnProvider columnProvider in _columnProviders)
+                {
+                    columnProvider.Clear();
+                }
+            }
+
             _backgroundUpdater.ScheduleExcecution();
         }
 
@@ -686,13 +682,8 @@ namespace GitUI.UserControls.RevisionGrid
             CancellationToken cancellationToken = _updateVisibleRowRangeSequence.Next();
 
             int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
-            int visibleRowCount = _rowHeight <= 0 ? 0 : (Height + _rowHeight - 1) / _rowHeight; // Rounding up integer division: (a+b-1)/b = ceil(a/b)
+            int visibleRowCount = DisplayedRowCount(includePartialRow: true);
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
-
-            if (_forceRefresh)
-            {
-                _backgroundScrollTo = -1;
-            }
 
             if (_forceRefresh || _visibleRowRange.FromIndex != fromIndex || _visibleRowRange.Count != visibleRowCount)
             {
@@ -775,18 +766,23 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        public override void Refresh()
+        public void ApplySettings()
         {
             InitFonts();
-
             UpdateRowHeight();
-            UpdateVisibleRowRange();
 
-            // Refresh column providers
             foreach (ColumnProvider columnProvider in _columnProviders)
             {
-                columnProvider.Refresh(_rowHeight, _visibleRowRange);
+                columnProvider.ApplySettings();
             }
+
+            Refresh();
+        }
+
+        public override void Refresh()
+        {
+            _forceRefresh = true;
+            UpdateVisibleRowRange();
 
             base.Refresh();
         }

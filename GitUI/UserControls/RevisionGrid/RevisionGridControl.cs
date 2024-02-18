@@ -531,7 +531,7 @@ namespace GitUI
                 _lastVisibleResizableColumn.Resizable = DataGridViewTriState.True;
             }
 
-            _gridView.Refresh(); // columns could change their Resizable state, e.g. the BuildStatusColumnProvider
+            _gridView.ApplySettings(); // columns could change their Resizable state, e.g. the BuildStatusColumnProvider
 
             base.Refresh();
 
