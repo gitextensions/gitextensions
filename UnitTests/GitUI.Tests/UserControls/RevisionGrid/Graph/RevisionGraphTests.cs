@@ -309,9 +309,7 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             AppSettings.StraightenGraphDiagonals.Value = true;
 
-            RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
-
-            await VerifyGraphLayoutAsync(revisionGraph);
+            await VerifyGraphLayoutAsync(commitSpecs);
         }
 
         [Test]
@@ -329,9 +327,7 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             AppSettings.StraightenGraphDiagonals.Value = true;
 
-            RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
-
-            await VerifyGraphLayoutAsync(revisionGraph);
+            await VerifyGraphLayoutAsync(commitSpecs);
         }
 
         [Test]
@@ -343,9 +339,7 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             AppSettings.StraightenGraphDiagonals.Value = true;
 
-            RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
-
-            await VerifyGraphLayoutAsync(revisionGraph);
+            await VerifyGraphLayoutAsync(commitSpecs);
         }
 
         [Test]
@@ -355,9 +349,7 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             AppSettings.StraightenGraphDiagonals.Value = true;
 
-            RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
-
-            await VerifyGraphLayoutAsync(revisionGraph);
+            await VerifyGraphLayoutAsync(commitSpecs);
         }
 
         [Test]
@@ -502,7 +494,7 @@ namespace GitUITests.UserControls.RevisionGrid
             return graph;
         }
 
-        private RevisionGraph CreateGraphTopDown(string commitSpecs)
+        private static RevisionGraph CreateGraphTopDown(string commitSpecs)
         {
             return CreateGraph(commitSpecs.Split(' ').Reverse().Join(" "));
         }
@@ -633,6 +625,13 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
             await Verify(actualGraph);
+        }
+
+        private async Task VerifyGraphLayoutAsync(string commitSpecs)
+        {
+            RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
+            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
+            await Verify(actualGraph).UseHashedParameters(commitSpecs);
         }
     }
 }
