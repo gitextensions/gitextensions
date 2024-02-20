@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Runtime.CompilerServices;
+using FluentAssertions;
 using GitCommands;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
@@ -301,55 +302,55 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        [TestCase("0:1,4 1:2 2:R,3 3:R 4:R R")]
-        [TestCase("0:1,R 1:2,R 2:4,3 3:R 4:5,8 5:6 6:7,R 7:R,R 8:9 9:R R")]
-        [TestCase("0:D,1,2,3,4,5,6,B,8,9,7 1:D 2:D 3:E 4:E 5:C 6:C 7:G 8:9 9:A A:B B:C C:F D:R E:F F:R G:H H:R R")]
-        [TestCase("0:4 1:3,2 2:6 3:8,B 4:5 5:A,6 6:7 7:8 8:C,R 9:A A:B,R B:R C:R R")]
-        public async Task UnfoldOneLaneShiftsToDiagonals(string commitSpecs)
+        [TestCase(1, "0:1,4 1:2 2:R,3 3:R 4:R R")]
+        [TestCase(2, "0:1,R 1:2,R 2:4,3 3:R 4:5,8 5:6 6:7,R 7:R,R 8:9 9:R R")]
+        [TestCase(3, "0:D,1,2,3,4,5,6,B,8,9,7 1:D 2:D 3:E 4:E 5:C 6:C 7:G 8:9 9:A A:B B:C C:F D:R E:F F:R G:H H:R R")]
+        [TestCase(4, "0:4 1:3,2 2:6 3:8,B 4:5 5:A,6 6:7 7:8 8:C,R 9:A A:B,R B:R C:R R")]
+        public async Task UnfoldOneLaneShiftsToDiagonals(int testCaseIndex, string commitSpecs)
         {
             AppSettings.StraightenGraphDiagonals.Value = true;
 
-            await VerifyGraphLayoutAsync(commitSpecs);
+            await VerifyGraphLayoutAsync(commitSpecs, testCaseIndex);
         }
 
         [Test]
         // Do not move the right lane of row 2.
-        [TestCase("0:1,5 1:2   2:R,3 3:R,4 4:R   5:R R")]
+        [TestCase(1, "0:1,5 1:2   2:R,3 3:R,4 4:R   5:R R")]
         // Do not move the right lanes of row 6.
-        [TestCase("0:1,R 1:2,R 2:4,3 3:R   4:5,R 5:6   6:7   7:8,R 8:9 9:R R")]
+        [TestCase(2, "0:1,R 1:2,R 2:4,3 3:R   4:5,R 5:6   6:7   7:8,R 8:9 9:R R")]
         // Do not move the right lanes of row 4.
-        [TestCase("0:1,R 1:2,R 2:4,3 3:R 4:5,8 5:6,R 6:7,R 7:R,R 8:9 9:R R")]
+        [TestCase(3, "0:1,R 1:2,R 2:4,3 3:R 4:5,8 5:6,R 6:7,R 7:R,R 8:9 9:R R")]
         // Do not move segment 4:8 at row 6 & 5.
-        [TestCase("0:5,1,2,3,4 1:5 2:5 3:6 4:8 5:R 6:7 7:8,B 8:9 9:R,A A:R   B:R     R")]
+        [TestCase(4, "0:5,1,2,3,4 1:5 2:5 3:6 4:8 5:R 6:7 7:8,B 8:9 9:R,A A:R   B:R     R")]
         // Do not move segment 7:B at row 9.
-        [TestCase("0:5,1,2,3,4 1:5 2:5 3:6 4:8 5:R 6:7 7:8,B 8:9 9:R,A A:R,C B:R C:R R")]
-        public async Task DoNotUnfoldOneLaneShiftFollowedByDiagonal(string commitSpecs)
+        [TestCase(5, "0:5,1,2,3,4 1:5 2:5 3:6 4:8 5:R 6:7 7:8,B 8:9 9:R,A A:R,C B:R C:R R")]
+        public async Task DoNotUnfoldOneLaneShiftFollowedByDiagonal(int testCaseIndex, string commitSpecs)
         {
             AppSettings.StraightenGraphDiagonals.Value = true;
 
-            await VerifyGraphLayoutAsync(commitSpecs);
+            await VerifyGraphLayoutAsync(commitSpecs, testCaseIndex);
         }
 
         [Test]
-        [TestCase("0:3,2 1:5 2:5 3:5 4:R 5:R R")]
-        [TestCase("0:3,2 1:5 2:5 3:5 4:6 5:6 6:7,8 7:R 8:R R")]
-        [TestCase("0:5,4 1:7 2:6 3:R 4:7 5:7 6:R 7:R R")]
-        [TestCase("0:R,3 1:2 2:8,7 3:4,5,6 4:R 5:R 6:R 7:8 8:R R")]
-        public async Task JoinMultiLaneCrossings(string commitSpecs)
+        [TestCase(1, "0:3,2 1:5 2:5 3:5 4:R 5:R R")]
+        [TestCase(2, "0:3,2 1:5 2:5 3:5 4:6 5:6 6:7,8 7:R 8:R R")]
+        [TestCase(3, "0:5,4 1:7 2:6 3:R 4:7 5:7 6:R 7:R R")]
+        [TestCase(4, "0:R,3 1:2 2:8,7 3:4,5,6 4:R 5:R 6:R 7:8 8:R R")]
+        public async Task JoinMultiLaneCrossings(int testCaseIndex, string commitSpecs)
         {
             AppSettings.StraightenGraphDiagonals.Value = true;
 
-            await VerifyGraphLayoutAsync(commitSpecs);
+            await VerifyGraphLayoutAsync(commitSpecs, testCaseIndex);
         }
 
         [Test]
-        [TestCase("0:6 1:6 2:6 3:6 4:R 5:7 6:R 7:R R")]
-        [TestCase("0:1,4,R 1:2,R 2:3,R 3:R 4:R R")]
-        public async Task DoNotJoinMultiLaneCrossings(string commitSpecs)
+        [TestCase(1, "0:6 1:6 2:6 3:6 4:R 5:7 6:R 7:R R")]
+        [TestCase(2, "0:1,4,R 1:2,R 2:3,R 3:R 4:R R")]
+        public async Task DoNotJoinMultiLaneCrossings(int testCaseIndex, string commitSpecs)
         {
             AppSettings.StraightenGraphDiagonals.Value = true;
 
-            await VerifyGraphLayoutAsync(commitSpecs);
+            await VerifyGraphLayoutAsync(commitSpecs, testCaseIndex);
         }
 
         [Test]
@@ -627,11 +628,11 @@ namespace GitUITests.UserControls.RevisionGrid
             await Verify(actualGraph);
         }
 
-        private async Task VerifyGraphLayoutAsync(string commitSpecs)
+        private async Task VerifyGraphLayoutAsync(string commitSpecs, int testCaseIndex = 0, [CallerMemberName] string callerMemberName = null)
         {
             RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
             string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-            await Verify(actualGraph).UseHashedParameters(commitSpecs);
+            await Verify(actualGraph).UseFileName($"{callerMemberName}.{testCaseIndex}");
         }
     }
 }
