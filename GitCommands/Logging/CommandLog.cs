@@ -102,12 +102,12 @@ namespace GitCommands.Logging
                 if (FileName.StartsWith("wsl "))
                 {
                     fileName = "wsl";
-                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "");
+                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "").TrimEnd();
                 }
                 else if (FileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
-                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "");
+                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "").TrimEnd();
                 }
                 else
                 {
