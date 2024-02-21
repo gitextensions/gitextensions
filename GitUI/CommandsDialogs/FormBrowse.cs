@@ -640,7 +640,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            RevisionGrid.PerformRefreshRevisions(getRefs, forceRefresh: true);
+            RevisionGrid.PerformRefreshRevisions(getRefs, forceRefreshRefs: true);
 
             InternalInitialize();
             ToolStripFilters.RefreshRevisionFunction(getRefs);
@@ -1677,39 +1677,45 @@ namespace GitUI.CommandsDialogs
             if (Module.IsValidGitWorkingDir())
             {
                 RevisionGrid.SuspendRefreshRevisions();
-                string path = Module.WorkingDir;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
-                AppSettings.RecentWorkingDir = path;
-
-                HideDashboard();
-
-                if (!string.Equals(originalWorkingDir, Module.WorkingDir, StringComparison.Ordinal))
+                try
                 {
-                    ChangeTerminalActiveFolder(Module.WorkingDir);
+                    string path = Module.WorkingDir;
+                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
+                    AppSettings.RecentWorkingDir = path;
+
+                    HideDashboard();
+
+                    if (!string.Equals(originalWorkingDir, Module.WorkingDir, StringComparison.Ordinal))
+                    {
+                        ChangeTerminalActiveFolder(Module.WorkingDir);
 
 #if DEBUG
-                    // Current encodings
-                    Debug.WriteLine($"Encodings for {Module.WorkingDir}");
-                    Debug.WriteLine($"Files content encoding: {Module.FilesEncoding.EncodingName}");
-                    Debug.WriteLine($"Commit encoding: {Module.CommitEncoding.EncodingName}");
-                    if (Module.LogOutputEncoding.CodePage != Module.CommitEncoding.CodePage)
-                    {
-                        Debug.WriteLine($"Log output encoding: {Module.LogOutputEncoding.EncodingName}");
-                    }
+                        // Current encodings
+                        Debug.WriteLine($"Encodings for {Module.WorkingDir}");
+                        Debug.WriteLine($"Files content encoding: {Module.FilesEncoding.EncodingName}");
+                        Debug.WriteLine($"Commit encoding: {Module.CommitEncoding.EncodingName}");
+                        if (Module.LogOutputEncoding.CodePage != Module.CommitEncoding.CodePage)
+                        {
+                            Debug.WriteLine($"Log output encoding: {Module.LogOutputEncoding.EncodingName}");
+                        }
 #endif
 
-                    // Reset the filter when switching repos
+                        // Reset the filter when switching repos
 
-                    // If we're applying custom branch or revision filters - reset them
-                    RevisionGrid.ResetAllFilters();
-                    ToolStripFilters.ClearQuickFilters();
-                    revisionDiff.RepositoryChanged();
+                        // If we're applying custom branch or revision filters - reset them
+                        RevisionGrid.ResetAllFilters();
+                        ToolStripFilters.ClearQuickFilters();
+                        revisionDiff.RepositoryChanged();
+                    }
+
+                    RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
                 }
+                finally
+                {
+                    RevisionGrid.ResumeRefreshRevisions();
 
-                RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
-                RevisionGrid.ResumeRefreshRevisions();
-
-                RefreshRevisions();
+                    RefreshRevisions();
+                }
             }
             else
             {

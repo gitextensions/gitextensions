@@ -113,7 +113,7 @@ namespace GitUI
         /// </summary>
         private Lazy<IReadOnlyCollection<string>>? _ambiguousRefs;
 
-        private int _updatingFilters;
+        private int _suspendRefreshCounter;
 
         private IDisposable? _revisionSubscription;
         private GitRevision? _baseCommitToCompare;
@@ -485,15 +485,15 @@ namespace GitUI
         ///  Prevents revisions refreshes and stops <see cref="PerformRefreshRevisions"/> from executing
         ///  until <see cref="ResumeRefreshRevisions"/> is called.
         /// </summary>
-        internal void SuspendRefreshRevisions() => _updatingFilters++;
+        internal void SuspendRefreshRevisions() => ++_suspendRefreshCounter;
 
         /// <summary>
         ///  Resume revisions refreshes.
         /// </summary>
         internal void ResumeRefreshRevisions()
         {
-            --_updatingFilters;
-            DebugHelpers.Assert(_updatingFilters >= 0, $"{nameof(ResumeRefreshRevisions)} was called without matching {nameof(SuspendRefreshRevisions)}!");
+            --_suspendRefreshCounter;
+            DebugHelpers.Assert(_suspendRefreshCounter >= 0, $"{nameof(ResumeRefreshRevisions)} was called without matching {nameof(SuspendRefreshRevisions)}!");
         }
 
         public void SetAndApplyBranchFilter(string filter)
@@ -865,11 +865,11 @@ namespace GitUI
         }
 
         /// <summary>
-        ///  Indicates whether the revision grid can be refreshed, i.e. it is not currently being refreshed
-        ///  or it is not in a middle of reconfiguration process guarded by <see cref="SuspendRefreshRevisions"/>
+        ///  Indicates whether the revision grid can be refreshed,
+        ///  i.e. it is not in a middle of reconfiguration process guarded by <see cref="SuspendRefreshRevisions"/>
         ///  and <see cref="ResumeRefreshRevisions"/>.
         /// </summary>
-        private bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
+        private bool CanRefresh => _suspendRefreshCounter == 0;
 
         #region PerformRefreshRevisions
 
@@ -877,15 +877,24 @@ namespace GitUI
         ///  Queries git for the new set of revisions and refreshes the grid.
         /// </summary>
         /// <exception cref="Exception"></exception>
-        /// <param name="forceRefresh">Refresh may be required as references may be changed.</param>
-        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, bool forceRefresh = false)
+        /// <param name="forceRefreshRefs">Refresh may be required as references may be changed.</param>
+        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, bool forceRefreshRefs = false)
         {
             ThreadHelper.AssertOnUIThread();
 
             if (!CanRefresh)
             {
-                Trace.WriteLine("Ignoring refresh as RefreshRevisions() is already running.");
+                Trace.WriteLine("Ignoring refresh as RefreshRevisions() is suspended.");
                 return;
+            }
+
+            if (_isRefreshingRevisions)
+            {
+                Trace.WriteLine("Forcing refresh, cancel already running RefreshRevisions().");
+                if (!_gridView.IsDataLoadComplete)
+                {
+                    _gridView.MarkAsDataLoadingComplete();
+                }
             }
 
             IGitModule capturedModule = Module;
@@ -1097,7 +1106,7 @@ namespace GitUI
                 });
 
                 // Initiate update left panel
-                RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
+                RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefreshRefs));
             }
             catch
             {
@@ -1206,55 +1215,59 @@ namespace GitUI
 
             void OnRevisionRead(GitRevision revision)
             {
-                if (!firstRevisionReceived)
+                try
                 {
-                    // Wait for refs,CurrentCheckout and stashes as second step
-                    this.InvokeAndForget(() => ShowLoading(showSpinner: false));
-                    semaphoreUpdateGrid.Wait(cancellationToken);
-                    semaphoreUpdateGrid.Wait(cancellationToken);
-                    firstRevisionReceived = true;
-                }
-
-                if (stashesById is not null)
-                {
-                    if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
+                    if (!firstRevisionReceived)
                     {
-                        revision.ReflogSelector = gridStash.ReflogSelector;
-
-                        // Do not add this again (when the main commit is handled)
-                        stashesById.Remove(revision.ObjectId);
+                        // Wait for refs,CurrentCheckout and stashes as second step
+                        this.InvokeAndForget(() => ShowLoading(showSpinner: false));
+                        semaphoreUpdateGrid.Wait(cancellationToken);
+                        semaphoreUpdateGrid.Wait(cancellationToken);
+                        firstRevisionReceived = true;
                     }
-                    else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+
+                    if (stashesById is not null)
                     {
-                        foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
+                        if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
                         {
-                            // Add if not already added (reflogs etc list before parent commit)
-                            if (stashesById.ContainsKey(stash.ObjectId))
+                            revision.ReflogSelector = gridStash.ReflogSelector;
+
+                            // Do not add this again (when the main commit is handled)
+                            stashesById.Remove(revision.ObjectId);
+                        }
+                        else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+                        {
+                            foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
                             {
-                                _gridView.Add(stash);
-                                if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                // Add if not already added (reflogs etc list before parent commit)
+                                if (stashesById.ContainsKey(stash.ObjectId))
                                 {
-                                    _gridView.Add(untracked);
+                                    _gridView.Add(stash);
+                                    if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                    {
+                                        _gridView.Add(untracked);
+                                    }
                                 }
                             }
                         }
                     }
+
+                    // Look up any refs associated with this revision
+                    revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
+
+                    if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
+                    {
+                        // Insert artificial worktree/index just before HEAD (CurrentCheckout)
+                        // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
+                        headIsHandled = true;
+                        AddArtificialRevisions();
+                    }
+
+                    _gridView.Add(revision);
                 }
-
-                // Look up any refs associated with this revision
-                revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
-
-                if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
+                catch (OperationCanceledException)
                 {
-                    // Insert artificial worktree/index just before HEAD (CurrentCheckout)
-                    // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
-                    headIsHandled = true;
-                    AddArtificialRevisions();
                 }
-
-                _gridView.Add(revision);
-
-                return;
             }
 
             bool ShowArtificialRevisions()
@@ -1351,7 +1364,7 @@ namespace GitUI
                         }
 
                         _isRefreshingRevisions = false;
-                        RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
+                        RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefreshRefs));
                     });
                     return;
                 }
@@ -1417,7 +1430,7 @@ namespace GitUI
 
                     SetPage(_gridView);
                     _isRefreshingRevisions = false;
-                    RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
+                    RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefreshRefs));
                     HighlightRevisionsByAuthor(GetSelectedRevisions());
 
                     await TaskScheduler.Default;
