@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Net;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.Avatars
@@ -13,7 +14,7 @@ namespace GitUI.Avatars
 
         private static readonly SemaphoreSlim _downloadSemaphore = new(initialCount: _maxConcurrentDownloads);
         private static readonly ConcurrentDictionary<Uri, (DateTime, Task<Image?>)> _downloads = new();
-        private static readonly HttpClient _client = new(new HttpClientHandler() { UseProxy = true });
+        private static readonly HttpClient _client = new(new HttpClientHandler() { UseProxy = true, DefaultProxyCredentials = CredentialCache.DefaultCredentials });
 
         public async Task<Image?> DownloadImageAsync(Uri? imageUrl)
         {
