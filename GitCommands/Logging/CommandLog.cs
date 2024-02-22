@@ -66,7 +66,7 @@ namespace GitCommands.Logging
 
     public sealed partial class CommandLogEntry
     {
-        [GeneratedRegex(@"((-c +[^ ]+)|(--no-optional-locks)) *", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"((-c +[^ ""]+(""[^""]*"")?)|(--no-optional-locks)) *", RegexOptions.ExplicitCapture)]
         private static partial Regex GitArgumentsWithoutConfigurationRegex();
 
         public string FileName { get; }
@@ -102,12 +102,12 @@ namespace GitCommands.Logging
                 if (FileName.StartsWith("wsl "))
                 {
                     fileName = "wsl";
-                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "");
+                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "").TrimEnd();
                 }
                 else if (FileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
-                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "");
+                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "").TrimEnd();
                 }
                 else
                 {
