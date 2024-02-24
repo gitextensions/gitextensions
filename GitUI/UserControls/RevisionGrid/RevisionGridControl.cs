@@ -1210,9 +1210,16 @@ namespace GitUI
                 {
                     // Wait for refs,CurrentCheckout and stashes as second step
                     this.InvokeAndForget(() => ShowLoading(showSpinner: false));
-                    semaphoreUpdateGrid.Wait(cancellationToken);
-                    semaphoreUpdateGrid.Wait(cancellationToken);
-                    firstRevisionReceived = true;
+                    try
+                    {
+                        semaphoreUpdateGrid.Wait(cancellationToken);
+                        semaphoreUpdateGrid.Wait(cancellationToken);
+                        firstRevisionReceived = true;
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        return;
+                    }
                 }
 
                 if (stashesById is not null)
