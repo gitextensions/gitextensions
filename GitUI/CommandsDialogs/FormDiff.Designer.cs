@@ -418,11 +418,9 @@ namespace GitUI.CommandsDialogs
             // 
             // findInDiffToolStripMenuItem
             // 
-            findInDiffToolStripMenuItem.Image = Properties.Images.Preview;
             findInDiffToolStripMenuItem.Name = "findInDiffToolStripMenuItem";
-            findInDiffToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.F)));
             findInDiffToolStripMenuItem.Size = new Size(210, 22);
-            findInDiffToolStripMenuItem.Text = "Find";
+            findInDiffToolStripMenuItem.Text = "Find file...";
             findInDiffToolStripMenuItem.Click += findInDiffToolStripMenuItem_Click;
             // 
             // FormDiff

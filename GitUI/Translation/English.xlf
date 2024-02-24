@@ -4438,7 +4438,7 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>Find</source>
+        <source>Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="firstCommitGroup.Text">
@@ -8822,7 +8822,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find</source>
+        <source>&amp;Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
