@@ -150,14 +150,14 @@ namespace GitUI.Editor
             findToolStripMenuItem.Image = Properties.Images.Preview;
             findToolStripMenuItem.Name = "findToolStripMenuItem";
             findToolStripMenuItem.Size = new Size(243, 22);
-            findToolStripMenuItem.Text = "&Find";
+            findToolStripMenuItem.Text = "&Find...";
             findToolStripMenuItem.Click += FindToolStripMenuItemClick;
             // 
             // replaceToolStripMenuItem
             // 
             replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
             replaceToolStripMenuItem.Size = new Size(243, 22);
-            replaceToolStripMenuItem.Text = "&Replace";
+            replaceToolStripMenuItem.Text = "&Replace...";
             replaceToolStripMenuItem.Click += FindToolStripMenuItemClick;
             // 
             // toolStripSeparator1
