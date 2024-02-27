@@ -29,6 +29,8 @@ namespace GitUI.Avatars
             _onlySupplyNoReply = onlySupplyNoReply;
         }
 
+        public bool PerformsIo => true;
+
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             Uri uri = await BuildAvatarUriAsync(email, imageSize);

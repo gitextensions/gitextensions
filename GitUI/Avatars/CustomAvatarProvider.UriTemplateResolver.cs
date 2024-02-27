@@ -19,6 +19,8 @@ namespace GitUI.Avatars
         {
             private readonly Func<UriTemplateData, string> _templateResolver;
 
+            public bool PerformsIo => false;
+
             public UriTemplateResolver(string uriTemplate)
             {
                 // create a formatter, so we only have to parse the template once

@@ -37,9 +37,16 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public event EventHandler? CacheCleared;
 
+        public bool PerformsIo => true;
+
         /// <inheritdoc />
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
+            if (!_inner.PerformsIo)
+            {
+                return await _inner.GetAvatarAsync(email, name, imageSize);
+            }
+
             string path = Path.Combine(_cacheDir, $"{email}.{imageSize}px.png");
 
             Image image = ReadImage();

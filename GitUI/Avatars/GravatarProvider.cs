@@ -39,6 +39,8 @@ namespace GitUI.Avatars
             _queryString += "&s=";
         }
 
+        public bool PerformsIo => true;
+
         public static bool IsFallbackSupportedByGravatar(AvatarFallbackType fallback)
         {
             return SerializeFallbackType(fallback) is not null;
