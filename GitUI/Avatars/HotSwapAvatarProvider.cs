@@ -16,6 +16,8 @@ namespace GitUI.Avatars
         /// </summary>
         public IAvatarProvider? Provider { get; set; }
 
+        public bool PerformsIo => Provider?.PerformsIo ?? false;
+
         public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             try

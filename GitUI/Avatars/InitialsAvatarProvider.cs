@@ -33,6 +33,8 @@ namespace GitUI.Avatars
             return Task.FromResult<Image?>(avatar);
         }
 
+        public bool PerformsIo => false;
+
         /// <summary>
         /// Calculate the most simpler non-cryptographic deterministic hash (to get the same result every times it is calculated for the same string)
         /// We just need an inexpensive way to convert a string to an integer, and calculating a hash is a good way to do it.
