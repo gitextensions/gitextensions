@@ -369,7 +369,7 @@ namespace GitUITests.UserControls.RevisionGrid
                 int initialLaneCount = lane + 1;
                 revisionGraphRow.GetLaneCount().Should().Be(initialLaneCount);
                 revisionGraphRow.MoveLanesRight(moveFirstLane ? 0 : lane);
-                revisionGraphRow.GetLaneCount().Should().Be(initialLaneCount + 1);
+                revisionGraphRow.GetLaneCount().Should().Be(initialLaneCount < RevisionGraphRow.MaxMoveLane ? initialLaneCount + 1 : initialLaneCount);
             }
 
             await VerifyGraphLayoutAsync(_revisionGraph);

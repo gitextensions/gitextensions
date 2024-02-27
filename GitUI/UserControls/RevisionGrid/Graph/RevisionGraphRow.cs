@@ -30,6 +30,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
+        // Lanes beyond MaxLanes are not rendered. So there is no need to move lanes which are located far enough in the invisible area.
+        private const int _maxMoveLaneMargin = 5;
+        internal const int MaxMoveLane = RevisionGraph.MaxLanes + _maxMoveLaneMargin;
+
         public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, RevisionGraphRow previousRow, bool mergeGraphLanesHavingCommonParent)
         {
             Revision = revision;
@@ -270,7 +274,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void MoveLanesRight(int fromLane)
         {
-            int nextGap = _gaps?.Min(lane => lane > fromLane ? lane : null) ?? int.MaxValue;
+            int nextGap = _gaps?.Min(gap => gap > fromLane ? gap : null) ?? MaxMoveLane;
 
             if (_revisionLane >= fromLane && _revisionLane < nextGap)
             {
@@ -281,18 +285,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             RevisionGraphSegment[] segmentsToBeMoved = _segmentLanes.Where(keyValue => keyValue.Value.Index >= fromLane && keyValue.Value.Index < nextGap)
                                                                     .Select(keyValue => keyValue.Key)
                                                                     .ToArray();
-            if (!segmentsToBeMoved.Any())
+            if (segmentsToBeMoved.Length == 0)
             {
                 return;
             }
 
             _gaps ??= [];
             _gaps.Add(fromLane);
-            if (nextGap < int.MaxValue)
+            if (nextGap < MaxMoveLane)
             {
                 _gaps.Remove(nextGap);
             }
-            else
+            else if (_laneCount < MaxMoveLane)
             {
                 ++_laneCount;
             }
