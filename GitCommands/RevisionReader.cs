@@ -160,7 +160,7 @@ namespace GitCommands
                 "-z",
                 "-1",
                 $"--pretty=format:\"{GetLogFormat(hasNotes: hasNotes)}\"",
-                commitHash.Quote()
+                commitHash.QuoteNE()
             };
 
             // output can be cached if Git Notes is not included
