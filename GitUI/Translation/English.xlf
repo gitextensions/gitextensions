@@ -1539,7 +1539,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
-        <source>&amp;Find</source>
+        <source>&amp;Find...</source>
         <target />
       </trans-unit>
       <trans-unit id="goToLineToolStripMenuItem.Text">
@@ -1587,7 +1587,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="replaceToolStripMenuItem.Text">
-        <source>&amp;Replace</source>
+        <source>&amp;Replace...</source>
         <target />
       </trans-unit>
       <trans-unit id="resetSelectedLinesToolStripMenuItem.Text">
@@ -4422,7 +4422,7 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
-        <source>Blame</source>
+        <source>&amp;Blame</source>
         <target />
       </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
@@ -4438,11 +4438,11 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File history</source>
+        <source>File &amp;history</source>
         <target />
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>Find</source>
+        <source>&amp;Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="firstCommitGroup.Text">
@@ -4458,11 +4458,11 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show in folder</source>
+        <source>Show &amp;in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
+        <source>Open with &amp;difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="secondCommitGroup.Text">
@@ -8826,7 +8826,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find</source>
+        <source>&amp;Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
@@ -8948,15 +8948,15 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="assumeUnchangedTheFileToolStripMenuItem.Text">
-        <source>Assume unchanged this file</source>
+        <source>Assume &amp;unchanged this file</source>
         <target />
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem1.Text">
-        <source>Blame</source>
+        <source>&amp;Blame</source>
         <target />
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Collapse All</source>
+        <source>Co&amp;llapse all</source>
         <target />
       </trans-unit>
       <trans-unit id="copyPathsToolStripMenuItem.Text">
@@ -8964,27 +8964,27 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
-        <source>Edit working directory file</source>
+        <source>&amp;Edit working directory file</source>
         <target />
       </trans-unit>
       <trans-unit id="expandToolStripMenuItem.Text">
-        <source>Expand</source>
+        <source>&amp;Expand</source>
         <target />
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
-        <source>View history</source>
+        <source>View &amp;history</source>
         <target />
       </trans-unit>
       <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
-        <source>Archive...</source>
+        <source>Archi&amp;ve...</source>
         <target />
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
-        <source>Clean this folder in the working directory...</source>
+        <source>&amp;Clean this folder in the working directory...</source>
         <target />
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
-        <source>Show in folder</source>
+        <source>Show &amp;in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="filterFileInGridToolStripMenuItem.Text">
@@ -8992,15 +8992,15 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
-        <source>Find in file tree...</source>
+        <source>&amp;Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="openFileToolStripMenuItem.Text">
-        <source>Open this revision (temp file)</source>
+        <source>Ope&amp;n this revision (temp file)</source>
         <target />
       </trans-unit>
       <trans-unit id="openFileWithToolStripMenuItem.Text">
-        <source>Open this revision with... (temp file)</source>
+        <source>Open this revision &amp;with... (temp file)</source>
         <target />
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
@@ -9008,27 +9008,27 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
+        <source>Open with &amp;difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>Open working directory file with...</source>
+        <source>&amp;Open working directory file with...</source>
         <target />
       </trans-unit>
       <trans-unit id="rememberFileStripMenuItem.Text">
-        <source>Remember file for diff</source>
+        <source>Re&amp;member file for diff</source>
         <target />
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
-        <source>Reset to selected revision</source>
+        <source>&amp;Reset to selected revision</source>
         <target />
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
-        <source>Save as...</source>
+        <source>S&amp;ave as...</source>
         <target />
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
-        <source>Stop tracking this file</source>
+        <source>Stop &amp;tracking this file</source>
         <target />
       </trans-unit>
     </body>
