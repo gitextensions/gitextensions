@@ -630,8 +630,8 @@ namespace GitUI.CommandsDialogs
             // FormRebase
             // 
             AcceptButton = btnRebase;
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1034, 461);
             Controls.Add(btnSolveMergeconflicts);
