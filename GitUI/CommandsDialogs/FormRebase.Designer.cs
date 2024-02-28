@@ -486,10 +486,10 @@ namespace GitUI.CommandsDialogs
             // lblCommitsToReapply
             // 
             lblCommitsToReapply.AutoSize = true;
+            lblCommitsToReapply.Dock = DockStyle.Fill;
             lblCommitsToReapply.Location = new Point(3, 175);
             lblCommitsToReapply.Name = "lblCommitsToReapply";
-            lblCommitsToReapply.Padding = new Padding(0, 10, 0, 0);
-            lblCommitsToReapply.Size = new Size(120, 25);
+            lblCommitsToReapply.Size = new Size(709, 15);
             lblCommitsToReapply.TabIndex = 25;
             lblCommitsToReapply.Text = "Commits to re-apply:";
             // 
