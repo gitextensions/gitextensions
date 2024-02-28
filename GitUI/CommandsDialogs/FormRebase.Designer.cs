@@ -60,12 +60,12 @@ namespace GitUI.CommandsDialogs
             lblRangeTo = new Label();
             cboTo = new ComboBox();
             llblShowOptions = new LinkLabel();
-            PatchGrid = new GitUI.PatchGrid();
+            PatchGrid = new PatchGrid();
             lblCommitsToReapply = new Label();
             btnSolveMergeconflicts = new Button();
             MergeToolPanel = new Panel();
             MainLayout = new TableLayoutPanel();
-            PanelLeftImage = new GitUI.Help.HelpImageDisplayUserControl();
+            PanelLeftImage = new Help.HelpImageDisplayUserControl();
             PanelMiddle = new TableLayoutPanel();
             rebasePanel = new FlowLayoutPanel();
             tlpnlSecondaryControls = new TableLayoutPanel();
@@ -149,11 +149,11 @@ namespace GitUI.CommandsDialogs
             btnEditTodo.Image = Properties.Images.EditFile;
             btnEditTodo.Location = new Point(180, 3);
             btnEditTodo.Name = "btnEditTodo";
-            btnEditTodo.Size = new Size(79, 25);
+            btnEditTodo.Size = new Size(90, 25);
             btnEditTodo.TabIndex = 36;
             btnEditTodo.Text = "&Edit todo...";
-            btnEditTodo.UseVisualStyleBackColor = true;
             btnEditTodo.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnEditTodo.UseVisualStyleBackColor = true;
             btnEditTodo.Click += EditTodoClick;
             // 
             // flowLayoutPanel2
@@ -292,7 +292,7 @@ namespace GitUI.CommandsDialogs
             flpnlOptionsPanelTop.Dock = DockStyle.Fill;
             flpnlOptionsPanelTop.Location = new Point(3, 78);
             flpnlOptionsPanelTop.Name = "flpnlOptionsPanelTop";
-            flpnlOptionsPanelTop.Size = new Size(709, 25);
+            flpnlOptionsPanelTop.Size = new Size(709, 50);
             flpnlOptionsPanelTop.TabIndex = 11;
             // 
             // chkInteractive
@@ -351,8 +351,7 @@ namespace GitUI.CommandsDialogs
             chkIgnoreDate.Size = new Size(86, 19);
             chkIgnoreDate.TabIndex = 16;
             chkIgnoreDate.Text = "Ignore &date";
-            toolTip1.SetToolTip(chkIgnoreDate, "Sets the author date to the current date (same as\r\ncommit date), ignoring the ori" +
-        "ginal author date.");
+            toolTip1.SetToolTip(chkIgnoreDate, "Sets the author date to the current date (same as\r\ncommit date), ignoring the original author date.");
             chkIgnoreDate.UseVisualStyleBackColor = true;
             chkIgnoreDate.CheckedChanged += chkIgnoreDate_CheckedChanged;
             // 
@@ -360,7 +359,7 @@ namespace GitUI.CommandsDialogs
             // 
             chkCommitterDateIsAuthorDate.Anchor = AnchorStyles.Left;
             chkCommitterDateIsAuthorDate.AutoSize = true;
-            chkCommitterDateIsAuthorDate.Location = new Point(523, 3);
+            chkCommitterDateIsAuthorDate.Location = new Point(3, 28);
             chkCommitterDateIsAuthorDate.Name = "chkCommitterDateIsAuthorDate";
             chkCommitterDateIsAuthorDate.Size = new Size(185, 19);
             chkCommitterDateIsAuthorDate.TabIndex = 17;
@@ -372,7 +371,7 @@ namespace GitUI.CommandsDialogs
             // checkBoxUpdateRefs
             // 
             checkBoxUpdateRefs.AutoSize = true;
-            checkBoxUpdateRefs.Location = new Point(714, 3);
+            checkBoxUpdateRefs.Location = new Point(194, 28);
             checkBoxUpdateRefs.Name = "checkBoxUpdateRefs";
             checkBoxUpdateRefs.Size = new Size(146, 19);
             checkBoxUpdateRefs.TabIndex = 18;
@@ -389,7 +388,7 @@ namespace GitUI.CommandsDialogs
             flpnlOptionsPanelBottom.Controls.Add(lblRangeTo);
             flpnlOptionsPanelBottom.Controls.Add(cboTo);
             flpnlOptionsPanelBottom.Dock = DockStyle.Fill;
-            flpnlOptionsPanelBottom.Location = new Point(3, 109);
+            flpnlOptionsPanelBottom.Location = new Point(3, 134);
             flpnlOptionsPanelBottom.Name = "flpnlOptionsPanelBottom";
             flpnlOptionsPanelBottom.Size = new Size(709, 30);
             flpnlOptionsPanelBottom.TabIndex = 18;
@@ -477,17 +476,17 @@ namespace GitUI.CommandsDialogs
             PatchGrid.AutoSize = true;
             PatchGrid.Dock = DockStyle.Fill;
             PatchGrid.IsManagingRebase = true;
-            PatchGrid.Location = new Point(3, 177);
+            PatchGrid.Location = new Point(3, 192);
             PatchGrid.Margin = new Padding(3, 2, 3, 2);
             PatchGrid.MinimumSize = new Size(0, 100);
             PatchGrid.Name = "PatchGrid";
-            PatchGrid.Size = new Size(709, 174);
+            PatchGrid.Size = new Size(709, 159);
             PatchGrid.TabIndex = 26;
             // 
             // lblCommitsToReapply
             // 
             lblCommitsToReapply.AutoSize = true;
-            lblCommitsToReapply.Location = new Point(3, 150);
+            lblCommitsToReapply.Location = new Point(3, 175);
             lblCommitsToReapply.Name = "lblCommitsToReapply";
             lblCommitsToReapply.Padding = new Padding(0, 10, 0, 0);
             lblCommitsToReapply.Size = new Size(120, 25);
@@ -668,7 +667,6 @@ namespace GitUI.CommandsDialogs
             tlpnlSecondaryControls.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
