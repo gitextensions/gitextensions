@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtUtils.GitUI;
 using ResourceManager;
 
 namespace GitUI.Help
@@ -91,7 +92,7 @@ namespace GitUI.Help
             get { return _image1; }
             set
             {
-                _image1 = value;
+                _image1 = value is null ? value : DpiUtil.Scale(value);
                 UpdateImageDisplay();
                 if (IsExpanded)
                 {
@@ -105,7 +106,7 @@ namespace GitUI.Help
             get { return _image2; }
             set
             {
-                _image2 = value;
+                _image2 = value is null ? value : DpiUtil.Scale(value);
                 UpdateImageDisplay();
                 if (IsExpanded)
                 {
