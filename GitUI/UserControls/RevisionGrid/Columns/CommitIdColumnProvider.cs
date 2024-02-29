@@ -10,6 +10,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private readonly Dictionary<Font, int[]> _widthByLengthByFont = new(capacity: 4);
         private readonly RevisionGridControl _grid;
         private int? _charCount = null;
+        private readonly int _maxWidth = TextRenderer.MeasureText(GitRevision.WorkTreeGuid, AppSettings.MonospaceFont).Width;
 
         public CommitIdColumnProvider(RevisionGridControl grid)
             : base("Commit ID")
@@ -60,7 +61,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
-            if (e.FormattedValue is null)
+            if (string.IsNullOrWhiteSpace(e.FormattedValue as string))
             {
                 return;
             }
@@ -71,6 +72,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public override void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
         {
             _charCount = GetCharLengthForColumnWidth(e.Column.Width);
+            if (e.Column.Width > _maxWidth && Column.DataGridView != null)
+            {
+                // Enforce from outside the current method because it is not allowed (exception thrown...)
+                Task.Run(async () =>
+                {
+                    await Column.DataGridView!.SwitchToMainThreadAsync();
+                    e.Column.Width = _maxWidth;
+                });
+            }
         }
 
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
