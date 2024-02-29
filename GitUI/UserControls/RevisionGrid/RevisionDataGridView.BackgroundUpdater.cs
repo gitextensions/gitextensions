@@ -48,10 +48,7 @@
                 }
                 finally
                 {
-                    if (_rerunRequested)
-                    {
-                        await Task.Delay(_cooldownMilliseconds);
-                    }
+                    await Task.Delay(_cooldownMilliseconds);
 
                     lock (_sync)
                     {
