@@ -46,10 +46,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
         }
 
-        public virtual void OnVisibleRowsChanged(in VisibleRowRange visibleRowRange)
-        {
-        }
-
         /// <summary>Attempts to get custom tool tip text for a cell in this column.</summary>
         /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
         public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)

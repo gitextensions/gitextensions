@@ -64,6 +64,25 @@ internal sealed class GraphCache
         Reset();
     }
 
+    internal void CopyFrom(GraphCache source)
+    {
+        Capacity = source.Capacity;
+        Bitmap sourceBitmap = source.GraphBitmap;
+        Allocate(sourceBitmap.Width, sourceBitmap.Height);
+        GraphBitmapGraphics.CompositingMode = CompositingMode.SourceCopy;
+        GraphBitmapGraphics.DrawImage(sourceBitmap, 0, 0);
+        Count = source.Count;
+        Head = source.Head;
+        HeadRow = source.HeadRow;
+    }
+
+    /// <summary>
+    /// Maps a graph row to a cache row.
+    /// </summary>
+    /// <param name="rowIndex">The row index in the entire graph.</param>
+    /// <returns>The row index in the cache.</returns>
+    internal int GetCacheRow(int rowIndex) => (Head + rowIndex - HeadRow) % Capacity;
+
     internal void Reset()
     {
         Head = 0;

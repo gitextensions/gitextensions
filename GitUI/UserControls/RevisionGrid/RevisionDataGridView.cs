@@ -739,19 +739,20 @@ namespace GitUI.UserControls.RevisionGrid
             if (_forceRefresh || _visibleRowRange.FromIndex != fromIndex || _visibleRowRange.Count != visibleRowCount)
             {
                 _forceRefresh = false;
-                _visibleRowRange = new VisibleRowRange(fromIndex, visibleRowCount);
+                VisibleRowRange visibleRowRange = new(fromIndex, visibleRowCount);
+                _visibleRowRange = visibleRowRange;
 
                 if (visibleRowCount > 0)
                 {
                     // Preload the next page, too, in order to avoid delayed display of the graph when scrolling down
-                    int newBackgroundScrollTo = fromIndex + (2 * visibleRowCount);
+                    int newBackgroundScrollTo = fromIndex + (2 * visibleRowCount) - 1;
 
                     // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
                     if (_backgroundScrollTo != newBackgroundScrollTo)
                     {
                         _backgroundScrollTo = newBackgroundScrollTo;
 
-                        if (AppSettings.ShowRevisionGridGraphColumn)
+                        if (AppSettings.ShowRevisionGridGraphColumn && _columnProviders.Count > 0)
                         {
                             int curCount;
                             do
@@ -766,6 +767,14 @@ namespace GitUI.UserControls.RevisionGrid
                                 }
                             }
                             while (curCount <= _backgroundScrollTo);
+
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                return;
+                            }
+
+                            await ((RevisionGraphColumnProvider)_columnProviders[0])
+                                .RenderGraphToCacheAsync(visibleRowRange, newBackgroundScrollTo, _rowHeight, cancellationToken);
                         }
                         else
                         {
@@ -773,14 +782,6 @@ namespace GitUI.UserControls.RevisionGrid
                             await UpdateGraphAsync(fromIndex: maxRowIndex, toIndex: maxRowIndex);
                         }
                     }
-
-                    await this.SwitchToMainThreadAsync(cancellationToken);
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
-
-                    NotifyProvidersVisibleRowRangeChanged();
                 }
             }
 
@@ -806,14 +807,6 @@ namespace GitUI.UserControls.RevisionGrid
                     _backgroundScrollTo = -1;
                     Trace.WriteLine(exception);
                 }
-            }
-        }
-
-        private void NotifyProvidersVisibleRowRangeChanged()
-        {
-            foreach (ColumnProvider provider in _columnProviders)
-            {
-                provider.OnVisibleRowsChanged(_visibleRowRange);
             }
         }
 
