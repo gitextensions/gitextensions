@@ -15,13 +15,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             _grid = grid;
 
+            int initialWidth = AppSettings.RelativeDate ? DpiUtil.Scale(130) : TextRenderer.MeasureText(DateTime.Now.ToString("G"), AppSettings.Font).Width;
+
             Column = new DataGridViewTextBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                 HeaderText = "Date",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                Width = DpiUtil.Scale(130),
+                Width = initialWidth,
                 MinimumWidth = DpiUtil.Scale(25)
             };
         }
