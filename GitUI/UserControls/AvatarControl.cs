@@ -59,11 +59,11 @@ namespace GitUI
 
         public void ClearCache()
         {
-            this.InvokeAndForget(async () =>
+            ThreadHelper.FileAndForget(async () =>
                     {
                         AvatarService.UpdateAvatarProvider();
-                        await _avatarCacheCleaner.ClearCacheAsync().ConfigureAwait(true);
-                        await UpdateAvatarAsync().ConfigureAwait(false);
+                        await _avatarCacheCleaner.ClearCacheAsync();
+                        await UpdateAvatarAsync();
                     });
         }
 
