@@ -120,8 +120,10 @@ namespace GitUI.CommandsDialogs
             // btnAddFiles
             // 
             btnAddFiles.AutoSize = true;
+            btnAddFiles.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnAddFiles.Image = Properties.Images.BulletAdd;
             btnAddFiles.Location = new Point(3, 3);
+            btnAddFiles.MinimumSize = new Size(79, 25);
             btnAddFiles.Name = "btnAddFiles";
             btnAddFiles.Size = new Size(79, 25);
             btnAddFiles.TabIndex = 34;
@@ -133,8 +135,10 @@ namespace GitUI.CommandsDialogs
             // btnCommit
             // 
             btnCommit.AutoSize = true;
+            btnCommit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnCommit.Image = Properties.Images.RepoStateStaged;
             btnCommit.Location = new Point(88, 3);
+            btnCommit.MinimumSize = new Size(86, 25);
             btnCommit.Name = "btnCommit";
             btnCommit.Size = new Size(86, 25);
             btnCommit.TabIndex = 35;
@@ -146,8 +150,10 @@ namespace GitUI.CommandsDialogs
             // btnEditTodo
             // 
             btnEditTodo.AutoSize = true;
+            btnEditTodo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnEditTodo.Image = Properties.Images.EditFile;
             btnEditTodo.Location = new Point(180, 3);
+            btnEditTodo.MinimumSize = new Size(90, 25);
             btnEditTodo.Name = "btnEditTodo";
             btnEditTodo.Size = new Size(90, 25);
             btnEditTodo.TabIndex = 36;
@@ -172,7 +178,9 @@ namespace GitUI.CommandsDialogs
             // btnSkip
             // 
             btnSkip.AutoSize = true;
+            btnSkip.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnSkip.Location = new Point(163, 3);
+            btnSkip.MinimumSize = new Size(183, 25);
             btnSkip.Name = "btnSkip";
             btnSkip.Size = new Size(183, 25);
             btnSkip.TabIndex = 39;
@@ -247,7 +255,9 @@ namespace GitUI.CommandsDialogs
             // btnContinueRebase
             // 
             btnContinueRebase.AutoSize = true;
+            btnContinueRebase.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnContinueRebase.Location = new Point(837, 8);
+            btnContinueRebase.MinimumSize = new Size(103, 25);
             btnContinueRebase.Name = "btnContinueRebase";
             btnContinueRebase.Size = new Size(103, 25);
             btnContinueRebase.TabIndex = 38;
@@ -258,7 +268,9 @@ namespace GitUI.CommandsDialogs
             // btnAbort
             // 
             btnAbort.AutoSize = true;
+            btnAbort.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnAbort.Location = new Point(946, 8);
+            btnAbort.MinimumSize = new Size(75, 25);
             btnAbort.Name = "btnAbort";
             btnAbort.Size = new Size(75, 25);
             btnAbort.TabIndex = 40;
@@ -269,9 +281,10 @@ namespace GitUI.CommandsDialogs
             // btnSolveConflicts
             // 
             btnSolveConflicts.AutoSize = true;
+            btnSolveConflicts.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnSolveConflicts.Location = new Point(0, 2);
             btnSolveConflicts.Margin = new Padding(1);
-            btnSolveConflicts.MinimumSize = new Size(100, 0);
+            btnSolveConflicts.MinimumSize = new Size(100, 25);
             btnSolveConflicts.Name = "btnSolveConflicts";
             btnSolveConflicts.Size = new Size(100, 25);
             btnSolveConflicts.TabIndex = 32;
@@ -428,9 +441,11 @@ namespace GitUI.CommandsDialogs
             // btnChooseFromRevision
             // 
             btnChooseFromRevision.Anchor = AnchorStyles.Left;
+            btnChooseFromRevision.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnChooseFromRevision.Enabled = false;
             btnChooseFromRevision.Image = Properties.Images.SelectRevision;
             btnChooseFromRevision.Location = new Point(268, 3);
+            btnChooseFromRevision.MinimumSize = new Size(25, 24);
             btnChooseFromRevision.Name = "btnChooseFromRevision";
             btnChooseFromRevision.Size = new Size(25, 24);
             btnChooseFromRevision.TabIndex = 22;
@@ -501,6 +516,7 @@ namespace GitUI.CommandsDialogs
             btnSolveMergeconflicts.BackColor = Color.Salmon;
             btnSolveMergeconflicts.FlatStyle = FlatStyle.Flat;
             btnSolveMergeconflicts.Location = new Point(12, 426);
+            btnSolveMergeconflicts.MinimumSize = new Size(213, 27);
             btnSolveMergeconflicts.Name = "btnSolveMergeconflicts";
             btnSolveMergeconflicts.Size = new Size(213, 27);
             btnSolveMergeconflicts.TabIndex = 42;
@@ -615,9 +631,10 @@ namespace GitUI.CommandsDialogs
             // btnRebase
             // 
             btnRebase.AutoSize = true;
+            btnRebase.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnRebase.Image = Properties.Images.Rebase;
             btnRebase.Location = new Point(628, 8);
-            btnRebase.MinimumSize = new Size(100, 0);
+            btnRebase.MinimumSize = new Size(100, 25);
             btnRebase.Name = "btnRebase";
             btnRebase.Size = new Size(100, 25);
             btnRebase.TabIndex = 29;
@@ -630,8 +647,8 @@ namespace GitUI.CommandsDialogs
             // FormRebase
             // 
             AcceptButton = btnRebase;
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1034, 461);
             Controls.Add(btnSolveMergeconflicts);
@@ -643,6 +660,7 @@ namespace GitUI.CommandsDialogs
             Controls.SetChildIndex(MainPanel, 0);
             Controls.SetChildIndex(btnSolveMergeconflicts, 0);
             MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
             ControlsPanel.ResumeLayout(false);
             ControlsPanel.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
