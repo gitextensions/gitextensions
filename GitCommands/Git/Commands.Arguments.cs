@@ -396,7 +396,7 @@ namespace GitCommands.Git
                 { fullRefname, @"--format=""%(refname)""" },
                 { includeRemote, "-a" },
                 "--merged",
-                commit
+                commit.QuoteNE()
             };
         }
 

@@ -74,7 +74,7 @@ namespace GitUI.Editor
         private FileStatusItem? _viewItem;
         private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
 
-        [GeneratedRegex("warning: .*has type .* expected .*")]
+        [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
         private static partial Regex FileModeWarningRegex();
 
         public FileViewer()
@@ -143,6 +143,8 @@ namespace GitUI.Editor
             ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(reload: !AppSettings.RememberShowSyntaxHighlightingInDiff);
             showSyntaxHighlighting.Image = Resources.SyntaxHighlighting.AdaptLightness();
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
+            showSyntaxHighlightingToolStripMenuItem.Image = Resources.SyntaxHighlighting.AdaptLightness();
+            showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
             automaticContinuousScrollToolStripMenuItem.Text = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
 
             IsReadOnly = true;
@@ -220,7 +222,11 @@ namespace GitUI.Editor
         public bool IsReadOnly
         {
             get => internalFileViewer.IsReadOnly;
-            set => internalFileViewer.IsReadOnly = value;
+            set
+            {
+                internalFileViewer.IsReadOnly = value;
+                replaceToolStripMenuItem.Visible = !value;
+            }
         }
 
         [DefaultValue(true)]
@@ -332,10 +338,18 @@ namespace GitUI.Editor
         public void ReloadHotkeys()
         {
             LoadHotkeys(HotkeySettingsName);
-            findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
             stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageLines);
             unstageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnstageLines);
             resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetLines);
+            ignoreAllWhitespaceChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.IgnoreAllWhitespace);
+            increaseNumberOfLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.IncreaseNumberOfVisibleLines);
+            decreaseNumberOfLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DecreaseNumberOfVisibleLines);
+            showEntireFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowEntireFile);
+            showSyntaxHighlightingToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowSyntaxHighlighting);
+            treatAllFilesAsTextToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.TreatFileAsText);
+            findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
+            replaceToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Replace);
+            goToLineToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.GoToLine);
         }
 
         public ToolStripSeparator AddContextMenuSeparator()
@@ -809,6 +823,7 @@ namespace GitUI.Editor
             increaseNumberOfLinesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
             decreaseNumberOfLinesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
             showEntireFileToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            showSyntaxHighlightingToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
             toolStripSeparator2.Visible = IsDiffView(viewMode);
             treatAllFilesAsTextToolStripMenuItem.Visible = IsDiffView(viewMode);
 
@@ -1247,6 +1262,7 @@ namespace GitUI.Editor
         {
             ShowSyntaxHighlightingInDiff = !ShowSyntaxHighlightingInDiff;
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
+            showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
             AppSettings.ShowSyntaxHighlightingInDiff.Value = ShowSyntaxHighlightingInDiff;
             OnExtraDiffArgumentsChanged();
         }
@@ -1744,7 +1760,7 @@ namespace GitUI.Editor
 
         private void FindToolStripMenuItemClick(object sender, EventArgs e)
         {
-            internalFileViewer.Find();
+            internalFileViewer.Find(sender == replaceToolStripMenuItem && !IsReadOnly);
         }
 
         private void encodingToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1796,12 +1812,14 @@ namespace GitUI.Editor
         internal enum Command
         {
             Find = 0,
+            Replace = 16,
             FindNextOrOpenWithDifftool = 8,
             FindPrevious = 9,
             GoToLine = 1,
             IncreaseNumberOfVisibleLines = 2,
             DecreaseNumberOfVisibleLines = 3,
             ShowEntireFile = 4,
+            ShowSyntaxHighlighting = 17,
             TreatFileAsText = 5,
             NextChange = 6,
             PreviousChange = 7,
@@ -1819,13 +1837,21 @@ namespace GitUI.Editor
 
             switch (command)
             {
-                case Command.Find: internalFileViewer.Find(); break;
+                case Command.Find: internalFileViewer.Find(replace: false); break;
+                case Command.Replace:
+                    if (!IsReadOnly)
+                    {
+                        internalFileViewer.Find(replace: true);
+                    }
+
+                    break;
                 case Command.FindNextOrOpenWithDifftool: internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true)); break;
                 case Command.FindPrevious: internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false)); break;
                 case Command.GoToLine: return PerformClickIfAvailable(goToLineToolStripMenuItem);
                 case Command.IncreaseNumberOfVisibleLines: return PerformClickIfAvailable(increaseNumberOfLinesToolStripMenuItem);
                 case Command.DecreaseNumberOfVisibleLines: return PerformClickIfAvailable(decreaseNumberOfLinesToolStripMenuItem);
                 case Command.ShowEntireFile: return PerformClickIfAvailable(showEntireFileToolStripMenuItem);
+                case Command.ShowSyntaxHighlighting: return PerformClickIfAvailable(showSyntaxHighlightingToolStripMenuItem);
                 case Command.TreatFileAsText: return PerformClickIfAvailable(treatAllFilesAsTextToolStripMenuItem);
                 case Command.NextChange: return PerformClickIfAvailable(nextChangeButton);
                 case Command.PreviousChange: return PerformClickIfAvailable(previousChangeButton);

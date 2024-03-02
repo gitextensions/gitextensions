@@ -10,11 +10,11 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public sealed partial class ObjectIdTests
     {
-        [GeneratedRegex("[a-f0-9]{40}")]
+        [GeneratedRegex(@"[a-f0-9]{40}", RegexOptions.ExplicitCapture)]
         private static partial Regex Sha40Regex();
-        [GeneratedRegex("[a-f0-9]{39}")]
+        [GeneratedRegex(@"[a-f0-9]{39}", RegexOptions.ExplicitCapture)]
         private static partial Regex Sha39Regex();
-        [GeneratedRegex("[XYZa-f0-9]{39}")]
+        [GeneratedRegex(@"[XYZa-f0-9]{39}", RegexOptions.ExplicitCapture)]
         private static partial Regex ShaXYZRegex();
 
         [TestCase("0000000000000000000000000000000000000000")]
@@ -288,7 +288,7 @@ namespace GitCommandsTests.Git
             const string s = "0102030405060708091011121314151617181920";
             ObjectId id = ObjectId.Parse(s);
 
-            for (int length = 0; length < ObjectId.Sha1CharCount; length++)
+            for (int length = 1; length < ObjectId.Sha1CharCount; length++)
             {
                 Assert.AreEqual(s[..length], id.ToShortString(length));
             }

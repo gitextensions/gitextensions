@@ -2381,7 +2381,7 @@ namespace GitUI.CommandsDialogs
                     {
                         "--pretty=format:\"    %m %h - %s\"",
                         "--no-merges",
-                        $"{from}...{to}"
+                        $"{from}...{to}".Quote()
                     };
 
                     string log = module.GitExecutable.GetOutput(args);
@@ -2714,7 +2714,7 @@ namespace GitUI.CommandsDialogs
                     return;
 
                     // Do not cache results in order to update the info on FormActivate
-                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key, cache: false) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
+                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
                 });
         }
 
@@ -3082,20 +3082,28 @@ namespace GitUI.CommandsDialogs
                 commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
                 // Add registered templates
+                bool isItemAdded = false;
                 foreach (CommitTemplateItem item in _commitTemplateManager.RegisteredTemplates)
                 {
-                    CreateToolStripItem(item);
+                    isItemAdded |= CreateToolStripItem(item);
                 }
 
-                AddSeparator();
+                if (isItemAdded)
+                {
+                    AddSeparator();
+                    isItemAdded = false;
+                }
 
                 // Add templates from settings
                 foreach (CommitTemplateItem item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
                 {
-                    CreateToolStripItem(item);
+                    isItemAdded |= CreateToolStripItem(item);
                 }
 
-                AddSeparator();
+                if (isItemAdded)
+                {
+                    AddSeparator();
+                }
 
                 // Add a settings item
                 AddSettingsItem();
@@ -3103,11 +3111,11 @@ namespace GitUI.CommandsDialogs
 
                 return;
 
-                void CreateToolStripItem(CommitTemplateItem item)
+                bool CreateToolStripItem(CommitTemplateItem item)
                 {
                     if (string.IsNullOrEmpty(item.Name))
                     {
-                        return;
+                        return false;
                     }
 
                     ToolStripMenuItem toolStripItem = new(item.Name, item.Icon);
@@ -3123,14 +3131,12 @@ namespace GitUI.CommandsDialogs
                         }
                     };
                     commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+                    return true;
                 }
 
                 void AddSeparator()
                 {
-                    if (commitTemplatesToolStripMenuItem.DropDownItems.Count != 0)
-                    {
-                        commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-                    }
+                    commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
                 }
 
                 void AddSettingsItem()

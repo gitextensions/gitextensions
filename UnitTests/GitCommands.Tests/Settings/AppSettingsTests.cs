@@ -298,6 +298,9 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.HighlightAuthoredRevisions)], true, false, false);
                 yield return (properties[nameof(AppSettings.FillRefLabels)], false, false, false);
                 yield return (properties[nameof(AppSettings.MergeGraphLanesHavingCommonParent)], true, false, true);
+                yield return (properties[nameof(AppSettings.RenderGraphWithDiagonals)], true, false, true);
+                yield return (properties[nameof(AppSettings.StraightenGraphDiagonals)], true, false, true);
+                yield return (properties[nameof(AppSettings.StraightenGraphSegmentsLimit)], 80, false, true);
                 yield return (properties[nameof(AppSettings.LastFormatPatchDir)], string.Empty, true, false);
                 yield return (properties[nameof(AppSettings.IgnoreWhitespaceKind)], IgnoreWhitespaceKind.None, false, true);
                 yield return (properties[nameof(AppSettings.RememberIgnoreWhiteSpacePreference)], true, false, false);

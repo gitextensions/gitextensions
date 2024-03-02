@@ -7,7 +7,7 @@ namespace GitUI;
 
 internal partial class FailedPluginWrapper : IGitPlugin
 {
-    [GeneratedRegex("\\\"GitExtensions.([^\"]+)\\\"")]
+    [GeneratedRegex(@"""GitExtensions.([^""]+)""", RegexOptions.ExplicitCapture)]
     private static partial Regex PluginNameRegex();
 
     private readonly string _exception;

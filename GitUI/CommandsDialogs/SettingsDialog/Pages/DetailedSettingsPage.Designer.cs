@@ -35,6 +35,8 @@
             gbRevisionGraph = new GroupBox();
             tlpnlRevisionGraph = new TableLayoutPanel();
             chkMergeGraphLanesHavingCommonParent = new CheckBox();
+            chkRenderGraphWithDiagonals = new CheckBox();
+            chkStraightenGraphDiagonals = new CheckBox();
             groupBoxEmailSettings = new GroupBox();
             tlpnlEmailSettings = new TableLayoutPanel();
             SmtpServer = new TextBox();
@@ -65,10 +67,10 @@
             PushWindowGB.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PushWindowGB.Controls.Add(tableLayoutPanel1);
             PushWindowGB.Dock = DockStyle.Fill;
-            PushWindowGB.Location = new Point(3, 66);
+            PushWindowGB.Location = new Point(3, 116);
             PushWindowGB.Name = "PushWindowGB";
             PushWindowGB.Padding = new Padding(8);
-            PushWindowGB.Size = new Size(1480, 57);
+            PushWindowGB.Size = new Size(1049, 57);
             PushWindowGB.TabIndex = 1;
             PushWindowGB.TabStop = false;
             PushWindowGB.Text = "&Push window";
@@ -90,7 +92,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(1464, 25);
+            tableLayoutPanel1.Size = new Size(1033, 25);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // chkRemotesFromServer
@@ -99,7 +101,7 @@
             chkRemotesFromServer.Dock = DockStyle.Top;
             chkRemotesFromServer.Location = new Point(3, 3);
             chkRemotesFromServer.Name = "chkRemotesFromServer";
-            chkRemotesFromServer.Size = new Size(1458, 19);
+            chkRemotesFromServer.Size = new Size(1027, 19);
             chkRemotesFromServer.TabIndex = 0;
             chkRemotesFromServer.Text = "Get remote branches directly from the remote";
             chkRemotesFromServer.UseVisualStyleBackColor = true;
@@ -123,7 +125,7 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.Size = new Size(1486, 670);
+            tableLayoutPanel2.Size = new Size(1055, 670);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // gbRevisionGraph
@@ -135,7 +137,7 @@
             gbRevisionGraph.Location = new Point(3, 3);
             gbRevisionGraph.Name = "gbRevisionGraph";
             gbRevisionGraph.Padding = new Padding(8);
-            gbRevisionGraph.Size = new Size(1480, 57);
+            gbRevisionGraph.Size = new Size(1049, 107);
             gbRevisionGraph.TabIndex = 0;
             gbRevisionGraph.TabStop = false;
             gbRevisionGraph.Text = "&Revision graph";
@@ -149,12 +151,16 @@
             tlpnlRevisionGraph.ColumnStyles.Add(new ColumnStyle());
             tlpnlRevisionGraph.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpnlRevisionGraph.Controls.Add(chkMergeGraphLanesHavingCommonParent, 0, 0);
+            tlpnlRevisionGraph.Controls.Add(chkRenderGraphWithDiagonals, 0, 1);
+            tlpnlRevisionGraph.Controls.Add(chkStraightenGraphDiagonals, 0, 2);
             tlpnlRevisionGraph.Dock = DockStyle.Fill;
             tlpnlRevisionGraph.Location = new Point(8, 24);
             tlpnlRevisionGraph.Name = "tlpnlRevisionGraph";
-            tlpnlRevisionGraph.RowCount = 1;
+            tlpnlRevisionGraph.RowCount = 3;
             tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
-            tlpnlRevisionGraph.Size = new Size(1464, 25);
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.RowStyles.Add(new RowStyle());
+            tlpnlRevisionGraph.Size = new Size(1033, 75);
             tlpnlRevisionGraph.TabIndex = 0;
             // 
             // chkMergeGraphLanesHavingCommonParent
@@ -169,15 +175,39 @@
             chkMergeGraphLanesHavingCommonParent.Text = "Merge graph lanes having common parent";
             chkMergeGraphLanesHavingCommonParent.UseVisualStyleBackColor = true;
             // 
+            // chkRenderGraphWithDiagonals
+            // 
+            chkRenderGraphWithDiagonals.AutoSize = true;
+            tlpnlRevisionGraph.SetColumnSpan(chkRenderGraphWithDiagonals, 2);
+            chkRenderGraphWithDiagonals.Dock = DockStyle.Fill;
+            chkRenderGraphWithDiagonals.Location = new Point(3, 28);
+            chkRenderGraphWithDiagonals.Name = "chkRenderGraphWithDiagonals";
+            chkRenderGraphWithDiagonals.Size = new Size(252, 19);
+            chkRenderGraphWithDiagonals.TabIndex = 1;
+            chkRenderGraphWithDiagonals.Text = "Render graph with diagonals";
+            chkRenderGraphWithDiagonals.UseVisualStyleBackColor = true;
+            // 
+            // chkStraightenGraphDiagonals
+            // 
+            chkStraightenGraphDiagonals.AutoSize = true;
+            tlpnlRevisionGraph.SetColumnSpan(chkStraightenGraphDiagonals, 2);
+            chkStraightenGraphDiagonals.Dock = DockStyle.Fill;
+            chkStraightenGraphDiagonals.Location = new Point(3, 53);
+            chkStraightenGraphDiagonals.Name = "chkStraightenGraphDiagonals";
+            chkStraightenGraphDiagonals.Size = new Size(252, 19);
+            chkStraightenGraphDiagonals.TabIndex = 2;
+            chkStraightenGraphDiagonals.Text = "Straighten graph diagonals";
+            chkStraightenGraphDiagonals.UseVisualStyleBackColor = true;
+            // 
             // groupBoxEmailSettings
             // 
             groupBoxEmailSettings.AutoSize = true;
             groupBoxEmailSettings.Controls.Add(tlpnlEmailSettings);
             groupBoxEmailSettings.Dock = DockStyle.Fill;
-            groupBoxEmailSettings.Location = new Point(3, 202);
+            groupBoxEmailSettings.Location = new Point(3, 252);
             groupBoxEmailSettings.Name = "groupBoxEmailSettings";
             groupBoxEmailSettings.Padding = new Padding(8);
-            groupBoxEmailSettings.Size = new Size(1480, 115);
+            groupBoxEmailSettings.Size = new Size(1049, 115);
             groupBoxEmailSettings.TabIndex = 3;
             groupBoxEmailSettings.TabStop = false;
             groupBoxEmailSettings.Text = "&Email settings for sending patches";
@@ -201,7 +231,7 @@
             tlpnlEmailSettings.RowStyles.Add(new RowStyle());
             tlpnlEmailSettings.RowStyles.Add(new RowStyle());
             tlpnlEmailSettings.RowStyles.Add(new RowStyle());
-            tlpnlEmailSettings.Size = new Size(1464, 83);
+            tlpnlEmailSettings.Size = new Size(1033, 83);
             tlpnlEmailSettings.TabIndex = 0;
             // 
             // SmtpServer
@@ -260,10 +290,10 @@
             mergeWindowGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             mergeWindowGroup.Controls.Add(tableLayoutPanel4);
             mergeWindowGroup.Dock = DockStyle.Top;
-            mergeWindowGroup.Location = new Point(3, 129);
+            mergeWindowGroup.Location = new Point(3, 179);
             mergeWindowGroup.Name = "mergeWindowGroup";
             mergeWindowGroup.Padding = new Padding(8);
-            mergeWindowGroup.Size = new Size(1480, 67);
+            mergeWindowGroup.Size = new Size(1049, 67);
             mergeWindowGroup.TabIndex = 2;
             mergeWindowGroup.TabStop = false;
             mergeWindowGroup.Text = "&Merge window";
@@ -280,7 +310,7 @@
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
-            tableLayoutPanel4.Size = new Size(1464, 35);
+            tableLayoutPanel4.Size = new Size(1033, 35);
             tableLayoutPanel4.TabIndex = 0;
             // 
             // flowLayoutPanel1
@@ -320,8 +350,8 @@
             Controls.Add(tableLayoutPanel2);
             Name = "DetailedSettingsPage";
             Padding = new Padding(8);
-            Size = new Size(1502, 686);
             Text = "Detailed";
+            Size = new Size(1071, 686);
             PushWindowGB.ResumeLayout(false);
             PushWindowGB.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
@@ -367,5 +397,7 @@
         private GroupBox gbRevisionGraph;
         private TableLayoutPanel tlpnlRevisionGraph;
         private CheckBox chkMergeGraphLanesHavingCommonParent;
+        private CheckBox chkRenderGraphWithDiagonals;
+        private CheckBox chkStraightenGraphDiagonals;
     }
 }

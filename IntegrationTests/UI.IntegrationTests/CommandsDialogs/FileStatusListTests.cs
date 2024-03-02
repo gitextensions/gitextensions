@@ -216,22 +216,19 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Test_FilterWatermarkLabelVisibility_on_FilterVisibleChange(
             [Values(null, "", "x")] string filterText,
-            [Values(true, false)] bool filterFocused,
-            [Values(true, false)] bool filterVisible)
+            [Values(true, false)] bool filterFocused)
         {
             FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
             accessor.FilterComboBox.Text = filterText; // must be set first because it does not need to update the visibility
-
-            _fileStatusList.FilterVisible = !filterVisible; // force a change
-            _fileStatusList.FilterVisible = filterVisible;
+            accessor.SetFileStatusListVisibility(filesPresent: true);
 
             if (filterFocused)
             {
                 accessor.FilterComboBox.Focus(); // must be done after FilterVisible = true
             }
 
-            accessor.FilterWatermarkLabelVisible.Should().Be(filterVisible && !filterFocused && string.IsNullOrEmpty(filterText));
+            accessor.FilterWatermarkLabelVisible.Should().Be(!filterFocused && string.IsNullOrEmpty(filterText));
         }
 
         [Test]
@@ -240,19 +237,15 @@ namespace GitExtensions.UITests.CommandsDialogs
             FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
             accessor.FilterComboBox.Text = "";
-
-            // FilterVisibleInternal has been reset because no items were added, toggle it
-            _fileStatusList.FilterVisible = false;
-            _fileStatusList.FilterVisible = true;
-
+            accessor.SetFileStatusListVisibility(filesPresent: true);
             accessor.FilterWatermarkLabelVisible.Should().BeTrue();
 
             accessor.FilterComboBox.Focus();
-
+            accessor.SetFileStatusListVisibility(filesPresent: true);
             accessor.FilterWatermarkLabelVisible.Should().BeFalse();
 
             accessor.FileStatusListView.Focus();
-
+            accessor.SetFileStatusListVisibility(filesPresent: true);
             accessor.FilterWatermarkLabelVisible.Should().BeTrue();
         }
 
@@ -267,12 +260,10 @@ namespace GitExtensions.UITests.CommandsDialogs
             string expectedRegex = string.IsNullOrEmpty(regex) ? null : regex;
 
             _fileStatusList.SetFilter(regex);
+            accessor.SetFileStatusListVisibility(filesPresent: true);
 
             CheckStoreFilter(expectedColor, expectedRegex, accessor);
 
-            // FilterVisibleInternal has been reset because no items were added, toggle it
-            _fileStatusList.FilterVisible = false;
-            _fileStatusList.FilterVisible = true;
             accessor.DeleteFilterButton.Visible.Should().Be(active);
         }
 

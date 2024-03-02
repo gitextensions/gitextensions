@@ -37,7 +37,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public override void Refresh(int rowHeight, in VisibleRowRange range)
+        public override void ApplySettings()
         {
             bool showIcon = AppSettings.ShowBuildStatusIconColumn;
             bool showText = AppSettings.ShowBuildStatusTextColumn;

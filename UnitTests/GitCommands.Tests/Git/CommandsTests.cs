@@ -375,11 +375,11 @@ namespace GitCommandsTests_Git
 
         [Test]
         public void MergedBranchesCmd([Values(true, false)] bool includeRemote, [Values(true, false)] bool fullRefname,
-             [Values(null, "", " ", "HEAD", "1234567890")] string commit)
+             [Values(null, "", "HEAD", "1234567890")] string commit)
         {
             string formatArg = fullRefname ? @" --format=""%(refname)""" : string.Empty;
             string remoteArg = includeRemote ? " -a" : string.Empty;
-            string commitArg = string.IsNullOrWhiteSpace(commit) ? string.Empty : $" {commit}";
+            string commitArg = string.IsNullOrWhiteSpace(commit) ? string.Empty : $" {commit.Quote()}";
             string expected = $"branch{formatArg}{remoteArg} --merged{commitArg}";
 
             Assert.AreEqual(expected, Commands.MergedBranches(includeRemote, fullRefname, commit).Arguments);

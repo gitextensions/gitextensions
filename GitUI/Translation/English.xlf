@@ -1309,6 +1309,14 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Get remote branches directly from the remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkRenderGraphWithDiagonals.Text">
+        <source>Render graph with diagonals</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkStraightenGraphDiagonals.Text">
+        <source>Straighten graph diagonals</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkUseSSL.Text">
         <source>Use SSL/TLS</source>
         <target />
@@ -1507,19 +1515,19 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
-        <source>Copy new version</source>
+        <source>Copy &amp;new version</source>
         <target />
       </trans-unit>
       <trans-unit id="copyOldVersionToolStripMenuItem.Text">
-        <source>Copy old version</source>
+        <source>Copy &amp;old version</source>
         <target />
       </trans-unit>
       <trans-unit id="copyPatchToolStripMenuItem.Text">
-        <source>Copy patch</source>
+        <source>Copy &amp;patch</source>
         <target />
       </trans-unit>
       <trans-unit id="copyToolStripMenuItem.Text">
-        <source>Copy</source>
+        <source>&amp;Copy</source>
         <target />
       </trans-unit>
       <trans-unit id="decreaseNumberOfLines.ToolTipText">
@@ -1527,19 +1535,19 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="decreaseNumberOfLinesToolStripMenuItem.Text">
-        <source>Decrease the number of lines of context</source>
+        <source>&amp;Decrease the number of lines of context</source>
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
-        <source>Find</source>
+        <source>&amp;Find...</source>
         <target />
       </trans-unit>
       <trans-unit id="goToLineToolStripMenuItem.Text">
-        <source>Go to line</source>
+        <source>&amp;Go to line</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaceChangesToolStripMenuItem.Text">
-        <source>Ignore all whitespace changes</source>
+        <source>Ignore all &amp;whitespace changes</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaces.ToolTipText">
@@ -1555,11 +1563,11 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="ignoreWhitespaceAtEolToolStripMenuItem.Text">
-        <source>Ignore whitespace changes at end of line</source>
+        <source>Ignore whitespace changes at end of &amp;line</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
-        <source>Ignore changes in amount of whitespace</source>
+        <source>Ignore changes in &amp;amount of whitespace</source>
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -1567,7 +1575,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLinesToolStripMenuItem.Text">
-        <source>Increase the number of lines of context</source>
+        <source>&amp;Increase the number of lines of context</source>
         <target />
       </trans-unit>
       <trans-unit id="nextChangeButton.ToolTipText">
@@ -1576,6 +1584,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="previousChangeButton.ToolTipText">
         <source>Previous change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="replaceToolStripMenuItem.Text">
+        <source>&amp;Replace...</source>
         <target />
       </trans-unit>
       <trans-unit id="resetSelectedLinesToolStripMenuItem.Text">
@@ -1591,7 +1603,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="showEntireFileToolStripMenuItem.Text">
-        <source>Show entire file</source>
+        <source>Show &amp;entire file</source>
         <target />
       </trans-unit>
       <trans-unit id="showNonPrintChars.ToolTipText">
@@ -1599,11 +1611,15 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="showNonprintableCharactersToolStripMenuItem.Text">
-        <source>Show nonprinting characters</source>
+        <source>S&amp;how nonprinting characters</source>
         <target />
       </trans-unit>
       <trans-unit id="showSyntaxHighlighting.ToolTipText">
         <source>Show syntax highlighting</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showSyntaxHighlightingToolStripMenuItem.Text">
+        <source>Show synta&amp;x highlighting</source>
         <target />
       </trans-unit>
       <trans-unit id="stageSelectedLinesToolStripMenuItem.Text">
@@ -1611,7 +1627,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
-        <source>Treat all files as text</source>
+        <source>&amp;Treat all files as text</source>
         <target />
       </trans-unit>
       <trans-unit id="unstageSelectedLinesToolStripMenuItem.Text">
@@ -2663,6 +2679,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
         <source>Plugin &amp;Settings</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="pluginsLoadingToolStripMenuItem.Text">
+        <source>Loading...</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginsToolStripMenuItem.Text">
@@ -4402,7 +4422,7 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
-        <source>Blame</source>
+        <source>&amp;Blame</source>
         <target />
       </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
@@ -4418,11 +4438,11 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File history</source>
+        <source>File &amp;history</source>
         <target />
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>Find</source>
+        <source>&amp;Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="firstCommitGroup.Text">
@@ -4438,11 +4458,11 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show in folder</source>
+        <source>Show &amp;in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
+        <source>Open with &amp;difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="secondCommitGroup.Text">
@@ -8806,7 +8826,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find</source>
+        <source>&amp;Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
@@ -8928,15 +8948,15 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="assumeUnchangedTheFileToolStripMenuItem.Text">
-        <source>Assume unchanged this file</source>
+        <source>Assume &amp;unchanged this file</source>
         <target />
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem1.Text">
-        <source>Blame</source>
+        <source>&amp;Blame</source>
         <target />
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Collapse All</source>
+        <source>Co&amp;llapse all</source>
         <target />
       </trans-unit>
       <trans-unit id="copyPathsToolStripMenuItem.Text">
@@ -8944,27 +8964,27 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
-        <source>Edit working directory file</source>
+        <source>&amp;Edit working directory file</source>
         <target />
       </trans-unit>
       <trans-unit id="expandToolStripMenuItem.Text">
-        <source>Expand</source>
+        <source>&amp;Expand</source>
         <target />
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
-        <source>View history</source>
+        <source>View &amp;history</source>
         <target />
       </trans-unit>
       <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
-        <source>Archive...</source>
+        <source>Archi&amp;ve...</source>
         <target />
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
-        <source>Clean this folder in the working directory...</source>
+        <source>&amp;Clean this folder in the working directory...</source>
         <target />
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
-        <source>Show in folder</source>
+        <source>Show &amp;in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="filterFileInGridToolStripMenuItem.Text">
@@ -8972,15 +8992,15 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
-        <source>Find in file tree...</source>
+        <source>&amp;Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="openFileToolStripMenuItem.Text">
-        <source>Open this revision (temp file)</source>
+        <source>Ope&amp;n this revision (temp file)</source>
         <target />
       </trans-unit>
       <trans-unit id="openFileWithToolStripMenuItem.Text">
-        <source>Open this revision with... (temp file)</source>
+        <source>Open this revision &amp;with... (temp file)</source>
         <target />
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
@@ -8988,27 +9008,27 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
+        <source>Open with &amp;difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>Open working directory file with...</source>
+        <source>&amp;Open working directory file with...</source>
         <target />
       </trans-unit>
       <trans-unit id="rememberFileStripMenuItem.Text">
-        <source>Remember file for diff</source>
+        <source>Re&amp;member file for diff</source>
         <target />
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
-        <source>Reset to selected revision</source>
+        <source>&amp;Reset to selected revision</source>
         <target />
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
-        <source>Save as...</source>
+        <source>S&amp;ave as...</source>
         <target />
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
-        <source>Stop tracking this file</source>
+        <source>Stop &amp;tracking this file</source>
         <target />
       </trans-unit>
     </body>

@@ -232,6 +232,7 @@ namespace GitUI
             _gridView.MouseDoubleClick += OnGridViewDoubleClick;
             _gridView.MouseClick += OnGridViewMouseClick;
             _gridView.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e);
+            _gridView.CellMouseEnter += _gridView_CellMouseEnter;
 
             // Allow to drop patch file on revision grid
             _gridView.AllowDrop = true;
@@ -251,6 +252,13 @@ namespace GitUI
             _gridView.AddColumn(_buildServerWatcher.ColumnProvider);
             _maximizedColumn = _gridView.Columns.Cast<DataGridViewColumn>()
                 .FirstOrDefault(column => column.Resizable == DataGridViewTriState.True && column.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill);
+        }
+
+        internal void CancelBackgroundTasks()
+        {
+            _customDiffToolsSequence.CancelCurrent();
+            _refreshRevisionsSequence.CancelCurrent();
+            _gridView.CancelBackgroundTasks();
         }
 
         protected override void Dispose(bool disposing)
@@ -523,7 +531,7 @@ namespace GitUI
                 _lastVisibleResizableColumn.Resizable = DataGridViewTriState.True;
             }
 
-            _gridView.Refresh(); // columns could change their Resizable state, e.g. the BuildStatusColumnProvider
+            _gridView.ApplySettings(); // columns could change their Resizable state, e.g. the BuildStatusColumnProvider
 
             base.Refresh();
 
@@ -996,6 +1004,7 @@ namespace GitUI
                         ? getUnfilteredRefs.Value.Where(r => r.CompleteName != GitRefName.RefsStashPrefix)
                         : getUnfilteredRefs.Value)
                         .ToLookup(gitRef => gitRef.ObjectId);
+                    cancellationToken.ThrowIfCancellationRequested();
                     ResetNavigationHistory();
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef.Value);
                     _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(CurrentCheckout, currentlySelectedObjectIds);
@@ -1073,6 +1082,7 @@ namespace GitUI
                     {
                         RevisionReader reader = new(capturedModule);
                         string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
+                        cancellationToken.ThrowIfCancellationRequested();
                         ParentsAreRewritten = _filterInfo.HasRevisionFilter;
 
                         cancellationToken.ThrowIfCancellationRequested();
@@ -1122,6 +1132,7 @@ namespace GitUI
 
             string BuildPathFilter(string? path)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 FilePathByObjectId?.Clear();
 
                 if (string.IsNullOrWhiteSpace(path))
@@ -1181,7 +1192,7 @@ namespace GitUI
 
                 HashSet<string?> setOfFileNames = [];
 
-                foreach (string fileName in ParseFileNames(args))
+                foreach (string fileName in ParseFileNames(args, cancellationToken))
                 {
                     setOfFileNames.Add(fileName);
                 }
@@ -1199,9 +1210,16 @@ namespace GitUI
                 {
                     // Wait for refs,CurrentCheckout and stashes as second step
                     this.InvokeAndForget(() => ShowLoading(showSpinner: false));
-                    semaphoreUpdateGrid.Wait(cancellationToken);
-                    semaphoreUpdateGrid.Wait(cancellationToken);
-                    firstRevisionReceived = true;
+                    try
+                    {
+                        semaphoreUpdateGrid.Wait(cancellationToken);
+                        semaphoreUpdateGrid.Wait(cancellationToken);
+                        firstRevisionReceived = true;
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        return;
+                    }
                 }
 
                 if (stashesById is not null)
@@ -1542,10 +1560,10 @@ namespace GitUI
                 path,
             };
 
-            return ParseFileNames(args).FirstOrDefault();
+            return ParseFileNames(args, cancellationToken: default).FirstOrDefault();
         }
 
-        private IEnumerable<string> ParseFileNames(GitArgumentBuilder args)
+        private IEnumerable<string> ParseFileNames(GitArgumentBuilder args, CancellationToken cancellationToken)
         {
             ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
 
@@ -1585,6 +1603,7 @@ namespace GitUI
                 }
 
                 // Add only the first file to the dictionary
+                cancellationToken.ThrowIfCancellationRequested();
                 FilePathByObjectId?.TryAdd(currentObjectId, line);
 
                 yield return line;
@@ -1742,10 +1761,29 @@ namespace GitUI
             }
         }
 
+        private void _gridView_CellMouseEnter(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == _buildServerWatcher.ColumnProvider.Index)
+            {
+                GitRevision revision = GetRevision(e.RowIndex);
+                _gridView.Cursor = string.IsNullOrWhiteSpace(revision?.BuildStatus?.Url) ? Cursors.Default : Cursors.Hand;
+            }
+            else
+            {
+                _gridView.Cursor = Cursors.Default;
+            }
+        }
+
         private void OnGridViewCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             try
             {
+                if (e.Button == MouseButtons.Left && e.ColumnIndex == _buildServerWatcher.ColumnProvider.Index)
+                {
+                    OpenBuildReport(GetRevision(e.RowIndex));
+                    return;
+                }
+
                 if (e.Button != MouseButtons.Right)
                 {
                     return;
@@ -2983,7 +3021,11 @@ namespace GitUI
 
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GitRevision? revision = GetSelectedRevisionOrDefault();
+            OpenBuildReport(GetSelectedRevisionOrDefault());
+        }
+
+        private void OpenBuildReport(GitRevision? revision)
+        {
             if (string.IsNullOrWhiteSpace(revision?.BuildStatus?.Url))
             {
                 return;

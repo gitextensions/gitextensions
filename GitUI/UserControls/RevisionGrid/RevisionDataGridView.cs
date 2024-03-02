@@ -28,6 +28,8 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Stopwatch _lastScroll = Stopwatch.StartNew();
         private readonly Stopwatch _consecutiveScroll = Stopwatch.StartNew();
         private readonly List<ColumnProvider> _columnProviders = [];
+        private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
+        private readonly CancellationTokenSequence _updateVisibleRowRangeSequence = new();
 
         internal RevisionGraph _revisionGraph = new();
 
@@ -81,7 +83,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             InitFonts();
 
-            _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, BackgroundThreadUpdatePeriod);
+            _backgroundUpdater = new BackgroundUpdater(_taskManager, UpdateVisibleRowRangeInternalAsync, BackgroundThreadUpdatePeriod);
 
             InitializeComponent();
             DoubleBuffered = true;
@@ -119,23 +121,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             };
 
-            _revisionGraph.Updated += () =>
-            {
-                // We have to post this since the thread owns a lock on GraphData that we'll
-                // need in order to re-draw the graph.
-                this.InvokeAndForget(() =>
-                    {
-                        DebugHelpers.Assert(_rowHeight != 0, "_rowHeight != 0");
-
-                        // Refresh column providers
-                        foreach (ColumnProvider columnProvider in _columnProviders)
-                        {
-                            columnProvider.Refresh(_rowHeight, _visibleRowRange);
-                        }
-
-                        Invalidate();
-                    });
-            };
+            _revisionGraph.Updated += () => this.InvokeAndForget(Invalidate);
 
             VirtualMode = true;
             Clear();
@@ -179,8 +165,21 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
+        internal void CancelBackgroundTasks()
+        {
+            _columnProviders.Clear();
+            _backgroundScrollTo = -1;
+            _updateVisibleRowRangeSequence.CancelCurrent();
+            _taskManager.JoinPendingOperations();
+        }
+
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                CancelBackgroundTasks();
+            }
+
             base.Dispose(disposing);
         }
 
@@ -306,7 +305,12 @@ namespace GitUI.UserControls.RevisionGrid
                 provider.OnCellPainting(e, revision, _rowHeight, cellStyle);
             }
 
-            e.Handled = true;
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                _forceRefresh = true;
+                UpdateVisibleRowRange();
+            }
         }
 
         /// <summary>
@@ -316,13 +320,13 @@ namespace GitUI.UserControls.RevisionGrid
         /// <param name="revision">The revision to add.</param>
         public void Add(GitRevision revision)
         {
-            _forceRefresh = _revisionGraph.Add(revision) || _forceRefresh;
+            _forceRefresh |= _revisionGraph.Add(revision);
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
                 ++_loadedToBeSelectedRevisionsCount;
             }
 
-            UpdateVisibleRowRange();
+            TriggerRowCountUpdate();
         }
 
         /// <summary>
@@ -344,7 +348,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             // Insert at matching parent.
-            _forceRefresh = _revisionGraph.Insert(workTreeRev, indexRev, parents) || _forceRefresh;
+            _forceRefresh |= _revisionGraph.Insert(workTreeRev, indexRev, parents);
 
             if (ToBeSelectedObjectIds.Contains(workTreeRev.ObjectId))
             {
@@ -356,13 +360,16 @@ namespace GitUI.UserControls.RevisionGrid
                 ++_loadedToBeSelectedRevisionsCount;
             }
 
-            UpdateVisibleRowRange();
+            TriggerRowCountUpdate();
         }
 
         public void Clear()
         {
-            _backgroundScrollTo = 0;
+            ThreadHelper.AssertOnUIThread();
+
+            _backgroundScrollTo = -1;
             _forceRefresh = false;
+            _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0);
 
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about to delete the data
             SetRowCount(0);
@@ -376,7 +383,6 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             // Redraw
-            UpdateVisibleRowRange();
             Invalidate(invalidateChildren: true);
         }
 
@@ -437,54 +443,50 @@ namespace GitUI.UserControls.RevisionGrid
             if (_revisionGraph.Count == 0)
             {
                 MarkAsDataLoadingComplete();
+                return;
             }
-            else
+
+            // Rows have not been selected yet
+            this.InvokeAndForget(async () =>
             {
-                // Rows have not been selected yet
-                this.InvokeAndForget(async () =>
+                SetRowCountAndSelectRowsIfReady();
+
+                if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
                 {
-                    SetRowCountAndSelectRowsIfReady();
-
-                    if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
-                    {
-                        // Nothing to select or interrupted
-                        MarkAsDataLoadingComplete();
-                        return;
-                    }
-
-                    int scrollTo = _toBeSelectedGraphIndexesCache.Value.Max();
-                    int firstGraphIndex = _toBeSelectedGraphIndexesCache.Value[0];
-                    if (RowCount - 1 < scrollTo)
-                    {
-                        // Wait for the periodic background thread to load all rows in the grid
-                        while (RowCount - 1 < scrollTo && firstGraphIndex >= Rows.Count)
-                        {
-                            // Force loading of rows
-                            int maxScroll = Math.Min(RowCount - 1, scrollTo);
-                            EnsureRowVisible(maxScroll);
-
-                            // Wait for background thread to update grid rows
-                            UpdateVisibleRowRange();
-                            await Task.Delay(BackgroundThreadUpdatePeriod);
-                            if (_loadedToBeSelectedRevisionsCount == 0)
-                            {
-                                // Selection done or aborted
-                                break;
-                            }
-                        }
-                    }
-
-                    // Scroll to first selected only if selection is not changed
-                    if (firstGraphIndex >= 0 && firstGraphIndex < Rows.Count && Rows[firstGraphIndex].Selected)
-                    {
-                        EnsureRowVisible(firstGraphIndex);
-                    }
-
+                    // Nothing to select or interrupted
                     MarkAsDataLoadingComplete();
-                });
-            }
+                    return;
+                }
 
-            return;
+                int rowCount;
+
+                // Wait for the periodic background thread to load the first selected grid row, stop if aborted
+                int firstGraphIndex = _toBeSelectedGraphIndexesCache.Value[0];
+                do
+                {
+                    rowCount = RowCount;
+                    if (firstGraphIndex < rowCount)
+                    {
+                        break;
+                    }
+
+                    // Scroll to currently last loaded row
+                    SetRowCount(rowCount);
+                    EnsureRowVisible(rowCount - 1);
+
+                    // Wait for background thread to load grid rows
+                    await Task.Delay(BackgroundThreadUpdatePeriod);
+                }
+                while (_loadedToBeSelectedRevisionsCount > 0);
+
+                // Scroll to first selected only if selection is not changed
+                if (firstGraphIndex >= 0 && firstGraphIndex < rowCount && Rows[firstGraphIndex].Selected)
+                {
+                    EnsureRowVisible(firstGraphIndex);
+                }
+
+                MarkAsDataLoadingComplete();
+            });
         }
 
         public void MarkAsDataLoadingComplete()
@@ -558,7 +560,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         private void ResetGraphIndices()
         {
-            _toBeSelectedGraphIndexesCache = new(() => CalculateGraphIndices());
+            _toBeSelectedGraphIndexesCache = new Lazy<IList<int>>(CalculateGraphIndices);
             return;
 
             // Get the revision graph row indexes for the ToBeSelectedObjectIds.
@@ -646,6 +648,11 @@ namespace GitUI.UserControls.RevisionGrid
             _lastScroll.Restart();
         }
 
+        private void TriggerRowCountUpdate()
+        {
+            UpdateVisibleRowRange();
+        }
+
         private void UpdateVisibleRowRange()
         {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
@@ -655,19 +662,28 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
+            if (_forceRefresh)
+            {
+                // Always set _backgroundScrollTo in order to stop the background thread
+                _backgroundScrollTo = -1;
+
+                // The graph cache must be cleared at once
+                foreach (ColumnProvider columnProvider in _columnProviders)
+                {
+                    columnProvider.Clear();
+                }
+            }
+
             _backgroundUpdater.ScheduleExcecution();
         }
 
         private async Task UpdateVisibleRowRangeInternalAsync()
         {
-            int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
-            int visibleRowCount = _rowHeight <= 0 ? 0 : (Height + _rowHeight - 1) / _rowHeight; // Rounding up integer division: (a+b-1)/b = ceil(a/b)
+            CancellationToken cancellationToken = _updateVisibleRowRangeSequence.Next();
 
+            int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
+            int visibleRowCount = DisplayedRowCount(includePartialRow: true);
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
-            if (_forceRefresh)
-            {
-                _backgroundScrollTo = -1;
-            }
 
             if (_forceRefresh || _visibleRowRange.FromIndex != fromIndex || _visibleRowRange.Count != visibleRowCount)
             {
@@ -695,18 +711,24 @@ namespace GitUI.UserControls.RevisionGrid
                                 // Take changes to _backgroundScrollTo and IsDataLoadComplete by another thread into account
                                 if (IsDataLoadComplete)
                                 {
-                                    _backgroundScrollTo = Math.Min(_backgroundScrollTo, _revisionGraph.Count);
+                                    _backgroundScrollTo = Math.Min(_backgroundScrollTo, _revisionGraph.Count - 1);
                                 }
                             }
-                            while (curCount < _backgroundScrollTo);
+                            while (curCount <= _backgroundScrollTo);
                         }
                         else
                         {
-                            await UpdateGraphAsync(fromIndex: _revisionGraph.Count, toIndex: _revisionGraph.Count);
+                            int maxRowIndex = _revisionGraph.Count - 1;
+                            await UpdateGraphAsync(fromIndex: maxRowIndex, toIndex: maxRowIndex);
                         }
                     }
 
-                    await this.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync(cancellationToken);
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
                     NotifyProvidersVisibleRowRangeChanged();
                 }
             }
@@ -715,12 +737,24 @@ namespace GitUI.UserControls.RevisionGrid
 
             async Task UpdateGraphAsync(int fromIndex, int toIndex)
             {
-                // Cache the next item; build the cache in limited chunks in order to update intermittently
-                _revisionGraph.CacheTo(currentRowIndex: toIndex, lastToCacheRowIndex: Math.Min(fromIndex + 1500, toIndex));
+                try
+                {
+                    // Cache the next item; build the cache in limited chunks in order to update intermittently
+                    _revisionGraph.CacheTo(currentRowIndex: toIndex, lastToCacheRowIndex: Math.Min(fromIndex + 1500, toIndex));
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
-                SetRowCountAndSelectRowsIfReady();
+                    SetRowCountAndSelectRowsIfReady();
+                }
+                catch (Exception exception)
+                {
+                    _backgroundScrollTo = -1;
+                    Trace.WriteLine(exception);
+                }
             }
         }
 
@@ -732,18 +766,23 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        public override void Refresh()
+        public void ApplySettings()
         {
             InitFonts();
-
             UpdateRowHeight();
-            UpdateVisibleRowRange();
 
-            // Refresh column providers
             foreach (ColumnProvider columnProvider in _columnProviders)
             {
-                columnProvider.Refresh(_rowHeight, _visibleRowRange);
+                columnProvider.ApplySettings();
             }
+
+            Refresh();
+        }
+
+        public override void Refresh()
+        {
+            _forceRefresh = true;
+            UpdateVisibleRowRange();
 
             base.Refresh();
         }

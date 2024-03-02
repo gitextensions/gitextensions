@@ -22,5 +22,12 @@ namespace CommonTestUtils
             using CancellationTokenSource cancellationTokenSource = new(timeout);
             await ThreadHelper.JoinPendingOperationsAsync(cancellationTokenSource.Token);
         }
+
+        public static void JoinPendingOperations()
+        {
+            // Note that JoinableTaskContext.Factory must be used to bypass the default behavior of JoinableTaskFactory
+            // since the latter adds new tasks to the collection and would therefore never complete.
+            ThreadHelper.JoinableTaskContext.Factory.Run(() => JoinPendingOperationsAsync(UnexpectedTimeout));
+        }
     }
 }

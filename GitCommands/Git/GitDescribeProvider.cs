@@ -10,8 +10,9 @@ namespace GitCommands.Git
         /// of additional commits on top of the tagged object and the abbreviated object name of the most recent commit.
         /// </summary>
         /// <param name="revision">A revision to describe.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>Describe information.</returns>
-        (string precedingTag, string commitCount) Get(ObjectId revision);
+        (string precedingTag, string commitCount) Get(ObjectId revision, CancellationToken cancellationToken = default);
     }
 
     public sealed class GitDescribeProvider : IGitDescribeProvider
@@ -24,9 +25,9 @@ namespace GitCommands.Git
         }
 
         /// <inheritdoc />
-        public (string precedingTag, string commitCount) Get(ObjectId revision)
+        public (string precedingTag, string commitCount) Get(ObjectId revision, CancellationToken cancellationToken = default)
         {
-            string? description = GetModule().GetDescribe(revision);
+            string? description = GetModule().GetDescribe(revision, cancellationToken);
             if (string.IsNullOrEmpty(description))
             {
                 return (string.Empty, string.Empty);

@@ -17,11 +17,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         /// <summary>The display friendly name of this column.</summary>
         public string Name { get; }
 
-        protected ColumnProvider(string name) => Name = name;
-
-        public virtual void Refresh(int rowHeight, in VisibleRowRange range) => Column.Visible = true;
-
         public int Index => Column.Index;
+
+        protected ColumnProvider(string name)
+        {
+            Name = name;
+        }
+
+        public virtual void ApplySettings()
+        {
+            Column.Visible = true;
+        }
 
         public virtual void Clear()
         {
@@ -48,7 +54,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
         public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
         {
-            toolTip = default;
+            toolTip = null;
             return false;
         }
     }

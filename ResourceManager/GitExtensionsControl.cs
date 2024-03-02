@@ -1,104 +1,43 @@
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using GitExtUtils;
-using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 
 namespace ResourceManager
 {
     // NOTE do not make this class abstract as it breaks the WinForms designer in VS
 
-    /// <summary>Provides translation and hotkey plumbing for GitEx <see cref="UserControl"/>s.</summary>
-    public class GitExtensionsControl : UserControl, ITranslate
+    /// <summary>
+    ///  Provides hotkey plumbing for Git Extensions <see cref="UserControl"/>s.
+    /// </summary>
+    public class GitExtensionsControl : TranslatedControl
     {
-        private readonly GitExtensionsControlInitialiser _initialiser;
         private IReadOnlyList<HotkeyCommand>? _hotkeys;
 
-        protected GitExtensionsControl()
+        private bool _serviceProviderLoaded = false;
+
+        protected override void OnRuntimeLoad()
         {
-            _initialiser = new GitExtensionsControlInitialiser(this);
-        }
-
-        [Browsable(false)] // because we always read from settings
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public override Font Font
-        {
-            get => base.Font;
-            set => base.Font = value;
-        }
-
-        protected bool IsDesignMode => _initialiser.IsDesignMode;
-
-        protected virtual void OnRuntimeLoad()
-        {
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            if (!IsDesignMode)
-            {
-                OnRuntimeLoad();
-            }
-        }
-
-        /// <summary>Performs post-initialisation tasks such as translation.</summary>
-        /// <remarks>
-        /// <para>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</para>
-        /// <para>Requiring this extra life-cycle event allows preparing the UI after any call to <c>InitializeComponent</c>,
-        /// but before it is show. The <see cref="UserControl.Load"/> event occurs too late for operations that effect layout.</para>
-        /// </remarks>
-        protected void InitializeComplete()
-        {
-            _initialiser.InitializeComplete();
-
-            if (IsDesignMode)
-            {
-                return;
-            }
-
-            this.FixVisualStyle();
-        }
-
-        public virtual void AddTranslationItems(ITranslation translation)
-        {
-            TranslationUtils.AddTranslationItemsFromFields(Name, this, translation);
-        }
-
-        public virtual void TranslateItems(ITranslation translation)
-        {
-            TranslationUtils.TranslateItemsFromFields(Name, this, translation);
+            base.OnRuntimeLoad();
+            _serviceProviderLoaded = true;
         }
 
         /// <summary>
-        ///  Attempts to find an instance of <see cref="IGitUICommands"/>.
+        ///  Attempts to find an instance of <see cref="IServiceProvider"/>.
         /// </summary>
-        /// <param name="commands">
-        ///  The instance of <see cref="IGitUICommands"/> either directly assigned to the control
-        ///  (if the control implements <see cref="IGitModuleControl"/>) or to the parent form
-        ///  (if the form implements <see cref="IGitModuleForm"/>); <see langword="null"/>, otherwise.
-        /// </param>
+        /// <remark>
+        ///  The instance of <see cref="IServiceProvider"/>
+        ///  either directly assigned to the control (if the control implements <see cref="IGitModuleControl"/>)
+        ///  or to the parent form (if the form implements <see cref="IGitModuleForm"/>).
+        /// </remark>>
         /// <returns>
-        ///  <see langword="true"/>, if an instance of <see cref="IGitUICommands"/> is found; <see langword="false"/>, otherwise.
+        ///  The found instance of <see cref="IServiceProvider"/>.
         /// </returns>
-        public bool TryGetUICommands([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
-        {
-            if (this is IGitModuleControl control)
-            {
-                commands = control.UICommands;
-                return commands is not null;
-            }
-
-            if (FindForm() is IGitModuleForm form)
-            {
-                commands = form.UICommands;
-                return commands is not null;
-            }
-
-            commands = null;
-            return false;
-        }
+        /// <exception cref="InvalidOperationException">
+        ///  If this control is not a <see cref="IGitModuleControl"/>) and is not placed on a <see cref="IGitModuleForm"/>.
+        /// </exception>
+        protected IServiceProvider ServiceProvider
+            => this is IGitModuleControl control ? control.UICommands
+                : FindForm() is IGitModuleForm form ? form.UICommands
+                : throw new InvalidOperationException($"no chance to get {nameof(ServiceProvider)}");
 
         #region Hotkeys
 
@@ -132,18 +71,13 @@ namespace ResourceManager
         {
             _hotkeys = null;
 
-            if (!HotkeysEnabled)
+            if (!HotkeysEnabled || !_serviceProviderLoaded)
             {
+                // Hotkeys shall be loaded by all controls in OnRuntimeLoad
                 return;
             }
 
-            if (!TryGetUICommands(out IGitUICommands commands))
-            {
-                DebugHelpers.Fail($"{GetType().FullName}: service provider is unavailable.");
-                return;
-            }
-
-            _hotkeys = commands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
+            _hotkeys = ServiceProvider.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
         }
 
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>

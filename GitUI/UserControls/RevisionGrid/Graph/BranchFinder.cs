@@ -5,7 +5,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal partial class BranchFinder
     {
-        [GeneratedRegex("(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$", RegexOptions.CultureInvariant)]
+        [GeneratedRegex(@"^merged? (pull request (?<pr>.*) from )?(.*branch |tag )?'?(?<with>[^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (?<into>.*[^.]))?\.?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
         private static partial Regex MergeRegex();
 
         internal BranchFinder(RevisionGraphRevision node)
@@ -77,9 +77,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Match match = MergeRegex().Match(commitSubject);
             if (match.Success)
             {
-                Group matchPullRequest = match.Groups[2];
-                Group matchWith = match.Groups[4];
-                Group matchInto = match.Groups[7];
+                Group matchPullRequest = match.Groups["pr"];
+                Group matchWith = match.Groups["with"];
+                Group matchInto = match.Groups["into"];
                 into = matchInto.Success ? matchInto.Value : "master";
                 with = matchWith.Success ? matchWith.Value : "?";
                 if (appendPullRequest && matchPullRequest.Success)

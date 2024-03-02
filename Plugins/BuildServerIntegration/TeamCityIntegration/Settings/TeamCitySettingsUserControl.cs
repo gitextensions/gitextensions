@@ -20,7 +20,7 @@ namespace TeamCityIntegration.Settings
                 "(Should contain at least the \"buildTypeId\" parameter)");
         private readonly TranslationString _failToExtractDataFromClipboardCaption = new("Build url not valid");
 
-        [GeneratedRegex(@"(\?|\&)([^=]+)\=([^&]+)")]
+        [GeneratedRegex(@"(\?|\&)(?<buildtypeid>[^=]+)\=(?<buildtype>[^&]+)", RegexOptions.ExplicitCapture)]
         private static partial Regex TeamcityBuildUrl();
 
         public TeamCitySettingsUserControl()
@@ -122,9 +122,9 @@ namespace TeamCityIntegration.Settings
                 {
                     if (paramResult.Success)
                     {
-                        if (paramResult.Groups[2].Value == "buildTypeId")
+                        if (paramResult.Groups["buildtypeid"].Value == "buildTypeId")
                         {
-                            Build buildType = _teamCityAdapter.GetBuildType(paramResult.Groups[3].Value);
+                            Build buildType = _teamCityAdapter.GetBuildType(paramResult.Groups["buildtype"].Value);
                             TeamCityProjectName.Text = buildType.ParentProject;
                             TeamCityBuildIdFilter.Text = buildType.Id;
                             return;

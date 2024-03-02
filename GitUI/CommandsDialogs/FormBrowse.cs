@@ -30,6 +30,7 @@ using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
+using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
@@ -269,15 +270,10 @@ namespace GitUI.CommandsDialogs
 
             _formBrowseDiagnosticsReporter = new FormBrowseDiagnosticsReporter(this);
 
+            _repositoryHostsToolStripMenuItem.Visible = false;
+
             MainSplitContainer.Visible = false;
             MainSplitContainer.SplitterDistance = DpiUtil.Scale(260);
-
-            ThreadHelper.FileAndForget(async () =>
-            {
-                PluginRegistry.Initialize();
-                await this.SwitchToMainThreadAsync();
-                RegisterPlugins();
-            });
 
             InitCountArtificial(out _gitStatusMonitor);
 
@@ -362,7 +358,6 @@ namespace GitUI.CommandsDialogs
                     Brush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
-                    toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                     if (countToolbar || countArtificial)
                     {
@@ -475,6 +470,53 @@ namespace GitUI.CommandsDialogs
 
             // All app init is done, make all repo related similar to switching repos
             SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
+            bool isDashboard = _dashboard?.Visible ?? false;
+            ThreadHelper.FileAndForget(async () =>
+            {
+                if (isDashboard)
+                {
+                    // Load only the git hoster plugin to quickly provide related features in dashboard
+                    PluginRegistry.InitializeGitHostersOnly();
+
+                    await this.SwitchToMainThreadAsync();
+
+                    // Now that hoster plugin is registered, populate Git-host-plugin actions on Dashboard, like "Clone GitHub repository"
+                    UpdateRepositoryHostsMenu();
+
+                    // Check if during plugin loading user left dashboard
+                    if (_dashboard.Visible)
+                    {
+                        _dashboard.RefreshContent();
+                    }
+
+                    // Come back to background to load all the other plugins (that could be long...)
+                    await TaskScheduler.Default;
+                }
+
+                await InitializeAndRegisterAllPluginsAsync();
+            });
+
+            return;
+
+            async Task InitializeAndRegisterAllPluginsAsync()
+            {
+                PluginRegistry.InitializeAll();
+                await this.SwitchToMainThreadAsync();
+                RegisterPlugins();
+                UpdateRepositoryHostsMenu();
+            }
+
+            void UpdateRepositoryHostsMenu()
+            {
+                if (PluginRegistry.GitHosters.Count != 0)
+                {
+                    // TODO: support more than one Git hosting provider plugin (ADO, GitLab,...)
+                    _repositoryHostsToolStripMenuItem.Text = PluginRegistry.GitHosters[0].Name;
+                }
+
+                // Show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
+                _repositoryHostsToolStripMenuItem.Visible = PluginRegistry.GitHosters.Count != 0;
+            }
         }
 
         protected override void OnActivated(EventArgs e)
@@ -523,6 +565,7 @@ namespace GitUI.CommandsDialogs
         protected override void OnClosed(EventArgs e)
         {
             PluginRegistry.Unregister(UICommands);
+            RevisionGrid.CancelBackgroundTasks();
             base.OnClosed(e);
         }
 
@@ -716,6 +759,10 @@ namespace GitUI.CommandsDialogs
             _dashboard.Visible = true;
             _dashboard.BringToFront();
 
+            _createPullRequestsToolStripMenuItem.Enabled = false;
+            _viewPullRequestsToolStripMenuItem.Enabled = false;
+            _addUpstreamRemoteToolStripMenuItem.Enabled = false;
+
             DiagnosticsClient.TrackPageView("Dashboard");
         }
 
@@ -742,6 +789,11 @@ namespace GitUI.CommandsDialogs
         {
             foreach (ToolStripItem item in pluginsToolStripMenuItem.DropDownItems)
             {
+                if (item == pluginsLoadingToolStripMenuItem)
+                {
+                    continue;
+                }
+
                 item.Enabled = !(item.Tag is IGitPluginForRepository) || validWorkingDir;
             }
         }
@@ -753,6 +805,16 @@ namespace GitUI.CommandsDialogs
 
             lock (PluginRegistry.Plugins)
             {
+                if (PluginRegistry.Plugins.Count == 0)
+                {
+                    return;
+                }
+
+                if (pluginsToolStripMenuItem.DropDownItems.Contains(pluginsLoadingToolStripMenuItem))
+                {
+                    pluginsToolStripMenuItem.DropDownItems.Remove(pluginsLoadingToolStripMenuItem);
+                }
+
                 IOrderedEnumerable<IGitPlugin> pluginEntries = PluginRegistry.Plugins
                     .OrderByDescending(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
 
@@ -789,14 +851,12 @@ namespace GitUI.CommandsDialogs
                     }
                     else
                     {
-                        pluginsToolStripMenuItem.DropDownItems.Insert(0, item);
-                    }
-                }
+                        // Handle special case where Git Hosting plugin has already been loaded
+                        ToolStripItem first = pluginsToolStripMenuItem.DropDownItems[0];
+                        int index = first is ToolStripSeparator || string.CompareOrdinal(first.Text, item.Text) >= 0 ? 0 : 1;
 
-                if (_dashboard?.Visible ?? false)
-                {
-                    // now that plugins are registered, populate Git-host-plugin actions on Dashboard, like "Clone GitHub repository"
-                    _dashboard.RefreshContent();
+                        pluginsToolStripMenuItem.DropDownItems.Insert(index, item);
+                    }
                 }
 
                 mainMenuStrip?.Refresh();
@@ -806,13 +866,6 @@ namespace GitUI.CommandsDialogs
             PluginRegistry.Register(UICommands);
 
             UICommands.RaisePostRegisterPlugin(this);
-
-            // Show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
-            _repositoryHostsToolStripMenuItem.Visible = PluginRegistry.GitHosters.Count > 0;
-            if (PluginRegistry.GitHosters.Count == 1)
-            {
-                _repositoryHostsToolStripMenuItem.Text = PluginRegistry.GitHosters[0].Name;
-            }
 
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
         }
@@ -831,7 +884,6 @@ namespace GitUI.CommandsDialogs
             pluginsToolStripMenuItem.Visible = false;
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
-            _repositoryHostsToolStripMenuItem.Visible = false;
             _formBrowseMenus.RemoveRevisionGridMainMenuItems();
             mainMenuStrip.Refresh();
         }
@@ -902,6 +954,7 @@ namespace GitUI.CommandsDialogs
                 toolStripSplitStash.Enabled = validBrowseDir && !bareRepository;
                 _createPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
+                _addUpstreamRemoteToolStripMenuItem.Enabled = validBrowseDir;
 
                 // repositoryToolStripMenuItem.Visible
                 if (validBrowseDir)
@@ -941,6 +994,7 @@ namespace GitUI.CommandsDialogs
                 OnActivate();
 
                 LoadUserMenu();
+                toolStripButtonLevelUp.Image = validBrowseDir && Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                 if (validBrowseDir)
                 {
@@ -2231,7 +2285,14 @@ namespace GitUI.CommandsDialogs
             // Account for this shift. This is a workaround at best in the same way as for FormCommit.
             if (!RevisionsSplitContainer.Panel2Collapsed && RevisionsSplitContainer.FixedPanel == FixedPanel.Panel2)
             {
-                RevisionsSplitContainer.SplitterDistance -= 4;
+                try
+                {
+                    RevisionsSplitContainer.SplitterDistance -= 4;
+                }
+                catch (Exception)
+                {
+                    // Catching because bad value can raise an exception
+                }
             }
         }
 

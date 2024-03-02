@@ -1,7 +1,9 @@
 ﻿using System.Drawing.Drawing2D;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 {
@@ -15,26 +17,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 
         private const int _noLane = -10;
 
-        public static void DrawItem(RevisionGraphConfig config, Graphics g, int index, int width, int rowHeight,
+        public static void DrawItem(RevisionGraphConfig config, Graphics g, int index, int rowHeight,
             Func<int, IRevisionGraphRow?> getSegmentsForRow,
             RevisionGraphDrawStyle revisionGraphDrawStyle,
             ObjectId headId)
         {
-            SmoothingMode oldSmoothingMode = g.SmoothingMode;
-            Region oldClip = g.Clip;
-
-            int top = g.RenderingOrigin.Y;
-            Rectangle laneRect = new(0, top, width, rowHeight);
-            using Region newClip = new(laneRect);
-            newClip.Intersect(oldClip);
-            g.Clip = newClip;
             g.Clear(Color.Transparent);
 
             DrawItem();
-
-            // Restore graphics options
-            g.Clip = oldClip;
-            g.SmoothingMode = oldSmoothingMode;
 
             return;
 
@@ -50,7 +40,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
                 IRevisionGraphRow? nextRow = getSegmentsForRow(index + 1);
 
                 SegmentPointsInfo p = new();
-                p.Center.Y = top + (rowHeight / 2);
+                p.Center.Y = g.RenderingOrigin.Y + (rowHeight / 2);
                 p.Start.Y = p.Center.Y - rowHeight;
                 p.End.Y = p.Center.Y + rowHeight;
 
@@ -73,9 +63,30 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 
                     Brush laneBrush = GetBrushForLaneInfo(revisionGraphSegment.LaneInfo, revisionGraphSegment.Child.IsRelative, revisionGraphDrawStyle);
                     using Pen lanePen = new(laneBrush, LaneLineWidth);
-                    SegmentRenderer segmentRenderer = new(new Context(config, g, lanePen));
+                    SegmentRenderer segmentRenderer = new(new Context(config, g, lanePen, LaneWidth, rowHeight));
 
-                    DrawSegment(segmentRenderer, p, lanes);
+                    if (config.RenderGraphWithDiagonals)
+                    {
+                        Lazy<DiagonalSegmentInfo> previousSegmentInfo = new(() =>
+                        {
+                            Validates.NotNull(previousRow);
+                            SegmentLanesInfo previousLanes = GetLanesInfo(revisionGraphSegment, getSegmentsForRow(index - 2), previousRow, currentRow, skipSecondarySharedSegments, config.MergeGraphLanesHavingCommonParent);
+                            return GetDiagonalSegmentInfo(previousLanes, config.MergeGraphLanesHavingCommonParent);
+                        });
+                        Lazy<DiagonalSegmentInfo> nextSegmentInfo = new(() =>
+                        {
+                            Validates.NotNull(nextRow);
+                            SegmentLanesInfo nextLanes = GetLanesInfo(revisionGraphSegment, currentRow, nextRow, getSegmentsForRow(index + 2), skipSecondarySharedSegments, config.MergeGraphLanesHavingCommonParent);
+                            return GetDiagonalSegmentInfo(nextLanes, config.MergeGraphLanesHavingCommonParent);
+                        });
+                        DiagonalSegmentInfo currentSegmentInfo = GetDiagonalSegmentInfo(lanes, config.MergeGraphLanesHavingCommonParent);
+
+                        DrawSegmentWithDiagonals(segmentRenderer, p, previousSegmentInfo, currentSegmentInfo, nextSegmentInfo);
+                    }
+                    else
+                    {
+                        DrawSegmentCurvy(segmentRenderer, p, lanes);
+                    }
                 }
 
                 if (currentRow.GetCurrentRevisionLane() < MaxLanes)
@@ -126,7 +137,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
             in IRevisionGraphRow? nextRow,
             in bool skipSecondarySharedSegments,
             in bool mergeGraphLanesHavingCommonParent,
-            in Action<LaneInfo?>? setLaneInfo)
+            in Action<LaneInfo?>? setLaneInfo = null)
         {
             Lane currentLane = currentRow.GetLaneForSegment(revisionGraphSegment);
 
@@ -137,10 +148,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
             // Avoid drawing the same curve twice (caused aliasing artifacts, particularly when in different colors)
             if (skipSecondarySharedSegments && currentLane.Sharing == LaneSharing.Entire)
             {
-                return new SegmentLanesInfo(startLane, centerLane, endLane, drawFromStart: false, drawToEnd: false);
+                return new SegmentLanesInfo(startLane, centerLane, endLane, primaryEndLane: endLane, isTheRevisionLane: false, drawFromStart: false, drawToEnd: false);
             }
 
             centerLane = currentLane.Index;
+            bool isTheRevisionLane = true;
             if (revisionGraphSegment.Parent == currentRow.Revision)
             {
                 // This lane ends here
@@ -160,9 +172,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
                     // This lane crosses
                     startLane = GetLaneForRow(previousRow, revisionGraphSegment);
                     endLane = GetLaneForRow(nextRow, revisionGraphSegment);
+                    isTheRevisionLane = false;
                 }
             }
 
+            int primaryEndLane = endLane;
             switch (currentLane.Sharing)
             {
                 case LaneSharing.DifferentStart:
@@ -189,23 +203,148 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
                     break;
             }
 
-            return new SegmentLanesInfo(startLane, centerLane, endLane,
+            return new SegmentLanesInfo(startLane, centerLane, endLane, primaryEndLane, isTheRevisionLane,
                 drawFromStart: startLane >= 0 && centerLane >= 0 && (startLane <= MaxLanes || centerLane <= MaxLanes),
                 drawToEnd: endLane >= 0 && centerLane >= 0 && (endLane <= MaxLanes || centerLane <= MaxLanes));
         }
 
-        private static void DrawSegment(SegmentRenderer segmentDrawer, SegmentPointsInfo p, SegmentLanesInfo lanes)
+        private static DiagonalSegmentInfo GetDiagonalSegmentInfo(in SegmentLanesInfo currentLanes, bool mergeGraphLanesHavingCommonParent)
+        {
+            bool drawFromStart = currentLanes.DrawFromStart;
+            bool drawToEnd = currentLanes.DrawToEnd;
+            bool isTheRevisionLane = currentLanes.IsTheRevisionLane;
+
+            int startShift = currentLanes.CenterLane - currentLanes.StartLane;
+            int endShift = currentLanes.EndLane - currentLanes.CenterLane;
+            bool startIsDiagonal = Math.Abs(startShift) == 1;
+            bool endIsDiagonal = Math.Abs(endShift) == 1;
+            bool isBowOfDiagonals = startIsDiagonal && endIsDiagonal && -Math.Sign(startShift) == Math.Sign(endShift);
+            int bowOffset = LaneWidth / 6;
+            int junctionBowOffset = mergeGraphLanesHavingCommonParent ? LaneLineWidth : bowOffset;
+            int horizontalOffset = isBowOfDiagonals ? -Math.Sign(startShift) * junctionBowOffset : 0;
+
+            // Go perpendicularly through the center in order to avoid crossing independend nodes
+            bool drawCenterToStartPerpendicularly = drawFromStart && (startShift == 0 || (!startIsDiagonal && !isTheRevisionLane));
+            bool drawCenterToEndPerpendicularly = drawToEnd && (endShift == 0 || (!endIsDiagonal && !isTheRevisionLane));
+            bool drawCenterPerpendicularly = isBowOfDiagonals;
+            bool drawCenter = drawCenterPerpendicularly
+                || !drawFromStart
+                || !drawToEnd
+                || (!drawCenterToStartPerpendicularly && !drawCenterToEndPerpendicularly);
+
+            // handle non-straight junctions
+            if (currentLanes.EndLane < 0 && currentLanes.PrimaryEndLane >= 0 && startShift != 0)
+            {
+                endShift = currentLanes.PrimaryEndLane - currentLanes.CenterLane;
+                bool sameDirection = Math.Sign(endShift) == Math.Sign(startShift);
+                if (startIsDiagonal)
+                {
+                    int endDelta = Math.Abs(endShift);
+                    if (!sameDirection || endDelta > 1)
+                    {
+                        drawCenterToEndPerpendicularly = true;
+                        drawCenter = false;
+                        horizontalOffset = -Math.Sign(startShift) * (endDelta != 1 || sameDirection ? LaneLineWidth / 3 : bowOffset);
+                    }
+                }
+                else if (Math.Abs(endShift) == 1)
+                {
+                    // multi-lane crossing continued by a diagonal
+                    drawCenterToStartPerpendicularly = false;
+                    if (!sameDirection)
+                    {
+                        // bow
+                        horizontalOffset = -Math.Sign(startShift) * LaneLineWidth * 2 / 3;
+                    }
+                }
+                else
+                {
+                    // multi-lane crossing continued by a straight or a multi-lane crossing
+                    drawCenterToStartPerpendicularly = false;
+                }
+            }
+
+            return new DiagonalSegmentInfo(drawFromStart, drawToEnd,
+                drawCenterToStartPerpendicularly, drawCenter, drawCenterPerpendicularly, drawCenterToEndPerpendicularly,
+                isTheRevisionLane, horizontalOffset);
+        }
+
+        private static void DrawSegmentCurvy(SegmentRenderer segmentRenderer, in SegmentPointsInfo p, in SegmentLanesInfo lanes)
         {
             if (lanes.DrawFromStart)
             {
-                segmentDrawer.DrawTo(p.Start);
+                segmentRenderer.DrawTo(p.Start);
             }
 
-            segmentDrawer.DrawTo(p.Center);
+            segmentRenderer.DrawTo(p.Center);
 
             if (lanes.DrawToEnd)
             {
-                segmentDrawer.DrawTo(p.End);
+                segmentRenderer.DrawTo(p.End);
+            }
+        }
+
+        private static void DrawSegmentWithDiagonals(SegmentRenderer segmentRenderer,
+            in SegmentPointsInfo p,
+            in Lazy<DiagonalSegmentInfo> previousSegmentInfo,
+            in DiagonalSegmentInfo current,
+            in Lazy<DiagonalSegmentInfo> nextSegmentInfo)
+        {
+            int halfPerpendicularHeight = segmentRenderer.RowHeight / 6;
+
+            if (current.DrawFromStart)
+            {
+                DiagonalSegmentInfo previous = previousSegmentInfo.Value;
+                DebugHelpers.Assert(previous.DrawToEnd || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(previous.DrawToEnd));
+                int startX = p.Start.X + previous.HorizontalOffset;
+                if (previous.DrawCenterToEndPerpendicularly)
+                {
+                    segmentRenderer.DrawTo(startX, p.Start.Y + halfPerpendicularHeight);
+                }
+                else if (previous.DrawCenter)
+                {
+                    segmentRenderer.DrawTo(startX, p.Start.Y, previous.DrawCenterPerpendicularly);
+                }
+                else
+                {
+                    segmentRenderer.DrawTo(startX, p.Start.Y - halfPerpendicularHeight);
+                }
+            }
+
+            int centerX = p.Center.X + current.HorizontalOffset;
+
+            if (current.DrawCenterToStartPerpendicularly)
+            {
+                segmentRenderer.DrawTo(centerX, p.Center.Y - halfPerpendicularHeight);
+            }
+
+            if (current.DrawCenter)
+            {
+                segmentRenderer.DrawTo(centerX, p.Center.Y, current.DrawCenterPerpendicularly);
+            }
+
+            if (current.DrawCenterToEndPerpendicularly)
+            {
+                segmentRenderer.DrawTo(centerX, p.Center.Y + halfPerpendicularHeight);
+            }
+
+            if (current.DrawToEnd)
+            {
+                DiagonalSegmentInfo next = nextSegmentInfo.Value;
+                DebugHelpers.Assert(next.DrawFromStart || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(next.DrawFromStart));
+                int endX = p.End.X + next.HorizontalOffset;
+                if (next.DrawCenterToStartPerpendicularly)
+                {
+                    segmentRenderer.DrawTo(endX, p.End.Y - halfPerpendicularHeight);
+                }
+                else if (next.DrawCenter)
+                {
+                    segmentRenderer.DrawTo(endX, p.End.Y, next.DrawCenterPerpendicularly);
+                }
+                else
+                {
+                    segmentRenderer.DrawTo(endX, p.End.Y + halfPerpendicularHeight);
+                }
             }
         }
 
@@ -225,10 +364,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
         {
             if (row is not null)
             {
-                return row.GetLaneForSegment(revisionGraphRevision).Index;
+                int lane = row.GetLaneForSegment(revisionGraphRevision).Index;
+                if (lane >= 0)
+                {
+                    return lane;
+                }
             }
 
-            return -1;
+            return _noLane;
         }
     }
 }

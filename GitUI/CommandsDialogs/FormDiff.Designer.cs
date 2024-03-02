@@ -353,7 +353,7 @@ namespace GitUI.CommandsDialogs
             openWithDifftoolToolStripMenuItem.Image = Properties.Images.Diff;
             openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             openWithDifftoolToolStripMenuItem.Size = new Size(210, 22);
-            openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
+            openWithDifftoolToolStripMenuItem.Text = "Open with &difftool";
             openWithDifftoolToolStripMenuItem.DropDownOpening += openWithDifftoolToolStripMenuItem_DropDownOpening;
             // 
             // firstToSelectedToolStripMenuItem
@@ -392,7 +392,7 @@ namespace GitUI.CommandsDialogs
             openContainingFolderToolStripMenuItem.Image = Properties.Images.BrowseFileExplorer;
             openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
             openContainingFolderToolStripMenuItem.Size = new Size(210, 22);
-            openContainingFolderToolStripMenuItem.Text = "Show in folder";
+            openContainingFolderToolStripMenuItem.Text = "Show &in folder";
             openContainingFolderToolStripMenuItem.Click += openContainingFolderToolStripMenuItem_Click;
             // 
             // toolStripSeparator33
@@ -405,7 +405,7 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem.Image = Properties.Images.FileHistory;
             fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
             fileHistoryDiffToolstripMenuItem.Size = new Size(210, 22);
-            fileHistoryDiffToolstripMenuItem.Text = "File history";
+            fileHistoryDiffToolstripMenuItem.Text = "File &history";
             fileHistoryDiffToolstripMenuItem.Click += fileHistoryDiffToolStripMenuItem_Click;
             // 
             // blameToolStripMenuItem
@@ -413,16 +413,14 @@ namespace GitUI.CommandsDialogs
             blameToolStripMenuItem.Image = Properties.Images.Blame;
             blameToolStripMenuItem.Name = "blameToolStripMenuItem";
             blameToolStripMenuItem.Size = new Size(210, 22);
-            blameToolStripMenuItem.Text = "Blame";
+            blameToolStripMenuItem.Text = "&Blame";
             blameToolStripMenuItem.Click += blameToolStripMenuItem_Click;
             // 
             // findInDiffToolStripMenuItem
             // 
-            findInDiffToolStripMenuItem.Image = Properties.Images.Preview;
             findInDiffToolStripMenuItem.Name = "findInDiffToolStripMenuItem";
-            findInDiffToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.F)));
             findInDiffToolStripMenuItem.Size = new Size(210, 22);
-            findInDiffToolStripMenuItem.Text = "Find";
+            findInDiffToolStripMenuItem.Text = "&Find file...";
             findInDiffToolStripMenuItem.Click += findInDiffToolStripMenuItem_Click;
             // 
             // FormDiff

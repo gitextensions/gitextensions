@@ -7,14 +7,14 @@ namespace GitCommands.Git
 {
     public static partial class SubmoduleHelpers
     {
-        [GeneratedRegex(@"diff --git [abic]/(.+)\s[abwi]/(.+)")]
+        [GeneratedRegex(@"diff --git [abic]/(?<filenamea>.+)\s[abwi]/(?<filenameb>.+)", RegexOptions.ExplicitCapture)]
         private static partial Regex DiffCommandRegex();
-        [GeneratedRegex(@"diff --cc (.+)")]
+        [GeneratedRegex(@"diff --cc (?<filenamea>.+)", RegexOptions.ExplicitCapture)]
         private static partial Regex CombinedDiffCommandRegex();
 
-        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
+        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
         {
-            (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true).ConfigureAwait(false);
+            (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true, cancellationToken: cancellationToken).ConfigureAwait(false);
             return patch is null
                 ? new GitSubmoduleStatus(errorMessage ?? "", null, false, null, null, null, null)
                 : ParseSubmodulePatchStatus(patch, module, fileName);
@@ -68,16 +68,16 @@ namespace GitCommands.Git
                     Match match = DiffCommandRegex().Match(line);
                     if (match.Groups.Count > 1)
                     {
-                        name = match.Groups[1].Value;
-                        oldName = match.Groups[2].Value;
+                        name = match.Groups["filenamea"].Value;
+                        oldName = match.Groups["filenameb"].Value;
                     }
                     else
                     {
                         match = CombinedDiffCommandRegex().Match(line);
                         if (match.Groups.Count > 1)
                         {
-                            name = match.Groups[1].Value;
-                            oldName = match.Groups[1].Value;
+                            name = match.Groups["filenamea"].Value;
+                            oldName = name;
                         }
                     }
                 }

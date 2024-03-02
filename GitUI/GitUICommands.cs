@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Text;
 using GitCommands;
 using GitCommands.Git;
@@ -524,48 +526,64 @@ namespace GitUI
                 return false;
             }
 
+            // Commit dialog can be opened on its own without the main form
+            // If it is opened by itself, we need to ensure plugins are loaded because some of them
+            // may have hooks into the commit flow
+            bool werePluginsRegistered = PluginRegistry.PluginsRegistered;
+
+            try
+            {
+                // Load plugins synchronously
+                // if the commit dialog is opened from the main form, all plugins are already loaded and we return instantly,
+                // if the dialog is loaded on its own, plugins need to be loaded before we load the form
+                if (!werePluginsRegistered)
+                {
+                    PluginRegistry.InitializeForCommitForm();
+                    PluginRegistry.Register(this);
+                }
+            }
+            catch (Exception exception)
+            {
+                // Nothing: we don't want plugin loading to crash the application here
+                Trace.WriteLine(exception);
+            }
+
             bool Action()
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
 
-                // Commit dialog can be opened on its own without the main form
-                // If it is opened by itself, we need to ensure plugins are loaded because some of them
-                // may have hooks into the commit flow
-                bool werePluginsRegistered = PluginRegistry.PluginsRegistered;
-
-                try
+                using FormCommit form = new(this, commitMessage: commitMessage);
+                if (showOnlyWhenChanges)
                 {
-                    // Load plugins synchronously
-                    // if the commit dialog is opened from the main form, all plugins are already loaded and we return instantly,
-                    // if the dialog is loaded on its own, plugins need to be loaded before we load the form
-                    if (!werePluginsRegistered)
-                    {
-                        PluginRegistry.Initialize();
-                        PluginRegistry.Register(this);
-                    }
-
-                    using FormCommit form = new(this, commitMessage: commitMessage);
-                    if (showOnlyWhenChanges)
-                    {
-                        form.ShowDialogWhenChanges(owner);
-                    }
-                    else
-                    {
-                        form.ShowDialog(owner);
-                    }
+                    form.ShowDialogWhenChanges(owner);
                 }
-                finally
+                else
+                {
+                    form.ShowDialog(owner);
+                }
+
+                return true;
+            }
+
+            try
+            {
+                return DoActionOnRepo(owner, Action, changesRepo: false, preEvent: PreCommit, postEvent: PostCommit);
+            }
+            finally
+            {
+                try
                 {
                     if (!werePluginsRegistered)
                     {
                         PluginRegistry.Unregister(this);
                     }
                 }
-
-                return true;
+                catch (Exception exception)
+                {
+                    // Nothing: we don't want plugin loading to crash the application here
+                    Trace.WriteLine(exception);
+                }
             }
-
-            return DoActionOnRepo(owner, Action, changesRepo: false, preEvent: PreCommit, postEvent: PostCommit);
         }
 
         public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null)

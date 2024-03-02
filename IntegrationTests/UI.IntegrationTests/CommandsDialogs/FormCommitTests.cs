@@ -271,20 +271,14 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(async form =>
             {
-                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Stage all", form.GetTestAccessor().StageAllToolItem.ToolTipText);
             });
 
             RunFormTest(async form =>
             {
-                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 FormCommit.TestAccessor testform = form.GetTestAccessor();
 
@@ -314,20 +308,14 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(async form =>
             {
-                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Unstage all", form.GetTestAccessor().UnstageAllToolItem.ToolTipText);
             });
 
             RunFormTest(async form =>
             {
-                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
-                {
-                    await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
-                }
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 FormCommit.TestAccessor testform = form.GetTestAccessor();
 
@@ -493,7 +481,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 // update the form
                 Application.DoEvents();
-                ThreadHelper.JoinPendingOperations();
+                AsyncTestHelper.JoinPendingOperations();
 
                 _commands.Module.RevParse("HEAD").Should().Be(previousCommitId);
                 ta.Amend.Enabled.Should().BeFalse();
@@ -508,7 +496,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 // update the form
                 Application.DoEvents();
-                ThreadHelper.JoinPendingOperations();
+                AsyncTestHelper.JoinPendingOperations();
 
                 ta.Amend.Enabled.Should().BeTrue();
                 ta.Amend.Checked.Should().BeFalse();
@@ -613,7 +601,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 _referenceRepository.CreateRepoFile("original2.txt", contents);
 
                 ta.RescanChanges();
-                ThreadHelper.JoinPendingOperations();
+                AsyncTestHelper.JoinPendingOperations();
 
                 ta.UnstagedList.SelectedItems = ta.UnstagedList.AllItems;
                 ta.UnstagedList.Focus();
@@ -622,7 +610,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ta.StagedList.SelectedGitItem = ta.StagedList.AllItems.Single(i => i.Item.Name.Contains("original2.txt")).Item;
 
                 selectedDiffInternal.Focus();
-                ThreadHelper.JoinPendingOperations();
+                AsyncTestHelper.JoinPendingOperations();
 
                 selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.SelectionManager.SetSelection(
                     new TextLocation(2, 11), new TextLocation(5, 12));
@@ -637,7 +625,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 selectedDiff.ExecuteCommand(FileViewer.Command.ResetLines);
 
                 ta.RescanChanges();
-                ThreadHelper.JoinPendingOperations();
+                AsyncTestHelper.JoinPendingOperations();
 
                 int textLengthAfterReset = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.Document.TextLength;
 
@@ -685,7 +673,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     });
 
                     // Await updated FileViewer
-                    ThreadHelper.JoinPendingOperations();
+                    AsyncTestHelper.JoinPendingOperations();
                 },
                 testDriverAsync);
         }

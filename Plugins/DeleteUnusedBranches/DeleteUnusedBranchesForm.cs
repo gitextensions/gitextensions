@@ -99,7 +99,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 {
                     "--pretty=\"format:%ci\n%an\n%s\"",
                     "--max-count=1",
-                    branchName,
+                    branchName.Quote(),
                     "--"
                 };
 

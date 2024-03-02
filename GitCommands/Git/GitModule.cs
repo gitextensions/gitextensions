@@ -52,22 +52,22 @@ namespace GitCommands
         // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
         //
         // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
-        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline)]
+        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
         private static partial Regex RefRegex();
 
-        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)")]
+        [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex HeaderRegex();
 
-        [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$")]
+        [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$", RegexOptions.ExplicitCapture)]
         private static partial Regex RemoteVerboseLineRegex();
 
-        [GeneratedRegex(@"(\\([0-7]{3}))+")]
+        [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
         private static partial Regex EscapedOctalCodePointRegex();
 
-        [GeneratedRegex(@"^([ -+U])([0-9a-f]{40}) (.+) \((.+)\)$")]
+        [GeneratedRegex(@"^(?<code>[ -+U])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShaRegex();
 
-        [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$")]
+        [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShortlogRegex();
 
         /// <summary>
@@ -816,7 +816,7 @@ namespace GitCommands
         {
             GitArgumentBuilder args = new("ls-tree")
             {
-                refName,
+                refName.Quote(),
                 { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
             };
@@ -834,8 +834,8 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("rev-list")
             {
-                parent,
-                $"^{child}",
+                parent.Quote(),
+                $"^{child}".Quote(),
                 "--count",
                 "--"
             };
@@ -859,7 +859,7 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("rev-list")
             {
-                $"{firstId}...{secondId}",
+                $"{firstId}...{secondId}".Quote(),
                 "--count",
                 "--left-right"
             };
@@ -874,8 +874,9 @@ namespace GitCommands
             return (null, null);
         }
 
-        public string GetCommitCountString(string from, string to)
+        public string GetCommitCountString(ObjectId fromId, string to)
         {
+            string from = fromId.IsArtificial ? "HEAD" : fromId.ToString();
             int? removed = GetCommitCount(from, to);
             int? added = GetCommitCount(to, from);
 
@@ -994,7 +995,7 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("rev-parse")
             {
-                $"{objectId}^@"
+                $"{objectId}^@".Quote()
             };
             return _gitExecutable.Execute(args, cache: GitCommandCache)
                 .StandardOutput
@@ -1052,7 +1053,7 @@ namespace GitCommands
             {
                 "--verify",
                 "--quiet",
-                $"{objectIdPrefix}^{{commit}}"
+                $"{objectIdPrefix}^{{commit}}".Quote()
             };
             ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
             string output = result.StandardOutput.Trim();
@@ -1110,7 +1111,7 @@ namespace GitCommands
                 "--parents",
                 "--no-walk",
                 "--min-parents=2",
-                $"{startRev}..{endRev}"
+                $"{startRev}..{endRev}".Quote(),
             };
 
             // Could fail if pulling interactively from remote where the specified branch does not exist
@@ -1224,11 +1225,11 @@ namespace GitCommands
                     return false;
                 }
 
-                char code = match.Groups[1].Value[0];
-                string localPath = match.Groups[3].Value;
-                string branch = match.Groups[4].Value;
+                char code = match.Groups["code"].Value[0];
+                string localPath = match.Groups["path"].Value;
+                string branch = match.Groups["branch"].Value;
 
-                if (!ObjectId.TryParse(match.Groups[2].Value, out ObjectId? currentCommitId))
+                if (!ObjectId.TryParse(match.Groups["sha"].Value, out ObjectId? currentCommitId))
                 {
                     info = default;
                     return false;
@@ -2117,9 +2118,9 @@ namespace GitCommands
             return ((ConfigFileSettings)EffectiveConfigFile).ByPath(path);
         }
 
-        public string? GetEffectiveGitSetting(string setting, bool cache = true)
+        public string? GetGitSetting(string setting, string scopeArg, bool cache = false)
         {
-            GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
+            GitArgumentBuilder args = new("config") { "--includes", scopeArg, "--get", setting };
             ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
 
             // Handle no value set, is error code 1: https://git-scm.com/docs/git-config#_description
@@ -2130,6 +2131,11 @@ namespace GitCommands
                 ConfigKeyInvalidOrNotSet => null,
                 _ => throw new ExternalOperationException("git", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException("Error getting config value"))
             };
+        }
+
+        public string? GetEffectiveGitSetting(string setting, bool cache = false)
+        {
+            return GetGitSetting(setting, scopeArg: "", cache);
         }
 
         public void UnsetSetting(string setting)
@@ -2170,7 +2176,8 @@ namespace GitCommands
             ObjectId? firstId, ObjectId? secondId,
             string? fileName, string? oldFileName,
             string extraDiffArguments, Encoding encoding,
-            bool cacheResult, bool isTracked = true)
+            bool cacheResult, bool isTracked,
+            CancellationToken cancellationToken)
         {
             // fix refs slashes
             fileName = fileName.ToPosixPath();
@@ -2201,7 +2208,8 @@ namespace GitCommands
                 args,
                 cache: cache,
                 outputEncoding: LosslessEncoding,
-                throwOnErrorExit: false);
+                throwOnErrorExit: false,
+                cancellationToken: cancellationToken);
             if (!result.ExitedSuccessfully)
             {
                 return (patch: null, errorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
@@ -2213,7 +2221,7 @@ namespace GitCommands
             return (patch: GetPatch(patches, fileName, oldFileName), errorMessage: null);
         }
 
-        public async Task<string> GetRangeDiffAsync(
+        public async Task<ExecutionResult> GetRangeDiffAsync(
             ObjectId firstId,
             ObjectId secondId,
             ObjectId? firstBase,
@@ -2249,7 +2257,7 @@ namespace GitCommands
                 outputEncoding: LosslessEncoding,
                 cancellationToken: cancellationToken);
 
-            return result.StandardOutput;
+            return result;
         }
 
         private static Patch? GetPatch(IReadOnlyList<Patch> patches, string? fileName, string? oldFileName)
@@ -2305,7 +2313,7 @@ namespace GitCommands
         {
             StagedStatus stagedStatus = GetStagedStatus(firstId, secondId, parentToSecond);
             IReadOnlyList<GitItemStatus> status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus, cancellationToken: cancellationToken);
-            GetSubmoduleStatus(status, firstId, secondId);
+            GetSubmoduleStatus(status, firstId, secondId, cancellationToken);
             return status;
         }
 
@@ -2389,7 +2397,7 @@ namespace GitCommands
             // add - optionally stashed - untracked files
             GitArgumentBuilder args = new("log")
             {
-                $"{stashName}^3",
+                $"{stashName}^3".Quote(),
                 "--pretty=format:\"%T\"",
                 "--max-count=1"
             };
@@ -2539,7 +2547,7 @@ namespace GitCommands
             }
         }
 
-        private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, ObjectId? firstId, ObjectId? secondId)
+        private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
         {
             foreach (GitItemStatus item in status.Where(i => i.IsSubmodule))
             {
@@ -2548,7 +2556,7 @@ namespace GitCommands
                         async () =>
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                            return await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, item.Name, item.OldName, firstId, secondId)
+                            return await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, item.Name, item.OldName, firstId, secondId, cancellationToken)
                                 .ConfigureAwait(false);
                         }));
             }
@@ -2838,10 +2846,10 @@ namespace GitCommands
                 : Array.Empty<IGitRef>();
         }
 
-        public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string? commit = null)
+        public async Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken)
         {
             ExecutionResult result = await _gitExecutable
-                .ExecuteAsync(Commands.MergedBranches(includeRemote, fullRefname, commit), throwOnErrorExit: false)
+                .ExecuteAsync(Commands.MergedBranches(includeRemote, fullRefname, commit), throwOnErrorExit: false, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             ////TODO: Handle non-empty result.StandardError
             return result.StandardOutput.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
@@ -2910,7 +2918,7 @@ namespace GitCommands
             return gitRefs;
         }
 
-        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote)
+        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote, CancellationToken cancellationToken = default)
         {
             if (!getLocal && !getRemote)
             {
@@ -2924,7 +2932,7 @@ namespace GitCommands
                 "--contains",
                 objectId
             };
-            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -2959,9 +2967,9 @@ namespace GitCommands
             return result;
         }
 
-        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId)
+        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId, CancellationToken cancellationToken)
         {
-            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -2971,7 +2979,7 @@ namespace GitCommands
             return exec.StandardOutput.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public string? GetTagMessage(string? tag)
+        public string? GetTagMessage(string? tag, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(tag))
             {
@@ -2980,7 +2988,7 @@ namespace GitCommands
 
             tag = tag.Trim();
 
-            ExecutionResult exec = _gitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no message (no error presented to the user)
@@ -3042,7 +3050,7 @@ namespace GitCommands
         public IReadOnlyList<string> GetFullTree(string id)
         {
             return _gitExecutable.GetOutput(
-                    $"ls-tree -z -r --name-only {id}",
+                    $"ls-tree -z -r --name-only {id.Quote()}",
                     cache: GitCommandCache)
                 .Split(Delimiters.NullAndLineFeed);
         }
@@ -3066,9 +3074,9 @@ namespace GitCommands
             GitArgumentBuilder args = new("blame")
             {
                 "--porcelain",
-                { AppSettings.DetectCopyInFileOnBlame, "-M" },
-                { AppSettings.DetectCopyInAllOnBlame, "-C" },
-                { AppSettings.IgnoreWhitespaceOnBlame, "-w" },
+                { AppSettings.DetectCopyInFileOnBlame, "-M" }, // as git-diff --find-renames
+                { AppSettings.DetectCopyInAllOnBlame, "-C" }, // as git-diff --find-copies
+                { AppSettings.IgnoreWhitespaceOnBlame, "-w" }, // as git-diff --ignore-all-space
                 "-l",
                 { lines is not null, $"-L {lines}" },
                 from.ToPosixPath().Quote(),
@@ -3411,7 +3419,7 @@ namespace GitCommands
             {
                 "-z",
                 $"-n {count}",
-                revision,
+                revision.Quote(),
                 @"--pretty=""format:%B""",
                 { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
             };
@@ -3499,7 +3507,7 @@ namespace GitCommands
             {
                 "--quiet",
                 "--verify",
-                $"\"{revisionExpression}~0\""
+                $"{revisionExpression}~0".Quote()
             };
             ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
@@ -3701,7 +3709,7 @@ namespace GitCommands
                     try
                     {
                         return SystemEncoding.GetString(
-                            match.Groups[2]
+                            match.Groups["octal"]
                                 .Captures.Cast<Capture>()
                                 .Select(c => Convert.ToByte(c.Value, 8))
                                 .ToArray());
@@ -3860,7 +3868,7 @@ namespace GitCommands
                 }).ToList();
         }
 
-        public string? GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding)
+        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, CancellationToken cancellationToken)
         {
             GitArgumentBuilder args = new("diff-tree")
             {
@@ -3873,16 +3881,29 @@ namespace GitCommands
                 filePath.ToPosixPath().Quote()
             };
 
-            string patch = _gitExecutable.GetOutput(args, cache: GitCommandCache, outputEncoding: LosslessEncoding);
+            ExecutionResult result = _gitExecutable.Execute(
+                args,
+                cache: GitCommandCache,
+                outputEncoding: LosslessEncoding,
+                cancellationToken: cancellationToken);
 
-            if (string.IsNullOrWhiteSpace(patch))
+            if (!result.ExitedSuccessfully)
             {
-                return "";
+                diffOfConflict = "";
+                return false;
             }
 
-            List<Patch> patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
+            List<Patch> patches = PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding)).ToList();
 
-            return GetPatch(patches, filePath, filePath)?.Text;
+            Patch? patch = GetPatch(patches, filePath, filePath);
+            if (patch is null)
+            {
+                diffOfConflict = "";
+                return false;
+            }
+
+            diffOfConflict = patch.Text ?? "";
+            return true;
         }
 
         public bool StopTrackingFile(string filename)
@@ -3900,7 +3921,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitId">The commit where to start searching</param>
         /// <returns>Tag name if it exists, otherwise null</returns>
-        public string? GetDescribe(ObjectId commitId)
+        public string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken = default)
         {
             GitArgumentBuilder args = new("describe")
             {

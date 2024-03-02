@@ -33,9 +33,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
         private readonly AsyncLoader _loader = new();
 
-        [GeneratedRegex(@"(?:\n|^)diff --git ")]
+        [GeneratedRegex(@"(?:\n|^)diff --git ", RegexOptions.ExplicitCapture)]
         private static partial Regex DiffCommandRegex();
-        [GeneratedRegex(@"^a/([^\n]+) b/([^\n]+)\s*(.*)$", RegexOptions.Singleline)]
+        [GeneratedRegex(@"^a/([^\n]+) b/(?<name>[^\n]+)\s*(?<value>.*)$", RegexOptions.Singleline | RegexOptions.ExplicitCapture)]
         private static partial Regex FilePartRegex();
 
         public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)
@@ -399,7 +399,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     return;
                 }
 
-                GitItemStatus gis = new(name: match.Groups[2].Value.Trim())
+                GitItemStatus gis = new(name: match.Groups["name"].Value.Trim())
                 {
                     IsChanged = true,
                     IsNew = false,
@@ -409,7 +409,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 };
 
                 giss.Add(gis);
-                _diffCache.Add(gis.Name, match.Groups[3].Value);
+                _diffCache.Add(gis.Name, match.Groups["value"].Value);
             }
 
             // Note: Commits in PR may not exist in the local repo

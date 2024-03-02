@@ -16,7 +16,8 @@ using RestSharp.Authenticators;
 namespace GitExtensions.Plugins.JiraCommitHintPlugin
 {
     [Export(typeof(IGitPlugin))]
-    public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForRepository
+    [Export(typeof(IGitPluginForCommit))]
+    public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
     {
         private static readonly TranslationString JiraFieldsLabel = new("Jira fields");
         private static readonly TranslationString QueryHelperLinkText = new("Open the query helper inside Jira");
@@ -26,6 +27,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
         private static readonly TranslationString QueryHelperOpenErrorText = new("Unable to open Jira query helper");
         private static readonly TranslationString EmptyQueryResultMessage = new("[Empty Jira Query Result]");
         private static readonly TranslationString EmptyQueryResultCaption = new("First Task Preview");
+        private static readonly TranslationString JiraPluginConfigurationErrorText = new("Jira plugin configuration incomplete!");
 
         private const string DefaultFormat = "{Key} {Summary}";
         private const string AuthTypeUsernamePassword = "User name and password";
@@ -291,6 +293,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
             if (_jira?.Issues is null || _query is null)
             {
+                e.GitUICommands.AddCommitTemplate(JiraPluginConfigurationErrorText.Text, () => string.Empty, Icon);
                 return;
             }
 
