@@ -33,10 +33,10 @@
             patchFileBindingSource = new BindingSource(components);
             Action = new DataGridViewTextBoxColumn();
             FileName = new DataGridViewTextBoxColumn();
-            CommitHash = new DataGridViewTextBoxColumn();
             subjectDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             authorDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             dateDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            CommitHash = new DataGridViewTextBoxColumn();
             Status = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(Patches)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(patchFileBindingSource)).BeginInit();
@@ -55,10 +55,10 @@
             Status,
             Action,
             FileName,
-            CommitHash,
             subjectDataGridViewTextBoxColumn,
             authorDataGridViewTextBoxColumn,
-            dateDataGridViewTextBoxColumn});
+            dateDataGridViewTextBoxColumn,
+            CommitHash});
             Patches.DataSource = patchFileBindingSource;
             Patches.Dock = DockStyle.Fill;
             Patches.Location = new Point(0, 0);
@@ -91,14 +91,6 @@
             Action.ReadOnly = true;
             Action.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
-            // CommitHash
-            // 
-            CommitHash.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            CommitHash.HeaderText = "Commit hash";
-            CommitHash.Name = "CommitHash";
-            CommitHash.ReadOnly = true;
-            CommitHash.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
             // subjectDataGridViewTextBoxColumn
             // 
             subjectDataGridViewTextBoxColumn.HeaderText = "Subject";
@@ -121,6 +113,14 @@
             dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
             dateDataGridViewTextBoxColumn.ReadOnly = true;
             dateDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // CommitHash
+            // 
+            CommitHash.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            CommitHash.HeaderText = "Commit hash";
+            CommitHash.Name = "CommitHash";
+            CommitHash.ReadOnly = true;
+            CommitHash.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // Status
             // 
@@ -149,10 +149,10 @@
         private BindingSource patchFileBindingSource;
         private DataGridViewTextBoxColumn Action;
         private DataGridViewTextBoxColumn FileName;
-        private DataGridViewTextBoxColumn CommitHash;
         private DataGridViewTextBoxColumn subjectDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn CommitHash;
         private DataGridViewTextBoxColumn Status;
     }
 }
