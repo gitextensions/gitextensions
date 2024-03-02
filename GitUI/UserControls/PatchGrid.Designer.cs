@@ -117,7 +117,7 @@
             // CommitHash
             // 
             CommitHash.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            CommitHash.HeaderText = "Hash";
+            CommitHash.HeaderText = "Commit hash";
             CommitHash.Name = "CommitHash";
             CommitHash.ReadOnly = true;
             CommitHash.SortMode = DataGridViewColumnSortMode.NotSortable;
