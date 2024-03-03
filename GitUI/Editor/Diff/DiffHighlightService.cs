@@ -19,7 +19,6 @@ public abstract class DiffHighlightService : TextHighlightService
     public DiffHighlightService(ref string text, bool useGitColoring)
     {
         _useGitColoring = useGitColoring;
-
         SetText(ref text);
     }
 
@@ -116,9 +115,10 @@ public abstract class DiffHighlightService : TextHighlightService
         }
     }
 
-    public abstract string[] GetFullDiffPrefixes();
+    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.Mixed or DiffLineType.Grep);
 
-    public abstract bool IsSearchMatch(string line);
+    public abstract string[] GetFullDiffPrefixes();
 
     protected readonly LinePrefixHelper LinePrefixHelper = new(new LineSegmentGetter());
 

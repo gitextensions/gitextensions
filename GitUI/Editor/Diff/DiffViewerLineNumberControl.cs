@@ -7,9 +7,9 @@ namespace GitUI.Editor.Diff;
 
 public class DiffViewerLineNumberControl : AbstractMargin
 {
-    private const int TextHorizontalMargin = 4;
-    private static readonly IReadOnlyDictionary<int, DiffLineInfo> Empty = new Dictionary<int, DiffLineInfo>();
-    private IReadOnlyDictionary<int, DiffLineInfo> _diffLines = Empty;
+    private const int _textHorizontalMargin = 4;
+    private static readonly IReadOnlyDictionary<int, DiffLineInfo> _empty = new Dictionary<int, DiffLineInfo>();
+    private IReadOnlyDictionary<int, DiffLineInfo> _diffLines = _empty;
     private bool _visible = true;
     private bool _showLeftColumn = true;
 
@@ -27,12 +27,12 @@ public class DiffViewerLineNumberControl : AbstractMargin
     {
         get
         {
-            if (_visible && _diffLines.Any())
+            if (_visible && _diffLines.Count != 0)
             {
                 // add a space behind each number
                 int maxDigits = MaxLineNumber > 0 ? ((int)Math.Log10(MaxLineNumber) + 1) : 0;
                 int length = (_showLeftColumn ? 2 : 1) * (1 + maxDigits);
-                return TextHorizontalMargin + (textArea.TextView.WideSpaceWidth * length);
+                return _textHorizontalMargin + (textArea.TextView.WideSpaceWidth * length);
             }
 
             return 0;
@@ -43,16 +43,16 @@ public class DiffViewerLineNumberControl : AbstractMargin
     /// returns the according line numbers or null if the caretLine is not mapped.
     /// </summary>
     /// <param name="caretLine">0-based (in contrast to the displayed line numbers which are 1-based).</param>
-    public DiffLineInfo GetLineInfo(int caretLine)
+    public DiffLineInfo? GetLineInfo(int caretLine)
     {
-        _diffLines.TryGetValue(caretLine + 1, out DiffLineInfo diffLine);
+        _diffLines.TryGetValue(caretLine + 1, out DiffLineInfo? diffLine);
         return diffLine;
     }
 
     public override void Paint(Graphics g, Rectangle rect)
     {
-        int numbersWidth = Width - TextHorizontalMargin;
-        int leftWidth = _showLeftColumn ? TextHorizontalMargin + (numbersWidth / 2) : 0;
+        int numbersWidth = Width - _textHorizontalMargin;
+        int leftWidth = _showLeftColumn ? _textHorizontalMargin + (numbersWidth / 2) : 0;
         int rightWidth = rect.Width - leftWidth;
 
         int fontHeight = textArea.TextView.FontHeight;
@@ -72,23 +72,19 @@ public class DiffViewerLineNumberControl : AbstractMargin
             g.FillRectangle(fillBrush, backgroundRectangle);
             int curLine = textArea.Document.GetFirstLogicalLine(textArea.Document.GetVisibleLine(textArea.TextView.FirstVisibleLine) + y);
 
-            if (curLine >= textArea.Document.TotalNumberOfLines)
+            if (curLine >= textArea.Document.TotalNumberOfLines
+                || !_diffLines.TryGetValue(curLine + 1, out DiffLineInfo? diffLine))
             {
                 continue;
             }
 
-            if (!_diffLines.ContainsKey(curLine + 1))
-            {
-                continue;
-            }
-
-            DiffLineInfo diffLine = _diffLines[curLine + 1];
             if (diffLine.LineType != DiffLineType.Context)
             {
                 using Brush brush = diffLine.LineType switch
                 {
                     DiffLineType.Plus => new SolidBrush(AppColor.DiffAdded.GetThemeColor()),
                     DiffLineType.Minus => new SolidBrush(AppColor.DiffRemoved.GetThemeColor()),
+                    DiffLineType.Mixed => new SolidBrush(Color.FromArgb(255, 0xc8, 0xc5, 0xff)),
                     DiffLineType.Header => new SolidBrush(AppColor.DiffSection.GetThemeColor()),
                     DiffLineType.Grep => new SolidBrush(AppColor.DiffRemoved.GetThemeColor()),
                     _ => default(Brush)
@@ -104,7 +100,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
                 g.DrawString(diffLine.LeftLineNumber.ToString(),
                     lineNumberPainterColor.GetFont(TextEditorProperties.FontContainer),
                     drawBrush,
-                    new Point(TextHorizontalMargin, backgroundRectangle.Top));
+                    new Point(_textHorizontalMargin, backgroundRectangle.Top));
             }
 
             if (diffLine.RightLineNumber != DiffLineInfo.NotApplicableLineNum)
@@ -124,9 +120,10 @@ public class DiffViewerLineNumberControl : AbstractMargin
         _showLeftColumn = showLeftColumn;
     }
 
-    public void Clear(bool forDiff)
+    public void Clear()
     {
-        _diffLines = Empty;
+        _diffLines = _empty;
+        MaxLineNumber = 0;
     }
 
     public void SetVisibility(bool visible)

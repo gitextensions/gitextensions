@@ -263,8 +263,8 @@ namespace GitUI.Editor
             };
 
             TextEditor.Text = text;
-            bool hasLineNumberControl = viewMode.IsNormalDiffView() || viewMode is ViewMode.Grep;
-            _lineNumbersControl.Clear(hasLineNumberControl);
+            bool hasLineNumberControl = viewMode.IsPartialTextView();
+            _lineNumbersControl.Clear();
             _lineNumbersControl.SetVisibility(hasLineNumberControl);
 
             if (hasLineNumberControl)
@@ -389,29 +389,6 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Get the next/previous line for the grep match,
-        /// updating the current line.
-        /// </summary>
-        /// <param name="next"><c>true</c> if next position, <c>false</c> if previous.</param>
-        /// <returns><c>true</c> if this is is a grep string.</returns>
-        public bool GetMatchLine(bool next)
-        {
-            if (_textHighlightService is not GrepHighlightService grepHighlightService)
-            {
-                return false;
-            }
-
-            if (!(grepHighlightService.GetGrepLineNum(LineAtCaret, next) is int line) || line < 0)
-            {
-                return true;
-            }
-
-            FirstVisibleLine = Math.Max(0, line - 3);
-            LineAtCaret = line;
-            return true;
-        }
-
-        /// <summary>
         /// Get the full prefix for lines with differences.
         /// </summary>
         /// <returns>An array with the prefixes.</returns>
@@ -432,64 +409,28 @@ namespace GitUI.Editor
         /// For range-diff, this is a header.
         /// </summary>
         /// <returns>An array with the prefixes.</returns>
-        /// <param name="line">The line to check.</param>
-        /// <exception cref="ArgumentException"></exception>
-        private bool IsSearchMatch(string line)
-        {
-            if (_textHighlightService is not DiffHighlightService highlightService)
-            {
-                throw new ArgumentException($"Unexpected highlight service {_textHighlightService.GetType()}, not a diff type.");
-            }
-
-            return highlightService.IsSearchMatch(line);
-        }
+        /// <param name="indexInText">The line to check.</param>
+        private bool IsSearchMatch(int indexInText)
+            => _textHighlightService.IsSearchMatch(_lineNumbersControl, indexInText);
 
         /// <summary>
         /// Go to next change
         /// For normal diffs, this is the next diff
-        /// For range-diff, it is the next commit summary header.
+        /// For range-diff, it is the next block of commit summary header.
         /// </summary>
         /// <param name="contextLines">Number of context lines, to include header for new diff.</param>
         public void GoToNextChange(int contextLines)
         {
-            if (GetMatchLine(next: true))
-            {
-                return;
-            }
-
-            int totalNumberOfLines = TotalNumberOfLines;
-            bool isRangeDiff = _textHighlightService is RangeDiffHighlightService;
-            if (isRangeDiff)
-            {
-                int line = LineAtCaret + 1;
-                while (line < totalNumberOfLines && !IsSearchMatch(GetLineText(line)))
-                {
-                    line++;
-                }
-
-                // Avoid going to the last empty line
-                if (line < totalNumberOfLines
-                    && GetLineText(line) is string lineContent
-                    && IsSearchMatch(lineContent)
-                    && !string.IsNullOrWhiteSpace(lineContent))
-                {
-                    FirstVisibleLine = line;
-                    LineAtCaret = line;
-                }
-
-                return;
-            }
-
             // Skip the file header
-            const int firstValidIndex = 4;
-            int startLine = Math.Max(firstValidIndex, LineAtCaret);
+            bool hasDiffHeader = _textHighlightService is (PatchHighlightService or CombinedDiffHighlightService);
+            int firstValidIndex = hasDiffHeader ? 4 : 0;
+            int startIndex = Math.Max(firstValidIndex, LineAtCaret);
+            int totalNumberOfLines = TotalNumberOfLines;
 
             bool emptyLineCheck = false;
-            for (int line = startLine; line < totalNumberOfLines; line++)
+            for (int line = startIndex; line < totalNumberOfLines; line++)
             {
-                string lineContent = GetLineText(line);
-
-                if (IsSearchMatch(lineContent))
+                if (IsSearchMatch(line))
                 {
                     if (emptyLineCheck)
                     {
@@ -508,43 +449,21 @@ namespace GitUI.Editor
 
         public void GoToPreviousChange(int contextLines)
         {
-            if (GetMatchLine(next: false))
-            {
-                return;
-            }
-
-            bool isRangeDiff = _textHighlightService is RangeDiffHighlightService;
-            if (isRangeDiff)
-            {
-                int line = LineAtCaret - 1;
-                while (line >= 0 && !IsSearchMatch(GetLineText(line)))
-                {
-                    line--;
-                }
-
-                if (line >= 0 && IsSearchMatch(GetLineText(line)))
-                {
-                    FirstVisibleLine = line;
-                    LineAtCaret = line;
-                }
-
-                return;
-            }
-
             // Skip the file header
-            const int firstValidIndex = 4;
-            int startLine = LineAtCaret;
-            while (startLine > firstValidIndex && IsSearchMatch(GetLineText(startLine)))
+            bool hasDiffHeader = _textHighlightService is (PatchHighlightService or CombinedDiffHighlightService);
+            int firstValidIndex = hasDiffHeader ? 4 : 0;
+            int startIndex = LineAtCaret;
+            while (startIndex > firstValidIndex && IsSearchMatch(startIndex))
             {
                 // Go to line before of current diff block
-                startLine--;
+                startIndex--;
             }
 
             // Find the start of previous diff
             bool emptyLineCheck = false;
-            for (int line = startLine; line >= firstValidIndex; line--)
+            for (int line = startIndex; line >= firstValidIndex; line--)
             {
-                if (IsSearchMatch(GetLineText(line)))
+                if (IsSearchMatch(line) && line > firstValidIndex)
                 {
                     emptyLineCheck = true;
                     continue;
@@ -555,8 +474,11 @@ namespace GitUI.Editor
                     continue;
                 }
 
-                // Restore to last diff
-                line++;
+                if (!IsSearchMatch(line))
+                {
+                    // Restore to last diff
+                    line++;
+                }
 
                 // Include the header with the (possible) function summary line
                 FirstVisibleLine = Math.Max(line - contextLines - 1, 0);
@@ -711,7 +633,7 @@ namespace GitUI.Editor
             {
                 for (int offset = 0; offset < TotalNumberOfLines; ++offset)
                 {
-                    DiffLineInfo diffLineNum = _lineNumbersControl.GetLineInfo(offset);
+                    DiffLineInfo? diffLineNum = _lineNumbersControl.GetLineInfo(offset);
                     if (diffLineNum is not null)
                     {
                         int diffLine = rightFile ? diffLineNum.RightLineNumber : diffLineNum.LeftLineNumber;
