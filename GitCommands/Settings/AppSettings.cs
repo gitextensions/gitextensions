@@ -2129,6 +2129,15 @@ namespace GitCommands
                 {
                     // there are CultureInfo values without a code page
                 }
+
+                try
+                {
+                    AddEncoding(Encoding.GetEncoding(0));
+                }
+                catch
+                {
+                    // catch if error retrieving operating system's active code page
+                }
             }
             else
             {
