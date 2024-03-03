@@ -1,7 +1,9 @@
+using System.Text.RegularExpressions;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
+using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
@@ -9,10 +11,12 @@ namespace GitUI.Editor.Diff;
 /// <summary>
 /// Highlight git-range-diff
 /// </summary>
-public class RangeDiffHighlightService : DiffHighlightService
+public partial class RangeDiffHighlightService : DiffHighlightService
 {
+    [GeneratedRegex(@"^(\u001b\[.*?m)?\s*(\d+|-):", RegexOptions.ExplicitCapture)]
+    private static partial Regex RangeHeaderRegex();
+
     private static readonly string[] _diffFullPrefixes = ["      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    "];
-    private static readonly string[] _diffSearchPrefixes = ["    "];
     private static readonly string[] _addedLinePrefixes = ["+", " +"];
     private static readonly string[] _removedLinePrefixes = ["-", " -"];
 
@@ -24,6 +28,30 @@ public class RangeDiffHighlightService : DiffHighlightService
     // git-range-diff has an extended subset of git-diff options, base is the same
     public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
         => GetGitCommandConfiguration(module, useGitColoring, "range-diff");
+
+    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
+    {
+        DiffLinesInfo result = new();
+        string[] lines = textEditor.Text.Split(Delimiters.LineFeed);
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string line = lines[i];
+            result.Add(new DiffLineInfo
+            {
+                LineNumInDiff = i + 1,
+                LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+                RightLineNumber = i + 1,
+
+                // Note that Git output occasionally corrupts context lines, so parse headers
+                LineType = RangeHeaderRegex().IsMatch(line) ? DiffLineType.Header : DiffLineType.Context
+            });
+        }
+
+        lineNumbersControl.DisplayLineNum(result, showLeftColumn: false);
+    }
+
+    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Header;
 
     public override void AddTextHighlighting(IDocument document)
     {
@@ -66,9 +94,6 @@ public class RangeDiffHighlightService : DiffHighlightService
     }
 
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
-
-    // For range-diff, this is a negative check, search is for headers
-    public override bool IsSearchMatch(string line) => !line.StartsWithAny(_diffSearchPrefixes);
 
     protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
         => LinePrefixHelper.GetLinesStartingWith(document, ref line, _addedLinePrefixes, ref found);

@@ -524,7 +524,8 @@ namespace GitUI.Editor
                     }
                     else
                     {
-                        internalFileViewer.SetText(text, openWithDifftool);
+                        internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring: false);
+
                         if (line is not null)
                         {
                             GoToLine(line.Value);
@@ -841,7 +842,7 @@ namespace GitUI.Editor
             treatAllFilesAsTextToolStripMenuItem.Visible = viewMode.IsPartialTextView();
 
             // toolbar
-            bool hasNextPreviousButton = viewMode.IsPartialTextView() && !ShowGitWordColoring;
+            bool hasNextPreviousButton = viewMode.IsPartialTextView();
             nextChangeButton.Visible = hasNextPreviousButton;
             previousChangeButton.Visible = hasNextPreviousButton;
 

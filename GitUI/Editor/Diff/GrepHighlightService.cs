@@ -13,9 +13,8 @@ namespace GitUI.Editor.Diff;
 
 public partial class GrepHighlightService : TextHighlightService
 {
-    private readonly bool _useGitColoring;
     private readonly List<TextMarker> _textMarkers = [];
-    private List<(int lineno, bool match)> _matchInfos = [];
+    private DiffLinesInfo _matchInfos = new();
 
     [GeneratedRegex(@"-e\s*(((?<q>""|')(?<quote>.*?)\k<q>)|(?<noquote>[^\s]+))", RegexOptions.ExplicitCapture)]
     private static partial Regex GrepSearchStringRegex();
@@ -25,38 +24,36 @@ public partial class GrepHighlightService : TextHighlightService
     private static partial Regex GrepLineColumnRegex();
 
     public GrepHighlightService(ref string text, bool useGitColoring, string grepString)
-    {
-        _useGitColoring = useGitColoring;
-        SetText(ref text, useGitColoring, grepString);
-    }
+        => SetText(ref text, useGitColoring, grepString);
 
     public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
-    {
-        lineNumbersControl.DisplayLineNum(GetDiffLinesInfo(), showLeftColumn: false);
-    }
+        => lineNumbersControl.DisplayLineNum(_matchInfos, showLeftColumn: false);
+
+    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.Mixed or DiffLineType.Grep);
 
     /// <summary>
     /// Get the next/previous line for the grep match.
     /// </summary>
     /// <param name="rowIndexInText">The row index (starting from 0) for the current position.</param>
     /// <param name="next"><c>true</c> if next position, <c>false</c> if previous.</param>
-    /// <returns>The next/previous line if found, -1 otherwise.</returns>
+    /// <returns>The next/previous index if found, -1 otherwise.</returns>
     public int GetGrepLineNum(int rowIndexInText, bool next)
     {
         int increase = next ? 1 : -1;
 
         // If start index is on a match, move to next
-        if (rowIndexInText >= 0 && rowIndexInText < _matchInfos.Count && _matchInfos[rowIndexInText].match)
+        if (_matchInfos.DiffLines.TryGetValue(rowIndexInText, out DiffLineInfo lineInfo) && lineInfo.LineType == DiffLineType.Grep)
         {
             rowIndexInText += increase;
         }
 
-        while (rowIndexInText >= 0 && rowIndexInText < _matchInfos.Count && !_matchInfos[rowIndexInText].match)
+        while (_matchInfos.DiffLines.TryGetValue(rowIndexInText, out lineInfo) && lineInfo.LineType != DiffLineType.Grep)
         {
             rowIndexInText += increase;
         }
 
-        return rowIndexInText >= 0 && rowIndexInText < _matchInfos.Count && _matchInfos[rowIndexInText].match ? rowIndexInText : -1;
+        return lineInfo?.LineType is DiffLineType.Grep ? rowIndexInText - increase : -1;
     }
 
     public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
@@ -118,7 +115,7 @@ public partial class GrepHighlightService : TextHighlightService
             {
                 if (sb.Length > 0)
                 {
-                    _matchInfos.Add((DiffLineInfo.NotApplicableLineNum, false));
+                    _matchInfos.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, false));
                     sb.Append('\n');
                 }
 
@@ -144,7 +141,7 @@ public partial class GrepHighlightService : TextHighlightService
             }
 
             bool isMatch = match.Groups["kind"].Success && match.Groups["kind"].Value == ":";
-            _matchInfos.Add((lineNo, isMatch));
+            _matchInfos.Add(GetDiffLineInfo(lineNo, isMatch));
             string grepText = match.Groups["text"].Value;
 
             if (useGitColoring)
@@ -192,29 +189,16 @@ public partial class GrepHighlightService : TextHighlightService
     /// for git-diff this is parsed dynamically.
     /// </summary>
     /// <returns>The type of contents for all editor lines.</returns>
-    private DiffLinesInfo GetDiffLinesInfo()
-    {
-        DiffLinesInfo result = new();
-        for (int i = 0; i < _matchInfos.Count; ++i)
+    private DiffLineInfo GetDiffLineInfo(int lineno, bool match)
+        => new()
         {
-            int lineno = _matchInfos[i].lineno;
-            bool match = _matchInfos[i].match;
-
-            DiffLineInfo diffLineInfo = new()
-            {
-                LineNumInDiff = i + 1,
-                LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
-                RightLineNumber = lineno,
-                LineType = lineno == DiffLineInfo.NotApplicableLineNum
+            LineNumInDiff = _matchInfos.DiffLines.Count + 1,
+            LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+            RightLineNumber = lineno,
+            LineType = lineno == DiffLineInfo.NotApplicableLineNum
                     ? DiffLineType.Header
                     : match
                         ? DiffLineType.Grep
                         : DiffLineType.Context
-            };
-
-            result.Add(diffLineInfo);
-        }
-
-        return result;
-    }
+        };
 }
