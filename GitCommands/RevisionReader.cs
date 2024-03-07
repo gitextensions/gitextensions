@@ -223,7 +223,7 @@ namespace GitCommands
         /// <param name="hasNotes">Include Git Notes.</param>
         /// <param name="cancellationToken">Cancellation cancellationToken.</param>
         public void GetLog(
-            IObserver<GitRevision> subject,
+            IObserver<IReadOnlyList<GitRevision>> subject,
             string revisionFilter,
             string pathFilter,
             bool hasNotes,
@@ -240,6 +240,10 @@ namespace GitCommands
             using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding);
             cancellationToken.ThrowIfCancellationRequested();
 
+            // Initial buffer to give very quick feedback to user
+            const int initialCommitsBatchSize = 100;
+            const int furtherCommitsBatchSize = 25_000;
+            List<GitRevision> revisions = new(capacity: initialCommitsBatchSize);
             foreach (ReadOnlyMemory<byte> chunk in process.StandardOutput.BaseStream.SplitLogOutput())
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -249,9 +253,19 @@ namespace GitCommands
 #if TRACE_REVISIONREADER
                     revisionCount++;
 #endif
-                    subject.OnNext(revision);
+                    revisions.Add(revision);
+                    if (revisions.Count == revisions.Capacity)
+                    {
+                        subject.OnNext(revisions);
+
+                        // ... then use big buffer to load all the remaining revisions with better performance
+                        // by creating another array to avoid "Collection was modified" exception
+                        revisions = new(furtherCommitsBatchSize);
+                    }
                 }
             }
+
+            subject.OnNext(revisions);
 
 #if TRACE_REVISIONREADER
             // TODO Make it possible to explicitly activate Trace printouts like this
