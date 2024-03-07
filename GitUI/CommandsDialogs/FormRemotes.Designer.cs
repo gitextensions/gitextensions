@@ -413,6 +413,7 @@ namespace GitUI.CommandsDialogs
             RemoteName.Size = new Size(248, 20);
             RemoteName.TabIndex = 1;
             RemoteName.TextChanged += RemoteName_TextChanged;
+            RemoteName.Enter += RemoteName_Enter;
             // 
             // pnlManagementContainer
             // 
