@@ -753,5 +753,20 @@ Inactive remote is completely invisible to git.");
                 }
             }
         }
+
+        private void RemoteName_Enter(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(RemoteName.Text) || string.IsNullOrEmpty(Url.Text))
+            {
+                return;
+            }
+
+            GitHostingRemoteParser gitHostingRemoteParser = new();
+            if (gitHostingRemoteParser.TryExtractGitHostingDataFromRemoteUrl(Url.Text, out _, out string owner, out _))
+            {
+                RemoteName.Text = owner;
+                RemoteName.SelectAll();
+            }
+        }
     }
 }
