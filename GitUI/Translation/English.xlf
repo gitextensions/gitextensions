@@ -828,8 +828,20 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Highlight authored revisions</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkUseGEThemeGitColoring.Text">
+        <source>Use theme coloring</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkUseGitColoring.Text">
+        <source>Git coloring</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkUseSystemVisualStyle.Text">
         <source>Use system-defined visual style (looks bad with dark colors)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbDiffColoring.Text">
+        <source>Diff coloring</source>
         <target />
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">

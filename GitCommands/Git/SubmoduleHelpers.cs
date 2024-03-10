@@ -14,7 +14,7 @@ namespace GitCommands.Git
 
         public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
         {
-            (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true, useGitColoring: false, commandConfiguration: null, cancellationToken: cancellationToken).ConfigureAwait(false);
             return patch is null
                 ? new GitSubmoduleStatus(errorMessage ?? "", null, false, null, null, null, null)
                 : ParseSubmodulePatchStatus(patch, module, fileName);

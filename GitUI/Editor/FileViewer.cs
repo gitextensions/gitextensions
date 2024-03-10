@@ -412,11 +412,11 @@ namespace GitUI.Editor
         /// <param name="text">The patch text.</param>
         /// <param name="line">The line to display.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
-        public Task ViewPatchAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.Diff);
+        public Task ViewPatchAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool, bool useGitColoring)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.Diff, useGitColoring);
 
-        public Task ViewCombinedDiffAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff);
+        public Task ViewCombinedDiffAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool, bool useGitColoring)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring);
 
         /// <summary>
         /// Present the text as a patch in the file viewer, for GitHub.
@@ -435,8 +435,8 @@ namespace GitUI.Editor
                 () => ViewFixedPatchAsync(fileName, text, openWithDifftool));
         }
 
-        public Task ViewRangeDiffAsync(string fileName, string text)
-            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff);
+        public Task ViewRangeDiffAsync(string fileName, string text, bool useGitColoring)
+            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff, useGitColoring);
 
         public void ViewText(string? fileName,
             string text,
@@ -747,14 +747,14 @@ namespace GitUI.Editor
 
         // Private methods
 
-        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode)
+        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring = false)
         {
             return ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
                     ResetView(viewMode, fileName, item: item, text: text);
-                    internalFileViewer.SetText(text, openWithDifftool, _viewMode);
+                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring);
                     if (line is not null)
                     {
                         GoToLine(line.Value);
@@ -1925,7 +1925,7 @@ namespace GitUI.Editor
                     new GitItemStatus(name: fileName ?? ""));
                 FileViewer fileViewer = _fileViewer;
                 ThreadHelper.JoinableTaskFactory.Run(
-                    () => fileViewer.ViewPatchAsync(f, text, line: null, openWithDifftool));
+                    () => fileViewer.ViewPatchAsync(f, text, line: null, openWithDifftool, useGitColoring: false));
             }
         }
     }

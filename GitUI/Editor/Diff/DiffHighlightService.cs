@@ -1,5 +1,9 @@
-﻿using GitExtUtils.GitUI.Theming;
+﻿using System.Text;
+using GitCommands;
+using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
@@ -9,12 +13,71 @@ namespace GitUI.Editor.Diff;
 /// </summary>
 public abstract class DiffHighlightService : TextHighlightService
 {
-    public DiffHighlightService()
+    protected readonly bool _useGitColoring;
+    protected readonly List<TextMarker> _textMarkers = [];
+
+    public DiffHighlightService(ref string text, bool useGitColoring)
     {
+        _useGitColoring = useGitColoring;
+
+        SetText(ref text);
+    }
+
+    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring, string command)
+    {
+        if (!useGitColoring)
+        {
+            // Use default
+            return null;
+        }
+
+        GitCommandConfiguration commandConfiguration = new();
+        IReadOnlyList<GitConfigItem> items = GitCommandConfiguration.Default.Get(command);
+        foreach (GitConfigItem cfg in items)
+        {
+            commandConfiguration.Add(cfg, command);
+        }
+
+        if (string.IsNullOrEmpty(module.GetEffectiveSetting("diff.colorMoved")))
+        {
+            commandConfiguration.Add(new GitConfigItem("diff.colorMoved", "zebra"), command);
+        }
+
+        if (string.IsNullOrEmpty(module.GetEffectiveSetting("diff.colorMovedWS")))
+        {
+            // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---color-moved-wsltmodesgt
+            // Disable by default, document that this can be enabled.
+            commandConfiguration.Add(new GitConfigItem("diff.colorMovedWS", "no"), command);
+        }
+
+        // Override Git default coloring to "theme" colors for those that are defined
+        if (AppSettings.UseGEThemeGitColoring.Value)
+        {
+            commandConfiguration.Add(AnsiEscapeUtilities.SetUnsetGitColor(
+                "color.diff.old",
+                AppColor.DiffRemoved),
+                command);
+            commandConfiguration.Add(AnsiEscapeUtilities.SetUnsetGitColor(
+                "color.diff.new",
+                AppColor.DiffAdded),
+                command);
+        }
+
+        return commandConfiguration;
     }
 
     public override void AddTextHighlighting(IDocument document)
     {
+        if (_useGitColoring)
+        {
+            foreach (TextMarker tm in _textMarkers)
+            {
+                document.MarkerStrategy.AddMarker(tm);
+            }
+
+            return;
+        }
+
         bool forceAbort = false;
 
         AddExtraPatchHighlighting(document);
@@ -82,6 +145,19 @@ public abstract class DiffHighlightService : TextHighlightService
 
         bool DoesLineStartWith(IDocument document, int offset, string prefixStr, bool invertMatch)
             => invertMatch ^ LinePrefixHelper.DoesLineStartWith(document, offset, prefixStr);
+    }
+
+    private void SetText(ref string text)
+    {
+        if (!_useGitColoring)
+        {
+            return;
+        }
+
+        StringBuilder sb = new(text.Length);
+        AnsiEscapeUtilities.ParseEscape(text, sb, _textMarkers);
+
+        text = sb.ToString();
     }
 
     private static void MarkDifference(IDocument document, List<ISegment> linesRemoved, List<ISegment> linesAdded, int beginOffset)

@@ -408,6 +408,16 @@ namespace GitCommands
             set => SetBool("usepatiencediffalgorithm", value);
         }
 
+        /// <summary>
+        /// Use Git coloring for selected commands
+        /// </summary>
+        public static ISetting<bool> UseGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(UseGitColoring), true);
+
+        /// <summary>
+        /// Use GE theme colors with Git diff coloring
+        /// </summary>
+        public static ISetting<bool> UseGEThemeGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(UseGEThemeGitColoring), true);
+
         public static bool ShowErrorsWhenStagingFiles
         {
             get => GetBool("showerrorswhenstagingfiles", true);

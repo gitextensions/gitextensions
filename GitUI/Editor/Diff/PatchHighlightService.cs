@@ -1,5 +1,7 @@
-﻿using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -16,7 +18,8 @@ public class PatchHighlightService : DiffHighlightService
     private static readonly string[] _diffFullPrefixes = [" ", _addedLinePrefix, _removedLinePrefix];
     private static readonly string[] _diffSearchPrefixes = [_addedLinePrefix, _removedLinePrefix];
 
-    public PatchHighlightService()
+    public PatchHighlightService(ref string text, bool useGitColoring)
+        : base(ref text, useGitColoring)
     {
     }
 
@@ -26,6 +29,9 @@ public class PatchHighlightService : DiffHighlightService
         DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(textEditor.Text, isCombinedDiff: false);
         lineNumbersControl.DisplayLineNum(result);
     }
+
+    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
+        => GetGitCommandConfiguration(module, useGitColoring, "diff");
 
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
 
