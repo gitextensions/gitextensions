@@ -1,7 +1,9 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtUtils;
 using GitUI.Editor;
+using GitUI.Editor.Diff;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -97,6 +99,33 @@ namespace GitUI
                 return;
             }
 
+            if (firstId == ObjectId.CombinedDiffId)
+            {
+                bool result = fileViewer.Module.GetCombinedDiffContent(item.SecondRevision.ObjectId, item.Item.Name,
+                    fileViewer.GetExtraDiffArguments(),
+                    fileViewer.Encoding,
+                    out string diffOfConflict,
+                    cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (!result)
+                {
+                    string output = $"Git command exit code: {result}{Environment.NewLine}{diffOfConflict}";
+                    await fileViewer.ViewTextAsync(item?.Item?.Name, text: diffOfConflict);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(diffOfConflict))
+                {
+                    await fileViewer.ViewTextAsync(item?.Item?.Name, text: TranslatedStrings.UninterestingDiffOmitted);
+                    return;
+                }
+
+                await fileViewer.ViewCombinedDiffAsync(item, text: diffOfConflict, line: line, openWithDifftool: openWithDiffTool);
+                return;
+            }
+
             string selectedPatch = (await GetSelectedPatchAsync(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item, cancellationToken))
                 ?? defaultText;
 
@@ -130,29 +159,6 @@ namespace GitUI
                 GitItemStatus file,
                 CancellationToken cancellationToken)
             {
-                if (firstId == ObjectId.CombinedDiffId)
-                {
-                    bool result = fileViewer.Module.GetCombinedDiffContent(selectedId, file.Name,
-                        fileViewer.GetExtraDiffArguments(),
-                        fileViewer.Encoding,
-                        out string diffOfConflict,
-                        cancellationToken);
-
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (!result)
-                    {
-                        return $"Git command exit code: {result}{Environment.NewLine}{diffOfConflict}";
-                    }
-
-                    if (string.IsNullOrWhiteSpace(diffOfConflict))
-                    {
-                        return TranslatedStrings.UninterestingDiffOmitted;
-                    }
-
-                    return diffOfConflict;
-                }
-
                 Task<GitSubmoduleStatus?> task = file.GetSubmoduleStatusAsync();
 
                 if (file.IsSubmodule && task is not null)
