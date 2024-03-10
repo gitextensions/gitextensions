@@ -140,12 +140,17 @@ namespace GitUI
 
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    return result switch
+                    if (!result)
                     {
-                        false => defaultText,
-                        true when string.IsNullOrWhiteSpace(diffOfConflict) => TranslatedStrings.UninterestingDiffOmitted,
-                        _ => diffOfConflict
-                    };
+                        return $"Git command exit code: {result}{Environment.NewLine}{diffOfConflict}";
+                    }
+
+                    if (string.IsNullOrWhiteSpace(diffOfConflict))
+                    {
+                        return TranslatedStrings.UninterestingDiffOmitted;
+                    }
+
+                    return diffOfConflict;
                 }
 
                 Task<GitSubmoduleStatus?> task = file.GetSubmoduleStatusAsync();

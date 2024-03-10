@@ -2255,6 +2255,7 @@ namespace GitCommands
                 args,
                 cache: GitCommandCache,
                 outputEncoding: LosslessEncoding,
+                throwOnErrorExit: false,
                 cancellationToken: cancellationToken);
 
             return result;
@@ -3885,12 +3886,19 @@ namespace GitCommands
                 args,
                 cache: GitCommandCache,
                 outputEncoding: LosslessEncoding,
+                throwOnErrorExit: false,
                 cancellationToken: cancellationToken);
 
             if (!result.ExitedSuccessfully)
             {
-                diffOfConflict = "";
+                diffOfConflict = result.AllOutput;
                 return false;
+            }
+
+            if (string.IsNullOrEmpty(result.StandardOutput))
+            {
+                diffOfConflict = "";
+                return true;
             }
 
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding)).ToList();
