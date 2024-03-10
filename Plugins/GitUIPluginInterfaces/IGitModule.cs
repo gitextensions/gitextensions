@@ -242,7 +242,7 @@ namespace GitUIPluginInterfaces
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>the Git output.</returns>
         string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken);
-        Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked, CancellationToken cancellationToken);
+        Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken);
         int? GetCommitCount(string parent, string child, bool cache, bool throwOnErrorExit);
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace GitUIPluginInterfaces
         bool InTheMiddleOfBisect();
         IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache, CancellationToken cancellationToken);
         bool IsDirtyDir();
-        Task<ExecutionResult> GetRangeDiffAsync(ObjectId firstId, ObjectId secondId, ObjectId? firstBase, ObjectId? secondBase, string extraDiffArguments, string? pathFilter, CancellationToken cancellationToken);
+        Task<ExecutionResult> GetRangeDiffAsync(ObjectId firstId, ObjectId secondId, ObjectId? firstBase, ObjectId? secondBase, string extraDiffArguments, string? pathFilter, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken);
         bool InTheMiddleOfPatch();
         bool InTheMiddleOfConflictedMerge(bool throwOnErrorExit = true);
         bool InTheMiddleOfAction();
@@ -400,7 +400,7 @@ namespace GitUIPluginInterfaces
         /// </summary>
         IGitVersion GitVersion { get; }
 
-        bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, CancellationToken cancellationToken);
+        bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken);
         bool IsMerge(ObjectId objectId);
         IEnumerable<string> GetMergedBranches(bool includeRemote = false);
         Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken);

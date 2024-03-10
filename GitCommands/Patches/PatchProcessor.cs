@@ -15,13 +15,13 @@ namespace GitCommands.Patches
             OutsidePatch
         }
 
-        [GeneratedRegex(@"^diff --(?<type>git|cc|combined)\s", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --(?<type>git|cc|combined)\s", RegexOptions.ExplicitCapture)]
         private static partial Regex PatchHeaderRegex();
-        [GeneratedRegex(@"^diff --git [""]?[abiwco12]/(?<filenamea>.*)[""]? [""]?[abiwco12]/(?<filenameb>.*)[""]?$", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --git [""]?[abiwco12]/(?<filenamea>.*)[""]? [""]?[abiwco12]/(?<filenameb>.*?)[""]?(\u001b\[.*?m)?$", RegexOptions.ExplicitCapture)]
         private static partial Regex DiffCommandRegex();
-        [GeneratedRegex(@"^diff --(cc|combined) [""]?(?<filenamea>.*)[""]?$", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --(cc|combined) [""]?(?<filenamea>.*?)[""]?(\u001b\[.*?m)?$", RegexOptions.ExplicitCapture)]
         private static partial Regex CombinedDiffCommandRegex();
-        [GeneratedRegex(@"[-+]{3} [""]?[abiwco12]/(?<filename>.*)[""]?", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"(\u001b\[.*?m)?[-+]{3} [""]?[abiwco12]/(?<filename>.*)[""]?(\u001b\[.*?m)?", RegexOptions.ExplicitCapture)]
         private static partial Regex FileNameRegex();
 
         /// <summary>

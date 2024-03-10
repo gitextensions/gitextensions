@@ -1,5 +1,4 @@
 ﻿using GitCommands;
-using GitCommands.Patches;
 using GitCommands.Settings;
 using GitExtUtils;
 using GitExtUtils.GitUI;
@@ -235,7 +234,7 @@ namespace GitUI.Editor
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         public void SetText(string text, Action? openWithDifftool)
         {
-            SetText(text, openWithDifftool, viewMode: ViewMode.Text);
+            SetText(text, openWithDifftool, viewMode: ViewMode.Text, useGitColoring: false);
         }
 
         /// <summary>
@@ -244,7 +243,7 @@ namespace GitUI.Editor
         /// <param name="text">The text to set in the editor.</param>
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         /// <param name="viewMode">the view viewMode in the file viewer, the kind of info shown</param>
-        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode)
+        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -256,10 +255,10 @@ namespace GitUI.Editor
             _textHighlightService = viewMode switch
             {
                 ViewMode.Text => TextHighlightService.Instance,
-                ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(),
-                ViewMode.CombinedDiff => new CombinedDiffHighlightService(),
-                ViewMode.RangeDiff => new RangeDiffHighlightService(),
-               _ => throw new ArgumentException($"Unexpected viewMode: {viewMode}", nameof(viewMode))
+                ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(ref text, useGitColoring),
+                ViewMode.CombinedDiff => new CombinedDiffHighlightService(ref text, useGitColoring),
+                ViewMode.RangeDiff => new RangeDiffHighlightService(ref text, useGitColoring),
+                _ => throw new ArgumentException($"Unexpected viewMode: {viewMode}", nameof(viewMode))
             };
 
             TextEditor.Text = text;

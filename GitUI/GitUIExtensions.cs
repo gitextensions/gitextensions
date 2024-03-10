@@ -80,6 +80,8 @@ namespace GitUI
                         item.BaseB,
                         fileViewer.GetExtraDiffArguments(isRangeDiff: true),
                         additionalCommandInfo,
+                        useGitColoring: AppSettings.UseGitColoring.Value,
+                        commandConfiguration: RangeDiffHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring.Value),
                         cancellationToken);
 
                 if (!result.ExitedSuccessfully)
@@ -95,7 +97,8 @@ namespace GitUI
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await fileViewer.ViewRangeDiffAsync(filename, result.StandardOutput);
+                await fileViewer.ViewRangeDiffAsync(filename, result.StandardOutput, AppSettings.UseGitColoring.Value);
+
                 return;
             }
 
@@ -105,6 +108,8 @@ namespace GitUI
                     fileViewer.GetExtraDiffArguments(),
                     fileViewer.Encoding,
                     out string diffOfConflict,
+                    useGitColoring: AppSettings.UseGitColoring.Value,
+                    commandConfiguration: CombinedDiffHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring.Value),
                     cancellationToken);
 
                 cancellationToken.ThrowIfCancellationRequested();
@@ -122,7 +127,7 @@ namespace GitUI
                     return;
                 }
 
-                await fileViewer.ViewCombinedDiffAsync(item, text: diffOfConflict, line: line, openWithDifftool: openWithDiffTool);
+                await fileViewer.ViewCombinedDiffAsync(item, text: diffOfConflict, line: line, openWithDifftool: openWithDiffTool, useGitColoring: AppSettings.UseGitColoring.Value);
                 return;
             }
 
@@ -137,7 +142,7 @@ namespace GitUI
             }
             else
             {
-                await fileViewer.ViewPatchAsync(item, text: selectedPatch, line: line, openWithDifftool: openWithDiffTool);
+                await fileViewer.ViewPatchAsync(item, text: selectedPatch, line: line, openWithDifftool: openWithDiffTool, useGitColoring: AppSettings.UseGitColoring.Value);
             }
 
             return;
@@ -193,6 +198,8 @@ namespace GitUI
                     bool isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
 
                     return await module.GetSingleDiffAsync(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked,
+                        AppSettings.UseGitColoring.Value,
+                        PatchHighlightService.GetGitCommandConfiguration(module, AppSettings.UseGitColoring.Value),
                         cancellationToken);
                 }
             }

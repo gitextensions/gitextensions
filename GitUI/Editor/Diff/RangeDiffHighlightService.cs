@@ -1,5 +1,7 @@
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
@@ -14,12 +16,27 @@ public class RangeDiffHighlightService : DiffHighlightService
     private static readonly string[] _addedLinePrefixes = ["+", " +"];
     private static readonly string[] _removedLinePrefixes = ["-", " -"];
 
-    public RangeDiffHighlightService()
+    public RangeDiffHighlightService(ref string text, bool useGitColoring)
+        : base(ref text, useGitColoring)
     {
     }
 
+    // git-range-diff has an extended subset of git-diff options, base is the same
+    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
+        => GetGitCommandConfiguration(module, useGitColoring, "range-diff");
+
     public override void AddTextHighlighting(IDocument document)
     {
+        if (_useGitColoring)
+        {
+            foreach (TextMarker tm in _textMarkers)
+            {
+                document.MarkerStrategy.AddMarker(tm);
+            }
+
+            return;
+        }
+
         bool forceAbort = false;
 
         for (int line = 0; line < document.TotalNumberOfLines && !forceAbort; line++)

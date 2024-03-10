@@ -2173,10 +2173,16 @@ namespace GitCommands
         }
 
         public async Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(
-            ObjectId? firstId, ObjectId? secondId,
-            string? fileName, string? oldFileName,
-            string extraDiffArguments, Encoding encoding,
-            bool cacheResult, bool isTracked,
+            ObjectId? firstId,
+            ObjectId? secondId,
+            string? fileName,
+            string? oldFileName,
+            string extraDiffArguments,
+            Encoding encoding,
+            bool cacheResult,
+            bool isTracked,
+            bool useGitColoring,
+            GitCommandConfiguration commandConfiguration,
             CancellationToken cancellationToken)
         {
             // fix refs slashes
@@ -2187,10 +2193,11 @@ namespace GitCommands
 
             string? diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
 
-            GitArgumentBuilder args = new("diff")
+            GitArgumentBuilder args = new("diff", commandConfiguration)
             {
                 "--find-renames",
                 "--find-copies",
+                { useGitColoring, "--color=always" },
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 extraDiffArguments,
                 diffOptions
@@ -2208,6 +2215,7 @@ namespace GitCommands
                 args,
                 cache: cache,
                 outputEncoding: LosslessEncoding,
+                stripAnsiEscapeCodes: !useGitColoring,
                 throwOnErrorExit: false,
                 cancellationToken: cancellationToken);
             if (!result.ExitedSuccessfully)
@@ -2228,6 +2236,8 @@ namespace GitCommands
             ObjectId? secondBase,
             string extraDiffArguments,
             string? pathFilter,
+            bool useGitColoring,
+            GitCommandConfiguration commandConfiguration,
             CancellationToken cancellationToken)
         {
             // range-diff is not possible for artificial commits, use HEAD
@@ -2240,11 +2250,12 @@ namespace GitCommands
             }
 
             // Supported since Git 2.19 (checks when adding the command)
-            GitArgumentBuilder args = new("range-diff")
+            GitArgumentBuilder args = new("range-diff", commandConfiguration)
             {
                 "--find-renames",
                 "--find-copies",
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+                { useGitColoring, "--color=always" },
                 extraDiffArguments,
                 { firstBase is null || secondBase is null,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" },
                 { GitVersion.SupportRangeDiffPath && !string.IsNullOrWhiteSpace(pathFilter), "--" },
@@ -2255,6 +2266,7 @@ namespace GitCommands
                 args,
                 cache: GitCommandCache,
                 outputEncoding: LosslessEncoding,
+                stripAnsiEscapeCodes: !useGitColoring,
                 throwOnErrorExit: false,
                 cancellationToken: cancellationToken);
 
@@ -3869,15 +3881,16 @@ namespace GitCommands
                 }).ToList();
         }
 
-        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, CancellationToken cancellationToken)
+        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken)
         {
-            GitArgumentBuilder args = new("diff-tree")
+            GitArgumentBuilder args = new("diff-tree", commandConfiguration)
             {
                 { AppSettings.OmitUninterestingDiff, "--cc", "-c -p" },
                 "--no-commit-id",
+                { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+                { useGitColoring, "--color=always" },
                 extraArgs,
                 revisionOfMergeCommit,
-                { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 "--",
                 filePath.ToPosixPath().Quote()
             };
@@ -3886,6 +3899,7 @@ namespace GitCommands
                 args,
                 cache: GitCommandCache,
                 outputEncoding: LosslessEncoding,
+                stripAnsiEscapeCodes: !useGitColoring,
                 throwOnErrorExit: false,
                 cancellationToken: cancellationToken);
 
