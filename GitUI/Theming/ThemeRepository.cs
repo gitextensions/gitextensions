@@ -41,8 +41,11 @@ namespace GitUI.Theming
             return _persistence.Load(themePath, themeId, variations);
         }
 
-        public void Save(Theme theme) =>
+        public void Save(Theme theme)
+        {
+            Directory.CreateDirectory(_themePathProvider.UserThemesDirectory);
             _persistence.Save(theme, _themePathProvider.GetThemePath(theme.Id));
+        }
 
         public Theme GetInvariantTheme() =>
             GetTheme(new ThemeId(InvariantThemeName, isBuiltin: true), variations: Array.Empty<string>());
