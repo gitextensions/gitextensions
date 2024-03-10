@@ -29,27 +29,6 @@ namespace GitUI.Editor
         /// </summary>
         public event Action? EscapePressed;
 
-        /// <summary>
-        /// The type of information currently shown in the file viewer.
-        /// </summary>
-        private enum ViewMode
-        {
-            // Plain text
-            Text,
-
-            // Diff or patch
-            Diff,
-
-            // Diffs that will not be affected by diff arguments like white space etc (limited options)
-            FixedDiff,
-
-            // range-diff output
-            RangeDiff,
-
-            // Image viewer
-            Image
-        }
-
         private readonly TranslationString _largeFileSizeWarning = new("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
         private readonly TranslationString _cannotViewImage = new("Cannot view image {0}");
 
@@ -151,7 +130,7 @@ namespace GitUI.Editor
 
             internalFileViewer.MouseMove += (_, e) =>
             {
-                if (IsDiffView(_viewMode) && !fileviewerToolbar.Visible)
+                if (_viewMode.IsPartialTextView() && !fileviewerToolbar.Visible)
                 {
                     fileviewerToolbar.Visible = true;
                     fileviewerToolbar.Location = new Point(Width - fileviewerToolbar.Width - 40, 0);
@@ -383,7 +362,7 @@ namespace GitUI.Editor
 
                 // Handle zero context as showing no file changes, to get the summary only
                 { isRangeDiff && NumberOfContextLines == 0, "--no-patch " },
-                { TreatAllFilesAsText, "--text" }
+                { TreatAllFilesAsText, "--text" },
             };
         }
 
@@ -435,6 +414,9 @@ namespace GitUI.Editor
         /// <param name="openWithDifftool">The action to open the difftool.</param>
         public Task ViewPatchAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
             => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.Diff);
+
+        public Task ViewCombinedDiffAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff);
 
         /// <summary>
         /// Present the text as a patch in the file viewer, for GitHub.
@@ -765,9 +747,6 @@ namespace GitUI.Editor
 
         // Private methods
 
-        private static bool IsDiffView(ViewMode viewMode)
-            => viewMode is (ViewMode.Diff or ViewMode.FixedDiff or ViewMode.RangeDiff);
-
         private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode)
         {
             return ShowOrDeferAsync(
@@ -775,7 +754,7 @@ namespace GitUI.Editor
                 () =>
                 {
                     ResetView(viewMode, fileName, item: item, text: text);
-                    internalFileViewer.SetText(text, openWithDifftool, isDiff: IsDiffView(_viewMode), isRangeDiff: _viewMode == ViewMode.RangeDiff);
+                    internalFileViewer.SetText(text, openWithDifftool, _viewMode);
                     if (line is not null)
                     {
                         GoToLine(line.Value);
@@ -813,30 +792,38 @@ namespace GitUI.Editor
             resetSelectedLinesToolStripMenuItem.Visible = SupportLinePatching;
 
             // RangeDiff patch is undefined, could be new/old commit or to parents
-            copyPatchToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.FixedDiff);
-            copyNewVersionToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.FixedDiff);
-            copyOldVersionToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.FixedDiff);
+            bool isCopyPatch = viewMode.IsNormalDiffView();
+            copyPatchToolStripMenuItem.Visible = isCopyPatch;
+            copyNewVersionToolStripMenuItem.Visible = isCopyPatch;
+            copyOldVersionToolStripMenuItem.Visible = isCopyPatch;
 
-            ignoreWhitespaceAtEolToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            ignoreWhitespaceChangesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            ignoreAllWhitespaceChangesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            increaseNumberOfLinesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            decreaseNumberOfLinesToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            showEntireFileToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            showSyntaxHighlightingToolStripMenuItem.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            toolStripSeparator2.Visible = IsDiffView(viewMode);
-            treatAllFilesAsTextToolStripMenuItem.Visible = IsDiffView(viewMode);
+            bool diffCanBeModified = viewMode.IsDiffView() && viewMode is not ViewMode.FixedDiff;
+            ignoreWhitespaceAtEolToolStripMenuItem.Visible = diffCanBeModified;
+            ignoreWhitespaceChangesToolStripMenuItem.Visible = diffCanBeModified;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Visible = diffCanBeModified;
+
+            bool isPartialFlexibleView = viewMode.IsPartialTextView() && viewMode is not ViewMode.FixedDiff;
+            increaseNumberOfLinesToolStripMenuItem.Visible = isPartialFlexibleView;
+            decreaseNumberOfLinesToolStripMenuItem.Visible = isPartialFlexibleView;
+            showEntireFileToolStripMenuItem.Visible = isPartialFlexibleView;
+            showSyntaxHighlightingToolStripMenuItem.Visible = isPartialFlexibleView;
+
+            toolStripSeparator2.Visible = viewMode.IsPartialTextView();
+            treatAllFilesAsTextToolStripMenuItem.Visible = viewMode.IsPartialTextView();
 
             // toolbar
-            nextChangeButton.Visible = IsDiffView(viewMode);
-            previousChangeButton.Visible = IsDiffView(viewMode);
-            increaseNumberOfLines.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            decreaseNumberOfLines.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            showEntireFileButton.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            showSyntaxHighlighting.Visible = IsDiffView(viewMode);
-            ignoreWhitespaceAtEol.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            ignoreWhiteSpaces.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
-            ignoreAllWhitespaces.Visible = viewMode is (ViewMode.Diff or ViewMode.RangeDiff);
+            bool hasNextPreviousButton = viewMode.IsPartialTextView();
+            nextChangeButton.Visible = hasNextPreviousButton;
+            previousChangeButton.Visible = hasNextPreviousButton;
+
+            increaseNumberOfLines.Visible = isPartialFlexibleView;
+            decreaseNumberOfLines.Visible = isPartialFlexibleView;
+            showEntireFileButton.Visible = isPartialFlexibleView;
+            showSyntaxHighlighting.Visible = viewMode.IsPartialTextView();
+
+            ignoreWhitespaceAtEol.Visible = diffCanBeModified;
+            ignoreWhiteSpaces.Visible = diffCanBeModified;
+            ignoreAllWhitespaces.Visible = diffCanBeModified;
         }
 
         private void OnExtraDiffArgumentsChanged()
@@ -982,7 +969,7 @@ namespace GitUI.Editor
             SupportLinePatching =
 
                 // Diffs, currently requires that the file to update exists
-                ((IsDiffView(_viewMode) && (text?.Contains("@@") ?? false)
+                ((_viewMode.IsDiffView() && (text?.Contains("@@") ?? false)
                         && File.Exists(_fullPathResolver.Resolve(fileName)))
 
                 // New files, patches only applies for artificial or if the file does not exist
@@ -998,7 +985,7 @@ namespace GitUI.Editor
             PictureBox.Visible = _viewMode == ViewMode.Image;
             internalFileViewer.Visible = _viewMode != ViewMode.Image;
 
-            if (((ShowSyntaxHighlightingInDiff && IsDiffView(_viewMode)) || _viewMode == ViewMode.Text) && fileName is not null)
+            if (((ShowSyntaxHighlightingInDiff && _viewMode.IsPartialTextView()) || _viewMode == ViewMode.Text) && fileName is not null)
             {
                 internalFileViewer.SetHighlightingForFile(fileName);
             }
@@ -1651,7 +1638,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            if (IsDiffView(_viewMode))
+            if (_viewMode.IsDiffView())
             {
                 int pos = internalFileViewer.GetSelectionPosition();
                 string fileText = internalFileViewer.GetText();

@@ -235,7 +235,7 @@ namespace GitUI.Editor
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         public void SetText(string text, Action? openWithDifftool)
         {
-            SetText(text, openWithDifftool, isDiff: false, isRangeDiff: false);
+            SetText(text, openWithDifftool, viewMode: ViewMode.Text);
         }
 
         /// <summary>
@@ -243,16 +243,27 @@ namespace GitUI.Editor
         /// </summary>
         /// <param name="text">The text to set in the editor.</param>
         /// <param name="openWithDifftool">The command to open the difftool.</param>
-        /// <param name="isDiff"><c>true</c> if the text is in diff format.</param>
-        /// <param name="isRangeDiff"><c>true</c> if the text is in git-range-diff format.</param>
-        public void SetText(string text, Action? openWithDifftool, bool isDiff, bool isRangeDiff)
+        /// <param name="viewMode">the view viewMode in the file viewer, the kind of info shown</param>
+        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
             _currentViewPositionCache.Capture();
 
             OpenWithDifftool = openWithDifftool;
-            bool hasLineNumberControl = isDiff && !isRangeDiff;
+
+            // Get the highlight service, possibly clean escape sequences in the text and create highlight.
+            _textHighlightService = viewMode switch
+            {
+                ViewMode.Text => TextHighlightService.Instance,
+                ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(),
+                ViewMode.CombinedDiff => new CombinedDiffHighlightService(),
+                ViewMode.RangeDiff => new RangeDiffHighlightService(),
+               _ => throw new ArgumentException($"Unexpected viewMode: {viewMode}", nameof(viewMode))
+            };
+
+            TextEditor.Text = text;
+            bool hasLineNumberControl = viewMode.IsNormalDiffView();
             _lineNumbersControl.Clear(hasLineNumberControl);
             _lineNumbersControl.SetVisibility(hasLineNumberControl);
 
@@ -263,31 +274,13 @@ namespace GitUI.Editor
                 {
                     TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
                 }
-            }
 
-            if (isRangeDiff)
-            {
-                _textHighlightService = RangeDiffHighlightService.Instance;
+                _textHighlightService.SetLineControl(_lineNumbersControl, TextEditor);
             }
-            else if (isDiff)
-            {
-                // Get if the given diff is a combined diff, with changes from all parents.
-                // <see href="https://git-scm.com/docs/git-diff#_combined_diff_format"/> for more information.
-                _textHighlightService = PatchProcessor.IsCombinedDiff(text)
-                        ? CombinedDiffHighlightService.Instance
-                        : DiffHighlightService.Instance;
-                _lineNumbersControl.DisplayLineNumFor(text);
-            }
-            else
-            {
-                _textHighlightService = TextHighlightService.Instance;
-            }
-
-            TextEditor.Text = text;
 
             // important to set after the text was changed
             // otherwise the may be rendering artifacts as noted in #5568
-            TextEditor.ShowLineNumbers = ShowLineNumbers ?? !hasLineNumberControl && !isRangeDiff;
+            TextEditor.ShowLineNumbers = ShowLineNumbers ?? !hasLineNumberControl;
             if (ShowLineNumbers.HasValue && !ShowLineNumbers.Value)
             {
                 Padding = new Padding(DpiUtil.Scale(5), Padding.Top, Padding.Right, Padding.Bottom);
@@ -295,7 +288,7 @@ namespace GitUI.Editor
 
             TextEditor.Refresh();
 
-            _currentViewPositionCache.Restore(isDiff);
+            _currentViewPositionCache.Restore(viewMode.IsPartialTextView());
 
             if (_shouldScrollToBottom || _shouldScrollToTop)
             {
@@ -436,8 +429,8 @@ namespace GitUI.Editor
         /// <param name="contextLines">Number of context lines, to include header for new diff.</param>
         public void GoToNextChange(int contextLines)
         {
-            bool isRangeDiff = _textHighlightService is RangeDiffHighlightService;
             int totalNumberOfLines = TotalNumberOfLines;
+            bool isRangeDiff = _textHighlightService is RangeDiffHighlightService;
             if (isRangeDiff)
             {
                 int line = LineAtCaret + 1;
@@ -573,7 +566,7 @@ namespace GitUI.Editor
                 // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {
-                    char[] specials = { ' ', '-', '+' };
+                    char[] specials = [' ', '-', '+'];
                     lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s[1..] : s);
                 }
 
@@ -704,9 +697,9 @@ namespace GitUI.Editor
 
         public int CurrentFileLine()
         {
-            bool isDiff = _textHighlightService is DiffHighlightService;
+            bool isPartial = _textHighlightService is DiffHighlightService;
             _currentViewPositionCache.Capture();
-            return _currentViewPositionCache.CurrentFileLine(isDiff);
+            return _currentViewPositionCache.CurrentFileLine(isPartial);
         }
 
         private int LineAtCaret

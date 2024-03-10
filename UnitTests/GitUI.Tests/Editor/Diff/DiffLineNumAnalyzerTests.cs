@@ -28,7 +28,7 @@ namespace GitUITests.Editor.Diff
         [Test]
         public void CanGetHeaders()
         {
-            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleDiff);
+            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleDiff, isCombinedDiff: false);
             List<int> headerLines = [5, 17];
             foreach (int header in headerLines)
             {
@@ -40,7 +40,7 @@ namespace GitUITests.Editor.Diff
         [Test]
         public void CanGetContextLines()
         {
-            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleDiff);
+            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleDiff, isCombinedDiff: false);
 
             result.DiffLines[6].LeftLineNumber.Should().Be(9);
             result.DiffLines[6].RightLineNumber.Should().Be(9);
@@ -58,7 +58,7 @@ namespace GitUITests.Editor.Diff
         [Test]
         public void CanGetMinusLines()
         {
-            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleDiff);
+            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleDiff, isCombinedDiff: false);
 
             result.DiffLines[9].LeftLineNumber.Should().Be(12);
             result.DiffLines[9].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
@@ -70,7 +70,7 @@ namespace GitUITests.Editor.Diff
         [Test]
         public void CanGetPlusLines()
         {
-            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleDiff);
+            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleDiff, isCombinedDiff: false);
 
             result.DiffLines[12].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
             result.DiffLines[12].RightLineNumber.Should().Be(14);
@@ -85,7 +85,7 @@ namespace GitUITests.Editor.Diff
         [Test]
         public void CanGetLineNumbersForCombinedDiff()
         {
-            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleCombinedDiff);
+            DiffLinesInfo result = _lineNumAnalyzer.Analyze(_sampleCombinedDiff, isCombinedDiff: true);
 
             result.DiffLines[6].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
             result.DiffLines[6].RightLineNumber.Should().Be(70);
