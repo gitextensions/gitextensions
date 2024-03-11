@@ -5,6 +5,7 @@ using GitUI.Infrastructure;
 using GitUI.Shells;
 using Microsoft;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs.Menus
 {
@@ -27,10 +28,10 @@ namespace GitUI.CommandsDialogs.Menus
 
         public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
         {
-            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKey(hotkeys, (int)FormBrowse.Command.GitBash);
-            gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKey(hotkeys, (int)FormBrowse.Command.GitGui);
-            kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKey(hotkeys, (int)FormBrowse.Command.GitGitK);
-            settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKey(hotkeys, (int)FormBrowse.Command.OpenSettings);
+            gitBashToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitBash);
+            gitGUIToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitGui);
+            kGitToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitGitK);
+            settingsToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenSettings);
 
             base.RefreshShortcutKeys(hotkeys);
         }

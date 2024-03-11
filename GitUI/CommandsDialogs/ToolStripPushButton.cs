@@ -3,6 +3,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
@@ -16,13 +17,14 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _behindCommitsTointegrateOrForcePush =
             new("{0} commit(s) should be integrated (or will be lost if force pushed)");
 
-        public void DisplayAheadBehindInformation(IDictionary<string, AheadBehindData>? aheadBehindData, string branchName)
+        public void DisplayAheadBehindInformation(IDictionary<string, AheadBehindData>? aheadBehindData, string branchName, string shortcut)
         {
             if (string.IsNullOrWhiteSpace(branchName)
                 || !AppSettings.ShowAheadBehindData
                 || aheadBehindData?.TryGetValue(branchName, out AheadBehindData data) is not true)
             {
                 ResetToDefaultState();
+                ToolTipText = ToolTipText.UpdateTooltipWithShortcut(shortcut);
                 return;
             }
 
@@ -30,7 +32,7 @@ namespace GitUI.CommandsDialogs
             AutoSize = true;
             Text = data.ToDisplay();
             DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            ToolTipText = GetToolTipText(data);
+            ToolTipText = GetToolTipText(data).UpdateTooltipWithShortcut(shortcut);
 
             if (!string.IsNullOrEmpty(data.BehindCount))
             {

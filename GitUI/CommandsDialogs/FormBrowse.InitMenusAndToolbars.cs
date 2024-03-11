@@ -1,11 +1,11 @@
 ﻿using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
-using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Shells;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
@@ -46,8 +46,6 @@ namespace GitUI.CommandsDialogs
                 branchToolStripMenuItem,
             }.ForEach(ColorHelper.AdaptImageLightness);
 
-            InsertFetchPullShortcuts();
-
             pullToolStripMenuItem1.Tag = AppSettings.PullAction.None;
             mergeToolStripMenuItem.Tag = AppSettings.PullAction.Merge;
             rebaseToolStripMenuItem1.Tag = AppSettings.PullAction.Rebase;
@@ -67,6 +65,8 @@ namespace GitUI.CommandsDialogs
             RefreshDefaultPullAction();
 
             FillUserShells(defaultShell: BashShell.ShellName);
+
+            InsertFetchPullShortcuts();
 
             WorkaroundToolbarLocationBug();
 
@@ -137,17 +137,23 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void UpdateTooltipWithShortcut(ToolStripItem button, Command command)
+            => UpdateTooltipWithShortcut(button, GetShortcutKeys(command));
+
+        private static void UpdateTooltipWithShortcut(ToolStripItem button, Keys keys)
+            => button.ToolTipText = button.ToolTipText.UpdateTooltipWithShortcut(keys.ToShortcutKeyToolTipString());
+
         private void InsertFetchPullShortcuts()
         {
             int i = ToolStripMain.Items.IndexOf(toolStripButtonPull);
-            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchToolStripMenuItem));
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchToolStripMenuItem, Command.QuickFetch));
             ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchAllToolStripMenuItem));
             ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchPruneAllToolStripMenuItem));
-            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(mergeToolStripMenuItem));
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(mergeToolStripMenuItem, Command.QuickPull));
             ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(rebaseToolStripMenuItem1));
-            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(pullToolStripMenuItem1));
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(pullToolStripMenuItem1, Command.PullOrFetch));
 
-            ToolStripButton CreateCorrespondingToolbarButton(ToolStripMenuItem toolStripMenuItem)
+            ToolStripButton CreateCorrespondingToolbarButton(ToolStripMenuItem toolStripMenuItem, Command? command = null)
             {
                 string toolTipText = toolStripMenuItem.Text.Replace("&", string.Empty);
                 ToolStripButton clonedToolStripMenuItem = new()
@@ -157,7 +163,7 @@ namespace GitUI.CommandsDialogs
                     Name = FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
                     Size = toolStripMenuItem.Size,
                     Text = toolTipText,
-                    ToolTipText = toolTipText,
+                    ToolTipText = toolTipText.UpdateTooltipWithShortcut(command.HasValue ? GetShortcutKeyTooltipString(command.Value) : null),
                     DisplayStyle = ToolStripItemDisplayStyle.Image,
                 };
 
@@ -307,7 +313,7 @@ namespace GitUI.CommandsDialogs
                     break;
             }
 
-            toolStripButtonPull.ToolTipText += GetShortcutKeys(Command.QuickPullOrFetch).ToShortcutKeyToolTipString();
+            UpdateTooltipWithShortcut(toolStripButtonPull, Command.QuickPullOrFetch);
         }
 
         private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
@@ -324,7 +330,7 @@ namespace GitUI.CommandsDialogs
 
                     if (status is not null)
                     {
-                        toolStripButtonCommit.Text = string.Format("{0} ({1})", _commitButtonText, status.Count);
+                        toolStripButtonCommit.Text = $"{_commitButtonText} ({status.Count})";
                         toolStripButtonCommit.AutoSize = true;
                     }
                     else

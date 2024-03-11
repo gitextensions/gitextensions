@@ -15,13 +15,13 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
-using GitUI.Hotkey;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommitInfo
 {

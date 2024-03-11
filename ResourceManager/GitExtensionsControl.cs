@@ -69,15 +69,22 @@ namespace ResourceManager
         /// <param name="hotkeySettingsName">The setting name.</param>
         protected void LoadHotkeys(string hotkeySettingsName)
         {
-            _hotkeys = null;
+            _hotkeys = GetHotkeys(hotkeySettingsName);
+        }
 
+        /// <summary>
+        ///  Get hotkeys for the specified configuration setting.
+        /// </summary>
+        /// <param name="hotkeySettingsName">The setting name.</param>
+        protected IReadOnlyList<HotkeyCommand> GetHotkeys(string hotkeySettingsName)
+        {
             if (!HotkeysEnabled || !_serviceProviderLoaded)
             {
                 // Hotkeys shall be loaded by all controls in OnRuntimeLoad
-                return;
+                return [];
             }
 
-            _hotkeys = ServiceProvider.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
+            return ServiceProvider.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
         }
 
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>

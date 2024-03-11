@@ -6,12 +6,12 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
-using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
