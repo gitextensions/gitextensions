@@ -17,7 +17,6 @@ using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
-using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -26,6 +25,7 @@ using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using ResourceManager.Hotkey;
 using TaskDialog = System.Windows.Forms.TaskDialog;
 using TaskDialogButton = System.Windows.Forms.TaskDialogButton;
 
@@ -837,6 +837,7 @@ namespace GitUI
         {
             LoadHotkeys(HotkeySettingsName);
             MenuCommands.CreateOrUpdateMenuCommands();
+            rebaseWithAdvOptionsToolStripMenuItem.ShortcutKeyDisplayString = GetHotkeys(FormBrowse.HotkeySettingsName).GetShortcutDisplay(FormBrowse.Command.Rebase);
         }
 
         public void ReloadTranslation()
