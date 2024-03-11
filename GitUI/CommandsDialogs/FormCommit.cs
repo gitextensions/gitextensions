@@ -690,11 +690,6 @@ namespace GitUI.CommandsDialogs
             SelectPrevious_AlternativeHotkey2 = 24, // Alt+Left
         }
 
-        private string GetShortcutKeyDisplayString(Command cmd)
-        {
-            return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
-        }
-
         private bool AddSelectionToCommitMessage()
         {
             if (!SelectedDiff.ContainsFocus)

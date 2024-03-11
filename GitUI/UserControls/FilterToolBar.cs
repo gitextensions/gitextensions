@@ -1,7 +1,10 @@
 ﻿using GitCommands;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
+using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.UserControls
 {
@@ -14,12 +17,11 @@ namespace GitUI.UserControls
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
         private Func<RefsFilter, IReadOnlyList<IGitRef>> _getRefs;
+        private string _tslblRevisionFilterToolTip;
 
         public FilterToolBar()
         {
             InitializeComponent();
-            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip;
-            tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent;
 
             // Select an option until we get a filter bound.
             SelectShowBranchesFilterOption(selectedIndex: 0);
@@ -479,6 +481,23 @@ namespace GitUI.UserControls
 
         internal TestAccessor GetTestAccessor()
             => new(this);
+
+        internal void RefreshBrowseDialogShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
+        {
+            _tslblRevisionFilterToolTip ??= tslblRevisionFilter.ToolTipText;
+
+            tslblRevisionFilter.ToolTipText = _tslblRevisionFilterToolTip.UpdateTooltipWithShortcut(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter));
+        }
+
+        internal void RefreshRevisionGridShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
+        {
+            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip.UpdateTooltipWithShortcut(hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowReflogReferences));
+            tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent.UpdateTooltipWithShortcut(hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowCurrentBranchOnly));
+
+            tsmiShowBranchesAll.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(RevisionGridControl.Command.ShowAllBranches);
+            tsmiShowBranchesFiltered.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(RevisionGridControl.Command.ShowFilteredBranches);
+            tsmiShowBranchesCurrent.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(RevisionGridControl.Command.ShowCurrentBranchOnly);
+        }
 
         internal readonly struct TestAccessor
         {

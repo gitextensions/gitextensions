@@ -12,12 +12,12 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
-using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.Editor
 {

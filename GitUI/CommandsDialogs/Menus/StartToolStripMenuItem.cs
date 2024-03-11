@@ -1,9 +1,9 @@
-﻿using GitCommands;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUIPluginInterfaces;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs.Menus
 {
@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs.Menus
 
         public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
         {
-            openToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKey(hotkeys, (int)FormBrowse.Command.OpenRepo);
+            openToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo);
 
             base.RefreshShortcutKeys(hotkeys);
         }

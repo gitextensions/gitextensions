@@ -19,7 +19,6 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.HelperDialogs;
-using GitUI.Hotkey;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.LeftPanel;
 using GitUI.NBugReports;
@@ -35,6 +34,7 @@ using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
@@ -283,7 +283,6 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.SuspendRefreshRevisions();
 
             ToolStripFilters.Bind(() => Module, RevisionGrid);
-            InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
 
             InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
             InitCommitDetails();
@@ -292,6 +291,8 @@ namespace GitUI.CommandsDialogs
 
             HotkeysEnabled = true;
             LoadHotkeys(HotkeySettingsName);
+            SetShortcutKeyDisplayStringsFromHotkeySettings();
+            InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
 
             UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             UICommands.BrowseRepo = this;
@@ -988,8 +989,6 @@ namespace GitUI.CommandsDialogs
 
                 toolsToolStripMenuItem.RefreshState(bareRepository);
 
-                SetShortcutKeyDisplayStringsFromHotkeySettings();
-
                 RefreshWorkingDirComboText();
 
                 OnActivate();
@@ -1021,7 +1020,7 @@ namespace GitUI.CommandsDialogs
                             // and the data will be taken from cache (so what we pass as argument is kind of useless)
                             IDictionary<string, AheadBehindData> aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
                             await this.SwitchToMainThreadAsync();
-                            toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, currentBranch);
+                            toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, currentBranch, GetShortcutKeyTooltipString(Command.Push));
                         });
                     }
 
@@ -1074,6 +1073,8 @@ namespace GitUI.CommandsDialogs
                         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
                     };
 
+                    UpdateTooltipWithShortcut(button, (Command)script.HotkeyCommandIdentifier);
+
                     button.Click += (s, e) => ExecuteCommand(script.HotkeyCommandIdentifier);
 
                     // add to toolstrip
@@ -1085,28 +1086,37 @@ namespace GitUI.CommandsDialogs
         private void SetShortcutKeyDisplayStringsFromHotkeySettings()
         {
             // Add shortcuts to the menu items
-            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Commit).ToShortcutKeyDisplayString();
-            stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Stash).ToShortcutKeyDisplayString();
-            stashStagedToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashStaged).ToShortcutKeyDisplayString();
-            stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashPop).ToShortcutKeyDisplayString();
-            closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CloseRepository).ToShortcutKeyDisplayString();
-            checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString();
-            branchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CreateBranch).ToShortcutKeyDisplayString();
-            tagToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CreateTag).ToShortcutKeyDisplayString();
-            mergeBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.MergeBranches).ToShortcutKeyDisplayString();
-            pullToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.PullOrFetch).ToShortcutKeyDisplayString();
-            pullToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeys(Command.PullOrFetch).ToShortcutKeyDisplayString();
-            pushToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Push).ToShortcutKeyDisplayString();
-            rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
+            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Commit);
+            stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Stash);
+            stashStagedToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StashStaged);
+            stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StashPop);
+            closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.CloseRepository);
+            checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.CheckoutBranch);
+            branchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.CreateBranch);
+            tagToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.CreateTag);
+            mergeBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.MergeBranches);
+            pullToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.PullOrFetch);
+            pullToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.PullOrFetch);
+            pushToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Push);
+            rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Rebase);
 
             fileToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
             helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
             toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+            ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys);
+            ToolStripFilters.RefreshRevisionGridShortcutKeys(GetHotkeys(RevisionGridControl.HotkeySettingsName));
 
             // Set shortcuts on the Browse toolbar with commands in RevGrid
             RevisionGrid.SetFilterShortcutKeys(ToolStripFilters);
 
             // TODO: add more
+            UpdateTooltipWithShortcut(toggleLeftPanel, Command.ToggleLeftPanel);
+            UpdateTooltipWithShortcut(toolStripButtonCommit, Command.Commit);
+            UpdateTooltipWithShortcut(EditSettings, Command.OpenSettings);
+            UpdateTooltipWithShortcut(branchSelect, Command.CheckoutBranch);
+            UpdateTooltipWithShortcut(toolStripFileExplorer, fileExplorerToolStripMenuItem.ShortcutKeys);
+            UpdateTooltipWithShortcut(RefreshButton, Keys.F5);
+            UpdateTooltipWithShortcut(userShell, Command.GitBash);
         }
 
         private void OnActivate()
@@ -1766,6 +1776,8 @@ namespace GitUI.CommandsDialogs
                 RevisionGrid.ResumeRefreshRevisions();
 
                 RefreshRevisions();
+
+                SetShortcutKeyDisplayStringsFromHotkeySettings();
             }
             else
             {
@@ -1835,7 +1847,7 @@ namespace GitUI.CommandsDialogs
                 ToolStripMenuItem checkoutBranchItem = new(checkoutBranchToolStripMenuItem.Text, Images.BranchCheckout)
                 {
                     ShortcutKeys = GetShortcutKeys(Command.CheckoutBranch),
-                    ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString()
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.CheckoutBranch)
                 };
 
                 branchSelect.DropDownItems.Add(checkoutBranchItem);
@@ -1973,7 +1985,7 @@ namespace GitUI.CommandsDialogs
             // Toolbar
             AddNotes = 8,
             FindFileInSelectedCommit = 9,
-            QuickPullOrFetch = 48,
+            QuickPullOrFetch = 48, // Default user action configured in toolbar
             QuickFetch = 11,
             QuickPull = 12,
             QuickPush = 13,
@@ -1998,11 +2010,6 @@ namespace GitUI.CommandsDialogs
             GoToParent = 38
 
             /* deprecated: RotateApplicationIcon = 14, */
-        }
-
-        internal Keys GetShortcutKeys(Command cmd)
-        {
-            return GetShortcutKeys((int)cmd);
         }
 
         private void AddNotes()

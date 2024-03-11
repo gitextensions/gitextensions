@@ -5,13 +5,13 @@ using GitCommands.Git;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
-using GitUI.Hotkey;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
