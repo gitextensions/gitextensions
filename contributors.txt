@@ -206,4 +206,4 @@ YYYY/MM/DD, github id, Full name, email
 2023/12/01, pmgiant, Pawel Marchewka, ppmmggiiaanntt(at)gmail.com
 2024/01/01, qgppl, Grzegorz Pachocki, g.pachocki(at)wp.pl
 2024/02/21, superhoang, Aymeric Nguyen, aymeric.nguyen(at)gmail.com
-
+2024/03/14, rstm-sf, Rustam rstm.sf(at)gmail.com

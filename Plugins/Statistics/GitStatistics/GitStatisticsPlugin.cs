@@ -11,7 +11,7 @@ namespace GitExtensions.Plugins.GitStatistics
     {
         private const string _defaultCodeFiles =
             "*.c;*.cpp;*.cc;*.cxx;*.h;*.hpp;*.hxx;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" +
-            "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb;*.js;*.jsm;*.ts;*.mk;*.java;*.os;*.bsl";
+            "*.vbs;*.vb;*.fs;*.fsx;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb;*.js;*.jsm;*.ts;*.mk;*.java;*.os;*.bsl";
 
         private readonly StringSetting _codeFiles = new("Code files", _defaultCodeFiles);
         private readonly StringSetting _ignoreDirectories = new("Directories to ignore (EndsWith)", @"\Debug;\Release;\obj;\bin;\lib");
