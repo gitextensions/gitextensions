@@ -1028,10 +1028,12 @@ namespace GitUI.CommandsDialogs
             // modifyCommitMessageButton
             //
             modifyCommitMessageButton.AutoSize = true;
+            modifyCommitMessageButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             modifyCommitMessageButton.BackColor = SystemColors.ButtonFace;
             modifyCommitMessageButton.FlatStyle = FlatStyle.Flat;
             modifyCommitMessageButton.ForeColor = SystemColors.HotTrack;
             modifyCommitMessageButton.Location = new Point(185, 55);
+            modifyCommitMessageButton.MinimumSize = new Size(149, 25);
             modifyCommitMessageButton.Name = "modifyCommitMessageButton";
             modifyCommitMessageButton.Size = new Size(149, 25);
             modifyCommitMessageButton.TabIndex = 9;
