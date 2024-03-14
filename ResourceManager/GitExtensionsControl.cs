@@ -83,14 +83,7 @@ namespace ResourceManager
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            try
-            {
-                return ProcessHotkey(keyData) || base.ProcessCmdKey(ref msg, keyData);
-            }
-            catch (OperationCanceledException)
-            {
-                return true;
-            }
+            return ProcessHotkey(keyData) || base.ProcessCmdKey(ref msg, keyData);
         }
 
         protected Keys GetShortcutKeys(int commandCode)

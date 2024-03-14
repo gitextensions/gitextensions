@@ -116,6 +116,13 @@ namespace GitUI.NBugReports
                 return;
             }
 
+            // Do not report cancellation of async implementations awaited by the UI thread (refer to https://github.com/gitextensions/gitextensions/issues/11636)
+            if (exception is OperationCanceledException or TaskCanceledException)
+            {
+                Debug.WriteLine(exception);
+                return;
+            }
+
             ExternalOperationException externalOperationException = exception as ExternalOperationException;
 
             if (externalOperationException?.InnerException?.Message?.Contains(ExecutableExtensions.DubiousOwnershipSecurityConfigString) is true)
