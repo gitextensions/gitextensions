@@ -97,8 +97,6 @@ public partial class GrepHighlightService : TextHighlightService
         {
             document.MarkerStrategy.AddMarker(tm);
         }
-
-        return;
     }
 
     private void SetText(ref string text, bool useGitColoring, string grepString)
@@ -139,7 +137,7 @@ public partial class GrepHighlightService : TextHighlightService
                     DebugHelpers.Fail($"Cannot parse lineNo for grep {line} ({sb.Length})");
                 }
 
-                // git-grep emitts an enpty line last, should not be displayed.
+                // git-grep emits an empty line last, should not be displayed.
                 // Other occurrences should not occur, just print them to debug.
                 sb.Append(line);
                 continue;
@@ -161,12 +159,12 @@ public partial class GrepHighlightService : TextHighlightService
                     Color color = AppColor.DiffAddedExtra.GetThemeColor();
                     Color forecolor = ColorHelper.GetForeColorForBackColor(color);
                     if (AnsiEscapeUtilities.TryGetTextMarker(new()
-                    {
-                        DocOffset = sb.Length + column - 1,
-                        Length = grepLength,
-                        BackColor = color,
-                        ForeColor = forecolor
-                    },
+                        {
+                            DocOffset = sb.Length + column - 1,
+                            Length = grepLength,
+                            BackColor = color,
+                            ForeColor = forecolor
+                        },
                         out TextMarker tm))
                     {
                         _textMarkers.Add(tm);

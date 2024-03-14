@@ -37,6 +37,7 @@ namespace GitUI
         private Rectangle _dragBoxFromMouseDown;
         private IDisposable? _selectedIndexChangeSubscription;
         private IDisposable? _diffListSortSubscription;
+        private SearchCommitForm _searchCommitForm;
 
         // Enable menu item to disable AppSettings.ShowDiffForAllParents in some forms
         private bool _enableDisablingShowDiffForAllParents = false;
@@ -66,6 +67,11 @@ namespace GitUI
         {
             InitializeComponent();
             InitialiseFiltering();
+            Disposed += (sender, e) =>
+            {
+                _searchCommitForm?.Dispose();
+            };
+
             _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
             _NO_TRANSLATE_openInVisualStudioMenuItem = CreateOpenInVisualStudioMenuItem();
             _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
@@ -314,7 +320,7 @@ namespace GitUI
             set
             {
                 _searchEnabledForList = value;
-                EnableSearchForList(value && AppSettings.ShowSearchCommit);
+                EnableSearchForList(value && AppSettings.ShowSearchCommit.Value);
             }
         }
 
@@ -782,7 +788,7 @@ namespace GitUI
             FileStatusListLoading();
             _enableDisablingShowDiffForAllParents = true;
             _diffCalculator.SetDiff(revisions, headId: null, allowMultiDiff: false);
-            UpdateFileStatusListView(_diffCalculator.Calculate(Array.Empty<FileStatusWithDescription>(), refreshDiff: true, refreshGrep: false, cancellationToken));
+            UpdateFileStatusListView(_diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken));
         }
 
         public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
@@ -794,7 +800,7 @@ namespace GitUI
             await TaskScheduler.Default;
             cancellationToken.ThrowIfCancellationRequested();
             _diffCalculator.SetDiff(revisions, headId, allowMultiDiff: true);
-            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(Array.Empty<FileStatusWithDescription>(), refreshDiff: true, refreshGrep: false, cancellationToken);
+            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken);
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
@@ -808,7 +814,7 @@ namespace GitUI
 
             await TaskScheduler.Default;
             cancellationToken.ThrowIfCancellationRequested();
-            gitItemStatusesWithDescription = _diffCalculator.Calculate(GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
+            gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
@@ -1514,7 +1520,7 @@ namespace GitUI
                     FileStatusListLoading();
                     ThreadHelper.FileAndForget(async () =>
                     {
-                        IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(GitItemStatusesWithDescription, refreshDiff: true, refreshGrep: false, cancellationToken);
+                        IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: true, refreshGrep: false, cancellationToken);
 
                         await this.SwitchToMainThreadAsync(cancellationToken);
                         UpdateFileStatusListView(gitItemStatusesWithDescription);
@@ -1542,9 +1548,13 @@ namespace GitUI
                 return;
             }
 
-            SearchCommitForm search = new()
+            if (_searchCommitForm?.IsDisposed is true)
             {
-                SearchFor = !string.IsNullOrEmpty(text) ? text : SearchComboBox.Text,
+                _searchCommitForm = null;
+            }
+
+            _searchCommitForm ??= new(UICommands)
+            {
                 SearchFunc = (text, delay) =>
                 {
                     SearchFiles(text, delay);
@@ -1554,11 +1564,12 @@ namespace GitUI
                 {
                     EnableSearchForList(enable);
                 },
-                SearchItems = SearchComboBox.Items,
-                Location = new Point(TopLevelControl.Location.X + 100, TopLevelControl.Location.Y + 100),
                 Owner = (Form)TopLevelControl
             };
-            search.Show();
+            _searchCommitForm.SearchFor = !string.IsNullOrEmpty(text) ? text : SearchComboBox.Text;
+            _searchCommitForm.SearchItems = SearchComboBox.Items;
+            _searchCommitForm.Location = new Point(TopLevelControl.Location.X + 100, TopLevelControl.Location.Y + 100);
+            _searchCommitForm.Show();
         }
 
         private void FileStatusListView_DoubleClick(object sender, EventArgs e)
@@ -1986,7 +1997,7 @@ namespace GitUI
                 // delay to handle keypresses
                 await Task.Delay(delay, cancellationToken);
                 _diffCalculator.SetGrep(search);
-                IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
+                IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 SearchComboBox.BackColor = string.IsNullOrEmpty(search) ? SystemColors.Window : _activeInputColor;

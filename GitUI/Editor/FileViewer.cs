@@ -376,10 +376,11 @@ namespace GitUI.Editor
 
         public ArgumentString GetExtraGrepArguments()
         {
+            int numberOfContextLines = ShowEntireFile ? 100_000 : NumberOfContextLines;
             return new ArgumentBuilder
             {
                 "-h",
-                { ShowEntireFile, "--context=9000", $"--context={NumberOfContextLines}" },
+                $"--context={numberOfContextLines}",
                 { TreatAllFilesAsText, "--text" },
             };
         }

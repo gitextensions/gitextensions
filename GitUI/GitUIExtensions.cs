@@ -105,7 +105,7 @@ namespace GitUI
             {
                 GitCommandConfiguration commandConfiguration = GrepHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring.Value);
                 ExecutionResult result = await fileViewer.Module.GetGrepFileAsync(
-                        item.SecondRevision,
+                        item.SecondRevision.ObjectId,
                         item.Item.Name,
                         fileViewer.GetExtraGrepArguments(),
                         item.Item.GrepString,
@@ -121,7 +121,6 @@ namespace GitUI
                 }
 
                 await fileViewer.ViewGrepAsync(item, text: result.StandardOutput, useGitColoring: AppSettings.UseGitColoring.Value, item.Item.GrepString);
-                return;
             }
 
             if (firstId == ObjectId.CombinedDiffId)

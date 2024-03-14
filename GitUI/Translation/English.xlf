@@ -8894,7 +8894,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="showSearchCommitToolStripMenuItem.Text">
-        <source>S&amp;earch commit...</source>
+        <source>S&amp;earch files in commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
@@ -9696,11 +9696,11 @@ Currently checked out revision:
   <file datatype="plaintext" original="SearchCommitForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Search commit</source>
+        <source>Search files in commit</source>
         <target />
       </trans-unit>
       <trans-unit id="btnSearch.Text">
-        <source>&amp;Search</source>
+        <source>Search</source>
         <target />
       </trans-unit>
       <trans-unit id="chkMatchCase.Text">
@@ -9716,11 +9716,11 @@ Currently checked out revision:
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Search:</source>
+        <source>&amp;Search:</source>
         <target />
       </trans-unit>
       <trans-unit id="lblOptions.Text">
-        <source>Options:</source>
+        <source>&amp;Options:</source>
         <target />
       </trans-unit>
     </body>

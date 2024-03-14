@@ -1,4 +1,6 @@
 ﻿
+using ICSharpCode.TextEditor.Actions;
+
 namespace GitUI
 {
 	partial class SearchCommitForm
@@ -24,7 +26,27 @@ namespace GitUI
             chkMatchCase = new CheckBox();
             btnSearch = new Button();
             chkShowSearchBox = new CheckBox();
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
             SuspendLayout();
+            // 
+            // MainPanel
+            // 
+            MainPanel.Controls.Add(chkMatchCase);
+            MainPanel.Controls.Add(chkMatchWholeWord);
+            MainPanel.Controls.Add(txtOptions);
+            MainPanel.Controls.Add(txtSearchFor);
+            MainPanel.Controls.Add(lblOptions);
+            MainPanel.Controls.Add(label1);
+            MainPanel.Padding = new Padding(9);
+            MainPanel.Size = new Size(419, 103);
+            // 
+            // ControlsPanel
+            // 
+            ControlsPanel.Controls.Add(btnSearch);
+            ControlsPanel.Controls.Add(chkShowSearchBox);
+            ControlsPanel.Location = new Point(0, 50);
+            ControlsPanel.Size = new Size(419, 41);
             // 
             // label1
             // 
@@ -33,7 +55,7 @@ namespace GitUI
             label1.Name = "label1";
             label1.Size = new Size(45, 15);
             label1.TabIndex = 0;
-            label1.Text = "Search:";
+            label1.Text = "&Search:";
             // 
             // lblOptions
             // 
@@ -42,7 +64,7 @@ namespace GitUI
             lblOptions.Name = "lblOptions";
             lblOptions.Size = new Size(52, 15);
             lblOptions.TabIndex = 2;
-            lblOptions.Text = "Options:";
+            lblOptions.Text = "&Options:";
             // 
             // txtSearchFor
             // 
@@ -51,8 +73,8 @@ namespace GitUI
             txtSearchFor.Name = "txtSearchFor";
             txtSearchFor.Size = new Size(317, 23);
             txtSearchFor.TabIndex = 1;
-            txtSearchFor.KeyDown += txtSearchFor_KeyDown;
             txtSearchFor.SelectedIndexChanged += btnSearch_Click;
+            txtSearchFor.KeyDown += txtSearchFor_KeyDown;
             // 
             // txtOptions
             // 
@@ -63,17 +85,6 @@ namespace GitUI
             txtOptions.TabIndex = 2;
             txtOptions.TextChanged += txtOptions_TextChanged;
             txtOptions.KeyDown += txtSearchFor_KeyDown;
-            // 
-            // chkMatchCase
-            // 
-            chkMatchCase.AutoSize = true;
-            chkMatchCase.Location = new Point(90, 58);
-            chkMatchCase.Name = "chkMatchCase";
-            chkMatchCase.Size = new Size(86, 19);
-            chkMatchCase.TabIndex = 4;
-            chkMatchCase.Text = "Match &case";
-            chkMatchCase.UseVisualStyleBackColor = true;
-            chkMatchCase.CheckedChanged += chkMatchCase_CheckedChanged;
             // 
             // chkMatchWholeWord
             // 
@@ -86,10 +97,33 @@ namespace GitUI
             chkMatchWholeWord.UseVisualStyleBackColor = true;
             chkMatchWholeWord.CheckedChanged += chkMatchWholeWord_CheckedChanged;
             // 
+            // chkMatchCase
+            // 
+            chkMatchCase.AutoSize = true;
+            chkMatchCase.Location = new Point(90, 58);
+            chkMatchCase.Name = "chkMatchCase";
+            chkMatchCase.Size = new Size(86, 19);
+            chkMatchCase.TabIndex = 4;
+            chkMatchCase.Text = "Match &case";
+            chkMatchCase.UseVisualStyleBackColor = true;
+            chkMatchCase.CheckedChanged += chkMatchCase_CheckedChanged;
+            // 
+            // btnSearch
+            // 
+            btnSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnSearch.DialogResult = DialogResult.Cancel;
+            btnSearch.Location = new Point(306, 8);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(100, 25);
+            btnSearch.TabIndex = 7;
+            btnSearch.Text = "Search";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
+            // 
             // chkShowSearchBox
             // 
             chkShowSearchBox.AutoSize = true;
-            chkShowSearchBox.Location = new Point(90, 106);
+            chkShowSearchBox.Location = new Point(12, 10);
             chkShowSearchBox.Name = "chkShowSearchBox";
             chkShowSearchBox.Size = new Size(125, 19);
             chkShowSearchBox.TabIndex = 6;
@@ -97,40 +131,26 @@ namespace GitUI
             chkShowSearchBox.UseVisualStyleBackColor = true;
             chkShowSearchBox.CheckedChanged += chkShowSearchBox_CheckedChanged;
             // 
-            // btnSearch
-            // 
-            btnSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnSearch.DialogResult = DialogResult.Cancel;
-            btnSearch.Location = new Point(307, 134);
-            btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(100, 25);
-            btnSearch.TabIndex = 7;
-            btnSearch.Text = "&Search";
-            btnSearch.UseVisualStyleBackColor = true;
-            btnSearch.Click += btnSearch_Click;
-            // 
             // SearchCommitForm
             // 
+            AcceptButton = btnSearch;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            CancelButton = btnSearch;
-            ClientSize = new Size(419, 169);
-            Controls.Add(chkShowSearchBox);
-            Controls.Add(chkMatchCase);
-            Controls.Add(chkMatchWholeWord);
-            Controls.Add(btnSearch);
-            Controls.Add(txtOptions);
-            Controls.Add(txtSearchFor);
-            Controls.Add(lblOptions);
-            Controls.Add(label1);
+            ClientSize = new Size(419, 144);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            HelpButton = true;
+            ManualSectionAnchorName = "diff";
+            ManualSectionSubfolder = "browse_repository";
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "SearchCommitForm";
             StartPosition = FormStartPosition.Manual;
-            Text = "Search commit";
+            Text = "Search files in commit";
             FormClosing += SearchCommitForm_FormClosing;
-            Load += SearchCommitForm_Load;
+            MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
