@@ -13,6 +13,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     [DebuggerDisplay("{Objectid} {GitRevision.Subject}")]
     public class RevisionGraphRevision
     {
+        // Enough as initial the majority of times because commits nearly never have more than 2 parents.
+        private const int InitialStackSize = 2;
         private ImmutableStack<RevisionGraphRevision> _children = ImmutableStack<RevisionGraphRevision>.Empty;
         private readonly ConcurrentQueue<RevisionGraphSegment> _startSegments = new();
 
@@ -45,6 +47,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <summary>
         /// This method is called to ensure that the score is higher than a given score.
         /// E.g. the score needs to be higher that the score of its children.
+        /// Warning: On big repositories, this method could be **really** costly.
         /// </summary>
         /// <param name="minimalScore">The minimal score to set.</param>
         /// <returns>true if Score was updated.</returns>
@@ -62,9 +65,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return Score;
             }
 
+            int traversalCount = 0;
             int maxScore = Score;
 
-            Stack<RevisionGraphRevision> stack = new();
+            Stack<RevisionGraphRevision> stack = new(InitialStackSize);
             stack.Push(this);
             while (stack.Count > 0)
             {
@@ -78,13 +82,17 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         continue;
                     }
 
+                    traversalCount++;
                     parent.Score = revision.Score + 1;
-
-                    DebugHelpers.Assert(parent.Score > revision.Score, "Reorder score failed.");
 
                     maxScore = Math.Max(parent.Score, maxScore);
                     stack.Push(parent);
                 }
+            }
+
+            if (traversalCount > 1_000_000)
+            {
+                Debug.WriteLine($"performance: Consider enabling git log commit sorting... (CommitId: {Objectid} / Traversal count: {traversalCount})");
             }
 
             return maxScore;
@@ -116,7 +124,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            Stack<RevisionGraphRevision> stack = new();
+            Stack<RevisionGraphRevision> stack = new(InitialStackSize);
             stack.Push(this);
 
             while (stack.Count > 0)
