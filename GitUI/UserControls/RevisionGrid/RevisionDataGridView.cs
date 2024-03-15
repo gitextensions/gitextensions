@@ -54,6 +54,7 @@ namespace GitUI.UserControls.RevisionGrid
         private Color _highlightedGrayTextColor;
         private Color _grayTextColor;
         private Color _highlightedGrayTextColorCustom;
+        private int _unhiddableColumnMessageIndex = 1;
 
         /// <summary>
         /// Force refresh the gridview, set when revision graph is changed while loading revisions.
@@ -231,6 +232,11 @@ namespace GitUI.UserControls.RevisionGrid
             columnProvider.Column.CellTemplate = _accessibleDataGridViewTextBoxCell;
 
             Columns.Add(columnProvider.Column);
+
+            if (columnProvider is MessageColumnProvider)
+            {
+                _unhiddableColumnMessageIndex = columnProvider.Index;
+            }
         }
 
         private Color GetForeground(bool isSelected, bool isNonRelativeGray)
@@ -336,8 +342,13 @@ namespace GitUI.UserControls.RevisionGrid
             if (!e.Handled)
             {
                 e.Handled = true;
-                _forceRefresh = true;
-                UpdateVisibleRowRange();
+
+                // Ensure triggering is done only one time per row
+                if (e.ColumnIndex == _unhiddableColumnMessageIndex)
+                {
+                    _forceRefresh = true;
+                    UpdateVisibleRowRange();
+                }
             }
         }
 
