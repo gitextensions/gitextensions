@@ -36,6 +36,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
+            e.Handled = false;
             if (AppSettings.ShowRevisionGridGraphColumn
                 && e.State.HasFlag(DataGridViewElementStates.Visible)
                 && e.RowIndex >= 0
