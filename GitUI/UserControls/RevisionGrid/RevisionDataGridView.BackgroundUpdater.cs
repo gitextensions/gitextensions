@@ -22,7 +22,7 @@
                 _cooldownMilliseconds = cooldownMilliseconds;
             }
 
-            public void ScheduleExcecution()
+            public void ScheduleExecution()
             {
                 lock (_sync)
                 {

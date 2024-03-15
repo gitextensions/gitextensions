@@ -724,7 +724,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
 
-            _backgroundUpdater.ScheduleExcecution();
+            _backgroundUpdater.ScheduleExecution();
         }
 
         private async Task UpdateVisibleRowRangeInternalAsync()
