@@ -2,6 +2,7 @@ using System.Diagnostics.Contracts;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Settings;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Patches
@@ -15,14 +16,30 @@ namespace GitCommands.Patches
             OutsidePatch
         }
 
-        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --(?<type>git|cc|combined)\s", RegexOptions.ExplicitCapture)]
+        // With Git coloring, Git add escape sequences in the beginning and end of the line.
+        private const string _escapeSequenceRegex = @"\u001b\[[^m]*m";
+        [GeneratedRegex(@$"^({_escapeSequenceRegex})?(?<line>.*?)({_escapeSequenceRegex})?\s*$", RegexOptions.ExplicitCapture)]
+        private static partial Regex EscapeSequenceRegex();
+#if DEBUG
+        // Test if Git start emit escape sequences
+        [GeneratedRegex(@$"{_escapeSequenceRegex}", RegexOptions.ExplicitCapture)]
+        private static partial Regex CheckAnyEscapeSequenceRegex();
+#endif
+
+        // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
+        // diff --git b/Benchmarks/App.config a/Benchmarks/App.config
+        // diff --cc config-enumerator
+        [GeneratedRegex(@$"^diff --(?<type>git|cc|combined)\s[""]?([abiwco12]/)?(?<filenamea>.*?)[""]?( [""]?[abiwco12]/(?<filenameb>.*?)[""]?)?\s*$", RegexOptions.ExplicitCapture)]
+        private static partial Regex PatchHeaderFileNameRegex();
+
+        [GeneratedRegex(@$"^({_escapeSequenceRegex})?diff --(?<type>git|cc|combined)\s", RegexOptions.ExplicitCapture)]
         private static partial Regex PatchHeaderRegex();
-        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --git [""]?[abiwco12]/(?<filenamea>.*)[""]? [""]?[abiwco12]/(?<filenameb>.*?)[""]?(\u001b\[.*?m)?$", RegexOptions.ExplicitCapture)]
-        private static partial Regex DiffCommandRegex();
-        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --(cc|combined) [""]?(?<filenamea>.*?)[""]?(\u001b\[.*?m)?$", RegexOptions.ExplicitCapture)]
-        private static partial Regex CombinedDiffCommandRegex();
-        [GeneratedRegex(@"(\u001b\[.*?m)?[-+]{3} [""]?[abiwco12]/(?<filename>.*)[""]?(\u001b\[.*?m)?", RegexOptions.ExplicitCapture)]
+
+        [GeneratedRegex(@$"(---|\+\+\+) [""]?[abiwco12]/(?<filename>.*)[""]?", RegexOptions.ExplicitCapture)]
         private static partial Regex FileNameRegex();
+
+        [GeneratedRegex(@$"^({_escapeSequenceRegex})?[ -+@]", RegexOptions.ExplicitCapture)]
+        private static partial Regex StartOfContentsRegex();
 
         /// <summary>
         /// Parses a patch file into individual <see cref="Patch"/> objects.
@@ -48,7 +65,7 @@ namespace GitCommands.Patches
             // skip email header
             for (; i < lines.Length; i++)
             {
-                if (IsStartOfANewPatch(lines[i]))
+                if (PatchHeaderRegex().IsMatch(lines[i]))
                 {
                     break;
                 }
@@ -71,71 +88,54 @@ namespace GitCommands.Patches
                 return null;
             }
 
-            string header = lines[lineIndex];
-
-            Match headerMatch = PatchHeaderRegex().Match(header);
-
+            string rawHeader = lines[lineIndex];
+            Match contentMatch = EscapeSequenceRegex().Match(rawHeader);
+            ReadOnlySpan<char> header = contentMatch.Groups["line"].ValueSpan;
+#if DEBUG
+            DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(header), "Git unexpectedly emits escape sequences in header other than at start/end.");
+#endif
+            Match headerMatch = PatchHeaderFileNameRegex().Match(header.ToString());
             if (!headerMatch.Success)
             {
                 return null;
             }
 
-            header = GitModule.ReEncodeFileNameFromLossless(header);
-
-            PatchProcessorState state = PatchProcessorState.InHeader;
-
-            string? fileNameA, fileNameB;
-
+            header = GitModule.ReEncodeFileNameFromLossless(header.ToString());
             bool isCombinedDiff = headerMatch.Groups["type"].Value != "git";
-
-            if (!isCombinedDiff)
+            if (!headerMatch.Success || (!isCombinedDiff && !headerMatch.Groups["filenameb"].Success))
             {
-                // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
-                // diff --git b/Benchmarks/App.config a/Benchmarks/App.config
-                Match match = DiffCommandRegex().Match(header);
-
-                if (!match.Success)
-                {
-                    throw new FormatException("Invalid patch header: " + header);
-                }
-
-                fileNameA = match.Groups["filenamea"].Value.Trim();
-                fileNameB = match.Groups["filenameb"].Value.Trim();
-            }
-            else
-            {
-                Match match = CombinedDiffCommandRegex().Match(header);
-
-                if (!match.Success)
-                {
-                    throw new FormatException("Invalid patch header: " + header);
-                }
-
-                fileNameA = match.Groups["filenamea"].Value.Trim();
-                fileNameB = null;
+                throw new FormatException($"Invalid patch header: {header}");
             }
 
-            string? index = null;
-            PatchChangeType changeType = PatchChangeType.ChangeFile;
-            PatchFileType fileType = PatchFileType.Text;
+            string fileNameA = headerMatch.Groups["filenamea"].Value.Trim();
+            string? fileNameB = isCombinedDiff ? null : headerMatch.Groups["filenameb"].Value.Trim();
+
             StringBuilder patchText = new();
 
-            patchText.Append(header);
+            patchText.Append(ReaddEscapes(rawHeader, header, contentMatch));
             if (lineIndex < lines.Length - 1)
             {
                 patchText.Append('\n');
             }
 
+            PatchProcessorState state = PatchProcessorState.InHeader;
+            PatchChangeType changeType = PatchChangeType.ChangeFile;
+            PatchFileType fileType = PatchFileType.Text;
+            ReadOnlySpan<char> index = null;
+
             bool done = false;
             int i = lineIndex + 1;
-
             for (; i < lines.Length; i++)
             {
-                string line = lines[i];
+                string rawLine = lines[i];
+                Match lineMatch = EscapeSequenceRegex().Match(rawLine);
+                ReadOnlySpan<char> line = lineMatch.Groups["line"].ValueSpan;
+#if DEBUG
+                DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(header), "Git unexpectedly emits escape sequences in header other than at start/end.");
+#endif
 
-                if (IsStartOfANewPatch(line))
+                if (PatchHeaderRegex().IsMatch(line))
                 {
-                    lineIndex = i - 1;
                     done = true;
                     break;
                 }
@@ -148,22 +148,14 @@ namespace GitCommands.Patches
                 }
 
                 // header lines are encoded in GitModule.SystemEncoding
-                line = GitModule.ReEncodeStringFromLossless(line, GitModule.SystemEncoding);
+                line = GitModule.ReEncodeStringFromLossless(line.ToString(), GitModule.SystemEncoding);
 
                 if (line.StartsWith("index "))
                 {
                     // Index line
                     index = line;
-                    patchText.Append(line);
-                    if (i < lines.Length - 1)
-                    {
-                        patchText.Append('\n');
-                    }
-
-                    continue;
                 }
-
-                if (line.StartsWith("new file mode "))
+                else if (line.StartsWith("new file mode "))
                 {
                     changeType = PatchChangeType.NewFile;
                 }
@@ -180,7 +172,7 @@ namespace GitCommands.Patches
                     // Unlisted binary file deletion
                     if (changeType != PatchChangeType.DeleteFile)
                     {
-                        throw new FormatException("Change not parsed correctly: " + line);
+                        throw new FormatException($"Invalid patch header: {line}");
                     }
 
                     fileType = PatchFileType.Binary;
@@ -192,7 +184,7 @@ namespace GitCommands.Patches
                     // Unlisted binary file addition
                     if (changeType != PatchChangeType.NewFile)
                     {
-                        throw new FormatException("Change not parsed correctly: " + line);
+                        throw new FormatException($"Invalid patch header: {line}");
                     }
 
                     fileType = PatchFileType.Binary;
@@ -211,14 +203,14 @@ namespace GitCommands.Patches
                     // there is no old file, so this should be a new file
                     if (changeType != PatchChangeType.NewFile)
                     {
-                        throw new FormatException("Change not parsed correctly: " + line);
+                        throw new FormatException($"Invalid patch header: {line}");
                     }
                 }
                 else if (line.StartsWith("--- "))
                 {
                     // old file name
-                    line = GitModule.UnescapeOctalCodePoints(line);
-                    Match regexMatch = FileNameRegex().Match(line);
+                    line = GitModule.UnescapeOctalCodePoints(line.ToString());
+                    Match regexMatch = FileNameRegex().Match(line.ToString());
 
                     if (regexMatch.Success)
                     {
@@ -226,7 +218,7 @@ namespace GitCommands.Patches
                     }
                     else
                     {
-                        throw new FormatException("Old filename not parsed correctly: " + line);
+                        throw new FormatException($"Invalid patch header: {line}");
                     }
                 }
                 else if (line.StartsWith("+++ /dev/null"))
@@ -234,14 +226,14 @@ namespace GitCommands.Patches
                     // there is no new file, so this should be a deleted file
                     if (changeType != PatchChangeType.DeleteFile)
                     {
-                        throw new FormatException("Change not parsed correctly: " + line);
+                        throw new FormatException($"Invalid patch header: {line}");
                     }
                 }
                 else if (line.StartsWith("+++ "))
                 {
                     // new file name
-                    line = GitModule.UnescapeOctalCodePoints(line);
-                    Match regexMatch = FileNameRegex().Match(line);
+                    line = GitModule.UnescapeOctalCodePoints(line.ToString());
+                    Match regexMatch = FileNameRegex().Match(line.ToString());
 
                     if (regexMatch.Success)
                     {
@@ -249,12 +241,12 @@ namespace GitCommands.Patches
                     }
                     else
                     {
-                        throw new FormatException("New filename not parsed correctly: " + line);
+                        throw new FormatException($"Invalid patch header: {line}");
                     }
                 }
 
-                patchText.Append(line);
-
+                // patchText.Append($"{rawLine[..lineMatch.Index]}{line}{rawLine[(lineMatch.Index + lineMatch.Length)..]}");
+                patchText.Append(ReaddEscapes(rawLine, line, lineMatch));
                 if (i < lines.Length - 1)
                 {
                     patchText.Append('\n');
@@ -265,49 +257,30 @@ namespace GitCommands.Patches
             for (; !done && i < lines.Length; i++)
             {
                 string line = lines[i];
-
-                if (IsStartOfANewPatch(line))
+                if (PatchHeaderRegex().IsMatch(line))
                 {
-                    lineIndex = i - 1;
                     break;
                 }
 
-                if (state == PatchProcessorState.InBody && line.StartsWithAny(new[] { " ", "-", "+", "@" }))
-                {
-                    // diff content
-                    line = GitModule.ReEncodeStringFromLossless(line, filesContentEncoding.Value);
-                }
-                else
-                {
-                    // warnings, messages ...
-                    line = GitModule.ReEncodeStringFromLossless(line, GitModule.SystemEncoding);
-                }
+                Encoding encoding = (state == PatchProcessorState.InBody && StartOfContentsRegex().IsMatch(line))
+                    ? filesContentEncoding.Value // diff content
+                    : GitModule.SystemEncoding; // warnings, messages ...
 
+                line = GitModule.ReEncodeStringFromLossless(line, encoding);
+                patchText.Append(line);
                 if (i < lines.Length - 1)
                 {
-                    line += "\n";
+                    patchText.Append('\n');
                 }
-
-                patchText.Append(line);
             }
 
             lineIndex = i - 1;
 
-            return new Patch(header, index, fileType, fileNameA, fileNameB, isCombinedDiff, changeType, patchText.ToString());
-        }
+            return new Patch(header.ToString(), index.ToString(), fileType, fileNameA, fileNameB, changeType, patchText.ToString());
 
-        public static bool IsCombinedDiff(string? diff)
-        {
-            // diff --combined describe.c
-            // diff --cc describe.c
-            return !string.IsNullOrWhiteSpace(diff) &&
-                   (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
-        }
-
-        [Pure]
-        private static bool IsStartOfANewPatch(string input)
-        {
-            return PatchHeaderRegex().IsMatch(input);
+            // Add the escape sequences back to the header
+            string ReaddEscapes(string rawLine, ReadOnlySpan<char> line, Match lineMatch)
+                => $"{rawLine[..lineMatch.Index]}{line}{rawLine[(lineMatch.Index + lineMatch.Length)..]}";
         }
     }
 }
