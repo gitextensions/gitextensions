@@ -484,7 +484,10 @@ namespace GitUI.CommandsDialogs
             LoadCustomDifftools();
 
             base.OnLoad(e);
+        }
 
+        private void RestoreSplitters()
+        {
             _splitterManager.AddSplitter(splitMain, nameof(splitMain));
             _splitterManager.AddSplitter(splitRight, nameof(splitRight));
             _splitterManager.AddSplitter(splitLeft, nameof(splitLeft));

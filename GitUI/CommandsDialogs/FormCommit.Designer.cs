@@ -1552,8 +1552,8 @@ namespace GitUI.CommandsDialogs
             commitStatusStrip.ResumeLayout(false);
             commitStatusStrip.PerformLayout();
             ResumeLayout(false);
+            RestoreSplitters();
             PerformLayout();
-
         }
 
         #endregion
