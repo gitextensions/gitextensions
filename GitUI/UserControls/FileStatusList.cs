@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reactive.Linq;
@@ -61,7 +62,12 @@ namespace GitUI
         [DefaultValue(false)]
         public bool DisableSubmoduleMenuItemBold { get; set; }
 
-        private readonly Dictionary<string, int> _stateImageIndexDict = [];
+        private static readonly ImageListData _imageListData;
+
+        static FileStatusList()
+        {
+            _imageListData = CreateImageListData();
+        }
 
         public FileStatusList()
         {
@@ -85,8 +91,8 @@ namespace GitUI
 
             SelectFirstItemOnSetItems = true;
 
-            FileStatusListView.SmallImageList = CreateImageList();
-            FileStatusListView.LargeImageList = FileStatusListView.SmallImageList;
+            FileStatusListView.SmallImageList = _imageListData.ImageList;
+            FileStatusListView.LargeImageList = _imageListData.ImageList;
 
             NoFiles.Text = TranslatedStrings.NoChanges;
             LoadingFiles.Text = TranslatedStrings.LoadingData;
@@ -116,79 +122,6 @@ namespace GitUI
             base.Enter += FileStatusList_Enter;
 
             return;
-
-            ImageList CreateImageList()
-            {
-                const int rowHeight = 18;
-
-                ImageList list = new()
-                {
-                    ColorDepth = ColorDepth.Depth32Bit,
-                    ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
-                };
-
-                (string imageKey, Bitmap icon)[] images = new (string imageKey, Bitmap icon)[]
-                {
-                    (nameof(Images.FileStatusUnknown), ScaleHeight(Images.FileStatusUnknown)),
-                    (nameof(Images.FileStatusModified), ScaleHeight(Images.FileStatusModified)),
-                    (nameof(Images.FileStatusModifiedOnlyA), ScaleHeight(Images.FileStatusModifiedOnlyA)),
-                    (nameof(Images.FileStatusModifiedOnlyB), ScaleHeight(Images.FileStatusModifiedOnlyB)),
-                    (nameof(Images.FileStatusModifiedSame), ScaleHeight(Images.FileStatusModifiedSame)),
-                    (nameof(Images.FileStatusModifiedUnequal), ScaleHeight(Images.FileStatusModifiedUnequal)),
-                    (nameof(Images.FileStatusAdded), ScaleHeight(Images.FileStatusAdded)),
-                    (nameof(Images.FileStatusAddedOnlyA), ScaleHeight(Images.FileStatusAddedOnlyA)),
-                    (nameof(Images.FileStatusAddedOnlyB), ScaleHeight(Images.FileStatusAddedOnlyB)),
-                    (nameof(Images.FileStatusAddedSame), ScaleHeight(Images.FileStatusAddedSame)),
-                    (nameof(Images.FileStatusAddedUnequal), ScaleHeight(Images.FileStatusAddedUnequal)),
-                    (nameof(Images.FileStatusRemoved), ScaleHeight(Images.FileStatusRemoved)),
-                    (nameof(Images.FileStatusRemovedOnlyA), ScaleHeight(Images.FileStatusRemovedOnlyA)),
-                    (nameof(Images.FileStatusRemovedOnlyB), ScaleHeight(Images.FileStatusRemovedOnlyB)),
-                    (nameof(Images.FileStatusRemovedSame), ScaleHeight(Images.FileStatusRemovedSame)),
-                    (nameof(Images.FileStatusRemovedUnequal), ScaleHeight(Images.FileStatusRemovedUnequal)),
-                    (nameof(Images.Unmerged), ScaleHeight(Images.Unmerged)),
-                    (nameof(Images.FileStatusRenamed), ScaleHeight(Images.FileStatusRenamed.AdaptLightness())),
-                    (nameof(Images.FileStatusRenamedOnlyA), ScaleHeight(Images.FileStatusRenamedOnlyA)),
-                    (nameof(Images.FileStatusRenamedOnlyB), ScaleHeight(Images.FileStatusRenamedOnlyB)),
-                    (nameof(Images.FileStatusRenamedSame), ScaleHeight(Images.FileStatusRenamedSame)),
-                    (nameof(Images.FileStatusRenamedUnequal), ScaleHeight(Images.FileStatusRenamedUnequal)),
-                    (nameof(Images.FileStatusCopied), ScaleHeight(Images.FileStatusCopied)),
-                    (nameof(Images.FileStatusCopiedOnlyA), ScaleHeight(Images.FileStatusCopiedOnlyA)),
-                    (nameof(Images.FileStatusCopiedOnlyB), ScaleHeight(Images.FileStatusCopiedOnlyB)),
-                    (nameof(Images.FileStatusCopiedSame), ScaleHeight(Images.FileStatusCopiedSame)),
-                    (nameof(Images.FileStatusCopiedUnequal), ScaleHeight(Images.FileStatusCopiedUnequal)),
-                    (nameof(Images.SubmodulesManage), ScaleHeight(Images.SubmodulesManage)),
-                    (nameof(Images.FolderSubmodule), ScaleHeight(Images.FolderSubmodule)),
-                    (nameof(Images.SubmoduleDirty), ScaleHeight(Images.SubmoduleDirty)),
-                    (nameof(Images.SubmoduleRevisionUp), ScaleHeight(Images.SubmoduleRevisionUp)),
-                    (nameof(Images.SubmoduleRevisionUpDirty), ScaleHeight(Images.SubmoduleRevisionUpDirty)),
-                    (nameof(Images.SubmoduleRevisionDown), ScaleHeight(Images.SubmoduleRevisionDown)),
-                    (nameof(Images.SubmoduleRevisionDownDirty), ScaleHeight(Images.SubmoduleRevisionDownDirty)),
-                    (nameof(Images.SubmoduleRevisionSemiUp), ScaleHeight(Images.SubmoduleRevisionSemiUp)),
-                    (nameof(Images.SubmoduleRevisionSemiUpDirty), ScaleHeight(Images.SubmoduleRevisionSemiUpDirty)),
-                    (nameof(Images.SubmoduleRevisionSemiDown), ScaleHeight(Images.SubmoduleRevisionSemiDown)),
-                    (nameof(Images.SubmoduleRevisionSemiDownDirty), ScaleHeight(Images.SubmoduleRevisionSemiDownDirty)),
-                    (nameof(Images.ViewFile), ScaleHeight(Images.ViewFile)),
-                    (nameof(Images.Diff), ScaleHeight(Images.Diff))
-                };
-
-                for (int i = 0; i < images.Length; i++)
-                {
-                    list.Images.Add(images[i].icon);
-                    _stateImageIndexDict.Add(images[i].imageKey, i);
-                }
-
-                return list;
-
-                static Bitmap ScaleHeight(Bitmap input)
-                {
-                    DebugHelpers.Assert(input.Height < rowHeight, "Can only increase row height");
-                    Bitmap scaled = new(input.Width, rowHeight, input.PixelFormat);
-                    using Graphics g = Graphics.FromImage(scaled);
-                    g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);
-
-                    return scaled;
-                }
-            }
 
             ToolStripMenuItem CreateOpenSubmoduleMenuItem()
             {
@@ -220,6 +153,82 @@ namespace GitUI
                     }
                 };
                 return item;
+            }
+        }
+
+        private record ImageListData(ImageList ImageList, FrozenDictionary<string, int> StateImageIndexDict);
+
+        private static ImageListData CreateImageListData()
+        {
+            const int rowHeight = 18;
+
+            ImageList list = new()
+            {
+                ColorDepth = ColorDepth.Depth32Bit,
+                ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
+            };
+
+            (string imageKey, Bitmap icon)[] images =
+            [
+                (nameof(Images.FileStatusUnknown), ScaleHeight(Images.FileStatusUnknown)),
+                (nameof(Images.FileStatusModified), ScaleHeight(Images.FileStatusModified)),
+                (nameof(Images.FileStatusModifiedOnlyA), ScaleHeight(Images.FileStatusModifiedOnlyA)),
+                (nameof(Images.FileStatusModifiedOnlyB), ScaleHeight(Images.FileStatusModifiedOnlyB)),
+                (nameof(Images.FileStatusModifiedSame), ScaleHeight(Images.FileStatusModifiedSame)),
+                (nameof(Images.FileStatusModifiedUnequal), ScaleHeight(Images.FileStatusModifiedUnequal)),
+                (nameof(Images.FileStatusAdded), ScaleHeight(Images.FileStatusAdded)),
+                (nameof(Images.FileStatusAddedOnlyA), ScaleHeight(Images.FileStatusAddedOnlyA)),
+                (nameof(Images.FileStatusAddedOnlyB), ScaleHeight(Images.FileStatusAddedOnlyB)),
+                (nameof(Images.FileStatusAddedSame), ScaleHeight(Images.FileStatusAddedSame)),
+                (nameof(Images.FileStatusAddedUnequal), ScaleHeight(Images.FileStatusAddedUnequal)),
+                (nameof(Images.FileStatusRemoved), ScaleHeight(Images.FileStatusRemoved)),
+                (nameof(Images.FileStatusRemovedOnlyA), ScaleHeight(Images.FileStatusRemovedOnlyA)),
+                (nameof(Images.FileStatusRemovedOnlyB), ScaleHeight(Images.FileStatusRemovedOnlyB)),
+                (nameof(Images.FileStatusRemovedSame), ScaleHeight(Images.FileStatusRemovedSame)),
+                (nameof(Images.FileStatusRemovedUnequal), ScaleHeight(Images.FileStatusRemovedUnequal)),
+                (nameof(Images.Unmerged), ScaleHeight(Images.Unmerged)),
+                (nameof(Images.FileStatusRenamed), ScaleHeight(Images.FileStatusRenamed.AdaptLightness())),
+                (nameof(Images.FileStatusRenamedOnlyA), ScaleHeight(Images.FileStatusRenamedOnlyA)),
+                (nameof(Images.FileStatusRenamedOnlyB), ScaleHeight(Images.FileStatusRenamedOnlyB)),
+                (nameof(Images.FileStatusRenamedSame), ScaleHeight(Images.FileStatusRenamedSame)),
+                (nameof(Images.FileStatusRenamedUnequal), ScaleHeight(Images.FileStatusRenamedUnequal)),
+                (nameof(Images.FileStatusCopied), ScaleHeight(Images.FileStatusCopied)),
+                (nameof(Images.FileStatusCopiedOnlyA), ScaleHeight(Images.FileStatusCopiedOnlyA)),
+                (nameof(Images.FileStatusCopiedOnlyB), ScaleHeight(Images.FileStatusCopiedOnlyB)),
+                (nameof(Images.FileStatusCopiedSame), ScaleHeight(Images.FileStatusCopiedSame)),
+                (nameof(Images.FileStatusCopiedUnequal), ScaleHeight(Images.FileStatusCopiedUnequal)),
+                (nameof(Images.SubmodulesManage), ScaleHeight(Images.SubmodulesManage)),
+                (nameof(Images.FolderSubmodule), ScaleHeight(Images.FolderSubmodule)),
+                (nameof(Images.SubmoduleDirty), ScaleHeight(Images.SubmoduleDirty)),
+                (nameof(Images.SubmoduleRevisionUp), ScaleHeight(Images.SubmoduleRevisionUp)),
+                (nameof(Images.SubmoduleRevisionUpDirty), ScaleHeight(Images.SubmoduleRevisionUpDirty)),
+                (nameof(Images.SubmoduleRevisionDown), ScaleHeight(Images.SubmoduleRevisionDown)),
+                (nameof(Images.SubmoduleRevisionDownDirty), ScaleHeight(Images.SubmoduleRevisionDownDirty)),
+                (nameof(Images.SubmoduleRevisionSemiUp), ScaleHeight(Images.SubmoduleRevisionSemiUp)),
+                (nameof(Images.SubmoduleRevisionSemiUpDirty), ScaleHeight(Images.SubmoduleRevisionSemiUpDirty)),
+                (nameof(Images.SubmoduleRevisionSemiDown), ScaleHeight(Images.SubmoduleRevisionSemiDown)),
+                (nameof(Images.SubmoduleRevisionSemiDownDirty), ScaleHeight(Images.SubmoduleRevisionSemiDownDirty)),
+                (nameof(Images.ViewFile), ScaleHeight(Images.ViewFile)),
+                (nameof(Images.Diff), ScaleHeight(Images.Diff))
+            ];
+
+            Dictionary<string, int> stateImageIndexDict = [];
+            for (int i = 0; i < images.Length; i++)
+            {
+                list.Images.Add(images[i].icon);
+                stateImageIndexDict.Add(images[i].imageKey, i);
+            }
+
+            return new ImageListData(list, stateImageIndexDict.ToFrozenDictionary());
+
+            static Bitmap ScaleHeight(Bitmap input)
+            {
+                DebugHelpers.Assert(input.Height < rowHeight, "Can only increase row height");
+                Bitmap scaled = new(input.Width, rowHeight, input.PixelFormat);
+                using Graphics g = Graphics.FromImage(scaled);
+                g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);
+
+                return scaled;
             }
         }
 
@@ -1200,9 +1209,9 @@ namespace GitUI
             int GetItemImageIndex(GitItemStatus gitItemStatus)
             {
                 string imageKey = GetItemImageKey(gitItemStatus);
-                return _stateImageIndexDict.TryGetValue(imageKey, out int value)
+                return _imageListData.StateImageIndexDict.TryGetValue(imageKey, out int value)
                     ? value
-                    : _stateImageIndexDict[nameof(Images.FileStatusUnknown)];
+                    : _imageListData.StateImageIndexDict[nameof(Images.FileStatusUnknown)];
             }
 
             static string GetItemImageKey(GitItemStatus gitItemStatus)
