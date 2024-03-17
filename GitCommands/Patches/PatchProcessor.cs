@@ -136,7 +136,7 @@ namespace GitCommands.Patches
                 Match lineMatch = StripWrappingEscapesSequenceRegex().Match(rawLine);
                 ReadOnlySpan<char> line = lineMatch.Groups["line"].ValueSpan;
 #if DEBUG
-                DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(header), "Git unexpectedly emits escape sequences in header other than at start/end.");
+                DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(line), "Git unexpectedly emits escape sequences in header other than at start/end.");
 #endif
 
                 if (PatchHeaderRegex().IsMatch(line))
