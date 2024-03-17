@@ -16,12 +16,13 @@ namespace GitCommands.Patches
             OutsidePatch
         }
 
-        // With Git coloring, Git add escape sequences in the beginning and end of the line.
+        // With Git coloring, Git adds escape sequences at the start and end of the line.
         private const string _escapeSequenceRegex = @"\u001b\[[^m]*m";
         [GeneratedRegex(@$"^({_escapeSequenceRegex})?(?<line>.*?)({_escapeSequenceRegex})?\s*$", RegexOptions.ExplicitCapture)]
-        private static partial Regex EscapeSequenceRegex();
+        private static partial Regex StripWrappingEscapesSequenceRegex();
+
 #if DEBUG
-        // Test if Git start emit escape sequences
+        // Check whether Git starts to emit escape sequences inside the patch header.
         [GeneratedRegex(@$"{_escapeSequenceRegex}", RegexOptions.ExplicitCapture)]
         private static partial Regex CheckAnyEscapeSequenceRegex();
 #endif
@@ -89,18 +90,20 @@ namespace GitCommands.Patches
             }
 
             string rawHeader = lines[lineIndex];
-            Match contentMatch = EscapeSequenceRegex().Match(rawHeader);
+            Match contentMatch = StripWrappingEscapesSequenceRegex().Match(rawHeader);
             ReadOnlySpan<char> header = contentMatch.Groups["line"].ValueSpan;
 #if DEBUG
             DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(header), "Git unexpectedly emits escape sequences in header other than at start/end.");
 #endif
-            Match headerMatch = PatchHeaderFileNameRegex().Match(header.ToString());
+            string headerStr = header.ToString();
+            Match headerMatch = PatchHeaderFileNameRegex().Match(headerStr);
             if (!headerMatch.Success)
             {
                 return null;
             }
 
-            header = GitModule.ReEncodeFileNameFromLossless(header.ToString());
+            header = GitModule.ReEncodeFileNameFromLossless(headerStr);
+            headerStr = null; // Reset temporary cache
             bool isCombinedDiff = headerMatch.Groups["type"].Value != "git";
             if (!headerMatch.Success || (!isCombinedDiff && !headerMatch.Groups["filenameb"].Success))
             {
@@ -125,10 +128,12 @@ namespace GitCommands.Patches
 
             bool done = false;
             int i = lineIndex + 1;
+
+            // Process patch header
             for (; i < lines.Length; i++)
             {
                 string rawLine = lines[i];
-                Match lineMatch = EscapeSequenceRegex().Match(rawLine);
+                Match lineMatch = StripWrappingEscapesSequenceRegex().Match(rawLine);
                 ReadOnlySpan<char> line = lineMatch.Groups["line"].ValueSpan;
 #if DEBUG
                 DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(header), "Git unexpectedly emits escape sequences in header other than at start/end.");
@@ -245,7 +250,6 @@ namespace GitCommands.Patches
                     }
                 }
 
-                // patchText.Append($"{rawLine[..lineMatch.Index]}{line}{rawLine[(lineMatch.Index + lineMatch.Length)..]}");
                 patchText.Append(ReaddEscapes(rawLine, line, lineMatch));
                 if (i < lines.Length - 1)
                 {
