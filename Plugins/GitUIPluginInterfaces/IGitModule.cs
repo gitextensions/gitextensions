@@ -446,7 +446,7 @@ namespace GitUIPluginInterfaces
 
         GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines = null, CancellationToken cancellationToken = default);
 
-        IReadOnlyList<GitItemStatus>? GetGrepFilesStatus(ObjectId objectId, string greps, CancellationToken cancellationToken = default);
+        IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string greps, CancellationToken cancellationToken = default);
         Task<ExecutionResult> GetGrepFileAsync(ObjectId objectId, string fileName, ArgumentString extraArgs, string grepString, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken = default);
     }
 }

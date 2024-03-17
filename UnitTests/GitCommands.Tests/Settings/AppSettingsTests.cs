@@ -163,6 +163,10 @@ namespace GitCommandsTests.Settings
                 Dictionary<string, PropertyInfo> properties = typeof(AppSettings).GetProperties()
                     .ToDictionary(x => x.Name, x => x);
 
+                const bool isISetting = true;
+                const bool isNoISetting = false;
+                const bool isNotNullable = false;
+
                 yield return (properties[nameof(AppSettings.TelemetryEnabled)], null, true, false);
                 yield return (properties[nameof(AppSettings.AutoNormaliseBranchName)], true, false, false);
                 yield return (properties[nameof(AppSettings.RememberAmendCommitState)], true, false, false);
@@ -290,12 +294,12 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RevisionGridQuickSearchTimeout)], 4000, false, false);
                 yield return (properties[nameof(AppSettings.MaxRevisionGraphCommits)], 100000, false, false);
                 yield return (properties[nameof(AppSettings.ShowDiffForAllParents)], true, false, false);
-                yield return (properties[nameof(AppSettings.ShowSearchCommit)], false, false, false);
-                yield return (properties[nameof(AppSettings.ShowAvailableDiffTools)], true, false, false);
-                yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, false, false);
-                yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", false, false);
-                yield return (properties[nameof(AppSettings.GitGrepIgnoreCase)], false, false, false);
-                yield return (properties[nameof(AppSettings.GitGrepMatchWholeWord)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowSearchCommit)], false, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.ShowAvailableDiffTools)], true, isNotNullable, isNoISetting);
+                yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, isNotNullable, isNoISetting);
+                yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.GitGrepIgnoreCase)], false, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.GitGrepMatchWholeWord)], false, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.RecentWorkingDir)], null, true, false);
                 yield return (properties[nameof(AppSettings.StartWithRecentWorkingDir)], false, false, false);
                 yield return (properties[nameof(AppSettings.AutoStartPageant)], true, false, false);

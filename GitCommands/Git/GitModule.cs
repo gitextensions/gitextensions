@@ -2318,7 +2318,7 @@ namespace GitCommands
                 cancellationToken: cancellationToken);
         }
 
-        public IReadOnlyList<GitItemStatus>? GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken = default)
+        public IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken = default)
         {
             List<GitItemStatus> result = [];
             ExecutionResult exec = GetGrepFiles(objectId, grepString, cancellationToken);

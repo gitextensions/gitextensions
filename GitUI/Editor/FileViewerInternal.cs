@@ -389,10 +389,11 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Get the next/previous line for the grep match.
+        /// Get the next/previous line for the grep match,
+        /// updating the current line.
         /// </summary>
         /// <param name="next"><c>true</c> if next position, <c>false</c> if previous.</param>
-        /// <returns><c>true</c> if.</returns>
+        /// <returns><c>true</c> if this is is a grep string.</returns>
         public bool GetMatchLine(bool next)
         {
             if (_textHighlightService is not GrepHighlightService grepHighlightService)

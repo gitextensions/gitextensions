@@ -310,7 +310,7 @@ namespace GitUI
                 return null;
             }
 
-            IReadOnlyList<GitItemStatus>? statuses = GetModule().GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, cancellationToken);
+            IReadOnlyList<GitItemStatus> statuses = GetModule().GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, cancellationToken);
 
             return new FileStatusWithDescription(
                                firstRev: null,
