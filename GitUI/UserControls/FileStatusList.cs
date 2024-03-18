@@ -1567,7 +1567,7 @@ namespace GitUI
                 Owner = (Form)TopLevelControl
             };
             _searchCommitForm.SearchFor = !string.IsNullOrEmpty(text) ? text : SearchComboBox.Text;
-            _searchCommitForm.SearchItems = SearchComboBox.Items;
+            _searchCommitForm.SetSearchItems(SearchComboBox.Items);
             _searchCommitForm.Location = new Point(TopLevelControl.Location.X + 100, TopLevelControl.Location.Y + 100);
             _searchCommitForm.Show();
         }

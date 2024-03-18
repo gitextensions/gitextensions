@@ -23,14 +23,12 @@ public partial class SearchCommitForm : GitExtensionsDialog
 
     public Action<string, int> SearchFunc;
     public Action<bool> EnableSearchBoxFunc;
-    public ComboBox.ObjectCollection SearchItems
+    public void SetSearchItems(ComboBox.ObjectCollection items)
     {
-        set
+        txtSearchFor.Items.Clear();
+        foreach (object item in items)
         {
-            foreach (object item in value)
-            {
-                txtSearchFor.Items.Add(item);
-            }
+            txtSearchFor.Items.Add(item);
         }
     }
 
@@ -100,7 +98,7 @@ public partial class SearchCommitForm : GitExtensionsDialog
             }
 
             const int SearchFilterMaxLength = 30;
-            if (txtSearchFor.Items.Count == SearchFilterMaxLength)
+            if (txtSearchFor.Items.Count >= SearchFilterMaxLength)
             {
                 txtSearchFor.Items.RemoveAt(SearchFilterMaxLength - 1);
             }
