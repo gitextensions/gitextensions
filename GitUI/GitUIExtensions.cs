@@ -121,6 +121,7 @@ namespace GitUI
                 }
 
                 await fileViewer.ViewGrepAsync(item, text: result.StandardOutput, useGitColoring: AppSettings.UseGitColoring.Value, item.Item.GrepString);
+                return;
             }
 
             if (firstId == ObjectId.CombinedDiffId)
