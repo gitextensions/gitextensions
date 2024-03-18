@@ -14,7 +14,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     public class RevisionGraphRevision
     {
         // Enough as initial the majority of times because commits nearly never have more than 2 parents.
-        private const int InitialStackSize = 2;
+        private const int _initialParentStackCapacity = 2;
         private ImmutableStack<RevisionGraphRevision> _children = ImmutableStack<RevisionGraphRevision>.Empty;
         private readonly ConcurrentQueue<RevisionGraphSegment> _startSegments = new();
 
@@ -68,12 +68,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             int traversalCount = 0;
             int maxScore = Score;
 
-            Stack<RevisionGraphRevision> stack = new(InitialStackSize);
+            Stack<RevisionGraphRevision> stack = new(_initialParentStackCapacity);
             stack.Push(this);
             while (stack.Count > 0)
             {
                 RevisionGraphRevision revision = stack.Pop();
 
+                RevisionGraphRevision previous = null;
                 foreach (RevisionGraphSegment segment in revision._startSegments)
                 {
                     RevisionGraphRevision parent = segment.Parent;
@@ -86,7 +87,31 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     parent.Score = revision.Score + 1;
 
                     maxScore = Math.Max(parent.Score, maxScore);
-                    stack.Push(parent);
+
+                    // Without using a collection (due to performance cost),
+                    // try to queue first parent with a more complex history (i.e. more parents)
+                    // by comparing **only** with previous sibling.
+                    if (previous is null)
+                    {
+                        previous = parent;
+                    }
+                    else
+                    {
+                        if (previous._startSegments.Count >= parent._startSegments.Count)
+                        {
+                            stack.Push(previous);
+                            previous = parent;
+                        }
+                        else
+                        {
+                            stack.Push(parent);
+                        }
+                    }
+                }
+
+                if (previous is not null)
+                {
+                    stack.Push(previous);
                 }
             }
 
@@ -124,7 +149,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            Stack<RevisionGraphRevision> stack = new(InitialStackSize);
+            Stack<RevisionGraphRevision> stack = new(_initialParentStackCapacity);
             stack.Push(this);
 
             while (stack.Count > 0)
