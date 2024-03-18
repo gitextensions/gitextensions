@@ -91,19 +91,17 @@ namespace GitCommands.Patches
 
             string rawHeader = lines[lineIndex];
             Match contentMatch = StripWrappingEscapesSequenceRegex().Match(rawHeader);
-            ReadOnlySpan<char> header = contentMatch.Groups["line"].ValueSpan;
+            string header = contentMatch.Groups["line"].Value;
 #if DEBUG
-            DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(header), "Git unexpectedly emits escape sequences in header other than at start/end.");
+            DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(header), "Git unexpectedly emits escape sequences in first header other than at start/end. line {i}:{rawHeader}");
 #endif
-            string headerStr = header.ToString();
-            Match headerMatch = PatchHeaderFileNameRegex().Match(headerStr);
+            Match headerMatch = PatchHeaderFileNameRegex().Match(header);
             if (!headerMatch.Success)
             {
                 return null;
             }
 
-            header = GitModule.ReEncodeFileNameFromLossless(headerStr);
-            headerStr = null; // Reset temporary cache
+            header = GitModule.ReEncodeFileNameFromLossless(header);
             bool isCombinedDiff = headerMatch.Groups["type"].Value != "git";
             if (!headerMatch.Success || (!isCombinedDiff && !headerMatch.Groups["filenameb"].Success))
             {
@@ -124,7 +122,7 @@ namespace GitCommands.Patches
             PatchProcessorState state = PatchProcessorState.InHeader;
             PatchChangeType changeType = PatchChangeType.ChangeFile;
             PatchFileType fileType = PatchFileType.Text;
-            ReadOnlySpan<char> index = null;
+            string? index = null;
 
             bool done = false;
             int i = lineIndex + 1;
@@ -134,9 +132,10 @@ namespace GitCommands.Patches
             {
                 string rawLine = lines[i];
                 Match lineMatch = StripWrappingEscapesSequenceRegex().Match(rawLine);
-                ReadOnlySpan<char> line = lineMatch.Groups["line"].ValueSpan;
+                string line = lineMatch.Groups["line"].Value;
 #if DEBUG
-                DebugHelpers.Assert(!CheckAnyEscapeSequenceRegex().IsMatch(line), "Git unexpectedly emits escape sequences in header other than at start/end.");
+                DebugHelpers.Assert(line.StartsWith("@@") || !CheckAnyEscapeSequenceRegex().IsMatch(line),
+                    $"Git unexpectedly emits escape sequences in header other than at start/end. line {i}:{rawLine}");
 #endif
 
                 if (PatchHeaderRegex().IsMatch(line))
@@ -153,7 +152,7 @@ namespace GitCommands.Patches
                 }
 
                 // header lines are encoded in GitModule.SystemEncoding
-                line = GitModule.ReEncodeStringFromLossless(line.ToString(), GitModule.SystemEncoding);
+                line = GitModule.ReEncodeStringFromLossless(line, GitModule.SystemEncoding);
 
                 if (line.StartsWith("index "))
                 {
@@ -214,8 +213,8 @@ namespace GitCommands.Patches
                 else if (line.StartsWith("--- "))
                 {
                     // old file name
-                    line = GitModule.UnescapeOctalCodePoints(line.ToString());
-                    Match regexMatch = FileNameRegex().Match(line.ToString());
+                    line = GitModule.UnescapeOctalCodePoints(line);
+                    Match regexMatch = FileNameRegex().Match(line);
 
                     if (regexMatch.Success)
                     {
@@ -237,8 +236,8 @@ namespace GitCommands.Patches
                 else if (line.StartsWith("+++ "))
                 {
                     // new file name
-                    line = GitModule.UnescapeOctalCodePoints(line.ToString());
-                    Match regexMatch = FileNameRegex().Match(line.ToString());
+                    line = GitModule.UnescapeOctalCodePoints(line);
+                    Match regexMatch = FileNameRegex().Match(line);
 
                     if (regexMatch.Success)
                     {
@@ -280,10 +279,10 @@ namespace GitCommands.Patches
 
             lineIndex = i - 1;
 
-            return new Patch(header.ToString(), index.ToString(), fileType, fileNameA, fileNameB, changeType, patchText.ToString());
+            return new Patch(header, index, fileType, fileNameA, fileNameB, changeType, patchText.ToString());
 
             // Add the escape sequences back to the header
-            string ReaddEscapes(string rawLine, ReadOnlySpan<char> line, Match lineMatch)
+            static string ReaddEscapes(string rawLine, string line, Match lineMatch)
                 => $"{rawLine[..lineMatch.Index]}{line}{rawLine[(lineMatch.Index + lineMatch.Length)..]}";
         }
     }
