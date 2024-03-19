@@ -104,7 +104,7 @@ namespace GitUI.LeftPanel
             return treeNode?.Tag as T;
         }
 
-        public static void OnNode<T>(TreeNode treeNode, Action<T> action) where T : class, INode
+        public static void OnNode<T>(TreeNode? treeNode, Action<T> action) where T : class, INode
         {
             T node = GetNodeSafe<T>(treeNode);
 

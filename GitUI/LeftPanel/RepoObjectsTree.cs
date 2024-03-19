@@ -212,7 +212,7 @@ namespace GitUI.LeftPanel
 
             return;
 
-            bool IsOverride(MethodInfo m)
+            bool IsOverride(MethodInfo? m)
             {
                 return m is not null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
             }
@@ -608,7 +608,7 @@ namespace GitUI.LeftPanel
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            NodeBase node = e.Node.Tag as NodeBase;
+            NodeBase node = (NodeBase)e.Node.Tag;
 
             if (e.Button == MouseButtons.Right && node.IsSelected)
             {
@@ -706,13 +706,13 @@ namespace GitUI.LeftPanel
                     nodes = node.Nodes.Cast<TreeNode>();
                 }
 
-                if (node.Tag.GetType() != typeof(TExpected))
+                if (node?.Tag.GetType() != typeof(TExpected))
                 {
-                    throw new ArgumentException($"The selected node is of type {node.Tag.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
+                    throw new ArgumentException($"The selected node is of type {node?.Tag.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
                 }
 
                 TreeView.SelectedNode = node; // simulates a node click well enough for UI tests
-                _repoObjectsTree.SelectNode(node.Tag as NodeBase, multiple, includingDescendants);
+                _repoObjectsTree.SelectNode((NodeBase)node.Tag, multiple, includingDescendants);
             }
 
             public void ReorderTreeNode(TreeNode node, bool up)
