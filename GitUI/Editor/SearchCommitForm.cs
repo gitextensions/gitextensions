@@ -74,6 +74,7 @@ public partial class SearchCommitForm : GitExtensionsDialog
         chkMatchCase.Checked = !AppSettings.GitGrepIgnoreCase.Value;
         chkMatchWholeWord.Checked = AppSettings.GitGrepMatchWholeWord.Value;
         chkShowSearchBox.Checked = AppSettings.ShowSearchCommit.Value;
+        txtSearchFor.Focus();
         _hasLoaded = true;
     }
 

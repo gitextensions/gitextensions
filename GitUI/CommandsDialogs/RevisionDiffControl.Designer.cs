@@ -441,7 +441,7 @@ namespace GitUI.CommandsDialogs
             showSearchCommitToolStripMenuItem.Image = Properties.Images.ViewFile;
             showSearchCommitToolStripMenuItem.Name = "showSearchCommitToolStripMenuItem";
             showSearchCommitToolStripMenuItem.Size = new Size(262, 22);
-            showSearchCommitToolStripMenuItem.Text = "S&earch files in commit...";
+            showSearchCommitToolStripMenuItem.Text = "Sear&ch files in commit...";
             showSearchCommitToolStripMenuItem.Click += showSearchCommitToolStripMenuItem_Click;
             // 
             // DiffText

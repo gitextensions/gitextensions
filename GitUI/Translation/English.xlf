@@ -8894,7 +8894,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="showSearchCommitToolStripMenuItem.Text">
-        <source>S&amp;earch files in commit...</source>
+        <source>Sear&amp;ch files in commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
