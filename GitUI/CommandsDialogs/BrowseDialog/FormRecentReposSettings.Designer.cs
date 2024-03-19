@@ -260,10 +260,10 @@
             // middleDotRB
             // 
             middleDotRB.AutoSize = true;
-            middleDotRB.Location = new Point(6, 68);
+            middleDotRB.Location = new Point(6, 45);
             middleDotRB.Name = "middleDotRB";
             middleDotRB.Size = new Size(169, 17);
-            middleDotRB.TabIndex = 2;
+            middleDotRB.TabIndex = 1;
             middleDotRB.TabStop = true;
             middleDotRB.Text = "Replace middle part with dots ";
             middleDotRB.UseVisualStyleBackColor = true;
@@ -272,10 +272,10 @@
             // mostSigDirRB
             // 
             mostSigDirRB.AutoSize = true;
-            mostSigDirRB.Location = new Point(6, 45);
+            mostSigDirRB.Location = new Point(6, 68);
             mostSigDirRB.Name = "mostSigDirRB";
             mostSigDirRB.Size = new Size(169, 17);
-            mostSigDirRB.TabIndex = 1;
+            mostSigDirRB.TabIndex = 2;
             mostSigDirRB.TabStop = true;
             mostSigDirRB.Text = "The most significant directory ";
             mostSigDirRB.UseVisualStyleBackColor = true;
