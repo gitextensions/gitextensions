@@ -141,7 +141,7 @@ namespace GitUI.LeftPanel
 
             SearchControl<string> CreateSearchBox()
             {
-                SearchControl<string> search = new(SearchForBranch, _ => { })
+                SearchControl<string> search = new(SearchForBranch, onSizeChanged: size => { })
                 {
                     Anchor = AnchorStyles.Left | AnchorStyles.Right,
                     Name = "txtBranchCritierion",
@@ -497,7 +497,7 @@ namespace GitUI.LeftPanel
 
             TreeNode? GetNextSearchResult()
             {
-                if (_searchResult?.Count is not > 0 || _searchResult[0] is not { } first)
+                if (_searchResult?.Count is not > 0 || _searchResult[0] is not TreeNode first)
                 {
                     return null;
                 }
@@ -699,13 +699,13 @@ namespace GitUI.LeftPanel
             public void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false) where TExpected : Node
             {
                 IEnumerable<TreeNode> nodes = TreeView.Nodes.Cast<TreeNode>();
-                TreeNode node = null;
+                TreeNode? node = null;
 
                 foreach (string text in nodeTexts)
                 {
                     node = nodes.SingleOrDefault(n => n.Text == text);
 
-                    if (node == null)
+                    if (node is null)
                     {
                         throw new ArgumentException(
                             $"Node '{text}' not found. Available nodes on this level: " + nodes.Select(n => n.Text).Join(", "),
