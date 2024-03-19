@@ -7,5 +7,11 @@
             base.CreateHandle();
             NativeMethods.SetWindowTheme(Handle, "explorer", null);
         }
+
+        public new bool DoubleBuffered
+        {
+            get => base.DoubleBuffered;
+            set => base.DoubleBuffered = value;
+        }
     }
 }

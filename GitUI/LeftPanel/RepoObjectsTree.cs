@@ -81,6 +81,7 @@ namespace GitUI.LeftPanel
 
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
+            treeMain.DoubleBuffered = true;
 
             return;
 
@@ -140,7 +141,7 @@ namespace GitUI.LeftPanel
 
             SearchControl<string> CreateSearchBox()
             {
-                SearchControl<string> search = new(SearchForBranch, i => { })
+                SearchControl<string> search = new(SearchForBranch, _ => { })
                 {
                     Anchor = AnchorStyles.Left | AnchorStyles.Right,
                     Name = "txtBranchCritierion",
@@ -496,7 +497,7 @@ namespace GitUI.LeftPanel
 
             TreeNode? GetNextSearchResult()
             {
-                if (_searchResult?.Count is not > 0 || _searchResult[0] is not TreeNode first)
+                if (_searchResult?.Count is not > 0 || _searchResult[0] is not { } first)
                 {
                     return null;
                 }
@@ -615,11 +616,19 @@ namespace GitUI.LeftPanel
                 return; // don't undo multi-selection on opening context menu, even without Ctrl
             }
 
-            SelectNode(node, multiple: ModifierKeys.HasFlag(Keys.Control), includingDescendants: ModifierKeys.HasFlag(Keys.Shift));
-
-            if (node is Node clickable)
+            try
             {
-                clickable.OnClick();
+                treeMain.BeginUpdate();
+                SelectNode(node, multiple: ModifierKeys.HasFlag(Keys.Control), includingDescendants: ModifierKeys.HasFlag(Keys.Shift));
+
+                if (node is Node clickable)
+                {
+                    clickable.OnClick();
+                }
+            }
+            finally
+            {
+                treeMain.EndUpdate();
             }
         }
 
@@ -694,7 +703,7 @@ namespace GitUI.LeftPanel
 
                 foreach (string text in nodeTexts)
                 {
-                    node = nodes.SingleOrDefault(node => node.Text == text);
+                    node = nodes.SingleOrDefault(n => n.Text == text);
 
                     if (node == null)
                     {
