@@ -492,13 +492,6 @@ namespace GitUI.CommandsDialogs
             _splitterManager.AddSplitter(splitRight, nameof(splitRight));
             _splitterManager.AddSplitter(splitLeft, nameof(splitLeft));
             _splitterManager.RestoreSplitters();
-
-            // Since #8849 and #8557 we have a geometry bug, which pushes the splitter up by 6px.
-            // Account for this shift. This is a workaround at best.
-            //
-            // The problem is likely caused by 'splitRight.FixedPanel = FixedPanel.Panel2' fact, but other forms
-            // have the same setting, and don't appear to suffer from the same bug.
-            splitRight.SplitterDistance -= DpiUtil.Scale(6);
         }
 
         protected override void OnShown(EventArgs e)
