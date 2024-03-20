@@ -549,8 +549,8 @@ namespace GitUI.CommandsDialogs
             gotoUserManualControl1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             gotoUserManualControl1.AutoSize = true;
             gotoUserManualControl1.Location = new Point(3, 369);
-            gotoUserManualControl1.ManualSectionAnchorName = null;
-            gotoUserManualControl1.ManualSectionSubfolder = "merge_conflicts";
+            gotoUserManualControl1.ManualSectionAnchorName = "handle-merge-conflicts";
+            gotoUserManualControl1.ManualSectionSubfolder = "modify_history";
             gotoUserManualControl1.MinimumSize = new Size(70, 20);
             gotoUserManualControl1.Name = "gotoUserManualControl1";
             gotoUserManualControl1.Size = new Size(70, 20);
