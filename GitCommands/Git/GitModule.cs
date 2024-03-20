@@ -1948,14 +1948,14 @@ namespace GitCommands
             return File.Exists(Path.Combine(GetGitDirectory(), "BISECT_START"));
         }
 
-        public bool InTheMiddleOfRebase()
-        {
-            return !File.Exists(GetRebaseDir() + "applying") && Directory.Exists(GetRebaseDir());
-        }
+        public bool InTheMiddleOfRebase() => InTheMiddleOfGitOperation("applying");
 
-        public bool InTheMiddleOfPatch()
+        public bool InTheMiddleOfPatch() => InTheMiddleOfGitOperation("rebasing");
+
+        private bool InTheMiddleOfGitOperation(string filename)
         {
-            return !File.Exists(GetRebaseDir() + "rebasing") && Directory.Exists(GetRebaseDir());
+            string rebaseDir = GetRebaseDir();
+            return !File.Exists(rebaseDir + filename) && Directory.Exists(rebaseDir);
         }
 
         public bool InTheMiddleOfMerge()
