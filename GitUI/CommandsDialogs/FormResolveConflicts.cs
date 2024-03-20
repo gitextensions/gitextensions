@@ -118,6 +118,7 @@ namespace GitUI.CommandsDialogs
         private int _filesModifiedLocallyAndDeletedRemotelySolved;
         private int _conflictItemsCount;
         private readonly CancellationTokenSequence _customDiffToolsSequence = new();
+        private bool _inTheMiddleOfRebase;
 
         public FormResolveConflicts(GitUICommands commands, bool offerCommit = true)
             : base(commands)
@@ -175,6 +176,8 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
+                _inTheMiddleOfRebase = Module.InTheMiddleOfRebase();
+
                 int oldSelectedRow = 0;
                 bool isLastRow = false;
                 if (ConflictedFiles.SelectedRows.Count > 0)
@@ -236,7 +239,7 @@ namespace GitUI.CommandsDialogs
                 OpenMergetool.Text = _openMergeToolItemText.Text + " " + _mergetool;
                 openMergeToolBtn.Text = _button1Text.Text + " " + _mergetool;
 
-                if (Module.InTheMiddleOfRebase())
+                if (_inTheMiddleOfRebase)
                 {
                     ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
                     ContextChooseRemote.Text = _contextChooseRemoteRebaseText.Text;
@@ -251,7 +254,7 @@ namespace GitUI.CommandsDialogs
                 {
                     UICommands.UpdateSubmodules(this);
 
-                    if (!Module.InTheMiddleOfPatch() && !Module.InTheMiddleOfRebase() && _offerCommit)
+                    if (!Module.InTheMiddleOfPatch() && !_inTheMiddleOfRebase && _offerCommit)
                     {
                         if (AppSettings.DontConfirmCommitAfterConflictsResolved ||
                             MessageBox.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -703,27 +706,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private string GetRemoteSideString()
-        {
-            bool inTheMiddleOfRebase = Module.InTheMiddleOfRebase();
-            return inTheMiddleOfRebase ? _ours.Text : _theirs.Text;
-        }
+        private string GetRemoteSideString() => _inTheMiddleOfRebase ? _ours.Text : _theirs.Text;
 
-        private string GetLocalSideString()
-        {
-            bool inTheMiddleOfRebase = Module.InTheMiddleOfRebase();
-            return inTheMiddleOfRebase ? _theirs.Text : _ours.Text;
-        }
+        private string GetLocalSideString() => _inTheMiddleOfRebase ? _theirs.Text : _ours.Text;
 
         private string GetShortHash(ConflictedFileData item)
-        {
-            if (item.ObjectId is null)
-            {
-                return "@" + _deleted.Text;
-            }
-
-            return '@' + item.ObjectId.ToShortString();
-        }
+            => $"@{(item.ObjectId is null ? _deleted.Text : item.ObjectId.ToShortString())}";
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
