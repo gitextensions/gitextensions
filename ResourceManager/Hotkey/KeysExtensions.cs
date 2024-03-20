@@ -1,11 +1,10 @@
 ﻿using System.Globalization;
+using GitExtUtils;
 
 namespace ResourceManager.Hotkey
 {
     public static class KeysExtensions
     {
-        private const string TooltipSeparator = "\u00A0";
-
         /// <summary>
         /// Strips the modifier from KeyData.
         /// </summary>
@@ -84,11 +83,7 @@ namespace ResourceManager.Hotkey
             => key == Keys.None ? "" : $"({key.ToShortcutKeyDisplayString()})";
 
         public static string UpdateTooltipWithShortcut(this string currentTooltipText, string shortcut)
-        {
-            int indexShortcut = currentTooltipText.LastIndexOf(TooltipSeparator);
-            string toolTip = indexShortcut < 0 ? currentTooltipText : currentTooltipText[..indexShortcut];
-            return string.IsNullOrWhiteSpace(shortcut) ? toolTip : $"{toolTip}{TooltipSeparator}{shortcut}";
-        }
+            => currentTooltipText.UpdateSuffix(shortcut);
 
         private static string? ToCultureSpecificString(this Keys key)
         {
