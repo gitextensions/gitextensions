@@ -65,11 +65,18 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _openMergeToolItemText = new("Open in");
         private readonly TranslationString _button1Text = new("Open in");
 
-        private readonly TranslationString _contextChooseLocalRebaseText = new("Choose local (theirs)");
-        private readonly TranslationString _contextChooseRemoteRebaseText = new("Choose remote (ours)");
+        private readonly TranslationString _contextChooseLocalRebaseText = new("Choose local/current (theirs)");
+        private readonly TranslationString _takeOnly = new("Take only");
+        private readonly TranslationString _changesLocalRebaseTooltip = new("the changes from the branch you are rebasing onto");
+        private readonly TranslationString _contextChooseRemoteRebaseText = new("Choose remote/incoming (ours)");
+        private readonly TranslationString _changesRemoteRebaseTooltip = new("the changes from the branch you are rebasing");
 
-        private readonly TranslationString _contextChooseLocalMergeText = new("Choose local (ours)");
-        private readonly TranslationString _contextChooseRemoteMergeText = new("Choose remote (theirs)");
+        private readonly TranslationString _contextChooseLocalMergeText = new("Choose local/current (ours)");
+        private readonly TranslationString _changesLocalMergeTooltip = new("the changes from the current branch");
+        private readonly TranslationString _contextChooseRemoteMergeText = new("Choose remote/incoming (theirs)");
+        private readonly TranslationString _changesRemoteMergeTooltip = new("the changes from the branch you are merging");
+
+        private readonly TranslationString _contextChooseBaseTooltip = new("Take no changes and revert to base content!");
 
         private readonly TranslationString _noBaseFileMergeCaption = new("Merge");
 
@@ -242,13 +249,29 @@ namespace GitUI.CommandsDialogs
                 if (_inTheMiddleOfRebase)
                 {
                     ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
+                    ContextChooseLocal.ToolTipText = _takeOnly.Text + " " + _changesLocalRebaseTooltip.Text;
+                    labelLocalCurrent.Text = labelLocalCurrent.Text.UpdateSuffixWithinParenthesis(_theirs.Text);
+                    toolTip.SetToolTip(labelLocalCurrent, _changesLocalRebaseTooltip.Text);
+
                     ContextChooseRemote.Text = _contextChooseRemoteRebaseText.Text;
+                    ContextChooseRemote.ToolTipText = _takeOnly.Text + " " + _changesRemoteRebaseTooltip.Text;
+                    labelRemoteIncoming.Text = labelRemoteIncoming.Text.UpdateSuffixWithinParenthesis(_ours.Text);
+                    toolTip.SetToolTip(labelRemoteIncoming, _changesRemoteRebaseTooltip.Text);
                 }
                 else
                 {
                     ContextChooseLocal.Text = _contextChooseLocalMergeText.Text;
+                    ContextChooseLocal.ToolTipText = _takeOnly.Text + " " + _changesLocalMergeTooltip.Text;
+                    labelLocalCurrent.Text = labelLocalCurrent.Text.UpdateSuffixWithinParenthesis(_ours.Text);
+                    toolTip.SetToolTip(labelLocalCurrent, _changesLocalMergeTooltip.Text);
+
                     ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
+                    ContextChooseRemote.ToolTipText = _takeOnly.Text + " " + _changesRemoteMergeTooltip.Text;
+                    labelRemoteIncoming.Text = labelRemoteIncoming.Text.UpdateSuffixWithinParenthesis(_theirs.Text);
+                    toolTip.SetToolTip(labelRemoteIncoming, _changesRemoteMergeTooltip.Text);
                 }
+
+                ContextChooseBase.ToolTipText = _contextChooseBaseTooltip.Text;
 
                 if (!Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts)
                 {

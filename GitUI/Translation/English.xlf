@@ -6728,6 +6728,22 @@ Is the merge conflict solved?</source>
         <source>Open in</source>
         <target />
       </trans-unit>
+      <trans-unit id="_changesLocalMergeTooltip.Text">
+        <source>the changes from the current branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesLocalRebaseTooltip.Text">
+        <source>the changes from the branch you are rebasing onto</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesRemoteMergeTooltip.Text">
+        <source>the changes from the branch you are merging</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesRemoteRebaseTooltip.Text">
+        <source>the changes from the branch you are rebasing</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_chooseBaseFileFailedText.Text">
         <source>Choose base file failed.</source>
         <target />
@@ -6752,20 +6768,24 @@ Is the merge conflict solved?</source>
         <source>Solve</source>
         <target />
       </trans-unit>
+      <trans-unit id="_contextChooseBaseTooltip.Text">
+        <source>Take no changes and revert to base content!</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_contextChooseLocalMergeText.Text">
-        <source>Choose local (ours)</source>
+        <source>Choose local/current (ours)</source>
         <target />
       </trans-unit>
       <trans-unit id="_contextChooseLocalRebaseText.Text">
-        <source>Choose local (theirs)</source>
+        <source>Choose local/current (theirs)</source>
         <target />
       </trans-unit>
       <trans-unit id="_contextChooseRemoteMergeText.Text">
-        <source>Choose remote (theirs)</source>
+        <source>Choose remote/incoming (theirs)</source>
         <target />
       </trans-unit>
       <trans-unit id="_contextChooseRemoteRebaseText.Text">
-        <source>Choose remote (ours)</source>
+        <source>Choose remote/incoming (ours)</source>
         <target />
       </trans-unit>
       <trans-unit id="_currentFormatFilter.Text">
@@ -6928,6 +6948,10 @@ Please go to settings and configure the mergetool!</source>
         <source>Stage {0}</source>
         <target />
       </trans-unit>
+      <trans-unit id="_takeOnly.Text">
+        <source>Take only</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_theirs.Text">
         <source>theirs</source>
         <target />
@@ -6958,16 +6982,16 @@ Do you want to use this custom merge script?</source>
         <source>Unresolved merge conflicts</source>
         <target />
       </trans-unit>
-      <trans-unit id="label2.Text">
+      <trans-unit id="labelBase.Text">
         <source>Base</source>
         <target />
       </trans-unit>
-      <trans-unit id="label5.Text">
-        <source>Remote</source>
+      <trans-unit id="labelLocalCurrent.Text">
+        <source>Local/current</source>
         <target />
       </trans-unit>
-      <trans-unit id="label7.Text">
-        <source>Local</source>
+      <trans-unit id="labelRemoteIncoming.Text">
+        <source>Remote/incoming</source>
         <target />
       </trans-unit>
       <trans-unit id="merge.Text">
