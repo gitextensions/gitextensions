@@ -81,7 +81,6 @@ namespace GitUI.LeftPanel
 
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
-            treeMain.DoubleBuffered = true;
 
             return;
 

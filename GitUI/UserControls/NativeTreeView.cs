@@ -2,16 +2,15 @@
 {
     public class NativeTreeView : TreeView
     {
+        public NativeTreeView()
+        {
+            DoubleBuffered = true;
+        }
+
         protected override void CreateHandle()
         {
             base.CreateHandle();
             NativeMethods.SetWindowTheme(Handle, "explorer", null);
-        }
-
-        public new bool DoubleBuffered
-        {
-            get => base.DoubleBuffered;
-            set => base.DoubleBuffered = value;
         }
     }
 }
