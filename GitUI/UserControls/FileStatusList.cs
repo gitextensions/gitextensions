@@ -1986,17 +1986,18 @@ namespace GitUI
             SetSearchWatermarkLabelVisibility();
             SetDeleteSearchButtonVisibility();
 
-            if (!string.IsNullOrWhiteSpace(search) && !GrepStringRegex().IsMatch(search))
-            {
-                search = $@"-e ""{search}""";
-            }
-
             CancellationToken cancellationToken = _reloadSequence.Next();
             ThreadHelper.FileAndForget(async () =>
             {
                 // delay to handle keypresses
                 await Task.Delay(delay, cancellationToken);
-                _diffCalculator.SetGrep(search);
+                string searchArg = search;
+                if (!string.IsNullOrWhiteSpace(searchArg) && !GrepStringRegex().IsMatch(searchArg))
+                {
+                    searchArg = $@"-e ""{searchArg}""";
+                }
+
+                _diffCalculator.SetGrep(searchArg);
                 IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
@@ -2022,17 +2023,22 @@ namespace GitUI
 
                         SearchComboBox.Items.Insert(0, search);
                         SearchComboBox.Items.RemoveAt(index + 1);
-                        SearchComboBox.Text = search;
-                        return;
                     }
-
-                    const int SearchFilterMaxLength = 30;
-                    if (SearchComboBox.Items.Count == SearchFilterMaxLength)
+                    else
                     {
-                        SearchComboBox.Items.RemoveAt(SearchFilterMaxLength - 1);
+                        const int SearchFilterMaxLength = 30;
+                        if (SearchComboBox.Items.Count == SearchFilterMaxLength)
+                        {
+                            SearchComboBox.Items.RemoveAt(SearchFilterMaxLength - 1);
+                        }
+
+                        SearchComboBox.Items.Insert(0, search);
                     }
 
-                    SearchComboBox.Items.Insert(0, search);
+                    if (_searchCommitForm?.IsDisposed is false)
+                    {
+                        _searchCommitForm.SetSearchItems(SearchComboBox.Items);
+                    }
                 }
             });
         }

@@ -79,34 +79,7 @@ public partial class SearchCommitForm : GitExtensionsDialog
     }
 
     private void Search()
-    {
-        SearchFunc?.Invoke(SearchFor, 0);
-        AddToSearchFilter(SearchFor);
-
-        void AddToSearchFilter(string search)
-        {
-            if (txtSearchFor.Items.IndexOf(search) is int index && index >= 0)
-            {
-                if (index == 0)
-                {
-                    return;
-                }
-
-                txtSearchFor.Items.Insert(0, search);
-                txtSearchFor.Items.RemoveAt(index + 1);
-                txtSearchFor.Text = search;
-                return;
-            }
-
-            const int SearchFilterMaxLength = 30;
-            if (txtSearchFor.Items.Count >= SearchFilterMaxLength)
-            {
-                txtSearchFor.Items.RemoveAt(SearchFilterMaxLength - 1);
-            }
-
-            txtSearchFor.Items.Insert(0, search);
-        }
-    }
+        => SearchFunc?.Invoke(SearchFor, 0);
 
     private void btnSearch_Click(object sender, EventArgs e)
     {
