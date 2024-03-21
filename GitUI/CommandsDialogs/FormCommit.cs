@@ -3325,6 +3325,8 @@ namespace GitUI.CommandsDialogs
 
             internal FileViewer SelectedDiff => _formCommit.SelectedDiff;
 
+            internal SplitContainer MainSplitter => _formCommit.splitMain;
+
             internal ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
 
             internal ToolStripStatusLabel CommitAuthorStatusToolStripStatusLabel => _formCommit.commitAuthorStatus;
