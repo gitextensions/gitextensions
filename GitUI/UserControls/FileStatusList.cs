@@ -1566,9 +1566,11 @@ namespace GitUI
                 },
                 Owner = (Form)TopLevelControl
             };
+
+            // offset a few pixels compared to FindAndReplaceForm
+            _searchCommitForm.Location = new Point(TopLevelControl.Location.X + 90, TopLevelControl.Location.Y + 110);
             _searchCommitForm.SearchFor = !string.IsNullOrEmpty(text) ? text : SearchComboBox.Text;
             _searchCommitForm.SetSearchItems(SearchComboBox.Items);
-            _searchCommitForm.Location = new Point(TopLevelControl.Location.X + 100, TopLevelControl.Location.Y + 100);
             _searchCommitForm.Show();
         }
 
