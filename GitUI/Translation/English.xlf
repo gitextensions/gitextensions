@@ -9693,7 +9693,7 @@ Currently checked out revision:
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SearchCommitForm" source-language="en">
+  <file datatype="plaintext" original="FormSearchCommit" source-language="en">
     <body>
       <trans-unit id="$this.Text">
         <source>Search files in commit</source>

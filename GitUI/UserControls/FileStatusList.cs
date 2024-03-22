@@ -37,7 +37,7 @@ namespace GitUI
         private Rectangle _dragBoxFromMouseDown;
         private IDisposable? _selectedIndexChangeSubscription;
         private IDisposable? _diffListSortSubscription;
-        private SearchCommitForm _searchCommitForm;
+        private FormSearchCommit _formSearchCommit;
 
         // Enable menu item to disable AppSettings.ShowDiffForAllParents in some forms
         private bool _enableDisablingShowDiffForAllParents = false;
@@ -69,7 +69,7 @@ namespace GitUI
             InitialiseFiltering();
             Disposed += (sender, e) =>
             {
-                _searchCommitForm?.Dispose();
+                _formSearchCommit?.Dispose();
             };
 
             _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
@@ -1548,12 +1548,12 @@ namespace GitUI
                 return;
             }
 
-            if (_searchCommitForm?.IsDisposed is true)
+            if (_formSearchCommit?.IsDisposed is true)
             {
-                _searchCommitForm = null;
+                _formSearchCommit = null;
             }
 
-            _searchCommitForm ??= new(UICommands)
+            _formSearchCommit ??= new(UICommands)
             {
                 SearchFunc = (text, delay) =>
                 {
@@ -1568,10 +1568,10 @@ namespace GitUI
             };
 
             // offset a few pixels compared to FindAndReplaceForm
-            _searchCommitForm.Location = new Point(TopLevelControl.Location.X + 90, TopLevelControl.Location.Y + 110);
-            _searchCommitForm.SearchFor = !string.IsNullOrEmpty(text) ? text : SearchComboBox.Text;
-            _searchCommitForm.SetSearchItems(SearchComboBox.Items);
-            _searchCommitForm.Show();
+            _formSearchCommit.Location = new Point(TopLevelControl.Location.X + 90, TopLevelControl.Location.Y + 110);
+            _formSearchCommit.SearchFor = !string.IsNullOrEmpty(text) ? text : SearchComboBox.Text;
+            _formSearchCommit.SetSearchItems(SearchComboBox.Items);
+            _formSearchCommit.Show();
         }
 
         private void FileStatusListView_DoubleClick(object sender, EventArgs e)
@@ -2037,9 +2037,9 @@ namespace GitUI
                         SearchComboBox.Items.Insert(0, search);
                     }
 
-                    if (_searchCommitForm?.IsDisposed is false)
+                    if (_formSearchCommit?.IsDisposed is false)
                     {
-                        _searchCommitForm.SetSearchItems(SearchComboBox.Items);
+                        _formSearchCommit.SetSearchItems(SearchComboBox.Items);
                     }
                 }
             });

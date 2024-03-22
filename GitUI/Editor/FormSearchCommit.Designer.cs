@@ -3,7 +3,7 @@ using ICSharpCode.TextEditor.Actions;
 
 namespace GitUI
 {
-	partial class SearchCommitForm
+	partial class FormSearchCommit
     {
 		/// <summary>
 		/// Required designer variable.
@@ -131,7 +131,7 @@ namespace GitUI
             chkShowSearchBox.UseVisualStyleBackColor = true;
             chkShowSearchBox.CheckedChanged += chkShowSearchBox_CheckedChanged;
             // 
-            // SearchCommitForm
+            // FormSearchCommit
             // 
             AcceptButton = btnSearch;
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -143,10 +143,10 @@ namespace GitUI
             ManualSectionSubfolder = "browse_repository";
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "SearchCommitForm";
+            Name = "FormSearchCommit";
             StartPosition = FormStartPosition.Manual;
             Text = "Search files in commit";
-            FormClosing += SearchCommitForm_FormClosing;
+            FormClosing += FormSearchCommit_FormClosing;
             MainPanel.ResumeLayout(false);
             MainPanel.PerformLayout();
             ControlsPanel.ResumeLayout(false);

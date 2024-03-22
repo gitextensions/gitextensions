@@ -2,11 +2,11 @@
 
 namespace GitUI;
 
-public partial class SearchCommitForm : GitExtensionsDialog
+public partial class FormSearchCommit : GitExtensionsDialog
 {
     private bool _hasLoaded = false;
 
-    public SearchCommitForm(GitUICommands commands)
+    public FormSearchCommit(GitUICommands commands)
             : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
@@ -57,7 +57,7 @@ public partial class SearchCommitForm : GitExtensionsDialog
         base.Dispose(disposing);
     }
 
-    private void SearchCommitForm_FormClosing(object sender, FormClosingEventArgs e)
+    private void FormSearchCommit_FormClosing(object sender, FormClosingEventArgs e)
     {
         // Close the search if search is not visible (or user has cleared input)
         if (string.IsNullOrEmpty(SearchFor) || !AppSettings.ShowSearchCommit.Value)
