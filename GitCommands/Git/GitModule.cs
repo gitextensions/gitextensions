@@ -3460,7 +3460,7 @@ namespace GitCommands
 
         public void OpenWithDifftoolDirDiff(string? firstRevision, string? secondRevision, string? customTool = null)
         {
-            OpenWithDifftool(null, firstRevision, secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
+            OpenWithDifftool(filename: null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
         }
 
         public void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
