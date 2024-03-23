@@ -332,7 +332,7 @@ namespace GitUI.Hotkey
                     Hk(FileViewer.Command.PreviousChange, Keys.Alt | Keys.Up),
                     Hk(FileViewer.Command.ShowEntireFile, Keys.Control | Keys.E),
                     Hk(FileViewer.Command.ShowSyntaxHighlighting, Keys.X),
-                    Hk(FileViewer.Command.ShowGitWordColoring, Keys.Control | Keys.Shift | Keys.D),
+                    Hk(FileViewer.Command.ShowGitWordColoring, Keys.Control | Keys.D),
                     Hk(FileViewer.Command.TreatFileAsText, Keys.None),
                     Hk(FileViewer.Command.NextOccurrence, Keys.Alt | Keys.Right),
                     Hk(FileViewer.Command.PreviousOccurrence, Keys.Alt | Keys.Left),
