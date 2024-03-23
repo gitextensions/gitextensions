@@ -82,9 +82,6 @@ namespace ResourceManager.Hotkey
         public static string ToShortcutKeyToolTipString(this Keys key)
             => key == Keys.None ? "" : $"({key.ToShortcutKeyDisplayString()})";
 
-        public static string UpdateTooltipWithShortcut(this string currentTooltipText, string shortcut)
-            => currentTooltipText.UpdateSuffix(shortcut);
-
         private static string? ToCultureSpecificString(this Keys key)
         {
             if (key == Keys.None)

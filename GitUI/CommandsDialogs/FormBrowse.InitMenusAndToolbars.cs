@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
             => UpdateTooltipWithShortcut(button, GetShortcutKeys(command));
 
         private static void UpdateTooltipWithShortcut(ToolStripItem button, Keys keys)
-            => button.ToolTipText = button.ToolTipText.UpdateTooltipWithShortcut(keys.ToShortcutKeyToolTipString());
+            => button.ToolTipText = button.ToolTipText.UpdateSuffix(keys.ToShortcutKeyToolTipString());
 
         private void InsertFetchPullShortcuts()
         {
@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs
                     Name = FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
                     Size = toolStripMenuItem.Size,
                     Text = toolTipText,
-                    ToolTipText = toolTipText.UpdateTooltipWithShortcut(command.HasValue ? GetShortcutKeyTooltipString(command.Value) : null),
+                    ToolTipText = toolTipText.UpdateSuffix(command.HasValue ? GetShortcutKeyTooltipString(command.Value) : null),
                     DisplayStyle = ToolStripItemDisplayStyle.Image,
                 };
 

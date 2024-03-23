@@ -486,13 +486,13 @@ namespace GitUI.UserControls
         {
             _tslblRevisionFilterToolTip ??= tslblRevisionFilter.ToolTipText;
 
-            tslblRevisionFilter.ToolTipText = _tslblRevisionFilterToolTip.UpdateTooltipWithShortcut(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter));
+            tslblRevisionFilter.ToolTipText = _tslblRevisionFilterToolTip.UpdateSuffix(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter));
         }
 
         internal void RefreshRevisionGridShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
         {
-            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip.UpdateTooltipWithShortcut(hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowReflogReferences));
-            tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent.UpdateTooltipWithShortcut(hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowCurrentBranchOnly));
+            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip.UpdateSuffix(hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowReflogReferences));
+            tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent.UpdateSuffix(hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowCurrentBranchOnly));
 
             tsmiShowBranchesAll.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(RevisionGridControl.Command.ShowAllBranches);
             tsmiShowBranchesFiltered.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(RevisionGridControl.Command.ShowFilteredBranches);

@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
@@ -24,7 +25,7 @@ namespace GitUI.CommandsDialogs
                 || aheadBehindData?.TryGetValue(branchName, out AheadBehindData data) is not true)
             {
                 ResetToDefaultState();
-                ToolTipText = ToolTipText.UpdateTooltipWithShortcut(shortcut);
+                ToolTipText = ToolTipText.UpdateSuffix(shortcut);
                 return;
             }
 
@@ -32,7 +33,7 @@ namespace GitUI.CommandsDialogs
             AutoSize = true;
             Text = data.ToDisplay();
             DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            ToolTipText = GetToolTipText(data).UpdateTooltipWithShortcut(shortcut);
+            ToolTipText = GetToolTipText(data).UpdateSuffix(shortcut);
 
             if (!string.IsNullOrEmpty(data.BehindCount))
             {
