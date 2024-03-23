@@ -1552,6 +1552,8 @@ namespace GitUI.CommandsDialogs
             commitStatusStrip.ResumeLayout(false);
             commitStatusStrip.PerformLayout();
             ResumeLayout(false);
+            // Restoring splitter distance is deliberatly done here, early in the process.
+            // This prevents additional re-drawing of the form as it's done before the initial layout.
             RestoreSplitters();
             PerformLayout();
         }
