@@ -23,13 +23,29 @@ public partial class FormSearchCommit : GitExtensionsDialog
 
     public Action<string, int> SearchFunc;
     public Action<bool> EnableSearchBoxFunc;
+
+    /// <summary>
+    /// Set the search items in the search combobox dropdown,
+    /// without changing the current search text.
+    /// </summary>
+    /// <param name="items">items to change</param>
     public void SetSearchItems(ComboBox.ObjectCollection items)
     {
+        txtSearchFor.BeginUpdate();
+        string search = txtSearchFor.Text;
+        int selectionStart = txtSearchFor.SelectionStart;
+        int selectionLength = txtSearchFor.SelectionLength;
+
         txtSearchFor.Items.Clear();
         foreach (object item in items)
         {
             txtSearchFor.Items.Add(item);
         }
+
+        txtSearchFor.Text = search;
+        txtSearchFor.SelectionStart = selectionStart;
+        txtSearchFor.SelectionLength = selectionLength;
+        txtSearchFor.EndUpdate();
     }
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -84,14 +100,6 @@ public partial class FormSearchCommit : GitExtensionsDialog
     private void btnSearch_Click(object sender, EventArgs e)
     {
         Search();
-    }
-
-    private void txtSearchFor_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.KeyCode == Keys.Enter)
-        {
-            Search();
-        }
     }
 
     private void txtOptions_TextChanged(object sender, EventArgs e)

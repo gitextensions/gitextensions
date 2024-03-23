@@ -1557,7 +1557,7 @@ namespace GitUI
             {
                 SearchFunc = (text, delay) =>
                 {
-                    SearchFiles(text, delay);
+                    DoSearchCommit(text, delay);
                     SearchComboBox.Text = text;
                 },
                 EnableSearchBoxFunc = (enable) =>
@@ -1980,10 +1980,10 @@ namespace GitUI
 
         private void SearchComboBox_TextUpdate(object sender, EventArgs e)
         {
-            SearchFiles(SearchComboBox.Text);
+            DoSearchCommit(SearchComboBox.Text);
         }
 
-        private void SearchFiles(string search, int delay = 200)
+        private void DoSearchCommit(string search, int delay = 200)
         {
             SetSearchWatermarkLabelVisibility();
             SetDeleteSearchButtonVisibility();
@@ -2023,13 +2023,18 @@ namespace GitUI
                             return;
                         }
 
+                        SearchComboBox.BeginUpdate();
+                        SearchComboBox.Items.RemoveAt(index);
                         SearchComboBox.Items.Insert(0, search);
-                        SearchComboBox.Items.RemoveAt(index + 1);
+                        SearchComboBox.Text = search;
+                        SearchComboBox.SelectionStart = SearchComboBox.Text.Length;
+                        SearchComboBox.SelectionLength = 0;
+                        SearchComboBox.EndUpdate();
                     }
                     else
                     {
                         const int SearchFilterMaxLength = 30;
-                        if (SearchComboBox.Items.Count == SearchFilterMaxLength)
+                        if (SearchComboBox.Items.Count >= SearchFilterMaxLength)
                         {
                             SearchComboBox.Items.RemoveAt(SearchFilterMaxLength - 1);
                         }
@@ -2047,7 +2052,7 @@ namespace GitUI
 
         private void SearchComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SearchFiles(SearchComboBox.Text, 0);
+            DoSearchCommit(SearchComboBox.Text, 0);
         }
 
         private void SearchWatermarkLabel_Click(object sender, EventArgs e)
@@ -2073,7 +2078,7 @@ namespace GitUI
         private void DeleteSearchButton_Click(object sender, EventArgs e)
         {
             SearchComboBox.Text = "";
-            SearchFiles(SearchComboBox.Text, 0);
+            DoSearchCommit(SearchComboBox.Text, 0);
         }
 
         private void SortByFilePath()

@@ -73,8 +73,6 @@ namespace GitUI
             txtSearchFor.Name = "txtSearchFor";
             txtSearchFor.Size = new Size(317, 23);
             txtSearchFor.TabIndex = 1;
-            txtSearchFor.SelectedIndexChanged += btnSearch_Click;
-            txtSearchFor.KeyDown += txtSearchFor_KeyDown;
             // 
             // txtOptions
             // 
@@ -84,7 +82,6 @@ namespace GitUI
             txtOptions.Size = new Size(317, 23);
             txtOptions.TabIndex = 2;
             txtOptions.TextChanged += txtOptions_TextChanged;
-            txtOptions.KeyDown += txtSearchFor_KeyDown;
             // 
             // chkMatchWholeWord
             // 
