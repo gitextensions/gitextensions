@@ -335,6 +335,14 @@ namespace GitUI.Editor
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
             replaceToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Replace);
             goToLineToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.GoToLine);
+
+            UpdateTooltipWithShortcut(nextChangeButton, Command.NextChange);
+            UpdateTooltipWithShortcut(previousChangeButton, Command.PreviousChange);
+            UpdateTooltipWithShortcut(increaseNumberOfLines, Command.IncreaseNumberOfVisibleLines);
+            UpdateTooltipWithShortcut(decreaseNumberOfLines, Command.DecreaseNumberOfVisibleLines);
+            UpdateTooltipWithShortcut(showEntireFileButton, Command.ShowEntireFile);
+            UpdateTooltipWithShortcut(showSyntaxHighlighting, Command.ShowSyntaxHighlighting);
+            UpdateTooltipWithShortcut(ignoreAllWhitespaces, Command.IgnoreAllWhitespace);
         }
 
         public ToolStripSeparator AddContextMenuSeparator()

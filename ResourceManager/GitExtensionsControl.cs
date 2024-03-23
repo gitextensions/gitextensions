@@ -100,6 +100,11 @@ namespace ResourceManager
         public string GetShortcutKeyDisplayString<T>(T commandCode) where T : struct, Enum
             => _hotkeys.GetShortcutDisplay(commandCode);
 
+        protected void UpdateTooltipWithShortcut<T>(ToolStripItem button, T commandCode) where T : struct, Enum
+        {
+            button.ToolTipText = button.ToolTipText.UpdateSuffix(_hotkeys.GetShortcutToolTip(commandCode));
+        }
+
         /// <summary>
         /// Override this method to handle form-specific Hotkey commands.
         /// <remarks>This base method does nothing and returns <see langword="false"/>.</remarks>
