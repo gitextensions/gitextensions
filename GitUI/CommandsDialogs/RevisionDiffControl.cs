@@ -1356,8 +1356,7 @@ namespace GitUI.CommandsDialogs
         {
             return base.ProcessHotkey(keyData) // generic handling of this controls's hotkeys (upstream)
                 || (!GitExtensionsControl.IsTextEditKey(keyData) // downstream (without keys for quick search and filter)
-                    && ((DiffFiles.Visible && DiffFiles.ProcessHotkey(keyData))
-                        || (DiffText.Visible && DiffText.ProcessHotkey(keyData))
+                    && ((DiffText.Visible && DiffText.ProcessHotkey(keyData))
                         || (BlameControl.Visible && BlameControl.ProcessHotkey(keyData))));
         }
 
