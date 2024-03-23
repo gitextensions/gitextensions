@@ -2,6 +2,11 @@
 {
     public class NativeTreeView : TreeView
     {
+        public NativeTreeView()
+        {
+            DoubleBuffered = true;
+        }
+
         protected override void CreateHandle()
         {
             base.CreateHandle();
