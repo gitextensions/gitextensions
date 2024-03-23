@@ -5,7 +5,6 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
-using ResourceManager.Hotkey;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -462,16 +461,10 @@ namespace GitUI.UserControls.RevisionGrid
             };
         }
 
-        public string? GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command revGridCommands)
+        public string? GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command revisionGridCommand)
         {
             // _revisionGrid is null when TranslationApp is called
-            return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();
-        }
-
-        public string? GetShortcutKeyTooltipStringFromRevisionGridIfAvailable(RevisionGridControl.Command revGridCommands)
-        {
-            // _revisionGrid is null when TranslationApp is called
-            return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyToolTipString();
+            return _revisionGrid?.GetShortcutKeyDisplayString(revisionGridCommand);
         }
 
         protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()

@@ -11,7 +11,6 @@ using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
-using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
@@ -226,11 +225,6 @@ namespace GitUI.CommandsDialogs
         public void CancelLoadCustomDifftools()
         {
             _customDiffToolsSequence.CancelCurrent();
-        }
-
-        private string GetShortcutKeyDisplayString(Command cmd)
-        {
-            return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
         }
 
         #endregion

@@ -2893,13 +2893,7 @@ namespace GitUI
 
         private void SetShortcutString(ToolStripMenuItem item, Command command)
         {
-            item.ShortcutKeyDisplayString = GetShortcutKeys(command)
-                .ToShortcutKeyDisplayString();
-        }
-
-        internal Keys GetShortcutKeys(Command cmd)
-        {
-            return GetShortcutKeys((int)cmd);
+            item.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(command);
         }
 
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)

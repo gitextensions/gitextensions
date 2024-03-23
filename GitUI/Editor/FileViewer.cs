@@ -17,7 +17,6 @@ using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
-using ResourceManager.Hotkey;
 
 namespace GitUI.Editor
 {
@@ -1882,11 +1881,6 @@ namespace GitUI.Editor
                 // Don't handle the hotkey to let the control handle it if an action is bound to it
                 return false;
             }
-        }
-
-        private string GetShortcutKeyDisplayString(Command cmd)
-        {
-            return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
         }
 
         #endregion

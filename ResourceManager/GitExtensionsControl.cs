@@ -1,5 +1,6 @@
 using GitExtUtils;
 using GitUIPluginInterfaces;
+using ResourceManager.Hotkey;
 
 namespace ResourceManager
 {
@@ -94,14 +95,10 @@ namespace ResourceManager
         }
 
         protected Keys GetShortcutKeys(int commandCode)
-        {
-            return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
-        }
+            => _hotkeys.GetShortcutKey(commandCode);
 
-        private HotkeyCommand? GetHotkeyCommand(int commandCode)
-        {
-            return _hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
-        }
+        public string GetShortcutKeyDisplayString<T>(T commandCode) where T : struct, Enum
+            => _hotkeys.GetShortcutDisplay(commandCode);
 
         /// <summary>
         /// Override this method to handle form-specific Hotkey commands.
