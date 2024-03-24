@@ -324,31 +324,24 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (_cellStyle is null)
             {
+                e.Handled = false;
                 return;
             }
 
             e.Graphics!.FillRectangle(_cellStyle.Value.BackBrush, e.CellBounds);
 
-            if (_revision is null)
-            {
-                return;
-            }
+            e.Handled = true;
 
             if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
             {
-                provider.OnCellPainting(e, _revision, _rowHeight, _cellStyle.Value);
+                provider.OnCellPainting(e, _revision!, _rowHeight, _cellStyle.Value);
             }
 
             if (!e.Handled)
             {
                 e.Handled = true;
 
-                // Ensure triggering is done only one time per row
-                if (e.ColumnIndex == _unhiddableColumnMessageIndex)
-                {
-                    _forceRefresh = true;
-                    UpdateVisibleRowRange();
-                }
+                UpdateVisibleRowRange();
             }
         }
 
