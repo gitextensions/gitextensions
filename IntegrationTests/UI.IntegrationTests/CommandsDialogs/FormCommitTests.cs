@@ -550,6 +550,24 @@ namespace GitExtensions.UITests.CommandsDialogs
                 (bounds1, bounds2) => bounds2.Should().Be(bounds1));
         }
 
+        [Test]
+        public void MainSplitter_Remembers_Distance()
+        {
+            bool splitterMoved = false;
+            RunGeometryMemoryTest(
+                form =>
+                {
+                    if (!splitterMoved)
+                    {
+                        form.GetTestAccessor().MainSplitter.SplitterDistance += 100;
+                        splitterMoved = true;
+                    }
+
+                    return form.GetTestAccessor().UnstagedList.Bounds;
+                },
+                (bounds1, bounds2) => bounds2.Should().Be(bounds1));
+        }
+
         private void TestAddSelectionToCommitMessage(
             bool focusSelectedDiff,
             string selectedText,
