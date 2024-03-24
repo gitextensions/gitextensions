@@ -35,6 +35,22 @@ namespace GitUITests.Theming
             }
         }
 
+        [Test]
+        public void Default_values_are_used_when_not_overridden_in_settings([Values]AppColor name)
+        {
+            // This only applies when migrating colors from AppSettings to a theme.
+            // Fixes https://github.com/gitextensions/gitextensions/issues/11629
+
+#pragma warning disable CS0618 // AppSettings.GetColorSettingName is obsolete, but still used by theme migration.
+            MemorySettings emptySettings = new();
+
+            Color defaultColor = AppColorDefaults.GetBy(name);
+            Color settingsColor = emptySettings.GetColor(AppSettings.GetColorSettingName(name), defaultColor);
+
+            settingsColor.Should().Be(defaultColor);
+#pragma warning restore CS0618
+        }
+
 #if SUPPORT_THEMES
         [Test]
         public void Default_values_are_specified_in_invariant_theme()

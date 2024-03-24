@@ -2104,8 +2104,11 @@ namespace GitCommands
         [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is")]
         public static Color GetColor(AppColor name)
         {
-            return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
+            return SettingsContainer.GetColor(GetColorSettingName(name), AppColorDefaults.GetBy(name));
         }
+
+        [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is")]
+        public static string GetColorSettingName(AppColor color) => color.ToString().ToLowerInvariant() + "color";
 
         // Enum
         public static T GetEnum<T>(string name, T defaultValue) where T : struct, Enum => SettingsContainer.GetEnum(name, defaultValue);
