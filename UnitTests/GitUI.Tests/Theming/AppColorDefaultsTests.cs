@@ -41,14 +41,12 @@ namespace GitUITests.Theming
             // This only applies when migrating colors from AppSettings to a theme.
             // Fixes https://github.com/gitextensions/gitextensions/issues/11629
 
-#pragma warning disable CS0618 // AppSettings.GetColorSettingName is obsolete, but still used by theme migration.
             MemorySettings emptySettings = new();
 
             Color defaultColor = AppColorDefaults.GetBy(name);
             Color settingsColor = emptySettings.GetColor(name.ToString(), defaultColor);
 
             settingsColor.Should().Be(defaultColor);
-#pragma warning restore CS0618
         }
 
 #if SUPPORT_THEMES
