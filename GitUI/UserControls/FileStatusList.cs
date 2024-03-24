@@ -2044,6 +2044,7 @@ namespace GitUI
 
                     if (_formSearchCommit?.IsDisposed is false)
                     {
+                        _formSearchCommit.SearchFor = search;
                         _formSearchCommit.SetSearchItems(SearchComboBox.Items);
                     }
                 }

@@ -7136,6 +7136,38 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormSearchCommit" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Search files in commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnSearch.Text">
+        <source>Search</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMatchCase.Text">
+        <source>Match &amp;case</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMatchWholeWord.Text">
+        <source>Match &amp;whole word</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowSearchBox.Text">
+        <source>Show search &amp;box</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>&amp;Search:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblOptions.Text">
+        <source>&amp;Options:</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormSelectMultipleBranches" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -9689,38 +9721,6 @@ Currently checked out revision:
       </trans-unit>
       <trans-unit id="chdrNames.Text">
         <source>Name</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormSearchCommit" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Search files in commit</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="btnSearch.Text">
-        <source>Search</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkMatchCase.Text">
-        <source>Match &amp;case</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkMatchWholeWord.Text">
-        <source>Match &amp;whole word</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkShowSearchBox.Text">
-        <source>Show search &amp;box</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>&amp;Search:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblOptions.Text">
-        <source>&amp;Options:</source>
         <target />
       </trans-unit>
     </body>
