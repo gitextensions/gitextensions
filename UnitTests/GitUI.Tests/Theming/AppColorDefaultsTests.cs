@@ -45,7 +45,7 @@ namespace GitUITests.Theming
             MemorySettings emptySettings = new();
 
             Color defaultColor = AppColorDefaults.GetBy(name);
-            Color settingsColor = emptySettings.GetColor(AppSettings.GetColorSettingName(name), defaultColor);
+            Color settingsColor = emptySettings.GetColor(name.ToString(), defaultColor);
 
             settingsColor.Should().Be(defaultColor);
 #pragma warning restore CS0618
