@@ -15,10 +15,18 @@ public partial class FormSearchCommit : GitExtensionsDialog
         ShowInTaskbar = false;
     }
 
-    public string SearchFor
+    public string? SearchFor
     {
         get => txtSearchFor.Text;
-        set => txtSearchFor.Text = value;
+        set
+        {
+            if (value is not null)
+            {
+                txtSearchFor.Text = value;
+            }
+
+            txtSearchFor.Focus();
+        }
     }
 
     public Action<string, int> SearchFunc;

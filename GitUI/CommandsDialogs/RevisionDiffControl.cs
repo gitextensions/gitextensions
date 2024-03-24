@@ -853,7 +853,7 @@ namespace GitUI.CommandsDialogs
 
         private void showSearchCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DiffFiles.SearchCommit_Click(DiffText.GetSelectedText());
+            DiffFiles.ShowSearchCommit_Click(DiffText.GetSelectedText());
         }
 
         private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)

@@ -1541,7 +1541,7 @@ namespace GitUI
             }
         }
 
-        public void SearchCommit_Click(string text)
+        public void ShowSearchCommit_Click(string text)
         {
             if (!SearchEnabledForList)
             {
@@ -1569,7 +1569,7 @@ namespace GitUI
 
             // offset a few pixels compared to FindAndReplaceForm
             _formSearchCommit.Location = new Point(TopLevelControl.Location.X + 90, TopLevelControl.Location.Y + 110);
-            _formSearchCommit.SearchFor = !string.IsNullOrEmpty(text) ? text : SearchComboBox.Text;
+            _formSearchCommit.SearchFor = !string.IsNullOrEmpty(text) ? text : (SearchComboBox.Visible ? SearchComboBox.Text : null);
             _formSearchCommit.SetSearchItems(SearchComboBox.Items);
             _formSearchCommit.Show();
         }
@@ -2044,8 +2044,11 @@ namespace GitUI
 
                     if (_formSearchCommit?.IsDisposed is false)
                     {
-                        _formSearchCommit.SearchFor = search;
                         _formSearchCommit.SetSearchItems(SearchComboBox.Items);
+                        if (SearchComboBox.Visible)
+                        {
+                            _formSearchCommit.SearchFor = search;
+                        }
                     }
                 }
             });
