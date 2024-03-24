@@ -101,7 +101,7 @@ namespace GitUI.LeftPanel
         private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string setting)
         {
             // Sort prio branches first (if set) with the compile cache (no need to instantiate)
-            string[] regexes = setting.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            string[] regexes = setting.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Select(regex => $"^({regex})$")
                 .ToArray();
 

@@ -171,6 +171,8 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.ApplyPatchIgnoreWhitespace)], false, false, false);
                 yield return (properties[nameof(AppSettings.ApplyPatchSignOff)], true, false, false);
                 yield return (properties[nameof(AppSettings.UseHistogramDiffAlgorithm)], false, false, false);
+                yield return (properties[nameof(AppSettings.UseGitColoring)], true, false, true);
+                yield return (properties[nameof(AppSettings.UseGEThemeGitColoring)], true, false, true);
                 yield return (properties[nameof(AppSettings.ShowErrorsWhenStagingFiles)], true, false, false);
                 yield return (properties[nameof(AppSettings.EnsureCommitMessageSecondLineEmpty)], true, false, false);
                 yield return (properties[nameof(AppSettings.LastCommitMessage)], string.Empty, true, false);
@@ -218,7 +220,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.SimplifyMergesInFileHistory)], false, false, false);
                 yield return (properties[nameof(AppSettings.LoadFileHistoryOnShow)], true, false, false);
                 yield return (properties[nameof(AppSettings.LoadBlameOnShow)], true, false, false);
-                yield return (properties[nameof(AppSettings.DetectCopyInFileOnBlame)], true, false, false);
+                yield return (properties[nameof(AppSettings.DetectCopyInFileOnBlame)], false, false, false);
                 yield return (properties[nameof(AppSettings.DetectCopyInAllOnBlame)], false, false, false);
                 yield return (properties[nameof(AppSettings.IgnoreWhitespaceOnBlame)], true, false, false);
                 yield return (properties[nameof(AppSettings.OpenSubmoduleDiffInSeparateWindow)], false, false, false);
@@ -298,6 +300,9 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.HighlightAuthoredRevisions)], true, false, false);
                 yield return (properties[nameof(AppSettings.FillRefLabels)], false, false, false);
                 yield return (properties[nameof(AppSettings.MergeGraphLanesHavingCommonParent)], true, false, true);
+                yield return (properties[nameof(AppSettings.RenderGraphWithDiagonals)], true, false, true);
+                yield return (properties[nameof(AppSettings.StraightenGraphDiagonals)], true, false, true);
+                yield return (properties[nameof(AppSettings.StraightenGraphSegmentsLimit)], 80, false, true);
                 yield return (properties[nameof(AppSettings.LastFormatPatchDir)], string.Empty, true, false);
                 yield return (properties[nameof(AppSettings.IgnoreWhitespaceKind)], IgnoreWhitespaceKind.None, false, true);
                 yield return (properties[nameof(AppSettings.RememberIgnoreWhiteSpacePreference)], true, false, false);
@@ -305,6 +310,8 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RememberShowNonPrintingCharsPreference)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowEntireFile)], false, false, true);
                 yield return (properties[nameof(AppSettings.RememberShowEntireFilePreference)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowGitWordColoring)], false, false, true);
+                yield return (properties[nameof(AppSettings.RememberShowGitWordColoring)], false, false, true);
                 yield return (properties[nameof(AppSettings.RememberNumberOfContextLines)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowSyntaxHighlightingInDiff)], true, false, true);
                 yield return (properties[nameof(AppSettings.RememberShowSyntaxHighlightingInDiff)], true, false, false);

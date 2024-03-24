@@ -24,6 +24,8 @@ namespace GitUI.Avatars
             _avatarProvider = avatarProvider ?? throw new ArgumentNullException(nameof(avatarProvider));
         }
 
+        public bool PerformsIo => _avatarProvider.PerformsIo;
+
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             if (imageSize < 1)

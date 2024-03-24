@@ -8,29 +8,29 @@ namespace AzureDevOpsIntegration.Settings
     /// </summary>
     public partial class ProjectUrlHelper
     {
-        [GeneratedRegex(@"^(?<prot>(?:http|https))://(?<user>[^.@]+)(?:@[^.]*)?\.visualstudio\.com(?<port>:\d*)?(?:/DefaultCollection)?(?<project>(/[^/]+)?/[^/]+)/_(git|ssh)/(.+)$")]
+        [GeneratedRegex(@"^(?<prot>(?:http|https))://(?<user>[^.@]+)(?:@[^.]*)?\.visualstudio\.com(?<port>:\d*)?(?:/DefaultCollection)?(?<project>(/[^/]+)?/[^/]+)/_(git|ssh)/(.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex VsTeamHttpsRegex();
-        [GeneratedRegex(@"^(?<user>[^.@]+)@vs-ssh\.visualstudio.com:v3(?:/[^/]*)?(?<project>/[^/]+)")]
+        [GeneratedRegex(@"^(?<user>[^.@]+)@vs-ssh\.visualstudio.com:v3(?:/[^/]*)?(?<project>/[^/]+)", RegexOptions.ExplicitCapture)]
         private static partial Regex VsTeamSshRegex();
 
-        [GeneratedRegex(@"^(?<prot>(?:http|https))://(?:[^.@]+@)?dev\.azure\.com(?<port>:\d*)?(?<project>(?:/[^/]+)?/[^/]+)/_(?:git|ssh)/(?:.+)$")]
+        [GeneratedRegex(@"^(?<prot>(?:http|https))://(?:[^.@]+@)?dev\.azure\.com(?<port>:\d*)?(?<project>(?:/[^/]+)?/[^/]+)/_(?:git|ssh)/(?:.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex AzureDevopsHttpsRegex();
-        [GeneratedRegex(@"^[^.@]+@ssh\.dev\.azure\.com:v3(?<project>(?:/[^/]+)?/[^/]+)")]
+        [GeneratedRegex(@"^[^.@]+@ssh\.dev\.azure\.com:v3(?<project>(?:/[^/]+)?/[^/]+)", RegexOptions.ExplicitCapture)]
         private static partial Regex AzureDevopsSshRegex();
 
-        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)(?<project>/[^/]+)/_(?:git|ssh)")]
+        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)(?<project>/[^/]+)/_(?:git|ssh)", RegexOptions.ExplicitCapture)]
         private static partial Regex TfsSecondaryRegex();
-        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)/_(?:git|ssh)(?<project>/[^/]+)")]
+        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)/_(?:git|ssh)(?<project>/[^/]+)", RegexOptions.ExplicitCapture)]
         private static partial Regex TfsMainRegex();
 
-        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^.@]+(?:@[^.]*)?\.visualstudio\.com(?::\d*)?)")]
+        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^.@]+(?:@[^.]*)?\.visualstudio\.com(?::\d*)?)", RegexOptions.ExplicitCapture)]
         private static partial Regex VsTeamTokenRegex();
-        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://dev\.azure\.com(?::\d*)?/[^/]+)")]
+        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://dev\.azure\.com(?::\d*)?/[^/]+)", RegexOptions.ExplicitCapture)]
         private static partial Regex AzureDevopsTokenRegex();
-        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/[^/]+")]
+        [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/[^/]+", RegexOptions.ExplicitCapture)]
         private static partial Regex TfsTokenRegex();
 
-        [GeneratedRegex(@"^(?<projecturl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)")]
+        [GeneratedRegex(@"^(?<projecturl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex BuildUrlInfoRegex();
 
         private static readonly Dictionary<Regex, Func<Match, string>> RemoteToProjectUrlLookup = new()

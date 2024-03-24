@@ -65,7 +65,13 @@ namespace GitUI.LeftPanel
             Validates.NotNull(_treeViewNode);
 
             _treeViewNode.Name = NodeName();
-            _treeViewNode.Text = DisplayText();
+
+            // Check before if value has changed because that's a costly operation
+            string updatedText = DisplayText();
+            if (updatedText != _treeViewNode.Text)
+            {
+                _treeViewNode.Text = updatedText;
+            }
         }
 
         internal virtual void OnSelected()
@@ -98,9 +104,9 @@ namespace GitUI.LeftPanel
             return treeNode?.Tag as T;
         }
 
-        public static void OnNode<T>(TreeNode treeNode, Action<T> action) where T : class, INode
+        public static void OnNode<T>(TreeNode? treeNode, Action<T> action) where T : class, INode
         {
-            T node = GetNodeSafe<T>(treeNode);
+            T? node = GetNodeSafe<T>(treeNode);
 
             if (node is not null)
             {

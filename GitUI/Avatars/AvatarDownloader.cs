@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Net;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.Avatars
@@ -10,10 +11,13 @@ namespace GitUI.Avatars
     public sealed class AvatarDownloader : IAvatarDownloader
     {
         private const int _maxConcurrentDownloads = 10;
+        private const int _requestCacheDurationInSeconds = 30;
+
+        private static TimeSpan _requestCacheTimeSpan = TimeSpan.FromSeconds(_requestCacheDurationInSeconds);
 
         private static readonly SemaphoreSlim _downloadSemaphore = new(initialCount: _maxConcurrentDownloads);
         private static readonly ConcurrentDictionary<Uri, (DateTime, Task<Image?>)> _downloads = new();
-        private static readonly HttpClient _client = new(new HttpClientHandler() { UseProxy = true });
+        private static readonly HttpClient _client = new(new HttpClientHandler() { UseProxy = true, DefaultProxyCredentials = CredentialCache.DefaultCredentials });
 
         public async Task<Image?> DownloadImageAsync(Uri? imageUrl)
         {
@@ -49,7 +53,15 @@ namespace GitUI.Avatars
                     continue;
                 }
 
-                return await task;
+                Image image = await task;
+                if (image?.PixelFormat == System.Drawing.Imaging.PixelFormat.DontCare)
+                {
+                    // Image from cached download has been disposed (in all probability during a cache cleanup)
+                    _downloads.TryRemove(imageUrl, out _);
+                    continue;
+                }
+
+                return image;
             }
         }
 
@@ -64,6 +76,11 @@ namespace GitUI.Avatars
             try
             {
                 using HttpResponseMessage response = await _client.GetAsync(imageUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
                 using Stream imageStream = await response.Content.ReadAsStreamAsync();
                 return Image.FromStream(imageStream);
             }
@@ -86,7 +103,7 @@ namespace GitUI.Avatars
 
             foreach ((Uri key, (DateTime time, Task<Image?> _)) in _downloads)
             {
-                if (now - time > TimeSpan.FromSeconds(30))
+                if (now - time > _requestCacheTimeSpan)
                 {
                     _downloads.TryRemove(key, out _);
                 }

@@ -140,7 +140,7 @@ namespace GitUI.LeftPanel
 
             SearchControl<string> CreateSearchBox()
             {
-                SearchControl<string> search = new(SearchForBranch, i => { })
+                SearchControl<string> search = new(SearchForBranch, onSizeChanged: size => { })
                 {
                     Anchor = AnchorStyles.Left | AnchorStyles.Right,
                     Name = "txtBranchCritierion",
@@ -212,7 +212,7 @@ namespace GitUI.LeftPanel
 
             return;
 
-            bool IsOverride(MethodInfo m)
+            bool IsOverride(MethodInfo? m)
             {
                 return m is not null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
             }
@@ -309,7 +309,7 @@ namespace GitUI.LeftPanel
                 cancellationToken.ThrowIfCancellationRequested();
                 HashSet<string> mergedBranches = selectedGuid is null
                     ? []
-                    : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid)).ToHashSet();
+                    : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid, cancellationToken)).ToHashSet();
 
                 selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
 
@@ -608,18 +608,26 @@ namespace GitUI.LeftPanel
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            NodeBase node = e.Node.Tag as NodeBase;
+            NodeBase node = (NodeBase)e.Node.Tag;
 
             if (e.Button == MouseButtons.Right && node.IsSelected)
             {
                 return; // don't undo multi-selection on opening context menu, even without Ctrl
             }
 
-            SelectNode(node, multiple: ModifierKeys.HasFlag(Keys.Control), includingDescendants: ModifierKeys.HasFlag(Keys.Shift));
-
-            if (node is Node clickable)
+            try
             {
-                clickable.OnClick();
+                treeMain.BeginUpdate();
+                SelectNode(node, multiple: ModifierKeys.HasFlag(Keys.Control), includingDescendants: ModifierKeys.HasFlag(Keys.Shift));
+
+                if (node is Node clickable)
+                {
+                    clickable.OnClick();
+                }
+            }
+            finally
+            {
+                treeMain.EndUpdate();
             }
         }
 
@@ -690,13 +698,13 @@ namespace GitUI.LeftPanel
             public void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false) where TExpected : Node
             {
                 IEnumerable<TreeNode> nodes = TreeView.Nodes.Cast<TreeNode>();
-                TreeNode node = null;
+                TreeNode? node = null;
 
                 foreach (string text in nodeTexts)
                 {
-                    node = nodes.SingleOrDefault(node => node.Text == text);
+                    node = nodes.SingleOrDefault(n => n.Text == text);
 
-                    if (node == null)
+                    if (node is null)
                     {
                         throw new ArgumentException(
                             $"Node '{text}' not found. Available nodes on this level: " + nodes.Select(n => n.Text).Join(", "),
@@ -706,13 +714,13 @@ namespace GitUI.LeftPanel
                     nodes = node.Nodes.Cast<TreeNode>();
                 }
 
-                if (node.Tag.GetType() != typeof(TExpected))
+                if (node?.Tag.GetType() != typeof(TExpected))
                 {
-                    throw new ArgumentException($"The selected node is of type {node.Tag.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
+                    throw new ArgumentException($"The selected node is of type {node?.Tag.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
                 }
 
                 TreeView.SelectedNode = node; // simulates a node click well enough for UI tests
-                _repoObjectsTree.SelectNode(node.Tag as NodeBase, multiple, includingDescendants);
+                _repoObjectsTree.SelectNode((NodeBase)node.Tag, multiple, includingDescendants);
             }
 
             public void ReorderTreeNode(TreeNode node, bool up)

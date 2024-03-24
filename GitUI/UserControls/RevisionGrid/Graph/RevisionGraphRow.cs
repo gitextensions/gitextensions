@@ -1,8 +1,4 @@
-﻿// Disabled hotfix of #11292 for release 4.2: Due to heavy performance issues with the Linux repo, do not determine the kind of LaneSharing of secondary segments.
-// This deactivated #10915 which avoided the multiple drawing of shared graph segments.
-// This reactivated a minor hyperactivity of line-straightening over commits (#11059).
-////#define ALL_PRIMARY_LANES
-
+﻿using System.Diagnostics;
 using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -17,22 +13,22 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         int GetLaneCount();
         Lane GetLaneForSegment(RevisionGraphSegment revisionGraphRevision);
         IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
-        void MoveLanesRight(int fromLane);
+        void MoveLanesRight(int fromLane, int by = 1);
     }
 
     // The RevisionGraphRow contains an ordered list of Segments that crosses the row or connects to the revision in the row.
     // The segments can be returned in the order how it is stored.
     // Segments are not the same as lanes.A crossing segment is a lane, but multiple segments can connect to the revision.
     // Therefore, a single lane can have multiple segments.
+    [DebuggerDisplay("{Revision}")]
     public class RevisionGraphRow : IRevisionGraphRow
     {
         private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
-        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, RevisionGraphRow previousRow, bool mergeGraphLanesHavingCommonParent)
+        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, bool mergeGraphLanesHavingCommonParent)
         {
             Revision = revision;
             Segments = segments;
-            _previousRow = previousRow;
             _mergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
         }
 
@@ -41,8 +37,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
         private readonly bool _mergeGraphLanesHavingCommonParent;
-
-        private readonly RevisionGraphRow _previousRow;
 
         /// <summary>
         /// This dictionary contains a cached list of all segments and the lane index the segment is in for this row.
@@ -122,6 +116,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             _revisionLane = CreateLane();
                         }
 
+                        segment.IsSecondarySharedLaneAtLeastSinceScore = int.MaxValue;
                         LaneSharing laneSharing;
                         if (!hasStart)
                         {
@@ -130,11 +125,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         }
                         else
                         {
-#if ALL_PRIMARY_LANES
-                            laneSharing = LaneSharing.ExclusiveOrPrimary;
-#else
                             laneSharing = LaneSharing.DifferentEnd;
-#endif
                         }
 
                         return new Lane(_revisionLane, laneSharing);
@@ -157,11 +148,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         if (!hasEnd)
                         {
                             hasEnd = true;
+                            segment.IsSecondarySharedLaneAtLeastSinceScore = int.MaxValue;
                             laneSharing = LaneSharing.ExclusiveOrPrimary;
                         }
                         else
                         {
-                            laneSharing = GetSecondarySharingOfContinuedSegment();
+                            laneSharing = SecondarySharing(segment, Revision.Score);
                         }
 
                         return new Lane(_revisionLane, laneSharing);
@@ -193,26 +185,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
                             if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
                             {
-                                return new Lane(searchParent.Value.Index, GetSecondarySharingOfContinuedSegment());
+                                return new Lane(searchParent.Value.Index, SecondarySharing(segment, Revision.Score));
                             }
                         }
                     }
 
                     // Segment has not been assigned a lane yet
+                    segment.IsSecondarySharedLaneAtLeastSinceScore = int.MaxValue;
                     return new Lane(CreateLane(), LaneSharing.ExclusiveOrPrimary);
 
-                    LaneSharing GetSecondarySharingOfContinuedSegment()
+                    static LaneSharing SecondarySharing(RevisionGraphSegment segment, int revisionScore)
                     {
-#if ALL_PRIMARY_LANES
-                        return LaneSharing.ExclusiveOrPrimary;
-#else
-                        return _previousRow.GetLaneForSegment(segment).Sharing switch
+                        if (revisionScore > segment.IsSecondarySharedLaneAtLeastSinceScore)
                         {
-                            LaneSharing.ExclusiveOrPrimary or LaneSharing.DifferentEnd => LaneSharing.DifferentStart,
-                            LaneSharing.Entire or LaneSharing.DifferentStart => LaneSharing.Entire,
-                            _ => throw new NotImplementedException()
-                        };
-#endif
+                            return LaneSharing.Entire;
+                        }
+
+                        segment.IsSecondarySharedLaneAtLeastSinceScore = Math.Min(segment.IsSecondarySharedLaneAtLeastSinceScore, revisionScore);
+                        return LaneSharing.DifferentStart;
                     }
                 }
 
@@ -256,6 +246,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             return _noLane;
+        }
+
+        public void MoveLanesRight(int fromLane, int by)
+        {
+            for (; by > 0; --by, ++fromLane)
+            {
+                MoveLanesRight(fromLane);
+            }
         }
 
         public void MoveLanesRight(int fromLane)

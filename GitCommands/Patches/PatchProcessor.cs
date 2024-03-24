@@ -15,13 +15,13 @@ namespace GitCommands.Patches
             OutsidePatch
         }
 
-        [GeneratedRegex(@"^diff --(?<type>git|cc|combined)\s")]
+        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --(?<type>git|cc|combined)\s", RegexOptions.ExplicitCapture)]
         private static partial Regex PatchHeaderRegex();
-        [GeneratedRegex("^diff --git [\\\"]?[abiwco12]/(.*)[\\\"]? [\\\"]?[abiwco12]/(.*)[\\\"]?$")]
+        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --git [""]?[abiwco12]/(?<filenamea>.*)[""]? [""]?[abiwco12]/(?<filenameb>.*?)[""]?(\u001b\[.*?m)?$", RegexOptions.ExplicitCapture)]
         private static partial Regex DiffCommandRegex();
-        [GeneratedRegex("^diff --(cc|combined) [\\\"]?(?<filenamea>.*)[\\\"]?$")]
+        [GeneratedRegex(@"^(\u001b\[.*?m)?diff --(cc|combined) [""]?(?<filenamea>.*?)[""]?(\u001b\[.*?m)?$", RegexOptions.ExplicitCapture)]
         private static partial Regex CombinedDiffCommandRegex();
-        [GeneratedRegex("[-+]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?")]
+        [GeneratedRegex(@"(\u001b\[.*?m)?[-+]{3} [""]?[abiwco12]/(?<filename>.*)[""]?(\u001b\[.*?m)?", RegexOptions.ExplicitCapture)]
         private static partial Regex FileNameRegex();
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace GitCommands.Patches
                     throw new FormatException("Invalid patch header: " + header);
                 }
 
-                fileNameA = match.Groups[1].Value.Trim();
-                fileNameB = match.Groups[2].Value.Trim();
+                fileNameA = match.Groups["filenamea"].Value.Trim();
+                fileNameB = match.Groups["filenameb"].Value.Trim();
             }
             else
             {
@@ -123,7 +123,7 @@ namespace GitCommands.Patches
             patchText.Append(header);
             if (lineIndex < lines.Length - 1)
             {
-                patchText.Append("\n");
+                patchText.Append('\n');
             }
 
             bool done = false;
@@ -157,7 +157,7 @@ namespace GitCommands.Patches
                     patchText.Append(line);
                     if (i < lines.Length - 1)
                     {
-                        patchText.Append("\n");
+                        patchText.Append('\n');
                     }
 
                     continue;
@@ -222,7 +222,7 @@ namespace GitCommands.Patches
 
                     if (regexMatch.Success)
                     {
-                        fileNameA = regexMatch.Groups[1].Value.Trim();
+                        fileNameA = regexMatch.Groups["filename"].Value.Trim();
                     }
                     else
                     {
@@ -245,7 +245,7 @@ namespace GitCommands.Patches
 
                     if (regexMatch.Success)
                     {
-                        fileNameB = regexMatch.Groups[1].Value.Trim();
+                        fileNameB = regexMatch.Groups["filename"].Value.Trim();
                     }
                     else
                     {
@@ -257,7 +257,7 @@ namespace GitCommands.Patches
 
                 if (i < lines.Length - 1)
                 {
-                    patchText.Append("\n");
+                    patchText.Append('\n');
                 }
             }
 

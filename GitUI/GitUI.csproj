@@ -6,9 +6,11 @@
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
 
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+
     <!--
     For debug purposes uncomment these lines:
-    
+
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
     -->
@@ -40,7 +42,7 @@
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\GitExtensions.Analyzers.CSharp\GitExtensions.Analyzers.CSharp.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using CommonTestUtils;
+using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -71,7 +72,7 @@ namespace GitUITests
             _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption);
 
             // await adding branch name in ShortcutKeyDisplayString, done async
-            ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(default));
+            AsyncTestHelper.JoinPendingOperations();
 
             ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.ShortcutKeyDisplayString.Should().Be(branch);

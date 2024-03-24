@@ -1,7 +1,10 @@
 ﻿using GitCommands;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
+using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.UserControls
 {
@@ -14,19 +17,17 @@ namespace GitUI.UserControls
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
         private Func<RefsFilter, IReadOnlyList<IGitRef>> _getRefs;
+        private string _tslblRevisionFilterToolTip;
 
         public FilterToolBar()
         {
             InitializeComponent();
-            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip;
-            tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent;
 
             // Select an option until we get a filter bound.
             SelectShowBranchesFilterOption(selectedIndex: 0);
 
-            tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
-            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
             tstxtRevisionFilter.Items.AddRange(AppSettings.RevisionFilterDropdowns);
+            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private IRevisionGridFilter RevisionGridFilter
@@ -329,6 +330,7 @@ namespace GitUI.UserControls
                 tscboBranchFilter.Items.Clear();
                 tscboBranchFilter.Items.AddRange(matches);
                 tscboBranchFilter.SelectionStart = index;
+                tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
             }
         }
 
@@ -479,6 +481,23 @@ namespace GitUI.UserControls
 
         internal TestAccessor GetTestAccessor()
             => new(this);
+
+        internal void RefreshBrowseDialogShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
+        {
+            _tslblRevisionFilterToolTip ??= tslblRevisionFilter.ToolTipText;
+
+            tslblRevisionFilter.ToolTipText = _tslblRevisionFilterToolTip.UpdateSuffix(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter));
+        }
+
+        internal void RefreshRevisionGridShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
+        {
+            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip.UpdateSuffix(hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowReflogReferences));
+            tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent.UpdateSuffix(hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowCurrentBranchOnly));
+
+            tsmiShowBranchesAll.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(RevisionGridControl.Command.ShowAllBranches);
+            tsmiShowBranchesFiltered.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(RevisionGridControl.Command.ShowFilteredBranches);
+            tsmiShowBranchesCurrent.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(RevisionGridControl.Command.ShowCurrentBranchOnly);
+        }
 
         internal readonly struct TestAccessor
         {

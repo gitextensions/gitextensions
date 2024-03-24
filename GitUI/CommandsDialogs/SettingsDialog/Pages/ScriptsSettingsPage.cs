@@ -259,6 +259,12 @@ File(s):
                 }
 
                 lvScripts.Select();
+
+                // Last column size fit the content
+                if (lvScripts.Items.Count > 0)
+                {
+                    chdrCommand.Width = -1;
+                }
             }
             finally
             {
@@ -274,6 +280,8 @@ File(s):
             script.Enabled = true;
 
             BindScripts(_scripts, script);
+
+            propertyGrid1.Focus();
         }
 
         private void btnArgumentsHelp_Click(object sender, EventArgs e)

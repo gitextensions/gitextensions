@@ -5,9 +5,7 @@ using GitCommands;
 using GitCommands.Submodules;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
-using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {
@@ -83,7 +81,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
-            // _provider is a singleton and must not be disposed
+            _provider.Dispose();
             _repo1.Dispose();
             _repo2.Dispose();
             _repo3.Dispose();
@@ -93,14 +91,14 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void RepoObjectTree_should_show_all_submodules()
         {
             RunFormTest(
-                async form =>
+                form =>
                 {
-                    // act
-                    await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
-
-                    // assert
                     TreeNode submodulesNode = GetSubmoduleNode(form);
 
+                    // act: wait until loaded by left panel
+                    UITest.ProcessUntil("Loading submodules", () => submodulesNode.Nodes.Count == 1);
+
+                    // assert
                     submodulesNode.Nodes.Count.Should().Be(1);
 
                     TreeNode repo1Node = submodulesNode.Nodes[0];
@@ -114,6 +112,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                     TreeNode repo3Node = repo2Node.Nodes[0];
                     repo3Node.Name.Should().StartWith("repo3");
                     repo3Node.Nodes.Count.Should().Be(0);
+
+                    return Task.CompletedTask;
                 });
         }
 

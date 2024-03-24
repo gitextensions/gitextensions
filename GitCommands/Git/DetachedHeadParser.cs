@@ -9,7 +9,7 @@ namespace GitCommands.Git
 
         private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from ", "(HEAD detached at " };
 
-        [GeneratedRegex(@"^\(.* (?<sha1>.*)\)$")]
+        [GeneratedRegex(@"^\(.* (?<sha1>.*)\)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShaRegex();
 
         public static bool IsDetachedHead(string branch)

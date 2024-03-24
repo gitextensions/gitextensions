@@ -48,6 +48,10 @@
             tsmiUserFolder = new ToolStripMenuItem();
             _NO_TRANSLATE_cbSelectTheme = new ComboBox();
             lblRestartNeeded = new Label();
+            gbDiffColoring = new GroupBox();
+            tlpnlDiffColoring = new TableLayoutPanel();
+            chkUseGitColoring = new CheckBox();
+            chkUseGEThemeGitColoring = new CheckBox();
             tlpnlMain = new TableLayoutPanel();
             tlpnlMain.SuspendLayout();
             gbRevisionGraph.SuspendLayout();
@@ -55,6 +59,8 @@
             gbTheme.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             cmsOpenThemeFolders.SuspendLayout();
+            gbDiffColoring.SuspendLayout();
+            tlpnlDiffColoring.SuspendLayout();
             SuspendLayout();
             // 
             // tlpnlMain
@@ -65,10 +71,12 @@
             tlpnlMain.ColumnStyles.Add(new ColumnStyle());
             tlpnlMain.Controls.Add(gbRevisionGraph, 0, 0);
             tlpnlMain.Controls.Add(gbTheme, 0, 2);
+            tlpnlMain.Controls.Add(gbDiffColoring, 0, 3);
             tlpnlMain.Dock = DockStyle.Fill;
             tlpnlMain.Location = new Point(8, 8);
             tlpnlMain.Name = "tlpnlMain";
-            tlpnlMain.RowCount = 4;
+            tlpnlMain.RowCount = 5;
+            tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
@@ -305,6 +313,62 @@
             lblRestartNeeded.Text = "Restart required to apply changes";
             lblRestartNeeded.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // gbDiffColoring
+            // 
+            gbDiffColoring.AutoSize = true;
+            gbDiffColoring.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gbDiffColoring.Controls.Add(tlpnlDiffColoring);
+            gbDiffColoring.Dock = DockStyle.Fill;
+            gbDiffColoring.Location = new Point(3, 3);
+            gbDiffColoring.Name = "gbDiffColoring";
+            gbDiffColoring.Padding = new Padding(8);
+            gbDiffColoring.Size = new Size(1505, 182);
+            gbDiffColoring.TabIndex = 0;
+            gbDiffColoring.TabStop = false;
+            gbDiffColoring.Text = "Diff coloring";
+            // 
+            // tlpnlDiffColoring
+            // 
+            tlpnlDiffColoring.AutoSize = true;
+            tlpnlDiffColoring.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlDiffColoring.ColumnCount = 2;
+            tlpnlDiffColoring.ColumnStyles.Add(new ColumnStyle());
+            tlpnlDiffColoring.ColumnStyles.Add(new ColumnStyle());
+            tlpnlDiffColoring.Controls.Add(chkUseGitColoring, 0, 0);
+            tlpnlDiffColoring.Controls.Add(chkUseGEThemeGitColoring, 0, 1);
+            tlpnlDiffColoring.Dock = DockStyle.Fill;
+            tlpnlDiffColoring.Location = new Point(8, 24);
+            tlpnlDiffColoring.Name = "tlpnlDiffColoring";
+            tlpnlDiffColoring.RowCount = 3;
+            tlpnlDiffColoring.RowStyles.Add(new RowStyle());
+            tlpnlDiffColoring.RowStyles.Add(new RowStyle());
+            tlpnlDiffColoring.RowStyles.Add(new RowStyle());
+            tlpnlDiffColoring.Size = new Size(1489, 150);
+            tlpnlDiffColoring.TabIndex = 0;
+            // 
+            // chkUseGitColoring
+            // 
+            chkUseGitColoring.AutoSize = true;
+            chkUseGitColoring.Dock = DockStyle.Fill;
+            chkUseGitColoring.Location = new Point(3, 3);
+            chkUseGitColoring.Name = "chkUseGitColoring";
+            chkUseGitColoring.Size = new Size(183, 19);
+            chkUseGitColoring.TabIndex = 1;
+            chkUseGitColoring.Text = "Git coloring";
+            chkUseGitColoring.UseVisualStyleBackColor = true;
+            chkUseGitColoring.CheckedChanged += chkUseGitColoring_CheckedChanged;
+            // 
+            // chkUseGEThemeGitColoring
+            // 
+            chkUseGEThemeGitColoring.AutoSize = true;
+            chkUseGEThemeGitColoring.Dock = DockStyle.Fill;
+            chkUseGEThemeGitColoring.Location = new Point(3, 28);
+            chkUseGEThemeGitColoring.Name = "chkUseGEThemeGitColoring";
+            chkUseGEThemeGitColoring.Size = new Size(183, 19);
+            chkUseGEThemeGitColoring.TabIndex = 2;
+            chkUseGEThemeGitColoring.Text = "Use theme coloring";
+            chkUseGEThemeGitColoring.UseVisualStyleBackColor = true;
+            // 
             // ColorsSettingsPage
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -325,13 +389,17 @@
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             cmsOpenThemeFolders.ResumeLayout(false);
+            gbDiffColoring.ResumeLayout(false);
+            gbDiffColoring.PerformLayout();
+            tlpnlDiffColoring.ResumeLayout(false);
+            tlpnlDiffColoring.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
 
         }
 
         #endregion
-    
+
         private GroupBox gbRevisionGraph;
         private CheckBox DrawNonRelativesTextGray;
         private CheckBox DrawNonRelativesGray;
@@ -350,5 +418,9 @@
         private ComboBox _NO_TRANSLATE_cbSelectTheme;
         private Label lblRestartNeeded;
         private CheckBox chkFillRefLabels;
+        private GroupBox gbDiffColoring;
+        private TableLayoutPanel tlpnlDiffColoring;
+        private CheckBox chkUseGitColoring;
+        private CheckBox chkUseGEThemeGitColoring;
     }
 }

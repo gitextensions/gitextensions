@@ -1,93 +1,96 @@
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Document;
 
-namespace GitUI.Editor.Diff
+namespace GitUI.Editor.Diff;
+
+/// <summary>
+/// Highlight git-range-diff
+/// </summary>
+public class RangeDiffHighlightService : DiffHighlightService
 {
-    public class RangeDiffHighlightService : DiffHighlightService
+    private static readonly string[] _diffFullPrefixes = ["      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    "];
+    private static readonly string[] _diffSearchPrefixes = ["    "];
+    private static readonly string[] _addedLinePrefixes = ["+", " +"];
+    private static readonly string[] _removedLinePrefixes = ["-", " -"];
+
+    public RangeDiffHighlightService(ref string text, bool useGitColoring)
+        : base(ref text, useGitColoring)
     {
-        private static readonly string[] _diffFullPrefixes = { "      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    " };
-        private static readonly string[] _diffSearchPrefixes = { "    " };
+    }
 
-        public static new RangeDiffHighlightService Instance { get; } = new();
+    // git-range-diff has an extended subset of git-diff options, base is the same
+    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
+        => GetGitCommandConfiguration(module, useGitColoring, "range-diff");
 
-        protected RangeDiffHighlightService()
+    public override void AddTextHighlighting(IDocument document)
+    {
+        if (_useGitColoring)
         {
-        }
-
-        protected override int GetDiffContentOffset()
-        {
-            // Four spaces and two space/+/-
-            return 6;
-        }
-
-        public override string[] GetFullDiffPrefixes()
-        {
-            return _diffFullPrefixes;
-        }
-
-        // For range-diff, this is a negative check, search is for headers
-        public override bool IsSearchMatch(string line)
-        {
-            return !line.StartsWithAny(_diffSearchPrefixes);
-        }
-
-        public override void AddTextHighlighting(IDocument document)
-        {
-            bool forceAbort = false;
-
-            for (int line = 0; line < document.TotalNumberOfLines && !forceAbort; line++)
+            foreach (TextMarker tm in _textMarkers)
             {
-                LineSegment lineSegment = document.GetLineSegment(line);
-
-                if (lineSegment.TotalLength == 0)
-                {
-                    continue;
-                }
-
-                if (line == document.TotalNumberOfLines - 1)
-                {
-                    forceAbort = true;
-                }
-
-                line = TryHighlightAddedAndDeletedLines(document, line, lineSegment);
-
-                ProcessLineSegment(document, ref line, lineSegment, "    ", AppColor.AuthoredHighlight.GetThemeColor(), true);
-                ProcessLineSegment(document, ref line, lineSegment, "    @@", AppColor.DiffSection.GetThemeColor());
-                ProcessLineSegment(document, ref line, lineSegment, "     @@", AppColor.DiffSection.GetThemeColor());
-                ProcessLineSegment(document, ref line, lineSegment, "    -@@", AppColor.DiffSection.GetThemeColor());
-                ProcessLineSegment(document, ref line, lineSegment, "    +@@", AppColor.DiffSection.GetThemeColor());
-                ProcessLineSegment(document, ref line, lineSegment, "      ## ", AppColor.DiffSection.GetThemeColor());
-                ProcessLineSegment(document, ref line, lineSegment, "       ##", AppColor.DiffSection.GetThemeColor());
+                document.MarkerStrategy.AddMarker(tm);
             }
+
+            return;
         }
 
-        protected override int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
+        bool forceAbort = false;
+
+        for (int line = 0; line < document.TotalNumberOfLines && !forceAbort; line++)
         {
-            // part of range-diff dual-color
+            LineSegment lineSegment = document.GetLineSegment(line);
 
-            // Only changed in selected
-            ProcessLineSegment(document, ref line, lineSegment, "    ++", AppColor.DiffAddedExtra.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "    +-", AppColor.DiffRemovedExtra.GetThemeColor());
+            if (lineSegment.TotalLength == 0)
+            {
+                continue;
+            }
 
-            // Only changed in first or same change in both
-            ProcessLineSegment(document, ref line, lineSegment, "    -+", AppColor.DiffAdded.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "    --", AppColor.DiffRemoved.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "     -", AppColor.DiffRemoved.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "     +", AppColor.DiffAdded.GetThemeColor());
+            if (line == document.TotalNumberOfLines - 1)
+            {
+                forceAbort = true;
+            }
 
-            // No highlight for lines removed in both first/selected
-            return line;
+            line = TryHighlightAddedAndDeletedLines(document, line, lineSegment);
+
+            ProcessLineSegment(document, ref line, lineSegment, "    ", AppColor.AuthoredHighlight.GetThemeColor(), true);
+            ProcessLineSegment(document, ref line, lineSegment, "    @@", AppColor.DiffSection.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "     @@", AppColor.DiffSection.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "    -@@", AppColor.DiffSection.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "    +@@", AppColor.DiffSection.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "      ## ", AppColor.DiffSection.GetThemeColor());
+            ProcessLineSegment(document, ref line, lineSegment, "       ##", AppColor.DiffSection.GetThemeColor());
         }
+    }
 
-        protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
-        {
-            return LinePrefixHelper.GetLinesStartingWith(document, ref line, new[] { "+", " +" }, ref found);
-        }
+    public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
 
-        protected override List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
-        {
-            return LinePrefixHelper.GetLinesStartingWith(document, ref line, new[] { "-", " -" }, ref found);
-        }
+    // For range-diff, this is a negative check, search is for headers
+    public override bool IsSearchMatch(string line) => !line.StartsWithAny(_diffSearchPrefixes);
+
+    protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
+        => LinePrefixHelper.GetLinesStartingWith(document, ref line, _addedLinePrefixes, ref found);
+
+    protected override List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
+        => LinePrefixHelper.GetLinesStartingWith(document, ref line, _removedLinePrefixes, ref found);
+
+    protected override int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
+    {
+        // part of range-diff dual-color
+
+        // Only changed in selected
+        ProcessLineSegment(document, ref line, lineSegment, "    ++", AppColor.DiffAddedExtra.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, "    +-", AppColor.DiffRemovedExtra.GetThemeColor());
+
+        // Only changed in first or same change in both
+        ProcessLineSegment(document, ref line, lineSegment, "    -+", AppColor.DiffAdded.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, "    --", AppColor.DiffRemoved.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, "     -", AppColor.DiffRemoved.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, "     +", AppColor.DiffAdded.GetThemeColor());
+
+        // No highlight for lines removed in both first/selected
+        return line;
     }
 }

@@ -30,7 +30,7 @@ namespace TranslationApp
             ManagedExtensibility.Initialise();
 
             // Required for translation
-            PluginRegistry.Initialize();
+            PluginRegistry.InitializeAll();
 
             // We will be instantiating a number of forms using their default constructors.
             // This would lead to InvalidOperationException thrown in GitModuleForm().

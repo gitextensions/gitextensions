@@ -1,10 +1,9 @@
-﻿namespace GitUI.Editor.Diff
+﻿namespace GitUI.Editor.Diff;
+
+public enum DiffLineType
 {
-    public enum DiffLineType
-    {
-        Header,
-        Plus,
-        Minus,
-        Context
-    }
+    Header,
+    Plus,
+    Minus,
+    Context,
 }

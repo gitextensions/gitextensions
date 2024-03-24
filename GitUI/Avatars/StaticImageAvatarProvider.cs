@@ -11,6 +11,8 @@
             _sizeCache.Add(_image.Height, image);
         }
 
+        public bool PerformsIo => false;
+
         /// <inheritdoc />
         public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
@@ -26,7 +28,7 @@
                     return image;
                 }
 
-                Bitmap resizedImage = new(_image, new Size(imageSize, imageSize));
+                Bitmap resizedImage = new(_image, imageSize, imageSize);
                 _sizeCache.Add(imageSize, resizedImage);
 
                 return resizedImage;

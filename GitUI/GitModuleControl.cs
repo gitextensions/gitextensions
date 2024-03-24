@@ -69,7 +69,9 @@ namespace GitUI
             }
         }
 
-        /// <summary>Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.</summary>
+        /// <summary>
+        ///  Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.
+        /// </summary>
         [Browsable(false)]
         public GitUICommands UICommands => UICommandsSource.UICommands;
 

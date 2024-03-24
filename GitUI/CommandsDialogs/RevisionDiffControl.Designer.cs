@@ -98,8 +98,7 @@ namespace GitUI.CommandsDialogs
             // 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
             DiffFiles.Dock = DockStyle.Fill;
-            DiffFiles.FilterVisible = true;
-            DiffFiles.GroupByRevision = false;
+            DiffFiles.GroupByRevision = true;
             DiffFiles.Location = new Point(0, 0);
             DiffFiles.Margin = new Padding(0);
             DiffFiles.Name = "DiffFiles";
@@ -434,10 +433,9 @@ namespace GitUI.CommandsDialogs
             // 
             // findInDiffToolStripMenuItem
             // 
-            findInDiffToolStripMenuItem.Image = Properties.Images.Preview;
             findInDiffToolStripMenuItem.Name = "findInDiffToolStripMenuItem";
             findInDiffToolStripMenuItem.Size = new Size(262, 22);
-            findInDiffToolStripMenuItem.Text = "&Find";
+            findInDiffToolStripMenuItem.Text = "&Find file...";
             findInDiffToolStripMenuItem.Click += findInDiffToolStripMenuItem_Click;
             // 
             // toolStripSeparatorScript

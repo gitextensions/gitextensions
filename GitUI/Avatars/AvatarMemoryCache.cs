@@ -21,6 +21,8 @@ namespace GitUI.Avatars
             _cache = new MruCache<(string email, int imageSize), Image>(capacity);
         }
 
+        public bool PerformsIo => false;
+
         /// <inheritdoc />
         public event EventHandler? CacheCleared;
 
@@ -102,6 +104,14 @@ namespace GitUI.Avatars
         {
             lock (_cache)
             {
+                foreach ((string email, int imageSize) key in _cache.Keys)
+                {
+                    if (_cache.TryGetValue(key, out Image cachedImage))
+                    {
+                        cachedImage.Dispose();
+                    }
+                }
+
                 _cache.Clear();
             }
 

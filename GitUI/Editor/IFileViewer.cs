@@ -26,7 +26,7 @@ namespace GitUI.Editor
         event EventHandler DoubleClick;
 
         void EnableScrollBars(bool enable);
-        void Find();
+        void Find(bool replace);
         Task FindNextAsync(bool searchForwardOrOpenWithDifftool);
 
         string GetText();

@@ -1,7 +1,9 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtUtils;
 using GitUI.Editor;
+using GitUI.Editor.Diff;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -71,22 +73,61 @@ namespace GitUI
                     : $"{item.BaseA}..{firstId} {item.BaseB}..{item.SecondRevision.ObjectId}";
                 await fileViewer.ViewTextAsync("git-range-diff.sh", $"git range-diff {range} -- {additionalCommandInfo}");
 
-                string? output = await fileViewer.Module.GetRangeDiffAsync(
+                ExecutionResult result = await fileViewer.Module.GetRangeDiffAsync(
                         firstId,
                         item.SecondRevision.ObjectId,
                         item.BaseA,
                         item.BaseB,
                         fileViewer.GetExtraDiffArguments(isRangeDiff: true),
                         additionalCommandInfo,
+                        useGitColoring: AppSettings.UseGitColoring.Value,
+                        commandConfiguration: RangeDiffHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring.Value),
                         cancellationToken);
 
+                if (!result.ExitedSuccessfully)
+                {
+                    string output = $"{result.StandardError}{Environment.NewLine}Git output (exit code: {result.ExitCode}): {Environment.NewLine}{result.StandardOutput}";
+                    await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
+                    return;
+                }
+
                 // Try set highlighting from first found filename
-                Match match = FileNameRegex().Match(output ?? "");
+                Match match = FileNameRegex().Match(result.StandardOutput);
                 string filename = match.Groups["file"].Success ? match.Groups["file"].Value : item.Item.Name;
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await fileViewer.ViewRangeDiffAsync(filename, output ?? defaultText);
+                await fileViewer.ViewRangeDiffAsync(filename, result.StandardOutput, AppSettings.UseGitColoring.Value);
+
+                return;
+            }
+
+            if (firstId == ObjectId.CombinedDiffId)
+            {
+                bool result = fileViewer.Module.GetCombinedDiffContent(item.SecondRevision.ObjectId, item.Item.Name,
+                    fileViewer.GetExtraDiffArguments(),
+                    fileViewer.Encoding,
+                    out string diffOfConflict,
+                    useGitColoring: AppSettings.UseGitColoring.Value,
+                    commandConfiguration: CombinedDiffHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring.Value),
+                    cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (!result)
+                {
+                    string output = $"Git command exit code: {result}{Environment.NewLine}{diffOfConflict}";
+                    await fileViewer.ViewTextAsync(item?.Item?.Name, text: diffOfConflict);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(diffOfConflict))
+                {
+                    await fileViewer.ViewTextAsync(item?.Item?.Name, text: TranslatedStrings.UninterestingDiffOmitted);
+                    return;
+                }
+
+                await fileViewer.ViewCombinedDiffAsync(item, text: diffOfConflict, line: line, openWithDifftool: openWithDiffTool, useGitColoring: AppSettings.UseGitColoring.Value);
                 return;
             }
 
@@ -101,7 +142,7 @@ namespace GitUI
             }
             else
             {
-                await fileViewer.ViewPatchAsync(item, text: selectedPatch, line: line, openWithDifftool: openWithDiffTool);
+                await fileViewer.ViewPatchAsync(item, text: selectedPatch, line: line, openWithDifftool: openWithDiffTool, useGitColoring: AppSettings.UseGitColoring.Value);
             }
 
             return;
@@ -116,24 +157,13 @@ namespace GitUI
                     isTracked: item.Item.IsTracked);
             }
 
-            static async Task<string?> GetSelectedPatchAsync(
+            async Task<string?> GetSelectedPatchAsync(
                 FileViewer fileViewer,
                 ObjectId firstId,
                 ObjectId selectedId,
                 GitItemStatus file,
                 CancellationToken cancellationToken)
             {
-                if (firstId == ObjectId.CombinedDiffId)
-                {
-                    string diffOfConflict = fileViewer.Module.GetCombinedDiffContent(selectedId, file.Name,
-                        fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
-
-                    cancellationToken.ThrowIfCancellationRequested();
-                    return string.IsNullOrWhiteSpace(diffOfConflict)
-                        ? TranslatedStrings.UninterestingDiffOmitted
-                        : diffOfConflict;
-                }
-
                 Task<GitSubmoduleStatus?> task = file.GetSubmoduleStatusAsync();
 
                 if (file.IsSubmodule && task is not null)
@@ -148,7 +178,7 @@ namespace GitUI
                 }
 
                 (Patch? patch, string? errorMessage) = await GetItemPatchAsync(fileViewer.Module, file, firstId, selectedId,
-                    fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
+                    fileViewer.GetExtraDiffArguments(), fileViewer.Encoding, cancellationToken);
 
                 cancellationToken.ThrowIfCancellationRequested();
                 return file.IsSubmodule
@@ -161,12 +191,16 @@ namespace GitUI
                     ObjectId? firstId,
                     ObjectId? secondId,
                     string diffArgs,
-                    Encoding encoding)
+                    Encoding encoding,
+                    CancellationToken cancellationToken)
                 {
                     // Files with tree guid should be presented with normal diff
                     bool isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
 
-                    return await module.GetSingleDiffAsync(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
+                    return await module.GetSingleDiffAsync(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked,
+                        AppSettings.UseGitColoring.Value,
+                        PatchHighlightService.GetGitCommandConfiguration(module, AppSettings.UseGitColoring.Value),
+                        cancellationToken);
                 }
             }
         }

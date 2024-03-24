@@ -19,8 +19,6 @@ namespace GitUI
             InitializeComponent();
             InitializeComplete();
 
-            clearImagecacheToolStripMenuItem.Click += delegate { ClearCache(); };
-
             foreach (AvatarProvider avatarProvider in EnumHelper.GetValues<AvatarProvider>())
             {
                 ToolStripMenuItem item = new()
@@ -61,11 +59,11 @@ namespace GitUI
 
         public void ClearCache()
         {
-            this.InvokeAndForget(async () =>
+            ThreadHelper.FileAndForget(async () =>
                     {
                         AvatarService.UpdateAvatarProvider();
-                        await _avatarCacheCleaner.ClearCacheAsync().ConfigureAwait(true);
-                        await UpdateAvatarAsync().ConfigureAwait(false);
+                        await _avatarCacheCleaner.ClearCacheAsync();
+                        await UpdateAvatarAsync();
                     });
         }
 
@@ -141,13 +139,6 @@ namespace GitUI
 
         private void OnClearCacheClick(object sender, EventArgs e)
         {
-            string email = Email;
-
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return;
-            }
-
             ClearCache();
         }
 

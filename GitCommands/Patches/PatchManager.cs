@@ -62,7 +62,7 @@ namespace GitCommands.Patches
 
         private static string CorrectHeaderForNewFile(string header)
         {
-            string[] headerLines = header.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             string? pppLine = null;
             foreach (string line in headerLines)
             {
@@ -108,7 +108,7 @@ namespace GitCommands.Patches
             // --- a/original2.txt
             // +++ b/original2.txt
 
-            string[] headerLines = header.Split(new[] { '\n' });
+            string[] headerLines = header.Split('\n');
             string? oldNameWithPrefix = null;
             string? newName = null;
             foreach (string line in headerLines)
@@ -515,7 +515,7 @@ namespace GitCommands.Patches
         private readonly List<SubChunk> _subChunks = [];
         private SubChunk? _currentSubChunk;
 
-        [GeneratedRegex(@".*-(\d+),")]
+        [GeneratedRegex(@".*-(?<startline>\d+),", RegexOptions.ExplicitCapture)]
         private static partial Regex HeaderRegex();
 
         private SubChunk CurrentSubChunk
@@ -578,7 +578,7 @@ namespace GitCommands.Patches
 
             if (match.Success)
             {
-                _startLine = int.Parse(match.Groups[1].Value);
+                _startLine = int.Parse(match.Groups["startline"].Value);
             }
         }
 

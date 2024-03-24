@@ -5,7 +5,6 @@ using GitCommands.Git;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
-using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -54,7 +53,6 @@ namespace GitUI.CommandsDialogs
         public RevisionDiffControl()
         {
             InitializeComponent();
-            DiffFiles.GroupByRevision = true;
             InitializeComplete();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
@@ -233,11 +231,6 @@ namespace GitUI.CommandsDialogs
         public void CancelLoadCustomDifftools()
         {
             _customDiffToolsSequence.CancelCurrent();
-        }
-
-        private string GetShortcutKeyDisplayString(Command cmd)
-        {
-            return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
         }
 
         #endregion
@@ -794,7 +787,7 @@ namespace GitUI.CommandsDialogs
 
             // switch to view (and fills the first level of file tree data model if not already done)
             string name = DiffFiles.SelectedItems.First().Item.Name;
-            int? line = DiffText.Visible ? DiffText.CurrentFileLine : BlameControl.CurrentFileLine;
+            int line = DiffText.Visible ? DiffText.CurrentFileLine : BlameControl.CurrentFileLine;
             (FindForm() as FormBrowse)?.ExecuteCommand(FormBrowse.Command.FocusFileTree);
             _revisionFileTree.ExpandToFile(name, line, requestBlame);
         }
@@ -1365,8 +1358,7 @@ namespace GitUI.CommandsDialogs
         {
             return base.ProcessHotkey(keyData) // generic handling of this controls's hotkeys (upstream)
                 || (!GitExtensionsControl.IsTextEditKey(keyData) // downstream (without keys for quick search and filter)
-                    && ((DiffFiles.Visible && DiffFiles.ProcessHotkey(keyData))
-                        || (DiffText.Visible && DiffText.ProcessHotkey(keyData))
+                    && ((DiffText.Visible && DiffText.ProcessHotkey(keyData))
                         || (BlameControl.Visible && BlameControl.ProcessHotkey(keyData))));
         }
 

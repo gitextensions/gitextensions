@@ -46,11 +46,11 @@ namespace GitUI.CommandsDialogs
             fileHistoryToolStripMenuItem = new ToolStripMenuItem();
             gitItemBindingSource = new BindingSource(components);
             tableLayoutPanel1 = new TableLayoutPanel();
-            label7 = new Label();
+            labelLocalCurrent = new Label();
             localFileName = new Label();
             baseFileName = new Label();
-            label2 = new Label();
-            label5 = new Label();
+            labelBase = new Label();
+            labelRemoteIncoming = new Label();
             remoteFileName = new Label();
             tableLayoutPanel3 = new TableLayoutPanel();
             merge = new Button();
@@ -66,6 +66,7 @@ namespace GitUI.CommandsDialogs
             gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
             progressBar = new ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(ConflictedFiles)).BeginInit();
+            toolTip = new ToolTip(components);
             ConflictedFilesContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(gitItemBindingSource)).BeginInit();
             tableLayoutPanel1.SuspendLayout();
@@ -303,13 +304,14 @@ namespace GitUI.CommandsDialogs
             // 
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel4.SetColumnSpan(tableLayoutPanel1, 2);
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(label7, 0, 0);
+            tableLayoutPanel1.Controls.Add(labelLocalCurrent, 0, 0);
             tableLayoutPanel1.Controls.Add(localFileName, 1, 0);
             tableLayoutPanel1.Controls.Add(baseFileName, 1, 1);
-            tableLayoutPanel1.Controls.Add(label2, 0, 1);
-            tableLayoutPanel1.Controls.Add(label5, 0, 2);
+            tableLayoutPanel1.Controls.Add(labelBase, 0, 1);
+            tableLayoutPanel1.Controls.Add(labelRemoteIncoming, 0, 2);
             tableLayoutPanel1.Controls.Add(remoteFileName, 1, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 296);
@@ -322,16 +324,16 @@ namespace GitUI.CommandsDialogs
             tableLayoutPanel1.Size = new Size(467, 66);
             tableLayoutPanel1.TabIndex = 0;
             // 
-            // label7
+            // labelLocalCurrent
             // 
-            label7.Anchor = AnchorStyles.Left;
-            label7.AutoSize = true;
-            label7.Location = new Point(3, 0);
-            label7.Name = "label7";
-            label7.Padding = new Padding(0, 3, 0, 3);
-            label7.Size = new Size(37, 22);
-            label7.TabIndex = 1;
-            label7.Text = "Local";
+            labelLocalCurrent.Anchor = AnchorStyles.Left;
+            labelLocalCurrent.AutoSize = true;
+            labelLocalCurrent.Location = new Point(3, 0);
+            labelLocalCurrent.Name = "labelLocalCurrent";
+            labelLocalCurrent.Padding = new Padding(0, 3, 0, 3);
+            labelLocalCurrent.Size = new Size(80, 21);
+            labelLocalCurrent.TabIndex = 1;
+            labelLocalCurrent.Text = "Local/current";
             // 
             // localFileName
             // 
@@ -353,27 +355,27 @@ namespace GitUI.CommandsDialogs
             baseFileName.TabIndex = 4;
             baseFileName.Text = "...";
             // 
-            // label2
+            // labelBase
             // 
-            label2.Anchor = AnchorStyles.Left;
-            label2.AutoSize = true;
-            label2.Location = new Point(3, 22);
-            label2.Name = "label2";
-            label2.Padding = new Padding(0, 3, 0, 3);
-            label2.Size = new Size(35, 22);
-            label2.TabIndex = 2;
-            label2.Text = "Base";
+            labelBase.Anchor = AnchorStyles.Left;
+            labelBase.AutoSize = true;
+            labelBase.Location = new Point(3, 22);
+            labelBase.Name = "labelBase";
+            labelBase.Padding = new Padding(0, 3, 0, 3);
+            labelBase.Size = new Size(35, 22);
+            labelBase.TabIndex = 2;
+            labelBase.Text = "Base";
             // 
-            // label5
+            // labelRemoteIncoming
             // 
-            label5.Anchor = AnchorStyles.Left;
-            label5.AutoSize = true;
-            label5.Location = new Point(3, 44);
-            label5.Name = "label5";
-            label5.Padding = new Padding(0, 3, 0, 3);
-            label5.Size = new Size(52, 22);
-            label5.TabIndex = 5;
-            label5.Text = "Remote";
+            labelRemoteIncoming.Anchor = AnchorStyles.Left;
+            labelRemoteIncoming.AutoSize = true;
+            labelRemoteIncoming.Location = new Point(3, 44);
+            labelRemoteIncoming.Name = "labelRemoteIncoming";
+            labelRemoteIncoming.Padding = new Padding(0, 3, 0, 3);
+            labelRemoteIncoming.Size = new Size(104, 21);
+            labelRemoteIncoming.TabIndex = 5;
+            labelRemoteIncoming.Text = "Remote/incoming";
             // 
             // remoteFileName
             // 
@@ -549,8 +551,8 @@ namespace GitUI.CommandsDialogs
             gotoUserManualControl1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             gotoUserManualControl1.AutoSize = true;
             gotoUserManualControl1.Location = new Point(3, 369);
-            gotoUserManualControl1.ManualSectionAnchorName = null;
-            gotoUserManualControl1.ManualSectionSubfolder = "merge_conflicts";
+            gotoUserManualControl1.ManualSectionAnchorName = "handle-merge-conflicts";
+            gotoUserManualControl1.ManualSectionSubfolder = "modify_history";
             gotoUserManualControl1.MinimumSize = new Size(70, 20);
             gotoUserManualControl1.Name = "gotoUserManualControl1";
             gotoUserManualControl1.Size = new Size(70, 20);
@@ -609,12 +611,12 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem openWithToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripMenuItem openFolderToolStripMenuItem;
-        private Label label7;
+        private Label labelLocalCurrent;
         private TableLayoutPanel tableLayoutPanel1;
-        private Label label2;
+        private Label labelBase;
         private Label localFileName;
         private Label baseFileName;
-        private Label label5;
+        private Label labelRemoteIncoming;
         private Label remoteFileName;
         private Label conflictDescription;
         private DataGridView ConflictedFiles;
@@ -634,5 +636,6 @@ namespace GitUI.CommandsDialogs
         private TableLayoutPanel tableLayoutPanel5;
         private UserControls.GotoUserManualControl gotoUserManualControl1;
         private ProgressBar progressBar;
+        private ToolTip toolTip;
     }
 }

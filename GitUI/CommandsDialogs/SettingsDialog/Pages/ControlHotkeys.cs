@@ -2,6 +2,7 @@
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

@@ -184,4 +184,7 @@ Victor Shih, bygreencn, mrahn80, Alexander Eifler, Marcelo Ghelman, ghanique, ol
   <data name="DeleteText" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\DeleteText.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\Warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

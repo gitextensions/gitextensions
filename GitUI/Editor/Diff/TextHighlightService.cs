@@ -1,22 +1,24 @@
-﻿using GitExtUtils.GitUI.Theming;
-using GitUI.Theming;
+﻿using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
-namespace GitUI.Editor.Diff
+namespace GitUI.Editor.Diff;
+
+public class TextHighlightService : ITextHighlightService
 {
-    public class TextHighlightService : ITextHighlightService
+    /// <summary>
+    /// Base class for highlighting, not adding any highlighting.
+    /// </summary>
+    public static TextHighlightService Instance { get; } = new();
+
+    protected TextHighlightService()
     {
-        /// <summary>
-        /// Base class for highlighting, not adding any highlighting.
-        /// </summary>
-        public static TextHighlightService Instance { get; } = new();
+    }
 
-        protected TextHighlightService()
-        {
-        }
+    public virtual void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
+    {
+    }
 
-        public virtual void AddTextHighlighting(IDocument document)
-        {
-        }
+    public virtual void AddTextHighlighting(IDocument document)
+    {
     }
 }

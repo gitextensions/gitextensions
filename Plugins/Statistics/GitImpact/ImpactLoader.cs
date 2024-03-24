@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Globalization;
+using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -9,11 +10,11 @@ namespace GitExtensions.Plugins.GitImpact
     {
         public readonly struct Commit
         {
-            public DateTime Week { get; }
+            public DateOnly Week { get; }
             public string Author { get; }
             public DataPoint Data { get; }
 
-            public Commit(DateTime week, string author, DataPoint data)
+            public Commit(DateOnly week, string author, DataPoint data)
             {
                 Week = week;
                 Author = author;
@@ -51,20 +52,32 @@ namespace GitExtensions.Plugins.GitImpact
         public bool RespectMailmap { get; set; }
 
         public event EventHandler? Exited;
-        public event Action<Commit>? CommitLoaded;
+        public event Action<IList<Commit>>? CommitLoaded;
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
+        private readonly CancellationTokenSource _closingPluginCancellationToken = new();
         private readonly IGitModule _module;
+        private readonly JoinableTask _mainModuleLoadingTask;
+        private readonly Dictionary<string, List<Commit>> _modulesCommits = new(1);
+        private readonly int _firstDayOfWeek = (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
 
         public ImpactLoader(IGitModule module)
         {
             _module = module;
+            _mainModuleLoadingTask = ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    LoadModuleInfoData(_module, _closingPluginCancellationToken.Token);
+                });
         }
 
         public void Dispose()
         {
+            _closingPluginCancellationToken.Cancel();
             Stop();
             _cancellationTokenSequence.Dispose();
+            _closingPluginCancellationToken.Dispose();
         }
 
         public void Stop()
@@ -108,18 +121,12 @@ namespace GitExtensions.Plugins.GitImpact
 
         private IReadOnlyList<JoinableTask> GetTasks(CancellationToken token)
         {
-            string authorName = RespectMailmap ? "%aN" : "%an";
-            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=iso -C --all --no-merges";
-
-            List<JoinableTask> tasks =
-            [
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
-                    {
-                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                        LoadModuleInfo(command, _module, token);
-                    })
-            ];
+            List<JoinableTask> tasks = [ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    await _mainModuleLoadingTask.JoinAsync(token);
+                    LoadModuleInfo(_module, token);
+                })];
 
             if (ShowSubmodules)
             {
@@ -132,17 +139,40 @@ namespace GitExtensions.Plugins.GitImpact
                         async () =>
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                            LoadModuleInfo(command, submodule, token);
+                            LoadModuleInfo(submodule, token);
                         }));
             }
 
             return tasks;
         }
 
-        private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
+        private void LoadModuleInfo(IGitModule module, CancellationToken token)
         {
-            ExecutionResult result = module.GitExecutable.Execute(command);
-            using List<string>.Enumerator lineEnumerator = result.StandardOutput.Split('\n').ToList().GetEnumerator();
+            if (_modulesCommits.TryGetValue(module.WorkingDir, out List<Commit> commitsBatch))
+            {
+                CommitLoaded(commitsBatch);
+                return;
+            }
+
+            commitsBatch = LoadModuleInfoData(module, token);
+            if (!token.IsCancellationRequested)
+            {
+                CommitLoaded(commitsBatch);
+            }
+        }
+
+        private List<Commit> LoadModuleInfoData(IGitModule module, CancellationToken token)
+        {
+            string authorName = RespectMailmap ? "%aN" : "%an";
+            string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=short --find-copies --all --no-merges";
+            ExecutionResult result = module.GitExecutable.Execute(command, cancellationToken: token);
+            List<string> lines = result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            const int linePerCommitEstimationInGitLogOutput = 6; // chosen by fair dice roll, guaranted to be random ;) ( https://xkcd.com/221/ )
+            int estimatedCommitCount = lines.Count / linePerCommitEstimationInGitLogOutput;
+            List<Commit> commitsBatch = new(estimatedCommitCount);
+
+            using List<string>.Enumerator lineEnumerator = lines.GetEnumerator();
 
             // Analyze commit listing
             while (!token.IsCancellationRequested && lineEnumerator.MoveNext())
@@ -177,10 +207,10 @@ namespace GitExtensions.Plugins.GitImpact
                 string author = header[1];
 
                 // Parse commit date
-                DateTime date = DateTime.Parse(header[0]).Date;
+                DateOnly date = DateOnly.Parse(header[0]);
 
                 // Calculate first day of the commit week
-                DateTime week = date.AddDays(-(int)date.DayOfWeek);
+                DateOnly week = date.AddDays(_firstDayOfWeek - (int)date.DayOfWeek);
 
                 // Reset commit data
                 int commits = 1;
@@ -213,23 +243,27 @@ namespace GitExtensions.Plugins.GitImpact
 
                 if (!token.IsCancellationRequested)
                 {
-                    CommitLoaded?.Invoke(new Commit(week, author, new DataPoint(commits, added, deleted)));
+                    commitsBatch.Add(new Commit(week, author, new DataPoint(commits, added, deleted)));
                 }
             }
+
+            _modulesCommits.Add(module.WorkingDir, commitsBatch);
+
+            return commitsBatch;
         }
 
         public static void AddIntermediateEmptyWeeks(
-            ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact,
+            ref SortedDictionary<DateOnly, Dictionary<string, DataPoint>> impact,
             IEnumerable<string> authors)
         {
             foreach (string author in authors)
             {
                 // Determine first and last commit week of each author
-                DateTime start = new();
-                DateTime end = new();
+                DateOnly start = DateOnly.MinValue;
+                DateOnly end = DateOnly.MinValue;
                 bool startFound = false;
 
-                foreach ((DateTime weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
+                foreach ((DateOnly weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
                 {
                     if (weekDataByAuthor.ContainsKey(author))
                     {
@@ -249,7 +283,7 @@ namespace GitExtensions.Plugins.GitImpact
                 }
 
                 // Add 0 commits weeks in between
-                foreach ((DateTime weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
+                foreach ((DateOnly weekDate, Dictionary<string, DataPoint> weekDataByAuthor) in impact)
                 {
                     if (!weekDataByAuthor.ContainsKey(author) &&
                         weekDate > start && weekDate < end)

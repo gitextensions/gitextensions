@@ -491,18 +491,14 @@ namespace GitUI.CommandsDialogs
             LoadCustomDifftools();
 
             base.OnLoad(e);
+        }
 
+        private void RestoreSplitters()
+        {
             _splitterManager.AddSplitter(splitMain, nameof(splitMain));
             _splitterManager.AddSplitter(splitRight, nameof(splitRight));
             _splitterManager.AddSplitter(splitLeft, nameof(splitLeft));
             _splitterManager.RestoreSplitters();
-
-            // Since #8849 and #8557 we have a geometry bug, which pushes the splitter up by 6px.
-            // Account for this shift. This is a workaround at best.
-            //
-            // The problem is likely caused by 'splitRight.FixedPanel = FixedPanel.Panel2' fact, but other forms
-            // have the same setting, and don't appear to suffer from the same bug.
-            splitRight.SplitterDistance -= 6;
         }
 
         protected override void OnShown(EventArgs e)
@@ -709,11 +705,6 @@ namespace GitUI.CommandsDialogs
             SelectPrevious = 22, // Ctrl+P
             SelectPrevious_AlternativeHotkey1 = 23, // Alt+Up
             SelectPrevious_AlternativeHotkey2 = 24, // Alt+Left
-        }
-
-        private string GetShortcutKeyDisplayString(Command cmd)
-        {
-            return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
         }
 
         private bool AddSelectionToCommitMessage()
@@ -1473,7 +1464,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
                     {
-                        string firstLine = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                        string firstLine = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.RemoveEmptyEntries)[0];
                         if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine &&
                             MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
@@ -1483,7 +1474,7 @@ namespace GitUI.CommandsDialogs
 
                     if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
                     {
-                        string[] lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] lines = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string line in lines)
                         {
                             if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine &&
@@ -1496,7 +1487,7 @@ namespace GitUI.CommandsDialogs
 
                     if (AppSettings.CommitValidationSecondLineMustBeEmpty)
                     {
-                        string[] lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                        string[] lines = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.None);
                         if (lines.Length > 2 &&
                             lines[1].Length != 0 &&
                             MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
@@ -1527,7 +1518,7 @@ namespace GitUI.CommandsDialogs
 
                 static string GetTextToValidate(string text)
                 {
-                    string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    string[] lines = text.Split(Delimiters.NewLines, StringSplitOptions.None);
                     if (text.StartsWith(CommitKind.Amend.GetPrefix()) && lines.Length > 2 && lines[1].Length == 0)
                     {
                         return string.Join(Environment.NewLine, lines.Skip(2));
@@ -2411,7 +2402,7 @@ namespace GitUI.CommandsDialogs
                     {
                         "--pretty=format:\"    %m %h - %s\"",
                         "--no-merges",
-                        $"{from}...{to}"
+                        $"{from}...{to}".Quote()
                     };
 
                     string log = module.GitExecutable.GetOutput(args);
@@ -2744,7 +2735,7 @@ namespace GitUI.CommandsDialogs
                     return;
 
                     // Do not cache results in order to update the info on FormActivate
-                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key, cache: false) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
+                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
                 });
         }
 
@@ -3112,20 +3103,28 @@ namespace GitUI.CommandsDialogs
                 commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
                 // Add registered templates
+                bool isItemAdded = false;
                 foreach (CommitTemplateItem item in _commitTemplateManager.RegisteredTemplates)
                 {
-                    CreateToolStripItem(item);
+                    isItemAdded |= CreateToolStripItem(item);
                 }
 
-                AddSeparator();
+                if (isItemAdded)
+                {
+                    AddSeparator();
+                    isItemAdded = false;
+                }
 
                 // Add templates from settings
                 foreach (CommitTemplateItem item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
                 {
-                    CreateToolStripItem(item);
+                    isItemAdded |= CreateToolStripItem(item);
                 }
 
-                AddSeparator();
+                if (isItemAdded)
+                {
+                    AddSeparator();
+                }
 
                 // Add a settings item
                 AddSettingsItem();
@@ -3133,11 +3132,11 @@ namespace GitUI.CommandsDialogs
 
                 return;
 
-                void CreateToolStripItem(CommitTemplateItem item)
+                bool CreateToolStripItem(CommitTemplateItem item)
                 {
                     if (string.IsNullOrEmpty(item.Name))
                     {
-                        return;
+                        return false;
                     }
 
                     ToolStripMenuItem toolStripItem = new(item.Name, item.Icon);
@@ -3153,14 +3152,12 @@ namespace GitUI.CommandsDialogs
                         }
                     };
                     commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+                    return true;
                 }
 
                 void AddSeparator()
                 {
-                    if (commitTemplatesToolStripMenuItem.DropDownItems.Count != 0)
-                    {
-                        commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-                    }
+                    commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
                 }
 
                 void AddSettingsItem()
@@ -3369,6 +3366,8 @@ namespace GitUI.CommandsDialogs
             internal EditNetSpell Message => _formCommit.Message;
 
             internal FileViewer SelectedDiff => _formCommit.SelectedDiff;
+
+            internal SplitContainer MainSplitter => _formCommit.splitMain;
 
             internal ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
 

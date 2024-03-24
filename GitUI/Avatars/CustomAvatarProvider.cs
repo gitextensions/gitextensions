@@ -21,6 +21,8 @@ namespace GitUI.Avatars
             _subProvider = subProvider ?? throw new ArgumentNullException(nameof(subProvider));
         }
 
+        public bool PerformsIo => true;
+
         /// <inheritdoc/>
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {

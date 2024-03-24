@@ -43,10 +43,11 @@ namespace GitUI.UserControls
 
             bool isArtificialCommitForEmptyRepo = commitHash == "HEAD";
 
+            lbCommits.Text = "";
+
             if (SelectedObjectId is null || isArtificialCommitForEmptyRepo)
             {
                 textBoxCommitHash.Text = "";
-                lbCommits.Text = "";
             }
             else
             {
@@ -55,9 +56,13 @@ namespace GitUI.UserControls
                     {
                         ObjectId currentCheckout = Module.GetCurrentCheckout();
 
-                        Validates.NotNull(currentCheckout);
+                        if (currentCheckout is null)
+                        {
+                            return;
+                        }
 
-                        string text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
+                        string toRef = SelectedObjectId.IsArtificial ? "HEAD" : SelectedObjectId.ToString();
+                        string text = Module.GetCommitCountString(currentCheckout, toRef);
 
                         await this.SwitchToMainThreadAsync();
 

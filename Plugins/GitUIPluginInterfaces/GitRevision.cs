@@ -18,9 +18,9 @@ namespace GitUIPluginInterfaces
         /// Artificial commit for the combined diff</summary>
         public const string CombinedDiffGuid = "3333333333333333333333333333333333333333";
 
-        [GeneratedRegex(@"^[a-f\d]{40}$")]
+        [GeneratedRegex(@"^[a-f\d]{40}$", RegexOptions.ExplicitCapture)]
         public static partial Regex Sha1HashRegex();
-        [GeneratedRegex(@"\b[a-f\d]{7,40}\b(?![^@\s]*@)")]
+        [GeneratedRegex(@"\b[a-f\d]{7,40}\b(?![^@\s]*@)", RegexOptions.ExplicitCapture)]
         public static partial Regex Sha1HashShortRegex();
 
         private BuildInfo? _buildStatus;

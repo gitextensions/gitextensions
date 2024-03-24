@@ -348,9 +348,8 @@ namespace GitCommands.Git
         private static string RemoveWarnings(string statusString)
         {
             // The status string from git-diff can show warnings. See tests
-            char[] nl = new[] { '\n', '\r' };
             string trimmedStatus = statusString;
-            int lastNewLinePos = trimmedStatus.LastIndexOfAny(nl);
+            int lastNewLinePos = trimmedStatus.LastIndexOfAny(Delimiters.LineFeedAndCarriageReturn);
             while (lastNewLinePos >= 0)
             {
                 if (lastNewLinePos == 0)
@@ -360,10 +359,10 @@ namespace GitCommands.Git
                 }
 
                 // Error always end with \n and start at previous index
-                int ind = trimmedStatus.LastIndexOfAny(new[] { '\n', '\r', '\0' }, lastNewLinePos - 1);
+                int ind = trimmedStatus.LastIndexOfAny(Delimiters.LineFeedCarriageReturnAndNull, lastNewLinePos - 1);
 
                 trimmedStatus = trimmedStatus.Remove(ind + 1, lastNewLinePos - ind);
-                lastNewLinePos = trimmedStatus.LastIndexOfAny(nl);
+                lastNewLinePos = trimmedStatus.LastIndexOfAny(Delimiters.LineFeedAndCarriageReturn);
             }
 
             return trimmedStatus;

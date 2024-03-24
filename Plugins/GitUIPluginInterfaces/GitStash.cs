@@ -6,7 +6,7 @@ namespace GitUIPluginInterfaces
     /// <summary>Stored local modifications.</summary>
     public sealed partial class GitStash
     {
-        [GeneratedRegex(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$")]
+        [GeneratedRegex(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex StashRegex();
 
         public static bool TryParse(string s, [NotNullWhen(returnValue: true)] out GitStash? stash)

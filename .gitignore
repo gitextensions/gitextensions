@@ -8,6 +8,7 @@ ipch/
 _ReSharper*/
 TestResults/
 *.DS_Store*
+.cr/
 
 obj/
 bin/

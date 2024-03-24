@@ -5,6 +5,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUIPluginInterfaces;
+using ResourceManager.Hotkey;
 using ResourceManager.Properties;
 
 namespace ResourceManager
@@ -76,20 +77,27 @@ namespace ResourceManager
         /// <param name="hotkeySettingsName">The setting name.</param>
         protected void LoadHotkeys(string hotkeySettingsName)
         {
-            _hotkeys = null;
+            _hotkeys = GetHotkeys(hotkeySettingsName);
+        }
 
+        /// <summary>
+        ///  Loads hotkeys for the specified configuration setting.
+        /// </summary>
+        /// <param name="hotkeySettingsName">The setting name.</param>
+        protected IReadOnlyList<HotkeyCommand> GetHotkeys(string hotkeySettingsName)
+        {
             if (!HotkeysEnabled)
             {
-                return;
+                return [];
             }
 
             if (!TryGetUICommands(out IGitUICommands commands))
             {
                 DebugHelpers.Fail($"{GetType().FullName}: service provider is unavailable.");
-                return;
+                return [];
             }
 
-            _hotkeys = commands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
+            return commands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName);
         }
 
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
@@ -98,15 +106,14 @@ namespace ResourceManager
             return ProcessHotkey(keyData) || base.ProcessCmdKey(ref msg, keyData);
         }
 
-        protected Keys GetShortcutKeys(int commandCode)
-        {
-            return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
-        }
+        protected Keys GetShortcutKeys<T>(T commandCode) where T : struct, Enum
+            => _hotkeys.GetShortcutKey(commandCode);
 
-        protected HotkeyCommand? GetHotkeyCommand(int commandCode)
-        {
-            return _hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
-        }
+        protected string GetShortcutKeyDisplayString<T>(T commandCode) where T : struct, Enum
+            => _hotkeys.GetShortcutDisplay(commandCode);
+
+        protected string GetShortcutKeyTooltipString<T>(T commandCode) where T : struct, Enum
+            => _hotkeys.GetShortcutToolTip(commandCode);
 
         /// <summary>Override this method to handle form-specific Hotkey commands.</summary>
         protected virtual bool ExecuteCommand(int command)

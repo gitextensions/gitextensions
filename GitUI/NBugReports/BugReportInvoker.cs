@@ -109,6 +109,20 @@ namespace GitUI.NBugReports
                 return;
             }
 
+            // Ignore accessibility-specific exception (refer to https://github.com/gitextensions/gitextensions/issues/11385)
+            if (exception is InvalidOperationException && exception.StackTrace?.Contains("ListViewGroup.get_AccessibilityObject") is true)
+            {
+                Trace.WriteLine(exception);
+                return;
+            }
+
+            // Do not report cancellation of async implementations awaited by the UI thread (refer to https://github.com/gitextensions/gitextensions/issues/11636)
+            if (exception is OperationCanceledException or TaskCanceledException)
+            {
+                Debug.WriteLine(exception);
+                return;
+            }
+
             ExternalOperationException externalOperationException = exception as ExternalOperationException;
 
             if (externalOperationException?.InnerException?.Message?.Contains(ExecutableExtensions.DubiousOwnershipSecurityConfigString) is true)
@@ -261,7 +275,7 @@ namespace GitUI.NBugReports
                 SizeToContent = true,
             };
             int startIndex = error.IndexOf(ExecutableExtensions.DubiousOwnershipSecurityConfigString);
-            string gitConfigTrustRepoCommand = error[startIndex..];
+            string gitConfigTrustRepoCommand = error[startIndex..].Trim();
             string folderPath = error[(startIndex + ExecutableExtensions.DubiousOwnershipSecurityConfigString.Length + 1)..];
 
             TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);

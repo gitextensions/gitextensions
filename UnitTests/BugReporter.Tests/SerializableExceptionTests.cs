@@ -9,7 +9,7 @@ namespace BugReporterTests
     [SetUICulture("en-US")]
     public sealed partial class SerializableExceptionTests
     {
-        [GeneratedRegex(@"^(?<keep>.*)(?<codeLocationToBeRemoved>\sin\s.*)$")]
+        [GeneratedRegex(@"^(?<keep>.*)(?<codeLocationToBeRemoved>\sin\s.*)$", RegexOptions.ExplicitCapture)]
         private static partial Regex PathRegex();
 
         [Test, TestCaseSource(nameof(TestCases))]

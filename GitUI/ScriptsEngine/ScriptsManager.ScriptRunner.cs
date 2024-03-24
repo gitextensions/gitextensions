@@ -18,9 +18,9 @@ namespace GitUI.ScriptsEngine
             private const string userFiles = "UserFiles";
 
             // Regex that ensure that in the default value, there is the same number of '{' than '}' to find the right end of the default value expression.
-            [GeneratedRegex(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}")]
+            [GeneratedRegex(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}", RegexOptions.ExplicitCapture)]
             private static partial Regex UserInputRegex();
-            [GeneratedRegex(@"\{plugin.(.+)\}", RegexOptions.IgnoreCase)]
+            [GeneratedRegex(@"\{plugin.(?<name>.+)\}", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
             private static partial Regex PluginRegex();
 
             public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
@@ -263,7 +263,7 @@ namespace GitUI.ScriptsEngine
                 Match match = PluginRegex().Match(originalCommand);
                 if (match.Success && match.Groups.Count > 1)
                 {
-                    originalCommand = $"{PluginPrefix}{match.Groups[1].Value.ToLower()}";
+                    originalCommand = $"{PluginPrefix}{match.Groups["name"].Value.ToLower()}";
                 }
 
                 return originalCommand;

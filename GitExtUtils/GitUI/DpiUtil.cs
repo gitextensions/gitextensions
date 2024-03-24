@@ -174,7 +174,7 @@ namespace GitExtUtils.GitUI
             using Graphics g = Graphics.FromImage(bitmap);
 
             // NearestNeighbor is better for 200% and above
-            // http://blogs.msdn.com/b/visualstudio/archive/2014/03/19/improving-high-dpi-support-for-visual-studio-2013.aspx
+            // https://devblogs.microsoft.com/visualstudio/improving-high-dpi-support-for-visual-studio-2013/
 
             g.InterpolationMode = ScaleX >= 2
                 ? InterpolationMode.NearestNeighbor

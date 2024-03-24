@@ -37,7 +37,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public override void Refresh(int rowHeight, in VisibleRowRange range) => Column.Visible = AppSettings.ShowAuthorAvatarColumn;
+        public override void ApplySettings()
+        {
+            Column.Visible = AppSettings.ShowAuthorAvatarColumn;
+        }
+
+        private string _email = null;
+        private string _author = null;
+        private Task<Image?> _getLastAvatarTask = null;
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
@@ -50,7 +57,35 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             int imageSize = e.CellBounds.Height - _padding - _padding;
 
-            Task<Image?> imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, revision.Author, imageSize);
+            Task<Image?> imageTask;
+
+            if (_email == revision.AuthorEmail && _author == revision.Author)
+            {
+                imageTask = _getLastAvatarTask;
+                if (imageTask.Status == TaskStatus.RanToCompletion)
+                {
+                    // Manage exceptional case where cached image have been cleaned by user
+                    try
+                    {
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+                        if (imageTask.Result.PixelFormat == System.Drawing.Imaging.PixelFormat.DontCare)
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+                        {
+                            GetAvatar();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        GetAvatar();
+                    }
+                }
+            }
+            else
+            {
+                GetAvatar();
+                _email = revision.AuthorEmail;
+                _author = revision.Author;
+            }
 
             Rectangle rect = new(
                 e.CellBounds.Left + _padding,
@@ -60,18 +95,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (imageTask.Status != TaskStatus.RanToCompletion)
             {
-                // First time, draw at the good size the placeholder image and cache it
-                if (_placeholderImage is null)
-                {
-                    _placeholderImage = new Bitmap(imageSize, imageSize);
-                    using Graphics g = Graphics.FromImage(_placeholderImage);
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    g.DrawImage(Images.User80, 0, 0, imageSize, imageSize);
-                }
-
-                // and draw this placeholder for now
-                e.Graphics.DrawImageUnscaled(_placeholderImage, rect);
-
                 // Once the image has loaded, invalidate only the avatar area for repaint
                 imageTask.ContinueWith(
                     t =>
@@ -79,6 +102,20 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         if (t.Status == TaskStatus.RanToCompletion)
                         {
                             _revisionGridView.Invalidate(rect);
+                        }
+                        else
+                        {
+                            // draw the placeholder
+                            // First time, draw at the good size the placeholder image and cache it
+                            if (_placeholderImage is null)
+                            {
+                                _placeholderImage = new Bitmap(imageSize, imageSize);
+                                using Graphics g = Graphics.FromImage(_placeholderImage);
+                                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                g.DrawImage(Images.User80, 0, 0, imageSize, imageSize);
+                            }
+
+                            e.Graphics.DrawImageUnscaled(_placeholderImage, rect);
                         }
 
                         imageTask.Dispose();
@@ -112,6 +149,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             // Bottom right corner
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Bottom - 1, 2, 1);
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Bottom - 2, 1, 2);
+
+            return;
+
+            void GetAvatar() =>
+                _getLastAvatarTask = imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, revision.Author, imageSize);
         }
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)

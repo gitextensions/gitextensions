@@ -27,6 +27,7 @@ namespace GitUI.Editor
             copyNewVersionToolStripMenuItem = new ToolStripMenuItem();
             copyOldVersionToolStripMenuItem = new ToolStripMenuItem();
             findToolStripMenuItem = new ToolStripMenuItem();
+            replaceToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             ignoreWhitespaceAtEolToolStripMenuItem = new ToolStripMenuItem();
             ignoreWhitespaceChangesToolStripMenuItem = new ToolStripMenuItem();
@@ -34,6 +35,8 @@ namespace GitUI.Editor
             increaseNumberOfLinesToolStripMenuItem = new ToolStripMenuItem();
             decreaseNumberOfLinesToolStripMenuItem = new ToolStripMenuItem();
             showEntireFileToolStripMenuItem = new ToolStripMenuItem();
+            showSyntaxHighlightingToolStripMenuItem = new ToolStripMenuItem();
+            showGitWordColoringToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             treatAllFilesAsTextToolStripMenuItem = new ToolStripMenuItem();
             automaticContinuousScrollToolStripMenuItem = new ToolStripMenuItem();
@@ -73,17 +76,20 @@ namespace GitUI.Editor
             copyNewVersionToolStripMenuItem,
             copyOldVersionToolStripMenuItem,
             toolStripSeparator1,
-            ignoreWhitespaceAtEolToolStripMenuItem,
-            ignoreWhitespaceChangesToolStripMenuItem,
-            ignoreAllWhitespaceChangesToolStripMenuItem,
             increaseNumberOfLinesToolStripMenuItem,
             decreaseNumberOfLinesToolStripMenuItem,
             showEntireFileToolStripMenuItem,
+            showNonprintableCharactersToolStripMenuItem,
+            showSyntaxHighlightingToolStripMenuItem,
+            ignoreWhitespaceAtEolToolStripMenuItem,
+            ignoreWhitespaceChangesToolStripMenuItem,
+            ignoreAllWhitespaceChangesToolStripMenuItem,
+            showGitWordColoringToolStripMenuItem,
             toolStripSeparator2,
             treatAllFilesAsTextToolStripMenuItem,
             automaticContinuousScrollToolStripMenuItem,
-            showNonprintableCharactersToolStripMenuItem,
             findToolStripMenuItem,
+            replaceToolStripMenuItem,
             goToLineToolStripMenuItem});
             contextMenu.Name = "ContextMenu";
             contextMenu.Size = new Size(244, 346);
@@ -117,36 +123,44 @@ namespace GitUI.Editor
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             copyToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.C)));
             copyToolStripMenuItem.Size = new Size(243, 22);
-            copyToolStripMenuItem.Text = "Copy";
+            copyToolStripMenuItem.Text = "&Copy";
             copyToolStripMenuItem.Click += CopyToolStripMenuItemClick;
             // 
             // copyPatchToolStripMenuItem
             // 
             copyPatchToolStripMenuItem.Name = "copyPatchToolStripMenuItem";
             copyPatchToolStripMenuItem.Size = new Size(243, 22);
-            copyPatchToolStripMenuItem.Text = "Copy patch";
+            copyPatchToolStripMenuItem.Text = "Copy &patch";
             copyPatchToolStripMenuItem.Click += CopyPatchToolStripMenuItemClick;
             // 
             // copyNewVersionToolStripMenuItem
             // 
             copyNewVersionToolStripMenuItem.Name = "copyNewVersionToolStripMenuItem";
             copyNewVersionToolStripMenuItem.Size = new Size(243, 22);
-            copyNewVersionToolStripMenuItem.Text = "Copy new version";
+            copyNewVersionToolStripMenuItem.Text = "Copy &new version";
             copyNewVersionToolStripMenuItem.Click += copyNewVersionToolStripMenuItem_Click;
             // 
             // copyOldVersionToolStripMenuItem
             // 
             copyOldVersionToolStripMenuItem.Name = "copyOldVersionToolStripMenuItem";
             copyOldVersionToolStripMenuItem.Size = new Size(243, 22);
-            copyOldVersionToolStripMenuItem.Text = "Copy old version";
+            copyOldVersionToolStripMenuItem.Text = "Copy &old version";
             copyOldVersionToolStripMenuItem.Click += copyOldVersionToolStripMenuItem_Click;
             // 
             // findToolStripMenuItem
             // 
+            findToolStripMenuItem.Image = Properties.Images.Preview;
             findToolStripMenuItem.Name = "findToolStripMenuItem";
             findToolStripMenuItem.Size = new Size(243, 22);
-            findToolStripMenuItem.Text = "Find";
+            findToolStripMenuItem.Text = "&Find...";
             findToolStripMenuItem.Click += FindToolStripMenuItemClick;
+            // 
+            // replaceToolStripMenuItem
+            // 
+            replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
+            replaceToolStripMenuItem.Size = new Size(243, 22);
+            replaceToolStripMenuItem.Text = "&Replace...";
+            replaceToolStripMenuItem.Click += FindToolStripMenuItemClick;
             // 
             // toolStripSeparator1
             // 
@@ -157,21 +171,21 @@ namespace GitUI.Editor
             // 
             ignoreWhitespaceAtEolToolStripMenuItem.Name = "ignoreWhitespaceAtEolToolStripMenuItem";
             ignoreWhitespaceAtEolToolStripMenuItem.Size = new Size(243, 22);
-            ignoreWhitespaceAtEolToolStripMenuItem.Text = "Ignore whitespace changes at end of line";
+            ignoreWhitespaceAtEolToolStripMenuItem.Text = "Ignore whitespace changes at end of &line";
             ignoreWhitespaceAtEolToolStripMenuItem.Click += IgnoreWhitespaceAtEolToolStripMenuItem_Click;
             // 
             // ignoreWhitespaceChangesToolStripMenuItem
             // 
             ignoreWhitespaceChangesToolStripMenuItem.Name = "ignoreWhitespaceChangesToolStripMenuItem";
             ignoreWhitespaceChangesToolStripMenuItem.Size = new Size(243, 22);
-            ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore changes in amount of whitespace";
+            ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore changes in &amount of whitespace";
             ignoreWhitespaceChangesToolStripMenuItem.Click += IgnoreWhitespaceChangesToolStripMenuItemClick;
             // 
             // ignoreAllWhitespaceChangesToolStripMenuItem
             // 
             ignoreAllWhitespaceChangesToolStripMenuItem.Name = "ignoreAllWhitespaceChangesToolStripMenuItem";
             ignoreAllWhitespaceChangesToolStripMenuItem.Size = new Size(243, 22);
-            ignoreAllWhitespaceChangesToolStripMenuItem.Text = "Ignore all whitespace changes";
+            ignoreAllWhitespaceChangesToolStripMenuItem.Text = "Ignore all &whitespace changes";
             ignoreAllWhitespaceChangesToolStripMenuItem.Click += IgnoreAllWhitespaceChangesToolStripMenuItem_Click;
             // 
             // increaseNumberOfLinesToolStripMenuItem
@@ -179,7 +193,7 @@ namespace GitUI.Editor
             increaseNumberOfLinesToolStripMenuItem.Image = Properties.Images.NumberOfLinesIncrease;
             increaseNumberOfLinesToolStripMenuItem.Name = "increaseNumberOfLinesToolStripMenuItem";
             increaseNumberOfLinesToolStripMenuItem.Size = new Size(243, 22);
-            increaseNumberOfLinesToolStripMenuItem.Text = "Increase the number of lines of context";
+            increaseNumberOfLinesToolStripMenuItem.Text = "&Increase the number of lines of context";
             increaseNumberOfLinesToolStripMenuItem.Click += IncreaseNumberOfLinesToolStripMenuItemClick;
             // 
             // descreaseNumberOfLinesToolStripMenuItem
@@ -187,7 +201,7 @@ namespace GitUI.Editor
             decreaseNumberOfLinesToolStripMenuItem.Image = Properties.Images.NumberOfLinesDecrease;
             decreaseNumberOfLinesToolStripMenuItem.Name = "decreaseNumberOfLinesToolStripMenuItem";
             decreaseNumberOfLinesToolStripMenuItem.Size = new Size(243, 22);
-            decreaseNumberOfLinesToolStripMenuItem.Text = "Decrease the number of lines of context";
+            decreaseNumberOfLinesToolStripMenuItem.Text = "&Decrease the number of lines of context";
             decreaseNumberOfLinesToolStripMenuItem.Click += DecreaseNumberOfLinesToolStripMenuItemClick;
             // 
             // showEntireFileToolStripMenuItem
@@ -195,8 +209,25 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Image = Properties.Images.ShowEntireFile;
             showEntireFileToolStripMenuItem.Name = "showEntireFileToolStripMenuItem";
             showEntireFileToolStripMenuItem.Size = new Size(243, 22);
-            showEntireFileToolStripMenuItem.Text = "Show entire file";
+            showEntireFileToolStripMenuItem.Text = "Show &entire file";
             showEntireFileToolStripMenuItem.Click += ShowEntireFileToolStripMenuItemClick;
+            // 
+            // showSyntaxHighlightingToolStripMenuItem
+            // 
+            showSyntaxHighlightingToolStripMenuItem.Image = Properties.Resources.SyntaxHighlighting;
+            showSyntaxHighlightingToolStripMenuItem.ImageTransparentColor = Color.Magenta;
+            showSyntaxHighlightingToolStripMenuItem.Name = "showSyntaxHighlightingToolStripMenuItem";
+            showSyntaxHighlightingToolStripMenuItem.Size = new Size(243, 22);
+            showSyntaxHighlightingToolStripMenuItem.Text = "Show synta&x highlighting";
+            showSyntaxHighlightingToolStripMenuItem.Click += ShowSyntaxHighlighting_Click;
+            // 
+            // showGitWordColoringToolStripMenuItem
+            // 
+            showGitWordColoringToolStripMenuItem.Image = Properties.Images.Colors;
+            showGitWordColoringToolStripMenuItem.Name = "showGitWordColoringToolStripMenuItem";
+            showGitWordColoringToolStripMenuItem.Size = new Size(243, 22);
+            showGitWordColoringToolStripMenuItem.Text = "Show Git wor&d coloring";
+            showGitWordColoringToolStripMenuItem.Click += ShowGitWordColoringToolStripMenuItemClick;
             // 
             // toolStripSeparator2
             // 
@@ -207,7 +238,7 @@ namespace GitUI.Editor
             // 
             treatAllFilesAsTextToolStripMenuItem.Name = "treatAllFilesAsTextToolStripMenuItem";
             treatAllFilesAsTextToolStripMenuItem.Size = new Size(243, 22);
-            treatAllFilesAsTextToolStripMenuItem.Text = "Treat all files as text";
+            treatAllFilesAsTextToolStripMenuItem.Text = "&Treat all files as text";
             treatAllFilesAsTextToolStripMenuItem.Click += TreatAllFilesAsTextToolStripMenuItemClick;
             // 
             // automaticContinuousScrollToolStripMenuItem
@@ -222,14 +253,14 @@ namespace GitUI.Editor
             showNonprintableCharactersToolStripMenuItem.Image = Properties.Images.ShowWhitespace;
             showNonprintableCharactersToolStripMenuItem.Name = "showNonprintableCharactersToolStripMenuItem";
             showNonprintableCharactersToolStripMenuItem.Size = new Size(243, 22);
-            showNonprintableCharactersToolStripMenuItem.Text = "Show nonprinting characters";
+            showNonprintableCharactersToolStripMenuItem.Text = "S&how nonprinting characters";
             showNonprintableCharactersToolStripMenuItem.Click += ShowNonprintableCharactersToolStripMenuItemClick;
             // 
             // goToLineToolStripMenuItem
             // 
             goToLineToolStripMenuItem.Name = "goToLineToolStripMenuItem";
             goToLineToolStripMenuItem.Size = new Size(243, 22);
-            goToLineToolStripMenuItem.Text = "Go to line";
+            goToLineToolStripMenuItem.Text = "&Go to line";
             goToLineToolStripMenuItem.Click += goToLineToolStripMenuItem_Click;
             // 
             // fileviewerToolbar
@@ -453,12 +484,15 @@ namespace GitUI.Editor
 
         private ContextMenuStrip contextMenu;
         private ToolStripMenuItem findToolStripMenuItem;
+        private ToolStripMenuItem replaceToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem ignoreWhitespaceAtEolToolStripMenuItem;
         private ToolStripMenuItem ignoreWhitespaceChangesToolStripMenuItem;
         private ToolStripMenuItem increaseNumberOfLinesToolStripMenuItem;
         private ToolStripMenuItem decreaseNumberOfLinesToolStripMenuItem;
         private ToolStripMenuItem showEntireFileToolStripMenuItem;
+        private ToolStripMenuItem showSyntaxHighlightingToolStripMenuItem;
+        private ToolStripMenuItem showGitWordColoringToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
         private ToolStripMenuItem copyToolStripMenuItem;

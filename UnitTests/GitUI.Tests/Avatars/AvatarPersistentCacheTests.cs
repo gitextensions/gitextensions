@@ -10,7 +10,8 @@ namespace GitUITests.Avatars
     [TestFixture]
     public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
     {
-        private string _folderPath;
+        private string _avatarImageCachePath = AppSettings.AvatarImageCachePath;
+        private string _email1AvatarPath;
         private IFileSystem _fileSystem;
         private DirectoryBase _directory;
         private FileBase _file;
@@ -35,34 +36,33 @@ namespace GitUITests.Avatars
 
             AppSettings.AvatarProvider = AvatarProvider.Default;
 
-            _folderPath = AppSettings.AvatarImageCachePath;
-
             _cache = new FileSystemAvatarCache(_inner, _fileSystem);
+            _email1AvatarPath = Path.Combine(_avatarImageCachePath, $"{_email1}.{_size}px.png");
         }
 
         [Test]
         public async Task GetAvatarAsync_should_create_if_folder_absent()
         {
             MockFileSystem fileSystem = new();
+            fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeFalse();
             _cache = new FileSystemAvatarCache(_inner, fileSystem);
-            fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
             Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
 
-            fileSystem.Directory.Exists(_folderPath).Should().BeTrue();
+            fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeTrue();
         }
 
         [Test]
         public async Task GetAvatarAsync_should_create_image_from_stream()
         {
             MockFileSystem fileSystem = new();
+            fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeFalse();
             _cache = new FileSystemAvatarCache(_inner, fileSystem);
-            fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
             Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
 
-            fileSystem.Directory.Exists(_folderPath).Should().BeTrue();
-            fileSystem.File.Exists(Path.Combine(_folderPath, $"{_email1}.{_size}px.png")).Should().BeTrue();
+            fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeTrue();
+            fileSystem.File.Exists(_email1AvatarPath).Should().BeTrue();
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace GitUITests.Avatars
 
             await MissAsync(_email1, _name1);
 
-            _fileSystem.File.Received(1).Delete(Path.Combine(AppSettings.AvatarImageCachePath, $"{_email1}.{_size}px.png"));
+            _fileSystem.File.Received(1).Delete(_email1AvatarPath);
 
             _file.OpenRead(Arg.Any<string>()).Returns(c => GetPngStream());
             _fileInfo.LastWriteTime.Returns(DateTime.Now);
@@ -87,7 +87,8 @@ namespace GitUITests.Avatars
 
             image.Should().NotBeNull();
             _ = _fileInfo.Received(1).LastWriteTime;
-            _fileSystem.File.Received(1).OpenRead(Path.Combine(AppSettings.AvatarImageCachePath, $"{_email1}.{_size}px.png"));
+
+            _fileSystem.File.Received(1).OpenRead(_email1AvatarPath);
         }
 
         [Test]
@@ -106,8 +107,8 @@ namespace GitUITests.Avatars
             MockFileSystem fileSystem = new();
             _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
-            fileSystem.AddFile(Path.Combine(_folderPath, "a@a.com.16px.png"), new MockFileData(""));
-            fileSystem.AddFile(Path.Combine(_folderPath, "b@b.com.16px.png"), new MockFileData(""));
+            fileSystem.AddFile(Path.Combine(_avatarImageCachePath, "a@a.com.16px.png"), new MockFileData(""));
+            fileSystem.AddFile(Path.Combine(_avatarImageCachePath, "b@b.com.16px.png"), new MockFileData(""));
             fileSystem.AllFiles.Count().Should().Be(2);
 
             await _cacheCleaner.ClearCacheAsync();
@@ -119,7 +120,7 @@ namespace GitUITests.Avatars
         public void ClearCacheAsync_should_ignore_errors()
         {
             _directory.Exists(Arg.Any<string>()).Returns(true);
-            _directory.GetFiles(_folderPath).Returns(new[] { "c:\\file.txt", "boot.sys" });
+            _directory.GetFiles(_avatarImageCachePath).Returns(["c:\\file.txt", "boot.sys"]);
             _file.When(x => x.Delete(Arg.Any<string>()))
                 .Do(x => throw new DivideByZeroException());
 

@@ -35,12 +35,13 @@ namespace GitCommands
         private static readonly SettingsPath AppearanceSettingsPath = new AppSettingsPath("Appearance");
         private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
+        private static readonly SettingsPath ExperimentalSettingsPath = new AppSettingsPath(DetailedSettingsPath, "Experimental");
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
 
         private static Mutex _globalMutex;
 
-        [GeneratedRegex(@"^(\d+)\.(\d+)")]
+        [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex VersionRegex();
 
         public static readonly int BranchDropDownMinWidth = 300;
@@ -142,7 +143,7 @@ namespace GitCommands
                 Match match = VersionRegex().Match(version);
                 if (match.Success)
                 {
-                    docVersion = $"en/release-{match.Groups[1]}.{match.Groups[2]}/";
+                    docVersion = $"en/release-{match.Groups["major"]}.{match.Groups["minor"]}/";
                 }
             }
 
@@ -407,6 +408,16 @@ namespace GitCommands
             set => SetBool("usepatiencediffalgorithm", value);
         }
 
+        /// <summary>
+        /// Use Git coloring for selected commands
+        /// </summary>
+        public static ISetting<bool> UseGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(UseGitColoring), true);
+
+        /// <summary>
+        /// Use GE theme colors with Git diff coloring
+        /// </summary>
+        public static ISetting<bool> UseGEThemeGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(UseGEThemeGitColoring), true);
+
         public static bool ShowErrorsWhenStagingFiles
         {
             get => GetBool("showerrorswhenstagingfiles", true);
@@ -557,7 +568,7 @@ namespace GitCommands
 
         #region Avatars
 
-        public static string AvatarImageCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
+        public static string AvatarImageCachePath => Path.Combine(LocalApplicationDataPath.Value, "Images\\");
 
         public static AvatarFallbackType AvatarFallbackType
         {
@@ -597,7 +608,7 @@ namespace GitCommands
 
         public static int AvatarCacheSize
         {
-            get => GetInt("Appearance.AvatarCacheSize", 50);
+            get => GetInt("Appearance.AvatarCacheSize", 200);
             set => SetInt("Appearance.AvatarCacheSize", value);
         }
 
@@ -854,7 +865,7 @@ namespace GitCommands
 
         public static bool DetectCopyInFileOnBlame
         {
-            get => GetBool("DetectCopyInFileOnBlame", true);
+            get => GetBool("DetectCopyInFileOnBlame", false);
             set => SetBool("DetectCopyInFileOnBlame", value);
         }
 
@@ -1512,6 +1523,20 @@ namespace GitCommands
 
         public static ISetting<bool> MergeGraphLanesHavingCommonParent { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(MergeGraphLanesHavingCommonParent), true);
 
+        public static ISetting<bool> RenderGraphWithDiagonals { get; } = Setting.Create(ExperimentalSettingsPath, nameof(RenderGraphWithDiagonals), true);
+
+        public static ISetting<bool> StraightenGraphDiagonals { get; } = Setting.Create(ExperimentalSettingsPath, nameof(StraightenGraphDiagonals), true);
+
+        /// <summary>
+        ///  The limit when to skip the straightening of revision graph segments.
+        /// </summary>
+        /// <remarks>
+        ///  Straightening needs to call the expensive RevisionGraphRow.BuildSegmentLanes function.<br></br>
+        ///  Straightening inserts gaps making the graph wider. If it already has to display many segments, i.e. parallel branches, there would be a low benefit of straightening.<br></br>
+        ///  So rather skip the - in this case particularly expensive - RevisionGraphRow.BuildSegmentLanes function and call it only if the row is visible.
+        /// </remarks>
+        public static ISetting<int> StraightenGraphSegmentsLimit { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphSegmentsLimit), 80);
+
         public static string LastFormatPatchDir
         {
             get => GetString("lastformatpatchdir", "");
@@ -1541,6 +1566,16 @@ namespace GitCommands
             get => GetBool("RememberShowEntireFilePreference", false);
             set => SetBool("RememberShowEntireFilePreference", value);
         }
+
+        /// <summary>
+        /// Enable git-word-diff instead of normal "patch" viewer.
+        /// </summary>
+        public static BoolRuntimeSetting ShowGitWordColoring { get; } = new(RootSettingsPath, nameof(ShowGitWordColoring), false);
+
+        /// <summary>
+        /// Gets or sets whether to remember the preference for showing git word coloring.
+        /// </summary>
+        public static ISetting<bool> RememberShowGitWordColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(RememberShowGitWordColoring), false);
 
         public static int NumberOfContextLines
         {
@@ -1653,6 +1688,12 @@ namespace GitCommands
         {
             get => GetInt("history size", 30);
             set => SetInt("history size", value);
+        }
+
+        // (Currently) hidden configuration
+        public static int RemotesCacheLength
+        {
+            get => GetInt("RemotesCacheLength", 30);
         }
 
         public static int RecentReposComboMinWidth
@@ -1815,6 +1856,7 @@ namespace GitCommands
                     _applicationExecutablePath.EndsWith("testhost.x86.exe", StringComparison.InvariantCultureIgnoreCase) ||
 
                     _applicationExecutablePath.EndsWith("ReSharperTestRunner.exe", StringComparison.InvariantCultureIgnoreCase) ||
+                    _applicationExecutablePath.EndsWith("dotnet.exe", StringComparison.InvariantCultureIgnoreCase) ||
 
                     // Translations
                     _applicationExecutablePath.EndsWith("TranslationApp.exe", StringComparison.InvariantCultureIgnoreCase);
@@ -1973,6 +2015,11 @@ namespace GitCommands
             set => SetInt("DiffViewer.AutomaticContinuousScrollDelay", value);
         }
 
+        public static IEnumerable<string> CustomGenericRemoteNames
+        {
+            get => GetString("CustomGenericRemoteNames", string.Empty).Split(',', StringSplitOptions.RemoveEmptyEntries);
+        }
+
         public static bool LogCaptureCallStacks
         {
             get => GetBool("Log.CaptureCallStacks", false);
@@ -2106,6 +2153,15 @@ namespace GitCommands
                 catch
                 {
                     // there are CultureInfo values without a code page
+                }
+
+                try
+                {
+                    AddEncoding(Encoding.GetEncoding(0));
+                }
+                catch
+                {
+                    // catch if error retrieving operating system's active code page
                 }
             }
             else

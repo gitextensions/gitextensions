@@ -1,4 +1,5 @@
-﻿using System.Drawing.Imaging;
+﻿using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO.Abstractions;
 using GitCommands;
 
@@ -9,25 +10,44 @@ namespace GitUI.Avatars
     /// </summary>
     public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
     {
-        private const int DefaultCacheDays = 30;
-
         private readonly IAvatarProvider _inner;
         private readonly IFileSystem _fileSystem;
+        private readonly string _cacheDir;
+        private readonly int _cacheDays;
 
         public FileSystemAvatarCache(IAvatarProvider inner, IFileSystem? fileSystem = null)
         {
             _inner = inner;
             _fileSystem = fileSystem ?? new FileSystem();
+
+            _cacheDays = AppSettings.AvatarImageCacheDays;
+            if (_cacheDays < 1)
+            {
+                const int DefaultCacheDays = 30;
+                _cacheDays = DefaultCacheDays;
+            }
+
+            _cacheDir = AppSettings.AvatarImageCachePath;
+            if (!_fileSystem.Directory.Exists(_cacheDir))
+            {
+                _fileSystem.Directory.CreateDirectory(_cacheDir);
+            }
         }
 
         /// <inheritdoc />
         public event EventHandler? CacheCleared;
 
+        public bool PerformsIo => true;
+
         /// <inheritdoc />
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            string cacheDir = AppSettings.AvatarImageCachePath;
-            string path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
+            if (!_inner.PerformsIo)
+            {
+                return await _inner.GetAvatarAsync(email, name, imageSize);
+            }
+
+            string path = Path.Combine(_cacheDir, $"{email}.{imageSize}px.png");
 
             Image image = ReadImage();
 
@@ -47,31 +67,16 @@ namespace GitUI.Avatars
 
             void WriteImage()
             {
-                if (!_fileSystem.Directory.Exists(cacheDir))
-                {
-                    _fileSystem.Directory.CreateDirectory(cacheDir);
-                }
-
                 try
-                {
-                    using Stream output = _fileSystem.File.OpenWrite(path);
-                    image.Save(output, ImageFormat.Png);
-                }
-                catch
                 {
                     // Workaround to avoid the "A generic error occurred in GDI+." exception when saving
                     // where copying the image in a new one allows the save on disk to be successful...
-                    try
-                    {
-                        using (Bitmap newImage = new(image))
-                        {
-                            using Stream output = _fileSystem.File.OpenWrite(path);
-                            newImage.Save(output, ImageFormat.Png);
-                        }
-                    }
-                    catch
-                    {
-                    }
+                    using Bitmap newImage = new(image);
+                    using Stream output = _fileSystem.File.OpenWrite(path);
+                    newImage.Save(output, ImageFormat.Png);
+                }
+                catch
+                {
                 }
             }
 
@@ -90,7 +95,6 @@ namespace GitUI.Avatars
                     }
                 }
 
-                TryDelete();
                 return null;
 
                 bool HasExpired()
@@ -108,13 +112,13 @@ namespace GitUI.Avatars
                         return false;
                     }
 
-                    int cacheDays = AppSettings.AvatarImageCacheDays;
-                    if (cacheDays < 1)
+                    if (info.LastWriteTime < DateTime.Now.AddDays(-_cacheDays))
                     {
-                        cacheDays = DefaultCacheDays;
+                        TryDelete();
+                        return true;
                     }
 
-                    return info.LastWriteTime < DateTime.Now.AddDays(-cacheDays);
+                    return false;
                 }
 
                 void TryDelete()
@@ -138,24 +142,34 @@ namespace GitUI.Avatars
 
             if (_fileSystem.Directory.Exists(cachePath))
             {
-                await Task.Run(
-                    () =>
+                try
+                {
+                    foreach (string file in _fileSystem.Directory.GetFiles(cachePath))
                     {
-                        foreach (string file in _fileSystem.Directory.GetFiles(cachePath))
+                        try
                         {
-                            try
-                            {
-                                _fileSystem.File.Delete(file);
-                            }
-                            catch
-                            {
-                                // do nothing
-                            }
+                            _fileSystem.File.Delete(file);
                         }
-                    });
+                        catch (Exception ex)
+                        {
+                            // do nothing
+                            Trace.WriteLine($"Failed to delete file '{file}'. Error: {ex}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // do nothing
+                    Trace.WriteLine($"Failed to enumerate files. Error: {ex}");
+                }
             }
 
-            CacheCleared?.Invoke(this, EventArgs.Empty);
+            if (CacheCleared is not null)
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                CacheCleared.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }

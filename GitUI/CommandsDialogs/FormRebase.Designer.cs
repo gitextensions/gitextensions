@@ -60,12 +60,12 @@ namespace GitUI.CommandsDialogs
             lblRangeTo = new Label();
             cboTo = new ComboBox();
             llblShowOptions = new LinkLabel();
-            PatchGrid = new GitUI.PatchGrid();
+            PatchGrid = new PatchGrid();
             lblCommitsToReapply = new Label();
             btnSolveMergeconflicts = new Button();
             MergeToolPanel = new Panel();
             MainLayout = new TableLayoutPanel();
-            PanelLeftImage = new GitUI.Help.HelpImageDisplayUserControl();
+            PanelLeftImage = new Help.HelpImageDisplayUserControl();
             PanelMiddle = new TableLayoutPanel();
             rebasePanel = new FlowLayoutPanel();
             tlpnlSecondaryControls = new TableLayoutPanel();
@@ -120,8 +120,10 @@ namespace GitUI.CommandsDialogs
             // btnAddFiles
             // 
             btnAddFiles.AutoSize = true;
+            btnAddFiles.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnAddFiles.Image = Properties.Images.BulletAdd;
             btnAddFiles.Location = new Point(3, 3);
+            btnAddFiles.MinimumSize = new Size(79, 25);
             btnAddFiles.Name = "btnAddFiles";
             btnAddFiles.Size = new Size(79, 25);
             btnAddFiles.TabIndex = 34;
@@ -133,8 +135,10 @@ namespace GitUI.CommandsDialogs
             // btnCommit
             // 
             btnCommit.AutoSize = true;
+            btnCommit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnCommit.Image = Properties.Images.RepoStateStaged;
             btnCommit.Location = new Point(88, 3);
+            btnCommit.MinimumSize = new Size(86, 25);
             btnCommit.Name = "btnCommit";
             btnCommit.Size = new Size(86, 25);
             btnCommit.TabIndex = 35;
@@ -146,14 +150,16 @@ namespace GitUI.CommandsDialogs
             // btnEditTodo
             // 
             btnEditTodo.AutoSize = true;
+            btnEditTodo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnEditTodo.Image = Properties.Images.EditFile;
             btnEditTodo.Location = new Point(180, 3);
+            btnEditTodo.MinimumSize = new Size(90, 25);
             btnEditTodo.Name = "btnEditTodo";
-            btnEditTodo.Size = new Size(79, 25);
+            btnEditTodo.Size = new Size(90, 25);
             btnEditTodo.TabIndex = 36;
             btnEditTodo.Text = "&Edit todo...";
-            btnEditTodo.UseVisualStyleBackColor = true;
             btnEditTodo.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnEditTodo.UseVisualStyleBackColor = true;
             btnEditTodo.Click += EditTodoClick;
             // 
             // flowLayoutPanel2
@@ -172,7 +178,9 @@ namespace GitUI.CommandsDialogs
             // btnSkip
             // 
             btnSkip.AutoSize = true;
+            btnSkip.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnSkip.Location = new Point(163, 3);
+            btnSkip.MinimumSize = new Size(183, 25);
             btnSkip.Name = "btnSkip";
             btnSkip.Size = new Size(183, 25);
             btnSkip.TabIndex = 39;
@@ -247,7 +255,9 @@ namespace GitUI.CommandsDialogs
             // btnContinueRebase
             // 
             btnContinueRebase.AutoSize = true;
+            btnContinueRebase.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnContinueRebase.Location = new Point(837, 8);
+            btnContinueRebase.MinimumSize = new Size(103, 25);
             btnContinueRebase.Name = "btnContinueRebase";
             btnContinueRebase.Size = new Size(103, 25);
             btnContinueRebase.TabIndex = 38;
@@ -258,7 +268,9 @@ namespace GitUI.CommandsDialogs
             // btnAbort
             // 
             btnAbort.AutoSize = true;
+            btnAbort.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnAbort.Location = new Point(946, 8);
+            btnAbort.MinimumSize = new Size(75, 25);
             btnAbort.Name = "btnAbort";
             btnAbort.Size = new Size(75, 25);
             btnAbort.TabIndex = 40;
@@ -269,9 +281,10 @@ namespace GitUI.CommandsDialogs
             // btnSolveConflicts
             // 
             btnSolveConflicts.AutoSize = true;
+            btnSolveConflicts.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnSolveConflicts.Location = new Point(0, 2);
             btnSolveConflicts.Margin = new Padding(1);
-            btnSolveConflicts.MinimumSize = new Size(100, 0);
+            btnSolveConflicts.MinimumSize = new Size(100, 25);
             btnSolveConflicts.Name = "btnSolveConflicts";
             btnSolveConflicts.Size = new Size(100, 25);
             btnSolveConflicts.TabIndex = 32;
@@ -292,7 +305,7 @@ namespace GitUI.CommandsDialogs
             flpnlOptionsPanelTop.Dock = DockStyle.Fill;
             flpnlOptionsPanelTop.Location = new Point(3, 78);
             flpnlOptionsPanelTop.Name = "flpnlOptionsPanelTop";
-            flpnlOptionsPanelTop.Size = new Size(709, 25);
+            flpnlOptionsPanelTop.Size = new Size(709, 50);
             flpnlOptionsPanelTop.TabIndex = 11;
             // 
             // chkInteractive
@@ -351,8 +364,7 @@ namespace GitUI.CommandsDialogs
             chkIgnoreDate.Size = new Size(86, 19);
             chkIgnoreDate.TabIndex = 16;
             chkIgnoreDate.Text = "Ignore &date";
-            toolTip1.SetToolTip(chkIgnoreDate, "Sets the author date to the current date (same as\r\ncommit date), ignoring the ori" +
-        "ginal author date.");
+            toolTip1.SetToolTip(chkIgnoreDate, "Sets the author date to the current date (same as\r\ncommit date), ignoring the original author date.");
             chkIgnoreDate.UseVisualStyleBackColor = true;
             chkIgnoreDate.CheckedChanged += chkIgnoreDate_CheckedChanged;
             // 
@@ -360,7 +372,7 @@ namespace GitUI.CommandsDialogs
             // 
             chkCommitterDateIsAuthorDate.Anchor = AnchorStyles.Left;
             chkCommitterDateIsAuthorDate.AutoSize = true;
-            chkCommitterDateIsAuthorDate.Location = new Point(523, 3);
+            chkCommitterDateIsAuthorDate.Location = new Point(3, 28);
             chkCommitterDateIsAuthorDate.Name = "chkCommitterDateIsAuthorDate";
             chkCommitterDateIsAuthorDate.Size = new Size(185, 19);
             chkCommitterDateIsAuthorDate.TabIndex = 17;
@@ -372,7 +384,7 @@ namespace GitUI.CommandsDialogs
             // checkBoxUpdateRefs
             // 
             checkBoxUpdateRefs.AutoSize = true;
-            checkBoxUpdateRefs.Location = new Point(714, 3);
+            checkBoxUpdateRefs.Location = new Point(194, 28);
             checkBoxUpdateRefs.Name = "checkBoxUpdateRefs";
             checkBoxUpdateRefs.Size = new Size(146, 19);
             checkBoxUpdateRefs.TabIndex = 18;
@@ -389,7 +401,7 @@ namespace GitUI.CommandsDialogs
             flpnlOptionsPanelBottom.Controls.Add(lblRangeTo);
             flpnlOptionsPanelBottom.Controls.Add(cboTo);
             flpnlOptionsPanelBottom.Dock = DockStyle.Fill;
-            flpnlOptionsPanelBottom.Location = new Point(3, 109);
+            flpnlOptionsPanelBottom.Location = new Point(3, 134);
             flpnlOptionsPanelBottom.Name = "flpnlOptionsPanelBottom";
             flpnlOptionsPanelBottom.Size = new Size(709, 30);
             flpnlOptionsPanelBottom.TabIndex = 18;
@@ -429,9 +441,11 @@ namespace GitUI.CommandsDialogs
             // btnChooseFromRevision
             // 
             btnChooseFromRevision.Anchor = AnchorStyles.Left;
+            btnChooseFromRevision.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnChooseFromRevision.Enabled = false;
             btnChooseFromRevision.Image = Properties.Images.SelectRevision;
             btnChooseFromRevision.Location = new Point(268, 3);
+            btnChooseFromRevision.MinimumSize = new Size(25, 24);
             btnChooseFromRevision.Name = "btnChooseFromRevision";
             btnChooseFromRevision.Size = new Size(25, 24);
             btnChooseFromRevision.TabIndex = 22;
@@ -477,20 +491,20 @@ namespace GitUI.CommandsDialogs
             PatchGrid.AutoSize = true;
             PatchGrid.Dock = DockStyle.Fill;
             PatchGrid.IsManagingRebase = true;
-            PatchGrid.Location = new Point(3, 177);
+            PatchGrid.Location = new Point(3, 192);
             PatchGrid.Margin = new Padding(3, 2, 3, 2);
             PatchGrid.MinimumSize = new Size(0, 100);
             PatchGrid.Name = "PatchGrid";
-            PatchGrid.Size = new Size(709, 174);
+            PatchGrid.Size = new Size(709, 159);
             PatchGrid.TabIndex = 26;
             // 
             // lblCommitsToReapply
             // 
             lblCommitsToReapply.AutoSize = true;
-            lblCommitsToReapply.Location = new Point(3, 150);
+            lblCommitsToReapply.Dock = DockStyle.Fill;
+            lblCommitsToReapply.Location = new Point(3, 175);
             lblCommitsToReapply.Name = "lblCommitsToReapply";
-            lblCommitsToReapply.Padding = new Padding(0, 10, 0, 0);
-            lblCommitsToReapply.Size = new Size(120, 25);
+            lblCommitsToReapply.Size = new Size(709, 15);
             lblCommitsToReapply.TabIndex = 25;
             lblCommitsToReapply.Text = "Commits to re-apply:";
             // 
@@ -502,6 +516,7 @@ namespace GitUI.CommandsDialogs
             btnSolveMergeconflicts.BackColor = Color.Salmon;
             btnSolveMergeconflicts.FlatStyle = FlatStyle.Flat;
             btnSolveMergeconflicts.Location = new Point(12, 426);
+            btnSolveMergeconflicts.MinimumSize = new Size(213, 27);
             btnSolveMergeconflicts.Name = "btnSolveMergeconflicts";
             btnSolveMergeconflicts.Size = new Size(213, 27);
             btnSolveMergeconflicts.TabIndex = 42;
@@ -616,9 +631,10 @@ namespace GitUI.CommandsDialogs
             // btnRebase
             // 
             btnRebase.AutoSize = true;
+            btnRebase.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnRebase.Image = Properties.Images.Rebase;
             btnRebase.Location = new Point(628, 8);
-            btnRebase.MinimumSize = new Size(100, 0);
+            btnRebase.MinimumSize = new Size(100, 25);
             btnRebase.Name = "btnRebase";
             btnRebase.Size = new Size(100, 25);
             btnRebase.TabIndex = 29;
@@ -644,6 +660,7 @@ namespace GitUI.CommandsDialogs
             Controls.SetChildIndex(MainPanel, 0);
             Controls.SetChildIndex(btnSolveMergeconflicts, 0);
             MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
             ControlsPanel.ResumeLayout(false);
             ControlsPanel.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
@@ -668,7 +685,6 @@ namespace GitUI.CommandsDialogs
             tlpnlSecondaryControls.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion

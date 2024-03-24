@@ -22,6 +22,9 @@ namespace GitUI
 
         public static JoinableTaskFactory JoinableTaskFactory => _taskManager.JoinableTaskFactory;
 
+        internal static void CancelSwitchToMainThread()
+            => TaskManager.CancelSwitchToMainThread();
+
         public static ExclusiveTaskRunner CreateExclusiveTaskRunner()
             => new(_taskManager);
 
@@ -101,9 +104,6 @@ namespace GitUI
 
         public static async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
             => await _taskManager.JoinPendingOperationsAsync(cancellationToken);
-
-        public static void JoinPendingOperations()
-            => _taskManager.JoinPendingOperations();
 
         public static T CompletedResult<T>(this Task<T> task)
         {

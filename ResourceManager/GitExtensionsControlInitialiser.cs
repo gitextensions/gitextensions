@@ -26,7 +26,7 @@ namespace ResourceManager
             _translate = form;
         }
 
-        public GitExtensionsControlInitialiser(GitExtensionsControl control)
+        public GitExtensionsControlInitialiser(TranslatedControl control)
         {
             if (IsDesignMode)
             {

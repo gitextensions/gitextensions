@@ -5,6 +5,10 @@ namespace GitUI
 {
     public class TaskManager
     {
+        private static readonly CancellationTokenSequence _switchToMainThreadCancellationTokenSequence = new();
+
+        private static CancellationToken _switchToMainThreadCancellationToken = _switchToMainThreadCancellationTokenSequence.Next();
+
         private readonly JoinableTaskCollection _joinableTaskCollection;
 
         public TaskManager(JoinableTaskContext joinableTaskContext)
@@ -65,6 +69,11 @@ namespace GitUI
                 };
         }
 
+        internal static void CancelSwitchToMainThread()
+        {
+            _switchToMainThreadCancellationToken = _switchToMainThreadCancellationTokenSequence.Next();
+        }
+
         /// <summary>
         /// Asynchronously run <paramref name="asyncAction"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
@@ -104,7 +113,7 @@ namespace GitUI
                     {
                         if (!JoinableTaskContext.IsOnMainThread)
                         {
-                            await control.SwitchToMainThreadAsync(cancellationToken);
+                            await control.SwitchToMainThreadAsync(cancellationToken.CombineWith(_switchToMainThreadCancellationToken).Token);
                         }
 
                         await asyncAction();
@@ -122,14 +131,24 @@ namespace GitUI
 
         public async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
         {
-            await _joinableTaskCollection.JoinTillEmptyAsync(cancellationToken);
+            try
+            {
+                await _joinableTaskCollection.JoinTillEmptyAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+            }
         }
 
         public void JoinPendingOperations()
         {
+            const int maxWaitMilliseconds = 60_000;
+            using CancellationTokenSource cancellationTokenSource = new(maxWaitMilliseconds);
+
             // Note that JoinableTaskContext.Factory must be used to bypass the default behavior of JoinableTaskFactory
             // since the latter adds new tasks to the collection and would therefore never complete.
-            JoinableTaskContext.Factory.Run(_joinableTaskCollection.JoinTillEmptyAsync);
+            JoinableTaskContext.Factory.Run(() => JoinPendingOperationsAsync(cancellationTokenSource.Token));
         }
 
         /// <summary>
@@ -142,7 +161,7 @@ namespace GitUI
             {
                 if (!JoinableTaskContext.IsOnMainThread)
                 {
-                    await JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await JoinableTaskFactory.SwitchToMainThreadAsync(_switchToMainThreadCancellationToken);
                 }
 
                 Application.OnThreadException(ex.Demystify());

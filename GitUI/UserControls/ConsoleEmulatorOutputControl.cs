@@ -141,7 +141,7 @@ namespace GitUI.UserControls
         private int _commandLineCharsInOutput;
         private string? _lineChunk;
 
-        [GeneratedRegex(@"(?<=[\n\r])")]
+        [GeneratedRegex(@"(?<=[\n\r])", RegexOptions.ExplicitCapture)]
         private static partial Regex NewLineRegex();
 
         public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)

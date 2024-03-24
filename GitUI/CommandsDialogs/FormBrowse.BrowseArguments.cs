@@ -27,9 +27,9 @@ namespace GitUI.CommandsDialogs
             public ObjectId? FirstId { get; init; }
 
             /// <summary>
-            /// If to start in "FileHistory mode" with blame view
+            /// If to start in "FileHistory mode", hiding left panel.
             /// </summary>
-            public bool IsFileBlameHistory { get; init; }
+            public bool IsFileHistoryMode { get; init; }
         }
     }
 }

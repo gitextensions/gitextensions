@@ -347,6 +347,7 @@ namespace GitUI.CommandsDialogs
             comboBoxPushUrl.Size = new Size(248, 21);
             comboBoxPushUrl.TabIndex = 7;
             comboBoxPushUrl.Visible = false;
+            comboBoxPushUrl.Enter += ComboBoxPushUrl_Enter;
             // 
             // label2
             // 
@@ -368,6 +369,7 @@ namespace GitUI.CommandsDialogs
             Url.Name = "Url";
             Url.Size = new Size(248, 21);
             Url.TabIndex = 3;
+            Url.Enter += Url_Enter;
             // 
             // labelPushUrl
             // 
@@ -411,6 +413,7 @@ namespace GitUI.CommandsDialogs
             RemoteName.Size = new Size(248, 20);
             RemoteName.TabIndex = 1;
             RemoteName.TextChanged += RemoteName_TextChanged;
+            RemoteName.Enter += RemoteName_Enter;
             // 
             // pnlManagementContainer
             // 

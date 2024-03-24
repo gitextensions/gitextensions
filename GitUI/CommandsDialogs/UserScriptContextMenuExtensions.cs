@@ -1,8 +1,8 @@
-﻿using GitUI.Hotkey;
-using GitUI.LeftPanel.ContextMenu;
+﻿using GitUI.LeftPanel.ContextMenu;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {

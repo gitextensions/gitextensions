@@ -4,12 +4,12 @@ namespace GitCommands.Remotes
 {
     public abstract class RemoteParser
     {
-        protected Match? MatchRegExes(string remoteUrl, string[] regExs)
+        protected Match? MatchRegExes(string remoteUrl, Regex[] regExs)
         {
             Match? m = null;
-            foreach (string regex in regExs)
+            foreach (Regex regex in regExs)
             {
-                m = Regex.Match(remoteUrl, regex);
+                m = regex.Match(remoteUrl);
                 if (m.Success)
                 {
                     break;

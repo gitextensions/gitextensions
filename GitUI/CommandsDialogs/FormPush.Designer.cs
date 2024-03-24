@@ -207,6 +207,7 @@
             _NO_TRANSLATE_Branch.TabIndex = 0;
             _NO_TRANSLATE_Branch.SelectedIndexChanged += _NO_TRANSLATE_Branch_SelectedIndexChanged;
             _NO_TRANSLATE_Branch.SelectedValueChanged += BranchSelectedValueChanged;
+            _NO_TRANSLATE_Branch.Enter += _NO_TRANSLATE_Branch_Enter;
             // 
             // labelTo
             // 

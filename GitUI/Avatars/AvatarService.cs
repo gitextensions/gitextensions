@@ -112,7 +112,7 @@ namespace GitUI.Avatars
             FileSystemAvatarCache persistentCacheProvider = new(HotSwapProvider);
             AvatarMemoryCache memoryCachedProvider = new(persistentCacheProvider, AppSettings.AvatarCacheSize);
 
-            MultiCacheCleaner cacheCleaner = new(persistentCacheProvider, memoryCachedProvider);
+            MultiCacheCleaner cacheCleaner = new(memoryCachedProvider, persistentCacheProvider);
 
             SafetynetAvatarProvider mainProvider
                 = new(
@@ -121,6 +121,11 @@ namespace GitUI.Avatars
                         UserImageAvatarProvider));
 
             return (mainProvider, cacheCleaner);
+        }
+
+        public static void UpdateAvatarInitialFontsSettings()
+        {
+            InitialsAvatarProvider.UpdateFontsSettings();
         }
     }
 }

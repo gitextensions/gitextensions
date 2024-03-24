@@ -1,5 +1,4 @@
 ﻿using GitCommands;
-using GitUI.Hotkey;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -35,17 +34,6 @@ namespace GitUI.CommandsDialogs.Menus
             Translator.Translate(this, AppSettings.CurrentTranslation);
 
             _getUICommands = getUICommands;
-        }
-
-        /// <summary>
-        ///  Returns the string representation of <paramref name="commandCode"/> if it exists in <paramref name="hotkeys"/> collection.
-        /// </summary>
-        /// <param name="hotkeys">The collection of configured shortcut keys.</param>
-        /// <param name="commandCode">The required shortcut identifier.</param>
-        /// <returns>The string representation of the shortcut, if exists; otherwise, the string representation of <see cref="Keys.None"/>.</returns>
-        protected static string GetShortcutKey(IEnumerable<HotkeyCommand>? hotkeys, int commandCode)
-        {
-            return (hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode)?.KeyData ?? Keys.None).ToShortcutKeyDisplayString();
         }
 
         /// <summary>

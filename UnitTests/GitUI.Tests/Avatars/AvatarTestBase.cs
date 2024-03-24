@@ -55,6 +55,7 @@ namespace GitUITests.Avatars
         {
             _inner = Substitute.For<IAvatarProvider>();
 
+            _inner.PerformsIo.Returns(true);
             _inner.GetAvatarAsync(_email1, _name1, _size).Returns(Task.FromResult(_img1));
             _inner.GetAvatarAsync(_email2, _name2, _size).Returns(Task.FromResult(_img2));
             _inner.GetAvatarAsync(_email3, _name3, _size).Returns(Task.FromResult(_img3));

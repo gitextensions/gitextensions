@@ -15,7 +15,6 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
-using GitUI.Hotkey;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -106,7 +105,7 @@ namespace GitUI.CommitInfo
 
             rtbxCommitMessage.Font = AppSettings.CommitFont;
             RevisionInfo.Font = AppSettings.Font;
-            addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Command.AddNotes).ToShortcutKeyDisplayString();
+            addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(FormBrowse.Command.AddNotes);
 
             _commitMessageResizedSubscription = subscribeToContentsResized(rtbxCommitMessage, CommitMessage_ContentsResized);
             _revisionInfoResizedSubscription = subscribeToContentsResized(RevisionInfo, RevisionInfo_ContentsResized);
@@ -503,7 +502,7 @@ namespace GitUI.CommitInfo
 
                             if (gitRef is { IsTag: true, IsDereference: true })
                             {
-                                string? content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
+                                string? content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName, cancellationToken));
                                 if (content is not null)
                                 {
                                     result.Add(gitRef.LocalName, content);
@@ -519,7 +518,7 @@ namespace GitUI.CommitInfo
                 {
                     await TaskScheduler.Default;
 
-                    List<string> tags = Module.GetAllTagsWhichContainGivenCommit(objectId).ToList();
+                    List<string> tags = Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken).ToList();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _tags = tags;
@@ -536,7 +535,7 @@ namespace GitUI.CommitInfo
                     // Include remote branches if requested
                     bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                                      AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                    List<string> branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
+                    List<string> branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken).ToList();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _branches = branches;
@@ -562,7 +561,7 @@ namespace GitUI.CommitInfo
 
                     string GetDescribeInfoForRevision()
                     {
-                        (string precedingTag, string commitCount) = _gitDescribeProvider.Get(commitId);
+                        (string precedingTag, string commitCount) = _gitDescribeProvider.Get(commitId, cancellationToken);
 
                         StringBuilder gitDescribeInfo = new();
                         if (!string.IsNullOrEmpty(precedingTag))
@@ -845,10 +844,10 @@ namespace GitUI.CommitInfo
             {
                 _currentBranch = currentBranch;
                 _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
-                string[] branchRegexes = AppSettings.PrioritizedBranchNames.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                string[] branchRegexes = AppSettings.PrioritizedBranchNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 string[] localBranchRegexes = branchRegexes.Select(regex => $"^({regex})$").ToArray();
                 string[] remoteBranchRegexes = branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$").ToArray();
-                string[] remoteRegexes = AppSettings.PrioritizedRemoteNames.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                string[] remoteRegexes = AppSettings.PrioritizedRemoteNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                     .Select(regex => $"^{_remoteBranchPrefix}({regex})/").ToArray();
 
                 foreach (string branch in branches)
