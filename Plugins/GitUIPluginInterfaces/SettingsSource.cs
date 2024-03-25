@@ -118,14 +118,23 @@ namespace GitUIPluginInterfaces
         {
             string? stringValue = GetValue(name);
 
-            try
+            if (!string.IsNullOrWhiteSpace(stringValue))
             {
-                return ColorTranslator.FromHtml(stringValue);
+                try
+                {
+                    Color result = ColorTranslator.FromHtml(stringValue);
+                    if (result != Color.Empty)
+                    {
+                        return result;
+                    }
+                }
+                catch
+                {
+                    // ignore invalid color values (return the default value)
+                }
             }
-            catch
-            {
-                return defaultValue;
-            }
+
+            return defaultValue;
         }
 
         public T GetEnum<T>(string name, T defaultValue) where T : struct, Enum
