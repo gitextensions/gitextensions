@@ -134,9 +134,40 @@ namespace GitUI
 
             bool ExecuteScriptCommand()
             {
+                IScriptsManager scriptsManager = UICommands.GetRequiredService<IScriptsManager>();
+                ScriptInfo? scriptInfo = scriptsManager.GetScript(command);
+                if (scriptInfo is null)
+                {
+                    return false;
+                }
+
                 IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
-                return scriptsRunner.RunScript(command, owner: this, UICommands, this as IScriptOptionsProvider);
+                _ = scriptsRunner.RunScript(scriptInfo, owner: this, UICommands, FindScriptOptionsProvider());
+                return true;
+
+                IScriptOptionsProvider? FindScriptOptionsProvider()
+                {
+                    for (Control control = this; control != null; control = control.Parent)
+                    {
+                        if (control is GitModuleControl gitModuleControl && gitModuleControl.GetScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider)
+                        {
+                            return scriptOptionsProvider;
+                        }
+
+                        if (control is GitModuleForm gitModuleForm)
+                        {
+                            return gitModuleForm.GetScriptOptionsProvider();
+                        }
+                    }
+
+                    return null;
+                }
             }
+        }
+
+        protected virtual IScriptOptionsProvider? GetScriptOptionsProvider()
+        {
+            return null;
         }
 
         /// <summary>Raises the <see cref="UICommandsSourceSet"/> event.</summary>

@@ -48,6 +48,8 @@ namespace GitUI.CommandsDialogs
             findToolStripMenuItem = new ToolStripMenuItem();
             expandToolStripMenuItem = new ToolStripMenuItem();
             collapseAllToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparatorScript = new ToolStripSeparator();
+            runScriptToolStripMenuItem = new ToolStripMenuItem();
             FileText = new GitUI.Editor.FileViewer();
             BlameControl = new Blame.BlameControl();
             ((System.ComponentModel.ISupportInitialize)(FileTreeSplitContainer)).BeginInit();
@@ -125,7 +127,9 @@ namespace GitUI.CommandsDialogs
             toolStripSeparatorGitTrackingActions,
             findToolStripMenuItem,
             expandToolStripMenuItem,
-            collapseAllToolStripMenuItem});
+            collapseAllToolStripMenuItem,
+            toolStripSeparatorScript,
+            runScriptToolStripMenuItem});
             FileTreeContextMenu.Name = "FileTreeContextMenu";
             FileTreeContextMenu.Size = new Size(326, 474);
             FileTreeContextMenu.Opening += FileTreeContextMenu_Opening;
@@ -323,6 +327,18 @@ namespace GitUI.CommandsDialogs
             collapseAllToolStripMenuItem.Text = "Co&llapse all";
             collapseAllToolStripMenuItem.Click += collapseAllToolStripMenuItem_Click;
             // 
+            // toolStripSeparatorScript
+            // 
+            toolStripSeparatorScript.Name = "toolStripSeparatorScript";
+            toolStripSeparatorScript.Size = new Size(259, 6);
+            // 
+            // runScriptToolStripMenuItem
+            // 
+            runScriptToolStripMenuItem.Image = Properties.Images.Console;
+            runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
+            runScriptToolStripMenuItem.Size = new Size(262, 22);
+            runScriptToolStripMenuItem.Text = "Run script";
+            // 
             // FileText
             // 
             FileText.Dock = DockStyle.Fill;
@@ -391,5 +407,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparatorGitActions;
         private ToolStripMenuItem stopTrackingThisFileToolStripMenuItem;
         private ToolStripMenuItem expandToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparatorScript;
+        private ToolStripMenuItem runScriptToolStripMenuItem;
     }
 }

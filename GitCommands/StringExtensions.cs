@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Text;
+using GitCommands.Utils;
 using GitExtUtils;
 
 // ReSharper disable once CheckNamespace
@@ -187,6 +188,18 @@ namespace System
         public static string? QuoteNE(this string? s)
         {
             return string.IsNullOrEmpty(s) ? s : s.Quote();
+        }
+
+        /// <summary>
+        /// Quotes and escapes this string for use as a command line argument.
+        /// </summary>
+        [Pure]
+        public static string QuoteForCommandLine(this string s, bool? forWindows = null)
+        {
+            return $"\"{((forWindows ?? EnvUtils.RunningOnWindows()) ? EscapeForWindowsCommandLine(s) : EscapeForPosixCommandLine(s))}\"";
+
+            static string EscapeForWindowsCommandLine(string s) => s.Replace("\"", "\"\"");
+            static string EscapeForPosixCommandLine(string s) => s.Replace(@"\", @"\\").Replace("\"", "\\\"").Replace("'", @"\'");
         }
 
         /// <summary>

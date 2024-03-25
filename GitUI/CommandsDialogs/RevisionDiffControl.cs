@@ -5,6 +5,7 @@ using GitCommands.Git;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -183,6 +184,11 @@ namespace GitUI.CommandsDialogs
                 DiffFiles.Focus();
                 return true;
             }
+        }
+
+        protected override IScriptOptionsProvider? GetScriptOptionsProvider()
+        {
+            return new ScriptOptionsProvider(DiffFiles, () => _fullPathResolver, () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine);
         }
 
         public void ReloadHotkeys()
@@ -741,6 +747,8 @@ namespace GitUI.CommandsDialogs
             {
                 blameToolStripMenuItem.Checked = false;
             }
+
+            DiffContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void DiffContextMenu_Opening(object sender, CancelEventArgs e)

@@ -46,6 +46,8 @@ namespace GitUI.CommandsDialogs
             assumeUnchangedToolStripMenuItem = new ToolStripMenuItem();
             doNotAssumeUnchangedToolStripMenuItem = new ToolStripMenuItem();
             interactiveAddToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparatorScript = new ToolStripSeparator();
+            runScriptToolStripMenuItem = new ToolStripMenuItem();
             fileTooltip = new ToolTip(components);
             StageInSuperproject = new CheckBox();
             StagedFileContext = new ContextMenuStrip(components);
@@ -61,6 +63,8 @@ namespace GitUI.CommandsDialogs
             stagedCopyPathToolStripMenuItem14 = new ToolStripMenuItem();
             stagedOpenFolderToolStripMenuItem10 = new ToolStripMenuItem();
             stagedEditFileToolStripMenuItem11 = new ToolStripMenuItem();
+            stagedToolStripSeparatorScript = new ToolStripSeparator();
+            stagedRunScriptToolStripMenuItem = new ToolStripMenuItem();
             UnstagedSubmoduleContext = new ContextMenuStrip(components);
             commitSubmoduleChanges = new ToolStripMenuItem();
             resetSubmoduleChanges = new ToolStripMenuItem();
@@ -211,7 +215,9 @@ namespace GitUI.CommandsDialogs
             skipWorktreeToolStripMenuItem,
             doNotSkipWorktreeToolStripMenuItem,
             assumeUnchangedToolStripMenuItem,
-            doNotAssumeUnchangedToolStripMenuItem});
+            doNotAssumeUnchangedToolStripMenuItem,
+            toolStripSeparatorScript,
+            runScriptToolStripMenuItem});
             UnstagedFileContext.Name = "UnstagedFileContext";
             UnstagedFileContext.Size = new Size(233, 414);
             UnstagedFileContext.Opening += UnstagedFileContext_Opening;
@@ -374,6 +380,18 @@ namespace GitUI.CommandsDialogs
             interactiveAddToolStripMenuItem.Text = "Interactive Add";
             interactiveAddToolStripMenuItem.Click += interactiveAddToolStripMenuItem_Click;
             //
+            // toolStripSeparatorScript
+            // 
+            toolStripSeparatorScript.Name = "toolStripSeparatorScript";
+            toolStripSeparatorScript.Size = new Size(259, 6);
+            // 
+            // runScriptToolStripMenuItem
+            // 
+            runScriptToolStripMenuItem.Image = Properties.Images.Console;
+            runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
+            runScriptToolStripMenuItem.Size = new Size(262, 22);
+            runScriptToolStripMenuItem.Text = "Run script";
+            // 
             // StageInSuperproject
             // 
             StageInSuperproject.AutoSize = true;
@@ -401,7 +419,9 @@ namespace GitUI.CommandsDialogs
             stagedCopyPathToolStripMenuItem14,
             stagedOpenFolderToolStripMenuItem10,
             stagedFileHistoryToolStripSeparator,
-            stagedFileHistoryToolStripMenuItem6});
+            stagedFileHistoryToolStripMenuItem6,
+            stagedToolStripSeparatorScript,
+            stagedRunScriptToolStripMenuItem});
             StagedFileContext.Name = "StagedFileContext";
             StagedFileContext.Size = new Size(233, 198);
             StagedFileContext.Opening += StagedFileContext_Opening;
@@ -490,6 +510,18 @@ namespace GitUI.CommandsDialogs
             stagedEditFileToolStripMenuItem11.Size = new Size(232, 22);
             stagedEditFileToolStripMenuItem11.Text = "Edit file";
             stagedEditFileToolStripMenuItem11.Click += editFileToolStripMenuItem_Click;
+            // 
+            // stagedToolStripSeparatorScript
+            // 
+            stagedToolStripSeparatorScript.Name = "stagedToolStripSeparatorScript";
+            stagedToolStripSeparatorScript.Size = new Size(259, 6);
+            // 
+            // stagedRunScriptToolStripMenuItem
+            // 
+            stagedRunScriptToolStripMenuItem.Image = Properties.Images.Console;
+            stagedRunScriptToolStripMenuItem.Name = "stagedRunScriptToolStripMenuItem";
+            stagedRunScriptToolStripMenuItem.Size = new Size(262, 22);
+            stagedRunScriptToolStripMenuItem.Text = "Run script";
             // 
             // UnstagedSubmoduleContext
             // 
@@ -1660,6 +1692,10 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem stagedCopyPathToolStripMenuItem14;
         private ToolStripSeparator toolStripSeparator12;
         private ToolStripMenuItem interactiveAddToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparatorScript;
+        private ToolStripMenuItem runScriptToolStripMenuItem;
+        private ToolStripSeparator stagedToolStripSeparatorScript;
+        private ToolStripMenuItem stagedRunScriptToolStripMenuItem;
         private TableLayoutPanel tableLayoutPanel1;
         private StatusStrip commitStatusStrip;
         private ToolStripStatusLabel commitAuthorStatus;

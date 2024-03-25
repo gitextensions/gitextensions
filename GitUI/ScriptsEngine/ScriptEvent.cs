@@ -15,6 +15,7 @@
         BeforeMerge,
         AfterMerge,
         BeforeFetch,
-        AfterFetch
+        AfterFetch,
+        ShowInFileList
     }
 }

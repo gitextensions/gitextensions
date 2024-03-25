@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
         /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
         /// <param name="serviceProvider">The DI service provider.</param>
-        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Func<int, bool> scriptInvoker, IServiceProvider serviceProvider)
+        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Func<int, bool> scriptInvoker, Func<ScriptInfo, bool> scriptFilterAddDirect, IServiceProvider serviceProvider)
         {
             ArgumentNullException.ThrowIfNull(contextMenu);
             ArgumentNullException.ThrowIfNull(hostMenuItem);
@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs
                     scriptInvoker(scriptId);
                 };
 
-                if (script.AddToRevisionGridContextMenu)
+                if (scriptFilterAddDirect(script))
                 {
                     // insert items after hostMenuItem
                     contextMenu.Items.Insert(++lastScriptItemIndex, item);
