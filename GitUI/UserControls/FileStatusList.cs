@@ -1569,7 +1569,7 @@ namespace GitUI
                 Location = new Point(TopLevelControl.Location.X + 90, TopLevelControl.Location.Y + 110)
             };
 
-            _formSearchCommit.SearchFor = !string.IsNullOrEmpty(text) ? text : (SearchComboBox.Visible ? SearchComboBox.Text : null);
+            _formSearchCommit.SearchFor = !string.IsNullOrEmpty(text) ? text : (SearchComboBox.Visible && !string.IsNullOrWhiteSpace(SearchComboBox.Text) ? SearchComboBox.Text : null);
             _formSearchCommit.SetSearchItems(SearchComboBox.Items);
             _formSearchCommit.Show();
             _formSearchCommit.Focus();
