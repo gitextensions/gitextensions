@@ -25,7 +25,7 @@ public partial class FormSearchCommit : GitExtensionsDialog
                 txtSearchFor.Text = value;
             }
 
-            txtSearchFor.Focus();
+            ActiveControl = txtSearchFor;
         }
     }
 

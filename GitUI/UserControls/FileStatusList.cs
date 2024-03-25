@@ -1553,25 +1553,26 @@ namespace GitUI
                 _formSearchCommit = null;
             }
 
-            _formSearchCommit ??= new(UICommands)
+            _formSearchCommit ??= new FormSearchCommit(UICommands)
             {
                 SearchFunc = (text, delay) =>
                 {
                     DoSearchCommit(text, delay);
                     SearchComboBox.Text = text;
                 },
-                EnableSearchBoxFunc = (enable) =>
-                {
-                    EnableSearchForList(enable);
-                },
-                Owner = (Form)TopLevelControl
+
+                EnableSearchBoxFunc = EnableSearchForList,
+
+                Owner = (Form)TopLevelControl,
+
+                // offset a few pixels compared to FindAndReplaceForm
+                Location = new Point(TopLevelControl.Location.X + 90, TopLevelControl.Location.Y + 110)
             };
 
-            // offset a few pixels compared to FindAndReplaceForm
-            _formSearchCommit.Location = new Point(TopLevelControl.Location.X + 90, TopLevelControl.Location.Y + 110);
             _formSearchCommit.SearchFor = !string.IsNullOrEmpty(text) ? text : (SearchComboBox.Visible ? SearchComboBox.Text : null);
             _formSearchCommit.SetSearchItems(SearchComboBox.Items);
             _formSearchCommit.Show();
+            _formSearchCommit.Focus();
         }
 
         private void FileStatusListView_DoubleClick(object sender, EventArgs e)
