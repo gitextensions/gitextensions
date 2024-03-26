@@ -209,6 +209,7 @@
             // 
             sortPinnedRepos.AutoSize = true;
             sortPinnedRepos.CheckAlign = ContentAlignment.MiddleRight;
+            tableLayoutPanel1.SetColumnSpan(sortPinnedRepos, 2);
             sortPinnedRepos.Location = new Point(11, 69);
             sortPinnedRepos.Name = "sortPinnedRepos";
             sortPinnedRepos.RightToLeft = RightToLeft.Yes;
@@ -232,6 +233,7 @@
             // 
             sortAllRecentRepos.AutoSize = true;
             sortAllRecentRepos.CheckAlign = ContentAlignment.MiddleRight;
+            tableLayoutPanel1.SetColumnSpan(sortAllRecentRepos, 2);
             sortAllRecentRepos.Location = new Point(11, 94);
             sortAllRecentRepos.Name = "sortAllRecentRepos";
             sortAllRecentRepos.RightToLeft = RightToLeft.Yes;
@@ -245,13 +247,14 @@
             // 
             shorteningGB.AutoSize = true;
             shorteningGB.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.SetColumnSpan(shorteningGB, 2);
             shorteningGB.Controls.Add(dontShortenRB);
             shorteningGB.Controls.Add(middleDotRB);
             shorteningGB.Controls.Add(mostSigDirRB);
             shorteningGB.Dock = DockStyle.Fill;
             shorteningGB.Location = new Point(11, 119);
             shorteningGB.Name = "shorteningGB";
-            shorteningGB.Size = new Size(261, 109);
+            shorteningGB.Size = new Size(328, 109);
             shorteningGB.TabIndex = 6;
             shorteningGB.TabStop = false;
             shorteningGB.Text = "Shortening strategy";
