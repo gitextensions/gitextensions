@@ -1,0 +1,325 @@
+[1mdiff --git a/GitCommands/Patches/PatchProcessor.cs b/GitCommands/Patches/PatchProcessor.cs[m
+[1mindex 70b40..c1e6c 100644[m
+[1m--- a/GitCommands/Patches/PatchProcessor.cs[m
+[1m+++ b/GitCommands/Patches/PatchProcessor.cs[m
+[36m@@ -15,19 +15,29 @@[m [mprivate enum PatchProcessorState[m
+             OutsidePatch[m
+         }[m
+ [m
+[32m+[m[32m        private const string _escapeSequenceRegex = @"(\u001b\[.*?m)?";[m
+[32m+[m[32m        [GeneratedRegex(@$"^{_escapeSequenceRegex}", RegexOptions.ExplicitCapture)][m
+[32m+[m[32m        private static partial Regex StartEscapeSequenceRegex();[m
+[32m+[m[32m        [GeneratedRegex(@$"{_escapeSequenceRegex}$", RegexOptions.ExplicitCapture)][m
+[32m+[m[32m        private static partial Regex EndEscapeSequenceRegex();[m
+[32m+[m[32m        [GeneratedRegex(@$"^{_escapeSequenceRegex}diff --(?<type>git|cc|combined)\s", RegexOptions.ExplicitCapture)][m
+         private static partial Regex PatchHeaderRegex();[m
+[31m-        [GeneratedRegex(@$"{_escapeSequenceRegex}diff --git [""]?[abiwco12]/(?<filenamea>.*)[""]? [""]?[abiwco12]/(?<filenameb>.*?)[""]?{_escapeSequenceRegex}$", RegexOptions.ExplicitCapture)][m
+[31m-        private static partial Regex DiffCommandRegex();[m
+[31m-        [GeneratedRegex(@$"^{_escapeSequenceRegex}diff --(cc|combined) [""]?(?<filenamea>.*?)[""]?{_escapeSequenceRegex}$", RegexOptions.ExplicitCapture)][m
+[31m-        private static partial Regex CombinedDiffCommandRegex();[m
+[31m-        [GeneratedRegex(@$"{_escapeSequenceRegex}[-+]{{3}} [""]?[abiwco12]/(?<filename>.*)[""]?{_escapeSequenceRegex}", RegexOptions.ExplicitCapture)][m
+[32m+[m
+[32m+[m[32m        // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs[m
+[32m+[m[32m        // diff --git b/Benchmarks/App.config a/Benchmarks/App.config[m
+[32m+[m[32m        // diff --cc config-enumerator[m
+[32m+[m[32m        [GeneratedRegex(@$"^diff --(?<type>git|cc|combined)\s[""]?([abiwco12]/)?(?<filenamea>.*?)[""]?( [""]?[abiwco12]/(?<filenameb>.*?)[""]?)?$", RegexOptions.ExplicitCapture)][m
+[32m+[m[32m        private static partial Regex PatchHeaderFileNameRegex();[m
+[32m+[m[32m        ////[GeneratedRegex(@$"diff --git [""]?[abiwco12]/(?<filenamea>.*)[""]? [""]?[abiwco12]/(?<filenameb>.*?)[""]?$", RegexOptions.ExplicitCapture)][m
+[32m+[m[32m        ////private static partial Regex DiffCommandRegex();[m
+[32m+[m[32m        ////[GeneratedRegex(@$"^diff --(cc|combined) [""]?(?<filenamea>.*?)[""]?$", RegexOptions.ExplicitCapture)][m
+[32m+[m[32m        ////private static partial Regex CombinedDiffCommandRegex();[m
+[32m+[m[32m        [GeneratedRegex(@$"[-+]{{3}} [""]?[abiwco12]/(?<filename>.*)[""]?", RegexOptions.ExplicitCapture)][m
+         private static partial Regex FileNameRegex();[m
+[31m-        [GeneratedRegex(@$"^{_escapeSequenceRegex}(?<line>,*)", RegexOptions.ExplicitCapture)][m
+[31m-        private static partial Regex StartOfLineRegex();[m
+[32m+[m[32m        [GeneratedRegex(@$"^@@", RegexOptions.ExplicitCapture)][m
+[32m+[m[32m        private static partial Regex StartOfChunkRegex();[m
+         [GeneratedRegex(@$"^{_escapeSequenceRegex}?[ -+@]", RegexOptions.ExplicitCapture)][m
+         private static partial Regex StartOfContentsRegex();[m
+[31m-        [GeneratedRegex(@$"^{_escapeSequenceRegex}?@@", RegexOptions.ExplicitCapture)][m
+[31m-        private static partial Regex StartOfChunkRegex();[m
+ [m
+         /// <summary>[m
+         /// Parses a patch file into individual <see cref="Patch"/> objects.[m
+[36m@@ -53,7 +63,7 @@[m [mpublic static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<[m
+             // skip email header[m
+             for (; i < lines.Length; i++)[m
+             {[m
+[31m-                if (IsStartOfANewPatch(lines[i]))[m
+[32m+[m[32m                if (PatchHeaderRegex().IsMatch(lines[i]))[m
+                 {[m
+                     break;[m
+                 }[m
+[36m@@ -76,56 +86,38 @@[m [mpublic static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<[m
+                 return null;[m
+             }[m
+ [m
+[31m-            string header = lines[lineIndex];[m
+[31m-[m
+[31m-            Match headerMatch = PatchHeaderRegex().Match(header);[m
+[32m+[m[32m            string rawHeader = lines[lineIndex];[m
+[32m+[m[32m            Match startEscape = StartEscapeSequenceRegex().Match(rawHeader);[m
+[32m+[m[32m            Match endEscape = EndEscapeSequenceRegex().Match(rawHeader);[m
+[32m+[m[32m            ReadOnlySpan<char> header = rawHeader.AsSpan(startEscape.Length, rawHeader.Length - startEscape.Length - endEscape.Length);[m
+ [m
+[32m+[m[32m            Match headerMatch = PatchHeaderFileNameRegex().Match(header.ToString());[m
+             if (!headerMatch.Success)[m
+             {[m
+                 return null;[m
+             }[m
+ [m
+[31m-            header = GitModule.ReEncodeFileNameFromLossless(header);[m
+[31m-[m
+[31m-            PatchProcessorState state = PatchProcessorState.InHeader;[m
+[31m-[m
+[31m-            string? fileNameA, fileNameB;[m
+[31m-[m
+[32m+[m[32m            header = GitModule.ReEncodeFileNameFromLossless(header.ToString());[m
+             bool isCombinedDiff = headerMatch.Groups["type"].Value != "git";[m
+ [m
+[31m-            if (!isCombinedDiff)[m
+[32m+[m[32m            // Match match = (isCombinedDiff ? CombinedDiffCommandRegex() : DiffCommandRegex())[m
+[32m+[m[32m            //     .Match(header.ToString());[m
+[32m+[m[32m            if (!headerMatch.Success || (!isCombinedDiff && !headerMatch.Groups["filenameb"].Success))[m
+             {[m
+[31m-                // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs[m
+[31m-                // diff --git b/Benchmarks/App.config a/Benchmarks/App.config[m
+[31m-                Match match = DiffCommandRegex().Match(header);[m
+[31m-[m
+[31m-                if (!match.Success)[m
+[31m-                {[m
+[31m-                    throw new FormatException("Invalid patch header: " + header);[m
+[31m-                }[m
+[31m-[m
+[31m-                fileNameA = match.Groups["filenamea"].Value.Trim();[m
+[31m-                fileNameB = match.Groups["filenameb"].Value.Trim();[m
+[31m-            }[m
+[31m-            else[m
+[31m-            {[m
+[31m-                Match match = CombinedDiffCommandRegex().Match(header);[m
+[31m-[m
+[31m-                if (!match.Success)[m
+[31m-                {[m
+[31m-                    throw new FormatException("Invalid patch header: " + header);[m
+[31m-                }[m
+[31m-[m
+[31m-                fileNameA = match.Groups["filenamea"].Value.Trim();[m
+[31m-                fileNameB = null;[m
+[32m+[m[32m                throw new FormatException($"Invalid patch header: {header}");[m
+             }[m
+ [m
+[31m-            string? index = null;[m
+[32m+[m[32m            string fileNameA = headerMatch.Groups["filenamea"].Value.Trim();[m
+[32m+[m[32m            string? fileNameB = isCombinedDiff ? null : headerMatch.Groups["filenameb"].Value.Trim();[m
+[32m+[m
+[32m+[m[32m            PatchProcessorState state = PatchProcessorState.InHeader;[m
+             PatchChangeType changeType = PatchChangeType.ChangeFile;[m
+             PatchFileType fileType = PatchFileType.Text;[m
+[32m+[m
+[32m+[m[32m            ReadOnlySpan<char> index = null;[m
+             StringBuilder patchText = new();[m
+ [m
+[31m-            patchText.Append(header);[m
+[32m+[m[32m            patchText.Append($"{startEscape.Value}{header}{endEscape.Value}");[m
+             if (lineIndex < lines.Length - 1)[m
+             {[m
+                 patchText.Append('\n');[m
+[36m@@ -133,12 +125,14 @@[m [mpublic static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<[m
+ [m
+             bool done = false;[m
+             int i = lineIndex + 1;[m
+[31m-[m
+             for (; i < lines.Length; i++)[m
+             {[m
+[31m-                string line = lines[i];[m
+[32m+[m[32m                string rawLine = lines[i];[m
+[32m+[m[32m                startEscape = StartEscapeSequenceRegex().Match(rawLine);[m
+[32m+[m[32m                endEscape = EndEscapeSequenceRegex().Match(rawLine);[m
+[32m+[m[32m                ReadOnlySpan<char> line = rawLine.AsSpan(startEscape.Length, rawLine.Length - startEscape.Length - endEscape.Length);[m
+ [m
+[31m-                if (IsStartOfANewPatch(line))[m
+[32m+[m[32m                if (PatchHeaderRegex().IsMatch(line))[m
+                 {[m
+                     done = true;[m
+                     break;[m
+[36m@@ -152,84 +146,69 @@[m [mpublic static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<[m
+                 }[m
+ [m
+                 // header lines are encoded in GitModule.SystemEncoding[m
+[31m-                line = GitModule.ReEncodeStringFromLossless(line, GitModule.SystemEncoding);[m
+[32m+[m[32m                line = GitModule.ReEncodeStringFromLossless(line.ToString(), GitModule.SystemEncoding);[m
+ [m
+[31m-                Match startOfLineMatch = StartOfLineRegex().Match(line);[m
+[31m-                if (!startOfLineMatch.Success)[m
+[31m-                {[m
+[31m-                    throw new FormatException("Invalid patch line: " + line);[m
+[31m-                }[m
+[31m-[m
+[31m-                string startOfLine = startOfLineMatch.Groups["line"].Value;[m
+[31m-                if (startOfLine.StartsWith("index "))[m
+[32m+[m[32m                if (line.StartsWith("index "))[m
+                 {[m
+                     // Index line[m
+                     index = line;[m
+[31m-                    patchText.Append(line);[m
+[31m-                    if (i < lines.Length - 1)[m
+[31m-                    {[m
+[31m-                        patchText.Append('\n');[m
+[31m-                    }[m
+[31m-[m
+[31m-                    continue;[m
+                 }[m
+[31m-[m
+[31m-                if (startOfLine.StartsWith("new file mode "))[m
+[32m+[m[32m                else if (line.StartsWith("new file mode "))[m
+                 {[m
+                     changeType = PatchChangeType.NewFile;[m
+                 }[m
+[31m-                else if (startOfLine.StartsWith("deleted file mode "))[m
+[32m+[m[32m                else if (line.StartsWith("deleted file mode "))[m
+                 {[m
+                     changeType = PatchChangeType.DeleteFile;[m
+                 }[m
+[31m-                else if (startOfLine.StartsWith("old mode "))[m
+[32m+[m[32m                else if (line.StartsWith("old mode "))[m
+                 {[m
+                     changeType = PatchChangeType.ChangeFileMode;[m
+                 }[m
+[31m-                else if (startOfLine.StartsWith("Binary files a/") && line.EndsWith(" and /dev/null differ"))[m
+[32m+[m[32m                else if (line.StartsWith("Binary files a/") && line.EndsWith(" and /dev/null differ"))[m
+                 {[m
+                     // Unlisted binary file deletion[m
+                     if (changeType != PatchChangeType.DeleteFile)[m
+                     {[m
+[31m-                        throw new FormatException("Change not parsed correctly: " + line);[m
+[32m+[m[32m                        throw new FormatException($"Invalid patch header: {line}");[m
+                     }[m
+ [m
+                     fileType = PatchFileType.Binary;[m
+                     state = PatchProcessorState.OutsidePatch;[m
+                     break;[m
+                 }[m
+[31m-                else if (startOfLine.StartsWith("Binary files /dev/null and b/") && line.EndsWith(" differ"))[m
+[32m+[m[32m                else if (line.StartsWith("Binary files /dev/null and b/") && line.EndsWith(" differ"))[m
+                 {[m
+                     // Unlisted binary file addition[m
+                     if (changeType != PatchChangeType.NewFile)[m
+                     {[m
+[31m-                        throw new FormatException("Change not parsed correctly: " + line);[m
+[32m+[m[32m                        throw new FormatException($"Invalid patch header: {line}");[m
+                     }[m
+ [m
+                     fileType = PatchFileType.Binary;[m
+                     state = PatchProcessorState.OutsidePatch;[m
+                     break;[m
+                 }[m
+[31m-                else if (startOfLine.StartsWith("GIT binary patch"))[m
+[32m+[m[32m                else if (line.StartsWith("GIT binary patch"))[m
+                 {[m
+                     fileType = PatchFileType.Binary;[m
+                     state = PatchProcessorState.OutsidePatch;[m
+                     break;[m
+                 }[m
+ [m
+[31m-                if (startOfLine.StartsWith("--- /dev/null"))[m
+[32m+[m[32m                if (line.StartsWith("--- /dev/null"))[m
+                 {[m
+                     // there is no old file, so this should be a new file[m
+                     if (changeType != PatchChangeType.NewFile)[m
+                     {[m
+[31m-                        throw new FormatException("Change not parsed correctly: " + line);[m
+[32m+[m[32m                        throw new FormatException($"Invalid patch header: {line}");[m
+                     }[m
+                 }[m
+[31m-                else if (startOfLine.StartsWith("--- "))[m
+[32m+[m[32m                else if (line.StartsWith("--- "))[m
+                 {[m
+                     // old file name[m
+[31m-                    line = GitModule.UnescapeOctalCodePoints(line);[m
+[31m-                    Match regexMatch = FileNameRegex().Match(line);[m
+[32m+[m[32m                    line = GitModule.UnescapeOctalCodePoints(line.ToString());[m
+[32m+[m[32m                    Match regexMatch = FileNameRegex().Match(line.ToString());[m
+ [m
+                     if (regexMatch.Success)[m
+                     {[m
+[36m@@ -237,22 +216,22 @@[m [mpublic static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<[m
+                     }[m
+                     else[m
+                     {[m
+[31m-                        throw new FormatException("Old filename not parsed correctly: " + line);[m
+[32m+[m[32m                        throw new FormatException($"Invalid patch header: {line}");[m
+                     }[m
+                 }[m
+[31m-                else if (startOfLine.StartsWith("+++ /dev/null"))[m
+[32m+[m[32m                else if (line.StartsWith("+++ /dev/null"))[m
+                 {[m
+                     // there is no new file, so this should be a deleted file[m
+                     if (changeType != PatchChangeType.DeleteFile)[m
+                     {[m
+[31m-                        throw new FormatException("Change not parsed correctly: " + line);[m
+[32m+[m[32m                        throw new FormatException($"Invalid patch header: {line}");[m
+                     }[m
+                 }[m
+[31m-                else if (startOfLine.StartsWith("+++ "))[m
+[32m+[m[32m                else if (line.StartsWith("+++ "))[m
+                 {[m
+                     // new file name[m
+[31m-                    line = GitModule.UnescapeOctalCodePoints(line);[m
+[31m-                    Match regexMatch = FileNameRegex().Match(line);[m
+[32m+[m[32m                    line = GitModule.UnescapeOctalCodePoints(line.ToString());[m
+[32m+[m[32m                    Match regexMatch = FileNameRegex().Match(line.ToString());[m
+ [m
+                     if (regexMatch.Success)[m
+                     {[m
+[36m@@ -260,12 +239,11 @@[m [mpublic static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<[m
+                     }[m
+                     else[m
+                     {[m
+[31m-                        throw new FormatException("New filename not parsed correctly: " + line);[m
+[32m+[m[32m                        throw new FormatException($"Invalid patch header: {line}");[m
+                     }[m
+                 }[m
+ [m
+[31m-                patchText.Append(line);[m
+[31m-[m
+[32m+[m[32m                patchText.Append($"{startEscape.Value}{line}{endEscape.Value}");[m
+                 if (i < lines.Length - 1)[m
+                 {[m
+                     patchText.Append('\n');[m
+[36m@@ -276,8 +254,7 @@[m [mpublic static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<[m
+             for (; !done && i < lines.Length; i++)[m
+             {[m
+                 string line = lines[i];[m
+[31m-[m
+[31m-                if (IsStartOfANewPatch(line))[m
+[32m+[m[32m                if (PatchHeaderRegex().IsMatch(line))[m
+                 {[m
+                     break;[m
+                 }[m
+[36m@@ -287,23 +264,16 @@[m [mpublic static IEnumerable<Patch> CreatePatchesFromString(string patchText, Lazy<[m
+                     : GitModule.SystemEncoding; // warnings, messages ...[m
+ [m
+                 line = GitModule.ReEncodeStringFromLossless(line, encoding);[m
+[32m+[m[32m                patchText.Append(line);[m
+                 if (i < lines.Length - 1)[m
+                 {[m
+[31m-                    line += "\n";[m
+[32m+[m[32m                    patchText.Append('\n');[m
+                 }[m
+[31m-[m
+[31m-                patchText.Append(line);[m
+             }[m
+ [m
+             lineIndex = i - 1;[m
+ [m
+[31m-            return new Patch(header, index, fileType, fileNameA, fileNameB, changeType, patchText.ToString());[m
+[31m-        }[m
+[31m-[m
+[31m-        [Pure][m
+[31m-        private static bool IsStartOfANewPatch(string input)[m
+[31m-        {[m
+[31m-            return PatchHeaderRegex().IsMatch(input);[m
+[32m+[m[32m            return new Patch(header.ToString(), index.ToString(), fileType, fileNameA, fileNameB, changeType, patchText.ToString());[m
+         }[m
+     }[m
+ }[m

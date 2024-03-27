@@ -11,12 +11,16 @@ namespace GitCommandsTests.Patches
         private readonly string _bigPatch;
         private readonly string _bigBinPatch;
         private readonly string _rebaseDiff;
+        private readonly string _colorDiff;
+        private readonly string _colorBinDiff;
 
         public PatchProcessorTest()
         {
             _bigPatch = LoadPatch("big.patch");
             _bigBinPatch = LoadPatch("bigBin.patch");
             _rebaseDiff = LoadPatch("rebase.diff");
+            _colorDiff = LoadPatch("color.diff");
+            _colorBinDiff = LoadPatch("color-binary.diff");
 
             string LoadPatch(string fileName)
             {
@@ -115,7 +119,6 @@ namespace GitCommandsTests.Patches
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(_rebaseDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
             Assert.AreEqual(13, patches.Count);
-            Assert.AreEqual(3, patches.Count(p => p.IsCombinedDiff));
         }
 
         [Test]
@@ -134,7 +137,38 @@ index cdf8bebba,55ff37bb9..000000000
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(diff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
             Assert.AreEqual(2, patches.Count);
-            Assert.IsTrue(patches.All(p => p.IsCombinedDiff));
+        }
+
+        [Test]
+        public void ColorDiff()
+        {
+            List<Patch> patches = PatchProcessor.CreatePatchesFromString(_colorDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+
+            Assert.AreEqual(1, patches.Count);
+            Patch createdPatch = patches.First();
+
+            Assert.AreEqual(@"diff --git a/GitCommands/Patches/PatchProcessor.cs b/GitCommands/Patches/PatchProcessor.cs", createdPatch.Header, "header");
+            Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameA, "fileA");
+            Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameB, "fileB");
+            Assert.AreEqual("index 70b40..c1e6c 100644", createdPatch.Index);
+            Assert.AreEqual(PatchChangeType.ChangeFile, createdPatch.ChangeType);
+            Assert.AreEqual(PatchFileType.Text, createdPatch.FileType);
+        }
+
+        [Test]
+        public void ColorBinDiff()
+        {
+            List<Patch> patches = PatchProcessor.CreatePatchesFromString(_colorBinDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+
+            Assert.AreEqual(1, patches.Count);
+            Patch createdPatch = patches.First();
+
+            Assert.AreEqual(@"diff --git a/syscolor 3 gray.7z b/syscolor 3 gray.7z", createdPatch.Header, "header");
+            Assert.AreEqual("syscolor 3 gray.7z", createdPatch.FileNameA, "fileA");
+            Assert.AreEqual("syscolor 3 gray.7z", createdPatch.FileNameB, "fileB");
+            Assert.AreEqual("index 33b006c1..00000000", createdPatch.Index);
+            Assert.AreEqual(PatchChangeType.DeleteFile, createdPatch.ChangeType);
+            Assert.AreEqual(PatchFileType.Binary, createdPatch.FileType);
         }
 
         private static TestPatch CreateSmallPatchExample(bool reverse = false)
@@ -168,7 +202,7 @@ index cdf8bebba,55ff37bb9..000000000
             AppendDiffLine("-ąśdkjaldskjlaksd");
             AppendDiffLine("+changed again€");
 
-            Patch patch = new(header, index, PatchFileType.Text, fileNameA, fileNameB, false, PatchChangeType.ChangeFile, patchText.ToString());
+            Patch patch = new(header, index, PatchFileType.Text, fileNameA, fileNameB, PatchChangeType.ChangeFile, patchText.ToString());
 
             return new TestPatch(patch, patchOutput.ToString());
 

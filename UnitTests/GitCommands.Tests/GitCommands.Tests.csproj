@@ -35,6 +35,12 @@
     <None Include="Patches\testdata\rebase.diff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Patches\testdata\color.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\color-binary.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\RevisionReader\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

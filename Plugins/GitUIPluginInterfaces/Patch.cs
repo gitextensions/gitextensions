@@ -12,8 +12,6 @@
 
         public string? FileNameB { get; }
 
-        public bool IsCombinedDiff { get; }
-
         public PatchChangeType ChangeType { get; }
 
         public string? Text { get; }
@@ -24,7 +22,6 @@
             PatchFileType fileType,
             string fileNameA,
             string? fileNameB,
-            bool isCombinedDiff,
             PatchChangeType changeType,
             string? text)
         {
@@ -33,7 +30,6 @@
             FileType = fileType;
             FileNameA = fileNameA ?? throw new ArgumentNullException(nameof(fileNameA));
             FileNameB = fileNameB;
-            IsCombinedDiff = isCombinedDiff;
             ChangeType = changeType;
             Text = text;
         }
