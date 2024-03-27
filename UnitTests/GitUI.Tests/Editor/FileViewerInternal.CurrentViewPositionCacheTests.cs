@@ -118,7 +118,7 @@ namespace GitUITests.Editor
             test.TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 18;
             test.LineNumberControl = new DiffViewerLineNumberControl(test.TextEditor.ActiveTextAreaControl.TextArea);
             DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(test.TextEditor.Text, isCombinedDiff: false);
-            test.LineNumberControl.DisplayLineNum(result);
+            test.LineNumberControl.DisplayLineNum(result, showLeftColumn: true);
 
             _viewPositionCache.Capture();
 

@@ -243,7 +243,7 @@ namespace GitUI.Editor
         /// <param name="text">The text to set in the editor.</param>
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         /// <param name="viewMode">the view viewMode in the file viewer, the kind of info shown</param>
-        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring)
+        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring, string? grepString = null)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -258,11 +258,12 @@ namespace GitUI.Editor
                 ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(ref text, useGitColoring),
                 ViewMode.CombinedDiff => new CombinedDiffHighlightService(ref text, useGitColoring),
                 ViewMode.RangeDiff => new RangeDiffHighlightService(ref text, useGitColoring),
+                ViewMode.Grep => new GrepHighlightService(ref text, useGitColoring, grepString),
                 _ => throw new ArgumentException($"Unexpected viewMode: {viewMode}", nameof(viewMode))
             };
 
             TextEditor.Text = text;
-            bool hasLineNumberControl = viewMode.IsNormalDiffView();
+            bool hasLineNumberControl = viewMode.IsNormalDiffView() || viewMode is ViewMode.Grep;
             _lineNumbersControl.Clear(hasLineNumberControl);
             _lineNumbersControl.SetVisibility(hasLineNumberControl);
 
@@ -388,6 +389,29 @@ namespace GitUI.Editor
         }
 
         /// <summary>
+        /// Get the next/previous line for the grep match,
+        /// updating the current line.
+        /// </summary>
+        /// <param name="next"><c>true</c> if next position, <c>false</c> if previous.</param>
+        /// <returns><c>true</c> if this is is a grep string.</returns>
+        public bool GetMatchLine(bool next)
+        {
+            if (_textHighlightService is not GrepHighlightService grepHighlightService)
+            {
+                return false;
+            }
+
+            if (!(grepHighlightService.GetGrepLineNum(LineAtCaret, next) is int line) || line < 0)
+            {
+                return true;
+            }
+
+            FirstVisibleLine = Math.Max(0, line - 3);
+            LineAtCaret = line;
+            return true;
+        }
+
+        /// <summary>
         /// Get the full prefix for lines with differences.
         /// </summary>
         /// <returns>An array with the prefixes.</returns>
@@ -428,6 +452,11 @@ namespace GitUI.Editor
         /// <param name="contextLines">Number of context lines, to include header for new diff.</param>
         public void GoToNextChange(int contextLines)
         {
+            if (GetMatchLine(next: true))
+            {
+                return;
+            }
+
             int totalNumberOfLines = TotalNumberOfLines;
             bool isRangeDiff = _textHighlightService is RangeDiffHighlightService;
             if (isRangeDiff)
@@ -479,6 +508,11 @@ namespace GitUI.Editor
 
         public void GoToPreviousChange(int contextLines)
         {
+            if (GetMatchLine(next: false))
+            {
+                return;
+            }
+
             bool isRangeDiff = _textHighlightService is RangeDiffHighlightService;
             if (isRangeDiff)
             {
@@ -696,7 +730,7 @@ namespace GitUI.Editor
 
         public int CurrentFileLine()
         {
-            bool isPartial = _textHighlightService is DiffHighlightService;
+            bool isPartial = _textHighlightService is (DiffHighlightService or GrepHighlightService);
             _currentViewPositionCache.Capture();
             return _currentViewPositionCache.CurrentFileLine(isPartial);
         }

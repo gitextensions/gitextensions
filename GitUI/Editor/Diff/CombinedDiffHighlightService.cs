@@ -22,7 +22,7 @@ public class CombinedDiffHighlightService : DiffHighlightService
     public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
     {
         DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(textEditor.Text, isCombinedDiff: true);
-        lineNumbersControl.DisplayLineNum(result);
+        lineNumbersControl.DisplayLineNum(result, showLeftColumn: true);
     }
 
     public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)

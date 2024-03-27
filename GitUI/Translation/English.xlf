@@ -1506,6 +1506,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="SearchWatermarkLabel.Text">
+        <source>Search files in commit using a regular expression...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
         <source>&amp;Sort by...</source>
         <target />
@@ -7148,6 +7152,38 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormSearchCommit" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Search files in commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnSearch.Text">
+        <source>Search</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMatchCase.Text">
+        <source>Match &amp;case</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMatchWholeWord.Text">
+        <source>Match &amp;whole word</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowSearchBox.Text">
+        <source>Show search &amp;box</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>&amp;Search:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblOptions.Text">
+        <source>&amp;Options:</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormSelectMultipleBranches" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -8903,6 +8939,10 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
         <source>&amp;Second -&gt; Working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showSearchCommitToolStripMenuItem.Text">
+        <source>Sear&amp;ch files in commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">

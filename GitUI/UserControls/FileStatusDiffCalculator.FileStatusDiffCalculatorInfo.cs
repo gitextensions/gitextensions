@@ -9,6 +9,7 @@ namespace GitUI
             public IReadOnlyList<GitRevision> Revisions { get; set; }
             public ObjectId? HeadId { get; set; }
             public bool AllowMultiDiff { get; set; }
+            public string GrepArguments { get; set; }
         }
     }
 }
