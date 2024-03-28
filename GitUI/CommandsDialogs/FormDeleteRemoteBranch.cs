@@ -46,6 +46,7 @@ namespace GitUI.CommandsDialogs
         protected override void OnShown(EventArgs e)
         {
             RecalculateSizeConstraints();
+            CheckDeleteTrackingAllowed();
             base.OnShown(e);
             Branches.Focus();
         }
@@ -64,6 +65,28 @@ namespace GitUI.CommandsDialogs
             ResumeLayout();
         }
 
+        private List<IGitRef> GetSelectedRemotRefs() => Branches.GetSelectedBranches().ToList();
+
+        private void Branches_SelectedValueChanged(object? sender, EventArgs e)
+        {
+            CheckDeleteTrackingAllowed();
+        }
+
+        private void CheckDeleteTrackingAllowed()
+        {
+            bool localTrackingBranchesExists = GetTrackingReferenceOfRemoteRefs(GetSelectedRemotRefs()).Any();
+
+            if (!localTrackingBranchesExists)
+            {
+                DeleteLocalTrackingBranch.Checked = false;
+                DeleteLocalTrackingBranch.Enabled = false;
+            }
+            else
+            {
+                DeleteLocalTrackingBranch.Enabled = true;
+            }
+        }
+
         private void Delete_Click(object sender, EventArgs e)
         {
             if (!DeleteRemote.Checked)
@@ -71,7 +94,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            List<IGitRef> selectedBranches = Branches.GetSelectedBranches().ToList();
+            List<IGitRef> selectedBranches = GetSelectedRemotRefs();
 
             // wait for _mergedBranches to be filled
             _taskManager.JoinPendingOperations();
@@ -110,12 +133,20 @@ namespace GitUI.CommandsDialogs
                 if (!form.ErrorOccurred() && !Module.InTheMiddleOfAction())
                 {
                     ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
+                    if (DeleteLocalTrackingBranch.Checked)
+                    {
+                        UICommands.StartDeleteBranchDialog(this, GetTrackingReferenceOfRemoteRefs(selectedBranches));
+                    }
                 }
             }
 
             UICommands.RepoChangedNotifier.Notify();
             Close();
         }
+
+        private IEnumerable<string> GetTrackingReferenceOfRemoteRefs(List<IGitRef> remoteRefs)
+            => Module.GetRefs(RefsFilter.Heads).Where(b => remoteRefs.Any(r => b.IsTrackingRemote(r)))
+                            .Select(r => r.LocalName);
 
         private void DeleteRemote_CheckedChanged(object sender, EventArgs e)
         {
