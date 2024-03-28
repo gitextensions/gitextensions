@@ -1,0 +1,14 @@
+﻿diff --git a/GitUI/Editor/Diff/CombinedDiffHighlightService.cs b/GitUI/Editor/Diff/CombinedDiffHighlightService.cs
+index cda8f..14e62 100644
+--- a/GitUI/Editor/Diff/CombinedDiffHighlightService.cs
++++ b/GitUI/Editor/Diff/CombinedDiffHighlightService.cs
+@@ -21,10 +21,10 @@ public CombinedDiffHighlightService(ref string text, bool useGitColoring)
+
+    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
+    {
+        DiffLinesInfoList<DiffLineInfo> result = new DiffLineNumAnalyzer().Analyze(textEditor.Text, isCombinedDiff: true);
+        lineNumbersControl.DisplayLineNum(result, showLeftColumn: true);
+    }
+- Dummy line
++ Dummy line
+@ Dummy line
