@@ -32,9 +32,9 @@ namespace GitCommands
             /* Notes placeholder */ "{1}";
 
         private const string _reflogSelectorFormat = "%gD%n";
-        private const string _notesPrefix = "Notes:";
-        private const string _notesMarker = $"\n{_notesPrefix}";
-        private const string _notesFormat = $"%n{_notesPrefix}%n%N";
+        internal const string NotesPrefix = "\u0578\u043et\u0435\u0282:"; // Unicode l00k-alikes, ոоtеʂ:
+        private const string _notesMarker = $"\n{NotesPrefix}";
+        private const string _notesFormat = $"%n{NotesPrefix}%n%N";
 
         // Trace info for parse errors
         private int _noOfParseError = 0;
@@ -468,45 +468,17 @@ namespace GitCommands
                     currentOffset++;
                 }
 
-                // Removes empty Notes markers (this is the most common case)
-                bool hasNonEmptyNotes = _hasNotes;
-                if (hasNonEmptyNotes)
+                if (_hasNotes)
                 {
-                    if (decoded.EndsWith(_notesMarker))
+                    if (!decoded.EndsWith(_notesMarker) && ((ReadOnlySpan<char>)decoded).LastIndexOf(_notesMarker, StringComparison.Ordinal) is int notesStartIndex and >= 0)
                     {
-                        // Remove the empty marker
-                        decoded = decoded[..^_notesMarker.Length].TrimEnd();
-                        hasNonEmptyNotes = false;
+                        revision.Body = decoded[..notesStartIndex].TrimEnd().ToString();
+                        revision.Notes = decoded.Slice(notesStartIndex + _notesMarker.Length + 1).ToString();
                     }
-                }
-
-                if (hasNonEmptyNotes)
-                {
-                    // Format Notes, add indentation
-                    int notesStartIndex = ((ReadOnlySpan<char>)decoded).IndexOf(_notesMarker, StringComparison.Ordinal);
-
-                    StringBuilder message = new();
-                    currentOffset = notesStartIndex + _notesMarker.Length + 1;
-                    message.Append(decoded.Slice(0, currentOffset));
-                    while (currentOffset < decoded.Length)
+                    else
                     {
-                        message.Append("    ");
-                        int lineLength = decoded.Slice(currentOffset).IndexOf('\n');
-                        if (lineLength == -1)
-                        {
-                            message.Append(decoded.Slice(currentOffset));
-                            break;
-                        }
-                        else
-                        {
-                            message.Append(decoded.Slice(currentOffset, lineLength))
-                                .Append('\n');
-                        }
-
-                        currentOffset += lineLength + 1;
+                        revision.Body = decoded[..^_notesMarker.Length].TrimEnd().ToString();
                     }
-
-                    revision.Body = message.ToString();
                 }
                 else
                 {
@@ -516,7 +488,7 @@ namespace GitCommands
 
             if (_hasNotes)
             {
-                revision.HasNotes = true;
+                revision.Notes ??= "";
             }
 #if DEBUG
             if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && revision.HasMultiLineMessage && revision.Body is null))
