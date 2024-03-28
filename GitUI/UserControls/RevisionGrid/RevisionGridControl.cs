@@ -940,7 +940,7 @@ namespace GitUI
                 base.Refresh();
 
                 _superprojectCurrentCheckout = null;
-                Subject<GitRevision> observeRevisions = new();
+                Subject<IReadOnlyList<GitRevision>> observeRevisions = new();
                 _revisionSubscription?.Dispose();
                 _revisionSubscription = observeRevisions
                     .ObserveOn(ThreadPoolScheduler.Instance)
@@ -980,6 +980,8 @@ namespace GitUI
 
                 ObjectId? previousCheckout = CurrentCheckout;
 
+                bool showStashes = AppSettings.ShowStashes;
+
                 // Evaluate GitRefs and current commit
                 ThreadHelper.FileAndForget(async () =>
                 {
@@ -1001,7 +1003,7 @@ namespace GitUI
                     }
 
                     // Exclude the 'stash' ref, it is specially handled when stashes are shown
-                    refsByObjectId = (AppSettings.ShowStashes
+                    refsByObjectId = (showStashes
                         ? getUnfilteredRefs.Value.Where(r => r.CompleteName != GitRefName.RefsStashPrefix)
                         : getUnfilteredRefs.Value)
                         .ToLookup(gitRef => gitRef.ObjectId);
@@ -1025,56 +1027,61 @@ namespace GitUI
                     }
                 });
 
-                ThreadHelper.FileAndForget(() =>
+                if (!showStashes || getStashRevs.Value.Count == 0)
                 {
-                    if (!AppSettings.ShowStashes)
-                    {
-                        semaphoreUpdateGrid.Release();
-                        return;
-                    }
-
-                    stashesById = getStashRevs.Value.ToDictionary(r => r.ObjectId);
-
-                    // Git stores stashes in 2 or 3 commits. The (first) "stash" commit is listed by git-stash-list,
-                    // does not include untracked files, may be stored in the third "untracked" commit.
-                    // The second "index" commit are ignored (can be seen with reflog).
-                    // Git creates the "untracked" commit also if there are no changes, these are filtered (adds marginal time to getting revisions).
-                    // This command to list "untracked" commits is quite slow, why max number of "stash" commits
-                    // to evaluate for untracked files is limited.
-                    if (AppSettings.ShowReflogReferences)
-                    {
-                        // the "untracked" commits are already shown in the grid
-                        semaphoreUpdateGrid.Release();
-                        return;
-                    }
-
-                    // "stash" commits to insert (before regular commit)
-                    stashesByParentId = getStashRevs.Value.ToLookup(r => r.FirstParentId);
-
-                    // "untracked" commits to insert (parent to "stash" commits)
-                    Dictionary<ObjectId, ObjectId> untrackedChildIds = getStashRevs.Value.Where(stash => stash.ParentIds.Count >= 3)
-                        .Take(AppSettings.MaxStashesWithUntrackedFiles)
-                        .ToDictionary(stash => stash.ParentIds[2], stash => stash.ObjectId);
-                    IReadOnlyCollection<GitRevision> untrackedRevs = new RevisionReader(capturedModule)
-                        .GetRevisionsFromList(untrackedChildIds.Keys.ToList(), cancellationToken);
-                    untrackedByStashId = untrackedRevs.ToDictionary(r => untrackedChildIds[r.ObjectId]);
-
-                    // Remove parents not included ("index" and empty "untracked" commits).
-                    foreach (GitRevision stash in getStashRevs.Value)
-                    {
-                        if (!untrackedByStashId.ContainsKey(stash.ObjectId))
-                        {
-                            stash.ParentIds = new List<ObjectId>() { stash.FirstParentId };
-                        }
-                        else
-                        {
-                            stash.ParentIds = new List<ObjectId>() { stash.FirstParentId, stash.ParentIds[2] };
-                        }
-                    }
-
-                    // Allow add revisions to the grid
                     semaphoreUpdateGrid.Release();
-                });
+                }
+                else
+                {
+                    ThreadHelper.FileAndForget(() =>
+                    {
+                        try
+                        {
+                            stashesById = getStashRevs.Value.ToDictionary(r => r.ObjectId);
+
+                            // Git stores stashes in 2 or 3 commits. The (first) "stash" commit is listed by git-stash-list,
+                            // does not include untracked files, may be stored in the third "untracked" commit.
+                            // The second "index" commit are ignored (can be seen with reflog).
+                            // Git creates the "untracked" commit also if there are no changes, these are filtered (adds marginal time to getting revisions).
+                            // This command to list "untracked" commits is quite slow, why max number of "stash" commits
+                            // to evaluate for untracked files is limited.
+                            if (AppSettings.ShowReflogReferences)
+                            {
+                                // the "untracked" commits are already shown in the grid
+                                return;
+                            }
+
+                            // "stash" commits to insert (before regular commits)
+                            stashesByParentId = getStashRevs.Value.ToLookup(r => r.FirstParentId);
+
+                            // "untracked" commits to insert (parent to "stash" commits)
+                            Dictionary<ObjectId, ObjectId> untrackedChildIds = getStashRevs.Value.Where(stash => stash.ParentIds.Count >= 3)
+                                .Take(AppSettings.MaxStashesWithUntrackedFiles)
+                                .ToDictionary(stash => stash.ParentIds[2], stash => stash.ObjectId);
+                            IReadOnlyCollection<GitRevision> untrackedRevs = new RevisionReader(capturedModule)
+                                .GetRevisionsFromList(untrackedChildIds.Keys.ToList(), cancellationToken);
+                            untrackedByStashId = untrackedRevs.ToDictionary(r => untrackedChildIds[r.ObjectId]);
+
+                            // Remove parents not included ("index" and empty "untracked" commits).
+                            foreach (GitRevision stash in getStashRevs.Value)
+                            {
+                                if (!untrackedByStashId.ContainsKey(stash.ObjectId))
+                                {
+                                    stash.ParentIds = [stash.FirstParentId];
+                                }
+                                else
+                                {
+                                    stash.ParentIds = [stash.FirstParentId, stash.ParentIds[2]];
+                                }
+                            }
+                        }
+                        finally
+                        {
+                            // Allow add revisions to the grid
+                            semaphoreUpdateGrid.Release();
+                        }
+                    });
+                }
 
                 // Get info about all Git commits, update the grid
                 ThreadHelper.FileAndForget(() =>
@@ -1205,7 +1212,7 @@ namespace GitUI
                     : string.Join("", setOfFileNames.Select(s => @$" ""{s}"""));
             }
 
-            void OnRevisionRead(GitRevision revision)
+            void OnRevisionRead(IReadOnlyList<GitRevision> revisions)
             {
                 if (!firstRevisionReceived)
                 {
@@ -1223,45 +1230,66 @@ namespace GitUI
                     }
                 }
 
-                if (stashesById is not null)
-                {
-                    if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
-                    {
-                        revision.ReflogSelector = gridStash.ReflogSelector;
+                List<GitRevision> revisionsToDisplay = new(revisions.Count + getStashRevs.Value.Count + 2);
 
-                        // Do not add this again (when the main commit is handled)
-                        stashesById.Remove(revision.ObjectId);
-                    }
-                    else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+                foreach (GitRevision revision in revisions)
+                {
+                    if (stashesById is not null && stashesById.Count != 0)
                     {
-                        foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
+                        if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
                         {
-                            // Add if not already added (reflogs etc list before parent commit)
-                            if (stashesById.ContainsKey(stash.ObjectId))
+                            revision.ReflogSelector = gridStash.ReflogSelector;
+
+                            // Do not add this again (when the main commit is handled)
+                            stashesById.Remove(revision.ObjectId);
+                        }
+                        else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+                        {
+                            foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
                             {
-                                _gridView.Add(stash);
-                                if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                // Add if not already added (reflogs etc list before parent commit)
+                                if (stashesById.ContainsKey(stash.ObjectId))
                                 {
-                                    _gridView.Add(untracked);
+                                    revisionsToDisplay.Add(stash);
+
+                                    // Remove current stash displayed
+                                    // and all previous ones (because as stash are retrieved sorted, it means they are not displayed in grid)
+                                    while (stashesById.Count != 0)
+                                    {
+                                        ObjectId firstStash = stashesById.Keys.First();
+                                        stashesById.Remove(firstStash);
+                                        if (firstStash == stash.ObjectId)
+                                        {
+                                            break;
+                                        }
+                                    }
+
+                                    if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                    {
+                                        revisionsToDisplay.Add(untracked);
+                                    }
                                 }
                             }
                         }
                     }
+
+                    // Look up any refs associated with this revision
+                    revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
+
+                    if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
+                    {
+                        // Insert artificial worktree/index just before HEAD (CurrentCheckout)
+                        // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
+                        headIsHandled = true;
+                        _gridView.AddRange(revisionsToDisplay);
+                        revisionsToDisplay.Clear();
+                        AddArtificialRevisions();
+                    }
+
+                    revisionsToDisplay.Add(revision);
                 }
 
-                // Look up any refs associated with this revision
-                revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
-
-                if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
-                {
-                    // Insert artificial worktree/index just before HEAD (CurrentCheckout)
-                    // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
-                    headIsHandled = true;
-                    AddArtificialRevisions();
-                }
-
-                _gridView.Add(revision);
-
+                _gridView.AddRange(revisionsToDisplay);
                 return;
             }
 
@@ -1311,8 +1339,7 @@ namespace GitUI
                 if (headParents is null)
                 {
                     // Add as normal commits at current position
-                    _gridView.Add(workTreeRev);
-                    _gridView.Add(indexRev);
+                    _gridView.AddRange([workTreeRev, indexRev]);
                 }
                 else
                 {
