@@ -16,6 +16,8 @@
 
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
+
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +27,12 @@
     </PackageReference>
 
     <!-- This is needed for scripts\Publish.targets to resolve .NET references -->
+    <PackageReference Include="GitExtensions.Extensibility" GeneratePathProperty="true">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="GitExtensions.PluginManager" GeneratePathProperty="true">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="NETStandard.Library" GeneratePathProperty="true" VersionOverride="2.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
