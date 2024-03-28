@@ -6733,19 +6733,35 @@ Is the merge conflict solved?</source>
         <target />
       </trans-unit>
       <trans-unit id="_changesLocalMergeTooltip.Text">
-        <source>the changes from the current branch</source>
+        <source>Changes from the current branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_changesLocalRebaseTooltip.Text">
-        <source>the changes from the branch you are rebasing onto</source>
+        <source>Changes from the branch you are rebasing onto</source>
         <target />
       </trans-unit>
       <trans-unit id="_changesRemoteMergeTooltip.Text">
-        <source>the changes from the branch you are merging</source>
+        <source>Changes from the branch you are merging</source>
         <target />
       </trans-unit>
       <trans-unit id="_changesRemoteRebaseTooltip.Text">
-        <source>the changes from the branch you are rebasing</source>
+        <source>Changes from the branch you are rebasing</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesTakeOnlyLocalMergeTooltip.Text">
+        <source>Take only the changes from the current branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesTakeOnlyLocalRebaseTooltip.Text">
+        <source>Take only the changes from the branch you are rebasing onto</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesTakeOnlyRemoteMergeTooltip.Text">
+        <source>Take only the changes from the branch you are merging</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesTakeOnlyRemoteRebaseTooltip.Text">
+        <source>Take only the changes from the branch you are rebasing</source>
         <target />
       </trans-unit>
       <trans-unit id="_chooseBaseFileFailedText.Text">
@@ -6950,10 +6966,6 @@ Please go to settings and configure the mergetool!</source>
       </trans-unit>
       <trans-unit id="_stageFilename.Text">
         <source>Stage {0}</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_takeOnly.Text">
-        <source>Take only</source>
         <target />
       </trans-unit>
       <trans-unit id="_theirs.Text">
