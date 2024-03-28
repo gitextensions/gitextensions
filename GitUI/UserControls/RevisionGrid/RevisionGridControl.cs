@@ -1252,7 +1252,8 @@ namespace GitUI
                                 {
                                     revisionsToDisplay.Add(stash);
 
-                                    // Remove current stash displayed and all previous ones (because they are not displayed in grid)
+                                    // Remove current stash displayed
+                                    // and all previous ones (because as stash are retrieved sorted, it means they are not displayed in grid)
                                     while (stashesById.Count != 0)
                                     {
                                         ObjectId firstStash = stashesById.Keys.First();
