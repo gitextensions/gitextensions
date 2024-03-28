@@ -28,12 +28,7 @@ namespace GitExtensions.Plugins.GitHub3
         {
             if (_diffData is null)
             {
-#pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
-#pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
-                using WebResponse response = await request.GetResponseAsync();
-                using StreamReader reader = new(response.GetResponseStream(), Encoding.UTF8);
-                _diffData = await reader.ReadToEndAsync();
+                _diffData = await _pullRequest.GetDiffData(_pullRequest.DiffUrl);
             }
 
             return _diffData;
