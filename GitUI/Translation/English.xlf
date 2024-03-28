@@ -2355,6 +2355,10 @@ compare with first:</source>
         <source>Go to superproject</source>
         <target />
       </trans-unit>
+      <trans-unit id="_historyTabCaption.Text">
+        <source>History</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
         <source>Failed to delete index.lock</source>
         <target />
@@ -3009,6 +3013,10 @@ Do you want to continue?</source>
         <source>Show the Console tab</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkProcessHistoryAsTab.Text">
+        <source>Process history as tab (otherwise as panel)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
         <source>Show GPG information</source>
         <target />
@@ -3031,6 +3039,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Default shell</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblProcessHistoryDepth.Text">
+        <source>Process history depth:</source>
         <target />
       </trans-unit>
     </body>
@@ -8453,6 +8465,18 @@ This will just checkout on the submodule the commit determined by the superproje
     <body>
       <trans-unit id="$this.Title">
         <source>Plugins</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ProcessHistoryControl" source-language="en">
+    <body>
+      <trans-unit id="tsmiClear.Text">
+        <source>C&amp;lear</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCopy.Text">
+        <source>&amp;Copy</source>
         <target />
       </trans-unit>
     </body>

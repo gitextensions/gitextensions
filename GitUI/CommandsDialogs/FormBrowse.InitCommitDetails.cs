@@ -1,6 +1,8 @@
 ﻿using GitCommands;
 using GitExtUtils.GitUI;
+using GitUI.Models;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
@@ -23,7 +25,8 @@ namespace GitUI.CommandsDialogs
                     { nameof(Images.FileTree), Images.FileTree },
                     { nameof(Images.Diff), Images.Diff },
                     { nameof(Images.Key), Images.Key },
-                    { nameof(Images.Console), Images.Console }
+                    { nameof(Images.Console), Images.Console },
+                    { nameof(Images.GitCommandLog), Images.GitCommandLog }
                 }
             }
             .FixImageTransparencyRegression();
@@ -44,6 +47,12 @@ namespace GitUI.CommandsDialogs
 
             // Populate terminal tab after translation within InitializeComplete
             FillTerminalTab();
+
+            _historyController = AppSettings.ProcessHistoryAsTab.Value
+                ? new ProcessHistoryTabController(UICommands.GetRequiredService<IProcessHistoryModel>(), new ProcessHistoryControl(),
+                    parent: CommitInfoTabControl, tabCaption: _historyTabCaption.Text)
+                : new ProcessHistoryPanelController(UICommands.GetRequiredService<IProcessHistoryModel>(), new ProcessHistoryControl(),
+                    parent: toolPanel.ContentPanel, verticalSplitContainer: LeftSplitContainer, horizontalSplitContainer: revisionDiff.HorizontalSplitter);
         }
 
         private void FillBuildReport(GitRevision? revision)

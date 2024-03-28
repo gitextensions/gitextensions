@@ -194,6 +194,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _buildReportTabCaption = new("Build Report");
         private readonly TranslationString _consoleTabCaption = new("Console");
+        private readonly TranslationString _historyTabCaption = new("History");
 
         private readonly TranslationString _noWorkingFolderText = new("No working directory");
         private readonly TranslationString _commitButtonText = new("Commit");
@@ -225,6 +226,7 @@ namespace GitUI.CommandsDialogs
         private bool _fileBlameHistoryLeftPanelStartupState;
 
         private TabPage? _consoleTabPage;
+        private ProcessHistoryControllerBase _historyController;
 
         private readonly Dictionary<Brush, Icon> _overlayIconByBrush = [];
 
@@ -1941,18 +1943,21 @@ namespace GitUI.CommandsDialogs
         internal enum Command
         {
             // Focus or visuals
+            FocusLeftPanel = 25,
             FocusRevisionGrid = 3,
             FocusCommitInfo = 4,
             FocusDiff = 5,
             FocusFileTree = 6,
-            FocusFilter = 18,
-            ToggleLeftPanel = 21,
-            FocusLeftPanel = 25,
             FocusGpgInfo = 26,
             FocusGitConsole = 29,
             FocusBuildServerStatus = 30,
             FocusNextTab = 31,
             FocusPrevTab = 32,
+
+            FocusFilter = 18,
+
+            ToggleHistory = 47,
+            ToggleLeftPanel = 21,
 
             // START menu
             OpenRepo = 45,
@@ -2130,6 +2135,7 @@ namespace GitUI.CommandsDialogs
                 case Command.GoToSuperproject: toolStripButtonLevelUp.PerformClick(); break;
                 case Command.GoToSubmodule: toolStripButtonLevelUp.ShowDropDown(); break;
                 case Command.ToggleBetweenArtificialAndHeadCommits: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits); break;
+                case Command.ToggleHistory: _historyController.ToggleControl(); break;
                 case Command.GoToChild: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToChild)); break;
                 case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
                 case Command.PullOrFetch: DoPull(pullAction: AppSettings.FormPullAction, isSilent: false); break;
@@ -2279,6 +2285,7 @@ namespace GitUI.CommandsDialogs
             _splitterManager.AddSplitter(RevisionsSplitContainer, nameof(RevisionsSplitContainer));
             _splitterManager.AddSplitter(MainSplitContainer, nameof(MainSplitContainer));
             _splitterManager.AddSplitter(RightSplitContainer, nameof(RightSplitContainer));
+            _splitterManager.AddSplitter(LeftSplitContainer, nameof(LeftSplitContainer));
 
             revisionDiff.InitSplitterManager(_splitterManager);
             fileTree.InitSplitterManager(_splitterManager);
@@ -2303,6 +2310,11 @@ namespace GitUI.CommandsDialogs
                 {
                     // Catching because bad value can raise an exception
                 }
+            }
+
+            if (AppSettings.ProcessHistoryAsTab.Value)
+            {
+                LeftSplitContainer.Panel2Collapsed = true;
             }
         }
 

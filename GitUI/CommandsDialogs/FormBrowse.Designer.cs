@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-using GitUI.CommandsDialogs.Menus;
+﻿using System.ComponentModel;
 
 namespace GitUI.CommandsDialogs
 {
@@ -58,6 +56,7 @@ namespace GitUI.CommandsDialogs
             userShell = new ToolStripSplitButton();
             EditSettings = new ToolStripButton();
             MainSplitContainer = new SplitContainer();
+            LeftSplitContainer = new SplitContainer();
             repoObjectsTree = new GitUI.LeftPanel.RepoObjectsTree();
             RightSplitContainer = new SplitContainer();
             RevisionsSplitContainer = new SplitContainer();
@@ -161,6 +160,9 @@ namespace GitUI.CommandsDialogs
             MainSplitContainer.Panel1.SuspendLayout();
             MainSplitContainer.Panel2.SuspendLayout();
             MainSplitContainer.SuspendLayout();
+            ((ISupportInitialize)(LeftSplitContainer)).BeginInit();
+            LeftSplitContainer.Panel1.SuspendLayout();
+            LeftSplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(RightSplitContainer)).BeginInit();
             RightSplitContainer.Panel1.SuspendLayout();
             RightSplitContainer.Panel2.SuspendLayout();
@@ -544,7 +546,7 @@ namespace GitUI.CommandsDialogs
             // 
             // MainSplitContainer.Panel1
             // 
-            MainSplitContainer.Panel1.Controls.Add(repoObjectsTree);
+            MainSplitContainer.Panel1.Controls.Add(LeftSplitContainer);
             MainSplitContainer.Panel1.Padding = new Padding(1);
             MainSplitContainer.Panel1MinSize = 192;
             // 
@@ -555,15 +557,37 @@ namespace GitUI.CommandsDialogs
             MainSplitContainer.SplitterWidth = 6;
             MainSplitContainer.TabIndex = 1;
             // 
+            // LeftSplitContainer
+            // 
+            LeftSplitContainer.Dock = DockStyle.Fill;
+            LeftSplitContainer.Location = new Point(1, 1);
+            LeftSplitContainer.Margin = new Padding(0);
+            LeftSplitContainer.Name = "LeftSplitContainer";
+            LeftSplitContainer.Orientation = Orientation.Horizontal;
+            // 
+            // LeftSplitContainer.Panel1
+            // 
+            LeftSplitContainer.Panel1.Controls.Add(repoObjectsTree);
+            // 
+            // LeftSplitContainer.Panel2
+            // 
+            LeftSplitContainer.Panel2Collapsed = true;
+            LeftSplitContainer.Panel2MinSize = 0;
+            LeftSplitContainer.Size = new Size(190, 480);
+            LeftSplitContainer.SplitterDistance = 388;
+            LeftSplitContainer.SplitterWidth = 6;
+            LeftSplitContainer.TabIndex = 2;
+            LeftSplitContainer.TabStop = false;
+            // 
             // repoObjectsTree
             // 
             repoObjectsTree.Dock = DockStyle.Fill;
             repoObjectsTree.Location = new Point(0, 0);
-            repoObjectsTree.MinimumSize = new Size(190, 0);
             repoObjectsTree.Margin = new Padding(0);
+            repoObjectsTree.MinimumSize = new Size(190, 0);
             repoObjectsTree.Name = "repoObjectsTree";
-            repoObjectsTree.Size = new Size(267, 502);
-            repoObjectsTree.TabIndex = 0;
+            repoObjectsTree.Size = new Size(190, 480);
+            repoObjectsTree.TabIndex = 1;
             // 
             // RightSplitContainer
             // 
@@ -1408,6 +1432,9 @@ namespace GitUI.CommandsDialogs
             MainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(MainSplitContainer)).EndInit();
             MainSplitContainer.ResumeLayout(false);
+            LeftSplitContainer.Panel1.ResumeLayout(false);
+            ((ISupportInitialize)(LeftSplitContainer)).EndInit();
+            LeftSplitContainer.ResumeLayout(false);
             RightSplitContainer.Panel1.ResumeLayout(false);
             RightSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(RightSplitContainer)).EndInit();
@@ -1574,5 +1601,6 @@ namespace GitUI.CommandsDialogs
         private UserControls.InteractiveGitActionControl notificationBarBisectInProgress;
         private UserControls.InteractiveGitActionControl notificationBarGitActionInProgress;
         private ToolStripMenuItem pluginsLoadingToolStripMenuItem;
+        private SplitContainer LeftSplitContainer;
     }
 }
