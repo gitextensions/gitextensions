@@ -976,7 +976,7 @@ namespace GitUI.CommandsDialogs
             repoSettingsToolStripMenuItem.Image = Properties.Images.Settings;
             repoSettingsToolStripMenuItem.Name = "repoSettingsToolStripMenuItem";
             repoSettingsToolStripMenuItem.Size = new Size(221, 22);
-            repoSettingsToolStripMenuItem.Text = "Rep&ository settings";
+            repoSettingsToolStripMenuItem.Text = "Rep&ository settings...";
             repoSettingsToolStripMenuItem.Click += RepoSettingsToolStripMenuItemClick;
             // 
             // toolStripSeparator13
@@ -1296,7 +1296,7 @@ namespace GitUI.CommandsDialogs
             pluginSettingsToolStripMenuItem.Image = Properties.Images.Settings;
             pluginSettingsToolStripMenuItem.Name = "pluginSettingsToolStripMenuItem";
             pluginSettingsToolStripMenuItem.Size = new Size(153, 22);
-            pluginSettingsToolStripMenuItem.Text = "Plugin &Settings";
+            pluginSettingsToolStripMenuItem.Text = "Plugins &settings...";
             pluginSettingsToolStripMenuItem.Click += PluginSettingsToolStripMenuItemClick;
             // 
             // helpToolStripMenuItem

@@ -46,10 +46,12 @@ namespace GitUI.CommandsDialogs
             columnDate.Width = DpiUtil.Scale(56);
             columnType.Width = DpiUtil.Scale(58);
             columnAuthor.Width = DpiUtil.Scale(150);
-            columnHash.Width = DpiUtil.Scale(280);
-            columnHash.MinimumWidth = DpiUtil.Scale(75);
-            columnParent.Width = DpiUtil.Scale(280);
-            columnParent.MinimumWidth = DpiUtil.Scale(75);
+            columnHash.Width = DpiUtil.Scale(60);
+            columnHash.MinimumWidth = DpiUtil.Scale(25);
+            columnHash.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            columnParent.Width = DpiUtil.Scale(60);
+            columnParent.MinimumWidth = DpiUtil.Scale(25);
+            columnParent.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
             fileViewer.ExtraDiffArgumentsChanged += Warnings_SelectionChanged;

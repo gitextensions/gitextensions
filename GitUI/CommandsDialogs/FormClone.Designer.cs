@@ -52,13 +52,13 @@
             // MainPanel
             // 
             MainPanel.Controls.Add(tpnlMain);
-            MainPanel.Size = new Size(647, 310);
+            MainPanel.Size = new Size(647, 318);
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(Ok);
             ControlsPanel.Controls.Add(LoadSSHKey);
-            ControlsPanel.Location = new Point(0, 310);
+            ControlsPanel.Location = new Point(0, 318);
             ControlsPanel.Size = new Size(647, 41);
             // 
             // Central
@@ -151,6 +151,8 @@
             // FromBrowse
             // 
             FromBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            FromBrowse.Image = Properties.Images.BrowseFileExplorer;
+            FromBrowse.ImageAlign = ContentAlignment.MiddleLeft;
             FromBrowse.Location = new Point(526, 3);
             FromBrowse.Name = "FromBrowse";
             FromBrowse.Size = new Size(94, 24);
@@ -186,6 +188,8 @@
             // ToBrowse
             // 
             ToBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ToBrowse.Image = Properties.Images.BrowseFileExplorer;
+            ToBrowse.ImageAlign = ContentAlignment.MiddleLeft;
             ToBrowse.Location = new Point(526, 34);
             ToBrowse.Name = "ToBrowse";
             ToBrowse.Size = new Size(94, 24);
@@ -345,7 +349,7 @@
             tpnlMain.RowStyles.Add(new RowStyle());
             tpnlMain.RowStyles.Add(new RowStyle());
             tpnlMain.RowStyles.Add(new RowStyle());
-            tpnlMain.Size = new Size(623, 286);
+            tpnlMain.Size = new Size(623, 294);
             tpnlMain.TabIndex = 0;
             // 
             // optionsPanel
@@ -365,7 +369,7 @@
             AcceptButton = Ok;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(647, 351);
+            ClientSize = new Size(647, 359);
             HelpButton = true;
             ManualSectionAnchorName = "clone-repository";
             ManualSectionSubfolder = "getting_started";
