@@ -1,0 +1,37 @@
+[1mdiff --git a/GitUI/Editor/Diff/PatchHighlightService.cs b/GitUI/Editor/Diff/PatchHighlightService.cs[m
+[1mindex 6e386..cad79 100644[m
+[1m--- a/GitUI/Editor/Diff/PatchHighlightService.cs[m
+[1m+++ b/GitUI/Editor/Diff/PatchHighlightService.cs[m
+[36m@@ -1,4 +1,5 @@[m
+﻿using [38;2;0;0;0;48;2;200;255;200mGitCommands;[m
+[38;2;0;0;0;48;2;200;255;200musing[m GitExtUtils;
+using GitExtUtils.GitUI.Theming;[m
+using GitUI.Theming;[m
+using GitUIPluginInterfaces;[m
+[36m@@ -16,7 +17,6 @@[m [mpublic class PatchHighlightService : DiffHighlightService[m
+    private const string _addedLinePrefix = "+";[m
+    private const string _removedLinePrefix = "-";[m
+    private static readonly string[] _diffFullPrefixes = [" ", _addedLinePrefix, _removedLinePrefix];[m
+[38;2;0;0;0;48;2;255;200;200m    private static readonly string[] _diffSearchPrefixes = [_addedLinePrefix, _removedLinePrefix];[m
+
+    public PatchHighlightService(ref string text, bool useGitColoring)[m
+        : base(ref text, useGitColoring)[m
+[36m@@ -25,9 +25,9 @@[m [mpublic PatchHighlightService(ref string text, bool useGitColoring)[m
+
+    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)[m
+    {[m
+        [38;2;0;0;0;48;2;255;200;200m// Note: This is the fourth time the text is parsed...[m[38;2;0;0;0;48;2;200;255;200mbool isGitWordDiff = _useGitColoring && AppSettings.ShowGitWordColoring.Value;[m
+        DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(textEditor[38;2;0;0;0;48;2;255;200;200m.Text[m, isCombinedDiff: false[38;2;0;0;0;48;2;200;255;200m, isGitWordDiff[m);
+        lineNumbersControl.DisplayLineNum(result, showLeftColumn: [38;2;0;0;0;48;2;255;200;200mtrue[m[38;2;0;0;0;48;2;200;255;200m!isGitWordDiff[m);
+    }[m
+
+    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)[m
+[36m@@ -35,8 +35,6 @@[m [mpublic static GitCommandConfiguration GetGitCommandConfiguration(IGitModule modu[m
+
+    public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;[m
+
+[38;2;0;0;0;48;2;255;200;200m    public override bool IsSearchMatch(string line) => line.StartsWithAny(_diffSearchPrefixes);[m
+
+    protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)[m
+        => LinePrefixHelper.GetLinesStartingWith(document, ref line, _addedLinePrefix, ref found);[m
+

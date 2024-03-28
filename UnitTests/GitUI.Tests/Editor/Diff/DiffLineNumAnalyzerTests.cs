@@ -9,19 +9,19 @@ namespace GitUITests.Editor.Diff;
 [TestFixture]
 public class DiffLineNumAnalyzerTests
 {
-    private static readonly string TestDataDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "Editor", "Diff");
+    private static readonly string _testDataDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "Editor", "Diff");
     private readonly string _sampleDiff;
     private readonly string _sampleCombinedDiff;
+    private readonly string _sampleGitWordDiff;
     private readonly TextEditorControl _textEditor;
-    private readonly DiffLineNumAnalyzer _lineNumAnalyzer;
 
     public DiffLineNumAnalyzerTests()
     {
         // File copied from https://github.com/libgit2/libgit2sharp/pull/1034/files
-        _sampleDiff = File.ReadAllText(Path.Combine(TestDataDir, "Sample.diff"));
-        _sampleCombinedDiff = File.ReadAllText(Path.Combine(TestDataDir, "SampleCombined.diff"));
+        _sampleDiff = File.ReadAllText(Path.Combine(_testDataDir, "Sample.diff"));
+        _sampleCombinedDiff = File.ReadAllText(Path.Combine(_testDataDir, "SampleCombined.diff"));
+        _sampleGitWordDiff = File.ReadAllText(Path.Combine(_testDataDir, "SampleGitWord.diff"));
         _textEditor = new TextEditorControl();
-        _lineNumAnalyzer = new DiffLineNumAnalyzer();
     }
 
     [TearDown]
@@ -34,7 +34,7 @@ public class DiffLineNumAnalyzerTests
     public void CanGetHeaders()
     {
         _textEditor.Text = _sampleDiff;
-        DiffLinesInfo result = _lineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: true);
+        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: true);
         List<int> headerLines = [5, 17];
         foreach (int header in headerLines)
         {
@@ -48,7 +48,7 @@ public class DiffLineNumAnalyzerTests
     public void CanGetContextLines()
     {
         _textEditor.Text = _sampleDiff;
-        DiffLinesInfo result = _lineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: false);
+        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: false);
 
         result.DiffLines[6].LineNumInDiff.Should().Be(6);
         result.DiffLines[6].LineType.Should().Be(DiffLineType.Context);
@@ -75,7 +75,7 @@ public class DiffLineNumAnalyzerTests
     public void CanGetMinusLines()
     {
         _textEditor.Text = _sampleDiff;
-        DiffLinesInfo result = _lineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: false);
+        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: false);
 
         result.DiffLines[9].LineNumInDiff.Should().Be(9);
         result.DiffLines[9].LineType.Should().Be(DiffLineType.Minus);
@@ -92,7 +92,7 @@ public class DiffLineNumAnalyzerTests
     public void CanGetPlusLines()
     {
         _textEditor.Text = _sampleDiff;
-        DiffLinesInfo result = _lineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: false);
+        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: false);
 
         result.DiffLines[12].LineNumInDiff.Should().Be(12);
         result.DiffLines[12].LineType.Should().Be(DiffLineType.Plus);
@@ -114,7 +114,7 @@ public class DiffLineNumAnalyzerTests
     public void CanGetLineNumbersForCombinedDiff()
     {
         _textEditor.Text = _sampleCombinedDiff;
-        DiffLinesInfo result = _lineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: true);
+        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: true);
 
         result.DiffLines[6].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[6].RightLineNumber.Should().Be(70);
@@ -144,16 +144,30 @@ public class DiffLineNumAnalyzerTests
     [Test]
     public void CanGetGitWordDiffInfo()
     {
-        DiffLinesInfo result = _lineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: false);
-/* TBD
-        result[12].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
-        result[12].RightLineNumber.Should().Be(14);
+        string text = _sampleGitWordDiff;
+        DiffHighlightService diffHighlightService = new PatchHighlightService(ref text, useGitColoring: true);
+        _textEditor.Text = text;
+        diffHighlightService.AddTextHighlighting(_textEditor.Document);
+        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(_textEditor, isCombinedDiff: false, isGitWordDiff: true);
 
-        result[13].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
-        result[13].RightLineNumber.Should().Be(15);
+        result.DiffLines[5].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[5].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[5].LineType.Should().Be(DiffLineType.Header);
 
-        result[22].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
-        result[22].RightLineNumber.Should().Be(37);
-*/
+        result.DiffLines[6].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[6].RightLineNumber.Should().Be(1);
+        result.DiffLines[6].LineType.Should().Be(DiffLineType.Plus);
+
+        result.DiffLines[8].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[8].RightLineNumber.Should().Be(3);
+        result.DiffLines[8].LineType.Should().Be(DiffLineType.Context);
+
+        result.DiffLines[15].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[15].RightLineNumber.Should().Be(20);
+        result.DiffLines[15].LineType.Should().Be(DiffLineType.Minus);
+
+        result.DiffLines[23].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[23].RightLineNumber.Should().Be(28);
+        result.DiffLines[23].LineType.Should().Be(DiffLineType.Mixed);
     }
 }

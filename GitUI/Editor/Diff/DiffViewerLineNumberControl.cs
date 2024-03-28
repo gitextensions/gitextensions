@@ -8,8 +8,8 @@ namespace GitUI.Editor.Diff;
 public class DiffViewerLineNumberControl : AbstractMargin
 {
     private const int _textHorizontalMargin = 4;
-    private static readonly IReadOnlyDictionary<int, DiffLineInfo> Empty = new Dictionary<int, DiffLineInfo>();
-    private IReadOnlyDictionary<int, DiffLineInfo> _diffLines = Empty;
+    private static readonly IReadOnlyDictionary<int, DiffLineInfo> _empty = new Dictionary<int, DiffLineInfo>();
+    private IReadOnlyDictionary<int, DiffLineInfo> _diffLines = _empty;
     private bool _visible = true;
     private bool _showLeftColumn = true;
 
@@ -45,7 +45,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
     /// <param name="caretLine">0-based (in contrast to the displayed line numbers which are 1-based).</param>
     public DiffLineInfo? GetLineInfo(int caretLine)
     {
-        _diffLines.TryGetValue(caretLine + 1, out DiffLineInfo diffLine);
+        _diffLines.TryGetValue(caretLine + 1, out DiffLineInfo? diffLine);
         return diffLine;
     }
 
@@ -72,17 +72,12 @@ public class DiffViewerLineNumberControl : AbstractMargin
             g.FillRectangle(fillBrush, backgroundRectangle);
             int curLine = textArea.Document.GetFirstLogicalLine(textArea.Document.GetVisibleLine(textArea.TextView.FirstVisibleLine) + y);
 
-            if (curLine >= textArea.Document.TotalNumberOfLines)
+            if (curLine >= textArea.Document.TotalNumberOfLines
+                || !_diffLines.TryGetValue(curLine + 1, out DiffLineInfo? diffLine))
             {
                 continue;
             }
 
-            if (!_diffLines.ContainsKey(curLine + 1))
-            {
-                continue;
-            }
-
-            DiffLineInfo diffLine = _diffLines[curLine + 1];
             if (diffLine.LineType != DiffLineType.Context)
             {
                 using Brush brush = diffLine.LineType switch
@@ -127,7 +122,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
     public void Clear()
     {
-        _diffLines = Empty;
+        _diffLines = _empty;
         MaxLineNumber = 0;
     }
 

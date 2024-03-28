@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using EnvDTE;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -13,7 +12,7 @@ public partial class DiffLineNumAnalyzer
     [GeneratedRegex(@"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
     private static partial Regex DiffRegex();
 
-    public DiffLinesInfo Analyze(TextEditorControl textEditor, bool isCombinedDiff, bool isGitWordDiff = false)
+    public static DiffLinesInfo Analyze(TextEditorControl textEditor, bool isCombinedDiff, bool isGitWordDiff = false)
     {
         DiffLinesInfo ret = new();
         int lineNumInDiff = 0;

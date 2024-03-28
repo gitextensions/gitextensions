@@ -20,7 +20,7 @@ public class CombinedDiffHighlightService : DiffHighlightService
 
     public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
     {
-        DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(textEditor, isCombinedDiff: true);
+        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(textEditor, isCombinedDiff: true);
         lineNumbersControl.DisplayLineNum(result, showLeftColumn: true);
     }
 

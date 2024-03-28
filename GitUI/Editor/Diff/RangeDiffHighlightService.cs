@@ -32,15 +32,15 @@ public partial class RangeDiffHighlightService : DiffHighlightService
     public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
     {
         DiffLinesInfo result = new();
-        string[] lines = textEditor.Text.Split(Delimiters.LineFeed);
-        for (int i = 0; i < lines.Length; i++)
+        int bufferLine = 0;
+        foreach (string line in textEditor.Text.Split(Delimiters.LineFeed))
         {
-            string line = lines[i];
+            ++bufferLine;
             result.Add(new DiffLineInfo
             {
-                LineNumInDiff = i + 1,
+                LineNumInDiff = bufferLine,
                 LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
-                RightLineNumber = i + 1,
+                RightLineNumber = bufferLine,
 
                 // Note that Git output occasionally corrupts context lines, so parse headers
                 LineType = RangeHeaderRegex().IsMatch(line) ? DiffLineType.Header : DiffLineType.Context

@@ -22,6 +22,9 @@
     <None Include="Editor\Diff\SampleCombined.diff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Editor\Diff\SampleGitWord.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
