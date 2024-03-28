@@ -35,6 +35,8 @@
             Central = new RadioButton();
             Personal = new RadioButton();
             Init = new Button();
+            cbAddCategory = new CheckBox();
+            categories = new ComboBox();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -42,16 +44,18 @@
             // 
             // MainPanel
             // 
+            MainPanel.Controls.Add(categories);
+            MainPanel.Controls.Add(cbAddCategory);
             MainPanel.Controls.Add(groupBox1);
             MainPanel.Controls.Add(Browse);
             MainPanel.Controls.Add(_NO_TRANSLATE_Directory);
             MainPanel.Controls.Add(label1);
-            MainPanel.Size = new Size(542, 132);
+            MainPanel.Size = new Size(542, 153);
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(Init);
-            ControlsPanel.Location = new Point(0, 132);
+            ControlsPanel.Location = new Point(0, 153);
             ControlsPanel.Size = new Size(542, 41);
             // 
             // label1
@@ -128,12 +132,32 @@
             Init.UseVisualStyleBackColor = true;
             Init.Click += InitClick;
             // 
+            // cbAddCategory
+            // 
+            cbAddCategory.AutoSize = true;
+            cbAddCategory.Location = new Point(257, 125);
+            cbAddCategory.Name = "cbAddCategory";
+            cbAddCategory.Size = new Size(100, 19);
+            cbAddCategory.TabIndex = 4;
+            cbAddCategory.Text = "Add category:";
+            cbAddCategory.UseVisualStyleBackColor = true;
+            cbAddCategory.CheckStateChanged += cbAddCategory_CheckStateChanged;
+            // 
+            // categories
+            // 
+            categories.Enabled = false;
+            categories.FormattingEnabled = true;
+            categories.Location = new Point(363, 124);
+            categories.Name = "categories";
+            categories.Size = new Size(167, 23);
+            categories.TabIndex = 5;
+            // 
             // FormInit
             // 
             AcceptButton = Init;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(542, 173);
+            ClientSize = new Size(542, 194);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             HelpButton = true;
             ManualSectionAnchorName = "create-new-repository";
@@ -163,5 +187,7 @@
         private RadioButton Central;
         private RadioButton Personal;
         private Button Init;
+        private ComboBox categories;
+        private CheckBox cbAddCategory;
     }
 }

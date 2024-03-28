@@ -148,6 +148,9 @@ namespace GitUI.CommandsDialogs
             }
 
             FromTextUpdate(this, EventArgs.Empty);
+
+            categories.Items.Clear();
+            categories.Items.AddRange(GetCategories());
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -232,7 +235,12 @@ namespace GitUI.CommandsDialogs
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
                     await RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(_NO_TRANSLATE_From.Text);
-                    await RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo);
+                    IList<Repository>? recentLocals = await RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo);
+                    if (cbAddCategory.Checked && !string.IsNullOrEmpty(categories.Text))
+                    {
+                        Repository repo = recentLocals.FirstOrDefault(x => x.Path.TrimEnd(Path.DirectorySeparatorChar).Equals(dirTo.TrimEnd(Path.DirectorySeparatorChar)));
+                        await RepositoryHistoryManager.Locals.AssignCategoryAsync(repo!, categories.Text);
+                    }
                 });
 
                 if (!string.IsNullOrEmpty(_puttySshKey))
@@ -438,6 +446,27 @@ namespace GitUI.CommandsDialogs
         private void Branches_DropDown(object sender, EventArgs e)
         {
             LoadBranches();
+        }
+
+        private void cbAddCategory_CheckStateChanged(object sender, EventArgs e)
+        {
+            categories.Enabled = cbAddCategory.Checked;
+            if (!cbAddCategory.Checked)
+            {
+                categories.Text = string.Empty;
+            }
+        }
+
+        private object[] GetCategories()
+        {
+            IList<Repository>? favourites = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
+            return favourites
+                .Select(repository => repository.Category)
+                .WhereNotNullOrWhiteSpace()
+                .OrderBy(x => x)
+                .Distinct()
+                .Cast<object>()
+                .ToArray();
         }
 
         /// <summary>

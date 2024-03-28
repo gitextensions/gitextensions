@@ -36,6 +36,9 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Directory.DisplayMember = nameof(Repository.Path);
             _NO_TRANSLATE_Directory.SelectedIndex = -1;
             _NO_TRANSLATE_Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
+
+            categories.Items.Clear();
+            categories.Items.AddRange(GetCategories());
         }
 
         private void InitClick(object sender, EventArgs e)
@@ -65,7 +68,15 @@ namespace GitUI.CommandsDialogs
 
             _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(directoryPath));
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                IList<Repository>? recentLocals = await RepositoryHistoryManager.Locals.AddAsMostRecentAsync(directoryPath);
+                if (cbAddCategory.Checked && !string.IsNullOrEmpty(categories.Text))
+                {
+                    Repository repo = recentLocals.FirstOrDefault(x => x.Path.TrimEnd(Path.DirectorySeparatorChar).Equals(directoryPath.TrimEnd(Path.DirectorySeparatorChar)));
+                    await RepositoryHistoryManager.Locals.AssignCategoryAsync(repo!, categories.Text);
+                }
+            });
             Close();
         }
 
@@ -100,6 +111,27 @@ namespace GitUI.CommandsDialogs
             if (userSelectedPath is not null)
             {
                 _NO_TRANSLATE_Directory.Text = userSelectedPath;
+            }
+        }
+
+        private object[] GetCategories()
+        {
+            IList<Repository>? favourites = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
+            return favourites
+                .Select(repository => repository.Category)
+                .WhereNotNullOrWhiteSpace()
+                .OrderBy(x => x)
+                .Distinct()
+                .Cast<object>()
+                .ToArray();
+        }
+
+        private void cbAddCategory_CheckStateChanged(object sender, EventArgs e)
+        {
+            categories.Enabled = cbAddCategory.Checked;
+            if (!cbAddCategory.Checked)
+            {
+                categories.Text = string.Empty;
             }
         }
 
