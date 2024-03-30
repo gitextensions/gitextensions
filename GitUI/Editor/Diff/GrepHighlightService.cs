@@ -26,11 +26,11 @@ public partial class GrepHighlightService : TextHighlightService
     public GrepHighlightService(ref string text, bool useGitColoring, string grepString)
         => SetText(ref text, useGitColoring, grepString);
 
-    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
-        => lineNumbersControl.DisplayLineNum(_matchInfos, showLeftColumn: false);
-
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
         => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.Mixed or DiffLineType.Grep);
+
+    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
+        => lineNumbersControl.DisplayLineNum(_matchInfos, showLeftColumn: false);
 
     /// <summary>
     /// Get the next/previous line for the grep match.

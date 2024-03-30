@@ -16,13 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Editor\Diff\Sample.diff">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Editor\Diff\SampleCombined.diff">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Editor\Diff\SampleGitWord.diff">
+    <None Include="Editor\Diff\*.diff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

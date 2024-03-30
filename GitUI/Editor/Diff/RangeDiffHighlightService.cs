@@ -29,30 +29,6 @@ public partial class RangeDiffHighlightService : DiffHighlightService
     public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
         => GetGitCommandConfiguration(module, useGitColoring, "range-diff");
 
-    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
-    {
-        DiffLinesInfo result = new();
-        int bufferLine = 0;
-        foreach (string line in textEditor.Text.Split(Delimiters.LineFeed))
-        {
-            ++bufferLine;
-            result.Add(new DiffLineInfo
-            {
-                LineNumInDiff = bufferLine,
-                LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
-                RightLineNumber = bufferLine,
-
-                // Note that Git output occasionally corrupts context lines, so parse headers
-                LineType = RangeHeaderRegex().IsMatch(line) ? DiffLineType.Header : DiffLineType.Context
-            });
-        }
-
-        lineNumbersControl.DisplayLineNum(result, showLeftColumn: false);
-    }
-
-    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
-        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Header;
-
     public override void AddTextHighlighting(IDocument document)
     {
         if (_useGitColoring)
@@ -91,6 +67,30 @@ public partial class RangeDiffHighlightService : DiffHighlightService
             ProcessLineSegment(document, ref line, lineSegment, "      ## ", AppColor.DiffSection.GetThemeColor());
             ProcessLineSegment(document, ref line, lineSegment, "       ##", AppColor.DiffSection.GetThemeColor());
         }
+    }
+
+    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Header;
+
+    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
+    {
+        DiffLinesInfo result = new();
+        int bufferLine = 0;
+        foreach (string line in textEditor.Text.Split(Delimiters.LineFeed))
+        {
+            ++bufferLine;
+            result.Add(new DiffLineInfo
+            {
+                LineNumInDiff = bufferLine,
+                LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+                RightLineNumber = bufferLine,
+
+                // Note that Git output occasionally corrupts context lines, so parse headers
+                LineType = RangeHeaderRegex().IsMatch(line) ? DiffLineType.Header : DiffLineType.Context
+            });
+        }
+
+        lineNumbersControl.DisplayLineNum(result, showLeftColumn: false);
     }
 
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
