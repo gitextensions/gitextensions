@@ -107,7 +107,6 @@ namespace GitUI.Editor
             showEntireFileButton.Checked = ShowEntireFile;
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
             showGitWordColoringToolStripMenuItem.Checked = AppSettings.ShowGitWordColoring.GetValue(reload: !AppSettings.RememberShowGitWordColoring.Value);
-            showGitWordColoringToolStripMenuItem.Visible = AppSettings.UseGitColoring.Value;
             SetStateOfContextLinesButtons();
 
             automaticContinuousScrollToolStripMenuItem.Image = Images.UiScrollBar.AdaptLightness();
@@ -276,6 +275,10 @@ namespace GitUI.Editor
             set => internalFileViewer.VScrollPosition = value;
         }
 
+        [Description("Use Git coloring with patch commands (always for git-word-diff, setting for normal patch).")]
+        [DefaultValue(false)]
+        public bool PatchUseGitColoring => showGitWordColoringToolStripMenuItem.Checked || AppSettings.UseGitColoring.Value;
+
         // Private properties
 
         [Description("Sets what kind of whitespace changes shall be ignored in diffs")]
@@ -289,10 +292,6 @@ namespace GitUI.Editor
         [Description("Show diffs with entire file.")]
         [DefaultValue(false)]
         private bool ShowEntireFile { get; set; }
-
-        [Description("Show Git word diff coloring.")]
-        [DefaultValue(false)]
-        private bool ShowGitWordColoring => showGitWordColoringToolStripMenuItem.Checked && AppSettings.UseGitColoring.Value;
 
         [Description("Treat all files as text.")]
         [DefaultValue(false)]
@@ -377,7 +376,7 @@ namespace GitUI.Editor
                 // Handle zero context as showing no file changes, to get the summary only
                 { isRangeDiff && NumberOfContextLines == 0, "--no-patch " },
                 { TreatAllFilesAsText, "--text" },
-                { ShowGitWordColoring, "--word-diff=color" },
+                { showGitWordColoringToolStripMenuItem.Checked, "--word-diff=color" },
             };
         }
 
@@ -436,13 +435,13 @@ namespace GitUI.Editor
         /// </summary>
         /// <param name="item">The gitItem to present.</param>
         /// <param name="text">The patch text.</param>
-        /// <param name="line">The line to display.</param>
+        /// <param name="line">The line number to display.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
-        public Task ViewPatchAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool, bool useGitColoring)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.Diff, useGitColoring);
+        public Task ViewPatchAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.Diff, useGitColoring: PatchUseGitColoring);
 
-        public Task ViewCombinedDiffAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool, bool useGitColoring)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring);
+        public Task ViewCombinedDiffAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring.Value);
 
         /// <summary>
         /// Present the text as a patch in the file viewer, for GitHub.
@@ -461,11 +460,11 @@ namespace GitUI.Editor
                 () => ViewFixedPatchAsync(fileName, text, openWithDifftool));
         }
 
-        public Task ViewRangeDiffAsync(string fileName, string text, bool useGitColoring)
-            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff, useGitColoring);
+        public Task ViewRangeDiffAsync(string fileName, string text)
+            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff, useGitColoring: true);
 
-        public Task ViewGrepAsync(FileStatusItem item, string text, bool useGitColoring, string grepString)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, line: null, openWithDifftool: null, ViewMode.Grep, useGitColoring: useGitColoring, grepString);
+        public Task ViewGrepAsync(FileStatusItem item, string text)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line: null, openWithDifftool: null, ViewMode.Grep, useGitColoring: true);
 
         public void ViewText(string? fileName,
             string text,
@@ -777,14 +776,14 @@ namespace GitUI.Editor
 
         // Private methods
 
-        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring = false, string? grepString = null)
+        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring = false)
         {
             return ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
                     ResetView(viewMode, fileName, item: item, text: text);
-                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, grepString);
+                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring);
                     if (line is not null)
                     {
                         GoToLine(line.Value);
@@ -822,7 +821,7 @@ namespace GitUI.Editor
             resetSelectedLinesToolStripMenuItem.Visible = SupportLinePatching;
 
             // RangeDiff patch is undefined, could be new/old commit or to parents
-            bool isCopyPatch = viewMode.IsNormalDiffView() && !ShowGitWordColoring;
+            bool isCopyPatch = viewMode.IsNormalDiffView() && !showGitWordColoringToolStripMenuItem.Checked;
             copyPatchToolStripMenuItem.Visible = isCopyPatch;
             copyNewVersionToolStripMenuItem.Visible = isCopyPatch;
             copyOldVersionToolStripMenuItem.Visible = isCopyPatch;
@@ -837,7 +836,7 @@ namespace GitUI.Editor
             decreaseNumberOfLinesToolStripMenuItem.Visible = isPartialFlexibleView;
             showEntireFileToolStripMenuItem.Visible = isPartialFlexibleView;
             showSyntaxHighlightingToolStripMenuItem.Visible = isPartialFlexibleView;
-            showGitWordColoringToolStripMenuItem.Visible = viewMode is ViewMode.Diff or ViewMode.CombinedDiff && AppSettings.UseGitColoring.Value;
+            showGitWordColoringToolStripMenuItem.Visible = viewMode is ViewMode.Diff or ViewMode.CombinedDiff;
             toolStripSeparator2.Visible = viewMode.IsPartialTextView();
             treatAllFilesAsTextToolStripMenuItem.Visible = viewMode.IsPartialTextView();
 
@@ -1001,7 +1000,7 @@ namespace GitUI.Editor
                 // Diffs, currently requires that the file to update exists
                 ((_viewMode.IsDiffView() && (text?.Contains("@@") ?? false)
                         && File.Exists(_fullPathResolver.Resolve(fileName))
-                        && !ShowGitWordColoring)
+                        && !showGitWordColoringToolStripMenuItem.Checked)
 
                 // New files, patches only applies for artificial or if the file does not exist
                     || ((item?.Item.IsNew ?? false)
@@ -1960,7 +1959,7 @@ namespace GitUI.Editor
                     new GitItemStatus(name: fileName ?? ""));
                 FileViewer fileViewer = _fileViewer;
                 ThreadHelper.JoinableTaskFactory.Run(
-                    () => fileViewer.ViewPatchAsync(f, text, line: null, openWithDifftool, useGitColoring: false));
+                    () => fileViewer.ViewPrivateAsync(f, f?.Item?.Name, text, line: null, openWithDifftool, ViewMode.Diff, useGitColoring: false));
             }
         }
     }
