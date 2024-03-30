@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
-using GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.Theming;
 using ICSharpCode.TextEditor;
 
 namespace GitUITests.Editor.Diff;
@@ -20,7 +21,13 @@ public class DiffLineNumAnalyzerTests
         // File copied from https://github.com/libgit2/libgit2sharp/pull/1034/files
         _sampleDiff = File.ReadAllText(Path.Combine(_testDataDir, "Sample.diff"));
         _sampleCombinedDiff = File.ReadAllText(Path.Combine(_testDataDir, "SampleCombined.diff"));
-        _sampleGitWordDiff = File.ReadAllText(Path.Combine(_testDataDir, "SampleGitWord.diff"));
+
+        // Adjust the colors to match the current theme. (See code comments for limitations.)
+        Color added = AppColor.DiffAdded.GetThemeColor();
+        Color removed = AppColor.DiffRemoved.GetThemeColor();
+        _sampleGitWordDiff = File.ReadAllText(Path.Combine(_testDataDir, "SampleGitWord.diff"))
+            .Replace(@";200;255;200m", $";{added.R};{added.G};{added.B}m")
+            .Replace(@";255;200;200m", $";{removed.R};{removed.G};{removed.B}m");
         _textEditor = new TextEditorControl();
     }
 
