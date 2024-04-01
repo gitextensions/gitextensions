@@ -85,9 +85,9 @@ public partial class DiffLineNumAnalyzer
                 DiffLineInfo meta = new()
                 {
                     LineNumInDiff = lineNumInDiff,
-                    LeftLineNumber = isGitWordDiff ? DiffLineInfo.NotApplicableLineNum : leftLineNum,
-                    RightLineNumber = isGitWordDiff ? rightLineNum : DiffLineInfo.NotApplicableLineNum,
-                    LineType = DiffLineType.Minus
+                    LeftLineNumber = leftLineNum,
+                    RightLineNumber = DiffLineInfo.NotApplicableLineNum,
+                    LineType = isGitWordDiff ? DiffLineType.MinusLeft : DiffLineType.Minus
                 };
                 ret.Add(meta);
 
@@ -101,7 +101,7 @@ public partial class DiffLineNumAnalyzer
                     LineNumInDiff = lineNumInDiff,
                     LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
                     RightLineNumber = rightLineNum,
-                    LineType = DiffLineType.Plus,
+                    LineType = isGitWordDiff ? DiffLineType.PlusRight : DiffLineType.Plus,
                 };
                 ret.Add(meta);
                 rightLineNum++;
@@ -111,11 +111,12 @@ public partial class DiffLineNumAnalyzer
                 DiffLineInfo meta = new()
                 {
                     LineNumInDiff = lineNumInDiff,
-                    LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+                    LeftLineNumber = leftLineNum,
                     RightLineNumber = rightLineNum,
-                    LineType = DiffLineType.Mixed,
+                    LineType = DiffLineType.MinusPlus,
                 };
                 ret.Add(meta);
+                leftLineNum++;
                 rightLineNum++;
             }
             else if (i == lines.Length - 1 && line.StartsWith(GitModule.NoNewLineAtTheEnd))
@@ -134,7 +135,7 @@ public partial class DiffLineNumAnalyzer
                 DiffLineInfo meta = new()
                 {
                     LineNumInDiff = lineNumInDiff,
-                    LeftLineNumber = isGitWordDiff ? DiffLineInfo.NotApplicableLineNum : leftLineNum,
+                    LeftLineNumber = leftLineNum,
                     RightLineNumber = rightLineNum,
                     LineType = DiffLineType.Context,
                 };

@@ -27,7 +27,7 @@ public partial class GrepHighlightService : TextHighlightService
         => SetText(ref text, useGitColoring, grepString);
 
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
-        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.Mixed or DiffLineType.Grep);
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.MinusPlus or DiffLineType.Grep);
 
     public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
         => lineNumbersControl.DisplayLineNum(_matchInfos, showLeftColumn: false);

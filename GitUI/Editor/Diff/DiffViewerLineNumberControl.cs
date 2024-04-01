@@ -78,13 +78,26 @@ public class DiffViewerLineNumberControl : AbstractMargin
                 continue;
             }
 
-            if (diffLine.LineType != DiffLineType.Context)
+            if (diffLine.LineType is DiffLineType.MinusPlus or DiffLineType.MinusLeft or DiffLineType.PlusRight)
+            {
+                if (diffLine.LineType is not DiffLineType.PlusRight)
+                {
+                    using Brush leftBrush = new SolidBrush(AppColor.DiffRemoved.GetThemeColor());
+                    g.FillRectangle(leftBrush, new Rectangle(0, backgroundRectangle.Top, backgroundRectangle.Width / 2, backgroundRectangle.Height));
+                }
+
+                if (diffLine.LineType is not DiffLineType.MinusLeft)
+                {
+                    using Brush rightBrush = new SolidBrush(AppColor.DiffAdded.GetThemeColor());
+                    g.FillRectangle(rightBrush, new Rectangle(backgroundRectangle.Width / 2, backgroundRectangle.Top, rightWidth, backgroundRectangle.Height));
+                }
+            }
+            else if (diffLine.LineType != DiffLineType.Context)
             {
                 using Brush brush = diffLine.LineType switch
                 {
                     DiffLineType.Plus => new SolidBrush(AppColor.DiffAdded.GetThemeColor()),
                     DiffLineType.Minus => new SolidBrush(AppColor.DiffRemoved.GetThemeColor()),
-                    DiffLineType.Mixed => new SolidBrush(Color.FromArgb(255, 0xc8, 0xc5, 0xff)),
                     DiffLineType.Header => new SolidBrush(AppColor.DiffSection.GetThemeColor()),
                     DiffLineType.Grep => new SolidBrush(AppColor.DiffRemoved.GetThemeColor()),
                     _ => default(Brush)

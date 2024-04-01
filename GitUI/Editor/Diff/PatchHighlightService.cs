@@ -27,7 +27,7 @@ public class PatchHighlightService : DiffHighlightService
     {
         bool isGitWordDiff = _useGitColoring && AppSettings.ShowGitWordColoring.Value;
         DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(textEditor, isCombinedDiff: false, isGitWordDiff);
-        lineNumbersControl.DisplayLineNum(result, showLeftColumn: !isGitWordDiff);
+        lineNumbersControl.DisplayLineNum(result, showLeftColumn: true);
     }
 
     public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)

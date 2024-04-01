@@ -163,18 +163,18 @@ public class DiffLineNumAnalyzerTests
 
         result.DiffLines[6].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[6].RightLineNumber.Should().Be(1);
-        result.DiffLines[6].LineType.Should().Be(DiffLineType.Plus);
+        result.DiffLines[6].LineType.Should().Be(DiffLineType.PlusRight);
 
-        result.DiffLines[8].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[8].LeftLineNumber.Should().Be(1);
         result.DiffLines[8].RightLineNumber.Should().Be(3);
         result.DiffLines[8].LineType.Should().Be(DiffLineType.Context);
 
-        result.DiffLines[15].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
-        result.DiffLines[15].RightLineNumber.Should().Be(20);
-        result.DiffLines[15].LineType.Should().Be(DiffLineType.Minus);
+        result.DiffLines[15].LeftLineNumber.Should().Be(19);
+        result.DiffLines[15].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[15].LineType.Should().Be(DiffLineType.MinusLeft);
 
-        result.DiffLines[23].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[23].LeftLineNumber.Should().Be(28);
         result.DiffLines[23].RightLineNumber.Should().Be(28);
-        result.DiffLines[23].LineType.Should().Be(DiffLineType.Mixed);
+        result.DiffLines[23].LineType.Should().Be(DiffLineType.MinusPlus);
     }
 }

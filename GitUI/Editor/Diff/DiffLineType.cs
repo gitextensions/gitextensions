@@ -6,6 +6,8 @@ public enum DiffLineType
     Plus,
     Minus,
     Context,
-    Mixed,
+    MinusLeft,
+    PlusRight,
+    MinusPlus,
     Grep,
 }
