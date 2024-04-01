@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitUI.UserControls.Settings;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class DiffViewerSettingsPage
     {
@@ -32,22 +34,28 @@
             chkRememberIgnoreWhiteSpacePreference = new CheckBox();
             chkRememberShowNonPrintingCharsPreference = new CheckBox();
             chkRememberShowEntireFilePreference = new CheckBox();
-            chkRememberShowGitWordColoringPreference = new CheckBox();
+            chkRememberDiffAppearancePreference = new SettingsCheckBox();
             chkRememberNumberOfContextLines = new CheckBox();
             chkRememberShowSyntaxHighlightingInDiff = new CheckBox();
             chkOmitUninterestingDiff = new CheckBox();
             chkContScrollToNextFileOnlyWithAlt = new CheckBox();
             chkOpenSubmoduleDiffInSeparateWindow = new CheckBox();
-            chkShowDiffForAllParents = new GitUI.UserControls.Settings.SettingsCheckBox();
-            chkShowAllCustomDiffTools = new GitUI.UserControls.Settings.SettingsCheckBox();
+            chkShowDiffForAllParents = new SettingsCheckBox();
+            chkShowAllCustomDiffTools = new SettingsCheckBox();
             label1 = new Label();
             VerticalRulerPosition = new NumericUpDown();
             tlpnlMain = new TableLayoutPanel();
             gbGeneral = new GroupBox();
+            gbDiffColoring = new GroupBox();
+            tlpnlDiffColoring = new TableLayoutPanel();
+            chkUseGitColoring = new SettingsCheckBox();
+            chkUseGEThemeGitColoring = new SettingsCheckBox();
             tlpnlGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(VerticalRulerPosition)).BeginInit();
             tlpnlMain.SuspendLayout();
             gbGeneral.SuspendLayout();
+            gbDiffColoring.SuspendLayout();
+            tlpnlDiffColoring.SuspendLayout();
             SuspendLayout();
             // 
             // tlpnlGeneral
@@ -61,7 +69,7 @@
             tlpnlGeneral.Controls.Add(chkRememberIgnoreWhiteSpacePreference, 0, 0);
             tlpnlGeneral.Controls.Add(chkRememberShowNonPrintingCharsPreference, 0, 1);
             tlpnlGeneral.Controls.Add(chkRememberShowEntireFilePreference, 0, 2);
-            tlpnlGeneral.Controls.Add(chkRememberShowGitWordColoringPreference, 0, 3);
+            tlpnlGeneral.Controls.Add(chkRememberDiffAppearancePreference, 0, 3);
             tlpnlGeneral.Controls.Add(chkRememberNumberOfContextLines, 0, 4);
             tlpnlGeneral.Controls.Add(chkRememberShowSyntaxHighlightingInDiff, 0, 5);
             tlpnlGeneral.Controls.Add(chkOmitUninterestingDiff, 0, 6);
@@ -120,15 +128,18 @@
             chkRememberShowEntireFilePreference.Text = "Remember the \'Show entire file\' preference";
             chkRememberShowEntireFilePreference.UseVisualStyleBackColor = true;
             // 
-            // chkRememberShowGitWordColoringPreference
+            // chkRememberDiffAppearancePreference
             // 
-            chkRememberShowGitWordColoringPreference.AutoSize = true;
-            chkRememberShowGitWordColoringPreference.Dock = DockStyle.Fill;
-            chkRememberShowGitWordColoringPreference.Location = new Point(3, 53);
-            chkRememberShowGitWordColoringPreference.Name = "chkRememberShowGitWordColoringPreference";
-            chkRememberShowGitWordColoringPreference.Size = new Size(325, 19);
-            chkRememberShowGitWordColoringPreference.Text = "Remember the \'Show Git word coloring\' preference";
-            chkRememberShowGitWordColoringPreference.UseVisualStyleBackColor = true;
+            chkRememberDiffAppearancePreference.AutoSize = true;
+            chkRememberDiffAppearancePreference.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkRememberDiffAppearancePreference.Checked = false;
+            chkRememberDiffAppearancePreference.Dock = DockStyle.Fill;
+            chkRememberDiffAppearancePreference.Location = new Point(3, 53);
+            chkRememberDiffAppearancePreference.Name = "chkRememberDiffAppearancePreference";
+            chkRememberDiffAppearancePreference.Size = new Size(325, 19);
+            chkRememberDiffAppearancePreference.Text = "Remember the 'Diff appearance' preference";
+            chkRememberDiffAppearancePreference.ToolTipText = "Diff appearance: patch (default), Git word-diff or Difftastic.";
+            chkRememberDiffAppearancePreference.InfoClicked += diffAppearanceHelp_Click;
             // 
             // chkRememberNumberOfContextLines
             // 
@@ -230,15 +241,77 @@
             0,
             0});
             // 
+            // chkShowAllCustomDiffTools
+            // 
+            chkShowAllCustomDiffTools.AutoSize = true;
+            chkShowAllCustomDiffTools.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkShowAllCustomDiffTools.Checked = false;
+            chkShowAllCustomDiffTools.Dock = DockStyle.Fill;
+            chkShowAllCustomDiffTools.Location = new Point(3, 228);
+            chkShowAllCustomDiffTools.Name = "chkShowAllCustomDiffTools";
+            chkShowAllCustomDiffTools.Size = new Size(325, 19);
+            chkShowAllCustomDiffTools.Text = "Show all available difftools";
+            chkShowAllCustomDiffTools.ToolTipText = "Show all configured difftools in a dropdown.\nThe primary difftool can still be selected by clicking the main menu entry.";
+            // 
+            // chkUseGitColoring
+            // 
+            chkUseGitColoring.AutoSize = true;
+            chkUseGitColoring.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkUseGitColoring.Checked = false;
+            chkUseGitColoring.Dock = DockStyle.Fill;
+            chkUseGitColoring.Location = new Point(3, 3);
+            chkUseGitColoring.Name = "chkUseGitColoring";
+            chkUseGitColoring.Size = new Size(183, 19);
+            chkUseGitColoring.TabIndex = 1;
+            chkUseGitColoring.Text = "Git coloring";
+            chkUseGitColoring.ToolTipText = "Use Git coloring engine to show moved code etc.\n";
+            chkUseGitColoring.CheckedChanged += chkUseGitColoring_CheckedChanged;
+            chkUseGitColoring.InfoClicked += chkUseGitColoring_InfoClicked;
+            // 
+            // chkUseGEThemeGitColoring
+            // 
+            chkUseGEThemeGitColoring.AutoSize = true;
+            chkUseGEThemeGitColoring.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkUseGEThemeGitColoring.Checked = false;
+            chkUseGEThemeGitColoring.Dock = DockStyle.Fill;
+            chkUseGEThemeGitColoring.Location = new Point(3, 28);
+            chkUseGEThemeGitColoring.Name = "chkUseGEThemeGitColoring";
+            chkUseGEThemeGitColoring.Size = new Size(183, 19);
+            chkUseGEThemeGitColoring.TabIndex = 2;
+            chkUseGEThemeGitColoring.Text = "Use theme coloring";
+            chkUseGEThemeGitColoring.ToolTipText = "Apply Git theme colors (with inverse backround) instead of Git default colors.";
+            chkUseGEThemeGitColoring.InfoClicked += chkUseGitColoring_InfoClicked;
+            // 
+            // tlpnlDiffColoring
+            // 
+            tlpnlDiffColoring.AutoSize = true;
+            tlpnlDiffColoring.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlDiffColoring.ColumnCount = 2;
+            tlpnlDiffColoring.ColumnStyles.Add(new ColumnStyle());
+            tlpnlDiffColoring.ColumnStyles.Add(new ColumnStyle());
+            tlpnlDiffColoring.Controls.Add(chkUseGitColoring, 0, 0);
+            tlpnlDiffColoring.Controls.Add(chkUseGEThemeGitColoring, 0, 1);
+            tlpnlDiffColoring.Dock = DockStyle.Fill;
+            tlpnlDiffColoring.Location = new Point(8, 24);
+            tlpnlDiffColoring.Name = "tlpnlDiffColoring";
+            tlpnlDiffColoring.RowCount = 3;
+            tlpnlDiffColoring.RowStyles.Add(new RowStyle());
+            tlpnlDiffColoring.RowStyles.Add(new RowStyle());
+            tlpnlDiffColoring.RowStyles.Add(new RowStyle());
+            tlpnlDiffColoring.Size = new Size(1489, 150);
+            tlpnlDiffColoring.TabIndex = 0;
+            // 
             // tlpnlMain
             // 
             tlpnlMain.ColumnCount = 1;
             tlpnlMain.ColumnStyles.Add(new ColumnStyle());
             tlpnlMain.Controls.Add(gbGeneral, 0, 0);
+            tlpnlMain.Controls.Add(gbDiffColoring, 0, 1);
             tlpnlMain.Dock = DockStyle.Fill;
             tlpnlMain.Location = new Point(8, 8);
             tlpnlMain.Name = "tlpnlMain";
-            tlpnlMain.RowCount = 2;
+            tlpnlMain.RowCount = 5;
+            tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
@@ -258,6 +331,20 @@
             gbGeneral.TabStop = false;
             gbGeneral.Text = "General";
             // 
+            // gbDiffColoring
+            // 
+            gbDiffColoring.AutoSize = true;
+            gbDiffColoring.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gbDiffColoring.Controls.Add(tlpnlDiffColoring);
+            gbDiffColoring.Dock = DockStyle.Fill;
+            gbDiffColoring.Location = new Point(3, 3);
+            gbDiffColoring.Name = "gbDiffColoring";
+            gbDiffColoring.Padding = new Padding(8);
+            gbDiffColoring.Size = new Size(1505, 182);
+            gbDiffColoring.TabIndex = 0;
+            gbDiffColoring.TabStop = false;
+            gbDiffColoring.Text = "Diff coloring";
+            // 
             // DiffViewerSettingsPage
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
@@ -269,10 +356,14 @@
             tlpnlGeneral.ResumeLayout(false);
             tlpnlGeneral.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(VerticalRulerPosition)).EndInit();
+            tlpnlDiffColoring.ResumeLayout(false);
+            tlpnlDiffColoring.PerformLayout();
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             gbGeneral.ResumeLayout(false);
             gbGeneral.PerformLayout();
+            gbDiffColoring.ResumeLayout(false);
+            gbDiffColoring.PerformLayout();
             ResumeLayout(false);
 
         }
@@ -284,16 +375,20 @@
         private CheckBox chkRememberIgnoreWhiteSpacePreference;
         private CheckBox chkRememberShowNonPrintingCharsPreference;
         private CheckBox chkRememberShowEntireFilePreference;
-        private CheckBox chkRememberShowGitWordColoringPreference;
+        private SettingsCheckBox chkRememberDiffAppearancePreference;
         private CheckBox chkRememberNumberOfContextLines;
         private CheckBox chkRememberShowSyntaxHighlightingInDiff;
         private CheckBox chkOmitUninterestingDiff;
         private CheckBox chkOpenSubmoduleDiffInSeparateWindow;
         private CheckBox chkContScrollToNextFileOnlyWithAlt;
-        private UserControls.Settings.SettingsCheckBox chkShowDiffForAllParents;
-        private UserControls.Settings.SettingsCheckBox chkShowAllCustomDiffTools;
+        private SettingsCheckBox chkShowDiffForAllParents;
+        private SettingsCheckBox chkShowAllCustomDiffTools;
         private NumericUpDown VerticalRulerPosition;
         private Label label1;
         private TableLayoutPanel tlpnlMain;
+        private GroupBox gbDiffColoring;
+        private TableLayoutPanel tlpnlDiffColoring;
+        private SettingsCheckBox chkUseGitColoring;
+        private SettingsCheckBox chkUseGEThemeGitColoring;
     }
 }

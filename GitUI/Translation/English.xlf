@@ -828,20 +828,8 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Highlight authored revisions</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkUseGEThemeGitColoring.Text">
-        <source>Use theme coloring</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkUseGitColoring.Text">
-        <source>Git coloring</source>
-        <target />
-      </trans-unit>
       <trans-unit id="chkUseSystemVisualStyle.Text">
         <source>Use system-defined visual style (looks bad with dark colors)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="gbDiffColoring.Text">
-        <source>Diff coloring</source>
         <target />
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
@@ -1373,6 +1361,14 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Open Submodule Diff in separate window</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkRememberDiffAppearancePreference.Text">
+        <source>Remember the 'Diff appearance' preference</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkRememberDiffAppearancePreference.ToolTipText">
+        <source>Diff appearance: patch (default), Git word-diff or Difftastic.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
         <source>Remember the 'Ignore whitespaces' preference</source>
         <target />
@@ -1383,10 +1379,6 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="chkRememberShowEntireFilePreference.Text">
         <source>Remember the 'Show entire file' preference</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkRememberShowGitWordColoringPreference.Text">
-        <source>Remember the 'Show Git word coloring' preference</source>
         <target />
       </trans-unit>
       <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
@@ -1408,6 +1400,27 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkUseGEThemeGitColoring.Text">
+        <source>Use theme coloring</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkUseGEThemeGitColoring.ToolTipText">
+        <source>Apply Git theme colors (with inverse backround) instead of Git default colors.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkUseGitColoring.Text">
+        <source>Git coloring</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkUseGitColoring.ToolTipText">
+        <source>Use Git coloring engine to show moved code etc.
+</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbDiffColoring.Text">
+        <source>Diff coloring</source>
         <target />
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -1558,6 +1571,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>&amp;Decrease the number of lines of context</source>
         <target />
       </trans-unit>
+      <trans-unit id="diffAppearanceToolStripMenuItem.Text">
+        <source>Diff appea&amp;rance</source>
+        <target />
+      </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
         <source>&amp;Find...</source>
         <target />
@@ -1618,6 +1635,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Settings</source>
         <target />
       </trans-unit>
+      <trans-unit id="showDifftasticToolStripMenuItem.Text">
+        <source>Diff&amp;tastic</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showEntireFileButton.ToolTipText">
         <source>Show entire file</source>
         <target />
@@ -1627,7 +1648,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="showGitWordColoringToolStripMenuItem.Text">
-        <source>Show Git wor&amp;d coloring</source>
+        <source>Git wor&amp;d diff</source>
         <target />
       </trans-unit>
       <trans-unit id="showNonPrintChars.ToolTipText">
@@ -1636,6 +1657,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="showNonprintableCharactersToolStripMenuItem.Text">
         <source>S&amp;how nonprinting characters</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showPatchToolStripMenuItem.Text">
+        <source>&amp;Patch</source>
         <target />
       </trans-unit>
       <trans-unit id="showSyntaxHighlighting.ToolTipText">

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -13,6 +14,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -45,12 +47,16 @@ namespace GitUI.Editor
 
         private readonly AsyncLoader _async;
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
+        private readonly ContinuousScrollEventManager _continuousScrollEventManager;
+
+        // Cache for the configuration of a difftastic difftool
+        private readonly ConcurrentDictionary<string, Lazy<bool>> _difftasticCmdCache = [];
+
         private ViewMode _viewMode;
         private Encoding? _encoding;
         private Func<Task>? _deferShowFunc;
-        private readonly ContinuousScrollEventManager _continuousScrollEventManager;
         private FileStatusItem? _viewItem;
-        private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
 
         [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
         private static partial Regex FileModeWarningRegex();
@@ -106,7 +112,7 @@ namespace GitUI.Editor
             ShowEntireFile = AppSettings.ShowEntireFile.GetValue(reload: !AppSettings.RememberShowEntireFilePreference);
             showEntireFileButton.Checked = ShowEntireFile;
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
-            showGitWordColoringToolStripMenuItem.Checked = AppSettings.ShowGitWordColoring.GetValue(reload: !AppSettings.RememberShowGitWordColoring.Value);
+            diffAppearanceToolStripMenuItem.Visible = false;
             SetStateOfContextLinesButtons();
 
             automaticContinuousScrollToolStripMenuItem.Image = Images.UiScrollBar.AdaptLightness();
@@ -279,6 +285,38 @@ namespace GitUI.Editor
         [DefaultValue(false)]
         public bool PatchUseGitColoring => showGitWordColoringToolStripMenuItem.Checked || AppSettings.UseGitColoring.Value;
 
+        [Description("Show Difftastic diff coloring.")]
+        [DefaultValue(false)]
+        public Lazy<bool> IsDifftasticEnabled
+        {
+            get
+            {
+                lock (_difftasticCmdCache)
+                {
+                    if (_difftasticCmdCache.TryGetValue(Module.WorkingDir, out Lazy<bool> isEnabled))
+                    {
+                        return isEnabled;
+                    }
+
+                    // GetEffectiveSettings() checks Windows only, this need to be checked for each instance
+                    try
+                    {
+                        const string difftasticCmd = "difftool.difftastic.cmd";
+                        isEnabled = _difftasticCmdCache[Module.WorkingDir] = new Lazy<bool>(() =>
+                            !string.IsNullOrEmpty(PathUtil.IsWslPath(Module.WorkingDir)
+                                ? Module.GetEffectiveGitSetting(difftasticCmd)
+                                : Module.GetEffectiveSetting(difftasticCmd)));
+                    }
+                    catch (Exception)
+                    {
+                        isEnabled = new Lazy<bool>(() => false);
+                    }
+
+                    return isEnabled;
+                }
+            }
+        }
+
         // Private properties
 
         [Description("Sets what kind of whitespace changes shall be ignored in diffs")]
@@ -330,6 +368,7 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowEntireFile);
             showSyntaxHighlightingToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowSyntaxHighlighting);
             showGitWordColoringToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowGitWordColoring);
+            showDifftasticToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowDifftastic);
             treatAllFilesAsTextToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.TreatFileAsText);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
             replaceToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Replace);
@@ -364,7 +403,7 @@ namespace GitUI.Editor
             internalFileViewer.EnableScrollBars(enable);
         }
 
-        public ArgumentString GetExtraDiffArguments(bool isRangeDiff = false)
+        public ArgumentString GetExtraDiffArguments(bool isRangeDiff = false, bool isCombinedDiff = false)
         {
             return new ArgumentBuilder
             {
@@ -376,7 +415,38 @@ namespace GitUI.Editor
                 // Handle zero context as showing no file changes, to get the summary only
                 { isRangeDiff && NumberOfContextLines == 0, "--no-patch " },
                 { TreatAllFilesAsText, "--text" },
-                { showGitWordColoringToolStripMenuItem.Checked, "--word-diff=color" },
+                { !isCombinedDiff && AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff, "--word-diff=color" },
+            };
+        }
+
+        public ArgumentString GetDifftasticArguments(bool isRangeDiff = false)
+        {
+            EnvironmentAbstraction env = new();
+
+            // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
+            env.SetEnvironmentVariable("DFT_COLOR", "always");
+            env.SetEnvironmentVariable("DFT_BACKGROUND", ThemeModule.IsDarkTheme ? "dark" : "light");
+            env.SetEnvironmentVariable("DFT_SYNTAX_HIGHLIGHT", ShowSyntaxHighlightingInDiff ? "on" : "off");
+            int contextLines = ShowEntireFile ? 9000 : NumberOfContextLines;
+            env.SetEnvironmentVariable("DFT_CONTEXT", contextLines.ToString());
+            if (IgnoreWhitespace != IgnoreWhitespaceKind.None)
+            {
+                // Reasonable similar to IgnoreWhitespaceKind.Eol
+                env.SetEnvironmentVariable("DFT_STRIP_CR", "on");
+            }
+
+            // Guess a reasonable even column number from viewer width, so scrollbar is (barely) activated.
+            // At least 2*(2+linenoLength) of the width is used for difftastic lineno.
+            int width = Math.Max(88, Math.Min(200, DpiUtil.Scale(internalFileViewer.Width) / 7)) / 2 * 2;
+            env.SetEnvironmentVariable("DFT_WIDTH", width.ToString());
+
+            // Also export to WSL environment (DFT_WIDTH is also used when parsing in GE).
+            env.SetEnvironmentVariable("WSLENV", "DFT_COLOR:DFT_BACKGROUND:DFT_SYNTAX_HIGHLIGHT:DFT_CONTEXT:DFT_WIDTH");
+
+            return new ArgumentBuilder
+            {
+                "--tool=difftastic",
+                { TreatAllFilesAsText, "--text" },
             };
         }
 
@@ -459,6 +529,9 @@ namespace GitUI.Editor
             ThreadHelper.JoinableTaskFactory.Run(
                 () => ViewFixedPatchAsync(fileName, text, openWithDifftool));
         }
+
+        public Task ViewDifftasticAsync(string fileName, string text)
+            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.Difftastic, useGitColoring: true);
 
         public Task ViewRangeDiffAsync(string fileName, string text)
             => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff, useGitColoring: true);
@@ -821,13 +894,13 @@ namespace GitUI.Editor
             resetSelectedLinesToolStripMenuItem.Visible = SupportLinePatching;
 
             // RangeDiff patch is undefined, could be new/old commit or to parents
-            bool isCopyPatch = viewMode.IsNormalDiffView() && !showGitWordColoringToolStripMenuItem.Checked;
+            bool isCopyPatch = viewMode.IsNormalDiffView() && AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.Patch;
             copyPatchToolStripMenuItem.Visible = isCopyPatch;
             copyNewVersionToolStripMenuItem.Visible = isCopyPatch;
             copyOldVersionToolStripMenuItem.Visible = isCopyPatch;
 
-            bool diffCanBeModified = viewMode.IsDiffView() && viewMode is not ViewMode.FixedDiff;
-            ignoreWhitespaceAtEolToolStripMenuItem.Visible = diffCanBeModified;
+            bool diffCanBeModified = viewMode.IsDiffView() && viewMode is not (ViewMode.FixedDiff or ViewMode.Difftastic);
+            ignoreWhitespaceAtEolToolStripMenuItem.Visible = diffCanBeModified || viewMode is ViewMode.Difftastic;
             ignoreWhitespaceChangesToolStripMenuItem.Visible = diffCanBeModified;
             ignoreAllWhitespaceChangesToolStripMenuItem.Visible = diffCanBeModified;
 
@@ -836,7 +909,16 @@ namespace GitUI.Editor
             decreaseNumberOfLinesToolStripMenuItem.Visible = isPartialFlexibleView;
             showEntireFileToolStripMenuItem.Visible = isPartialFlexibleView;
             showSyntaxHighlightingToolStripMenuItem.Visible = isPartialFlexibleView;
-            showGitWordColoringToolStripMenuItem.Visible = viewMode is ViewMode.Diff or ViewMode.CombinedDiff;
+
+            bool isDiffAppearanceVisible = viewMode is ViewMode.Diff or ViewMode.Difftastic;
+            diffAppearanceToolStripMenuItem.Visible = isDiffAppearanceVisible;
+
+            showGitWordColoringToolStripMenuItem.Enabled = isDiffAppearanceVisible;
+            showGitWordColoringToolStripMenuItem.Checked = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff;
+            showDifftasticToolStripMenuItem.Checked = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.Difftastic;
+            showPatchToolStripMenuItem.Checked = !(showGitWordColoringToolStripMenuItem.Checked || showDifftasticToolStripMenuItem.Checked);
+            SetDifftasticEnabled();
+
             toolStripSeparator2.Visible = viewMode.IsPartialTextView();
             treatAllFilesAsTextToolStripMenuItem.Visible = viewMode.IsPartialTextView();
 
@@ -850,9 +932,34 @@ namespace GitUI.Editor
             showEntireFileButton.Visible = isPartialFlexibleView;
             showSyntaxHighlighting.Visible = viewMode.IsPartialTextView();
 
-            ignoreWhitespaceAtEol.Visible = diffCanBeModified;
+            ignoreWhitespaceAtEol.Visible = diffCanBeModified || viewMode is ViewMode.Difftastic;
             ignoreWhiteSpaces.Visible = diffCanBeModified;
             ignoreAllWhitespaces.Visible = diffCanBeModified;
+
+            return;
+
+            void SetDifftasticEnabled()
+            {
+                if (!isDiffAppearanceVisible)
+                {
+                    showDifftasticToolStripMenuItem.Enabled = false;
+                    return;
+                }
+
+                if (IsDifftasticEnabled.IsValueCreated)
+                {
+                    showDifftasticToolStripMenuItem.Enabled = IsDifftasticEnabled.Value;
+                    return;
+                }
+
+                ThreadHelper.FileAndForget(async () =>
+                {
+                    bool enabled = IsDifftasticEnabled.Value;
+
+                    await this.SwitchToMainThreadAsync();
+                    showDifftasticToolStripMenuItem.Enabled = enabled;
+                });
+            }
         }
 
         private void OnExtraDiffArgumentsChanged()
@@ -998,9 +1105,9 @@ namespace GitUI.Editor
             SupportLinePatching =
 
                 // Diffs, currently requires that the file to update exists
-                ((_viewMode.IsDiffView() && (text?.Contains("@@") ?? false)
-                        && File.Exists(_fullPathResolver.Resolve(fileName))
-                        && !showGitWordColoringToolStripMenuItem.Checked)
+                ((_viewMode.IsNormalDiffView() && (text?.Contains("@@") ?? false)
+                        && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
+                        && File.Exists(_fullPathResolver.Resolve(fileName)))
 
                 // New files, patches only applies for artificial or if the file does not exist
                     || ((item?.Item.IsNew ?? false)
@@ -1294,10 +1401,22 @@ namespace GitUI.Editor
             OnExtraDiffArgumentsChanged();
         }
 
-        private void ShowGitWordColoringToolStripMenuItemClick(object sender, EventArgs e)
+        private void ResetPatchAppearanceToolStripMenuItemClick(object sender, EventArgs e)
         {
-            showGitWordColoringToolStripMenuItem.Checked = !showGitWordColoringToolStripMenuItem.Checked;
-            AppSettings.ShowGitWordColoring.Value = showGitWordColoringToolStripMenuItem.Checked;
+            // The other settings toggle, this just resets the appearance
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void ToggleGitWordColoringToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            AppSettings.DiffDisplayAppearance.Value = !showGitWordColoringToolStripMenuItem.Checked ? DiffDisplayAppearance.GitWordDiff : DiffDisplayAppearance.Patch;
+            OnExtraDiffArgumentsChanged();
+        }
+
+        private void ToggleDifftasticToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            AppSettings.DiffDisplayAppearance.Value = !showDifftasticToolStripMenuItem.Checked ? DiffDisplayAppearance.Difftastic : DiffDisplayAppearance.Patch;
             OnExtraDiffArgumentsChanged();
         }
 
@@ -1675,7 +1794,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            if (_viewMode.IsDiffView())
+            if (_viewMode.IsDiffView() && _viewMode != ViewMode.Difftastic)
             {
                 int pos = internalFileViewer.GetSelectionPosition();
                 string fileText = internalFileViewer.GetText();
@@ -1845,6 +1964,7 @@ namespace GitUI.Editor
             ShowEntireFile = 4,
             ShowSyntaxHighlighting = 17,
             ShowGitWordColoring = 18,
+            ShowDifftastic = 19,
             TreatFileAsText = 5,
             NextChange = 6,
             PreviousChange = 7,
@@ -1878,6 +1998,7 @@ namespace GitUI.Editor
                 case Command.ShowEntireFile: return PerformClickIfAvailable(showEntireFileToolStripMenuItem);
                 case Command.ShowSyntaxHighlighting: return PerformClickIfAvailable(showSyntaxHighlightingToolStripMenuItem);
                 case Command.ShowGitWordColoring: return PerformClickIfAvailable(showGitWordColoringToolStripMenuItem);
+                case Command.ShowDifftastic: return PerformClickIfAvailable(showDifftasticToolStripMenuItem);
                 case Command.TreatFileAsText: return PerformClickIfAvailable(treatAllFilesAsTextToolStripMenuItem);
                 case Command.NextChange: return PerformClickIfAvailable(nextChangeButton);
                 case Command.PreviousChange: return PerformClickIfAvailable(previousChangeButton);
@@ -1959,7 +2080,7 @@ namespace GitUI.Editor
                     new GitItemStatus(name: fileName ?? ""));
                 FileViewer fileViewer = _fileViewer;
                 ThreadHelper.JoinableTaskFactory.Run(
-                    () => fileViewer.ViewPrivateAsync(f, f?.Item?.Name, text, line: null, openWithDifftool, ViewMode.Diff, useGitColoring: false));
+                    () => fileViewer.ViewPatchAsync(f, text, line: null, openWithDifftool));
             }
         }
     }

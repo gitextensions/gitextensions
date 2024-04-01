@@ -14,6 +14,9 @@ public enum ViewMode
     // Diffs that will not be affected by diff arguments like white space etc (limited options)
     FixedDiff,
 
+    // special difftool output
+    Difftastic,
+
     // range-diff output
     RangeDiff,
 

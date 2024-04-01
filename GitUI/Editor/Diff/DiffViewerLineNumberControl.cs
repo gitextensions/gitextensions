@@ -143,4 +143,30 @@ public class DiffViewerLineNumberControl : AbstractMargin
     {
         _visible = visible;
     }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly DiffViewerLineNumberControl _diffViewerLineNumberControl;
+
+        public TestAccessor(DiffViewerLineNumberControl diffViewerLineNumberControl)
+        {
+            _diffViewerLineNumberControl = diffViewerLineNumberControl;
+        }
+
+        public DiffLinesInfo Result
+        {
+            get
+            {
+                DiffLinesInfo diffLinesInfo = new();
+                foreach (KeyValuePair<int, DiffLineInfo> kvp in _diffViewerLineNumberControl._diffLines)
+                {
+                    diffLinesInfo.Add(kvp.Value);
+                }
+
+                return diffLinesInfo;
+            }
+        }
+    }
 }

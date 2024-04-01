@@ -114,9 +114,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
             chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
             chkFillRefLabels.Checked = AppSettings.FillRefLabels;
-            chkUseGitColoring.Checked = AppSettings.UseGitColoring.Value;
-            chkUseGEThemeGitColoring.Checked = AppSettings.UseGEThemeGitColoring.Value;
-            chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
             _controller.ShowThemeSettings();
 
             base.SettingsToPage();
@@ -130,8 +127,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
             AppSettings.HighlightAuthoredRevisions = chkHighlightAuthored.Checked;
             AppSettings.FillRefLabels = chkFillRefLabels.Checked;
-            AppSettings.UseGitColoring.Value = chkUseGitColoring.Checked;
-            AppSettings.UseGEThemeGitColoring.Value = chkUseGEThemeGitColoring.Checked;
             _controller.ApplyThemeSettings();
 
             base.PageToSettings();
@@ -161,9 +156,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void tsmiUserFolder_Click(object sender, EventArgs e) =>
             _controller.ShowUserThemesDirectory();
-
-        private void chkUseGitColoring_CheckedChanged(object sender, EventArgs e)
-            => chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
 
         private struct FormattedThemeId
         {

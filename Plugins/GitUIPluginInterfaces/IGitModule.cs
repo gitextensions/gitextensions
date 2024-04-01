@@ -242,6 +242,7 @@ namespace GitUIPluginInterfaces
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>the Git output.</returns>
         string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken);
+        Task<ExecutionResult> GetSingleDifftoolAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, ArgumentString extraDiffArguments, bool cacheResult, bool isTracked, bool useGitColoring, CancellationToken cancellationToken);
         Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken);
         int? GetCommitCount(string parent, string child, bool cache, bool throwOnErrorExit);
 

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
 using GitUI.Theming;
@@ -14,6 +15,7 @@ public class DiffLineNumAnalyzerTests
     private readonly string _sampleDiff;
     private readonly string _sampleCombinedDiff;
     private readonly string _sampleGitWordDiff;
+    private readonly string _sampleDifftastic;
     private readonly TextEditorControl _textEditor;
 
     public DiffLineNumAnalyzerTests()
@@ -28,6 +30,7 @@ public class DiffLineNumAnalyzerTests
         _sampleGitWordDiff = File.ReadAllText(Path.Combine(_testDataDir, "SampleGitWord.diff"))
             .Replace(@";200;255;200m", $";{added.R};{added.G};{added.B}m")
             .Replace(@";255;200;200m", $";{removed.R};{removed.G};{removed.B}m");
+        _sampleDifftastic = File.ReadAllText(Path.Combine(_testDataDir, "SampleDifftastic.diff"));
         _textEditor = new TextEditorControl();
     }
 
@@ -176,5 +179,53 @@ public class DiffLineNumAnalyzerTests
         result.DiffLines[23].LeftLineNumber.Should().Be(28);
         result.DiffLines[23].RightLineNumber.Should().Be(28);
         result.DiffLines[23].LineType.Should().Be(DiffLineType.MinusPlus);
+    }
+
+    [Test]
+    public void CanGetDifftasticInfo()
+    {
+        string text = _sampleDifftastic;
+        EnvironmentAbstraction env = new();
+        env.SetEnvironmentVariable("DFT_WIDTH", "200"); // Matching the value when getting the sample
+        bool theme = AppSettings.UseGEThemeGitColoring.Value;
+        AppSettings.UseGEThemeGitColoring.Value = false;
+
+        DifftasticHighlightService diffHighlightService = new(ref text);
+        _textEditor.Text = text;
+
+        diffHighlightService.AddTextHighlighting(_textEditor.Document);
+        DiffViewerLineNumberControl lineNumbersControl = new(_textEditor.ActiveTextAreaControl.TextArea);
+        diffHighlightService.SetLineControl(lineNumbersControl, _textEditor);
+        DiffLinesInfo result = lineNumbersControl.GetTestAccessor().Result;
+
+        result.DiffLines[5].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[5].RightLineNumber.Should().Be(16);
+        result.DiffLines[5].LineType.Should().Be(DiffLineType.PlusRight);
+
+        result.DiffLines[22].LeftLineNumber.Should().Be(51);
+        result.DiffLines[22].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[22].LineType.Should().Be(DiffLineType.MinusLeft);
+
+        result.DiffLines[29].LeftLineNumber.Should().Be(106);
+        result.DiffLines[29].RightLineNumber.Should().Be(111);
+        result.DiffLines[29].LineType.Should().Be(DiffLineType.Context);
+
+        result.DiffLines[30].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[30].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[30].LineType.Should().Be(DiffLineType.Context);
+
+        result.DiffLines[33].LeftLineNumber.Should().Be(109);
+        result.DiffLines[33].RightLineNumber.Should().Be(114);
+        result.DiffLines[33].LineType.Should().Be(DiffLineType.MinusPlus);
+
+        result.DiffLines[34].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[34].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[34].LineType.Should().Be(DiffLineType.MinusPlus);
+
+        result.DiffLines[56].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[56].RightLineNumber.Should().Be(342);
+        result.DiffLines[56].LineType.Should().Be(DiffLineType.PlusRight);
+
+        AppSettings.UseGEThemeGitColoring.Value = theme;
     }
 }

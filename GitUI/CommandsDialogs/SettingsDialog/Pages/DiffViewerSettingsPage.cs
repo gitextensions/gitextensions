@@ -4,6 +4,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class DiffViewerSettingsPage : SettingsPageWithHeader
     {
+        private const string _diffAppearanceURL = "https://git-extensions-documentation.readthedocs.io/settings.html#diff-appearance";
+        private const string _useGitColoringURL = "https://git-extensions-documentation.readthedocs.io/settings.html#diff-coloring";
+
         public DiffViewerSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
@@ -20,7 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference;
             chkOmitUninterestingDiff.Checked = AppSettings.OmitUninterestingDiff;
             chkRememberShowEntireFilePreference.Checked = AppSettings.RememberShowEntireFilePreference;
-            chkRememberShowGitWordColoringPreference.Checked = AppSettings.RememberShowGitWordColoring.Value;
+            chkRememberDiffAppearancePreference.Checked = AppSettings.RememberDiffDisplayAppearance.Value;
             chkRememberShowNonPrintingCharsPreference.Checked = AppSettings.RememberShowNonPrintingCharsPreference;
             chkRememberNumberOfContextLines.Checked = AppSettings.RememberNumberOfContextLines;
             chkRememberShowSyntaxHighlightingInDiff.Checked = AppSettings.RememberShowSyntaxHighlightingInDiff;
@@ -29,6 +32,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
             chkShowAllCustomDiffTools.Checked = AppSettings.ShowAvailableDiffTools;
             VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
+            chkUseGitColoring.Checked = AppSettings.UseGitColoring.Value;
+            chkUseGEThemeGitColoring.Checked = AppSettings.UseGEThemeGitColoring.Value;
+            chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
 
             base.SettingsToPage();
         }
@@ -38,7 +44,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RememberIgnoreWhiteSpacePreference = chkRememberIgnoreWhiteSpacePreference.Checked;
             AppSettings.OmitUninterestingDiff = chkOmitUninterestingDiff.Checked;
             AppSettings.RememberShowEntireFilePreference = chkRememberShowEntireFilePreference.Checked;
-            AppSettings.RememberShowGitWordColoring.Value = chkRememberShowGitWordColoringPreference.Checked;
+            AppSettings.RememberDiffDisplayAppearance.Value = chkRememberDiffAppearancePreference.Checked;
             AppSettings.RememberShowNonPrintingCharsPreference = chkRememberShowNonPrintingCharsPreference.Checked;
             AppSettings.RememberNumberOfContextLines = chkRememberNumberOfContextLines.Checked;
             AppSettings.RememberShowSyntaxHighlightingInDiff = chkRememberShowSyntaxHighlightingInDiff.Checked;
@@ -47,9 +53,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
             AppSettings.ShowAvailableDiffTools = chkShowAllCustomDiffTools.Checked;
             AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;
+            AppSettings.UseGitColoring.Value = chkUseGitColoring.Checked;
+            AppSettings.UseGEThemeGitColoring.Value = chkUseGEThemeGitColoring.Checked;
 
             base.PageToSettings();
         }
+
+        private void chkUseGitColoring_CheckedChanged(object sender, EventArgs e)
+            => chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
+
+        private void chkUseGitColoring_InfoClicked(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser(_useGitColoringURL);
+        private void diffAppearanceHelp_Click(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser(_diffAppearanceURL);
 
         public static SettingsPageReference GetPageReference()
         {

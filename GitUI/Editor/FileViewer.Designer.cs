@@ -36,7 +36,10 @@ namespace GitUI.Editor
             decreaseNumberOfLinesToolStripMenuItem = new ToolStripMenuItem();
             showEntireFileToolStripMenuItem = new ToolStripMenuItem();
             showSyntaxHighlightingToolStripMenuItem = new ToolStripMenuItem();
+            diffAppearanceToolStripMenuItem = new ToolStripMenuItem();
+            showPatchToolStripMenuItem = new ToolStripMenuItem();
             showGitWordColoringToolStripMenuItem = new ToolStripMenuItem();
+            showDifftasticToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             treatAllFilesAsTextToolStripMenuItem = new ToolStripMenuItem();
             automaticContinuousScrollToolStripMenuItem = new ToolStripMenuItem();
@@ -84,7 +87,7 @@ namespace GitUI.Editor
             ignoreWhitespaceAtEolToolStripMenuItem,
             ignoreWhitespaceChangesToolStripMenuItem,
             ignoreAllWhitespaceChangesToolStripMenuItem,
-            showGitWordColoringToolStripMenuItem,
+            diffAppearanceToolStripMenuItem,
             toolStripSeparator2,
             treatAllFilesAsTextToolStripMenuItem,
             automaticContinuousScrollToolStripMenuItem,
@@ -221,13 +224,44 @@ namespace GitUI.Editor
             showSyntaxHighlightingToolStripMenuItem.Text = "Show synta&x highlighting";
             showSyntaxHighlightingToolStripMenuItem.Click += ShowSyntaxHighlighting_Click;
             // 
+            // diffAppearanceToolStripMenuItem
+            // 
+            diffAppearanceToolStripMenuItem.Image = Properties.Images.Diff;
+            diffAppearanceToolStripMenuItem.Name = "diffAppearanceToolStripMenuItem";
+            diffAppearanceToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                showPatchToolStripMenuItem,
+                showGitWordColoringToolStripMenuItem,
+                showDifftasticToolStripMenuItem,
+            });
+            diffAppearanceToolStripMenuItem.Size = new Size(243, 22);
+            diffAppearanceToolStripMenuItem.Text = "Diff appea&rance";
+            diffAppearanceToolStripMenuItem.Click += ResetPatchAppearanceToolStripMenuItemClick;
+            // 
+            // showPatchToolStripMenuItem
+            // 
+            showPatchToolStripMenuItem.Image = Properties.Images.Diff;
+            showPatchToolStripMenuItem.Name = "showPatchToolStripMenuItem";
+            showPatchToolStripMenuItem.Size = new Size(243, 22);
+            showPatchToolStripMenuItem.Text = "&Patch";
+            showPatchToolStripMenuItem.Click += ToggleGitWordColoringToolStripMenuItemClick;
+            // 
             // showGitWordColoringToolStripMenuItem
             // 
-            showGitWordColoringToolStripMenuItem.Image = Properties.Images.Colors;
+            showGitWordColoringToolStripMenuItem.Image = Properties.Images.EditColor;
             showGitWordColoringToolStripMenuItem.Name = "showGitWordColoringToolStripMenuItem";
             showGitWordColoringToolStripMenuItem.Size = new Size(243, 22);
-            showGitWordColoringToolStripMenuItem.Text = "Show Git wor&d coloring";
-            showGitWordColoringToolStripMenuItem.Click += ShowGitWordColoringToolStripMenuItemClick;
+            showGitWordColoringToolStripMenuItem.Text = "Git wor&d diff";
+            showGitWordColoringToolStripMenuItem.Click += ToggleGitWordColoringToolStripMenuItemClick;
+            // 
+            // showDifftasticToolStripMenuItem
+            // 
+            showDifftasticToolStripMenuItem.Image = Properties.Images.Difftastic;
+            showDifftasticToolStripMenuItem.Name = "showDifftasticToolStripMenuItem";
+            showDifftasticToolStripMenuItem.Size = new Size(243, 22);
+            showDifftasticToolStripMenuItem.Text = "Diff&tastic";
+            showDifftasticToolStripMenuItem.Click += ToggleDifftasticToolStripMenuItemClick;
+
             // 
             // toolStripSeparator2
             // 
@@ -492,7 +526,10 @@ namespace GitUI.Editor
         private ToolStripMenuItem decreaseNumberOfLinesToolStripMenuItem;
         private ToolStripMenuItem showEntireFileToolStripMenuItem;
         private ToolStripMenuItem showSyntaxHighlightingToolStripMenuItem;
+        private ToolStripMenuItem diffAppearanceToolStripMenuItem;
+        private ToolStripMenuItem showPatchToolStripMenuItem;
         private ToolStripMenuItem showGitWordColoringToolStripMenuItem;
+        private ToolStripMenuItem showDifftasticToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
         private ToolStripMenuItem copyToolStripMenuItem;
