@@ -940,7 +940,7 @@ namespace GitUI
                 base.Refresh();
 
                 _superprojectCurrentCheckout = null;
-                Subject<GitRevision> observeRevisions = new();
+                Subject<IReadOnlyList<GitRevision>> observeRevisions = new();
                 _revisionSubscription?.Dispose();
                 _revisionSubscription = observeRevisions
                     .ObserveOn(ThreadPoolScheduler.Instance)
@@ -1212,7 +1212,7 @@ namespace GitUI
                     : string.Join("", setOfFileNames.Select(s => @$" ""{s}"""));
             }
 
-            void OnRevisionRead(GitRevision revision)
+            void OnRevisionRead(IReadOnlyList<GitRevision> revisions)
             {
                 if (!firstRevisionReceived)
                 {
@@ -1230,49 +1230,58 @@ namespace GitUI
                     }
                 }
 
-                if (stashesById is not null && stashesById.Count != 0)
+                const int artificialCommitCount = 2;
+                List<GitRevision> revisionsToDisplay = new(capacity: revisions.Count + getStashRevs.Value.Count + artificialCommitCount);
+
+                foreach (GitRevision revision in revisions)
                 {
-                    if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
+                    if (stashesById is not null && stashesById.Count != 0)
                     {
-                        revision.ReflogSelector = gridStash.ReflogSelector;
-
-                        // Do not add this again (when the main commit is handled)
-                        stashesById.Remove(revision.ObjectId);
-                    }
-                    else if (stashesByParentId?.Contains(revision.ObjectId) is true)
-                    {
-                        foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
+                        if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
                         {
-                            // Add if not already added (reflogs etc list before parent commit)
-                            if (stashesById.ContainsKey(stash.ObjectId))
+                            revision.ReflogSelector = gridStash.ReflogSelector;
+
+                            // Do not add this again (when the main commit is handled)
+                            stashesById.Remove(revision.ObjectId);
+                        }
+                        else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+                        {
+                            foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
                             {
-                                _gridView.Add(stash);
-
-                                // Remove current stash from list of stashes to display
-                                stashesById.Remove(stash.ObjectId);
-
-                                if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                // Add if not already added (reflogs etc list before parent commit)
+                                if (stashesById.ContainsKey(stash.ObjectId))
                                 {
-                                    _gridView.Add(untracked);
+                                    revisionsToDisplay.Add(stash);
+
+                                    // Remove current stash from list of stashes to display
+                                    stashesById.Remove(stash.ObjectId);
+
+                                    if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                    {
+                                        revisionsToDisplay.Add(untracked);
+                                    }
                                 }
                             }
                         }
                     }
+
+                    // Look up any refs associated with this revision
+                    revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
+
+                    if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
+                    {
+                        // Insert artificial worktree/index just before HEAD (CurrentCheckout)
+                        // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
+                        headIsHandled = true;
+                        _gridView.AddRange(revisionsToDisplay);
+                        revisionsToDisplay.Clear();
+                        AddArtificialRevisions();
+                    }
+
+                    revisionsToDisplay.Add(revision);
                 }
 
-                // Look up any refs associated with this revision
-                revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
-
-                if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
-                {
-                    // Insert artificial worktree/index just before HEAD (CurrentCheckout)
-                    // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
-                    headIsHandled = true;
-                    AddArtificialRevisions();
-                }
-
-                _gridView.Add(revision);
-
+                _gridView.AddRange(revisionsToDisplay);
                 return;
             }
 
@@ -1322,8 +1331,7 @@ namespace GitUI
                 if (headParents is null)
                 {
                     // Add as normal commits at current position
-                    _gridView.Add(workTreeRev);
-                    _gridView.Add(indexRev);
+                    _gridView.AddRange([workTreeRev, indexRev]);
                 }
                 else
                 {
