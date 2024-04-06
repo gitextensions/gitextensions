@@ -342,16 +342,19 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// Add a single revision from the git log to the graph, including segments to parents.
+        /// Add revisions from the git log to the graph, including segments to parents.
         /// Update visible rows if needed.
         /// </summary>
-        /// <param name="revision">The revision to add.</param>
-        public void Add(GitRevision revision)
+        /// <param name="revisions">The revisions to add.</param>
+        public void AddRange(IEnumerable<GitRevision> revisions)
         {
-            _forceRefresh |= _revisionGraph.Add(revision);
-            if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
+            foreach (GitRevision revision in revisions)
             {
-                ++_loadedToBeSelectedRevisionsCount;
+                _forceRefresh |= _revisionGraph.Add(revision);
+                if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
+                {
+                    ++_loadedToBeSelectedRevisionsCount;
+                }
             }
 
             TriggerRowCountUpdate();
