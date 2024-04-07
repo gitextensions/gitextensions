@@ -112,7 +112,7 @@ namespace GitUI.HelperDialogs
 
         private void Branches_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!Branches.DroppedDown && e.KeyCode is not (Keys.Menu or Keys.Escape))
+            if (!Branches.DroppedDown && e.KeyCode is not (Keys.Menu or Keys.Enter or Keys.Escape))
             {
                 string text = Branches.Text;
                 int selectionStart = Branches.SelectionStart;
