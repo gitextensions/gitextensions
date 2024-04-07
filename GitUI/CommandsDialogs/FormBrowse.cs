@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
         private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
 
-        private readonly TranslationString _configureWorkingDirMenu = new("&Configure this menu");
+        private readonly TranslationString _configureWorkingDirMenu = new("&Configure this menu...");
 
         private readonly TranslationString _updateCurrentSubmodule = new("Update current submodule");
 
@@ -1169,11 +1169,9 @@ namespace GitUI.CommandsDialogs
                 () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
 
             List<RecentRepoInfo> pinnedRepos = new();
-            using Graphics graphics = CreateGraphics();
             RecentRepoSplitter splitter = new()
             {
                 MeasureFont = _NO_TRANSLATE_WorkingDir.Font,
-                Graphics = graphics
             };
 
             splitter.SplitRecentRepos(recentRepositoryHistory, pinnedRepos, pinnedRepos);
@@ -1185,9 +1183,9 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.RecentReposComboMinWidth > 0)
             {
                 _NO_TRANSLATE_WorkingDir.AutoSize = false;
-                float captionWidth = graphics.MeasureString(_NO_TRANSLATE_WorkingDir.Text, _NO_TRANSLATE_WorkingDir.Font).Width;
+                int captionWidth = TextRenderer.MeasureText(_NO_TRANSLATE_WorkingDir.Text, _NO_TRANSLATE_WorkingDir.Font).Width;
                 captionWidth = captionWidth + _NO_TRANSLATE_WorkingDir.DropDownButtonWidth + 5;
-                _NO_TRANSLATE_WorkingDir.Width = Math.Max(AppSettings.RecentReposComboMinWidth, (int)captionWidth);
+                _NO_TRANSLATE_WorkingDir.Width = Math.Max(AppSettings.RecentReposComboMinWidth, captionWidth);
             }
             else
             {
@@ -1744,7 +1742,6 @@ namespace GitUI.CommandsDialogs
             {
                 RevisionGrid.SuspendRefreshRevisions();
                 string path = Module.WorkingDir;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
 
                 HideDashboard();

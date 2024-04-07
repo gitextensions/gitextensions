@@ -35,6 +35,7 @@ namespace GitCommands
         private static readonly SettingsPath AppearanceSettingsPath = new AppSettingsPath("Appearance");
         private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
+        private static readonly SettingsPath DialogSettingsPath = new AppSettingsPath("Dialogs");
         private static readonly SettingsPath ExperimentalSettingsPath = new AppSettingsPath(DetailedSettingsPath, "Experimental");
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
@@ -1342,6 +1343,8 @@ namespace GitCommands
             set => SetBool("showdiffforallparents", value);
         }
 
+        public static ISetting<bool> ShowSearchCommit { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowSearchCommit), false);
+
         public static bool ShowAvailableDiffTools
         {
             get => GetBool("difftools.showavailable", true);
@@ -1353,6 +1356,12 @@ namespace GitCommands
             get => GetInt("diffverticalrulerposition", 0);
             set => SetInt("diffverticalrulerposition", value);
         }
+
+        public static ISetting<string> GitGrepUserArguments { get; } = Setting.Create(DialogSettingsPath, nameof(GitGrepUserArguments), "");
+
+        public static ISetting<bool> GitGrepIgnoreCase { get; } = Setting.Create(DialogSettingsPath, nameof(GitGrepIgnoreCase), false);
+
+        public static ISetting<bool> GitGrepMatchWholeWord { get; } = Setting.Create(DialogSettingsPath, nameof(GitGrepMatchWholeWord), false);
 
         [MaybeNull]
         public static string RecentWorkingDir

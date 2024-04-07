@@ -85,6 +85,7 @@ namespace GitExtensions.Plugins.GitHub3
         internal static GitHub3Plugin Instance = null!;
         internal static Client? _gitHub;
         internal static Client GitHub => _gitHub ??= new(Instance.GitHubApiEndpoint);
+        internal static GitHubRemoteParser _gitHubRemoteParser = new();
 
         private IGitUICommands? _currentGitUiCommands;
         private IReadOnlyList<IHostedRemote>? _hostedRemotesForModule;
@@ -213,44 +214,37 @@ namespace GitExtensions.Plugins.GitHub3
         }
 
         public bool GitModuleIsRelevantToMe()
-        {
-            return GetHostedRemotesForModule().Count > 0;
-        }
+            => _currentGitUiCommands?.Module is null
+                ? false
+                : GetHostedRemotes().Any();
 
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
         public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule()
+            => _currentGitUiCommands?.Module is null ? [] : GetHostedRemotes().ToArray();
+
+        private IEnumerable<IHostedRemote> GetHostedRemotes()
         {
-            if (_currentGitUiCommands?.Module is null)
-            {
-                return Array.Empty<IHostedRemote>();
-            }
+            HashSet<IHostedRemote> set = [];
 
             IGitModule gitModule = _currentGitUiCommands.Module;
-            return Remotes().ToList();
-
-            IEnumerable<IHostedRemote> Remotes()
+            foreach (string remote in gitModule.GetRemoteNames())
             {
-                HashSet<IHostedRemote> set = [];
+                string url = gitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
-                foreach (string remote in gitModule.GetRemoteNames())
+                if (string.IsNullOrEmpty(url))
                 {
-                    string url = gitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                    continue;
+                }
 
-                    if (string.IsNullOrEmpty(url))
+                if (_gitHubRemoteParser.TryExtractGitHubDataFromRemoteUrl(url, out string? owner, out string? repository))
+                {
+                    GitHubHostedRemote hostedRemote = new(remote, owner, repository, url);
+
+                    if (set.Add(hostedRemote))
                     {
-                        continue;
-                    }
-
-                    if (new GitHubRemoteParser().TryExtractGitHubDataFromRemoteUrl(url, out string? owner, out string? repository))
-                    {
-                        GitHubHostedRemote hostedRemote = new(remote, owner, repository, url);
-
-                        if (set.Add(hostedRemote))
-                        {
-                            yield return hostedRemote;
-                        }
+                        yield return hostedRemote;
                     }
                 }
             }

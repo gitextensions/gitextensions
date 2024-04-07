@@ -31,7 +31,7 @@
             BranchInfo = new Label();
             Ok = new Button();
             Cancel = new Button();
-            commitSummaryUserControl = new GitUI.UserControls.CommitSummaryUserControl();
+            commitSummaryUserControl = new UserControls.CommitSummaryUserControl();
             ForceReset = new CheckBox();
             pictureBox1 = new PictureBox();
             labelResetBranchWarning = new Label();
@@ -39,7 +39,7 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             flowLayoutPanel1 = new FlowLayoutPanel();
             tlpnlWarning = new TableLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             tlpnlWarning.SuspendLayout();
@@ -52,7 +52,7 @@
             BranchInfo.Location = new Point(6, 39);
             BranchInfo.Name = "BranchInfo";
             BranchInfo.Size = new Size(509, 13);
-            BranchInfo.TabIndex = 0;
+            BranchInfo.TabIndex = 1;
             BranchInfo.Text = "Reset local &branch:";
             // 
             // Ok
@@ -61,7 +61,7 @@
             Ok.Location = new Point(320, 3);
             Ok.Name = "Ok";
             Ok.Size = new Size(91, 25);
-            Ok.TabIndex = 3;
+            Ok.TabIndex = 4;
             Ok.Text = "OK";
             Ok.UseVisualStyleBackColor = true;
             Ok.Click += Ok_Click;
@@ -73,7 +73,7 @@
             Cancel.Location = new Point(417, 3);
             Cancel.Name = "Cancel";
             Cancel.Size = new Size(91, 25);
-            Cancel.TabIndex = 4;
+            Cancel.TabIndex = 5;
             Cancel.Text = "Cancel";
             Cancel.UseVisualStyleBackColor = true;
             Cancel.Click += Cancel_Click;
@@ -90,6 +90,7 @@
             commitSummaryUserControl.Revision = null;
             commitSummaryUserControl.Size = new Size(513, 150);
             commitSummaryUserControl.TabIndex = 0;
+            commitSummaryUserControl.TabStop = false;
             // 
             // ForceReset
             // 
@@ -98,7 +99,7 @@
             ForceReset.Location = new Point(6, 234);
             ForceReset.Name = "ForceReset";
             ForceReset.Size = new Size(509, 17);
-            ForceReset.TabIndex = 2;
+            ForceReset.TabIndex = 3;
             ForceReset.Text = "&Force reset for a non-fast-forward reset";
             ForceReset.UseVisualStyleBackColor = true;
             // 
@@ -132,8 +133,8 @@
             Branches.Margin = new Padding(8, 3, 8, 3);
             Branches.Name = "Branches";
             Branches.Size = new Size(499, 21);
-            Branches.TabIndex = 1;
-            Branches.KeyDown += Branches_KeyDown;
+            Branches.TabIndex = 2;
+            Branches.KeyUp += Branches_KeyUp;
             // 
             // tableLayoutPanel1
             // 
@@ -214,7 +215,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Reset branch";
             Load += FormResetAnotherBranch_Load;
-            ((System.ComponentModel.ISupportInitialize)(pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
@@ -222,7 +223,6 @@
             tlpnlWarning.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion

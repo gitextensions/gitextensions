@@ -14,5 +14,5 @@ public static class ViewModeExtension
     /// <param name="viewMode">The current view mode in the editor.</param>
     /// <returns><c>true</c> if the view is partial, <c>false</c> if the complete contents is shown.</returns>
     public static bool IsPartialTextView(this ViewMode viewMode)
-        => viewMode.IsDiffView();
+        => viewMode.IsDiffView() || viewMode is ViewMode.Grep;
 }

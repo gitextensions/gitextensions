@@ -41,6 +41,7 @@ namespace GitUI
             CommitHash.Width = DpiUtil.Scale(55);
             authorDataGridViewTextBoxColumn.Width = DpiUtil.Scale(140);
             Patches.RowTemplate.MinimumHeight = Patches.ColumnHeadersHeight;
+            CommitHash.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             _commitDataManager = new CommitDataManager(() => Module);
         }

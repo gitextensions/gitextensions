@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
@@ -15,7 +16,6 @@ using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
-using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.SpellChecker;
@@ -24,6 +24,7 @@ using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
@@ -127,7 +128,9 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitValidationCaption = new("Commit validation");
 
-        private readonly TranslationString _commitMessageSettings = new("Edit commit message templates and settings...");
+        private readonly TranslationString _commitMessageSettings = new("&Edit commit message templates and settings...");
+        private readonly TranslationString _conventionalCommit = new("Conven&tional Commits");
+        private readonly TranslationString _conventionalCommitDocumentation = new("Documentation...");
 
         private readonly TranslationString _commitAuthorInfo = new("Author");
         private readonly TranslationString _commitCommitterInfo = new("Committer");
@@ -167,6 +170,12 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly List<string> _formattedLines = [];
 
+        private const string _feat = "feat";
+
+        private static readonly string[] _headerCommitTypes = ["build", "chore", "ci", "docs", _feat, "fix", "perf", "refactor", "style", "test"];
+        private static readonly string[] _footerKeywords = ["BREAKING CHANGE", "Co-authored-by", "Reviewed-by"];
+
+        private bool _insertScopeParentheses;
         private CommitKind _commitKind;
         private FileStatusList _currentFilesList;
         private bool _skipUpdate;
@@ -183,6 +192,7 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<GitItemStatus>? _currentSelection;
         private int _alreadyLoadedTemplatesCount = -1;
         private EventHandler? _branchNameLabelOnClick;
+        private ToolStripMenuItem _conventionalCommitItem;
 
         private CommitKind CommitKind
         {
@@ -705,6 +715,8 @@ namespace GitUI.CommandsDialogs
             SelectPrevious = 22, // Ctrl+P
             SelectPrevious_AlternativeHotkey1 = 23, // Alt+Up
             SelectPrevious_AlternativeHotkey2 = 24, // Alt+Left
+            ConventionalCommit_PrefixMessage = 25, // Ctrl+T
+            ConventionalCommit_PrefixMessageWithScope = 26, // Ctrl+Shift+T
         }
 
         private bool AddSelectionToCommitMessage()
@@ -868,6 +880,8 @@ namespace GitUI.CommandsDialogs
             switch ((Command)cmd)
             {
                 case Command.AddToGitIgnore: return AddToGitIgnore();
+                case Command.ConventionalCommit_PrefixMessage: OpenConventionalCommitMenu(insertScope: false); return true;
+                case Command.ConventionalCommit_PrefixMessageWithScope: OpenConventionalCommitMenu(insertScope: true); return true;
                 case Command.DeleteSelectedFiles: return DeleteSelectedFiles();
                 case Command.FocusStagedFiles: return FocusStagedFiles();
                 case Command.FocusUnstagedFiles: return FocusUnstagedFiles();
@@ -2787,6 +2801,14 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void OpenConventionalCommitMenu(bool insertScope)
+        {
+            commitTemplatesToolStripMenuItem.ShowDropDown();
+            _conventionalCommitItem.ShowDropDown();
+            _conventionalCommitItem.DropDownItems.Cast<ToolStripItem>().First(i => i.Text == _feat).Select();
+            _insertScopeParentheses = insertScope;
+        }
+
         private void Message_TextChanged(object sender, EventArgs e)
         {
             // Format text, except when doing an undo, because
@@ -3126,7 +3148,10 @@ namespace GitUI.CommandsDialogs
                     AddSeparator();
                 }
 
-                // Add a settings item
+                AddConventionalCommitsItems();
+
+                AddSeparator();
+
                 AddSettingsItem();
                 commitTemplatesToolStripMenuItem.DropDown.ResumeLayout();
 
@@ -3174,7 +3199,146 @@ namespace GitUI.CommandsDialogs
                     };
                     commitTemplatesToolStripMenuItem.DropDownItems.Add(settingsItem);
                 }
+
+                void AddConventionalCommitsItems()
+                {
+                    _conventionalCommitItem = new(_conventionalCommit.Text, Images.GitCommandLog);
+
+                    foreach (string conventionKeyword in _headerCommitTypes)
+                    {
+                        ToolStripMenuItem commitTypeMenuItem = new(conventionKeyword, null, (_, _) =>
+                        {
+                            (string title, int selectionStart) = PrefixOrReplaceKeyword(conventionKeyword);
+
+                            if (Message.Text.Length == 0)
+                            {
+                                Message.Text = title;
+                            }
+                            else
+                            {
+                                Message.ReplaceLine(0, title);
+                            }
+
+                            Message.SelectionStart = selectionStart;
+                            Message.Focus();
+                        });
+
+                        if (commitTypeMenuItem.Text == _feat)
+                        {
+                            string hotkey1 = GetShortcutKeyDisplayString(Command.ConventionalCommit_PrefixMessage);
+                            string hotkey2 = GetShortcutKeyDisplayString(Command.ConventionalCommit_PrefixMessageWithScope);
+
+                            commitTypeMenuItem.ShortcutKeyDisplayString = hotkey1;
+
+                            if (!string.IsNullOrEmpty(hotkey1) && !string.IsNullOrEmpty(hotkey2))
+                            {
+                                commitTypeMenuItem.ShortcutKeyDisplayString += ", ";
+                            }
+
+                            commitTypeMenuItem.ShortcutKeyDisplayString += hotkey2;
+                        }
+
+                        _conventionalCommitItem.DropDownItems.Add(commitTypeMenuItem);
+                    }
+
+                    _conventionalCommitItem.DropDownItems.Add(new ToolStripSeparator());
+
+                    foreach (string footerKeyword in _footerKeywords)
+                    {
+                        AddFooter(footerKeyword, $"{footerKeyword}: ");
+                    }
+
+                    AddFooter("[skip ci]", keepCursorPosition: true);
+
+                    void AddFooter(string itemText, string messageText = null, bool keepCursorPosition = false)
+                    {
+                        messageText ??= itemText;
+                        _conventionalCommitItem.DropDownItems.Add(itemText, null, (_, _) =>
+                        {
+                            int lineCount = Message.LineCount();
+                            if (lineCount == 0)
+                            {
+                                Message.Text = $"{Environment.NewLine}{messageText}";
+                            }
+                            else
+                            {
+                                int lastLine = lineCount - 1;
+                                string currentLastLine = Message.Line(lastLine);
+                                Message.ReplaceLine(lastLine, $"{currentLastLine}{Environment.NewLine}{messageText}");
+                            }
+
+                            if (!keepCursorPosition)
+                            {
+                                Message.SelectionStart = Message.Text.Length;
+                            }
+
+                            Message.Focus();
+                        });
+                    }
+
+                    _conventionalCommitItem.DropDownItems.Add(new ToolStripSeparator());
+
+                    _conventionalCommitItem.DropDownItems.Add(_conventionalCommitDocumentation.Text, Images.Information, (_, _)
+                        => OsShellUtil.OpenUrlInDefaultBrowser("https://www.conventionalcommits.org"));
+
+                    commitTemplatesToolStripMenuItem.DropDownItems.Add(_conventionalCommitItem);
+                }
             }
+        }
+
+        private (string message, int selectionStart) PrefixOrReplaceKeyword(string keyword)
+        {
+            int currentPosition = Message.SelectionStart;
+            string scope = _insertScopeParentheses ? "()" : "";
+            int scopePosition = keyword.Length + 1;
+            int titlePosition = keyword.Length + (scope.Length / 2) + 2;
+
+            string currentTitle = string.IsNullOrWhiteSpace(Message.Text) ? string.Empty : Message.Line(0);
+
+            // Replacing current keyword
+            foreach (string key in _headerCommitTypes)
+            {
+                if (!currentTitle.StartsWith(key))
+                {
+                    continue;
+                }
+
+                if (currentTitle.Length == key.Length)
+                {
+                    return ($"{keyword}{scope}: ", _insertScopeParentheses ? scopePosition : titlePosition);
+                }
+
+                char nextChar = currentTitle[key.Length];
+                if (!_insertScopeParentheses)
+                {
+                    if (nextChar == ':' || nextChar == '(' || nextChar == '!')
+                    {
+                        return ReplaceKeyword(_ => titlePosition);
+                    }
+                }
+                else
+                {
+                    if (nextChar == ':' || nextChar == '!')
+                    {
+                        return ($"{keyword}(){currentTitle.Substring(key.Length)}", scopePosition);
+                    }
+
+                    if (nextChar == '(')
+                    {
+                        return ReplaceKeyword(newTitle => 2 + Math.Max(newTitle.IndexOf(":"), newTitle.IndexOf("(")));
+                    }
+                }
+
+                (string message, int selectionStart) ReplaceKeyword(Func<string, int> maxPosition)
+                {
+                    string newTitle = $"{keyword}{currentTitle.Substring(key.Length)}";
+                    int newMessageLength = Message.Text.Length + newTitle.Length - currentTitle.Length;
+                    return (newTitle, Math.Min(newMessageLength, Math.Max(maxPosition(newTitle), currentPosition + keyword.Length - key.Length)));
+                }
+            }
+
+            // Append current keyword
+            return ($"{keyword}{scope}: {currentTitle}", _insertScopeParentheses ? scopePosition : titlePosition + currentPosition);
         }
 
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3394,6 +3558,16 @@ namespace GitUI.CommandsDialogs
             internal Button ResetSoft => _formCommit.ResetSoft;
 
             internal void RescanChanges() => _formCommit.RescanChanges();
+
+            internal (string message, int selectionStart) PrefixOrReplaceKeyword(string keyword)
+                => _formCommit.PrefixOrReplaceKeyword(keyword);
+
+            internal bool IncludeFeatureParentheses { set => _formCommit._insertScopeParentheses = value; }
+            internal void SetMessageState(string text, int position)
+            {
+                _formCommit.Message.Text = text;
+                _formCommit.Message.SelectionStart = position;
+            }
         }
     }
 

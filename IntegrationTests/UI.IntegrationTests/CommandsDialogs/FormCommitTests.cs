@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel.Design;
+using System.Windows.Forms;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -548,6 +549,72 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunGeometryMemoryTest(
                 form => form.GetTestAccessor().SelectedDiff.Bounds,
                 (bounds1, bounds2) => bounds2.Should().Be(bounds1));
+        }
+
+        [TestCase("", 0, "feat: ", 6)]
+        [TestCase("text", 3, "feat: text", 9)]
+        public void ConventionalCommit_keyword_is_prefixed_when_none(string initialText, int initialPosition,
+            string expectedText, int expectedPosition)
+        {
+            RunFormTest(form =>
+            {
+                FormCommit.TestAccessor testForm = form.GetTestAccessor();
+                testForm.SetMessageState(initialText, initialPosition);
+                testForm.IncludeFeatureParentheses = false;
+                (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
+                Assert.AreEqual(expectedText, message);
+                Assert.AreEqual(expectedPosition, selectionStart);
+            });
+        }
+
+        [TestCase("", 0, "feat(): ", 5)]
+        [TestCase("text", 3, "feat(): text", 5)]
+        public void ConventionalCommit_keyword_is_prefixed_when_none_with_scope(string initialText, int initialPosition,
+            string expectedText, int expectedPosition)
+        {
+            RunFormTest(form =>
+            {
+                FormCommit.TestAccessor testForm = form.GetTestAccessor();
+                testForm.SetMessageState(initialText, initialPosition);
+                testForm.IncludeFeatureParentheses = true;
+                (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
+                Assert.AreEqual(expectedText, message);
+                Assert.AreEqual(expectedPosition, selectionStart);
+            });
+        }
+
+        [TestCase("fix: ", 0, "feat: ", 6)]
+        [TestCase("fix: text", 3, "feat: text", 6)]
+        public void ConventionalCommit_keyword_is_prefixed_when_already_typed(string initialText, int initialPosition,
+            string expectedText, int expectedPosition)
+        {
+            RunFormTest(form =>
+            {
+                FormCommit.TestAccessor testForm = form.GetTestAccessor();
+                testForm.SetMessageState(initialText, initialPosition);
+                testForm.IncludeFeatureParentheses = false;
+                (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
+                Assert.AreEqual(expectedText, message);
+                Assert.AreEqual(expectedPosition, selectionStart);
+            });
+        }
+
+        [TestCase("fix: ", 0, "feat(): ", 5)]
+        [TestCase("fix: text", 3, "feat(): text", 5)]
+        [TestCase("fix(scope): ", 0, "feat(scope): ", 13)]
+        [TestCase("fix(scope): text", 14, "feat(scope): text", 15)]
+        public void ConventionalCommit_keyword_is_prefixed_when_already_typed_with_scope(string initialText, int initialPosition,
+            string expectedText, int expectedPosition)
+        {
+            RunFormTest(form =>
+            {
+                FormCommit.TestAccessor testForm = form.GetTestAccessor();
+                testForm.SetMessageState(initialText, initialPosition);
+                testForm.IncludeFeatureParentheses = true;
+                (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
+                Assert.AreEqual(expectedText, message);
+                Assert.AreEqual(expectedPosition, selectionStart);
+            });
         }
 
         [Test]

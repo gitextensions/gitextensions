@@ -120,7 +120,7 @@
             settingsToolStripMenuItem.Image = Properties.Images.Settings;
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             settingsToolStripMenuItem.Size = new Size(217, 22);
-            settingsToolStripMenuItem.Text = "&Settings";
+            settingsToolStripMenuItem.Text = "&Settings...";
             settingsToolStripMenuItem.Click += OnShowSettingsClick;
 
             DropDownItems.AddRange(new ToolStripItem[] {

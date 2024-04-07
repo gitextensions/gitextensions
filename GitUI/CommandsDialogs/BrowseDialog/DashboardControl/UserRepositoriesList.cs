@@ -274,10 +274,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             IReadOnlyList<RecentRepoInfo> recentRepositories;
             IReadOnlyList<RecentRepoInfo> favouriteRepositories;
-            using (Graphics graphics = CreateGraphics())
-            {
-                (recentRepositories, favouriteRepositories) = _controller.PreRenderRepositories(graphics, textBoxSearch.Text);
-            }
+            (recentRepositories, favouriteRepositories) = _controller.PreRenderRepositories(textBoxSearch.Text);
 
             try
             {

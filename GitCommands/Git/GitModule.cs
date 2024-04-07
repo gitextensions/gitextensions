@@ -1440,7 +1440,7 @@ namespace GitCommands
 
             static bool DeletableItem(GitItemStatus item) => item.IsNew || item.IsRenamed;
 
-            // For normal commits: 'git-checkout <id> --' must be used for Unmerged but will not work on e.g. SkipWorktree.
+            // For normal commits: 'git-checkout <objectId> --' must be used for Unmerged but will not work on e.g. SkipWorktree.
             static bool UnmergedNotIndex(GitItemStatus item, Lazy<List<GitItemStatus>> status)
                 => item.IsUnmerged && !status.Value.Any(i => !i.IsDeleted && !i.IsNew && i.Name == item.Name);
 
@@ -2295,6 +2295,79 @@ namespace GitCommands
                 "-s",
                 { untracked, "-u" }
             });
+        }
+
+        private ExecutionResult GetGrepFiles(ObjectId objectId, string grepString, CancellationToken cancellationToken = default)
+        {
+            bool noCache = objectId.IsArtificial;
+
+            return _gitExecutable.Execute(
+                new GitArgumentBuilder("grep")
+                {
+                    "--files-with-matches",
+                    "-z",
+                    AppSettings.GitGrepUserArguments.Value,
+                    { AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
+                    { AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+                    grepString,
+                    !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
+                    "--"
+                },
+                cache: noCache ? null : GitCommandCache,
+                throwOnErrorExit: false,
+                cancellationToken: cancellationToken);
+        }
+
+        public IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken = default)
+        {
+            List<GitItemStatus> result = [];
+            ExecutionResult exec = GetGrepFiles(objectId, grepString, cancellationToken);
+            if (!exec.ExitedSuccessfully)
+            {
+                // Cannot see difference from error and no matches
+                return [];
+            }
+
+            foreach (string file in exec.StandardOutput.LazySplit('\0', StringSplitOptions.RemoveEmptyEntries))
+            {
+                int startIndex = file.IndexOf(':') + 1;
+                result.Add(new GitItemStatus(file[startIndex..])
+                    {
+                        GrepString = grepString,
+
+                        // Assume this file is handled by Git, may not be entirely correct for worktree
+                        IsTracked = true
+                    });
+            }
+
+            return result;
+        }
+
+        public async Task<ExecutionResult> GetGrepFileAsync(ObjectId objectId, string fileName, ArgumentString extraArgs, string grepString, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken = default)
+        {
+            bool noCache = objectId.IsArtificial;
+
+            GitArgumentBuilder args = new("grep", commandConfiguration: commandConfiguration)
+            {
+                "--line-number",
+                { !useGitColoring, "--column" },
+                { useGitColoring, "--color=always" },
+                extraArgs,
+                AppSettings.GitGrepUserArguments.Value,
+                { AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
+                { AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+                grepString,
+                !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
+                "--",
+                fileName
+            };
+
+            return await _gitExecutable.ExecuteAsync(
+                args,
+                cache: noCache ? null : GitCommandCache,
+                throwOnErrorExit: false,
+                stripAnsiEscapeCodes: !useGitColoring,
+                cancellationToken: cancellationToken);
         }
 
         public ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache = false, bool nullSeparated = false, CancellationToken cancellationToken = default)

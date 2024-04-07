@@ -27,7 +27,7 @@ public class PatchHighlightService : DiffHighlightService
     {
         // Note: This is the fourth time the text is parsed...
         DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(textEditor.Text, isCombinedDiff: false);
-        lineNumbersControl.DisplayLineNum(result);
+        lineNumbersControl.DisplayLineNum(result, showLeftColumn: true);
     }
 
     public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)

@@ -1506,6 +1506,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="SearchWatermarkLabel.Text">
+        <source>Search files in commit using a regular expression...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
         <source>&amp;Sort by...</source>
         <target />
@@ -2332,7 +2336,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
-        <source>&amp;Configure this menu</source>
+        <source>&amp;Configure this menu...</source>
         <target />
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -2698,7 +2702,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Plugin &amp;Settings</source>
+        <source>Plugins &amp;settings...</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginsLoadingToolStripMenuItem.Text">
@@ -2742,7 +2746,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
-        <source>Rep&amp;ository settings</source>
+        <source>Rep&amp;ository settings...</source>
         <target />
       </trans-unit>
       <trans-unit id="reportAnIssueToolStripMenuItem.Text">
@@ -2766,7 +2770,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
-        <source>&amp;Settings</source>
+        <source>&amp;Settings...</source>
         <target />
       </trans-unit>
       <trans-unit id="startAuthenticationAgentToolStripMenuItem.Text">
@@ -3577,7 +3581,7 @@ Git will never check if the file has changed that will improve status check perf
         <target />
       </trans-unit>
       <trans-unit id="_commitMessageSettings.Text">
-        <source>Edit commit message templates and settings...</source>
+        <source>&amp;Edit commit message templates and settings...</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitMsgFirstLineInvalid.Text">
@@ -3605,6 +3609,14 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_commitValidationCaption.Text">
         <source>Commit validation</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_conventionalCommit.Text">
+        <source>Conven&amp;tional Commits</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_conventionalCommitDocumentation.Text">
+        <source>Documentation...</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteFailed.Text">
@@ -6737,19 +6749,35 @@ Is the merge conflict solved?</source>
         <target />
       </trans-unit>
       <trans-unit id="_changesLocalMergeTooltip.Text">
-        <source>the changes from the current branch</source>
+        <source>Changes from the current branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_changesLocalRebaseTooltip.Text">
-        <source>the changes from the branch you are rebasing onto</source>
+        <source>Changes from the branch you are rebasing onto</source>
         <target />
       </trans-unit>
       <trans-unit id="_changesRemoteMergeTooltip.Text">
-        <source>the changes from the branch you are merging</source>
+        <source>Changes from the branch you are merging</source>
         <target />
       </trans-unit>
       <trans-unit id="_changesRemoteRebaseTooltip.Text">
-        <source>the changes from the branch you are rebasing</source>
+        <source>Changes from the branch you are rebasing</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesTakeOnlyLocalMergeTooltip.Text">
+        <source>Take only the changes from the current branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesTakeOnlyLocalRebaseTooltip.Text">
+        <source>Take only the changes from the branch you are rebasing onto</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesTakeOnlyRemoteMergeTooltip.Text">
+        <source>Take only the changes from the branch you are merging</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changesTakeOnlyRemoteRebaseTooltip.Text">
+        <source>Take only the changes from the branch you are rebasing</source>
         <target />
       </trans-unit>
       <trans-unit id="_chooseBaseFileFailedText.Text">
@@ -6956,10 +6984,6 @@ Please go to settings and configure the mergetool!</source>
         <source>Stage {0}</source>
         <target />
       </trans-unit>
-      <trans-unit id="_takeOnly.Text">
-        <source>Take only</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_theirs.Text">
         <source>theirs</source>
         <target />
@@ -7152,6 +7176,38 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_until.Text">
         <source>&amp;Until</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormSearchCommit" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Search files in commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnSearch.Text">
+        <source>Search</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMatchCase.Text">
+        <source>Match &amp;case</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMatchWholeWord.Text">
+        <source>Match &amp;whole word</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowSearchBox.Text">
+        <source>Show search &amp;box</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>&amp;Search:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblOptions.Text">
+        <source>&amp;Options:</source>
         <target />
       </trans-unit>
     </body>
@@ -8915,6 +8971,10 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
         <source>&amp;Second -&gt; Working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showSearchCommitToolStripMenuItem.Text">
+        <source>Sear&amp;ch files in commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
