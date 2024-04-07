@@ -148,7 +148,7 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem,
             blameToolStripMenuItem,
             findInDiffToolStripMenuItem,
-            showSearchCommitToolStripMenuItem});
+            showSearchCommitToolStripMenuItem,
             toolStripSeparatorScript,
             runScriptToolStripMenuItem});
             DiffContextMenu.Name = "DiffContextMenu";
