@@ -243,7 +243,7 @@ namespace GitUI.Editor
         /// <param name="text">The text to set in the editor.</param>
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         /// <param name="viewMode">the view viewMode in the file viewer, the kind of info shown</param>
-        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring, string? grepString = null)
+        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -257,8 +257,8 @@ namespace GitUI.Editor
                 ViewMode.Text => TextHighlightService.Instance,
                 ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(ref text, useGitColoring),
                 ViewMode.CombinedDiff => new CombinedDiffHighlightService(ref text, useGitColoring),
-                ViewMode.RangeDiff => new RangeDiffHighlightService(ref text, useGitColoring),
-                ViewMode.Grep => new GrepHighlightService(ref text, useGitColoring, grepString),
+                ViewMode.RangeDiff => new RangeDiffHighlightService(ref text),
+                ViewMode.Grep => new GrepHighlightService(ref text),
                 _ => throw new ArgumentException($"Unexpected viewMode: {viewMode}", nameof(viewMode))
             };
 
