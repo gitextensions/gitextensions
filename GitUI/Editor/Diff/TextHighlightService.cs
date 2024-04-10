@@ -1,4 +1,5 @@
-﻿using ICSharpCode.TextEditor;
+﻿using GitExtUtils;
+using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
@@ -14,11 +15,17 @@ public class TextHighlightService : ITextHighlightService
     {
     }
 
-    public virtual void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
+    public virtual void AddTextHighlighting(IDocument document)
     {
     }
 
-    public virtual void AddTextHighlighting(IDocument document)
+    public virtual bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
+    {
+        DebugHelpers.Fail($"Unexpected highlight service {GetType()}, not a diff/grep type.");
+        return false;
+    }
+
+    public virtual void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
     {
     }
 }

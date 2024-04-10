@@ -12,7 +12,6 @@ public class CombinedDiffHighlightService : DiffHighlightService
     private static readonly string[] _diffFullPrefixes = ["  ", "++", "+ ", " +", "--", "- ", " -"];
     private static readonly string[] _addedLinePrefixes = ["+", " +"];
     private static readonly string[] _removedLinePrefixes = ["-", " -"];
-    private static readonly string[] _diffSearchPrefixes = [.. _addedLinePrefixes, .. _removedLinePrefixes];
 
     public CombinedDiffHighlightService(ref string text, bool useGitColoring)
         : base(ref text, useGitColoring)
@@ -21,7 +20,7 @@ public class CombinedDiffHighlightService : DiffHighlightService
 
     public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
     {
-        DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(textEditor.Text, isCombinedDiff: true);
+        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(textEditor, isCombinedDiff: true);
         lineNumbersControl.DisplayLineNum(result, showLeftColumn: true);
     }
 
@@ -29,8 +28,6 @@ public class CombinedDiffHighlightService : DiffHighlightService
         => GetGitCommandConfiguration(module, useGitColoring, "diff-tree");
 
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
-
-    public override bool IsSearchMatch(string line) => line.StartsWithAny(_diffSearchPrefixes);
 
     protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
         => LinePrefixHelper.GetLinesStartingWith(document, ref line, _addedLinePrefixes, ref found);
