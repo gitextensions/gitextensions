@@ -588,7 +588,7 @@ namespace GitUI.Editor
                                 .AppendLine();
                             internalFileViewer.SetText(summary.ToString(), openWithDifftool);
 
-                            ToHexDump(Encoding.ASCII.GetBytes(text), summary);
+                            ToHexDump(text, summary);
                             internalFileViewer.SetText(summary.ToString(), openWithDifftool);
                         }
                         catch
@@ -757,7 +757,7 @@ namespace GitUI.Editor
             string GetFileText()
             {
                 using FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using StreamReader reader = new(stream, Module.FilesEncoding);
+                using StreamReader reader = new(stream, GitModule.LosslessEncoding);
 #pragma warning disable VSTHRD103 // Call async methods when in an async method
                 string content = reader.ReadToEnd();
 #pragma warning restore VSTHRD103 // Call async methods when in an async method
@@ -1175,7 +1175,7 @@ namespace GitUI.Editor
                                         .AppendLine($"{text.Length:N0} bytes:")
                                         .AppendLine();
 
-                                    ToHexDump(Encoding.ASCII.GetBytes(text), summary);
+                                    ToHexDump(text, summary);
                                     internalFileViewer.SetText(summary.ToString(), openWithDifftool);
                                     return;
                                 }
@@ -1203,9 +1203,9 @@ namespace GitUI.Editor
             }
         }
 
-        private static string ToHexDump(byte[] bytes, StringBuilder str, int columnWidth = 8, int columnCount = 2)
+        private static string ToHexDump(string text, StringBuilder str, int columnWidth = 8, int columnCount = 2)
         {
-            if (bytes.Length == 0)
+            if (text.Length == 0)
             {
                 return "";
             }
@@ -1213,7 +1213,7 @@ namespace GitUI.Editor
             // Do not freeze GE when selecting large binary files
             // Show only the header of the binary file to indicate contents and files incorrectly handled
             // Use a dedicated editor to view the complete file
-            int limit = Math.Min(bytes.Length, columnWidth * columnCount * 256);
+            int limit = Math.Min(text.Length, columnWidth * columnCount * 256);
             int i = 0;
 
             while (i < limit)
@@ -1226,7 +1226,7 @@ namespace GitUI.Editor
                 }
 
                 // OFFSET
-                str.Append($"{baseIndex:X4}    ");
+                str.Append($"{baseIndex:X4}   ");
 
                 // BYTES
                 for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
@@ -1244,14 +1244,14 @@ namespace GitUI.Editor
                             str.Append(' ');
                         }
 
-                        str.Append(i < bytes.Length
-                            ? bytes[i].ToString("X2")
+                        str.Append(i < text.Length
+                            ? ((byte)text[i]).ToString("X2")
                             : "  ");
                         i++;
                     }
                 }
 
-                str.Append("    ");
+                str.Append("   ");
 
                 // ASCII
                 i = baseIndex;
@@ -1265,9 +1265,9 @@ namespace GitUI.Editor
 
                     for (int j = 0; j < columnWidth; j++)
                     {
-                        if (i < bytes.Length)
+                        if (i < text.Length)
                         {
-                            char c = (char)bytes[i];
+                            char c = text[i];
                             str.Append(char.IsControl(c) ? '.' : c);
                         }
                         else
@@ -1280,7 +1280,7 @@ namespace GitUI.Editor
                 }
             }
 
-            if (bytes.Length > limit)
+            if (text.Length > limit)
             {
                 str.AppendLine();
                 str.Append("[Truncated]");

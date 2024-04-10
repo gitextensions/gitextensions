@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs
 
             _previewedItem = CurrentItem;
 
-            string content = Module.ShowObject(_previewedItem.ObjectId) ?? "";
+            string content = Module.ShowObject(_previewedItem.ObjectId, returnRaw: _previewedItem.ObjectType == LostObjectType.Blob) ?? "";
             if (_previewedItem.ObjectType == LostObjectType.Commit || _previewedItem.ObjectType == LostObjectType.Tag)
             {
                 fileViewer.InvokeAndForget(() => fileViewer.ViewFixedPatchAsync("commit.patch", content, openWithDifftool: null));
@@ -366,7 +366,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            string? obj = Module.ShowObject(currentItem.ObjectId);
+            string? obj = Module.ShowObject(currentItem.ObjectId, returnRaw: _previewedItem.ObjectType == LostObjectType.Blob);
 
             if (obj is not null)
             {
