@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormVerify : GitModuleForm
     {
-        private const string RestoredObjectsTagPrefix = "LOST_FOUND_";
+        private const string _restoredObjectsTagPrefix = "LOST_FOUND_";
 
         private readonly TranslationString _removeDanglingObjectsCaption = new("Remove");
         private readonly TranslationString _removeDanglingObjectsQuestion = new("Are you sure you want to delete all dangling objects?");
@@ -24,17 +24,48 @@ namespace GitUI.CommandsDialogs
         private readonly IGitTagController _gitTagController;
 
         private LostObject? _previewedItem;
+        private string _defaultFilename = null;
 
-        private static readonly Dictionary<string, string> LanguagesStartOfFile = new()
+        private static readonly Dictionary<string, string> _languagesStartOfFile = new()
         {
-            { "{", "recovery.json" },
-            { "#include", "recovery.cpp" },
-            { "import", "recovery.java" },
-            { "from", "recovery.py" },
-            { "package", "recovery.go" },
-            { "#!", "recovery.sh" },
-            { "[", "recovery.ini" },
-            { "using", "recovery.cs" },
+            { "{", "json" },
+            { "#include", "cpp" },
+            { "import {", "js" },
+            { "import * as", "js" },
+            { "import \"", "js" },
+            { "export ", "js" },
+            { "import ", "java" },
+            { "from", "py" },
+            { "package", "go" },
+            { "namespace ", "fs" },
+            { "#!", "sh" },
+            { "[", "ini" },
+            { "using ", "cs" },
+            { "# ", "md" },
+            { "<!doctype html", "html" },
+            { "<html", "html" },
+            { "<?xml", "xml" },
+            { "use ", "rs" },
+            { @"{\", "rtf" },
+            { "%PDF", "pdf" },
+            { "PK", "zip" },
+            { "MZ", "exe" },
+            { @"\document", "tex" },
+            { "\u0089PNG", "png" },
+            { "ÿØÿà\0\x10JFIF", "jpg" },
+            { "<svg", "svg" },
+        };
+
+        private static readonly Dictionary<string, string[]> _fileTypesEquivalences = new()
+        {
+            { "js", ["ts", "jsx", "tsx"] },
+            { "html", ["php", "cshtml"] },
+            { "cpp", ["c"] },
+            { "xml", ["config", "settings", "csproj", "xlf", "props"] },
+            { "zip", ["docx", "xlsx", "odt", "ods"] },
+            { "exe", ["dll"] },
+            { "md", ["sh", "yml"] },
+            { "txt", ["csv", "css", "md", "yml"] },
         };
 
         public FormVerify(GitUICommands commands)
@@ -219,6 +250,7 @@ namespace GitUI.CommandsDialogs
 
         private void Warnings_SelectionChanged(object sender, EventArgs e)
         {
+            _defaultFilename = null;
             if (CurrentItem is null || _previewedItem == CurrentItem)
             {
                 return;
@@ -227,38 +259,34 @@ namespace GitUI.CommandsDialogs
             _previewedItem = CurrentItem;
 
             string content = Module.ShowObject(_previewedItem.ObjectId) ?? "";
-            if (_previewedItem.ObjectType == LostObjectType.Commit)
+            if (_previewedItem.ObjectType == LostObjectType.Commit || _previewedItem.ObjectType == LostObjectType.Tag)
             {
                 fileViewer.InvokeAndForget(() => fileViewer.ViewFixedPatchAsync("commit.patch", content, openWithDifftool: null));
             }
+            else if (_previewedItem.ObjectType == LostObjectType.Blob)
+            {
+                _defaultFilename = GuessFileTypeWithContent(content, _previewedItem.ObjectId.ToString());
+                fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync(_defaultFilename, content, openWithDifftool: null));
+            }
             else
             {
-                string filename = GuessFileTypeWithContent(content);
-                fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync(filename, content, openWithDifftool: null));
+                fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync("file.txt", content, openWithDifftool: null));
             }
         }
 
-        private static string GuessFileTypeWithContent(string content)
+        private static string GuessFileTypeWithContent(string content, string hash)
         {
-            if (content.StartsWith("<"))
+            foreach (KeyValuePair<string, string> pair in _languagesStartOfFile)
             {
-                return content.Contains("<html", StringComparison.InvariantCultureIgnoreCase) ? "recovery.html" : "recovery.xml";
-            }
-
-            foreach (KeyValuePair<string, string> pair in LanguagesStartOfFile)
-            {
-                if (content.StartsWith(pair.Key))
+                if (content.StartsWith(pair.Key, StringComparison.OrdinalIgnoreCase))
                 {
-                    return pair.Value;
+                    return BuildFilename(pair.Value);
                 }
             }
 
-            if (content.Contains("function"))
-            {
-                return "recovery.ts";
-            }
+            return BuildFilename("txt");
 
-            return "recovery.txt";
+            string BuildFilename(string extension) => $"LOST_FOUND_{hash}.{extension}";
         }
 
         #endregion
@@ -367,7 +395,7 @@ namespace GitUI.CommandsDialogs
             {
                 currentTag++;
                 string tagName = lostObject.ObjectType == LostObjectType.Tag ? lostObject.TagName : currentTag.ToString();
-                GitCreateTagArgs createTagArgs = new($"{RestoredObjectsTagPrefix}{tagName}", lostObject.ObjectId);
+                GitCreateTagArgs createTagArgs = new($"{_restoredObjectsTagPrefix}{tagName}", lostObject.ObjectId);
                 _gitTagController.CreateTag(createTagArgs, this);
             }
 
@@ -378,7 +406,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (IGitRef head in Module.GetRefs(RefsFilter.Tags))
             {
-                if (head.Name.StartsWith(RestoredObjectsTagPrefix))
+                if (head.Name.StartsWith(_restoredObjectsTagPrefix))
                 {
                     Module.DeleteTag(head.Name);
                 }
@@ -466,13 +494,21 @@ namespace GitUI.CommandsDialogs
 
             if (lostObject.ObjectType == LostObjectType.Blob)
             {
+                string filename = _defaultFilename ?? lostObject.ObjectId.ToString() + "_LOST_FOUND.txt";
+                string extension = Path.GetExtension(filename).TrimStart('.');
+                string filter = $"{extension} Files (*.{extension})|*.{extension}";
+                if (_fileTypesEquivalences.TryGetValue(extension, out string[] types))
+                {
+                    filter += "|" + string.Join("|", types.Select(t => $"{t} Files (*.{t})|*.{t}"));
+                }
+
                 using SaveFileDialog fileDialog =
                     new()
                     {
                         InitialDirectory = Module.WorkingDir,
-                        FileName = "LOST_FOUND.txt",
-                        Filter = "(*.*)|*.*",
-                        DefaultExt = "txt",
+                        FileName = filename,
+                        Filter = $"{filter}| All Files (*.*)|*.*",
+                        DefaultExt = extension,
                         AddExtension = true
                     };
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
