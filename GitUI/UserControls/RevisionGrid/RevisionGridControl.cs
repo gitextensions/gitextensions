@@ -2835,10 +2835,22 @@ namespace GitUI
                 revisions
             };
 
-            string mergeBaseCommitId = UICommands.Module.GitExecutable.GetOutput(args).TrimEnd('\n');
+            ExecutionResult result = UICommands.Module.GitExecutable.Execute(args, throwOnErrorExit: false);
+
+            // Not related histories: https://git-scm.com/docs/git-merge-base#Documentation/git-merge-base.txt---is-ancestor
+            const int NoCommonAncestorsExitCode = 1;
+            if (result.ExitCode == NoCommonAncestorsExitCode)
+            {
+                MessageBoxes.ShowError(this, _noMergeBaseCommit.Text);
+                return;
+            }
+
+            result.ThrowIfErrorExit();
+
+            string mergeBaseCommitId = result.StandardOutput.TrimEnd();
             if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
             {
-                MessageBox.Show(_noMergeBaseCommit.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.ShowError(this, _noMergeBaseCommit.Text);
                 return;
             }
 
