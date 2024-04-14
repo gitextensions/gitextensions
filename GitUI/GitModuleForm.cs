@@ -105,8 +105,26 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int command)
         {
-            return ScriptsRunner.RunScript(command, owner: this, UICommands)
+            return ExecuteScriptCommand()
                 || base.ExecuteCommand(command);
+
+            bool ExecuteScriptCommand()
+            {
+                IScriptsManager scriptsManager = UICommands.GetRequiredService<IScriptsManager>();
+                ScriptInfo? scriptInfo = scriptsManager.GetScript(command);
+                if (scriptInfo is null)
+                {
+                    return false;
+                }
+
+                _ = ScriptsRunner.RunScript(scriptInfo, owner: this, UICommands, GetScriptOptionsProvider());
+                return true;
+            }
+        }
+
+        public virtual IScriptOptionsProvider? GetScriptOptionsProvider()
+        {
+            return null;
         }
 
         protected virtual void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
