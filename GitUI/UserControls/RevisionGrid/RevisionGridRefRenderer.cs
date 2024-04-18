@@ -144,8 +144,8 @@ namespace GitUI
         {
             ThreadHelper.AssertOnUIThread();
 
-            const float horShift = 4;
-            const float verShift = 3;
+            float horShift = DpiUtil.Scale(4f);
+            float verShift = DpiUtil.Scale(3f);
 
             float height = rowHeight - (verShift * 2);
             float width = height / 2;
