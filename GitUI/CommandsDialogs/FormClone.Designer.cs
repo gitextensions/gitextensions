@@ -51,6 +51,8 @@
             // 
             // MainPanel
             // 
+            MainPanel.AutoSize = true;
+            MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             MainPanel.Controls.Add(tpnlMain);
             MainPanel.Size = new Size(647, 318);
             // 
@@ -280,10 +282,13 @@
             // groupBox1
             // 
             groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox1.AutoSize = true;
             groupBox1.Controls.Add(CentralRepository);
             groupBox1.Controls.Add(PersonalRepository);
             groupBox1.Location = new Point(3, 184);
             groupBox1.Margin = new Padding(3, 4, 3, 0);
+            groupBox1.MaximumSize = new Size(0, 78);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(617, 78);
             groupBox1.TabIndex = 2;
@@ -370,12 +375,13 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(647, 359);
+            AutoSize = true;
             HelpButton = true;
             ManualSectionAnchorName = "clone-repository";
             ManualSectionSubfolder = "getting_started";
             MaximizeBox = false;
-            MinimizeBox = false;
             MaximumSize = new Size(950, 398);
+            MinimizeBox = false;
             MinimumSize = new Size(450, 398);
             Name = "FormClone";
             StartPosition = FormStartPosition.CenterParent;
