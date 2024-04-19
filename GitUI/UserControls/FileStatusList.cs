@@ -62,12 +62,9 @@ namespace GitUI
         [DefaultValue(false)]
         public bool DisableSubmoduleMenuItemBold { get; set; }
 
-        private static readonly ImageListData _imageListData;
+        private record ImageListData(ImageList ImageList, FrozenDictionary<string, int> StateImageIndexMap);
 
-        static FileStatusList()
-        {
-            _imageListData = CreateImageListData();
-        }
+        private static readonly ImageListData _imageListData = CreateImageListData();
 
         public FileStatusList()
         {
@@ -155,8 +152,6 @@ namespace GitUI
                 return item;
             }
         }
-
-        private record ImageListData(ImageList ImageList, FrozenDictionary<string, int> StateImageIndexDict);
 
         private static ImageListData CreateImageListData()
         {
@@ -1206,12 +1201,12 @@ namespace GitUI
                     .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
             }
 
-            int GetItemImageIndex(GitItemStatus gitItemStatus)
+            static int GetItemImageIndex(GitItemStatus gitItemStatus)
             {
                 string imageKey = GetItemImageKey(gitItemStatus);
-                return _imageListData.StateImageIndexDict.TryGetValue(imageKey, out int value)
+                return _imageListData.StateImageIndexMap.TryGetValue(imageKey, out int value)
                     ? value
-                    : _imageListData.StateImageIndexDict[nameof(Images.FileStatusUnknown)];
+                    : _imageListData.StateImageIndexMap[nameof(Images.FileStatusUnknown)];
             }
 
             static string GetItemImageKey(GitItemStatus gitItemStatus)
