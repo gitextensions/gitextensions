@@ -33,6 +33,8 @@
             // 
             // buttonBrowse
             // 
+            buttonBrowse.AutoSize = true;
+            buttonBrowse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             buttonBrowse.Dock = DockStyle.Fill;
             buttonBrowse.Image = Properties.Images.BrowseFileExplorer;
             buttonBrowse.ImageAlign = ContentAlignment.MiddleLeft;
