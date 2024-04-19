@@ -46,6 +46,11 @@ namespace GitUI
                             pictureBox.Image = DpiUtil.Scale(pictureBox.Image);
                         }
 
+                        if (isDpiScaled && pictureBox.BackgroundImage is not null)
+                        {
+                            pictureBox.BackgroundImage = DpiUtil.Scale(pictureBox.BackgroundImage);
+                        }
+
                         break;
                     }
 
