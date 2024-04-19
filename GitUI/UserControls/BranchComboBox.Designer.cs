@@ -41,6 +41,8 @@
             branches.Location = new Point(0, 3);
             branches.Name = "branches";
             branches.Size = new Size(304, 23);
+            branches.TabIndex = 0;
+            branches.SelectedValueChanged += branches_SelectedValueChanged;
             // 
             // selectMultipleBranchesButton
             // 
@@ -49,6 +51,7 @@
             selectMultipleBranchesButton.Location = new Point(308, 1);
             selectMultipleBranchesButton.Margin = new Padding(0);
             selectMultipleBranchesButton.Name = "selectMultipleBranchesButton";
+            selectMultipleBranchesButton.TabIndex = 1;
             selectMultipleBranchesButton.Size = new Size(23, 23);
             selectMultipleBranchesButton.UseVisualStyleBackColor = true;
             selectMultipleBranchesButton.Click += selectMultipleBranchesButton_Click;

@@ -4384,8 +4384,16 @@ Proceed?</source>
         <source>&amp;Delete</source>
         <target />
       </trans-unit>
+      <trans-unit id="DeleteLocalTrackingBranch.Text">
+        <source>Delete local tracking branch (if available)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="DeleteRemote.Text">
         <source>Delete branch(es) from &amp;remote repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_andMore.Text">
+        <source>and {0} more...</source>
         <target />
       </trans-unit>
       <trans-unit id="_confirmDeleteUnmergedRemoteBranchMessage.Text">
@@ -4395,6 +4403,10 @@ Deleting a branch can cause commits to be deleted too!</source>
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesCaption.Text">
         <source>Delete remote branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toDeleteCandidates.Text">
+        <source>Local tracking branche(s) candidate to deletion:</source>
         <target />
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
