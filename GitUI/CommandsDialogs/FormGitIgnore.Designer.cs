@@ -196,6 +196,7 @@
             label1.Multiline = true;
             label1.Name = "label1";
             label1.ReadOnly = true;
+            label1.ScrollBars = ScrollBars.Vertical;
             label1.Size = new Size(270, 540);
             label1.TabIndex = 4;
             label1.Text = resources.GetString("label1.Text");
