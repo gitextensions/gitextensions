@@ -266,7 +266,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return isFocused ? SystemBrushes.Highlight : OtherColors.InactiveSelectionHighlightBrush;
             }
 
-            if (_highlightAuthoredRevisions && !revision?.IsArtificial is false && AuthorHighlighting?.IsHighlighted(revision) is true)
+            if (_highlightAuthoredRevisions && revision?.IsArtificial is false && AuthorHighlighting?.IsHighlighted(revision) is true)
             {
                 return _authoredHighlightBrush;
             }
