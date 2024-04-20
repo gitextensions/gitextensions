@@ -37,7 +37,7 @@
             AddPattern = new Button();
             Save = new Button();
             splitContainer1 = new SplitContainer();
-            _NO_TRANSLATE_GitIgnoreEdit = new GitUI.Editor.FileViewer();
+            _NO_TRANSLATE_GitIgnoreEdit = new Editor.FileViewer();
             label1 = new TextBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
             btnCancel = new Button();
@@ -45,7 +45,7 @@
             flowLayoutPanel2 = new FlowLayoutPanel();
             panel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
@@ -228,7 +228,7 @@
             Controls.Add(flowLayoutPanel1);
             MinimumSize = new Size(650, 498);
             Name = "FormGitIgnore";
-            Padding = new Padding(4, 4, 4, 4);
+            Padding = new Padding(4);
             StartPosition = FormStartPosition.CenterParent;
             Text = "Edit .gitignore";
             FormClosing += FormGitIgnoreFormClosing;
@@ -241,13 +241,12 @@
             splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
             splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
