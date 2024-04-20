@@ -4385,7 +4385,7 @@ Proceed?</source>
         <target />
       </trans-unit>
       <trans-unit id="DeleteLocalTrackingBranch.Text">
-        <source>Delete local tracking branch (if available)</source>
+        <source>Delete &amp;local tracking branch (if available)</source>
         <target />
       </trans-unit>
       <trans-unit id="DeleteRemote.Text">
