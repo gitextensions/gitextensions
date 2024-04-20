@@ -91,7 +91,7 @@
       &lt;RevisionPart&gt;LocalBranches&lt;/RevisionPart&gt;
       &lt;RevisionPart&gt;RemoteBranches&lt;/RevisionPart&gt;
     &lt;/SearchInParts&gt;
-    &lt;SearchPattern&gt;(?i)(pull request |pr[ _]?)#?\d+&lt;/SearchPattern&gt;
+    &lt;SearchPattern&gt;(?i)(^|pull request |pr[ _]?)#?\d+&lt;/SearchPattern&gt;
     &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
   &lt;/GitExtLinkDef&gt;
 &lt;/ArrayOfGitExtLinkDef&gt;</string>
