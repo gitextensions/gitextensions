@@ -60,21 +60,21 @@
             panel1.Controls.Add(lnkGitIgnorePatterns);
             panel1.Dock = DockStyle.Bottom;
             panel1.FlowDirection = FlowDirection.RightToLeft;
-            panel1.Location = new Point(0, 383);
+            panel1.Location = new Point(0, 540);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(0, 0, 8, 4);
-            panel1.Size = new Size(270, 38);
+            panel1.Size = new Size(270, 42);
             panel1.TabIndex = 5;
             // 
             // lnkGitIgnoreGenerate
             // 
             lnkGitIgnoreGenerate.AutoSize = true;
             lnkGitIgnoreGenerate.Dock = DockStyle.Right;
-            lnkGitIgnoreGenerate.Location = new Point(79, 2);
+            lnkGitIgnoreGenerate.Location = new Point(62, 2);
             lnkGitIgnoreGenerate.Margin = new Padding(3, 2, 3, 2);
             lnkGitIgnoreGenerate.Name = "lnkGitIgnoreGenerate";
             lnkGitIgnoreGenerate.RightToLeft = RightToLeft.Yes;
-            lnkGitIgnoreGenerate.Size = new Size(180, 13);
+            lnkGitIgnoreGenerate.Size = new Size(197, 15);
             lnkGitIgnoreGenerate.TabIndex = 7;
             lnkGitIgnoreGenerate.TabStop = true;
             lnkGitIgnoreGenerate.Text = "Generate a custom ignore file for git";
@@ -84,11 +84,11 @@
             // 
             lnkGitIgnorePatterns.AutoSize = true;
             lnkGitIgnorePatterns.Dock = DockStyle.Right;
-            lnkGitIgnorePatterns.Location = new Point(135, 19);
+            lnkGitIgnorePatterns.Location = new Point(124, 21);
             lnkGitIgnorePatterns.Margin = new Padding(3, 2, 3, 2);
             lnkGitIgnorePatterns.Name = "lnkGitIgnorePatterns";
             lnkGitIgnorePatterns.RightToLeft = RightToLeft.Yes;
-            lnkGitIgnorePatterns.Size = new Size(124, 13);
+            lnkGitIgnorePatterns.Size = new Size(135, 15);
             lnkGitIgnorePatterns.TabIndex = 6;
             lnkGitIgnorePatterns.TabStop = true;
             lnkGitIgnorePatterns.Text = "Example ignore patterns";
@@ -100,7 +100,7 @@
             flowLayoutPanel2.Controls.Add(AddDefault);
             flowLayoutPanel2.Controls.Add(AddPattern);
             flowLayoutPanel2.Dock = DockStyle.Bottom;
-            flowLayoutPanel2.Location = new Point(0, 388);
+            flowLayoutPanel2.Location = new Point(0, 549);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(352, 33);
             flowLayoutPanel2.TabIndex = 6;
@@ -169,7 +169,7 @@
             splitContainer1.Panel2.Controls.Add(label1);
             splitContainer1.Panel2.Controls.Add(panel1);
             splitContainer1.Panel2MinSize = 250;
-            splitContainer1.Size = new Size(626, 421);
+            splitContainer1.Size = new Size(626, 582);
             splitContainer1.SplitterDistance = 352;
             splitContainer1.TabIndex = 0;
             // 
@@ -182,7 +182,7 @@
             _NO_TRANSLATE_GitIgnoreEdit.Location = new Point(0, 0);
             _NO_TRANSLATE_GitIgnoreEdit.Margin = new Padding(0, 0, 3, 2);
             _NO_TRANSLATE_GitIgnoreEdit.Name = "_NO_TRANSLATE_GitIgnoreEdit";
-            _NO_TRANSLATE_GitIgnoreEdit.Size = new Size(352, 388);
+            _NO_TRANSLATE_GitIgnoreEdit.Size = new Size(352, 549);
             _NO_TRANSLATE_GitIgnoreEdit.TabIndex = 0;
             // 
             // label1
@@ -196,7 +196,7 @@
             label1.Multiline = true;
             label1.Name = "label1";
             label1.ReadOnly = true;
-            label1.Size = new Size(270, 383);
+            label1.Size = new Size(270, 540);
             label1.TabIndex = 4;
             label1.Text = resources.GetString("label1.Text");
             // 
@@ -207,7 +207,7 @@
             flowLayoutPanel1.Controls.Add(btnCancel);
             flowLayoutPanel1.Dock = DockStyle.Bottom;
             flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
-            flowLayoutPanel1.Location = new Point(4, 425);
+            flowLayoutPanel1.Location = new Point(4, 586);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(626, 33);
             flowLayoutPanel1.TabIndex = 1;
@@ -231,7 +231,7 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             CancelButton = btnCancel;
-            ClientSize = new Size(634, 462);
+            ClientSize = new Size(634, 623);
             Controls.Add(splitContainer1);
             Controls.Add(flowLayoutPanel1);
             MinimumSize = new Size(650, 498);
