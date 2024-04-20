@@ -46,12 +46,12 @@
             MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             MainPanel.Controls.Add(tlpnlMain);
             MainPanel.Padding = new Padding(9);
-            MainPanel.Size = new Size(403, 145);
+            MainPanel.Size = new Size(403, 102);
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(Delete);
-            ControlsPanel.Location = new Point(0, 145);
+            ControlsPanel.Location = new Point(0, 102);
             ControlsPanel.Size = new Size(403, 41);
             // 
             // Delete
@@ -111,7 +111,7 @@
             tlpnlMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tlpnlMain.ColumnCount = 2;
             tlpnlMain.ColumnStyles.Add(new ColumnStyle());
-            tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+            tlpnlMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpnlMain.Controls.Add(labelSelectBranches, 0, 0);
             tlpnlMain.Controls.Add(Branches, 1, 0);
             tlpnlMain.Controls.Add(DeleteRemote, 1, 1);
@@ -121,13 +121,12 @@
             tlpnlMain.Location = new Point(9, 9);
             tlpnlMain.Margin = new Padding(0);
             tlpnlMain.Name = "tlpnlMain";
-            tlpnlMain.RowCount = 5;
+            tlpnlMain.RowCount = 4;
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
-            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tlpnlMain.Size = new Size(385, 127);
+            tlpnlMain.Size = new Size(385, 80);
             tlpnlMain.TabIndex = 0;
             // 
             // DeleteRemote
@@ -157,13 +156,13 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
-            ClientSize = new Size(403, 186);
+            ClientSize = new Size(403, 139);
             HelpButton = true;
             ManualSectionAnchorName = "delete-branch";
             ManualSectionSubfolder = "branches";
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(410, 129);
+            MinimumSize = new Size(403, 102);
             Name = "FormDeleteRemoteBranch";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Delete branch";
