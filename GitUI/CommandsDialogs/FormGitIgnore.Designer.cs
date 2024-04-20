@@ -110,7 +110,9 @@
             // 
             AddDefault.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             AddDefault.AutoSize = true;
+            AddDefault.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AddDefault.Location = new Point(3, 3);
+            AddDefault.MinimumSize = new Size(160, 27);
             AddDefault.Name = "AddDefault";
             AddDefault.Size = new Size(160, 27);
             AddDefault.TabIndex = 2;
@@ -122,7 +124,9 @@
             // 
             AddPattern.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             AddPattern.AutoSize = true;
+            AddPattern.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AddPattern.Location = new Point(169, 3);
+            AddPattern.MinimumSize = new Size(160, 27);
             AddPattern.Name = "AddPattern";
             AddPattern.Size = new Size(160, 27);
             AddPattern.TabIndex = 3;
@@ -133,10 +137,12 @@
             // Save
             // 
             Save.AutoSize = true;
+            Save.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Save.DialogResult = DialogResult.OK;
             Save.Image = Properties.Images.Save;
             Save.ImageAlign = ContentAlignment.MiddleRight;
             Save.Location = new Point(463, 3);
+            Save.MinimumSize = new Size(160, 27);
             Save.Name = "Save";
             Save.Size = new Size(160, 27);
             Save.TabIndex = 1;
@@ -209,8 +215,10 @@
             // btnCancel
             // 
             btnCancel.AutoSize = true;
+            btnCancel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnCancel.DialogResult = DialogResult.Cancel;
             btnCancel.Location = new Point(382, 3);
+            btnCancel.MinimumSize = new Size(75, 27);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 27);
             btnCancel.TabIndex = 2;
