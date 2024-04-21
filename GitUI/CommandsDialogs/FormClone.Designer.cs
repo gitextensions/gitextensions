@@ -17,8 +17,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClone));
-            Central = new RadioButton();
-            Personal = new RadioButton();
             Ok = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             repositoryLabel = new Label();
@@ -63,35 +61,13 @@
             ControlsPanel.Location = new Point(0, 318);
             ControlsPanel.Size = new Size(647, 41);
             // 
-            // Central
-            // 
-            Central.AutoSize = true;
-            Central.Location = new Point(6, 42);
-            Central.Name = "Central";
-            Central.Size = new Size(274, 17);
-            Central.TabIndex = 0;
-            Central.Text = "Central repository, no working directory  (--bare --shared=all)";
-            Central.UseVisualStyleBackColor = true;
-            // 
-            // Personal
-            // 
-            Personal.AutoSize = true;
-            Personal.Checked = true;
-            Personal.Location = new Point(6, 19);
-            Personal.Name = "Personal";
-            Personal.Size = new Size(114, 17);
-            Personal.TabIndex = 0;
-            Personal.TabStop = true;
-            Personal.Text = "Personal repository";
-            Personal.UseVisualStyleBackColor = true;
-            // 
             // Ok
             // 
-            Ok.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Ok.Anchor = AnchorStyles.Right;
             Ok.AutoSize = true;
             Ok.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Ok.Location = new Point(559, 8);
-            Ok.MinimumSize = new Size(75, 23);
+            Ok.MinimumSize = new Size(75, 25);
             Ok.Name = "Ok";
             Ok.Size = new Size(75, 25);
             Ok.TabIndex = 0;
@@ -129,6 +105,7 @@
             // 
             // repositoryLabel
             // 
+            repositoryLabel.Anchor = AnchorStyles.Left;
             repositoryLabel.AutoSize = true;
             repositoryLabel.Dock = DockStyle.Left;
             repositoryLabel.Location = new Point(3, 0);
@@ -140,7 +117,7 @@
             // 
             // _NO_TRANSLATE_From
             // 
-            _NO_TRANSLATE_From.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_From.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             _NO_TRANSLATE_From.AutoCompleteSource = AutoCompleteSource.ListItems;
             _NO_TRANSLATE_From.FormattingEnabled = true;
             _NO_TRANSLATE_From.Location = new Point(135, 3);
@@ -152,7 +129,7 @@
             // 
             // FromBrowse
             // 
-            FromBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            FromBrowse.Anchor = AnchorStyles.Right;
             FromBrowse.Image = Properties.Images.BrowseFileExplorer;
             FromBrowse.ImageAlign = ContentAlignment.MiddleLeft;
             FromBrowse.Location = new Point(526, 3);
@@ -165,6 +142,7 @@
             // 
             // destinationLabel
             // 
+            destinationLabel.Anchor = AnchorStyles.Left;
             destinationLabel.AutoSize = true;
             destinationLabel.Dock = DockStyle.Left;
             destinationLabel.Location = new Point(3, 31);
@@ -176,7 +154,7 @@
             // 
             // _NO_TRANSLATE_To
             // 
-            _NO_TRANSLATE_To.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_To.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             _NO_TRANSLATE_To.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             _NO_TRANSLATE_To.AutoCompleteSource = AutoCompleteSource.FileSystemDirectories;
             _NO_TRANSLATE_To.FormattingEnabled = true;
@@ -189,7 +167,7 @@
             // 
             // ToBrowse
             // 
-            ToBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ToBrowse.Anchor = AnchorStyles.Right;
             ToBrowse.Image = Properties.Images.BrowseFileExplorer;
             ToBrowse.ImageAlign = ContentAlignment.MiddleLeft;
             ToBrowse.Location = new Point(526, 34);
@@ -202,6 +180,7 @@
             // 
             // subdirectoryLabel
             // 
+            subdirectoryLabel.Anchor = AnchorStyles.Left;
             subdirectoryLabel.AutoSize = true;
             subdirectoryLabel.Dock = DockStyle.Left;
             subdirectoryLabel.Location = new Point(3, 62);
@@ -213,7 +192,7 @@
             // 
             // _NO_TRANSLATE_NewDirectory
             // 
-            _NO_TRANSLATE_NewDirectory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_NewDirectory.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             _NO_TRANSLATE_NewDirectory.Location = new Point(135, 65);
             _NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
             _NO_TRANSLATE_NewDirectory.Size = new Size(385, 23);
@@ -222,6 +201,7 @@
             // 
             // brachLabel
             // 
+            brachLabel.Anchor = AnchorStyles.Left;
             brachLabel.AutoSize = true;
             brachLabel.Dock = DockStyle.Left;
             brachLabel.Location = new Point(3, 93);
@@ -233,7 +213,7 @@
             // 
             // _NO_TRANSLATE_Branches
             // 
-            _NO_TRANSLATE_Branches.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_Branches.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             _NO_TRANSLATE_Branches.FormattingEnabled = true;
             _NO_TRANSLATE_Branches.Location = new Point(135, 96);
             _NO_TRANSLATE_Branches.Name = "_NO_TRANSLATE_Branches";
@@ -282,15 +262,15 @@
             // groupBox1
             // 
             groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox1.AutoSize = true;
+            groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             groupBox1.Controls.Add(CentralRepository);
             groupBox1.Controls.Add(PersonalRepository);
             groupBox1.Location = new Point(3, 184);
             groupBox1.Margin = new Padding(3, 4, 3, 0);
-            groupBox1.MaximumSize = new Size(0, 78);
+            groupBox1.MaximumSize = new Size(0, 88);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(617, 78);
+            groupBox1.Size = new Size(617, 88);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Repository type";
@@ -324,7 +304,7 @@
             LoadSSHKey.Image = Properties.Images.Putty;
             LoadSSHKey.ImageAlign = ContentAlignment.MiddleLeft;
             LoadSSHKey.Location = new Point(433, 8);
-            LoadSSHKey.MinimumSize = new Size(75, 23);
+            LoadSSHKey.MinimumSize = new Size(120, 25);
             LoadSSHKey.Name = "LoadSSHKey";
             LoadSSHKey.Padding = new Padding(8, 0, 8, 0);
             LoadSSHKey.Size = new Size(120, 25);
@@ -413,8 +393,6 @@
         private GroupBox groupBox1;
         private RadioButton CentralRepository;
         private RadioButton PersonalRepository;
-        private RadioButton Central;
-        private RadioButton Personal;
         private Button LoadSSHKey;
         private TextBox _NO_TRANSLATE_NewDirectory;
         private Label Info;
