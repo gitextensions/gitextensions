@@ -43,7 +43,7 @@ public abstract class DiffHighlightService : TextHighlightService
 
         // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt-diffwordRegex
         // Set to "minimal" diff unless configured.
-        SetIfUnsetInGit(key: "diff.wordRegex", value: ".");
+        SetIfUnsetInGit(key: "diff.wordRegex", value: "\"[a-z0-9_]+|.\"");
 
         // dimmed-zebra highlights borders better than the default "zebra"
         SetIfUnsetInGit(key: "diff.colorMoved", value: "dimmed-zebra");
