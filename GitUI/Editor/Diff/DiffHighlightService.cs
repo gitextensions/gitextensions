@@ -37,23 +37,35 @@ public abstract class DiffHighlightService : TextHighlightService
             commandConfiguration.Add(cfg, command);
         }
 
-        if (string.IsNullOrEmpty(module.GetEffectiveSetting("diff.colorMoved")))
-        {
-            commandConfiguration.Add(new GitConfigItem("diff.colorMoved", "zebra"), command);
-        }
+        // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---color-moved-wsltmodesgt
+        // Disable by default, document that this can be enabled.
+        SetIfUnsetInGit(key: "diff.colorMovedWS", value: "no");
 
-        if (string.IsNullOrEmpty(module.GetEffectiveSetting("diff.colorMovedWS")))
-        {
-            // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---color-moved-wsltmodesgt
-            // Disable by default, document that this can be enabled.
-            commandConfiguration.Add(new GitConfigItem("diff.colorMovedWS", "no"), command);
-        }
+        // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt-diffwordRegex
+        // Set to "minimal" diff unless configured.
+        SetIfUnsetInGit(key: "diff.wordRegex", value: ".");
 
-        if (string.IsNullOrEmpty(module.GetEffectiveSetting("diff.wordRegex")))
+        // dimmed-zebra highlights borders better than the default "zebra"
+        SetIfUnsetInGit(key: "diff.colorMoved", value: "dimmed-zebra");
+
+        // Change bold to normal, hard to see in fileviewer
+        SetIfUnsetInGit(key: "color.diff.oldMoved", value: "magenta");
+        SetIfUnsetInGit(key: "color.diff.newMoved", value: "blue");
+        SetIfUnsetInGit(key: "color.diff.oldMovedAlternative", value: "cyan");
+        SetIfUnsetInGit(key: "color.diff.newMovedAlternative", value: "yellow");
+
+        // Set dimmed colors, default is gray dimmed/talic and italic is same as dimmed
+        SetIfUnsetInGit(key: "color.diff.oldMovedDimmed", value: "magenta dim");
+        SetIfUnsetInGit(key: "color.diff.newMovedDimmed", value: "blue dim");
+        SetIfUnsetInGit(key: "color.diff.oldMovedAlternativeDimmed", value: "cyan dim");
+        SetIfUnsetInGit(key: "color.diff.newMovedAlternativeDimmed", value: "yellow dim");
+
+        // range-diff
+        if (command == "range-diff")
         {
-            // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt-diffwordRegex
-            // Set to "minimal" diff unless configured.
-            commandConfiguration.Add(new GitConfigItem("diff.wordRegex", "."), command);
+            SetIfUnsetInGit(key: "color.diff.contextBold", value: "normal");
+            SetIfUnsetInGit(key: "color.diff.oldBold", value: "red");
+            SetIfUnsetInGit(key: "color.diff.newBold", value: "green");
         }
 
         // Override Git default coloring to "theme" colors for those that are defined
@@ -70,6 +82,15 @@ public abstract class DiffHighlightService : TextHighlightService
         }
 
         return commandConfiguration;
+
+        void SetIfUnsetInGit(string key, string value)
+        {
+            // Note: Only check Windows, not WSL settings
+            if (string.IsNullOrEmpty(module.GetEffectiveSetting(key)))
+            {
+                commandConfiguration.Add(new GitConfigItem(key, value), command);
+            }
+        }
     }
 
     public override void AddTextHighlighting(IDocument document)
