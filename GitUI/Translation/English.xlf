@@ -3349,10 +3349,6 @@ Are you sure?</source>
         <source>Clone</source>
         <target />
       </trans-unit>
-      <trans-unit id="Central.Text">
-        <source>Central repository, no working directory  (--bare --shared=all)</source>
-        <target />
-      </trans-unit>
       <trans-unit id="CentralRepository.Text">
         <source>P&amp;ublic repository, no working directory  (--bare)</source>
         <target />
@@ -3367,10 +3363,6 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Clone</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Personal.Text">
-        <source>Personal repository</source>
         <target />
       </trans-unit>
       <trans-unit id="PersonalRepository.Text">
