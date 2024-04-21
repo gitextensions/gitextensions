@@ -6186,9 +6186,6 @@ Example:
 #Ignore thumbnails created by Windows
 Thumbs.db
 #Ignore files built by Visual Studio
-*.obj
-*.exe
-*.pdb
 *.user
 *.aps
 *.pch
@@ -6197,30 +6194,22 @@ Thumbs.db
 *_p.c
 *.ncb
 *.suo
-*.tlb
-*.tlh
 *.bak
 *.cache
 *.ilk
 *.log
 [Bb]in
 [Dd]ebug*/
-*.lib
 *.sbr
 obj/
 [Rr]elease*/
-_ReSharper*/
-[Tt]est[Rr]esult*
-.vs/
-.idea/
-#Nuget packages folder
-packages/</source>
+_ReSharper*/</source>
         <target>Укажите шаблоны файлов для игнорирования.
 
 Пример:
-#Ignore thumbnails created by Windows
+#ignore thumbnails created by windows
 Thumbs.db
-#Ignore files built by Visual Studio
+#ignore files build by Visual Studio
 *.obj
 *.exe
 *.pdb
@@ -6244,12 +6233,7 @@ Thumbs.db
 *.sbr
 obj/
 [Rr]elease*/
-_ReSharper*/
-[Tt]est[Rr]esult*
-.vs/
-.idea/
-#Nuget packages folder
-packages/</target>
+_ReSharper*/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
