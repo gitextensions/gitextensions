@@ -201,6 +201,7 @@ namespace GitCommands
                 result = result is null
                     ? itemResult
                     : new ExecutionResult(
+                        item.Argument,
                         result?.StandardOutput + itemResult.StandardOutput,
                         result?.StandardError + itemResult.StandardError,
                         result?.ExitCode is (> 0 or < 0) ? result?.ExitCode : itemResult.ExitCode);
@@ -293,6 +294,7 @@ namespace GitCommands
             if (cache?.TryGet(arguments, out byte[]? cachedOutput, out byte[]? cachedError) is true)
             {
                 return new ExecutionResult(
+                    arguments,
                     CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(cachedOutput, error: null, ref outputEncoding)),
                     CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(output: null, cachedError, ref outputEncoding)),
                     exitCode: 0);
@@ -364,6 +366,7 @@ namespace GitCommands
             }
 
             return new ExecutionResult(
+                arguments,
                 CleanString(stripAnsiEscapeCodes, output),
                 CleanString(stripAnsiEscapeCodes, error),
                 exitCode);
