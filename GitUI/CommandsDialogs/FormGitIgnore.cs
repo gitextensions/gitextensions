@@ -51,6 +51,7 @@ namespace GitUI.CommandsDialogs
             "_ReSharper*/",
             "[Tt]est[Rr]esult*",
             ".vs/",
+            ".idea/",
             "#Nuget packages folder",
             "packages/"
         };

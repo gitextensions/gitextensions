@@ -101,7 +101,7 @@
             DeleteLocalTrackingBranch.Name = "DeleteLocalTrackingBranch";
             DeleteLocalTrackingBranch.Size = new Size(284, 19);
             DeleteLocalTrackingBranch.TabIndex = 3;
-            DeleteLocalTrackingBranch.Text = "Delete local tracking branch (if available)";
+            DeleteLocalTrackingBranch.Text = "Delete &local tracking branch (if available)";
             DeleteLocalTrackingBranch.UseVisualStyleBackColor = true;
             DeleteLocalTrackingBranch.CheckedChanged += DeleteRemote_CheckedChanged;
             // 
