@@ -2130,7 +2130,7 @@ namespace GitCommands
                 return null;
             }
 
-            result.ThrowIfErrorExit(AppSettings.GitCommand, WorkingDir, "Error getting config value");
+            result.ThrowIfErrorExit("Error getting config value");
 
             return result.StandardOutput.Trim();
         }

@@ -15,6 +15,9 @@ namespace GitCommands
         private readonly Func<string> _fileNameProvider;
         private readonly string _prefixArguments;
 
+        public string WorkingDir => _workingDir;
+        public string Command => _fileNameProvider();
+
         public Executable(string fileName, string workingDir = "")
             : this(() => fileName, workingDir)
         {

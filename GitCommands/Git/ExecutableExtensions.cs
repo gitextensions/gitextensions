@@ -200,7 +200,7 @@ namespace GitCommands
                 ExecutionResult itemResult = executable.Execute(item.Argument, writeInput);
                 result = result is null
                     ? itemResult
-                    : new ExecutionResult(
+                    : new ExecutionResult(executable,
                         item.Argument,
                         result?.StandardOutput + itemResult.StandardOutput,
                         result?.StandardError + itemResult.StandardError,
@@ -294,6 +294,7 @@ namespace GitCommands
             if (cache?.TryGet(arguments, out byte[]? cachedOutput, out byte[]? cachedError) is true)
             {
                 return new ExecutionResult(
+                    executable,
                     arguments,
                     CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(cachedOutput, error: null, ref outputEncoding)),
                     CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(output: null, cachedError, ref outputEncoding)),
@@ -366,6 +367,7 @@ namespace GitCommands
             }
 
             return new ExecutionResult(
+                executable,
                 arguments,
                 CleanString(stripAnsiEscapeCodes, output),
                 CleanString(stripAnsiEscapeCodes, error),
