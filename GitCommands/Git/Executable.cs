@@ -27,6 +27,9 @@ namespace GitCommands
             _prefixArguments = prefixArguments;
         }
 
+        public string WorkingDir => _workingDir;
+        public string Command => _fileNameProvider();
+
         public IProcess Start(ArgumentString arguments = default,
                               bool createWindow = false,
                               bool redirectInput = false,

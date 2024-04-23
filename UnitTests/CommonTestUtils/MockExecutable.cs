@@ -14,6 +14,9 @@ namespace CommonTestUtils
         private readonly List<MockProcess> _processes = [];
         private int _nextCommandId;
 
+        public string Command => "mock-git.exe";
+        public string WorkingDir => ".";
+
         public IDisposable StageOutput(string arguments, string output, int? exitCode = 0, string? error = null)
         {
             ConcurrentStack<(string output, int? exitCode, string? error)> stack = _outputStackByArguments.GetOrAdd(

@@ -2125,12 +2125,14 @@ namespace GitCommands
 
             // Handle no value set, is error code 1: https://git-scm.com/docs/git-config#_description
             const int ConfigKeyInvalidOrNotSet = 1;
-            return result.ExitCode switch
+            if (result.ExitCode == ConfigKeyInvalidOrNotSet)
             {
-                ExecutionResult.Success => result.StandardOutput.Trim(),
-                ConfigKeyInvalidOrNotSet => null,
-                _ => throw new ExternalOperationException("git", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException("Error getting config value"))
-            };
+                return null;
+            }
+
+            result.ThrowIfErrorExit("Error getting config value");
+
+            return result.StandardOutput.Trim();
         }
 
         public string? GetEffectiveGitSetting(string setting, bool cache = false)
