@@ -15,9 +15,6 @@ namespace GitCommands
         private readonly Func<string> _fileNameProvider;
         private readonly string _prefixArguments;
 
-        public string WorkingDir => _workingDir;
-        public string Command => _fileNameProvider();
-
         public Executable(string fileName, string workingDir = "")
             : this(() => fileName, workingDir)
         {
@@ -29,6 +26,9 @@ namespace GitCommands
             _fileNameProvider = fileNameProvider;
             _prefixArguments = prefixArguments;
         }
+
+        public string WorkingDir => _workingDir;
+        public string Command => _fileNameProvider();
 
         public IProcess Start(ArgumentString arguments = default,
                               bool createWindow = false,
