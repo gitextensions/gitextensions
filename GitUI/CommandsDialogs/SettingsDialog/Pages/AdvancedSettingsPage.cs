@@ -64,5 +64,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
         }
+
+        private void chkConsoleEmulator_InfoClicked(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser("https://git-extensions-documentation.readthedocs.io/settings.html#general-use-console-emulator-for-console-output-in-command-dialogs");
+        private void chkAutoNormaliseBranchName_InfoClicked(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser("https://git-extensions-documentation.readthedocs.io/settings.html#general-auto-normalise-branch-name");
+        private void chkCheckForRCVersions_InfoClicked(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser("https://git-extensions-documentation.readthedocs.io/settings.html#updates-check-for-release-candidate-versions");
     }
 }

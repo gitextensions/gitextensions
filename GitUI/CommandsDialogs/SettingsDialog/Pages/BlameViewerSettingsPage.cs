@@ -51,6 +51,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.PageToSettings();
         }
 
+        private void cbDetectMoveAndCopyInThisFile_InfoClicked(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser("https://git-extensions-documentation.readthedocs.io/settings.html#blame-viewer-blame-settings-detect-move-and-copy-in-this-file");
+        private void cbDetectMoveAndCopyInAllFiles_InfoClicked(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser("https://git-extensions-documentation.readthedocs.io/settings.html#blame-viewer-blame-settings-detect-move-and-copy-in-all-files");
+
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(BlameViewerSettingsPage));

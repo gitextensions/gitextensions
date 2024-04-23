@@ -1,4 +1,5 @@
-﻿using GitUI.UserControls.Settings;
+﻿using GitCommands;
+using GitUI.UserControls.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -104,6 +105,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbDetectMoveAndCopyInThisFile.Text = "Detect moved or copied lines within blamed file";
             cbDetectMoveAndCopyInThisFile.ToolTipText = null;
             cbDetectMoveAndCopyInThisFile.ToolTipIcon = UserControls.Settings.ToolTipIcon.Warning;
+            cbDetectMoveAndCopyInThisFile.InfoClicked += cbDetectMoveAndCopyInThisFile_InfoClicked;
             // 
             // cbDetectMoveAndCopyInAllFiles
             // 
@@ -119,6 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbDetectMoveAndCopyInAllFiles.Text = "Detect moved or copied lines from all files in same commit";
             cbDetectMoveAndCopyInAllFiles.ToolTipText = null;
             cbDetectMoveAndCopyInAllFiles.ToolTipIcon = UserControls.Settings.ToolTipIcon.Warning;
+            cbDetectMoveAndCopyInAllFiles.InfoClicked += cbDetectMoveAndCopyInAllFiles_InfoClicked;
             // 
             // groupBoxDisplayResult
             // 

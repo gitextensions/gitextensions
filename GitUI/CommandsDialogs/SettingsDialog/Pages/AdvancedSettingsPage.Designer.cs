@@ -1,4 +1,7 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitCommands;
+using GitUI.UserControls.Settings;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class AdvancedSettingsPage
     {
@@ -142,6 +145,7 @@
             chkCheckForRCVersions.TabIndex = 3;
             chkCheckForRCVersions.Text = "Check for release candidate versions";
             chkCheckForRCVersions.ToolTipText = resources.GetString("chkCheckForRCVersions.ToolTip");
+            chkCheckForRCVersions.InfoClicked += chkCheckForRCVersions_InfoClicked;
             // 
             // grpCommit
             // 
@@ -309,6 +313,7 @@
             chkConsoleEmulator.TabIndex = 3;
             chkConsoleEmulator.Text = "Use Console Emulator for console output in command dialogs";
             chkConsoleEmulator.ToolTipText = resources.GetString("chkConsoleEmulator.ToolTip");
+            chkConsoleEmulator.InfoClicked += chkConsoleEmulator_InfoClicked;
             // 
             // tableLayoutPanel4
             // 
@@ -345,6 +350,7 @@
                 " naming rules.\r\nIf enabled, any illegal symbols will be replaced with the replac" +
                 "ement symbol of your choice.";
             chkAutoNormaliseBranchName.CheckedChanged += chkAutoNormaliseBranchName_CheckedChanged;
+            chkAutoNormaliseBranchName.InfoClicked += chkAutoNormaliseBranchName_InfoClicked;
             // 
             // label1
             // 
@@ -412,9 +418,9 @@
         private CheckBox chkAlwaysShowCheckoutDlg;
         private CheckBox chkUseLocalChangesAction;
         private CheckBox chkAlwaysShowAdvOpt;
-        private GitUI.UserControls.Settings.SettingsCheckBox chkConsoleEmulator;
+        private SettingsCheckBox chkConsoleEmulator;
         private TableLayoutPanel tableLayoutPanel4;
-        private GitUI.UserControls.Settings.SettingsCheckBox chkAutoNormaliseBranchName;
+        private SettingsCheckBox chkAutoNormaliseBranchName;
         private Label label1;
         private ComboBox cboAutoNormaliseSymbol;
         private GroupBox grpCommit;
@@ -423,6 +429,6 @@
         private GroupBox grpUpdates;
         private TableLayoutPanel tableLayoutPanel6;
         private CheckBox chkCheckForUpdates;
-        private GitUI.UserControls.Settings.SettingsCheckBox chkCheckForRCVersions;
+        private SettingsCheckBox chkCheckForRCVersions;
     }
 }
