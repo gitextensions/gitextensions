@@ -75,7 +75,7 @@ namespace ResourceManager.Xliff
                 if (field.IsPublic && !field.IsInitOnly)
                 {
                     // if public AND modifiable (NOT readonly)
-                    Trace.WriteLine(string.Format("Skip field {0}.{1} [{2}]", obj.GetType().Name, field.Name, field.GetValue(obj)), "Translation");
+                    Debug.WriteLine(string.Format("Skip field {0}.{1} [{2}]", obj.GetType().Name, field.Name, field.GetValue(obj)), "Translation");
                     continue;
                 }
 
