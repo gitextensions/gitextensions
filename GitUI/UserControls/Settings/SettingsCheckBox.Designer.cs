@@ -32,7 +32,7 @@
             checkBox = new CheckBox();
             pictureBox = new PictureBox();
             tableLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel
@@ -66,6 +66,7 @@
             // 
             // pictureBox
             // 
+            pictureBox.Cursor = Cursors.Hand;
             pictureBox.Image = Properties.Resources.information;
             pictureBox.Location = new Point(88, 0);
             pictureBox.Margin = new Padding(2, 0, 0, 0);
@@ -86,10 +87,9 @@
             Size = new Size(104, 17);
             tableLayoutPanel.ResumeLayout(false);
             tableLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(pictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
