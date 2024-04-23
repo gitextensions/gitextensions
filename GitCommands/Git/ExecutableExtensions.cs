@@ -200,7 +200,8 @@ namespace GitCommands
                 ExecutionResult itemResult = executable.Execute(item.Argument, writeInput);
                 result = result is null
                     ? itemResult
-                    : new ExecutionResult(executable,
+                    : new ExecutionResult(
+                        executable,
                         item.Argument,
                         result?.StandardOutput + itemResult.StandardOutput,
                         result?.StandardError + itemResult.StandardError,
