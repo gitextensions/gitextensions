@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
+using GitCommands;
 
 namespace GitUI.UserControls.Settings
 {
     public partial class SettingsCheckBox : UserControl
     {
+        private string? _helpTopic;
         private string? _toolTipText;
         private ToolTipIcon _toolTipIcon;
         private ToolTip? _tooltip;
@@ -11,12 +13,32 @@ namespace GitUI.UserControls.Settings
         public SettingsCheckBox()
         {
             InitializeComponent();
+
+            pictureBox.Click += (_, _) =>
+            {
+                if (HelpTopic is null)
+                {
+                    return;
+                }
+
+                OsShellUtil.OpenUrlInDefaultBrowser($"https://git-extensions-documentation.readthedocs.io/settings.html#{HelpTopic}");
+            };
         }
 
         public bool Checked
         {
             get => checkBox.Checked;
             set => checkBox.Checked = value;
+        }
+
+        public string? HelpTopic
+        {
+            get => _helpTopic;
+            set
+            {
+                _helpTopic = value;
+                pictureBox.Cursor = _helpTopic is null ? Cursors.Default : Cursors.Hand;
+            }
         }
 
         [EditorBrowsable(EditorBrowsableState.Always)]

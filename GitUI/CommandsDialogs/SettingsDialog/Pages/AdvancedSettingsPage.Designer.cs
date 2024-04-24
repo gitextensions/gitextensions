@@ -1,5 +1,4 @@
-﻿using GitCommands;
-using GitUI.UserControls.Settings;
+﻿using GitUI.UserControls.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -139,13 +138,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             chkCheckForRCVersions.AutoSize = true;
             chkCheckForRCVersions.Dock = DockStyle.Fill;
+            chkCheckForRCVersions.HelpTopic = "updates-check-for-release-candidate-versions";
             chkCheckForRCVersions.Location = new Point(3, 28);
             chkCheckForRCVersions.Name = "chkCheckForRCVersions";
             chkCheckForRCVersions.Size = new Size(1426, 19);
             chkCheckForRCVersions.TabIndex = 3;
             chkCheckForRCVersions.Text = "Check for release candidate versions";
             chkCheckForRCVersions.ToolTipText = resources.GetString("chkCheckForRCVersions.ToolTip");
-            chkCheckForRCVersions.InfoClicked += chkCheckForRCVersions_InfoClicked;
             // 
             // grpCommit
             // 
@@ -307,13 +306,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             chkConsoleEmulator.AutoSize = true;
             chkConsoleEmulator.Dock = DockStyle.Fill;
+            chkConsoleEmulator.HelpTopic = "general-use-console-emulator-for-console-output-in-command-dialogs";
             chkConsoleEmulator.Location = new Point(3, 72);
             chkConsoleEmulator.Name = "chkConsoleEmulator";
             chkConsoleEmulator.Size = new Size(1572, 17);
             chkConsoleEmulator.TabIndex = 3;
             chkConsoleEmulator.Text = "Use Console Emulator for console output in command dialogs";
             chkConsoleEmulator.ToolTipText = resources.GetString("chkConsoleEmulator.ToolTip");
-            chkConsoleEmulator.InfoClicked += chkConsoleEmulator_InfoClicked;
             // 
             // tableLayoutPanel4
             // 
@@ -340,6 +339,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkAutoNormaliseBranchName.AutoSize = true;
             tableLayoutPanel4.SetColumnSpan(chkAutoNormaliseBranchName, 2);
             chkAutoNormaliseBranchName.Dock = DockStyle.Fill;
+            chkAutoNormaliseBranchName.HelpTopic = "general-auto-normalise-branch-name";
             chkAutoNormaliseBranchName.Location = new Point(3, 3);
             chkAutoNormaliseBranchName.Name = "chkAutoNormaliseBranchName";
             chkAutoNormaliseBranchName.Size = new Size(1572, 17);
@@ -350,7 +350,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 " naming rules.\r\nIf enabled, any illegal symbols will be replaced with the replac" +
                 "ement symbol of your choice.";
             chkAutoNormaliseBranchName.CheckedChanged += chkAutoNormaliseBranchName_CheckedChanged;
-            chkAutoNormaliseBranchName.InfoClicked += chkAutoNormaliseBranchName_InfoClicked;
             // 
             // label1
             // 
