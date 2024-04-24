@@ -5,7 +5,6 @@ namespace GitUI.UserControls.Settings
 {
     public partial class SettingsCheckBox : UserControl
     {
-        private string? _helpTopic;
         private string? _toolTipText;
         private ToolTipIcon _toolTipIcon;
         private ToolTip? _tooltip;
@@ -16,12 +15,18 @@ namespace GitUI.UserControls.Settings
 
             pictureBox.Click += (_, _) =>
             {
-                if (HelpTopic is null)
+                if (string.IsNullOrWhiteSpace(ManualSectionAnchorName))
                 {
                     return;
                 }
 
-                OsShellUtil.OpenUrlInDefaultBrowser($"https://git-extensions-documentation.readthedocs.io/settings.html#{HelpTopic}");
+                if (string.IsNullOrWhiteSpace(ManualSectionSubfolder))
+                {
+                    ManualSectionSubfolder = "settings";
+                }
+
+                string url = UserManual.UserManual.UrlFor(ManualSectionSubfolder, ManualSectionAnchorName);
+                OsShellUtil.OpenUrlInDefaultBrowser(url);
             };
         }
 
@@ -31,15 +36,24 @@ namespace GitUI.UserControls.Settings
             set => checkBox.Checked = value;
         }
 
-        public string? HelpTopic
-        {
-            get => _helpTopic;
-            set
-            {
-                _helpTopic = value;
-                pictureBox.Cursor = _helpTopic is null ? Cursors.Default : Cursors.Hand;
-            }
-        }
+        /// <summary>
+        /// Gets or sets the anchor pointing to a section in the manual pertaining to this control.
+        /// </summary>
+        /// <remarks>
+        /// The URL structure:
+        /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
+        /// </remarks>
+        public string? ManualSectionAnchorName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of a document pertaining to this control.
+        /// Default is "settings
+        /// </summary>
+        /// <remarks>
+        /// The URL structure:
+        /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
+        /// </remarks>
+        public string? ManualSectionSubfolder { get; set; }
 
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]

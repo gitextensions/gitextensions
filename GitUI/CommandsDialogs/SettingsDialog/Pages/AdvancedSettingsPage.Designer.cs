@@ -138,8 +138,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             chkCheckForRCVersions.AutoSize = true;
             chkCheckForRCVersions.Dock = DockStyle.Fill;
-            chkCheckForRCVersions.HelpTopic = "updates-check-for-release-candidate-versions";
             chkCheckForRCVersions.Location = new Point(3, 28);
+            chkCheckForRCVersions.ManualSectionAnchorName = "updates-check-for-release-candidate-versions";
             chkCheckForRCVersions.Name = "chkCheckForRCVersions";
             chkCheckForRCVersions.Size = new Size(1426, 19);
             chkCheckForRCVersions.TabIndex = 3;
@@ -306,8 +306,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             chkConsoleEmulator.AutoSize = true;
             chkConsoleEmulator.Dock = DockStyle.Fill;
-            chkConsoleEmulator.HelpTopic = "general-use-console-emulator-for-console-output-in-command-dialogs";
             chkConsoleEmulator.Location = new Point(3, 72);
+            chkConsoleEmulator.ManualSectionAnchorName = "general-use-console-emulator-for-console-output-in-command-dialogs";
             chkConsoleEmulator.Name = "chkConsoleEmulator";
             chkConsoleEmulator.Size = new Size(1572, 17);
             chkConsoleEmulator.TabIndex = 3;
@@ -339,8 +339,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkAutoNormaliseBranchName.AutoSize = true;
             tableLayoutPanel4.SetColumnSpan(chkAutoNormaliseBranchName, 2);
             chkAutoNormaliseBranchName.Dock = DockStyle.Fill;
-            chkAutoNormaliseBranchName.HelpTopic = "general-auto-normalise-branch-name";
             chkAutoNormaliseBranchName.Location = new Point(3, 3);
+            chkAutoNormaliseBranchName.ManualSectionAnchorName = "general-auto-normalise-branch-name";
             chkAutoNormaliseBranchName.Name = "chkAutoNormaliseBranchName";
             chkAutoNormaliseBranchName.Size = new Size(1572, 17);
             chkAutoNormaliseBranchName.TabIndex = 0;
