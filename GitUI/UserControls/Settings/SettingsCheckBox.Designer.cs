@@ -66,6 +66,7 @@
             // 
             // pictureBox
             // 
+            pictureBox.Cursor = Cursors.Hand;
             pictureBox.Image = Properties.Resources.information;
             pictureBox.Location = new Point(88, 0);
             pictureBox.Margin = new Padding(2, 0, 0, 0);

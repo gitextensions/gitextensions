@@ -98,13 +98,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbDetectMoveAndCopyInThisFile.Dock = DockStyle.Fill;
             cbDetectMoveAndCopyInThisFile.Location = new Point(3, 28);
             cbDetectMoveAndCopyInThisFile.Margin = new Padding(3, 3, 3, 3);
+            cbDetectMoveAndCopyInThisFile.ManualSectionAnchorName = "blame-viewer-blame-settings-detect-move-and-copy-in-this-file";
             cbDetectMoveAndCopyInThisFile.Name = "cbDetectMoveAndCopyInThisFile";
             cbDetectMoveAndCopyInThisFile.Size = new Size(297, 19);
             cbDetectMoveAndCopyInThisFile.TabIndex = 1;
             cbDetectMoveAndCopyInThisFile.Text = "Detect moved or copied lines within blamed file";
             cbDetectMoveAndCopyInThisFile.ToolTipText = null;
             cbDetectMoveAndCopyInThisFile.ToolTipIcon = UserControls.Settings.ToolTipIcon.Warning;
-            cbDetectMoveAndCopyInThisFile.InfoClicked += cbDetectMoveAndCopyInThisFile_InfoClicked;
             // 
             // cbDetectMoveAndCopyInAllFiles
             // 
@@ -114,13 +114,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbDetectMoveAndCopyInAllFiles.Dock = DockStyle.Fill;
             cbDetectMoveAndCopyInAllFiles.Location = new Point(3, 53);
             cbDetectMoveAndCopyInAllFiles.Margin = new Padding(3, 3, 3, 3);
+            cbDetectMoveAndCopyInAllFiles.ManualSectionAnchorName = "blame-viewer-blame-settings-detect-move-and-copy-in-all-files";
             cbDetectMoveAndCopyInAllFiles.Name = "cbDetectMoveAndCopyInAllFiles";
             cbDetectMoveAndCopyInAllFiles.Size = new Size(297, 19);
             cbDetectMoveAndCopyInAllFiles.TabIndex = 2;
             cbDetectMoveAndCopyInAllFiles.Text = "Detect moved or copied lines from all files in same commit";
             cbDetectMoveAndCopyInAllFiles.ToolTipText = null;
             cbDetectMoveAndCopyInAllFiles.ToolTipIcon = UserControls.Settings.ToolTipIcon.Warning;
-            cbDetectMoveAndCopyInAllFiles.InfoClicked += cbDetectMoveAndCopyInAllFiles_InfoClicked;
             // 
             // groupBoxDisplayResult
             // 

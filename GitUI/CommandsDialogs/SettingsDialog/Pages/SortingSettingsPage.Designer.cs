@@ -164,11 +164,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             RevisionSortOrderHelp.Image = Properties.Resources.information;
             RevisionSortOrderHelp.Location = new Point(448, 5);
             RevisionSortOrderHelp.Margin = new Padding(3, 5, 3, 3);
+            RevisionSortOrderHelp.ManualSectionAnchorName = "sorting-sort-author-date";
             RevisionSortOrderHelp.Name = "RevisionSortOrderHelp";
             RevisionSortOrderHelp.Size = new Size(16, 16);
             RevisionSortOrderHelp.SizeMode = PictureBoxSizeMode.AutoSize;
             RevisionSortOrderHelp.TabStop = false;
-            RevisionSortOrderHelp.Click += RevisionSortOrderHelp_Click;
             // 
             // PrioBranchNamesHelp
             // 
@@ -176,11 +176,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             PrioBranchNamesHelp.Image = Properties.Resources.information;
             PrioBranchNamesHelp.Location = new Point(448, 92);
             PrioBranchNamesHelp.Margin = new Padding(3, 5, 3, 3);
+            PrioBranchNamesHelp.ManualSectionAnchorName = "sorting-sort-prioritized-branches";
             PrioBranchNamesHelp.Name = "PrioBranchNamesHelp";
             PrioBranchNamesHelp.Size = new Size(16, 16);
             PrioBranchNamesHelp.SizeMode = PictureBoxSizeMode.AutoSize;
             PrioBranchNamesHelp.TabStop = false;
-            PrioBranchNamesHelp.Click += PrioBranchNamesHelp_Click;
             // 
             // PrioRemoteNamesHelp
             // 
@@ -188,11 +188,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             PrioRemoteNamesHelp.Image = Properties.Resources.information;
             PrioRemoteNamesHelp.Location = new Point(448, 121);
             PrioRemoteNamesHelp.Margin = new Padding(3, 5, 3, 3);
+            PrioRemoteNamesHelp.ManualSectionAnchorName = "sorting-sort-prioritized-remotes";
             PrioRemoteNamesHelp.Name = "PrioRemoteNamesHelp";
             PrioRemoteNamesHelp.Size = new Size(16, 16);
             PrioRemoteNamesHelp.SizeMode = PictureBoxSizeMode.AutoSize;
             PrioRemoteNamesHelp.TabStop = false;
-            PrioRemoteNamesHelp.Click += PrioRemoteNamesHelp_Click;
             // 
             // lblBranchesOrder
             // 
