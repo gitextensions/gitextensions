@@ -242,12 +242,12 @@
             menuHelp.Image = Properties.Resources.information;
             menuHelp.Location = new Point(240, 50);
             menuHelp.Margin = new Padding(0, 5, 3, 3);
-            menuHelp.ManualSectionAnchorName = "shell-extension";
             menuHelp.Name = "menuHelp";
             menuHelp.Size = new Size(16, 16);
             menuHelp.SizeMode = PictureBoxSizeMode.AutoSize;
             menuHelp.TabIndex = 13;
             menuHelp.TabStop = false;
+            menuHelp.Click += menuHelp_Click;
             // 
             // label1
             // 
