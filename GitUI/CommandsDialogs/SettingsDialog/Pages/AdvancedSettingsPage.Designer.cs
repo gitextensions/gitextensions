@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitUI.UserControls.Settings;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class AdvancedSettingsPage
     {
@@ -137,6 +139,7 @@
             chkCheckForRCVersions.AutoSize = true;
             chkCheckForRCVersions.Dock = DockStyle.Fill;
             chkCheckForRCVersions.Location = new Point(3, 28);
+            chkCheckForRCVersions.ManualSectionAnchorName = "updates-check-for-release-candidate-versions";
             chkCheckForRCVersions.Name = "chkCheckForRCVersions";
             chkCheckForRCVersions.Size = new Size(1426, 19);
             chkCheckForRCVersions.TabIndex = 3;
@@ -304,6 +307,7 @@
             chkConsoleEmulator.AutoSize = true;
             chkConsoleEmulator.Dock = DockStyle.Fill;
             chkConsoleEmulator.Location = new Point(3, 72);
+            chkConsoleEmulator.ManualSectionAnchorName = "general-use-console-emulator-for-console-output-in-command-dialogs";
             chkConsoleEmulator.Name = "chkConsoleEmulator";
             chkConsoleEmulator.Size = new Size(1572, 17);
             chkConsoleEmulator.TabIndex = 3;
@@ -336,6 +340,7 @@
             tableLayoutPanel4.SetColumnSpan(chkAutoNormaliseBranchName, 2);
             chkAutoNormaliseBranchName.Dock = DockStyle.Fill;
             chkAutoNormaliseBranchName.Location = new Point(3, 3);
+            chkAutoNormaliseBranchName.ManualSectionAnchorName = "general-auto-normalise-branch-name";
             chkAutoNormaliseBranchName.Name = "chkAutoNormaliseBranchName";
             chkAutoNormaliseBranchName.Size = new Size(1572, 17);
             chkAutoNormaliseBranchName.TabIndex = 0;
@@ -412,9 +417,9 @@
         private CheckBox chkAlwaysShowCheckoutDlg;
         private CheckBox chkUseLocalChangesAction;
         private CheckBox chkAlwaysShowAdvOpt;
-        private GitUI.UserControls.Settings.SettingsCheckBox chkConsoleEmulator;
+        private SettingsCheckBox chkConsoleEmulator;
         private TableLayoutPanel tableLayoutPanel4;
-        private GitUI.UserControls.Settings.SettingsCheckBox chkAutoNormaliseBranchName;
+        private SettingsCheckBox chkAutoNormaliseBranchName;
         private Label label1;
         private ComboBox cboAutoNormaliseSymbol;
         private GroupBox grpCommit;
@@ -423,6 +428,6 @@
         private GroupBox grpUpdates;
         private TableLayoutPanel tableLayoutPanel6;
         private CheckBox chkCheckForUpdates;
-        private GitUI.UserControls.Settings.SettingsCheckBox chkCheckForRCVersions;
+        private SettingsCheckBox chkCheckForRCVersions;
     }
 }

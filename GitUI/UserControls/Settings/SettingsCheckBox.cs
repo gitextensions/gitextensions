@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using GitCommands;
 
 namespace GitUI.UserControls.Settings
 {
@@ -11,6 +12,22 @@ namespace GitUI.UserControls.Settings
         public SettingsCheckBox()
         {
             InitializeComponent();
+
+            pictureBox.Click += (_, _) =>
+            {
+                if (string.IsNullOrWhiteSpace(ManualSectionAnchorName))
+                {
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(ManualSectionSubfolder))
+                {
+                    ManualSectionSubfolder = "settings";
+                }
+
+                string url = UserManual.UserManual.UrlFor(ManualSectionSubfolder, ManualSectionAnchorName);
+                OsShellUtil.OpenUrlInDefaultBrowser(url);
+            };
         }
 
         public bool Checked
@@ -18,6 +35,25 @@ namespace GitUI.UserControls.Settings
             get => checkBox.Checked;
             set => checkBox.Checked = value;
         }
+
+        /// <summary>
+        /// Gets or sets the anchor pointing to a section in the manual pertaining to this control.
+        /// </summary>
+        /// <remarks>
+        /// The URL structure:
+        /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
+        /// </remarks>
+        public string? ManualSectionAnchorName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of a document pertaining to this control.
+        /// Default is "settings
+        /// </summary>
+        /// <remarks>
+        /// The URL structure:
+        /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
+        /// </remarks>
+        public string? ManualSectionSubfolder { get; set; }
 
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]

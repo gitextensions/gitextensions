@@ -8,8 +8,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
-        private const string _customAvatarTemplateURL = "https://git-extensions-documentation.readthedocs.io/settings.html#git-extensions-appearance-author-images-avatar-provider";
-        private const string _gravatarDefaultImageURL = "https://git-extensions-documentation.readthedocs.io/settings.html#git-extensions-appearance-author-images-avatar-fallback";
         private const string _spellingWikiURL = "https://github.com/gitextensions/gitextensions/wiki/Spelling";
         private const string _translationsWikiURL = "https://github.com/gitextensions/gitextensions/wiki/Translations";
 
@@ -209,14 +207,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         }
 
         private void pictureAvatarHelp_Click(object sender, EventArgs e)
-        {
-            OsShellUtil.OpenUrlInDefaultBrowser(_gravatarDefaultImageURL);
-        }
+             => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "author-images-avatar-fallback"));
 
         private void customAvatarHelp_Click(object sender, EventArgs e)
-        {
-            OsShellUtil.OpenUrlInDefaultBrowser(_customAvatarTemplateURL);
-        }
+            => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "author-images-avatar-provider"));
 
         private void AvatarProvider_SelectedIndexChanged(object sender, EventArgs e)
         {

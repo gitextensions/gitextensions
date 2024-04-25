@@ -79,6 +79,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.PageToSettings();
         }
 
+        private void RevisionSortOrderHelp_Click(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-author-date"));
+        private void PrioBranchNamesHelp_Click(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-prioritized-branches"));
+        private void PrioRemoteNamesHelp_Click(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-prioritized-remotes"));
+
         private class ComboBoxItem<T>
         {
             public string Text { get; }

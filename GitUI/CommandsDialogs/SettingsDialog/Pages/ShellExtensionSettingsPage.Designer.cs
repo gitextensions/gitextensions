@@ -247,6 +247,7 @@
             menuHelp.SizeMode = PictureBoxSizeMode.AutoSize;
             menuHelp.TabIndex = 13;
             menuHelp.TabStop = false;
+            menuHelp.Click += menuHelp_Click;
             // 
             // label1
             // 

@@ -157,5 +157,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     break;
             }
         }
+
+        private void menuHelp_Click(object sender, EventArgs e)
+            => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "shell-extension"));
     }
 }

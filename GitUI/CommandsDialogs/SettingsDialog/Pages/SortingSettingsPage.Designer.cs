@@ -168,6 +168,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             RevisionSortOrderHelp.Size = new Size(16, 16);
             RevisionSortOrderHelp.SizeMode = PictureBoxSizeMode.AutoSize;
             RevisionSortOrderHelp.TabStop = false;
+            RevisionSortOrderHelp.Click += RevisionSortOrderHelp_Click;
             // 
             // PrioBranchNamesHelp
             // 
@@ -179,6 +180,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             PrioBranchNamesHelp.Size = new Size(16, 16);
             PrioBranchNamesHelp.SizeMode = PictureBoxSizeMode.AutoSize;
             PrioBranchNamesHelp.TabStop = false;
+            PrioBranchNamesHelp.Click += PrioBranchNamesHelp_Click;
             // 
             // PrioRemoteNamesHelp
             // 
@@ -190,6 +192,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             PrioRemoteNamesHelp.Size = new Size(16, 16);
             PrioRemoteNamesHelp.SizeMode = PictureBoxSizeMode.AutoSize;
             PrioRemoteNamesHelp.TabStop = false;
+            PrioRemoteNamesHelp.Click += PrioRemoteNamesHelp_Click;
             // 
             // lblBranchesOrder
             // 

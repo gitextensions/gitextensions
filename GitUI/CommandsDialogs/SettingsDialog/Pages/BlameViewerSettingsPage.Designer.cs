@@ -98,6 +98,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbDetectMoveAndCopyInThisFile.Dock = DockStyle.Fill;
             cbDetectMoveAndCopyInThisFile.Location = new Point(3, 28);
             cbDetectMoveAndCopyInThisFile.Margin = new Padding(3, 3, 3, 3);
+            cbDetectMoveAndCopyInThisFile.ManualSectionAnchorName = "blame-viewer-blame-settings-detect-move-and-copy-in-this-file";
             cbDetectMoveAndCopyInThisFile.Name = "cbDetectMoveAndCopyInThisFile";
             cbDetectMoveAndCopyInThisFile.Size = new Size(297, 19);
             cbDetectMoveAndCopyInThisFile.TabIndex = 1;
@@ -113,6 +114,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbDetectMoveAndCopyInAllFiles.Dock = DockStyle.Fill;
             cbDetectMoveAndCopyInAllFiles.Location = new Point(3, 53);
             cbDetectMoveAndCopyInAllFiles.Margin = new Padding(3, 3, 3, 3);
+            cbDetectMoveAndCopyInAllFiles.ManualSectionAnchorName = "blame-viewer-blame-settings-detect-move-and-copy-in-all-files";
             cbDetectMoveAndCopyInAllFiles.Name = "cbDetectMoveAndCopyInAllFiles";
             cbDetectMoveAndCopyInAllFiles.Size = new Size(297, 19);
             cbDetectMoveAndCopyInAllFiles.TabIndex = 2;
