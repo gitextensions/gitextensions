@@ -135,11 +135,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkRememberDiffAppearancePreference.Checked = false;
             chkRememberDiffAppearancePreference.Dock = DockStyle.Fill;
             chkRememberDiffAppearancePreference.Location = new Point(3, 53);
+            chkRememberDiffAppearancePreference.ManualSectionAnchorName = "diff-appearance";
             chkRememberDiffAppearancePreference.Name = "chkRememberDiffAppearancePreference";
             chkRememberDiffAppearancePreference.Size = new Size(325, 19);
             chkRememberDiffAppearancePreference.Text = "Remember the 'Diff appearance' preference";
             chkRememberDiffAppearancePreference.ToolTipText = "Diff appearance: patch (default), Git word-diff or Difftastic.";
-            chkRememberDiffAppearancePreference.InfoClicked += diffAppearanceHelp_Click;
             // 
             // chkRememberNumberOfContextLines
             // 
@@ -198,6 +198,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowDiffForAllParents.Checked = false;
             chkShowDiffForAllParents.Dock = DockStyle.Fill;
             chkShowDiffForAllParents.Location = new Point(3, 203);
+            chkShowDiffForAllParents.ManualSectionAnchorName = "general-show-file-differences-for-all-parents-in-browse-dialog";
             chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
             chkShowDiffForAllParents.Size = new Size(325, 19);
             chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog";
@@ -210,6 +211,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowAllCustomDiffTools.Checked = false;
             chkShowAllCustomDiffTools.Dock = DockStyle.Fill;
             chkShowAllCustomDiffTools.Location = new Point(3, 228);
+            chkShowAllCustomDiffTools.ManualSectionAnchorName = "general-show-all-available-difftools";
             chkShowAllCustomDiffTools.Name = "chkShowAllCustomDiffTools";
             chkShowAllCustomDiffTools.Size = new Size(325, 19);
             chkShowAllCustomDiffTools.Text = "Show all available difftools";
@@ -241,18 +243,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             0,
             0});
             // 
-            // chkShowAllCustomDiffTools
-            // 
-            chkShowAllCustomDiffTools.AutoSize = true;
-            chkShowAllCustomDiffTools.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            chkShowAllCustomDiffTools.Checked = false;
-            chkShowAllCustomDiffTools.Dock = DockStyle.Fill;
-            chkShowAllCustomDiffTools.Location = new Point(3, 228);
-            chkShowAllCustomDiffTools.Name = "chkShowAllCustomDiffTools";
-            chkShowAllCustomDiffTools.Size = new Size(325, 19);
-            chkShowAllCustomDiffTools.Text = "Show all available difftools";
-            chkShowAllCustomDiffTools.ToolTipText = "Show all configured difftools in a dropdown.\nThe primary difftool can still be selected by clicking the main menu entry.";
-            // 
             // chkUseGitColoring
             // 
             chkUseGitColoring.AutoSize = true;
@@ -260,13 +250,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseGitColoring.Checked = false;
             chkUseGitColoring.Dock = DockStyle.Fill;
             chkUseGitColoring.Location = new Point(3, 3);
+            chkUseGitColoring.ManualSectionAnchorName = "diff-coloring-git-coloring";
             chkUseGitColoring.Name = "chkUseGitColoring";
             chkUseGitColoring.Size = new Size(183, 19);
             chkUseGitColoring.TabIndex = 1;
             chkUseGitColoring.Text = "Git coloring";
             chkUseGitColoring.ToolTipText = "Use Git coloring engine to show moved code etc.\n";
             chkUseGitColoring.CheckedChanged += chkUseGitColoring_CheckedChanged;
-            chkUseGitColoring.InfoClicked += chkUseGitColoring_InfoClicked;
             // 
             // chkUseGEThemeGitColoring
             // 
@@ -275,12 +265,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseGEThemeGitColoring.Checked = false;
             chkUseGEThemeGitColoring.Dock = DockStyle.Fill;
             chkUseGEThemeGitColoring.Location = new Point(3, 28);
+            chkUseGEThemeGitColoring.ManualSectionAnchorName = "diff-coloring-use-theme-coloring";
             chkUseGEThemeGitColoring.Name = "chkUseGEThemeGitColoring";
             chkUseGEThemeGitColoring.Size = new Size(183, 19);
             chkUseGEThemeGitColoring.TabIndex = 2;
             chkUseGEThemeGitColoring.Text = "Use theme coloring";
             chkUseGEThemeGitColoring.ToolTipText = "Apply Git theme colors (with inverse backround) instead of Git default colors.";
-            chkUseGEThemeGitColoring.InfoClicked += chkUseGitColoring_InfoClicked;
             // 
             // tlpnlDiffColoring
             // 

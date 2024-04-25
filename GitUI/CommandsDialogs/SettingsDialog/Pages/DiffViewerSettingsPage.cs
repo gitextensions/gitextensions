@@ -4,9 +4,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class DiffViewerSettingsPage : SettingsPageWithHeader
     {
-        private const string _diffAppearanceURL = "https://git-extensions-documentation.readthedocs.io/settings.html#diff-appearance";
-        private const string _useGitColoringURL = "https://git-extensions-documentation.readthedocs.io/settings.html#diff-coloring";
-
         public DiffViewerSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
@@ -61,11 +58,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void chkUseGitColoring_CheckedChanged(object sender, EventArgs e)
             => chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
-
-        private void chkUseGitColoring_InfoClicked(object sender, EventArgs e)
-            => OsShellUtil.OpenUrlInDefaultBrowser(_useGitColoringURL);
-        private void diffAppearanceHelp_Click(object sender, EventArgs e)
-            => OsShellUtil.OpenUrlInDefaultBrowser(_diffAppearanceURL);
 
         public static SettingsPageReference GetPageReference()
         {
