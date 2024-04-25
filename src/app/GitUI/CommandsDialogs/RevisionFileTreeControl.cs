@@ -292,7 +292,7 @@ See the changes in the commit form.");
             return true;
         }
 
-        protected override IScriptOptionsProvider? GetScriptOptionsProvider()
+        public override IScriptOptionsProvider? GetScriptOptionsProvider()
         {
             return new ScriptOptionsProvider(() =>
                 {

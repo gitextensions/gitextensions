@@ -1153,6 +1153,20 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        public override IScriptOptionsProvider? GetScriptOptionsProvider()
+        {
+            if (fileTree.Visible)
+            {
+                return fileTree.GetScriptOptionsProvider();
+            }
+            else if (revisionDiff.Visible)
+            {
+                return revisionDiff.GetScriptOptionsProvider();
+            }
+
+            return base.GetScriptOptionsProvider();
+        }
+
         #region Working directory combo box
 
         /// <summary>Updates the text shown on the combo button itself.</summary>

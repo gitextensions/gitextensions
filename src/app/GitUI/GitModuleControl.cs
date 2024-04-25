@@ -165,7 +165,7 @@ namespace GitUI
             }
         }
 
-        protected virtual IScriptOptionsProvider? GetScriptOptionsProvider()
+        public virtual IScriptOptionsProvider? GetScriptOptionsProvider()
         {
             return null;
         }
