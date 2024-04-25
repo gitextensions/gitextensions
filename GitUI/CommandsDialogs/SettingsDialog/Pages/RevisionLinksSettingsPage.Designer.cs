@@ -629,7 +629,7 @@
             gotoUserManualControl1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             gotoUserManualControl1.Dock = DockStyle.Right;
             gotoUserManualControl1.Location = new Point(350, 3);
-            gotoUserManualControl1.ManualSectionAnchorName = "git-extensions-revision-links";
+            gotoUserManualControl1.ManualSectionAnchorName = "revision-links";
             gotoUserManualControl1.ManualSectionSubfolder = "settings";
             gotoUserManualControl1.MinimumSize = new Size(70, 20);
             gotoUserManualControl1.Name = "gotoUserManualControl1";
