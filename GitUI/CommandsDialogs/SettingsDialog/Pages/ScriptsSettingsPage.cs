@@ -282,6 +282,8 @@ File(s):
                 {
                     chdrCommand.Width = -1;
                 }
+
+                SetPropertyGridWidthOnce();
             }
             finally
             {
@@ -388,6 +390,18 @@ File(s):
             int index = _scripts.IndexOf(script);
             btnMoveUp.Enabled = index > 0;
             btnMoveDown.Enabled = index < _scripts.Count - 1;
+        }
+
+        private void SetPropertyGridWidthOnce()
+        {
+            const string widthSetTag = "width_set";
+
+            string? tag = propertyGrid1.GetTag<string?>();
+            if (tag != widthSetTag)
+            {
+                propertyGrid1.SetLabelColumnWidth(DpiUtil.Scale(240));
+                propertyGrid1.SetTag(widthSetTag);
+            }
         }
     }
 }
