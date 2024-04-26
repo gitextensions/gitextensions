@@ -37,7 +37,7 @@
         /// <summary>
         /// Gets or sets the Icon or associated file path
         /// </summary>
-        public string? IconPath { get; set; }
+        public string? IconPathName { get; set; }
 
         /// <summary>
         /// Gets the associated bitmap.
@@ -45,17 +45,17 @@
         /// <returns>Bitmap image.</returns>
         public Bitmap? GetIcon()
         {
-            if (File.Exists(IconPath))
+            if (File.Exists(IconPathName))
             {
-                if (IconPath.EndsWith(".ico", StringComparison.OrdinalIgnoreCase))
+                if (IconPathName.EndsWith(".ico", StringComparison.OrdinalIgnoreCase))
                 {
-                    System.Drawing.Icon icon = new(IconPath);
+                    System.Drawing.Icon icon = new(IconPathName);
                     return icon.ToBitmap();
                 }
 
                 try
                 {
-                    System.Drawing.Icon associatedIcon = System.Drawing.Icon.ExtractAssociatedIcon(IconPath);
+                    System.Drawing.Icon associatedIcon = System.Drawing.Icon.ExtractAssociatedIcon(IconPathName);
                     return associatedIcon.ToBitmap();
                 }
                 catch

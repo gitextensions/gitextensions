@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             [DisplayName("Icon or associated file path")]
             [Description("This can either be a path to an .ico file or to any other file in which case its \"associated icon\" is used.")]
             [Editor(typeof(System.Windows.Forms.Design.FileNameEditor), typeof(UITypeEditor))]
-            public string? IconPath { get; set; }
+            public string? IconPathName { get; set; }
 
             [Category(ScriptBehaviourCategory)]
             [DisplayName("Ask confirmation")]
@@ -84,13 +84,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             internal void SetImages(ImageList images)
             {
-                if (IconPath is not null)
+                if (IconPathName is not null)
                 {
                     ScriptInfo scriptInfo = this;
                     Bitmap? icon = scriptInfo.GetIcon();
-                    if (icon is not null && !images.Images.ContainsKey(IconPath))
+                    if (icon is not null && !images.Images.ContainsKey(IconPathName))
                     {
-                        images.Images.Add(IconPath, icon.AdaptLightness());
+                        images.Images.Add(IconPathName, icon.AdaptLightness());
                     }
                 }
 
@@ -99,9 +99,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             internal string? GetIconImageKey()
             {
-                if (File.Exists(IconPath))
+                if (File.Exists(IconPathName))
                 {
-                    return IconPath;
+                    return IconPathName;
                 }
 
                 return Icon;
@@ -128,7 +128,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     AddToRevisionGridContextMenu = script.AddToRevisionGridContextMenu,
                     RunInBackground = script.RunInBackground,
                     Icon = script.Icon,
-                    IconPath = script.IconPath
+                    IconPathName = script.IconPathName
                 };
             }
 
@@ -153,7 +153,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     AddToRevisionGridContextMenu = proxy.AddToRevisionGridContextMenu,
                     RunInBackground = proxy.RunInBackground,
                     Icon = proxy.Icon,
-                    IconPath = proxy.IconPath
+                    IconPathName = proxy.IconPathName
                 };
             }
         }
