@@ -35,11 +35,34 @@
         public string? Icon { get; set; }
 
         /// <summary>
+        /// Gets or sets the Icon or associated file path
+        /// </summary>
+        public string? IconPath { get; set; }
+
+        /// <summary>
         /// Gets the associated bitmap.
         /// </summary>
         /// <returns>Bitmap image.</returns>
         public Bitmap? GetIcon()
         {
+            if (File.Exists(IconPath))
+            {
+                if (IconPath.EndsWith(".ico", StringComparison.OrdinalIgnoreCase))
+                {
+                    System.Drawing.Icon icon = new(IconPath);
+                    return icon.ToBitmap();
+                }
+
+                try
+                {
+                    System.Drawing.Icon associatedIcon = System.Drawing.Icon.ExtractAssociatedIcon(IconPath);
+                    return associatedIcon.ToBitmap();
+                }
+                catch
+                {
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(Icon))
             {
                 return null;

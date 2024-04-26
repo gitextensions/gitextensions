@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Design;
 using GitUI.ScriptsEngine;
 
@@ -51,8 +52,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             [TypeConverter(typeof(ImageKeyConverter))]
             [Editor("System.Windows.Forms.Design.ImageIndexEditor, System.Design", typeof(UITypeEditor))]
             [Category(ScriptCategory)]
-            [PropertyOrder(4)]
+            [PropertyOrder(5)]
             public string? Icon { get; set; }
+
+            [Category(ScriptCategory)]
+            [PropertyOrder(6)]
+            [DisplayName("Icon or associated file path")]
+            [Description("This can either be a path to an .ico file or to any other file in which case its \"associated icon\" is used.")]
+            [Editor(typeof(System.Windows.Forms.Design.FileNameEditor), typeof(UITypeEditor))]
+            public string? IconPath { get; set; }
 
             [Category(ScriptBehaviourCategory)]
             [DisplayName("Ask confirmation")]
@@ -76,10 +84,33 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             internal void SetImages(ImageList images)
             {
+                if (IconPath is not null)
+                {
+                    ScriptInfo scriptInfo = this;
+                    Bitmap? icon = scriptInfo.GetIcon();
+                    if (icon is not null)
+                    {
+                        if (!images.Images.ContainsKey(IconPath))
+                        {
+                            images.Images.Add(IconPath, icon.AdaptLightness());
+                        }
+                    }
+                }
+
                 ImageList = images;
             }
 
-            [return: NotNullIfNotNull("script")]
+            internal string? GetIconImageKey()
+            {
+                if (File.Exists(IconPath))
+                {
+                    return IconPath;
+                }
+
+                return Icon;
+            }
+
+            [return: NotNullIfNotNull(nameof(script))]
             public static implicit operator ScriptInfoProxy?(ScriptInfo? script)
             {
                 if (script is null)
@@ -99,11 +130,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     OnEvent = script.OnEvent,
                     AddToRevisionGridContextMenu = script.AddToRevisionGridContextMenu,
                     RunInBackground = script.RunInBackground,
-                    Icon = script.Icon
+                    Icon = script.Icon,
+                    IconPath = script.IconPath
                 };
             }
 
-            [return: NotNullIfNotNull("proxy")]
+            [return: NotNullIfNotNull(nameof(proxy))]
             public static implicit operator ScriptInfo?(ScriptInfoProxy? proxy)
             {
                 if (proxy is null)
@@ -123,7 +155,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     OnEvent = proxy.OnEvent,
                     AddToRevisionGridContextMenu = proxy.AddToRevisionGridContextMenu,
                     RunInBackground = proxy.RunInBackground,
-                    Icon = proxy.Icon
+                    Icon = proxy.Icon,
+                    IconPath = proxy.IconPath
                 };
             }
         }
