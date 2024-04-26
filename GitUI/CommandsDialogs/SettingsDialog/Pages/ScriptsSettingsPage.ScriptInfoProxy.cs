@@ -88,12 +88,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 {
                     ScriptInfo scriptInfo = this;
                     Bitmap? icon = scriptInfo.GetIcon();
-                    if (icon is not null)
+                    if (icon is not null && !images.Images.ContainsKey(IconPath))
                     {
-                        if (!images.Images.ContainsKey(IconPath))
-                        {
-                            images.Images.Add(IconPath, icon.AdaptLightness());
-                        }
+                        images.Images.Add(IconPath, icon.AdaptLightness());
                     }
                 }
 

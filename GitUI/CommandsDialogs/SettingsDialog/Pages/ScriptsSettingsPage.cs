@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using GitCommands;
 using GitCommands.Utils;
@@ -9,6 +8,7 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -166,7 +166,8 @@ File(s):
             // dummy request; for some strange reason the ResourceSets are not loaded until after the first object request... bug?
             rm.GetObject("dummy");
 
-            using System.Resources.ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true)!;
+            using System.Resources.ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
+            Validates.NotNull(resourceSet);
             foreach (DictionaryEntry icon in resourceSet.Cast<DictionaryEntry>().OrderBy(icon => icon.Key))
             {
                 if (icon.Value is Bitmap bitmap)
@@ -244,7 +245,7 @@ File(s):
                         ToolTipText = $"{script.Command} {script.Arguments}",
                         Tag = script,
                         ForeColor = color,
-                        ImageKey = script.GetIconImageKey(),
+                        ImageKey = script.GetIconImageKey() ?? string.Empty,
                         Checked = script.Enabled
                     };
                     lvScripts.Items.Add(lvitem);
@@ -293,7 +294,7 @@ File(s):
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            ScriptInfoProxy script = _scripts.AddNew()!;
+            ScriptInfoProxy script = _scripts.AddNew();
             script.HotkeyCommandIdentifier = Math.Max(ScriptsManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
             script.Name = "<New Script>";
             script.Enabled = true;
