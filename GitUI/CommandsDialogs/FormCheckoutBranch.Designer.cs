@@ -342,7 +342,7 @@ namespace GitUI.CommandsDialogs
             rbDontCreate.Name = "rbDontCreate";
             rbDontCreate.Size = new Size(232, 19);
             rbDontCreate.TabIndex = 4;
-            rbDontCreate.Text = "Ch&eckout remote branch";
+            rbDontCreate.Text = "Ch&eckout the commit (in detached head)";
             rbDontCreate.UseVisualStyleBackColor = true;
             // 
             // txtCustomBranchName

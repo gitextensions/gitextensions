@@ -3143,7 +3143,7 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="rbDontCreate.Text">
-        <source>Ch&amp;eckout remote branch</source>
+        <source>Ch&amp;eckout the commit (in detached head)</source>
         <target />
       </trans-unit>
       <trans-unit id="rbMerge.Text">
