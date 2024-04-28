@@ -398,6 +398,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             ThreadHelper.AssertOnUIThread();
 
+            _updateVisibleRowRangeSequence.CancelCurrent();
             _backgroundScrollTo = -1;
             _forceRefresh = false;
             _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0);
