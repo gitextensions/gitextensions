@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _customBranchNameIsNotValid =
             new("“{0}” is not valid branch name.\nEnter valid branch name or select predefined value.");
         private readonly TranslationString _createBranch =
-            new("Cr&eate local branch with the name:");
+            new("Cr&eate local branch with same name:");
         private readonly TranslationString _applyStashedItemsAgainCaption =
             new("Auto stash");
         private readonly TranslationString _applyStashedItemsAgain =

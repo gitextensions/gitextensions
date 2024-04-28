@@ -3095,7 +3095,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="_createBranch.Text">
-        <source>Cr&amp;eate local branch with the name:</source>
+        <source>Cr&amp;eate local branch with same name:</source>
         <target />
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
