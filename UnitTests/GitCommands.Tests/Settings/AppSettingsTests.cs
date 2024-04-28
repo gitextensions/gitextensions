@@ -319,8 +319,8 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RememberShowNonPrintingCharsPreference)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowEntireFile)], false, false, true);
                 yield return (properties[nameof(AppSettings.RememberShowEntireFilePreference)], false, false, false);
-                yield return (properties[nameof(AppSettings.ShowGitWordColoring)], false, false, true);
-                yield return (properties[nameof(AppSettings.RememberShowGitWordColoring)], false, false, true);
+                yield return (properties[nameof(AppSettings.DiffDisplayAppearance)], DiffDisplayAppearance.Patch, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.RememberDiffDisplayAppearance)], false, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.RememberNumberOfContextLines)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowSyntaxHighlightingInDiff)], true, false, true);
                 yield return (properties[nameof(AppSettings.RememberShowSyntaxHighlightingInDiff)], true, false, false);

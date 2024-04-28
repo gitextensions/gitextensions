@@ -1577,14 +1577,14 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Enable git-word-diff instead of normal "patch" viewer.
+        /// Diff appearance, alternatives to "patch" viewer.
         /// </summary>
-        public static BoolRuntimeSetting ShowGitWordColoring { get; } = new(RootSettingsPath, nameof(ShowGitWordColoring), false);
+        public static EnumRuntimeSetting<DiffDisplayAppearance> DiffDisplayAppearance { get; } = new(RootSettingsPath, nameof(DiffDisplayAppearance), Settings.DiffDisplayAppearance.Patch);
 
         /// <summary>
-        /// Gets or sets whether to remember the preference for showing git word coloring.
+        /// Gets or sets whether to remember the preference for diff appearance.
         /// </summary>
-        public static ISetting<bool> RememberShowGitWordColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(RememberShowGitWordColoring), false);
+        public static ISetting<bool> RememberDiffDisplayAppearance { get; } = Setting.Create(AppearanceSettingsPath, nameof(RememberDiffDisplayAppearance), false);
 
         public static int NumberOfContextLines
         {

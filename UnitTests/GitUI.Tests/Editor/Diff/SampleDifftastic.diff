@@ -1,0 +1,255 @@
+[1m[33mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[39m[0m[2m --- 1/16 --- C#[0m
+[2m13 [0m[2m13 [0m[1musing[0m GitUI.CommandsDialogs;
+[2m14 [0m[2m14 [0m[1musing[0m GitUI.CommandsDialogs.SettingsDialog.Pages;
+[2m15 [0m[2m15 [0m[1musing[0m GitUI.Properties;
+[2m.. [0m[32;1m16 [0m[32;1musing[0m [32mGitUI[0m[32m.[0m[32mTheming[0m[32m;[0m
+[2m16 [0m[2m17 [0m[1musing[0m GitUI.UserControls;
+[2m17 [0m[2m18 [0m[1musing[0m GitUIPluginInterfaces;
+[2m18 [0m[2m19 [0m[1musing[0m Microsoft;
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 2/16 --- C#[0m
+[2m45 [0m                                                                                                 [2m46 [0m
+[2m46 [0m        [1mprivate[0m [1mreadonly[0m [1mAsyncLoader[0m _async;                                                     [2m47 [0m        [1mprivate[0m [1mreadonly[0m [1mAsyncLoader[0m _async;
+[2m47 [0m        [1mprivate[0m [1mreadonly[0m [1mIFullPathResolver[0m _fullPathResolver;                                    [2m48 [0m        [1mprivate[0m [1mreadonly[0m [1mIFullPathResolver[0m _fullPathResolver;
+[2m.. [0m                                                                                                 [32;1m49 [0m        [32;1mprivate[0m [32;1mreadonly[0m [32;1mTaskDialogPage[0m [32m_NO_TRANSLATE_resetSelectedLinesConfirmationDialog[0m[32m;[0m
+[2m.. [0m                                                                                                 [32;1m50 [0m        [32;1mprivate[0m [32;1mreadonly[0m [32;1mContinuousScrollEventManager[0m [32m_continuousScrollEventManager[0m[32m;[0m
+[2m.. [0m                                                                                                 [32;1m51 [0m
+[2m.. [0m                                                                                                 [32;1m52 [0m        [32;3m// Cache for the configuration of a difftastic difftool[0m
+[2m.. [0m                                                                                                 [32;1m53 [0m        [32;1mprivate[0m [32;1mreadonly[0m [32;1mDictionary[0m[32;1m<[0m[32;1mstring[0m[32m,[0m [32;1mbool[0m[32;1m>[0m [32m_difftasticCmdCache[0m [32;1m=[0m [32m[[0m[32m][0m[32m;[0m
+[2m.. [0m                                                                                                 [32;1m54 [0m
+[2m48 [0m        [1mprivate[0m [1mViewMode[0m _viewMode;                                                              [2m55 [0m        [1mprivate[0m [1mViewMode[0m _viewMode;
+[2m49 [0m        [1mprivate[0m Encoding[1m?[0m _encoding;                                                             [2m56 [0m        [1mprivate[0m Encoding[1m?[0m _encoding;
+[2m50 [0m        [1mprivate[0m [1mFunc[0m[1m<[0m[1mTask[0m[1m>[0m[1m?[0m _deferShowFunc;                                                      [2m57 [0m        [1mprivate[0m [1mFunc[0m[1m<[0m[1mTask[0m[1m>[0m[1m?[0m _deferShowFunc;
+[31;1m51 [0m        [31;1mprivate[0m [31;1mreadonly[0m [31;1mContinuousScrollEventManager[0m [31m_continuousScrollEventManager[0m[31m;[0m             [2m.. [0m
+[2m52 [0m        [1mprivate[0m FileStatusItem[1m?[0m _viewItem;                                                       [2m58 [0m        [1mprivate[0m FileStatusItem[1m?[0m _viewItem;
+[31;1m53 [0m        [31;1mprivate[0m [31;1mreadonly[0m [31;1mTaskDialogPage[0m [31m_NO_TRANSLATE_resetSelectedLinesConfirmationDialog[0m[31m;[0m      [2m.. [0m
+[2m54 [0m                                                                                                 [2m59 [0m
+[2m55 [0m        [GeneratedRegex([35m@"warning: .*has type .* expected .*"[0m, RegexOptions.ExplicitCapture)]    [2m60 [0m        [GeneratedRegex([35m@"warning: .*has type .* expected .*"[0m, RegexOptions.ExplicitCapture)]
+[2m56 [0m        [1mprivate[0m [1mstatic[0m [1mpartial[0m [1mRegex[0m FileModeWarningRegex();                                     [2m61 [0m        [1mprivate[0m [1mstatic[0m [1mpartial[0m [1mRegex[0m FileModeWarningRegex();
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 3/16 --- C#[0m
+[2m106 [0m            ShowEntireFile [1m=[0m AppSettings.ShowEntireFile.GetValue(reload[1m:[0m [1m![0mAppSettings.RememberS [2m111 [0m            ShowEntireFile [1m=[0m AppSettings.ShowEntireFile.GetValue(reload[1m:[0m [1m![0mAppSettings.RememberS
+[2m[2m... [0m[0mhowEntireFilePreference);                                                                       [2m[2m... [0m[0mhowEntireFilePreference);
+[2m107 [0m            showEntireFileButton.Checked [1m=[0m ShowEntireFile;                                      [2m112 [0m            showEntireFileButton.Checked [1m=[0m ShowEntireFile;
+[2m108 [0m            showEntireFileToolStripMenuItem.Checked [1m=[0m ShowEntireFile;                           [2m113 [0m            showEntireFileToolStripMenuItem.Checked [1m=[0m ShowEntireFile;
+[31;1m109 [0m            [31mshowGitWordColoringToolStripMenuItem[0m.[31mChecked[0m [1m=[0m [31mAppSettings[0m[31m.[0m[31mShowGitWordColoring[0m[31m.[0m[31mGetV[0m [32;1m114 [0m            [32mdiffAppearanceToolStripMenuItem[0m.[32mVisible[0m [1m=[0m [32mfalse[0m;
+[31;1m[2m... [0m[0m[31malue[0m[31;1m([0m[31mreload[0m[31;1m:[0m [31;1m![0m[31mAppSettings[0m[31m.[0m[31mRememberShowGitWordColoring[0m[31m.[0m[31mValue[0m[31;1m)[0m;                                   [32;1m[2m... [0m[0m
+[2m110 [0m            SetStateOfContextLinesButtons();                                                    [2m115 [0m            SetStateOfContextLinesButtons();
+[2m111 [0m                                                                                                [2m116 [0m
+[2m112 [0m            automaticContinuousScrollToolStripMenuItem.Image [1m=[0m Images.UiScrollBar.AdaptLightnes [2m117 [0m            automaticContinuousScrollToolStripMenuItem.Image [1m=[0m Images.UiScrollBar.AdaptLightnes
+[2m[2m    [0m[0ms();                                                                                            [2m[2m    [0m[0ms();
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 4/16 --- C#[0m
+[2m301 [0m                                                                                                [2m306 [0m
+[2m302 [0m        [Description([35m"Use Git coloring with patch commands."[0m)]                                  [2m307 [0m        [Description([35m"Use Git coloring with patch commands."[0m)]
+[2m303 [0m        [DefaultValue(false)]                                                                   [2m308 [0m        [DefaultValue(false)]
+[31;1m304 [0m        [1mpublic[0m [1mbool[0m PatchUseGitColoring [1m=>[0m [31mshowGitWordColoringToolStripMenuItem[0m.[31mChecked[0m [1m||[0m AppS [32;1m309 [0m        [1mpublic[0m [1mbool[0m PatchUseGitColoring [1m=>[0m [32mAppSettings[0m[32m.[0m[32mDiffDisplayAppearance[0m.[32mValue[0m [32;1m!=[0m [32mDiffDispl[0m
+[31;1m[2m... [0m[0mettings.UseGitColoring.Value;                                                                   [32;1m[2m... [0m[0m[32mayAppearance[0m[32m.[0m[32mPatch[0m [1m||[0m AppSettings.UseGitColoring.Value;
+[2m... [0m                                                                                                [32;1m310 [0m
+[2m... [0m                                                                                                [32;1m311 [0m        [32m[[0m[32mDescription[0m[32;1m([0m[32m"Show Difftastic diff coloring."[0m[32;1m)[0m[32m][0m
+[2m... [0m                                                                                                [32;1m312 [0m        [32m[[0m[32mDefaultValue[0m[32;1m([0m[32mfalse[0m[32;1m)[0m[32m][0m
+[2m... [0m                                                                                                [32;1m313 [0m        [32;1mpublic[0m [32;1mbool[0m [32mIsDifftasticEnabled[0m [32;1m=>[0m [32mshowDifftasticToolStripMenuItem[0m[32m.[0m[32mEnabled[0m[32m;[0m
+[2m305 [0m                                                                                                [2m314 [0m
+[2m306 [0m        [1mpublic[0m [1mvoid[0m SetGitBlameGutter([1mIEnumerable[0m[1m<[0m[1mGitBlameEntry[0m[1m>[0m gitBlameEntries)               [2m315 [0m        [1mpublic[0m [1mvoid[0m SetGitBlameGutter([1mIEnumerable[0m[1m<[0m[1mGitBlameEntry[0m[1m>[0m gitBlameEntries)
+[2m307 [0m        {                                                                                       [2m316 [0m        {
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 5/16 --- C#[0m
+[2m330 [0m[2m339 [0m            showEntireFileToolStripMenuItem.ShortcutKeyDisplayString [1m=[0m GetShortcutKeyDisplayString(Command.ShowEntireFile);
+[2m331 [0m[2m340 [0m            showSyntaxHighlightingToolStripMenuItem.ShortcutKeyDisplayString [1m=[0m GetShortcutKeyDisplayString(Command.ShowSyntaxHighlighting);
+[2m332 [0m[2m341 [0m            showGitWordColoringToolStripMenuItem.ShortcutKeyDisplayString [1m=[0m GetShortcutKeyDisplayString(Command.ShowGitWordColoring);
+[2m... [0m[32;1m342 [0m            [32mshowDifftasticToolStripMenuItem[0m[32m.[0m[32mShortcutKeyDisplayString[0m [32;1m=[0m [32mGetShortcutKeyDisplayString[0m[32;1m([0m[32mCommand[0m[32m.[0m[32mShowDifftastic[0m[32;1m)[0m[32m;[0m
+[2m333 [0m[2m343 [0m            treatAllFilesAsTextToolStripMenuItem.ShortcutKeyDisplayString [1m=[0m GetShortcutKeyDisplayString(Command.TreatFileAsText);
+[2m334 [0m[2m344 [0m            findToolStripMenuItem.ShortcutKeyDisplayString [1m=[0m GetShortcutKeyDisplayString(Command.Find);
+[2m335 [0m[2m345 [0m            replaceToolStripMenuItem.ShortcutKeyDisplayString [1m=[0m GetShortcutKeyDisplayString(Command.Replace);
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 6/16 --- C#[0m
+[2m364 [0m[2m374 [0m            internalFileViewer.EnableScrollBars(enable);
+[2m365 [0m[2m375 [0m        }
+[2m366 [0m[2m376 [0m
+[2m367 [0m[32;1m377 [0m        [1mpublic[0m [1mArgumentString[0m GetExtraDiffArguments([1mbool[0m isRangeDiff [1m=[0m false[32m,[0m [32;1mbool[0m [32misCombinedDiff[0m [32;1m=[0m [32mfalse[0m)
+[2m368 [0m[2m378 [0m        {
+[2m369 [0m[2m379 [0m            [1mreturn[0m [1mnew[0m ArgumentBuilder
+[2m370 [0m[2m380 [0m            {
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 7/16 --- C#[0m
+[2m376 [0m                [34;3m// Handle zero context as showing no file changes, to get the summary only[0m      [2m386 [0m                [34;3m// Handle zero context as showing no file changes, to get the summary only[0m
+[2m377 [0m                { isRangeDiff [1m&&[0m NumberOfContextLines [1m==[0m 0, [35m"--no-patch "[0m },                    [2m387 [0m                { isRangeDiff [1m&&[0m NumberOfContextLines [1m==[0m 0, [35m"--no-patch "[0m },
+[2m378 [0m                { TreatAllFilesAsText, [35m"--text"[0m },                                              [2m388 [0m                { TreatAllFilesAsText, [35m"--text"[0m },
+[31;1m379 [0m                { [31mshowGitWordColoringToolStripMenuItem[0m.[31mChecked[0m, [35m"--word-diff=color"[0m },          [32;1m389 [0m                { [32;1m![0m[32misCombinedDiff[0m [32;1m&&[0m [32mAppSettings[0m[32m.[0m[32mDiffDisplayAppearance[0m.[32mValue[0m [32;1m==[0m [32mDiffDisplayAppe[0m
+[31;1m[2m... [0m[0m                                                                                                [32;1m[2m... [0m[0m[32marance[0m[32m.[0m[32mGitWordDiff[0m, [35m"--word-diff=color"[0m },
+[2m380 [0m            };                                                                                  [2m390 [0m            };
+[2m381 [0m        }                                                                                       [2m391 [0m        }
+[2m... [0m                                                                                                [32;1m392 [0m
+[2m... [0m                                                                                                [32;1m393 [0m        [32;1mpublic[0m [32;1mArgumentString[0m [32mGetDifftasticArguments[0m[32;1m([0m[32;1mbool[0m [32misRangeDiff[0m [32;1m=[0m [32mfalse[0m[32;1m)[0m
+[2m... [0m                                                                                                [32;1m394 [0m        [32;1m{[0m
+[2m... [0m                                                                                                [32;1m395 [0m            [32;1mEnvironmentAbstraction[0m [32menv[0m [32;1m=[0m [32;1mnew[0m[32;1m([0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m396 [0m
+[2m... [0m                                                                                                [32;1m397 [0m            [32;3m// Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32;3m).[0m
+[2m... [0m                                                                                                [32;1m398 [0m            [32menv[0m[32m.[0m[32mSetEnvironmentVariable[0m[32;1m([0m[32m"DFT_COLOR"[0m[32m,[0m [32m"always"[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m399 [0m            [32menv[0m[32m.[0m[32mSetEnvironmentVariable[0m[32;1m([0m[32m"DFT_BACKGROUND"[0m[32m,[0m [32mThemeModule[0m[32m.[0m[32mIsDarkTheme[0m [32;1m?[0m [32m"dark"[0m [32;1m:[0m [32m"li[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32mght"[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m400 [0m            [32menv[0m[32m.[0m[32mSetEnvironmentVariable[0m[32;1m([0m[32m"DFT_SYNTAX_HIGHLIGHT"[0m[32m,[0m [32mShowSyntaxHighlightingInDiff[0m [32;1m?[0m [32m"[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32mon"[0m [32;1m:[0m [32m"off"[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m401 [0m            [32;1mint[0m [32mcontextLines[0m [32;1m=[0m [32mShowEntireFile[0m [32;1m?[0m [32m9000[0m [32;1m:[0m [32mNumberOfContextLines[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m402 [0m            [32menv[0m[32m.[0m[32mSetEnvironmentVariable[0m[32;1m([0m[32m"DFT_CONTEXT"[0m[32m,[0m [32mcontextLines[0m[32m.[0m[32mToString[0m[32;1m([0m[32;1m)[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m403 [0m
+[2m... [0m                                                                                                [32;1m404 [0m            [32;3m// Guess a reasonable even column number from viewer width, so scrollbar is (barely[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32;3m) activated.[0m
+[2m... [0m                                                                                                [32;1m405 [0m            [32;3m// At least 2*(2+linenoLength) of the width is used for difftastic lineno.[0m
+[2m... [0m                                                                                                [32;1m406 [0m            [32;1mint[0m [32mwidth[0m [32;1m=[0m [32mMath[0m[32m.[0m[32mMax[0m[32;1m([0m[32m88[0m[32m,[0m [32mMath[0m[32m.[0m[32mMin[0m[32;1m([0m[32m200[0m[32m,[0m [32mDpiUtil[0m[32m.[0m[32mScale[0m[32;1m([0m[32minternalFileViewer[0m[32m.[0m[32mWidth[0m[32;1m)[0m [32;1m/[0m [32m7[0m[32;1m)[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32;1m)[0m [32;1m/[0m [32m2[0m [32;1m*[0m [32m2[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m407 [0m            [32menv[0m[32m.[0m[32mSetEnvironmentVariable[0m[32;1m([0m[32m"DFT_WIDTH"[0m[32m,[0m [32mwidth[0m[32m.[0m[32mToString[0m[32;1m([0m[32;1m)[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m408 [0m
+[2m... [0m                                                                                                [32;1m409 [0m            [32;3m// Also export to WSL environment (DFT_WIDTH is also used when parsing in GE).[0m
+[2m... [0m                                                                                                [32;1m410 [0m            [32menv[0m[32m.[0m[32mSetEnvironmentVariable[0m[32;1m([0m[32m"WSLENV"[0m[32m,[0m [32m"DFT_COLOR:DFT_BACKGROUND:DFT_SYNTAX_HIGHLIGHT[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32m:DFT_CONTEXT:DFT_WIDTH"[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m411 [0m
+[2m... [0m                                                                                                [32;1m412 [0m            [32;1mreturn[0m [32;1mnew[0m [32mArgumentBuilder[0m
+[2m... [0m                                                                                                [32;1m413 [0m            [32;1m{[0m
+[2m... [0m                                                                                                [32;1m414 [0m                [32m"--tool=difftastic"[0m[32m,[0m
+[2m... [0m                                                                                                [32;1m415 [0m                [32;1m{[0m [32mTreatAllFilesAsText[0m[32m,[0m [32m"--text"[0m [32;1m}[0m[32m,[0m
+[2m... [0m                                                                                                [32;1m416 [0m            [32;1m}[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m417 [0m        [32;1m}[0m
+[2m382 [0m                                                                                                [2m418 [0m
+[2m383 [0m        [1mpublic[0m [1mArgumentString[0m GetExtraGrepArguments()                                           [2m419 [0m        [1mpublic[0m [1mArgumentString[0m GetExtraGrepArguments()
+[2m384 [0m        {                                                                                       [2m420 [0m        {
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 8/16 --- C#[0m
+[2m463 [0m[2m499 [0m                () [1m=>[0m ViewFixedPatchAsync(fileName, text, openWithDifftool));
+[2m464 [0m[2m500 [0m        }
+[2m... [0m[32;1m501 [0m
+[2m... [0m[32;1m502 [0m        [32;1mpublic[0m [32;1mTask[0m [32mViewDifftasticAsync[0m[32;1m([0m[32;1mstring[0m [32mfileName[0m[32m,[0m [32;1mstring[0m [32mtext[0m[32;1m)[0m
+[2m... [0m[32;1m503 [0m            [32;1m=>[0m [32mViewPrivateAsync[0m[32;1m([0m[32mitem[0m[32;1m:[0m [32;1mnull[0m[32m,[0m [32mfileName[0m[32m,[0m [32mtext[0m[32m,[0m [32mline[0m[32;1m:[0m [32;1mnull[0m[32m,[0m [32mopenWithDifftool[0m[32;1m:[0m [32;1mnull[0m[32m,[0m [32mViewMode[0m[32m.[0m[32mDifftastic[0m[32m,[0m [32museGitColoring[0m[32;1m:[0m [32mtrue[0m[32;1m)[0m[32m;[0m
+[2m465 [0m[2m504 [0m
+[2m466 [0m[2m505 [0m        [1mpublic[0m [1mTask[0m ViewRangeDiffAsync([1mstring[0m fileName, [1mstring[0m text)
+[2m467 [0m[2m506 [0m            [1m=>[0m ViewPrivateAsync(item[1m:[0m [1mnull[0m, fileName, text, line[1m:[0m [1mnull[0m, openWithDifftool[1m:[0m [1mnull[0m, ViewMode.RangeDiff, useGitColoring[1m:[0m true);
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 9/16 --- C#[0m
+[2m824 [0m            resetSelectedLinesToolStripMenuItem.Visible [1m=[0m SupportLinePatching;                  [2m863 [0m            resetSelectedLinesToolStripMenuItem.Visible [1m=[0m SupportLinePatching;
+[2m825 [0m                                                                                                [2m864 [0m
+[2m826 [0m            [34;3m// RangeDiff patch is undefined, could be new/old commit or to parents[0m              [2m865 [0m            [34;3m// RangeDiff patch is undefined, could be new/old commit or to parents[0m
+[31;1m827 [0m            [1mbool[0m isCopyPatch [1m=[0m viewMode.IsNormalDiffView() [1m&&[0m [31;1m![0m[31mshowGitWordColoringToolStripMenu[0m [32;1m866 [0m            [1mbool[0m isCopyPatch [1m=[0m viewMode.IsNormalDiffView() [1m&&[0m [32mAppSettings[0m[32m.[0m[32mDiffDisplayAppearance[0m
+[31;1m[2m... [0m[0m[31mItem[0m.[31mChecked[0m;                                                                                   [32;1m[2m... [0m[0m.[32mValue[0m [32;1m==[0m [32mDiffDisplayAppearance[0m[32m.[0m[32mPatch[0m;
+[2m828 [0m            copyPatchToolStripMenuItem.Visible [1m=[0m isCopyPatch;                                   [2m867 [0m            copyPatchToolStripMenuItem.Visible [1m=[0m isCopyPatch;
+[2m829 [0m            copyNewVersionToolStripMenuItem.Visible [1m=[0m isCopyPatch;                              [2m868 [0m            copyNewVersionToolStripMenuItem.Visible [1m=[0m isCopyPatch;
+[2m830 [0m            copyOldVersionToolStripMenuItem.Visible [1m=[0m isCopyPatch;                              [2m869 [0m            copyOldVersionToolStripMenuItem.Visible [1m=[0m isCopyPatch;
+[2m831 [0m                                                                                                [2m870 [0m
+[2m832 [0m            [1mbool[0m diffCanBeModified [1m=[0m viewMode.IsDiffView() [1m&&[0m viewMode [1mis[0m not ViewMode.FixedDif [32;1m871 [0m            [1mbool[0m diffCanBeModified [1m=[0m viewMode.IsDiffView() [1m&&[0m viewMode [1mis[0m not [32;1m([0mViewMode.FixedDi
+[2m[2m... [0m[0mf;                                                                                              [32;1m[2m... [0m[0mff [32mor[0m [32mViewMode[0m[32m.[0m[32mDifftastic[0m[32;1m)[0m;
+[2m833 [0m            ignoreWhitespaceAtEolToolStripMenuItem.Visible [1m=[0m diffCanBeModified;                 [2m872 [0m            ignoreWhitespaceAtEolToolStripMenuItem.Visible [1m=[0m diffCanBeModified;
+[2m834 [0m            ignoreWhitespaceChangesToolStripMenuItem.Visible [1m=[0m diffCanBeModified;               [2m873 [0m            ignoreWhitespaceChangesToolStripMenuItem.Visible [1m=[0m diffCanBeModified;
+[2m835 [0m            ignoreAllWhitespaceChangesToolStripMenuItem.Visible [1m=[0m diffCanBeModified;            [2m874 [0m            ignoreAllWhitespaceChangesToolStripMenuItem.Visible [1m=[0m diffCanBeModified;
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 10/16 --- C#[0m
+[2m840 [0m            showEntireFileToolStripMenuItem.Visible [1m=[0m isPartialFlexibleView;                    [2m879 [0m            showEntireFileToolStripMenuItem.Visible [1m=[0m isPartialFlexibleView;
+[2m841 [0m            showSyntaxHighlightingToolStripMenuItem.Visible [1m=[0m isPartialFlexibleView;            [2m880 [0m            showSyntaxHighlightingToolStripMenuItem.Visible [1m=[0m isPartialFlexibleView;
+[2m... [0m                                                                                                [32;1m881 [0m
+[31;1m842 [0m            [31mshowGitWordColoringToolStripMenuItem[0m.Visible [1m=[0m viewMode [1mis[0m ViewMode.Diff or ViewMod [32;1m882 [0m            [32mdiffAppearanceToolStripMenuItem[0m.Visible [1m=[0m viewMode [1mis[0m ViewMode.Diff or ViewMode.[32mDif[0m
+[31;1m[2m... [0m[0me.[31mCombinedDiff[0m;                                                                                 [32;1m[2m... [0m[0m[32mftastic[0m;
+[2m... [0m                                                                                                [32;1m883 [0m
+[2m... [0m                                                                                                [32;1m884 [0m            [32mshowGitWordColoringToolStripMenuItem[0m[32m.[0m[32mChecked[0m [32;1m=[0m [32mAppSettings[0m[32m.[0m[32mDiffDisplayAppearance[0m[32m.[0m[32mVa[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32mlue[0m [32;1m==[0m [32mDiffDisplayAppearance[0m[32m.[0m[32mGitWordDiff[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m885 [0m            [32mshowDifftasticToolStripMenuItem[0m[32m.[0m[32mChecked[0m [32;1m=[0m [32mAppSettings[0m[32m.[0m[32mDiffDisplayAppearance[0m[32m.[0m[32mValue[0m [32;1m=[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32;1m=[0m [32mDiffDisplayAppearance[0m[32m.[0m[32mDifftastic[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m886 [0m            [32mshowPatchToolStripMenuItem[0m[32m.[0m[32mChecked[0m [32;1m=[0m [32;1m![0m[32;1m([0m[32mshowGitWordColoringToolStripMenuItem[0m[32m.[0m[32mChecked[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m [32;1m||[0m [32mshowDifftasticToolStripMenuItem[0m[32m.[0m[32mChecked[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m887 [0m            [32mThreadHelper[0m[32m.[0m[32mFileAndForget[0m[32;1m([0m[32;1masync[0m [32;1m([0m[32;1m)[0m [32;1m=>[0m
+[2m... [0m                                                                                                [32;1m888 [0m            [32;1m{[0m
+[2m... [0m                                                                                                [32;1m889 [0m                [32;3m// GetEffectiveSettings() checks Windows only, this need to be checked for each[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32;3m instance[0m
+[2m... [0m                                                                                                [32;1m890 [0m                [32;1mif[0m [32;1m([0m[32;1m![0m[32m_difftasticCmdCache[0m[32m.[0m[32mTryGetValue[0m[32;1m([0m[32mModule[0m[32m.[0m[32mWorkingDir[0m[32m,[0m [32;1mout[0m [32;1mbool[0m [32menabled[0m[32;1m)[0m[32;1m)[0m
+[2m... [0m                                                                                                [32;1m891 [0m                [32;1m{[0m
+[2m... [0m                                                                                                [32;1m892 [0m                    [32menabled[0m [32;1m=[0m [32;1m![0m[32;1mstring[0m[32m.[0m[32mIsNullOrEmpty[0m[32;1m([0m[32mModule[0m[32m.[0m[32mGetEffectiveGitSetting[0m[32;1m([0m[32m"difftool.dif[0m
+[2m... [0m                                                                                                [32;1m[2m... [0m[0m[32mftastic.cmd"[0m[32;1m)[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m893 [0m                    [32m_difftasticCmdCache[0m[32m[[0m[32mModule[0m[32m.[0m[32mWorkingDir[0m[32m][0m [32;1m=[0m [32menabled[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m894 [0m                [32;1m}[0m
+[2m... [0m                                                                                                [32;1m895 [0m
+[2m... [0m                                                                                                [32;1m896 [0m                [32;1mawait[0m [32mthis[0m[32m.[0m[32mSwitchToMainThreadAsync[0m[32;1m([0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m897 [0m                [32mshowDifftasticToolStripMenuItem[0m[32m.[0m[32mEnabled[0m [32;1m=[0m [32menabled[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m898 [0m            [32;1m}[0m[32;1m)[0m[32m;[0m
+[2m... [0m                                                                                                [32;1m899 [0m
+[2m843 [0m            toolStripSeparator2.Visible [1m=[0m viewMode.IsPartialTextView();                         [2m900 [0m            toolStripSeparator2.Visible [1m=[0m viewMode.IsPartialTextView();
+[2m844 [0m            treatAllFilesAsTextToolStripMenuItem.Visible [1m=[0m viewMode.IsPartialTextView();        [2m901 [0m            treatAllFilesAsTextToolStripMenuItem.Visible [1m=[0m viewMode.IsPartialTextView();
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 11/16 --- C#[0m
+[2m1001 [0m            SupportLinePatching [1m=[0m                                                              [2m1058 [0m            SupportLinePatching [1m=[0m
+[2m1002 [0m                                                                                               [2m1059 [0m
+[2m1003 [0m                [34;3m// Diffs, currently requires that the file to update exists[0m                    [2m1060 [0m                [34;3m// Diffs, currently requires that the file to update exists[0m
+[31;1m1004 [0m                ((_viewMode.[31mIsDiffView[0m() [1m&&[0m (text[1m?[0m.Contains([35m"@@"[0m) [1m??[0m false)                    [32;1m1061 [0m                ((_viewMode.[32mIsNormalDiffView[0m() [1m&&[0m (text[1m?[0m.Contains([35m"@@"[0m) [1m??[0m false)
+[31;1m1005 [0m                        [1m&&[0m [31mFile[0m.[31mExists[0m[31;1m([0m[31m_fullPathResolver[0m.[31mResolve[0m[31;1m([0m[31mfileName[0m[31;1m)[0m[31;1m)[0m                    [32;1m1062 [0m                        [1m&&[0m [32mAppSettings[0m[32m.[0m[32mDiffDisplayAppearance[0m.[32mValue[0m [32;1m!=[0m [32mDiffDisplayAppearance[0m.[32mGi[0m
+[31;1m[2m.... [0m[0m                                                                                               [32;1m[2m.... [0m[0m[32mtWordDiff[0m
+[31;1m1006 [0m                        [1m&&[0m [31;1m![0m[31mshowGitWordColoringToolStripMenuItem[0m.[31mChecked[0m)                      [32;1m1063 [0m                        [1m&&[0m [32mFile[0m.[32mExists[0m[32;1m([0m[32m_fullPathResolver[0m[32m.[0m[32mResolve[0m[32;1m([0m[32mfileName[0m[32;1m)[0m[32;1m)[0m)
+[2m1007 [0m                                                                                               [2m1064 [0m
+[2m1008 [0m                [34;3m// New files, patches only applies for artificial or if the file does not exis[0m [2m1065 [0m                [34;3m// New files, patches only applies for artificial or if the file does not exis[0m
+[2m[2m.... [0m[0m[34;3mt[0m                                                                                              [2m[2m.... [0m[0m[34;3mt[0m
+[2m1009 [0m                    [1m||[0m ((item[1m?[0m.Item.IsNew [1m??[0m false)                                            [2m1066 [0m                    [1m||[0m ((item[1m?[0m.Item.IsNew [1m??[0m false)
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 12/16 --- C#[0m
+[2m1297 [0m            OnExtraDiffArgumentsChanged();                                                     [2m1354 [0m            OnExtraDiffArgumentsChanged();
+[2m1298 [0m        }                                                                                      [2m1355 [0m        }
+[2m.... [0m                                                                                               [32;1m1356 [0m
+[2m.... [0m                                                                                               [32;1m1357 [0m        [32;1mprivate[0m [32;1mvoid[0m [32mResetPatchAppearanceToolStripMenuItemClick[0m[32;1m([0m[32;1mobject[0m [32msender[0m[32m,[0m [32;1mEventArgs[0m [32me[0m[32;1m)[0m
+[2m.... [0m                                                                                               [32;1m1358 [0m        [32;1m{[0m
+[2m.... [0m                                                                                               [32;1m1359 [0m            [32;3m// The other settings toggle, this just resets the appearance[0m
+[2m.... [0m                                                                                               [32;1m1360 [0m            [32mAppSettings[0m[32m.[0m[32mDiffDisplayAppearance[0m[32m.[0m[32mValue[0m [32;1m=[0m [32mDiffDisplayAppearance[0m[32m.[0m[32mPatch[0m[32m;[0m
+[2m.... [0m                                                                                               [32;1m1361 [0m            [32mOnExtraDiffArgumentsChanged[0m[32;1m([0m[32;1m)[0m[32m;[0m
+[2m.... [0m                                                                                               [32;1m1362 [0m        [32;1m}[0m
+[2m1299 [0m                                                                                               [2m1363 [0m
+[31;1m1300 [0m        [1mprivate[0m [1mvoid[0m [31mShowGitWordColoringToolStripMenuItemClick[0m([1mobject[0m sender, [1mEventArgs[0m e)     [32;1m1364 [0m        [1mprivate[0m [1mvoid[0m [32mToggleGitWordColoringToolStripMenuItemClick[0m([1mobject[0m sender, [1mEventArgs[0m e)
+[2m1301 [0m        {                                                                                      [2m1365 [0m        {
+[31;1m1302 [0m            [31mshowGitWordColoringToolStripMenuItem[0m[31m.[0m[31mChecked[0m [31;1m=[0m [31;1m![0m[31mshowGitWordColoringToolStripMenuIt[0m [2m.... [0m
+[31;1m[2m.... [0m[0m[31mem[0m[31m.[0m[31mChecked[0m[31m;[0m                                                                                    [2m.... [0m
+[31;1m1303 [0m            AppSettings.[31mShowGitWordColoring[0m.Value [1m=[0m showGitWordColoringToolStripMenuItem.Check [32;1m1366 [0m            AppSettings.[32mDiffDisplayAppearance[0m.Value [1m=[0m [32;1m![0mshowGitWordColoringToolStripMenuItem.Ch
+[31;1m[2m.... [0m[0med;                                                                                            [32;1m[2m.... [0m[0mecked [32;1m?[0m [32mDiffDisplayAppearance[0m[32m.[0m[32mGitWordDiff[0m [32;1m:[0m [32mDiffDisplayAppearance[0m[32m.[0m[32mPatch[0m;
+[2m1304 [0m            OnExtraDiffArgumentsChanged();                                                     [2m1367 [0m            OnExtraDiffArgumentsChanged();
+[2m1305 [0m        }                                                                                      [2m1368 [0m        }
+[2m.... [0m                                                                                               [32;1m1369 [0m
+[2m.... [0m                                                                                               [32;1m1370 [0m        [32;1mprivate[0m [32;1mvoid[0m [32mToggleDifftasticToolStripMenuItemClick[0m[32;1m([0m[32;1mobject[0m [32msender[0m[32m,[0m [32;1mEventArgs[0m [32me[0m[32;1m)[0m
+[2m.... [0m                                                                                               [32;1m1371 [0m        [32;1m{[0m
+[2m.... [0m                                                                                               [32;1m1372 [0m            [32mAppSettings[0m[32m.[0m[32mDiffDisplayAppearance[0m[32m.[0m[32mValue[0m [32;1m=[0m [32;1m![0m[32mshowDifftasticToolStripMenuItem[0m[32m.[0m[32mChecked[0m
+[2m.... [0m                                                                                               [32;1m[2m.... [0m[0m [32;1m?[0m [32mDiffDisplayAppearance[0m[32m.[0m[32mDifftastic[0m [32;1m:[0m [32mDiffDisplayAppearance[0m[32m.[0m[32mPatch[0m[32m;[0m
+[2m.... [0m                                                                                               [32;1m1373 [0m            [32mOnExtraDiffArgumentsChanged[0m[32;1m([0m[32;1m)[0m[32m;[0m
+[2m.... [0m                                                                                               [32;1m1374 [0m        [32;1m}[0m
+[2m1306 [0m                                                                                               [2m1375 [0m
+[2m1307 [0m        [1mprivate[0m [1mvoid[0m _continuousScrollEventManager_BottomScrollReached([1mobject[0m sender, [1mEventArg[0m [2m1376 [0m        [1mprivate[0m [1mvoid[0m _continuousScrollEventManager_BottomScrollReached([1mobject[0m sender, [1mEventArg[0m
+[2m[2m.... [0m[0m[1ms[0m e)                                                                                           [2m[2m.... [0m[0m[1ms[0m e)
+[2m1308 [0m            [1m=>[0m BottomScrollReached[1m?[0m.Invoke(sender, e);                                         [2m1377 [0m            [1m=>[0m BottomScrollReached[1m?[0m.Invoke(sender, e);
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 13/16 --- C#[0m
+[2m1678 [0m[2m1747 [0m                [1mreturn[0m;
+[2m1679 [0m[2m1748 [0m            }
+[2m1680 [0m[2m1749 [0m
+[2m1681 [0m[32;1m1750 [0m            [1mif[0m (_viewMode.IsDiffView() [32;1m&&[0m [32m_viewMode[0m [32;1m!=[0m [32mViewMode[0m[32m.[0m[32mDifftastic[0m)
+[2m1682 [0m[2m1751 [0m            {
+[2m1683 [0m[2m1752 [0m                [1mint[0m pos [1m=[0m internalFileViewer.GetSelectionPosition();
+[2m1684 [0m[2m1753 [0m                [1mstring[0m fileText [1m=[0m internalFileViewer.GetText();
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 14/16 --- C#[0m
+[2m1848 [0m[2m1917 [0m            ShowEntireFile [1m=[0m 4,
+[2m1849 [0m[2m1918 [0m            ShowSyntaxHighlighting [1m=[0m 17,
+[2m1850 [0m[2m1919 [0m            ShowGitWordColoring [1m=[0m 18,
+[2m.... [0m[32;1m1920 [0m            [32mShowDifftastic[0m [32;1m=[0m [32m19[0m[32m,[0m
+[2m1851 [0m[2m1921 [0m            TreatFileAsText [1m=[0m 5,
+[2m1852 [0m[2m1922 [0m            NextChange [1m=[0m 6,
+[2m1853 [0m[2m1923 [0m            PreviousChange [1m=[0m 7,
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 15/16 --- C#[0m
+[2m1881 [0m[2m1951 [0m                [1mcase[0m Command.ShowEntireFile[1m:[0m [1mreturn[0m PerformClickIfAvailable(showEntireFileToolStripMenuItem);
+[2m1882 [0m[2m1952 [0m                [1mcase[0m Command.ShowSyntaxHighlighting[1m:[0m [1mreturn[0m PerformClickIfAvailable(showSyntaxHighlightingToolStripMenuItem);
+[2m1883 [0m[2m1953 [0m                [1mcase[0m Command.ShowGitWordColoring[1m:[0m [1mreturn[0m PerformClickIfAvailable(showGitWordColoringToolStripMenuItem);
+[2m.... [0m[32;1m1954 [0m                [32;1mcase[0m [32mCommand[0m[32m.[0m[32mShowDifftastic[0m[32;1m:[0m [32;1mreturn[0m [32mPerformClickIfAvailable[0m[32;1m([0m[32mshowDifftasticToolStripMenuItem[0m[32;1m)[0m[32m;[0m
+[2m1884 [0m[2m1955 [0m                [1mcase[0m Command.TreatFileAsText[1m:[0m [1mreturn[0m PerformClickIfAvailable(treatAllFilesAsTextToolStripMenuItem);
+[2m1885 [0m[2m1956 [0m                [1mcase[0m Command.NextChange[1m:[0m [1mreturn[0m PerformClickIfAvailable(nextChangeButton);
+[2m1886 [0m[2m1957 [0m                [1mcase[0m Command.PreviousChange[1m:[0m [1mreturn[0m PerformClickIfAvailable(previousChangeButton);
+
+[1mC:\Users\ejgo\AppData\Local\Temp/git-blob-b26504/FileViewer.cs[0m[2m --- 16/16 --- C#[0m
+[2m1962 [0m                    [1mnew[0m GitItemStatus(name[1m:[0m fileName [1m??[0m [35m""[0m));                                  [2m2033 [0m                    [1mnew[0m GitItemStatus(name[1m:[0m fileName [1m??[0m [35m""[0m));
+[2m1963 [0m                [1mFileViewer[0m fileViewer [1m=[0m _fileViewer;                                           [2m2034 [0m                [1mFileViewer[0m fileViewer [1m=[0m _fileViewer;
+[2m1964 [0m                ThreadHelper.JoinableTaskFactory.Run(                                          [2m2035 [0m                ThreadHelper.JoinableTaskFactory.Run(
+[31;1m1965 [0m                    () [1m=>[0m fileViewer.[31mViewPrivateAsync[0m(f, [31mf[0m[31;1m?[0m[31m.[0m[31mItem[0m[31;1m?[0m[31m.[0m[31mName[0m[31m,[0m text, line[1m:[0m [1mnull[0m, open [32;1m2036 [0m                    () [1m=>[0m fileViewer.[32mViewPatchAsync[0m(f, text, line[1m:[0m [1mnull[0m, openWithDifftool));
+[31;1m[2m.... [0m[0mWithDifftool[31m,[0m [31mViewMode[0m[31m.[0m[31mDiff[0m[31m,[0m [31museGitColoring[0m[31;1m:[0m [31mfalse[0m));                                          [32;1m[2m.... [0m[0m
+[2m1966 [0m            }                                                                                  [2m2037 [0m            }
+[2m1967 [0m        }                                                                                      [2m2038 [0m        }
+[2m1968 [0m    }                                                                                          [2m2039 [0m    }
+

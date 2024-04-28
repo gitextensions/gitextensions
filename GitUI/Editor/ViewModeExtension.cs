@@ -6,7 +6,7 @@ public static class ViewModeExtension
         => viewMode is (ViewMode.Diff or ViewMode.FixedDiff or ViewMode.CombinedDiff);
 
     public static bool IsDiffView(this ViewMode viewMode)
-        => viewMode.IsNormalDiffView() || viewMode is ViewMode.RangeDiff;
+        => viewMode.IsNormalDiffView() || viewMode is ViewMode.RangeDiff or ViewMode.Difftastic;
 
     /// <summary>
     /// The document is partial, the line numbers ar (normally) non-continuous.

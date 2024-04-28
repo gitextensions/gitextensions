@@ -257,6 +257,7 @@ namespace GitUI.Editor
                 ViewMode.Text => TextHighlightService.Instance,
                 ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(ref text, useGitColoring),
                 ViewMode.CombinedDiff => new CombinedDiffHighlightService(ref text, useGitColoring),
+                ViewMode.Difftastic => new DifftasticHighlightService(ref text),
                 ViewMode.RangeDiff => new RangeDiffHighlightService(ref text),
                 ViewMode.Grep => new GrepHighlightService(ref text),
                 _ => throw new ArgumentException($"Unexpected viewMode: {viewMode}", nameof(viewMode))
@@ -652,7 +653,7 @@ namespace GitUI.Editor
 
         public int CurrentFileLine()
         {
-            bool isPartial = _textHighlightService is (DiffHighlightService or GrepHighlightService);
+            bool isPartial = _textHighlightService is (DiffHighlightService or GrepHighlightService or DifftasticHighlightService);
             _currentViewPositionCache.Capture();
             return _currentViewPositionCache.CurrentFileLine(isPartial);
         }

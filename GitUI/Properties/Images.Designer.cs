@@ -703,6 +703,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Difftastic {
+            get {
+                object obj = ResourceManager.GetObject("Difftastic", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap DocumentTree {
             get {
                 object obj = ResourceManager.GetObject("DocumentTree", resourceCulture);
@@ -726,6 +736,16 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap DonateBadge {
             get {
                 object obj = ResourceManager.GetObject("DonateBadge", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap EditColor {
+            get {
+                object obj = ResourceManager.GetObject("EditColor", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

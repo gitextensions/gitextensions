@@ -55,7 +55,7 @@ public partial class AnsiEscapeUtilities
                 {
                     sb.Append("@!");
                     int colorId = i + offset;
-                    TryGetColorsFromEscapeSequence(new List<int>() { 38 + (fore ? 0 : 10), 5, colorId }, out Color? backColor, out Color? foreColor, ref currentColorId);
+                    TryGetColorsFromEscapeSequence(new List<int>() { 38 + (fore ? 0 : 10), 5, colorId }, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors: false);
                     if (TryGetTextMarker(new()
                             {
                                 DocOffset = sb.Length - 2,
@@ -113,7 +113,7 @@ public partial class AnsiEscapeUtilities
     /// <param name="text">The text to parse.</param>
     /// <param name="sb">StringBuilder to appened the text with with the escape sequences removed.</param>
     /// <param name="textMarkers">Detected and current started highlight info for the document.</param>
-    public static void ParseEscape(string text, StringBuilder sb, List<TextMarker> textMarkers)
+    public static void ParseEscape(string text, StringBuilder sb, List<TextMarker> textMarkers, bool themeColors = false)
     {
         int prevLineOffset = 0;
         int currentColorId = 0; // current color, used when just bold etc is set
@@ -133,13 +133,13 @@ public partial class AnsiEscapeUtilities
             // An escape sequence can include several attributes (empty/unparsable is break).
             List<int> escapeCodes = match.Groups["escNo"].Captures.Select(i => int.TryParse(i.ToString(), out int attribute) ? attribute : 0).ToList();
 
-            if (TryGetColorsFromEscapeSequence(escapeCodes, out Color? backColor, out Color? foreColor, ref currentColorId))
+            if (TryGetColorsFromEscapeSequence(escapeCodes, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors))
             {
                 if (currentHighlight.Length >= 0)
                 {
                     // End current match so new can be started, this is expected but normally not used by Git (?).
                     // Also assume that the new colors are "complete", not just overlay.
-                    Trace.WriteLine($"New start marker without end for grep {text} ({sb.Length})");
+                    Trace.WriteLine($"New start marker without end for grep ({sb.Length},{match.Index}) {text}");
 
                     currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
                     if (TryGetTextMarker(currentHighlight, out TextMarker tm))
@@ -202,7 +202,7 @@ public partial class AnsiEscapeUtilities
     /// <param name="foreColor">Foreground color if set.</param>
     /// <param name="currentColorId">The fore color ANSI id (not argb color) if it was set. Can be used in follow-up sequences.</param>
     /// <returns><see langword="true"/> if a color was set; otherwise <see langword="false"/>.</returns>
-    private static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId)
+    private static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId, bool themeColors)
     {
         bool result = false;
         backColor = null;
@@ -252,7 +252,23 @@ public partial class AnsiEscapeUtilities
                 case >= 90 and <= 97: // Set bright foreground color
                     bold = bold || escapeCodes[i] >= 90;
                     currentColorId = escapeCodes[i] - (escapeCodes[i] >= 90 ? 90 : 30);
-                    foreColor = Get8bitColor(currentColorId + GetBoldDimOffset(), out _);
+                    if (themeColors && currentColorId is 1 or 2 && !dim && !reverse && backColor is null)
+                    {
+                        // Assume this is a fit for the theme colors with reverse color
+                        if (currentColorId == 1)
+                        {
+                            backColor = (bold ? AppColor.DiffRemovedExtra : AppColor.DiffRemoved).GetThemeColor();
+                        }
+                        else
+                        {
+                            backColor = (bold ? AppColor.DiffAddedExtra : AppColor.DiffAdded).GetThemeColor();
+                        }
+                    }
+                    else
+                    {
+                        foreColor = Get8bitColor(currentColorId + GetBoldDimOffset(), out _);
+                    }
+
                     break;
                 case >= 40 and <= 47: // Set background color
                 case >= 100 and <= 107: // Set bright background color
@@ -478,7 +494,7 @@ public partial class AnsiEscapeUtilities
     internal readonly struct TestAccessor
     {
         public static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId)
-            => AnsiEscapeUtilities.TryGetColorsFromEscapeSequence(escapeCodes, out backColor, out foreColor, ref currentColorId);
+            => AnsiEscapeUtilities.TryGetColorsFromEscapeSequence(escapeCodes, out backColor, out foreColor, ref currentColorId, themeColors: false);
 
         public static Color Get8bitColor(int colorCode, out int colorId)
             => AnsiEscapeUtilities.Get8bitColor(colorCode, out colorId);

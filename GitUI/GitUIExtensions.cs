@@ -127,7 +127,7 @@ namespace GitUI
             if (firstId == ObjectId.CombinedDiffId)
             {
                 bool result = fileViewer.Module.GetCombinedDiffContent(item.SecondRevision.ObjectId, item.Item.Name,
-                    fileViewer.GetExtraDiffArguments(),
+                    fileViewer.GetExtraDiffArguments(isCombinedDiff: true),
                     fileViewer.Encoding,
                     out string diffOfConflict,
                     useGitColoring: fileViewer.PatchUseGitColoring,
@@ -150,6 +150,31 @@ namespace GitUI
                 }
 
                 await fileViewer.ViewCombinedDiffAsync(item, text: diffOfConflict, line: line, openWithDifftool: openWithDiffTool);
+                return;
+            }
+
+            if (!item.Item.IsSubmodule && AppSettings.DiffDisplayAppearance.Value == GitCommands.Settings.DiffDisplayAppearance.Difftastic && fileViewer.IsDifftasticEnabled.Value)
+            {
+                bool isTracked = item.Item.IsTracked || (item.Item.TreeGuid is not null && item.SecondRevision.ObjectId is not null);
+                string diffArgs = fileViewer.GetDifftasticArguments();
+
+                await fileViewer.ViewTextAsync("git-difftool.sh", $"git difftool {diffArgs} -- {item.Item.Name}");
+
+                ExecutionResult result = await fileViewer.Module.GetSingleDifftoolAsync(firstId, item.SecondRevision.ObjectId, item.Item.Name, item.Item.OldName,
+                    diffArgs,
+                    cacheResult: false,
+                    isTracked,
+                    useGitColoring: true,
+                    cancellationToken);
+
+                if (!result.ExitedSuccessfully)
+                {
+                    string output = $"Git command exit code: {result}{Environment.NewLine}{result.StandardError}";
+                    await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
+                    return;
+                }
+
+                await fileViewer.ViewDifftasticAsync(item.Item.Name, text: result.StandardOutput);
                 return;
             }
 

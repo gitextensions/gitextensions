@@ -76,8 +76,8 @@ public abstract class DiffHighlightService : TextHighlightService
     {
         if (_useGitColoring)
         {
-            // Apply GE wordhighlighting unless Git coloring is already applied
-            if (!AppSettings.ShowGitWordColoring.Value)
+            // Apply GE word highlighting for Patch display (may apply to Difftastic setting, if not available for a repo)
+            if (AppSettings.DiffDisplayAppearance.Value != GitCommands.Settings.DiffDisplayAppearance.GitWordDiff)
             {
                 AddExtraPatchHighlighting(document);
             }
