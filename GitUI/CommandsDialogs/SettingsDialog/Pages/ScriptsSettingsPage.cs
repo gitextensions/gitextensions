@@ -245,7 +245,7 @@ File(s):
                         ToolTipText = $"{script.Command} {script.Arguments}",
                         Tag = script,
                         ForeColor = color,
-                        ImageKey = script.GetIconImageKey() ?? string.Empty,
+                        ImageKey = script.GetIconImageKey(),
                         Checked = script.Enabled
                     };
                     lvScripts.Items.Add(lvitem);

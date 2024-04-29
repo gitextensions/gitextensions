@@ -97,14 +97,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 ImageList = images;
             }
 
-            internal string? GetIconImageKey()
+            public string GetIconImageKey()
             {
                 if (File.Exists(IconPathName))
                 {
                     return IconPathName;
                 }
 
-                return Icon;
+                return Icon ?? string.Empty;
             }
 
             [return: NotNullIfNotNull(nameof(script))]

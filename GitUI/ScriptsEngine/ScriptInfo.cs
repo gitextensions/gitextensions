@@ -49,14 +49,17 @@
             {
                 if (IconPathName.EndsWith(".ico", StringComparison.OrdinalIgnoreCase))
                 {
-                    System.Drawing.Icon icon = new(IconPathName);
+                    using Icon icon = new(IconPathName);
                     return icon.ToBitmap();
                 }
 
                 try
                 {
-                    System.Drawing.Icon associatedIcon = System.Drawing.Icon.ExtractAssociatedIcon(IconPathName);
-                    return associatedIcon.ToBitmap();
+                    using Icon? associatedIcon = System.Drawing.Icon.ExtractAssociatedIcon(IconPathName);
+                    if (associatedIcon is not null)
+                    {
+                        return associatedIcon.ToBitmap();
+                    }
                 }
                 catch
                 {
