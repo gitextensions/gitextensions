@@ -41,6 +41,9 @@
     <None Include="Patches\testdata\color-binary.diff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Patches\testdata\color-prefix.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\RevisionReader\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

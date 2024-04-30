@@ -67,6 +67,18 @@ namespace GitCommandsTests.Git
             Assert.IsNull(status.OldCommit);
             Assert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
 
+            // With user customized `diff.srcPrefix` and `diff.dstPrefix` settings: Submodule name with spaces in the name
+
+            text = "diff --git before:/Assets/Core/Vehicle Physics core assets after:/Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- before:/Assets/Core/Vehicle Physics core assets\t\n+++ after:/Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
+            fileName = "Assets/Core/Vehicle Physics core assets";
+
+            status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+
+            Assert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
+            Assert.AreEqual(fileName, status.OldName);
+
             try
             {
                 // Clean up temporary folders

@@ -30,13 +30,13 @@ namespace GitCommands.Patches
         // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
         // diff --git b/Benchmarks/App.config a/Benchmarks/App.config
         // diff --cc config-enumerator
-        [GeneratedRegex(@$"^diff --(?<type>git|cc|combined)\s[""]?([abiwco12]/)?(?<filenamea>.*?)[""]?( [""]?[abiwco12]/(?<filenameb>.*?)[""]?)?\s*$", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@$"^diff --(?<type>git|cc|combined)\s[""]?([^/\s]+/)?(?<filenamea>.*?)[""]?( [""]?[^/\s]+/(?<filenameb>.*?)[""]?)?\s*$", RegexOptions.ExplicitCapture)]
         private static partial Regex PatchHeaderFileNameRegex();
 
         [GeneratedRegex(@$"^({_escapeSequenceRegex})?diff --(?<type>git|cc|combined)\s", RegexOptions.ExplicitCapture)]
         private static partial Regex PatchHeaderRegex();
 
-        [GeneratedRegex(@$"(---|\+\+\+) [""]?[abiwco12]/(?<filename>.*)[""]?", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@$"(---|\+\+\+) [""]?[^/\s]+/(?<filename>.*)[""]?", RegexOptions.ExplicitCapture)]
         private static partial Regex FileNameRegex();
 
         [GeneratedRegex(@$"^({_escapeSequenceRegex})?[ -+@]", RegexOptions.ExplicitCapture)]

@@ -7,7 +7,7 @@ namespace GitCommands.Git
 {
     public static partial class SubmoduleHelpers
     {
-        [GeneratedRegex(@"diff --git [abic]/(?<filenamea>.+)\s[abwi]/(?<filenameb>.+)", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"diff --git [^/\s]+/(?<filenamea>.+)\s[^/\s]+/(?<filenameb>.+)", RegexOptions.ExplicitCapture)]
         private static partial Regex DiffCommandRegex();
         [GeneratedRegex(@"diff --cc (?<filenamea>.+)", RegexOptions.ExplicitCapture)]
         private static partial Regex CombinedDiffCommandRegex();
