@@ -8,6 +8,7 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -73,18 +74,25 @@ File(s):
 {SelectedFiles}
 {LineNumber}");
 
-        private static readonly string[] WatchedProxyProperties = new string[]
-        {
+        private static readonly string[] WatchedProxyPropertiesOnFocusChanged =
+        [
             nameof(ScriptInfoProxy.Name),
             nameof(ScriptInfoProxy.Enabled),
-            nameof(ScriptInfoProxy.Icon),
             nameof(ScriptInfoProxy.OnEvent),
             nameof(ScriptInfoProxy.Command),
             nameof(ScriptInfoProxy.Arguments),
-        };
+        ];
+
+        private static readonly string[] WatchedProxyPropertiesOnValueChanged =
+        [
+            nameof(ScriptInfoProxy.Icon),
+            nameof(ScriptInfoProxy.IconFilePath),
+        ];
+
         private static readonly ImageList EmbeddedIcons = new()
         {
-            ColorDepth = ColorDepth.Depth32Bit
+            ColorDepth = ColorDepth.Depth32Bit,
+            ImageSize = DpiUtil.Scale(new Size(16, 16))
         };
 
         private readonly BindingList<ScriptInfoProxy> _scripts = [];
@@ -94,7 +102,7 @@ File(s):
 
         // settings maybe loaded before page is shown or after
         // we need to track that so we load images before we bind the list
-        private bool _imagsLoaded;
+        private bool _imagesLoaded;
 
         public ScriptsSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
@@ -117,14 +125,21 @@ File(s):
             int margin = propertyGrid1.Margin.Left;
             propertyGrid1.Margin = new Padding(margin, margin, panelButtons.Width, margin);
 
-            propertyGrid1.SelectedGridItemChanged += (s, e) =>
+            propertyGrid1.SelectedGridItemChanged += (_, e) =>
+                UpdateScripts(WatchedProxyPropertiesOnFocusChanged, e.OldSelection?.PropertyDescriptor?.Name ?? "");
+
+            propertyGrid1.PropertyValueChanged += (_, e) =>
+                UpdateScripts(WatchedProxyPropertiesOnValueChanged, e.ChangedItem?.PropertyDescriptor?.Name ?? "");
+
+            void UpdateScripts(string[] watchedProperties, string changedItem)
             {
-                if (WatchedProxyProperties.Contains(e.OldSelection?.PropertyDescriptor?.Name ?? ""))
+                if (watchedProperties.Contains(changedItem))
                 {
+                    SelectedScript?.SetImages(EmbeddedIcons);
                     BindScripts(_scripts, SelectedScript);
                     propertyGrid1.Focus();
                 }
-            };
+            }
         }
 
         private ScriptInfoProxy? SelectedScript { get; set; }
@@ -152,11 +167,12 @@ File(s):
             rm.GetObject("dummy");
 
             using System.Resources.ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
+            Validates.NotNull(resourceSet);
             foreach (DictionaryEntry icon in resourceSet.Cast<DictionaryEntry>().OrderBy(icon => icon.Key))
             {
                 if (icon.Value is Bitmap bitmap)
                 {
-                    EmbeddedIcons.Images.Add(icon.Key.ToString(), bitmap.AdaptLightness());
+                    EmbeddedIcons.Images.Add(icon.Key.ToString()!, bitmap.AdaptLightness());
                 }
             }
 
@@ -164,7 +180,7 @@ File(s):
             rm.ReleaseAllResources();
 
             lvScripts.LargeImageList = lvScripts.SmallImageList = EmbeddedIcons;
-            _imagsLoaded = true;
+            _imagesLoaded = true;
 
             BindScripts(_scripts, null);
         }
@@ -175,10 +191,12 @@ File(s):
 
             foreach (ScriptInfo script in _scriptsManager.GetScripts())
             {
-                _scripts.Add(script);
+                ScriptInfoProxy scriptProxy = script;
+                scriptProxy.SetImages(EmbeddedIcons);
+                _scripts.Add(scriptProxy);
             }
 
-            if (_imagsLoaded)
+            if (_imagesLoaded)
             {
                 BindScripts(_scripts, null);
             }
@@ -227,7 +245,7 @@ File(s):
                         ToolTipText = $"{script.Command} {script.Arguments}",
                         Tag = script,
                         ForeColor = color,
-                        ImageKey = script.Icon,
+                        ImageKey = script.GetIconImageKey(),
                         Checked = script.Enabled
                     };
                     lvScripts.Items.Add(lvitem);
@@ -242,7 +260,7 @@ File(s):
 
                 SelectedScript = selectedScript;
 
-                if (selectedScript is object)
+                if (selectedScript is not null)
                 {
                     ListViewItem lvi = lvScripts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag == selectedScript);
                     if (lvi is not null)
@@ -265,6 +283,8 @@ File(s):
                 {
                     chdrCommand.Width = -1;
                 }
+
+                SetPropertyGridWidthOnce();
             }
             finally
             {
@@ -275,7 +295,7 @@ File(s):
         private void btnAdd_Click(object sender, EventArgs e)
         {
             ScriptInfoProxy script = _scripts.AddNew();
-            script.HotkeyCommandIdentifier = Math.Max(GitUI.ScriptsEngine.ScriptsManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
+            script.HotkeyCommandIdentifier = Math.Max(ScriptsManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
             script.Name = "<New Script>";
             script.Enabled = true;
 
@@ -366,13 +386,23 @@ File(s):
             }
 
             SelectedScript = script;
-            script.SetImages(EmbeddedIcons);
-
             propertyGrid1.SelectedObject = script;
 
             int index = _scripts.IndexOf(script);
             btnMoveUp.Enabled = index > 0;
             btnMoveDown.Enabled = index < _scripts.Count - 1;
+        }
+
+        private void SetPropertyGridWidthOnce()
+        {
+            const string widthSetTag = "width_set";
+
+            string? tag = propertyGrid1.GetTag<string?>();
+            if (tag != widthSetTag)
+            {
+                propertyGrid1.SetLabelColumnWidth(DpiUtil.Scale(240));
+                propertyGrid1.SetTag(widthSetTag);
+            }
         }
     }
 }
