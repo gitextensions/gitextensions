@@ -1023,7 +1023,7 @@ namespace GitUI
                     {
                         // Revision may be displayed already, explicit refresh needed
                         await this.SwitchToMainThreadAsync(cancellationToken);
-                        Refresh();
+                        _gridView.Invalidate();
                     }
                 });
 
@@ -1679,7 +1679,7 @@ namespace GitUI
                 !_gridView.UpdatingVisibleRows &&
                 _authorHighlighting.ProcessRevisionSelectionChange(Module, selectedRevisions))
             {
-                Refresh();
+                _gridView.Invalidate();
             }
         }
 
