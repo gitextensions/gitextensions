@@ -86,7 +86,7 @@ File(s):
         private static readonly string[] WatchedProxyPropertiesOnValueChanged =
         [
             nameof(ScriptInfoProxy.Icon),
-            nameof(ScriptInfoProxy.IconPathName),
+            nameof(ScriptInfoProxy.IconFilePath),
         ];
 
         private static readonly ImageList EmbeddedIcons = new()
