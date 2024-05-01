@@ -35,7 +35,7 @@
         public string? Icon { get; set; }
 
         /// <summary>
-        /// Gets or sets the Icon or associated file path
+        /// Gets or sets the path to the file containing the icon.
         /// </summary>
         public string? IconPathName { get; set; }
 
