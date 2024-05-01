@@ -937,14 +937,7 @@ namespace GitUI
 
                 _buildServerWatcher.CancelBuildStatusFetchOperation();
 
-                base.Refresh();
-
                 _superprojectCurrentCheckout = null;
-                Subject<IReadOnlyList<GitRevision>> observeRevisions = new();
-                _revisionSubscription?.Dispose();
-                _revisionSubscription = observeRevisions
-                    .ObserveOn(ThreadPoolScheduler.Instance)
-                    .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
                 IReadOnlyList<ObjectId>? currentlySelectedObjectIds = _gridView.SelectedObjectIds;
                 _gridView.SuspendLayout();
@@ -961,6 +954,12 @@ namespace GitUI
                 Controls.Add(_loadingControlText);
                 ShowLoading();
                 _gridView.ResumeLayout();
+
+                Subject<IReadOnlyList<GitRevision>> observeRevisions = new();
+                _revisionSubscription?.Dispose();
+                _revisionSubscription = observeRevisions
+                    .ObserveOn(ThreadPoolScheduler.Instance)
+                    .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
                 IndexWatcher.Reset();
 
@@ -1026,6 +1025,9 @@ namespace GitUI
                         _gridView.Invalidate();
                     }
                 });
+
+                // Apply settings early, adapt column widths, etc.
+                Refresh();
 
                 if (!showStashes || getStashRevs.Value.Count == 0)
                 {
@@ -1391,7 +1393,6 @@ namespace GitUI
                     }
 
                     IReadOnlyList<ObjectId>? headParents = null;
-                    bool refresh = false;
                     if (!headIsHandled && ShowArtificialRevisions())
                     {
                         if (CurrentCheckout is not null)
@@ -1404,7 +1405,7 @@ namespace GitUI
                         // (can occur when filtering or limiting number of loaded commits)
                         // Try to find the revision where to attach the artificial, first is not found
                         // null means that no matching should be done (just add), so use an empty list if no parents were found
-                        refresh = AddArtificialRevisions(headParents ?? Array.Empty<ObjectId>());
+                        AddArtificialRevisions(headParents ?? []);
                     }
 
                     // All revisions are loaded (but maybe not yet the grid)
@@ -1436,16 +1437,13 @@ namespace GitUI
                     }
 
                     _gridView.LoadingCompleted();
+
                     await this.SwitchToMainThreadAsync(cancellationToken);
-                    if (refresh)
-                    {
-                        _gridView.Refresh();
-                    }
 
                     SetPage(_gridView);
+
                     _isRefreshingRevisions = false;
                     RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
-                    HighlightRevisionsByAuthor(GetSelectedRevisions());
 
                     await TaskScheduler.Default;
 

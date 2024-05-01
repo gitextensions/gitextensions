@@ -592,6 +592,7 @@ namespace GitUI.UserControls.RevisionGrid
             finally
             {
                 UpdatingVisibleRows = false;
+                _backgroundUpdater.ScheduleExecution();
             }
         }
 
