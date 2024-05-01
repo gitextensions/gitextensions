@@ -54,7 +54,7 @@ public class RevisionGraphColumnTests
     [Test]
     public void PaintGraphCell_should_fill_forward_then_restart()
     {
-        Setup(rowCount: 6, visibleRowCount: 2, out RevisionGraphColumnProvider.TestAccessor testAccessor, out Graphics graphics);
+        Setup(rowCount: 10, visibleRowCount: 2, out RevisionGraphColumnProvider.TestAccessor testAccessor, out Graphics graphics);
 
         int rowIndex = 0;
         testAccessor.PaintGraphCell(rowIndex, _rowHeight, _paintRectangle, graphics)
@@ -70,7 +70,7 @@ public class RevisionGraphColumnTests
         testAccessor.GraphCache.HeadRow.Should().Be(0);
         testAccessor.GraphCache.Count.Should().Be(2);
 
-        rowIndex = testAccessor.GraphCache.HeadRow + testAccessor.GraphCache.Capacity;
+        rowIndex = testAccessor.GraphCache.HeadRow + (2 * (testAccessor.GraphCache.Capacity - 1)) + 1;
         testAccessor.PaintGraphCell(rowIndex, _rowHeight, _paintRectangle, graphics)
             .Should().BeTrue();
         testAccessor.GraphCache.Head.Should().Be(0);
@@ -78,9 +78,10 @@ public class RevisionGraphColumnTests
         testAccessor.GraphCache.Count.Should().Be(1);
     }
 
+    [Test]
     public void PaintGraphCell_should_scroll_forward()
     {
-        Setup(rowCount: 3, visibleRowCount: 2, out RevisionGraphColumnProvider.TestAccessor testAccessor, out Graphics graphics);
+        Setup(rowCount: 10, visibleRowCount: 2, out RevisionGraphColumnProvider.TestAccessor testAccessor, out Graphics graphics);
 
         int rowIndex = 0;
         testAccessor.PaintGraphCell(rowIndex, _rowHeight, _paintRectangle, graphics)
@@ -99,9 +100,37 @@ public class RevisionGraphColumnTests
         ++rowIndex;
         testAccessor.PaintGraphCell(rowIndex, _rowHeight, _paintRectangle, graphics)
             .Should().BeTrue();
+        testAccessor.GraphCache.Head.Should().Be(0);
+        testAccessor.GraphCache.HeadRow.Should().Be(0);
+        testAccessor.GraphCache.Count.Should().Be(3);
+
+        ++rowIndex;
+        testAccessor.PaintGraphCell(rowIndex, _rowHeight, _paintRectangle, graphics)
+            .Should().BeTrue();
+        testAccessor.GraphCache.Head.Should().Be(0);
+        testAccessor.GraphCache.HeadRow.Should().Be(0);
+        testAccessor.GraphCache.Count.Should().Be(4);
+
+        ++rowIndex;
+        testAccessor.PaintGraphCell(rowIndex, _rowHeight, _paintRectangle, graphics)
+            .Should().BeTrue();
+        testAccessor.GraphCache.Head.Should().Be(0);
+        testAccessor.GraphCache.HeadRow.Should().Be(0);
+        testAccessor.GraphCache.Count.Should().Be(5);
+
+        ++rowIndex;
+        testAccessor.PaintGraphCell(rowIndex, _rowHeight, _paintRectangle, graphics)
+            .Should().BeTrue();
         testAccessor.GraphCache.Head.Should().Be(1);
         testAccessor.GraphCache.HeadRow.Should().Be(1);
-        testAccessor.GraphCache.Count.Should().Be(2);
+        testAccessor.GraphCache.Count.Should().Be(5);
+
+        rowIndex = testAccessor.GraphCache.HeadRow + (2 * (testAccessor.GraphCache.Capacity - 1));
+        testAccessor.PaintGraphCell(rowIndex, _rowHeight, _paintRectangle, graphics)
+            .Should().BeTrue();
+        testAccessor.GraphCache.Head.Should().Be(1 - 1);
+        testAccessor.GraphCache.HeadRow.Should().Be(rowIndex - (testAccessor.GraphCache.Capacity - 1));
+        testAccessor.GraphCache.Count.Should().Be(5);
     }
 
     [Test]

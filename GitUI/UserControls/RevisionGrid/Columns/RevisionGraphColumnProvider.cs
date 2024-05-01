@@ -101,15 +101,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return true;
                 }
 
-                if (Math.Abs(offsetToHead) >= _graphCache.Capacity)
-                {
-                    // Restart the cache with this line
-                    startRow = rowIndex;
-                    endRow = rowIndex + 1;
-                    _graphCache.HeadRow = startRow;
-                    _graphCache.Count = 1;
-                }
-                else if (offsetToHead < 0)
+                if (offsetToHead < 0 && -offsetToHead < _graphCache.Capacity)
                 {
                     // Scroll back, make the current row the head row
                     startRow = rowIndex;
@@ -119,17 +111,25 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     _graphCache.Head += _graphCache.Capacity + offsetToHead;
                     _graphCache.Head %= _graphCache.Capacity;
                 }
-                else
+                else if (offsetToHead > 0 && offsetToHead <= 2 * (_graphCache.Capacity - 1))
                 {
                     // Scroll forward
-                    startRow = _graphCache.HeadRow + _graphCache.Count;
+                    startRow = _graphCache.HeadRow + _graphCache.Count; // all rows before have already been rendered
                     endRow = rowIndex + 1;
-                    _graphCache.Count += endRow - startRow;
+                    _graphCache.Count += endRow - startRow; // Count = Count + (rowIndex + 1) - (HeadRow + Count) = rowIndex + 1 - HeadRow
                     int neededHeadAdjustment = Math.Max(0, _graphCache.Count - _graphCache.Capacity);
                     _graphCache.Count -= neededHeadAdjustment;
                     _graphCache.HeadRow += neededHeadAdjustment;
                     _graphCache.Head += neededHeadAdjustment;
                     _graphCache.Head %= _graphCache.Capacity;
+                }
+                else
+                {
+                    // Restart the cache with this line
+                    startRow = rowIndex;
+                    endRow = rowIndex + 1;
+                    _graphCache.HeadRow = startRow;
+                    _graphCache.Count = 1;
                 }
             }
 
