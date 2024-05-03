@@ -1069,7 +1069,7 @@ namespace GitCommands
 
         public async Task<(char code, ObjectId? commitId)> GetSuperprojectCurrentCheckoutAsync()
         {
-            if (SuperprojectModule is null)
+            if (string.IsNullOrEmpty(SuperprojectModule?.WorkingDir))
             {
                 return (' ', null);
             }
