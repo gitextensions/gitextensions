@@ -1952,6 +1952,11 @@ namespace GitUI
             PerformRefreshRevisions();
         }
 
+        public void SetLastRevisionToDisplayHash(string hash)
+        {
+            _filterInfo.LastRevisionToDisplayHash = hash;
+        }
+
         public void ShowRevisionFilterDialog()
         {
             using FormRevisionFilter form = new(UICommands, _filterInfo);

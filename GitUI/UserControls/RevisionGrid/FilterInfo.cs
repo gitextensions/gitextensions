@@ -195,6 +195,12 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
+        /// The hash of the last revision to display (i.e. the oldest one displayed at the bottom).
+        /// This hash is used to query history only until this given commit.
+        /// </summary>
+        public string LastRevisionToDisplayHash { get; internal set; }
+
+        /// <summary>
         /// Disables all active filters.
         /// CurrentBranch and Reflog are not disabled.
         /// FullHistory and SimplifyMerges are considered settings and not reset.
@@ -481,6 +487,11 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     filter.Add("--boundary");
                 }
+            }
+
+            if (!string.IsNullOrWhiteSpace(LastRevisionToDisplayHash))
+            {
+                filter.Add($"...{LastRevisionToDisplayHash}");
             }
 
             return;
