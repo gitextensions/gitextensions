@@ -18,12 +18,15 @@ namespace GitUI.UserControls.RevisionGrid
     {
         private const int BackgroundThreadUpdatePeriod = 25;
         private const int MouseWheelDeltaTimeout = 1500; // Mouse wheel idle time in milliseconds after which unconsumed wheel delta will be dropped.
+        private const int RowCountUpdateCoolDown = 300;
+
         private static readonly AccessibleDataGridViewTextBoxCell _accessibleDataGridViewTextBoxCell = new();
 
         private readonly SolidBrush _alternatingRowBackgroundBrush;
         private readonly SolidBrush _authoredHighlightBrush;
 
-        private readonly BackgroundUpdater _backgroundUpdater;
+        private readonly BackgroundUpdater _rowCountUpdater;
+        private readonly BackgroundUpdater _visibleRowRangeUpdater;
         private readonly Stopwatch _lastRepaint = Stopwatch.StartNew();
         private readonly Stopwatch _lastScroll = Stopwatch.StartNew();
         private readonly Stopwatch _consecutiveScroll = Stopwatch.StartNew();
@@ -90,7 +93,8 @@ namespace GitUI.UserControls.RevisionGrid
         {
             InitFonts();
 
-            _backgroundUpdater = new BackgroundUpdater(_taskManager, UpdateVisibleRowRangeInternalAsync, BackgroundThreadUpdatePeriod);
+            _rowCountUpdater = new BackgroundUpdater(_taskManager, UpdateRowCountAsync, RowCountUpdateCoolDown);
+            _visibleRowRangeUpdater = new BackgroundUpdater(_taskManager, UpdateVisibleRowRangeInternalAsync, BackgroundThreadUpdatePeriod);
 
             InitializeComponent();
             DoubleBuffered = true;
@@ -592,7 +596,7 @@ namespace GitUI.UserControls.RevisionGrid
             finally
             {
                 UpdatingVisibleRows = false;
-                _backgroundUpdater.ScheduleExecution();
+                UpdateVisibleRowRange();
             }
         }
 
@@ -691,7 +695,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void TriggerRowCountUpdate()
         {
-            UpdateVisibleRowRange();
+            _rowCountUpdater.ScheduleExecution();
+        }
+
+        private async Task UpdateRowCountAsync()
+        {
+            await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync();
+            SetRowCountAndSelectRowsIfReady();
         }
 
         private void UpdateVisibleRowRange()
@@ -715,7 +725,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
 
-            _backgroundUpdater.ScheduleExecution();
+            _visibleRowRangeUpdater.ScheduleExecution();
         }
 
         private async Task UpdateVisibleRowRangeInternalAsync()
