@@ -336,13 +336,6 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 provider.OnCellPainting(e, _revision!, _rowHeight, _cellStyle.Value);
             }
-
-            if (!e.Handled)
-            {
-                e.Handled = true;
-
-                UpdateVisibleRowRange();
-            }
         }
 
         /// <summary>
