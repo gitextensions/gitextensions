@@ -413,7 +413,7 @@ public partial class AnsiEscapeUtilities
             redId + _boldOffset => Color.FromArgb(255, 118, 118),
             redId + _dimOffset => Color.FromArgb(208, 142, 147),
 
-            greenId => Color.FromArgb(137, 190, 127),
+            greenId => Color.FromArgb(28, 168, 0),
             greenId + _boldOffset => Color.FromArgb(0, 242, 0),
             greenId + _dimOffset => Color.FromArgb(137, 190, 127),
 
