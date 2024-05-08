@@ -3095,7 +3095,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="_createBranch.Text">
-        <source>Cr&amp;eate local branch with the name:</source>
+        <source>Cr&amp;eate local branch with same name:</source>
         <target />
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -3143,7 +3143,7 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="rbDontCreate.Text">
-        <source>Ch&amp;eckout remote branch</source>
+        <source>Ch&amp;eckout the commit (in detached head)</source>
         <target />
       </trans-unit>
       <trans-unit id="rbMerge.Text">
