@@ -153,7 +153,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <param name="lastToCacheRowIndex">
         /// The graph can be built per x rows. This defines the last row index that the graph will build cache to.
         /// </param>
-        public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
+        public void CacheTo(int currentRowIndex, int lastToCacheRowIndex, CancellationToken cancellationToken = default)
         {
             // Graph segments shall be straightened. For this, we need to look ahead some rows.
             // If lanes of a row are moved, go back the same number of rows as for the look-ahead
@@ -190,7 +190,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             ImmutableArray<RevisionGraphRevision> orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
-            BuildOrderedRowCache(orderedNodesCache, lastToCacheRowIndex);
+            BuildOrderedRowCache(orderedNodesCache, lastToCacheRowIndex, cancellationToken);
         }
 
         public bool IsRowRelative(int row)
@@ -419,7 +419,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 || orderedRowCache[0].Revision != orderedNodesCache[0];
         }
 
-        private void BuildOrderedRowCache(ImmutableArray<RevisionGraphRevision> orderedNodesCache, int lastToCacheRowIndex)
+        private void BuildOrderedRowCache(ImmutableArray<RevisionGraphRevision> orderedNodesCache, int lastToCacheRowIndex, CancellationToken cancellationToken)
         {
             bool orderSegments = Config.ReduceGraphCrossings;
 
@@ -451,6 +451,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             for (int nextIndex = startIndex; nextIndex <= lastToCacheRowIndex; ++nextIndex)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 RevisionGraphRevision revision = orderedNodesCache[nextIndex];
                 RevisionGraphSegment[] revisionStartSegments = revision.GetStartSegments();
                 if (orderSegments)

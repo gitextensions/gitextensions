@@ -769,7 +769,7 @@ namespace GitUI.UserControls.RevisionGrid
                 do
                 {
                     curCount = _revisionGraph.GetCachedCount();
-                    _revisionGraph.CacheTo(currentRowIndex: curCount, lastToCacheRowIndex: newBackgroundScrollTo);
+                    _revisionGraph.CacheTo(currentRowIndex: curCount, lastToCacheRowIndex: newBackgroundScrollTo, cancellationToken);
 
                     // Take changes to _backgroundScrollTo and IsDataLoadComplete by another thread into account
                     if (IsDataLoadComplete)
