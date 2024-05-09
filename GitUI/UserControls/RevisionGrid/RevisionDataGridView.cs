@@ -730,83 +730,63 @@ namespace GitUI.UserControls.RevisionGrid
 
         private async Task UpdateVisibleRowRangeInternalAsync()
         {
+            if (!AppSettings.ShowRevisionGridGraphColumn
+                || _columnProviders.Count == 0
+                || _columnProviders[0] is not RevisionGraphColumnProvider revisionGraphColumnProvider)
+            {
+                return;
+            }
+
             CancellationToken cancellationToken = _updateVisibleRowRangeSequence.Next();
 
             int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
             int visibleRowCount = DisplayedRowCount(includePartialRow: true);
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
 
-            if (_forceRefresh || _visibleRowRange.FromIndex != fromIndex || _visibleRowRange.Count != visibleRowCount)
+            if (!_forceRefresh && _visibleRowRange.FromIndex == fromIndex && _visibleRowRange.Count == visibleRowCount)
             {
-                _forceRefresh = false;
-                VisibleRowRange visibleRowRange = new(fromIndex, visibleRowCount);
-                _visibleRowRange = visibleRowRange;
-
-                if (visibleRowCount > 0)
-                {
-                    // Preload the next page, too, in order to avoid delayed display of the graph when scrolling down
-                    int newBackgroundScrollTo = fromIndex + (2 * visibleRowCount) - 1;
-
-                    // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
-                    if (_backgroundScrollTo != newBackgroundScrollTo)
-                    {
-                        _backgroundScrollTo = newBackgroundScrollTo;
-
-                        if (AppSettings.ShowRevisionGridGraphColumn && _columnProviders.Count > 0)
-                        {
-                            int curCount;
-                            do
-                            {
-                                curCount = _revisionGraph.GetCachedCount();
-                                await UpdateGraphAsync(fromIndex: curCount, toIndex: newBackgroundScrollTo);
-
-                                // Take changes to _backgroundScrollTo and IsDataLoadComplete by another thread into account
-                                if (IsDataLoadComplete)
-                                {
-                                    _backgroundScrollTo = Math.Min(_backgroundScrollTo, _revisionGraph.Count - 1);
-                                }
-                            }
-                            while (curCount <= _backgroundScrollTo);
-
-                            if (cancellationToken.IsCancellationRequested)
-                            {
-                                return;
-                            }
-
-                            await ((RevisionGraphColumnProvider)_columnProviders[0])
-                                .RenderGraphToCacheAsync(visibleRowRange, newBackgroundScrollTo, _rowHeight, cancellationToken);
-                        }
-                        else
-                        {
-                            int maxRowIndex = _revisionGraph.Count - 1;
-                            await UpdateGraphAsync(fromIndex: maxRowIndex, toIndex: maxRowIndex);
-                        }
-                    }
-                }
+                return;
             }
 
-            return;
+            _forceRefresh = false;
+            VisibleRowRange visibleRowRange = new(fromIndex, visibleRowCount);
+            _visibleRowRange = visibleRowRange;
 
-            async Task UpdateGraphAsync(int fromIndex, int toIndex)
+            if (visibleRowCount == 0)
             {
-                try
-                {
-                    // Cache the next item; build the cache in limited chunks in order to update intermittently
-                    _revisionGraph.CacheTo(currentRowIndex: toIndex, lastToCacheRowIndex: Math.Min(fromIndex + 1500, toIndex));
+                return;
+            }
 
-                    await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                    if (cancellationToken.IsCancellationRequested)
+            try
+            {
+                // Preload the next page, too, in order to avoid delayed display of the graph when scrolling down
+                int newBackgroundScrollTo = fromIndex + (2 * visibleRowCount) - 1;
+
+                // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
+                _backgroundScrollTo = newBackgroundScrollTo;
+
+                int curCount;
+                do
+                {
+                    curCount = _revisionGraph.GetCachedCount();
+                    _revisionGraph.CacheTo(currentRowIndex: curCount, lastToCacheRowIndex: newBackgroundScrollTo);
+
+                    // Take changes to _backgroundScrollTo and IsDataLoadComplete by another thread into account
+                    if (IsDataLoadComplete)
                     {
-                        return;
+                        _backgroundScrollTo = Math.Min(_backgroundScrollTo, _revisionGraph.Count - 1);
                     }
+                }
+                while (curCount <= _backgroundScrollTo);
 
-                    SetRowCountAndSelectRowsIfReady();
-                }
-                catch (Exception exception)
-                {
-                    _backgroundScrollTo = -1;
-                    Trace.WriteLine(exception);
-                }
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await revisionGraphColumnProvider.RenderGraphToCacheAsync(visibleRowRange, newBackgroundScrollTo, _rowHeight, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0);
+                Trace.WriteLineIf(exception is not OperationCanceledException, exception);
             }
         }
 
