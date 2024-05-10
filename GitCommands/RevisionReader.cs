@@ -160,10 +160,13 @@ namespace GitCommands
                 "-z",
                 "-1",
                 $"--pretty=format:\"{GetLogFormat(hasNotes: hasNotes)}\"",
-                commitHash.QuoteNE()
+
+                // commit hash is either an ObjectId or empty, QuoteNE() should not be needed and may even fail
+                commitHash
             };
 
             // output can be cached if Git Notes is not included
+            // Artificial revision must not be called (empty commitHash, must not be cached
             if (!hasNotes && GitModule.GitCommandCache.TryGet(arguments.ToString(), out byte[]? commandOutput, out _) is true)
             {
                 // OK
@@ -182,7 +185,7 @@ namespace GitCommands
                 return null;
             }
 
-            if (!hasNotes)
+            if (!hasNotes && !string.IsNullOrWhiteSpace(commitHash))
             {
                 GitModule.GitCommandCache.Add(arguments.ToString(), commandOutput, commandOutput);
             }
