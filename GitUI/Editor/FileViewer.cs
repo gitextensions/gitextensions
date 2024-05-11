@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Pipes;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -1759,7 +1760,24 @@ namespace GitUI.Editor
 
             if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
             {
-                MessageBox.Show(this, $"{output}\n\n{Encoding.GetString(patch)}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TaskDialogPage page = new()
+                {
+                    Heading = "Failed to apply patch",
+                    Text = output,
+                    Icon = TaskDialogIcon.Error,
+                    Buttons = { TaskDialogButton.OK },
+                    AllowCancel = true
+                };
+
+                page.Expander = new TaskDialogExpander
+                {
+                    CollapsedButtonText = TranslatedStrings.GitDubiousOwnershipSeeGitCommandOutput,
+                    ExpandedButtonText = TranslatedStrings.GitDubiousOwnershipHideGitCommandOutput,
+                    Position = TaskDialogExpanderPosition.AfterFootnote,
+                    Text = Encoding.GetString(patch),
+                };
+
+                TaskDialog.ShowDialog(page);
             }
             else if (!result.ExitedSuccessfully || output.StartsWith("error: ") || output.StartsWith("warning: "))
             {
