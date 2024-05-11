@@ -4128,11 +4128,11 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="labelMaxFirstLineLength.Text">
-        <source>Maximum numbers of characters in first line (0 = check disabled):</source>
+        <source>Maximum number of characters in the first line (0 = check disabled):</source>
         <target />
       </trans-unit>
       <trans-unit id="labelMaxLineLength.Text">
-        <source>Maximum numbers of characters per line (0 = check disabled):</source>
+        <source>Maximum number of characters per line (0 = check disabled):</source>
         <target />
       </trans-unit>
       <trans-unit id="labelRegExCheck.Text">
@@ -4144,7 +4144,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="labelUseIndent.Text">
-        <source>Indent lines after first line:</source>
+        <source>Indent lines after the first line:</source>
         <target />
       </trans-unit>
       <trans-unit id="tabPage1.Text">

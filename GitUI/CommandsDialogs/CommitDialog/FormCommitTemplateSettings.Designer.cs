@@ -254,15 +254,15 @@
             labelMaxFirstLineLength.AutoSize = true;
             labelMaxFirstLineLength.Location = new Point(3, 7);
             labelMaxFirstLineLength.Name = "labelMaxFirstLineLength";
-            labelMaxFirstLineLength.Size = new Size(353, 15);
+            labelMaxFirstLineLength.Size = new Size(368, 15);
             labelMaxFirstLineLength.TabIndex = 3;
-            labelMaxFirstLineLength.Text = "Maximum numbers of characters in first line (0 = check disabled):";
+            labelMaxFirstLineLength.Text = "Maximum number of characters in the first line (0 = check disabled):";
             // 
             // _NO_TRANSLATE_numericMaxFirstLineLength
             // 
             _NO_TRANSLATE_numericMaxFirstLineLength.Anchor = AnchorStyles.Left;
             _NO_TRANSLATE_numericMaxFirstLineLength.AutoSize = true;
-            _NO_TRANSLATE_numericMaxFirstLineLength.Location = new Point(362, 3);
+            _NO_TRANSLATE_numericMaxFirstLineLength.Location = new Point(377, 3);
             _NO_TRANSLATE_numericMaxFirstLineLength.MinimumSize = new Size(60, 0);
             _NO_TRANSLATE_numericMaxFirstLineLength.Name = "_NO_TRANSLATE_numericMaxFirstLineLength";
             _NO_TRANSLATE_numericMaxFirstLineLength.Size = new Size(60, 23);
@@ -274,15 +274,15 @@
             labelMaxLineLength.AutoSize = true;
             labelMaxLineLength.Location = new Point(3, 36);
             labelMaxLineLength.Name = "labelMaxLineLength";
-            labelMaxLineLength.Size = new Size(337, 15);
+            labelMaxLineLength.Size = new Size(332, 15);
             labelMaxLineLength.TabIndex = 5;
-            labelMaxLineLength.Text = "Maximum numbers of characters per line (0 = check disabled):";
+            labelMaxLineLength.Text = "Maximum number of characters per line (0 = check disabled):";
             // 
             // _NO_TRANSLATE_numericMaxLineLength
             // 
             _NO_TRANSLATE_numericMaxLineLength.Anchor = AnchorStyles.Left;
             _NO_TRANSLATE_numericMaxLineLength.AutoSize = true;
-            _NO_TRANSLATE_numericMaxLineLength.Location = new Point(362, 32);
+            _NO_TRANSLATE_numericMaxLineLength.Location = new Point(377, 32);
             _NO_TRANSLATE_numericMaxLineLength.MinimumSize = new Size(60, 0);
             _NO_TRANSLATE_numericMaxLineLength.Name = "_NO_TRANSLATE_numericMaxLineLength";
             _NO_TRANSLATE_numericMaxLineLength.Size = new Size(60, 23);
@@ -324,7 +324,7 @@
             _NO_TRANSLATE_textBoxCommitValidationRegex.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             _NO_TRANSLATE_textBoxCommitValidationRegex.Location = new Point(377, 89);
             _NO_TRANSLATE_textBoxCommitValidationRegex.Name = "_NO_TRANSLATE_textBoxCommitValidationRegex";
-            _NO_TRANSLATE_textBoxCommitValidationRegex.Size = new Size(301, 23);
+            _NO_TRANSLATE_textBoxCommitValidationRegex.Size = new Size(286, 23);
             _NO_TRANSLATE_textBoxCommitValidationRegex.TabIndex = 14;
             // 
             // labelUseIndent
@@ -333,9 +333,9 @@
             labelUseIndent.AutoSize = true;
             labelUseIndent.Location = new Point(3, 121);
             labelUseIndent.Name = "labelUseIndent";
-            labelUseIndent.Size = new Size(143, 15);
+            labelUseIndent.Size = new Size(163, 15);
             labelUseIndent.TabIndex = 15;
-            labelUseIndent.Text = "Indent lines after first line:";
+            labelUseIndent.Text = "Indent lines after the first line:";
             // 
             // checkBoxUseIndent
             // 
