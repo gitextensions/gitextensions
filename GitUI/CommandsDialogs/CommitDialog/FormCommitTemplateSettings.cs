@@ -4,7 +4,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.CommitDialog
 {
-    public partial class FormCommitTemplateSettings : GitExtensionsForm
+    public sealed partial class FormCommitTemplateSettings : GitExtensionsDialog
     {
         private readonly TranslationString _emptyTemplate =
             new("empty");
@@ -15,7 +15,8 @@ namespace GitUI.CommandsDialogs.CommitDialog
         private const int _maxShownCharsForName = 50;
         private const int _maxUsedCharsForName = 80;
 
-        public FormCommitTemplateSettings()
+        public FormCommitTemplateSettings(GitUICommands commands)
+            : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
             InitializeComplete();

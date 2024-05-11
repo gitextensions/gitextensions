@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            tableLayoutPanel1 = new TableLayoutPanel();
-            tableLayoutPanel2 = new TableLayoutPanel();
             buttonOk = new Button();
             buttonCancel = new Button();
             tabControl1 = new TabControl();
@@ -42,101 +40,94 @@
             _NO_TRANSLATE_textBoxCommitTemplateName = new TextBox();
             tabPage2 = new TabPage();
             tableLayoutPanel3 = new TableLayoutPanel();
-            labelUseIndent = new Label();
-            labelMaxLineLength = new Label();
             labelMaxFirstLineLength = new Label();
-            _NO_TRANSLATE_numericMaxLineLength = new NumericUpDown();
             _NO_TRANSLATE_numericMaxFirstLineLength = new NumericUpDown();
+            labelMaxLineLength = new Label();
+            _NO_TRANSLATE_numericMaxLineLength = new NumericUpDown();
+            labelAutoWrap = new Label();
+            checkBoxAutoWrap = new CheckBox();
             labelRegExCheck = new Label();
             _NO_TRANSLATE_textBoxCommitValidationRegex = new TextBox();
+            labelUseIndent = new Label();
             checkBoxUseIndent = new CheckBox();
             labelSecondLineEmpty = new Label();
-            labelAutoWrap = new Label();
             checkBoxSecondLineEmpty = new CheckBox();
-            checkBoxAutoWrap = new CheckBox();
-            tableLayoutPanel1.SuspendLayout();
-            tableLayoutPanel2.SuspendLayout();
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
             tabPage2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(_NO_TRANSLATE_numericMaxLineLength)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(_NO_TRANSLATE_numericMaxFirstLineLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)_NO_TRANSLATE_numericMaxFirstLineLength).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)_NO_TRANSLATE_numericMaxLineLength).BeginInit();
             SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // MainPanel
             // 
-            tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 0);
-            tableLayoutPanel1.Controls.Add(tabControl1, 0, 0);
-            tableLayoutPanel1.Location = new Point(0, 0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(698, 394);
-            tableLayoutPanel1.TabIndex = 60;
+            MainPanel.AutoSize = true;
+            MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            MainPanel.Controls.Add(tabControl1);
+            MainPanel.Padding = new Padding(9);
+            MainPanel.Size = new Size(698, 320);
             // 
-            // tableLayoutPanel2
+            // ControlsPanel
             // 
-            tableLayoutPanel2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel2.ColumnCount = 3;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.Controls.Add(buttonOk, 1, 0);
-            tableLayoutPanel2.Controls.Add(buttonCancel, 2, 0);
-            tableLayoutPanel2.Location = new Point(533, 362);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 1;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(162, 29);
-            tableLayoutPanel2.TabIndex = 0;
+            ControlsPanel.Controls.Add(buttonCancel);
+            ControlsPanel.Controls.Add(buttonOk);
+            ControlsPanel.Location = new Point(0, 102);
+            ControlsPanel.Size = new Size(698, 320);
             // 
             // buttonOk
             // 
-            buttonOk.Location = new Point(3, 3);
+            buttonOk.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonOk.AutoSize = true;
+            buttonOk.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonOk.ForeColor = SystemColors.ControlText;
+            buttonOk.Location = new Point(529, 8);
+            buttonOk.MinimumSize = new Size(75, 25);
             buttonOk.Name = "buttonOk";
-            buttonOk.Size = new Size(75, 23);
-            buttonOk.TabIndex = 6;
+            buttonOk.Size = new Size(75, 25);
+            buttonOk.TabIndex = 20;
             buttonOk.Text = "OK";
             buttonOk.UseVisualStyleBackColor = true;
             buttonOk.Click += buttonOk_Click;
             // 
             // buttonCancel
             // 
-            buttonCancel.Location = new Point(84, 3);
+            buttonCancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonCancel.AutoSize = true;
+            buttonCancel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonCancel.ForeColor = SystemColors.ControlText;
+            buttonCancel.Location = new Point(610, 8);
+            buttonCancel.MinimumSize = new Size(75, 25);
             buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 7;
+            buttonCancel.Size = new Size(75, 25);
+            buttonCancel.TabIndex = 22;
             buttonCancel.Text = "Cancel";
             buttonCancel.UseVisualStyleBackColor = true;
             buttonCancel.Click += buttonCancel_Click;
             // 
             // tabControl1
             // 
-            tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
-            tabControl1.Location = new Point(3, 3);
+            tabControl1.Dock = DockStyle.Fill;
+            tabControl1.Location = new Point(9, 9);
+            tabControl1.Margin = new Padding(0);
             tabControl1.Name = "tabControl1";
+            tabControl1.Padding = new Point(0, 0);
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(692, 353);
+            tabControl1.Size = new Size(680, 302);
             tabControl1.TabIndex = 4;
             // 
             // tabPage1
             // 
             tabPage1.Controls.Add(tableLayoutPanel5);
-            tabPage1.Location = new Point(4, 22);
+            tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(684, 327);
+            tabPage1.Size = new Size(672, 274);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Commit templates";
             tabPage1.UseVisualStyleBackColor = true;
@@ -158,16 +149,16 @@
             tableLayoutPanel5.RowStyles.Add(new RowStyle());
             tableLayoutPanel5.RowStyles.Add(new RowStyle());
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.Size = new Size(678, 321);
+            tableLayoutPanel5.Size = new Size(666, 268);
             tableLayoutPanel5.TabIndex = 1;
             // 
             // labelCommitTemplate
             // 
             labelCommitTemplate.AutoSize = true;
-            labelCommitTemplate.Location = new Point(3, 59);
+            labelCommitTemplate.Location = new Point(3, 64);
             labelCommitTemplate.Margin = new Padding(3, 6, 3, 0);
             labelCommitTemplate.Name = "labelCommitTemplate";
-            labelCommitTemplate.Size = new Size(87, 13);
+            labelCommitTemplate.Size = new Size(104, 15);
             labelCommitTemplate.TabIndex = 5;
             labelCommitTemplate.Text = "Commit template:";
             // 
@@ -179,7 +170,7 @@
             _NO_TRANSLATE_comboBoxCommitTemplates.FormattingEnabled = true;
             _NO_TRANSLATE_comboBoxCommitTemplates.Location = new Point(3, 3);
             _NO_TRANSLATE_comboBoxCommitTemplates.Name = "_NO_TRANSLATE_comboBoxCommitTemplates";
-            _NO_TRANSLATE_comboBoxCommitTemplates.Size = new Size(672, 21);
+            _NO_TRANSLATE_comboBoxCommitTemplates.Size = new Size(660, 23);
             _NO_TRANSLATE_comboBoxCommitTemplates.TabIndex = 0;
             _NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndexChanged += comboBoxCommitTemplates_SelectedIndexChanged;
             // 
@@ -187,63 +178,64 @@
             // 
             labelCommitTemplateName.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             labelCommitTemplateName.AutoSize = true;
-            labelCommitTemplateName.Location = new Point(3, 33);
+            labelCommitTemplateName.Location = new Point(3, 36);
             labelCommitTemplateName.Name = "labelCommitTemplateName";
-            labelCommitTemplateName.Size = new Size(87, 13);
+            labelCommitTemplateName.Size = new Size(104, 15);
             labelCommitTemplateName.TabIndex = 7;
             labelCommitTemplateName.Text = "Name:";
             // 
             // _NO_TRANSLATE_textCommitTemplateText
             // 
             _NO_TRANSLATE_textCommitTemplateText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            _NO_TRANSLATE_textCommitTemplateText.Location = new Point(96, 56);
+            _NO_TRANSLATE_textCommitTemplateText.Location = new Point(113, 61);
             _NO_TRANSLATE_textCommitTemplateText.Multiline = true;
             _NO_TRANSLATE_textCommitTemplateText.Name = "_NO_TRANSLATE_textCommitTemplateText";
             _NO_TRANSLATE_textCommitTemplateText.ScrollBars = ScrollBars.Vertical;
-            _NO_TRANSLATE_textCommitTemplateText.Size = new Size(579, 262);
+            _NO_TRANSLATE_textCommitTemplateText.Size = new Size(550, 204);
             _NO_TRANSLATE_textCommitTemplateText.TabIndex = 2;
             _NO_TRANSLATE_textCommitTemplateText.TextChanged += textCommitTemplateText_TextChanged;
             // 
             // _NO_TRANSLATE_textBoxCommitTemplateName
             // 
             _NO_TRANSLATE_textBoxCommitTemplateName.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            _NO_TRANSLATE_textBoxCommitTemplateName.Location = new Point(96, 30);
+            _NO_TRANSLATE_textBoxCommitTemplateName.Location = new Point(113, 32);
             _NO_TRANSLATE_textBoxCommitTemplateName.Name = "_NO_TRANSLATE_textBoxCommitTemplateName";
-            _NO_TRANSLATE_textBoxCommitTemplateName.Size = new Size(579, 20);
+            _NO_TRANSLATE_textBoxCommitTemplateName.Size = new Size(550, 23);
             _NO_TRANSLATE_textBoxCommitTemplateName.TabIndex = 1;
             _NO_TRANSLATE_textBoxCommitTemplateName.TextChanged += textBoxCommitTemplateName_TextChanged;
             // 
             // tabPage2
             // 
             tabPage2.Controls.Add(tableLayoutPanel3);
-            tabPage2.Location = new Point(4, 22);
+            tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(684, 327);
+            tabPage2.Size = new Size(672, 274);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Commit validation";
             tabPage2.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel3
             // 
-            tableLayoutPanel3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel3.AutoSize = true;
+            tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel3.ColumnCount = 2;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Controls.Add(labelUseIndent, 0, 4);
-            tableLayoutPanel3.Controls.Add(labelMaxLineLength, 0, 1);
             tableLayoutPanel3.Controls.Add(labelMaxFirstLineLength, 0, 0);
-            tableLayoutPanel3.Controls.Add(_NO_TRANSLATE_numericMaxLineLength, 1, 1);
             tableLayoutPanel3.Controls.Add(_NO_TRANSLATE_numericMaxFirstLineLength, 1, 0);
+            tableLayoutPanel3.Controls.Add(labelMaxLineLength, 0, 1);
+            tableLayoutPanel3.Controls.Add(_NO_TRANSLATE_numericMaxLineLength, 1, 1);
+            tableLayoutPanel3.Controls.Add(labelAutoWrap, 0, 2);
+            tableLayoutPanel3.Controls.Add(checkBoxAutoWrap, 1, 2);
             tableLayoutPanel3.Controls.Add(labelRegExCheck, 0, 3);
             tableLayoutPanel3.Controls.Add(_NO_TRANSLATE_textBoxCommitValidationRegex, 1, 3);
+            tableLayoutPanel3.Controls.Add(labelUseIndent, 0, 4);
             tableLayoutPanel3.Controls.Add(checkBoxUseIndent, 1, 4);
             tableLayoutPanel3.Controls.Add(labelSecondLineEmpty, 0, 5);
-            tableLayoutPanel3.Controls.Add(labelAutoWrap, 0, 2);
             tableLayoutPanel3.Controls.Add(checkBoxSecondLineEmpty, 1, 5);
-            tableLayoutPanel3.Controls.Add(checkBoxAutoWrap, 1, 2);
-            tableLayoutPanel3.Location = new Point(0, 0);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(3, 3);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 7;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
@@ -253,135 +245,145 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(686, 142);
+            tableLayoutPanel3.Size = new Size(666, 268);
             tableLayoutPanel3.TabIndex = 0;
-            // 
-            // labelUseIndent
-            // 
-            labelUseIndent.Anchor = AnchorStyles.Left;
-            labelUseIndent.AutoSize = true;
-            labelUseIndent.Location = new Point(3, 101);
-            labelUseIndent.Name = "labelUseIndent";
-            labelUseIndent.Size = new Size(126, 13);
-            labelUseIndent.TabIndex = 11;
-            labelUseIndent.Text = "Indent lines after first line:";
-            // 
-            // labelMaxLineLength
-            // 
-            labelMaxLineLength.Anchor = AnchorStyles.Left;
-            labelMaxLineLength.AutoSize = true;
-            labelMaxLineLength.Location = new Point(3, 32);
-            labelMaxLineLength.Name = "labelMaxLineLength";
-            labelMaxLineLength.Size = new Size(298, 13);
-            labelMaxLineLength.TabIndex = 4;
-            labelMaxLineLength.Text = "Maximum numbers of characters per line (0 = check disabled):";
             // 
             // labelMaxFirstLineLength
             // 
             labelMaxFirstLineLength.Anchor = AnchorStyles.Left;
             labelMaxFirstLineLength.AutoSize = true;
-            labelMaxFirstLineLength.Location = new Point(3, 6);
+            labelMaxFirstLineLength.Location = new Point(3, 7);
             labelMaxFirstLineLength.Name = "labelMaxFirstLineLength";
-            labelMaxFirstLineLength.Size = new Size(310, 13);
-            labelMaxFirstLineLength.TabIndex = 0;
+            labelMaxFirstLineLength.Size = new Size(353, 15);
+            labelMaxFirstLineLength.TabIndex = 3;
             labelMaxFirstLineLength.Text = "Maximum numbers of characters in first line (0 = check disabled):";
-            // 
-            // _NO_TRANSLATE_numericMaxLineLength
-            // 
-            _NO_TRANSLATE_numericMaxLineLength.Anchor = AnchorStyles.Left;
-            _NO_TRANSLATE_numericMaxLineLength.Location = new Point(319, 29);
-            _NO_TRANSLATE_numericMaxLineLength.Name = "_NO_TRANSLATE_numericMaxLineLength";
-            _NO_TRANSLATE_numericMaxLineLength.Size = new Size(60, 20);
-            _NO_TRANSLATE_numericMaxLineLength.TabIndex = 4;
             // 
             // _NO_TRANSLATE_numericMaxFirstLineLength
             // 
             _NO_TRANSLATE_numericMaxFirstLineLength.Anchor = AnchorStyles.Left;
-            _NO_TRANSLATE_numericMaxFirstLineLength.Location = new Point(319, 3);
+            _NO_TRANSLATE_numericMaxFirstLineLength.AutoSize = true;
+            _NO_TRANSLATE_numericMaxFirstLineLength.Location = new Point(362, 3);
+            _NO_TRANSLATE_numericMaxFirstLineLength.MinimumSize = new Size(60, 0);
             _NO_TRANSLATE_numericMaxFirstLineLength.Name = "_NO_TRANSLATE_numericMaxFirstLineLength";
-            _NO_TRANSLATE_numericMaxFirstLineLength.Size = new Size(60, 20);
-            _NO_TRANSLATE_numericMaxFirstLineLength.TabIndex = 3;
+            _NO_TRANSLATE_numericMaxFirstLineLength.Size = new Size(60, 23);
+            _NO_TRANSLATE_numericMaxFirstLineLength.TabIndex = 4;
+            // 
+            // labelMaxLineLength
+            // 
+            labelMaxLineLength.Anchor = AnchorStyles.Left;
+            labelMaxLineLength.AutoSize = true;
+            labelMaxLineLength.Location = new Point(3, 36);
+            labelMaxLineLength.Name = "labelMaxLineLength";
+            labelMaxLineLength.Size = new Size(337, 15);
+            labelMaxLineLength.TabIndex = 5;
+            labelMaxLineLength.Text = "Maximum numbers of characters per line (0 = check disabled):";
+            // 
+            // _NO_TRANSLATE_numericMaxLineLength
+            // 
+            _NO_TRANSLATE_numericMaxLineLength.Anchor = AnchorStyles.Left;
+            _NO_TRANSLATE_numericMaxLineLength.AutoSize = true;
+            _NO_TRANSLATE_numericMaxLineLength.Location = new Point(362, 32);
+            _NO_TRANSLATE_numericMaxLineLength.MinimumSize = new Size(60, 0);
+            _NO_TRANSLATE_numericMaxLineLength.Name = "_NO_TRANSLATE_numericMaxLineLength";
+            _NO_TRANSLATE_numericMaxLineLength.Size = new Size(60, 23);
+            _NO_TRANSLATE_numericMaxLineLength.TabIndex = 6;
+            // 
+            // labelAutoWrap
+            // 
+            labelAutoWrap.Anchor = AnchorStyles.Left;
+            labelAutoWrap.AutoSize = true;
+            labelAutoWrap.Location = new Point(3, 64);
+            labelAutoWrap.Name = "labelAutoWrap";
+            labelAutoWrap.Size = new Size(267, 15);
+            labelAutoWrap.TabIndex = 7;
+            labelAutoWrap.Text = "Auto-wrap commit message (except subject line)";
+            // 
+            // checkBoxAutoWrap
+            // 
+            checkBoxAutoWrap.Anchor = AnchorStyles.Left;
+            checkBoxAutoWrap.AutoSize = true;
+            checkBoxAutoWrap.Location = new Point(377, 65);
+            checkBoxAutoWrap.Margin = new Padding(3, 7, 3, 7);
+            checkBoxAutoWrap.Name = "checkBoxAutoWrap";
+            checkBoxAutoWrap.Size = new Size(15, 14);
+            checkBoxAutoWrap.TabIndex = 12;
+            checkBoxAutoWrap.UseVisualStyleBackColor = true;
             // 
             // labelRegExCheck
             // 
             labelRegExCheck.Anchor = AnchorStyles.Left;
             labelRegExCheck.AutoSize = true;
-            labelRegExCheck.Location = new Point(3, 78);
+            labelRegExCheck.Location = new Point(3, 93);
             labelRegExCheck.Name = "labelRegExCheck";
-            labelRegExCheck.Size = new Size(302, 13);
-            labelRegExCheck.TabIndex = 7;
+            labelRegExCheck.Size = new Size(346, 15);
+            labelRegExCheck.TabIndex = 13;
             labelRegExCheck.Text = "Commit must match following RegEx (Empty = check disabled):";
             // 
             // _NO_TRANSLATE_textBoxCommitValidationRegex
             // 
             _NO_TRANSLATE_textBoxCommitValidationRegex.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            _NO_TRANSLATE_textBoxCommitValidationRegex.Location = new Point(319, 75);
+            _NO_TRANSLATE_textBoxCommitValidationRegex.Location = new Point(377, 89);
             _NO_TRANSLATE_textBoxCommitValidationRegex.Name = "_NO_TRANSLATE_textBoxCommitValidationRegex";
-            _NO_TRANSLATE_textBoxCommitValidationRegex.Size = new Size(364, 20);
-            _NO_TRANSLATE_textBoxCommitValidationRegex.TabIndex = 8;
+            _NO_TRANSLATE_textBoxCommitValidationRegex.Size = new Size(301, 23);
+            _NO_TRANSLATE_textBoxCommitValidationRegex.TabIndex = 14;
+            // 
+            // labelUseIndent
+            // 
+            labelUseIndent.Anchor = AnchorStyles.Left;
+            labelUseIndent.AutoSize = true;
+            labelUseIndent.Location = new Point(3, 121);
+            labelUseIndent.Name = "labelUseIndent";
+            labelUseIndent.Size = new Size(143, 15);
+            labelUseIndent.TabIndex = 15;
+            labelUseIndent.Text = "Indent lines after first line:";
             // 
             // checkBoxUseIndent
             // 
             checkBoxUseIndent.Anchor = AnchorStyles.Left;
             checkBoxUseIndent.AutoSize = true;
-            checkBoxUseIndent.Location = new Point(319, 101);
+            checkBoxUseIndent.Location = new Point(377, 122);
+            checkBoxUseIndent.Margin = new Padding(3, 7, 3, 7);
             checkBoxUseIndent.Name = "checkBoxUseIndent";
             checkBoxUseIndent.Size = new Size(15, 14);
-            checkBoxUseIndent.TabIndex = 10;
+            checkBoxUseIndent.TabIndex = 16;
             checkBoxUseIndent.UseVisualStyleBackColor = true;
             // 
             // labelSecondLineEmpty
             // 
             labelSecondLineEmpty.Anchor = AnchorStyles.Left;
             labelSecondLineEmpty.AutoSize = true;
-            labelSecondLineEmpty.Location = new Point(3, 121);
+            labelSecondLineEmpty.Location = new Point(3, 149);
             labelSecondLineEmpty.Name = "labelSecondLineEmpty";
-            labelSecondLineEmpty.Size = new Size(137, 13);
-            labelSecondLineEmpty.TabIndex = 6;
+            labelSecondLineEmpty.Size = new Size(154, 15);
+            labelSecondLineEmpty.TabIndex = 17;
             labelSecondLineEmpty.Text = "Second line must be empty:";
-            // 
-            // labelAutoWrap
-            // 
-            labelAutoWrap.Anchor = AnchorStyles.Left;
-            labelAutoWrap.AutoSize = true;
-            labelAutoWrap.Location = new Point(3, 55);
-            labelAutoWrap.Name = "labelAutoWrap";
-            labelAutoWrap.Size = new Size(233, 13);
-            labelAutoWrap.TabIndex = 13;
-            labelAutoWrap.Text = "Auto-wrap commit message (except subject line)";
             // 
             // checkBoxSecondLineEmpty
             // 
             checkBoxSecondLineEmpty.Anchor = AnchorStyles.Left;
             checkBoxSecondLineEmpty.AutoSize = true;
-            checkBoxSecondLineEmpty.Location = new Point(319, 121);
+            checkBoxSecondLineEmpty.Location = new Point(377, 150);
+            checkBoxSecondLineEmpty.Margin = new Padding(3, 7, 3, 7);
             checkBoxSecondLineEmpty.Name = "checkBoxSecondLineEmpty";
             checkBoxSecondLineEmpty.Size = new Size(15, 14);
-            checkBoxSecondLineEmpty.TabIndex = 5;
+            checkBoxSecondLineEmpty.TabIndex = 18;
             checkBoxSecondLineEmpty.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxAutoWrap
-            // 
-            checkBoxAutoWrap.Anchor = AnchorStyles.Left;
-            checkBoxAutoWrap.AutoSize = true;
-            checkBoxAutoWrap.Location = new Point(319, 55);
-            checkBoxAutoWrap.Name = "checkBoxAutoWrap";
-            checkBoxAutoWrap.Size = new Size(15, 14);
-            checkBoxAutoWrap.TabIndex = 14;
-            checkBoxAutoWrap.UseVisualStyleBackColor = true;
             // 
             // FormCommitTemplateSettings
             // 
+            AcceptButton = buttonOk;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(698, 394);
-            Controls.Add(tableLayoutPanel1);
-            MinimumSize = new Size(550, 400);
+            AutoSize = true;
+            ClientSize = new Size(698, 361);
+            MinimizeBox = false;
+            MinimumSize = new Size(550, 310);
             Name = "FormCommitTemplateSettings";
             Text = "Commit message settings";
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
-            tableLayoutPanel2.ResumeLayout(false);
+            MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
+            ControlsPanel.ResumeLayout(false);
+            ControlsPanel.PerformLayout();
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tableLayoutPanel5.ResumeLayout(false);
@@ -390,17 +392,14 @@
             tabPage2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(_NO_TRANSLATE_numericMaxLineLength)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(_NO_TRANSLATE_numericMaxFirstLineLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)_NO_TRANSLATE_numericMaxFirstLineLength).EndInit();
+            ((System.ComponentModel.ISupportInitialize)_NO_TRANSLATE_numericMaxLineLength).EndInit();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
 
-        private TableLayoutPanel tableLayoutPanel1;
-        private TableLayoutPanel tableLayoutPanel2;
         private Button buttonOk;
         private Button buttonCancel;
         private TableLayoutPanel tableLayoutPanel3;
