@@ -1,4 +1,5 @@
 ﻿using BugReporter;
+using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.Extensibility.Translations.Xliff;
 using GitUI;
@@ -36,6 +37,8 @@ namespace TranslationApp
             // This would lead to InvalidOperationException thrown in GitModuleForm().
             // Set the flag that will stop this from happening.
             GitModuleForm.IsUnitTestActive = true;
+
+            AppSettings.Font = SystemFonts.MessageBoxFont;
 
             IDictionary<string, List<TranslationItemWithCategory>> neutralItems = TranslationHelpers.LoadNeutralItems();
             string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
