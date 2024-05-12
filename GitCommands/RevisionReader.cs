@@ -16,8 +16,8 @@ namespace GitCommands
 
             // These header entries can all be decoded from the bytes (ASCII compatible) directly.
 
-            /* Object ID       */ "%H" +
-            /* Tree ID         */ "%T" +
+            /* Object ID       */ "%H." +
+            /* Tree ID         */ "%T." +
             /* Parent IDs      */ "%P%n" +
             /* Author date     */ "%at%n" +
             /* Commit date     */ "%ct%n" +
@@ -317,10 +317,40 @@ namespace GitCommands
                 return false;
             }
 
+            int firstDotIndex = buffer.Span.IndexOf((byte)'.');
+            if (firstDotIndex == -1)
+            {
+                ParseAssert($"Log parse error, no dot found for commit hash: {buffer.Length}");
+                revision = default;
+                return false;
+            }
+
+            if (!ObjectId.IsValidLength(firstDotIndex))
+            {
+                ParseAssert($"Log parse error, the commit hash has an invalid length: {firstDotIndex}");
+                revision = default;
+                return false;
+            }
+
+            int secondDotIndex = buffer.Span.Slice(firstDotIndex + 1).IndexOf((byte)'.');
+            if (secondDotIndex == -1)
+            {
+                ParseAssert($"Log parse error, no dot found for parent commit hash: {buffer.Length}");
+                revision = default;
+                return false;
+            }
+
+            if (!ObjectId.IsValidLength(secondDotIndex))
+            {
+                ParseAssert($"Log parse error, the parent commit hash has an invalid length: {secondDotIndex}");
+                revision = default;
+                return false;
+            }
+
             #region Object ID, Tree ID, Parent IDs
 
             // The first 40 bytes are the revision ID and the tree ID back to back
-            ReadOnlyMemory<byte> commitHash = buffer.Slice(0, ObjectId.Sha1CharCount);
+            ReadOnlyMemory<byte> commitHash = buffer.Slice(0, firstDotIndex);
             ReadOnlySpan<byte> commitHashSpan = commitHash.Span;
             ObjectId? objectId;
             if (_cache.objectId is not null && commitHashSpan.SequenceEqual(_cache.buffer.Span))
@@ -337,7 +367,7 @@ namespace GitCommands
                 }
             }
 
-            ReadOnlyMemory<byte> parentCommitHash = buffer.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount);
+            ReadOnlyMemory<byte> parentCommitHash = buffer.Slice(firstDotIndex + 1, secondDotIndex);
             if (!ObjectId.TryParse(parentCommitHash.Span, out ObjectId? treeId))
             {
                 ParseAssert($"Log parse error, object id: {buffer.Length}({parentCommitHash}");
@@ -345,7 +375,7 @@ namespace GitCommands
                 return false;
             }
 
-            int offset = ObjectId.Sha1CharCount * 2;
+            int offset = objectId.CharLength + treeId.CharLength + 2; // + 2 for the dots
             ReadOnlySpan<byte> bufferSpan = buffer.Span;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
@@ -368,9 +398,14 @@ namespace GitCommands
 
                     if (baseOffset >= array.Length || ((char)array[baseOffset] is not ('\n' or ' ')))
                     {
-                        // Parse error, not using ParseAssert (or increasing _noOfParseError)
-                        ParseAssert($"Log parse error, unexpected contents in the parent array: {baseOffset - offset} for {objectId}");
-                        return -1;
+                        // Try to advance another 24 bytes (difference between sha1 and sha256 length)
+                        baseOffset += 24;
+                        if (baseOffset >= array.Length || ((char)array[baseOffset] is not ('\n' or ' ')))
+                        {
+                            // Parse error, not using ParseAssert (or increasing _noOfParseError)
+                            ParseAssert($"Log parse error, unexpected contents in the parent array: {baseOffset - offset} for {objectId}");
+                            return -1;
+                        }
                     }
                 }
 
@@ -389,8 +424,8 @@ namespace GitCommands
 
                 for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
-                    ReadOnlyMemory<byte> hashParent = buffer.Slice(offset, ObjectId.Sha1CharCount);
-                    if (!ObjectId.TryParse(hashParent.Span, out ObjectId parentId))
+                    ReadOnlyMemory<byte> hashParent = buffer.Slice(offset);
+                    if (!ObjectId.TryParse(hashParent.Span, out ObjectId parentId, out int hashLength))
                     {
                         ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                         revision = default;
@@ -402,7 +437,7 @@ namespace GitCommands
                     }
 
                     parentIds[parentIndex] = parentId;
-                    offset += ObjectId.Sha1CharCount + 1;
+                    offset += hashLength + 1;
                 }
             }
 

@@ -22,17 +22,17 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
         /// </summary>
-        public static ObjectId WorkTreeId { get; } = new(0x1111_1111_1111_1111, 0x1111_1111_1111_1111, 0x1111_1111);
+        public static ObjectId WorkTreeId { get; } = new(0x1111_1111_1111_1111, 0x1111_1111_1111_1111, 0x1111_1111, 0, 0, false);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent changes staged to the index.
         /// </summary>
-        public static ObjectId IndexId { get; } = new(0x2222_2222_2222_2222, 0x2222_2222_2222_2222, 0x2222_2222);
+        public static ObjectId IndexId { get; } = new(0x2222_2222_2222_2222, 0x2222_2222_2222_2222, 0x2222_2222, 0, 0, false);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent combined diff for merge commits.
         /// </summary>
-        public static ObjectId CombinedDiffId { get; } = new(0x3333_3333_3333_3333, 0x3333_3333_3333_3333, 0x3333_3333);
+        public static ObjectId CombinedDiffId { get; } = new(0x3333_3333_3333_3333, 0x3333_3333_3333_3333, 0x3333_3333, 0, 0, false);
 
         /// <summary>
         /// Produces an <see cref="ObjectId"/> populated with random bytes.
@@ -43,13 +43,27 @@ namespace GitUIPluginInterfaces
             return new ObjectId(
                 unchecked((ulong)_random.NextInt64()),
                 unchecked((ulong)_random.NextInt64()),
-                unchecked((uint)_random.Next()));
+                unchecked((uint)_random.Next()),
+                0,
+                0,
+                false);
         }
+
+        /// <summary>
+        /// Checks if a char buffer with the given length can be a valid hash.
+        /// </summary>
+        /// <param name="length">The length of the buffer.</param>
+        /// <returns>True if the buffer can be a valid hash; otherwise false. It must still be checked if the buffer contains a valid hash.</returns>
+        public static bool IsValidLength(int length) => length == Sha1CharCount || length == Sha256CharCount;
 
         public bool IsArtificial => this == WorkTreeId || this == IndexId || this == CombinedDiffId;
 
+        public int CharLength => _isSha256 ? Sha256CharCount : Sha1CharCount;
+
         private const int _sha1ByteCount = 20;
+        private const int _sha256ByteCount = 32;
         public const int Sha1CharCount = 40;
+        public const int Sha256CharCount = 64;
 
         #region Parsing
 
@@ -66,7 +80,7 @@ namespace GitUIPluginInterfaces
         [MustUseReturnValue]
         public static ObjectId Parse(string s)
         {
-            if (s?.Length is not Sha1CharCount || !TryParse(s.AsSpan(), out ObjectId id))
+            if ((s?.Length is not Sha1CharCount && s?.Length is not Sha256CharCount) || !TryParse(s.AsSpan(), out ObjectId id))
             {
                 throw new FormatException($"Unable to parse object ID \"{s}\".");
             }
@@ -88,7 +102,7 @@ namespace GitUIPluginInterfaces
         [MustUseReturnValue]
         public static ObjectId Parse(string s, Capture capture)
         {
-            if (s is null || capture?.Length is not Sha1CharCount || !TryParse(s.AsSpan(capture.Index, capture.Length), out ObjectId id))
+            if (s is null || (capture?.Length is not Sha1CharCount && capture?.Length is not Sha256CharCount) || !TryParse(s.AsSpan(capture.Index, capture.Length), out ObjectId id))
             {
                 throw new FormatException($"Unable to parse object ID \"{s}\".");
             }
@@ -138,6 +152,11 @@ namespace GitUIPluginInterfaces
                 return false;
             }
 
+            if (s.Length - offset >= Sha256CharCount && TryParse(s.AsSpan(offset, Sha256CharCount), out objectId))
+            {
+                return true;
+            }
+
             return TryParse(s.AsSpan(offset, Sha1CharCount), out objectId);
         }
 
@@ -156,11 +175,15 @@ namespace GitUIPluginInterfaces
         [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         public static bool TryParse(in ReadOnlySpan<char> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
-            if (array.Length != Sha1CharCount)
+            if (array.Length != Sha1CharCount && array.Length != Sha256CharCount)
             {
                 objectId = default;
                 return false;
             }
+
+            bool isSha256 = false;
+            ulong i4 = 0;
+            uint i5 = 0;
 
             if (!ulong.TryParse(array.Slice(0, 16), NumberStyles.AllowHexSpecifier, provider: null, out ulong i1)
                 || !ulong.TryParse(array.Slice(16, 16), NumberStyles.AllowHexSpecifier, provider: null, out ulong i2)
@@ -170,7 +193,19 @@ namespace GitUIPluginInterfaces
                 return false;
             }
 
-            objectId = new ObjectId(i1, i2, i3);
+            if (array.Length == Sha256CharCount)
+            {
+                if (!ulong.TryParse(array.Slice(40, 16), NumberStyles.AllowHexSpecifier, provider: null, out i4)
+                || !uint.TryParse(array.Slice(56, 8), NumberStyles.AllowHexSpecifier, provider: null, out i5))
+                {
+                    objectId = default;
+                    return false;
+                }
+
+                isSha256 = true;
+            }
+
+            objectId = new ObjectId(i1, i2, i3, i4, i5, isSha256);
             return true;
         }
 
@@ -186,14 +221,51 @@ namespace GitUIPluginInterfaces
         /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
         /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
         [MustUseReturnValue]
-        [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         public static bool TryParse(in ReadOnlySpan<byte> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
-            if (array.Length != Sha1CharCount)
+            if (array.Length != Sha1CharCount && array.Length != Sha256CharCount)
             {
                 objectId = default;
                 return false;
             }
+
+            bool result = TryParse(array, out objectId, out int hashLength);
+
+            if (result && array.Length == Sha256CharCount && hashLength == Sha1CharCount)
+            {
+                // The array has the length of a sha256 hash but only a sha1 hash could be parsed.
+                return false;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Parses an <see cref="ObjectId"/> from a span of bytes <paramref name="array"/> containing ASCII characters.
+        /// </summary>
+        /// <remarks>
+        /// <para>This method reads human-readable ASCII-encoded bytes (more verbose than raw values).
+        /// Several git commands emit them in this form.</para>
+        /// <para>For parsing to succeed, <paramref name="array"/> must contain at least 40 bytes.</para>
+        /// </remarks>
+        /// <param name="array">The byte span to parse.</param>
+        /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
+        /// <param name="hashLength">Contains the length of the hash if <paramref name="array"/> could be parsed.</param>
+        /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
+        [MustUseReturnValue]
+        [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
+        public static bool TryParse(in ReadOnlySpan<byte> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId, out int hashLength)
+        {
+            hashLength = 0;
+            if (array.Length < Sha1CharCount)
+            {
+                objectId = default;
+                return false;
+            }
+
+            bool isSha256 = false;
+            ulong i4 = 0;
+            uint i5 = 0;
 
             if (!Utf8Parser.TryParse(array.Slice(0, 16), out ulong i1, out int _, standardFormat: 'X')
                 || !Utf8Parser.TryParse(array.Slice(16, 16), out ulong i2, out int _, standardFormat: 'X')
@@ -203,7 +275,17 @@ namespace GitUIPluginInterfaces
                 return false;
             }
 
-            objectId = new ObjectId(i1, i2, i3);
+            hashLength = Sha1CharCount;
+
+            if (array.Length >= Sha256CharCount
+                && Utf8Parser.TryParse(array.Slice(40, 16), out i4, out int _, standardFormat: 'X')
+                && Utf8Parser.TryParse(array.Slice(56, 8), out i5, out int _, standardFormat: 'X'))
+            {
+                isSha256 = true;
+                hashLength = Sha256CharCount;
+            }
+
+            objectId = new ObjectId(i1, i2, i3, i4, i5, isSha256);
             return true;
         }
 
@@ -215,7 +297,7 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to validate.</param>
         /// <returns><c>true</c> if <paramref name="s"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
         [Pure]
-        public static bool IsValid(string s) => s.Length == Sha1CharCount && IsValidCharacters(s);
+        public static bool IsValid(string s) => (s.Length == Sha1CharCount || s.Length == Sha256CharCount) && IsValidCharacters(s);
 
         /// <summary>
         /// Identifies whether <paramref name="s"/> contains between <paramref name="minLength"/> and 40 valid SHA-1 hash characters.
@@ -223,7 +305,7 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to validate.</param>
         /// <returns><c>true</c> if <paramref name="s"/> is a valid partial SHA-1 hash, otherwise <c>false</c>.</returns>
         [Pure]
-        public static bool IsValidPartial(string s, int minLength) => s.Length >= minLength && s.Length <= Sha1CharCount && IsValidCharacters(s);
+        public static bool IsValidPartial(string s, int minLength) => s.Length >= minLength && s.Length <= Sha256CharCount && IsValidCharacters(s);
 
         private static bool IsValidCharacters(string s)
         {
@@ -244,19 +326,31 @@ namespace GitUIPluginInterfaces
         private readonly ulong _i1;
         private readonly ulong _i2;
         private readonly uint _i3;
+        private readonly ulong _i4;
+        private readonly uint _i5;
+        private bool _isSha256;
 
-        private ObjectId(ulong i1, ulong i2, uint i3)
+        private ObjectId(ulong i1, ulong i2, uint i3, ulong i4, uint i5, bool isSha256)
         {
             _i1 = i1;
             _i2 = i2;
             _i3 = i3;
+            _i4 = i4;
+            _i5 = i5;
+            _isSha256 = isSha256;
         }
 
         #region IComparable<ObjectId>
 
         public int CompareTo(ObjectId other)
         {
-            int result = _i1.CompareTo(other._i1);
+            int result = _isSha256.CompareTo(other._isSha256);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            result = _i1.CompareTo(other._i1);
             if (result != 0)
             {
                 return result;
@@ -268,7 +362,19 @@ namespace GitUIPluginInterfaces
                 return result;
             }
 
-            return _i3.CompareTo(other._i3);
+            result = _i3.CompareTo(other._i3);
+            if (result != 0 || !_isSha256)
+            {
+                return result;
+            }
+
+            result = _i4.CompareTo(other._i4);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            return _i5.CompareTo(other._i5);
         }
 
         #endregion
@@ -278,7 +384,7 @@ namespace GitUIPluginInterfaces
         /// </summary>
         public override string ToString()
         {
-            return ToShortString(Sha1CharCount);
+            return ToShortString(_isSha256 ? Sha256CharCount : Sha1CharCount);
         }
 
         /// <summary>
@@ -295,19 +401,30 @@ namespace GitUIPluginInterfaces
                 throw new ArgumentOutOfRangeException(nameof(length), length, "Cannot be less than one.");
             }
 
-            if (length > Sha1CharCount)
+            if (!_isSha256 && length > Sha1CharCount)
             {
                 throw new ArgumentOutOfRangeException(nameof(length), length, $"Cannot be greater than {Sha1CharCount}.");
             }
 
+            if (_isSha256 && length > Sha256CharCount)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), length, $"Cannot be greater than {Sha256CharCount}.");
+            }
+
             int neededBytesCount = (length + 1) / 2; // equivalent to Math.Ceiling(length / 2.0) with only int calculation
-            Span<byte> buffer = stackalloc byte[_sha1ByteCount];
+            Span<byte> buffer = stackalloc byte[_isSha256 ? _sha256ByteCount : _sha1ByteCount];
 
             BinaryPrimitives.WriteUInt64BigEndian(buffer, _i1);
             if (neededBytesCount > 8)
             {
                 BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
                 BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
+
+                if (_isSha256)
+                {
+                    BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(20, 8), _i4);
+                    BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(28, 4), _i5);
+                }
             }
 
             // Operate on the smaller buffer possible
@@ -326,9 +443,12 @@ namespace GitUIPluginInterfaces
         public bool Equals(ObjectId? other)
         {
             return other is not null &&
+                   _isSha256 == other._isSha256 &&
                    _i1 == other._i1 &&
                    _i2 == other._i2 &&
-                   _i3 == other._i3;
+                   _i3 == other._i3 &&
+                   _i4 == other._i4 &&
+                   _i5 == other._i5;
         }
 
         /// <inheritdoc />
