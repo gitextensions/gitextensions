@@ -1,17 +1,16 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+public interface ISetting
 {
-    public interface ISetting
-    {
-        /// <summary>
-        /// Name of the setting
-        /// </summary>
-        string Name { get; }
+    /// <summary>
+    /// Name of the setting
+    /// </summary>
+    string Name { get; }
 
-        /// <summary>
-        /// Caption of the setting
-        /// </summary>
-        string Caption { get; }
+    /// <summary>
+    /// Caption of the setting
+    /// </summary>
+    string Caption { get; }
 
-        ISettingControlBinding CreateControlBinding();
-    }
+    ISettingControlBinding CreateControlBinding();
 }

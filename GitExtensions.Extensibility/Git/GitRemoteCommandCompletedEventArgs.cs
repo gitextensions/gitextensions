@@ -1,18 +1,17 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+public class GitRemoteCommandCompletedEventArgs : EventArgs
 {
-    public class GitRemoteCommandCompletedEventArgs : EventArgs
+    public IGitRemoteCommand Command { get; }
+
+    public bool IsError { get; }
+
+    public bool Handled { get; }
+
+    public GitRemoteCommandCompletedEventArgs(IGitRemoteCommand command, bool isError, bool handled)
     {
-        public IGitRemoteCommand Command { get; }
-
-        public bool IsError { get; }
-
-        public bool Handled { get; }
-
-        public GitRemoteCommandCompletedEventArgs(IGitRemoteCommand command, bool isError, bool handled)
-        {
-            Command = command;
-            IsError = isError;
-            Handled = handled;
-        }
+        Command = command;
+        IsError = isError;
+        Handled = handled;
     }
 }

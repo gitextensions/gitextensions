@@ -1,13 +1,12 @@
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces;
+
+public enum SubmoduleStatus
 {
-    public enum SubmoduleStatus
-    {
-        Unknown = 0,
-        NewSubmodule,
-        FastForward,
-        Rewind,
-        NewerTime,
-        OlderTime,
-        SameTime
-    }
+    Unknown = 0,
+    NewSubmodule,
+    FastForward,
+    Rewind,
+    NewerTime,
+    OlderTime,
+    SameTime
 }

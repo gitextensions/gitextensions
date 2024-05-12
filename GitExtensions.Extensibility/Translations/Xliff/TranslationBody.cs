@@ -2,60 +2,59 @@
 using System.Xml.Serialization;
 using GitExtUtils;
 
-namespace ResourceManager.Xliff
+namespace ResourceManager.Xliff;
+
+public class TranslationBody
 {
-    public class TranslationBody
+    public TranslationBody()
     {
-        public TranslationBody()
+        TranslationItems = [];
+    }
+
+    [XmlElement(ElementName = "trans-unit")]
+    public List<TranslationItem> TranslationItems { get; set; }
+
+    public void AddTranslationItem(TranslationItem translationItem)
+    {
+        if (string.IsNullOrEmpty(translationItem.Name))
         {
-            TranslationItems = [];
+            throw new InvalidOperationException($"Cannot add {nameof(TranslationItem)} without name");
         }
 
-        [XmlElement(ElementName = "trans-unit")]
-        public List<TranslationItem> TranslationItems { get; set; }
+        TranslationItems.Add(translationItem);
+    }
 
-        public void AddTranslationItem(TranslationItem translationItem)
+    public void AddTranslationItemIfNotExist(TranslationItem translationItem)
+    {
+        if (string.IsNullOrEmpty(translationItem.Name))
         {
-            if (string.IsNullOrEmpty(translationItem.Name))
-            {
-                throw new InvalidOperationException($"Cannot add {nameof(TranslationItem)} without name");
-            }
-
-            TranslationItems.Add(translationItem);
+            throw new InvalidOperationException($"Cannot add {nameof(TranslationItem)} without name");
         }
 
-        public void AddTranslationItemIfNotExist(TranslationItem translationItem)
+        TranslationItem? ti = GetTranslationItem(translationItem.Name, translationItem.Property);
+        if (ti is null)
         {
-            if (string.IsNullOrEmpty(translationItem.Name))
+            if (translationItem.Property == "ToolTipText")
             {
-                throw new InvalidOperationException($"Cannot add {nameof(TranslationItem)} without name");
-            }
-
-            TranslationItem? ti = GetTranslationItem(translationItem.Name, translationItem.Property);
-            if (ti is null)
-            {
-                if (translationItem.Property == "ToolTipText")
-                {
-                    ti = GetTranslationItem(translationItem.Name, "Text");
-                    if (ti is null || translationItem.Source != ti.Source)
-                    {
-                        TranslationItems.Add(translationItem);
-                    }
-                }
-                else
+                ti = GetTranslationItem(translationItem.Name, "Text");
+                if (ti is null || translationItem.Source != ti.Source)
                 {
                     TranslationItems.Add(translationItem);
                 }
             }
             else
             {
-                DebugHelpers.Assert(ti.Value == translationItem.Value, "ti.Value == translationItem.Value");
+                TranslationItems.Add(translationItem);
             }
         }
-
-        public TranslationItem? GetTranslationItem(string name, string? property)
+        else
         {
-            return TranslationItems.Find(t => t.Name is not null && t.Name.TrimStart('_') == name.TrimStart('_') && t.Property == property);
+            DebugHelpers.Assert(ti.Value == translationItem.Value, "ti.Value == translationItem.Value");
         }
+    }
+
+    public TranslationItem? GetTranslationItem(string name, string? property)
+    {
+        return TranslationItems.Find(t => t.Name is not null && t.Name.TrimStart('_') == name.TrimStart('_') && t.Property == property);
     }
 }

@@ -1,26 +1,25 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+/// <summary>Arguments to 'git reset'.</summary>
+public enum ResetMode
 {
-    /// <summary>Arguments to 'git reset'.</summary>
-    public enum ResetMode
-    {
-        /// <summary>(no option)</summary>
-        ResetIndex = 0,
+    /// <summary>(no option)</summary>
+    ResetIndex = 0,
 
-        /// <summary>--soft</summary>
-        Soft,
+    /// <summary>--soft</summary>
+    Soft,
 
-        /// <summary>--mixed</summary>
-        Mixed,
+    /// <summary>--mixed</summary>
+    Mixed,
 
-        /// <summary>--hard</summary>
-        Hard,
+    /// <summary>--hard</summary>
+    Hard,
 
-        /// <summary>--merge</summary>
-        Merge,
+    /// <summary>--merge</summary>
+    Merge,
 
-        /// <summary>--keep</summary>
-        Keep
+    /// <summary>--keep</summary>
+    Keep
 
-        // All options are not implemented, like --patch
-    }
+    // All options are not implemented, like --patch
 }

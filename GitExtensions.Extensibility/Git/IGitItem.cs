@@ -1,9 +1,8 @@
-﻿namespace GitUIPluginInterfaces
-{
-    public interface IGitItem
-    {
-        ObjectId? ObjectId { get; }
+﻿namespace GitUIPluginInterfaces;
 
-        string? Guid { get; }
-    }
+public interface IGitItem
+{
+    ObjectId? ObjectId { get; }
+
+    string? Guid { get; }
 }

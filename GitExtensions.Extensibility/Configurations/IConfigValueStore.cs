@@ -1,8 +1,7 @@
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces;
+
+public interface IConfigValueStore : ISettingsValueGetter
 {
-    public interface IConfigValueStore : ISettingsValueGetter
-    {
-        void SetPathValue(string setting, string? value);
-        void SetValue(string setting, string? value);
-    }
+    void SetPathValue(string setting, string? value);
+    void SetValue(string setting, string? value);
 }

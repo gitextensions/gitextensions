@@ -1,14 +1,13 @@
-namespace GitUIPluginInterfaces
-{
-    public readonly struct ConflictedFileData
-    {
-        public ConflictedFileData(ObjectId objectId, string filename)
-        {
-            ObjectId = objectId;
-            Filename = filename;
-        }
+namespace GitUIPluginInterfaces;
 
-        public ObjectId ObjectId { get; }
-        public string Filename { get; }
+public readonly struct ConflictedFileData
+{
+    public ConflictedFileData(ObjectId objectId, string filename)
+    {
+        ObjectId = objectId;
+        Filename = filename;
     }
+
+    public ObjectId ObjectId { get; }
+    public string Filename { get; }
 }
