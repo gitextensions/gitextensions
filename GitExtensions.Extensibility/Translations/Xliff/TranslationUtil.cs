@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using GitCommands;
 
 namespace ResourceManager.Xliff
 {
@@ -431,6 +430,18 @@ namespace ResourceManager.Xliff
 
                 return e.Types.Where(t => t != null);
             }
+        }
+
+        private static readonly char PosixDirectorySeparatorChar = '/';
+        private static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
+
+        /// <summary>
+        ///  Replaces native path separator with POSIX path separator (/).
+        /// </summary>
+        [return: NotNullIfNotNull("path")]
+        private static string? ToPosixPath(this string? path)
+        {
+            return path?.Replace(NativeDirectorySeparatorChar, PosixDirectorySeparatorChar);
         }
     }
 }

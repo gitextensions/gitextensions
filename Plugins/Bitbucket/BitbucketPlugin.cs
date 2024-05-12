@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitCommands;
 using GitExtensions.Plugins.Bitbucket.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Settings;
@@ -20,7 +21,7 @@ namespace GitExtensions.Plugins.Bitbucket
         {
             Id = new Guid("0DA2C988-37A1-461C-BAD4-AFE4930C3157");
             Name = "Bitbucket Server";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
 
             Icon = Resources.IconPluginBitbucket;
         }

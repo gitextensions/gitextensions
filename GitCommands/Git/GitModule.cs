@@ -2231,7 +2231,7 @@ namespace GitCommands
             bool cacheResult,
             bool isTracked,
             bool useGitColoring,
-            GitCommandConfiguration commandConfiguration,
+            IGitCommandConfiguration commandConfiguration,
             CancellationToken cancellationToken)
         {
             // fix refs slashes
@@ -2286,7 +2286,7 @@ namespace GitCommands
             string extraDiffArguments,
             string? pathFilter,
             bool useGitColoring,
-            GitCommandConfiguration commandConfiguration,
+            IGitCommandConfiguration commandConfiguration,
             CancellationToken cancellationToken)
         {
             // range-diff is not possible for artificial commits, use HEAD
@@ -2392,7 +2392,7 @@ namespace GitCommands
             return result;
         }
 
-        public async Task<ExecutionResult> GetGrepFileAsync(ObjectId objectId, string fileName, ArgumentString extraArgs, string grepString, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken = default)
+        public async Task<ExecutionResult> GetGrepFileAsync(ObjectId objectId, string fileName, ArgumentString extraArgs, string grepString, bool useGitColoring, IGitCommandConfiguration commandConfiguration, CancellationToken cancellationToken = default)
         {
             bool noCache = objectId.IsArtificial;
 
@@ -4003,7 +4003,7 @@ namespace GitCommands
                 }).ToList();
         }
 
-        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, bool useGitColoring, GitCommandConfiguration commandConfiguration, CancellationToken cancellationToken)
+        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, bool useGitColoring, IGitCommandConfiguration commandConfiguration, CancellationToken cancellationToken)
         {
             GitArgumentBuilder args = new("diff-tree", commandConfiguration)
             {

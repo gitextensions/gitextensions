@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using AdysTech.CredentialManager;
-using Microsoft;
 
 namespace GitUIPluginInterfaces
 {
@@ -67,7 +66,7 @@ namespace GitUIPluginInterfaces
         protected void SetCredentials(SettingLevel settingLevel, string name, NetworkCredential? value)
         {
             string targetName = GetWindowsCredentialsTarget(name, settingLevel);
-            Validates.NotNull(targetName);
+            ArgumentNullException.ThrowIfNull(targetName);
             Credentials.AddOrUpdate(targetName, value, (s, credential) => value);
         }
 
@@ -78,7 +77,7 @@ namespace GitUIPluginInterfaces
                 return $"{name}";
             }
 
-            Validates.NotNull(_getWorkingDir);
+            ArgumentNullException.ThrowIfNull(_getWorkingDir);
             string suffix = _getWorkingDir();
             return string.IsNullOrWhiteSpace(suffix) ? null : $"{name}_{suffix}";
         }

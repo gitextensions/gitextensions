@@ -345,13 +345,13 @@ namespace TeamCityIntegration
             return buildInfo;
         }
 
-        private static BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
+        private static BuildStatus ParseBuildStatus(string statusValue)
         {
             return statusValue switch
             {
-                "SUCCESS" => BuildInfo.BuildStatus.Success,
-                "FAILURE" => BuildInfo.BuildStatus.Failure,
-                _ => BuildInfo.BuildStatus.Unknown
+                "SUCCESS" => BuildStatus.Success,
+                "FAILURE" => BuildStatus.Failure,
+                _ => BuildStatus.Unknown
             };
         }
 

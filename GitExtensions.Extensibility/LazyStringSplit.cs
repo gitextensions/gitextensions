@@ -13,7 +13,7 @@ namespace GitExtUtils
     /// the substrings themselves. We also avoid the large internal arrays assigned by the
     /// methods on <see cref="string"/>.
     /// </remarks>
-    internal readonly struct LazyStringSplit : IEnumerable<string>
+    public readonly struct LazyStringSplit : IEnumerable<string>
     {
         private readonly string _input;
         private readonly char _delimiter;
@@ -111,7 +111,7 @@ namespace GitExtUtils
         }
     }
 
-    internal static class LazyStringSplitExtensions
+    public static class LazyStringSplitExtensions
     {
         public static LazyStringSplit LazySplit(this string s, char delimiter, StringSplitOptions options = StringSplitOptions.None)
         {

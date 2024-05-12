@@ -1,6 +1,5 @@
 using System.Text;
 using GitExtUtils;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -28,7 +27,6 @@ namespace GitUIPluginInterfaces
         /// <param name="useShellExecute">The value for the flag <c>ProcessStartInfo.UseShellExecute</c>.</param>
         /// <param name="throwOnErrorExit">A flag configuring whether to throw an exception if the exit code is not 0.</param>
         /// <returns>The started process.</returns>
-        [MustUseReturnValue]
         IProcess Start(ArgumentString arguments = default,
                        bool createWindow = false,
                        bool redirectInput = false,

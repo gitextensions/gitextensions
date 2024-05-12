@@ -55,7 +55,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
         {
             Id = new Guid("B0128E39-D312-47DA-B18A-43F5CA726D7D");
             Name = "Jira Commit Hint";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconJira;
 
             _credentialsSettings = new CredentialsSetting("JiraCredentials", "Jira credentials", () => _gitModule?.WorkingDir);

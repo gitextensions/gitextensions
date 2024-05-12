@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -125,7 +124,6 @@ namespace GitUIPluginInterfaces
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

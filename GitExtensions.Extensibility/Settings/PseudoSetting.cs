@@ -57,7 +57,7 @@ namespace GitUIPluginInterfaces.Settings
 
             public override Control CreateControl()
             {
-                Validates.NotNull(_textBoxCreator);
+                ArgumentNullException.ThrowIfNull(_textBoxCreator);
                 Setting.CustomControl = _textBoxCreator();
                 return Setting.CustomControl;
             }

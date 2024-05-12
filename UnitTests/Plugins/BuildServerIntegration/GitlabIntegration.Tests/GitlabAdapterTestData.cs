@@ -114,7 +114,7 @@ namespace GitlabIntegrationTests
                         Id = "7",
                         CommitHashList = new[] { ObjectId.Parse("cd4090d807d75f165a3cf0000a1773422fdf56ca") },
                         Duration = 600000000,
-                        Status = BuildInfo.BuildStatus.InProgress,
+                        Status = BuildStatus.InProgress,
                         ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline
@@ -134,7 +134,7 @@ namespace GitlabIntegrationTests
                         Id = "7",
                         CommitHashList = new[] { ObjectId.Parse("cd4090d807d75f165a3cf0000a1773422fdf56ca") },
                         Duration = 900000000,
-                        Status = BuildInfo.BuildStatus.Success,
+                        Status = BuildStatus.Success,
                         ShowInBuildReportTab = false,
                     },
                     new GitlabPipeline

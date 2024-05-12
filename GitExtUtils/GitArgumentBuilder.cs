@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitUIPluginInterfaces;
 
 namespace GitExtUtils
 {
@@ -49,7 +50,7 @@ namespace GitExtUtils
         /// <param name="gitOptions">Optional arguments that are for the git command.  EX: git --no-optional-locks status.</param>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException"><paramref name="command"/> is an invalid string.</exception>
-        public GitArgumentBuilder(string command, GitCommandConfiguration? commandConfiguration = null, ArgumentString gitOptions = default)
+        public GitArgumentBuilder(string command, IGitCommandConfiguration? commandConfiguration = null, ArgumentString gitOptions = default)
         {
             if (command is null)
             {

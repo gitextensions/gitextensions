@@ -7,7 +7,7 @@ namespace System
     /// Using these instances avoids allocating an array for each invocation of methods
     /// such as <c>string.Split</c>.
     /// </remarks>
-    internal static class Delimiters
+    public static class Delimiters
     {
         public static readonly char[] LineFeed = ['\n'];
         public static readonly char[] LineAndVerticalFeed = ['\n', '\v'];
