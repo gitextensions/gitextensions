@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 
 namespace GitCommands.Git
 {

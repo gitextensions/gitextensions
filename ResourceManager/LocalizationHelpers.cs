@@ -1,5 +1,4 @@
 using System.Text;
-using System.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;

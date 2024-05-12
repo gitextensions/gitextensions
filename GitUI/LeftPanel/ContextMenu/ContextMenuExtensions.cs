@@ -1,5 +1,4 @@
 ﻿using GitExtensions.Extensibility;
-using GitExtUtils;
 
 namespace GitUI.LeftPanel.ContextMenu
 {

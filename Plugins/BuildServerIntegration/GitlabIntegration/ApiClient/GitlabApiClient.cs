@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using System.Threading;
 using System.Web;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 

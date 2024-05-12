@@ -1,6 +1,5 @@
 ﻿using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
-using Microsoft.Toolkit.HighPerformance;
 
 namespace GitlabIntegrationTests
 {

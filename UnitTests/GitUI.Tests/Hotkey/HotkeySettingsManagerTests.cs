@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;

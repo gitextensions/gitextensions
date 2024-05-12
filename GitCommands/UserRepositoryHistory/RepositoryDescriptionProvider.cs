@@ -1,4 +1,3 @@
-using System.ComponentModel.Composition;
 using GitCommands.Git;
 
 namespace GitCommands.UserRepositoryHistory

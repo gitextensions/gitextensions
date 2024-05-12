@@ -1,6 +1,4 @@
-﻿using GitExtUtils;
-
-namespace GitExtensions.Extensibility;
+﻿namespace GitExtensions.Extensibility;
 
 public readonly struct ExecutionResult
 {

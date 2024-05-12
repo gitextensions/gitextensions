@@ -1,5 +1,4 @@
-﻿using GitCommands;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;

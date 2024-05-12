@@ -4,7 +4,6 @@ using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
-using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
