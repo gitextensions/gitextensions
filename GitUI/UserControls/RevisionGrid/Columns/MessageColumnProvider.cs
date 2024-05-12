@@ -21,6 +21,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private readonly RevisionGridControl _grid;
         private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
+        private bool _notesInSeparateColumn;
 
         public MessageColumnProvider(RevisionGridControl grid, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
             : base("Message")
@@ -119,7 +120,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
             {
                 // The body is not stored for older commits (to save memory)
-                string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(revision.Body)
+                string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetText(revision))
                     ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
                 int initialLength = bodySummary.Length + 10;
                 _toolTipBuilder.EnsureCapacity(initialLength);
@@ -520,7 +521,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
-        private static string[] GetCommitMessageLines(GitRevision revision) =>
-            (revision.Body?.Trim() ?? revision.Subject).Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+        public override void Refresh(int rowHeight, in VisibleRowRange range)
+        {
+            _notesInSeparateColumn = AppSettings.ShowGitNotesColumn.Value;
+            base.Refresh(rowHeight, in range);
+        }
+
+        private string[] GetCommitMessageLines(GitRevision revision) => GetText(revision).Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+
+        private string GetText(GitRevision revision)
+            => _notesInSeparateColumn
+                ? revision.Body ?? revision.Subject
+                : UIExtensions.FormatBodyAndNotes(revision.Body ?? revision.Subject, revision.Notes);
     }
 }

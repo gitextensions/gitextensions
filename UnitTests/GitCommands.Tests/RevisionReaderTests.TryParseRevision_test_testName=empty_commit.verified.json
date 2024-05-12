@@ -23,7 +23,7 @@
   "Subject": "",
   "Body": "",
   "HasMultiLineMessage": false,
-  "HasNotes": false,
+  "Notes": null,
   "IsArtificial": false,
   "IsStash": false,
   "ReflogSelector": null,

@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using System.Text;
+
+namespace GitUI
 {
     public static class UIExtensions
     {
@@ -42,6 +44,35 @@
             }
 
             return fixedWidth;
+        }
+
+        /// <summary>
+        /// bodyOrSubject
+        /// Notes:
+        ///     notes
+        /// </summary>
+        public static string FormatBodyAndNotes(string bodyOrSubject, string? notes)
+        {
+            if (string.IsNullOrWhiteSpace(notes))
+            {
+                return bodyOrSubject;
+            }
+
+            const string notesPrefix = "Notes:";
+            const string indent = "    ";
+
+            // trying to avoid buffer re-allocation during Append()
+            StringBuilder? sb = new StringBuilder((bodyOrSubject?.Length ?? 0) + 2 + notesPrefix.Length + 2 + indent.Length + notes.Length + 1)
+                .AppendLine(bodyOrSubject)
+                .AppendLine(notesPrefix);
+
+            foreach (string line in notes.Split('\n'))
+            {
+                sb.Append(indent).Append(line).Append('\n');
+            }
+
+            --sb.Length; // removing the last artificially appended \n
+            return sb.ToString();
         }
     }
 }

@@ -23,7 +23,7 @@
   "Subject": "Remove MVC & Razor annotation attributes",
   "Body": null,
   "HasMultiLineMessage": true,
-  "HasNotes": false,
+  "Notes": null,
   "IsArtificial": false,
   "IsStash": false,
   "ReflogSelector": null,
