@@ -1,104 +1,103 @@
 ﻿using System.Xml.Serialization;
 
-namespace ResourceManager.Xliff
+namespace ResourceManager.Xliff;
+
+/// <summary>Provides a translation for a specific language.</summary>
+[XmlRoot("xliff")]
+public class TranslationFile : ITranslation
 {
-    /// <summary>Provides a translation for a specific language.</summary>
-    [XmlRoot("xliff")]
-    public class TranslationFile : ITranslation
+    public TranslationFile()
     {
-        public TranslationFile()
+        Version = "1.0";
+        TranslationCategories = [];
+    }
+
+    public TranslationFile(string gitExVersion, string sourceLanguage, string targetLanguage)
+        : this()
+    {
+        GitExVersion = "";
+        SourceLanguage = sourceLanguage;
+        TargetLanguage = targetLanguage;
+    }
+
+    [XmlAttribute("version")]
+    public string Version { get; set; }
+
+    [XmlAttribute("GitExVersion")]
+    public string? GitExVersion { get; set; }
+
+    [XmlIgnore]
+    public string? SourceLanguage { get; set; }
+
+    [XmlIgnore]
+    public string? TargetLanguage { get; set; }
+
+    [XmlElement(ElementName = "file")]
+    public List<TranslationCategory> TranslationCategories { get; set; }
+
+    public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
+    {
+        TranslationCategory? tc = GetTranslationCategory(translationCategory);
+        if (tc is null)
         {
-            Version = "1.0";
-            TranslationCategories = [];
+            tc = new TranslationCategory(translationCategory, SourceLanguage, TargetLanguage);
+            AddTranslationCategory(tc);
         }
 
-        public TranslationFile(string gitExVersion, string sourceLanguage, string targetLanguage)
-            : this()
+        return tc;
+    }
+
+    public void AddTranslationCategory(TranslationCategory translationCategory)
+    {
+        if (string.IsNullOrEmpty(translationCategory.Name))
         {
-            GitExVersion = "";
-            SourceLanguage = sourceLanguage;
-            TargetLanguage = targetLanguage;
+            throw new InvalidOperationException("Cannot add translationCategory without name");
         }
 
-        [XmlAttribute("version")]
-        public string Version { get; set; }
+        TranslationCategories.Add(translationCategory);
+    }
 
-        [XmlAttribute("GitExVersion")]
-        public string? GitExVersion { get; set; }
+    public TranslationCategory? GetTranslationCategory(string name)
+    {
+        return TranslationCategories.Find(t => t.Name != null && t.Name.TrimStart('_') == name.TrimStart('_'));
+    }
 
-        [XmlIgnore]
-        public string? SourceLanguage { get; set; }
-
-        [XmlIgnore]
-        public string? TargetLanguage { get; set; }
-
-        [XmlElement(ElementName = "file")]
-        public List<TranslationCategory> TranslationCategories { get; set; }
-
-        public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
+    public void Sort()
+    {
+        TranslationCategories.Sort();
+        foreach (TranslationCategory tc in TranslationCategories)
         {
-            TranslationCategory? tc = GetTranslationCategory(translationCategory);
-            if (tc is null)
-            {
-                tc = new TranslationCategory(translationCategory, SourceLanguage, TargetLanguage);
-                AddTranslationCategory(tc);
-            }
+            tc.Body.TranslationItems.Sort();
+        }
+    }
 
-            return tc;
+    public void AddTranslationItem(string category, string item, string property, string neutralValue)
+    {
+        FindOrAddTranslationCategory(category).Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
+    }
+
+    public string? TranslateItem(string category, string item, string property, Func<string> provideDefaultValue)
+    {
+        TranslationCategory tc = FindOrAddTranslationCategory(category);
+
+        TranslationItem? ti = tc.Body.GetTranslationItem(item, property);
+
+        if (ti is null)
+        {
+            // if an item is not translated, then store its default value
+            // to be able to retrieve it later (eg. when to a caption
+            // is added an additional information like 'Commit (<number of changes>)',
+            // and then the caption needs to be refreshed)
+            string defaultValue = provideDefaultValue();
+            tc.Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, defaultValue));
+            return defaultValue;
         }
 
-        public void AddTranslationCategory(TranslationCategory translationCategory)
+        if (string.IsNullOrEmpty(ti.Value))
         {
-            if (string.IsNullOrEmpty(translationCategory.Name))
-            {
-                throw new InvalidOperationException("Cannot add translationCategory without name");
-            }
-
-            TranslationCategories.Add(translationCategory);
+            return ti.Source;
         }
 
-        public TranslationCategory? GetTranslationCategory(string name)
-        {
-            return TranslationCategories.Find(t => t.Name != null && t.Name.TrimStart('_') == name.TrimStart('_'));
-        }
-
-        public void Sort()
-        {
-            TranslationCategories.Sort();
-            foreach (TranslationCategory tc in TranslationCategories)
-            {
-                tc.Body.TranslationItems.Sort();
-            }
-        }
-
-        public void AddTranslationItem(string category, string item, string property, string neutralValue)
-        {
-            FindOrAddTranslationCategory(category).Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
-        }
-
-        public string? TranslateItem(string category, string item, string property, Func<string> provideDefaultValue)
-        {
-            TranslationCategory tc = FindOrAddTranslationCategory(category);
-
-            TranslationItem? ti = tc.Body.GetTranslationItem(item, property);
-
-            if (ti is null)
-            {
-                // if an item is not translated, then store its default value
-                // to be able to retrieve it later (eg. when to a caption
-                // is added an additional information like 'Commit (<number of changes>)',
-                // and then the caption needs to be refreshed)
-                string defaultValue = provideDefaultValue();
-                tc.Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, defaultValue));
-                return defaultValue;
-            }
-
-            if (string.IsNullOrEmpty(ti.Value))
-            {
-                return ti.Source;
-            }
-
-            return ti.Value;
-        }
+        return ti.Value;
     }
 }

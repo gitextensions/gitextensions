@@ -1,28 +1,27 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+public interface IGitPlugin
 {
-    public interface IGitPlugin
-    {
-        Guid Id { get; }
+    Guid Id { get; }
 
-        string? Name { get; }
+    string? Name { get; }
 
-        string? Description { get; }
+    string? Description { get; }
 
-        Image? Icon { get; }
+    Image? Icon { get; }
 
-        IGitPluginSettingsContainer? SettingsContainer { get; set; }
+    IGitPluginSettingsContainer? SettingsContainer { get; set; }
 
-        bool HasSettings { get; }
+    bool HasSettings { get; }
 
-        IEnumerable<ISetting> GetSettings();
+    IEnumerable<ISetting> GetSettings();
 
-        void Register(IGitUICommands gitUiCommands);
+    void Register(IGitUICommands gitUiCommands);
 
-        void Unregister(IGitUICommands gitUiCommands);
+    void Unregister(IGitUICommands gitUiCommands);
 
-        /// <summary>
-        /// Runs the plugin and returns whether the RevisionGrid should be refreshed.
-        /// </summary>
-        bool Execute(GitUIEventArgs args);
-    }
+    /// <summary>
+    /// Runs the plugin and returns whether the RevisionGrid should be refreshed.
+    /// </summary>
+    bool Execute(GitUIEventArgs args);
 }

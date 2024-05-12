@@ -1,32 +1,31 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+/// <inherit/>
+public sealed class FilteredGitRefsProvider : IFilteredGitRefsProvider
 {
-    /// <inherit/>
-    public sealed class FilteredGitRefsProvider : IFilteredGitRefsProvider
+    public FilteredGitRefsProvider(IGitModule module)
     {
-        public FilteredGitRefsProvider(IGitModule module)
+        _getRefs = new(() => module.GetRefs(RefsFilter.NoFilter));
+    }
+
+    public FilteredGitRefsProvider(Lazy<IReadOnlyList<IGitRef>> getRefs)
+    {
+        _getRefs = getRefs;
+    }
+
+    private readonly Lazy<IReadOnlyList<IGitRef>> _getRefs;
+
+    /// <inherit/>
+    public IReadOnlyList<IGitRef> GetRefs(RefsFilter filter)
+    {
+        if (filter == RefsFilter.NoFilter)
         {
-            _getRefs = new(() => module.GetRefs(RefsFilter.NoFilter));
+            return _getRefs.Value;
         }
 
-        public FilteredGitRefsProvider(Lazy<IReadOnlyList<IGitRef>> getRefs)
-        {
-            _getRefs = getRefs;
-        }
-
-        private readonly Lazy<IReadOnlyList<IGitRef>> _getRefs;
-
-        /// <inherit/>
-        public IReadOnlyList<IGitRef> GetRefs(RefsFilter filter)
-        {
-            if (filter == RefsFilter.NoFilter)
-            {
-                return _getRefs.Value;
-            }
-
-            return _getRefs.Value.Where(r =>
-                ((filter & RefsFilter.Tags) != 0 && r.IsTag)
-                || ((filter & RefsFilter.Remotes) != 0 && r.IsRemote)
-                || ((filter & RefsFilter.Heads) != 0 && r.IsHead)).ToList();
-        }
+        return _getRefs.Value.Where(r =>
+            ((filter & RefsFilter.Tags) != 0 && r.IsTag)
+            || ((filter & RefsFilter.Remotes) != 0 && r.IsRemote)
+            || ((filter & RefsFilter.Heads) != 0 && r.IsHead)).ToList();
     }
 }

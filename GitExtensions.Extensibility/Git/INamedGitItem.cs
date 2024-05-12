@@ -1,7 +1,6 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+public interface INamedGitItem : IGitItem
 {
-    public interface INamedGitItem : IGitItem
-    {
-        string Name { get; }
-    }
+    string Name { get; }
 }

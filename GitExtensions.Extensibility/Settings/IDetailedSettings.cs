@@ -1,17 +1,16 @@
-﻿namespace GitUIPluginInterfaces.Settings
+﻿namespace GitUIPluginInterfaces.Settings;
+
+public interface IDetailedSettings
 {
-    public interface IDetailedSettings
-    {
-        string SmtpServer { get; set; }
+    string SmtpServer { get; set; }
 
-        int SmtpPort { get; set; }
+    int SmtpPort { get; set; }
 
-        bool SmtpUseSsl { get; set; }
+    bool SmtpUseSsl { get; set; }
 
-        bool GetRemoteBranchesDirectlyFromRemote { get; set; }
+    bool GetRemoteBranchesDirectlyFromRemote { get; set; }
 
-        bool AddMergeLogMessages { get; set; }
+    bool AddMergeLogMessages { get; set; }
 
-        int MergeLogMessagesCount { get; set; }
-    }
+    int MergeLogMessagesCount { get; set; }
 }

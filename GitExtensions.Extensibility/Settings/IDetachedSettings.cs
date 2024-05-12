@@ -1,9 +1,8 @@
-﻿namespace GitUIPluginInterfaces.Settings
-{
-    public interface IDetachedSettings
-    {
-        string Dictionary { get; set; }
+﻿namespace GitUIPluginInterfaces.Settings;
 
-        bool NoFastForwardMerge { get; set; }
-    }
+public interface IDetachedSettings
+{
+    string Dictionary { get; set; }
+
+    bool NoFastForwardMerge { get; set; }
 }

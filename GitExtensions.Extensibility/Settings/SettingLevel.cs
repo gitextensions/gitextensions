@@ -1,12 +1,11 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+public enum SettingLevel
 {
-    public enum SettingLevel
-    {
-        Unknown,
-        SystemWide,
-        Global,
-        Distributed,
-        Local,
-        Effective
-    }
+    Unknown,
+    SystemWide,
+    Global,
+    Distributed,
+    Local,
+    Effective
 }

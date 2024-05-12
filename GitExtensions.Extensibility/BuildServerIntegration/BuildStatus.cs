@@ -1,12 +1,11 @@
-﻿namespace GitUIPluginInterfaces.BuildServerIntegration
+﻿namespace GitUIPluginInterfaces.BuildServerIntegration;
+
+public enum BuildStatus
 {
-    public enum BuildStatus
-    {
-        Unknown,
-        InProgress,
-        Success,
-        Failure,
-        Unstable,
-        Stopped
-    }
+    Unknown,
+    InProgress,
+    Success,
+    Failure,
+    Unstable,
+    Stopped
 }

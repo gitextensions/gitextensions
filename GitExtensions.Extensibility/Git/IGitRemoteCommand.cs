@@ -1,16 +1,15 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+public interface IGitRemoteCommand
 {
-    public interface IGitRemoteCommand
-    {
-        object? OwnerForm { get; set; }
-        string? Remote { get; set; }
-        string? Title { get; set; }
-        string? CommandText { get; set; }
-        bool ErrorOccurred { get; }
-        string? CommandOutput { get; }
+    object? OwnerForm { get; set; }
+    string? Remote { get; set; }
+    string? Title { get; set; }
+    string? CommandText { get; set; }
+    bool ErrorOccurred { get; }
+    string? CommandOutput { get; }
 
-        event EventHandler<GitRemoteCommandCompletedEventArgs> Completed;
+    event EventHandler<GitRemoteCommandCompletedEventArgs> Completed;
 
-        void Execute();
-    }
+    void Execute();
 }

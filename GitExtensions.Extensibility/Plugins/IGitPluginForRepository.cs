@@ -1,6 +1,5 @@
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces;
+
+public interface IGitPluginForRepository : IGitPlugin
 {
-    public interface IGitPluginForRepository : IGitPlugin
-    {
-    }
 }
