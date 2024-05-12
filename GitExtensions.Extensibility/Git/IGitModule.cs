@@ -6,7 +6,9 @@ using GitUIPluginInterfaces;
 
 namespace GitExtensions.Extensibility.Git;
 
-/// <summary>Provides manipulation with git module.</summary>
+/// <summary>
+///  Provides the ability to manipulate the git module.
+/// </summary>
 public interface IGitModule
 {
     IConfigFileSettings LocalConfigFile { get; }
@@ -223,12 +225,12 @@ public interface IGitModule
 
     string ReEncodeCommitMessage(string s);
 
-    string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken = default);
+    string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken);
 
-    (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null);
+    (int TotalCount, Dictionary<string, int> CountByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null);
 
     void SaveBlobAs(string saveAs, string blob);
-    Task<(char code, ObjectId commitId)> GetSuperprojectCurrentCheckoutAsync();
+    Task<(char Code, ObjectId CommitId)> GetSuperprojectCurrentCheckoutAsync();
     Task<Patch?> GetCurrentChangesAsync(string? fileName, string? oldFileName, bool staged, string extraDiffArguments, Encoding? encoding = null, bool noLocks = false);
     Task<string?> GetFileContentsAsync(GitItemStatus file);
     IReadOnlyList<GitStash> GetStashes(bool noLocks);
@@ -244,8 +246,30 @@ public interface IGitModule
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>the Git output.</returns>
     string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken);
-    Task<ExecutionResult> GetSingleDifftoolAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, ArgumentString extraDiffArguments, bool cacheResult, bool isTracked, bool useGitColoring, CancellationToken cancellationToken);
-    Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(ObjectId? firstId, ObjectId? secondId, string? fileName, string? oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked, bool useGitColoring, IGitCommandConfiguration commandConfiguration, CancellationToken cancellationToken);
+
+    Task<ExecutionResult> GetSingleDifftoolAsync(
+        ObjectId? firstId,
+        ObjectId? secondId,
+        string? fileName,
+        string? oldFileName,
+        ArgumentString extraDiffArguments,
+        bool cacheResult,
+        bool isTracked,
+        bool useGitColoring,
+        CancellationToken cancellationToken);
+
+    Task<(Patch? Patch, string? ErrorMessage)> GetSingleDiffAsync(
+            ObjectId? firstId,
+            ObjectId? secondId,
+            string? fileName,
+            string? oldFileName,
+            string extraDiffArguments,
+            Encoding encoding,
+            bool cacheResult,
+            bool isTracked,
+            bool useGitColoring,
+            IGitCommandConfiguration commandConfiguration,
+            CancellationToken cancellationToken);
     int? GetCommitCount(string parent, string child, bool cache, bool throwOnErrorExit);
 
     /// <summary>
@@ -262,7 +286,16 @@ public interface IGitModule
     bool InTheMiddleOfBisect();
     IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache, CancellationToken cancellationToken);
     bool IsDirtyDir();
-    Task<ExecutionResult> GetRangeDiffAsync(ObjectId firstId, ObjectId secondId, ObjectId? firstBase, ObjectId? secondBase, string extraDiffArguments, string? pathFilter, bool useGitColoring, IGitCommandConfiguration commandConfiguration, CancellationToken cancellationToken);
+    Task<ExecutionResult> GetRangeDiffAsync(
+        ObjectId firstId,
+        ObjectId secondId,
+        ObjectId? firstBase,
+        ObjectId? secondBase,
+        string extraDiffArguments,
+        string? pathFilter,
+        bool useGitColoring,
+        IGitCommandConfiguration commandConfiguration,
+        CancellationToken cancellationToken);
     bool InTheMiddleOfPatch();
     bool InTheMiddleOfConflictedMerge(bool throwOnErrorExit = true);
     bool InTheMiddleOfAction();
@@ -280,7 +313,7 @@ public interface IGitModule
     void RunGui();
     void RunGitK();
     ObjectId? GetMergeBase(ObjectId a, ObjectId b);
-    (int? first, int? second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId);
+    (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId);
     IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(ObjectId mergeCommitObjectId);
     IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeGuid, bool full);
     IReadOnlyList<string> GetFullTree(string id);
@@ -294,7 +327,7 @@ public interface IGitModule
     /// <param name="getLocal">Pass true to include local branches.</param>
     /// <param name="getRemote">Pass true to include remote branches.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
-    IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote, CancellationToken cancellationToken = default);
+    IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote, CancellationToken cancellationToken);
 
     /// <summary>
     /// Uses check-ref-format to ensure that a branch name is well formed.
@@ -319,7 +352,7 @@ public interface IGitModule
     /// Returns tag's message. If the lightweight tag is passed, corresponding commit message
     /// is returned.
     /// </summary>
-    string? GetTagMessage(string? tag, CancellationToken cancellationToken = default);
+    string? GetTagMessage(string? tag, CancellationToken cancellationToken);
     void UnstageFile(string file);
     bool UnstageFiles(IReadOnlyList<GitItemStatus> files, out string allOutput);
     bool StageFile(string file);
@@ -374,7 +407,7 @@ public interface IGitModule
 
     void Reset(ResetMode mode, string? file = null);
 
-    (string? baseFile, string? localFile, string? remoteFile) CheckoutConflictedFiles(ConflictData unmergedData);
+    (string? BaseFile, string? LocalFile, string? RemoteFile) CheckoutConflictedFiles(ConflictData unmergedData);
 
     bool IsSubmodule(string submodulePath);
 
@@ -403,7 +436,15 @@ public interface IGitModule
     /// </summary>
     IGitVersion GitVersion { get; }
 
-    bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, bool useGitColoring, IGitCommandConfiguration commandConfiguration, CancellationToken cancellationToken);
+    bool GetCombinedDiffContent(
+            ObjectId revisionOfMergeCommit,
+            string filePath,
+            string extraArgs,
+            Encoding encoding,
+            out string diffOfConflict,
+            bool useGitColoring,
+            IGitCommandConfiguration commandConfiguration,
+            CancellationToken cancellationToken);
     bool IsMerge(ObjectId objectId);
     IEnumerable<string> GetMergedBranches(bool includeRemote = false);
     Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken);
@@ -446,9 +487,15 @@ public interface IGitModule
     string GetRemoteBranch(string branch);
 
     string RenameBranch(string name, string newName);
+    IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken);
+    Task<ExecutionResult> GetGrepFileAsync(
+        ObjectId objectId,
+        string fileName,
+        ArgumentString extraArgs,
+        string grepString,
+        bool useGitColoring,
+        IGitCommandConfiguration commandConfiguration,
+        CancellationToken cancellationToken);
 
-    GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines = null, CancellationToken cancellationToken = default);
-
-    IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string greps, CancellationToken cancellationToken = default);
-    Task<ExecutionResult> GetGrepFileAsync(ObjectId objectId, string fileName, ArgumentString extraArgs, string grepString, bool useGitColoring, IGitCommandConfiguration commandConfiguration, CancellationToken cancellationToken = default);
+    GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines, CancellationToken cancellationToken);
 }

@@ -31,7 +31,7 @@ public static class TranslationSerializer
             stringReader = new StreamReader(path);
             using XmlTextReader xmlReader = new(stringReader);
             stringReader = null;
-            return (TranslationFile)serializer.Deserialize(xmlReader);
+            return (TranslationFile)serializer.Deserialize(xmlReader)!;
         }
         finally
         {

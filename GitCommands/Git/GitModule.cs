@@ -680,7 +680,7 @@ namespace GitCommands
             return side;
         }
 
-        public (string? baseFile, string? localFile, string? remoteFile) CheckoutConflictedFiles(ConflictData unmergedData)
+        public (string? BaseFile, string? LocalFile, string? RemoteFile) CheckoutConflictedFiles(ConflictData unmergedData)
         {
             Directory.SetCurrentDirectory(WorkingDir);
 
@@ -854,7 +854,7 @@ namespace GitCommands
             return null;
         }
 
-        public (int? first, int? second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
+        public (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
         {
             if (firstId == secondId)
             {
@@ -1071,7 +1071,7 @@ namespace GitCommands
             return false;
         }
 
-        public async Task<(char code, ObjectId? commitId)> GetSuperprojectCurrentCheckoutAsync()
+        public async Task<(char Code, ObjectId? CommitId)> GetSuperprojectCurrentCheckoutAsync()
         {
             if (string.IsNullOrEmpty(SuperprojectModule?.WorkingDir))
             {
@@ -2225,7 +2225,7 @@ namespace GitCommands
             return result;
         }
 
-        public async Task<(Patch? patch, string? errorMessage)> GetSingleDiffAsync(
+        public async Task<(Patch? Patch, string? ErrorMessage)> GetSingleDiffAsync(
             ObjectId? firstId,
             ObjectId? secondId,
             string? fileName,
@@ -2273,13 +2273,13 @@ namespace GitCommands
                 cancellationToken: cancellationToken);
             if (!result.ExitedSuccessfully)
             {
-                return (patch: null, errorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
+                return (Patch: null, ErrorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
             }
 
             string patch = result.StandardOutput;
             IReadOnlyList<Patch> patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
 
-            return (patch: GetPatch(patches, fileName, oldFileName), errorMessage: null);
+            return (Patch: GetPatch(patches, fileName, oldFileName), ErrorMessage: null);
         }
 
         public async Task<ExecutionResult> GetRangeDiffAsync(
@@ -2371,7 +2371,7 @@ namespace GitCommands
                 cancellationToken: cancellationToken);
         }
 
-        public IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken = default)
+        public IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken)
         {
             List<GitItemStatus> result = [];
             ExecutionResult exec = GetGrepFiles(objectId, grepString, cancellationToken);
@@ -2385,18 +2385,25 @@ namespace GitCommands
             {
                 int startIndex = file.IndexOf(':') + 1;
                 result.Add(new GitItemStatus(file[startIndex..])
-                    {
-                        GrepString = grepString,
+                {
+                    GrepString = grepString,
 
-                        // Assume this file is handled by Git, may not be entirely correct for worktree
-                        IsTracked = true
-                    });
+                    // Assume this file is handled by Git, may not be entirely correct for worktree
+                    IsTracked = true
+                });
             }
 
             return result;
         }
 
-        public async Task<ExecutionResult> GetGrepFileAsync(ObjectId objectId, string fileName, ArgumentString extraArgs, string grepString, bool useGitColoring, IGitCommandConfiguration commandConfiguration, CancellationToken cancellationToken = default)
+        public async Task<ExecutionResult> GetGrepFileAsync(
+            ObjectId objectId,
+            string fileName,
+            ArgumentString extraArgs,
+            string grepString,
+            bool useGitColoring,
+            IGitCommandConfiguration commandConfiguration,
+            CancellationToken cancellationToken)
         {
             bool noCache = objectId.IsArtificial;
 
@@ -3057,7 +3064,7 @@ namespace GitCommands
             return gitRefs;
         }
 
-        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote, CancellationToken cancellationToken = default)
+        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote, CancellationToken cancellationToken)
         {
             if (!getLocal && !getRemote)
             {
@@ -3118,7 +3125,7 @@ namespace GitCommands
             return exec.StandardOutput.Split(Delimiters.GitOutput, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public string? GetTagMessage(string? tag, CancellationToken cancellationToken = default)
+        public string? GetTagMessage(string? tag, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(tag))
             {
@@ -3208,7 +3215,7 @@ namespace GitCommands
             return _gitTreeParser.Parse(tree);
         }
 
-        public GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines = null, CancellationToken cancellationToken = default)
+        public GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines, CancellationToken cancellationToken)
         {
             GitArgumentBuilder args = new("blame")
             {
@@ -4007,7 +4014,15 @@ namespace GitCommands
                 }).ToList();
         }
 
-        public bool GetCombinedDiffContent(ObjectId revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding, out string diffOfConflict, bool useGitColoring, IGitCommandConfiguration commandConfiguration, CancellationToken cancellationToken)
+        public bool GetCombinedDiffContent(
+            ObjectId revisionOfMergeCommit,
+            string filePath,
+            string extraArgs,
+            Encoding encoding,
+            out string diffOfConflict,
+            bool useGitColoring,
+            IGitCommandConfiguration commandConfiguration,
+            CancellationToken cancellationToken)
         {
             GitArgumentBuilder args = new("diff-tree", commandConfiguration)
             {
@@ -4069,7 +4084,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitId">The commit where to start searching</param>
         /// <returns>Tag name if it exists, otherwise null</returns>
-        public string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken = default)
+        public string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken)
         {
             GitArgumentBuilder args = new("describe")
             {
@@ -4090,7 +4105,7 @@ namespace GitCommands
             return new GitItemStatus(name: GitError) { IsStatusOnly = true, ErrorMessage = gitOutput.Replace('\0', '\t') };
         }
 
-        public (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null)
+        public (int TotalCount, Dictionary<string, int> CountByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null)
         {
             Dictionary<string, int> countByName = [];
             int totalCommits = 0;

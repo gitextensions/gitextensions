@@ -10,7 +10,7 @@ public class TranslationItem : IComparable<TranslationItem>, ICloneable
     {
     }
 
-    public TranslationItem(string name, string property, string source)
+    public TranslationItem(string name, string property, string? source)
     {
         Name = name;
         Property = property;
@@ -49,12 +49,12 @@ public class TranslationItem : IComparable<TranslationItem>, ICloneable
     [XmlElement("target")]
     public string? Value { get; set; }
 
-    public int CompareTo(TranslationItem other)
+    public int CompareTo(TranslationItem? other)
     {
-        int val = string.Compare(Name, other.Name, StringComparison.Ordinal);
+        int val = string.Compare(Name, other?.Name, StringComparison.Ordinal);
         if (val == 0)
         {
-            val = string.Compare(Property, other.Property, StringComparison.Ordinal);
+            val = string.Compare(Property, other?.Property, StringComparison.Ordinal);
         }
 
         return val;

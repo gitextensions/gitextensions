@@ -2,7 +2,7 @@
 
 namespace GitExtensions.Extensibility.BuildServerIntegration;
 
-public partial class BuildInfo
+public class BuildInfo
 {
     public string? Id { get; set; }
     public DateTime StartDate { get; set; }

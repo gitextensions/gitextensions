@@ -76,10 +76,13 @@ namespace GitUI.UserControls
 
                 if (_containRevisions.Count > 0)
                 {
-                    IEnumerable<string> branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
-                            !LocalBranch.Checked)
-                        .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
-                                    !a.EndsWith("/HEAD"));
+                    IEnumerable<string> branches =
+                        Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0],
+                                                                     getLocal: LocalBranch.Checked,
+                                                                     getRemote: !LocalBranch.Checked,
+                                                                     cancellationToken: default)
+                            .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
+                                        !a.EndsWith("/HEAD"));
                     result.UnionWith(branches);
                 }
 
@@ -87,8 +90,10 @@ namespace GitUI.UserControls
                 {
                     ObjectId containRevision = _containRevisions[index];
                     IEnumerable<string> branches =
-                        Module.GetAllBranchesWhichContainGivenCommit(containRevision, LocalBranch.Checked,
-                                !LocalBranch.Checked)
+                        Module.GetAllBranchesWhichContainGivenCommit(containRevision,
+                                                                     getLocal: LocalBranch.Checked,
+                                                                     getRemote: !LocalBranch.Checked,
+                                                                     cancellationToken: default)
                             .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                         !a.EndsWith("/HEAD"));
                     result.IntersectWith(branches);
@@ -119,11 +124,11 @@ namespace GitUI.UserControls
                 }
 
                 ThreadHelper.FileAndForget(async () =>
-                    {
-                        string text = Module.GetCommitCountString(currentCheckout, branchName);
-                        await this.SwitchToMainThreadAsync();
-                        lbChanges.Text = text;
-                    });
+                {
+                    string text = Module.GetCommitCountString(currentCheckout, branchName);
+                    await this.SwitchToMainThreadAsync();
+                    lbChanges.Text = text;
+                });
             }
         }
 

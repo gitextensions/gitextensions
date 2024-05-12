@@ -62,14 +62,14 @@ public static class TranslationUtil
         return text.Any(char.IsLetter);
     }
 
-    public static IEnumerable<(string name, object item)> GetObjFields(object obj, string? objName)
+    public static IEnumerable<(string Name, object Item)> GetObjFields(object obj, string? objName)
     {
         if (objName is not null)
         {
             yield return (objName, obj);
         }
 
-        foreach (FieldInfo field in obj.GetType().GetFields(_fieldFlags))
+        foreach (FieldInfo field in obj.GetType().GetFields(_fieldFlags)!)
         {
             if (field.IsPublic && !field.IsInitOnly)
             {
@@ -78,13 +78,13 @@ public static class TranslationUtil
                 continue;
             }
 
-            yield return (field.Name, field.GetValue(obj));
+            yield return (field.Name, field.GetValue(obj)!);
         }
     }
 
     public static void AddTranslationItem(string category, object obj, string propName, ITranslation translation)
     {
-        PropertyInfo property = obj?.GetType().GetProperty(propName, _propertyFlags);
+        PropertyInfo? property = obj?.GetType().GetProperty(propName, _propertyFlags);
 
         if (property?.GetValue(obj, null) is string value && AllowTranslateProperty(value))
         {
@@ -136,7 +136,7 @@ public static class TranslationUtil
         }
     }
 
-    public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<(string name, object item)> items)
+    public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<(string Name, object Item)> items)
     {
         foreach ((string itemName, object itemObj) in items)
         {
@@ -153,7 +153,7 @@ public static class TranslationUtil
                 {
                     if (itemObjForTooltip is Control control)
                     {
-                        string tooltipString = tooltip.GetToolTip(control);
+                        string? tooltipString = tooltip.GetToolTip(control);
                         if (!string.IsNullOrEmpty(tooltipString))
                         {
                             // Will add an entry in the xlf file with id `NameOfControl.NameOfTooltipControl` ex: "PushToRemote.toolTip1"
@@ -167,7 +167,7 @@ public static class TranslationUtil
 
             foreach (PropertyInfo property in GetItemPropertiesEnumerator(itemName, itemObj))
             {
-                object value = property.GetValue(itemObj, null);
+                object? value = property.GetValue(itemObj, null);
 
                 if (value is null)
                 {
@@ -188,7 +188,7 @@ public static class TranslationUtil
                 {
                     for (int index = 0; index < listItems.Count; index++)
                     {
-                        string listItem = listItems[index] as string;
+                        string? listItem = listItems[index] as string;
 
                         if (AllowTranslateProperty(listItem))
                         {
@@ -200,7 +200,7 @@ public static class TranslationUtil
         }
     }
 
-    public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<(string name, object item)> items)
+    public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<(string Name, object Item)> items)
     {
         foreach ((string itemName, object itemObj) in items)
         {
@@ -216,7 +216,7 @@ public static class TranslationUtil
 
             if (itemObj is ToolTip tooltip)
             {
-                static string ProvideDefaultValue() => null;
+                static string? ProvideDefaultValue() => null;
 
                 string? toolTipTitle = translation.TranslateItem(category, itemName, "ToolTipTitle", ProvideDefaultValue);
 
@@ -247,7 +247,7 @@ public static class TranslationUtil
 
                 if (property.Name == "Items" && typeof(IList).IsAssignableFrom(property.PropertyType))
                 {
-                    IList list = (IList)property.GetValue(itemObj, null);
+                    IList list = (IList)property.GetValue(itemObj, null)!;
                     for (int index = 0; index < list.Count; index++)
                     {
                         if (list[index] is string listValue)
@@ -265,7 +265,7 @@ public static class TranslationUtil
                 }
                 else if (property.PropertyType.IsEquivalentTo(typeof(string)))
                 {
-                    string ProvideDefaultValue() => (string)property.GetValue(itemObj, null);
+                    string ProvideDefaultValue() => (string)property.GetValue(itemObj, null)!;
                     string? value = translation.TranslateItem(category, itemName, property.Name, ProvideDefaultValue);
 
                     if (!string.IsNullOrEmpty(value))
@@ -276,7 +276,7 @@ public static class TranslationUtil
                         }
                     }
                     else if (property.Name == "ToolTipText" &&
-                             !string.IsNullOrEmpty((string)property.GetValue(itemObj, null)))
+                             !string.IsNullOrEmpty((string?)property.GetValue(itemObj, null)))
                     {
                         value = translation.TranslateItem(category, itemName, "Text", ProvideDefaultValue);
                         if (!string.IsNullOrEmpty(value))
@@ -294,7 +294,7 @@ public static class TranslationUtil
 
     public static void TranslateProperty(string category, object obj, string propName, ITranslation translation)
     {
-        PropertyInfo property = obj?.GetType().GetProperty(propName, _propertyFlags);
+        PropertyInfo? property = obj?.GetType().GetProperty(propName, _propertyFlags);
 
         if (property is null)
         {
@@ -342,7 +342,7 @@ public static class TranslationUtil
     private static bool IsTranslatable(this Assembly assembly)
     {
         bool isInvalid = UnTranslatableDLLs.Any(
-            asm => assembly.FullName.StartsWith(asm, StringComparison.OrdinalIgnoreCase));
+            asm => assembly.FullName!.StartsWith(asm, StringComparison.OrdinalIgnoreCase));
 
         return !isInvalid;
     }
@@ -352,12 +352,12 @@ public static class TranslationUtil
         Dictionary<string, List<Type>> dictionary = [];
         foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic))
         {
-            if (_processedAssemblies.Contains(assembly.FullName))
+            if (_processedAssemblies.Contains(assembly.FullName!))
             {
                 continue;
             }
 
-            _processedAssemblies.Add(assembly.FullName);
+            _processedAssemblies.Add(assembly.FullName!);
 
             if (!assembly.IsTranslatable())
             {
@@ -367,7 +367,7 @@ public static class TranslationUtil
             bool isPlugin = assembly.Location.ToPosixPath().IndexOf("/Plugins/", StringComparison.OrdinalIgnoreCase) != -1;
             string key = isPlugin ? ".Plugins" : "";
 
-            if (!dictionary.TryGetValue(key, out List<Type> list))
+            if (!dictionary.TryGetValue(key, out List<Type>? list))
             {
                 list = [];
                 dictionary.Add(key, list);
@@ -423,12 +423,12 @@ public static class TranslationUtil
             Console.WriteLine($"ERROR getting types of {assembly.Location}:");
             Console.WriteLine(e);
             Console.WriteLine("Processing the following types anyway:");
-            foreach (Type type in e.Types.Where(t => t != null))
+            foreach (Type? type in e.Types.Where(t => t != null)!)
             {
-                Console.WriteLine(type.FullName);
+                Console.WriteLine(type?.FullName);
             }
 
-            return e.Types.Where(t => t != null);
+            return e.Types.Where(t => t != null)!;
         }
     }
 

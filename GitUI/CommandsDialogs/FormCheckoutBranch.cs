@@ -219,8 +219,10 @@ namespace GitUI.CommandsDialogs
                 HashSet<string> result = [];
                 if (_containRevisions.Count > 0)
                 {
-                    IEnumerable<string> branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
-                            !LocalBranch.Checked)
+                    IEnumerable<string> branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0],
+                                                                                                getLocal: LocalBranch.Checked,
+                                                                                                getRemote: !LocalBranch.Checked,
+                                                                                                cancellationToken: default)
                         .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));
                     result.UnionWith(branches);
@@ -230,8 +232,10 @@ namespace GitUI.CommandsDialogs
                 {
                     ObjectId containRevision = _containRevisions[index];
                     IEnumerable<string> branches =
-                        Module.GetAllBranchesWhichContainGivenCommit(containRevision, LocalBranch.Checked,
-                                !LocalBranch.Checked)
+                        Module.GetAllBranchesWhichContainGivenCommit(containRevision,
+                                                                     getLocal: LocalBranch.Checked,
+                                                                     getRemote: !LocalBranch.Checked,
+                                                                     cancellationToken: default)
                             .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                         !a.EndsWith("/HEAD"));
                     result.IntersectWith(branches);
@@ -473,20 +477,20 @@ namespace GitUI.CommandsDialogs
             else
             {
                 ThreadHelper.FileAndForget(async () =>
+                {
+                    // not applicable if there is no checkout yet
+                    string aheadBehindInfo = "";
+
+                    ObjectId? currentCheckout = Module.GetCurrentCheckout();
+                    if (currentCheckout is not null)
                     {
-                        // not applicable if there is no checkout yet
-                        string aheadBehindInfo = "";
+                        aheadBehindInfo = Module.GetCommitCountString(currentCheckout, branch);
+                    }
 
-                        ObjectId? currentCheckout = Module.GetCurrentCheckout();
-                        if (currentCheckout is not null)
-                        {
-                            aheadBehindInfo = Module.GetCommitCountString(currentCheckout, branch);
-                        }
+                    await this.SwitchToMainThreadAsync();
 
-                        await this.SwitchToMainThreadAsync();
-
-                        lbChanges.Text = aheadBehindInfo;
-                    });
+                    lbChanges.Text = aheadBehindInfo;
+                });
             }
 
             return;

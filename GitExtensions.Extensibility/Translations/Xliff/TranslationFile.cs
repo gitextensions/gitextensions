@@ -76,7 +76,7 @@ public class TranslationFile : ITranslation
         FindOrAddTranslationCategory(category).Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
     }
 
-    public string? TranslateItem(string category, string item, string property, Func<string> provideDefaultValue)
+    public string? TranslateItem(string category, string item, string property, Func<string?> provideDefaultValue)
     {
         TranslationCategory tc = FindOrAddTranslationCategory(category);
 
@@ -88,7 +88,7 @@ public class TranslationFile : ITranslation
             // to be able to retrieve it later (eg. when to a caption
             // is added an additional information like 'Commit (<number of changes>)',
             // and then the caption needs to be refreshed)
-            string defaultValue = provideDefaultValue();
+            string? defaultValue = provideDefaultValue();
             tc.Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, defaultValue));
             return defaultValue;
         }

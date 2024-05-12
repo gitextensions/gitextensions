@@ -4,7 +4,7 @@ namespace GitExtensions.Extensibility.Translations;
 
 public static class TranslationUtils
 {
-    public static IEnumerable<(string name, object item)> GetObjFields(object obj, string objName)
+    public static IEnumerable<(string Name, object Item)> GetObjFields(object obj, string objName)
     {
         return TranslationUtil.GetObjFields(obj, objName);
     }
@@ -22,7 +22,7 @@ public static class TranslationUtils
         }
     }
 
-    public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<(string name, object item)> items)
+    public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<(string Name, object Item)> items)
     {
         TranslationUtil.AddTranslationItemsFromList(category, translation, items);
     }
@@ -32,7 +32,7 @@ public static class TranslationUtils
         TranslationUtil.TranslateProperty(category, obj, property, translation);
     }
 
-    public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<(string name, object item)> items)
+    public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<(string Name, object Item)> items)
     {
         TranslationUtil.TranslateItemsFromList(category, translation, items);
     }

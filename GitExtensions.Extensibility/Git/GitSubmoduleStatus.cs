@@ -14,7 +14,7 @@ public sealed class GitSubmoduleStatus
 
     public GitSubmoduleStatus(string name, string? oldName, bool isDirty, ObjectId? commit, ObjectId? oldCommit, int? addedCommits, int? removedCommits)
     {
-        ArgumentNullException.ThrowIfNull(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
         Name = name;
         OldName = oldName;
         IsDirty = isDirty;

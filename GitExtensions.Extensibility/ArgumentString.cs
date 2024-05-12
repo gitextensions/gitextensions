@@ -10,7 +10,8 @@ public readonly struct ArgumentString
 
     private ArgumentString(string arguments)
     {
-        Arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
+        ArgumentNullException.ThrowIfNull(arguments);
+        Arguments = arguments;
     }
 
     public static implicit operator ArgumentString(string? args) => new(args ?? "");
