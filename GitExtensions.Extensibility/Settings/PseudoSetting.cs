@@ -1,6 +1,6 @@
 ﻿using Microsoft;
 
-namespace GitUIPluginInterfaces.Settings;
+namespace GitExtensions.Extensibility.Settings;
 
 /// <summary>
 /// Not a real setting (as it save no setting value). It is used to display a control that is not a setting (linklabel, text,...)

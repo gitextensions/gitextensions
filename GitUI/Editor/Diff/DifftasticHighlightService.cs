@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 

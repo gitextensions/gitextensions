@@ -1,4 +1,6 @@
-﻿namespace GitUIPluginInterfaces.RepositoryHosts
+﻿using GitExtensions.Extensibility.Git;
+
+namespace GitUIPluginInterfaces.RepositoryHosts
 {
     // This is stored in ContextMenuStrip.Tag, so converting to a struct won't be beneficial
     public class GitBlameContext

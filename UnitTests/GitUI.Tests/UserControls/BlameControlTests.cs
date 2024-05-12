@@ -4,6 +4,7 @@ using CommonTestUtils;
 using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.Blame;
 using GitUIPluginInterfaces;

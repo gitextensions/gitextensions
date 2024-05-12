@@ -1,7 +1,7 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

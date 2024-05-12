@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 
 namespace ResourceManager.CommitDataRenders

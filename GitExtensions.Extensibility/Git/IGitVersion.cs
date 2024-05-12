@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces;
+﻿namespace GitExtensions.Extensibility.Git;
 
 public interface IGitVersion : IComparable<IGitVersion>
 {

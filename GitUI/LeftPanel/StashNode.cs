@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 
 namespace GitUI.LeftPanel
 {

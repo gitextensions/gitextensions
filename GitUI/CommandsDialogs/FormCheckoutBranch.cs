@@ -1,8 +1,9 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 

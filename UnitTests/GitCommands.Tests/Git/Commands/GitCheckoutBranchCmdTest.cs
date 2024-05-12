@@ -1,6 +1,6 @@
 using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Git_Commands
 {

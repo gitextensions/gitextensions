@@ -2,12 +2,13 @@ using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.BackgroundFetch.Properties;
 using GitExtUtils;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using Microsoft;
-using ResourceManager;
 
 namespace GitExtensions.Plugins.BackgroundFetch
 {

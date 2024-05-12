@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces.Settings;
+﻿namespace GitExtensions.Extensibility.Settings;
 
 /// <summary>
 /// The exception that is thrown when a git setting value is converted in an incompatible format.

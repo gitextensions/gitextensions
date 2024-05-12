@@ -2,7 +2,7 @@
 using System.Text;
 using FluentAssertions;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitUIPluginInterfaces;
 using Newtonsoft.Json;
 

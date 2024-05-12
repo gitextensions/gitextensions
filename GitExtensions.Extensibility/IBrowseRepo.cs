@@ -1,4 +1,7 @@
-﻿namespace GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Git;
+using GitUIPluginInterfaces;
+
+namespace GitExtensions.Extensibility;
 
 public interface IBrowseRepo
 {

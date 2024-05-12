@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces.BuildServerIntegration;
+﻿namespace GitExtensions.Extensibility.BuildServerIntegration;
 
 public enum BuildStatus
 {

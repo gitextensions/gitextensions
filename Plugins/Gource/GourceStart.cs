@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Drawing.Imaging;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.Avatars;
-using GitUIPluginInterfaces;
 
 namespace GitExtensions.Plugins.Gource
 {

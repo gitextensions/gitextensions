@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;

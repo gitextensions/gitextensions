@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 

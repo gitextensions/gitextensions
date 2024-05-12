@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces;
+﻿namespace GitExtensions.Extensibility.Git;
 
 /// <summary>Arguments to 'git reset'.</summary>
 public enum ResetMode

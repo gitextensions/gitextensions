@@ -1,4 +1,5 @@
-﻿using GitExtUtils.GitUI.Theming;
+﻿using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;

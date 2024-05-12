@@ -1,7 +1,9 @@
 using System.ComponentModel;
 using System.Text;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;

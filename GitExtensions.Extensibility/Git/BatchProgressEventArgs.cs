@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces;
+﻿namespace GitExtensions.Extensibility.Git;
 
 /// <summary>
 /// Event arguments for batch progress updating

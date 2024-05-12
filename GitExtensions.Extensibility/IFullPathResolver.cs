@@ -1,4 +1,6 @@
-﻿namespace GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Git;
+
+namespace GitExtensions.Extensibility;
 
 /// <summary>
 /// Provides the ability to resolve full path.

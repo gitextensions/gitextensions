@@ -3,6 +3,7 @@ using System.Reflection;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using Microsoft;
 

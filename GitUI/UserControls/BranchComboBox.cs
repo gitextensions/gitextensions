@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Text;
 using FluentAssertions;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitUI.NBugReports;
 
 namespace GitUITests.NBugReports

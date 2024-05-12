@@ -1,4 +1,4 @@
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ICSharpCode.TextEditor;

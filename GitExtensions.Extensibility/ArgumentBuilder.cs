@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using GitExtUtils;
 
-namespace GitExtUtils;
+namespace GitExtensions.Extensibility;
 
 /// <summary>
 /// Builds a command line argument string from zero or more arguments.

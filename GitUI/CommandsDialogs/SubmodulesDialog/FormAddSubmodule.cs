@@ -2,9 +2,9 @@
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SubmodulesDialog

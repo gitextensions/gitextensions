@@ -1,4 +1,4 @@
-﻿using GitExtUtils;
+﻿using GitExtensions.Extensibility;
 
 namespace GitCommands
 {

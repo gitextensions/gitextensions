@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;

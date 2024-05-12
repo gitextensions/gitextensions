@@ -2,8 +2,9 @@
 using FluentAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;
-using GitExtUtils;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Remote
@@ -359,7 +360,7 @@ namespace GitCommandsTests.Remote
             List<IConfigSection> sections = [new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
-            IReadOnlyList<GitUIPluginInterfaces.Remote> disabledRemotes = _remotesManager.GetDisabledRemotes();
+            IReadOnlyList<GitExtensions.Extensibility.Git.Remote> disabledRemotes = _remotesManager.GetDisabledRemotes();
             Assert.AreEqual(1, disabledRemotes.Count);
             Assert.AreEqual(disabledRemoteName, disabledRemotes[0].Name);
 

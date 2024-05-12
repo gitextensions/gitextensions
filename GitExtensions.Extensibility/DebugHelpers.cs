@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GitExtUtils;
+namespace GitExtensions.Extensibility;
 
 /// <summary>
 ///  Set of DEBUG-only helpers.

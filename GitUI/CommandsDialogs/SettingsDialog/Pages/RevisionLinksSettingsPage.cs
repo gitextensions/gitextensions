@@ -1,7 +1,7 @@
 ﻿using GitCommands.ExternalLinks;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
-using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 

@@ -1,5 +1,5 @@
+using GitExtensions.Extensibility;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs;
 

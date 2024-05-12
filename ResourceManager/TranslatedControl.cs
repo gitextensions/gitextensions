@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
 
 namespace ResourceManager;

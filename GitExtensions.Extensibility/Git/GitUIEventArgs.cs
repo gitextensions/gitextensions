@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Git;
 
 public class GitUIEventArgs : CancelEventArgs
 {

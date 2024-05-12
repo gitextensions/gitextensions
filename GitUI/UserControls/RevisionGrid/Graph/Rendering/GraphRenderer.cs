@@ -1,8 +1,8 @@
 ﻿using System.Drawing.Drawing2D;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
-using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph.Rendering

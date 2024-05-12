@@ -3,10 +3,11 @@ using Git.hub;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.GitHub3.Properties;
-using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
-using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using ResourceManager;
 

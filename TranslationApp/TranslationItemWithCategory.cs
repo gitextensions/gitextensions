@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using ResourceManager.Xliff;
+using GitExtensions.Extensibility.Translations.Xliff;
 
 namespace TranslationApp
 {

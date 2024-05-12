@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;

@@ -4,8 +4,8 @@ using System.Text;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Settings;
-using GitExtUtils;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitCommandsTests.Git
 {

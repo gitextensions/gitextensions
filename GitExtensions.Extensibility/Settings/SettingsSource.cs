@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Settings;
 
 public abstract class SettingsSource
 {
@@ -37,7 +37,7 @@ public abstract class SettingsSource
 
     public void SetBool(string name, bool? value)
     {
-        string? stringValue = value.HasValue ? (value.Value ? "true" : "false") : null;
+        string? stringValue = value.HasValue ? value.Value ? "true" : "false" : null;
 
         SetValue(name, stringValue);
     }

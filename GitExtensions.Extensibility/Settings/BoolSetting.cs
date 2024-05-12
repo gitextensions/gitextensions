@@ -1,6 +1,6 @@
-﻿using GitUI;
+﻿using GitExtensions.Extensibility.Extensions;
 
-namespace GitUIPluginInterfaces.Settings;
+namespace GitExtensions.Extensibility.Settings;
 
 public class BoolSetting : ISetting
 {

@@ -1,5 +1,6 @@
-﻿using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.LeftPanel
 {

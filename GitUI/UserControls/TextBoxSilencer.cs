@@ -1,4 +1,6 @@
-﻿namespace GitUI.UserControls
+﻿using GitExtensions.Extensibility;
+
+namespace GitUI.UserControls
 {
     /// <summary>
     /// Suppresses invalid cursor movement keypresses in order to avoid the "ding" sound.

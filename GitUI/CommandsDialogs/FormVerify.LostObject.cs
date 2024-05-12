@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {

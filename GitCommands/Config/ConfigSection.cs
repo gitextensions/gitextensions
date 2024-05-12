@@ -1,4 +1,4 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Configurations;
 
 namespace GitCommands.Config
 {

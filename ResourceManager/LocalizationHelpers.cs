@@ -2,7 +2,8 @@ using System.Text;
 using System.Threading;
 using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager

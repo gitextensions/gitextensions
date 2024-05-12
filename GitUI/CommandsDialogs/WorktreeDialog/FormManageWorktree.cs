@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using Microsoft;

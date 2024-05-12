@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.CommandsDialogs

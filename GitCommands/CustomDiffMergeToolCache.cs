@@ -1,6 +1,6 @@
 ﻿using GitCommands.Config;
-using GitExtUtils;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands

@@ -1,7 +1,6 @@
 using System.Text;
-using GitExtUtils;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility;
 
 /// <summary>
 /// Defines an executable that can be launched to create processes.

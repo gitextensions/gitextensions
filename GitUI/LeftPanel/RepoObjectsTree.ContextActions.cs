@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel.ContextMenu;
 using GitUI.LeftPanel.Interfaces;

@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Linq;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.UserControls;

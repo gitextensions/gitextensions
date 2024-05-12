@@ -1,6 +1,6 @@
-﻿using GitExtUtils;
+﻿using GitExtensions.Extensibility.Plugins;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Git;
 
 public interface IGitUICommands : IServiceProvider
 {

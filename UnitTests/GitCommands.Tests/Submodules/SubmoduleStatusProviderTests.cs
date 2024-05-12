@@ -4,7 +4,8 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Submodules;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Submodules
 {
@@ -771,7 +772,7 @@ namespace GitCommandsTests.Submodules
 
         private static IReadOnlyList<GitItemStatus> GetStatusChangedFiles(IGitModule module)
         {
-            GitExtUtils.ArgumentString cmd = Commands.GetAllChangedFiles(true, UntrackedFilesMode.Default, noLocks: true);
+            ArgumentString cmd = Commands.GetAllChangedFiles(true, UntrackedFilesMode.Default, noLocks: true);
             string output = module.GitExecutable.GetOutput(cmd);
             return new GetAllChangedFilesOutputParser(() => module).Parse(output);
         }

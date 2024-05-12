@@ -3,7 +3,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitCommandsTests.ExternalLinks
 {

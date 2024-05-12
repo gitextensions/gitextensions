@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using GitCommands;
 using GitCommands.Patches;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

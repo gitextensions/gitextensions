@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces;
+﻿namespace GitExtensions.Extensibility.Git;
 
 public sealed class GitSubmoduleStatus
 {
@@ -42,7 +42,7 @@ public sealed class GitSubmoduleStatus
     public string AddedAndRemovedString()
     {
         if (RemovedCommits is null || AddedCommits is null ||
-            (RemovedCommits == 0 && AddedCommits == 0))
+            RemovedCommits == 0 && AddedCommits == 0)
         {
             return "";
         }

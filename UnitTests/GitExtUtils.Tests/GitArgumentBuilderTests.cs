@@ -1,4 +1,5 @@
-﻿using GitExtUtils;
+﻿using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 
 namespace GitExtUtilsTests
 {

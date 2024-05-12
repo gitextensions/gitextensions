@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Xml.Serialization;
-using GitExtUtils;
 
-namespace ResourceManager.Xliff;
+namespace GitExtensions.Extensibility.Translations.Xliff;
 
 public class TranslationBody
 {

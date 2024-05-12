@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitUI.NBugReports;
 
@@ -77,7 +78,7 @@ namespace GitUI.Infrastructure
 
             string args = $"/k \"\"{AppSettings.Plink}\" -T {host}\"";
 
-            using GitUIPluginInterfaces.IProcess process = _executable.Start(args, createWindow: true, redirectInput: false, redirectOutput: false, outputEncoding: null);
+            using IProcess process = _executable.Start(args, createWindow: true, redirectInput: false, redirectOutput: false, outputEncoding: null);
             return await process.WaitForExitAsync() == 0;
         }
 

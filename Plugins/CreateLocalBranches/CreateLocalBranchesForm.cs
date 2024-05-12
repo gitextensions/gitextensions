@@ -1,6 +1,7 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 
 namespace GitExtensions.Plugins.CreateLocalBranches
 {

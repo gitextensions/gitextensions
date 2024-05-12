@@ -1,7 +1,7 @@
 ﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests
 {

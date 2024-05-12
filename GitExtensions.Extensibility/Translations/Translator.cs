@@ -1,6 +1,6 @@
-﻿using ResourceManager.Xliff;
+﻿using GitExtensions.Extensibility.Translations.Xliff;
 
-namespace ResourceManager;
+namespace GitExtensions.Extensibility.Translations;
 
 public static class Translator
 {

@@ -1,5 +1,5 @@
 ﻿using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

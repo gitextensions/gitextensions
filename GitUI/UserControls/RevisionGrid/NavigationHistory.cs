@@ -1,4 +1,4 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Git;
 
 namespace GitUI.UserControls.RevisionGrid
 {

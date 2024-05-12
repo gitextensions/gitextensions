@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
-using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;

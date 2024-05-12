@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid

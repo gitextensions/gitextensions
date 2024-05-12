@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces;
+﻿namespace GitExtensions.Extensibility.Configurations;
 
 /// <summary>
 ///  Provides the ability to access the .gitmodules config file.

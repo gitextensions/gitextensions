@@ -5,6 +5,8 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
@@ -12,7 +14,6 @@ using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

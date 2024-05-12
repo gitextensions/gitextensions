@@ -1,8 +1,9 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.Hotkey;
 

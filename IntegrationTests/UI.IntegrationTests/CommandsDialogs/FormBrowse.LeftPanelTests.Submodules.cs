@@ -3,6 +3,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Submodules;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;

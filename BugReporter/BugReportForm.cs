@@ -11,11 +11,12 @@ using System.Text.RegularExpressions;
 using BugReporter.Properties;
 using BugReporter.Serialization;
 using GitCommands;
+using GitExtensions.Extensibility.Translations;
+using GitExtensions.Extensibility.Translations.Xliff;
 using GitExtUtils.GitUI;
 using GitUI;
 using Microsoft;
 using ResourceManager;
-using ResourceManager.Xliff;
 using Report = BugReporter.Info.Report;
 
 namespace BugReporter

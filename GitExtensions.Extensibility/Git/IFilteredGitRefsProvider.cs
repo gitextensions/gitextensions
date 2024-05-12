@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces;
+﻿namespace GitExtensions.Extensibility.Git;
 
 /// <summary>
 /// A lazy provider for GitRefs() that can be shared for instance when a repository is changed.

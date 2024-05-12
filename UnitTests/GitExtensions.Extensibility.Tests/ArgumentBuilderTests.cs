@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 
 namespace GitExtUtilsTests
 {

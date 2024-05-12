@@ -2,6 +2,7 @@
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Gpg;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using NSubstitute;

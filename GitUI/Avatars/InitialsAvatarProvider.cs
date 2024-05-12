@@ -1,7 +1,7 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Avatars

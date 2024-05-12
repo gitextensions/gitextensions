@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces.Settings;
+﻿namespace GitExtensions.Extensibility.Settings;
 
 public class StringSetting : ISetting
 {

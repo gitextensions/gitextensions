@@ -8,6 +8,8 @@ using GitCommands;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;

@@ -1,7 +1,7 @@
 using System.Text;
 using GitCommands;
 using GitCommands.Patches;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Patches
 {

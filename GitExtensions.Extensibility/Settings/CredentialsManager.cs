@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using AdysTech.CredentialManager;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Settings;
 
 public interface ICredentialsManager
 {

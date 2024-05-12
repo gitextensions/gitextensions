@@ -2,7 +2,7 @@
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Git;
 
 /// <summary>
 /// Status if the file can be staged (worktree->index), unstaged or None (normal commits).
@@ -212,7 +212,7 @@ public sealed class GitItemStatus
     /// that is it belongs to either WorkTree or Index (<see cref="Staged"/> must be set).
     /// </summary>
     public bool IsUncommitted
-        => Staged is (StagedStatus.WorkTree or StagedStatus.Index);
+        => Staged is StagedStatus.WorkTree or StagedStatus.Index;
 
     /// <summary>
     /// Indicates whether the Git item is new or copied (<see cref="IsAdded"/>) and has not been committed yet (<see cref="IsUncommitted"/>).

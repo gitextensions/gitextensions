@@ -1,7 +1,6 @@
 using System.Text;
-using GitExtUtils;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Git;
 
 public interface IGitCommandRunner
 {

@@ -1,7 +1,8 @@
 ﻿using System.Text;
 using GitCommands;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using Microsoft;
 using Microsoft.Win32;
 using ResourceManager;

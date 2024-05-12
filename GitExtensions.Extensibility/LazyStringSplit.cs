@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using Microsoft;
 
-namespace GitExtUtils;
+namespace GitExtensions.Extensibility;
 
 /// <summary>
 /// Splits a string by a delimiter, producing substrings lazily during enumeration.
