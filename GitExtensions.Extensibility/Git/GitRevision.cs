@@ -119,7 +119,7 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
 
     public bool HasParent => ParentIds?.Count > 0;
 
-    public ObjectId? FirstParentId => HasParent ? ParentIds[0] : null;
+    public ObjectId? FirstParentId => HasParent ? ParentIds?[0] : null;
 
     #region INotifyPropertyChanged
 

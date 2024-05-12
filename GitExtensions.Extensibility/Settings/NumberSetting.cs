@@ -23,7 +23,9 @@ public class NumberSetting<T> : ISetting
     {
         if (typeof(T) == typeof(int))
         {
-            return new NumericUpDownBinding(this as NumberSetting<int>, CustomControl as NumericUpDown);
+            // It'd be great to write new NumericUpDownBinding((NumberSetting<int>)this, ...) but the compiler doesn't like that,
+            // so we are forced to use the !-operator.
+            return new NumericUpDownBinding((this as NumberSetting<int>)!, CustomControl as NumericUpDown);
         }
         else
         {
@@ -42,15 +44,15 @@ public class NumberSetting<T> : ISetting
 
         public override NumericUpDown CreateControl()
         {
-            NumericUpDown upDown = new();
+            NumericUpDown numericUpDown = new();
 
             // TODO: if we need negative values, int.MinValue should be the Minimum.
             //       Or, we can attempt to introduce a NumberSetting<int> constructor that accepts a min and max value parameter.
-            upDown.Minimum = 0;
-            upDown.Maximum = int.MaxValue;
+            numericUpDown.Minimum = 0;
+            numericUpDown.Maximum = int.MaxValue;
 
-            Setting.CustomControl = upDown;
-            return Setting.CustomControl as NumericUpDown;
+            Setting.CustomControl = numericUpDown;
+            return (NumericUpDown)Setting.CustomControl;
         }
 
         public override void LoadSetting(SettingsSource settings, NumericUpDown control)
@@ -81,7 +83,7 @@ public class NumberSetting<T> : ISetting
         public override TextBox CreateControl()
         {
             Setting.CustomControl = new TextBox();
-            return Setting.CustomControl as TextBox;
+            return (TextBox)Setting.CustomControl;
         }
 
         public override void LoadSetting(SettingsSource settings, TextBox control)
@@ -116,10 +118,10 @@ public class NumberSetting<T> : ISetting
             return string.Empty;
         }
 
-        return value.ToString();
+        return value.ToString()!;
     }
 
-    private static object? ConvertFromString(string value)
+    private static object? ConvertFromString(string? value)
     {
         if (string.IsNullOrEmpty(value))
         {

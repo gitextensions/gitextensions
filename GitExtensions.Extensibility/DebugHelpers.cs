@@ -17,6 +17,7 @@ public static class DebugHelpers
         }
     }
 
+#pragma warning disable CS8763 // A method marked [DoesNotReturn] should not return.
     [Conditional("DEBUG")]
     [DoesNotReturn]
     public static void Fail(string message)
@@ -35,6 +36,7 @@ public static class DebugHelpers
             }
         }
     }
+#pragma warning restore CS8763 // A method marked [DoesNotReturn] should not return.
 
     private static bool IsTestRunning
         => Application.ExecutablePath.EndsWith("testhost.exe");

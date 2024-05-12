@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace GitExtensions.Extensibility;
@@ -85,6 +86,7 @@ public class ArgumentBuilder : IEnumerable
     /// throws if called.
     /// </summary>
     /// <exception cref="InvalidOperationException">Always thrown.</exception>
+    [DoesNotReturn]
     IEnumerator IEnumerable.GetEnumerator()
     {
         throw new InvalidOperationException($"{nameof(IEnumerable)} only implemented to support collection initialiser syntax.");

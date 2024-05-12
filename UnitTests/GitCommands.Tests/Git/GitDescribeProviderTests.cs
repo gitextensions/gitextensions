@@ -22,7 +22,7 @@ namespace GitCommandsTests.Git
         public void GitDescribeProvider_returns_nulls_for_invalid_revision()
         {
             ObjectId commitId = ObjectId.Random();
-            _module.GetDescribe(commitId).Returns(x => null);
+            _module.GetDescribe(commitId, Arg.Any<CancellationToken>()).Returns(x => null);
             (string precedingTag, string commitCount) = _provider.Get(commitId);
 
             precedingTag.Should().BeNullOrEmpty();
@@ -35,7 +35,7 @@ namespace GitCommandsTests.Git
             // 33f0bc7f021210eb4bf49f770b5fc5952dfd41c2 predates tag 0.90 by 1 commit.
             // GitExecutable.GetOutput returns "fatal: No tags can describe '33f0bc7f021210eb4bf49f770b5fc5952dfd41c2'.\r\nTry --always, or create some tags."
             ObjectId commitId = ObjectId.Parse("33f0bc7f021210eb4bf49f770b5fc5952dfd41c2");
-            _module.GetDescribe(commitId).Returns(x => null);
+            _module.GetDescribe(commitId, Arg.Any<CancellationToken>()).Returns(x => null);
             (string precedingTag, string commitCount) = _provider.Get(commitId);
 
             precedingTag.Should().BeNullOrEmpty();
@@ -47,7 +47,7 @@ namespace GitCommandsTests.Git
         {
             // 943d230ba465d86c3ad2cd00f7e8c508d144d9a5 is the commit at tag 0.90.
             ObjectId commitId = ObjectId.Parse("943d230ba465d86c3ad2cd00f7e8c508d144d9a5");
-            _module.GetDescribe(commitId).Returns("0.90");
+            _module.GetDescribe(commitId, Arg.Any<CancellationToken>()).Returns("0.90");
             (string precedingTag, string commitCount) = _provider.Get(commitId);
 
             precedingTag.Should().Be("0.90");
@@ -59,7 +59,7 @@ namespace GitCommandsTests.Git
         {
             // 16dc9d22d986f9ca03f6ec24007d65e6c062840e comes after tag 0.90 by 2 commits.
             ObjectId commitId = ObjectId.Parse("16dc9d22d986f9ca03f6ec24007d65e6c062840e");
-            _module.GetDescribe(commitId).Returns("0.90-2-g16dc9d22d986f9ca03f6ec24007d65e6c062840e");
+            _module.GetDescribe(commitId, Arg.Any<CancellationToken>()).Returns("0.90-2-g16dc9d22d986f9ca03f6ec24007d65e6c062840e");
             (string precedingTag, string commitCount) = _provider.Get(commitId);
 
             precedingTag.Should().Be("0.90");

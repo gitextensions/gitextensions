@@ -25,10 +25,13 @@ public sealed class Patch
         PatchChangeType changeType,
         string? text)
     {
-        Header = header ?? throw new ArgumentNullException(nameof(header));
+        ArgumentNullException.ThrowIfNull(header);
+        ArgumentNullException.ThrowIfNull(fileNameA);
+
+        Header = header;
         Index = index;
         FileType = fileType;
-        FileNameA = fileNameA ?? throw new ArgumentNullException(nameof(fileNameA));
+        FileNameA = fileNameA;
         FileNameB = fileNameB;
         ChangeType = changeType;
         Text = text;

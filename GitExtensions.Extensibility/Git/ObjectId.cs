@@ -66,7 +66,7 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     [Pure]
     public static ObjectId Parse(string s)
     {
-        if (s?.Length is not Sha1CharCount || !TryParse(s.AsSpan(), out ObjectId id))
+        if (s?.Length is not Sha1CharCount || !TryParse(s.AsSpan(), out ObjectId? id))
         {
             throw new FormatException($"Unable to parse object ID \"{s}\".");
         }
@@ -88,7 +88,7 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     [Pure]
     public static ObjectId Parse(string s, Capture capture)
     {
-        if (s is null || capture?.Length is not Sha1CharCount || !TryParse(s.AsSpan(capture.Index, capture.Length), out ObjectId id))
+        if (s is null || capture?.Length is not Sha1CharCount || !TryParse(s.AsSpan(capture.Index, capture.Length), out ObjectId? id))
         {
             throw new FormatException($"Unable to parse object ID \"{s}\".");
         }
@@ -254,21 +254,21 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
 
     #region IComparable<ObjectId>
 
-    public int CompareTo(ObjectId other)
+    public int CompareTo(ObjectId? other)
     {
-        int result = _i1.CompareTo(other._i1);
+        int result = _i1.CompareTo(other?._i1);
         if (result != 0)
         {
             return result;
         }
 
-        result = _i2.CompareTo(other._i2);
+        result = _i2.CompareTo(other?._i2);
         if (result != 0)
         {
             return result;
         }
 
-        return _i3.CompareTo(other._i3);
+        return _i3.CompareTo(other?._i3);
     }
 
     #endregion
@@ -306,8 +306,8 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
         BinaryPrimitives.WriteUInt64BigEndian(buffer, _i1);
         if (neededBytesCount > 8)
         {
-            BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
-            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
+        BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
+        BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
         }
 
         // Operate on the smaller buffer possible

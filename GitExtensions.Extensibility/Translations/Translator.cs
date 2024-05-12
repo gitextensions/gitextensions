@@ -41,7 +41,7 @@ public static class Translator
 
     public static string GetTranslationDir()
     {
-        return Path.Combine(Path.GetDirectoryName(typeof(Translator).Assembly.Location), "Translation");
+        return Path.Combine(Path.GetDirectoryName(typeof(Translator).Assembly.Location)!, "Translation");
     }
 
     public static string[] GetAllTranslations()

@@ -6,7 +6,7 @@ public class GitUIEventArgs : CancelEventArgs
 {
     private readonly IFilteredGitRefsProvider _getRefs;
 
-    public GitUIEventArgs(IWin32Window? ownerForm, IGitUICommands gitUICommands, Lazy<IReadOnlyList<IGitRef>> getRefs = null)
+    public GitUIEventArgs(IWin32Window? ownerForm, IGitUICommands gitUICommands, Lazy<IReadOnlyList<IGitRef>>? getRefs = null)
         : base(cancel: false)
     {
         OwnerForm = ownerForm;

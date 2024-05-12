@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
@@ -129,7 +130,7 @@ namespace GitUI.Blame
             await BlameAuthor.ClearAsync();
             await BlameFile.ClearAsync();
 
-            await _blameLoader.LoadAsync(cancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, cancellationToken: cancellationToken),
+            await _blameLoader.LoadAsync(cancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, lines: null, cancellationToken: cancellationToken),
                 () => ProcessBlame(fileName, revision, children, controlToMask, line, cancellationToken));
         }
 
