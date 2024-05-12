@@ -2,7 +2,8 @@
 
 namespace GitExtensions.Extensibility.Git;
 
-/// <inherit/>
+// TODO: This should not be in Extensibility!
+
 public sealed class FilteredGitRefsProvider : IFilteredGitRefsProvider
 {
     public FilteredGitRefsProvider(IGitModule module)
@@ -25,9 +26,11 @@ public sealed class FilteredGitRefsProvider : IFilteredGitRefsProvider
             return _getRefs.Value;
         }
 
-        return _getRefs.Value.Where(r =>
-            (filter & RefsFilter.Tags) != 0 && r.IsTag
-            || (filter & RefsFilter.Remotes) != 0 && r.IsRemote
-            || (filter & RefsFilter.Heads) != 0 && r.IsHead).ToList();
+        return _getRefs.Value
+            .Where(r =>
+                ((filter & RefsFilter.Tags) != 0 && r.IsTag)
+                || ((filter & RefsFilter.Remotes) != 0 && r.IsRemote)
+                || ((filter & RefsFilter.Heads) != 0 && r.IsHead))
+            .ToList();
     }
 }
