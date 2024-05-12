@@ -375,6 +375,7 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
+            CancelButton = buttonCancel;
             ClientSize = new Size(698, 361);
             MinimizeBox = false;
             MinimumSize = new Size(550, 310);
