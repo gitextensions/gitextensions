@@ -1,7 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
-using GitUIPluginInterfaces;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog

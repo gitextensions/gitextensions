@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ResourceManager.Xliff;
+namespace GitExtensions.Extensibility.Translations.Xliff;
 
 /// <summary>Provides a translation for a specific language.</summary>
 [XmlRoot("xliff")]

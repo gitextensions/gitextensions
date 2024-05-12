@@ -1,4 +1,4 @@
-namespace System;
+namespace GitExtensions.Extensibility;
 
 /// <summary>
 /// Singleton instances of commonly used character arrays.

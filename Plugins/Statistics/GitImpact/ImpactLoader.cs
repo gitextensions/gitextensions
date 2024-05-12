@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI;
-using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitExtensions.Plugins.GitImpact

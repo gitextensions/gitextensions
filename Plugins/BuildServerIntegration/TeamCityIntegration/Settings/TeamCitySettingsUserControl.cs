@@ -1,6 +1,6 @@
 using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 

@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using GitCommands;
+using GitExtensions.Extensibility.Translations;
 using GitUI;
 
 namespace ResourceManager

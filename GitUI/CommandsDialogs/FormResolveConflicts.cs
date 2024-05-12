@@ -2,9 +2,10 @@
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.HelperDialogs;
-using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 
@@ -587,7 +588,7 @@ namespace GitUI.CommandsDialogs
                     string filePath = _fullPathResolver.Resolve(item.Filename);
                     DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
-                    GitUIPluginInterfaces.ExecutionResult res;
+                    ExecutionResult res;
                     try
                     {
                         res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments, throwOnErrorExit: false);

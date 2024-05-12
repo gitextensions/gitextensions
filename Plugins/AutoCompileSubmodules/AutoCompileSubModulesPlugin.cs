@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.Composition;
 using System.Text;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.AutoCompileSubmodules.Properties;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.AutoCompileSubmodules

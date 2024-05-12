@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces;
+﻿namespace GitExtensions.Extensibility.Git;
 
 /// <summary>Specifies whether to check untracked files/directories (e.g. via 'git status')</summary>
 public enum UntrackedFilesMode

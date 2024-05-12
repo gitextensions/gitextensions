@@ -1,7 +1,7 @@
 ﻿using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 
 namespace GitCommands.Git;
 

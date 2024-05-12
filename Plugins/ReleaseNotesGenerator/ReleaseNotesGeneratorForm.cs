@@ -2,8 +2,8 @@
 using System.Text;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.ReleaseNotesGenerator

@@ -1,4 +1,4 @@
-﻿namespace GitUI;
+﻿namespace GitExtensions.Extensibility.Extensions;
 
 public static class UIExtensions
 {

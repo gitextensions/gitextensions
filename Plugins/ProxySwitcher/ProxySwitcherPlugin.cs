@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Composition;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.ProxySwitcher.Properties;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
-using ResourceManager;
 
 namespace GitExtensions.Plugins.ProxySwitcher
 {

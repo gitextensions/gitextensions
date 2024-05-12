@@ -1,7 +1,7 @@
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Tag;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests_Git
 {

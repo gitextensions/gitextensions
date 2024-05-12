@@ -1,6 +1,5 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using GitUIPluginInterfaces.Settings;
 
 namespace GitCommands.Settings
 {

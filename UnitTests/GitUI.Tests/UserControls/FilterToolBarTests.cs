@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls

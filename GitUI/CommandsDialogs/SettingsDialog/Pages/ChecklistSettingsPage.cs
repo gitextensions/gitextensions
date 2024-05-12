@@ -2,6 +2,7 @@
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Utils;
+using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
 using Microsoft;
 using ResourceManager;

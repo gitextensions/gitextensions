@@ -1,5 +1,5 @@
-﻿using GitUI.Properties;
-using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI.Properties;
 
 namespace GitUI.UserControls
 {

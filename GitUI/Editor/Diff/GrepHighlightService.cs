@@ -2,9 +2,10 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
-using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 

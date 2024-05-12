@@ -3,9 +3,10 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.Gource.Properties;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using ICSharpCode.SharpZipLib.Zip;
 using ResourceManager;
 

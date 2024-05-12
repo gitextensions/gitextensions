@@ -1,4 +1,4 @@
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using Microsoft;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart

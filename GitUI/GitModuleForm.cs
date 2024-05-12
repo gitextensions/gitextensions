@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;

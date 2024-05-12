@@ -1,9 +1,9 @@
 using System.Drawing;
 using System.Windows.Forms;
+using GitExtensions.Extensibility.Git;
 using GitUI.Editor;
 using GitUI.SpellChecker;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {

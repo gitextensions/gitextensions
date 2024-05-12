@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Xliff;
+namespace GitExtensions.Extensibility.Translations.Xliff;
 
 /// <summary>Serializes and deserialize a <see cref="TranslationFile"/>.</summary>
 public static class TranslationSerializer

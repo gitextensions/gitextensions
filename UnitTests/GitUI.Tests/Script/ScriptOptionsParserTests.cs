@@ -3,6 +3,8 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;

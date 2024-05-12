@@ -6,13 +6,14 @@ using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.Settings;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using ResourceManager;
 

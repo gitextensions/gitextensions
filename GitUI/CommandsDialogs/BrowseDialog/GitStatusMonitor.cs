@@ -1,7 +1,8 @@
 using System.IO.Abstractions;
 using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -485,7 +486,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     {
                         try
                         {
-                            GitExtUtils.ArgumentString cmd = Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, noLocks: noLocks);
+                            ArgumentString cmd = Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, noLocks: noLocks);
                             ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken);
 
                             if (result.ExitedSuccessfully && !ModuleHasChanged())

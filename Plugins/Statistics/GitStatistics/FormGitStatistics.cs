@@ -1,9 +1,9 @@
 using System.Text;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Plugins.GitStatistics.PieChart;
 using GitExtUtils.GitUI;
 using GitUI;
-using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;

@@ -1,4 +1,5 @@
-﻿using GitExtUtils;
+﻿using GitExtensions.Extensibility;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUIPluginInterfaces;

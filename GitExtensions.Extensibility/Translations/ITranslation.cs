@@ -1,4 +1,4 @@
-﻿namespace ResourceManager;
+﻿namespace GitExtensions.Extensibility.Translations;
 
 public interface ITranslation
 {

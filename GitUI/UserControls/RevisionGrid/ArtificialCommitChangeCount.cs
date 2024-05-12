@@ -1,5 +1,5 @@
 using System.Text;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI
 {

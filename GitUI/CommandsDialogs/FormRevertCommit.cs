@@ -1,6 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;

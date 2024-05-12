@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
 using NSubstitute;
 
@@ -19,7 +20,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
 
         private RevisionGraphRevision SetupLaneRow(int row, int lane, int laneCount, int nodeLane = -1, RevisionGraphSegment firstSegment = null)
         {
-            RevisionGraphRevision node = new(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
+            RevisionGraphRevision node = new(ObjectId.WorkTreeId, 0);
             IRevisionGraphRow revisionGraphRow = Substitute.For<IRevisionGraphRow>();
 
             List<RevisionGraphSegment> segments = new();
@@ -125,8 +126,8 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         {
             const int row = 100;
             const int lane = 3;
-            RevisionGraphRevision parentNode = new(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
-            RevisionGraphRevision childNode = new(GitUIPluginInterfaces.ObjectId.WorkTreeId, 0);
+            RevisionGraphRevision parentNode = new(ObjectId.WorkTreeId, 0);
+            RevisionGraphRevision childNode = new(ObjectId.WorkTreeId, 0);
             RevisionGraphSegment segment = new(parentNode, childNode);
             RevisionGraphRevision laneNode = SetupLaneRow(row, lane, laneCount: lane + 1, firstSegment: segment);
 

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace ResourceManager.Xliff;
+namespace GitExtensions.Extensibility.Translations.Xliff;
 
 public static class TranslationUtil
 {

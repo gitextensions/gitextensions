@@ -10,6 +10,8 @@ using GitCommands.ExternalLinks;
 using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.Settings;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;

@@ -1,5 +1,6 @@
 ﻿using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git

@@ -1,6 +1,6 @@
-﻿using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
-using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
+﻿using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 
 namespace GitlabIntegrationTests
 {

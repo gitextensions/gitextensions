@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace ResourceManager
 {

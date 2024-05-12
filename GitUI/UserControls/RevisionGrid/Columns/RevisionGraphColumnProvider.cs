@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.NBugReports;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;

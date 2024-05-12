@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests

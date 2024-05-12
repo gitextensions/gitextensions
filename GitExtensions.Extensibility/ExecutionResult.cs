@@ -1,6 +1,6 @@
 ﻿using GitExtUtils;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility;
 
 public readonly struct ExecutionResult
 {

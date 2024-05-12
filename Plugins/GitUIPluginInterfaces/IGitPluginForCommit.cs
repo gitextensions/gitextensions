@@ -1,3 +1,5 @@
+using GitExtensions.Extensibility.Plugins;
+
 namespace GitUIPluginInterfaces;
 
 /// <summary>

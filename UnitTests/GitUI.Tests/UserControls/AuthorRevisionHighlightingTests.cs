@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.Config;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 

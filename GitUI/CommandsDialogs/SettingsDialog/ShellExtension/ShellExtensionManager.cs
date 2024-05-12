@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using GitCommands;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 using GitUI.NBugReports;
 using Microsoft.Win32;
 

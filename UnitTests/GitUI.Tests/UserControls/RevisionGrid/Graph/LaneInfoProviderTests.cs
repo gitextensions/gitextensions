@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;

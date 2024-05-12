@@ -1,5 +1,5 @@
 using GitCommands.Submodules;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace CommonTestUtils
 {

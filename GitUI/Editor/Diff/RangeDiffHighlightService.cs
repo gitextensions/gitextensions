@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 

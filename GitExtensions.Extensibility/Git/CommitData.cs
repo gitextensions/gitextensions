@@ -1,4 +1,6 @@
-namespace GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Extensions;
+
+namespace GitExtensions.Extensibility.Git;
 
 public sealed class CommitData
 {

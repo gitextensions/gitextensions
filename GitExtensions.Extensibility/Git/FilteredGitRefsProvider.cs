@@ -1,4 +1,6 @@
-﻿namespace GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility;
+
+namespace GitExtensions.Extensibility.Git;
 
 /// <inherit/>
 public sealed class FilteredGitRefsProvider : IFilteredGitRefsProvider
@@ -24,8 +26,8 @@ public sealed class FilteredGitRefsProvider : IFilteredGitRefsProvider
         }
 
         return _getRefs.Value.Where(r =>
-            ((filter & RefsFilter.Tags) != 0 && r.IsTag)
-            || ((filter & RefsFilter.Remotes) != 0 && r.IsRemote)
-            || ((filter & RefsFilter.Heads) != 0 && r.IsHead)).ToList();
+            (filter & RefsFilter.Tags) != 0 && r.IsTag
+            || (filter & RefsFilter.Remotes) != 0 && r.IsRemote
+            || (filter & RefsFilter.Heads) != 0 && r.IsHead).ToList();
     }
 }

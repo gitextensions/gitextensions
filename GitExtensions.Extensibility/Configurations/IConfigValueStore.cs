@@ -1,4 +1,6 @@
-namespace GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
+
+namespace GitExtensions.Extensibility.Configurations;
 
 public interface IConfigValueStore : ISettingsValueGetter
 {

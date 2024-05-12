@@ -1,5 +1,5 @@
 using System.Drawing.Drawing2D;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart
 {

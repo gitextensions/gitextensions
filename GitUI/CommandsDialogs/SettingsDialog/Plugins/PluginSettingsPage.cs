@@ -1,4 +1,5 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins

@@ -1,6 +1,6 @@
 // ReSharper disable once CheckNamespace
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Extensions;
 
 public static class DateTimeExtensions
 {

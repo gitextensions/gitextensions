@@ -3,11 +3,12 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUI.Infrastructure;
 using GitUI.Properties;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 

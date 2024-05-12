@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitExtUtils
 {

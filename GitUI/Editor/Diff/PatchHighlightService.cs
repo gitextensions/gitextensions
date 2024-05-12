@@ -1,8 +1,8 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
-using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 

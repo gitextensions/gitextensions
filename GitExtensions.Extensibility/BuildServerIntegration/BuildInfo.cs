@@ -1,4 +1,6 @@
-﻿namespace GitUIPluginInterfaces.BuildServerIntegration;
+﻿using GitExtensions.Extensibility.Git;
+
+namespace GitExtensions.Extensibility.BuildServerIntegration;
 
 public partial class BuildInfo
 {

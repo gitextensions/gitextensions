@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Xliff;
+namespace GitExtensions.Extensibility.Translations.Xliff;
 
 [DebuggerDisplay("{Name}.{Property}={Value}")]
 public class TranslationItem : IComparable<TranslationItem>, ICloneable

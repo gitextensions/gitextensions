@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
 
 namespace GitUIPluginInterfacesTests
 {

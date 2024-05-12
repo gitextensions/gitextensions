@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Composition;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 

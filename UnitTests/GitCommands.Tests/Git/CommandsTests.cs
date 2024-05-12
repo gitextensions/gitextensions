@@ -1,7 +1,8 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
 namespace GitCommandsTests_Git

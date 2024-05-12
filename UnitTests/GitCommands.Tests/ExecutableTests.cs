@@ -2,8 +2,8 @@
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Logging;
+using GitExtensions.Extensibility;
 using GitUI;
-using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommandsTests

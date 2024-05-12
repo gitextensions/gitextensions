@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace GitExtUtils;
+namespace GitExtensions.Extensibility;
 
 [DebuggerDisplay("{" + nameof(Arguments) + "}")]
 public readonly struct ArgumentString

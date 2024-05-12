@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using GitUIPluginInterfaces.BuildServerIntegration;
+using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUIPluginInterfaces;
 

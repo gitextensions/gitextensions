@@ -2,8 +2,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
 using GitCommands;
-using GitExtUtils;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI

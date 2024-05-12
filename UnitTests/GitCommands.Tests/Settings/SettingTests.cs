@@ -1,7 +1,7 @@
 ﻿using System.CodeDom.Compiler;
 using GitCommands;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitCommandsTests.Settings
 {

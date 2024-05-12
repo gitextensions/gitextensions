@@ -1,6 +1,8 @@
 ﻿using System.IO.Abstractions;
 using FluentAssertions;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Newtonsoft.Json;

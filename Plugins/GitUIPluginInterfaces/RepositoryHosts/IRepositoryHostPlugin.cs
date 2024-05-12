@@ -1,4 +1,6 @@
-﻿namespace GitUIPluginInterfaces.RepositoryHosts;
+﻿using GitExtensions.Extensibility.Plugins;
+
+namespace GitUIPluginInterfaces.RepositoryHosts;
 
 /// <summary>
 ///  Define that the plugin provides features (clone, ...) related to an online git hosting service.

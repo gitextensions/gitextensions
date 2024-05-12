@@ -1,5 +1,5 @@
 using GitCommands.Config;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommands.Remotes
 {

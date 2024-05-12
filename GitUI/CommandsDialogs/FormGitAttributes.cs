@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

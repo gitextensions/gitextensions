@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
 namespace GitUI

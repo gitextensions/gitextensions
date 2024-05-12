@@ -1,6 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Newtonsoft.Json;
 

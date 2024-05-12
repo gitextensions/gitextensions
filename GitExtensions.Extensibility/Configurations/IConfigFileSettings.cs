@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Configurations;
 
 public interface IConfigFileSettings : IConfigValueStore
 {

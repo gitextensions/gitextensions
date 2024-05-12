@@ -1,4 +1,4 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Plugins;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

@@ -1,8 +1,8 @@
 ﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
-using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.CommandsDialogs

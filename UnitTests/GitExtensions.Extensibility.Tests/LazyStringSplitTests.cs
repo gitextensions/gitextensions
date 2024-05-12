@@ -1,5 +1,5 @@
 ﻿using CommonTestUtils;
-using GitExtUtils;
+using GitExtensions.Extensibility;
 
 namespace GitExtUtilsTests
 {

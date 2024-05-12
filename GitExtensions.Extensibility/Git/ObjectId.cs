@@ -5,7 +5,7 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Git;
 
 /// <summary>
 /// Models a SHA1 hash.

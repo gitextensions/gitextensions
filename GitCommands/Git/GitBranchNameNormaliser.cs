@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using GitExtensions.Extensibility;
 
 namespace GitCommands.Git
 {

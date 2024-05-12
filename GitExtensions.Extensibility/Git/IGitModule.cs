@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using GitExtUtils;
+using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Settings;
+using GitUIPluginInterfaces;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility.Git;
 
 /// <summary>Provides manipulation with git module.</summary>
 public interface IGitModule
@@ -163,7 +165,7 @@ public interface IGitModule
     /// <typeparam name="T">The expected type of the git setting.</typeparam>
     /// <param name="setting">The git setting key.</param>
     /// <returns>The value converted to the <typeparamref name="T" /> type; <see langword="null"/> if the settings is not set.</returns>
-    /// <exception cref="Settings.GitConfigFormatException">
+    /// <exception cref="GitConfigFormatException">
     ///  The value of the git setting <paramref name="setting" /> cannot be converted in the specified type <typeparamref name="T" />.
     /// </exception>
     T? GetSetting<T>(string setting) where T : struct;
@@ -176,7 +178,7 @@ public interface IGitModule
     /// <typeparam name="T">The expected type of the git setting.</typeparam>
     /// <param name="setting">The git setting key.</param>
     /// <returns>The value converted to the <typeparamref name="T" /> type; <see langword="null"/> if the settings is not set.</returns>
-    /// <exception cref="Settings.GitConfigFormatException">
+    /// <exception cref="GitConfigFormatException">
     ///  The value of the git setting <paramref name="setting" /> cannot be converted in the specified type <typeparamref name="T" />.
     /// </exception>
     T? GetEffectiveSetting<T>(string setting) where T : struct;

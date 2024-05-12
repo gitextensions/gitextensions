@@ -1,8 +1,7 @@
 ﻿using System.Text;
 using FluentAssertions;
 using GitCommands.Git;
-using GitExtUtils;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility;
 using NSubstitute;
 
 namespace GitCommandsTests.Git

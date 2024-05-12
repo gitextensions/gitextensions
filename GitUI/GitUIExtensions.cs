@@ -1,12 +1,13 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.Editor;
 using GitUI.Editor.Diff;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI

@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces;
+﻿namespace GitExtensions.Extensibility;
 
 /// <summary>
 /// Enums requestable in GetRefs() (multiple names can be appended)

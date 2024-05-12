@@ -1,6 +1,8 @@
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
+using GitExtensions.Extensibility.Translations;
 
-namespace ResourceManager;
+namespace GitExtensions.Extensibility.Plugins;
 
 public abstract class GitPluginBase : IGitPlugin, ITranslate
 {

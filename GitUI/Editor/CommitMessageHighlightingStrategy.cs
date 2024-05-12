@@ -1,5 +1,5 @@
 ﻿using GitCommands;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 

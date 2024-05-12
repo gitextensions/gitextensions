@@ -1,10 +1,10 @@
 ﻿using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
-using GitExtUtils;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

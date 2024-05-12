@@ -1,6 +1,7 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.LeftPanel

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtensions.Extensibility;
 
 /// <summary>
 /// Defines a process instance.

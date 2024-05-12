@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Design;
 using CommonTestUtils;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUIPluginInterfaces;
 using NSubstitute;

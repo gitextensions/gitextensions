@@ -1,7 +1,7 @@
 ﻿using System.IO.Abstractions;
 using GitCommands.Git;
 using GitCommands.Git.Tag;
-using GitUIPluginInterfaces;
+using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git.Tag

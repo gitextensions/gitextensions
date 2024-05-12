@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.FindLargeFiles
