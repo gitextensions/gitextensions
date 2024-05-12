@@ -230,9 +230,14 @@ public sealed class GitItemStatus
     /// a task whose result is the status. The task may also return null if the status could not be
     /// determined.
     /// </returns>
-    public Task<GitSubmoduleStatus?>? GetSubmoduleStatusAsync()
+    public Task<GitSubmoduleStatus?> GetSubmoduleStatusAsync()
     {
-        return _submoduleStatus?.JoinAsync();
+        if (_submoduleStatus is null)
+        {
+            return Task.FromResult((GitSubmoduleStatus?)null);
+        }
+
+        return _submoduleStatus.JoinAsync();
     }
 
     public void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus?> status)
@@ -249,7 +254,7 @@ public sealed class GitItemStatus
     {
         GitItemStatus gitItemStatus = new(Name)
         {
-            Name = IsRenamed ? OldName : Name,
+            Name = IsRenamed ? (OldName ?? string.Empty) : Name,
             OldName = IsRenamed ? Name : OldName,
             ErrorMessage = ErrorMessage,
             TreeGuid = TreeGuid,

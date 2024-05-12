@@ -10,7 +10,7 @@ public interface ICredentialsManager
     void Save();
 }
 
-public class CredentialsManager : ICredentialsManager
+internal class CredentialsManager : ICredentialsManager
 {
     private static ConcurrentDictionary<string, NetworkCredential?> Credentials { get; } = new ConcurrentDictionary<string, NetworkCredential?>();
     private readonly Func<string?>? _getWorkingDir;
@@ -19,14 +19,14 @@ public class CredentialsManager : ICredentialsManager
     {
     }
 
-    protected CredentialsManager(Func<string?> getWorkingDir)
+    protected internal CredentialsManager(Func<string?> getWorkingDir)
     {
         _getWorkingDir = getWorkingDir;
     }
 
     public void Save()
     {
-        List<KeyValuePair<string, NetworkCredential>> credentials = Credentials.ToList();
+        List<KeyValuePair<string, NetworkCredential?>> credentials = Credentials.ToList();
         if (credentials.Count < 1)
         {
             return;
@@ -34,7 +34,7 @@ public class CredentialsManager : ICredentialsManager
 
         Credentials.Clear();
 
-        foreach (KeyValuePair<string, NetworkCredential> networkCredentials in credentials)
+        foreach (KeyValuePair<string, NetworkCredential?> networkCredentials in credentials)
         {
             if (networkCredentials.Value is null)
             {
@@ -47,9 +47,9 @@ public class CredentialsManager : ICredentialsManager
         }
     }
 
-    protected NetworkCredential GetCredentialOrDefault(SettingLevel settingLevel, string name, NetworkCredential defaultValue)
+    protected internal NetworkCredential GetCredentialOrDefault(SettingLevel settingLevel, string name, NetworkCredential defaultValue)
     {
-        string targetName = GetWindowsCredentialsTarget(name, settingLevel);
+        string? targetName = GetWindowsCredentialsTarget(name, settingLevel);
         if (string.IsNullOrWhiteSpace(targetName))
         {
             return defaultValue;
@@ -63,9 +63,9 @@ public class CredentialsManager : ICredentialsManager
         return defaultValue;
     }
 
-    protected void SetCredentials(SettingLevel settingLevel, string name, NetworkCredential? value)
+    protected internal void SetCredentials(SettingLevel settingLevel, string name, NetworkCredential? value)
     {
-        string targetName = GetWindowsCredentialsTarget(name, settingLevel);
+        string? targetName = GetWindowsCredentialsTarget(name, settingLevel);
         ArgumentNullException.ThrowIfNull(targetName);
         Credentials.AddOrUpdate(targetName, value, (s, credential) => value);
     }
@@ -78,7 +78,7 @@ public class CredentialsManager : ICredentialsManager
         }
 
         ArgumentNullException.ThrowIfNull(_getWorkingDir);
-        string suffix = _getWorkingDir();
+        string? suffix = _getWorkingDir();
         return string.IsNullOrWhiteSpace(suffix) ? null : $"{name}_{suffix}";
     }
 
