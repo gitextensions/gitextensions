@@ -14,7 +14,8 @@ public sealed class GitSubmoduleStatus
 
     public GitSubmoduleStatus(string name, string? oldName, bool isDirty, ObjectId? commit, ObjectId? oldCommit, int? addedCommits, int? removedCommits)
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(nameof(name));
+        Name = name;
         OldName = oldName;
         IsDirty = isDirty;
         Commit = commit;
@@ -42,7 +43,7 @@ public sealed class GitSubmoduleStatus
     public string AddedAndRemovedString()
     {
         if (RemovedCommits is null || AddedCommits is null ||
-            RemovedCommits == 0 && AddedCommits == 0)
+            (RemovedCommits == 0 && AddedCommits == 0))
         {
             return "";
         }
