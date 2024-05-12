@@ -1,8 +1,9 @@
 ﻿using System.Collections.Concurrent;
+using GitUIPluginInterfaces;
 
 namespace GitExtUtils
 {
-    public sealed class GitCommandConfiguration
+    public sealed class GitCommandConfiguration : IGitCommandConfiguration
     {
         private readonly ConcurrentDictionary<string, GitConfigItem[]> _configByCommand
             = new(StringComparer.Ordinal);
@@ -29,11 +30,6 @@ namespace GitExtUtils
             Default.Add(new GitConfigItem("core.safecrlf", "false"), "diff");
         }
 
-        /// <summary>
-        /// Registers <paramref name="configItem"/> against one or more command names.
-        /// </summary>
-        /// <param name="configItem">The config item to register.</param>
-        /// <param name="commands">One or more command names to register this config item against.</param>
         public void Add(GitConfigItem configItem, params string[] commands)
         {
             foreach (string command in commands)
@@ -45,11 +41,6 @@ namespace GitExtUtils
             }
         }
 
-        /// <summary>
-        /// Retrieves the set of default config items for the given <paramref name="command"/>.
-        /// </summary>
-        /// <param name="command">The command to retrieve default config items for.</param>
-        /// <returns>The default config items for <paramref name="command"/>.</returns>
         public IReadOnlyList<GitConfigItem> Get(string command)
         {
             return _configByCommand.TryGetValue(command, out GitConfigItem[] items)

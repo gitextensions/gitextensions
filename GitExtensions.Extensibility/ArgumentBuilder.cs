@@ -1,6 +1,6 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using JetBrains.Annotations;
 
 namespace GitExtUtils
 {
@@ -86,7 +86,6 @@ namespace GitExtUtils
         /// throws if called.
         /// </summary>
         /// <exception cref="InvalidOperationException">Always thrown.</exception>
-        [ContractAnnotation("=>halt")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new InvalidOperationException($"{nameof(IEnumerable)} only implemented to support collection initialiser syntax.");

@@ -198,9 +198,9 @@ namespace AppVeyorIntegration
 
                     JToken pullRequestId = b["pullRequestId"];
                     string version = b["version"].ToObject<string>();
-                    BuildInfo.BuildStatus status = ParseBuildStatus(b["status"].ToObject<string>());
+                    BuildStatus status = ParseBuildStatus(b["status"].ToObject<string>());
                     long? duration = null;
-                    if (status is (BuildInfo.BuildStatus.Success or BuildInfo.BuildStatus.Failure))
+                    if (status is (BuildStatus.Success or BuildStatus.Failure))
                     {
                         duration = GetBuildDuration(b);
                     }
@@ -298,8 +298,8 @@ namespace AppVeyorIntegration
                 {
                     // Update finished build with tests results
                     if (_shouldLoadTestResults
-                        && (build.Status == BuildInfo.BuildStatus.Success
-                            || build.Status == BuildInfo.BuildStatus.Failure))
+                        && (build.Status == BuildStatus.Success
+                            || build.Status == BuildStatus.Failure))
                     {
                         UpdateDescription(build, cancellationToken);
                     }
@@ -308,7 +308,7 @@ namespace AppVeyorIntegration
                 }
 
                 // Manage in progress builds...
-                List<AppVeyorBuildInfo> inProgressBuilds = _allBuilds.Where(b => b.Status == BuildInfo.BuildStatus.InProgress).ToList();
+                List<AppVeyorBuildInfo> inProgressBuilds = _allBuilds.Where(b => b.Status == BuildStatus.InProgress).ToList();
 
                 // Reset current build list - refresh required to see new builds
                 _allBuilds = null;
@@ -322,7 +322,7 @@ namespace AppVeyorIntegration
                         UpdateDisplay(observer, build);
                     }
 
-                    inProgressBuilds = inProgressBuilds.Where(b => b.Status == BuildInfo.BuildStatus.InProgress).ToList();
+                    inProgressBuilds = inProgressBuilds.Where(b => b.Status == BuildStatus.InProgress).ToList();
                 }
 
                 observer.OnCompleted();
@@ -414,15 +414,15 @@ namespace AppVeyorIntegration
             }
         }
 
-        private static BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
+        private static BuildStatus ParseBuildStatus(string statusValue)
         {
             return statusValue switch
             {
-                "success" => BuildInfo.BuildStatus.Success,
-                "failed" => BuildInfo.BuildStatus.Failure,
-                "cancelled" => BuildInfo.BuildStatus.Stopped,
-                "queued" or "running" => BuildInfo.BuildStatus.InProgress,
-                _ => BuildInfo.BuildStatus.Unknown
+                "success" => BuildStatus.Success,
+                "failed" => BuildStatus.Failure,
+                "cancelled" => BuildStatus.Stopped,
+                "queued" or "running" => BuildStatus.InProgress,
+                _ => BuildStatus.Unknown
             };
         }
 

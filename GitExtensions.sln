@@ -141,11 +141,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CustomDictionary.xml = CustomDictionary.xml
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
 		GitExtensions.ruleset = GitExtensions.ruleset
 		GitExtensionsTest.ruleset = GitExtensionsTest.ruleset
 		global.json = global.json
 		LICENSE.md = LICENSE.md
-		Directory.Packages.props = Directory.Packages.props
 		PrivacyPolicy.md = PrivacyPolicy.md
 		PrivacyPolicy.rtf = PrivacyPolicy.rtf
 		README.md = README.md
@@ -216,6 +216,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "analyzers", "analyzers", "{AA402478-7729-4C65-8A99-D07CFB118C0B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Analyzers.CSharp", "GitExtensions.Analyzers.CSharp\GitExtensions.Analyzers.CSharp.csproj", "{4CC94A8B-133E-4316-913C-05126D88D646}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Extensibility", "GitExtensions.Extensibility\GitExtensions.Extensibility.csproj", "{6C66CB9F-C453-4C0B-A09E-B187F294318B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Extensibility.Tests", "UnitTests\GitExtensions.Extensibility.Tests\GitExtensions.Extensibility.Tests.csproj", "{790D97FD-8C38-46B2-8469-C3755CD55E9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -409,6 +413,14 @@ Global
 		{4CC94A8B-133E-4316-913C-05126D88D646}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CC94A8B-133E-4316-913C-05126D88D646}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CC94A8B-133E-4316-913C-05126D88D646}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C66CB9F-C453-4C0B-A09E-B187F294318B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C66CB9F-C453-4C0B-A09E-B187F294318B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C66CB9F-C453-4C0B-A09E-B187F294318B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C66CB9F-C453-4C0B-A09E-B187F294318B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{790D97FD-8C38-46B2-8469-C3755CD55E9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{790D97FD-8C38-46B2-8469-C3755CD55E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{790D97FD-8C38-46B2-8469-C3755CD55E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{790D97FD-8C38-46B2-8469-C3755CD55E9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -472,6 +484,8 @@ Global
 		{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
 		{12A695E2-0AF3-43A1-B09B-CFA433AAC01C} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
 		{4CC94A8B-133E-4316-913C-05126D88D646} = {AA402478-7729-4C65-8A99-D07CFB118C0B}
+		{6C66CB9F-C453-4C0B-A09E-B187F294318B} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
+		{790D97FD-8C38-46B2-8469-C3755CD55E9C} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

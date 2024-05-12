@@ -22,7 +22,7 @@ public partial class RangeDiffHighlightService : DiffHighlightService
     }
 
     // git-range-diff has an extended subset of git-diff options, base is the same
-    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module)
+    public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module)
         => DiffHighlightService.GetGitCommandConfiguration(module, useGitColoring: true, "range-diff");
 
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)

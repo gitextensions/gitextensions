@@ -1,9 +1,9 @@
 ﻿using System.Buffers.Binary;
 using System.Buffers.Text;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -37,7 +37,7 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Produces an <see cref="ObjectId"/> populated with random bytes.
         /// </summary>
-        [MustUseReturnValue]
+        [Pure]
         public static ObjectId Random()
         {
             return new ObjectId(
@@ -63,7 +63,7 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to try parsing from.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
         /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash, or <paramref name="s"/> is <see langword="null"/>.</exception>
-        [MustUseReturnValue]
+        [Pure]
         public static ObjectId Parse(string s)
         {
             if (s?.Length is not Sha1CharCount || !TryParse(s.AsSpan(), out ObjectId id))
@@ -85,7 +85,7 @@ namespace GitUIPluginInterfaces
         /// <param name="capture">The regex capture/group that describes the location of the SHA-1 hash within <paramref name="s"/>.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
         /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
-        [MustUseReturnValue]
+        [Pure]
         public static ObjectId Parse(string s, Capture capture)
         {
             if (s is null || capture?.Length is not Sha1CharCount || !TryParse(s.AsSpan(capture.Index, capture.Length), out ObjectId id))
@@ -152,7 +152,7 @@ namespace GitUIPluginInterfaces
         /// <param name="array">The char span to parse.</param>
         /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
         /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
-        [MustUseReturnValue]
+        [Pure]
         [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         public static bool TryParse(in ReadOnlySpan<char> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
@@ -185,7 +185,7 @@ namespace GitUIPluginInterfaces
         /// <param name="array">The byte span to parse.</param>
         /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
         /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
-        [MustUseReturnValue]
+        [Pure]
         [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         public static bool TryParse(in ReadOnlySpan<byte> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {

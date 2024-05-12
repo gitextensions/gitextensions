@@ -22,7 +22,7 @@ public abstract class DiffHighlightService : TextHighlightService
         SetText(ref text);
     }
 
-    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring, string command)
+    public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring, string command)
     {
         if (!useGitColoring)
         {

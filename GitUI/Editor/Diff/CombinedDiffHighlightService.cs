@@ -24,7 +24,7 @@ public class CombinedDiffHighlightService : DiffHighlightService
         lineNumbersControl.DisplayLineNum(result, showLeftColumn: true);
     }
 
-    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
+    public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
         => GetGitCommandConfiguration(module, useGitColoring, "diff-tree");
 
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;

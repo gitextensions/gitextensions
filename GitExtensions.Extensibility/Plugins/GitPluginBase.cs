@@ -1,11 +1,7 @@
-using GitCommands;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
-using Microsoft;
 
 namespace ResourceManager
 {
-    [UsedImplicitly]
     public abstract class GitPluginBase : IGitPlugin, ITranslate
     {
         public Guid Id { get; protected set; }
@@ -41,7 +37,7 @@ namespace ResourceManager
         {
             get
             {
-                Validates.NotNull(SettingsContainer);
+                ArgumentNullException.ThrowIfNull(SettingsContainer);
                 return SettingsContainer.GetSettingsSource();
             }
         }
@@ -55,13 +51,13 @@ namespace ResourceManager
 
         public virtual void Register(IGitUICommands gitUiCommands)
         {
-            Validates.NotNull(SettingsContainer);
+            ArgumentNullException.ThrowIfNull(SettingsContainer);
             SettingsContainer.SetSettingsSource(gitUiCommands.Module.GetEffectiveSettings());
         }
 
         public virtual void Unregister(IGitUICommands gitUiCommands)
         {
-            Validates.NotNull(SettingsContainer);
+            ArgumentNullException.ThrowIfNull(SettingsContainer);
             SettingsContainer.SetSettingsSource(null);
         }
 
@@ -73,11 +69,11 @@ namespace ResourceManager
         /// false, otherwise </returns>
         public abstract bool Execute(GitUIEventArgs args);
 
-        protected void Translate()
+        protected void Translate(string currentTranslation)
         {
             // Description for old plugin setting processing as key
             Description = Name;
-            Translator.Translate(this, AppSettings.CurrentTranslation);
+            Translator.Translate(this, currentTranslation);
         }
 
         public virtual void AddTranslationItems(ITranslation translation)

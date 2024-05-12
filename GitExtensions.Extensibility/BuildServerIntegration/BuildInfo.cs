@@ -1,17 +1,7 @@
 ﻿namespace GitUIPluginInterfaces.BuildServerIntegration
 {
-    public class BuildInfo
+    public partial class BuildInfo
     {
-        public enum BuildStatus
-        {
-            Unknown,
-            InProgress,
-            Success,
-            Failure,
-            Unstable,
-            Stopped
-        }
-
         public string? Id { get; set; }
         public DateTime StartDate { get; set; }
         public long? Duration { get; set; }

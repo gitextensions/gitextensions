@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -50,7 +51,7 @@ public partial class GrepHighlightService : TextHighlightService
         return lineInfo?.LineType is DiffLineType.Grep ? rowIndexInText - increase : -1;
     }
 
-    public static GitCommandConfiguration GetGitCommandConfiguration()
+    public static IGitCommandConfiguration GetGitCommandConfiguration()
     {
         GitCommandConfiguration commandConfiguration = new();
         IReadOnlyList<GitConfigItem> items = GitCommandConfiguration.Default.Get("grep");

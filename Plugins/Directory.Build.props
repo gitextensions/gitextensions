@@ -30,4 +30,8 @@
     <OutDir>$(BaseOutputPath)</OutDir>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="$(RepoRoot)\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
+  </ItemGroup>
+
 </Project>

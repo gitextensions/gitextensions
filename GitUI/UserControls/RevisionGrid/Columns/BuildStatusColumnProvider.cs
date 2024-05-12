@@ -96,22 +96,22 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 Color customColor;
                 switch (revision.BuildStatus.Status)
                 {
-                    case BuildInfo.BuildStatus.Unknown:
+                    case BuildStatus.Unknown:
                         return foreColor;
 
-                    case BuildInfo.BuildStatus.Success:
+                    case BuildStatus.Success:
                         customColor = isSelected ? Color.LightGreen : Color.DarkGreen;
                         break;
-                    case BuildInfo.BuildStatus.Failure:
+                    case BuildStatus.Failure:
                         customColor = isSelected ? Color.Red : Color.DarkRed;
                         break;
-                    case BuildInfo.BuildStatus.InProgress:
+                    case BuildStatus.InProgress:
                         customColor = isSelected ? _lightBlue : Color.Blue;
                         break;
-                    case BuildInfo.BuildStatus.Unstable:
+                    case BuildStatus.Unstable:
                         customColor = Color.OrangeRed;
                         break;
-                    case BuildInfo.BuildStatus.Stopped:
+                    case BuildStatus.Stopped:
                     default:
                         customColor = isSelected ? Color.LightGray : Color.Gray;
                         break;

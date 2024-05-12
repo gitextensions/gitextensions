@@ -11,8 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\GitExtUtils\Delimiters.cs" Link="Utils\Delimiters.cs" />
-    <Compile Include="..\GitExtUtils\LazyStringSplit.cs" Link="Utils\LazyStringSplit.cs" />
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
   </ItemGroup>
   
@@ -33,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
     <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>

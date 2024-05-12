@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitCommands;
 using GitExtensions.Plugins.GitFlow.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -12,7 +13,7 @@ namespace GitExtensions.Plugins.GitFlow
         {
             Id = new Guid("83E1F3F1-B502-4BFB-97D9-7EF108252401");
             Name = "GitFlow";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resource.IconGitFlow;
         }
 

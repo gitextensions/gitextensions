@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitCommands;
 using GitExtensions.Plugins.DeleteUnusedBranches.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Settings;
@@ -13,7 +14,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
         {
             Id = new Guid("DC3CA904-B9A5-4FE8-BF63-5B8EE9C2DDAC");
             Name = "Delete obsolete branches";
-            Translate();
+            Translate(AppSettings.CurrentTranslation);
             Icon = Resources.IconDeleteUnusedBranches;
         }
 

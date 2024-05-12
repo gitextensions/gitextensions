@@ -11,4 +11,8 @@
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
+  </ItemGroup>
+
 </Project>
