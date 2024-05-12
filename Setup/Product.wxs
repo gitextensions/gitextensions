@@ -131,6 +131,9 @@
       <Component Id="GitExtensions.dll.config" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\GitExtensions.dll.config" />
       </Component>
+      <Component Id="GitExtensions.Extensibility.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\GitExtensions.Extensibility.dll" />
+      </Component>
       <Component Id="GitExtensions.runtimeconfig.json" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\GitExtensions.runtimeconfig.json" />
       </Component>
@@ -657,6 +660,7 @@
       <ComponentRef Id="GitExtensions.dll" />
       <ComponentRef Id="GitExtensions.dll.config" />
       <ComponentRef Id="GitExtensions.exe" />
+      <ComponentRef Id="GitExtensions.Extensibility.dll" />
       <ComponentRef Id="GitExtensions.runtimeconfig.json" />
       <ComponentRef Id="GitExtUtils.dll" />
       <ComponentRef Id="GitUI.dll" />
