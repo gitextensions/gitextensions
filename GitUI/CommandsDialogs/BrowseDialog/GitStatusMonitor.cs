@@ -1,4 +1,3 @@
-using System.IO.Abstractions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;

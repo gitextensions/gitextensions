@@ -1,13 +1,10 @@
-﻿using System.ComponentModel.Design;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.UITests;
 using GitUI;
 using GitUI.CommandsDialogs;
-using NSubstitute;
-using ResourceManager;
 
 namespace GitUITests.GitUICommandsTests
 {

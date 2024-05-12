@@ -1,4 +1,3 @@
-using System.Text;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;

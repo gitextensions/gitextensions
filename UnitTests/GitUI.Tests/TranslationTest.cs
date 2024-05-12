@@ -1,9 +1,6 @@
-﻿using CommonTestUtils.MEF;
-using GitExtensions.Extensibility.Translations;
+﻿using GitExtensions.Extensibility.Translations;
 using GitExtensions.Extensibility.Translations.Xliff;
 using GitUI;
-using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
 
 namespace GitUITests
 {

@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using GitExtUtils;
 
 namespace ResourceManager.Hotkey
 {

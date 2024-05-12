@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
-using GitExtUtils;
 using GitUI.NBugReports;
 
 namespace GitUI.Infrastructure

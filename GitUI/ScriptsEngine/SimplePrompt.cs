@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace GitUI.ScriptsEngine;
+﻿namespace GitUI.ScriptsEngine;
 
 internal partial class SimplePrompt : Form, IUserInputPrompt
 {

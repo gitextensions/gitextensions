@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Text;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
-using GitExtUtils;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 

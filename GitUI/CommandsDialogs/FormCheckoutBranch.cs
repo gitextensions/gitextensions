@@ -4,7 +4,6 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUI.ScriptsEngine;
-using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommands.Git

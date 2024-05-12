@@ -1,16 +1,13 @@
 ﻿using System.Globalization;
 using System.Text;
 using CommonTestUtils;
-using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.Blame;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
 using NSubstitute;
-using ResourceManager;
 
 namespace GitUITests.UserControls
 {

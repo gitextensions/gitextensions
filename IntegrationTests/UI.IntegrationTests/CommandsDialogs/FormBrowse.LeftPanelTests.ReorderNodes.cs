@@ -1,14 +1,10 @@
 ﻿using System.Collections;
-using System.ComponentModel.Design;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
-using GitUI.ScriptsEngine;
-using NSubstitute;
-using ResourceManager;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {

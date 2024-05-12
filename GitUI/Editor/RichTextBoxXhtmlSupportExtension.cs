@@ -5,7 +5,6 @@ using System.Text;
 using System.Xml;
 using GitExtensions.Extensibility;
 
-
 #pragma warning disable SA1305 // Field names should not use Hungarian notation
 
 namespace GitUI.Editor.RichTextBoxExtension

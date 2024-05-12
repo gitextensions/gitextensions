@@ -5,7 +5,6 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.Extensibility.Translations.Xliff;
-using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUIPluginInterfaces;

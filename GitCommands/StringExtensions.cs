@@ -4,7 +4,6 @@ using System.Text;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
 
-
 // ReSharper disable once CheckNamespace
 
 namespace System

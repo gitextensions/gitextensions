@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -7,8 +6,6 @@ using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
-using NSubstitute;
-using ResourceManager;
 
 namespace GitExtensions.UITests.UserControls.RevisionGrid
 {

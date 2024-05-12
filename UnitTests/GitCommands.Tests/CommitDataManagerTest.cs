@@ -1,5 +1,3 @@
-using System.Globalization;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;

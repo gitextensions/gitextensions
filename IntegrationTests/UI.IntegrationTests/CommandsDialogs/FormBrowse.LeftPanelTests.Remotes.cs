@@ -1,12 +1,9 @@
-﻿using System.ComponentModel.Design;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Remotes;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUI.ScriptsEngine;
-using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {
