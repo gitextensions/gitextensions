@@ -430,16 +430,15 @@ namespace GitUI.Editor
             EnvironmentAbstraction env = new();
 
             // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
+            // Allow user to override with difftool command line options.
             env.SetEnvironmentVariable("DFT_COLOR", "always");
             env.SetEnvironmentVariable("DFT_BACKGROUND", ThemeModule.IsDarkTheme ? "dark" : "light");
             env.SetEnvironmentVariable("DFT_SYNTAX_HIGHLIGHT", ShowSyntaxHighlightingInDiff ? "on" : "off");
             int contextLines = ShowEntireFile ? 9000 : NumberOfContextLines;
             env.SetEnvironmentVariable("DFT_CONTEXT", contextLines.ToString());
-            if (IgnoreWhitespace != IgnoreWhitespaceKind.None)
-            {
-                // Reasonable similar to IgnoreWhitespaceKind.Eol
-                env.SetEnvironmentVariable("DFT_STRIP_CR", "on");
-            }
+
+            // Reasonable similar to IgnoreWhitespaceKind.Eol
+            env.SetEnvironmentVariable("DFT_STRIP_CR", IgnoreWhitespace == IgnoreWhitespaceKind.None ? "off" : "on");
 
             // Guess a reasonable even column number from viewer width, so scrollbar is (barely) activated.
             // At least 2*(2+linenoLength) of the width is used for difftastic lineno.
@@ -447,7 +446,7 @@ namespace GitUI.Editor
             env.SetEnvironmentVariable("DFT_WIDTH", width.ToString());
 
             // Also export to WSL environment (DFT_WIDTH is also used when parsing in GE).
-            env.SetEnvironmentVariable("WSLENV", "DFT_COLOR:DFT_BACKGROUND:DFT_SYNTAX_HIGHLIGHT:DFT_CONTEXT:DFT_WIDTH");
+            env.SetEnvironmentVariable("WSLENV", "DFT_COLOR:DFT_BACKGROUND:DFT_SYNTAX_HIGHLIGHT:DFT_CONTEXT:DFT_STRIP_CR:DFT_WIDTH");
 
             return new ArgumentBuilder
             {
