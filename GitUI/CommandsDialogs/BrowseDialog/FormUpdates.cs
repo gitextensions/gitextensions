@@ -9,7 +9,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
-    public partial class FormUpdates : GitExtensionsForm
+    public partial class FormUpdates : GitExtensionsDialog
     {
         #region Translation
         private readonly TranslationString _newVersionAvailable = new("There is a new version {0} of Git Extensions available");
@@ -26,6 +26,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public string NewVersion = "";
 
         public FormUpdates(Version currentVersion)
+            : base(commands: null, enablePositionRestore: false)
         {
             CurrentVersion = currentVersion;
 
