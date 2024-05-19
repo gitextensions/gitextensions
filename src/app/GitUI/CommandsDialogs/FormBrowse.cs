@@ -1157,11 +1157,12 @@ namespace GitUI.CommandsDialogs
         {
             if (fileTree.Visible)
             {
-                return fileTree.GetScriptOptionsProvider();
+                return fileTree.ScriptOptionsProvider;
             }
-            else if (revisionDiff.Visible)
+
+            if (revisionDiff.Visible)
             {
-                return revisionDiff.GetScriptOptionsProvider();
+                return revisionDiff.ScriptOptionsProvider;
             }
 
             return base.GetScriptOptionsProvider();
