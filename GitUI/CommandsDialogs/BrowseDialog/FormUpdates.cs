@@ -53,9 +53,9 @@ public partial class FormUpdates : GitExtensionsDialog
             LaunchUrl(LaunchType.ChangeLog);
         }
         else if (keyData == (Keys.Alt | Keys.D))
-        {
-            LaunchUrl(LaunchType.DirectDownload);
-        }
+            {
+                LaunchUrl(LaunchType.DirectDownload);
+            }
 
         return base.ProcessCmdKey(ref msg, keyData);
     }
@@ -138,7 +138,7 @@ public partial class FormUpdates : GitExtensionsDialog
 
             if (UpdateFound)
             {
-                btnUpdateNow.Visible = true;
+                btnUpdateNow.Visible = !AppSettings.IsPortable();
                 UpdateLabel.Text = string.Format(_newVersionAvailable.Text, NewVersion);
                 linkChangeLog.Visible = true;
                 linkDirectDownload.Visible = true;
@@ -162,8 +162,17 @@ public partial class FormUpdates : GitExtensionsDialog
             case LaunchType.ChangeLog:
                 OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
                 break;
+
             case LaunchType.DirectDownload:
-                OsShellUtil.OpenUrlInDefaultBrowser(UpdateUrl);
+                if (AppSettings.IsPortable())
+                {
+                    OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/releases");
+                }
+                else
+                {
+                    OsShellUtil.OpenUrlInDefaultBrowser(UpdateUrl);
+                }
+
                 break;
         }
     }
