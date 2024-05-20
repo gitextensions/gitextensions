@@ -18,7 +18,8 @@ namespace GitUI.CommandsDialogs
         /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
         /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
         /// <param name="serviceProvider">The DI service provider.</param>
-        public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Func<int, bool> scriptInvoker, Func<ScriptInfo, bool> scriptFilterAddDirect, IServiceProvider serviceProvider)
+        /// <returns><see langword="true"/> if any scripts were added to menus; otherwise <see langword="false"/>.</returns>
+        public static bool AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Func<int, bool> scriptInvoker, Func<ScriptInfo, bool> scriptFilterAddDirect, IServiceProvider serviceProvider)
         {
             ArgumentNullException.ThrowIfNull(contextMenu);
             ArgumentNullException.ThrowIfNull(hostMenuItem);
@@ -34,6 +35,7 @@ namespace GitUI.CommandsDialogs
 
             IHotkeySettingsLoader hotkeySettingsLoader = serviceProvider.GetRequiredService<IHotkeySettingsLoader>();
             IReadOnlyList<HotkeyCommand> hotkeys = hotkeySettingsLoader.LoadHotkeys(FormSettings.HotkeySettingsName);
+            bool itemsAdded = false;
 
             foreach (ScriptInfo script in scripts)
             {
@@ -61,7 +63,11 @@ namespace GitUI.CommandsDialogs
                     hostMenuItem.DropDown.Items.Add(item);
                     hostMenuItem.Enable(true);
                 }
+
+                itemsAdded = true;
             }
+
+            return itemsAdded;
         }
 
         /// <summary>
