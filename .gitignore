@@ -14,7 +14,7 @@ obj/
 bin/
 
 #ignore output mild compiler
-GitExtensionsShellEx/Generated/
+src/native/**/Generated/
 
 #ignore some unwanted files
 *.ncb

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
+ 
+  <PropertyGroup>
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
+
+    <!-- Any NuGet package dependencies are copied to the output directory -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <!--
+      Direct plugins artifacts to be placed under Plugins folder
+    -->
+  <PropertyGroup Condition=" '$(MSBuildProjectName)' != 'GitUIPluginInterfaces'">
+    <!-- for dev versions only load .dll prefixed with 'GitExtensions.' -->
+    <_AssemblyRename>false</_AssemblyRename>
+    <_AssemblyRename Condition="!$(MSBuildProjectName.StartsWith('GitExtensions.'))">true</_AssemblyRename>
+    <AssemblyName Condition="$(_AssemblyRename) == true">GitExtensions.$(MSBuildProjectName)</AssemblyName>
+
+    <!-- we don't want to have folder with too long names - drop 'GitExtensions.Plugins.' from folder names -->
+    <_ProjectRename>false</_ProjectRename>
+    <_ProjectRename Condition="$(MSBuildProjectName.StartsWith('GitExtensions.Plugins.'))">true</_ProjectRename>
+    <_ProjectName>$(MSBuildProjectName)</_ProjectName>
+    <_ProjectName Condition="$(_ProjectRename) == true">$([System.String]::Copy('$(MSBuildProjectName)').Replace('GitExtensions.Plugins.', ''))</_ProjectName>
+
+    <BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsPluginsDir)', '$(_ProjectName)'))</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)</OutputPath>
+    <OutDir>$(BaseOutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(RepoRoot)\src\app\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
+  </ItemGroup>
+
+</Project>

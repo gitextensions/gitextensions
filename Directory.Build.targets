@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="scripts\Tests.targets" />
+  <Import Project="eng\Tests.targets" />
 
   <ItemGroup Condition="'$(EnableStyleCopAnalyzers)' != 'false'">
     <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" />

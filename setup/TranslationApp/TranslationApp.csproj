@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ApplicationIcon>..\assets\Logo\git-extensions-logo.ico</ApplicationIcon>
+    <OutputType>WinExe</OutputType>
+    <StartupObject />
+
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\externals\NetSpell.SpellChecker\SpellChecker.csproj" />
+    <ProjectReference Include="..\..\src\app\BugReporter\BugReporter.csproj" />
+    <ProjectReference Include="..\..\src\app\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\src\app\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\src\app\GitUI\GitUI.csproj" />
+    <ProjectReference Include="..\..\src\app\ResourceManager\ResourceManager.csproj" />
+  </ItemGroup>
+
+</Project>

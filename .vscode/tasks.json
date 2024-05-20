@@ -20,7 +20,7 @@
             "type": "process",
             "args": [
                 "build",
-                ".\\scripts\\native.proj"
+                ".\\src\\native\\build.proj"
             ],
             "problemMatcher": "$msCompile",
             "group": {

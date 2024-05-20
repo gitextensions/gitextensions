@@ -1,6 +1,6 @@
 <Project>
-  <Import Project="scripts\RepoLayout.props" />
-  <Import Project="scripts\Tests.props" />
+  <Import Project="eng\RepoLayout.props" />
+  <Import Project="eng\Tests.props" />
 
   <PropertyGroup>
     <LangVersion>12</LangVersion>
@@ -13,7 +13,7 @@
     <TargetFramework>$(SolutionTargetFramework)</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)GitExtensions.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)eng\GitExtensions.ruleset</CodeAnalysisRuleSet>
 
     <!-- More information: https://aka.ms/msbuild/net8-binaryformatter -->
     <GenerateResourceWarnOnBinaryFormatterUse>false</GenerateResourceWarnOnBinaryFormatterUse>
@@ -63,16 +63,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\stylecop.json">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\vs-threading.MainThreadAssertingMethods.txt">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\vs-threading.MainThreadAssertingMethods.txt">
       <Visible>False</Visible>
     </AdditionalFiles>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\vs-threading.MainThreadSwitchingMethods.txt">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\vs-threading.MainThreadSwitchingMethods.txt">
       <Visible>False</Visible>
     </AdditionalFiles>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\vs-threading.TypesRequiringMainThread.txt">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\vs-threading.TypesRequiringMainThread.txt">
       <Visible>False</Visible>
     </AdditionalFiles>
   </ItemGroup>

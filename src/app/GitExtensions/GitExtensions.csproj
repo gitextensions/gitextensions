@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(RepoRoot)\eng\Localisation.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\Project.Build.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\Project.Publish.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\Project.Loc.targets" />
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>..\..\..\setup\assets\Logo\git-extensions-logo.ico</ApplicationIcon>
+    <StartupObject />
+
+    <IsPublishable>true</IsPublishable>
+    <PublishDir Condition="'$(IsPublishable)' == 'true'">$(AppPublishDir)</PublishDir>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitInfo">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+
+    <!-- This is needed for eng\Publish.targets to resolve .NET references -->
+    <PackageReference Include="NETStandard.Library" GeneratePathProperty="true" VersionOverride="2.0.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="vswhere" GeneratePathProperty="true">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="WiX" GeneratePathProperty="true">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\GitUI\GitUI.csproj" />
+    <ProjectReference Include="..\..\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="AutoCompleteRegexes.txt" />
+    <EmbeddedResource Include="AutoCompleteRegexes.txt" />
+  </ItemGroup>
+
+</Project>

@@ -47,7 +47,7 @@ install:
 - cmd: git submodule update --init --recursive
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
-    cd scripts
+    cd eng
     C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
 
@@ -57,7 +57,7 @@ build_script:
 - ps: |
     # for release branches mark the repo as clean
     if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
-      & .\scripts\Mark-RepoClean.ps1
+      & .\eng\Mark-RepoClean.ps1
     }
 
     # if building a temporary merge with master, soft reset to the PR commit so the build contains the PR's hash instead of the merge-commit's hash
@@ -78,7 +78,7 @@ build_script:
     }
 
     # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
-    Push-Location .\GitExtensions
+    Push-Location .\src\app\GitExtensions
     msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
     Pop-Location

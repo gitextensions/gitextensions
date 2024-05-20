@@ -161,12 +161,8 @@ For more information see our [code of conduct](CODE_OF_CONDUCT.md).
 
 * We thank all the people who contribute, the project exists because of you<br />
   <a href="https://github.com/gitextensions/gitextensions/contributors"><img src="https://opencollective.com/gitextensions/contributors.svg?width=890&button=false" /></a>
-* We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses<br />
-  <a href="https://www.jetbrains.com/?from=gitextensions" target="_blank"><img src="./GitUI/Resources/Icons/originals/jetbrains-variant-4.png"></a>
 * We thank [Transifex](https://www.transifex.com/) for helping us with translations<br />
   <a href="https://www.transifex.com/" target="_blank"><img src="./GitUI/Resources/Icons/originals/transifex.svg"></a>
-* We thank [SemanticMerge](https://www.semanticmerge.com) for licenses<br />
-  <a href="https://www.semanticmerge.com" target="_blank"><img src="./GitUI/Resources/Icons/originals/semanticmerge-logo.svg"></a>
 * We thank [SignPath.io](https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension) for the free code signing<br />
   <a href="https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension" target="_blank"><img src="./GitUI/Resources/Icons/originals/signpath_logo.png"></a>
 * We thank [SignPath Foundation](https://signpath.org/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension) for the signing certificate
@@ -202,4 +198,3 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 * Issue tracker: [github.com/gitextensions/gitextensions/issues](https://github.com/gitextensions/gitextensions/issues)
 * Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
 * Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-* [How to visualize Git repository's history](/gource%20video.md)

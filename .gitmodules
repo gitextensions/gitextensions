@@ -1,12 +1,12 @@
 [submodule "Externals/Git.hub"]
-	path = Externals/Git.hub
+	path = externals/Git.hub
 	url = ../../gitextensions/Git.hub.git
 [submodule "Externals/conemu-inside"]
-	path = Externals/conemu-inside
+	path = externals/conemu-inside
 	url = ../../gitextensions/conemu-inside.git
 [submodule "Externals/ICSharpCode.TextEditor"]
-	path = Externals/ICSharpCode.TextEditor
+	path = externals/ICSharpCode.TextEditor
 	url = ../../gitextensions/ICSharpCode.TextEditor.git
 [submodule "Externals/EasyHook"]
-	path = Externals/EasyHook
+	path = externals/EasyHook
 	url = ../../gitextensions/EasyHook.git

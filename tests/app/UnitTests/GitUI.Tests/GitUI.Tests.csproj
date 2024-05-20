@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
+    <PackageReference Include="JetBrains.Annotations" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj" />
+    <ProjectReference Include="..\..\..\..\externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\GitUI\GitUI.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Editor\Diff\*.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
