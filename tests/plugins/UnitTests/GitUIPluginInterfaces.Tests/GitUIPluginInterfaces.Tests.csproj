@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="PathScanningData\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

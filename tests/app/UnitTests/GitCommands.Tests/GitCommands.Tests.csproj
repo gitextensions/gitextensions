@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>UNIT_TEST</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\app\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ExternalLinks\MockData\level3_roaming_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="ExternalLinks\MockData\level1_repogit_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="ExternalLinks\MockData\level2_repodist_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="Helpers\MockData\MacLines.bin" />
+    <EmbeddedResource Include="Helpers\MockData\UnixLines.bin" />
+    <EmbeddedResource Include="Helpers\MockData\WindowsLines.bin" />
+    <EmbeddedResource Include="MockData\Too_long_lines.txt" />
+    <EmbeddedResource Include="MockData\Too_many_lines.txt" />
+    <EmbeddedResource Include="Settings\MockData\level1_repogit_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="Settings\MockData\level2_repodist_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="Settings\MockData\level3_roaming_GitExtensions.settings.xml" />
+    <None Include="Patches\testdata\big.patch">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\bigBin.patch">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\rebase.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\color.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\color-binary.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Patches\testdata\color-prefix.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RevisionReader\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\README.blame">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories01.xml" />
+    <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories02.xml" />
+    <None Include="**\*.approved.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Helpers\MockData\MacLines.bin" />
+    <None Remove="Helpers\MockData\UnixLines.bin" />
+    <None Remove="Helpers\MockData\WindowsLines.bin" />
+    <None Remove="Settings\MockData\level1_repogit_GitExtensions.settings.xml" />
+    <None Remove="Settings\MockData\level2_repodist_GitExtensions.settings.xml" />
+    <None Remove="Settings\MockData\level3_roaming_GitExtensions.settings.xml" />
+  </ItemGroup>
+</Project>

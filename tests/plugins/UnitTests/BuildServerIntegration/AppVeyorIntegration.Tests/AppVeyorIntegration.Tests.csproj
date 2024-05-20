@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\app\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MockData\AppVeyorResult_master.json" />
+    <EmbeddedResource Include="MockData\AppVeyorResult_pull_request_build.json" />
+  </ItemGroup>
+
+</Project>

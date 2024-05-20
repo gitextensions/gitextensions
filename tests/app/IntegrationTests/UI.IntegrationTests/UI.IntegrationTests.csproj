@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);GITUI;</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\GitUI\GitUI.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="MEF\MockGenericBuildServerSettingsUserControl.Designer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

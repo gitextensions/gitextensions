@@ -1,0 +1,20 @@
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
+
+  <PropertyGroup>
+    <RootNamespace>$([System.String]::Copy('$(MSBuildProjectName)').Replace('.Tests', 'Tests'))</RootNamespace>
+    
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <!--
+      Direct unit test artifacts to be placed under tests/UnitTests folder
+    -->
+  <PropertyGroup>
+    <BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsUnitTestsDir)', '$(OutDirName)'))</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)</OutputPath>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,93 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
+
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+
+    <!--
+    For debug purposes uncomment these lines:
+
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\GitExtUtils\Validates.cs" Link="Utils\Validates.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AppInsights.WindowsDesktop" />
+    <PackageReference Include="EnvDTE" />
+    <PackageReference Include="ExCSS" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" />
+    <PackageReference Include="JetBrains.Annotations" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj" />
+    <ProjectReference Include="..\..\..\externals\Git.hub\Git.hub\Git.hub.csproj" />
+    <ProjectReference Include="..\..\..\externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj" />
+    <ProjectReference Include="..\..\..\externals\NetSpell.SpellChecker\SpellChecker.csproj" />
+    <ProjectReference Include="..\BugReporter\BugReporter.csproj" />
+    <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GitExtensions.Analyzers.CSharp\GitExtensions.Analyzers.CSharp.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Resources -->
+    <EmbeddedResource Update="Properties\Images.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+    <Compile Update="CommandsDialogs\Menus\StartToolStripMenuItem.cs" />
+    <Compile Update="UserControls\FilterToolBar.Designer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Properties\Images.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Images.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs" AutoGen="True" DependentUpon="Resources.resx" DesignTime="True" />
+
+    <None Include="Properties\DataSources\*.datasource" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
+    <None Remove="Resources\Icons\artwork\**" />
+    <None Remove="Resources\Icons\originals\**" />
+    <Content Include="Themes\*.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Themes\README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Themes\dark.css">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Themes\darksilver.css">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

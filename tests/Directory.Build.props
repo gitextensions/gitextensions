@@ -1,0 +1,14 @@
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
+
+  <PropertyGroup>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <DebugType>full</DebugType>
+
+    <CodeAnalysisRuleSet>$(RepoRoot)\eng\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
+  </PropertyGroup>
+
+</Project>
