@@ -84,12 +84,6 @@ namespace GitUI.CommandsDialogs.Menus
 
                 try
                 {
-                    if (_moveMouseWhenFiltering)
-                    {
-                        Cursor.Position = owner.RectangleToScreen(DropDownButtonBounds).Location;
-                        _moveMouseWhenFiltering = false;
-                    }
-
                     DropDown.SuspendLayout();
 
                     if (string.IsNullOrWhiteSpace(filterTextbox.Text))
@@ -115,6 +109,17 @@ namespace GitUI.CommandsDialogs.Menus
                 finally
                 {
                     DropDown.ResumeLayout();
+                    if (string.IsNullOrWhiteSpace(filterTextbox.Text))
+                    {
+                        EnableMousePositionHack();
+                    }
+                }
+
+                if (_moveMouseWhenFiltering)
+                {
+                    Point newPosition = filterTextbox.PointToScreen(Point.Empty) + new Size(0, filterTextbox.Size.Height);
+                    Cursor.Position = newPosition;
+                    _moveMouseWhenFiltering = false;
                 }
             };
         }
@@ -198,10 +203,8 @@ namespace GitUI.CommandsDialogs.Menus
             ShowDropDown();
         }
 
-        protected override void OnDropDownOpened(EventArgs e)
+        private void EnableMousePositionHack()
         {
-            base.OnDropDownOpened(e);
-
             if (Owner is not { } owner)
             {
                 return;
@@ -213,6 +216,12 @@ namespace GitUI.CommandsDialogs.Menus
             //       toolbar items as that would cause the DropDown to be closed immediately.
             Rectangle rect = owner.RectangleToScreen(DropDownButtonBounds);
             _moveMouseWhenFiltering = (rect.Top + rect.Height) > DropDown.Top;
+        }
+
+        protected override void OnDropDownOpened(EventArgs e)
+        {
+            base.OnDropDownOpened(e);
+            EnableMousePositionHack();
         }
 
         protected override void OnDropDownShow(EventArgs e)
