@@ -13,6 +13,7 @@ namespace GitCommandsTests.Patches
         private readonly string _rebaseDiff;
         private readonly string _colorDiff;
         private readonly string _colorBinDiff;
+        private readonly string _colorPrefixDiff;
 
         public PatchProcessorTest()
         {
@@ -21,6 +22,7 @@ namespace GitCommandsTests.Patches
             _rebaseDiff = LoadPatch("rebase.diff");
             _colorDiff = LoadPatch("color.diff");
             _colorBinDiff = LoadPatch("color-binary.diff");
+            _colorPrefixDiff = LoadPatch("color-prefix.diff");
 
             string LoadPatch(string fileName)
             {
@@ -148,6 +150,26 @@ index cdf8bebba,55ff37bb9..000000000
             Patch createdPatch = patches.First();
 
             Assert.AreEqual(@"diff --git a/GitCommands/Patches/PatchProcessor.cs b/GitCommands/Patches/PatchProcessor.cs", createdPatch.Header, "header");
+            Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameA, "fileA");
+            Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameB, "fileB");
+            Assert.AreEqual("index 70b40..c1e6c 100644", createdPatch.Index);
+            Assert.AreEqual(PatchChangeType.ChangeFile, createdPatch.ChangeType);
+            Assert.AreEqual(PatchFileType.Text, createdPatch.FileType);
+        }
+
+        // Prefix must *not* contains a space or a '/' (except the mandatory one at the end)
+        [TestCase("before:/", "after:/")]
+        [TestCase("a:./", "b:./")]
+        [TestCase("./", "./")]
+        public void ColorPrefixDiff(string prefixSrc, string prefixDst)
+        {
+            string diffWithCutomPrefixes = _colorPrefixDiff.Replace("[PLACEHOLDER_PREFIX_SRC]", prefixSrc).Replace("[PLACEHOLDER_PREFIX_DST]", prefixDst);
+            List<Patch> patches = PatchProcessor.CreatePatchesFromString(diffWithCutomPrefixes, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+
+            Assert.AreEqual(1, patches.Count);
+            Patch createdPatch = patches.First();
+
+            Assert.AreEqual(@$"diff --git {prefixSrc}GitCommands/Patches/PatchProcessor.cs {prefixDst}GitCommands/Patches/PatchProcessor.cs", createdPatch.Header, "header");
             Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameA, "fileA");
             Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameB, "fileB");
             Assert.AreEqual("index 70b40..c1e6c 100644", createdPatch.Index);
