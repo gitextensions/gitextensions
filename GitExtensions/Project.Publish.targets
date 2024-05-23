@@ -56,19 +56,24 @@
 
   <!--
     ============================================================
-                       _DownloadPluginManager
+                       _CopyPluginManager
 
-    Download plugin manager.
+    Copy the plugin manager from the NuGet package.
     ============================================================
     -->
   <PropertyGroup>
     <_PluginManagerPath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)', 'GitExtensions.PluginManager'))</_PluginManagerPath>
   </PropertyGroup>
 
-  <Target Name="_DownloadPluginManager">
-    <Exec 
-      Condition="!Exists('$(_PluginManagerPath)')"
-      Command="powershell.exe $(RepoRoot)\scripts\Download-PluginManager.ps1 -ExtractRootPath '$(_PluginManagerPath)'" />
+  <Target Name="_CopyPluginManager" Condition="!Exists('$(_PluginManagerPath)')">
+    <ItemGroup>
+      <_CopyItems Include="$(PKGGitExtensions_PluginManager)\lib\**\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_CopyItems)"
+          DestinationFiles="@(_CopyItems->'$(_PluginManagerPath)\%(RecursiveDir)%(Filename)%(Extension)')"
+          ContinueOnError="ErrorAndStop"
+          />
   </Target>
 
   <!--
@@ -135,7 +140,7 @@
       <_AppUserPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'UserPlugins'))</_AppUserPluginsPublishDir>
 
 
-      <_PluginManagerBinPath>$([MSBuild]::NormalizeDirectory('$(_PluginManagerPath)', 'Output'))</_PluginManagerBinPath>
+      <_PluginManagerBinPath>$([MSBuild]::NormalizeDirectory('$(_PluginManagerPath)'))</_PluginManagerBinPath>
       <_PluginManagerPublishDir>$([MSBuild]::NormalizeDirectory('$(_AppUserPluginsPublishDir)', 'GitExtensions.PluginManager'))</_PluginManagerPublishDir>
     </PropertyGroup>
 
@@ -214,7 +219,7 @@
     Checks whether all files that are present in $(PublishDir) are delcared in Setup/Product.wxs.
     ============================================================
     -->
-  <Target Name="_CheckBundlesConsistent" AfterTargets="Publish" DependsOnTargets="_PublishTranslations;_DownloadPluginManager;_EnsureBundleContent;_CleanupBeforePack">
+  <Target Name="_CheckBundlesConsistent" AfterTargets="Publish" DependsOnTargets="_PublishTranslations;_CopyPluginManager;_EnsureBundleContent;_CleanupBeforePack">
     <Exec
         Command="powershell.exe .\Setup\Check-BundlesConsistent.ps1 '$(PublishDir)'"
         WorkingDirectory="$(RepoRoot)"
