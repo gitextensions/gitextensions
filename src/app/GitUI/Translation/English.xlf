@@ -1535,8 +1535,24 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en">
     <body>
+      <trans-unit id="_binaryFile.Text">
+        <source>Binary file: {0}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_binaryFileDetected.Text">
+        <source>Binary file: {0} (Detected)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_bytes.Text">
+        <source>bytes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_cannotViewImage.Text">
         <source>Cannot view image {0}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_fileSizeInMb.Text">
+        <source>MB</source>
         <target />
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
