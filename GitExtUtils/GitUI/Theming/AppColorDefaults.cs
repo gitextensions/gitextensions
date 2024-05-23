@@ -8,8 +8,8 @@
             new()
             {
                 { AppColor.OtherTag, Color.Gray },
-                { AppColor.AuthoredHighlight, Color.LightYellow },
-                { AppColor.HighlightAllOccurences, Color.LightYellow },
+                { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
+                { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
                 { AppColor.Tag, Color.DarkBlue },
                 { AppColor.Graph, Color.DarkRed },
                 { AppColor.Branch, Color.FromArgb(0x00, 0x80, 0x00) },
