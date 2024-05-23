@@ -27,8 +27,10 @@ namespace GitUI.CommandsDialogs
         private LostObject? _previewedItem;
         private string _defaultFilename = null;
 
+        // https://en.wikipedia.org/wiki/List_of_file_signatures
         private static readonly Dictionary<string, string> _languagesStartOfFile = new()
         {
+            { @"{\rtf", "rtf" },
             { "{", "json" },
             { "#include", "cpp" },
             { "import {", "js" },
@@ -43,18 +45,36 @@ namespace GitUI.CommandsDialogs
             { "[", "ini" },
             { "using ", "cs" },
             { "# ", "md" },
+            { "##", "md" },
             { "<!doctype html", "html" },
             { "<html", "html" },
             { "<?xml", "xml" },
             { "use ", "rs" },
-            { @"{\", "rtf" },
             { "%PDF", "pdf" },
             { "PK", "zip" },
             { "MZ", "exe" },
             { @"\document", "tex" },
             { "\u0089PNG", "png" },
-            { "ÿØÿà\0\x10JFIF", "jpg" },
+            { "ÿØÿQ", "jp2" },
+            { "ÿØÿ", "jpg" },
+            { "ÿ\x0A", "jxl" },
+            { "RIFF", "webp" },
             { "<svg", "svg" },
+            { "BM", "bmp" },
+            { "7z", "7z" },
+            { "GIF", "gif" },
+            { "ÐÏ\x11à¡±\x1Aá", "doc" },
+            { "qoif", "qoi" },
+            { "Rar!", "rar" },
+            { "%!PS", "ps" },
+            { "OggS", "ogg" },
+            { "8BPS", "psf" },
+            { "ID3", "mp3" },
+            { "CD001", "iso" },
+            { "fLaC", "flac" },
+            { "FLIF", "flif" },
+            { "␚Eß£", "mkv" },
+            { "<", "xml" },
         };
 
         private static readonly Dictionary<string, string[]> _fileTypesEquivalences = new()
@@ -63,8 +83,9 @@ namespace GitUI.CommandsDialogs
             { "html", ["php", "cshtml"] },
             { "cpp", ["c"] },
             { "xml", ["config", "settings", "csproj", "xlf", "props"] },
-            { "zip", ["docx", "xlsx", "odt", "ods"] },
+            { "zip", ["docx", "xlsx", "pptx", "odt", "ods", "odp", "epub", "jar", "msix"] },
             { "exe", ["dll"] },
+            { "doc", ["xls", "ppt", "msi"] },
             { "md", ["sh", "yml"] },
             { "txt", ["csv", "css", "md", "yml"] },
         };
