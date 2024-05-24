@@ -1015,10 +1015,11 @@ namespace GitCommands
                 .ToList();
         }
 
-        public string? ShowObject(ObjectId objectId)
+        public string? ShowObject(ObjectId objectId, bool returnRaw)
         {
-            return ReEncodeShowString(_gitExecutable
-                .GetOutput($"show {objectId}", cache: GitCommandCache, outputEncoding: LosslessEncoding));
+            string gitOutput = _gitExecutable
+                .GetOutput($"show {objectId}", cache: GitCommandCache, outputEncoding: LosslessEncoding);
+            return returnRaw ? gitOutput : ReEncodeShowString(gitOutput);
         }
 
         public void DeleteTag(string tagName)

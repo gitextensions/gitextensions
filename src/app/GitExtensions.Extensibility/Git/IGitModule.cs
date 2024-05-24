@@ -391,7 +391,7 @@ public interface IGitModule
 
     void DeleteTag(string tagName);
 
-    string? ShowObject(ObjectId objectId);
+    string? ShowObject(ObjectId objectId, bool returnRaw);
 
     IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName);
 
