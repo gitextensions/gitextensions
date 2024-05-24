@@ -228,6 +228,7 @@ namespace GitUI.CommandsDialogs.Menus
         {
             DropDown.SuspendLayout();
             DropDownItems.Clear();
+            _tsmiCategorisedRepos.DropDownItems.Clear();
 
             _txtFilter.Text = string.Empty;
 
