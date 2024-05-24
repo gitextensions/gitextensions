@@ -337,6 +337,23 @@ namespace GitUI.CommandsDialogs
                         .WhereNotNull()
                         .OrderByDescending(l => l.Date));
 
+                LostObject[] commits = _lostObjects.Where(o => o.ObjectType == LostObjectType.Commit).ToArray();
+                List<string> metadata = new(commits.Length);
+                int batchSize = 30_000 / (ObjectId.Sha1CharCount + 1); // Based on process max command line length and hash length (with a margin)
+
+                for (int currentBatch = 0; currentBatch * batchSize < commits.Length; ++currentBatch)
+                {
+                    LostObject[] nextBatch = commits.Skip(currentBatch * batchSize)
+                        .Take(batchSize).ToArray();
+                    string[] metadataBatch = LostObject.GetCommitsMetadata(Module, nextBatch.Select(c => c.ObjectId.ToString()));
+                    metadata.AddRange(metadataBatch);
+                }
+
+                for (int i = 0; i < commits.Length; i++)
+                {
+                    commits[i].FillCommitData(Module, metadata[i]);
+                }
+
                 UpdateFilteredLostObjects();
             }
         }
