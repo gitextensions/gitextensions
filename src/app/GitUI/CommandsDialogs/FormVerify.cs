@@ -230,8 +230,10 @@ namespace GitUI.CommandsDialogs
             {
                 ShowOtherObjects.Checked = true;
             }
-
-            UpdateFilteredLostObjects();
+            else
+            {
+                UpdateFilteredLostObjects();
+            }
         }
 
         private void ShowOtherObjects_CheckedChanged(object sender, EventArgs e)
@@ -240,8 +242,10 @@ namespace GitUI.CommandsDialogs
             {
                 ShowCommitsAndTags.Checked = true;
             }
-
-            UpdateFilteredLostObjects();
+            else
+            {
+                UpdateFilteredLostObjects();
+            }
         }
 
         // NOTE: hack to select row under cursor on right click and context menu open
