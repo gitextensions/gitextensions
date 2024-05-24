@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
             /// <summary>
             /// Diagnostics and object type.
             /// </summary>
-            public string RawType { get; }
+            public string RawType { get; set; }
 
             public string? Author { get; private set; }
             public string? Subject { get; private set; }

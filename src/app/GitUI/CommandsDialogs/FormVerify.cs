@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _xTagsCreated = new("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
         private readonly TranslationString _selectLostObjectsToRestoreMessage = new("Select objects to restore.");
         private readonly TranslationString _selectLostObjectsToRestoreCaption = new("Restore lost objects");
+        private readonly TranslationString _seemingly = new("seemingly");
 
         private readonly List<LostObject> _lostObjects = [];
         private readonly SortableLostObjectsList _filteredLostObjects = new();
@@ -25,7 +26,8 @@ namespace GitUI.CommandsDialogs
         private readonly IGitTagController _gitTagController;
 
         private LostObject? _previewedItem;
-        private string _defaultFilename = null;
+        private string? _defaultFilename;
+        private bool _typeDetected;
 
         // https://en.wikipedia.org/wiki/List_of_file_signatures
         private static readonly Dictionary<string, string> _languagesStartOfFile = new()
@@ -291,7 +293,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (_previewedItem.ObjectType == LostObjectType.Blob)
             {
-                _defaultFilename = GuessFileTypeWithContent(content, _previewedItem.ObjectId.ToString());
+                _defaultFilename = GuessFileNameWithContent(content, _previewedItem.ObjectId.ToString());
                 fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync(_defaultFilename, content, openWithDifftool: null));
             }
             else
@@ -300,20 +302,21 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private static string GuessFileTypeWithContent(string content, string hash)
+        private static string GuessFileTypeWithContent(string content)
         {
             foreach (KeyValuePair<string, string> pair in _languagesStartOfFile)
             {
                 if (content.StartsWith(pair.Key, StringComparison.OrdinalIgnoreCase))
                 {
-                    return BuildFilename(pair.Value);
+                    return pair.Value;
                 }
             }
 
-            return BuildFilename("txt");
-
-            string BuildFilename(string extension) => $"LOST_FOUND_{hash}.{extension}";
+            return "txt";
         }
+
+        private static string GuessFileNameWithContent(string content, string hash)
+            => $"LOST_FOUND_{hash}.{GuessFileTypeWithContent(content)}";
 
         #endregion
 
@@ -360,6 +363,23 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateFilteredLostObjects()
         {
+            if (ShowOtherObjects.Checked & !_typeDetected)
+            {
+                ThreadHelper.FileAndForget(async () =>
+                {
+                    _typeDetected = true;
+                    foreach (LostObject item in _lostObjects.Where(o => o.ObjectType == LostObjectType.Blob))
+                    {
+                        string content = Module.ShowObject(item.ObjectId, returnRaw: item.ObjectType == LostObjectType.Blob) ?? "";
+                        item.RawType += $" ({_seemingly.Text}: {GuessFileTypeWithContent(content)})";
+                    }
+
+                    await this.SwitchToMainThreadAsync();
+                    Warnings.AutoResizeColumn(columnType.Index);
+                    Warnings.Refresh();
+                });
+            }
+
             SuspendLayout();
             _filteredLostObjects.Clear();
             _filteredLostObjects.AddRange(_lostObjects.Where(IsMatchToFilter));
