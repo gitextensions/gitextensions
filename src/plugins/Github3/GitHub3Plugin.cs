@@ -72,8 +72,6 @@ namespace GitExtensions.Plugins.GitHub3
     [Export(typeof(IGitPluginForCommit))]
     public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginForCommit
     {
-        private const int MaxMostRecentIssuesDisplayed = 10;
-
         private readonly TranslationString _viewInWebSite = new("View in {0}");
         private readonly TranslationString _tokenAlreadyExist = new("You already have an personal access token. To get a new one, delete your old one in Plugins > Plugin Settings first.");
         private readonly TranslationString _generateToken = new("Generate a GitHub personal access token");
@@ -89,6 +87,7 @@ namespace GitExtensions.Plugins.GitHub3
         public readonly StringSetting GitHubHost = new("GitHub (Enterprise) hostname", "github.com");
         public readonly StringSetting PersonalAccessToken = new("OAuth Token", "Personal Access Token", "");
         private readonly BoolSetting _issueCommitMessageHelperEnabled = new("IssueCommitMessageHelperEnabled", "Enable commit message issue helper", true);
+        private readonly NumberSetting<int> _issueCommitMessageHelperMaxCount = new("IssueCommitMessageHelperMaxCount", "Maximum number of issue retrieved", 10);
         public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
         public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
@@ -99,7 +98,7 @@ namespace GitExtensions.Plugins.GitHub3
 
         private IGitUICommands? _currentGitUiCommands;
         private IReadOnlyList<IHostedRemote>? _hostedRemotesForModule;
-        private List<string> _currentMessages = new(MaxMostRecentIssuesDisplayed);
+        private List<string> _currentMessages = new();
 
         public GitHub3Plugin() : base(true)
         {
@@ -127,6 +126,8 @@ namespace GitExtensions.Plugins.GitHub3
             yield return new PseudoSetting(_noteRestartNeeded.Text);
 
             yield return _issueCommitMessageHelperEnabled;
+
+            yield return _issueCommitMessageHelperMaxCount;
         }
 
         private void GenerateTokenLink_Click(object sender, EventArgs e)
@@ -195,7 +196,7 @@ namespace GitExtensions.Plugins.GitHub3
 
                 Issue[] recentUserIssues = issues.Where(i => i.Number != 0 && hostedRemotes.Any(r => r.Owner == i.Repository.Owner.Login && r.RemoteRepositoryName == i.Repository.Name))
                                                             .OrderByDescending(i => i.UpdatedAt)
-                                                            .Take(MaxMostRecentIssuesDisplayed)
+                                                            .Take(_issueCommitMessageHelperMaxCount.ValueOrDefault(Settings))
                                                             .ToArray();
 
                 bool multipleRemotes = hostedRemotes.Length > 1;
