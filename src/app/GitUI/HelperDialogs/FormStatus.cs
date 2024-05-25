@@ -1,4 +1,5 @@
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
 using GitUI.UserControls;
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -13,7 +14,7 @@ namespace GitUI.HelperDialogs
         private protected Action<FormStatus>? ProcessCallback;
         private protected Action<FormStatus>? AbortCallback;
 
-        public FormStatus(GitUICommands commands, ConsoleOutputControl? consoleOutput, bool useDialogSettings)
+        public FormStatus(IGitUICommands commands, ConsoleOutputControl? consoleOutput, bool useDialogSettings)
             : base(commands, enablePositionRestore: true)
         {
             ArgumentNullException.ThrowIfNull(commands);
@@ -101,7 +102,7 @@ namespace GitUI.HelperDialogs
             ProcessCallback?.Invoke(this);
         }
 
-        public static void ShowErrorDialog(IWin32Window owner, GitUICommands commands, string text, params string[] output)
+        public static void ShowErrorDialog(IWin32Window owner, IGitUICommands commands, string text, params string[] output)
         {
             using FormStatus form = new(commands, consoleOutput: new EditboxBasedConsoleOutputControl(), useDialogSettings: true);
             form.Text = text;

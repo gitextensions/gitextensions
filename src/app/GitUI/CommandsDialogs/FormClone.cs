@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
         private readonly IReadOnlyList<string> _defaultBranchItems;
         private string? _puttySshKey;
 
-        public FormClone(GitUICommands commands, string? url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs>? gitModuleChanged)
+        public FormClone(IGitUICommands commands, string? url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs>? gitModuleChanged)
             : base(commands, enablePositionRestore: false)
         {
             _gitModuleChanged = gitModuleChanged;
@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs
                 if (_openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Hide();
-                    GitUICommands uiCommands = UICommands.WithWorkingDirectory(dirTo);
+                    IGitUICommands uiCommands = UICommands.WithWorkingDirectory(dirTo);
                     uiCommands.StartBrowseDialog(owner: null);
                 }
                 else if (ShowInTaskbar == false && _gitModuleChanged is not null &&

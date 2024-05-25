@@ -1,3 +1,4 @@
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
@@ -16,7 +17,7 @@ namespace GitUI.CommandsDialogs
 
         private bool _hasChanges;
 
-        public FormEditor(GitUICommands commands, string? fileName, bool showWarning, bool readOnly = false, int? lineNumber = null)
+        public FormEditor(IGitUICommands commands, string? fileName, bool showWarning, bool readOnly = false, int? lineNumber = null)
             : base(commands)
         {
             _fileName = fileName;

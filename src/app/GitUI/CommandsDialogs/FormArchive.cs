@@ -82,7 +82,7 @@ namespace GitUI.CommandsDialogs
             Tar
         }
 
-        public FormArchive(GitUICommands commands)
+        public FormArchive(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

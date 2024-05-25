@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
             { "txt", ["csv", "css", "md", "yml"] },
         };
 
-        public FormVerify(GitUICommands commands)
+        public FormVerify(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

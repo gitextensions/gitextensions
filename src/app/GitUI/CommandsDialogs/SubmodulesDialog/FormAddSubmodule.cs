@@ -3,6 +3,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using ResourceManager;
@@ -14,7 +15,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         private readonly TranslationString _remoteAndLocalPathRequired
             = new("A remote path and local path are required");
 
-        public FormAddSubmodule(GitUICommands commands)
+        public FormAddSubmodule(IGitUICommands commands)
             : base(commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();

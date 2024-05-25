@@ -2,6 +2,7 @@
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using ResourceManager;
 
@@ -13,7 +14,7 @@ namespace GitUI.CommandsDialogs
             new("Are you sure you want to cleanup the repository?");
         private readonly TranslationString _reallyCleanupQuestionCaption = new("Cleanup");
 
-        public FormCleanupRepository(GitUICommands commands)
+        public FormCleanupRepository(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

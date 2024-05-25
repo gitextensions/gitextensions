@@ -41,7 +41,7 @@ namespace GitUI.LeftPanel
             _reloadTaskRunner.Dispose();
         }
 
-        public GitUICommands UICommands => _uiCommandsSource.UICommands;
+        public IGitUICommands UICommands => _uiCommandsSource.UICommands;
 
         /// <summary>
         /// A flag to indicate that node SelectionChanged event is not user-originated and

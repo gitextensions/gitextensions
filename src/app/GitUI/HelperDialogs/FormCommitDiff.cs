@@ -4,7 +4,7 @@ namespace GitUI.HelperDialogs
 {
     public sealed partial class FormCommitDiff : GitModuleForm
     {
-        public FormCommitDiff(GitUICommands commands, ObjectId? objectId)
+        public FormCommitDiff(IGitUICommands commands, ObjectId? objectId)
             : base(commands)
         {
             InitializeComponent();

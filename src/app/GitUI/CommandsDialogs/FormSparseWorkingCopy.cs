@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI.Editor;
 using ResourceManager;
@@ -11,7 +12,7 @@ namespace GitUI.CommandsDialogs
     {
         private IDisposable? _disposable1;
 
-        public FormSparseWorkingCopy(GitUICommands commands)
+        public FormSparseWorkingCopy(IGitUICommands commands)
             : base(commands)
         {
             FormSparseWorkingCopyViewModel sparse = new(commands);

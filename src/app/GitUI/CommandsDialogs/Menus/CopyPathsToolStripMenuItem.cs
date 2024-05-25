@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 
 namespace GitUI.CommandsDialogs.Menus
@@ -14,7 +15,7 @@ namespace GitUI.CommandsDialogs.Menus
             copyFullPathsNativeToolStripMenuItem.Font = new(copyFullPathsNativeToolStripMenuItem.Font, FontStyle.Bold);
         }
 
-        public CopyPathsToolStripMenuItem Initialize(Func<GitUICommands> getUICommands, Func<IEnumerable<string?>> getSelectedFilePaths)
+        public CopyPathsToolStripMenuItem Initialize(Func<IGitUICommands> getUICommands, Func<IEnumerable<string?>> getSelectedFilePaths)
         {
             Initialize(getUICommands);
             _getSelectedFilePaths = getSelectedFilePaths;

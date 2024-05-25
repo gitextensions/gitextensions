@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -12,7 +13,7 @@ namespace GitUI.CommandsDialogs
         private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
         private readonly string _oldName;
 
-        public FormRenameBranch(GitUICommands commands, string defaultBranch)
+        public FormRenameBranch(IGitUICommands commands, string defaultBranch)
             : base(commands)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();

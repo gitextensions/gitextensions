@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _ckCompareToMergeBase = new("Compare to merge &base");
 
         public FormDiff(
-            GitUICommands commands,
+            IGitUICommands commands,
             ObjectId firstId,
             ObjectId secondId,
             string firstCommitDisplayStr, string secondCommitDisplayStr)

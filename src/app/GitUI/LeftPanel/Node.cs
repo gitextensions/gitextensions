@@ -1,4 +1,5 @@
-﻿using GitUI.LeftPanel.Interfaces;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI.LeftPanel.Interfaces;
 using Microsoft;
 
 namespace GitUI.LeftPanel
@@ -14,7 +15,7 @@ namespace GitUI.LeftPanel
             }
         }
 
-        protected GitUICommands UICommands => Tree.UICommands;
+        protected IGitUICommands UICommands => Tree.UICommands;
 
         protected Node(Tree? tree)
         {

@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelectedMsgBox = new("Select 1 revision to checkout.");
         private readonly TranslationString _noRevisionSelectedMsgBoxCaption = new("Checkout");
 
-        public FormCheckoutRevision(GitUICommands commands)
+        public FormCheckoutRevision(IGitUICommands commands)
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();

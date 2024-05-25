@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="revision">initial selected commit.</param>
         /// <param name="filterByRevision">add filter.</param>
         /// <param name="showBlame">show blame initially instead of diff view.</param>
-        public FormFileHistory(GitUICommands commands, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
+        public FormFileHistory(IGitUICommands commands, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
             : base(commands)
         {
             InitializeComponent();

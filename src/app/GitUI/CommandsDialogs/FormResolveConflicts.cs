@@ -131,7 +131,7 @@ namespace GitUI.CommandsDialogs
         private readonly CancellationTokenSequence _customDiffToolsSequence = new();
         private bool _inTheMiddleOfRebase;
 
-        public FormResolveConflicts(GitUICommands commands, bool offerCommit = true)
+        public FormResolveConflicts(IGitUICommands commands, bool offerCommit = true)
             : base(commands)
         {
             InitializeComponent();

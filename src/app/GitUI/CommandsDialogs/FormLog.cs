@@ -1,10 +1,12 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using GitExtensions.Extensibility.Git;
+
+namespace GitUI.CommandsDialogs
 {
     public partial class FormLog : GitModuleForm
     {
         private readonly CancellationTokenSequence _viewChangesSequence = new();
 
-        public FormLog(GitUICommands commands)
+        public FormLog(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

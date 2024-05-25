@@ -239,7 +239,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         /// <param name="commands">The commands in the current form.</param>
         /// <param name="args">The start up arguments.</param>
-        public FormBrowse(GitUICommands commands, BrowseArguments args)
+        public FormBrowse(IGitUICommands commands, BrowseArguments args)
 #pragma warning disable CS0618 // Type or member is obsolete
             : this(commands, args, new AppSettingsPath("FormBrowse"))
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -247,7 +247,7 @@ namespace GitUI.CommandsDialogs
         }
 
         [Obsolete("Test only!")]
-        internal FormBrowse(GitUICommands commands, BrowseArguments args, SettingsSource settingsSource)
+        internal FormBrowse(IGitUICommands commands, BrowseArguments args, SettingsSource settingsSource)
             : base(commands)
         {
             _splitterManager = new(settingsSource);
@@ -575,7 +575,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
         {
-            GitUICommands oldCommands = e.OldCommands;
+            IGitUICommands oldCommands = e.OldCommands;
             RefreshDefaultPullAction();
 
             if (oldCommands is not null)

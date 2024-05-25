@@ -1300,7 +1300,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (string name in submodules)
             {
-                GitUICommands submodulCommands = UICommands.WithWorkingDirectory(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
+                IGitUICommands submodulCommands = UICommands.WithWorkingDirectory(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                 submodulCommands.StartCommitDialog(this);
             }
 
@@ -1341,7 +1341,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (string name in submodules)
             {
-                GitUICommands uiCmds = UICommands.WithGitModule(Module.GetSubmodule(name));
+                IGitUICommands uiCmds = UICommands.WithGitModule(Module.GetSubmodule(name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 

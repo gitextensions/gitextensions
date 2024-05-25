@@ -14,10 +14,10 @@ namespace GitUI.HelperDialogs
         private readonly GitRevision _revision;
         private readonly TranslationString _localRefInvalid = new("The entered value '{0}' is not the name of an existing local branch.");
 
-        public static FormResetAnotherBranch Create(GitUICommands commands, GitRevision revision)
+        public static FormResetAnotherBranch Create(IGitUICommands commands, GitRevision revision)
             => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision));
 
-        private FormResetAnotherBranch(GitUICommands commands, GitRevision revision)
+        private FormResetAnotherBranch(IGitUICommands commands, GitRevision revision)
             : base(commands)
         {
             _revision = revision;

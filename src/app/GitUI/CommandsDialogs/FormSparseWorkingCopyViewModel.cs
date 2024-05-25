@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 
 namespace GitUI.CommandsDialogs
@@ -11,7 +12,7 @@ namespace GitUI.CommandsDialogs
 
         public static readonly string SettingCoreSparseCheckout = "core.sparseCheckout";
 
-        private readonly GitUICommands _gitCommands;
+        private readonly IGitUICommands _gitCommands;
 
         private bool _isRefreshWorkingCopyOnSave = true /* on by default, otherwise index bitmap won't be updated */;
 
@@ -30,7 +31,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private string? _sRulesTextAsOnDisk;
 
-        public FormSparseWorkingCopyViewModel(GitUICommands gitCommands)
+        public FormSparseWorkingCopyViewModel(IGitUICommands gitCommands)
         {
             _gitCommands = gitCommands ?? throw new ArgumentNullException(nameof(gitCommands));
             _isSparseCheckoutEnabled = _isSparseCheckoutEnabledAsSaved = GetCurrentSparseEnabledState();

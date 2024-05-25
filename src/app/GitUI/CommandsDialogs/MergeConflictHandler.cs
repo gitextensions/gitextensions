@@ -1,10 +1,11 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI.CommandsDialogs
 {
     public static class MergeConflictHandler
     {
-        public static bool HandleMergeConflicts(GitUICommands commands, IWin32Window? owner, bool offerCommit = true, bool offerUpdateSubmodules = true)
+        public static bool HandleMergeConflicts(IGitUICommands commands, IWin32Window? owner, bool offerCommit = true, bool offerUpdateSubmodules = true)
         {
             if (commands.Module.InTheMiddleOfConflictedMerge())
             {
@@ -24,7 +25,7 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private static void SolveMergeConflicts(GitUICommands commands, IWin32Window? owner, bool offerCommit)
+        private static void SolveMergeConflicts(IGitUICommands commands, IWin32Window? owner, bool offerCommit)
         {
             if (commands.Module.InTheMiddleOfConflictedMerge())
             {

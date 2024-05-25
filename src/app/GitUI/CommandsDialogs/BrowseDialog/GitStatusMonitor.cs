@@ -327,7 +327,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void commandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
             {
-                GitUICommands oldCommands = e.OldCommands;
+                IGitUICommands oldCommands = e.OldCommands;
                 if (oldCommands is not null)
                 {
                     oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
@@ -342,7 +342,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void commandsSource_activate(IGitUICommandsSource sender)
             {
-                GitUICommands newCommands = sender.UICommands;
+                IGitUICommands newCommands = sender.UICommands;
                 newCommands.PreCheckoutBranch += GitUICommands_PreCheckout;
                 newCommands.PreCheckoutRevision += GitUICommands_PreCheckout;
                 newCommands.PostCheckoutBranch += GitUICommands_PostCheckout;

@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
         /// The Amend checkbox is disabled after soft reset.
         private bool PushForced => (Amend.Checked || !Amend.Enabled) && AppSettings.CommitAndPushForcedWhenAmend;
 
-        public FormCommit(GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision? editedCommit = null, string? commitMessage = null)
+        public FormCommit(IGitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision? editedCommit = null, string? commitMessage = null)
             : base(commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -611,7 +611,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
         {
-            GitUICommands oldCommands = e.OldCommands;
+            IGitUICommands oldCommands = e.OldCommands;
 
             if (oldCommands is not null)
             {
@@ -3046,7 +3046,7 @@ namespace GitUI.CommandsDialogs
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
             Validates.NotNull(_currentItem);
-            GitUICommands submoduleCommands = UICommands.WithWorkingDirectory(_fullPathResolver.Resolve(_currentItem.Item.Name.EnsureTrailingPathSeparator()));
+            IGitUICommands submoduleCommands = UICommands.WithWorkingDirectory(_fullPathResolver.Resolve(_currentItem.Item.Name.EnsureTrailingPathSeparator()));
             submoduleCommands.StartCommitDialog(this);
             Initialize();
         }
@@ -3101,7 +3101,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (GitItemStatus item in unstagedFiles.Where(it => it.IsSubmodule))
             {
-                GitUICommands commands = UICommands.WithGitModule(Module.GetSubmodule(item.Name));
+                IGitUICommands commands = UICommands.WithGitModule(Module.GetSubmodule(item.Name));
                 commands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 

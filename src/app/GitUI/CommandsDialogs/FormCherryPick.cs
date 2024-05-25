@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -23,7 +24,7 @@ namespace GitUI.CommandsDialogs
 
         public GitRevision? Revision { get; set; }
 
-        public FormCherryPick(GitUICommands commands, GitRevision? revision)
+        public FormCherryPick(IGitUICommands commands, GitRevision? revision)
             : base(commands, enablePositionRestore: false)
         {
             Revision = revision;

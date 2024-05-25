@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.GitIgnoreDialog;
 using ResourceManager;
 
@@ -60,7 +61,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly IGitIgnoreDialogModel _dialogModel;
 
-        public FormGitIgnore(GitUICommands commands, bool localExclude)
+        public FormGitIgnore(IGitUICommands commands, bool localExclude)
             : base(commands)
         {
             _localExclude = localExclude;

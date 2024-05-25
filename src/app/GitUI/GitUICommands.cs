@@ -14,7 +14,6 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using static GitUI.CommandsDialogs.FormBrowse;
 
 namespace GitUI
 {
@@ -381,7 +380,7 @@ namespace GitUI
         /// <param name="workingDir">The working directory for the new process.</param>
         /// <param name="selectedId">The optional commit to be selected.</param>
         /// <param name="firstId">The first commit to be selected, the first commit in a diff.</param>
-        public static void LaunchBrowse(string workingDir = "", ObjectId? selectedId = null, ObjectId? firstId = null)
+        internal static void LaunchBrowse(string workingDir = "", ObjectId? selectedId = null, ObjectId? firstId = null)
         {
             if (!Directory.Exists(workingDir))
             {
@@ -1183,18 +1182,6 @@ namespace GitUI
             }
         }
 
-        public FormDiff ShowFormDiff(ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
-        {
-            FormDiff diffForm = new(this, baseCommitSha, headCommitSha, baseCommitDisplayStr, headCommitDisplayStr)
-            {
-                ShowInTaskbar = true
-            };
-
-            diffForm.Show();
-
-            return diffForm;
-        }
-
         public bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted)
         {
             bool pushed = false;
@@ -1320,7 +1307,7 @@ namespace GitUI
             });
         }
 
-        internal void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
+        public void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
         {
             WrapRepoHostingCall(TranslatedStrings.ViewPullRequest, gitHoster,
                                 gh =>
@@ -1330,7 +1317,7 @@ namespace GitUI
                                 });
         }
 
-        internal void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
+        public void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
         {
             WrapRepoHostingCall(TranslatedStrings.AddUpstreamRemote, gitHoster,
                                 gh =>
@@ -1675,7 +1662,7 @@ namespace GitUI
 
         private bool RunOpenRepoCommand(IReadOnlyList<string> args)
         {
-            GitUICommands c = this;
+            IGitUICommands c = this;
             if (args.Count > 2)
             {
                 if (File.Exists(args[2]))
@@ -1913,12 +1900,12 @@ namespace GitUI
             }
         }
 
-        internal void RaisePostBrowseInitialize(IWin32Window? owner)
+        public void RaisePostBrowseInitialize(IWin32Window? owner)
         {
             InvokeEvent(owner, PostBrowseInitialize);
         }
 
-        internal void RaisePostRegisterPlugin(IWin32Window? owner)
+        public void RaisePostRegisterPlugin(IWin32Window? owner)
         {
             InvokeEvent(owner, PostRegisterPlugin);
         }
@@ -1929,18 +1916,18 @@ namespace GitUI
         }
 
         /// <summary>
-        ///  Creates a new instance of <see cref="GitUICommands"/> for a git repository specified by <paramref name="module"/>.
+        ///  Creates a new instance of <see cref="IGitUICommands"/> for a git repository specified by <paramref name="module"/>.
         /// </summary>
         /// <param name="module">The git repository.</param>
-        /// <returns>A new instance of <see cref="GitUICommands"/>.</returns>
-        public GitUICommands WithGitModule(IGitModule module) => new(_serviceProvider, module);
+        /// <returns>A new instance of <see cref="IGitUICommands"/>.</returns>
+        public IGitUICommands WithGitModule(IGitModule module) => new GitUICommands(_serviceProvider, module);
 
         /// <summary>
-        ///  Creates a new instance of <see cref="GitUICommands"/> for a git repository specified by <paramref name="workingDirectory"/>.
+        ///  Creates a new instance of <see cref="IGitUICommands"/> for a git repository specified by <paramref name="workingDirectory"/>.
         /// </summary>
         /// <param name="workingDirectory">The git repository working directory.</param>
-        /// <returns>A new instance of <see cref="GitUICommands"/>.</returns>
-        public GitUICommands WithWorkingDirectory(string? workingDirectory) => new(_serviceProvider, new GitModule(workingDirectory));
+        /// <returns>A new instance of <see cref="IGitUICommands"/>.</returns>
+        public IGitUICommands WithWorkingDirectory(string? workingDirectory) => new GitUICommands(_serviceProvider, new GitModule(workingDirectory));
 
         #region Nested class: GitRemoteCommand
 
@@ -1953,11 +1940,11 @@ namespace GitUI
             public bool ErrorOccurred { get; private set; }
             public string? CommandOutput { get; private set; }
 
-            private readonly GitUICommands _commands;
+            private readonly IGitUICommands _commands;
 
             public event EventHandler<GitRemoteCommandCompletedEventArgs>? Completed;
 
-            internal GitRemoteCommand(GitUICommands commands)
+            internal GitRemoteCommand(IGitUICommands commands)
             {
                 _commands = commands;
             }

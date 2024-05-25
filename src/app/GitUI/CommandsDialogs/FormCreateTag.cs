@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
 
-        public FormCreateTag(GitUICommands commands, ObjectId? objectId)
+        public FormCreateTag(IGitUICommands commands, ObjectId? objectId)
             : base(commands)
         {
             InitializeComponent();

@@ -4,7 +4,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormCompareToBranch : GitModuleForm
     {
-        public FormCompareToBranch(GitUICommands commands, ObjectId? selectedCommit)
+        public FormCompareToBranch(IGitUICommands commands, ObjectId? selectedCommit)
             : base(commands)
         {
             MinimizeBox = false;

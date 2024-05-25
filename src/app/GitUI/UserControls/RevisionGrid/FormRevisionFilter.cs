@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using GitExtensions.Extensibility.Git;
+using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -17,7 +18,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly TranslationString _pathFilter = new("&Path filter");
         private readonly TranslationString _branches = new("&Branches");
 
-        public FormRevisionFilter(GitUICommands commands, FilterInfo filterInfo)
+        public FormRevisionFilter(IGitUICommands commands, FilterInfo filterInfo)
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();

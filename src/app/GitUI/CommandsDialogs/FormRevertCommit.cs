@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -14,7 +15,7 @@ namespace GitUI.CommandsDialogs
 
         private bool _isMerge;
 
-        public FormRevertCommit(GitUICommands commands, GitRevision revision)
+        public FormRevertCommit(IGitUICommands commands, GitRevision revision)
             : base(commands)
         {
             Revision = revision;

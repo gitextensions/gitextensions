@@ -1,6 +1,7 @@
 using GitCommands;
 using GitCommands.Config;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.Infrastructure;
 using GitUI.UserControls;
 using ResourceManager;
@@ -28,13 +29,13 @@ Do you want to register the host's fingerprint and restart the process?");
         private bool _restart;
         private string _urlTryingToConnect = string.Empty;
 
-        public FormRemoteProcess(GitUICommands commands, ArgumentString arguments)
+        public FormRemoteProcess(IGitUICommands commands, ArgumentString arguments)
             : base(commands, arguments, commands.Module.WorkingDir, input: null, useDialogSettings: true)
         {
             Commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
-        public static bool ShowDialog(IWin32Window? owner, GitUICommands commands, ArgumentString arguments)
+        public static bool ShowDialog(IWin32Window? owner, IGitUICommands commands, ArgumentString arguments)
         {
             using FormRemoteProcess formRemoteProcess = new(commands, arguments);
             formRemoteProcess.ShowDialog(owner);
@@ -43,7 +44,7 @@ Do you want to register the host's fingerprint and restart the process?");
 
         public bool Plink { get; set; }
 
-        private GitUICommands Commands { get; }
+        private IGitUICommands Commands { get; }
 
         /// <summary>
         /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.
