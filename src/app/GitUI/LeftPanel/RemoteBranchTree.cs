@@ -136,7 +136,7 @@ namespace GitUI.LeftPanel
             UICommands.StartPullDialogAndPullImmediately(
                 out bool pullCompleted,
                 TreeViewNode.TreeView,
-                pullAction: AppSettings.PullAction.FetchAll);
+                pullAction: GitPullAction.FetchAll);
             return pullCompleted;
         }
 
@@ -145,7 +145,7 @@ namespace GitUI.LeftPanel
             UICommands.StartPullDialogAndPullImmediately(
                 out bool pullCompleted,
                 TreeViewNode.TreeView,
-                pullAction: AppSettings.PullAction.FetchPruneAll);
+                pullAction: GitPullAction.FetchPruneAll);
             return pullCompleted;
         }
     }

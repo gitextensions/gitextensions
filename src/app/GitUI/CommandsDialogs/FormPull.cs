@@ -128,7 +128,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ErrorOccurred { get; private set; }
 
-        public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, AppSettings.PullAction pullAction)
+        public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, GitPullAction pullAction)
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
@@ -141,36 +141,36 @@ namespace GitUI.CommandsDialogs
             _branch = Module.GetSelectedBranch();
             BindRemotesDropDown(defaultRemote);
 
-            if (pullAction == AppSettings.PullAction.None)
+            if (pullAction == GitPullAction.None)
             {
                 pullAction = AppSettings.DefaultPullAction;
             }
 
             switch (pullAction)
             {
-                case AppSettings.PullAction.None:
+                case GitPullAction.None:
                     Merge.Checked = true;
                     break;
-                case AppSettings.PullAction.Merge:
+                case GitPullAction.Merge:
                     Merge.Checked = true;
                     Prune.Enabled = false;
                     PruneTags.Enabled = false;
                     break;
-                case AppSettings.PullAction.Rebase:
+                case GitPullAction.Rebase:
                     Rebase.Checked = true;
                     Prune.Enabled = false;
                     PruneTags.Enabled = false;
                     break;
-                case AppSettings.PullAction.Fetch:
+                case GitPullAction.Fetch:
                     Fetch.Checked = true;
                     Prune.Enabled = true;
                     PruneTags.Enabled = true;
                     break;
-                case AppSettings.PullAction.FetchAll:
+                case GitPullAction.FetchAll:
                     Fetch.Checked = true;
                     _NO_TRANSLATE_Remotes.Text = AllRemotes;
                     break;
-                case AppSettings.PullAction.FetchPruneAll:
+                case GitPullAction.FetchPruneAll:
                     Fetch.Checked = true;
                     Prune.Checked = true;
                     PruneTags.Checked = false;
@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     break;
-                case AppSettings.PullAction.Default:
+                case GitPullAction.Default:
                     DebugHelpers.Assert(false, "pullAction is not a valid action");
                     break;
             }
@@ -245,10 +245,10 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public DialogResult PullAndShowDialogWhenFailed(IWin32Window? owner, string? remote, AppSettings.PullAction pullAction)
+        public DialogResult PullAndShowDialogWhenFailed(IWin32Window? owner, string? remote, GitPullAction pullAction)
         {
             // Special case for "Fetch and prune" and "Fetch and prune all" to make sure user confirms the action.
-            if (pullAction == AppSettings.PullAction.FetchPruneAll)
+            if (pullAction == GitPullAction.FetchPruneAll)
             {
                 string messageBoxTitle;
                 if (string.IsNullOrEmpty(remote))
@@ -628,9 +628,9 @@ namespace GitUI.CommandsDialogs
         private void UpdateSettingsDuringPull()
         {
             AppSettings.FormPullAction =
-                Merge.Checked ? AppSettings.PullAction.Merge :
-                Rebase.Checked ? AppSettings.PullAction.Rebase :
-                Fetch.Checked ? AppSettings.FormPullAction = AppSettings.PullAction.Fetch : AppSettings.PullAction.Default;
+                Merge.Checked ? GitPullAction.Merge :
+                Rebase.Checked ? GitPullAction.Rebase :
+                Fetch.Checked ? AppSettings.FormPullAction = GitPullAction.Fetch : GitPullAction.Default;
 
             AppSettings.AutoStash = AutoStash.Checked;
         }

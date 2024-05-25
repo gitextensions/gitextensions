@@ -32,7 +32,6 @@ using GitUI.Shells;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
@@ -2111,7 +2110,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
                 case Command.CheckoutBranch: UICommands.StartCheckoutBranch(this); break;
                 case Command.QuickFetch: QuickFetch(); break;
-                case Command.QuickPull: DoPull(pullAction: AppSettings.PullAction.Merge, isSilent: true); break;
+                case Command.QuickPull: DoPull(pullAction: GitPullAction.Merge, isSilent: true); break;
                 case Command.QuickPullOrFetch: toolStripButtonPull.PerformButtonClick(); break;
                 case Command.QuickPush: UICommands.StartPushDialog(this, true); break;
                 case Command.CloseRepository: SetWorkingDir(""); break;
@@ -2355,8 +2354,8 @@ namespace GitUI.CommandsDialogs
         {
             // Clicking on the Pull button toolbar button will perform the default selected action silently,
             // except if that action is to open the dialog (PullAction.None)
-            bool isSilent = AppSettings.DefaultPullAction != AppSettings.PullAction.None;
-            AppSettings.PullAction pullAction = AppSettings.DefaultPullAction != AppSettings.PullAction.None ?
+            bool isSilent = AppSettings.DefaultPullAction != GitPullAction.None;
+            GitPullAction pullAction = AppSettings.DefaultPullAction != GitPullAction.None ?
                 AppSettings.DefaultPullAction : AppSettings.FormPullAction;
             DoPull(pullAction: pullAction, isSilent: isSilent);
         }
@@ -2369,30 +2368,30 @@ namespace GitUI.CommandsDialogs
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoPull(pullAction: AppSettings.PullAction.Merge, isSilent: true);
+            DoPull(pullAction: GitPullAction.Merge, isSilent: true);
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            DoPull(pullAction: AppSettings.PullAction.Rebase, isSilent: true);
+            DoPull(pullAction: GitPullAction.Rebase, isSilent: true);
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoPull(pullAction: AppSettings.PullAction.Fetch, isSilent: true);
+            DoPull(pullAction: GitPullAction.Fetch, isSilent: true);
         }
 
         private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoPull(pullAction: AppSettings.PullAction.FetchAll, isSilent: true);
+            DoPull(pullAction: GitPullAction.FetchAll, isSilent: true);
         }
 
         private void fetchPruneAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoPull(pullAction: AppSettings.PullAction.FetchPruneAll, isSilent: true);
+            DoPull(pullAction: GitPullAction.FetchPruneAll, isSilent: true);
         }
 
-        private void DoPull(AppSettings.PullAction pullAction, bool isSilent)
+        private void DoPull(GitPullAction pullAction, bool isSilent)
         {
             if (isSilent)
             {

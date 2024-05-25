@@ -3,6 +3,7 @@ using System.Reflection;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -233,8 +234,8 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RevisionGraphDrawAlternateBackColor)], true, false, false);
                 yield return (properties[nameof(AppSettings.RevisionGraphDrawNonRelativesGray)], true, false, false);
                 yield return (properties[nameof(AppSettings.RevisionGraphDrawNonRelativesTextGray)], false, false, false);
-                yield return (properties[nameof(AppSettings.DefaultPullAction)], AppSettings.PullAction.Merge, false, false);
-                yield return (properties[nameof(AppSettings.FormPullAction)], AppSettings.PullAction.Merge, false, false);
+                yield return (properties[nameof(AppSettings.DefaultPullAction)], GitPullAction.Merge, false, false);
+                yield return (properties[nameof(AppSettings.FormPullAction)], GitPullAction.Merge, false, false);
                 yield return (properties[nameof(AppSettings.SmtpServer)], "smtp.gmail.com", true, false);
                 yield return (properties[nameof(AppSettings.SmtpPort)], 465, false, false);
                 yield return (properties[nameof(AppSettings.SmtpUseSsl)], true, false, false);
@@ -433,7 +434,7 @@ namespace GitCommandsTests.Settings
                 {
                     typeof(TruncatePathMethod),
                     typeof(AvatarProvider),
-                    typeof(AppSettings.PullAction),
+                    typeof(GitPullAction),
                     typeof(LocalChangesAction),
                     typeof(IgnoreWhitespaceKind),
                     typeof(ShorteningRecentRepoPathStrategy),

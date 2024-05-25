@@ -34,7 +34,7 @@ namespace GitUI.LeftPanel
                 TreeViewNode.TreeView,
                 remoteBranch: remoteBranchInfo.BranchName,
                 remote: remoteBranchInfo.Remote,
-                pullAction: AppSettings.PullAction.Fetch);
+                pullAction: GitPullAction.Fetch);
             return pullCompleted;
         }
 

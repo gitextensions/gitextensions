@@ -1,6 +1,6 @@
 ﻿using Git.hub;
 using GitExtensions.Extensibility.Git;
-using GitUIPluginInterfaces.RepositoryHosts;
+using GitExtensions.Extensibility.Plugins;
 
 namespace GitExtensions.Plugins.GitHub3
 {

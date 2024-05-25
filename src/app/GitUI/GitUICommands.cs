@@ -7,12 +7,12 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
 using static GitUI.CommandsDialogs.FormBrowse;
 
@@ -601,24 +601,24 @@ namespace GitUI
             return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, changesRepo: false);
         }
 
-        public bool StartPullDialogAndPullImmediately(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, AppSettings.PullAction pullAction = AppSettings.PullAction.None)
+        public bool StartPullDialogAndPullImmediately(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
         {
             return StartPullDialogAndPullImmediately(out _, owner, remoteBranch, remote, pullAction);
         }
 
         /// <param name="pullCompleted">true if pull completed with no errors.</param>
         /// <returns>if revision grid should be refreshed.</returns>
-        public bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, AppSettings.PullAction pullAction = AppSettings.PullAction.None)
+        public bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
         {
             return StartPullDialogInternal(owner, pullOnShow: true, out pullCompleted, remoteBranch, remote, pullAction);
         }
 
-        public bool StartPullDialog(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, AppSettings.PullAction pullAction = AppSettings.PullAction.None)
+        public bool StartPullDialog(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
         {
             return StartPullDialogInternal(owner, pullOnShow: false, out _, remoteBranch, remote, pullAction);
         }
 
-        private bool StartPullDialogInternal(IWin32Window? owner, bool pullOnShow, out bool pullCompleted, string? remoteBranch, string? remote, AppSettings.PullAction pullAction)
+        private bool StartPullDialogInternal(IWin32Window? owner, bool pullOnShow, out bool pullCompleted, string? remoteBranch, string? remote, GitPullAction pullAction)
         {
             bool pulled = false;
 
@@ -932,7 +932,7 @@ namespace GitUI
             return DoActionOnRepo(owner, Action, changesRepo: false, postEvent: PostEditGitIgnore);
         }
 
-        public bool StartSettingsDialog(IWin32Window? owner = null, SettingsPageReference? initialPage = null)
+        public bool StartSettingsDialog(IWin32Window? owner, SettingsPageReference? initialPage = null)
         {
             bool Action()
             {
@@ -1340,7 +1340,7 @@ namespace GitUI
                                         string remoteName = await gh.AddUpstreamRemoteAsync();
                                         if (!string.IsNullOrEmpty(remoteName))
                                         {
-                                            StartPullDialogAndPullImmediately(owner, remoteBranch: null, remoteName, AppSettings.PullAction.Fetch);
+                                            StartPullDialogAndPullImmediately(owner, remoteBranch: null, remoteName, GitPullAction.Fetch);
                                         }
                                     }).FileAndForget();
                                 });
@@ -1512,7 +1512,7 @@ namespace GitUI
                 case "searchfile":
                     return RunSearchFileCommand();
                 case "settings":
-                    return StartSettingsDialog();
+                    return StartSettingsDialog(owner: null);
                 case "stash":
                     return StartStashDialog();
                 case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
@@ -1894,17 +1894,17 @@ namespace GitUI
         {
             if (arguments.ContainsKey("merge"))
             {
-                AppSettings.DefaultPullAction = AppSettings.PullAction.Merge;
+                AppSettings.DefaultPullAction = GitPullAction.Merge;
             }
 
             if (arguments.ContainsKey("rebase"))
             {
-                AppSettings.DefaultPullAction = AppSettings.PullAction.Rebase;
+                AppSettings.DefaultPullAction = GitPullAction.Rebase;
             }
 
             if (arguments.ContainsKey("fetch"))
             {
-                AppSettings.DefaultPullAction = AppSettings.PullAction.Fetch;
+                AppSettings.DefaultPullAction = GitPullAction.Fetch;
             }
 
             if (arguments.ContainsKey("autostash"))

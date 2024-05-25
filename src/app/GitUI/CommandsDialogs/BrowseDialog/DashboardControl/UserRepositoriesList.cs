@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
-using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using Microsoft;

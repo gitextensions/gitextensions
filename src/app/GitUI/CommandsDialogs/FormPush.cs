@@ -8,6 +8,7 @@ using GitCommands.Settings;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
@@ -498,7 +499,7 @@ namespace GitUI.CommandsDialogs
 
         private bool IsRebasingMergeCommit()
         {
-            if (AppSettings.DefaultPullAction == AppSettings.PullAction.Rebase &&
+            if (AppSettings.DefaultPullAction == GitPullAction.Rebase &&
                 _candidateForRebasingMergeCommit &&
                 _selectedBranch == _currentBranchName &&
                 _selectedRemote == _currentBranchRemote)
@@ -537,7 +538,7 @@ namespace GitUI.CommandsDialogs
             {
                 DebugHelpers.Assert(form.Visible, "The progress dialog must be visible.");
 
-                (AppSettings.PullAction onRejectedPullAction, bool forcePush) = AskForAutoPullOnPushRejectedAction(form, match.Groups["currBranch"].Success);
+                (GitPullAction onRejectedPullAction, bool forcePush) = AskForAutoPullOnPushRejectedAction(form, match.Groups["currBranch"].Success);
 
                 if (forcePush)
                 {
@@ -554,17 +555,17 @@ namespace GitUI.CommandsDialogs
                     return true;
                 }
 
-                if (onRejectedPullAction == AppSettings.PullAction.Default)
+                if (onRejectedPullAction == GitPullAction.Default)
                 {
                     onRejectedPullAction = AppSettings.DefaultPullAction;
                 }
 
-                if (onRejectedPullAction == AppSettings.PullAction.None)
+                if (onRejectedPullAction == GitPullAction.None)
                 {
                     return false;
                 }
 
-                if (onRejectedPullAction is not (AppSettings.PullAction.Merge or AppSettings.PullAction.Rebase))
+                if (onRejectedPullAction is not (GitPullAction.Merge or GitPullAction.Rebase))
                 {
                     form.AppendOutput(Environment.NewLine +
                         "Automatical pull can only be performed, when the default pull action is either set to Merge or Rebase." +
@@ -601,25 +602,25 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private (AppSettings.PullAction pullAction, bool forcePush) AskForAutoPullOnPushRejectedAction(IWin32Window owner, bool allOptions)
+        private (GitPullAction pullAction, bool forcePush) AskForAutoPullOnPushRejectedAction(IWin32Window owner, bool allOptions)
         {
             bool forcePush = false;
-            AppSettings.PullAction? onRejectedPullAction = AppSettings.AutoPullOnPushRejectedAction;
+            GitPullAction? onRejectedPullAction = AppSettings.AutoPullOnPushRejectedAction;
             if (onRejectedPullAction is null)
             {
                 string destination = _NO_TRANSLATE_Remotes.Text;
                 string pullDefaultButtonText;
                 switch (AppSettings.DefaultPullAction)
                 {
-                    case AppSettings.PullAction.Fetch:
-                    case AppSettings.PullAction.FetchAll:
-                    case AppSettings.PullAction.FetchPruneAll:
+                    case GitPullAction.Fetch:
+                    case GitPullAction.FetchAll:
+                    case GitPullAction.FetchPruneAll:
                         pullDefaultButtonText = string.Format(_pullDefaultButton.Text, _pullActionFetch.Text);
                         break;
-                    case AppSettings.PullAction.Merge:
+                    case GitPullAction.Merge:
                         pullDefaultButtonText = string.Format(_pullDefaultButton.Text, _pullActionMerge.Text);
                         break;
-                    case AppSettings.PullAction.Rebase:
+                    case GitPullAction.Rebase:
                         pullDefaultButtonText = string.Format(_pullDefaultButton.Text, _pullActionRebase.Text);
                         break;
                     default:
@@ -658,19 +659,19 @@ namespace GitUI.CommandsDialogs
                 TaskDialogButton result = TaskDialog.ShowDialog(owner, page);
                 if (result == TaskDialogButton.Cancel)
                 {
-                    onRejectedPullAction = AppSettings.PullAction.None;
+                    onRejectedPullAction = GitPullAction.None;
                 }
                 else if (result == btnPullDefault)
                 {
-                    onRejectedPullAction = AppSettings.PullAction.Default;
+                    onRejectedPullAction = GitPullAction.Default;
                 }
                 else if (result == btnPullRebase)
                 {
-                    onRejectedPullAction = AppSettings.PullAction.Rebase;
+                    onRejectedPullAction = GitPullAction.Rebase;
                 }
                 else if (result == btnPullMerge)
                 {
-                    onRejectedPullAction = AppSettings.PullAction.Merge;
+                    onRejectedPullAction = GitPullAction.Merge;
                 }
                 else if (result == btnPushForce)
                 {
@@ -683,7 +684,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            return (onRejectedPullAction ?? AppSettings.PullAction.None, forcePush);
+            return (onRejectedPullAction ?? GitPullAction.None, forcePush);
         }
 
         private void _NO_TRANSLATE_Branch_Enter(object sender, EventArgs e)
@@ -817,7 +818,7 @@ namespace GitUI.CommandsDialogs
 
             Text = string.Concat(_pushCaption.Text, " (", Module.WorkingDir, ")");
 
-            GitUIPluginInterfaces.RepositoryHosts.IRepositoryHostPlugin gitHoster = PluginRegistry.TryGetGitHosterForModule(Module);
+            IRepositoryHostPlugin gitHoster = PluginRegistry.TryGetGitHosterForModule(Module);
             _createPullRequestCB.Enabled = gitHoster is not null;
         }
 

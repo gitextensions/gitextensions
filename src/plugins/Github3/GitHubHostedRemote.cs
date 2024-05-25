@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using GitExtensions.Extensibility.Plugins;
 using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitExtensions.Plugins.GitHub3

@@ -3,7 +3,6 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
 
 namespace GitUI

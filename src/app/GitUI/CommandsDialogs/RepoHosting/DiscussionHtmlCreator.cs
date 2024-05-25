@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Text;
-using GitUIPluginInterfaces.RepositoryHosts;
+using GitExtensions.Extensibility.Plugins;
 
 namespace GitUI.CommandsDialogs.RepoHosting
 {

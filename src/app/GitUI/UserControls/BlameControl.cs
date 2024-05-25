@@ -4,6 +4,7 @@ using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;

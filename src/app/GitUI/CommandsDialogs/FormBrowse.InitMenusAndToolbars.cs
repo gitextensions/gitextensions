@@ -47,12 +47,12 @@ namespace GitUI.CommandsDialogs
                 branchToolStripMenuItem,
             }.ForEach(ColorHelper.AdaptImageLightness);
 
-            pullToolStripMenuItem1.Tag = AppSettings.PullAction.None;
-            mergeToolStripMenuItem.Tag = AppSettings.PullAction.Merge;
-            rebaseToolStripMenuItem1.Tag = AppSettings.PullAction.Rebase;
-            fetchToolStripMenuItem.Tag = AppSettings.PullAction.Fetch;
-            fetchAllToolStripMenuItem.Tag = AppSettings.PullAction.FetchAll;
-            fetchPruneAllToolStripMenuItem.Tag = AppSettings.PullAction.FetchPruneAll;
+            pullToolStripMenuItem1.Tag = GitPullAction.None;
+            mergeToolStripMenuItem.Tag = GitPullAction.Merge;
+            rebaseToolStripMenuItem1.Tag = GitPullAction.Rebase;
+            fetchToolStripMenuItem.Tag = GitPullAction.Fetch;
+            fetchAllToolStripMenuItem.Tag = GitPullAction.FetchAll;
+            fetchPruneAllToolStripMenuItem.Tag = GitPullAction.FetchPruneAll;
 
             Color toolForeColor = SystemColors.WindowText;
             BackColor = SystemColors.Window;
@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
 
             IEnumerable<ToolStripItem> setDefaultPullActionDropDownItems = toolStripButtonPull.DropDownItems
                 .OfType<ToolStripMenuItem>()
-                .Where(tsmi => tsmi.Tag is AppSettings.PullAction)
+                .Where(tsmi => tsmi.Tag is GitPullAction)
                 .Select(tsmi =>
                 {
                     ToolStripItem tsi = new ToolStripMenuItem
@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs
             void SetDefaultPullActionMenuItemClick(object sender, EventArgs eventArgs)
             {
                 ToolStripMenuItem clickedMenuItem = (ToolStripMenuItem)sender;
-                AppSettings.DefaultPullAction = (AppSettings.PullAction)clickedMenuItem.Tag;
+                AppSettings.DefaultPullAction = (GitPullAction)clickedMenuItem.Tag;
                 RefreshDefaultPullAction();
             }
         }
@@ -274,36 +274,36 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            AppSettings.PullAction defaultPullAction = AppSettings.DefaultPullAction;
+            GitPullAction defaultPullAction = AppSettings.DefaultPullAction;
 
             foreach (ToolStripMenuItem menuItem in setDefaultPullButtonActionToolStripMenuItem.DropDown.Items)
             {
-                menuItem.Checked = (AppSettings.PullAction)menuItem.Tag == defaultPullAction;
+                menuItem.Checked = (GitPullAction)menuItem.Tag == defaultPullAction;
             }
 
             switch (defaultPullAction)
             {
-                case AppSettings.PullAction.Fetch:
+                case GitPullAction.Fetch:
                     toolStripButtonPull.Image = Images.PullFetch.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullFetch.Text;
                     break;
 
-                case AppSettings.PullAction.FetchAll:
+                case GitPullAction.FetchAll:
                     toolStripButtonPull.Image = Images.PullFetchAll.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullFetchAll.Text;
                     break;
 
-                case AppSettings.PullAction.FetchPruneAll:
+                case GitPullAction.FetchPruneAll:
                     toolStripButtonPull.Image = Images.PullFetchPruneAll.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullFetchPruneAll.Text;
                     break;
 
-                case AppSettings.PullAction.Merge:
+                case GitPullAction.Merge:
                     toolStripButtonPull.Image = Images.PullMerge.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullMerge.Text;
                     break;
 
-                case AppSettings.PullAction.Rebase:
+                case GitPullAction.Rebase:
                     toolStripButtonPull.Image = Images.PullRebase.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullRebase.Text;
                     break;

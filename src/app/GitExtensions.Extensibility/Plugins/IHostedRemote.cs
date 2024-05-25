@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces.RepositoryHosts
+﻿namespace GitExtensions.Extensibility.Plugins
 {
     public interface IHostedRemote
     {

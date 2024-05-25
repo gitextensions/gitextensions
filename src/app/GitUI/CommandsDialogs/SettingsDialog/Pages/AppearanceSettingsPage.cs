@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;

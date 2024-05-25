@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
@@ -918,32 +919,21 @@ namespace GitCommands
 
         public static readonly Dictionary<string, Encoding> AvailableEncodings = [];
 
-        public enum PullAction
-        {
-            None,
-            Merge,
-            Rebase,
-            Fetch,
-            FetchAll,
-            FetchPruneAll,
-            Default
-        }
-
         /// <summary>
         /// Gets or sets the default pull action that is performed by the toolbar icon when it is clicked on.
         /// </summary>
-        public static PullAction DefaultPullAction
+        public static GitPullAction DefaultPullAction
         {
-            get => GetEnum("DefaultPullAction", PullAction.Merge);
+            get => GetEnum("DefaultPullAction", GitPullAction.Merge);
             set => SetEnum("DefaultPullAction", value);
         }
 
         /// <summary>
         /// Gets or sets the default pull action as configured in the FormPull dialog.
         /// </summary>
-        public static PullAction FormPullAction
+        public static GitPullAction FormPullAction
         {
-            get => GetEnum("FormPullAction", PullAction.Merge);
+            get => GetEnum("FormPullAction", GitPullAction.Merge);
             set => SetEnum("FormPullAction", value);
         }
 
@@ -1033,9 +1023,9 @@ namespace GitCommands
             set => SetBool("AutoPopStashAfterCheckoutBranch", value);
         }
 
-        public static PullAction? AutoPullOnPushRejectedAction
+        public static GitPullAction? AutoPullOnPushRejectedAction
         {
-            get => GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction");
+            get => GetNullableEnum<GitPullAction>("AutoPullOnPushRejectedAction");
             set => SetNullableEnum("AutoPullOnPushRejectedAction", value);
         }
 

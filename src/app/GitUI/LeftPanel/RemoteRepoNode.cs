@@ -114,7 +114,7 @@ namespace GitUI.LeftPanel
                 out bool pullCompleted,
                 TreeViewNode.TreeView,
                 remote: FullPath,
-                pullAction: AppSettings.PullAction.Fetch);
+                pullAction: GitPullAction.Fetch);
             return pullCompleted;
         }
 
@@ -124,7 +124,7 @@ namespace GitUI.LeftPanel
                 out bool pullCompleted,
                 TreeViewNode.TreeView,
                 remote: FullPath,
-                pullAction: AppSettings.PullAction.FetchPruneAll);
+                pullAction: GitPullAction.FetchPruneAll);
             return pullCompleted;
         }
     }

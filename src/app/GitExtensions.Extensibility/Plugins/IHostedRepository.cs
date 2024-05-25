@@ -1,6 +1,6 @@
 ﻿using GitExtensions.Extensibility.Git;
 
-namespace GitUIPluginInterfaces.RepositoryHosts
+namespace GitExtensions.Extensibility.Plugins
 {
     public interface IHostedRepository
     {

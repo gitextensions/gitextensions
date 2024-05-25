@@ -2,6 +2,7 @@
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUITests;

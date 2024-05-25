@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

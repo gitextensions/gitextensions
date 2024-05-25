@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
 namespace GitUI

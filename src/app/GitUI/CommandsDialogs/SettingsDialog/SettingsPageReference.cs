@@ -1,16 +1,8 @@
 ﻿using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    /// <summary>
-    /// to jump to a specific page
-    ///
-    /// TODO: extend with attributes to jump to specific control on settingspage.
-    /// </summary>
-    public abstract class SettingsPageReference
-    {
-    }
-
     /// <summary>
     /// Type may be a SettingsPage type or a IGitPlugin subclass type.
     /// </summary>

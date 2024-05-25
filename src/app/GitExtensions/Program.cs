@@ -171,7 +171,7 @@ namespace GitExtensions
                         {
                             if (!checkSettingsLogic.AutoSolveAllSettings() || !checklistSettingsPage.CheckSettings())
                             {
-                                uiCommands.StartSettingsDialog();
+                                uiCommands.StartSettingsDialog(owner: null);
                             }
                         }
                     }
