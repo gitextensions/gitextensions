@@ -756,7 +756,7 @@ namespace GitUI.CommandsDialogs
                 blameToolStripMenuItem.Checked = false;
             }
 
-            DiffContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
+            toolStripSeparatorScript.Visible = DiffContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void DiffContextMenu_Opening(object sender, CancelEventArgs e)
