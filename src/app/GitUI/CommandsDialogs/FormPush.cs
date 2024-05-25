@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        public FormPush(GitUICommands commands)
+        public FormPush(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

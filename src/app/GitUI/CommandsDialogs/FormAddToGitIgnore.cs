@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 using ResourceManager;
 
@@ -16,7 +17,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly bool _localExclude;
 
-        public FormAddToGitIgnore(GitUICommands commands, bool localExclude, params string[] filePatterns)
+        public FormAddToGitIgnore(IGitUICommands commands, bool localExclude, params string[] filePatterns)
             : base(commands)
         {
             _localExclude = localExclude;

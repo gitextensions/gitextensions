@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Git;
 using Microsoft;
 using ResourceManager;
 
@@ -15,7 +16,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
         private const int _maxShownCharsForName = 50;
         private const int _maxUsedCharsForName = 80;
 
-        public FormCommitTemplateSettings(GitUICommands commands)
+        public FormCommitTemplateSettings(IGitUICommands commands)
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 
 namespace GitUI
@@ -15,7 +16,7 @@ namespace GitUI
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> indicating position restore.</summary>
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
-        protected GitExtensionsDialog(GitUICommands? commands, bool enablePositionRestore)
+        protected GitExtensionsDialog(IGitUICommands? commands, bool enablePositionRestore)
             : base(commands, enablePositionRestore)
         {
             InitializeComponent();

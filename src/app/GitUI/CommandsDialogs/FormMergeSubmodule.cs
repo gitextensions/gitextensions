@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly string _filename;
 
-        public FormMergeSubmodule(GitUICommands commands, string filename)
+        public FormMergeSubmodule(IGitUICommands commands, string filename)
             : base(commands)
         {
             InitializeComponent();
@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs
         private void btCheckoutBranch_Click(object sender, EventArgs e)
         {
             ObjectId[] ids = new[] { ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text) };
-            GitUICommands submoduleCommands = UICommands.WithWorkingDirectory(Module.GetSubmoduleFullPath(_filename));
+            IGitUICommands submoduleCommands = UICommands.WithWorkingDirectory(Module.GetSubmoduleFullPath(_filename));
             if (!submoduleCommands.StartCheckoutBranch(this, ids))
             {
                 return;

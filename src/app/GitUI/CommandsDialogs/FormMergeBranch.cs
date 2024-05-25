@@ -2,6 +2,7 @@
 using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
@@ -19,7 +20,7 @@ namespace GitUI.CommandsDialogs
 
         /// <summary>Initializes <see cref="FormMergeBranch"/>.</summary>
         /// <param name="defaultBranch">Branch to merge into the current branch.</param>
-        public FormMergeBranch(GitUICommands commands, string? defaultBranch)
+        public FormMergeBranch(IGitUICommands commands, string? defaultBranch)
             : base(commands)
         {
             InitializeComponent();

@@ -395,13 +395,13 @@ namespace GitUI.LeftPanel
 
         public void StashSubmodule(IWin32Window owner, SubmoduleNode node)
         {
-            GitUICommands uiCmds = UICommands.WithWorkingDirectory(node.Info.Path);
+            IGitUICommands uiCmds = UICommands.WithWorkingDirectory(node.Info.Path);
             uiCmds.StashSave(owner, AppSettings.IncludeUntrackedFilesInManualStash);
         }
 
         public void CommitSubmodule(IWin32Window owner, SubmoduleNode node)
         {
-            GitUICommands submodulCommands = UICommands.WithWorkingDirectory(node.Info.Path.EnsureTrailingPathSeparator());
+            IGitUICommands submodulCommands = UICommands.WithWorkingDirectory(node.Info.Path.EnsureTrailingPathSeparator());
             submodulCommands.StartCommitDialog(owner);
         }
     }

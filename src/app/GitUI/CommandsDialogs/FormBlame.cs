@@ -1,4 +1,5 @@
-﻿using GitUIPluginInterfaces;
+﻿using GitExtensions.Extensibility.Git;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -7,7 +8,7 @@ namespace GitUI.CommandsDialogs
         public string FileName { get; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private FormBlame(GitUICommands commands)
+        private FormBlame(IGitUICommands commands)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             : base(commands)
         {
@@ -15,7 +16,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        public FormBlame(GitUICommands commands, string fileName, GitRevision? revision, int? initialLine = null)
+        public FormBlame(IGitUICommands commands, string fileName, GitRevision? revision, int? initialLine = null)
             : this(commands)
         {
             if (string.IsNullOrEmpty(fileName))

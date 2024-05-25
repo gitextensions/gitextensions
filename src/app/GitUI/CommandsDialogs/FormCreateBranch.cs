@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs
         public bool UserAbleToChangeRevision { get; set; } = true;
         public bool CouldBeOrphan { get; set; } = true;
 
-        public FormCreateBranch(GitUICommands commands, ObjectId? objectId, string? newBranchNamePrefix = null)
+        public FormCreateBranch(IGitUICommands commands, ObjectId? objectId, string? newBranchNamePrefix = null)
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();

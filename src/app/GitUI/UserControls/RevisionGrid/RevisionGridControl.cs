@@ -2934,6 +2934,16 @@ namespace GitUI
             item.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(command);
         }
 
+        private void ShowFormDiff(ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
+        {
+            FormDiff diffForm = new(UICommands, baseCommitSha, headCommitSha, baseCommitDisplayStr, headCommitDisplayStr)
+            {
+                ShowInTaskbar = true
+            };
+
+            diffForm.Show();
+        }
+
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GitRevision? headCommit = GetSelectedRevisionOrDefault();
@@ -2948,7 +2958,7 @@ namespace GitUI
                 Validates.NotNull(form.BranchName);
                 ObjectId baseCommit = Module.RevParse(form.BranchName);
                 Validates.NotNull(baseCommit);
-                UICommands.ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
+                ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
             }
         }
 
@@ -2966,7 +2976,7 @@ namespace GitUI
                 return;
             }
 
-            UICommands.ShowFormDiff(baseCommit.ObjectId, CurrentCheckout, baseCommit.Subject, CurrentBranch.Value);
+            ShowFormDiff(baseCommit.ObjectId, CurrentCheckout, baseCommit.Subject, CurrentBranch.Value);
         }
 
         private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2989,7 +2999,7 @@ namespace GitUI
                 return;
             }
 
-            UICommands.ShowFormDiff(_baseCommitToCompare.ObjectId, headCommit.ObjectId, _baseCommitToCompare.Subject, headCommit.Subject);
+            ShowFormDiff(_baseCommitToCompare.ObjectId, headCommit.ObjectId, _baseCommitToCompare.Subject, headCommit.Subject);
         }
 
         private void compareToWorkingDirectoryMenuItem_Click(object sender, EventArgs e)
@@ -3006,7 +3016,7 @@ namespace GitUI
                 return;
             }
 
-            UICommands.ShowFormDiff(baseCommit.ObjectId, ObjectId.WorkTreeId, baseCommit.Subject, "Working directory");
+            ShowFormDiff(baseCommit.ObjectId, ObjectId.WorkTreeId, baseCommit.Subject, "Working directory");
         }
 
         private void compareSelectedCommitsMenuItem_Click(object sender, EventArgs e)
@@ -3016,7 +3026,7 @@ namespace GitUI
             if (selected is not null && firstId is not null)
             {
                 string firstSubject = GetRevision(firstId)?.Subject ?? "";
-                UICommands.ShowFormDiff(firstId, selected.ObjectId, firstSubject, selected.Subject);
+                ShowFormDiff(firstId, selected.ObjectId, firstSubject, selected.Subject);
             }
             else
             {

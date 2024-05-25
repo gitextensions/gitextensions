@@ -6,14 +6,14 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormChooseCommit : GitModuleForm
     {
-        private FormChooseCommit(GitUICommands commands)
+        private FormChooseCommit(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
             InitializeComplete();
         }
 
-        public FormChooseCommit(GitUICommands commands, string? preselectCommit, bool showArtificial = false, bool showCurrentBranchOnly = false, string? lastRevisionToDisplayHash = null)
+        public FormChooseCommit(IGitUICommands commands, string? preselectCommit, bool showArtificial = false, bool showCurrentBranchOnly = false, string? lastRevisionToDisplayHash = null)
             : this(commands)
         {
             revisionGrid.MultiSelect = false;

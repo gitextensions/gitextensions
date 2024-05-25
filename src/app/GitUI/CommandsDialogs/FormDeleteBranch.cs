@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
         private string? _currentBranch;
         private HashSet<string>? _mergedBranches;
 
-        public FormDeleteBranch(GitUICommands commands, IEnumerable<string> defaultBranches)
+        public FormDeleteBranch(IGitUICommands commands, IEnumerable<string> defaultBranches)
             : base(commands, enablePositionRestore: false)
         {
             _defaultBranches = defaultBranches;

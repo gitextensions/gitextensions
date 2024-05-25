@@ -7,12 +7,12 @@ namespace GitUI.CommandsDialogs.Menus
 {
     internal abstract class ToolStripMenuItemEx : ToolStripMenuItem, ITranslate
     {
-        private Func<GitUICommands>? _getUICommands;
+        private Func<IGitUICommands>? _getUICommands;
 
         /// <summary>
         ///  Gets the current instance of the UI commands.
         /// </summary>
-        protected GitUICommands UICommands
+        protected IGitUICommands UICommands
             => (_getUICommands ?? throw new InvalidOperationException("The button is not initialized"))();
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs.Menus
         ///  Initializes the menu item.
         /// </summary>
         /// <param name="getUICommands">The method that returns the current instance of UI commands.</param>
-        public void Initialize(Func<GitUICommands> getUICommands)
+        public void Initialize(Func<IGitUICommands> getUICommands)
         {
             Translator.Translate(this, AppSettings.CurrentTranslation);
 

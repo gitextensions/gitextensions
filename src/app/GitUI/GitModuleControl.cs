@@ -73,7 +73,7 @@ namespace GitUI
         ///  Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.
         /// </summary>
         [Browsable(false)]
-        public GitUICommands UICommands => UICommandsSource.UICommands;
+        public IGitUICommands UICommands => UICommandsSource.UICommands;
 
         IGitUICommands IGitModuleControl.UICommands => UICommandsSource.UICommands;
 
@@ -86,7 +86,7 @@ namespace GitUI
         /// <para>By contrast, the <see cref="UICommands"/> property attempts to initialise
         /// the value if not previously initialised.</para>
         /// </remarks>
-        internal bool TryGetUICommandsDirect([NotNullWhen(returnValue: true)] out GitUICommands? commands)
+        internal bool TryGetUICommandsDirect([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
         {
             commands = _uiCommandsSource?.UICommands;
             return commands is not null;

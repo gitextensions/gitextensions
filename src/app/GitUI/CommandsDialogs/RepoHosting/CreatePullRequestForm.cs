@@ -1,6 +1,6 @@
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
-using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly AsyncLoader _remoteLoader = new();
         private bool _ignoreFirstRemoteLoading = true;
 
-        public CreatePullRequestForm(GitUICommands commands, IRepositoryHostPlugin repoHost, string? chooseRemote, string? chooseBranch)
+        public CreatePullRequestForm(IGitUICommands commands, IRepositoryHostPlugin repoHost, string? chooseRemote, string? chooseBranch)
             : base(commands)
         {
             _repoHost = repoHost;

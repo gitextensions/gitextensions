@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<IGitRef>? _localBranches;
         private IReadOnlyList<IGitRef>? _remoteBranches;
 
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId>? containRevisions = null)
+        public FormCheckoutBranch(IGitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId>? containRevisions = null)
             : base(commands, true)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();

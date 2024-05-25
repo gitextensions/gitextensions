@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs
         private bool _isDirtyDir;
         private int _lastHitRowIndex;
 
-        public FormReflog(GitUICommands uiCommands)
+        public FormReflog(IGitUICommands uiCommands)
             : base(uiCommands)
         {
             InitializeComponent();

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -25,7 +26,7 @@ namespace GitUI.CommandsDialogs
         public string GitAttributesFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;
 
-        public FormGitAttributes(GitUICommands commands)
+        public FormGitAttributes(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

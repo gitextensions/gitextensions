@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         [GeneratedRegex(@"^a/([^\n]+) b/(?<name>[^\n]+)\s*(?<value>.*)$", RegexOptions.Singleline | RegexOptions.ExplicitCapture)]
         private static partial Regex FilePartRegex();
 
-        public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)
+        public ViewPullRequestsForm(IGitUICommands commands, IRepositoryHostPlugin gitHoster)
             : base(commands)
         {
             _gitHoster = gitHoster;

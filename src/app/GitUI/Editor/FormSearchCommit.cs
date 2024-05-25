@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
 
@@ -6,7 +7,7 @@ public partial class FormSearchCommit : GitExtensionsDialog
 {
     private bool _hasLoaded = false;
 
-    public FormSearchCommit(GitUICommands commands)
+    public FormSearchCommit(IGitUICommands commands)
             : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();

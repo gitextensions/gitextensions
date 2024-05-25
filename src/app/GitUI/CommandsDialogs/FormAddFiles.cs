@@ -1,10 +1,11 @@
-﻿using GitUI.HelperDialogs;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI.HelperDialogs;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormAddFiles : GitModuleForm
     {
-        public FormAddFiles(GitUICommands commands, string? addFile = null)
+        public FormAddFiles(IGitUICommands commands, string? addFile = null)
             : base(commands)
         {
             InitializeComponent();

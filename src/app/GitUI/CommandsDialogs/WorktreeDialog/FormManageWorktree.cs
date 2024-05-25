@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using Microsoft;
@@ -19,7 +20,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         public bool ShouldRefreshRevisionGrid { get; private set; }
 
-        public FormManageWorktree(GitUICommands commands)
+        public FormManageWorktree(IGitUICommands commands)
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();

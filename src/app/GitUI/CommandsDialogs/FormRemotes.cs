@@ -99,7 +99,7 @@ Inactive remote is completely invisible to git.");
         private IList<Repository> _repositoryHistory;
         #endregion
 
-        public FormRemotes(GitUICommands commands)
+        public FormRemotes(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

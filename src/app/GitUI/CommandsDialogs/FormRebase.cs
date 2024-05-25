@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
         private readonly string? _defaultToBranch;
         private readonly bool _startRebaseImmediately;
 
-        public FormRebase(GitUICommands commands, string? defaultBranch)
+        public FormRebase(IGitUICommands commands, string? defaultBranch)
             : base(commands, enablePositionRestore: false)
         {
             _defaultBranch = defaultBranch;
@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        public FormRebase(GitUICommands commands, string? from, string? to, string? defaultBranch, bool interactive = false, bool startRebaseImmediately = true)
+        public FormRebase(IGitUICommands commands, string? from, string? to, string? defaultBranch, bool interactive = false, bool startRebaseImmediately = true)
             : this(commands, defaultBranch)
         {
             txtFrom.Text = from;

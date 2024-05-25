@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using ResourceManager;
@@ -45,7 +46,7 @@ namespace GitUI.CommandsDialogs
 
         private static readonly List<PatchFile> Skipped = [];
 
-        public FormApplyPatch(GitUICommands commands)
+        public FormApplyPatch(IGitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

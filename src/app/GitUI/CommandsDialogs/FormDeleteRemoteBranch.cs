@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
         private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
         private HashSet<string> _mergedBranches;
 
-        public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch)
+        public FormDeleteRemoteBranch(IGitUICommands commands, string defaultRemoteBranch)
             : base(commands, enablePositionRestore: false)
         {
             _taskManager.FileAndForget(() => _mergedBranches = Module.GetMergedRemoteBranches().ToHashSet());

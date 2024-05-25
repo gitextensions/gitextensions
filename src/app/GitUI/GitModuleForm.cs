@@ -11,12 +11,12 @@ namespace GitUI
 {
     // NOTE do not make this class abstract as it breaks the WinForms designer in VS
 
-    /// <summary>Base <see cref="Form"/> that provides access to <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
+    /// <summary>Base <see cref="Form"/> that provides access to <see cref="GitModule"/> and <see cref="IGitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModuleForm
     {
         private IHotkeySettingsLoader? _hotkeySettingsLoader;
         private IScriptsRunner? _scriptsRunner;
-        private GitUICommands? _uiCommands;
+        private IGitUICommands? _uiCommands;
 
         /// <inheritdoc />
         public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged;
@@ -40,7 +40,7 @@ namespace GitUI
 
         /// <inheritdoc />
         [Browsable(false)]
-        public GitUICommands UICommands
+        public IGitUICommands UICommands
         {
             get
             {
@@ -55,7 +55,7 @@ namespace GitUI
             {
                 ArgumentNullException.ThrowIfNull(value);
 
-                GitUICommands oldCommands = _uiCommands;
+                IGitUICommands oldCommands = _uiCommands;
                 _uiCommands = value;
 
                 _hotkeySettingsLoader = _uiCommands.GetRequiredService<IHotkeySettingsLoader>();
@@ -71,8 +71,6 @@ namespace GitUI
         [Browsable(false)]
         public IGitModule Module => UICommands.Module;
 
-        IGitUICommands IGitModuleForm.UICommands => UICommands;
-
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         protected GitModuleForm()
         {
@@ -83,7 +81,7 @@ namespace GitUI
             }
         }
 
-        protected GitModuleForm(GitUICommands? commands, bool enablePositionRestore)
+        protected GitModuleForm(IGitUICommands? commands, bool enablePositionRestore)
             : base(enablePositionRestore)
         {
             if (commands is null && _uiCommands is null)
@@ -99,7 +97,7 @@ namespace GitUI
             DiagnosticsClient.TrackPageView(GetType().FullName);
         }
 
-        protected GitModuleForm([NotNull] GitUICommands commands)
+        protected GitModuleForm([NotNull] IGitUICommands commands)
             : this(commands, enablePositionRestore: true)
         {
         }
