@@ -585,5 +585,11 @@ namespace GitUI.CommandsDialogs
                 }
             }
         }
+
+        protected override bool ProcessKeyPreview(ref Message msg)
+        {
+            // Check if keyboard shortcut is one provided by the contextual menu
+            return mnuLostObjects.PreProcessMessage(ref msg) || base.ProcessKeyPreview(ref msg);
+        }
     }
 }
