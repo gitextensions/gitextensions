@@ -286,10 +286,11 @@ namespace GitUI.CommandsDialogs
 
             _previewedItem = CurrentItem;
 
-            string content = Module.ShowObject(_previewedItem.ObjectId, returnRaw: _previewedItem.ObjectType == LostObjectType.Blob) ?? "";
+            string content = GetLostObjectContent(_previewedItem);
             if (_previewedItem.ObjectType == LostObjectType.Commit || _previewedItem.ObjectType == LostObjectType.Tag)
             {
-                fileViewer.InvokeAndForget(() => fileViewer.ViewFixedPatchAsync("commit.patch", content, openWithDifftool: null));
+                _defaultFilename = "commit.patch";
+                fileViewer.InvokeAndForget(() => fileViewer.ViewFixedPatchAsync(_defaultFilename, content, openWithDifftool: null));
             }
             else if (_previewedItem.ObjectType == LostObjectType.Blob)
             {
@@ -298,7 +299,8 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync("file.txt", content, openWithDifftool: null));
+                _defaultFilename = "file.txt";
+                fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync(_defaultFilename, content, openWithDifftool: null));
             }
         }
 
@@ -370,7 +372,7 @@ namespace GitUI.CommandsDialogs
                     _typeDetected = true;
                     foreach (LostObject item in _lostObjects.Where(o => o.ObjectType == LostObjectType.Blob))
                     {
-                        string content = Module.ShowObject(item.ObjectId, returnRaw: item.ObjectType == LostObjectType.Blob) ?? "";
+                        string content = GetLostObjectContent(item);
                         item.RawType += $" ({_seemingly.Text}: {GuessFileTypeWithContent(content)})";
                     }
 
@@ -397,6 +399,9 @@ namespace GitUI.CommandsDialogs
             return (ShowCommitsAndTags.Checked && (lostObject.ObjectType == LostObjectType.Commit || lostObject.ObjectType == LostObjectType.Tag))
                 || (ShowOtherObjects.Checked && (lostObject.ObjectType != LostObjectType.Commit && lostObject.ObjectType != LostObjectType.Tag));
         }
+
+        private string GetLostObjectContent(LostObject item)
+            => Module.ShowObject(item.ObjectId, returnRaw: item.ObjectType == LostObjectType.Blob) ?? "";
 
         private string GetOptions()
         {
@@ -428,11 +433,11 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            string? obj = Module.ShowObject(currentItem.ObjectId, returnRaw: _previewedItem.ObjectType == LostObjectType.Blob);
+            string obj = GetLostObjectContent(currentItem);
 
-            if (obj is not null)
+            if (!string.IsNullOrEmpty(obj))
             {
-                using FormEdit frm = new(UICommands, obj);
+                using FormEdit frm = new(UICommands, obj, _defaultFilename);
                 frm.IsReadOnly = true;
                 frm.ShowDialog(this);
             }
