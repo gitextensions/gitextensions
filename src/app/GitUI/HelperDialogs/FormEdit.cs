@@ -4,12 +4,12 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormEdit : GitModuleForm
     {
-        public FormEdit(IGitUICommands commands, string text)
+        public FormEdit(IGitUICommands commands, string text, string filename = "")
             : base(commands)
         {
             InitializeComponent();
             InitializeComplete();
-            Viewer.InvokeAndForget(() => Viewer.ViewTextAsync("", text));
+            Viewer.InvokeAndForget(() => Viewer.ViewTextAsync(filename, text));
             Viewer.IsReadOnly = false;
         }
 
