@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using Git.hub;
-using GitUIPluginInterfaces.RepositoryHosts;
+using GitExtensions.Extensibility.Plugins;
 
 namespace GitExtensions.Plugins.GitHub3
 {

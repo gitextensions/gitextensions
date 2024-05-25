@@ -1,6 +1,6 @@
 ﻿using GitCommands;
-using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

@@ -1,6 +1,7 @@
 ﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
 
@@ -14,8 +15,8 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         // Created once for each test
         private GitUICommands _commands;
-        private AppSettings.PullAction _originalDefaultPullAction;
-        private AppSettings.PullAction _originalFormPullAction;
+        private GitPullAction _originalDefaultPullAction;
+        private GitPullAction _originalFormPullAction;
         private bool _originalAutoStash;
 
         [SetUp]
@@ -58,7 +59,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 },
                 null, null,
                 //// select an action different from Merge
-                AppSettings.PullAction.FetchAll);
+                GitPullAction.FetchAll);
         }
 
         [Test]
@@ -76,7 +77,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 },
                 null, null,
                 //// select an action different from Rebase
-                AppSettings.PullAction.FetchAll);
+                GitPullAction.FetchAll);
         }
 
         [Test]
@@ -94,20 +95,20 @@ namespace GitExtensions.UITests.CommandsDialogs
                 },
                 null, null,
                 //// select an action different from None/fetch
-                AppSettings.PullAction.Merge);
+                GitPullAction.Merge);
         }
 
-        [TestCase(AppSettings.PullAction.None, true, false, false, false, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Merge, true, false, false, false, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Rebase, false, false, false, true, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Fetch, false, false, false, false, true, false, true, true)]
-        [TestCase(AppSettings.PullAction.FetchAll, false, false, false, false, true, false, true, true)]
-        [TestCase(AppSettings.PullAction.FetchPruneAll, false, true, false, false, true, false, true, true)]
-        public void Should_correctly_setup_for_defined_pull_action(AppSettings.PullAction pullAction,
+        [TestCase(GitPullAction.None, true, false, false, false, false, false, false, false)]
+        [TestCase(GitPullAction.Merge, true, false, false, false, false, false, false, false)]
+        [TestCase(GitPullAction.Rebase, false, false, false, true, false, false, false, false)]
+        [TestCase(GitPullAction.Fetch, false, false, false, false, true, false, true, true)]
+        [TestCase(GitPullAction.FetchAll, false, false, false, false, true, false, true, true)]
+        [TestCase(GitPullAction.FetchPruneAll, false, true, false, false, true, false, true, true)]
+        public void Should_correctly_setup_for_defined_pull_action(GitPullAction pullAction,
             bool mergeChecked, bool pruneRemoteBranches, bool pruneRemoteBranchesAndTags, bool rebaseChecked, bool fetchChecked, bool autoStashChecked, bool pruneRemoteBranchesEnabled, bool pruneRemoteBranchesAndTagsEnabled)
         {
-            AppSettings.PullAction defaultPullAction = AppSettings.DefaultPullAction;
-            AppSettings.DefaultPullAction = AppSettings.PullAction.Merge;
+            GitPullAction defaultPullAction = AppSettings.DefaultPullAction;
+            AppSettings.DefaultPullAction = GitPullAction.Merge;
             RunFormTest(
                 form =>
                 {
@@ -133,13 +134,13 @@ namespace GitExtensions.UITests.CommandsDialogs
                 null, null, pullAction);
         }
 
-        [TestCase(AppSettings.PullAction.None, true, false, false, false, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Merge, true, false, false, false, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Rebase, false, false, false, true, false, false, false, false)]
-        [TestCase(AppSettings.PullAction.Fetch, false, false, false, false, true, false, true, true)]
-        [TestCase(AppSettings.PullAction.FetchAll, false, false, false, false, true, false, true, true)]
-        [TestCase(AppSettings.PullAction.FetchPruneAll, false, true, false, false, true, false, true, true)]
-        public void Should_use_user_DefaultPullAction_pull_action_None(AppSettings.PullAction pullAction,
+        [TestCase(GitPullAction.None, true, false, false, false, false, false, false, false)]
+        [TestCase(GitPullAction.Merge, true, false, false, false, false, false, false, false)]
+        [TestCase(GitPullAction.Rebase, false, false, false, true, false, false, false, false)]
+        [TestCase(GitPullAction.Fetch, false, false, false, false, true, false, true, true)]
+        [TestCase(GitPullAction.FetchAll, false, false, false, false, true, false, true, true)]
+        [TestCase(GitPullAction.FetchPruneAll, false, true, false, false, true, false, true, true)]
+        public void Should_use_user_DefaultPullAction_pull_action_None(GitPullAction pullAction,
             bool mergeChecked, bool pruneRemoteBranches, bool pruneRemoteBranchesAndTags, bool rebaseChecked, bool fetchChecked, bool autoStashChecked, bool pruneRemoteBranchesEnabled, bool pruneRemoteBranchesAndTagsEnabled)
         {
             AppSettings.DefaultPullAction = pullAction;
@@ -159,13 +160,13 @@ namespace GitExtensions.UITests.CommandsDialogs
                     accessor.PruneTags.Enabled.Should().Be(pruneRemoteBranchesAndTagsEnabled);
                     accessor.Remotes.Text.Should().Be("[ All ]");
                 },
-                null, null, AppSettings.PullAction.None);
+                null, null, GitPullAction.None);
         }
 
-        [TestCase(true, false, false, AppSettings.PullAction.Merge)]
-        [TestCase(false, true, false, AppSettings.PullAction.Rebase)]
-        [TestCase(false, false, true, AppSettings.PullAction.Fetch)]
-        public void Should_remember_user_choice_upon_pull(bool mergeChecked, bool rebaseChecked, bool fetchChecked, AppSettings.PullAction expectedFormPullAction)
+        [TestCase(true, false, false, GitPullAction.Merge)]
+        [TestCase(false, true, false, GitPullAction.Rebase)]
+        [TestCase(false, false, true, GitPullAction.Fetch)]
+        public void Should_remember_user_choice_upon_pull(bool mergeChecked, bool rebaseChecked, bool fetchChecked, GitPullAction expectedFormPullAction)
         {
             RunFormTest(
                 form =>
@@ -182,7 +183,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 },
                 null, null,
                 //// select an action different from None/fetch
-                AppSettings.PullAction.Merge);
+                GitPullAction.Merge);
         }
 
         [TestCase(false)]
@@ -201,10 +202,10 @@ namespace GitExtensions.UITests.CommandsDialogs
                 },
                 null, null,
                 //// select an action different from None/fetch
-                AppSettings.PullAction.Merge);
+                GitPullAction.Merge);
         }
 
-        private void RunFormTest(Action<FormPull> testDriver, string remoteBranch, string remote, AppSettings.PullAction pullAction)
+        private void RunFormTest(Action<FormPull> testDriver, string remoteBranch, string remote, GitPullAction pullAction)
         {
             RunFormTest(
                 form =>
@@ -215,7 +216,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 remoteBranch, remote, pullAction);
         }
 
-        private void RunFormTest(Func<FormPull, Task> testDriverAsync, string remoteBranch, string remote, AppSettings.PullAction pullAction)
+        private void RunFormTest(Func<FormPull, Task> testDriverAsync, string remoteBranch, string remote, GitPullAction pullAction)
         {
             UITest.RunForm(
                 () =>

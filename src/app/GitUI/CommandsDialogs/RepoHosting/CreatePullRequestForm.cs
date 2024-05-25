@@ -1,5 +1,5 @@
 using GitCommands;
-using GitUIPluginInterfaces.RepositoryHosts;
+using GitExtensions.Extensibility.Plugins;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 

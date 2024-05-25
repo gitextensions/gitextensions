@@ -451,7 +451,7 @@ Inactive remote is completely invisible to git.");
                 {
                     UICommands.StartPullDialogAndPullImmediately(
                         remote: remote,
-                        pullAction: AppSettings.PullAction.Fetch);
+                        pullAction: GitPullAction.Fetch);
                     _remotesManager.ConfigureRemotes(remote);
                     UICommands.RepoChangedNotifier.Notify();
                 }

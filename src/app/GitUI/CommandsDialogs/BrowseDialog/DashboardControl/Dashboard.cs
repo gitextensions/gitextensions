@@ -1,6 +1,6 @@
 ﻿using GitCommands;
-using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                             CreateLink(panel, _openRepository.Text, Images.RepoOpen, openItem_Click);
                             Control lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
 
-                            foreach (GitUIPluginInterfaces.RepositoryHosts.IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
+                            foreach (IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
                             {
                                 lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Name), Images.CloneRepoGitHub,
                                     (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));

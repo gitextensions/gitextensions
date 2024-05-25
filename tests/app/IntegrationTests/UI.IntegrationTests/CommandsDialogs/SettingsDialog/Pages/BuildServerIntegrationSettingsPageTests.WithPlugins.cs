@@ -1,6 +1,7 @@
 ﻿using CommonTestUtils;
 using CommonTestUtils.MEF;
 using GitCommands;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.UITests;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;

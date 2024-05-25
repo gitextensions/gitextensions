@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog
+﻿using GitExtensions.Extensibility.Settings;
+
+namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public interface ISettingsPageHost
     {

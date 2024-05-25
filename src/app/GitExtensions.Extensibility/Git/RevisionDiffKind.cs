@@ -1,4 +1,4 @@
-namespace GitUI
+namespace GitExtensions.Extensibility.Git
 {
     public enum RevisionDiffKind
     {

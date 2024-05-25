@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.Menus;
 
 namespace GitUI.CommandsDialogs
@@ -759,7 +760,7 @@ namespace GitUI.CommandsDialogs
             // 
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(43, 19);
-            fileToolStripMenuItem.GitModuleChanged += new System.EventHandler<GitCommands.Git.GitModuleEventArgs>(SetGitModule);
+            fileToolStripMenuItem.GitModuleChanged += new System.EventHandler<GitModuleEventArgs>(SetGitModule);
             fileToolStripMenuItem.RecentRepositoriesCleared += fileToolStripMenuItem_RecentRepositoriesCleared;
             // 
             // closeToolStripMenuItem

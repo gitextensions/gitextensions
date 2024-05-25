@@ -1,6 +1,4 @@
-using GitExtensions.Extensibility.Git;
-
-namespace GitCommands.Git
+namespace GitExtensions.Extensibility.Git
 {
     public sealed class GitModuleEventArgs : EventArgs
     {

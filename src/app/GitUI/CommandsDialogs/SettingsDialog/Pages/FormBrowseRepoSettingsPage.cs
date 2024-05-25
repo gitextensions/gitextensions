@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtensions.Extensibility.Settings;
 using GitUI.Shells;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

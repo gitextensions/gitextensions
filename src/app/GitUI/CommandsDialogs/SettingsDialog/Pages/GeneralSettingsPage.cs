@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -36,12 +38,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var pullActions = new[]
             {
-                new { Key = _openPullDialog, Value = AppSettings.PullAction.None },
-                new { Key = _pullMerge, Value = AppSettings.PullAction.Merge },
-                new { Key = _pullRebase, Value = AppSettings.PullAction.Rebase },
-                new { Key = _fetch, Value = AppSettings.PullAction.Fetch },
-                new { Key = _fetchAll, Value = AppSettings.PullAction.FetchAll },
-                new { Key = _fetchAndPruneAll, Value = AppSettings.PullAction.FetchPruneAll },
+                new { Key = _openPullDialog, Value = GitPullAction.None },
+                new { Key = _pullMerge, Value = GitPullAction.Merge },
+                new { Key = _pullRebase, Value = GitPullAction.Rebase },
+                new { Key = _fetch, Value = GitPullAction.Fetch },
+                new { Key = _fetchAll, Value = GitPullAction.FetchAll },
+                new { Key = _fetchAndPruneAll, Value = GitPullAction.FetchPruneAll },
             };
             cboDefaultPullAction.DisplayMember = "Key";
             cboDefaultPullAction.ValueMember = "Value";
@@ -90,8 +92,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
             cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath;
             cboDefaultPullAction.SelectedValue
-                = AppSettings.DefaultPullAction != AppSettings.PullAction.Default ?
-                  AppSettings.DefaultPullAction : AppSettings.PullAction.None;
+                = AppSettings.DefaultPullAction != GitPullAction.Default ?
+                  AppSettings.DefaultPullAction : GitPullAction.None;
             chkFollowRenamesInFileHistoryExact.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly;
             SetSubmoduleStatus();
 
@@ -119,7 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowSubmoduleStatus = chkShowSubmoduleStatusInBrowse.Checked;
 
             AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
-            AppSettings.DefaultPullAction = (AppSettings.PullAction)cboDefaultPullAction.SelectedValue;
+            AppSettings.DefaultPullAction = (GitPullAction)cboDefaultPullAction.SelectedValue;
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
 
             AppSettings.TelemetryEnabled = chkTelemetry.Checked;

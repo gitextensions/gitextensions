@@ -1,5 +1,4 @@
-﻿using GitCommands.Git;
-using GitCommands.UserRepositoryHistory;
+﻿using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;

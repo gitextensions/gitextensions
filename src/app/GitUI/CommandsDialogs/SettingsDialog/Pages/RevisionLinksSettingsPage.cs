@@ -1,5 +1,6 @@
 ﻿using GitCommands.ExternalLinks;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 using Microsoft;
