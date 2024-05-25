@@ -400,6 +400,7 @@
             // 
             saveAsToolStripMenuItem.Image = Properties.Images.SaveAs;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            saveAsToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.S)));
             saveAsToolStripMenuItem.Size = new Size(189, 22);
             saveAsToolStripMenuItem.Text = "Save as...";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
