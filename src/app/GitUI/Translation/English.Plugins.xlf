@@ -743,6 +743,10 @@ Are you sure you want to continue?</source>
         <source>Enable commit message issue helper</source>
         <target />
       </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target />

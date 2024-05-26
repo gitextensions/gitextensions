@@ -87,7 +87,7 @@ namespace GitExtensions.Plugins.GitHub3
         public readonly StringSetting GitHubHost = new("GitHub (Enterprise) hostname", "github.com");
         public readonly StringSetting PersonalAccessToken = new("OAuth Token", "Personal Access Token", "");
         private readonly BoolSetting _issueCommitMessageHelperEnabled = new("IssueCommitMessageHelperEnabled", "Enable commit message issue helper", true);
-        private readonly NumberSetting<int> _issueCommitMessageHelperMaxCount = new("IssueCommitMessageHelperMaxCount", "Maximum number of issue retrieved", 10);
+        private readonly NumberSetting<int> _issueCommitMessageHelperMaxCount = new("IssueCommitMessageHelperMaxCount", "Maximum number of issues retrieved", 10);
         public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
         public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
