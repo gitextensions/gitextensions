@@ -89,7 +89,7 @@ namespace GitExtensions.Plugins.GitHub3
 
         public IReadOnlyList<IPullRequestInformation> GetPullRequests()
         {
-            IList<PullRequest> pullRequests = _repo?.GetPullRequests();
+            IReadOnlyList<PullRequest> pullRequests = _repo?.GetPullRequests();
 
             if (pullRequests is not null)
             {

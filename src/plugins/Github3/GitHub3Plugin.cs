@@ -7,6 +7,8 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.GitHub3.Properties;
+using GitUI;
+using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
 using ResourceManager;
@@ -67,7 +69,8 @@ namespace GitExtensions.Plugins.GitHub3
 
     [Export(typeof(IGitPlugin))]
     [Export(typeof(IRepositoryHostPlugin))]
-    public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
+    [Export(typeof(IGitPluginForCommit))]
+    public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginForCommit
     {
         private readonly TranslationString _viewInWebSite = new("View in {0}");
         private readonly TranslationString _tokenAlreadyExist = new("You already have an personal access token. To get a new one, delete your old one in Plugins > Plugin Settings first.");
@@ -75,11 +78,16 @@ namespace GitExtensions.Plugins.GitHub3
         private readonly TranslationString _manageToken = new("Manage GitHub personal access token");
         private readonly TranslationString _openLinkFailed = new("Fail to open the link. Reason: ");
         private readonly TranslationString _noteRestartNeeded = new("Note: Git Extensions need to be restarted so that the token is taken into account.");
+        private readonly TranslationString _noTokenError = new("No GitHub personal access token (PAT) defined");
+        private readonly TranslationString _noAssignedIssues = new("No assigned GitHub issues found");
+        private readonly TranslationString _error = new("Error");
 
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
         public readonly StringSetting GitHubHost = new("GitHub (Enterprise) hostname", "github.com");
         public readonly StringSetting PersonalAccessToken = new("OAuth Token", "Personal Access Token", "");
+        private readonly BoolSetting _issueCommitMessageHelperEnabled = new("IssueCommitMessageHelperEnabled", "Enable commit message issue helper", true);
+        private readonly NumberSetting<int> _issueCommitMessageHelperMaxCount = new("IssueCommitMessageHelperMaxCount", "Maximum number of issues retrieved", 10);
         public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
         public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
@@ -90,6 +98,7 @@ namespace GitExtensions.Plugins.GitHub3
 
         private IGitUICommands? _currentGitUiCommands;
         private IReadOnlyList<IHostedRemote>? _hostedRemotesForModule;
+        private List<string> _currentMessages = new();
 
         public GitHub3Plugin() : base(true)
         {
@@ -115,6 +124,10 @@ namespace GitExtensions.Plugins.GitHub3
             yield return new PseudoSetting(manageTokenLink);
 
             yield return new PseudoSetting(_noteRestartNeeded.Text);
+
+            yield return _issueCommitMessageHelperEnabled;
+
+            yield return _issueCommitMessageHelperMaxCount;
         }
 
         private void GenerateTokenLink_Click(object sender, EventArgs e)
@@ -146,6 +159,80 @@ namespace GitExtensions.Plugins.GitHub3
             {
                 GitHub.setOAuth2Token(GitHubLoginInfo.OAuthToken);
             }
+
+            gitUiCommands.PreCommit += GitUiCommands_PreCommit;
+            gitUiCommands.PostCommit += GitUiCommands_PostCommit;
+        }
+
+        private void GitUiCommands_PreCommit(object? sender, GitUIEventArgs e)
+        {
+            if (!_issueCommitMessageHelperEnabled.ValueOrDefault(Settings))
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
+            {
+                e.GitUICommands.AddCommitTemplate(_noTokenError.Text, () => string.Empty, Icon);
+                return;
+            }
+
+            ThreadHelper.FileAndForget(async () =>
+            {
+                IHostedRemote[] hostedRemotes = GetHostedRemotes().ToArray();
+                if (hostedRemotes.Length == 0)
+                {
+                    return;
+                }
+
+                IReadOnlyList<Issue> issues = _gitHub.GetAssignedIssues();
+
+                if (issues?.All(i => i.Number == 0) ?? true)
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    e.GitUICommands.AddCommitTemplate(_noAssignedIssues.Text, () => string.Empty, Icon);
+                    return;
+                }
+
+                Issue[] recentUserIssues = issues.Where(i => i.Number != 0 && hostedRemotes.Any(r => r.Owner == i.Repository.Owner.Login && r.RemoteRepositoryName == i.Repository.Name))
+                                                            .OrderByDescending(i => i.UpdatedAt)
+                                                            .Take(_issueCommitMessageHelperMaxCount.ValueOrDefault(Settings))
+                                                            .ToArray();
+
+                bool multipleRemotes = hostedRemotes.Length > 1;
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                foreach (Issue issue in recentUserIssues)
+                {
+                    string remoteData = multipleRemotes ? $" ({issue.Repository.Owner.Login}/{issue.Repository.Name})" : string.Empty;
+                    string key = $"{issue.Number}: {issue.Title}{remoteData}";
+                    _currentMessages.Add(key);
+                    e.GitUICommands.AddCommitTemplate(key, () => GetIssueDescription(issue), Icon);
+                }
+
+                string GetIssueDescription(Issue issue)
+                    => $"""
+
+                        Fixes #{issue.Number} : {issue.Title}
+
+                        {issue.Body}
+
+                        """;
+            });
+        }
+
+        private void GitUiCommands_PostCommit(object sender, GitUIEventArgs e)
+        {
+            if (_currentMessages.Count == 0)
+            {
+                return;
+            }
+
+            foreach (string key in _currentMessages)
+            {
+                e.GitUICommands.RemoveCommitTemplate(key);
+            }
+
+            _currentMessages.Clear();
         }
 
         public override bool Execute(GitUIEventArgs args)
@@ -156,7 +243,7 @@ namespace GitExtensions.Plugins.GitHub3
             }
             else
             {
-                MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return false;

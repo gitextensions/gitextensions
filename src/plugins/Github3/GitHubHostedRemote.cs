@@ -1,7 +1,9 @@
-﻿using GitUIPluginInterfaces.RepositoryHosts;
+﻿using System.Diagnostics;
+using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitExtensions.Plugins.GitHub3
 {
+    [DebuggerDisplay("{Data}")]
     internal class GitHubHostedRemote : IHostedRemote
     {
         private GitHubRepo? _repo;
