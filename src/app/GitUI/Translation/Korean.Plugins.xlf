@@ -12,6 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>서브모듈 자동 컴파일</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -951,6 +952,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
+        <target>토큰 관리 페이지로 이동</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -959,10 +961,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
+        <target>Api 토큰</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
+        <target>프로젝트 ID</target>
         
       </trans-unit>
     </body>
@@ -1168,6 +1172,11 @@ Do you want to reset the configured path?</source>
       <trans-unit id="JiraFieldsLabel.Text">
         <source>Jira fields</source>
         <target>Jira 필드</target>
+        
+      </trans-unit>
+      <trans-unit id="JiraPluginConfigurationErrorText.Text">
+        <source>Jira plugin configuration incomplete!</source>
+        <target>Jira 플러그인 구성이 완료되지 않았습니다!</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">

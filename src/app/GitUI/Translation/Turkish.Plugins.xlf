@@ -1180,6 +1180,10 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
         <target>Jira alanları</target>
         
       </trans-unit>
+      <trans-unit id="JiraPluginConfigurationErrorText.Text">
+        <source>Jira plugin configuration incomplete!</source>
+        
+      </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
         <target>Önizleme</target>

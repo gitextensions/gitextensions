@@ -12,6 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>Compiler automatiquement les sous-modules</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -864,6 +865,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
+        <target>Un bon modèle de gestion de branches pour Git...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -911,6 +913,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>Note : Git Extensions doit être redémarré afin que le jeton soit pris en compte.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -920,6 +923,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
+        <target>Vous avez déjà un jeton d'accès personnel. Pour en obtenir un nouveau, effacez d'abord l'ancien depuis &quot;Extensions &gt; Paramètres des extensions&quot;</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -942,26 +946,32 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
+        <target>Obtenir un ID de projet de la part du serveur</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>Échec lors de l'obtention d'un projet depuis le serveur. Essayez d'indiquer un jeton d'API valide, et vérifiez l'URL de l'instance.</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
+        <target>Aller à la page de gestion des jetons d'API</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
+        <target>URL de l'instance</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
+        <target>Jeton API</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
+        <target>ID du projet</target>
         
       </trans-unit>
     </body>
@@ -1170,6 +1180,11 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>Champs Jira</target>
         
       </trans-unit>
+      <trans-unit id="JiraPluginConfigurationErrorText.Text">
+        <source>Jira plugin configuration incomplete!</source>
+        <target>Configuration du module Jira incomplète !</target>
+        
+      </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
         <target>Prévisualisation</target>
@@ -1187,6 +1202,7 @@ Voulez-vous réinitialiser le chemin configuré?</target>
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
         <source>Auth type</source>
+        <target>Type d'authentification</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

@@ -1180,6 +1180,10 @@ Do you want to reset the configured path?</source>
         <target>Jira 字段</target>
         
       </trans-unit>
+      <trans-unit id="JiraPluginConfigurationErrorText.Text">
+        <source>Jira plugin configuration incomplete!</source>
+        
+      </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
         <target>预览</target>

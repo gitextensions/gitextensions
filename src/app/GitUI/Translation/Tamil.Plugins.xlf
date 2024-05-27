@@ -1174,6 +1174,10 @@ Do you want to reset the configured path?</source>
         <target>சிரா புலங்கள்</target>
         
       </trans-unit>
+      <trans-unit id="JiraPluginConfigurationErrorText.Text">
+        <source>Jira plugin configuration incomplete!</source>
+        
+      </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
         <target>முன்னோட்டம்</target>

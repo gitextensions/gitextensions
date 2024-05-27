@@ -1179,6 +1179,11 @@ Do you want to reset the configured path?</source>
         <target>Jiraフィールド</target>
         
       </trans-unit>
+      <trans-unit id="JiraPluginConfigurationErrorText.Text">
+        <source>Jira plugin configuration incomplete!</source>
+        <target>Jira プラグインの構成が不完全です。</target>
+        
+      </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
         <target>プレビュー</target>

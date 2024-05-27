@@ -1,4 +1,6 @@
 Push-Location $PSScriptRoot
+
+$repoRoot = Resolve-Path  "../../"
 try {
     # Download tx.exe for Python 3 from https://github.com/transifex/transifex-client/releases/latest
     # or install it using pip install transifex-client
@@ -6,7 +8,7 @@ try {
     $env:PYTHONIOENCODING='UTF-8'
 
     # 1. remove all existing translations
-    Get-ChildItem -Path ../../GitUI/Translation/* -Filter *.xlf -Exclude English* | `
+    Get-ChildItem -Path $repoRoot/src/app/GitUI/Translation/* -Filter *.xlf -Exclude English* | `
         Remove-Item -Force;
 
     # 2. download updated plugin translations
@@ -27,7 +29,7 @@ try {
 
     # 5. move translations to the destination folder
     Get-ChildItem -Path ./* -Filter *.xlf | `
-        Move-Item -Destination ../../GitUI/Translation/$($_.Name) -Force
+        Move-Item -Destination $repoRoot/src/app/GitUI/Translation/$($_.Name) -Force
 }
 finally {
     Pop-Location
@@ -48,7 +50,7 @@ function Add-Attribute {
     $node.Attributes.Append($attrib) | Out-Null
 }
 
-Push-Location $PSScriptRoot/../../Setup
+Push-Location $repoRoot/setup/installer
 
 try {
     [xml]$productWxs = Get-Content Product.wxs
@@ -72,7 +74,7 @@ try {
     Add-Attribute -node $feature -attributeName 'Title' -attributeValue 'Translations';
     Add-Attribute -node $feature -attributeName 'Level' -attributeValue '1';
 
-    Get-ChildItem -Path ../GitUI/Translation/* -Include *.xlf -Exclude English.*,*.Plugins.xlf,*pseudo* | `
+    Get-ChildItem -Path $repoRoot/src/app/GitUI/Translation/* -Include *.xlf -Exclude English.*,*.Plugins.xlf,*pseudo* | `
         ForEach-Object {
 
             $componentTitle = $_.Name.Replace($_.Extension, '');
@@ -103,7 +105,7 @@ try {
     # restore the attribute
     Add-Attribute -node $directoryRef -attributeName 'Id' -attributeValue 'TranslationsDir';
 
-    Get-ChildItem -Path ../GitUI/Translation/* -Include *.xlf -Exclude *.Plugins.xlf,*pseudo* | `
+    Get-ChildItem -Path $repoRoot/src/app/GitUI/Translation/* -Include *.xlf -Exclude *.Plugins.xlf,*pseudo* | `
         ForEach-Object {
 
             $language = $_.Name.Replace($_.Extension, '')

@@ -12,14 +12,14 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
-        <target>自动编译子模块</target>
+        <target>自動編譯子模組</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>你要构建 {0} 吗?
+        <target>您想要建置 {0} 嗎?
 
 {1}</target>
         
@@ -85,8 +85,7 @@
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
         <source>Disable SSL verification</source>
-        <target>禁用SSL驗證
-</target>
+        <target>停用 SSL 驗證</target>
         
       </trans-unit>
       <trans-unit id="BitbucketPassword.Caption">
@@ -96,13 +95,12 @@
       </trans-unit>
       <trans-unit id="BitbucketUsername.Caption">
         <source>Bitbucket Username</source>
-        <target>Bitbucket 使用名稱
-</target>
+        <target>Bitbucket 使用者名稱</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket 服务器</target>
+        <target>Bitbucket 伺服器</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
@@ -123,7 +121,8 @@
       <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
-        <target>提交</target>
+        <target>{0} 已提交
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -133,8 +132,7 @@
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
-        <target>右鍵複製連結
-</target>
+        <target>按一下右鍵以複製連結</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -164,7 +162,7 @@
       </trans-unit>
       <trans-unit id="groupBoxInformation.Text">
         <source>Information</source>
-        <target>信息</target>
+        <target>資訊</target>
         
       </trans-unit>
       <trans-unit id="groupBoxPullRequestInfo.Text">
@@ -214,8 +212,7 @@
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>版本庫</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
@@ -230,14 +227,12 @@
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>版本庫</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>版本庫</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
@@ -257,8 +252,7 @@
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>版本庫</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
@@ -287,12 +281,12 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>创建本地跟踪分支</target>
+        <target>建立本機追蹤分支</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>创建本地跟踪分支</target>
+        <target>建立本機追蹤分支</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -320,7 +314,7 @@
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
-        <target>最后的作者</target>
+        <target>最後作者</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -340,12 +334,12 @@
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
-        <target>最后的消息</target>
+        <target>最後訊息</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
-        <target>搜索分支</target>
+        <target>搜尋分支</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -404,7 +398,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>搜索分支</target>
+        <target>搜尋分支</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
@@ -532,7 +526,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
-        <target>压缩大小</target>
+        <target>壓縮大小</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
@@ -610,7 +604,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
@@ -793,7 +787,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
-        <target> 初始化Git项目</target>
+        <target>初始化 GitFlow</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
@@ -808,7 +802,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
-        <target>基于:</target>
+        <target>基於:</target>
         
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
@@ -993,7 +987,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
         <source>Code files</source>
-        <target>代码文件</target>
+        <target>程式碼檔案</target>
         
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
@@ -1003,7 +997,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>忽略子模块</target>
+        <target>忽略子模組</target>
         
       </trans-unit>
     </body>
@@ -1047,7 +1041,7 @@ Do you want to automatically download Gource?</source>
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
-        <target>下载</target>
+        <target>下載</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
@@ -1189,6 +1183,10 @@ Do you want to reset the configured path?</source>
         <target>Jira 字段</target>
         
       </trans-unit>
+      <trans-unit id="JiraPluginConfigurationErrorText.Text">
+        <source>Jira plugin configuration incomplete!</source>
+        
+      </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
         <target>預覽</target>
@@ -1318,7 +1316,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
-        <target>无效输入</target>
+        <target>無效的輸入</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
@@ -1358,7 +1356,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
-        <target>产生</target>
+        <target>產生</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
