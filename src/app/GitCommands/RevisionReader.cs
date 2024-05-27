@@ -486,7 +486,7 @@ namespace GitCommands
 
             // Keep a full multi-line message body within the last six months (by default).
             // Note also that if body and subject are identical (single line), the body never need to be stored
-            bool keepBody = authorUnixTime >= _oldestBody;
+            bool keepBody = commitUnixTime >= _oldestBody;
 
             // Subject can also be defined as the contents before empty line (%s for --pretty),
             // this uses the alternative definition of first line in body.
