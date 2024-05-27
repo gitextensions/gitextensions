@@ -7,15 +7,15 @@ git:
       source_language: en
       source_file: GitUI/Translation/English.xlf
       # path expression to translation files, must contain <lang> placeholder
-      translation_files_expression: 'GitUI/Translation/<lang>.xlf'
+      translation_files_expression: 'src/app/GitUI/Translation/<lang>.xlf'
 
     - filter_type: file
       # all supported i18n types: https://docs.transifex.com/formats
       file_format: XLIFF
       source_language: en
-      source_file: GitUI/Translation/English.Plugins.xlf
+      source_file: src/app/GitUI/Translation/English.Plugins.xlf
       # path expression to translation files, must contain <lang> placeholder
-      translation_files_expression: 'GitUI/Translation/<lang>.Plugins.xlf'
+      translation_files_expression: 'src/app/GitUI/Translation/<lang>.Plugins.xlf'
 
   settings:
     language_mapping:
