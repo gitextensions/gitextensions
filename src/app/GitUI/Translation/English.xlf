@@ -2448,6 +2448,10 @@ compare with first:</source>
         <source>(Repository hosts)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_repositorySearchPlaceholder.Text">
+        <source>Search repositories...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_superprojectModuleFormat.Text">
         <source>Superproject: {0}</source>
         <target />
@@ -10795,7 +10799,7 @@ The action cannot be undone.</source>
         <target />
       </trans-unit>
       <trans-unit id="_repositorySearchPlaceholder.Text">
-        <source>Search repositories</source>
+        <source>Search repositories...</source>
         <target />
       </trans-unit>
       <trans-unit id="clmhdrBranch.Text">

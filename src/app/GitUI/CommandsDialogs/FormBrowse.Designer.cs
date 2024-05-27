@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
             commitInfoRightwardMenuItem = new ToolStripMenuItem();
             toolStripSeparator17 = new ToolStripSeparator();
             toolStripButtonLevelUp = new ToolStripSplitButton();
-            _NO_TRANSLATE_WorkingDir = new ToolStripSplitButton();
+            _NO_TRANSLATE_WorkingDir = new WorkingDirectoryToolStripSplitButton();
             branchSelect = new ToolStripSplitButton();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripSplitStash = new ToolStripSplitButton();
@@ -309,17 +309,9 @@ namespace GitUI.CommandsDialogs
             // 
             // _NO_TRANSLATE_WorkingDir
             // 
-            _NO_TRANSLATE_WorkingDir.Image = Properties.Resources.RepoOpen;
-            _NO_TRANSLATE_WorkingDir.ImageAlign = ContentAlignment.MiddleLeft;
-            _NO_TRANSLATE_WorkingDir.ImageTransparentColor = Color.Magenta;
-            _NO_TRANSLATE_WorkingDir.Name = "_NO_TRANSLATE_WorkingDir";
             _NO_TRANSLATE_WorkingDir.Size = new Size(83, 22);
             _NO_TRANSLATE_WorkingDir.Text = "WorkingDir";
-            _NO_TRANSLATE_WorkingDir.TextAlign = ContentAlignment.MiddleLeft;
             _NO_TRANSLATE_WorkingDir.ToolTipText = "Change working directory";
-            _NO_TRANSLATE_WorkingDir.ButtonClick += WorkingDirClick;
-            _NO_TRANSLATE_WorkingDir.DropDownOpening += WorkingDirDropDownOpening;
-            _NO_TRANSLATE_WorkingDir.MouseUp += _NO_TRANSLATE_WorkingDir_MouseUp;
             // 
             // branchSelect
             // 
@@ -1467,7 +1459,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripEx ToolStripScripts;
 
         private ToolStripButton toolStripButtonCommit;
-        private ToolStripSplitButton _NO_TRANSLATE_WorkingDir;
+        private WorkingDirectoryToolStripSplitButton _NO_TRANSLATE_WorkingDir;
         private ToolStripSeparator toolStripSeparator0;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSplitButton userShell;
