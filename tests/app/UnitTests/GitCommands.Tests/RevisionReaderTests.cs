@@ -29,6 +29,23 @@ namespace GitCommandsTests
         }
 
         [Test]
+        public void GetRevision_should_return_null_if_revision_does_not_exist()
+        {
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+            GitRevision? revision = reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: false, cancellationToken: default);
+
+            revision.Should().BeNull();
+        }
+
+        [Test]
+        public void GetRevision_should_throw_if_revision_does_not_exist()
+        {
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+            Assert.Throws<ExternalOperationException>(() =>
+                reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: true, cancellationToken: default));
+        }
+
+        [Test]
         public void TryParseRevisionshould_return_false_if_argument_is_invalid()
         {
             ArraySegment<byte> chunk = null;
