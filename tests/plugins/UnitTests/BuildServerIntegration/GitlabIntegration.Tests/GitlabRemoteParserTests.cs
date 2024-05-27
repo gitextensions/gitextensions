@@ -43,5 +43,20 @@ namespace GitlabIntegrationTests
 
             gitlabRemoteParser.IsValidRemoteUrl(url).Should().BeFalse();
         }
+
+        [Test]
+        public void Should_Correct_in_parsing_repositoryNamespace()
+        {
+            GitlabRemoteParser gitlabRemoteParser = new();
+            string url = "https://dev.bad.com/groupname/groupname/repo.git";
+            gitlabRemoteParser.TryExtractGitlabDataFromRemoteUrl(url, out string? host, out string? owner, out string? repository).Should().BeTrue();
+            string? repositoryNamespace = owner;
+            repositoryNamespace.Should().NotBeNull();
+            repositoryNamespace.Should().BeEquivalentTo("groupname/groupname");
+            repositoryNamespace.Should().NotBeEquivalentTo("groupname");
+            repository.Should().BeEquivalentTo("repo");
+            host.Should().BeEquivalentTo("dev.bad.com");
+            gitlabRemoteParser.IsValidRemoteUrl(url).Should().BeTrue();
+        }
     }
 }

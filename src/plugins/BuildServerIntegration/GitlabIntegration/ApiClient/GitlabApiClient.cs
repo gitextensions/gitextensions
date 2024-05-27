@@ -50,7 +50,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 
         public async Task<GitlabProject?> GetProjectAsync(string projectNamespace, string projectName)
         {
-            UriBuilder projectUriBuilder = new($"{InstanceUrl}/api/v4/projects/{projectNamespace}%2F{projectName}");
+            UriBuilder projectUriBuilder = new($"{InstanceUrl}/api/v4/projects/{Uri.EscapeDataString($"{projectNamespace}/{projectName}")}");
 
             return await LoadItemAsync<GitlabProject?>(projectUriBuilder.Uri);
         }
