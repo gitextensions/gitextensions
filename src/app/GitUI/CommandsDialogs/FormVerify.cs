@@ -133,6 +133,7 @@ namespace GitUI.CommandsDialogs
         {
             UpdateLostObjects();
             Warnings.DataSource = _filteredLostObjects;
+            Warnings.Sort(columnDate, System.ComponentModel.ListSortDirection.Descending);
         }
 
         private void SaveObjectsClick(object sender, EventArgs e)
