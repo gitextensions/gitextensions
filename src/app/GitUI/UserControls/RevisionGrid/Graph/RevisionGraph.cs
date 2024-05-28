@@ -67,13 +67,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <summary>
         /// The ordered row cache contains rows with segments stored in lanes.
         /// </summary>
-        /// <remarks>This cache is very expensive to build, done in chunks to limit load.</remarks>
-        private ImmutableArray<RevisionGraphRow> _orderedRowCache = ImmutableArray<RevisionGraphRow>.Empty;
+        /// <remarks>This cache is very expensive to build, done only for displayed rows - in a background task.</remarks>
+        private readonly List<RevisionGraphRow> _orderedRowCache = [];
 
         /// <summary>
-        /// <see cref="_orderedRowCache"/> is invalid if this flag is set.
+        /// <see cref="_orderedRowCache"/> is invalid if it contains scores above this value.
         /// </summary>
-        private bool _orderedRowCacheInvalid;
+        private int _orderedRowCacheInvalidFromScore = int.MaxValue;
 
         private int _straightenDiagonalsLookAhead => Config.StraightenGraphDiagonals ? _straightenLanesLookAhead / 2 : 0;
 
@@ -92,8 +92,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _incompleteRevisionByObjectId.Clear();
             _orderedNodesCache = ImmutableArray<RevisionGraphRevision>.Empty;
             _orderedNodesCacheInvalid = true;
-            _orderedRowCache = ImmutableArray<RevisionGraphRow>.Empty;
-            _orderedRowCacheInvalid = false;
+            _orderedRowCache.Clear();
+            _orderedRowCacheInvalidFromScore = int.MaxValue;
             Config = new();
         }
 
@@ -127,8 +127,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <returns>Index for the last row in the row cache with 'straightened' lanes.</returns>
         public int GetCachedCount()
         {
-            ImmutableArray<RevisionGraphRow> localOrderedRowCache = _orderedRowCache;
-            if (localOrderedRowCache.Length == 0 || IsRowCacheDirty(localOrderedRowCache, BuildOrderedNodesCache(int.MaxValue)))
+            int cachedCount = _orderedRowCache.Count;
+            if (cachedCount == 0 || IsRowCacheDirty(BuildOrderedNodesCache(int.MaxValue)))
             {
                 return 0;
             }
@@ -136,7 +136,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // _loadingCompleted is true when all revisions have been added to _revisionByObjectId.
             // Return the full number of rows only if the straightening of segments has finished, too.
             // Else do not show rows yet which might be affected by the straightening of segments.
-            int cachedCount = localOrderedRowCache.Length;
             return _loadingCompleted && cachedCount == Count ? cachedCount : Math.Max(0, cachedCount - _straightenLookAhead);
         }
 
@@ -234,13 +233,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IRevisionGraphRow? GetSegmentsForRow(int row)
         {
             ImmutableArray<RevisionGraphRevision> localOrderedNodesCache = BuildOrderedNodesCache(row);
-            ImmutableArray<RevisionGraphRow> localOrderedRowCache = _orderedRowCache;
-            if (IsRowCacheDirty(localOrderedRowCache, localOrderedNodesCache) || row < 0 || row >= localOrderedRowCache.Length)
+            if (IsRowCacheDirty(localOrderedNodesCache) || row < 0 || row >= _orderedRowCache.Count)
             {
                 return null;
             }
 
-            return localOrderedRowCache[row];
+            return _orderedRowCache[row];
         }
 
         public void HighlightBranch(ObjectId id)
@@ -391,47 +389,44 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// Check if the row cache is dirty by comparing to the ordered node cache.
         /// </summary>
         /// <param name="orderedNodesCache">The ordered nodes cache.</param>
-        /// <param name="orderedRowCache">The ordered row cache.</param>
         /// <returns><see langword="true"/> if the row cache is dirty; otherwise <see langword="false"/>.</returns>
-        private bool IsRowCacheDirty(ImmutableArray<RevisionGraphRow> orderedRowCache, ImmutableArray<RevisionGraphRevision> orderedNodesCache)
+        private bool IsRowCacheDirty(ImmutableArray<RevisionGraphRevision> orderedNodesCache)
         {
+            if (_orderedRowCache.Count == 0)
+            {
+                _orderedRowCacheInvalidFromScore = int.MaxValue;
+                return false;
+            }
+
             // We need bounds checking on orderedNodesCache. It should be always larger then the orderedRowCache,
             // but another thread could clear the orderedNodesCache while another is building orderedRowCache.
             // This is not a problem, since all methods use local instances of those caches. We do need to invalidate.
-            if (_orderedRowCacheInvalid || orderedRowCache.Length > orderedNodesCache.Length)
+            if (_orderedRowCacheInvalidFromScore <= _orderedRowCache[^1].Revision.Score || _orderedRowCache.Count > orderedNodesCache.Length)
             {
                 return true;
-            }
-
-            if (orderedRowCache.Length == 0)
-            {
-                return false;
             }
 
             // It is very easy to check if the orderedRowCache is dirty or not. If the last revision added to the orderedRowCache
             // is not in the same index in the orderedNodesCache, the order has been changed. Only then rebuilding is
             // required. If the order is changed after this revision, we do not care since it wasn't processed yet.
             // But when filtering revisions, this can mismatch. So check the first revision in addition.
-            int indexToCompare = orderedRowCache.Length - 1;
-            return orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare]
-                || orderedRowCache[0].Revision != orderedNodesCache[0];
+            int indexToCompare = _orderedRowCache.Count - 1;
+            return _orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare]
+                || _orderedRowCache[0].Revision != orderedNodesCache[0];
         }
 
         private void BuildOrderedRowCache(ImmutableArray<RevisionGraphRevision> orderedNodesCache, int lastToCacheRowIndex, CancellationToken cancellationToken)
         {
             bool orderSegments = Config.ReduceGraphCrossings;
 
-            int lastOrderedNodeIndex = orderedNodesCache.Length - 1;
-            int capacity = Math.Max(lastToCacheRowIndex, lastOrderedNodeIndex) + 1;
+            int orderedNodesCount = orderedNodesCache.Length;
+            int lastOrderedNodeIndex = orderedNodesCount - 1;
             bool loadingCompleted = _loadingCompleted;
-            ImmutableArray<RevisionGraphRow>.Builder localOrderedRowCache = ImmutableArray.CreateBuilder<RevisionGraphRow>(capacity);
-            if (IsRowCacheDirty(_orderedRowCache, orderedNodesCache))
+            _orderedRowCache.Capacity = orderedNodesCount;
+            if (IsRowCacheDirty(orderedNodesCache))
             {
-                _orderedRowCacheInvalid = false;
-            }
-            else
-            {
-                localOrderedRowCache.AddAll(_orderedRowCache);
+                _orderedRowCacheInvalidFromScore = int.MaxValue;
+                _orderedRowCache.Clear();
             }
 
             int maxLastToCacheRowIndex = lastOrderedNodeIndex - (loadingCompleted || !orderSegments ? 0 : _orderSegmentsLookAhead);
@@ -441,7 +436,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 loadingCompleted = false;
             }
 
-            int startIndex = localOrderedRowCache.Count;
+            int startIndex = _orderedRowCache.Count;
             if (startIndex > lastToCacheRowIndex)
             {
                 return;
@@ -475,7 +470,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 else
                 {
                     // Copy lanes from last row
-                    RevisionGraphRow previousRevisionGraphRow = localOrderedRowCache[nextIndex - 1];
+                    RevisionGraphRow previousRevisionGraphRow = _orderedRowCache[nextIndex - 1];
 
                     // Create segments list with the correct capacity
                     segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revisionStartSegments.Length);
@@ -540,7 +535,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     }
                 }
 
-                localOrderedRowCache.Add(new RevisionGraphRow(revision, segments, Config.MergeGraphLanesHavingCommonParent));
+                _orderedRowCache.Add(new RevisionGraphRow(revision, segments, Config.MergeGraphLanesHavingCommonParent));
             }
 
             // Straightening does not apply to the first and the last row. The single node there shall not be moved.
@@ -549,17 +544,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             loadingCompleted = loadingCompleted && lastToCacheRowIndex == lastOrderedNodeIndex;
             int straightenLanesStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead);
             int straightenLanesLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead;
-            StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, localOrderedRowCache, Config.StraightenGraphSegmentsLimit);
+            StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, _orderedRowCache, Config.StraightenGraphSegmentsLimit);
 
             int straightenDiagonalsLookAhead = _straightenDiagonalsLookAhead;
             if (straightenDiagonalsLookAhead > 0)
             {
                 int straightenDiagonalsStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead);
                 int straightenDiagonalsLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead;
-                StraightenDiagonals(straightenDiagonalsStartIndex, straightenDiagonalsLastIndex, lastLookAheadIndex: lastToCacheRowIndex, straightenDiagonalsLookAhead, localOrderedRowCache, Config.StraightenGraphSegmentsLimit);
+                StraightenDiagonals(straightenDiagonalsStartIndex, straightenDiagonalsLastIndex, lastLookAheadIndex: lastToCacheRowIndex, straightenDiagonalsLookAhead, _orderedRowCache, Config.StraightenGraphSegmentsLimit);
             }
-
-            _orderedRowCache = localOrderedRowCache.ToImmutable();
 
             return;
 
@@ -1010,13 +1003,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // This is not expected to be a common issue (primarily inserting artificial,
             // topo order and tests).
             // Not fully optimized, invalidate the complete cache instead of only the rows after the index.
-            ImmutableArray<RevisionGraphRow> localOrderedRowCache = _orderedRowCache;
-            if (localOrderedRowCache.Length > 0 && minScore <= localOrderedRowCache[^1].Revision.Score)
-            {
-                _orderedRowCacheInvalid = true;
-            }
+            _orderedRowCacheInvalidFromScore = minScore;
 
-            return _orderedRowCacheInvalid;
+            return _orderedNodesCacheInvalid;
         }
 
         private readonly record struct MoveLaneBy(IRevisionGraphRow Row, int Lane, int By);
