@@ -149,13 +149,14 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Retrieves the GitRevision.
+        ///  Retrieves the <see cref="GitRevision"/> for a real commit.
         /// </summary>
         /// <param name="commitHash">The Git commit hash.</param>
-        /// <param name="hasNotes">A cancellation token.</param>
+        /// <param name="hasNotes">Specifies whether Git Notes should be retrieved.</param>
+        /// <param name="throwOnError">Specifies whether an <see cref="ExternalOperationException"/> shall be thrown if the revision does not exist.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>The retrieved git history.</returns>
-        public GitRevision GetRevision(string commitHash, bool hasNotes, CancellationToken cancellationToken)
+        /// <returns>The retrieved git revision or <see langword="null"/> if it does not exist.</returns>
+        public GitRevision? GetRevision(string commitHash, bool hasNotes, bool throwOnError, CancellationToken cancellationToken)
         {
             GitArgumentBuilder arguments = new("log")
             {
@@ -167,9 +168,9 @@ namespace GitCommands
                 commitHash
             };
 
-            // output can be cached if Git Notes is not included
-            // Artificial revision must not be called (empty commitHash, must not be cached
-            if (!hasNotes && GitModule.GitCommandCache.TryGet(arguments.ToString(), out byte[]? commandOutput, out _) is true)
+            // output can be cached if Git Notes is not included and hash is valid
+            bool canCache = !hasNotes && !string.IsNullOrWhiteSpace(commitHash);
+            if (canCache && GitModule.GitCommandCache.TryGet(arguments.ToString(), out byte[]? commandOutput, out _) is true)
             {
                 // OK
             }
@@ -180,16 +181,27 @@ namespace GitCommands
 #endif
                 using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: null);
                 commandOutput = process.StandardOutput.BaseStream.SplitLogOutput().SingleOrDefault().ToArray();
+                string errorOutput = process.StandardError.ReadToEnd();
+                if (!string.IsNullOrWhiteSpace(errorOutput) && throwOnError)
+                {
+                    throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(), innerException: new Exception(errorOutput));
+                }
             }
 
             if (!TryParseRevision(commandOutput, out GitRevision? revision))
             {
+                if (throwOnError)
+                {
+                    throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(),
+                        innerException: new Exception($"invalid revision{Environment.NewLine}{commandOutput}"));
+                }
+
                 return null;
             }
 
-            if (!hasNotes && !string.IsNullOrWhiteSpace(commitHash))
+            if (canCache)
             {
-                GitModule.GitCommandCache.Add(arguments.ToString(), commandOutput, commandOutput);
+                GitModule.GitCommandCache.Add(arguments.ToString(), output: commandOutput, error: []);
             }
 
             return revision;
@@ -486,7 +498,7 @@ namespace GitCommands
 
             // Keep a full multi-line message body within the last six months (by default).
             // Note also that if body and subject are identical (single line), the body never need to be stored
-            bool keepBody = authorUnixTime >= _oldestBody;
+            bool keepBody = commitUnixTime >= _oldestBody;
 
             // Subject can also be defined as the contents before empty line (%s for --pretty),
             // this uses the alternative definition of first line in body.

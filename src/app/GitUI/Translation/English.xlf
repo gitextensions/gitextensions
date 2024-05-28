@@ -7591,6 +7591,10 @@ nodes.
         <source>Are you sure you want to delete all dangling objects?</source>
         <target />
       </trans-unit>
+      <trans-unit id="_seemingly.Text">
+        <source>seemingly</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_selectLostObjectsToRestoreCaption.Text">
         <source>Restore lost objects</source>
         <target />

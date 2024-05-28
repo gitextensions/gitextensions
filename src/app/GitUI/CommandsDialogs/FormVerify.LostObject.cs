@@ -32,9 +32,9 @@ namespace GitUI.CommandsDialogs
             /// %s  - subject.
             /// %ct - committer date, UNIX timestamp (easy to parse format).
             /// </summary>
-            private static readonly string LogCommandArgumentsFormat = (ArgumentString)new GitArgumentBuilder("log")
+            private static readonly string ShowCommandArgumentsFormat = (ArgumentString)new GitArgumentBuilder("show")
             {
-                "-n1",
+                "--quiet",
                 "--pretty=format:\"%aN\u001F%s\u001F%ct\u001F%P\" {0}"
             };
 
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
             /// <summary>
             /// Diagnostics and object type.
             /// </summary>
-            public string RawType { get; }
+            public string RawType { get; set; }
 
             public string? Author { get; private set; }
             public string? Subject { get; private set; }
@@ -76,6 +76,36 @@ namespace GitUI.CommandsDialogs
                 ObjectType = objectType;
                 RawType = rawType;
                 ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
+            }
+
+            /// <summary>
+            /// Retrieve commits metadata for all the commits hashes provided.
+            /// </summary>
+            /// <param name="module">Git module to run the git command.</param>
+            /// <param name="commitIds">The collection of commits hashes.</param>
+            /// <returns>the metadata for all the commits.</returns>
+            public static string[] GetCommitsMetadata(IGitModule module, IEnumerable<string> commitIds)
+            {
+                return module.GitExecutable
+                    .GetOutput(string.Format(ShowCommandArgumentsFormat, string.Join(" ", commitIds)), outputEncoding: GitModule.LosslessEncoding)
+                    .Split('\n');
+            }
+
+            public void FillCommitData(IGitModule module, string commitLog)
+            {
+                Match logPatternMatch = LogRegex().Match(commitLog);
+                if (logPatternMatch.Success)
+                {
+                    // TODO: cache
+                    Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups["author"].Value);
+                    Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups["subject"].Value) ?? "";
+                    Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups["date"].Value);
+                    string firstParent = logPatternMatch.Groups["first_parent"].Value;
+                    if (!string.IsNullOrEmpty(firstParent))
+                    {
+                        Parent = ObjectId.Parse(firstParent);
+                    }
+                }
             }
 
             public static LostObject? TryParse(IGitModule module, string raw)
@@ -106,19 +136,7 @@ namespace GitUI.CommandsDialogs
 
                 if (objectType == LostObjectType.Commit)
                 {
-                    string commitLog = GetLostCommitLog();
-                    Match logPatternMatch = LogRegex().Match(commitLog);
-                    if (logPatternMatch.Success)
-                    {
-                        result.Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups["author"].Value);
-                        result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups["subject"].Value) ?? "";
-                        result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups["date"].Value);
-                        string firstParent = logPatternMatch.Groups["first_parent"].Value;
-                        if (!string.IsNullOrEmpty(firstParent))
-                        {
-                            result.Parent = ObjectId.Parse(firstParent);
-                        }
-                    }
+                    // perf: Commit metadata will be fetched by batch
                 }
                 else if (objectType == LostObjectType.Tag)
                 {
@@ -142,7 +160,6 @@ namespace GitUI.CommandsDialogs
 
                 return result;
 
-                string GetLostCommitLog() => VerifyHashAndRunCommand(LogCommandArgumentsFormat);
                 string GetLostTagData() => VerifyHashAndRunCommand(TagCommandArgumentsFormat);
 
                 string VerifyHashAndRunCommand(ArgumentString commandFormat)

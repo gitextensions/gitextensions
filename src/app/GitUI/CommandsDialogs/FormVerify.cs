@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _xTagsCreated = new("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
         private readonly TranslationString _selectLostObjectsToRestoreMessage = new("Select objects to restore.");
         private readonly TranslationString _selectLostObjectsToRestoreCaption = new("Restore lost objects");
+        private readonly TranslationString _seemingly = new("seemingly");
 
         private readonly List<LostObject> _lostObjects = [];
         private readonly SortableLostObjectsList _filteredLostObjects = new();
@@ -25,10 +26,13 @@ namespace GitUI.CommandsDialogs
         private readonly IGitTagController _gitTagController;
 
         private LostObject? _previewedItem;
-        private string _defaultFilename = null;
+        private string? _defaultFilename;
+        private bool _typeDetected;
 
+        // https://en.wikipedia.org/wiki/List_of_file_signatures
         private static readonly Dictionary<string, string> _languagesStartOfFile = new()
         {
+            { @"{\rtf", "rtf" },
             { "{", "json" },
             { "#include", "cpp" },
             { "import {", "js" },
@@ -43,18 +47,36 @@ namespace GitUI.CommandsDialogs
             { "[", "ini" },
             { "using ", "cs" },
             { "# ", "md" },
+            { "##", "md" },
             { "<!doctype html", "html" },
             { "<html", "html" },
             { "<?xml", "xml" },
             { "use ", "rs" },
-            { @"{\", "rtf" },
             { "%PDF", "pdf" },
             { "PK", "zip" },
             { "MZ", "exe" },
             { @"\document", "tex" },
             { "\u0089PNG", "png" },
-            { "ÿØÿà\0\x10JFIF", "jpg" },
+            { "ÿØÿQ", "jp2" },
+            { "ÿØÿ", "jpg" },
+            { "ÿ\x0A", "jxl" },
+            { "RIFF", "webp" },
             { "<svg", "svg" },
+            { "BM", "bmp" },
+            { "7z", "7z" },
+            { "GIF", "gif" },
+            { "ÐÏ\x11à¡±\x1Aá", "doc" },
+            { "qoif", "qoi" },
+            { "Rar!", "rar" },
+            { "%!PS", "ps" },
+            { "OggS", "ogg" },
+            { "8BPS", "psf" },
+            { "ID3", "mp3" },
+            { "CD001", "iso" },
+            { "fLaC", "flac" },
+            { "FLIF", "flif" },
+            { "␚Eß£", "mkv" },
+            { "<", "xml" },
         };
 
         private static readonly Dictionary<string, string[]> _fileTypesEquivalences = new()
@@ -63,8 +85,9 @@ namespace GitUI.CommandsDialogs
             { "html", ["php", "cshtml"] },
             { "cpp", ["c"] },
             { "xml", ["config", "settings", "csproj", "xlf", "props"] },
-            { "zip", ["docx", "xlsx", "odt", "ods"] },
+            { "zip", ["docx", "xlsx", "pptx", "odt", "ods", "odp", "epub", "jar", "msix"] },
             { "exe", ["dll"] },
+            { "doc", ["xls", "ppt", "msi"] },
             { "md", ["sh", "yml"] },
             { "txt", ["csv", "css", "md", "yml"] },
         };
@@ -110,6 +133,7 @@ namespace GitUI.CommandsDialogs
         {
             UpdateLostObjects();
             Warnings.DataSource = _filteredLostObjects;
+            Warnings.Sort(columnDate, System.ComponentModel.ListSortDirection.Descending);
         }
 
         private void SaveObjectsClick(object sender, EventArgs e)
@@ -209,8 +233,10 @@ namespace GitUI.CommandsDialogs
             {
                 ShowOtherObjects.Checked = true;
             }
-
-            UpdateFilteredLostObjects();
+            else
+            {
+                UpdateFilteredLostObjects();
+            }
         }
 
         private void ShowOtherObjects_CheckedChanged(object sender, EventArgs e)
@@ -219,8 +245,10 @@ namespace GitUI.CommandsDialogs
             {
                 ShowCommitsAndTags.Checked = true;
             }
-
-            UpdateFilteredLostObjects();
+            else
+            {
+                UpdateFilteredLostObjects();
+            }
         }
 
         // NOTE: hack to select row under cursor on right click and context menu open
@@ -259,36 +287,39 @@ namespace GitUI.CommandsDialogs
 
             _previewedItem = CurrentItem;
 
-            string content = Module.ShowObject(_previewedItem.ObjectId, returnRaw: _previewedItem.ObjectType == LostObjectType.Blob) ?? "";
+            string content = GetLostObjectContent(_previewedItem);
             if (_previewedItem.ObjectType == LostObjectType.Commit || _previewedItem.ObjectType == LostObjectType.Tag)
             {
-                fileViewer.InvokeAndForget(() => fileViewer.ViewFixedPatchAsync("commit.patch", content, openWithDifftool: null));
+                _defaultFilename = "commit.patch";
+                fileViewer.InvokeAndForget(() => fileViewer.ViewFixedPatchAsync(_defaultFilename, content, openWithDifftool: null));
             }
             else if (_previewedItem.ObjectType == LostObjectType.Blob)
             {
-                _defaultFilename = GuessFileTypeWithContent(content, _previewedItem.ObjectId.ToString());
+                _defaultFilename = GuessFileNameWithContent(content, _previewedItem.ObjectId.ToString());
                 fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync(_defaultFilename, content, openWithDifftool: null));
             }
             else
             {
-                fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync("file.txt", content, openWithDifftool: null));
+                _defaultFilename = "file.txt";
+                fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync(_defaultFilename, content, openWithDifftool: null));
             }
         }
 
-        private static string GuessFileTypeWithContent(string content, string hash)
+        private static string GuessFileTypeWithContent(string content)
         {
             foreach (KeyValuePair<string, string> pair in _languagesStartOfFile)
             {
                 if (content.StartsWith(pair.Key, StringComparison.OrdinalIgnoreCase))
                 {
-                    return BuildFilename(pair.Value);
+                    return pair.Value;
                 }
             }
 
-            return BuildFilename("txt");
-
-            string BuildFilename(string extension) => $"LOST_FOUND_{hash}.{extension}";
+            return "txt";
         }
+
+        private static string GuessFileNameWithContent(string content, string hash)
+            => $"LOST_FOUND_{hash}.{GuessFileTypeWithContent(content)}";
 
         #endregion
 
@@ -312,12 +343,46 @@ namespace GitUI.CommandsDialogs
                         .WhereNotNull()
                         .OrderByDescending(l => l.Date));
 
+                LostObject[] commits = _lostObjects.Where(o => o.ObjectType == LostObjectType.Commit).ToArray();
+                List<string> metadata = new(commits.Length);
+                int batchSize = 30_000 / (ObjectId.Sha1CharCount + 1); // Based on process max command line length and hash length (with a margin)
+
+                for (int currentBatch = 0; currentBatch * batchSize < commits.Length; ++currentBatch)
+                {
+                    LostObject[] nextBatch = commits.Skip(currentBatch * batchSize)
+                        .Take(batchSize).ToArray();
+                    string[] metadataBatch = LostObject.GetCommitsMetadata(Module, nextBatch.Select(c => c.ObjectId.ToString()));
+                    metadata.AddRange(metadataBatch);
+                }
+
+                for (int i = 0; i < commits.Length; i++)
+                {
+                    commits[i].FillCommitData(Module, metadata[i]);
+                }
+
                 UpdateFilteredLostObjects();
             }
         }
 
         private void UpdateFilteredLostObjects()
         {
+            if (ShowOtherObjects.Checked & !_typeDetected)
+            {
+                ThreadHelper.FileAndForget(async () =>
+                {
+                    _typeDetected = true;
+                    foreach (LostObject item in _lostObjects.Where(o => o.ObjectType == LostObjectType.Blob))
+                    {
+                        string content = GetLostObjectContent(item);
+                        item.RawType += $" ({_seemingly.Text}: {GuessFileTypeWithContent(content)})";
+                    }
+
+                    await this.SwitchToMainThreadAsync();
+                    Warnings.AutoResizeColumn(columnType.Index);
+                    Warnings.Refresh();
+                });
+            }
+
             SuspendLayout();
             _filteredLostObjects.Clear();
             _filteredLostObjects.AddRange(_lostObjects.Where(IsMatchToFilter));
@@ -335,6 +400,9 @@ namespace GitUI.CommandsDialogs
             return (ShowCommitsAndTags.Checked && (lostObject.ObjectType == LostObjectType.Commit || lostObject.ObjectType == LostObjectType.Tag))
                 || (ShowOtherObjects.Checked && (lostObject.ObjectType != LostObjectType.Commit && lostObject.ObjectType != LostObjectType.Tag));
         }
+
+        private string GetLostObjectContent(LostObject item)
+            => Module.ShowObject(item.ObjectId, returnRaw: item.ObjectType == LostObjectType.Blob) ?? "";
 
         private string GetOptions()
         {
@@ -366,11 +434,11 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            string? obj = Module.ShowObject(currentItem.ObjectId, returnRaw: _previewedItem.ObjectType == LostObjectType.Blob);
+            string obj = GetLostObjectContent(currentItem);
 
-            if (obj is not null)
+            if (!string.IsNullOrEmpty(obj))
             {
-                using FormEdit frm = new(UICommands, obj);
+                using FormEdit frm = new(UICommands, obj, _defaultFilename);
                 frm.IsReadOnly = true;
                 frm.ShowDialog(this);
             }
@@ -517,6 +585,12 @@ namespace GitUI.CommandsDialogs
                     Module.SaveBlobAs(fileDialog.FileName, lostObject.ObjectId.ToString());
                 }
             }
+        }
+
+        protected override bool ProcessKeyPreview(ref Message msg)
+        {
+            // Check if keyboard shortcut is one provided by the contextual menu
+            return mnuLostObjects.PreProcessMessage(ref msg) || base.ProcessKeyPreview(ref msg);
         }
     }
 }

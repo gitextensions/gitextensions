@@ -73,7 +73,7 @@ namespace GitCommands
         /// <inheritdoc />
         public CommitData? GetCommitData(string commitId, bool includeNotes = false)
         {
-            GitRevision revision = new RevisionReader(GetModule(), allBodies: true).GetRevision(commitId, hasNotes: includeNotes, cancellationToken: default);
+            GitRevision? revision = new RevisionReader(GetModule(), allBodies: true).GetRevision(commitId, hasNotes: includeNotes, throwOnError: false, cancellationToken: default);
             return revision is not null
                 ? CreateFromRevision(revision, null)
                 : null;
