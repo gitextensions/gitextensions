@@ -83,9 +83,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </summary>
         private int _straightenLookAhead => 2 * (_straightenDiagonalsLookAhead + _straightenLanesLookAhead);
 
-        // When the cache is updated, this action can be used to invalidate the UI
-        public event Action? Updated;
-
         public void Clear()
         {
             _loadingCompleted = false;
@@ -563,8 +560,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             _orderedRowCache = localOrderedRowCache.ToImmutable();
-
-            Updated?.Invoke();
 
             return;
 

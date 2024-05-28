@@ -130,8 +130,6 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             };
 
-            _revisionGraph.Updated += () => this.InvokeAndForget(Invalidate);
-
             VirtualMode = true;
             Clear();
 
