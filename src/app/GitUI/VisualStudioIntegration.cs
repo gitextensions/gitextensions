@@ -130,7 +130,7 @@ namespace GitUI
 
         private static partial class NativeMethods
         {
-            [LibraryImport("user32.dll")]
+            [LibraryImport(Libraries.User32)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static partial bool SetForegroundWindow(IntPtr hwnd);
 

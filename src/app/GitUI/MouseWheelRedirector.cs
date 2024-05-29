@@ -84,10 +84,10 @@ namespace GitUI
         private static partial class NativeMethods
         {
             // P/Invoke declarations
-            [LibraryImport("user32.dll")]
+            [LibraryImport(Libraries.User32)]
             public static partial IntPtr WindowFromPoint(POINT pt);
 
-            [LibraryImport("user32.dll")]
+            [LibraryImport(Libraries.User32)]
             public static partial IntPtr SendMessageW(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
             [StructLayout(LayoutKind.Sequential)]

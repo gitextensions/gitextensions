@@ -457,7 +457,7 @@ namespace GitUI.CommandsDialogs
             base.OnHandleCreated(e);
         }
 
-        [LibraryImport("user32.dll")]
+        [LibraryImport(Libraries.User32)]
         private static partial IntPtr SendMessageW(IntPtr hwnd, uint msg, IntPtr wp, IntPtr lp);
 
         protected override void OnApplicationActivated()
