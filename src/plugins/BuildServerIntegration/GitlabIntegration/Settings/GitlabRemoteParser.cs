@@ -9,7 +9,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
         [GeneratedRegex(@"git(?:@|://)(?<host>[^/]+)[:/](?<owner>[^/]+)/(?<repo>[\w_\.\-]+)\.git")]
         private static partial Regex GitlabSshUrlRegex();
 
-        [GeneratedRegex(@"https?://(?<host>[^/@]+)/(?<owner>[^/].+)/(?<repo>[\w_\.\-]+)(?:.git)?")]
+        [GeneratedRegex(@"https?://(?<host>[^/@]+)/(?<owner>.+)/(?<repo>[\w_\.\-]+)(?:.git)?")]
         private static partial Regex GitlabHttpsUrlRegex();
 
         private static readonly Regex[] _gitLabRegexes = [GitlabHttpsUrlRegex(), GitlabSshUrlRegex()];
