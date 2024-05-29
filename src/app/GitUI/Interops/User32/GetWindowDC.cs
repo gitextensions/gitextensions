@@ -4,7 +4,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.User32)]
-        public static extern IntPtr GetWindowDC(IntPtr hwnd);
+        [LibraryImport(Libraries.User32)]
+        public static partial IntPtr GetWindowDC(IntPtr hwnd);
     }
 }

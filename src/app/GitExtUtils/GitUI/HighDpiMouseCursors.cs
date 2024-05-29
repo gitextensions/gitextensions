@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace GitExtUtils.GitUI
 {
-    internal static class HighDpiMouseCursors
+    internal static partial class HighDpiMouseCursors
     {
         /// <summary>
         /// Replaces some .NET Framework 96-dpi .cur file mouse cursors with system cursors.
@@ -28,10 +28,10 @@ namespace GitExtUtils.GitUI
             }
         }
 
-        private static class NativeMethods
+        private static partial class NativeMethods
         {
-            [DllImport("user32.dll")]
-            public static extern IntPtr LoadCursor(IntPtr hInstance, IDC lpCursorName);
+            [LibraryImport("user32.dll")]
+            public static partial IntPtr LoadCursor(IntPtr hInstance, IDC lpCursorName);
         }
 
         private enum IDC

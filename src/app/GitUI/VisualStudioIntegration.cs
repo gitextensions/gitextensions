@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
 {
-    internal static class VisualStudioIntegration
+    internal static partial class VisualStudioIntegration
     {
         static VisualStudioIntegration()
         {
@@ -128,10 +128,11 @@ namespace GitUI
             }
         }
 
-        private static class NativeMethods
+        private static partial class NativeMethods
         {
-            [DllImport("user32.dll")]
-            public static extern bool SetForegroundWindow(IntPtr hwnd);
+            [LibraryImport("user32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static partial bool SetForegroundWindow(IntPtr hwnd);
 
             [DllImport("ole32.dll")]
             public static extern void CreateBindCtx(int reserved, out IBindCtx ppbc);

@@ -4,7 +4,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.Gdi32, ExactSpelling = true, SetLastError = true)]
-        public static extern IntPtr CreateSolidBrush(int crColor);
+        [LibraryImport(Libraries.Gdi32, SetLastError = true)]
+        public static partial IntPtr CreateSolidBrush(int crColor);
     }
 }

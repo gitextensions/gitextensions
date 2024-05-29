@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

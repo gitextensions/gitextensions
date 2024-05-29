@@ -6,8 +6,8 @@ namespace System
     {
         public static IntPtr HWND_BROADCAST => (IntPtr)0xFFFF;
 
-        [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern IntPtr PostMessageW(
+        [LibraryImport(Libraries.User32)]
+        public static partial IntPtr PostMessageW(
             IntPtr hWnd,
             uint Msg,
             IntPtr wParam = default,

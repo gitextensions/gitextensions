@@ -4,7 +4,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern int GetThemeColor(IntPtr hTheme, int iPartId, int iStateId, int iPropId, out COLORREF pColor);
+        [LibraryImport(Libraries.UxTheme)]
+        public static partial int GetThemeColor(IntPtr hTheme, int iPartId, int iStateId, int iPropId, out COLORREF pColor);
     }
 }

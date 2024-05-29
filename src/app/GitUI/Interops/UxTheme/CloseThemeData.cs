@@ -4,7 +4,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern int CloseThemeData(IntPtr hTheme);
+        [LibraryImport(Libraries.UxTheme)]
+        public static partial int CloseThemeData(IntPtr hTheme);
     }
 }

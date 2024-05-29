@@ -4,7 +4,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.User32, ExactSpelling = true, SetLastError = true)]
-        public static extern int GetScrollPos(IntPtr hWnd, SB nBar);
+        [LibraryImport(Libraries.User32, SetLastError = true)]
+        public static partial int GetScrollPos(IntPtr hWnd, SB nBar);
     }
 }

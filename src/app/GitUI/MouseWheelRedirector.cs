@@ -3,7 +3,7 @@ using ResourceManager;
 
 namespace GitUI
 {
-    public sealed class MouseWheelRedirector : IMessageFilter
+    public sealed partial class MouseWheelRedirector : IMessageFilter
     {
         private static readonly MouseWheelRedirector instance = new();
 
@@ -75,20 +75,20 @@ namespace GitUI
                 return false;
             }
 
-            NativeMethods.SendMessage(hwnd, m.Msg, m.WParam, m.LParam);
+            NativeMethods.SendMessageW(hwnd, m.Msg, m.WParam, m.LParam);
             return true;
 
             static bool IsNonScrollableRichTextBox(Control c) => c is RichTextBox { ScrollBars: RichTextBoxScrollBars.None };
         }
 
-        private static class NativeMethods
+        private static partial class NativeMethods
         {
             // P/Invoke declarations
-            [DllImport("user32.dll")]
-            public static extern IntPtr WindowFromPoint(POINT pt);
+            [LibraryImport("user32.dll")]
+            public static partial IntPtr WindowFromPoint(POINT pt);
 
-            [DllImport("user32.dll")]
-            public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+            [LibraryImport("user32.dll")]
+            public static partial IntPtr SendMessageW(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
             [StructLayout(LayoutKind.Sequential)]
             public readonly struct POINT

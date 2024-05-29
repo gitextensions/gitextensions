@@ -4,8 +4,8 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern IntPtr SendMessageW(
+        [LibraryImport(Libraries.User32)]
+        public static partial IntPtr SendMessageW(
             IntPtr hWnd,
             uint Msg,
             IntPtr wParam = default,
