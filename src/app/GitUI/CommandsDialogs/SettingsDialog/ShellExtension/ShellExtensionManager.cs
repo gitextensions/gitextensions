@@ -42,7 +42,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
         /// <exception cref="FileNotFoundException">If at least one necessary for registration file wasn't found</exception>
         /// <exception cref="Win32Exception">If user canceled elevation dialog (when ex.NativeErrorCode == 1223)</exception>
         /// <exception cref="Exception">Other potential error</exception>
-        public static void Register() => RunRegSvrForShellExtensionDlls("/s {0}");
+        public static void Register()
+        {
+            AppSettings.SetInstallDir(AppSettings.GetGitExtensionsDirectory());
+            RunRegSvrForShellExtensionDlls("/s {0}");
+        }
 
         /// <summary>
         /// Unregister shell extensions
