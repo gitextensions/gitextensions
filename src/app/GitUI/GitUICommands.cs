@@ -1427,7 +1427,8 @@ namespace GitUI
                     return true;
                 case "add":
                 case "addfiles":
-                    return StartAddFilesDialog(null, args.Count == 3 ? args[2] : ".");
+                    // If filenames have been specified, quote them and pass them to the dialog, else pass '.' for current dir.
+                    return StartAddFilesDialog(owner: null, addFiles: args.Count < 3 ? "." : string.Join(' ', args.Skip(2).Select(file => file.Quote())));
                 case "apply":       // [filename]
                 case "applypatch":
                     return StartApplyPatchDialog(null, args.Count == 3 ? args[2] : "");

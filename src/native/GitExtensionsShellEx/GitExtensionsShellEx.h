@@ -81,7 +81,9 @@ private:
 
     UINT AddMenuItem(HMENU hmenu, LPTSTR text, int resource, UINT firstId, UINT id, UINT position, bool isSubMenu);
 
+    UINT m_uNumFiles;
     TCHAR m_szFile[MAX_PATH];
+    CString m_sFilesQuoted;
     std::map<UINT_PTR, int> myIDMap;
     std::map<UINT, HBITMAP> bitmaps;
     std::map<int, int> commandsId;
