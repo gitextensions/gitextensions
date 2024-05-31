@@ -368,6 +368,9 @@ namespace GitUI.NBugReports
                 }
             }
 
+            // Turns single quotes to double quotes on Windows if there are any at all around the repo path.
+            // in : git config --global -add safe.directory '%(prefix)///unc_machine/folder/to/repo'
+            // out: git config --global -add safe.directory "%(prefix)///unc_machine/folder/to/repo"
             static string ReplaceQuotes(string command)
             {
                 if (!EnvUtils.RunningOnWindows() || !command.EndsWith('\''))
