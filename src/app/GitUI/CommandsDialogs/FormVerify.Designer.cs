@@ -49,7 +49,7 @@
             copyHashToolStripMenuItem = new ToolStripMenuItem();
             copyParentHashToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
-            fileViewer = new GitUI.Editor.FileViewer();
+            fileViewer = new Editor.FileViewer();
             toolTip = new ToolTip(components);
             panel1 = new Panel();
             panel2 = new Panel();
@@ -57,11 +57,11 @@
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(Warnings)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Warnings).BeginInit();
             mnuLostObjects.SuspendLayout();
             SuspendLayout();
             // 
@@ -145,7 +145,7 @@
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(859, 134);
+            panel2.Size = new Size(859, 138);
             panel2.TabIndex = 4;
             // 
             // flowLayoutPanel1
@@ -157,7 +157,7 @@
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Padding = new Padding(5);
-            flowLayoutPanel1.Size = new Size(318, 134);
+            flowLayoutPanel1.Size = new Size(351, 138);
             flowLayoutPanel1.TabIndex = 13;
             // 
             // label2
@@ -165,17 +165,17 @@
             label2.AutoSize = true;
             label2.Location = new Point(8, 5);
             label2.Name = "label2";
-            label2.Size = new Size(302, 91);
+            label2.Size = new Size(335, 105);
             label2.TabIndex = 15;
             label2.Text = resources.GetString("label2.Text");
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(8, 101);
+            label1.Location = new Point(8, 115);
             label1.Margin = new Padding(3, 5, 3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(179, 13);
+            label1.Size = new Size(200, 15);
             label1.TabIndex = 16;
             label1.Text = "Double-click on a row for quick view";
             // 
@@ -212,10 +212,9 @@
             NoReflogs.CheckState = CheckState.Checked;
             NoReflogs.Location = new Point(430, 35);
             NoReflogs.Name = "NoReflogs";
-            NoReflogs.Size = new Size(335, 30);
+            NoReflogs.Size = new Size(375, 34);
             NoReflogs.TabIndex = 1;
-            NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
-    "reachable.";
+            NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be reachable.";
             NoReflogs.UseVisualStyleBackColor = true;
             NoReflogs.CheckedChanged += NoReflogsCheckedChanged;
             // 
@@ -224,10 +223,9 @@
             FullCheck.AutoSize = true;
             FullCheck.Location = new Point(430, 101);
             FullCheck.Name = "FullCheck";
-            FullCheck.Size = new Size(382, 30);
+            FullCheck.Size = new Size(392, 34);
             FullCheck.TabIndex = 3;
-            FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
-    " ones found in alternate object pools.\r\n";
+            FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the ones found in alternate object pools.\r\n";
             FullCheck.UseVisualStyleBackColor = true;
             FullCheck.CheckedChanged += FullCheckCheckedChanged;
             // 
@@ -236,10 +234,9 @@
             Unreachable.AutoSize = true;
             Unreachable.Location = new Point(430, 68);
             Unreachable.Name = "Unreachable";
-            Unreachable.Size = new Size(383, 30);
+            Unreachable.Size = new Size(430, 34);
             Unreachable.TabIndex = 2;
-            Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
-    "\nnodes.\r\n";
+            Unreachable.Text = "Print out objects that exist but that aren't readable from any of the reference \r\nnodes.\r\n";
             Unreachable.UseVisualStyleBackColor = true;
             Unreachable.CheckedChanged += UnreachableCheckedChanged;
             // 
@@ -268,14 +265,7 @@
             Warnings.AllowUserToResizeRows = false;
             Warnings.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             Warnings.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            Warnings.Columns.AddRange(new DataGridViewColumn[] {
-            columnIsLostObjectSelected,
-            columnDate,
-            columnType,
-            columnSubject,
-            columnAuthor,
-            columnHash,
-            columnParent});
+            Warnings.Columns.AddRange(new DataGridViewColumn[] { columnIsLostObjectSelected, columnDate, columnType, columnSubject, columnAuthor, columnHash, columnParent });
             Warnings.Dock = DockStyle.Fill;
             Warnings.EditMode = DataGridViewEditMode.EditOnEnter;
             Warnings.Location = new Point(0, 0);
@@ -306,7 +296,7 @@
             columnDate.HeaderText = "Date";
             columnDate.Name = "columnDate";
             columnDate.ReadOnly = true;
-            columnDate.Width = 55;
+            columnDate.Width = 56;
             // 
             // columnType
             // 
@@ -346,13 +336,7 @@
             // 
             // mnuLostObjects
             // 
-            mnuLostObjects.Items.AddRange(new ToolStripItem[] {
-            mnuLostObjectView,
-            mnuLostObjectsCreateTag,
-            mnuLostObjectsCreateBranch,
-            copyHashToolStripMenuItem,
-            copyParentHashToolStripMenuItem,
-            saveAsToolStripMenuItem});
+            mnuLostObjects.Items.AddRange(new ToolStripItem[] { mnuLostObjectView, mnuLostObjectsCreateTag, mnuLostObjectsCreateBranch, copyHashToolStripMenuItem, copyParentHashToolStripMenuItem, saveAsToolStripMenuItem });
             mnuLostObjects.Name = "mnuLostObjects";
             mnuLostObjects.Size = new Size(190, 136);
             mnuLostObjects.Opening += mnuLostObjects_Opening;
@@ -369,7 +353,7 @@
             // 
             mnuLostObjectsCreateTag.Image = Properties.Images.TagCreate;
             mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
-            mnuLostObjectsCreateTag.ShortcutKeys = ((Keys)((Keys.Control | Keys.T)));
+            mnuLostObjectsCreateTag.ShortcutKeys = Keys.Control | Keys.T;
             mnuLostObjectsCreateTag.Size = new Size(189, 22);
             mnuLostObjectsCreateTag.Text = "Create tag";
             mnuLostObjectsCreateTag.Click += mnuLostObjectsCreateTag_Click;
@@ -378,7 +362,7 @@
             // 
             mnuLostObjectsCreateBranch.Image = Properties.Images.BranchCreate;
             mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
-            mnuLostObjectsCreateBranch.ShortcutKeys = ((Keys)((Keys.Control | Keys.B)));
+            mnuLostObjectsCreateBranch.ShortcutKeys = Keys.Control | Keys.B;
             mnuLostObjectsCreateBranch.Size = new Size(189, 22);
             mnuLostObjectsCreateBranch.Text = "Create branch";
             mnuLostObjectsCreateBranch.Click += mnuLostObjectsCreateBranch_Click;
@@ -403,7 +387,7 @@
             // 
             saveAsToolStripMenuItem.Image = Properties.Images.SaveAs;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.S)));
+            saveAsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
             saveAsToolStripMenuItem.Size = new Size(189, 22);
             saveAsToolStripMenuItem.Text = "Save as...";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
@@ -411,6 +395,7 @@
             // fileViewer
             // 
             fileViewer.Dock = DockStyle.Fill;
+            fileViewer.EnableAutomaticContinuousScroll = false;
             fileViewer.Location = new Point(0, 0);
             fileViewer.Margin = new Padding(0);
             fileViewer.Name = "fileViewer";
@@ -445,13 +430,12 @@
             flowLayoutPanel1.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(splitContainer1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(Warnings)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Warnings).EndInit();
             mnuLostObjects.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
