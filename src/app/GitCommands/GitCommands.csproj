@@ -5,8 +5,7 @@
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
   </PropertyGroup>
-  <PropertyGroup>
-    <!-- To be limited to Debug after initial usage -->
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>$(DefineConstants);TRACE_REVISIONREADER</DefineConstants>
   </PropertyGroup>
 
