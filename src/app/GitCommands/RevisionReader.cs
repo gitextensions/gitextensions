@@ -260,6 +260,8 @@ namespace GitCommands
             // Initial buffer to give very quick feedback to user
             const int initialCommitsBatchSize = 100;
             const int furtherCommitsBatchSize = 25_000;
+            const int maxUpdateDelayMs = 500;
+            int recentUpdateTimeStamp = Environment.TickCount;
             List<GitRevision> revisions = new(capacity: initialCommitsBatchSize);
             foreach (ReadOnlyMemory<byte> chunk in process.StandardOutput.BaseStream.SplitLogOutput())
             {
@@ -271,13 +273,15 @@ namespace GitCommands
                     revisionCount++;
 #endif
                     revisions.Add(revision);
-                    if (revisions.Count == revisions.Capacity)
+                    int now = Environment.TickCount;
+                    if (revisions.Count == revisions.Capacity || (now - recentUpdateTimeStamp) >= maxUpdateDelayMs)
                     {
                         subject.OnNext(revisions);
 
                         // ... then use big buffer to load all the remaining revisions with better performance
                         // by creating another array to avoid "Collection was modified" exception
                         revisions = new(furtherCommitsBatchSize);
+                        recentUpdateTimeStamp = now;
                     }
                 }
             }
