@@ -276,7 +276,7 @@ namespace GitUI.NBugReports
                 SizeToContent = true,
             };
             int startIndex = error.IndexOf(ExecutableExtensions.DubiousOwnershipSecurityConfigString);
-            string gitConfigTrustRepoCommand = ReplaceQuotes(error[startIndex..].Trim());
+            string gitConfigTrustRepoCommand = ReplaceRepoPathQuotes(error[startIndex..].Trim());
             string folderPath = error[(startIndex + ExecutableExtensions.DubiousOwnershipSecurityConfigString.Length + 1)..];
 
             TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);
@@ -371,7 +371,7 @@ namespace GitUI.NBugReports
             // Turns single quotes to double quotes on Windows if there are any at all around the repo path.
             // in : git config --global -add safe.directory '%(prefix)///unc_machine/folder/to/repo'
             // out: git config --global -add safe.directory "%(prefix)///unc_machine/folder/to/repo"
-            static string ReplaceQuotes(string command)
+            static string ReplaceRepoPathQuotes(string command)
             {
                 if (!EnvUtils.RunningOnWindows() || !command.EndsWith('\''))
                 {
