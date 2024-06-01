@@ -5,6 +5,7 @@ using System.Text;
 using BugReporter;
 using BugReporter.Serialization;
 using GitCommands;
+using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitUI.CommandsDialogs;
@@ -275,7 +276,7 @@ namespace GitUI.NBugReports
                 SizeToContent = true,
             };
             int startIndex = error.IndexOf(ExecutableExtensions.DubiousOwnershipSecurityConfigString);
-            string gitConfigTrustRepoCommand = error[startIndex..].Trim();
+            string gitConfigTrustRepoCommand = ReplaceRepoPathQuotes(error[startIndex..].Trim());
             string folderPath = error[(startIndex + ExecutableExtensions.DubiousOwnershipSecurityConfigString.Length + 1)..];
 
             TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);
@@ -365,6 +366,20 @@ namespace GitUI.NBugReports
                             formBrowse.SetWorkingDir(workingDir);
                         });
                 }
+            }
+
+            // Turns single quotes to double quotes on Windows if there are any at all around the repo path.
+            // in : git config --global -add safe.directory '%(prefix)///unc_machine/folder/to/repo'
+            // out: git config --global -add safe.directory "%(prefix)///unc_machine/folder/to/repo"
+            static string ReplaceRepoPathQuotes(string command)
+            {
+                if (!EnvUtils.RunningOnWindows() || !command.EndsWith('\''))
+                {
+                    return command;
+                }
+
+                int quoteIndex = command.IndexOf("'%(prefix)");
+                return quoteIndex < 0 ? command : @$"{command[..quoteIndex]}""{command[(quoteIndex + 1)..^1]}""";
             }
         }
 
