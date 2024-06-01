@@ -709,32 +709,32 @@ STDMETHODIMP CGitExtensionsShellEx::GetCommandString(
 
 void CGitExtensionsShellEx::RunGitEx(const TCHAR* command)
 {
-    CString szFile = m_szFile;
-    CString szCommandName = command;
-    CString args;
+    CString sFile = m_szFile;
+    CString sArgs;
 
-    if (szFile.GetLength() > 1 && szFile[szFile.GetLength() - 1] == '\\')
+    if (sFile.GetLength() > 1 && sFile[sFile.GetLength() - 1] == '\\')
     {
         // Escape the final backslash to avoid escaping the quote.
         // This is a problem for drive roots on Windows, such as "C:\".
-        szFile += '\\';
+        sFile += '\\';
     }
 
-    args += command;
-    args += " \"";
-    args += szFile;
-    args += "\"";
+    sArgs += command;
+    sArgs += " \"";
+    sArgs += sFile;
+    sArgs += "\"";
 
-    CString dir = "";
+    CString sDir = "";
 
-    if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"InstallDir");
-    if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_USERS, L"SOFTWARE\\GitExtensions", L"InstallDir");
-    if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_LOCAL_MACHINE, L"SOFTWARE\\GitExtensions", L"InstallDir");
+    if (sDir.GetLength() == 0)
+        sDir = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"InstallDir");
+    if (sDir.GetLength() == 0)
+        sDir = GetRegistryValue(HKEY_USERS, L"SOFTWARE\\GitExtensions", L"InstallDir");
+    if (sDir.GetLength() == 0)
+        sDir = GetRegistryValue(HKEY_LOCAL_MACHINE, L"SOFTWARE\\GitExtensions", L"InstallDir");
 
-    ShellExecute(NULL, L"open", L"GitExtensions.exe", args, dir, SW_SHOWNORMAL);
+    CString sExe = sDir + L"\\GitExtensions.exe";
+    ShellExecute(NULL, L"open", sExe, sArgs, nullptr, SW_SHOWNORMAL);
 }
 
 STDMETHODIMP CGitExtensionsShellEx::InvokeCommand(LPCMINVOKECOMMANDINFO pCmdInfo)
