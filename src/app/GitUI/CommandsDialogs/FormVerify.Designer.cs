@@ -50,6 +50,7 @@
             copyParentHashToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
             fileViewer = new GitUI.Editor.FileViewer();
+            toolTip = new ToolTip(components);
             panel1 = new Panel();
             panel2 = new Panel();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -181,11 +182,12 @@
             // ShowOtherObjects
             // 
             ShowOtherObjects.AutoSize = true;
-            ShowOtherObjects.Location = new Point(588, 9);
+            ShowOtherObjects.Location = new Point(660, 9);
             ShowOtherObjects.Name = "ShowOtherObjects";
-            ShowOtherObjects.Size = new Size(117, 17);
+            ShowOtherObjects.Size = new Size(138, 19);
             ShowOtherObjects.TabIndex = 0;
-            ShowOtherObjects.Text = "Show other objects";
+            ShowOtherObjects.Text = "Show blobs and trees";
+            toolTip.SetToolTip(ShowOtherObjects, "To recover contents of files once staged but mistakenly deleted");
             ShowOtherObjects.UseVisualStyleBackColor = true;
             ShowOtherObjects.CheckedChanged += ShowOtherObjects_CheckedChanged;
             // 
@@ -196,9 +198,10 @@
             ShowCommitsAndTags.CheckState = CheckState.Checked;
             ShowCommitsAndTags.Location = new Point(430, 9);
             ShowCommitsAndTags.Name = "ShowCommitsAndTags";
-            ShowCommitsAndTags.Size = new Size(138, 17);
+            ShowCommitsAndTags.Size = new Size(210, 19);
             ShowCommitsAndTags.TabIndex = 0;
-            ShowCommitsAndTags.Text = "Show commits and tags";
+            ShowCommitsAndTags.Text = "Show commits and annotated tags";
+            toolTip.SetToolTip(ShowCommitsAndTags, "To recover unreachable commits or annotated tags");
             ShowCommitsAndTags.UseVisualStyleBackColor = true;
             ShowCommitsAndTags.CheckedChanged += ShowCommitsCheckedChanged;
             // 
@@ -414,6 +417,13 @@
             fileViewer.Size = new Size(155, 374);
             fileViewer.TabIndex = 0;
             // 
+            // toolTip
+            // 
+            toolTip.AutomaticDelay = 0;
+            toolTip.AutoPopDelay = 5000;
+            toolTip.InitialDelay = 0;
+            toolTip.ReshowDelay = 100;
+            // 
             // FormVerify
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -475,5 +485,6 @@
         private ToolStripMenuItem saveAsToolStripMenuItem;
         private SplitContainer splitContainer1;
         private Editor.FileViewer fileViewer;
+        private ToolTip toolTip;
     }
 }
