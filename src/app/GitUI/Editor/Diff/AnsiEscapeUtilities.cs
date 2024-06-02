@@ -114,8 +114,9 @@ public partial class AnsiEscapeUtilities
     /// <param name="text">The text to parse.</param>
     /// <param name="sb">StringBuilder to appened the text with with the escape sequences removed.</param>
     /// <param name="textMarkers">Detected and current started highlight info for the document.</param>
-    public static void ParseEscape(string text, StringBuilder sb, List<TextMarker> textMarkers, bool themeColors = false)
+    public static void ParseEscape(string text, StringBuilder sb, List<TextMarker> textMarkers, bool themeColors = false, bool traceErrors = true)
     {
+        int errorCount = 0;
         int prevLineOffset = 0;
         int currentColorId = 0; // current color, used when just bold etc is set
         HighlightInfo currentHighlight = new()
@@ -140,7 +141,8 @@ public partial class AnsiEscapeUtilities
                 {
                     // End current match so new can be started, this is expected but normally not used by Git (?).
                     // Also assume that the new colors are "complete", not just overlay.
-                    Trace.WriteLine($"New start marker without end for grep ({sb.Length},{match.Index}) {text}");
+                    ++errorCount;
+                    Trace.WriteLineIf(traceErrors && errorCount <= 3, $"New start marker without end for grep ({sb.Length}, {match.Index}){(errorCount == 1 ? " in:\n" + text : "")}");
 
                     currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
                     if (TryGetTextMarker(currentHighlight, out TextMarker tm))
