@@ -5,43 +5,33 @@ namespace GitUI.CommandsDialogs;
 
 internal class ScriptOptionsProvider : IScriptOptionsProvider
 {
-    private const string _selectedFiles = "SelectedFiles";
+    private const string _selectedRelativePaths = "SelectedRelativePaths";
     private const string _lineNumber = "LineNumber";
 
-    private Func<IEnumerable<string>> _getSelectedFiles;
-    private Func<IFullPathResolver> _getFullPathResolver;
+    private Func<IEnumerable<string>> _getSelectedRelativePaths;
     private Func<int?> _getCurrentLineNumber;
 
-    public ScriptOptionsProvider(Func<IEnumerable<string>> getSelectedFiles, Func<IFullPathResolver> getFullPathResolver, Func<int?> getCurrentLineNumber)
+    public ScriptOptionsProvider(Func<IEnumerable<string>> getSelectedRelativePaths, Func<int?> getCurrentLineNumber)
     {
-        _getSelectedFiles = getSelectedFiles;
-        _getFullPathResolver = getFullPathResolver;
+        _getSelectedRelativePaths = getSelectedRelativePaths;
         _getCurrentLineNumber = getCurrentLineNumber;
     }
 
-    public ScriptOptionsProvider(FileStatusList fileStatusList, Func<IFullPathResolver> getFullPathResolver, Func<int?> getCurrentLineNumber)
-        : this(() => fileStatusList.SelectedItems.Select(item => item.Item.Name), getFullPathResolver, getCurrentLineNumber)
+    public ScriptOptionsProvider(FileStatusList fileStatusList, Func<int?> getCurrentLineNumber)
+        : this(() => fileStatusList.SelectedItems.Select(item => item.Item.Name), getCurrentLineNumber)
     {
     }
 
-    IReadOnlyList<string> IScriptOptionsProvider.Options { get; } = new[] { _selectedFiles, _lineNumber };
+    IReadOnlyList<string> IScriptOptionsProvider.Options { get; } = new[] { _selectedRelativePaths, _lineNumber };
 
     string? IScriptOptionsProvider.GetValue(string option)
     {
         switch (option)
         {
-            case _selectedFiles:
-                IEnumerable<string> selectedFiles = _getSelectedFiles();
-                if (!selectedFiles.Any())
-                {
-                    return null;
-                }
-
-                IFullPathResolver fullPathResolver = _getFullPathResolver();
-                return string.Join(" ", selectedFiles.Select(item => fullPathResolver.Resolve(item).QuoteForCommandLine()));
+            case _selectedRelativePaths:
+                return string.Join(" ", _getSelectedRelativePaths().Select(item => item.QuoteForCommandLine()));
             case _lineNumber:
-                int? line = _getCurrentLineNumber();
-                return line?.ToString();
+                return _getCurrentLineNumber()?.ToString() ?? "";
             default:
                 throw new NotImplementedException(option);
         }
