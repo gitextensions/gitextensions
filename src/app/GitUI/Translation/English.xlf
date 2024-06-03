@@ -7570,11 +7570,19 @@ reflog to be reachable.</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowCommitsAndTags.Text">
-        <source>Show commits and tags</source>
+        <source>Show commits and annotated tags</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowCommitsAndTags.toolTip">
+        <source>To recover unreachable commits or annotated tags</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowOtherObjects.Text">
-        <source>Show other objects</source>
+        <source>Show blobs and trees</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowOtherObjects.toolTip">
+        <source>To recover contents of files once staged but mistakenly deleted</source>
         <target />
       </trans-unit>
       <trans-unit id="Unreachable.Text">
