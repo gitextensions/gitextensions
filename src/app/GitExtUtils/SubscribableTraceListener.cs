@@ -65,7 +65,7 @@ public class SubscribableTraceListener : TraceListener, ISubscribableTraceListen
 
                 string message = _trace.ToString();
 #if DEBUG
-                if (message.Contains("Exception")
+                if (message.Contains("Exception"))
 #endif
                 {
                     TraceReceived?.Invoke(message);
