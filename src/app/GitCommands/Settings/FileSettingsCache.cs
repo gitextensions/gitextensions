@@ -9,10 +9,9 @@ namespace GitCommands.Settings
     {
         private const double SaveTime = 2000;
         private DateTime? _lastFileRead;
-        private DateTime _lastFileModificationDate = DateTime.MaxValue;
+        private DateTime _lastFileModificationDate;
         private DateTime? _lastModificationDate;
         private readonly FileSystemWatcher _fileWatcher = new();
-        private readonly bool _canEnableFileWatcher;
 
         // The FileSystemWatcher is not reporting changes for WSL
         // https://github.com/microsoft/WSL/issues/4581
@@ -36,32 +35,21 @@ namespace GitCommands.Settings
             _fileWatcher.IncludeSubdirectories = false;
             _fileWatcher.EnableRaisingEvents = false;
             _fileWatcher.Changed += _fileWatcher_Changed;
-            _fileWatcher.Renamed += _fileWatcher_Renamed;
-            _fileWatcher.Created += _fileWatcher_Created;
+            _fileWatcher.Created += _fileWatcher_Changed;
+            _fileWatcher.Deleted += _fileWatcher_Changed;
+            _fileWatcher.Renamed += _fileWatcher_Changed;
 
             string? dir = Path.GetDirectoryName(SettingsFilePath);
-            if (Directory.Exists(dir) && File.Exists(SettingsFilePath))
+            if (Directory.Exists(dir))
             {
                 _fileWatcher.Path = dir;
                 _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
-                _canEnableFileWatcher = true;
-                _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
+                _fileWatcher.EnableRaisingEvents = true;
 
-                // The file exists, but notifications may not fire
+                // Notifications may not fire
                 _forceFileChangeChecks = PathUtil.IsWslPath(SettingsFilePath);
             }
 
-            FileChanged();
-        }
-
-        private void _fileWatcher_Created(object sender, FileSystemEventArgs e)
-        {
-            _lastFileRead = null;
-            FileChanged();
-        }
-
-        private void _fileWatcher_Renamed(object sender, RenamedEventArgs e)
-        {
             FileChanged();
         }
 
@@ -76,15 +64,15 @@ namespace GitCommands.Settings
                         _saveTimer.Dispose();
                         _saveTimer = null;
                         _fileWatcher.Changed -= _fileWatcher_Changed;
-                        _fileWatcher.Renamed -= _fileWatcher_Renamed;
-                        _fileWatcher.Created -= _fileWatcher_Created;
+                        _fileWatcher.Created -= _fileWatcher_Changed;
+                        _fileWatcher.Deleted -= _fileWatcher_Changed;
+                        _fileWatcher.Renamed -= _fileWatcher_Changed;
+                        _fileWatcher.Dispose();
 
                         if (_autoSave)
                         {
                             Save();
                         }
-
-                        _fileWatcher.Dispose();
                     }
                 });
             }
@@ -172,12 +160,8 @@ namespace GitCommands.Settings
                     throw new SaveSettingsException(ex);
                 }
 
-                _lastFileModificationDate = GetLastFileModificationUtc();
+                FileChanged();
                 _lastFileRead = DateTime.UtcNow;
-                if (_saveTimer is not null)
-                {
-                    _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
-                }
             }
             catch (IOException ex)
             {
@@ -193,16 +177,14 @@ namespace GitCommands.Settings
                 {
                     if (_forceFileChangeChecks)
                     {
-                        _lastFileModificationDate = GetLastFileModificationUtc();
+                        FileChanged();
                     }
 
                     ReadSettings(SettingsFilePath);
                     _lastFileRead = DateTime.UtcNow;
-                    _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
                 }
                 catch (Exception e)
                 {
-                    // TODO: should we report it to the user somehow?
                     Trace.WriteLine($"Failed to load {SettingsFilePath}: {e.Message}");
                 }
             }
@@ -217,7 +199,7 @@ namespace GitCommands.Settings
         {
             if (_forceFileChangeChecks)
             {
-                _lastFileModificationDate = GetLastFileModificationUtc();
+                FileChanged();
             }
 
             return !_lastFileRead.HasValue || _lastFileModificationDate > _lastFileRead.Value;
@@ -269,7 +251,6 @@ namespace GitCommands.Settings
             }
 
             public FileSystemWatcher FileSystemWatcher => _fileSettingsCache._fileWatcher;
-            public bool CanEnableFileWatcher => _fileSettingsCache._canEnableFileWatcher;
             public void SaveImpl() => _fileSettingsCache.SaveImpl();
             public void SetLastModificationDate(DateTime date) => _fileSettingsCache._lastModificationDate = date;
         }
