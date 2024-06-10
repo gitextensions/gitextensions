@@ -65,6 +65,7 @@
             TextBox.GotFocus += TextBox_GotFocus;
             TextBox.LostFocus += TextBox_LostFocus;
             TextBox.MouseDown += TextBox_MouseDown;
+            TextBox.WordWrap = false;
             // 
             // AutoComplete
             // 

@@ -11,47 +11,38 @@ namespace GitUI.UserControls
     {
         private RichTextBox _textBox;
 
-        private bool _isAtFirstColumn;
-        private bool _isAtEndColumn;
-        private bool _isAtFirstLine;
-        private bool _isAtLastLine;
-
         public TextBoxSilencer(RichTextBox textBox)
         {
             _textBox = textBox;
-            _textBox.SelectionChanged += (s, e) => UpdatePositionFlags();
             _textBox.KeyDown += OnKeyDown;
         }
 
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.Handled)
+            if (e.Handled || _textBox.SelectionLength > 0)
             {
                 return;
             }
 
-            switch (e.KeyCode)
-            {
-                case Keys.Up when _isAtFirstLine:
-                case Keys.Down when _isAtLastLine:
-                case Keys.Home when _isAtFirstColumn:
-                case Keys.End when _isAtEndColumn:
-                case Keys.Left or Keys.PageUp when _isAtFirstLine && _isAtFirstColumn:
-                case Keys.Right or Keys.PageDown when _isAtLastLine && _isAtEndColumn:
-                    e.Handled = true;
-                    break;
-            }
-        }
-
-        private void UpdatePositionFlags()
-        {
             string text = _textBox.Text;
             int position = _textBox.SelectionStart;
 
-            _isAtFirstColumn = position == _textBox.GetFirstCharIndexOfCurrentLine();
-            _isAtEndColumn = position == GetLineEnd(text, startIndex: position);
-            _isAtFirstLine = position <= GetLineEnd(text, startIndex: 0);
-            _isAtLastLine = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex: position) < 0;
+            bool isAtFirstColumn = position == _textBox.GetFirstCharIndexOfCurrentLine();
+            bool isAtEndColumn = position == GetLineEnd(text, startIndex: position);
+            bool isAtFirstLine = position <= GetLineEnd(text, startIndex: 0);
+            bool isAtLastLine = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex: position) < 0;
+
+            switch (e.KeyCode)
+            {
+                case Keys.Up when isAtFirstLine:
+                case Keys.Down when isAtLastLine:
+                case Keys.Home when isAtFirstColumn:
+                case Keys.End when isAtEndColumn:
+                case Keys.Left or Keys.PageUp when isAtFirstLine && isAtFirstColumn:
+                case Keys.Right or Keys.PageDown when isAtLastLine && isAtEndColumn:
+                    e.Handled = true;
+                    break;
+            }
         }
 
         private static int GetLineEnd(string text, int startIndex)
