@@ -475,7 +475,7 @@ namespace GitUI.CommandsDialogs
             fetchPruneAllToolStripMenuItem.Name = "fetchPruneAllToolStripMenuItem";
             fetchPruneAllToolStripMenuItem.Size = new Size(239, 22);
             fetchPruneAllToolStripMenuItem.Text = "F&etch and prune all";
-            fetchPruneAllToolStripMenuItem.ToolTipText = "Fetch branches and tags from all remote repositories also prune deleted refs";
+            fetchPruneAllToolStripMenuItem.ToolTipText = "Fetch branches and tags from all remote repositories also prune deleted branches";
             fetchPruneAllToolStripMenuItem.Click += fetchPruneAllToolStripMenuItem_Click;
             // 
             // setDefaultPullButtonActionToolStripMenuItem
