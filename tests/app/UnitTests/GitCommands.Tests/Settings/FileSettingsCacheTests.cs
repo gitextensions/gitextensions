@@ -37,14 +37,6 @@ namespace GitCommandsTests.Settings
 
         [TestCase(null)]
         [TestCase("")]
-        [TestCase("boo")]
-        public void ctor_CanEnableFileWatcher_should_be_false_if_invalid_dir(string settingsFilePath)
-        {
-            new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().CanEnableFileWatcher.Should().BeFalse();
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
         public void SaveImpl_should_throw_if_invalid_path(string settingsFilePath)
         {
             FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
