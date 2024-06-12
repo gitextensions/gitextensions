@@ -42,6 +42,7 @@
     public class RecentRepoSplitter
     {
         public int MaxTopRepositories { get; set; }
+        public bool HideTopRepositoriesFromRecentList { get; set; }
         public ShorteningRecentRepoPathStrategy ShorteningStrategy { get; set; }
         public bool SortTopRepos { get; set; }
         public bool SortRecentRepos { get; set; }
@@ -52,6 +53,7 @@
         public RecentRepoSplitter()
         {
             MaxTopRepositories = AppSettings.MaxTopRepositories;
+            HideTopRepositoriesFromRecentList = AppSettings.HideTopRepositoriesFromRecentList.Value;
             ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy;
             SortTopRepos = AppSettings.SortTopRepos;
             SortRecentRepos = AppSettings.SortRecentRepos;
@@ -81,7 +83,10 @@
                     topRepos.Add(ri);
                 }
 
-                recentRepos.Add(ri);
+                if (!HideTopRepositoriesFromRecentList || !ri.MostRecent)
+                {
+                    recentRepos.Add(ri);
+                }
 
                 if (middleDot)
                 {
@@ -120,7 +125,7 @@
                 addToList.AddRange(
                     from caption in orderedRepos.Keys
                     from repo in orderedRepos[caption]
-                    where !mostRecent || repo.MostRecent == mostRecent
+                    where (!mostRecent && !HideTopRepositoriesFromRecentList) || repo.MostRecent == mostRecent
                     select repo);
             }
 
