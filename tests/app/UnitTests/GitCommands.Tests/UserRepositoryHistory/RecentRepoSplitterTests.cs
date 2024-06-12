@@ -149,8 +149,8 @@ public class RecentRepoSplitterTests
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir;
-        sut.SortRecentRepos = true;
         sut.SortTopRepos = true;
+        sut.SortRecentRepos = true;
         List<RecentRepoInfo> topRepoList = new();
         List<RecentRepoInfo> recentRepoList = new();
 
@@ -164,6 +164,37 @@ public class RecentRepoSplitterTests
         recentRepoList[1].Caption.Should().Be("repo_anchored_in_top_path1");
         recentRepoList[2].Caption.Should().Be("repo_anchored_in_top_path2");
         recentRepoList[3].Caption.Should().Be("repo_not_anchored_path");
+    }
+
+    [Test]
+    public void SplitRecentRepos_Should_split_depending_anchor_and_sort_alphabetically_Hiding_Top_Repo_In_Recent_list()
+    {
+        List<Repository> history =
+        [
+            // Unsorted!
+            new Repository(repoNotAnchoredPath) { Anchor = Repository.RepositoryAnchor.None },
+            new Repository(repoAnchoredInRecentPath) { Anchor = Repository.RepositoryAnchor.AnchoredInRecent },
+            new Repository(repoAnchoredInTopPath2) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository(repoAnchoredInTopPath1) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+        ];
+
+        RecentRepoSplitter sut = new();
+
+        sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir;
+        sut.SortTopRepos = true;
+        sut.SortRecentRepos = true;
+        sut.HideTopRepositoriesFromRecentList = true;
+        List<RecentRepoInfo> topRepoList = new();
+        List<RecentRepoInfo> recentRepoList = new();
+
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
+
+        topRepoList.Count.Should().Be(2);
+        topRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
+        topRepoList[1].Caption.Should().Be("repo_anchored_in_top_path2");
+        recentRepoList.Count.Should().Be(2);
+        recentRepoList[0].Caption.Should().Be("repo_anchored_in_recent_path");
+        recentRepoList[1].Caption.Should().Be("repo_not_anchored_path");
     }
     #endregion
 }
