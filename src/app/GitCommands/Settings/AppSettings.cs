@@ -40,6 +40,7 @@ namespace GitCommands
         private static readonly SettingsPath DialogSettingsPath = new AppSettingsPath("Dialogs");
         private static readonly SettingsPath ExperimentalSettingsPath = new AppSettingsPath(DetailedSettingsPath, "Experimental");
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
+        private static readonly SettingsPath RecentRepositories = new AppSettingsPath("RecentRepositories");
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
 
         private static Mutex _globalMutex;
@@ -1690,6 +1691,8 @@ namespace GitCommands
             get => GetInt("history size", 30);
             set => SetInt("history size", value);
         }
+
+        public static ISetting<bool> HideTopRepositoriesFromRecentList { get; } = Setting.Create(RecentRepositories, nameof(HideTopRepositoriesFromRecentList), false);
 
         // Currently not configurable in UI (Set manually in settings file)
         public static int RemotesCacheLength

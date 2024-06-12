@@ -6239,6 +6239,10 @@ commit date), ignoring the original author date.</source>
         <source>Do not shorten  </source>
         <target />
       </trans-unit>
+      <trans-unit id="hideTopRepositoriesFromRecentList.Text">
+        <source>Hide top repositories from recent repositories list</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Recent repositories</source>
         <target />
