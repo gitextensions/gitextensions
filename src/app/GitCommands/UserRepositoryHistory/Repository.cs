@@ -1,4 +1,6 @@
-﻿namespace GitCommands.UserRepositoryHistory
+﻿using System.Xml.Serialization;
+
+namespace GitCommands.UserRepositoryHistory
 {
     [Serializable]
     public class Repository
@@ -7,8 +9,10 @@
 
         public enum RepositoryAnchor
         {
-            Pinned,
-            AllRecent,
+            [XmlEnum(Name = "Pinned")]
+            AnchoredInTop,
+            [XmlEnum(Name = "AllRecent")]
+            AnchoredInRecent,
             None
         }
 

@@ -6199,16 +6199,16 @@ commit date), ignoring the original author date.</source>
         <source>OK</source>
         <target />
       </trans-unit>
-      <trans-unit id="PinnedLabel.Text">
-        <source>Pinned repositories</source>
+      <trans-unit id="TopLabel.Text">
+        <source>Top repositories</source>
         <target />
       </trans-unit>
-      <trans-unit id="anchorToAllRecentReposToolStripMenuItem.Text">
+      <trans-unit id="anchorToRecentReposToolStripMenuItem.Text">
         <source>Anchor to recent repositories</source>
         <target />
       </trans-unit>
-      <trans-unit id="anchorToPinnedReposToolStripMenuItem.Text">
-        <source>Anchor to pinned repositories</source>
+      <trans-unit id="anchorToTopReposToolStripMenuItem.Text">
+        <source>Anchor to top repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="chdrRepository.Text">
@@ -6236,11 +6236,11 @@ commit date), ignoring the original author date.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRecentRepositoriesHistorySize.Text">
-        <source>Recent repositories history size</source>
+        <source>Maximum number of recent repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="maxRecentRepositories.Text">
-        <source>Maximum number of pinned recent repositories</source>
+        <source>Maximum number of top repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="middleDotRB.Text">
@@ -6263,12 +6263,12 @@ commit date), ignoring the original author date.</source>
         <source>Shortening strategy</source>
         <target />
       </trans-unit>
-      <trans-unit id="sortAllRecentRepos.Text">
+      <trans-unit id="sortRecentRepos.Text">
         <source>Sort recent repositories alphabetically</source>
         <target />
       </trans-unit>
-      <trans-unit id="sortPinnedRepos.Text">
-        <source>Sort pinned repositories alphabetically</source>
+      <trans-unit id="sortTopRepos.Text">
+        <source>Sort top repositories alphabetically</source>
         <target />
       </trans-unit>
     </body>

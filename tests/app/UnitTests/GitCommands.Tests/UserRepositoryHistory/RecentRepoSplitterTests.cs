@@ -8,10 +8,10 @@ public class RecentRepoSplitterTests
 {
     private const string _relativeLongRepoPath = @"this\is\a\very_very_very_very_very_very_very\long\repo_path";
     private static readonly string repoPathInUserFolder = Path.Combine(Path.GetTempPath(), _relativeLongRepoPath);
-    private static readonly string repoPinnedPath1 = @"C:\this\is\a\repo_pinned_path1\";
-    private static readonly string repoPinnedPath2 = @"C:\this\is\a\repo_pinned_path2\";
-    private static readonly string repoUnpinnedPath1 = @"C:\this\is\a\repo_unpinned_path1\";
-    private static readonly string repoUnpinnedPath2 = @"C:\this\is\a\repo_unpinned_path2\";
+    private static readonly string repoAnchoredInTopPath1 = @"C:\this\is\a\repo_anchored_in_top_path1\";
+    private static readonly string repoAnchoredInTopPath2 = @"C:\this\is\a\repo_anchored_in_top_path2\";
+    private static readonly string repoAnchoredInRecentPath = @"C:\this\is\a\repo_anchored_in_recent_path\";
+    private static readonly string repoNotAnchoredPath = @"C:\this\is\a\repo_not_anchored_path\";
 
     #region Shortening strategy
     [Test]
@@ -19,20 +19,20 @@ public class RecentRepoSplitterTests
     {
         List<Repository> history =
         [
-            new Repository(repoPinnedPath1) { Anchor = Repository.RepositoryAnchor.Pinned },
+            new Repository(repoAnchoredInTopPath1) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
         ];
 
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir;
-        List<RecentRepoInfo> pinnedRepoList = new();
-        List<RecentRepoInfo> allRecentRepoList = new();
+        List<RecentRepoInfo> topRepoList = new();
+        List<RecentRepoInfo> recentRepoList = new();
 
-        sut.SplitRecentRepos(history, pinnedRepoList, allRecentRepoList);
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        pinnedRepoList.Count.Should().Be(1);
-        pinnedRepoList[0].Caption.Should().Be("repo_pinned_path1");
-        allRecentRepoList.Count.Should().Be(1);
+        topRepoList.Count.Should().Be(1);
+        topRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
+        recentRepoList.Count.Should().Be(1);
     }
 
     [Test]
@@ -40,20 +40,20 @@ public class RecentRepoSplitterTests
     {
         List<Repository> history =
         [
-            new Repository(repoPinnedPath1) { Anchor = Repository.RepositoryAnchor.Pinned },
+            new Repository(repoAnchoredInTopPath1) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
         ];
 
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.None;
-        List<RecentRepoInfo> pinnedRepoList = new();
-        List<RecentRepoInfo> allRecentRepoList = new();
+        List<RecentRepoInfo> topRepoList = new();
+        List<RecentRepoInfo> recentRepoList = new();
 
-        sut.SplitRecentRepos(history, pinnedRepoList, allRecentRepoList);
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        pinnedRepoList.Count.Should().Be(1);
-        pinnedRepoList[0].Caption.Should().Be(repoPinnedPath1);
-        allRecentRepoList.Count.Should().Be(1);
+        topRepoList.Count.Should().Be(1);
+        topRepoList[0].Caption.Should().Be(repoAnchoredInTopPath1);
+        recentRepoList.Count.Should().Be(1);
     }
 
     [Test]
@@ -61,20 +61,20 @@ public class RecentRepoSplitterTests
     {
         List<Repository> history =
         [
-            new Repository(repoPathInUserFolder) { Anchor = Repository.RepositoryAnchor.Pinned },
+            new Repository(repoPathInUserFolder) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
         ];
 
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.None;
-        List<RecentRepoInfo> pinnedRepoList = new();
-        List<RecentRepoInfo> allRecentRepoList = new();
+        List<RecentRepoInfo> topRepoList = new();
+        List<RecentRepoInfo> recentRepoList = new();
 
-        sut.SplitRecentRepos(history, pinnedRepoList, allRecentRepoList);
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        pinnedRepoList.Count.Should().Be(1);
-        pinnedRepoList[0].Caption.Should().StartWith(@"~\AppData").And.EndWith(_relativeLongRepoPath);
-        allRecentRepoList.Count.Should().Be(1);
+        topRepoList.Count.Should().Be(1);
+        topRepoList[0].Caption.Should().StartWith(@"~\AppData").And.EndWith(_relativeLongRepoPath);
+        recentRepoList.Count.Should().Be(1);
     }
 
     [Test]
@@ -85,20 +85,20 @@ public class RecentRepoSplitterTests
 
         List<Repository> history =
         [
-            new Repository(repoPathInUserFolder) { Anchor = Repository.RepositoryAnchor.Pinned },
+            new Repository(repoPathInUserFolder) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
         ];
 
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MiddleDots;
-        List<RecentRepoInfo> pinnedRepoList = new();
-        List<RecentRepoInfo> allRecentRepoList = new();
+        List<RecentRepoInfo> topRepoList = new();
+        List<RecentRepoInfo> recentRepoList = new();
 
-        sut.SplitRecentRepos(history, pinnedRepoList, allRecentRepoList);
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        pinnedRepoList.Count.Should().Be(1);
-        pinnedRepoList[0].Caption.Should().Be(@"~\AppData\..\long\repo_path");
-        allRecentRepoList.Count.Should().Be(1);
+        topRepoList.Count.Should().Be(1);
+        topRepoList[0].Caption.Should().Be(@"~\AppData\..\long\repo_path");
+        recentRepoList.Count.Should().Be(1);
     }
     #endregion
 
@@ -108,30 +108,30 @@ public class RecentRepoSplitterTests
     {
         List<Repository> history =
         [
-            new Repository(repoPinnedPath1) { Anchor = Repository.RepositoryAnchor.Pinned },
-            new Repository(repoPinnedPath2) { Anchor = Repository.RepositoryAnchor.Pinned },
-            new Repository(repoUnpinnedPath1) { Anchor = Repository.RepositoryAnchor.AllRecent },
-            new Repository(repoUnpinnedPath2) { Anchor = Repository.RepositoryAnchor.None },
+            new Repository(repoAnchoredInTopPath1) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository(repoAnchoredInTopPath2) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository(repoAnchoredInRecentPath) { Anchor = Repository.RepositoryAnchor.AnchoredInRecent },
+            new Repository(repoNotAnchoredPath) { Anchor = Repository.RepositoryAnchor.None },
         ];
 
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir;
-        sut.SortPinnedRepos = false;
-        sut.SortAllRecentRepos = false;
-        List<RecentRepoInfo> pinnedRepoList = new();
-        List<RecentRepoInfo> allRecentRepoList = new();
+        sut.SortTopRepos = false;
+        sut.SortRecentRepos = false;
+        List<RecentRepoInfo> topRepoList = new();
+        List<RecentRepoInfo> recentRepoList = new();
 
-        sut.SplitRecentRepos(history, pinnedRepoList, allRecentRepoList);
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        pinnedRepoList.Count.Should().Be(2);
-        pinnedRepoList[0].Caption.Should().Be("repo_pinned_path1");
-        pinnedRepoList[1].Caption.Should().Be("repo_pinned_path2");
-        allRecentRepoList.Count.Should().Be(4);
-        allRecentRepoList[0].Caption.Should().Be("repo_pinned_path1");
-        allRecentRepoList[1].Caption.Should().Be("repo_pinned_path2");
-        allRecentRepoList[2].Caption.Should().Be("repo_unpinned_path1");
-        allRecentRepoList[3].Caption.Should().Be("repo_unpinned_path2");
+        topRepoList.Count.Should().Be(2);
+        topRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
+        topRepoList[1].Caption.Should().Be("repo_anchored_in_top_path2");
+        recentRepoList.Count.Should().Be(4);
+        recentRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
+        recentRepoList[1].Caption.Should().Be("repo_anchored_in_top_path2");
+        recentRepoList[2].Caption.Should().Be("repo_anchored_in_recent_path");
+        recentRepoList[3].Caption.Should().Be("repo_not_anchored_path");
     }
 
     [Test]
@@ -140,30 +140,30 @@ public class RecentRepoSplitterTests
         List<Repository> history =
         [
             // Unsorted!
-            new Repository(repoUnpinnedPath2) { Anchor = Repository.RepositoryAnchor.None },
-            new Repository(repoUnpinnedPath1) { Anchor = Repository.RepositoryAnchor.AllRecent },
-            new Repository(repoPinnedPath2) { Anchor = Repository.RepositoryAnchor.Pinned },
-            new Repository(repoPinnedPath1) { Anchor = Repository.RepositoryAnchor.Pinned },
+            new Repository(repoNotAnchoredPath) { Anchor = Repository.RepositoryAnchor.None },
+            new Repository(repoAnchoredInRecentPath) { Anchor = Repository.RepositoryAnchor.AnchoredInRecent },
+            new Repository(repoAnchoredInTopPath2) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository(repoAnchoredInTopPath1) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
         ];
 
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir;
-        sut.SortAllRecentRepos = true;
-        sut.SortPinnedRepos = true;
-        List<RecentRepoInfo> pinnedRepoList = new();
-        List<RecentRepoInfo> allRecentRepoList = new();
+        sut.SortRecentRepos = true;
+        sut.SortTopRepos = true;
+        List<RecentRepoInfo> topRepoList = new();
+        List<RecentRepoInfo> recentRepoList = new();
 
-        sut.SplitRecentRepos(history, pinnedRepoList, allRecentRepoList);
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        pinnedRepoList.Count.Should().Be(2);
-        pinnedRepoList[0].Caption.Should().Be("repo_pinned_path1");
-        pinnedRepoList[1].Caption.Should().Be("repo_pinned_path2");
-        allRecentRepoList.Count.Should().Be(4);
-        allRecentRepoList[0].Caption.Should().Be("repo_pinned_path1");
-        allRecentRepoList[1].Caption.Should().Be("repo_pinned_path2");
-        allRecentRepoList[2].Caption.Should().Be("repo_unpinned_path1");
-        allRecentRepoList[3].Caption.Should().Be("repo_unpinned_path2");
+        topRepoList.Count.Should().Be(2);
+        topRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
+        topRepoList[1].Caption.Should().Be("repo_anchored_in_top_path2");
+        recentRepoList.Count.Should().Be(4);
+        recentRepoList[0].Caption.Should().Be("repo_anchored_in_recent_path");
+        recentRepoList[1].Caption.Should().Be("repo_anchored_in_top_path1");
+        recentRepoList[2].Caption.Should().Be("repo_anchored_in_top_path2");
+        recentRepoList[3].Caption.Should().Be("repo_not_anchored_path");
     }
     #endregion
 }
