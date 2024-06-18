@@ -360,19 +360,19 @@ namespace GitCommands
             }
         }
 
-        // Currently not configurable
+        // Currently not configurable in UI (Set manually in settings file)
         public static bool WslGitEnabled
         {
             get => GetBool("WslGitEnabled", true);
         }
 
-        // Currently not configurable
+        // Currently not configurable in UI (Set manually in settings file)
         public static string WslGitCommand
         {
             get => GetString("WslGitCommand", "wsl");
         }
 
-        // Currently not configurable
+        // Currently not configurable in UI (Set manually in settings file)
         public static string WslGitPath
         {
             get => GetString("WslGitPath", "git");
@@ -386,7 +386,7 @@ namespace GitCommands
 
         public static bool DontConfirmStashDrop
         {
-            // The settings was originally was called 'StashConfirmDropShow', and then it was inverted.
+            // History Compatibility: The settings was originally was called 'StashConfirmDropShow', and then it was inverted.
             // To maintain the compat with the existing user settings negate the retrieved value.
             get => !GetBool("stashconfirmdropshow", true);
             set => SetBool("stashconfirmdropshow", !value);
@@ -406,7 +406,7 @@ namespace GitCommands
 
         public static bool UseHistogramDiffAlgorithm
         {
-            // The settings key has patience in the name for historical reasons
+            // History Compatibility: The settings key has patience in the name for historical reasons
             get => GetBool("usepatiencediffalgorithm", false);
             set => SetBool("usepatiencediffalgorithm", value);
         }
@@ -615,7 +615,7 @@ namespace GitCommands
             set => SetInt("Appearance.AvatarCacheSize", value);
         }
 
-        // Currently not configurable in UI
+        // Currently not configurable in UI (Set manually in settings file)
         // Names from here: https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.brushes?view=windowsdesktop-7.0
         // or #AARRGGBB code
         public static string AvatarAuthorInitialsPalette
@@ -624,7 +624,7 @@ namespace GitCommands
             set => SetString("Appearance.AvatarAuthorInitialsPalette", value);
         }
 
-        // Currently not configurable in UI
+        // Currently not configurable in UI (Set manually in settings file)
         public static float AvatarAuthorInitialsLuminanceThreshold => GetFloat("AvatarAuthorInitialsLuminanceThreshold", 0.5f);
 
         /// <summary>
@@ -1109,7 +1109,7 @@ namespace GitCommands
             set => SetBool("showStashes", value);
         }
 
-        // Set manually in settings file
+        // Currently not configurable in UI (Set manually in settings file)
         public static int MaxStashesWithUntrackedFiles
         {
             get => GetInt("maxStashesWithUntrackedFiles", 10);
@@ -1193,7 +1193,7 @@ namespace GitCommands
             set => SetBool("showannotatedtagsmessages", value);
         }
 
-        // Note: The meaning of this value is changed in the GUI, setting name is kept for compatibility
+        // History Compatibility: The meaning of this value is changed in the GUI, setting name is kept for compatibility
         public static bool HideMergeCommits
         {
             get => !GetBool("showmergecommits", true);
@@ -1313,7 +1313,7 @@ namespace GitCommands
         /// <summary>Gets or sets the path to the GNU/Linux tools (bash, ps, sh, ssh, etc.), e.g. "C:\Program Files\Git\usr\bin\"</summary>
         public static string LinuxToolsDir
         {
-            // Migrate the setting value from the from the former "gitbindir"
+            // History Compatibility: Migrate the setting value from the from the former "gitbindir"
             get => GetString(nameof(LinuxToolsDir), defaultValue: null) ?? GetString("gitbindir", "");
             set
             {
@@ -1680,6 +1680,7 @@ namespace GitCommands
 
         public static int MaxTopRepositories
         {
+            // History Compatibility: Keep original key to maintain the compatibility with the existing user settings
             get => GetInt("MaxMostRecentRepositories", 0);
             set => SetInt("MaxMostRecentRepositories", value);
         }
@@ -1690,7 +1691,7 @@ namespace GitCommands
             set => SetInt("history size", value);
         }
 
-        // (Currently) hidden configuration
+        // Currently not configurable in UI (Set manually in settings file)
         public static int RemotesCacheLength
         {
             get => GetInt("RemotesCacheLength", 30);
@@ -2030,13 +2031,13 @@ namespace GitCommands
         // Return false whilst we're in the designer.
         public static bool IsPortable() => !IsDesignMode && Properties.Settings.Default.IsPortable;
 
-        // Set manually in settings file
+        // Currently not configurable in UI (Set manually in settings file)
         public static bool WriteErrorLog
         {
             get => GetBool("WriteErrorLog", false);
         }
 
-        // Set manually in settings file
+        // Currently not configurable in UI (Set manually in settings file)
         public static bool WorkaroundActivateFromMinimize
         {
             get => GetBool("WorkaroundActivateFromMinimize", false);
