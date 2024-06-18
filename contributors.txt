@@ -209,3 +209,4 @@ YYYY/MM/DD, github id, Full name, email
 2024/03/14, rstm-sf, Rustam rstm.sf(at)gmail.com
 2024/03/24, berrs, Per-Erik Stendahl, pererik.stendahl@gmail.com
 2024/05/27, redcatH, Yi Liu, i.hao.lin[at}outlook.com
+2024/06/17, astos-marcb, Marc Becker, marc.becker@astos.de

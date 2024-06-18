@@ -159,8 +159,23 @@ namespace GitCommands.DiffMergeTools
             }
             else
             {
-                IEnumerable<string> pathsToSearch = new[] { UnquoteString(GetToolSetting(diffTool.Name, DiffMergeToolType.Merge, "path")) }.Union(diffTool.SearchPaths);
-                fullPath = _findFileInFolders(diffTool.ExeFileName, pathsToSearch);
+                // query static settings for defined fullPath to executable
+                string? command = UnquoteString(GetToolSetting(diffTool.Name, DiffMergeToolType.Merge, "path"));
+                if (!string.IsNullOrWhiteSpace(command))
+                {
+                    fullPath = command;
+                }
+                else
+                {
+                    // look for executable in (default) search paths
+                    fullPath = _findFileInFolders(diffTool.ExeFileName, diffTool.SearchPaths);
+                }
+            }
+
+            // last resort fallback to avoid empty string for executable
+            if (string.IsNullOrWhiteSpace(fullPath))
+            {
+                fullPath = diffTool.ExeFileName;
             }
 
             return new DiffMergeToolConfiguration(diffTool.ExeFileName, fullPath, diffTool.DiffCommand, diffTool.MergeCommand);
