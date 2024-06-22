@@ -39,27 +39,27 @@
             maxRecentRepositories = new Label();
             _NO_TRANSLATE_maxRecentRepositories = new NumericUpDown();
             comboMinWidthEdit = new NumericUpDown();
-            sortPinnedRepos = new CheckBox();
+            sortTopRepos = new CheckBox();
             comboMinWidthLabel = new Label();
-            sortAllRecentRepos = new CheckBox();
+            sortRecentRepos = new CheckBox();
             shorteningGB = new GroupBox();
             dontShortenRB = new RadioButton();
             middleDotRB = new RadioButton();
             mostSigDirRB = new RadioButton();
             comboPanel = new Panel();
-            AllRecentLB = new ListView();
+            RecentLB = new ListView();
             chdrRepository1 = new ColumnHeader();
             contextMenuStrip1 = new ContextMenuStrip(components);
-            anchorToPinnedReposToolStripMenuItem = new ToolStripMenuItem();
-            anchorToAllRecentReposToolStripMenuItem = new ToolStripMenuItem();
+            anchorToTopReposToolStripMenuItem = new ToolStripMenuItem();
+            anchorToRecentReposToolStripMenuItem = new ToolStripMenuItem();
             removeAnchorToolStripMenuItem = new ToolStripMenuItem();
             removeRecentToolStripMenuItem = new ToolStripMenuItem();
             panel3 = new Panel();
             label1 = new Label();
-            PinnedLB = new ListView();
+            TopLB = new ListView();
             chdrRepository = new ColumnHeader();
             panel2 = new Panel();
-            PinnedLabel = new Label();
+            TopLabel = new Label();
             flpnlControls = new FlowLayoutPanel();
             tableLayoutPanel1 = new TableLayoutPanel();
             flpnlControls.SuspendLayout();
@@ -121,15 +121,15 @@
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_RecentRepositoriesHistorySize, 1, 0);
-            tableLayoutPanel1.Controls.Add(lblRecentRepositoriesHistorySize, 0, 0);
+            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_RecentRepositoriesHistorySize, 1, 1);
+            tableLayoutPanel1.Controls.Add(lblRecentRepositoriesHistorySize, 0, 1);
             tableLayoutPanel1.Controls.Add(comboMinWidthNote, 0, 6);
-            tableLayoutPanel1.Controls.Add(maxRecentRepositories, 0, 1);
-            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_maxRecentRepositories, 1, 1);
+            tableLayoutPanel1.Controls.Add(maxRecentRepositories, 0, 0);
+            tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_maxRecentRepositories, 1, 0);
             tableLayoutPanel1.Controls.Add(comboMinWidthEdit, 1, 5);
-            tableLayoutPanel1.Controls.Add(sortPinnedRepos, 0, 2);
+            tableLayoutPanel1.Controls.Add(sortTopRepos, 0, 2);
             tableLayoutPanel1.Controls.Add(comboMinWidthLabel, 0, 5);
-            tableLayoutPanel1.Controls.Add(sortAllRecentRepos, 0, 3);
+            tableLayoutPanel1.Controls.Add(sortRecentRepos, 0, 3);
             tableLayoutPanel1.Controls.Add(shorteningGB, 0, 4);
             tableLayoutPanel1.Dock = DockStyle.Left;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -164,7 +164,7 @@
             lblRecentRepositoriesHistorySize.Name = "lblRecentRepositoriesHistorySize";
             lblRecentRepositoriesHistorySize.Size = new Size(168, 15);
             lblRecentRepositoriesHistorySize.TabIndex = 0;
-            lblRecentRepositoriesHistorySize.Text = "Recent repositories history size";
+            lblRecentRepositoriesHistorySize.Text = "Maximum number of recent repositories";
             // 
             // comboMinWidthNote
             // 
@@ -185,7 +185,7 @@
             maxRecentRepositories.Name = "maxRecentRepositories";
             maxRecentRepositories.Size = new Size(261, 15);
             maxRecentRepositories.TabIndex = 2;
-            maxRecentRepositories.Text = "Maximum number of pinned recent repositories";
+            maxRecentRepositories.Text = "Maximum number of top repositories";
             // 
             // _NO_TRANSLATE_maxRecentRepositories
             // 
@@ -194,7 +194,7 @@
             _NO_TRANSLATE_maxRecentRepositories.Name = "_NO_TRANSLATE_maxRecentRepositories";
             _NO_TRANSLATE_maxRecentRepositories.Size = new Size(61, 23);
             _NO_TRANSLATE_maxRecentRepositories.TabIndex = 3;
-            _NO_TRANSLATE_maxRecentRepositories.ValueChanged += sortPinnedRepos_CheckedChanged;
+            _NO_TRANSLATE_maxRecentRepositories.ValueChanged += sortTopRepos_CheckedChanged;
             // 
             // comboMinWidthEdit
             // 
@@ -205,19 +205,19 @@
             comboMinWidthEdit.TabIndex = 8;
             comboMinWidthEdit.ValueChanged += comboMinWidthEdit_ValueChanged;
             // 
-            // sortPinnedRepos
+            // sortTopRepos
             // 
-            sortPinnedRepos.AutoSize = true;
-            sortPinnedRepos.CheckAlign = ContentAlignment.MiddleRight;
-            tableLayoutPanel1.SetColumnSpan(sortPinnedRepos, 2);
-            sortPinnedRepos.Location = new Point(11, 69);
-            sortPinnedRepos.Name = "sortPinnedRepos";
-            sortPinnedRepos.RightToLeft = RightToLeft.Yes;
-            sortPinnedRepos.Size = new Size(227, 19);
-            sortPinnedRepos.TabIndex = 4;
-            sortPinnedRepos.Text = "Sort pinned repositories alphabetically";
-            sortPinnedRepos.UseVisualStyleBackColor = true;
-            sortPinnedRepos.CheckedChanged += sortPinnedRepos_CheckedChanged;
+            sortTopRepos.AutoSize = true;
+            sortTopRepos.CheckAlign = ContentAlignment.MiddleRight;
+            tableLayoutPanel1.SetColumnSpan(sortTopRepos, 2);
+            sortTopRepos.Location = new Point(11, 69);
+            sortTopRepos.Name = "sortTopRepos";
+            sortTopRepos.RightToLeft = RightToLeft.Yes;
+            sortTopRepos.Size = new Size(227, 19);
+            sortTopRepos.TabIndex = 4;
+            sortTopRepos.Text = "Sort top repositories alphabetically";
+            sortTopRepos.UseVisualStyleBackColor = true;
+            sortTopRepos.CheckedChanged += sortTopRepos_CheckedChanged;
             // 
             // comboMinWidthLabel
             // 
@@ -229,19 +229,19 @@
             comboMinWidthLabel.TabIndex = 7;
             comboMinWidthLabel.Text = "Combobox minimum width (0 = Autosize)";
             // 
-            // sortAllRecentRepos
+            // sortRecentRepos
             // 
-            sortAllRecentRepos.AutoSize = true;
-            sortAllRecentRepos.CheckAlign = ContentAlignment.MiddleRight;
-            tableLayoutPanel1.SetColumnSpan(sortAllRecentRepos, 2);
-            sortAllRecentRepos.Location = new Point(11, 94);
-            sortAllRecentRepos.Name = "sortAllRecentRepos";
-            sortAllRecentRepos.RightToLeft = RightToLeft.Yes;
-            sortAllRecentRepos.Size = new Size(223, 19);
-            sortAllRecentRepos.TabIndex = 5;
-            sortAllRecentRepos.Text = "Sort recent repositories alphabetically";
-            sortAllRecentRepos.UseVisualStyleBackColor = true;
-            sortAllRecentRepos.CheckedChanged += sortPinnedRepos_CheckedChanged;
+            sortRecentRepos.AutoSize = true;
+            sortRecentRepos.CheckAlign = ContentAlignment.MiddleRight;
+            tableLayoutPanel1.SetColumnSpan(sortRecentRepos, 2);
+            sortRecentRepos.Location = new Point(11, 94);
+            sortRecentRepos.Name = "sortRecentRepos";
+            sortRecentRepos.RightToLeft = RightToLeft.Yes;
+            sortRecentRepos.Size = new Size(223, 19);
+            sortRecentRepos.TabIndex = 5;
+            sortRecentRepos.Text = "Sort recent repositories alphabetically";
+            sortRecentRepos.UseVisualStyleBackColor = true;
+            sortRecentRepos.CheckedChanged += sortTopRepos_CheckedChanged;
             // 
             // shorteningGB
             // 
@@ -269,7 +269,7 @@
             dontShortenRB.TabStop = true;
             dontShortenRB.Text = "Do not shorten  ";
             dontShortenRB.UseVisualStyleBackColor = true;
-            dontShortenRB.CheckedChanged += sortPinnedRepos_CheckedChanged;
+            dontShortenRB.CheckedChanged += sortTopRepos_CheckedChanged;
             // 
             // middleDotRB
             // 
@@ -281,7 +281,7 @@
             middleDotRB.TabStop = true;
             middleDotRB.Text = "Replace middle part with dots ";
             middleDotRB.UseVisualStyleBackColor = true;
-            middleDotRB.CheckedChanged += sortPinnedRepos_CheckedChanged;
+            middleDotRB.CheckedChanged += sortTopRepos_CheckedChanged;
             // 
             // mostSigDirRB
             // 
@@ -293,13 +293,13 @@
             mostSigDirRB.TabStop = true;
             mostSigDirRB.Text = "The most significant directory ";
             mostSigDirRB.UseVisualStyleBackColor = true;
-            mostSigDirRB.CheckedChanged += sortPinnedRepos_CheckedChanged;
+            mostSigDirRB.CheckedChanged += sortTopRepos_CheckedChanged;
             // 
             // comboPanel
             // 
-            comboPanel.Controls.Add(AllRecentLB);
+            comboPanel.Controls.Add(RecentLB);
             comboPanel.Controls.Add(panel3);
-            comboPanel.Controls.Add(PinnedLB);
+            comboPanel.Controls.Add(TopLB);
             comboPanel.Controls.Add(panel2);
             comboPanel.Dock = DockStyle.Fill;
             comboPanel.Location = new Point(350, 0);
@@ -307,24 +307,24 @@
             comboPanel.Size = new Size(326, 327);
             comboPanel.TabIndex = 1;
             // 
-            // AllRecentLB
+            // RecentLB
             // 
-            AllRecentLB.Columns.AddRange(new ColumnHeader[] { chdrRepository1 });
-            AllRecentLB.ContextMenuStrip = contextMenuStrip1;
-            AllRecentLB.Dock = DockStyle.Fill;
-            AllRecentLB.FullRowSelect = true;
-            AllRecentLB.GridLines = true;
-            AllRecentLB.HeaderStyle = ColumnHeaderStyle.None;
-            AllRecentLB.LabelWrap = false;
-            AllRecentLB.Location = new Point(0, 166);
-            AllRecentLB.Name = "AllRecentLB";
-            AllRecentLB.ShowItemToolTips = true;
-            AllRecentLB.Size = new Size(326, 161);
-            AllRecentLB.TabIndex = 2;
-            AllRecentLB.UseCompatibleStateImageBehavior = false;
-            AllRecentLB.View = View.Details;
-            AllRecentLB.DrawItem += listView_DrawItem;
-            AllRecentLB.DoubleClick += AllRecentLB_DoubleClick;
+            RecentLB.Columns.AddRange(new ColumnHeader[] { chdrRepository1 });
+            RecentLB.ContextMenuStrip = contextMenuStrip1;
+            RecentLB.Dock = DockStyle.Fill;
+            RecentLB.FullRowSelect = true;
+            RecentLB.GridLines = true;
+            RecentLB.HeaderStyle = ColumnHeaderStyle.None;
+            RecentLB.LabelWrap = false;
+            RecentLB.Location = new Point(0, 166);
+            RecentLB.Name = "AllRecentLB";
+            RecentLB.ShowItemToolTips = true;
+            RecentLB.Size = new Size(326, 161);
+            RecentLB.TabIndex = 2;
+            RecentLB.UseCompatibleStateImageBehavior = false;
+            RecentLB.View = View.Details;
+            RecentLB.DrawItem += listView_DrawItem;
+            RecentLB.DoubleClick += AllRecentLB_DoubleClick;
             // 
             // chdrRepository1
             // 
@@ -332,24 +332,24 @@
             // 
             // contextMenuStrip1
             // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { anchorToPinnedReposToolStripMenuItem, anchorToAllRecentReposToolStripMenuItem, removeAnchorToolStripMenuItem, removeRecentToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { anchorToTopReposToolStripMenuItem, anchorToRecentReposToolStripMenuItem, removeAnchorToolStripMenuItem, removeRecentToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(247, 92);
             contextMenuStrip1.Opening += contextMenuStrip1_Opening;
             // 
-            // anchorToPinnedReposToolStripMenuItem
+            // anchorToTopReposToolStripMenuItem
             // 
-            anchorToPinnedReposToolStripMenuItem.Name = "anchorToPinnedReposToolStripMenuItem";
-            anchorToPinnedReposToolStripMenuItem.Size = new Size(246, 22);
-            anchorToPinnedReposToolStripMenuItem.Text = "Anchor to pinned repositories";
-            anchorToPinnedReposToolStripMenuItem.Click += anchorToMostToolStripMenuItem_Click;
+            anchorToTopReposToolStripMenuItem.Name = "anchorToTopReposToolStripMenuItem";
+            anchorToTopReposToolStripMenuItem.Size = new Size(246, 22);
+            anchorToTopReposToolStripMenuItem.Text = "Anchor to top repositories";
+            anchorToTopReposToolStripMenuItem.Click += anchorToMostToolStripMenuItem_Click;
             // 
-            // anchorToAllRecentReposToolStripMenuItem
+            // anchorToRecentReposToolStripMenuItem
             // 
-            anchorToAllRecentReposToolStripMenuItem.Name = "anchorToAllRecentReposToolStripMenuItem";
-            anchorToAllRecentReposToolStripMenuItem.Size = new Size(246, 22);
-            anchorToAllRecentReposToolStripMenuItem.Text = "Anchor to recent repositories";
-            anchorToAllRecentReposToolStripMenuItem.Click += anchorToLessToolStripMenuItem_Click;
+            anchorToRecentReposToolStripMenuItem.Name = "anchorToRecentReposToolStripMenuItem";
+            anchorToRecentReposToolStripMenuItem.Size = new Size(246, 22);
+            anchorToRecentReposToolStripMenuItem.Text = "Anchor to recent repositories";
+            anchorToRecentReposToolStripMenuItem.Click += anchorToLessToolStripMenuItem_Click;
             // 
             // removeAnchorToolStripMenuItem
             // 
@@ -384,24 +384,24 @@
             label1.TabIndex = 0;
             label1.Text = "Recent repositories";
             // 
-            // PinnedLB
+            // TopLB
             // 
-            PinnedLB.Columns.AddRange(new ColumnHeader[] { chdrRepository });
-            PinnedLB.ContextMenuStrip = contextMenuStrip1;
-            PinnedLB.Dock = DockStyle.Top;
-            PinnedLB.FullRowSelect = true;
-            PinnedLB.GridLines = true;
-            PinnedLB.HeaderStyle = ColumnHeaderStyle.None;
-            PinnedLB.LabelWrap = false;
-            PinnedLB.Location = new Point(0, 21);
-            PinnedLB.Name = "PinnedLB";
-            PinnedLB.ShowItemToolTips = true;
-            PinnedLB.Size = new Size(326, 121);
-            PinnedLB.TabIndex = 0;
-            PinnedLB.UseCompatibleStateImageBehavior = false;
-            PinnedLB.View = View.Details;
-            PinnedLB.DrawItem += listView_DrawItem;
-            PinnedLB.DoubleClick += PinnedLB_DoubleClick;
+            TopLB.Columns.AddRange(new ColumnHeader[] { chdrRepository });
+            TopLB.ContextMenuStrip = contextMenuStrip1;
+            TopLB.Dock = DockStyle.Top;
+            TopLB.FullRowSelect = true;
+            TopLB.GridLines = true;
+            TopLB.HeaderStyle = ColumnHeaderStyle.None;
+            TopLB.LabelWrap = false;
+            TopLB.Location = new Point(0, 21);
+            TopLB.Name = "TopLB";
+            TopLB.ShowItemToolTips = true;
+            TopLB.Size = new Size(326, 121);
+            TopLB.TabIndex = 0;
+            TopLB.UseCompatibleStateImageBehavior = false;
+            TopLB.View = View.Details;
+            TopLB.DrawItem += listView_DrawItem;
+            TopLB.DoubleClick += TopLB_DoubleClick;
             // 
             // chdrRepository
             // 
@@ -411,21 +411,21 @@
             // 
             panel2.AutoSize = true;
             panel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel2.Controls.Add(PinnedLabel);
+            panel2.Controls.Add(TopLabel);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
             panel2.Size = new Size(326, 21);
             panel2.TabIndex = 0;
             // 
-            // PinnedLabel
+            // TopLabel
             // 
-            PinnedLabel.AutoSize = true;
-            PinnedLabel.Location = new Point(3, 6);
-            PinnedLabel.Name = "PinnedLabel";
-            PinnedLabel.Size = new Size(108, 15);
-            PinnedLabel.TabIndex = 0;
-            PinnedLabel.Text = "Pinned repositories";
+            TopLabel.AutoSize = true;
+            TopLabel.Location = new Point(3, 6);
+            TopLabel.Name = "TopLabel";
+            TopLabel.Size = new Size(108, 15);
+            TopLabel.TabIndex = 0;
+            TopLabel.Text = "Top repositories";
             // 
             // FormRecentReposSettings
             // 
@@ -468,13 +468,13 @@
 
         private NumericUpDown _NO_TRANSLATE_maxRecentRepositories;
         private Label maxRecentRepositories;
-        private CheckBox sortAllRecentRepos;
-        private CheckBox sortPinnedRepos;
+        private CheckBox sortRecentRepos;
+        private CheckBox sortTopRepos;
         private Panel comboPanel;
-        private ListView AllRecentLB;
-        private ListView PinnedLB;
+        private ListView RecentLB;
+        private ListView TopLB;
         private Panel panel2;
-        private Label PinnedLabel;
+        private Label TopLabel;
         protected Button Abort;
         private GroupBox shorteningGB;
         private RadioButton mostSigDirRB;
@@ -485,10 +485,10 @@
         private Panel panel3;
         private Label label1;
         private ContextMenuStrip contextMenuStrip1;
-        private ToolStripMenuItem anchorToPinnedReposToolStripMenuItem;
+        private ToolStripMenuItem anchorToTopReposToolStripMenuItem;
         private ToolStripMenuItem removeAnchorToolStripMenuItem;
         private ToolStripMenuItem removeRecentToolStripMenuItem;
-        private ToolStripMenuItem anchorToAllRecentReposToolStripMenuItem;
+        private ToolStripMenuItem anchorToRecentReposToolStripMenuItem;
         private Button Ok;
         private ColumnHeader chdrRepository;
         private ColumnHeader chdrRepository1;

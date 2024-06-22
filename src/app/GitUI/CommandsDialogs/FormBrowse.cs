@@ -1170,15 +1170,15 @@ namespace GitUI.CommandsDialogs
             IList<Repository> recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
                 () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
 
-            List<RecentRepoInfo> pinnedRepos = new();
+            List<RecentRepoInfo> topRepos = new();
             RecentRepoSplitter splitter = new()
             {
                 MeasureFont = _NO_TRANSLATE_WorkingDir.Font,
             };
 
-            splitter.SplitRecentRepos(recentRepositoryHistory, pinnedRepos, pinnedRepos);
+            splitter.SplitRecentRepos(recentRepositoryHistory, topRepos, topRepos);
 
-            RecentRepoInfo ri = pinnedRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
+            RecentRepoInfo ri = topRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
             _NO_TRANSLATE_WorkingDir.Text = PathUtil.GetDisplayPath(ri?.Caption ?? path);
 

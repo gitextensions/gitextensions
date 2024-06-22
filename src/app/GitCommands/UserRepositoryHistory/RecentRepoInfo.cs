@@ -39,47 +39,47 @@
 
     public class RecentRepoSplitter
     {
-        public int MaxPinnedRepositories { get; set; }
+        public int MaxTopRepositories { get; set; }
         public ShorteningRecentRepoPathStrategy ShorteningStrategy { get; set; }
-        public bool SortPinnedRepos { get; set; }
-        public bool SortAllRecentRepos { get; set; }
+        public bool SortTopRepos { get; set; }
+        public bool SortRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
 
         public Font? MeasureFont { get; set; }
 
         public RecentRepoSplitter()
         {
-            MaxPinnedRepositories = AppSettings.MaxPinnedRepositories;
+            MaxTopRepositories = AppSettings.MaxTopRepositories;
             ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy;
-            SortPinnedRepos = AppSettings.SortPinnedRepos;
-            SortAllRecentRepos = AppSettings.SortAllRecentRepos;
+            SortTopRepos = AppSettings.SortTopRepos;
+            SortRecentRepos = AppSettings.SortRecentRepos;
             RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
         }
 
-        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> pinnedRepoList, List<RecentRepoInfo> allRecentRepoList)
+        public void SplitRecentRepos(IList<Repository> repositories, List<RecentRepoInfo> topRepoList, List<RecentRepoInfo> recentRepoList)
         {
             SortedList<string, List<RecentRepoInfo>> orderedRepos = [];
-            List<RecentRepoInfo> pinnedRepos = [];
-            List<RecentRepoInfo> allRecentRepos = [];
+            List<RecentRepoInfo> topRepos = [];
+            List<RecentRepoInfo> recentRepos = [];
 
             bool middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
             bool signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
 
-            int n = Math.Min(MaxPinnedRepositories, recentRepositories.Count);
+            int n = Math.Min(MaxTopRepositories, repositories.Count);
 
-            // the maxRecentRepositories repositories will be added at beginning
+            // the topRepositories repositories will be added at beginning
             // rest will be added in alphabetical order
-            foreach (Repository repository in recentRepositories)
+            foreach (Repository repository in repositories)
             {
-                bool mostRecent = (pinnedRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
-                    repository.Anchor == Repository.RepositoryAnchor.Pinned;
+                bool mostRecent = (topRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
+                    repository.Anchor == Repository.RepositoryAnchor.AnchoredInTop;
                 RecentRepoInfo ri = new(repository, mostRecent);
                 if (ri.MostRecent)
                 {
-                    pinnedRepos.Add(ri);
+                    topRepos.Add(ri);
                 }
 
-                allRecentRepos.Add(ri);
+                recentRepos.Add(ri);
 
                 if (middleDot)
                 {
@@ -96,20 +96,20 @@
                 }
             }
 
-            int r = pinnedRepos.Count - 1;
+            int r = topRepos.Count - 1;
 
             // remove not anchored repos if there is more than maxRecentRepositories repos
-            while (pinnedRepos.Count > n && r >= 0)
+            while (topRepos.Count > n && r >= 0)
             {
-                RecentRepoInfo repo = pinnedRepos[r];
-                if (repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned)
+                RecentRepoInfo repo = topRepos[r];
+                if (repo.Repo.Anchor == Repository.RepositoryAnchor.AnchoredInTop)
                 {
                     r--;
                 }
                 else
                 {
                     repo.MostRecent = false;
-                    pinnedRepos.RemoveAt(r);
+                    topRepos.RemoveAt(r);
                 }
             }
 
@@ -127,22 +127,22 @@
                 addToList.AddRange(list);
             }
 
-            if (SortPinnedRepos)
+            if (SortTopRepos)
             {
-                AddSortedRepos(true, pinnedRepoList);
+                AddSortedRepos(true, topRepoList);
             }
             else
             {
-                AddNotSortedRepos(pinnedRepos, pinnedRepoList);
+                AddNotSortedRepos(topRepos, topRepoList);
             }
 
-            if (SortAllRecentRepos)
+            if (SortRecentRepos)
             {
-                AddSortedRepos(false, allRecentRepoList);
+                AddSortedRepos(false, recentRepoList);
             }
             else
             {
-                AddNotSortedRepos(allRecentRepos, allRecentRepoList);
+                AddNotSortedRepos(recentRepos, recentRepoList);
             }
         }
 

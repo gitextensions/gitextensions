@@ -106,11 +106,11 @@ namespace GitCommandsTests.UserRepositoryHistory
                 new Repository(@"C:\Development\gitextensions\"),
                 new Repository(@"C:\Development\gitextensions\Externals\NBug\")
                 {
-                    Anchor = Repository.RepositoryAnchor.Pinned,
+                    Anchor = Repository.RepositoryAnchor.AnchoredInTop,
                 },
                 new Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
                 {
-                    Anchor = Repository.RepositoryAnchor.AllRecent,
+                    Anchor = Repository.RepositoryAnchor.AnchoredInRecent,
                 }
 
             ];

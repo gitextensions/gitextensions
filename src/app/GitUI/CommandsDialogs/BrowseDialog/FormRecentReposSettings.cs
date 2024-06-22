@@ -28,10 +28,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void LoadSettings()
         {
             SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);
-            sortPinnedRepos.Checked = AppSettings.SortPinnedRepos;
-            sortAllRecentRepos.Checked = AppSettings.SortAllRecentRepos;
+            sortTopRepos.Checked = AppSettings.SortTopRepos;
+            sortRecentRepos.Checked = AppSettings.SortRecentRepos;
             comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
-            SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxPinnedRepositories);
+            SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxTopRepositories);
             SetNumericUpDownValue(_NO_TRANSLATE_RecentRepositoriesHistorySize, AppSettings.RecentRepositoriesHistorySize);
 
             _previousValue = comboMinWidthEdit.Value;
@@ -67,9 +67,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Validates.NotNull(_repositoryHistory);
 
             AppSettings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
-            AppSettings.SortPinnedRepos = sortPinnedRepos.Checked;
-            AppSettings.SortAllRecentRepos = sortAllRecentRepos.Checked;
-            AppSettings.MaxPinnedRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
+            AppSettings.SortTopRepos = sortTopRepos.Checked;
+            AppSettings.SortRecentRepos = sortRecentRepos.Checked;
+            AppSettings.MaxTopRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
             AppSettings.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
             AppSettings.RecentRepositoriesHistorySize = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
 
@@ -102,43 +102,43 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             try
             {
-                PinnedLB.BeginUpdate();
-                AllRecentLB.BeginUpdate();
+                TopLB.BeginUpdate();
+                RecentLB.BeginUpdate();
 
-                PinnedLB.Items.Clear();
-                AllRecentLB.Items.Clear();
+                TopLB.Items.Clear();
+                RecentLB.Items.Clear();
 
-                List<RecentRepoInfo> pinnedRepos = [];
-                List<RecentRepoInfo> allRecentRepos = [];
+                List<RecentRepoInfo> topRepos = [];
+                List<RecentRepoInfo> recentRepos = [];
 
                 RecentRepoSplitter splitter = new()
                 {
-                    MaxPinnedRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
+                    MaxTopRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
                     ShorteningStrategy = GetShorteningStrategy(),
-                    SortAllRecentRepos = sortAllRecentRepos.Checked,
-                    SortPinnedRepos = sortPinnedRepos.Checked,
+                    SortRecentRepos = sortRecentRepos.Checked,
+                    SortTopRepos = sortTopRepos.Checked,
                     RecentReposComboMinWidth = (int)comboMinWidthEdit.Value,
-                    MeasureFont = PinnedLB.Font,
+                    MeasureFont = TopLB.Font,
                 };
 
-                splitter.SplitRecentRepos(_repositoryHistory, pinnedRepos, allRecentRepos);
+                splitter.SplitRecentRepos(_repositoryHistory, topRepos, recentRepos);
 
-                foreach (RecentRepoInfo repo in pinnedRepos)
+                foreach (RecentRepoInfo repo in topRepos)
                 {
-                    PinnedLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned));
+                    TopLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.AnchoredInTop));
                 }
 
-                foreach (RecentRepoInfo repo in allRecentRepos)
+                foreach (RecentRepoInfo repo in recentRepos)
                 {
-                    AllRecentLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.AllRecent));
+                    RecentLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.AnchoredInRecent));
                 }
 
                 SetComboWidth();
             }
             finally
             {
-                PinnedLB.EndUpdate();
-                AllRecentLB.EndUpdate();
+                TopLB.EndUpdate();
+                RecentLB.EndUpdate();
             }
         }
 
@@ -163,18 +163,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (comboMinWidthEdit.Value == 0)
             {
-                PinnedLB.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                AllRecentLB.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                TopLB.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                RecentLB.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             }
             else
             {
                 int width = Math.Max(MinComboWidthAllowed, (int)comboMinWidthEdit.Value);
-                PinnedLB.Columns[0].Width = width;
-                AllRecentLB.Columns[0].Width = width;
+                TopLB.Columns[0].Width = width;
+                RecentLB.Columns[0].Width = width;
             }
         }
 
-        private void sortPinnedRepos_CheckedChanged(object sender, EventArgs e)
+        private void sortTopRepos_CheckedChanged(object sender, EventArgs e)
         {
             RefreshRepos();
         }
@@ -223,8 +223,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 e.Cancel = false;
                 foreach (RecentRepoInfo repo in repos)
                 {
-                    anchorToPinnedReposToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.Pinned;
-                    anchorToAllRecentReposToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.AllRecent;
+                    anchorToTopReposToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.AnchoredInTop;
+                    anchorToRecentReposToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.AnchoredInRecent;
                     removeAnchorToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.None;
                 }
             }
@@ -246,13 +246,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             ListView? lb;
-            if (sender == PinnedLB)
+            if (sender == TopLB)
             {
-                lb = PinnedLB;
+                lb = TopLB;
             }
-            else if (sender == AllRecentLB)
+            else if (sender == RecentLB)
             {
-                lb = AllRecentLB;
+                lb = RecentLB;
             }
             else
             {
@@ -276,7 +276,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             AnchorToMostRecentRepositories(sender);
         }
 
-        private void PinnedLB_DoubleClick(object sender, EventArgs e)
+        private void TopLB_DoubleClick(object sender, EventArgs e)
         {
             AnchorToLessRecentRepositories(sender);
         }
@@ -292,7 +292,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 foreach (RecentRepoInfo repo in repos)
                 {
-                    repo.Repo.Anchor = Repository.RepositoryAnchor.Pinned;
+                    repo.Repo.Anchor = Repository.RepositoryAnchor.AnchoredInTop;
                 }
 
                 RefreshRepos();
@@ -310,7 +310,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 foreach (RecentRepoInfo repo in repos)
                 {
-                    repo.Repo.Anchor = Repository.RepositoryAnchor.AllRecent;
+                    repo.Repo.Anchor = Repository.RepositoryAnchor.AnchoredInRecent;
                 }
 
                 RefreshRepos();
