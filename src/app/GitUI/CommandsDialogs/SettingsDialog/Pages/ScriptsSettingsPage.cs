@@ -70,8 +70,8 @@ Currently checked out revision:
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}
 
-File(s):
-{SelectedFiles}
+Diff selection:
+{SelectedRelativePaths}   (relative paths as they were in the selected commit)
 {LineNumber}");
 
         private static readonly string[] WatchedProxyPropertiesOnFocusChanged =

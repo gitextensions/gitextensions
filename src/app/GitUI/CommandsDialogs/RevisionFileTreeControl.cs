@@ -298,12 +298,11 @@ See the changes in the commit form.");
                 {
                     if (tvGitTree.SelectedNode?.Tag is not GitItem gitItem || gitItem.ObjectType != GitObjectType.Blob)
                     {
-                        return Array.Empty<string>();
+                        return [];
                     }
 
-                    return new string[] { gitItem.FileName };
+                    return [gitItem.FileName];
                 },
-                () => _fullPathResolver,
                 () => BlameControl.Visible ? BlameControl.CurrentFileLine : FileText.CurrentFileLine);
         }
 

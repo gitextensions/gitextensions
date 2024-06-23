@@ -193,7 +193,7 @@ namespace GitUI.CommandsDialogs
 
         protected override IScriptOptionsProvider? GetScriptOptionsProvider()
         {
-            return new ScriptOptionsProvider(DiffFiles, () => _fullPathResolver, () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine);
+            return new ScriptOptionsProvider(DiffFiles, () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine);
         }
 
         public void ReloadHotkeys()

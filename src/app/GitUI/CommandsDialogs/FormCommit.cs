@@ -913,7 +913,7 @@ namespace GitUI.CommandsDialogs
 
         public override IScriptOptionsProvider? GetScriptOptionsProvider()
         {
-            return new ScriptOptionsProvider(_currentFilesList, () => _fullPathResolver, () => SelectedDiff.CurrentFileLine);
+            return new ScriptOptionsProvider(_currentFilesList, () => SelectedDiff.CurrentFileLine);
         }
 
         #endregion
