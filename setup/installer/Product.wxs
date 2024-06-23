@@ -2,7 +2,14 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
   <?include Config.wxi?>
   <Product Id="*" UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductName) $(var.Version)" Manufacturer="$(var.Manufacturer)" Version="$(var.NumericVersion)" Language="1033">
-    <Package InstallerVersion="200" Compressed="yes" Description="$(var.ProductName)" />
+    <?if $(var.Platform) = x64 ?>
+      <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+    <?elseif $(var.Platform) = arm64 ?>
+      <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+    <?else ?>
+      <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+    <?endif ?>
+    <Package InstallerVersion="500" Compressed="yes" Description="$(var.ProductName)" />
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
     <Property Id="ALLUSERS" Value="1" />
     <!--
@@ -21,7 +28,7 @@
     <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
     <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
+      <Directory Id="$(var.PlatformProgramFilesFolder)">
         <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
           <Directory Id="PluginsDir" Name="Plugins" />
           <Directory Id="DictionariesDir" Name="Dictionaries" />

@@ -27,8 +27,8 @@
 
     <IsPublishable>false</IsPublishable>
 
-    <!-- Set this manually whenever build ARM64-->
-    <Arm64Build>false</Arm64Build>
+    <!-- Set the target platform manually to be: x64 (default), x86, arm64 -->
+    <TargetPlatform Condition=" '$(TargetPlatform)' == '' ">x64</TargetPlatform>
 
     <!-- Opt in to build acceleration in VS (from 17.5 onwards): https://github.com/dotnet/project-system/blob/main/docs/build-acceleration.md -->
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>

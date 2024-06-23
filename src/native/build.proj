@@ -44,7 +44,7 @@
 
     <!-- Build GitExtSshAskPass project, x86 -->
     <Exec
-        Condition="'$(Arm64Build)' != 'true'"
+        Condition="'$(TargetPlatform)' != 'arm64'"
         Command="msbuild.exe $(_GitExtSshAskPassPath) $(_ProjectArgs32) /p:OutDir=$(_OutputPath)GitExtSshAskPass\ /bl:$(_ArtifactsLogDir)\GitExtSshAskPass.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
@@ -53,7 +53,7 @@
     </Exec>
     <!-- Build GitExtSshAskPass project, ARM64 -->
     <Exec
-        Condition="'$(Arm64Build)' == 'true'"
+        Condition="'$(TargetPlatform)' == 'arm64'"
         Command="msbuild.exe $(_GitExtSshAskPassPath) $(_ProjectArgsARM64) /p:OutDir=$(_OutputPath)GitExtSshAskPass\ /bl:$(_ArtifactsLogDir)\GitExtSshAskPass.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
@@ -62,7 +62,7 @@
     </Exec>
     <!-- Build GitExtensionsShellEx project, x86 -->
     <Exec
-        Condition="'$(Arm64Build)' != 'true'"
+        Condition="'$(TargetPlatform)' != 'arm64'"
         Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgs32) /p:OutDir=$(_OutputPath)GitExtensionsShellEx\ /bl:$(_ArtifactsLogDir)\GitExtensionsShellEx32.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
@@ -71,7 +71,7 @@
     </Exec>
     <!-- Build GitExtensionsShellEx project, x64 -->
     <Exec
-        Condition="'$(Arm64Build)' != 'true'"
+        Condition="'$(TargetPlatform)' != 'arm64'"
         Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgs64) /p:OutDir=$(_OutputPath)GitExtensionsShellEx\ /bl:$(_ArtifactsLogDir)\GitExtensionsShellEx64.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
@@ -80,7 +80,7 @@
     </Exec>
     <!-- Build GitExtensionsShellEx project, ARM64 -->
     <Exec
-        Condition="'$(Arm64Build)' == 'true'"
+        Condition="'$(TargetPlatform)' == 'arm64'"
         Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgsARM64) /p:OutDir=$(_OutputPath)GitExtensionsShellEx\ /bl:$(_ArtifactsLogDir)\GitExtensionsShellEx64.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
@@ -89,7 +89,7 @@
     </Exec>
     <!-- Copy GitExtensionsShellEx64.dll file to GitExtensionsShellEx32.dll, ARM64 -->
     <Copy
-        Condition="'$(Arm64Build)' == 'true'"
+        Condition="'$(TargetPlatform)' == 'arm64'"
         SourceFiles="$(_OutputPath)GitExtensionsShellEx\GitExtensionsShellEx64.dll"
         DestinationFiles="$(_OutputPath)GitExtensionsShellEx\GitExtensionsShellEx32.dll">
     </Copy>
