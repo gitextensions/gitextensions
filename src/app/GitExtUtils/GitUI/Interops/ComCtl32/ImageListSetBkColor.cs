@@ -2,10 +2,10 @@
 
 namespace System;
 
-internal static class NativeMethods
+internal static partial class NativeMethods
 {
     internal const int ComCtl32CLRNone = unchecked((int)0xFFFFFFFF);
 
-    [DllImport("comctl32.dll", EntryPoint = "ImageList_SetBkColor")]
-    internal static extern int ImageListSetBkColor(IntPtr himl, int clrBk);
+    [LibraryImport("comctl32.dll", EntryPoint = "ImageList_SetBkColor")]
+    internal static partial int ImageListSetBkColor(IntPtr himl, int clrBk);
 }
