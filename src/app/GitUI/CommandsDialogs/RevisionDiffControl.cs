@@ -191,6 +191,8 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        internal IScriptOptionsProvider? ScriptOptionsProvider => GetScriptOptionsProvider();
+
         protected override IScriptOptionsProvider? GetScriptOptionsProvider()
         {
             return new ScriptOptionsProvider(DiffFiles, () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine);

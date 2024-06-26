@@ -292,6 +292,8 @@ See the changes in the commit form.");
             return true;
         }
 
+        internal IScriptOptionsProvider? ScriptOptionsProvider => GetScriptOptionsProvider();
+
         protected override IScriptOptionsProvider? GetScriptOptionsProvider()
         {
             return new ScriptOptionsProvider(() =>
