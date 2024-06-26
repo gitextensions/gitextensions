@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void LlblTelemetryPrivacyLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/PrivacyPolicy.md");
+            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/setup/assets/PrivacyPolicy.md");
         }
 
         private void lblCommitsLimit_CheckedChanged(object sender, EventArgs e)
