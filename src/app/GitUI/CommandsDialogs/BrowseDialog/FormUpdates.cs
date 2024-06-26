@@ -160,7 +160,7 @@ public partial class FormUpdates : GitExtensionsDialog
         switch (launchType)
         {
             case LaunchType.ChangeLog:
-                OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
+                OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/src/app/GitUI/Resources/ChangeLog.md");
                 break;
 
             case LaunchType.DirectDownload:
