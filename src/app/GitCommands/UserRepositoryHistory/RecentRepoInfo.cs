@@ -5,14 +5,16 @@
         public Repository Repo { get; }
         public string? Caption { get; set; }
         public bool MostRecent { get; set; }
+        public bool Anchored { get; set; }
         public DirectoryInfo? DirInfo { get; set; }
         public string? ShortName { get; }
         public string DirName { get; }
 
-        public RecentRepoInfo(Repository repo, bool mostRecent)
+        public RecentRepoInfo(Repository repo, bool mostRecent, bool anchored)
         {
             Repo = repo;
             MostRecent = mostRecent;
+            Anchored = anchored;
             try
             {
                 DirInfo = new DirectoryInfo(Repo.Path);
@@ -40,6 +42,7 @@
     public class RecentRepoSplitter
     {
         public int MaxTopRepositories { get; set; }
+        public bool HideTopRepositoriesFromRecentList { get; set; }
         public ShorteningRecentRepoPathStrategy ShorteningStrategy { get; set; }
         public bool SortTopRepos { get; set; }
         public bool SortRecentRepos { get; set; }
@@ -50,6 +53,7 @@
         public RecentRepoSplitter()
         {
             MaxTopRepositories = AppSettings.MaxTopRepositories;
+            HideTopRepositoriesFromRecentList = AppSettings.HideTopRepositoriesFromRecentList.Value;
             ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy;
             SortTopRepos = AppSettings.SortTopRepos;
             SortRecentRepos = AppSettings.SortRecentRepos;
@@ -73,13 +77,16 @@
             {
                 bool mostRecent = (topRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.AnchoredInTop;
-                RecentRepoInfo ri = new(repository, mostRecent);
+                RecentRepoInfo ri = new(repository, mostRecent, repository.Anchor == Repository.RepositoryAnchor.AnchoredInTop || repository.Anchor == Repository.RepositoryAnchor.AnchoredInRecent);
                 if (ri.MostRecent)
                 {
                     topRepos.Add(ri);
                 }
 
-                recentRepos.Add(ri);
+                if (!HideTopRepositoriesFromRecentList || !ri.MostRecent)
+                {
+                    recentRepos.Add(ri);
+                }
 
                 if (middleDot)
                 {
@@ -118,7 +125,7 @@
                 addToList.AddRange(
                     from caption in orderedRepos.Keys
                     from repo in orderedRepos[caption]
-                    where !mostRecent || repo.MostRecent == mostRecent
+                    where (!mostRecent && !HideTopRepositoriesFromRecentList) || repo.MostRecent == mostRecent
                     select repo);
             }
 

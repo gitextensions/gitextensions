@@ -38,6 +38,7 @@
             comboMinWidthNote = new Label();
             maxRecentRepositories = new Label();
             _NO_TRANSLATE_maxRecentRepositories = new NumericUpDown();
+            hideTopRepositoriesFromRecentList = new CheckBox();
             comboMinWidthEdit = new NumericUpDown();
             sortTopRepos = new CheckBox();
             comboMinWidthLabel = new Label();
@@ -123,19 +124,21 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_RecentRepositoriesHistorySize, 1, 1);
             tableLayoutPanel1.Controls.Add(lblRecentRepositoriesHistorySize, 0, 1);
-            tableLayoutPanel1.Controls.Add(comboMinWidthNote, 0, 6);
+            tableLayoutPanel1.Controls.Add(comboMinWidthNote, 0, 7);
             tableLayoutPanel1.Controls.Add(maxRecentRepositories, 0, 0);
             tableLayoutPanel1.Controls.Add(_NO_TRANSLATE_maxRecentRepositories, 1, 0);
-            tableLayoutPanel1.Controls.Add(comboMinWidthEdit, 1, 5);
-            tableLayoutPanel1.Controls.Add(sortTopRepos, 0, 2);
-            tableLayoutPanel1.Controls.Add(comboMinWidthLabel, 0, 5);
-            tableLayoutPanel1.Controls.Add(sortRecentRepos, 0, 3);
-            tableLayoutPanel1.Controls.Add(shorteningGB, 0, 4);
+            tableLayoutPanel1.Controls.Add(comboMinWidthEdit, 1, 6);
+            tableLayoutPanel1.Controls.Add(hideTopRepositoriesFromRecentList, 0, 2);
+            tableLayoutPanel1.Controls.Add(sortTopRepos, 0, 3);
+            tableLayoutPanel1.Controls.Add(comboMinWidthLabel, 0, 6);
+            tableLayoutPanel1.Controls.Add(sortRecentRepos, 0, 4);
+            tableLayoutPanel1.Controls.Add(shorteningGB, 0, 5);
             tableLayoutPanel1.Dock = DockStyle.Left;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.Padding = new Padding(8);
             tableLayoutPanel1.RowCount = 7;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -195,6 +198,17 @@
             _NO_TRANSLATE_maxRecentRepositories.Size = new Size(61, 23);
             _NO_TRANSLATE_maxRecentRepositories.TabIndex = 3;
             _NO_TRANSLATE_maxRecentRepositories.ValueChanged += sortTopRepos_CheckedChanged;
+            // 
+            // hideTopRepositoriesFromRecentList
+            // 
+            hideTopRepositoriesFromRecentList.Anchor = AnchorStyles.Left;
+            hideTopRepositoriesFromRecentList.AutoSize = true;
+            hideTopRepositoriesFromRecentList.Location = new Point(11, 37);
+            hideTopRepositoriesFromRecentList.Name = "maxRecentRepositories";
+            hideTopRepositoriesFromRecentList.Size = new Size(261, 15);
+            hideTopRepositoriesFromRecentList.TabIndex = 2;
+            hideTopRepositoriesFromRecentList.Text = "Hide top repositories from recent repositories list";
+            hideTopRepositoriesFromRecentList.CheckedChanged += sortTopRepos_CheckedChanged;
             // 
             // comboMinWidthEdit
             // 
@@ -468,6 +482,7 @@
 
         private NumericUpDown _NO_TRANSLATE_maxRecentRepositories;
         private Label maxRecentRepositories;
+        private CheckBox hideTopRepositoriesFromRecentList;
         private CheckBox sortRecentRepos;
         private CheckBox sortTopRepos;
         private Panel comboPanel;

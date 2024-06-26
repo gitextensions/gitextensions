@@ -28,6 +28,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void LoadSettings()
         {
             SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);
+            hideTopRepositoriesFromRecentList.Checked = AppSettings.HideTopRepositoriesFromRecentList.Value;
             sortTopRepos.Checked = AppSettings.SortTopRepos;
             sortRecentRepos.Checked = AppSettings.SortRecentRepos;
             comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
@@ -67,6 +68,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Validates.NotNull(_repositoryHistory);
 
             AppSettings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
+            AppSettings.HideTopRepositoriesFromRecentList.Value = hideTopRepositoriesFromRecentList.Checked;
             AppSettings.SortTopRepos = sortTopRepos.Checked;
             AppSettings.SortRecentRepos = sortRecentRepos.Checked;
             AppSettings.MaxTopRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
@@ -114,6 +116,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 RecentRepoSplitter splitter = new()
                 {
                     MaxTopRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
+                    HideTopRepositoriesFromRecentList = hideTopRepositoriesFromRecentList.Checked,
                     ShorteningStrategy = GetShorteningStrategy(),
                     SortRecentRepos = sortRecentRepos.Checked,
                     SortTopRepos = sortTopRepos.Checked,

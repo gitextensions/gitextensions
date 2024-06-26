@@ -2,6 +2,7 @@
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
+using GitUI.Properties;
 
 namespace GitUI
 {
@@ -26,12 +27,17 @@ namespace GitUI
         private static Form? OwnerForm
             => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
 
-        private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption)
+        private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, bool anchored = false)
         {
             ToolStripMenuItem item = new(caption)
             {
                 DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
             };
+
+            if (anchored)
+            {
+                item.Image = Images.Pin;
+            }
 
             menuItemContainer.DropDownItems.Add(item);
 
@@ -147,7 +153,7 @@ namespace GitUI
 
             foreach (RecentRepoInfo repo in pinnedRepos)
             {
-                AddRecentRepositories(container, repo.Repo, repo.Caption);
+                AddRecentRepositories(container, repo.Repo, repo.Caption, repo.Anchored);
             }
 
             if (allRecentRepos.Count > 0)
@@ -159,7 +165,7 @@ namespace GitUI
 
                 foreach (RecentRepoInfo repo in allRecentRepos)
                 {
-                    AddRecentRepositories(container, repo.Repo, repo.Caption);
+                    AddRecentRepositories(container, repo.Repo, repo.Caption, repo.Anchored);
                 }
             }
         }
