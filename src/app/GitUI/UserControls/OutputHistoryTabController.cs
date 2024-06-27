@@ -3,11 +3,11 @@ using GitUI.Properties;
 
 namespace GitUI.UserControls;
 
-public partial class OutputHistoryTabController : OutputHistoryControllerBase
+internal partial class OutputHistoryTabController : OutputHistoryControllerBase
 {
     private TabPage? _tabPage;
 
-    public OutputHistoryTabController(IOutputHistoryModel outputHistoryModel,
+    internal OutputHistoryTabController(IOutputHistoryModel outputHistoryModel,
                                       OutputHistoryControl outputHistoryControl,
                                       TabControl parent,
                                       string tabCaption)
@@ -29,7 +29,7 @@ public partial class OutputHistoryTabController : OutputHistoryControllerBase
         _tabPage.ImageKey = nameof(Images.GitCommandLog);
     }
 
-    public override bool ToggleControl()
+    internal override bool FocusAndToggleIfPanel()
     {
         if (_tabPage is null)
         {

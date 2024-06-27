@@ -3,11 +3,11 @@ using GitUI.Models;
 
 namespace GitUI.UserControls;
 
-public partial class OutputHistoryPanelController : OutputHistoryControllerBase
+internal partial class OutputHistoryPanelController : OutputHistoryControllerBase
 {
     private SplitContainer _verticalSplitContainer;
 
-    public OutputHistoryPanelController(IOutputHistoryModel outputHistoryModel,
+    internal OutputHistoryPanelController(IOutputHistoryModel outputHistoryModel,
                                         OutputHistoryControl outputHistoryControl,
                                         Control parent,
                                         SplitContainer verticalSplitContainer,
@@ -70,7 +70,7 @@ public partial class OutputHistoryPanelController : OutputHistoryControllerBase
         }
     }
 
-    public override bool ToggleControl()
+    internal override bool FocusAndToggleIfPanel()
     {
         if (!_outputHistoryModel.Enabled)
         {

@@ -3,12 +3,12 @@ using GitUI.Models;
 
 namespace GitUI.UserControls;
 
-public abstract class OutputHistoryControllerBase : IDisposable
+internal abstract class OutputHistoryControllerBase : IDisposable
 {
     protected IOutputHistoryModel _outputHistoryModel;
     protected RichTextBox _textBox;
 
-    public OutputHistoryControllerBase(IOutputHistoryModel outputHistoryModel, OutputHistoryControl outputHistoryControl)
+    internal OutputHistoryControllerBase(IOutputHistoryModel outputHistoryModel, OutputHistoryControl outputHistoryControl)
     {
         _outputHistoryModel = outputHistoryModel;
         _textBox = outputHistoryControl.TextBox;
@@ -26,7 +26,7 @@ public abstract class OutputHistoryControllerBase : IDisposable
         _outputHistoryModel.HistoryChanged -= Update;
     }
 
-    public abstract bool ToggleControl();
+    internal abstract bool FocusAndToggleIfPanel();
 
     private void Update(object sender, EventArgs args)
     {

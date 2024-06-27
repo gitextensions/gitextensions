@@ -2107,7 +2107,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FocusGpgInfo when AppSettings.ShowGpgInformation.Value: FocusTabOf(revisionGpgInfo1, (c, alreadyContainedFocus) => c.Focus()); break;
                 case Command.FocusGitConsole: FocusGitConsole(); break;
                 case Command.FocusBuildServerStatus: FocusTabOf(_buildReportTabPageExtension?.Control, (c, alreadyContainedFocus) => c.Focus()); break;
-                case Command.FocusOutputHistoryAndToggleIfPanel: return _outputHistoryController.ToggleControl();
+                case Command.FocusOutputHistoryAndToggleIfPanel: return _outputHistoryController.FocusAndToggleIfPanel();
                 case Command.FocusNextTab: FocusNextTab(); break;
                 case Command.FocusPrevTab: FocusNextTab(forward: false); break;
                 case Command.FocusFilter: ToolStripFilters.SetFocus(); break;

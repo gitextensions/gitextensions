@@ -3,9 +3,9 @@ using ResourceManager;
 
 namespace GitUI.UserControls;
 
-public partial class OutputHistoryControl : GitExtensionsControl
+internal partial class OutputHistoryControl : GitExtensionsControl
 {
-    public OutputHistoryControl()
+    internal OutputHistoryControl()
     {
         InitializeComponent();
         TextBox.Font = AppSettings.FixedWidthFont;
