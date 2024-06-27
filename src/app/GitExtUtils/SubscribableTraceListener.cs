@@ -13,7 +13,7 @@ public interface ISubscribableTraceListener
     event TraceHandler TraceReceived;
 }
 
-public class SubscribableTraceListener : TraceListener, ISubscribableTraceListener
+internal class SubscribableTraceListener : TraceListener, ISubscribableTraceListener
 {
     private readonly StringBuilder _trace = new();
 
