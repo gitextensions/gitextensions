@@ -43,7 +43,7 @@ public interface IOutputHistoryModel
     void RecordHistory(in string message);
 }
 
-public sealed class OutputHistoryModel : IOutputHistoryModel
+internal sealed class OutputHistoryModel : IOutputHistoryModel
 {
     private const string _endMark = "###";
     private const string _noExecutable = "---";
