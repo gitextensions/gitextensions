@@ -34,6 +34,28 @@ public class SubscribableTraceListener : TraceListener, ISubscribableTraceListen
         base.Dispose(disposing);
     }
 
+    public override void Flush()
+    {
+        lock (this)
+        {
+            base.Flush();
+            try
+            {
+                if (_trace.Length == 0)
+                {
+                    return;
+                }
+
+                TraceReceived?.Invoke(_trace.ToString());
+                _trace.Clear();
+            }
+            catch
+            {
+                // Do not worsen things
+            }
+        }
+    }
+
     public override void Write(string? message)
     {
         lock (this)
@@ -48,35 +70,6 @@ public class SubscribableTraceListener : TraceListener, ISubscribableTraceListen
         {
             _trace.AppendLine(message);
             Flush();
-        }
-    }
-
-    public override void Flush()
-    {
-        lock (this)
-        {
-            base.Flush();
-            try
-            {
-                if (_trace.Length == 0)
-                {
-                    return;
-                }
-
-                string message = _trace.ToString();
-#if DEBUG
-                if (message.Contains("Exception"))
-#endif
-                {
-                    TraceReceived?.Invoke(message);
-                }
-
-                _trace.Clear();
-            }
-            catch
-            {
-                // Do not worsen things
-            }
         }
     }
 }
