@@ -65,8 +65,8 @@ namespace GitUI.ScriptsEngine
                             return (arguments: null, abort: false, cancel: true);
                         }
 
-                        arguments = ScriptOptionsParser.ReplaceOption($"UserInput:{label}", arguments, prompt.UserInput);
-                        arguments = ScriptOptionsParser.ReplaceOption(match.Value.Substring(1, match.Value.Length - 2), arguments, prompt.UserInput);
+                        arguments = ScriptOptionsParser.ReplaceOption($"UserInput:{label}", arguments, [prompt.UserInput]);
+                        arguments = ScriptOptionsParser.ReplaceOption(match.Value.Substring(1, match.Value.Length - 2), arguments, [prompt.UserInput]);
                     }
                 }
 
@@ -81,7 +81,7 @@ namespace GitUI.ScriptsEngine
                             return (arguments: null, abort: false, cancel: true);
                         }
 
-                        arguments = ScriptOptionsParser.ReplaceOption(userInput, arguments, prompt.UserInput);
+                        arguments = ScriptOptionsParser.ReplaceOption(userInput, arguments, [prompt.UserInput]);
                     }
                 }
 
@@ -94,7 +94,7 @@ namespace GitUI.ScriptsEngine
                             return (arguments: null, abort: false, cancel: true);
                         }
 
-                        arguments = ScriptOptionsParser.ReplaceOption(userFiles, arguments, prompt.UserInput);
+                        arguments = ScriptOptionsParser.ReplaceOption(userFiles, arguments, [prompt.UserInput]);
                     }
                 }
 
