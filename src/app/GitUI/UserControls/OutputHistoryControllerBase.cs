@@ -14,7 +14,7 @@ public abstract class OutputHistoryControllerBase : IDisposable
         _textBox = outputHistoryControl.TextBox;
 
         _textBox.LinkClicked += (_, e) => OsShellUtil.OpenUrlInDefaultBrowser(e.LinkText);
-        outputHistoryControl.tsmiClear.Click += (_, _) => _outputHistoryModel.Clear();
+        outputHistoryControl.tsmiClear.Click += (_, _) => _outputHistoryModel.ClearHistory();
         outputHistoryControl.tsmiCopy.Click += CopyToClipboard;
 
         _outputHistoryModel.HistoryChanged += Update;
