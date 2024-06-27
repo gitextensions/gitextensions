@@ -167,7 +167,7 @@ namespace GitUI.HelperDialogs
                 try
                 {
                     RunProcessInfo runProcessInfo = new(ProcessString, ProcessArguments, GetOutputString(), DateTime.Now);
-                    UICommands.GetRequiredService<IOutputHistoryModel>().Trace(runProcessInfo);
+                    UICommands.GetRequiredService<IOutputHistoryModel>().RecordHistory(runProcessInfo);
                 }
                 catch (Exception exception)
                 {
