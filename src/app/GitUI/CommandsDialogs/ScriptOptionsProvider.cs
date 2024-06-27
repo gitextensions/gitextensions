@@ -29,7 +29,7 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
         switch (option)
         {
             case _selectedRelativePaths:
-                return string.Join(" ", _getSelectedRelativePaths().Select(item => item.QuoteForCommandLine()));
+                return string.Join(" ", _getSelectedRelativePaths().Select(item => item.EscapeForCommandLine()));
             case _lineNumber:
                 return _getCurrentLineNumber()?.ToString() ?? "";
             default:
