@@ -4,10 +4,10 @@ using System.Globalization;
 using System.Reflection;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.ScriptsEngine;
-using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 
