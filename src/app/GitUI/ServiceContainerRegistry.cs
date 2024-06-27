@@ -17,7 +17,17 @@ public static class ServiceContainerRegistry
         HotkeySettingsManager hotkeySettingsManager = new(scriptsManager);
 
         OutputHistoryModel outputHistoryModel = new(AppSettings.OutputHistoryDepth.Value);
-        serviceContainer.GetRequiredService<ISubscribableTraceListener>().TraceReceived += outputHistoryModel.Trace;
+        serviceContainer.GetRequiredService<ISubscribableTraceListener>().TraceReceived += (in string message) =>
+        {
+            // In release builds, all Trace.Write* output is recorded.
+            // In debug builds, forward only exceptions but not all the noisy Debug.Write* output.
+#if DEBUG
+            if (message.Contains("Exception"))
+#endif
+            {
+                outputHistoryModel.RecordHistory(message);
+            }
+        };
 
         serviceContainer.AddService<IWindowsJumpListManager>(new WindowsJumpListManager(serviceContainer.GetRequiredService<IRepositoryDescriptionProvider>()));
         serviceContainer.AddService<IScriptsManager>(scriptsManager);

@@ -7,15 +7,40 @@ namespace GitUI.Models;
 
 public interface IOutputHistoryModel
 {
+    /// <summary>
+    ///  Is invoked when something was added to the output history.
+    /// </summary>
     event EventHandler HistoryChanged;
 
+    /// <summary>
+    ///  Gets whether the output history is enabled.
+    /// </summary>
     bool Enabled { get; }
+
+    /// <summary>
+    ///  Gets the current output history formatted as string.
+    /// </summary>
     string History { get; }
 
-    void Clear();
-    void Trace(in RunProcessInfo runProcess);
-    void Trace(in Exception exception);
-    void Trace(in string message);
+    /// <summary>
+    ///  Clears the recorded history.
+    /// </summary>
+    void ClearHistory();
+
+    /// <summary>
+    ///  Records the output after a process has run.
+    /// </summary>
+    void RecordHistory(in RunProcessInfo runProcess);
+
+    /// <summary>
+    ///  Records an exception.
+    /// </summary>
+    void RecordHistory(in Exception exception);
+
+    /// <summary>
+    ///  Records a string message.
+    /// </summary>
+    void RecordHistory(in string message);
 }
 
 public sealed class OutputHistoryModel : IOutputHistoryModel
@@ -53,7 +78,7 @@ public sealed class OutputHistoryModel : IOutputHistoryModel
         }
     }
 
-    public void Clear()
+    public void ClearHistory()
     {
         lock (_outputHistory)
         {
@@ -63,18 +88,18 @@ public sealed class OutputHistoryModel : IOutputHistoryModel
         HistoryChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void Trace(in string message)
+    public void RecordHistory(in string message)
     {
         string time = DateTime.Now.ToShortTimeString();
         Add(new StringBuilder(time, capacity: time.Length + 1 + message.Length).Append(' ').AppendLine(message));
     }
 
-    public void Trace(in Exception exception)
+    public void RecordHistory(in Exception exception)
     {
-        Trace(exception.ToStringDemystified());
+        RecordHistory(exception.ToStringDemystified());
     }
 
-    public void Trace(in RunProcessInfo runProcess)
+    public void RecordHistory(in RunProcessInfo runProcess)
     {
         Add(Format(runProcess));
 
