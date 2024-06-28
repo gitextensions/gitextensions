@@ -10,7 +10,7 @@ namespace GitUI.LeftPanel
         private readonly IGitUICommandsSource _uiCommandsSource;
         private readonly ExclusiveTaskRunner _reloadTaskRunner = ThreadHelper.CreateExclusiveTaskRunner();
         private bool _firstReloadNodesSinceModuleChanged = true;
-        protected bool IsLoading { get; private set; }
+        protected TaskCompletionSource LoadingCompleted = new();
 
         protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
         {
@@ -49,6 +49,10 @@ namespace GitUI.LeftPanel
         /// </summary>
         public bool IgnoreSelectionChangedEvent { get; set; }
         protected IGitModule Module => UICommands.Module;
+
+        /// <summary>
+        /// Flag if this tree is enabled or invisible.
+        /// </summary>
         protected bool IsAttached { get; private set; }
 
         public void Attached()
@@ -102,7 +106,7 @@ namespace GitUI.LeftPanel
 
                 try
                 {
-                    IsLoading = true;
+                    LoadingCompleted = new();
 
                     // Module is invalid in Dashboard
                     Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(cancellationToken, getRefs) : new(tree: null);
@@ -150,7 +154,7 @@ namespace GitUI.LeftPanel
                 }
                 finally
                 {
-                    IsLoading = false;
+                    LoadingCompleted.TrySetResult();
                 }
             });
         }
