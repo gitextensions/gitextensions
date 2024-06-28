@@ -30,13 +30,15 @@ namespace GitUI.LeftPanel
         {
             TreeView treeView = TreeViewNode.TreeView;
 
-            if (treeView is null || !IsAttached || IsLoading)
+            if (treeView is null || !IsAttached)
             {
                 return;
             }
 
             _updateTaskRunner.RunDetached(async cancellationToken =>
             {
+                await LoadingCompleted.Task;
+
                 await treeView.SwitchToMainThreadAsync(cancellationToken);
 
                 // Check again after switch to main thread
