@@ -292,13 +292,14 @@ namespace GitUI.ScriptsEngine
             in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches,
             in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
         {
+            IEnumerable<string>? newStrings = null;
             string? newString = null;
             string remote;
             string url;
             switch (option)
             {
                 case "sHashes":
-                    newString = string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid).ToArray());
+                    newString = string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid));
                     break;
 
                 case "sTag":
@@ -477,11 +478,20 @@ namespace GitUI.ScriptsEngine
                     break;
 
                 default:
-                    newString = scriptOptionsProvider?.GetValue(option);
+                    newStrings = scriptOptionsProvider?.GetValue(option);
                     break;
             }
 
-            return ReplaceOption(option, arguments, newString);
+            if (newString is not null)
+            {
+                newStrings = [newString];
+            }
+            else if (newStrings is null)
+            {
+                return arguments;
+            }
+
+            return ReplaceOption(option, arguments, newStrings.ToArray());
 
             static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
 
@@ -490,9 +500,13 @@ namespace GitUI.ScriptsEngine
             string SelectOneString(IList<string> strings) => SelectOne(strings, uiCommands, owner);
         }
 
-        public static string ReplaceOption(string option, string arguments, string newString)
+        internal static string ReplaceOption(string option, string arguments, string[] newStrings)
         {
-            if (newString is not null)
+            return arguments
+                .Replace(CreateOption(option, quoted: true), string.Join(' ', newStrings.Select(value => Quote(value))))
+                .Replace(CreateOption(option, quoted: false), string.Join(' ', newStrings));
+
+            static string Quote(string newString)
             {
                 string newStringQuoted = QuoteRegex().Replace(newString, "\\\"");
                 newStringQuoted = "\"" + newStringQuoted;
@@ -502,12 +516,8 @@ namespace GitUI.ScriptsEngine
                 }
 
                 newStringQuoted += "\"";
-
-                arguments = arguments.Replace(CreateOption(option, quoted: true), newStringQuoted);
-                arguments = arguments.Replace(CreateOption(option, quoted: false), newString);
+                return newStringQuoted;
             }
-
-            return arguments;
         }
 
         private static string SelectOne(IList<IGitRef> refs, IGitUICommands uiCommands, IWin32Window owner)

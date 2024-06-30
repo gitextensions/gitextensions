@@ -11,6 +11,6 @@ public interface IScriptOptionsProvider
     ///  Retrieves the information for placeholders in script arguments.
     /// </summary>
     /// <param name="option">The option identifier which is to be replaced.</param>
-    /// <returns>The value to be used for the script argument.</returns>
-    string? GetValue(string option);
+    /// <returns>The value(s) to be used for the script argument.</returns>
+    IEnumerable<string> GetValue(string option);
 }

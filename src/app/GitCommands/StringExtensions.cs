@@ -191,12 +191,12 @@ namespace System
         }
 
         /// <summary>
-        /// Quotes and escapes this string for use as a command line argument.
+        ///  Escapes this string for use as a command line argument.
         /// </summary>
         [Pure]
-        public static string QuoteForCommandLine(this string s, bool? forWindows = null)
+        public static string EscapeForCommandLine(this string s, bool? forWindows = null)
         {
-            return $"\"{((forWindows ?? EnvUtils.RunningOnWindows()) ? EscapeForWindowsCommandLine(s) : EscapeForPosixCommandLine(s))}\"";
+            return (forWindows ?? EnvUtils.RunningOnWindows()) ? EscapeForWindowsCommandLine(s) : EscapeForPosixCommandLine(s);
 
             static string EscapeForWindowsCommandLine(string s) => s.Replace("\"", "\"\"");
             static string EscapeForPosixCommandLine(string s) => s.Replace(@"\", @"\\").Replace("\"", "\\\"").Replace("'", @"\'");
