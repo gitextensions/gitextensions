@@ -144,7 +144,7 @@
         [TestCase("cmd /c \"echo \\\"Hello world\\\"\"", true, "cmd /c \"\"echo \\\"\"Hello world\\\"\"\"\"")]
         [TestCase("cmd /c \"echo \"\"Hello world\"\"\"", false, "cmd /c \\\"echo \\\"\\\"Hello world\\\"\\\"\\\"")]
         [TestCase("cmd /c \"echo \"\"Hello world\"\"\"", true, "cmd /c \"\"echo \"\"\"\"Hello world\"\"\"\"\"\"")]
-        public void QuoteForCommandLine_works_as_expected(string s, bool forWindows, string expected)
+        public void EscapeForCommandLine_works_as_expected(string s, bool forWindows, string expected)
         {
             Assert.AreEqual(expected, s.EscapeForCommandLine(forWindows));
         }
