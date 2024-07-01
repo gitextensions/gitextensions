@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands.UserRepositoryHistory;
+using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
@@ -21,5 +22,11 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IHotkeySettingsLoader>(hotkeySettingsManager);
         serviceContainer.AddService<ISimplePromptCreator>(new SimplePromptCreator());
         serviceContainer.AddService<IFilePromptCreator>(new FilePromptCreator());
+
+        RepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider = new();
+        InvalidRepositoryRemover invalidRepositoryRemover = new();
+        serviceContainer.AddService<IRepositoryCurrentBranchNameProvider>(repositoryCurrentBranchNameProvider);
+        serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
+        serviceContainer.AddService<IRepositoryHistoryUIService>(new RepositoryHistoryUIService(repositoryCurrentBranchNameProvider, invalidRepositoryRemover));
     }
 }

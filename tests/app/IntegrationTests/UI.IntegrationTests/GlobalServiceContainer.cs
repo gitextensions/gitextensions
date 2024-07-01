@@ -18,6 +18,7 @@ namespace GitExtensions.UITests
             serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
             serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
             serviceContainer.AddService(Substitute.For<ILinkFactory>());
+            serviceContainer.AddService(Substitute.For<IRepositoryHistoryUIService>());
 
             IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
             scriptsManager.GetScripts().Returns([]);

@@ -35,6 +35,15 @@ namespace GitUI.CommandsDialogs.Menus
             Translator.Translate(this, AppSettings.CurrentTranslation);
 
             _getUICommands = getUICommands;
+
+            OnInitialized();
+        }
+
+        /// <summary>
+        ///  Allows the menu item to perform any initialization logic.
+        /// </summary>
+        public virtual void OnInitialized()
+        {
         }
 
         /// <summary>
