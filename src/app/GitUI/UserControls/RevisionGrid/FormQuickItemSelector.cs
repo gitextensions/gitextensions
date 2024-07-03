@@ -1,6 +1,6 @@
 ﻿namespace GitUI.UserControls.RevisionGrid
 {
-    public partial class FormQuickItemSelector : GitExtensionsForm
+    internal partial class FormQuickItemSelector : GitExtensionsForm
     {
         private const short MaxVisibleItemsWithoutScroll = 8;
         private const short MaxRefLength = 100;
@@ -18,12 +18,12 @@
         /// </summary>
         public object? SelectedItem => (lbxRefs.SelectedItem as ItemData)?.Item;
 
-        protected void Init(IReadOnlyList<ItemData> items, string buttonText)
+        protected void Init(IReadOnlyList<ItemData> items, string buttonText, int selectedIndex = 0)
         {
             btnAction.Text = buttonText;
 
             lbxRefs.Items.Clear();
-            if (items?.Count is not > 0)
+            if (items.Count == 0)
             {
                 DialogResult = DialogResult.Cancel;
                 Close();
@@ -49,18 +49,27 @@
             }
             finally
             {
-                // what is this magic number "MaxVisibleItemsWithoutScroll + 0.5"?
-                // we are limiting number of visible items in the listbox before enabling vscroll, this is to reduce the risk of not fitting on user's screen.
-                // when listbox.IntegralHeight=true, the listbox automatically calculates its size and only show full items (i.e. you can't render it
+                // What is this magic number "MaxVisibleItemsWithoutScroll + 0.5"?
+                //
+                // We are limiting number of visible items in the listbox before enabling vscroll, this is to reduce the risk of not fitting on user's screen.
+                // When listbox.IntegralHeight=true, the listbox automatically calculates its size and only show full items (i.e. you can't render it
                 // at 20px high if the ItemHeight=13px, it can only be 13, 26, 39 etc (NB: slightly more if you account for the furniture)).
                 // listbox.PreferredHeight returns the height of the listbox showing all items.
-                // for some strange reason, MaxVisibleItemsWithoutScroll*listbox.ItemHeight renders the listbox showing MaxVisibleItemsWithoutScroll-1 items.
-                // to fix this, trick the listbox and set its height to show MaxVisibleItemsWithoutScroll+0.5
-                // this internally forces it to re-calculates its bounds and then to calculate its preferred height
+                //
+                // For some strange reason, MaxVisibleItemsWithoutScroll*listbox.ItemHeight renders the listbox showing MaxVisibleItemsWithoutScroll-1 items.
+                //
+                // To fix this, trick the listbox and set its height to show MaxVisibleItemsWithoutScroll+0.5
+                // this internally forces it to re-calculates its bounds and then to calculate its preferred height.
+
                 lbxRefs.Height = Math.Min(lbxRefs.PreferredHeight, (int)((MaxVisibleItemsWithoutScroll + 0.5) * lbxRefs.ItemHeight));
                 lbxRefs.Width = (int)longestItemWidth;
                 lbxRefs.EndUpdate();
-                lbxRefs.SelectedIndex = 0;
+
+                if (selectedIndex >= 0 && selectedIndex < lbxRefs.Items.Count)
+                {
+                    lbxRefs.SelectedIndex = selectedIndex;
+                }
+
                 lbxRefs.Focus();
 
                 // resize the form to look nice
@@ -86,7 +95,7 @@
             AcceptButton.PerformClick();
         }
 
-        public class ItemData
+        internal sealed class ItemData
         {
             public string Label { get; }
             public object Item { get; }

@@ -174,7 +174,7 @@ namespace GitUI.ScriptsEngine
 
             using FormQuickGitRefSelector f = new();
             f.Location = uiCommands.BrowseRepo?.GetQuickItemSelectorLocation() ?? new Point();
-            f.Init(FormQuickGitRefSelector.Action.Select, items);
+            f.Init(FormQuickGitRefSelector.QuickAction.Select, items);
             f.ShowDialog(owner);
             return f.SelectedRef?.Name ?? "";
         }
