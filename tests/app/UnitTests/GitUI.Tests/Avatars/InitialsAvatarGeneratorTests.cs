@@ -22,6 +22,12 @@ namespace GitUITests.Avatars
         [TestCase("", "A-Einstein", "AE")]
         [TestCase("", "Alb-Einstein", "AE")]
         [TestCase("", "AEinstein", "AE")]
+        [TestCase("1-pass@noreply.com", "1-pass", "1P")]
+        [TestCase("", "1-pass", "1P")]
+        [TestCase("1-pass@noreply.com", "", "1P")]
+        [TestCase("/*+=/°¨", "'µ*", "'")] // Fallback when no letters or digit found
+        [TestCase("/*+=/°¨", "'µ *", "'*")] // Fallback when no letters or digit found
+        [TestCase("", "", "?")]
         [TestCase(null, null, "?")]
         public void GetInitialsAndHashCode_return_initials_of_a_user(string email, string name, string expected)
         {
