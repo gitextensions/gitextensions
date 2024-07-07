@@ -55,36 +55,33 @@ namespace GitUI
 
             curIndex = curIndex >= 0 ? curIndex : 0;
 
-            if (e.KeyChar == 8 && _quickSearchString.Length > 1)
+            if (e.KeyChar == (char)Keys.Back && _quickSearchString.Length > 1)
             {
                 // backspace
-                RestartQuickSearchTimer();
-
-                _quickSearchString = _quickSearchString[..^1];
-
-                FindNextMatch(curIndex, _quickSearchString, false);
-                _lastQuickSearchString = _quickSearchString;
-
-                e.Handled = true;
-                ShowQuickSearchString();
+                UpdateQuickSearchString(_quickSearchString[..^1]);
             }
             else if (!char.IsControl(e.KeyChar))
             {
-                RestartQuickSearchTimer();
-
                 // The code below is meant to fix the weird key values when pressing keys e.g. ".".
-                _quickSearchString = string.Concat(_quickSearchString, char.ToLower(e.KeyChar));
-
-                FindNextMatch(curIndex, _quickSearchString, false);
-                _lastQuickSearchString = _quickSearchString;
-
-                e.Handled = true;
-                ShowQuickSearchString();
+                UpdateQuickSearchString(string.Concat(_quickSearchString, char.ToLower(e.KeyChar)));
             }
             else
             {
                 HideQuickSearchString();
                 e.Handled = false;
+            }
+
+            void UpdateQuickSearchString(string newValue)
+            {
+                RestartQuickSearchTimer();
+
+                _quickSearchString = newValue;
+
+                FindNextMatch(curIndex, _quickSearchString, false);
+                _lastQuickSearchString = _quickSearchString;
+
+                e.Handled = true;
+                ShowQuickSearchString();
             }
         }
 
