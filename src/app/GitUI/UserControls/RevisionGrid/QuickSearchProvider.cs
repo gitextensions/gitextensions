@@ -88,6 +88,14 @@ namespace GitUI
             }
         }
 
+        public void OnPreviewKeyDown(PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                HideQuickSearchString();
+            }
+        }
+
         public void NextResult(bool down)
         {
             int curIndex = -1;
