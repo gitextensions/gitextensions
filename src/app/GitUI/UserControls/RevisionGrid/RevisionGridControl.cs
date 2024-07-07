@@ -231,6 +231,7 @@ namespace GitUI
             _gridView.AuthorHighlighting = _authorHighlighting;
 
             _gridView.PreviewKeyDown += (_, e) => _quickSearchProvider.OnPreviewKeyDown(e);
+            _gridView.KeyDown += (_, e) => _quickSearchProvider.OnKeyDown(e);
             _gridView.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
             _gridView.MouseDown += OnGridViewMouseDown;
             _gridView.CellMouseDown += OnGridViewCellMouseDown;
