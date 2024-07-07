@@ -49,8 +49,8 @@ namespace GitUI
 
         public void OnKeyPress(KeyPressEventArgs e)
         {
-            // SYN char is issued when pasting
-            const char SynChar = (char)22;
+            // Ctrl+A to Ctrl+Z have codes 1..26 with Ctrl+V being 22
+            const char ctrlVChar = (char)('V' - 'A' + 1);
 
             int curIndex = _gridView.SelectedRows.Count > 0
                 ? _gridView.SelectedRows[0].Index
@@ -63,7 +63,7 @@ namespace GitUI
                 // backspace
                 UpdateQuickSearchString(_quickSearchString[..^1]);
             }
-            else if (Control.ModifierKeys == Keys.Control && e.KeyChar == SynChar && Clipboard.ContainsText())
+            else if (Control.ModifierKeys == Keys.Control && e.KeyChar == ctrlVChar && Clipboard.ContainsText())
             {
                 // paste
                 string text = Clipboard.GetText();
