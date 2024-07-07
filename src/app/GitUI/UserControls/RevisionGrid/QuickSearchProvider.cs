@@ -41,7 +41,6 @@ namespace GitUI
             _quickSearchTimer.Tick += (sender, e) =>
             {
                 _quickSearchTimer.Stop();
-                _quickSearchString = "";
                 HideQuickSearchString();
             };
 
@@ -84,7 +83,6 @@ namespace GitUI
             }
             else
             {
-                _quickSearchString = "";
                 HideQuickSearchString();
                 e.Handled = false;
             }
@@ -122,6 +120,7 @@ namespace GitUI
 
         private void HideQuickSearchString()
         {
+            _quickSearchString = "";
             _label.Visible = false;
         }
 
