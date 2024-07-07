@@ -99,20 +99,6 @@ namespace GitUI
             }
         }
 
-        public void OnKeyDown(KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Up && _quickSearchString != "")
-            {
-                e.Handled = true;
-                NextResult(down: false);
-            }
-            else if (e.KeyCode == Keys.Down && _quickSearchString != "")
-            {
-                e.Handled = true;
-                NextResult(down: true);
-            }
-        }
-
         public void NextResult(bool down)
         {
             int curIndex = -1;
