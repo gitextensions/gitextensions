@@ -60,6 +60,12 @@ namespace GitUI
                 // backspace
                 UpdateQuickSearchString(_quickSearchString[..^1]);
             }
+            else if (e.KeyChar == 22 && Control.ModifierKeys == Keys.Control && Clipboard.ContainsText())
+            {
+                // paste
+                string text = Clipboard.GetText();
+                UpdateQuickSearchString(string.Concat(_quickSearchString, text));
+            }
             else if (!char.IsControl(e.KeyChar))
             {
                 // The code below is meant to fix the weird key values when pressing keys e.g. ".".
