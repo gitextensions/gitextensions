@@ -41,7 +41,6 @@ namespace GitUI
             _quickSearchTimer.Tick += (sender, e) =>
             {
                 _quickSearchTimer.Stop();
-                _quickSearchString = "";
                 HideQuickSearchString();
             };
 
@@ -50,31 +49,44 @@ namespace GitUI
 
         public void OnKeyPress(KeyPressEventArgs e)
         {
+            // Ctrl+A to Ctrl+Z have codes 1..26 with Ctrl+V being 22
+            const char ctrlVChar = (char)('V' - 'A' + 1);
+
             int curIndex = _gridView.SelectedRows.Count > 0
                 ? _gridView.SelectedRows[0].Index
                 : -1;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
 
-            if (e.KeyChar == 8 && _quickSearchString.Length > 1)
+            if (e.KeyChar == (char)Keys.Back && _quickSearchString.Length > 1)
             {
                 // backspace
-                RestartQuickSearchTimer();
-
-                _quickSearchString = _quickSearchString[..^1];
-
-                FindNextMatch(curIndex, _quickSearchString, false);
-                _lastQuickSearchString = _quickSearchString;
-
-                e.Handled = true;
-                ShowQuickSearchString();
+                UpdateQuickSearchString(_quickSearchString[..^1]);
+            }
+            else if (Control.ModifierKeys == Keys.Control && e.KeyChar == ctrlVChar && Clipboard.ContainsText())
+            {
+                // paste
+                string text = Clipboard.GetText();
+                UpdateQuickSearchString(string.Concat(_quickSearchString, text));
             }
             else if (!char.IsControl(e.KeyChar))
             {
+                // The code below is meant to fix the weird key values when pressing keys e.g. ".".
+                UpdateQuickSearchString(string.Concat(_quickSearchString, char.ToLower(e.KeyChar)));
+            }
+            else
+            {
+                HideQuickSearchString();
+                e.Handled = false;
+            }
+
+            return;
+
+            void UpdateQuickSearchString(string newValue)
+            {
                 RestartQuickSearchTimer();
 
-                // The code below is meant to fix the weird key values when pressing keys e.g. ".".
-                _quickSearchString = string.Concat(_quickSearchString, char.ToLower(e.KeyChar));
+                _quickSearchString = newValue;
 
                 FindNextMatch(curIndex, _quickSearchString, false);
                 _lastQuickSearchString = _quickSearchString;
@@ -82,11 +94,13 @@ namespace GitUI
                 e.Handled = true;
                 ShowQuickSearchString();
             }
-            else
+        }
+
+        public void OnPreviewKeyDown(PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
             {
-                _quickSearchString = "";
                 HideQuickSearchString();
-                e.Handled = false;
             }
         }
 
@@ -122,6 +136,7 @@ namespace GitUI
 
         private void HideQuickSearchString()
         {
+            _quickSearchString = "";
             _label.Visible = false;
         }
 
