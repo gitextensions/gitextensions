@@ -3,11 +3,14 @@ using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public class FormQuickGitRefSelector : FormQuickItemSelector
+    internal class FormQuickGitRefSelector : FormQuickItemSelector
     {
+        private const string _separator = "――――――――――――――――――";
         private readonly TranslationString _actionRename = new("Rename");
         private readonly TranslationString _actionDelete = new("Delete");
         private readonly TranslationString _actionSelect = new("Select");
+        private readonly TranslationString _local = new("local");
+        private readonly TranslationString _remote = new("remote");
         private readonly TranslationString _tag = new("tag");
 
         /// <summary>
@@ -15,40 +18,71 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         public IGitRef? SelectedRef => SelectedItem as IGitRef;
 
-        public void Init(Action action, IReadOnlyList<IGitRef> refs)
+        public void Init(QuickAction action, IReadOnlyList<IGitRef> refs)
         {
-            List<ItemData> items = refs.OrderBy(r => r.IsTag).ThenBy(r => r.Name).Select(GetItemData).ToList();
+            List<ItemData> items = Filter(refs, _local, _remote, _tag, r => r.IsHead);
+            items.AddRange(Filter(refs, _local, _remote, _tag, r => r.IsRemote));
+            items.AddRange(Filter(refs, _local, _remote, _tag, r => r.IsTag));
 
-            ItemData GetItemData(IGitRef gitRef)
+            // if there are any items, then skip the header and select the first actual item.
+            int selectedIndex = 0;
+            if (items.Count > 0)
             {
-                string suffix = gitRef.IsTag ? $" ({_tag.Text})" : string.Empty;
-                return new ItemData($"{gitRef.Name}{suffix}", gitRef);
+                selectedIndex = 1;
             }
 
             switch (action)
             {
-                case Action.Delete:
+                case QuickAction.Delete:
                     {
-                        Init(items, _actionDelete.Text);
+                        Init(items, _actionDelete.Text, selectedIndex);
                     }
 
                     break;
-                case Action.Rename:
+                case QuickAction.Rename:
                     {
-                        Init(items, _actionRename.Text);
+                        Init(items, _actionRename.Text, selectedIndex);
                     }
 
                     break;
-                case Action.Select:
+                case QuickAction.Select:
                     {
-                        Init(items, _actionSelect.Text);
+                        Init(items, _actionSelect.Text, selectedIndex);
                     }
 
                     break;
             }
+
+            return;
+
+            static List<ItemData> Filter(IReadOnlyList<IGitRef> sourceRefs, TranslationString localText, TranslationString remoteText, TranslationString tagText, Func<IGitRef, bool> selector)
+            {
+                List<ItemData> list = sourceRefs.Where(r => selector(r))
+                                                .OrderBy(r => r.Name)
+                                                .Select(r => new ItemData(label: r.Name, item: r))
+                                                .ToList();
+
+                if (list.Count > 0)
+                {
+                    IGitRef gitRef = (IGitRef)list[0].Item;
+
+                    TranslationString chosenText = gitRef switch
+                    {
+                        { IsHead: true } => localText,
+                        { IsRemote: true } => remoteText,
+                        { IsTag: true } => tagText,
+                        _ => null,
+                    };
+
+                    string label = $"{chosenText} {_separator}"[.._separator.Length];
+                    list.Insert(0, new ItemData(label, _separator));
+                }
+
+                return list;
+            }
         }
 
-        public enum Action
+        public enum QuickAction
         {
             Rename = 0,
             Delete,

@@ -11,15 +11,30 @@ public interface IGitRef : INamedGitItem
     bool IsStash { get; }
 
     /// <summary>
-    /// True when Guid is a checksum of an object (e.g. commit) to which another object
-    /// with Name (e.g. annotated tag) is applied.
-    /// <para>False when Name and Guid are denoting the same object.</para>
+    ///  Indicates whether it is a checksum of an object (e.g., commit) to which another object
+    ///  with <c>name</c> (e.g. annotated tag) is applied.
     /// </summary>
+    /// <value>
+    ///  <see langword="true"/> if it is a checksum of an object to which another object with <c>name</c> is applied;
+    ///  <see langword="false"/> when <c>name</c> and <c>guid</c> are denoting the same object.
+    /// </value>
     bool IsDereference { get; }
 
+    /// <summary>
+    ///  Indicates whether the ref is a local, i.e., it is a <c>refs/heads/xyz</c>.
+    /// </summary>
     bool IsHead { get; }
+
+    /// <summary>
+    ///  Indicates whether the ref is a remote, i.e., it is a <c>refs/remotes/origin/xyz</c>.
+    /// </summary>
     bool IsRemote { get; }
+
+    /// <summary>
+    ///  Indicates whether the ref is a tag, i.e., it is a <c>refs/tags/xyz</c>.
+    /// </summary>
     bool IsTag { get; }
+
     string LocalName { get; }
     string MergeWith { get; set; }
     IGitModule Module { get; }

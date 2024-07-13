@@ -6011,6 +6011,14 @@ Would you like to do it now?</source>
         <source>Select</source>
         <target />
       </trans-unit>
+      <trans-unit id="_local.Text">
+        <source>local</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_remote.Text">
+        <source>remote</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_tag.Text">
         <source>tag</source>
         <target />
