@@ -2639,7 +2639,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchPruneAllToolStripMenuItem.ToolTipText">
-        <source>Fetch branches and tags from all remote repositories also prune deleted refs</source>
+        <source>Fetch branches and tags from all remote repositories also prune deleted branches</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchToolStripMenuItem.Text">
