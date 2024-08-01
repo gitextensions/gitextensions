@@ -57,7 +57,7 @@ namespace GitUI.Avatars
             }
         }
 
-        protected internal (string? initials, int hashCode) GetInitialsAndColorIndex(string email, string? name)
+        protected internal (string initials, int hashCode) GetInitialsAndColorIndex(string email, string? name)
         {
             (string selectedName, char[] separator) = NameSelector(name, email);
 
@@ -88,14 +88,21 @@ namespace GitUI.Avatars
             return (null, null);
         }
 
-        private static string? GetInitialsFromNames(string[]? names)
+        private static string GetInitialsFromNames(string[]? possibleNames)
         {
-            names = names?.Where(s => !string.IsNullOrWhiteSpace(s) && char.IsLetter(s[0])).ToArray();
+            possibleNames = possibleNames?.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
-            // if no valid name-elements are found, return null
+            if (possibleNames?.Length is not > 0)
+            {
+                return "?";
+            }
+
+            string[]? names = possibleNames?.Where(s => char.IsLetter(s[0]) || char.IsDigit(s[0])).ToArray();
+
+            // if no valid name-elements are found, return acceptable fallback
             if (names?.Length is not > 0)
             {
-                return null;
+                return possibleNames.Length > 1 ? $"{possibleNames[0][0]}{possibleNames[1][0]}" : $"{possibleNames[0][0]}";
             }
 
             string name = names[0];
@@ -159,6 +166,8 @@ namespace GitUI.Avatars
 
         private Image DrawText(string? text, Brush foreColor, Color backColor, int avatarSize)
         {
+            text ??= "?";
+
             Bitmap bitmap = new(avatarSize, avatarSize);
             using Graphics graphics = Graphics.FromImage(bitmap);
             graphics.Clear(backColor);
