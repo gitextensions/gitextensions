@@ -408,37 +408,37 @@ public partial class AnsiEscapeUtilities
 
         return colorCode switch
         {
-            blackId => Color.Black,
-            blackId + _boldOffset => Color.FromArgb(96, 96, 96),
-            blackId + _dimOffset => Color.FromArgb(127, 127, 127),
+            blackId => AppColor.AnsiTerminalBlackNormal.GetThemeColor(),
+            blackId + _boldOffset => AppColor.AnsiTerminalBlackBold.GetThemeColor(),
+            blackId + _dimOffset => AppColor.AnsiTerminalBlackDim.GetThemeColor(),
 
-            redId => Color.FromArgb(212, 44, 58),
-            redId + _boldOffset => Color.FromArgb(255, 118, 118),
-            redId + _dimOffset => Color.FromArgb(208, 142, 147),
+            redId => AppColor.AnsiTerminalRedNormal.GetThemeColor(),
+            redId + _boldOffset => AppColor.AnsiTerminalRedBold.GetThemeColor(),
+            redId + _dimOffset => AppColor.AnsiTerminalRedDim.GetThemeColor(),
 
-            greenId => Color.FromArgb(28, 168, 0),
-            greenId + _boldOffset => Color.FromArgb(0, 242, 0),
-            greenId + _dimOffset => Color.FromArgb(137, 190, 127),
+            greenId => AppColor.AnsiTerminalGreenNormal.GetThemeColor(),
+            greenId + _boldOffset => AppColor.AnsiTerminalGreenBold.GetThemeColor(),
+            greenId + _dimOffset => AppColor.AnsiTerminalGreenDim.GetThemeColor(),
 
-            yellowId => Color.FromArgb(192, 160, 0),
-            yellowId + _boldOffset => Color.FromArgb(242, 242, 0),
-            yellowId + _dimOffset => Color.FromArgb(199, 187, 127),
+            yellowId => AppColor.AnsiTerminalYellowNormal.GetThemeColor(),
+            yellowId + _boldOffset => AppColor.AnsiTerminalYellowBold.GetThemeColor(),
+            yellowId + _dimOffset => AppColor.AnsiTerminalYellowDim.GetThemeColor(),
 
-            blueId => Color.FromArgb(0, 93, 255),
-            blueId + _boldOffset => Color.FromArgb(125, 151, 255),
-            blueId + _dimOffset => Color.FromArgb(127, 143, 233),
+            blueId => AppColor.AnsiTerminalBlueNormal.GetThemeColor(),
+            blueId + _boldOffset => AppColor.AnsiTerminalBlueBold.GetThemeColor(),
+            blueId + _dimOffset => AppColor.AnsiTerminalBlueDim.GetThemeColor(),
 
-            magentaId => Color.FromArgb(177, 72, 198),
-            magentaId + _boldOffset => Color.FromArgb(255, 112, 255),
-            magentaId + _dimOffset => Color.FromArgb(194, 154, 202),
+            magentaId => AppColor.AnsiTerminalMagentaNormal.GetThemeColor(),
+            magentaId + _boldOffset => AppColor.AnsiTerminalMagentaBold.GetThemeColor(),
+            magentaId + _dimOffset => AppColor.AnsiTerminalMagentaDim.GetThemeColor(),
 
-            cyanId => Color.FromArgb(0, 168, 154),
-            cyanId + _boldOffset => Color.FromArgb(0, 240, 240),
-            cyanId + _dimOffset => Color.FromArgb(127, 190, 184),
+            cyanId => AppColor.AnsiTerminalCyanNormal.GetThemeColor(),
+            cyanId + _boldOffset => AppColor.AnsiTerminalCyanBold.GetThemeColor(),
+            cyanId + _dimOffset => AppColor.AnsiTerminalCyanDim.GetThemeColor(),
 
-            whiteId => Color.FromArgb(191, 191, 191),
-            whiteId + _boldOffset => Color.FromArgb(255, 255, 255),
-            whiteId + _dimOffset => Color.FromArgb(222, 222, 222),
+            whiteId => AppColor.AnsiTerminalWhiteNormal.GetThemeColor(),
+            whiteId + _boldOffset => AppColor.AnsiTerminalWhiteBold.GetThemeColor(),
+            whiteId + _dimOffset => AppColor.AnsiTerminalWhiteDim.GetThemeColor(),
 
             >= 16 and < 232 => Get216Colors(colorCode),
             >= 232 and <= 255 => Get24StepGray(colorCode),
