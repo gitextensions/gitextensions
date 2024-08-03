@@ -48,24 +48,27 @@ public abstract class DiffHighlightService : TextHighlightService
         // dimmed-zebra highlights borders better than the default "zebra"
         SetIfUnsetInGit(key: "diff.colorMoved", value: "dimmed-zebra");
 
-        // Change bold to normal, hard to see in fileviewer
-        SetIfUnsetInGit(key: "color.diff.oldMoved", value: "magenta");
-        SetIfUnsetInGit(key: "color.diff.newMoved", value: "blue");
-        SetIfUnsetInGit(key: "color.diff.oldMovedAlternative", value: "cyan");
-        SetIfUnsetInGit(key: "color.diff.newMovedAlternative", value: "yellow");
+        // Use reverse color to follow GE theme
+        string reverse = AppSettings.UseGEThemeGitColoring.Value ? "reverse" : "";
 
-        // Set dimmed colors, default is gray dimmed/talic and italic is same as dimmed
-        SetIfUnsetInGit(key: "color.diff.oldMovedDimmed", value: "magenta dim");
-        SetIfUnsetInGit(key: "color.diff.newMovedDimmed", value: "blue dim");
-        SetIfUnsetInGit(key: "color.diff.oldMovedAlternativeDimmed", value: "cyan dim");
-        SetIfUnsetInGit(key: "color.diff.newMovedAlternativeDimmed", value: "yellow dim");
+        // Change bold to normal, hard to see in fileviewer
+        SetIfUnsetInGit(key: "color.diff.oldMoved", value: $"magenta {reverse}");
+        SetIfUnsetInGit(key: "color.diff.newMoved", value: $"blue {reverse}");
+        SetIfUnsetInGit(key: "color.diff.oldMovedAlternative", value: $"cyan {reverse}");
+        SetIfUnsetInGit(key: "color.diff.newMovedAlternative", value: $"yellow {reverse}");
+
+        // Set dimmed colors, default is gray dimmed/italic and italic is implemented as dimmed
+        SetIfUnsetInGit(key: "color.diff.oldMovedDimmed", value: $"magenta dim {reverse}");
+        SetIfUnsetInGit(key: "color.diff.newMovedDimmed", value: $"blue dim {reverse}");
+        SetIfUnsetInGit(key: "color.diff.oldMovedAlternativeDimmed", value: $"cyan dim {reverse}");
+        SetIfUnsetInGit(key: "color.diff.newMovedAlternativeDimmed", value: $"yellow dim {reverse}");
 
         // range-diff
         if (command == "range-diff")
         {
-            SetIfUnsetInGit(key: "color.diff.contextBold", value: "normal");
-            SetIfUnsetInGit(key: "color.diff.oldBold", value: "red");
-            SetIfUnsetInGit(key: "color.diff.newBold", value: "green");
+            SetIfUnsetInGit(key: "color.diff.contextBold", value: $"normal bold {reverse}");
+            SetIfUnsetInGit(key: "color.diff.oldBold", value: $"red bold {reverse}");
+            SetIfUnsetInGit(key: "color.diff.newBold", value: $"green bold {reverse}");
         }
 
         // Override Git default coloring to "theme" colors for those that are defined
