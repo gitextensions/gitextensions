@@ -48,6 +48,9 @@
 .DiffAddedExtra          { color: #87ff87; }
 
 /* translation of terminal (cli) ansi color output sequences */
+/* Named 3/4 bit colors from the "theme" at https://github.com/mintty/mintty/blob/master/themes/helmholtz */
+/* (Dimmed/faint colors are not in the theme, extracted printing to terminal.) */
+
 .AnsiTerminalBlackNormal { color: #000000; }
 .AnsiTerminalBlackBold { color: #606060; }
 .AnsiTerminalBlackDim { color: #7f7f7f; }

@@ -372,10 +372,10 @@ public partial class AnsiEscapeUtilities
 
     /// <summary>
     /// Decode 3, 4, and 8-bit colors from https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit
-    /// Named 3/4 bit colors from the "theme" at https://github.com/mintty/mintty/blob/master/themes/helmholtz (could be integrated with GE colors)
-    /// (Dimmed/faint colors are not in the theme, extracted printing to terminal.)
+    /// The named 3/4 bit colors for the invariant theme is from the "theme" at
+    /// https://github.com/mintty/mintty/blob/master/themes/helmholtz
     /// Note: A difference from at least mintty handles sequences like "30;5;1" differently from "31",
-    /// as well as background and foreground differs occasionally.
+    /// as well as background and foreground differs occasionally, this implementation has no special handling.
     /// </summary>
     /// <param name="colorCode">The color code to decode.</param>
     /// <param name="colorId">ANSI color id if known, otherwise default black.</param>
