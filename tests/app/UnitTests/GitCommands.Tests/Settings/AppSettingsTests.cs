@@ -376,6 +376,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.BlameShowAuthorAvatar)], true, false, false);
                 yield return (properties[nameof(AppSettings.AutomaticContinuousScroll)], false, false, false);
                 yield return (properties[nameof(AppSettings.AutomaticContinuousScrollDelay)], 600, false, false);
+                yield return (properties[nameof(AppSettings.IsEditorSettingsMigrated)], false, false, false);
             }
 
             static IEnumerable<object> Values()

@@ -722,6 +722,41 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        /// Migrate editor settings if GE was installed in 'Program Files (x86)' before 4.3.
+        /// Only check and update global Git settings in Windows, the only set by GE.
+        /// Guess previous, migrate to current path (i.e. the first usage).
+        /// </summary>
+        private static void MigrateEditorSettings()
+        {
+            // Only run this once
+            bool isMigrated = IsEditorSettingsMigrated;
+            if (isMigrated)
+            {
+                return;
+            }
+
+            EnvironmentConfiguration.SetEnvironmentVariables();
+            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+
+            string path = configFileGlobalSettings.GetValue("core.editor");
+            if (!path.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return;
+            }
+
+#if DEBUG
+            // avoid setting, this may be in the debugger
+            DebugHelpers.Fail($"Update the core.editor path {path} in {configFileGlobalSettings}");
+#else
+
+            // Similar in EditorHelper.FileEditorCommand
+            path = $"\"{AppSettings.GetGitExtensionsFullPath().ToPosixPath()}\" fileeditor";
+            configFileGlobalSettings.SetValue("core.editor", path);
+            configFileGlobalSettings.Save();
+#endif
+        }
+
         #endregion
 
         public static string Translation
@@ -1649,6 +1684,7 @@ namespace GitCommands
             {
                 // Set environment variable
                 GitSshHelpers.SetGitSshEnvironmentVariable(SshPath);
+                MigrateEditorSettings();
             }
             catch
             {
@@ -2049,6 +2085,12 @@ namespace GitCommands
         public static bool GitAsyncWhenMinimized
         {
             get => GetBool("GitAsyncWhenMinimized", false);
+        }
+
+        public static bool IsEditorSettingsMigrated
+        {
+            get => GetBool("Git.IsEditorSettingsMigrated", false);
+            set => SetBool("Git.IsEditorSettingsMigrated", value);
         }
 
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
