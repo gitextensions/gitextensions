@@ -11,7 +11,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
     private string _escape_sequence = "\u001b[";
     private readonly Color _normalRedAnsiTheme = Color.FromArgb(212, 44, 58);
     private readonly Color _boldRedAnsiTheme = Color.FromArgb(255, 118, 118);
-    private readonly Color _dimRedAnsiTheme = Color.FromArgb(208, 142, 147);
+    private readonly Color _dimRedAnsiTheme = Color.FromArgb(233, 149, 156);
 
     [Test]
     public void ParseEscape_ShouldAppendTextWithoutEscapeSequence_WhenNoEscapeSequenceIsPresent()
