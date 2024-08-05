@@ -726,11 +726,13 @@ namespace GitCommands
         /// Migrate editor settings if GE was installed in 'Program Files (x86)' before 4.3.
         /// Only check and update global Git settings in Windows, the only set by GE.
         /// Guess previous, migrate to current path (i.e. the first usage).
+        /// Only needed in x64, should be meaningless on other platforms.
         /// </summary>
         private static void MigrateEditorSettings()
         {
             // Only run this once
-            bool isMigrated = IsEditorSettingsMigrated;
+            bool isMigrated = IsEditorSettingsMigrated.Value;
+            IsEditorSettingsMigrated.Value = true;
             if (isMigrated)
             {
                 return;
@@ -747,7 +749,7 @@ namespace GitCommands
 
 #if DEBUG
             // avoid setting, this may be in the debugger
-            DebugHelpers.Fail($"Update the core.editor path {path} in {configFileGlobalSettings}");
+            throw new Exception($"Update the core.editor path {path} in {configFileGlobalSettings}");
 #else
 
             // Similar in EditorHelper.FileEditorCommand
@@ -2087,11 +2089,9 @@ namespace GitCommands
             get => GetBool("GitAsyncWhenMinimized", false);
         }
 
-        public static bool IsEditorSettingsMigrated
-        {
-            get => GetBool("Git.IsEditorSettingsMigrated", false);
-            set => SetBool("Git.IsEditorSettingsMigrated", value);
-        }
+        private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
+        private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
+        public static ISetting<bool> IsEditorSettingsMigrated { get; set; } = Setting.Create(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), false);
 
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
         {
