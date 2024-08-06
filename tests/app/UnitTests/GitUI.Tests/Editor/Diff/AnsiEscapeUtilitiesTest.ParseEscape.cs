@@ -12,8 +12,8 @@ namespace GitUITests.Editor.Diff;
 public class AnsiEscapeUtilitiesTest_ParseEscape
 {
     private string _escape_sequence = "\u001b[";
-    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186),
-        Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186)];
+    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(211, 0, 11), Color.FromArgb(232, 127, 132), Color.FromArgb(255, 94, 94), Color.FromArgb(254, 174, 174),
+        Color.FromArgb(255, 200, 200), Color.FromArgb(254, 227, 227), Color.FromArgb(255, 165, 165), Color.FromArgb(254, 209, 209)];
 
     private ThemeId _themeId;
     private string[] _themeVariations;
@@ -140,7 +140,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         textMarkers[1].Offset.Should().Be(42);
         textMarkers[1].Length.Should().Be(20);
         textMarkers[1].Color.Should().Be(Color.FromArgb(255, 0, 255, 0));
-        textMarkers[1].ForeColor.Should().Be(Color.FromArgb(255, 255, 118, 118));
+        textMarkers[1].ForeColor.Should().Be(Color.FromArgb(255, 255, 94, 94));
 
         textMarkers[2].Offset.Should().Be(62);
         textMarkers[2].Length.Should().Be(6);
@@ -150,6 +150,6 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         textMarkers[3].Offset.Should().Be(100);
         textMarkers[3].Length.Should().Be(62);
         textMarkers[3].Color.Should().Be(Color.White);
-        textMarkers[3].ForeColor.Should().Be(Color.FromArgb(255, 0, 0, 0));
+        textMarkers[3].ForeColor.Should().Be(Color.FromArgb(0x00, 0x00, 0x00));
     }
 }

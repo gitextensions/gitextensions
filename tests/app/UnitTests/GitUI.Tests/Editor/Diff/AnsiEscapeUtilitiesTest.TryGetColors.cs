@@ -12,8 +12,8 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
     private const int _blackId = 0;
     private const int _redId = 1;
     private const int _yellowId = 3;
-    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186),
-        Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186)];
+    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(211, 0, 11), Color.FromArgb(232, 127, 132), Color.FromArgb(255, 94, 94), Color.FromArgb(254, 174, 174),
+        Color.FromArgb(255, 200, 200), Color.FromArgb(254, 227, 227), Color.FromArgb(255, 165, 165), Color.FromArgb(254, 209, 209)];
 
     private ThemeId _themeId;
     private string[] _themeVariations;
