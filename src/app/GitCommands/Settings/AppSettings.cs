@@ -42,6 +42,8 @@ namespace GitCommands
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
         private static readonly SettingsPath RecentRepositories = new AppSettingsPath("RecentRepositories");
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
+        private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
+        private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
 
         private static Mutex _globalMutex;
 
@@ -739,7 +741,7 @@ namespace GitCommands
             }
 
             EnvironmentConfiguration.SetEnvironmentVariables();
-            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(useSharedCache: false);
 
             string path = configFileGlobalSettings.GetValue("core.editor");
             if (!path.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase))
@@ -2089,9 +2091,7 @@ namespace GitCommands
             get => GetBool("GitAsyncWhenMinimized", false);
         }
 
-        private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
-        private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
-        public static ISetting<bool> IsEditorSettingsMigrated { get; set; } = Setting.Create(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), false);
+        public static ISetting<bool> IsEditorSettingsMigrated { get; } = Setting.Create(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), false);
 
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
         {
