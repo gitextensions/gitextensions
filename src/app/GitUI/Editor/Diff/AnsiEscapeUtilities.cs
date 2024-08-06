@@ -219,100 +219,87 @@ public partial class AnsiEscapeUtilities
         foreColor = null;
 
         // A subset of attributes supported, most are ignored, other handled as bold/dim
-        bool bold = false; // Git bright, increased intensity
-        bool dim = false; // faint, decreased intensity
         bool reverse = false; // swap fore/back
-        bool fore = true; // Set fore color
-        bool dimApplied = false; // dim must be applied only once
+        bool fore = true; // fore color is first in list
+
+        (int id, bool bold, bool dim) initCurrent = (-1, false, false);
+        (int id, bool bold, bool dim) currentFore = initCurrent;
+        (int id, bool bold, bool dim) currentBack = initCurrent;
         for (int i = 0; i < escapeCodes.Count; ++i)
         {
             switch (escapeCodes[i])
             {
                 case 0: // Reset or normal, all attributes become turned off
                     result = false;
-                    bold = false;
-                    dim = false;
                     reverse = false;
                     backColor = null;
                     foreColor = null;
                     currentColorId = 0; // default black
+                    currentFore = initCurrent;
+                    currentBack = initCurrent;
                     break;
                 case 1: // bold
                 case 4: // underline/ul
                 case 5: // slow blink
                 case 6: // fast blink
                 case 9: // strike
-                    bold = true;
                     if (fore)
                     {
-                        foreColor = Get8bitColor(currentColorId + GetBoldOffset(), dim, out _);
+                        currentFore.bold = true;
+                        if (currentFore.id < 0 && foreColor is null)
+                        {
+                            // Something is set for foreground, use default color
+                            currentFore.id = currentColorId;
+                        }
                     }
                     else
                     {
-                        backColor = Get8bitColor(currentColorId + GetBoldOffset(), dim, out _);
+                        currentBack.bold = true;
                     }
 
-                    dimApplied = false;
                     break;
                 case 2: // dim
                 case 3: // italic
                 case 8: // conceal
-                    dim = true;
-                    if (!dimApplied)
+                    if (fore)
                     {
-                        if (fore)
+                        currentFore.dim = true;
+                        if (currentFore.id < 0)
                         {
-                            foreColor = foreColor is null ? foreColor : DimColor((Color)foreColor);
-                        }
-                        else
-                        {
-                            backColor = backColor is null ? backColor : DimColor((Color)backColor);
+                            // Something is set for foreground, use default color
+                            currentFore.id = currentColorId;
                         }
                     }
+                    else
+                    {
+                        currentBack.dim = true;
+                    }
 
-                    dimApplied = true;
                     break;
                 case 7: // reverse
                     reverse = true;
                     break;
                 case 39: // Default foreground color
                     foreColor = null;
-                    currentColorId = 0;
+                    currentFore.id = currentColorId = 0;
                     break;
                 case 49: // Default background color
                     backColor = null;
+                    currentBack.id = 7; // White theme
                     break;
                 case >= 30 and <= 37: // Set foreground color
                 case >= 90 and <= 97: // Set bold foreground color
                     fore = true;
-                    bold = bold || escapeCodes[i] >= 90;
+                    currentFore.bold = currentFore.bold || escapeCodes[i] >= 90;
                     currentColorId = escapeCodes[i] - (escapeCodes[i] >= 90 ? 90 : 30);
-                    if (themeColors && currentColorId is 1 or 2 && !dim && !reverse && backColor is null)
-                    {
-                        // Assume this is a fit for the theme colors with reverse color
-                        if (currentColorId == 1)
-                        {
-                            backColor = (bold ? AppColor.DiffRemovedExtra : AppColor.DiffRemoved).GetThemeColor();
-                        }
-                        else
-                        {
-                            backColor = (bold ? AppColor.DiffAddedExtra : AppColor.DiffAdded).GetThemeColor();
-                        }
-                    }
-                    else
-                    {
-                        foreColor = Get8bitColor(currentColorId + GetBoldOffset(), dim, out _);
-                    }
+                    currentFore.id = currentColorId;
 
-                    dimApplied = false;
                     break;
                 case >= 40 and <= 47: // Set background color
                 case >= 100 and <= 107: // Set bold background color
                     fore = false;
-                    bold = bold || escapeCodes[i] >= 100;
-                    int backColorId = escapeCodes[i] - (escapeCodes[i] >= 100 ? 100 : 40);
-                    backColor = Get8bitColor(backColorId + GetBoldOffset(), dim, out _);
-                    dimApplied = false;
+                    currentBack.bold = currentBack.bold || escapeCodes[i] >= 100;
+                    currentBack.id = escapeCodes[i] - (escapeCodes[i] >= 100 ? 100 : 40);
                     break;
                 case 38: // Set foreground color with sequence
                 case 48: // Set background color with sequence
@@ -331,8 +318,18 @@ public partial class AnsiEscapeUtilities
                     {
                         // ESC[38:5:⟨n⟩m Select foreground color
                         ++i;
-                        bold = escapeCodes[i] is >= _boldOffset and < 2 * _boldOffset;
-                        color = Get8bitColor(escapeCodes[i], dim, out currentColorId);
+                        bool bold = escapeCodes[i] is >= _boldOffset and < 2 * _boldOffset;
+                        int id = escapeCodes[i] - (bold ? _boldOffset : 0);
+                        if (fore)
+                        {
+                            currentFore.bold = bold;
+                            currentFore.id = id;
+                        }
+                        else
+                        {
+                            currentBack.bold = bold;
+                            currentBack.id = id;
+                        }
                     }
                     else if (escapeCodes[i] == 2)
                     {
@@ -350,6 +347,18 @@ public partial class AnsiEscapeUtilities
                         // Unknown fixed identifier, reset id
                         // Reset also for background to avoid CS0165
                         currentColorId = 0;
+
+                        // Set the color, override if set later
+                        if (fore)
+                        {
+                            currentFore.id = -1;
+                            foreColor = color;
+                        }
+                        else
+                        {
+                            currentBack.id = -1;
+                            backColor = color;
+                        }
                     }
                     else
                     {
@@ -358,25 +367,35 @@ public partial class AnsiEscapeUtilities
                         break;
                     }
 
-                    if (fore)
-                    {
-                        foreColor = color;
-                    }
-                    else
-                    {
-                        backColor = color;
-                    }
-
-                    dimApplied = false;
                     break;
                 default: // Ignore unhandled sequences
                     break;
             }
         }
 
+        if (themeColors && !reverse
+            && (currentBack.id < 0 || backColor is null)
+            && foreColor is null
+            && currentFore.id is 1 or 2 && !currentFore.dim && !currentFore.bold)
+        {
+            // Assume this is a fit for the theme colors with reverse color (e.g. difftastic)
+            reverse = true;
+        }
+
         if (reverse)
         {
             (backColor, foreColor) = (foreColor, backColor);
+            (currentBack, currentFore) = (currentFore, currentBack);
+        }
+
+        if (currentFore.id >= 0)
+        {
+            foreColor = Get8bitColor(currentFore.id + (currentFore.bold ? _boldOffset : 0), fore: true, currentFore.dim, out currentColorId);
+        }
+
+        if (currentBack.id >= 0)
+        {
+            backColor = Get8bitColor(currentBack.id + (currentBack.bold ? _boldOffset : 0), fore: false, currentBack.dim, out _);
         }
 
         if (backColor is not null && foreColor is null)
@@ -393,21 +412,18 @@ public partial class AnsiEscapeUtilities
         }
 
         return result;
-
-        int GetBoldOffset() => bold ? (int)_boldOffset : 0;
     }
 
     /// <summary>
     /// Decode 3, 4, and 8-bit colors from https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit
     /// The named 3/4 bit colors for the invariant theme is from the "theme" at
     /// https://github.com/mintty/mintty/blob/master/themes/helmholtz
-    /// with the primary difference that mintty allows background and foreground colors to be separatly configured.
     /// </summary>
     /// <param name="colorCode">The color code to decode.</param>
     /// <param name="colorId">ANSI color id if known, otherwise default black.</param>
     /// <returns>The 24-bit RGB color.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Unexpected value.</exception>
-    private static Color Get8bitColor(int colorCode, bool dim, out int colorId)
+    private static Color Get8bitColor(int colorCode, bool fore, bool dim, out int colorId)
     {
         // Color code definitions
         const int blackId = 0;
@@ -433,29 +449,61 @@ public partial class AnsiEscapeUtilities
 
         Color color = colorCode switch
         {
-            blackId => AppColor.AnsiTerminalBlackNormal.GetThemeColor(),
-            blackId + _boldOffset => AppColor.AnsiTerminalBlackBold.GetThemeColor(),
+            blackId => fore
+                ? AppColor.AnsiTerminalBlackForeNormal.GetThemeColor()
+                : AppColor.AnsiTerminalBlackBackNormal.GetThemeColor(),
+            blackId + _boldOffset => fore
+                ? AppColor.AnsiTerminalBlackForeBold.GetThemeColor()
+                : AppColor.AnsiTerminalBlackBackBold.GetThemeColor(),
 
-            redId => AppColor.AnsiTerminalRedNormal.GetThemeColor(),
-            redId + _boldOffset => AppColor.AnsiTerminalRedBold.GetThemeColor(),
+            redId => fore
+                ? AppColor.AnsiTerminalRedForeNormal.GetThemeColor()
+                : AppColor.AnsiTerminalRedBackNormal.GetThemeColor(),
+            redId + _boldOffset => fore
+                ? AppColor.AnsiTerminalRedForeBold.GetThemeColor()
+                : AppColor.AnsiTerminalRedBackBold.GetThemeColor(),
 
-            greenId => AppColor.AnsiTerminalGreenNormal.GetThemeColor(),
-            greenId + _boldOffset => AppColor.AnsiTerminalGreenBold.GetThemeColor(),
+            greenId => fore
+                ? AppColor.AnsiTerminalGreenForeNormal.GetThemeColor()
+                : AppColor.AnsiTerminalGreenBackNormal.GetThemeColor(),
+            greenId + _boldOffset => fore
+                ? AppColor.AnsiTerminalGreenForeBold.GetThemeColor()
+                : AppColor.AnsiTerminalGreenBackBold.GetThemeColor(),
 
-            yellowId => AppColor.AnsiTerminalYellowNormal.GetThemeColor(),
-            yellowId + _boldOffset => AppColor.AnsiTerminalYellowBold.GetThemeColor(),
+            yellowId => fore
+                ? AppColor.AnsiTerminalYellowForeNormal.GetThemeColor()
+                : AppColor.AnsiTerminalYellowBackNormal.GetThemeColor(),
+            yellowId + _boldOffset => fore
+                ? AppColor.AnsiTerminalYellowForeBold.GetThemeColor()
+                : AppColor.AnsiTerminalYellowBackBold.GetThemeColor(),
 
-            blueId => AppColor.AnsiTerminalBlueNormal.GetThemeColor(),
-            blueId + _boldOffset => AppColor.AnsiTerminalBlueBold.GetThemeColor(),
+            blueId => fore
+                ? AppColor.AnsiTerminalBlueForeNormal.GetThemeColor()
+                : AppColor.AnsiTerminalBlueBackNormal.GetThemeColor(),
+            blueId + _boldOffset => fore
+                ? AppColor.AnsiTerminalBlueForeBold.GetThemeColor()
+                : AppColor.AnsiTerminalBlueBackBold.GetThemeColor(),
 
-            magentaId => AppColor.AnsiTerminalMagentaNormal.GetThemeColor(),
-            magentaId + _boldOffset => AppColor.AnsiTerminalMagentaBold.GetThemeColor(),
+            magentaId => fore
+                ? AppColor.AnsiTerminalMagentaForeNormal.GetThemeColor()
+                : AppColor.AnsiTerminalMagentaBackNormal.GetThemeColor(),
+            magentaId + _boldOffset => fore
+                ? AppColor.AnsiTerminalMagentaForeBold.GetThemeColor()
+                : AppColor.AnsiTerminalMagentaBackBold.GetThemeColor(),
 
-            cyanId => AppColor.AnsiTerminalCyanNormal.GetThemeColor(),
-            cyanId + _boldOffset => AppColor.AnsiTerminalCyanBold.GetThemeColor(),
+            cyanId => fore
+                ? AppColor.AnsiTerminalCyanForeNormal.GetThemeColor()
+                : AppColor.AnsiTerminalCyanBackNormal.GetThemeColor(),
+            cyanId + _boldOffset => fore
+                ? AppColor.AnsiTerminalCyanForeBold.GetThemeColor()
+                : AppColor.AnsiTerminalCyanBackBold.GetThemeColor(),
 
-            whiteId => AppColor.AnsiTerminalWhiteNormal.GetThemeColor(),
-            whiteId + _boldOffset => AppColor.AnsiTerminalWhiteBold.GetThemeColor(),
+            whiteId => fore
+                ? AppColor.AnsiTerminalWhiteForeNormal.GetThemeColor()
+                : AppColor.AnsiTerminalWhiteBackNormal.GetThemeColor(),
+            whiteId + _boldOffset => fore
+                ? AppColor.AnsiTerminalWhiteForeBold.GetThemeColor()
+                : AppColor.AnsiTerminalWhiteBackBold.GetThemeColor(),
 
             >= 16 and < 232 => Get216Colors(colorCode),
             >= 232 and <= 255 => Get24StepGray(colorCode),
@@ -471,7 +519,7 @@ public partial class AnsiEscapeUtilities
 
         static Color Get216Colors(int level)
         {
-            int i = level - 16;
+            int i = level - 16; // 2 * _boldOffset
             int blue = Get8bitFrom6over3bit(i % 6);
             int green = Get8bitFrom6over3bit((i % 36) / 6);
             int red = Get8bitFrom6over3bit(i / 36);
@@ -532,8 +580,8 @@ public partial class AnsiEscapeUtilities
         public static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId)
             => AnsiEscapeUtilities.TryGetColorsFromEscapeSequence(escapeCodes, out backColor, out foreColor, ref currentColorId, themeColors: false);
 
-        public static Color Get8bitColor(int colorCode, bool dim, out int colorId)
-            => AnsiEscapeUtilities.Get8bitColor(colorCode, dim, out colorId);
+        public static Color Get8bitColor(int colorCode, bool fore, bool dim, out int colorId)
+            => AnsiEscapeUtilities.Get8bitColor(colorCode, fore, dim, out colorId);
 
         public static int GetBoldOffset() => _boldOffset;
     }
