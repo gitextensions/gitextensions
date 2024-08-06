@@ -83,7 +83,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         string in_text = $"""
             Text with {_escape_sequence}38;5;196mred without end
             extra line
-            then {_escape_sequence}0;48:5:46:1;31mreverse green,
+            then {_escape_sequence}0;48:5:46;31;1mreverse green,
             then {_escape_sequence}38;2;0;0;255mblue,
             {_escape_sequence}999mcode out of range,
             {_escape_sequence}99munused code,

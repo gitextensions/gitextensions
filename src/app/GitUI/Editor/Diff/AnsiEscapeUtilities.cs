@@ -215,8 +215,9 @@ public partial class AnsiEscapeUtilities
         // A subset of attributes supported, most are ignored, other handled as bold/dim
         bool bold = false; // Git bright, increased intensity
         bool dim = false; // faint, decreased intensity
-        bool reverse = false; // swap isFore/back
-        bool pendingDim = false; // dim is not applied yet
+        bool reverse = false; // swap fore/back
+        bool fore = true; // Set fore color
+        bool dimApplied = false; // dim must be applied only once
         for (int i = 0; i < escapeCodes.Count; ++i)
         {
             switch (escapeCodes[i])
@@ -236,14 +237,34 @@ public partial class AnsiEscapeUtilities
                 case 6: // fast blink
                 case 9: // strike
                     bold = true;
-                    foreColor = Get8bitColor(currentColorId + GetBoldOffset(), dim, out _);
-                    pendingDim = false;
+                    if (fore)
+                    {
+                        foreColor = Get8bitColor(currentColorId + GetBoldOffset(), dim, out _);
+                    }
+                    else
+                    {
+                        backColor = Get8bitColor(currentColorId + GetBoldOffset(), dim, out _);
+                    }
+
+                    dimApplied = false;
                     break;
                 case 2: // dim
                 case 3: // italic
                 case 8: // conceal
                     dim = true;
-                    pendingDim = true;
+                    if (!dimApplied)
+                    {
+                        if (fore)
+                        {
+                            foreColor = foreColor is null ? foreColor : DimColor((Color)foreColor);
+                        }
+                        else
+                        {
+                            backColor = backColor is null ? backColor : DimColor((Color)backColor);
+                        }
+                    }
+
+                    dimApplied = true;
                     break;
                 case 7: // reverse
                     reverse = true;
@@ -257,6 +278,7 @@ public partial class AnsiEscapeUtilities
                     break;
                 case >= 30 and <= 37: // Set foreground color
                 case >= 90 and <= 97: // Set bold foreground color
+                    fore = true;
                     bold = bold || escapeCodes[i] >= 90;
                     currentColorId = escapeCodes[i] - (escapeCodes[i] >= 90 ? 90 : 30);
                     if (themeColors && currentColorId is 1 or 2 && !dim && !reverse && backColor is null)
@@ -276,14 +298,15 @@ public partial class AnsiEscapeUtilities
                         foreColor = Get8bitColor(currentColorId + GetBoldOffset(), dim, out _);
                     }
 
-                    pendingDim = false;
+                    dimApplied = false;
                     break;
                 case >= 40 and <= 47: // Set background color
                 case >= 100 and <= 107: // Set bold background color
+                    fore = false;
                     bold = bold || escapeCodes[i] >= 100;
                     int backColorId = escapeCodes[i] - (escapeCodes[i] >= 100 ? 100 : 40);
                     backColor = Get8bitColor(backColorId + GetBoldOffset(), dim, out _);
-                    pendingDim = false;
+                    dimApplied = false;
                     break;
                 case 38: // Set foreground color with sequence
                 case 48: // Set background color with sequence
@@ -295,7 +318,7 @@ public partial class AnsiEscapeUtilities
                     }
 
                     Color color;
-                    bool isFore = escapeCodes[i] == 38;
+                    fore = escapeCodes[i] == 38;
                     ++i;
 
                     if (escapeCodes[i] == 5)
@@ -329,7 +352,7 @@ public partial class AnsiEscapeUtilities
                         break;
                     }
 
-                    if (isFore)
+                    if (fore)
                     {
                         foreColor = color;
                     }
@@ -338,7 +361,7 @@ public partial class AnsiEscapeUtilities
                         backColor = color;
                     }
 
-                    pendingDim = false;
+                    dimApplied = false;
                     break;
                 default: // Ignore unhandled sequences
                     break;
@@ -348,12 +371,6 @@ public partial class AnsiEscapeUtilities
         if (reverse)
         {
             (backColor, foreColor) = (foreColor, backColor);
-        }
-
-        if (pendingDim)
-        {
-            backColor = backColor is null ? backColor : DimColor((Color)backColor);
-            foreColor = foreColor is null ? foreColor : DimColor((Color)foreColor);
         }
 
         if (backColor is not null && foreColor is null)
