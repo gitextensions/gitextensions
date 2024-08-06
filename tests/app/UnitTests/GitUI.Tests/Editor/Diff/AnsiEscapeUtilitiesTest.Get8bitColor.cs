@@ -1,5 +1,8 @@
 using FluentAssertions;
+using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.Theming;
 
 namespace GitUITests.Editor.Diff;
 
@@ -8,29 +11,53 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
 {
     private const int _blackId = 0;
     private const int _redId = 1;
-    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186)];
+    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186),
+        Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186)];
+
+    private ThemeId _themeId;
+    private string[] _themeVariations;
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
+    {
+        _themeId = AppSettings.ThemeId;
+        _themeVariations = AppSettings.ThemeVariations;
+        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeVariations = ThemeVariations.None;
+        ThemeModule.Load();
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        AppSettings.ThemeId = _themeId;
+        AppSettings.ThemeVariations = _themeVariations;
+    }
 
     [Test]
-    public void Get8bitColor_ShouldReturnNamedColors()
+    public void Get8bitColor_ShouldReturnBuiltinThemeColors()
     {
         List<int> offsets = [0, AnsiEscapeUtilities.TestAccessor.GetBoldOffset()];
         for (int colorId = 0; colorId < 8; ++colorId)
         {
-            foreach (int offset in offsets)
+            foreach (bool fore in new List<bool>() { true, false })
             {
-                foreach (bool dim in new List<bool>() { false, true })
+                foreach (int offset in offsets)
                 {
-                    // Only check the result for red, the other should just get a value and set the id
-                    // (No need to maintain all ANSI theme colors in parallel)
-                    Color result = AnsiEscapeUtilities.TestAccessor.Get8bitColor(colorId + offset, dim, out int seenColorId);
-                    colorId.Should().Be(seenColorId);
-                    if (colorId != _redId)
+                    foreach (bool dim in new List<bool>() { false, true })
                     {
-                        continue;
-                    }
+                        // Only check the result for red, the other should just get a value and set the id
+                        // (No need to maintain all ANSI theme colors in parallel)
+                        Color result = AnsiEscapeUtilities.TestAccessor.Get8bitColor(colorId + offset, fore, dim, out int seenColorId);
+                        colorId.Should().Be(seenColorId);
+                        if (colorId != _redId)
+                        {
+                            continue;
+                        }
 
-                    int themeOffset = (dim ? 1 : 0) + (offset == 0 ? 0 : 2);
-                    result.Should().Be(_redAnsiTheme[themeOffset]);
+                        int themeOffset = (dim ? 1 : 0) + (offset == 0 ? 0 : 2) + (fore ? 0 : 4);
+                        result.Should().Be(_redAnsiTheme[themeOffset], $"Failed for {themeOffset}");
+                    }
                 }
             }
         }
@@ -44,7 +71,7 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
 
         for (int i = 16; i < 232; ++i)
         {
-            Color result = AnsiEscapeUtilities.TestAccessor.Get8bitColor(i, dim: false, out int colorId);
+            Color result = AnsiEscapeUtilities.TestAccessor.Get8bitColor(i, fore: true, dim: false, out int colorId);
             result.Should().Be(GetExpectedColor(i));
             colorId.Should().Be(currentColorId);
 
@@ -83,7 +110,7 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
 
         for (int i = 232; i <= 255; ++i)
         {
-            Color result = AnsiEscapeUtilities.TestAccessor.Get8bitColor(i, dim: false, out int colorId);
+            Color result = AnsiEscapeUtilities.TestAccessor.Get8bitColor(i, fore: true, dim: false, out int colorId);
             result.Should().Be(Get24StepGray(i));
             colorId.Should().Be(currentColorId);
 
@@ -114,7 +141,7 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
         {
-            AnsiEscapeUtilities.TestAccessor.Get8bitColor(colorCode, dim: false, out int colorId);
+            AnsiEscapeUtilities.TestAccessor.Get8bitColor(colorCode, fore: true, dim: false, out int colorId);
         });
     }
 }

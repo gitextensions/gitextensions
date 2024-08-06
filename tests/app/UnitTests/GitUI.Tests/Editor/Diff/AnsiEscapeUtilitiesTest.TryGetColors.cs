@@ -1,5 +1,8 @@
 using FluentAssertions;
+using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.Theming;
 
 namespace GitUITests.Editor.Diff;
 
@@ -9,9 +12,28 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
     private const int _blackId = 0;
     private const int _redId = 1;
     private const int _yellowId = 3;
-    private readonly Color _normalRedAnsiTheme = Color.FromArgb(212, 44, 58);
-    private readonly Color _boldRedAnsiTheme = Color.FromArgb(255, 118, 118);
-    private readonly Color _dimRedAnsiTheme = Color.FromArgb(208, 142, 147);
+    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186),
+        Color.FromArgb(212, 44, 58), Color.FromArgb(233, 149, 156), Color.FromArgb(255, 118, 118), Color.FromArgb(254, 186, 186)];
+
+    private ThemeId _themeId;
+    private string[] _themeVariations;
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
+    {
+        _themeId = AppSettings.ThemeId;
+        _themeVariations = AppSettings.ThemeVariations;
+        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeVariations = ThemeVariations.None;
+        ThemeModule.Load();
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        AppSettings.ThemeId = _themeId;
+        AppSettings.ThemeVariations = _themeVariations;
+    }
 
     [Test]
     public void TryGetColorsFromEscapeSequence_ShouldReturnFalse_WhenEscapeCodesIsEmpty()
@@ -54,7 +76,7 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
 
         result.Should().BeTrue();
         backColor.Should().BeNull();
-        foreColor.Should().Be(_boldRedAnsiTheme);
+        foreColor.Should().Be(_redAnsiTheme[2]);
         currentColorId.Should().Be(_redId);
     }
 
@@ -69,7 +91,7 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
 
         result.Should().BeTrue();
         backColor.Should().BeNull();
-        foreColor.Should().Be(_boldRedAnsiTheme);
+        foreColor.Should().Be(_redAnsiTheme[2]);
         currentColorId.Should().Be(_redId);
     }
 }

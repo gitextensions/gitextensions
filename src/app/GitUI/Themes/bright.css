@@ -11,3 +11,7 @@
 .DiffRemoved.colorblind      { color: #94cbff; } /* hsl(209, 100%, 79%) */
 .DiffRemovedExtra            { color: #ffa3a3; } /* hsl(0,   100%, 82%) */
 .DiffRemovedExtra.colorblind { color: #4da6ff; } /* hsl(210, 100%, 65%) */
+.AnsiTerminalRedBackNormal            { color: #ffc7c7; } /* hsl(0,   100%, 89%) */
+.AnsiTerminalRedBackNormal.colorblind { color: #94cbff; } /* hsl(209, 100%, 79%) */
+.AnsiTerminalRedBackBold              { color: #ffa3a3; } /* hsl(0,   100%, 82%) */
+.AnsiTerminalRedBackBold.colorblind   { color: #4da6ff; } /* hsl(210, 100%, 65%) */
