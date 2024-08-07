@@ -82,8 +82,8 @@ namespace GitUI.CommandsDialogs
             _revisionTester = new GitRevisionTester(_fullPathResolver);
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
 
-            lblFirstCommit.BackColor = AppColor.DiffRemoved.GetThemeColor();
-            lblSecondCommit.BackColor = AppColor.DiffAdded.GetThemeColor();
+            lblFirstCommit.BackColor = AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
+            lblSecondCommit.BackColor = AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
             DiffFiles.SelectedIndexChanged += delegate { ShowSelectedFileDiff(); };

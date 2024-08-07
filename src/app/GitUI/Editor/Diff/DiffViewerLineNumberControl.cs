@@ -82,13 +82,13 @@ public class DiffViewerLineNumberControl : AbstractMargin
             {
                 if (diffLine.LineType is not DiffLineType.PlusRight)
                 {
-                    using Brush leftBrush = new SolidBrush(AppColor.DiffRemoved.GetThemeColor());
+                    using Brush leftBrush = new SolidBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor());
                     g.FillRectangle(leftBrush, new Rectangle(0, backgroundRectangle.Top, backgroundRectangle.Width / 2, backgroundRectangle.Height));
                 }
 
                 if (diffLine.LineType is not DiffLineType.MinusLeft)
                 {
-                    using Brush rightBrush = new SolidBrush(AppColor.DiffAdded.GetThemeColor());
+                    using Brush rightBrush = new SolidBrush(AppColor.AnsiTerminalGreenBackNormal.GetThemeColor());
                     g.FillRectangle(rightBrush, new Rectangle(backgroundRectangle.Width / 2, backgroundRectangle.Top, rightWidth, backgroundRectangle.Height));
                 }
             }
@@ -96,10 +96,10 @@ public class DiffViewerLineNumberControl : AbstractMargin
             {
                 using Brush brush = diffLine.LineType switch
                 {
-                    DiffLineType.Plus => new SolidBrush(AppColor.DiffAdded.GetThemeColor()),
-                    DiffLineType.Minus => new SolidBrush(AppColor.DiffRemoved.GetThemeColor()),
+                    DiffLineType.Plus => new SolidBrush(AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()),
+                    DiffLineType.Minus => new SolidBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor()),
                     DiffLineType.Header => new SolidBrush(AppColor.DiffSection.GetThemeColor()),
-                    DiffLineType.Grep => new SolidBrush(AppColor.DiffRemoved.GetThemeColor()),
+                    DiffLineType.Grep => new SolidBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor()),
                     _ => default(Brush)
                 };
 

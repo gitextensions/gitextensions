@@ -67,11 +67,11 @@ public partial class GrepHighlightService : TextHighlightService
 
         // Override Git default coloring unless the user overrides
         // As empty and unset are both reported as "", user cannot ignore with empty string
-        if (AppSettings.UseGEThemeGitColoring.Value)
+        if (AppSettings.ReverseGitColoring.Value)
         {
             commandConfiguration.Add(AnsiEscapeUtilities.SetUnsetGitColor(
                "color.grep.matchSelected",
-               AppColor.DiffRemovedExtra),
+               AppColor.AnsiTerminalRedBackBold),
                "grep");
         }
 

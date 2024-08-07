@@ -15,10 +15,6 @@
                 { AppColor.Branch, Color.FromArgb(0x00, 0x80, 0x00) },
                 { AppColor.RemoteBranch, Color.FromArgb(0x8b, 0x00, 0x09) },
                 { AppColor.DiffSection, Color.FromArgb(230, 230, 230) },
-                { AppColor.DiffRemoved, Color.FromArgb(255, 200, 200) },
-                { AppColor.DiffRemovedExtra, Color.FromArgb(255, 165, 165) },
-                { AppColor.DiffAdded, Color.FromArgb(200, 255, 200) },
-                { AppColor.DiffAddedExtra, Color.FromArgb(135, 255, 135) },
                 { AppColor.AnsiTerminalBlackForeNormal, Color.FromArgb(0x00, 0x00, 0x00) },
                 { AppColor.AnsiTerminalBlackBackNormal, Color.FromArgb(0x60, 0x60, 0x60) },
                 { AppColor.AnsiTerminalBlackForeBold, Color.FromArgb(0x40, 0x40, 0x40) },
@@ -62,8 +58,6 @@
                    { AppColor.RemoteBranch, Color.FromArgb(0x06, 0x00, 0xa8) },
                    { AppColor.AnsiTerminalRedBackNormal, Color.FromArgb(0x94, 0xcb, 0xff) },
                    { AppColor.AnsiTerminalRedBackBold, Color.FromArgb(0x4d, 0xa6, 0xff) },
-                   { AppColor.DiffRemoved, Color.FromArgb(0x94, 0xcb, 0xff) },
-                   { AppColor.DiffRemovedExtra, Color.FromArgb(0x4d, 0xa6, 0xff) },
                 }
             }
         };

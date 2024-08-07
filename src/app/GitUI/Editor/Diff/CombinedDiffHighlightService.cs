@@ -36,12 +36,12 @@ public class CombinedDiffHighlightService : DiffHighlightService
 
     protected override int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
     {
-        ProcessLineSegment(document, ref line, lineSegment, "++", AppColor.DiffAdded.GetThemeColor());
-        ProcessLineSegment(document, ref line, lineSegment, "+ ", AppColor.DiffAdded.GetThemeColor());
-        ProcessLineSegment(document, ref line, lineSegment, " +", AppColor.DiffAdded.GetThemeColor());
-        ProcessLineSegment(document, ref line, lineSegment, "--", AppColor.DiffRemoved.GetThemeColor());
-        ProcessLineSegment(document, ref line, lineSegment, "- ", AppColor.DiffRemoved.GetThemeColor());
-        ProcessLineSegment(document, ref line, lineSegment, " -", AppColor.DiffRemoved.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, "++", AppColor.AnsiTerminalGreenBackNormal.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, "+ ", AppColor.AnsiTerminalGreenBackNormal.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, " +", AppColor.AnsiTerminalGreenBackNormal.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, "--", AppColor.AnsiTerminalRedBackNormal.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, "- ", AppColor.AnsiTerminalRedBackNormal.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, " -", AppColor.AnsiTerminalRedBackNormal.GetThemeColor());
         return line;
     }
 }

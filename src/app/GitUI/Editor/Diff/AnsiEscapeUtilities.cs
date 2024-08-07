@@ -83,36 +83,6 @@ public partial class AnsiEscapeUtilities
 
             sb.Append('\n');
         }
-
-        // GE theme colors - primarily used as background color with adjusted foreground
-        foreach (List<Color?> cs in new List<List<Color?>>()
-            {
-            new() { null, AppColor.DiffRemoved.GetThemeColor(), AppColor.DiffAdded.GetThemeColor(), null, null, null, null, AppColor.DiffSection.GetThemeColor(), },
-            new() { null, AppColor.DiffRemovedExtra.GetThemeColor(), AppColor.DiffAddedExtra.GetThemeColor(), }
-            })
-        {
-            sb.Append($"{" ",2}");
-            foreach (Color? color in cs)
-            {
-                sb.Append(color is null ? "  " : "@!");
-                if (color is not null)
-                {
-                    if (TryGetTextMarker(new()
-                    {
-                        DocOffset = sb.Length - 2,
-                        Length = 2,
-                        BackColor = color,
-                        ForeColor = ColorHelper.GetForeColorForBackColor((Color)color)
-                    },
-                        out TextMarker tm))
-                    {
-                        textMarkers.Add(tm);
-                    }
-                }
-            }
-
-            sb.Append('\n');
-        }
     }
 
     /// <summary>
