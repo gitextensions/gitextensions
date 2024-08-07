@@ -35,7 +35,6 @@ public partial class AnsiEscapeUtilities
         return new GitConfigItem(key, $"#{fore:x6} #{back:x6}");
     }
 
-#if DEBUG
     /// <summary>
     /// Debug print colors similar to https://github.com/robertknight/konsole/raw/master/tests/color-spaces.pl
     /// </summary>
@@ -51,7 +50,15 @@ public partial class AnsiEscapeUtilities
             {
                 foreach (int dim in new List<int>() { 0, 2 })
                 {
-                    sb.Append($"{offset:d1} ");
+                    if (dim == 0)
+                    {
+                        sb.Append($"{offset:d1} ");
+                    }
+                    else
+                    {
+                        sb.Append($"{" ",2}");
+                    }
+
                     for (int i = 0; i < 8; i++)
                     {
                         sb.Append("@!");
@@ -107,7 +114,6 @@ public partial class AnsiEscapeUtilities
             sb.Append('\n');
         }
     }
-#endif
 
     /// <summary>
     /// Parse the text and convert ansi console escape sequences to highlight info applicable to the FileViewer.
