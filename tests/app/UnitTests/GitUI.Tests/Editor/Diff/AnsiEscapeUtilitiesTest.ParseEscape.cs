@@ -11,7 +11,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
     private string _escape_sequence = "\u001b[";
     private readonly Color _normalRedAnsiTheme = Color.FromArgb(212, 44, 58);
     private readonly Color _boldRedAnsiTheme = Color.FromArgb(255, 118, 118);
-    private readonly Color _dimRedAnsiTheme = Color.FromArgb(208, 142, 147);
+    private readonly Color _dimRedAnsiTheme = Color.FromArgb(233, 149, 156);
 
     [Test]
     public void ParseEscape_ShouldAppendTextWithoutEscapeSequence_WhenNoEscapeSequenceIsPresent()
@@ -83,7 +83,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         string in_text = $"""
             Text with {_escape_sequence}38;5;196mred without end
             extra line
-            then {_escape_sequence}0;48:5:46:1;31mreverse green,
+            then {_escape_sequence}0;48:5:46;31;1mreverse green,
             then {_escape_sequence}38;2;0;0;255mblue,
             {_escape_sequence}999mcode out of range,
             {_escape_sequence}99munused code,

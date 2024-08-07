@@ -49,29 +49,20 @@
 
 /* translation of terminal (cli) ansi color output sequences */
 /* Named 3/4 bit colors from the "theme" at https://github.com/mintty/mintty/blob/master/themes/helmholtz */
-/* (Dimmed/faint colors are explicitly configured.) */
 
 .AnsiTerminalBlackNormal { color: #000000; }
 .AnsiTerminalBlackBold { color: #606060; }
-.AnsiTerminalBlackDim { color: #7f7f7f; }
 .AnsiTerminalRedNormal { color: #d42c3a; }
 .AnsiTerminalRedBold { color: #ff7676; }
-.AnsiTerminalRedDim { color: #d08e93; }
 .AnsiTerminalGreenNormal { color: #1ca800; }
 .AnsiTerminalGreenBold { color: #00f200; }
-.AnsiTerminalGreenDim { color: #89be7f; }
 .AnsiTerminalYellowNormal { color: #c0a000; }
 .AnsiTerminalYellowBold { color: #f2f200; }
-.AnsiTerminalYellowDim { color: #c7bb7f; }
 .AnsiTerminalBlueNormal { color: #005dff; }
 .AnsiTerminalBlueBold { color: #7d97ff; }
-.AnsiTerminalBlueDim { color: #7f8fe9; }
 .AnsiTerminalMagentaNormal { color: #b148c6; }
 .AnsiTerminalMagentaBold { color: #ff70ff; }
-.AnsiTerminalMagentaDim { color: #c29aca; }
 .AnsiTerminalCyanNormal { color: #00a89a; }
 .AnsiTerminalCyanBold { color: #00f0f0; }
-.AnsiTerminalCyanDim { color: #7fbeb8; }
 .AnsiTerminalWhiteNormal { color: #bfbfbf; }
 .AnsiTerminalWhiteBold { color: #ffffff; }
-.AnsiTerminalWhiteDim { color: #dedede; }
