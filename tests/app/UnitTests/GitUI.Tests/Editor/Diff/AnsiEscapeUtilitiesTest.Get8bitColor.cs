@@ -1,5 +1,8 @@
 using FluentAssertions;
+using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.Theming;
 
 namespace GitUITests.Editor.Diff;
 
@@ -11,15 +14,35 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
     private readonly List<Color> _redAnsiTheme = [Color.FromArgb(211, 0, 11), Color.FromArgb(232, 127, 132), Color.FromArgb(255, 94, 94), Color.FromArgb(254, 174, 174),
         Color.FromArgb(255, 200, 200), Color.FromArgb(254, 227, 227), Color.FromArgb(255, 165, 165), Color.FromArgb(254, 209, 209)];
 
+    private ThemeId _themeId;
+    private string[] _themeVariations;
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
+    {
+        _themeId = AppSettings.ThemeId;
+        _themeVariations = AppSettings.ThemeVariations;
+        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeVariations = ThemeVariations.None;
+        ThemeModule.Load();
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        AppSettings.ThemeId = _themeId;
+        AppSettings.ThemeVariations = _themeVariations;
+    }
+
     [Test]
     public void Get8bitColor_ShouldReturnBuiltinThemeColors()
     {
         List<int> offsets = [0, AnsiEscapeUtilities.TestAccessor.GetBoldOffset()];
         for (int colorId = 0; colorId < 8; ++colorId)
         {
-            foreach (int offset in offsets)
+            foreach (bool fore in new List<bool>() { true, false })
             {
-                foreach (bool fore in new List<bool>() { true, false })
+                foreach (int offset in offsets)
                 {
                     foreach (bool dim in new List<bool>() { false, true })
                     {
@@ -33,7 +56,7 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
                         }
 
                         int themeOffset = (dim ? 1 : 0) + (offset == 0 ? 0 : 2) + (fore ? 0 : 4);
-                        result.Should().Be(_redAnsiTheme[themeOffset]);
+                        result.Should().Be(_redAnsiTheme[themeOffset], $"Failed for {themeOffset}");
                     }
                 }
             }

@@ -1,6 +1,9 @@
 using System.Text;
 using FluentAssertions;
+using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUITests.Editor.Diff;
@@ -11,6 +14,26 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
     private string _escape_sequence = "\u001b[";
     private readonly List<Color> _redAnsiTheme = [Color.FromArgb(211, 0, 11), Color.FromArgb(232, 127, 132), Color.FromArgb(255, 94, 94), Color.FromArgb(254, 174, 174),
         Color.FromArgb(255, 200, 200), Color.FromArgb(254, 227, 227), Color.FromArgb(255, 165, 165), Color.FromArgb(254, 209, 209)];
+
+    private ThemeId _themeId;
+    private string[] _themeVariations;
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
+    {
+        _themeId = AppSettings.ThemeId;
+        _themeVariations = AppSettings.ThemeVariations;
+        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeVariations = ThemeVariations.None;
+        ThemeModule.Load();
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        AppSettings.ThemeId = _themeId;
+        AppSettings.ThemeVariations = _themeVariations;
+    }
 
     [Test]
     public void ParseEscape_ShouldAppendTextWithoutEscapeSequence_WhenNoEscapeSequenceIsPresent()
@@ -68,7 +91,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         textMarkers[2].Offset.Should().Be(59);
         textMarkers[2].Length.Should().Be(16);
         textMarkers[2].Color.Should().Be(_redAnsiTheme[6]);
-        textMarkers[2].ForeColor.ToArgb().Should().Be(Color.Black.ToArgb());
+        textMarkers[2].ForeColor.Should().Be(Color.FromArgb(0, 0, 0));
 
         textMarkers[3].Offset.Should().Be(85);
         textMarkers[3].Length.Should().Be(7);

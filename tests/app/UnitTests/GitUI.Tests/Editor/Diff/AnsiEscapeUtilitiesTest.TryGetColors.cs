@@ -1,5 +1,8 @@
 using FluentAssertions;
+using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.Theming;
 
 namespace GitUITests.Editor.Diff;
 
@@ -11,6 +14,26 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
     private const int _yellowId = 3;
     private readonly List<Color> _redAnsiTheme = [Color.FromArgb(211, 0, 11), Color.FromArgb(232, 127, 132), Color.FromArgb(255, 94, 94), Color.FromArgb(254, 174, 174),
         Color.FromArgb(255, 200, 200), Color.FromArgb(254, 227, 227), Color.FromArgb(255, 165, 165), Color.FromArgb(254, 209, 209)];
+
+    private ThemeId _themeId;
+    private string[] _themeVariations;
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
+    {
+        _themeId = AppSettings.ThemeId;
+        _themeVariations = AppSettings.ThemeVariations;
+        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeVariations = ThemeVariations.None;
+        ThemeModule.Load();
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        AppSettings.ThemeId = _themeId;
+        AppSettings.ThemeVariations = _themeVariations;
+    }
 
     [Test]
     public void TryGetColorsFromEscapeSequence_ShouldReturnFalse_WhenEscapeCodesIsEmpty()
