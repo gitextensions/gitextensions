@@ -42,6 +42,8 @@ namespace GitCommands
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
         private static readonly SettingsPath RecentRepositories = new AppSettingsPath("RecentRepositories");
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
+        private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
+        private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
 
         private static Mutex _globalMutex;
 
@@ -720,6 +722,43 @@ namespace GitCommands
                     AppSettings.SshPath = "";
                 }
             }
+        }
+
+        /// <summary>
+        /// Migrate editor settings if GE was installed in 'Program Files (x86)' before 4.3.
+        /// Only check and update global Git settings in Windows, the only set by GE.
+        /// Guess previous, migrate to current path (i.e. the first usage).
+        /// Only needed in x64, should be meaningless on other platforms.
+        /// </summary>
+        private static void MigrateEditorSettings()
+        {
+            // Only run this once
+            bool isMigrated = IsEditorSettingsMigrated.Value;
+            IsEditorSettingsMigrated.Value = true;
+            if (isMigrated)
+            {
+                return;
+            }
+
+            EnvironmentConfiguration.SetEnvironmentVariables();
+            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(useSharedCache: false);
+
+            string path = configFileGlobalSettings.GetValue("core.editor");
+            if (!path.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return;
+            }
+
+#if DEBUG
+            // avoid setting, this may be in the debugger
+            throw new Exception($"Update the core.editor path {path} in {configFileGlobalSettings}");
+#else
+
+            // Similar in EditorHelper.FileEditorCommand
+            path = $"\"{AppSettings.GetGitExtensionsFullPath().ToPosixPath()}\" fileeditor";
+            configFileGlobalSettings.SetValue("core.editor", path);
+            configFileGlobalSettings.Save();
+#endif
         }
 
         #endregion
@@ -1649,6 +1688,7 @@ namespace GitCommands
             {
                 // Set environment variable
                 GitSshHelpers.SetGitSshEnvironmentVariable(SshPath);
+                MigrateEditorSettings();
             }
             catch
             {
@@ -2050,6 +2090,8 @@ namespace GitCommands
         {
             get => GetBool("GitAsyncWhenMinimized", false);
         }
+
+        public static ISetting<bool> IsEditorSettingsMigrated { get; } = Setting.Create(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), false);
 
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
         {
