@@ -4,7 +4,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern uint RegisterWindowMessageW(string name);
+        [LibraryImport(Libraries.User32, StringMarshalling = StringMarshalling.Utf16)]
+        public static partial uint RegisterWindowMessageW(string name);
     }
 }

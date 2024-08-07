@@ -4,7 +4,8 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.WinInet)]
-        public static extern bool InternetGetConnectedState(out int description, int reservedValue);
+        [LibraryImport(Libraries.WinInet)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static partial bool InternetGetConnectedState(out int description, int reservedValue);
     }
 }
