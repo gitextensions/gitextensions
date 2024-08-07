@@ -420,9 +420,9 @@ namespace GitCommands
         public static ISetting<bool> UseGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(UseGitColoring), true);
 
         /// <summary>
-        /// Use GE theme colors with Git diff coloring
+        /// Color the background at changes (invert colors).
         /// </summary>
-        public static ISetting<bool> UseGEThemeGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(UseGEThemeGitColoring), true);
+        public static ISetting<bool> ReverseGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(ReverseGitColoring), true);
 
         public static bool ShowErrorsWhenStagingFiles
         {

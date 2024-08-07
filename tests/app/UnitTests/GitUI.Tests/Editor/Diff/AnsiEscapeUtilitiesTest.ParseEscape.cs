@@ -91,7 +91,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         textMarkers[2].Offset.Should().Be(59);
         textMarkers[2].Length.Should().Be(16);
         textMarkers[2].Color.Should().Be(_redAnsiTheme[6]);
-        textMarkers[2].ForeColor.ToArgb().Should().Be(Color.Black.ToArgb());
+        textMarkers[2].ForeColor.Should().Be(Color.FromArgb(0, 0, 0));
 
         textMarkers[3].Offset.Should().Be(85);
         textMarkers[3].Length.Should().Be(7);

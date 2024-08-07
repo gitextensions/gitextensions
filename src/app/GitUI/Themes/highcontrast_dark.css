@@ -42,12 +42,6 @@
 .RemoteBranch                { color: #ff8080; } /* hsl(0,   100%, 75%) */
 .RemoteBranch.colorblind     { color: #0080ff; } /* hsl(210, 100%, 50%) */
 .DiffSection                 { color: #4f4f4f; }
-.DiffRemoved                 { color: #4b0606; } /* hsl(0,   85%,  16%) */
-.DiffRemoved.colorblind      { color: #080646; } /* hsl(242, 84%,  15%) */
-.DiffRemovedExtra            { color: #6c0404; } /* hsl(0,   93%,  22%) */
-.DiffRemovedExtra.colorblind { color: #09058a; } /* hsl(242, 93%,  28%) */
-.DiffAdded                   { color: #054224; }
-.DiffAddedExtra              { color: #046c38; }
 .AnsiTerminalRedBackNormal            { color: #4b0606; } /* hsl(0,   85%,  16%) */
 .AnsiTerminalRedBackNormal.colorblind { color: #080646; } /* hsl(242, 84%,  15%) */
 .AnsiTerminalRedBackBold              { color: #6c0404; } /* hsl(0,   93%,  22%) */

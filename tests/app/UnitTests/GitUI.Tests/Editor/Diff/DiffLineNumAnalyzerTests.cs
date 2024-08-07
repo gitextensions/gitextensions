@@ -25,8 +25,8 @@ public class DiffLineNumAnalyzerTests
         _sampleCombinedDiff = File.ReadAllText(Path.Combine(_testDataDir, "SampleCombined.diff"));
 
         // Adjust the colors to match the current theme. (See code comments for limitations.)
-        Color added = AppColor.DiffAdded.GetThemeColor();
-        Color removed = AppColor.DiffRemoved.GetThemeColor();
+        Color added = AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
+        Color removed = AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
         _sampleGitWordDiff = File.ReadAllText(Path.Combine(_testDataDir, "SampleGitWord.diff"))
             .Replace(@";200;255;200m", $";{added.R};{added.G};{added.B}m")
             .Replace(@";255;200;200m", $";{removed.R};{removed.G};{removed.B}m");
@@ -187,8 +187,8 @@ public class DiffLineNumAnalyzerTests
         string text = _sampleDifftastic;
         EnvironmentAbstraction env = new();
         env.SetEnvironmentVariable("DFT_WIDTH", "200"); // Matching the value when getting the sample
-        bool theme = AppSettings.UseGEThemeGitColoring.Value;
-        AppSettings.UseGEThemeGitColoring.Value = false;
+        bool theme = AppSettings.ReverseGitColoring.Value;
+        AppSettings.ReverseGitColoring.Value = false;
 
         DifftasticHighlightService diffHighlightService = new(ref text);
         _textEditor.Text = text;
@@ -226,6 +226,6 @@ public class DiffLineNumAnalyzerTests
         result.DiffLines[56].RightLineNumber.Should().Be(342);
         result.DiffLines[56].LineType.Should().Be(DiffLineType.PlusRight);
 
-        AppSettings.UseGEThemeGitColoring.Value = theme;
+        AppSettings.ReverseGitColoring.Value = theme;
     }
 }

@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowAllCustomDiffTools.Checked = AppSettings.ShowAvailableDiffTools;
             VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
             chkUseGitColoring.Checked = AppSettings.UseGitColoring.Value;
-            chkUseGEThemeGitColoring.Checked = AppSettings.UseGEThemeGitColoring.Value;
+            chkUseGEThemeGitColoring.Checked = AppSettings.ReverseGitColoring.Value;
             chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
 
             base.SettingsToPage();
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowAvailableDiffTools = chkShowAllCustomDiffTools.Checked;
             AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;
             AppSettings.UseGitColoring.Value = chkUseGitColoring.Checked;
-            AppSettings.UseGEThemeGitColoring.Value = chkUseGEThemeGitColoring.Checked;
+            AppSettings.ReverseGitColoring.Value = chkUseGEThemeGitColoring.Checked;
 
             base.PageToSettings();
         }

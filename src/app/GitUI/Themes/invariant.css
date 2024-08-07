@@ -44,10 +44,6 @@
 .RemoteBranch            { color: #8b0009; }
 .RemoteBranch.colorblind { color: #0600a8; }
 .DiffSection             { color: #e6e6e6; }
-.DiffRemoved             { color: #ffc8c8; }
-.DiffRemovedExtra        { color: #ffa5a5; }
-.DiffAdded               { color: #c8ffc8; }
-.DiffAddedExtra          { color: #87ff87; }
 
 /* translation of terminal (cli) ansi color output sequences */
 /* Named 3/4 bit colors from the "theme" at https://github.com/mintty/mintty/blob/master/themes/helmholtz */
