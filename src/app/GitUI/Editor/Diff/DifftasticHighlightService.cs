@@ -45,7 +45,7 @@ public partial class DifftasticHighlightService : TextHighlightService
 
             lineBuilder.Clear();
             textMarkers.Clear();
-            AnsiEscapeUtilities.ParseEscape(rawLine, lineBuilder, textMarkers, themeColors: AppSettings.UseGEThemeGitColoring.Value);
+            AnsiEscapeUtilities.ParseEscape(rawLine, lineBuilder, textMarkers, themeColors: AppSettings.ReverseGitColoring.Value);
 
             int leftLineNo = DiffLineInfo.NotApplicableLineNum;
             int rightLineNo = DiffLineInfo.NotApplicableLineNum;
@@ -91,7 +91,7 @@ public partial class DifftasticHighlightService : TextHighlightService
                 if (textMarkers.Count > 0 && textMarkers[0].Offset < leftLen)
                 {
                     // GE theme colors sets reverse colors
-                    Color c = AppSettings.UseGEThemeGitColoring.Value ? textMarkers[0].Color : textMarkers[0].ForeColor;
+                    Color c = AppSettings.ReverseGitColoring.Value ? textMarkers[0].Color : textMarkers[0].ForeColor;
                     if (c.R != c.G)
                     {
                         // Assume the theme in Diffstatic sets gray and the GE theme has the same value for red/green when context
@@ -199,7 +199,7 @@ public partial class DifftasticHighlightService : TextHighlightService
                     {
                         first = false;
 
-                        Color c = AppSettings.UseGEThemeGitColoring.Value ? textMarkers[i].Color : textMarkers[i].ForeColor;
+                        Color c = AppSettings.ReverseGitColoring.Value ? textMarkers[i].Color : textMarkers[i].ForeColor;
                         if (c.R != c.G)
                         {
                             // Merge line type with existing left line type

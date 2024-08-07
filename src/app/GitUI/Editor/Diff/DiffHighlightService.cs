@@ -49,7 +49,7 @@ public abstract class DiffHighlightService : TextHighlightService
         SetIfUnsetInGit(key: "diff.colorMoved", value: "dimmed-zebra");
 
         // Use reverse color to follow GE theme
-        string reverse = AppSettings.UseGEThemeGitColoring.Value ? "reverse" : "";
+        string reverse = AppSettings.ReverseGitColoring.Value ? "reverse" : "";
 
         SetIfUnsetInGit(key: "color.diff.old", value: $"red {reverse}");
         SetIfUnsetInGit(key: "color.diff.new", value: $"green {reverse}");
@@ -265,7 +265,7 @@ public abstract class DiffHighlightService : TextHighlightService
 
         if (lineAdded.Length - beginOffset - reverseOffset > 0)
         {
-            color = AppColor.DiffAddedExtra.GetThemeColor();
+            color = AppColor.AnsiTerminalGreenBackBold.GetThemeColor();
             markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
                                                     lineAdded.Length - beginOffset - reverseOffset,
                                                     TextMarkerType.SolidBlock, color,
@@ -274,7 +274,7 @@ public abstract class DiffHighlightService : TextHighlightService
 
         if (lineRemoved.Length - beginOffset - reverseOffset > 0)
         {
-            color = AppColor.DiffRemovedExtra.GetThemeColor();
+            color = AppColor.AnsiTerminalRedBackBold.GetThemeColor();
             markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
                                                     lineRemoved.Length - beginOffset - reverseOffset,
                                                     TextMarkerType.SolidBlock, color,

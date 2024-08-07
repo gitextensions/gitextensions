@@ -178,7 +178,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.ApplyPatchSignOff)], true, false, false);
                 yield return (properties[nameof(AppSettings.UseHistogramDiffAlgorithm)], false, false, false);
                 yield return (properties[nameof(AppSettings.UseGitColoring)], true, false, true);
-                yield return (properties[nameof(AppSettings.UseGEThemeGitColoring)], true, false, true);
+                yield return (properties[nameof(AppSettings.ReverseGitColoring)], true, false, true);
                 yield return (properties[nameof(AppSettings.ShowErrorsWhenStagingFiles)], true, false, false);
                 yield return (properties[nameof(AppSettings.EnsureCommitMessageSecondLineEmpty)], true, false, false);
                 yield return (properties[nameof(AppSettings.LastCommitMessage)], string.Empty, true, false);

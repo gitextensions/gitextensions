@@ -42,8 +42,8 @@ public class PatchHighlightService : DiffHighlightService
 
     protected override int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
     {
-        ProcessLineSegment(document, ref line, lineSegment, _addedLinePrefix, AppColor.DiffAdded.GetThemeColor());
-        ProcessLineSegment(document, ref line, lineSegment, _removedLinePrefix, AppColor.DiffRemoved.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, _addedLinePrefix, AppColor.AnsiTerminalGreenBackNormal.GetThemeColor());
+        ProcessLineSegment(document, ref line, lineSegment, _removedLinePrefix, AppColor.AnsiTerminalRedBackNormal.GetThemeColor());
         return line;
     }
 }
