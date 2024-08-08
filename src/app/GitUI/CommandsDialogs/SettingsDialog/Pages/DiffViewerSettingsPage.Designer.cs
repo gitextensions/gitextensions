@@ -265,12 +265,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseGEThemeGitColoring.Checked = false;
             chkUseGEThemeGitColoring.Dock = DockStyle.Fill;
             chkUseGEThemeGitColoring.Location = new Point(3, 28);
-            chkUseGEThemeGitColoring.ManualSectionAnchorName = "diff-coloring-use-theme-coloring";
+            chkUseGEThemeGitColoring.ManualSectionAnchorName = "diff-coloring-reverse-background-color";
             chkUseGEThemeGitColoring.Name = "chkUseGEThemeGitColoring";
             chkUseGEThemeGitColoring.Size = new Size(183, 19);
             chkUseGEThemeGitColoring.TabIndex = 2;
-            chkUseGEThemeGitColoring.Text = "Use theme coloring";
-            chkUseGEThemeGitColoring.ToolTipText = "Apply Git theme colors (with inverse backround) instead of Git default colors.";
+            chkUseGEThemeGitColoring.Text = "Reverse background color";
+            chkUseGEThemeGitColoring.ToolTipText = "Color the background at changes (invert colors).";
             // 
             // tlpnlDiffColoring
             // 

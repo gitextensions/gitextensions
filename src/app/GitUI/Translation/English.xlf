@@ -1403,11 +1403,11 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.Text">
-        <source>Use theme coloring</source>
+        <source>Reverse background color</source>
         <target />
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.ToolTipText">
-        <source>Apply Git theme colors (with inverse backround) instead of Git default colors.</source>
+        <source>Color the background at changes (invert colors).</source>
         <target />
       </trans-unit>
       <trans-unit id="chkUseGitColoring.Text">

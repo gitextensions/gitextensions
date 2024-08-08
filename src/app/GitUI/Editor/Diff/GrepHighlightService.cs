@@ -67,11 +67,11 @@ public partial class GrepHighlightService : TextHighlightService
 
         // Override Git default coloring unless the user overrides
         // As empty and unset are both reported as "", user cannot ignore with empty string
-        if (AppSettings.UseGEThemeGitColoring.Value)
+        if (AppSettings.ReverseGitColoring.Value)
         {
             commandConfiguration.Add(AnsiEscapeUtilities.SetUnsetGitColor(
                "color.grep.matchSelected",
-               AppColor.DiffRemovedExtra),
+               AppColor.AnsiTerminalRedBackBold),
                "grep");
         }
 
@@ -126,12 +126,12 @@ public partial class GrepHighlightService : TextHighlightService
             sb.Append('\n');
         }
 
-#if DEBUG
         if (new EnvironmentAbstraction().GetEnvironmentVariable("GIT_EXTENSIONS_CONSOLE_COLORS") is not null)
         {
+            // Debug printout the theme
             AnsiEscapeUtilities.PrintColors(sb, _textMarkers);
         }
-#endif
+
         text = sb.ToString();
     }
 

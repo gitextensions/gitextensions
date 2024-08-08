@@ -80,8 +80,8 @@ public partial class DiffLineNumAnalyzer
             }
             else if (isHeaderLineLocated && ((!isGitWordDiff && IsMinusLine(line))
 
-                // Heuristics: For GitWordDiff AppSettings.UseGEThemeGitColoring is assumed, otherwise just DiffLineType.Mixed is detected
-                || (isGitWordDiff && textMarkers.Value.Count > 0 && textMarkers.Value.All(i => i.Color == AppColor.DiffRemoved.GetThemeColor()))))
+                // Heuristics: For GitWordDiff AppSettings.ReverseGitColoring is assumed, otherwise just DiffLineType.Mixed is detected
+                || (isGitWordDiff && textMarkers.Value.Count > 0 && textMarkers.Value.All(i => i.Color == AppColor.AnsiTerminalRedBackNormal.GetThemeColor()))))
             {
                 DiffLineInfo meta = new()
                 {
@@ -95,7 +95,7 @@ public partial class DiffLineNumAnalyzer
                 leftLineNum++;
             }
             else if (isHeaderLineLocated && ((!isGitWordDiff && IsPlusLine(line))
-                || (isGitWordDiff && textMarkers.Value.Count > 0 && textMarkers.Value.All(i => i.Color == AppColor.DiffAdded.GetThemeColor()))))
+                || (isGitWordDiff && textMarkers.Value.Count > 0 && textMarkers.Value.All(i => i.Color == AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()))))
             {
                 DiffLineInfo meta = new()
                 {
