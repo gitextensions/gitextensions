@@ -39,8 +39,10 @@
 .HighlightAllOccurences  { color: #e8e8ff; }
 .Tag                     { color: #00008b; }
 .Graph                   { color: #8b0000; }
+.Graph.colorblind        { color: #0600a8; }
 .Branch                  { color: #008000; }
 .RemoteBranch            { color: #8b0009; }
+.RemoteBranch.colorblind { color: #0600a8; }
 .DiffSection             { color: #e6e6e6; }
 
 /* translation of terminal (cli) ansi color output sequences */
@@ -52,8 +54,10 @@
 .AnsiTerminalBlackBackBold { color: #404040; }
 .AnsiTerminalRedForeNormal { color: #d3000B; }
 .AnsiTerminalRedBackNormal { color: #ffc8c8; }
+.AnsiTerminalRedBackNormal.colorblind { color: #94cbff; }
 .AnsiTerminalRedForeBold { color: #ff5e5e; }
 .AnsiTerminalRedBackBold { color: #ffa5a5; }
+.AnsiTerminalRedBackBold.colorblind { color: #4da6ff; }
 .AnsiTerminalGreenForeNormal { color: #1ca800; }
 .AnsiTerminalGreenBackNormal { color: #c8ffc8; }
 .AnsiTerminalGreenForeBold { color: #2fd62f; }

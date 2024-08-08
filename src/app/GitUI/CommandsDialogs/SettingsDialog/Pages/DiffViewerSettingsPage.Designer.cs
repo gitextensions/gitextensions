@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseGEThemeGitColoring.Checked = false;
             chkUseGEThemeGitColoring.Dock = DockStyle.Fill;
             chkUseGEThemeGitColoring.Location = new Point(3, 28);
-            chkUseGEThemeGitColoring.ManualSectionAnchorName = "diff-coloring-reverse-background";
+            chkUseGEThemeGitColoring.ManualSectionAnchorName = "diff-coloring-reverse-background-color";
             chkUseGEThemeGitColoring.Name = "chkUseGEThemeGitColoring";
             chkUseGEThemeGitColoring.Size = new Size(183, 19);
             chkUseGEThemeGitColoring.TabIndex = 2;
