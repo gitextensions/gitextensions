@@ -478,7 +478,7 @@ namespace GitUI.ScriptsEngine
                     break;
 
                 default:
-                    newStrings = scriptOptionsProvider?.GetValue(option);
+                    newStrings = scriptOptionsProvider?.GetValues(option);
                     break;
             }
 

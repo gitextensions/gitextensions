@@ -12,5 +12,5 @@ public interface IScriptOptionsProvider
     /// </summary>
     /// <param name="option">The option identifier which is to be replaced.</param>
     /// <returns>The value(s) to be used for the script argument.</returns>
-    IEnumerable<string> GetValue(string option);
+    IEnumerable<string> GetValues(string option);
 }

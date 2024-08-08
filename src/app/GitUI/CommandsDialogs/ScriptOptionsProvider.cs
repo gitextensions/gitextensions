@@ -24,7 +24,7 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
 
     IReadOnlyList<string> IScriptOptionsProvider.Options { get; } = new[] { _selectedRelativePaths, _lineNumber };
 
-    IEnumerable<string> IScriptOptionsProvider.GetValue(string option)
+    IEnumerable<string> IScriptOptionsProvider.GetValues(string option)
     {
         switch (option)
         {
