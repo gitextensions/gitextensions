@@ -451,7 +451,7 @@ See the changes in the commit form.");
                     {
                         if (!blameToolStripMenuItem1.Checked)
                         {
-                            return ViewGitItemAsync(gitItem, line ?? 1);
+                            return ViewGitItemAsync(gitItem, line);
                         }
 
                         FileText.Visible = false;
