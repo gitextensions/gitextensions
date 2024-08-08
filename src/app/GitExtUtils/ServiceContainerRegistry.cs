@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.Design;
-using GitCommands.Submodules;
-using GitExtUtils;
 
-namespace GitCommands;
+namespace GitExtUtils;
 
 public static class ServiceContainerRegistry
 {
     public static void RegisterServices(ServiceContainer serviceContainer)
     {
-        serviceContainer.AddService<ISubmoduleStatusProvider>(new SubmoduleStatusProvider());
+        serviceContainer.AddService<ISubscribableTraceListener>(new SubscribableTraceListener());
     }
 }

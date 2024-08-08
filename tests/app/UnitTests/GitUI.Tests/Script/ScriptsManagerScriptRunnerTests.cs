@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using NSubstitute;
