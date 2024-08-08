@@ -2678,8 +2678,16 @@ Do you want to continue?</source>
         <source>&amp;Git maintenance</source>
         <target />
       </trans-unit>
+      <trans-unit id="gitSettingsToolStripMenuItem.Text">
+        <source>&amp;Git settings</source>
+        <target />
+      </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
         <source>Git &amp;command log</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gitextSettingsToolStripMenuItem.Text">
+        <source>Git Extensions &amp;settings</source>
         <target />
       </trans-unit>
       <trans-unit id="helpToolStripMenuItem.Text">
@@ -2748,6 +2756,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="pluginsLoadingToolStripMenuItem.Text">
         <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="pluginsSettingsToolStripMenuItem.Text">
+        <source>&amp;Plugins settings</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginsToolStripMenuItem.Text">
