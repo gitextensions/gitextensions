@@ -418,15 +418,16 @@ namespace GitUITests.Script
         {
             const string option1 = nameof(option1);
             const string option2 = nameof(option2);
-            const string value1 = nameof(value1);
+            const string value1a = nameof(value1a);
+            const string value1b = nameof(value1b);
             const string value2 = nameof(value2);
             _scriptOptionsProvider.Options.Returns(new string[] { option1, option2 });
-            _scriptOptionsProvider.GetValue(option1).Returns(value1);
-            _scriptOptionsProvider.GetValue(option2).Returns(value2);
+            _scriptOptionsProvider.GetValues(option1).Returns([value1a, value1b]);
+            _scriptOptionsProvider.GetValues(option2).Returns([value2]);
 
             (string? arguments, bool abort) = ScriptOptionsParser.Parse("foo {{" + option1 + "}} bar {" + option2 + "}", Substitute.For<IGitUICommands>(), owner: null, _scriptOptionsProvider);
 
-            arguments.Should().Be($"foo \"{value1}\" bar {value2}");
+            arguments.Should().Be($"foo \"{value1a}\" \"{value1b}\" bar {value2}");
             abort.Should().BeFalse();
         }
     }
