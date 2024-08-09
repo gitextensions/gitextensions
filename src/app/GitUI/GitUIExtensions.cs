@@ -158,7 +158,7 @@ namespace GitUI
                 bool isTracked = item.Item.IsTracked || (item.Item.TreeGuid is not null && item.SecondRevision.ObjectId is not null);
                 string diffArgs = fileViewer.GetDifftasticArguments();
 
-                await fileViewer.ViewTextAsync("git-difftool.sh", $"git difftool {diffArgs} -- {item.Item.Name}");
+                await fileViewer.ViewTextAsync(item.Item.Name, $"git difftool {diffArgs} -- {item.Item.Name}");
 
                 ExecutionResult result = await fileViewer.Module.GetSingleDifftoolAsync(firstId, item.SecondRevision.ObjectId, item.Item.Name, item.Item.OldName,
                     diffArgs,

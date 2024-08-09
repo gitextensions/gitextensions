@@ -235,7 +235,7 @@ namespace GitUI.Editor
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         public void SetText(string text, Action? openWithDifftool)
         {
-            SetText(text, openWithDifftool, viewMode: ViewMode.Text, useGitColoring: false);
+            SetText(text, openWithDifftool, viewMode: ViewMode.Text, useGitColoring: false, contentIdentification: null);
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace GitUI.Editor
         /// <param name="text">The text to set in the editor.</param>
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         /// <param name="viewMode">the view viewMode in the file viewer, the kind of info shown</param>
-        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring)
+        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring, string? contentIdentification)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -290,7 +290,11 @@ namespace GitUI.Editor
 
             TextEditor.Refresh();
 
-            _currentViewPositionCache.Restore(viewMode.IsPartialTextView());
+            // Restore position and update stored contentIdentification
+            _currentViewPositionCache.Restore(contentIdentification);
+
+            // Set contentIdentification for next update
+            _currentViewPositionCache.UpdateContentIdentification(contentIdentification);
 
             if (_shouldScrollToBottom || _shouldScrollToTop)
             {
@@ -765,12 +769,23 @@ namespace GitUI.Editor
         internal sealed class CurrentViewPositionCache
         {
             private readonly FileViewerInternal _viewer;
+            private string? _contentIdentification;
             private ViewPosition _currentViewPosition;
-            internal TestAccessor GetTestAccessor() => new(this);
 
             public CurrentViewPositionCache(FileViewerInternal viewer)
             {
                 _viewer = viewer;
+            }
+
+            public void UpdateContentIdentification(string? contentIdentification)
+            {
+                if (_viewer.TotalNumberOfLines <= 1)
+                {
+                    return;
+                }
+
+                // contentIdentification is updated similar to the captured context, ignore empty
+                _contentIdentification = contentIdentification;
             }
 
             public void Capture()
@@ -780,7 +795,7 @@ namespace GitUI.Editor
                     return;
                 }
 
-                // store the previous view position
+                // store the previous view position (for _contentIdentification)
                 ViewPosition currentViewPosition = new()
                 {
                     ActiveLineNum = null,
@@ -838,37 +853,43 @@ namespace GitUI.Editor
                 }
             }
 
-            public void Restore(bool isDiff)
+            public void Restore(string? contentIdentification)
             {
                 if (_viewer.TotalNumberOfLines <= 1)
                 {
                     return;
                 }
 
+                bool sameIdentification = contentIdentification is not null && contentIdentification == _contentIdentification;
+                if (!sameIdentification)
+                {
+                    return;
+                }
+
                 ViewPosition viewPosition = _currentViewPosition;
-                if (_viewer.TotalNumberOfLines == viewPosition.TotalNumberOfLines)
+                if (viewPosition.ActiveLineNum is not null)
+                {
+                    // prefer the LeftLineNum because the base revision will not change
+                    int line = viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
+                        ? _viewer.GetCaretOffset(viewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
+                        : _viewer.GetCaretOffset(viewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
+                    _viewer.TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(viewPosition.CaretPosition.Column, line);
+                    if (viewPosition.CaretVisible)
+                    {
+                        _viewer.TextEditor.ActiveTextAreaControl.CenterViewOn(line, treshold: 5);
+                    }
+                    else
+                    {
+                        _viewer.FirstVisibleLine = line;
+                    }
+                }
+                else
                 {
                     _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
                     _viewer.TextEditor.ActiveTextAreaControl.Caret.Position = viewPosition.CaretPosition;
                     if (!viewPosition.CaretVisible)
                     {
                         _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
-                    }
-                }
-                else if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum is not null)
-                {
-                    // prefer the LeftLineNum because the base revision will not change
-                    int line = viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
-                        ? _viewer.GetCaretOffset(viewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
-                        : _viewer.GetCaretOffset(viewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
-                    if (viewPosition.CaretVisible)
-                    {
-                        _viewer.TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(viewPosition.CaretPosition.Column, line);
-                        _viewer.TextEditor.ActiveTextAreaControl.CenterViewOn(line, treshold: 5);
-                    }
-                    else
-                    {
-                        _viewer.FirstVisibleLine = line;
                     }
                 }
             }
@@ -893,6 +914,7 @@ namespace GitUI.Editor
                 return viewPosition.CaretPosition.Line + 1;
             }
 
+            internal TestAccessor GetTestAccessor() => new(this);
             internal readonly struct TestAccessor
             {
                 private readonly CurrentViewPositionCache _viewPositionCache;
@@ -940,6 +962,8 @@ namespace GitUI.Editor
             }
 
             public TextEditorControl TextEditor => _control.TextEditor;
+            public void UpdateContentIdentification(string? contentIdentification)
+                => _control._currentViewPositionCache.UpdateContentIdentification(contentIdentification);
         }
     }
 }

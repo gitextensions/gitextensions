@@ -138,8 +138,10 @@ namespace GitUITests.Editor
         public void Restore_should_restore_current_position()
         {
             FileViewerInternal.CurrentViewPositionCache.TestAccessor test = _viewPositionCache.GetTestAccessor();
-            test.TextEditor.Text = Given.GitDiff;
+            string text = Given.GitDiff;
+            test.TextEditor.Text = text;
             test.TextEditor.ActiveTextAreaControl.TextArea.TextView.DrawingPosition = new Rectangle(0, 0, 100, 100);
+            test.TextEditor.ShowLineNumbers = false;
 
             FileViewerInternal.ViewPosition existingViewPosition = new()
             {
@@ -161,10 +163,60 @@ namespace GitUITests.Editor
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Line.Should().Be(0);
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Column.Should().Be(0);
 
-            _viewPositionCache.Restore(true);
+            _viewPositionCache.UpdateContentIdentification("current");
 
+            ITextHighlightService highlightService = new PatchHighlightService(ref text, true);
+            test.LineNumberControl.Clear();
+            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
+            _viewPositionCache.Restore("current");
+            _viewPositionCache.UpdateContentIdentification("current");
+
+            // position should be restored to the (inserted) existingViewPosition
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(existingViewPosition.CaretPosition);
+
+            _viewPositionCache.Capture();
+            test.TextEditor.Text = "";
+            test.LineNumberControl.Clear();
+            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
+            _viewPositionCache.Restore("empty");
+            _viewPositionCache.UpdateContentIdentification("empty");
+
+            // empty file, set the position to the first
+            test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(new TextLocation(0, 0));
+
+            highlightService = new PatchHighlightService(ref text, true);
+            _viewPositionCache.Capture();
+            test.TextEditor.Text = text;
+            test.LineNumberControl.Clear();
+            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
+            _viewPositionCache.Restore("current");
+            _viewPositionCache.UpdateContentIdentification("current");
+
+            // the captured position should not be reset by an empty text
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(existingViewPosition.CaretPosition);
+
+            string text2 = "dummy text\ndummy";
+            _viewPositionCache.Capture();
+            highlightService = new PatchHighlightService(ref text2, true);
+            test.TextEditor.Text = text2;
+            test.LineNumberControl.Clear();
+            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
+            _viewPositionCache.Restore("dummy");
+            _viewPositionCache.UpdateContentIdentification("dummy");
+
+            // a new file will set the position back to 0,0
+            test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(new TextLocation(0, 0));
+
+            highlightService = new PatchHighlightService(ref text, true);
+            _viewPositionCache.Capture();
+            test.TextEditor.Text = text;
+            test.LineNumberControl.Clear();
+            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
+            _viewPositionCache.Restore("current");
+            _viewPositionCache.UpdateContentIdentification("current");
+
+            // reset to 0,0. the cached position is not retained
+            test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(new TextLocation(0, 0));
         }
 
         private static class Given

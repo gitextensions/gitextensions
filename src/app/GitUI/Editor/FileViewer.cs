@@ -591,7 +591,7 @@ namespace GitUI.Editor
                     }
                     else
                     {
-                        internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring: false);
+                        internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring: false, contentIdentification: fileName);
 
                         if (line is not null)
                         {
@@ -871,7 +871,7 @@ namespace GitUI.Editor
                 () =>
                 {
                     ResetView(viewMode, fileName, item: item, text: text);
-                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring);
+                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, contentIdentification: fileName);
                     if (line is not null)
                     {
                         GoToLine(line.Value);
