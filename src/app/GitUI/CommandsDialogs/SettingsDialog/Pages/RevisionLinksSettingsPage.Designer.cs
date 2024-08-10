@@ -93,6 +93,8 @@
             // 
             // splitContainer1
             // 
+            splitContainer1.AutoScaleDimensions = new SizeF(96F, 96F);
+            splitContainer1.AutoScaleMode = AutoScaleMode.Dpi;
             splitContainer1.BackColor = SystemColors.Control;
             splitContainer1.Dock = DockStyle.Fill;
             splitContainer1.FixedPanel = FixedPanel.Panel1;
@@ -112,7 +114,7 @@
             splitContainer1.Panel2.Controls.Add(LinksGrid);
             splitContainer1.Panel2.Controls.Add(panel1);
             splitContainer1.Panel2.Controls.Add(detailPanel);
-            splitContainer1.Size = new Size(1245, 730);
+            splitContainer1.Size = new Size(1520, 788);
             splitContainer1.SplitterDistance = 192;
             splitContainer1.TabIndex = 2;
             // 
@@ -124,7 +126,7 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.Controls.Add(toolStripManageCategories, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Bottom;
-            tableLayoutPanel1.Location = new Point(0, 704);
+            tableLayoutPanel1.Location = new Point(0, 762);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -173,21 +175,23 @@
             _NO_TRANSLATE_Categories.FormattingEnabled = true;
             _NO_TRANSLATE_Categories.IntegralHeight = false;
             _NO_TRANSLATE_Categories.ItemHeight = 15;
-            _NO_TRANSLATE_Categories.Location = new Point(0, 22);
+            _NO_TRANSLATE_Categories.Location = new Point(0, 19);
             _NO_TRANSLATE_Categories.Margin = new Padding(2, 3, 2, 3);
             _NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
-            _NO_TRANSLATE_Categories.Size = new Size(192, 708);
+            _NO_TRANSLATE_Categories.Size = new Size(192, 769);
             _NO_TRANSLATE_Categories.TabIndex = 1;
             _NO_TRANSLATE_Categories.SelectedIndexChanged += _NO_TRANSLATE_Categories_SelectedIndexChanged;
             // 
             // CategoriesLabel
             // 
+            CategoriesLabel.AutoSize = true;
             CategoriesLabel.Dock = DockStyle.Top;
             CategoriesLabel.ImeMode = ImeMode.NoControl;
             CategoriesLabel.Location = new Point(0, 0);
             CategoriesLabel.Margin = new Padding(2, 0, 2, 0);
             CategoriesLabel.Name = "CategoriesLabel";
-            CategoriesLabel.Size = new Size(192, 22);
+            CategoriesLabel.Padding = new Padding(0, 0, 0, 4);
+            CategoriesLabel.Size = new Size(63, 19);
             CategoriesLabel.TabIndex = 0;
             CategoriesLabel.Text = "Categories";
             // 
@@ -203,7 +207,7 @@
             LinksGrid.RowHeadersVisible = false;
             LinksGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             LinksGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            LinksGrid.Size = new Size(1049, 408);
+            LinksGrid.Size = new Size(1324, 466);
             LinksGrid.TabIndex = 8;
             // 
             // CaptionCol
@@ -225,17 +229,17 @@
             panel1.Controls.Add(label6);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 304);
+            panel1.MinimumSize = new Size(0, 18);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(0, 0, 0, 3);
-            panel1.Size = new Size(1049, 18);
+            panel1.Size = new Size(1324, 18);
             panel1.TabIndex = 7;
             // 
             // label6
             // 
-            label6.Anchor = AnchorStyles.Left;
             label6.AutoSize = true;
             label6.ImeMode = ImeMode.NoControl;
-            label6.Location = new Point(206, 0);
+            label6.Location = new Point(0, 0);
             label6.Margin = new Padding(2, 0, 2, 0);
             label6.Name = "label6";
             label6.Size = new Size(34, 15);
@@ -252,7 +256,7 @@
             detailPanel.Location = new Point(0, 0);
             detailPanel.Name = "detailPanel";
             detailPanel.Padding = new Padding(0, 3, 0, 6);
-            detailPanel.Size = new Size(1049, 304);
+            detailPanel.Size = new Size(1324, 304);
             detailPanel.TabIndex = 6;
             // 
             // tableLayoutPanel3
@@ -275,7 +279,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.Size = new Size(1049, 269);
+            tableLayoutPanel3.Size = new Size(1324, 269);
             tableLayoutPanel3.TabIndex = 14;
             // 
             // remoteGrp
@@ -287,7 +291,7 @@
             remoteGrp.Dock = DockStyle.Fill;
             remoteGrp.Location = new Point(3, 32);
             remoteGrp.Name = "remoteGrp";
-            remoteGrp.Size = new Size(1043, 117);
+            remoteGrp.Size = new Size(1318, 117);
             remoteGrp.TabIndex = 28;
             remoteGrp.TabStop = false;
             remoteGrp.Text = "Remote data";
@@ -314,7 +318,7 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Size = new Size(1037, 95);
+            tableLayoutPanel2.Size = new Size(1312, 95);
             tableLayoutPanel2.TabIndex = 17;
             // 
             // lblUseRemotes
@@ -335,7 +339,7 @@
             _NO_TRANSLATE_RemotePatern.Location = new Point(89, 69);
             _NO_TRANSLATE_RemotePatern.Margin = new Padding(2, 3, 2, 3);
             _NO_TRANSLATE_RemotePatern.Name = "_NO_TRANSLATE_RemotePatern";
-            _NO_TRANSLATE_RemotePatern.Size = new Size(946, 23);
+            _NO_TRANSLATE_RemotePatern.Size = new Size(1221, 23);
             _NO_TRANSLATE_RemotePatern.TabIndex = 22;
             _NO_TRANSLATE_RemotePatern.Leave += _NO_TRANSLATE_RemotePatern_Leave;
             // 
@@ -406,7 +410,7 @@
             flowLayoutPanel4.Dock = DockStyle.Fill;
             flowLayoutPanel4.Location = new Point(90, 3);
             flowLayoutPanel4.Name = "flowLayoutPanel4";
-            flowLayoutPanel4.Size = new Size(944, 29);
+            flowLayoutPanel4.Size = new Size(1219, 29);
             flowLayoutPanel4.TabIndex = 25;
             // 
             // _NO_TRANSLATE_UseRemotes
@@ -439,7 +443,7 @@
             revisionDataGrp.Dock = DockStyle.Fill;
             revisionDataGrp.Location = new Point(3, 155);
             revisionDataGrp.Name = "revisionDataGrp";
-            revisionDataGrp.Size = new Size(1043, 111);
+            revisionDataGrp.Size = new Size(1318, 111);
             revisionDataGrp.TabIndex = 27;
             revisionDataGrp.TabStop = false;
             revisionDataGrp.Text = "Revision data";
@@ -467,7 +471,7 @@
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel4.Size = new Size(1037, 89);
+            tableLayoutPanel4.Size = new Size(1312, 89);
             tableLayoutPanel4.TabIndex = 16;
             // 
             // _NO_TRANSLATE_SearchPatternEdit
@@ -476,7 +480,7 @@
             _NO_TRANSLATE_SearchPatternEdit.Location = new Point(91, 34);
             _NO_TRANSLATE_SearchPatternEdit.Margin = new Padding(2, 3, 2, 3);
             _NO_TRANSLATE_SearchPatternEdit.Name = "_NO_TRANSLATE_SearchPatternEdit";
-            _NO_TRANSLATE_SearchPatternEdit.Size = new Size(944, 23);
+            _NO_TRANSLATE_SearchPatternEdit.Size = new Size(1219, 23);
             _NO_TRANSLATE_SearchPatternEdit.TabIndex = 22;
             _NO_TRANSLATE_SearchPatternEdit.Leave += _NO_TRANSLATE_SearchPatternEdit_Leave;
             // 
@@ -486,7 +490,7 @@
             _NO_TRANSLATE_NestedPatternEdit.Location = new Point(91, 63);
             _NO_TRANSLATE_NestedPatternEdit.Margin = new Padding(2, 3, 2, 3);
             _NO_TRANSLATE_NestedPatternEdit.Name = "_NO_TRANSLATE_NestedPatternEdit";
-            _NO_TRANSLATE_NestedPatternEdit.Size = new Size(944, 23);
+            _NO_TRANSLATE_NestedPatternEdit.Size = new Size(1219, 23);
             _NO_TRANSLATE_NestedPatternEdit.TabIndex = 21;
             _NO_TRANSLATE_NestedPatternEdit.Leave += _NO_TRANSLATE_NestedPatternEdit_Leave;
             // 
@@ -638,7 +642,7 @@
             BackColor = SystemColors.Control;
             Controls.Add(splitContainer1);
             Name = "RevisionLinksSettingsPage";
-            Size = new Size(1245, 730);
+            Size = new Size(1520, 788);
             Text = "Revision links";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
