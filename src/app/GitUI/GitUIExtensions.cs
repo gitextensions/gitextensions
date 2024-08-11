@@ -71,7 +71,7 @@ namespace GitUI
                 string range = item.BaseA is null || item.BaseB is null
                     ? $"{firstId}...{item.SecondRevision.ObjectId}"
                     : $"{item.BaseA}..{firstId} {item.BaseB}..{item.SecondRevision.ObjectId}";
-                await fileViewer.ViewTextAsync(null, $"git range-diff {range} -- {additionalCommandInfo}");
+                await fileViewer.ViewTextAsync(fileName: null, $"git range-diff {range} -- {additionalCommandInfo}");
 
                 ExecutionResult result = await fileViewer.Module.GetRangeDiffAsync(
                         firstId,
@@ -159,7 +159,7 @@ namespace GitUI
                 string diffArgs = fileViewer.GetDifftasticArguments();
 
                 // set file name as null to not change the restore lineno
-                await fileViewer.ViewTextAsync(null, $"git difftool {diffArgs} -- {item.Item.Name}");
+                await fileViewer.ViewTextAsync(fileName: null, $"git difftool {diffArgs} -- {item.Item.Name}");
 
                 ExecutionResult result = await fileViewer.Module.GetSingleDifftoolAsync(firstId, item.SecondRevision.ObjectId, item.Item.Name, item.Item.OldName,
                     diffArgs,
