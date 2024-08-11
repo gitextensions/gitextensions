@@ -86,7 +86,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         Assert.False(form.GetTestAccessor().HasChanges);
 
                         FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
-                        fileViewerInternal.GetTestAccessor().UpdateContentIdentification("hello-world");
+                        fileViewerInternal.GetTestAccessor().CurrentViewPositionCache.GetTestAccessor().SetCurrentIdentification("hello-world");
                         fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, ViewMode.Text, true, "hello-world");
 
                         Assert.True(form.GetTestAccessor().HasChanges);

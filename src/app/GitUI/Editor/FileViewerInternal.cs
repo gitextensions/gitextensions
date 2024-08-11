@@ -290,11 +290,8 @@ namespace GitUI.Editor
 
             TextEditor.Refresh();
 
-            // Restore position and update stored contentIdentification
+            // Restore position if contentIdentification matches the capture
             _currentViewPositionCache.Restore(contentIdentification);
-
-            // Set contentIdentification for next update
-            _currentViewPositionCache.UpdateContentIdentification(contentIdentification);
 
             if (_shouldScrollToBottom || _shouldScrollToTop)
             {
@@ -769,7 +766,8 @@ namespace GitUI.Editor
         internal sealed class CurrentViewPositionCache
         {
             private readonly FileViewerInternal _viewer;
-            private string? _contentIdentification;
+            public string? _currentIdentification;
+            public string? _capturedIdentification;
             private ViewPosition _currentViewPosition;
 
             public CurrentViewPositionCache(FileViewerInternal viewer)
@@ -777,25 +775,15 @@ namespace GitUI.Editor
                 _viewer = viewer;
             }
 
-            public void UpdateContentIdentification(string? contentIdentification)
-            {
-                if (_viewer.TotalNumberOfLines <= 1)
-                {
-                    return;
-                }
-
-                // contentIdentification is updated similar to the captured context, ignore empty
-                _contentIdentification = contentIdentification;
-            }
-
             public void Capture()
             {
-                if (_viewer.TotalNumberOfLines <= 1)
+                if (_viewer.TotalNumberOfLines <= 1 || string.IsNullOrEmpty(_currentIdentification))
                 {
                     return;
                 }
 
-                // store the previous view position (for _contentIdentification)
+                // store the previous view position
+                _capturedIdentification = _currentIdentification;
                 ViewPosition currentViewPosition = new()
                 {
                     ActiveLineNum = null,
@@ -855,12 +843,13 @@ namespace GitUI.Editor
 
             public void Restore(string? contentIdentification)
             {
-                if (_viewer.TotalNumberOfLines <= 1)
+                _currentIdentification = contentIdentification;
+                if (_viewer.TotalNumberOfLines <= 1 || string.IsNullOrEmpty(contentIdentification) || string.IsNullOrEmpty(_currentIdentification))
                 {
                     return;
                 }
 
-                bool sameIdentification = contentIdentification is not null && contentIdentification == _contentIdentification;
+                bool sameIdentification = contentIdentification == _capturedIdentification;
                 if (!sameIdentification)
                 {
                     return;
@@ -937,6 +926,9 @@ namespace GitUI.Editor
                     get => _viewPositionCache._viewer._lineNumbersControl;
                     set => _viewPositionCache._viewer._lineNumbersControl = value;
                 }
+
+                public void SetCapturedIdentification(string? contentIdentification) => _viewPositionCache._capturedIdentification = contentIdentification;
+                public void SetCurrentIdentification(string? contentIdentification) => _viewPositionCache._currentIdentification = contentIdentification;
             }
         }
 
@@ -962,8 +954,7 @@ namespace GitUI.Editor
             }
 
             public TextEditorControl TextEditor => _control.TextEditor;
-            public void UpdateContentIdentification(string? contentIdentification)
-                => _control._currentViewPositionCache.UpdateContentIdentification(contentIdentification);
+            public CurrentViewPositionCache CurrentViewPositionCache => _control._currentViewPositionCache;
         }
     }
 }
