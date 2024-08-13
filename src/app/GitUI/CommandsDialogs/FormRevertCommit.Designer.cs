@@ -51,7 +51,7 @@
             MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             MainPanel.Controls.Add(tlPnlMain);
             MainPanel.Size = new Size(614, 311);
-            MainPanel.TabIndex = 0;
+            MainPanel.TabIndex = 1;
             // 
             // ControlsPanel
             // 
@@ -59,7 +59,7 @@
             ControlsPanel.Controls.Add(Revert);
             ControlsPanel.Location = new Point(0, 379);
             ControlsPanel.Size = new Size(614, 41);
-            ControlsPanel.TabIndex = 1;
+            ControlsPanel.TabIndex = 0;
             // 
             // Revert
             // 
@@ -67,7 +67,7 @@
             Revert.Location = new Point(403, 8);
             Revert.Name = "Revert";
             Revert.Size = new Size(117, 25);
-            Revert.TabIndex = 10;
+            Revert.TabIndex = 1;
             Revert.Text = "&Revert this commit";
             Revert.UseVisualStyleBackColor = true;
             Revert.Click += Revert_Click;
@@ -78,7 +78,7 @@
             btnAbort.Location = new Point(526, 8);
             btnAbort.Name = "btnAbort";
             btnAbort.Size = new Size(75, 25);
-            btnAbort.TabIndex = 1;
+            btnAbort.TabIndex = 0;
             btnAbort.Text = "A&bort";
             btnAbort.UseVisualStyleBackColor = true;
             btnAbort.Click += btnAbort_Click;
@@ -90,7 +90,7 @@
             ParentsLabel.Location = new Point(3, 181);
             ParentsLabel.Name = "ParentsLabel";
             ParentsLabel.Size = new Size(584, 15);
-            ParentsLabel.TabIndex = 14;
+            ParentsLabel.TabIndex = 3;
             ParentsLabel.Text = "This commit is a merge, select &parent:";
             // 
             // lvParentsList
@@ -103,7 +103,7 @@
             lvParentsList.MultiSelect = false;
             lvParentsList.Name = "lvParentsList";
             lvParentsList.Size = new Size(578, 54);
-            lvParentsList.TabIndex = 15;
+            lvParentsList.TabIndex = 4;
             lvParentsList.UseCompatibleStateImageBehavior = false;
             lvParentsList.View = View.Details;
             // 
@@ -134,7 +134,7 @@
             AutoCommit.Location = new Point(3, 265);
             AutoCommit.Name = "AutoCommit";
             AutoCommit.Size = new Size(584, 19);
-            AutoCommit.TabIndex = 11;
+            AutoCommit.TabIndex = 5;
             AutoCommit.Text = "&Automatically create a commit";
             AutoCommit.UseVisualStyleBackColor = true;
             // 
@@ -145,7 +145,7 @@
             BranchInfo.Location = new Point(3, 0);
             BranchInfo.Name = "BranchInfo";
             BranchInfo.Size = new Size(584, 15);
-            BranchInfo.TabIndex = 5;
+            BranchInfo.TabIndex = 1;
             BranchInfo.Text = "Revert this commit:";
             // 
             // commitSummaryUserControl1
@@ -159,7 +159,7 @@
             commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             commitSummaryUserControl1.Revision = null;
             commitSummaryUserControl1.Size = new Size(571, 160);
-            commitSummaryUserControl1.TabIndex = 16;
+            commitSummaryUserControl1.TabIndex = 2;
             // 
             // tlPnlMain
             // 
@@ -182,7 +182,7 @@
             tlPnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlPnlMain.RowStyles.Add(new RowStyle());
             tlPnlMain.Size = new Size(590, 287);
-            tlPnlMain.TabIndex = 17;
+            tlPnlMain.TabIndex = 0;
             // 
             // FormRevertCommit
             // 
@@ -190,6 +190,7 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
+            CancelButton = btnAbort;
             ClientSize = new Size(614, 352);
             MaximizeBox = false;
             MinimizeBox = false;

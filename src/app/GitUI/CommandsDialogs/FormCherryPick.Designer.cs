@@ -56,7 +56,7 @@
             MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             MainPanel.Controls.Add(tlPnlMain);
             MainPanel.Size = new Size(614, 372);
-            MainPanel.TabIndex = 0;
+            MainPanel.TabIndex = 1;
             // 
             // ControlsPanel
             // 
@@ -64,7 +64,7 @@
             ControlsPanel.Controls.Add(btnPick);
             ControlsPanel.Location = new Point(0, 372);
             ControlsPanel.Size = new Size(614, 41);
-            ControlsPanel.TabIndex = 1;
+            ControlsPanel.TabIndex = 0;
             // 
             // btnPick
             // 
@@ -95,7 +95,7 @@
             btnChooseRevision.Location = new Point(556, 3);
             btnChooseRevision.Name = "btnChooseRevision";
             btnChooseRevision.Size = new Size(25, 24);
-            btnChooseRevision.TabIndex = 1;
+            btnChooseRevision.TabIndex = 5;
             btnChooseRevision.UseVisualStyleBackColor = true;
             btnChooseRevision.Click += btnChooseRevision_Click;
             // 
@@ -106,7 +106,7 @@
             lblParents.Location = new Point(3, 217);
             lblParents.Name = "lblParents";
             lblParents.Size = new Size(584, 15);
-            lblParents.TabIndex = 3;
+            lblParents.TabIndex = 6;
             lblParents.Text = "This commit is a merge, select &parent:";
             // 
             // lvParentsList
@@ -119,7 +119,7 @@
             lvParentsList.MultiSelect = false;
             lvParentsList.Name = "lvParentsList";
             lvParentsList.Size = new Size(578, 54);
-            lvParentsList.TabIndex = 4;
+            lvParentsList.TabIndex = 7;
             lvParentsList.UseCompatibleStateImageBehavior = false;
             lvParentsList.View = View.Details;
             // 
@@ -150,7 +150,7 @@
             cbxAddReference.Location = new Point(3, 326);
             cbxAddReference.Name = "cbxAddReference";
             cbxAddReference.Size = new Size(584, 19);
-            cbxAddReference.TabIndex = 6;
+            cbxAddReference.TabIndex = 9;
             cbxAddReference.Text = "A&dd commit reference to commit message";
             cbxAddReference.UseVisualStyleBackColor = true;
             // 
@@ -161,7 +161,7 @@
             cbxAutoCommit.Location = new Point(3, 301);
             cbxAutoCommit.Name = "cbxAutoCommit";
             cbxAutoCommit.Size = new Size(584, 19);
-            cbxAutoCommit.TabIndex = 5;
+            cbxAutoCommit.TabIndex = 8;
             cbxAutoCommit.Text = "&Automatically create a commit";
             cbxAutoCommit.UseVisualStyleBackColor = true;
             // 
@@ -172,7 +172,7 @@
             lblBranchInfo.Location = new Point(3, 0);
             lblBranchInfo.Name = "lblBranchInfo";
             lblBranchInfo.Size = new Size(584, 15);
-            lblBranchInfo.TabIndex = 0;
+            lblBranchInfo.TabIndex = 1;
             lblBranchInfo.Text = "Cherry pick this commit:";
             // 
             // commitSummaryUserControl1
@@ -186,7 +186,7 @@
             commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             commitSummaryUserControl1.Revision = null;
             commitSummaryUserControl1.Size = new Size(571, 160);
-            commitSummaryUserControl1.TabIndex = 1;
+            commitSummaryUserControl1.TabIndex = 2;
             // 
             // tlPnlMain
             // 
@@ -226,7 +226,7 @@
             chooseRevPanel.Location = new Point(3, 184);
             chooseRevPanel.Name = "chooseRevPanel";
             chooseRevPanel.Size = new Size(584, 30);
-            chooseRevPanel.TabIndex = 2;
+            chooseRevPanel.TabIndex = 3;
             // 
             // lblAnotherRev
             // 
@@ -235,7 +235,7 @@
             lblAnotherRev.Location = new Point(412, 0);
             lblAnotherRev.Name = "lblAnotherRev";
             lblAnotherRev.Size = new Size(138, 30);
-            lblAnotherRev.TabIndex = 0;
+            lblAnotherRev.TabIndex = 4;
             lblAnotherRev.Text = "C&hoose another revision:";
             lblAnotherRev.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -245,6 +245,7 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
+            CancelButton = btnAbort;
             ClientSize = new Size(614, 413);
             HelpButton = true;
             ManualSectionAnchorName = "cherry-pick-commit";
