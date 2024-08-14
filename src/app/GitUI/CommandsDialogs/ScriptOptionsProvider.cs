@@ -24,14 +24,14 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
 
     IReadOnlyList<string> IScriptOptionsProvider.Options { get; } = new[] { _selectedRelativePaths, _lineNumber };
 
-    string? IScriptOptionsProvider.GetValue(string option)
+    IEnumerable<string> IScriptOptionsProvider.GetValues(string option)
     {
         switch (option)
         {
             case _selectedRelativePaths:
-                return string.Join(" ", _getSelectedRelativePaths().Select(item => item.QuoteForCommandLine()));
+                return _getSelectedRelativePaths().Select(item => item.EscapeForCommandLine());
             case _lineNumber:
-                return _getCurrentLineNumber()?.ToString() ?? "";
+                return _getCurrentLineNumber() is int lineNumber ? [lineNumber.ToString()] : [];
             default:
                 throw new NotImplementedException(option);
         }
