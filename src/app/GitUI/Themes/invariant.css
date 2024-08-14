@@ -58,13 +58,13 @@
 .AnsiTerminalRedForeBold { color: #ff5e5e; }
 .AnsiTerminalRedBackBold { color: #ffa5a5; }
 .AnsiTerminalRedBackBold.colorblind { color: #4da6ff; }
-.AnsiTerminalGreenForeNormal { color: #1ca800; }
+.AnsiTerminalGreenForeNormal { color: #189100; }
 .AnsiTerminalGreenBackNormal { color: #c8ffc8; }
-.AnsiTerminalGreenForeBold { color: #2fd62f; }
+.AnsiTerminalGreenForeBold { color: #1ca800; }
 .AnsiTerminalGreenBackBold { color: #87ff87; }
 .AnsiTerminalYellowForeNormal { color: #c0a000; }
 .AnsiTerminalYellowBackNormal { color: #f2f293; }
-.AnsiTerminalYellowForeBold { color: #f2d543; }
+.AnsiTerminalYellowForeBold { color: #E2C73F; }
 .AnsiTerminalYellowBackBold { color: #ffff00; }
 .AnsiTerminalBlueForeNormal { color: #005dff; }
 .AnsiTerminalBlueBackNormal { color: #c8d0f4; }

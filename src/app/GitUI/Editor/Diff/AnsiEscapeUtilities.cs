@@ -346,7 +346,7 @@ public partial class AnsiEscapeUtilities
         if (themeColors && !reverse
             && (currentBack.id < 0 || backColor is null)
             && foreColor is null
-            && currentFore.id is 1 or 2 && !currentFore.dim && !currentFore.bold)
+            && currentFore.id is 1 or 2 && !currentFore.dim)
         {
             // Assume this is a fit for the theme colors with reverse color (e.g. difftastic)
             reverse = true;
