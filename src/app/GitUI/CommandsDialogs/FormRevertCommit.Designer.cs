@@ -51,7 +51,7 @@
             MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             MainPanel.Controls.Add(tlPnlMain);
             MainPanel.Size = new Size(614, 311);
-            MainPanel.TabIndex = 1;
+            MainPanel.TabIndex = 0;
             // 
             // ControlsPanel
             // 
@@ -59,7 +59,7 @@
             ControlsPanel.Controls.Add(Revert);
             ControlsPanel.Location = new Point(0, 379);
             ControlsPanel.Size = new Size(614, 41);
-            ControlsPanel.TabIndex = 0;
+            ControlsPanel.TabIndex = 1;
             // 
             // Revert
             // 
@@ -67,7 +67,7 @@
             Revert.Location = new Point(403, 8);
             Revert.Name = "Revert";
             Revert.Size = new Size(117, 25);
-            Revert.TabIndex = 1;
+            Revert.TabIndex = 0;
             Revert.Text = "&Revert this commit";
             Revert.UseVisualStyleBackColor = true;
             Revert.Click += Revert_Click;
@@ -78,7 +78,7 @@
             btnAbort.Location = new Point(526, 8);
             btnAbort.Name = "btnAbort";
             btnAbort.Size = new Size(75, 25);
-            btnAbort.TabIndex = 0;
+            btnAbort.TabIndex = 1;
             btnAbort.Text = "A&bort";
             btnAbort.UseVisualStyleBackColor = true;
             btnAbort.Click += btnAbort_Click;
@@ -160,6 +160,7 @@
             commitSummaryUserControl1.Revision = null;
             commitSummaryUserControl1.Size = new Size(571, 160);
             commitSummaryUserControl1.TabIndex = 2;
+            commitSummaryUserControl1.TabStop = false;
             // 
             // tlPnlMain
             // 
@@ -199,7 +200,8 @@
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Revert commit";
-            Load += FormRevertCommit_Load;
+            Load += Form_Load;
+            Shown += Form_Shown;
             MainPanel.ResumeLayout(false);
             MainPanel.PerformLayout();
             ControlsPanel.ResumeLayout(false);

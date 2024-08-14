@@ -56,7 +56,7 @@
             MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             MainPanel.Controls.Add(tlPnlMain);
             MainPanel.Size = new Size(614, 372);
-            MainPanel.TabIndex = 1;
+            MainPanel.TabIndex = 0;
             // 
             // ControlsPanel
             // 
@@ -64,7 +64,7 @@
             ControlsPanel.Controls.Add(btnPick);
             ControlsPanel.Location = new Point(0, 372);
             ControlsPanel.Size = new Size(614, 41);
-            ControlsPanel.TabIndex = 0;
+            ControlsPanel.TabIndex = 1;
             // 
             // btnPick
             // 
@@ -187,6 +187,7 @@
             commitSummaryUserControl1.Revision = null;
             commitSummaryUserControl1.Size = new Size(571, 160);
             commitSummaryUserControl1.TabIndex = 2;
+            commitSummaryUserControl1.TabStop = false;
             // 
             // tlPnlMain
             // 
@@ -259,6 +260,7 @@
             Text = "Cherry pick commit";
             FormClosing += Form_Closing;
             Load += Form_Load;
+            Shown += Form_Shown;
             MainPanel.ResumeLayout(false);
             MainPanel.PerformLayout();
             ControlsPanel.ResumeLayout(false);

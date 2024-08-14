@@ -48,6 +48,18 @@ namespace GitUI.CommandsDialogs
             OnRevisionChanged();
         }
 
+        private void Form_Shown(object? sender, EventArgs e)
+        {
+            if (lvParentsList.Visible)
+            {
+                lvParentsList.Focus();
+            }
+            else
+            {
+                cbxAutoCommit.Focus();
+            }
+        }
+
         private void Form_Closing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();

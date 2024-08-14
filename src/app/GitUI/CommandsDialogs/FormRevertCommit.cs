@@ -37,12 +37,24 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        private void FormRevertCommit_Load(object sender, EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
             _parentsLabelControlHeight = ParentsLabel.Size.Height;
             _lvParentsListControlHeight = lvParentsList.Size.Height;
 
             LoadRevisionInfo();
+        }
+
+        private void Form_Shown(object? sender, EventArgs e)
+        {
+            if (lvParentsList.Visible)
+            {
+                lvParentsList.Focus();
+            }
+            else
+            {
+                AutoCommit.Focus();
+            }
         }
 
         private void LoadRevisionInfo()
