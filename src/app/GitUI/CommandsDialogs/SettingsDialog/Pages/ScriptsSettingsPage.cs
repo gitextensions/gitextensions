@@ -26,6 +26,10 @@ User inputs:
 {UserInput:a popup label=a default value using {sLocalBranch}}
 {UserFiles}
 
+Conditional:
+{if:option}{/if}
+{ifnot:option}{/ifnot}
+
 Working directory:
 {WorkingDir}
 

@@ -1,6 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
+using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -96,7 +98,9 @@ namespace GitUI.ScriptsEngine
             ArgumentNullException.ThrowIfNull(uiCommands);
             ArgumentNullException.ThrowIfNull(uiCommands.Module);
 
+            bool selectedRevisionCached = false;
             GitRevision? selectedRevision = null;
+            bool currentRevisionCached = false;
             GitRevision? currentRevision = null;
 
             IReadOnlyList<GitRevision> allSelectedRevisions = Array.Empty<GitRevision>();
@@ -110,45 +114,42 @@ namespace GitUI.ScriptsEngine
             string currentRemote = "";
             List<IGitRef> currentBranches = [];
             List<IGitRef> currentTags = [];
+            IEnumerable<string> allOptions = GetOptions(Options, scriptOptionsProvider);
 
-            foreach (string option in GetOptions(Options, scriptOptionsProvider))
+            foreach (string option in allOptions)
             {
-                if (!Contains(arguments, option))
+                if (!Contains(arguments, option) && !Contains(arguments, "{if:" + option + "}") && !Contains(arguments, "{ifnot:" + option + "}"))
                 {
                     continue;
                 }
 
-                if (currentRevision is null && (option.StartsWith("c") || option == head))
+                if (currentRevisionCached && (option.StartsWith("c") || option == head))
                 {
+                    currentRevisionCached = true;
                     currentRevision = GetCurrentRevision(uiCommands.Module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
                         loadBody: Contains(arguments, currentMessage));
-                    if (currentRevision is null)
+                    if (currentRevision is not null)
                     {
-                        return (arguments: null, abort: true);
-                    }
-
-                    if (currentLocalBranches.Count == 1)
-                    {
-                        currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
-                    }
-                    else
-                    {
-                        currentRemote = uiCommands.Module.GetCurrentRemote();
-                        if (string.IsNullOrEmpty(currentRemote))
+                        if (currentLocalBranches.Count == 1)
                         {
-                            currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote,
-                                AskToSpecify(currentLocalBranches, uiCommands, owner)));
+                            currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
+                        }
+                        else
+                        {
+                            currentRemote = uiCommands.Module.GetCurrentRemote();
+                            if (string.IsNullOrEmpty(currentRemote))
+                            {
+                                currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote,
+                                    AskToSpecify(currentLocalBranches, uiCommands, owner)));
+                            }
                         }
                     }
                 }
-                else if (selectedRevision is null && uiCommands.BrowseRepo is not null && DependsOnSelectedRevision(option))
+                else if (!selectedRevisionCached && uiCommands.BrowseRepo is not null && DependsOnSelectedRevision(option))
                 {
+                    selectedRevisionCached = true;
                     allSelectedRevisions = uiCommands.BrowseRepo.GetSelectedRevisions();
                     selectedRevision = CalculateSelectedRevision(uiCommands, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
-                    if (selectedRevision is null)
-                    {
-                        return (arguments: null, abort: true);
-                    }
                 }
 
                 arguments = ParseScriptArguments(arguments, option, owner, scriptOptionsProvider, uiCommands, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision!, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision!, currentRemote);
@@ -156,6 +157,17 @@ namespace GitUI.ScriptsEngine
                 {
                     return (arguments: null, abort: true);
                 }
+            }
+
+            // Second pass - After all {if}s have been processed, verify that all options have been replaced
+            foreach (string option in allOptions)
+            {
+                if (!Contains(arguments, option) && !Contains(arguments, "{if:" + option + "}") && !Contains(arguments, "{ifnot:" + option + "}"))
+                {
+                    continue;
+                }
+
+                return (arguments: null, abort: true);
             }
 
             return (arguments, abort: false);
@@ -298,34 +310,74 @@ namespace GitUI.ScriptsEngine
             switch (option)
             {
                 case "sHashes":
+                    if (allSelectedRevisions is null)
+                    {
+                        break;
+                    }
+
                     newString = string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid).ToArray());
                     break;
 
                 case "sTag":
+                    if (selectedTags is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneRef(selectedTags);
                     break;
 
                 case "sBranch":
+                    if (selectedBranches is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneRef(selectedBranches);
                     break;
 
                 case "sLocalBranch":
+                    if (selectedLocalBranches is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneRef(selectedLocalBranches);
                     break;
 
                 case "sRemoteBranch":
+                    if (selectedRemoteBranches is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneRef(selectedRemoteBranches);
                     break;
 
                 case "sRemoteBranchName":
+                    if (selectedRemoteBranches is null)
+                    {
+                        break;
+                    }
+
                     newString = StripRemoteName(SelectOneRef(selectedRemoteBranches));
                     break;
 
                 case "sRemote":
+                    if (selectedRemotes is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneString(selectedRemotes);
                     break;
 
                 case "sRemoteUrl":
+                    if (selectedRemotes is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneString(selectedRemotes);
                     if (!string.IsNullOrEmpty(newString))
                     {
@@ -336,6 +388,11 @@ namespace GitUI.ScriptsEngine
                     break;
 
                 case "sRemotePathFromUrl":
+                    if (selectedRemotes is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneString(selectedRemotes);
                     if (!string.IsNullOrEmpty(newString))
                     {
@@ -347,34 +404,74 @@ namespace GitUI.ScriptsEngine
                     break;
 
                 case "sHash":
+                    if (selectedRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = selectedRevision.Guid;
                     break;
 
                 case "sMessage":
+                    if (selectedRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = EscapeLinefeeds(selectedRevision.Body) ?? selectedRevision.Subject;
                     break;
 
                 case "sSubject":
+                    if (selectedRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = selectedRevision.Subject;
                     break;
 
                 case "sAuthor":
+                    if (selectedRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = selectedRevision.Author;
                     break;
 
                 case "sCommitter":
+                    if (selectedRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = selectedRevision.Committer;
                     break;
 
                 case "sAuthorDate":
+                    if (selectedRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = selectedRevision.AuthorDate.ToString();
                     break;
 
                 case "sCommitDate":
+                    if (selectedRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = selectedRevision.CommitDate.ToString();
                     break;
 
                 case "cTag":
+                    if (currentTags is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneRef(currentTags);
                     break;
 
@@ -388,46 +485,101 @@ namespace GitUI.ScriptsEngine
                     break;
 
                 case "cBranch":
+                    if (currentBranches is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneRef(currentBranches);
                     break;
 
                 case "cLocalBranch":
+                    if (currentLocalBranches is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneRef(currentLocalBranches);
                     break;
 
                 case "cRemoteBranch":
+                    if (currentRemoteBranches is null)
+                    {
+                        break;
+                    }
+
                     newString = SelectOneRef(currentRemoteBranches);
                     break;
 
                 case "cRemoteBranchName":
+                    if (currentRemoteBranches is null)
+                    {
+                        break;
+                    }
+
                     newString = StripRemoteName(SelectOneRef(currentRemoteBranches));
                     break;
 
                 case "cHash":
+                    if (currentRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = currentRevision.Guid;
                     break;
 
                 case "cMessage":
+                    if (currentRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = EscapeLinefeeds(currentRevision.Body) ?? currentRevision.Subject;
                     break;
 
                 case "cSubject":
+                    if (currentRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = currentRevision.Subject;
                     break;
 
                 case "cAuthor":
+                    if (currentRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = currentRevision.Author;
                     break;
 
                 case "cCommitter":
+                    if (currentRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = currentRevision.Committer;
                     break;
 
                 case "cAuthorDate":
+                    if (currentRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = currentRevision.AuthorDate.ToString();
                     break;
 
                 case "cCommitDate":
+                    if (currentRevision is null)
+                    {
+                        break;
+                    }
+
                     newString = currentRevision.CommitDate.ToString();
                     break;
 
@@ -505,6 +657,14 @@ namespace GitUI.ScriptsEngine
 
                 arguments = arguments.Replace(CreateOption(option, quoted: true), newStringQuoted);
                 arguments = arguments.Replace(CreateOption(option, quoted: false), newString);
+
+                arguments = FilterConditionals(arguments, option, true, true);
+                arguments = FilterConditionals(arguments, option, false, false);
+            }
+            else
+            {
+                arguments = FilterConditionals(arguments, option, true, false);
+                arguments = FilterConditionals(arguments, option, false, true);
             }
 
             return arguments;
@@ -544,6 +704,56 @@ namespace GitUI.ScriptsEngine
             }
 
             return remoteBranchName;
+        }
+
+        private static string FilterConditionals(string source, string option, bool positiveCondition, bool keep)
+        {
+            string exactMatch = positiveCondition ? ("{if:" + option + "}") : ("{ifnot:" + option + "}");
+            int prevOffset = 0;
+            int depth = 0;
+            List<int> depthStack = new();
+            StringBuilder sb = new();
+            foreach (Match match in Regex.Matches(source, positiveCondition ? @"(\{if:[A-Za-z]*\})|(\{/if\})" : @"(\{ifnot:[A-Za-z]*\})|(\{/ifnot\})"))
+            {
+                bool write = keep || depthStack.Count <= 0;
+                bool skip = false;
+                if (match.Value.StartsWith("{/"))
+                {
+                    if (depth > 0)
+                    {
+                        depth--;
+                        if (depthStack.Count > 0 && depthStack[depthStack.Count - 1] == depth)
+                        {
+                            skip = true;
+                            depthStack.RemoveAt(depthStack.Count - 1);
+                        }
+                    }
+                }
+                else
+                {
+                    if (match.Value == exactMatch)
+                    {
+                        skip = true;
+                        depthStack.Add(depth);
+                    }
+
+                    depth++;
+                }
+
+                if (write)
+                {
+                    sb.Append(source.Substring(prevOffset, match.Index + (skip ? 0 : match.Length) - prevOffset));
+                }
+
+                prevOffset = match.Index + match.Length;
+            }
+
+            if (keep || depthStack.Count <= 0)
+            {
+                sb.Append(source.Substring(prevOffset));
+            }
+
+            return sb.ToString();
         }
 
         internal static TestAccessor GetTestAccessor() => new();
