@@ -52,7 +52,7 @@ public partial class GrepHighlightService : TextHighlightService
         return lineInfo?.LineType is DiffLineType.Grep ? rowIndexInText - increase : -1;
     }
 
-    public static IGitCommandConfiguration GetGitCommandConfiguration()
+    public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module)
     {
         GitCommandConfiguration commandConfiguration = new();
         IReadOnlyList<GitConfigItem> items = GitCommandConfiguration.Default.Get("grep");
@@ -65,17 +65,21 @@ public partial class GrepHighlightService : TextHighlightService
         commandConfiguration.Add(new GitConfigItem("color.grep.lineNumber", ""), "grep");
         commandConfiguration.Add(new GitConfigItem("color.grep.separator", ""), "grep");
 
-        // Override Git default coloring unless the user overrides
-        // As empty and unset are both reported as "", user cannot ignore with empty string
         if (AppSettings.ReverseGitColoring.Value)
         {
-            commandConfiguration.Add(AnsiEscapeUtilities.SetUnsetGitColor(
-               "color.grep.matchSelected",
-               AppColor.AnsiTerminalRedBackBold),
-               "grep");
+            SetIfUnsetInGit(key: "color.grep.matchSelected", value: $"red bold reverse");
         }
 
         return commandConfiguration;
+
+        void SetIfUnsetInGit(string key, string value)
+        {
+            // Note: Only check Windows, not WSL settings
+            if (string.IsNullOrEmpty(module.GetEffectiveSetting(key)))
+            {
+                commandConfiguration.Add(new GitConfigItem(key, value), "grep");
+            }
+        }
     }
 
     public override void AddTextHighlighting(IDocument document)

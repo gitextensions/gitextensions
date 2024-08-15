@@ -103,7 +103,7 @@ namespace GitUI
 
             if (!string.IsNullOrWhiteSpace(item.Item.GrepString))
             {
-                IGitCommandConfiguration commandConfiguration = GrepHighlightService.GetGitCommandConfiguration();
+                IGitCommandConfiguration commandConfiguration = GrepHighlightService.GetGitCommandConfiguration(fileViewer.Module);
                 ExecutionResult result = await fileViewer.Module.GetGrepFileAsync(
                         item.SecondRevision.ObjectId,
                         item.Item.Name,
