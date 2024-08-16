@@ -67,7 +67,7 @@ public partial class GrepHighlightService : TextHighlightService
 
         if (AppSettings.ReverseGitColoring.Value)
         {
-            SetIfUnsetInGit(key: "color.grep.matchSelected", value: $"red bold reverse");
+            SetIfUnsetInGit(key: "color.grep.matchSelected", value: "red bold reverse");
         }
 
         return commandConfiguration;
