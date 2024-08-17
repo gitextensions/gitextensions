@@ -72,13 +72,13 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             try
             {
-                const int lineNumerDefault = 2;
+                const int lineNumberDefault = 2;
                 File.WriteAllText(filePath, "Hello↔world\nline2\nline3\n\n\n", _commands.Module.FilesEncoding);
 
                 UITest.RunForm<FormEditor>(
                     () =>
                     {
-                        using FormEditor formEditor = new(_commands, filePath, showWarning: false, lineNumber: lineNumerDefault);
+                        using FormEditor formEditor = new(_commands, filePath, showWarning: false, lineNumber: lineNumberDefault);
                         formEditor.ShowDialog();
                     },
                     form =>
@@ -86,7 +86,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                         Assert.False(form.GetTestAccessor().HasChanges);
 
                         FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
-                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null);
+                        fileViewerInternal.GetTestAccessor().CurrentViewPositionCache.GetTestAccessor().SetCurrentIdentification("hello-world");
+                        fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, ViewMode.Text, true, "hello-world");
 
                         Assert.True(form.GetTestAccessor().HasChanges);
 
@@ -94,7 +95,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                         Assert.False(form.GetTestAccessor().HasChanges);
 
-                        Assert.AreEqual(lineNumerDefault, fileViewerInternal.CurrentFileLine());
+                        Assert.AreEqual(lineNumberDefault, fileViewerInternal.CurrentFileLine());
 
                         return Task.CompletedTask;
                     });
