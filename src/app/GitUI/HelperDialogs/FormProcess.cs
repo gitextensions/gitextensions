@@ -35,7 +35,7 @@ namespace GitUI.HelperDialogs
                 if (!string.IsNullOrEmpty(wslDistro))
                 {
                     process = AppSettings.WslGitCommand;
-                    arguments = $"-d {wslDistro} git {arguments}";
+                    arguments = $"-d {wslDistro} {AppSettings.WslGitPath} {arguments}";
                 }
             }
 
