@@ -8,6 +8,9 @@ Param(
     [string] $milestones
 )
 
+$repoRoot = Resolve-Path  "../../"
+
+
 function Generate-Changelog {
     [CmdletBinding()]
     Param(
@@ -73,7 +76,7 @@ function Update-Contributors {
     ping | Out-Null
     [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 
-    $file = '../GitUI/Properties/Resources.resx';
+    $file = "$repoRoot/src/app/GitUI/Properties/Resources.resx";
     [xml]$content = Get-Content $file -Encoding UTF8;
     $rawTeam = ($content.root.data | Where name -eq "Team").Value;
     $rawContributors = ($content.root.data | Where name -eq "Coders").Value;
