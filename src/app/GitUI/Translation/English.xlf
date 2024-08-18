@@ -3250,6 +3250,10 @@ Are you sure?</source>
         <source>Date</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblAnotherRev.Text">
+        <source>C&amp;hoose another revision:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblBranchInfo.Text">
         <source>Cherry pick this commit:</source>
         <target />
@@ -7144,6 +7148,10 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnAbort.Text">
+        <source>A&amp;bort</source>
         <target />
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
