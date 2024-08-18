@@ -50,7 +50,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>周期性背景提取</target>
+        <target>周期性背景获取</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
@@ -865,7 +865,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
-        <target>在使用 Git 管理儲存庫時，一個良好的分支模型對於你的專案至關重要...</target>
+        <target>用Git为您的项目搭建好分支模型...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -913,7 +913,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>註：需要重新啟動 Git Extensions 以使令牌生效。</target>
+        <target>注：需要重新启动 Git Extensions 以使令牌生效。</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -1152,7 +1152,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Jira Commit Hint</source>
-        <target>Jira Commit 提示</target>
+        <target>Jira 提交提示</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
@@ -1182,6 +1182,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
+        <target>Jira插件设置未完成！</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
@@ -1201,7 +1202,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
         <source>Auth type</source>
-        <target>認證類型</target>
+        <target>认证类型</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

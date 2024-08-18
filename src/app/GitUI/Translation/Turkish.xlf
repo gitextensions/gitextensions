@@ -549,6 +549,11 @@ Daha fazla ayrıntı için bu bilgi simgesine tıkla.</target>
 Because of this, make sure to fill in all the fields in the report template please.
 
 Send report?</source>
+        <target>Lütfen geliştiricilerin bu sorunu çözmelerine yardımcı olmak için mümkün olduğunca fazla bilgi verin. Aksi takdirde, sorun bildiriminiz herhangi bir geliştirici takibi olmaksızın kapatılabilir.
+
+Bu nedenle, lütfen rapor şablonundaki tüm alanları doldurduğundan emin ol.
+
+Yine de raporu göndermek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="_title.Text">
@@ -1737,6 +1742,7 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.Text">
         <source>Use theme coloring</source>
+        <target>Tema renklendirmesini kullan</target>
         
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.ToolTipText">
@@ -1875,6 +1881,7 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="SearchWatermarkLabel.Text">
         <source>Search files in commit using a regular expression...</source>
+        <target>Düzenli ifade kullanarak teslim içerisinde dosyaları ara...</target>
         
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
@@ -1908,18 +1915,22 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
         <source>Copy &amp;new version</source>
+        <target>Yeni sürümü kopyala</target>
         
       </trans-unit>
       <trans-unit id="copyOldVersionToolStripMenuItem.Text">
         <source>Copy &amp;old version</source>
+        <target>Eski sürümü kopyala</target>
         
       </trans-unit>
       <trans-unit id="copyPatchToolStripMenuItem.Text">
         <source>Copy &amp;patch</source>
+        <target>Yamayı kopyala</target>
         
       </trans-unit>
       <trans-unit id="copyToolStripMenuItem.Text">
         <source>&amp;Copy</source>
+        <target>&amp;Kopyala</target>
         
       </trans-unit>
       <trans-unit id="decreaseNumberOfLines.ToolTipText">
@@ -1929,22 +1940,27 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="decreaseNumberOfLinesToolStripMenuItem.Text">
         <source>&amp;Decrease the number of lines of context</source>
+        <target>Bağlam satırlarının sayısını azalt</target>
         
       </trans-unit>
       <trans-unit id="diffAppearanceToolStripMenuItem.Text">
         <source>Diff appea&amp;rance</source>
+        <target>Fark görünümü</target>
         
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
         <source>&amp;Find...</source>
+        <target>Bul...</target>
         
       </trans-unit>
       <trans-unit id="goToLineToolStripMenuItem.Text">
         <source>&amp;Go to line</source>
+        <target>Satıra git</target>
         
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore all &amp;whitespace changes</source>
+        <target>Tüm boşluk değişikliklerini yoksay</target>
         
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaces.ToolTipText">
@@ -1964,10 +1980,12 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="ignoreWhitespaceAtEolToolStripMenuItem.Text">
         <source>Ignore whitespace changes at end of &amp;line</source>
+        <target>Satır sonundaki boşluk değişikliklerini yoksay</target>
         
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore changes in &amp;amount of whitespace</source>
+        <target>Boşluk miktarındaki değişiklikleri yoksay</target>
         
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -1977,6 +1995,7 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="increaseNumberOfLinesToolStripMenuItem.Text">
         <source>&amp;Increase the number of lines of context</source>
+        <target>Bağlam satırlarının sayısını arttır</target>
         
       </trans-unit>
       <trans-unit id="nextChangeButton.ToolTipText">
@@ -1991,6 +2010,7 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="replaceToolStripMenuItem.Text">
         <source>&amp;Replace...</source>
+        <target>&amp;Değiştir...</target>
         
       </trans-unit>
       <trans-unit id="resetSelectedLinesToolStripMenuItem.Text">
@@ -2014,6 +2034,7 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="showEntireFileToolStripMenuItem.Text">
         <source>Show &amp;entire file</source>
+        <target>Dosyanın tamamını göster</target>
         
       </trans-unit>
       <trans-unit id="showGitWordColoringToolStripMenuItem.Text">
@@ -2027,10 +2048,12 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="showNonprintableCharactersToolStripMenuItem.Text">
         <source>S&amp;how nonprinting characters</source>
+        <target>Yazdırılamayan karakterleri göster</target>
         
       </trans-unit>
       <trans-unit id="showPatchToolStripMenuItem.Text">
         <source>&amp;Patch</source>
+        <target>Yama</target>
         
       </trans-unit>
       <trans-unit id="showSyntaxHighlighting.ToolTipText">
@@ -2040,6 +2063,7 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="showSyntaxHighlightingToolStripMenuItem.Text">
         <source>Show synta&amp;x highlighting</source>
+        <target>Sözdiziminin vurgulamasını göster</target>
         
       </trans-unit>
       <trans-unit id="stageSelectedLinesToolStripMenuItem.Text">
@@ -2049,6 +2073,7 @@ Birincil fark aracını, yine de ana menü girişine tıklanarak seçebilirsin.<
       </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
         <source>&amp;Treat all files as text</source>
+        <target>Tüm dosyaları, metin olarak ele al</target>
         
       </trans-unit>
       <trans-unit id="unstageSelectedLinesToolStripMenuItem.Text">
@@ -2894,6 +2919,7 @@ düzeltmeyi seç:</target>
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
         <source>&amp;Configure this menu...</source>
+        <target>Bu menüyü &amp;yapılandır...</target>
         
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -3352,10 +3378,12 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
         <source>Plugins &amp;settings...</source>
+        <target>&amp;Eklenti Ayarları...</target>
         
       </trans-unit>
       <trans-unit id="pluginsLoadingToolStripMenuItem.Text">
         <source>Loading...</source>
+        <target>Yükleniyor...</target>
         
       </trans-unit>
       <trans-unit id="pluginsToolStripMenuItem.Text">
@@ -3405,6 +3433,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
         <source>Rep&amp;ository settings...</source>
+        <target>Depo aya&amp;rları...</target>
         
       </trans-unit>
       <trans-unit id="reportAnIssueToolStripMenuItem.Text">
@@ -3434,6 +3463,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
         <source>&amp;Settings...</source>
+        <target>&amp;Ayarlar...</target>
         
       </trans-unit>
       <trans-unit id="startAuthenticationAgentToolStripMenuItem.Text">
@@ -4427,6 +4457,7 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_commitMessageSettings.Text">
         <source>&amp;Edit commit message templates and settings...</source>
+        <target>Teslim mesaj şablonlarını ve ayarlarını düzenle...</target>
         
       </trans-unit>
       <trans-unit id="_commitMsgFirstLineInvalid.Text">
@@ -4470,10 +4501,12 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="_conventionalCommit.Text">
         <source>Conven&amp;tional Commits</source>
+        <target>Geleneksel Teslimler</target>
         
       </trans-unit>
       <trans-unit id="_conventionalCommitDocumentation.Text">
         <source>Documentation...</source>
+        <target>Dokümantasyon...</target>
         
       </trans-unit>
       <trans-unit id="_deleteFailed.Text">
@@ -4900,6 +4933,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run script</source>
+        <target>Komut dosyasını çalıştır</target>
         
       </trans-unit>
       <trans-unit id="selectionFilterToolStripMenuItem.Text">
@@ -4979,6 +5013,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="stagedRunScriptToolStripMenuItem.Text">
         <source>Run script</source>
+        <target>Komut dosyasını çalıştır</target>
         
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
@@ -5114,6 +5149,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="labelUseIndent.Text">
         <source>Indent lines after the first line:</source>
+        <target>İlk satırdan sonraki satırları girintili yap:</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -5527,6 +5563,7 @@ Bir dalı silmek, teslimlerin de silinmesine neden olabilir!</target>
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
         <source>&amp;Blame</source>
+        <target>İzle (&amp;Suçla)</target>
         
       </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
@@ -5546,10 +5583,12 @@ Bir dalı silmek, teslimlerin de silinmesine neden olabilir!</target>
       </trans-unit>
       <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
         <source>File &amp;history</source>
+        <target>Dosya &amp;geçmişi</target>
         
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
         <source>&amp;Find file...</source>
+        <target>Dosya b&amp;ul...</target>
         
       </trans-unit>
       <trans-unit id="firstCommitGroup.Text">
@@ -5559,6 +5598,7 @@ Bir dalı silmek, teslimlerin de silinmesine neden olabilir!</target>
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
         <source>First -&gt; Working directory</source>
+        <target>Birinci -&gt; Çalışma dizini</target>
         
       </trans-unit>
       <trans-unit id="firstToSelectedToolStripMenuItem.Text">
@@ -5567,10 +5607,12 @@ Bir dalı silmek, teslimlerin de silinmesine neden olabilir!</target>
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show &amp;in folder</source>
+        <target>Klasörde g&amp;öster</target>
         
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with &amp;difftool</source>
+        <target>&amp;Fark aracı ile aç</target>
         
       </trans-unit>
       <trans-unit id="secondCommitGroup.Text">
@@ -8009,6 +8051,8 @@ Bu uzak depo için varsayılan itme ve çekme davranışını otomatik olarak ya
       <trans-unit id="_remoteBranchDataError.Text">
         <source>Invalid ´{1}´ found for branch ´{0}´.
 Value has been reset to empty value.</source>
+        <target>´{1}´ geçersiz, ´{0}´ dalında bulundu.
+Değer, boş değere sıfırlandı.</target>
         
       </trans-unit>
       <trans-unit id="_sshKeyOpenCaption.Text">
@@ -8409,34 +8453,42 @@ Birleştirme çakışması çözüldü mü?</target>
       </trans-unit>
       <trans-unit id="_changesLocalMergeTooltip.Text">
         <source>Changes from the current branch</source>
+        <target>Geçerli daldaki değişiklikler</target>
         
       </trans-unit>
       <trans-unit id="_changesLocalRebaseTooltip.Text">
         <source>Changes from the branch you are rebasing onto</source>
+        <target>Yeniden temellendirdiğin daldaki değişiklikler</target>
         
       </trans-unit>
       <trans-unit id="_changesRemoteMergeTooltip.Text">
         <source>Changes from the branch you are merging</source>
+        <target>Birleştirdiğin daldaki değişiklikler</target>
         
       </trans-unit>
       <trans-unit id="_changesRemoteRebaseTooltip.Text">
         <source>Changes from the branch you are rebasing</source>
+        <target>Yeniden temellendirdiğin daldaki değişiklikler</target>
         
       </trans-unit>
       <trans-unit id="_changesTakeOnlyLocalMergeTooltip.Text">
         <source>Take only the changes from the current branch</source>
+        <target>Sadece geçerli daldaki değişiklikleri al</target>
         
       </trans-unit>
       <trans-unit id="_changesTakeOnlyLocalRebaseTooltip.Text">
         <source>Take only the changes from the branch you are rebasing onto</source>
+        <target>Sadece yeniden temellendirdiğin daldaki değişiklikler al</target>
         
       </trans-unit>
       <trans-unit id="_changesTakeOnlyRemoteMergeTooltip.Text">
         <source>Take only the changes from the branch you are merging</source>
+        <target>Sadece birleştirdiğin daldaki değişiklikler al</target>
         
       </trans-unit>
       <trans-unit id="_changesTakeOnlyRemoteRebaseTooltip.Text">
         <source>Take only the changes from the branch you are rebasing</source>
+        <target>Sadece yeniden temellendirdiğin daldaki değişiklikler al</target>
         
       </trans-unit>
       <trans-unit id="_chooseBaseFileFailedText.Text">
@@ -8952,30 +9004,37 @@ Do you want to use this custom merge script?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Search files in commit</source>
+        <target>Teslim içerisinde dosya ara</target>
         
       </trans-unit>
       <trans-unit id="btnSearch.Text">
         <source>Search</source>
+        <target>Ara</target>
         
       </trans-unit>
       <trans-unit id="chkMatchCase.Text">
         <source>Match &amp;case</source>
+        <target>&amp;Büyük/küçük harf eşleştir</target>
         
       </trans-unit>
       <trans-unit id="chkMatchWholeWord.Text">
         <source>Match &amp;whole word</source>
+        <target>&amp;Sözcüğün tamamını eşleştir</target>
         
       </trans-unit>
       <trans-unit id="chkShowSearchBox.Text">
         <source>Show search &amp;box</source>
+        <target>Arama kutusunu göster</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Search:</source>
+        <target>Ara:</target>
         
       </trans-unit>
       <trans-unit id="lblOptions.Text">
         <source>&amp;Options:</source>
+        <target>Seçenekler:</target>
         
       </trans-unit>
     </body>
@@ -11103,6 +11162,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
         <source>&amp;Find file...</source>
+        <target>Dosya bul...</target>
         
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
@@ -11142,6 +11202,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run script</source>
+        <target>Komut dosyasını çalıştır</target>
         
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem1.Text">
@@ -11161,6 +11222,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="showSearchCommitToolStripMenuItem.Text">
         <source>Sear&amp;ch files in commit...</source>
+        <target>Teslim içerisinde dosya ara...</target>
         
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
@@ -11269,10 +11331,12 @@ Teslim formundaki değişikliklere bak.</target>
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem1.Text">
         <source>&amp;Blame</source>
+        <target>İzle (&amp;Suçla)</target>
         
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
         <source>Co&amp;llapse all</source>
+        <target>Tümünü daralt</target>
         
       </trans-unit>
       <trans-unit id="copyPathsToolStripMenuItem.Text">
@@ -11282,26 +11346,32 @@ Teslim formundaki değişikliklere bak.</target>
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
         <source>&amp;Edit working directory file</source>
+        <target>Çalışma dizini dosyasını d&amp;üzenle</target>
         
       </trans-unit>
       <trans-unit id="expandToolStripMenuItem.Text">
         <source>&amp;Expand</source>
+        <target>Genişlet</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
         <source>View &amp;history</source>
+        <target>Dosya &amp;geçmişi</target>
         
       </trans-unit>
       <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
         <source>Archi&amp;ve...</source>
+        <target>Archive...</target>
         
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
         <source>&amp;Clean this folder in the working directory...</source>
+        <target>Çalışma dizinindeki bu klasörü temizle...</target>
         
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
         <source>Show &amp;in folder</source>
+        <target>Klasörde g&amp;öster</target>
         
       </trans-unit>
       <trans-unit id="filterFileInGridToolStripMenuItem.Text">
@@ -11311,14 +11381,17 @@ Teslim formundaki değişikliklere bak.</target>
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
         <source>&amp;Find file...</source>
+        <target>Dosya b&amp;ul...</target>
         
       </trans-unit>
       <trans-unit id="openFileToolStripMenuItem.Text">
         <source>Ope&amp;n this revision (temp file)</source>
+        <target>Bu düzeltmeyi(revizyonu) &amp;aç (geçici dosya)</target>
         
       </trans-unit>
       <trans-unit id="openFileWithToolStripMenuItem.Text">
         <source>Open this revision &amp;with... (temp file)</source>
+        <target>Bu düzeltmeyi(revizyonu) &amp;birlikte aç... (geçici dosya)</target>
         
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
@@ -11328,30 +11401,37 @@ Teslim formundaki değişikliklere bak.</target>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with &amp;difftool</source>
+        <target>&amp;Fark aracı ile aç</target>
         
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
         <source>&amp;Open working directory file with...</source>
+        <target>&amp;Çalışma dizini dosyasını birlikte aç...</target>
         
       </trans-unit>
       <trans-unit id="rememberFileStripMenuItem.Text">
         <source>Re&amp;member file for diff</source>
+        <target>Fark için dosyayı hatırla</target>
         
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
         <source>&amp;Reset to selected revision</source>
+        <target>Seçili düzeltmeyi(revizyonu) sıfırla</target>
         
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run script</source>
+        <target>Komut dosyasını çalıştır</target>
         
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
         <source>S&amp;ave as...</source>
+        <target>Farklı kaydet...</target>
         
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
         <source>Stop &amp;tracking this file</source>
+        <target>Bu dosyayı izlemeyi durdur</target>
         
       </trans-unit>
     </body>
@@ -11473,10 +11553,12 @@ Teslim formundaki değişikliklere bak.</target>
       </trans-unit>
       <trans-unit id="SaveAsDefault.Text">
         <source>Save current view settings as default</source>
+        <target>Geçerli görünüm ayarlarını varsayılan olarak kaydet</target>
         
       </trans-unit>
       <trans-unit id="Settings_persistenceToolStripMenuItem.Text">
         <source>Settings persistence</source>
+        <target>Ayarların kalıcılığı</target>
         
       </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
@@ -11541,6 +11623,7 @@ Teslim formundaki değişikliklere bak.</target>
       </trans-unit>
       <trans-unit id="TopoOrder.Text">
         <source>Arrange c&amp;ommits by topo order (ancestor order)</source>
+        <target>Teslimleri topolojik sıraya göre (atalarına göre) sırala</target>
         
       </trans-unit>
       <trans-unit id="_quickSearchQuickHelp.Text">
@@ -11689,6 +11772,7 @@ Teslim formundaki değişikliklere bak.</target>
       </trans-unit>
       <trans-unit id="amendCommitToolStripMenuItem.Text">
         <source>Create an &amp;amend commit...</source>
+        <target>Düzeltme teslimi oluştur...</target>
         
       </trans-unit>
       <trans-unit id="applyStashToolStripMenuItem.Text">
@@ -12358,6 +12442,7 @@ OpenSSH kullanıldığında, komut satırı iletişim kutuları gösterilir!
     <body>
       <trans-unit id="Checkout.Text">
         <source>Chec&amp;kout tag revision...</source>
+        <target>Etiket düzeltimden(reziyonundan) çık</target>
         
       </trans-unit>
       <trans-unit id="CheckoutTooltip.Text">
@@ -12716,6 +12801,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
         <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
+        <target>Çoğu zaman hata geçicidir ve muhtemelen Windows Update'ten kaynaklanmaktadır.</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadPlugin.Text">
@@ -13009,6 +13095,7 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_reportReproducedIssueDescription.Text">
         <source>If you can consistently reproduce the issue, please report it.</source>
+        <target>Bu sorunu yeniden oluşturabiliyorsan lütfen bildir.</target>
         
       </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
@@ -13034,6 +13121,8 @@ Remote: {1}</source>
       <trans-unit id="_restartApplicationDescription.Text">
         <source>Usually restarting the application solves the issue.
 Sometimes Windows may need to be restarted too.</source>
+        <target>Genellikle uygulamayı yeniden başlatmak sorunu çözer.
+Bazen Windows'un da yeniden başlatılması gerekebilir.</target>
         
       </trans-unit>
       <trans-unit id="_rotInactive.Text">
