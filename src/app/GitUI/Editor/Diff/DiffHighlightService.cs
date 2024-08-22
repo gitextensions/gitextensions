@@ -228,18 +228,25 @@ public abstract class DiffHighlightService : TextHighlightService
         text = sb.ToString();
     }
 
-    private static void MarkDifference(IDocument document, List<ISegment> linesRemoved, List<ISegment> linesAdded, int beginOffset)
+    private static void MarkDifference(IDocument document, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
+    {
+        document.MarkerStrategy.AddMarkers(GetDifferenceMarkers(document.GetCharAt, linesRemoved, linesAdded, beginOffset));
+    }
+
+    private static IEnumerable<TextMarker> GetDifferenceMarkers(Func<int, char> getCharAt, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
     {
         int count = Math.Min(linesRemoved.Count, linesAdded.Count);
 
         for (int i = 0; i < count; i++)
         {
-            MarkDifference(document, linesRemoved[i], linesAdded[i], beginOffset);
+            foreach (TextMarker marker in GetDifferenceMarkers(getCharAt, linesRemoved[i], linesAdded[i], beginOffset))
+            {
+                yield return marker;
+            }
         }
     }
 
-    private static void MarkDifference(IDocument document, ISegment lineRemoved,
-        ISegment lineAdded, int beginOffset)
+    private static IEnumerable<TextMarker> GetDifferenceMarkers(Func<int, char> getCharAt, ISegment lineRemoved, ISegment lineAdded, int beginOffset)
     {
         int lineRemovedEndOffset = lineRemoved.Length;
         int lineAddedEndOffset = lineAdded.Length;
@@ -248,8 +255,8 @@ public abstract class DiffHighlightService : TextHighlightService
 
         while (beginOffset < endOffsetMin)
         {
-            char a = document.GetCharAt(lineAdded.Offset + beginOffset);
-            char r = document.GetCharAt(lineRemoved.Offset + beginOffset);
+            char a = getCharAt(lineAdded.Offset + beginOffset);
+            char r = getCharAt(lineRemoved.Offset + beginOffset);
 
             if (a != r)
             {
@@ -271,8 +278,8 @@ public abstract class DiffHighlightService : TextHighlightService
                 break;
             }
 
-            char a = document.GetCharAt(lineAdded.Offset + addedOffset);
-            char r = document.GetCharAt(lineRemoved.Offset + removedOffset);
+            char a = getCharAt(lineAdded.Offset + addedOffset);
+            char r = getCharAt(lineRemoved.Offset + removedOffset);
 
             if (a != r)
             {
@@ -283,26 +290,22 @@ public abstract class DiffHighlightService : TextHighlightService
             lineAddedEndOffset--;
         }
 
-        Color color;
-        MarkerStrategy markerStrategy = document.MarkerStrategy;
-
-        if (lineAdded.Length - beginOffset - reverseOffset > 0)
+        int addedLength = lineAdded.Length - beginOffset - reverseOffset;
+        if (addedLength > 0)
         {
-            color = AppColor.AnsiTerminalGreenBackBold.GetThemeColor();
-            markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
-                                                    lineAdded.Length - beginOffset - reverseOffset,
-                                                    TextMarkerType.SolidBlock, color,
-                                                    ColorHelper.GetForeColorForBackColor(color)));
+            yield return CreateTextMarker(lineAdded.Offset + beginOffset, addedLength, AppColor.AnsiTerminalGreenBackBold.GetThemeColor());
         }
 
-        if (lineRemoved.Length - beginOffset - reverseOffset > 0)
+        int removedLength = lineRemoved.Length - beginOffset - reverseOffset;
+        if (removedLength > 0)
         {
-            color = AppColor.AnsiTerminalRedBackBold.GetThemeColor();
-            markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
-                                                    lineRemoved.Length - beginOffset - reverseOffset,
-                                                    TextMarkerType.SolidBlock, color,
-                                                    ColorHelper.GetForeColorForBackColor(color)));
+            yield return CreateTextMarker(lineRemoved.Offset + beginOffset, removedLength, AppColor.AnsiTerminalRedBackBold.GetThemeColor());
         }
+
+        yield break;
+
+        static TextMarker CreateTextMarker(int offset, int length, Color color)
+            => new(offset, length, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color));
     }
 
     private void AddExtraPatchHighlighting(IDocument document)
