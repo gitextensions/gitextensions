@@ -235,11 +235,9 @@ public abstract class DiffHighlightService : TextHighlightService
 
     private static IEnumerable<TextMarker> GetDifferenceMarkers(Func<int, char> getCharAt, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
     {
-        int count = Math.Min(linesRemoved.Count, linesAdded.Count);
-
-        for (int i = 0; i < count; i++)
+        foreach ((ISegment lineRemoved, ISegment lineAdded) in LinesMatcher.FindLinePairs(linesRemoved, linesAdded))
         {
-            foreach (TextMarker marker in GetDifferenceMarkers(getCharAt, linesRemoved[i], linesAdded[i], beginOffset))
+            foreach (TextMarker marker in GetDifferenceMarkers(getCharAt, lineRemoved, lineAdded, beginOffset))
             {
                 yield return marker;
             }
