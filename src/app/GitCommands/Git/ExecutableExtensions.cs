@@ -133,7 +133,7 @@ namespace GitCommands
             string outputStr = CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(outputBuffer.ToArray(), Array.Empty<byte>(), ref outputEncoding));
             if (cache is not null && await exitTask == 0)
             {
-                cache.Add(arguments, outputStr, "");
+                cache.Add(arguments, outputStr, error: "");
             }
 
             return outputStr;
@@ -257,7 +257,7 @@ namespace GitCommands
             CancellationToken cancellationToken = default)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, "", stripAnsiEscapeCodes, throwOnErrorExit, cancellationToken));
+                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, extraCacheKey: "", stripAnsiEscapeCodes, throwOnErrorExit, cancellationToken));
         }
 
         /// <summary>
@@ -277,14 +277,14 @@ namespace GitCommands
             Action<StreamWriter>? writeInput = null,
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
-            string extraCacheKeys = "",
+            string extraCacheKey = "",
             bool stripAnsiEscapeCodes = true,
             bool throwOnErrorExit = true,
             CancellationToken cancellationToken = default)
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            string cacheKey = $"{arguments}::{executable.GetWorkingDirectory()}::{stripAnsiEscapeCodes}::{extraCacheKeys}";
+            string cacheKey = $"{arguments}::{executable.GetWorkingDirectory()}::{stripAnsiEscapeCodes}::{extraCacheKey}";
             if (cache?.TryGet(cacheKey, out string? cachedOutput, out string? cachedError) is true)
             {
                 return new ExecutionResult(

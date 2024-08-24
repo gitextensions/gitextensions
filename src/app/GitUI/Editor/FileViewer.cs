@@ -460,7 +460,7 @@ namespace GitUI.Editor
             void SetEnvironmentVariable(string variable, string value)
             {
                 env.SetEnvironmentVariable(variable, value);
-                sb.Append(';').Append(variable).Append('=').Append(value);
+                sb.AppendFormat($";{variable}={value}");
             }
         }
 
