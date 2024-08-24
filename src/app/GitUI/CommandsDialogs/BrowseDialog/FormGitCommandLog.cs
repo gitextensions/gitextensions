@@ -131,14 +131,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 commandCacheOutput.Text = string.Empty;
             }
 
-            static string PrintableChars(string? str)
+            return;
+
+            static string? PrintableChars(string? str)
             {
-                if (str == null)
+                if (str is null)
                 {
                     return str;
                 }
 
-                return str.Replace("\0", @"\0").Replace("\r", @"\r").Replace("\n", "\\n\n").Replace("\t", "\u00bb").Replace(" ", "\u00b7").Replace("\u001b", @"\033");
+                return str.Replace("\0", @"\0").Replace("\r", @"\r").Replace("\n", "\\n\n").Replace("\t", "\u00bb").Replace(" ", "\u00b7").Replace("\u001b", @"\x1b");
             }
         }
 
