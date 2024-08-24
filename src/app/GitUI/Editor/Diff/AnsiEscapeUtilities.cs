@@ -14,6 +14,8 @@ public partial class AnsiEscapeUtilities
 {
     [GeneratedRegex(@"\u001b\[((?<escNo>\d+)\s*[:;]?\s*)*m", RegexOptions.ExplicitCapture)]
     private static partial Regex EscapeRegex();
+    private static readonly List<bool> _fores = [true, false];
+    private static readonly List<bool> _bolds = [false, true];
 
     // Color code definitions
     private const int _blackId = 0;
@@ -36,9 +38,9 @@ public partial class AnsiEscapeUtilities
         sb.Append('\n');
 
         // color id (standard) colors
-        foreach (bool fore in new List<bool>() { true, false })
+        foreach (bool fore in _fores)
         {
-            foreach (bool bold in new List<bool>() { false, true })
+            foreach (bool bold in _bolds)
             {
                 foreach (int dim in new List<int>() { 0, 2 })
                 {
