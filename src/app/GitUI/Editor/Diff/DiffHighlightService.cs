@@ -230,12 +230,13 @@ public abstract class DiffHighlightService : TextHighlightService
 
     private static void MarkDifference(IDocument document, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
     {
-        document.MarkerStrategy.AddMarkers(GetDifferenceMarkers(document.GetCharAt, linesRemoved, linesAdded, beginOffset));
+        Func<ISegment, string> getText = line => document.GetText(line.Offset + beginOffset, line.Length - beginOffset);
+        document.MarkerStrategy.AddMarkers(GetDifferenceMarkers(document.GetCharAt, getText, linesRemoved, linesAdded, beginOffset));
     }
 
-    private static IEnumerable<TextMarker> GetDifferenceMarkers(Func<int, char> getCharAt, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
+    private static IEnumerable<TextMarker> GetDifferenceMarkers(Func<int, char> getCharAt, Func<ISegment, string> getText, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
     {
-        foreach ((ISegment lineRemoved, ISegment lineAdded) in LinesMatcher.FindLinePairs(linesRemoved, linesAdded))
+        foreach ((ISegment lineRemoved, ISegment lineAdded) in LinesMatcher.FindLinePairs(getText, linesRemoved, linesAdded))
         {
             foreach (TextMarker marker in GetDifferenceMarkers(getCharAt, lineRemoved, lineAdded, beginOffset))
             {
