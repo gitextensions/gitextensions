@@ -64,6 +64,15 @@ internal static class LinesMatcher
 
     private static (int RemovedIndex, int AddedIndex) FindBestMatch(LineData[] removed, LineData[] added)
     {
+        // first, search longest match of trimmed lines, i.e. detect indented lines
+        (LineData longestMatchingRemoved, int matchingAddedIndex)
+            = removed.Select(r => (r, addedIndex: added.IndexOf(a => a.Trimmed == r.Trimmed)))
+                     .MaxBy(pair => pair.addedIndex < 0 ? -1 : pair.r.Trimmed.Length);
+        if (matchingAddedIndex >= 0)
+        {
+            return (Array.IndexOf(removed, longestMatchingRemoved), matchingAddedIndex);
+        }
+
         return (0, 0);
     }
 
