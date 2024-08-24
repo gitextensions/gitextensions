@@ -244,12 +244,20 @@ public abstract class DiffHighlightService : TextHighlightService
             beginOffset++;
         }
 
-        while (lineAddedEndOffset > beginOffset && lineRemovedEndOffset > beginOffset)
+        while (lineAddedEndOffset >= beginOffset && lineRemovedEndOffset >= beginOffset)
         {
             reverseOffset = lineAdded.Length - lineAddedEndOffset;
 
-            char a = document.GetCharAt(lineAdded.Offset + lineAdded.Length - 1 - reverseOffset);
-            char r = document.GetCharAt(lineRemoved.Offset + lineRemoved.Length - 1 - reverseOffset);
+            int addedOffset = lineAdded.Length - 1 - reverseOffset;
+            int removedOffset = lineRemoved.Length - 1 - reverseOffset;
+
+            if (addedOffset < beginOffset || removedOffset < beginOffset)
+            {
+                break;
+            }
+
+            char a = document.GetCharAt(lineAdded.Offset + addedOffset);
+            char r = document.GetCharAt(lineRemoved.Offset + removedOffset);
 
             if (a != r)
             {
