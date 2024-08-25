@@ -428,7 +428,7 @@ namespace GitUI.Editor
         public (ArgumentString args, string extraCacheKey) GetDifftasticArguments(bool isRangeDiff = false)
         {
             EnvironmentAbstraction env = new();
-            StringBuilder sb = new();
+            StringBuilder extraCacheKeyBuilder = new();
 
             // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
             // Allow user to override with difftool command line options.
@@ -455,12 +455,12 @@ namespace GitUI.Editor
                 "--tool=difftastic",
                 { TreatAllFilesAsText, "--text" },
             },
-            sb.ToString());
+            extraCacheKeyBuilder.ToString());
 
             void SetEnvironmentVariable(string variable, string value)
             {
                 env.SetEnvironmentVariable(variable, value);
-                sb.AppendFormat($";{variable}={value}");
+                extraCacheKeyBuilder.AppendFormat($";{variable}={value}");
             }
         }
 
