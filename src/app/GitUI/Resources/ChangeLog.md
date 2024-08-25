@@ -4,9 +4,14 @@ Changelog
 ### Version 5.0.0 (1 Sep 2024)
 
 #### Changes:
+* [#11848] feat: Unprintable chars in cache viewer
+* [#11847] fix: Force black foreground colors for bold in moved diff
+* [#11846] fix(DiffHighlightService): Skip unchanged char after pure addition/removal
 * [#11842] fix: WslGitPath in FormProcess
 * [#11841] fix: Allow user to override git-grep color
 * [#11838] fix: Tweak difftastic colors
+* [#11837] Fix Revision Links settings page DPI
+* [#11836] Fix FormRevertCommit dpi
 * [#11833] fix: Keep linenumber when switching viewer
 * [#11832] fix(file tree): Do not force line first line when changing commit
 * [#11830] feat: Configure ANSI background colors separately
@@ -250,9 +255,14 @@ Changelog
 * [#10637] Render graph lines with less curves
 
 
+[#11848]:https://github.com/gitextensions/gitextensions/pull/11848
+[#11847]:https://github.com/gitextensions/gitextensions/pull/11847
+[#11846]:https://github.com/gitextensions/gitextensions/pull/11846
 [#11842]:https://github.com/gitextensions/gitextensions/pull/11842
 [#11841]:https://github.com/gitextensions/gitextensions/pull/11841
 [#11838]:https://github.com/gitextensions/gitextensions/pull/11838
+[#11837]:https://github.com/gitextensions/gitextensions/pull/11837
+[#11836]:https://github.com/gitextensions/gitextensions/pull/11836
 [#11833]:https://github.com/gitextensions/gitextensions/pull/11833
 [#11832]:https://github.com/gitextensions/gitextensions/pull/11832
 [#11830]:https://github.com/gitextensions/gitextensions/pull/11830
