@@ -212,7 +212,7 @@ public partial class AnsiEscapeUtilities
                 case 7: // reverse
                     reverse = true;
                     break;
-                case 22:
+                case 22: // normal color, intensity
                     bold = false;
                     dim = false;
                     break;
