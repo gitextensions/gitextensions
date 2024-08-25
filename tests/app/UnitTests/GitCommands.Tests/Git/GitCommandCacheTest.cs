@@ -16,8 +16,8 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestAdd()
         {
-            byte[] output = { 11, 12 };
-            byte[] error = { 13, 14 };
+            string output = "Git result";
+            string error = "No Git error!";
             string[] expectedCachedCommand = { "git command" };
 
             _cache.Add("git command", output, error);
@@ -35,12 +35,12 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestTryGet()
         {
-            byte[] originalOutput = { 11, 12 };
-            byte[] originalError = { 13, 14 };
+            string originalOutput = "Another Git result";
+            string originalError = "Still no Git error.";
 
             _cache.Add("git command", originalOutput, originalError);
 
-            Assert.IsTrue(_cache.TryGet("git command", out byte[]? cachedOutput, out byte[]? cachedError));
+            Assert.IsTrue(_cache.TryGet("git command", out string? cachedOutput, out string? cachedError));
             Assert.AreEqual(cachedOutput, originalOutput);
             Assert.AreEqual(cachedError, originalError);
         }
@@ -48,7 +48,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestTryGetFails()
         {
-            Assert.IsFalse(_cache.TryGet(null, out byte[]? output, out byte[]? error));
+            Assert.IsFalse(_cache.TryGet(null, out string? output, out string? error));
             Assert.IsFalse(_cache.TryGet("", out output, out error));
             Assert.IsNull(output);
             Assert.IsNull(error);
