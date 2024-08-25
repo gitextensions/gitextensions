@@ -54,9 +54,10 @@ namespace GitCommandsTests.Git
                 output: "Hello",
                 error: "World!");
 
+            // GetOutput always ignore error output (will not add to cache).
             string output = _executable.GetOutput(arguments, cache: cache);
 
-            Assert.AreEqual($"Hello{Environment.NewLine}World!", output);
+            Assert.AreEqual($"Hello", output);
 
             // Cache should still have a single item
             Assert.AreEqual(1, cache.GetCachedCommands().Count);
