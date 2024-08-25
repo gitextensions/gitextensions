@@ -2,6 +2,7 @@
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -9,52 +10,109 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormRevertCommit : GitModuleForm
+    public partial class FormRevertCommit : GitExtensionsDialog
     {
         private readonly TranslationString _noneParentSelectedText = new("None parent is selected!");
 
         private bool _isMerge;
+        private int _parentsLabelControlHeight;
+        private int _lvParentsListControlHeight;
+
+        private const int _parentsListItemHeight = 18;
+
+        public GitRevision Revision { get; }
 
         public FormRevertCommit(IGitUICommands commands, GitRevision revision)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             Revision = revision;
 
             InitializeComponent();
+
+            columnHeader1.Width = DpiUtil.Scale(columnHeader1.Width);
+            columnHeader2.Width = DpiUtil.Scale(columnHeader2.Width);
+            columnHeader3.Width = DpiUtil.Scale(columnHeader3.Width);
+            columnHeader4.Width = DpiUtil.Scale(columnHeader4.Width);
+
             InitializeComplete();
         }
 
-        public GitRevision Revision { get; }
-
-        private void FormRevertCommit_Load(object sender, EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
-            commitSummaryUserControl1.Revision = Revision;
+            _parentsLabelControlHeight = ParentsLabel.Size.Height;
+            _lvParentsListControlHeight = lvParentsList.Size.Height;
 
-            ParentsList.Items.Clear(); // TODO: search this line and the ones below to find code duplication
+            LoadRevisionInfo();
+        }
 
-            _isMerge = Module.IsMerge(Revision.ObjectId);
-            parentListPanel.Visible = _isMerge;
-            if (_isMerge)
+        private void Form_Shown(object? sender, EventArgs e)
+        {
+            if (lvParentsList.Visible)
             {
-                IReadOnlyList<GitRevision> parents = Module.GetParentRevisions(Revision.ObjectId);
+                lvParentsList.Focus();
+            }
+            else
+            {
+                AutoCommit.Focus();
+            }
+        }
 
-                for (int i = 0; i < parents.Count; i++)
+        private void LoadRevisionInfo()
+        {
+            try
+            {
+                SuspendLayout();
+
+                commitSummaryUserControl1.Revision = Revision;
+
+                lvParentsList.Items.Clear();
+
+                _isMerge = Module.IsMerge(Revision.ObjectId);
+
+                // We need to hide these optional components first to get a correct base value of PreferredMinimumHeight
+                ParentsLabel.Visible = false;
+                lvParentsList.Visible = false;
+
+                if (_isMerge)
                 {
-                    ParentsList.Items.Add(new ListViewItem((i + 1).ToString())
-                    {
-                        SubItems =
-                        {
-                            parents[i].Subject,
-                            parents[i].Author,
-                            parents[i].CommitDate.ToShortDateString()
-                        }
-                    });
+                    MinimumSize = new Size(MinimumSize.Width, PreferredMinimumHeight + _parentsLabelControlHeight + _lvParentsListControlHeight);
+                    Size = MinimumSize;
+                    ParentsLabel.Visible = true;
+                    lvParentsList.Visible = true;
+                }
+                else
+                {
+                    MinimumSize = new Size(MinimumSize.Width, PreferredMinimumHeight - _parentsLabelControlHeight - _lvParentsListControlHeight);
+                    Size = MinimumSize;
                 }
 
-                ParentsList.TopItem.Selected = true;
-                Size size = MinimumSize;
-                size.Height += 100;
-                MinimumSize = size;
+                if (_isMerge)
+                {
+                    IReadOnlyList<GitRevision> parents = Module.GetParentRevisions(Revision.ObjectId);
+
+                    for (int i = 0; i < parents.Count; i++)
+                    {
+                        lvParentsList.Items.Add(new ListViewItem((i + 1).ToString())
+                        {
+                            SubItems =
+                            {
+                                parents[i].Subject,
+                                parents[i].Author,
+                                parents[i].CommitDate.ToShortDateString()
+                            }
+                        });
+                    }
+
+                    lvParentsList.TopItem.Selected = true;
+                    Size size = MinimumSize;
+                    size.Height += DpiUtil.Scale(_parentsListItemHeight * parents.Count);
+                    Size = size;
+                    MinimumSize = size;
+                }
+            }
+            finally
+            {
+                ResumeLayout(performLayout: true);
             }
         }
 
@@ -63,14 +121,14 @@ namespace GitUI.CommandsDialogs
             int parentIndex = 0;
             if (_isMerge)
             {
-                if (ParentsList.SelectedItems.Count != 1)
+                if (lvParentsList.SelectedItems.Count != 1)
                 {
                     MessageBox.Show(this, _noneParentSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else
                 {
-                    parentIndex = ParentsList.SelectedItems[0].Index + 1;
+                    parentIndex = lvParentsList.SelectedItems[0].Index + 1;
                 }
             }
 
@@ -106,6 +164,11 @@ namespace GitUI.CommandsDialogs
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private void btnAbort_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

@@ -54,10 +54,14 @@ public abstract class DiffHighlightService : TextHighlightService
         SetIfUnsetInGit(key: "color.diff.old", value: $"red {reverse}");
         SetIfUnsetInGit(key: "color.diff.new", value: $"green {reverse}");
 
-        SetIfUnsetInGit(key: "color.diff.oldMoved", value: $"magenta bold {reverse}");
-        SetIfUnsetInGit(key: "color.diff.newMoved", value: $"blue bold {reverse}");
-        SetIfUnsetInGit(key: "color.diff.oldMovedAlternative", value: $"cyan bold {reverse}");
-        SetIfUnsetInGit(key: "color.diff.newMovedAlternative", value: $"yellow bold {reverse}");
+        if (AppSettings.ReverseGitColoring.Value)
+        {
+            // Fix: Force black foreground to avoid that foreground is calculated to white
+            SetIfUnsetInGit(key: "color.diff.oldMoved", value: "black brightmagenta");
+            SetIfUnsetInGit(key: "color.diff.newMoved", value: "black brightblue");
+            SetIfUnsetInGit(key: "color.diff.oldMovedAlternative", value: "black brightcyan");
+            SetIfUnsetInGit(key: "color.diff.newMovedAlternative", value: "black brightyellow");
+        }
 
         // Set dimmed colors, default is gray dimmed/italic
         SetIfUnsetInGit(key: "color.diff.oldMovedDimmed", value: $"magenta dim {reverse}");
@@ -69,8 +73,8 @@ public abstract class DiffHighlightService : TextHighlightService
         if (command == "range-diff")
         {
             SetIfUnsetInGit(key: "color.diff.contextBold", value: $"normal bold {reverse}");
-            SetIfUnsetInGit(key: "color.diff.oldBold", value: $"red bold {reverse}");
-            SetIfUnsetInGit(key: "color.diff.newBold", value: $"green bold {reverse}");
+            SetIfUnsetInGit(key: "color.diff.oldBold", value: $"brightred {reverse}");
+            SetIfUnsetInGit(key: "color.diff.newBold", value: $"brightgreen  {reverse}");
         }
 
         return commandConfiguration;
@@ -244,12 +248,20 @@ public abstract class DiffHighlightService : TextHighlightService
             beginOffset++;
         }
 
-        while (lineAddedEndOffset > beginOffset && lineRemovedEndOffset > beginOffset)
+        while (lineAddedEndOffset >= beginOffset && lineRemovedEndOffset >= beginOffset)
         {
             reverseOffset = lineAdded.Length - lineAddedEndOffset;
 
-            char a = document.GetCharAt(lineAdded.Offset + lineAdded.Length - 1 - reverseOffset);
-            char r = document.GetCharAt(lineRemoved.Offset + lineRemoved.Length - 1 - reverseOffset);
+            int addedOffset = lineAdded.Length - 1 - reverseOffset;
+            int removedOffset = lineRemoved.Length - 1 - reverseOffset;
+
+            if (addedOffset < beginOffset || removedOffset < beginOffset)
+            {
+                break;
+            }
+
+            char a = document.GetCharAt(lineAdded.Offset + addedOffset);
+            char r = document.GetCharAt(lineRemoved.Offset + removedOffset);
 
             if (a != r)
             {

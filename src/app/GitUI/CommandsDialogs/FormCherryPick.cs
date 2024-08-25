@@ -28,6 +28,7 @@ namespace GitUI.CommandsDialogs
             : base(commands, enablePositionRestore: false)
         {
             Revision = revision;
+
             InitializeComponent();
 
             columnHeader1.Width = DpiUtil.Scale(columnHeader1.Width);
@@ -36,15 +37,27 @@ namespace GitUI.CommandsDialogs
             columnHeader4.Width = DpiUtil.Scale(columnHeader4.Width);
 
             InitializeComplete();
-
-            _lblParentsControlHeight = lblParents.Size.Height;
-            _lvParentsListControlHeight = lvParentsList.Size.Height;
         }
 
         private void Form_Load(object sender, EventArgs e)
         {
+            _lblParentsControlHeight = lblParents.Size.Height;
+            _lvParentsListControlHeight = lvParentsList.Size.Height;
+
             LoadSettings();
             OnRevisionChanged();
+        }
+
+        private void Form_Shown(object? sender, EventArgs e)
+        {
+            if (lvParentsList.Visible)
+            {
+                lvParentsList.Focus();
+            }
+            else
+            {
+                cbxAutoCommit.Focus();
+            }
         }
 
         private void Form_Closing(object sender, FormClosingEventArgs e)
@@ -118,7 +131,7 @@ namespace GitUI.CommandsDialogs
 
                     lvParentsList.TopItem.Selected = true;
                     Size size = MinimumSize;
-                    size.Height += DpiUtil.Scale(_parentsListItemHeight * (parents.Count - 1));
+                    size.Height += DpiUtil.Scale(_parentsListItemHeight * parents.Count);
                     Size = size;
                     MinimumSize = size;
                 }
