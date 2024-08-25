@@ -122,11 +122,25 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 commandCacheOutput.Text =
                     command +
                     "\n-------------------------------------\n\n" +
-                    EncodingHelper.DecodeString(cmdOut, cmdErr, ref encoding).Replace("\0", "\\0");
+                    PrintableChars(EncodingHelper.DecodeString(cmdOut, [], ref encoding)) +
+                    "\n-------------------------------------\n\n" +
+                    PrintableChars(EncodingHelper.DecodeString([], cmdErr, ref encoding));
             }
             else
             {
                 commandCacheOutput.Text = string.Empty;
+            }
+
+            return;
+
+            static string? PrintableChars(string? str)
+            {
+                if (str is null)
+                {
+                    return str;
+                }
+
+                return str.Replace("\0", @"\0").Replace("\r", @"\r").Replace("\n", "\\n\n").Replace("\t", "\u00bb").Replace(" ", "\u00b7").Replace("\u001b", @"\x1b");
             }
         }
 
