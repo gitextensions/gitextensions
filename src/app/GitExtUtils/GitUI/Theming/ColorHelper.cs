@@ -13,6 +13,17 @@
 
         public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
+        /// <summary>
+        ///  Blends the color with the default background color, halves each value first.
+        /// </summary>
+        public static Color DimColor(Color color)
+        {
+            const uint maskWithoutLeastSignificantBits = 0xFE_FE_FE_FE;
+            uint defaultBackground = (uint)SystemColors.Window.ToArgb();
+            int dimCode = (int)((((uint)color.ToArgb() & maskWithoutLeastSignificantBits) >> 1) + ((defaultBackground & maskWithoutLeastSignificantBits) >> 1));
+            return Color.FromArgb((dimCode >> 16) & 0xff, (dimCode >> 8) & 0xff, dimCode & 0xff);
+        }
+
         public static void SetForeColorForBackColor(this Control control) =>
             control.ForeColor = GetForeColorForBackColor(control.BackColor);
 
