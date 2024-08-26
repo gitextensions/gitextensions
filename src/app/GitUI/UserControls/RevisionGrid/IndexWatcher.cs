@@ -96,6 +96,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
                 catch
                 {
+                    GitIndexWatcher.EnableRaisingEvents = false;
                 }
 
                 Changed?.Invoke(this, new IndexChangedEventArgs(IndexChanged));

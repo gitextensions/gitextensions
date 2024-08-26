@@ -229,6 +229,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch
             {
+                _workTreeWatcher.EnableRaisingEvents = false;
+                _gitDirWatcher.EnableRaisingEvents = false;
             }
         }
 

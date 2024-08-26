@@ -54,6 +54,7 @@ namespace GitCommands.Settings
             }
             catch
             {
+                _fileWatcher.EnableRaisingEvents = false;
             }
 
             FileChanged();
