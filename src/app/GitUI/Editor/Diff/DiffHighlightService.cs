@@ -14,7 +14,9 @@ namespace GitUI.Editor.Diff;
 public abstract class DiffHighlightService : TextHighlightService
 {
     private static readonly Color _addedBackColor = AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
+    private static readonly Color _addedForeColor = AppColor.AnsiTerminalGreenForeBold.GetThemeColor();
     private static readonly Color _removedBackColor = AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
+    private static readonly Color _removedForeColor = AppColor.AnsiTerminalRedForeBold.GetThemeColor();
 
     protected readonly bool _useGitColoring;
     protected readonly List<TextMarker> _textMarkers = [];
@@ -232,114 +234,138 @@ public abstract class DiffHighlightService : TextHighlightService
     private static void MarkInlineDifferences(IDocument document, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
     {
         Func<ISegment, string> getText = line => document.GetText(line.Offset + beginOffset, line.Length - beginOffset);
-        document.MarkerStrategy.AddMarkers(GetDifferenceMarkers(document.GetCharAt, getText, linesRemoved, linesAdded, beginOffset));
+        document.MarkerStrategy.AddMarkers(GetDifferenceMarkers(getText, linesRemoved, linesAdded, beginOffset));
     }
 
-    private static IEnumerable<TextMarker> GetDifferenceMarkers(Func<int, char> getCharAt, Func<ISegment, string> getText, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
+    private static List<TextMarker> GetDifferenceMarkers(Func<ISegment, string> getText, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
     {
+        List<TextMarker> markers = [];
         foreach ((ISegment lineRemoved, ISegment lineAdded) in LinesMatcher.FindLinePairs(getText, linesRemoved, linesAdded))
         {
-            foreach (TextMarker marker in GetDifferenceMarkers(getCharAt, lineRemoved, lineAdded, beginOffset))
-            {
-                yield return marker;
-            }
+            AddDifferenceMarkers(markers, getText, lineRemoved, lineAdded, beginOffset);
+        }
+
+        return markers;
+    }
+
+    internal static void AddDifferenceMarkers(List<TextMarker> markers, Func<ISegment, string> getText, ISegment lineRemoved, ISegment lineAdded, int beginOffset)
+    {
+        ReadOnlySpan<char> textRemoved = getText(lineRemoved).AsSpan();
+        ReadOnlySpan<char> textAdded = getText(lineAdded).AsSpan();
+        int offsetRemoved = lineRemoved.Offset + beginOffset;
+        int offsetAdded = lineAdded.Offset + beginOffset;
+        (int lengthIdenticalAtStart, int lengthIdenticalAtEnd) = AddDifferenceMarkers(markers, textRemoved, textAdded, offsetRemoved, offsetAdded);
+
+        if (lengthIdenticalAtStart > 0)
+        {
+            markers.Add(CreateDimmedMarker(offsetRemoved, lengthIdenticalAtStart, _removedBackColor));
+            markers.Add(CreateDimmedMarker(offsetAdded, lengthIdenticalAtStart, _addedBackColor));
+        }
+
+        if (lengthIdenticalAtEnd > 0)
+        {
+            markers.Add(CreateDimmedMarker(offsetRemoved + textRemoved.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, _removedBackColor));
+            markers.Add(CreateDimmedMarker(offsetAdded + textAdded.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, _addedBackColor));
         }
     }
 
-    internal static IEnumerable<TextMarker> GetDifferenceMarkers(Func<int, char> getCharAt, ISegment lineRemoved, ISegment lineAdded, int lineStartOffset)
+    private static (int LengthIdenticalAtStart, int LengthIdenticalAtEnd) AddDifferenceMarkers(List<TextMarker> markers, ReadOnlySpan<char> textRemoved, ReadOnlySpan<char> textAdded, int offsetRemoved, int offsetAdded)
     {
-        int lineRemovedEndOffset = lineRemoved.Length;
-        int lineAddedEndOffset = lineAdded.Length;
-        int endOffsetMin = Math.Min(lineRemovedEndOffset, lineAddedEndOffset);
-        int beginOffset = lineStartOffset;
-        int reverseOffset = 0;
+        // removed:             added:              "d" stands for "deleted" / "i" for "inserted" -> anchor marker in added / removed
+        // "d b R a "           " b A a i"          split at "b" (stands for "before")
+        // 1.                   1.
+        // "d ""b"" R a "       " ""b"" A a i"      split at "a" (stands for "after")
+        // 5.     2.            5.    2.
+        // "d ""b"" R ""a"" "   " ""b"" A ""a"" i"  join identical
+        //        4.      3.          4.      3.
+        // "d"" b ""R"" a """   """ b ""A"" a ""i"
 
-        while (beginOffset < endOffsetMin)
+        int lengthIdenticalAtStart = 0;
+        int lengthIdenticalAtEnd = 0;
+
+        int endRemoved = textRemoved.Length;
+        int endAdded = textAdded.Length;
+        if (endRemoved == endAdded && textRemoved == textAdded)
         {
-            char a = getCharAt(lineAdded.Offset + beginOffset);
-            char r = getCharAt(lineRemoved.Offset + beginOffset);
-
-            if (a != r)
-            {
-                break;
-            }
-
-            beginOffset++;
+            lengthIdenticalAtStart = endRemoved;
+            return (lengthIdenticalAtStart, lengthIdenticalAtEnd);
         }
 
-        while (lineAddedEndOffset >= beginOffset && lineRemovedEndOffset >= beginOffset)
+        (string? commonWord, int startIndexIdenticalRemoved, int startIndexIdenticalAdded) = LinesMatcher.FindBestMatch(textRemoved.ToString(), textAdded.ToString());
+        if (commonWord is not null)
         {
-            reverseOffset = lineAdded.Length - lineAddedEndOffset;
+            int lengthIdentical = commonWord.Length;
 
-            int addedOffset = lineAdded.Length - 1 - reverseOffset;
-            int removedOffset = lineRemoved.Length - 1 - reverseOffset;
+            // "LeftPart|CommonWord|RightPart"
+            // "LeftPart|CommonWord|identical|Different|identical"
+            // "LeftPart|CommonWord+identical" ignored  ^^^^^^^^^ -> lengthIdenticalAtEnd (final value)
+            int startIndexRightPartRemoved = startIndexIdenticalRemoved + lengthIdentical;
+            int startIndexRightPartAdded = startIndexIdenticalAdded + lengthIdentical;
+            (int lengthIdenticalAtStartRightPart, lengthIdenticalAtEnd) = AddDifferenceMarkers(markers,
+                textRemoved[startIndexRightPartRemoved..], textAdded[startIndexRightPartAdded..],
+                offsetRemoved + startIndexRightPartRemoved, offsetAdded + startIndexRightPartAdded);
+            lengthIdentical += lengthIdenticalAtStartRightPart;
 
-            if (addedOffset < beginOffset || removedOffset < beginOffset)
+            ////                                                             "LeftPart|CommonWord+identical"
+            ////                                        "identical|Different|identical|CommonWord+identical"
+            //// lengthIdenticalAtStart (final value) <- ^^^^^^^^^  ignored "identical+CommonWord+identical"
+            (lengthIdenticalAtStart, int lengthIdenticalAtLeftPartEnd) = AddDifferenceMarkers(markers,
+                textRemoved[..startIndexIdenticalRemoved], textAdded[..startIndexIdenticalAdded],
+                offsetRemoved, offsetAdded);
+            lengthIdentical += lengthIdenticalAtLeftPartEnd;
+            startIndexIdenticalRemoved -= lengthIdenticalAtLeftPartEnd;
+            startIndexIdenticalAdded -= lengthIdenticalAtLeftPartEnd;
+
+            // join with identical part at start or end or dim the identical part
+            if (startIndexIdenticalRemoved == lengthIdenticalAtStart && startIndexIdenticalAdded == lengthIdenticalAtStart)
             {
-                break;
+                lengthIdenticalAtStart += lengthIdentical;
             }
-
-            char a = getCharAt(lineAdded.Offset + addedOffset);
-            char r = getCharAt(lineRemoved.Offset + removedOffset);
-
-            if (a != r)
+            else if (startIndexIdenticalRemoved + lengthIdentical + lengthIdenticalAtEnd == endRemoved
+                && startIndexIdenticalAdded + lengthIdentical + lengthIdenticalAtEnd == endAdded)
             {
-                break;
+                lengthIdenticalAtEnd += lengthIdentical;
             }
-
-            lineRemovedEndOffset--;
-            lineAddedEndOffset--;
-        }
-
-        int addedLength = lineAdded.Length - beginOffset - reverseOffset;
-        if (addedLength > 0)
-        {
-            int beforeLength = beginOffset - lineStartOffset;
-            if (beforeLength > 0)
+            else
             {
-                yield return CreateDimmedMarker(lineAdded.Offset + lineStartOffset, beforeLength, _addedBackColor);
-            }
-
-            int afterBegin = beginOffset + addedLength;
-            int afterLength = lineAdded.Length - afterBegin;
-            if (afterLength > 0)
-            {
-                yield return CreateDimmedMarker(lineAdded.Offset + afterBegin, afterLength, _addedBackColor);
-            }
-        }
-        else
-        {
-            int length = lineAdded.Length - lineStartOffset;
-            if (length > 0)
-            {
-                yield return CreateDimmedMarker(lineAdded.Offset + lineStartOffset, length, _addedBackColor);
-            }
-        }
-
-        int removedLength = lineRemoved.Length - beginOffset - reverseOffset;
-        if (removedLength > 0)
-        {
-            int beforeLength = beginOffset - lineStartOffset;
-            if (beforeLength > 0)
-            {
-                yield return CreateDimmedMarker(lineRemoved.Offset + lineStartOffset, beforeLength, _removedBackColor);
-            }
-
-            int afterBegin = beginOffset + removedLength;
-            int afterLength = lineRemoved.Length - afterBegin;
-            if (afterLength > 0)
-            {
-                yield return CreateDimmedMarker(lineRemoved.Offset + afterBegin, afterLength, _removedBackColor);
+                markers.Add(CreateDimmedMarker(offsetRemoved + startIndexIdenticalRemoved, lengthIdentical, _removedBackColor));
+                markers.Add(CreateDimmedMarker(offsetAdded + startIndexIdenticalAdded, lengthIdentical, _addedBackColor));
             }
         }
         else
         {
-            int length = lineRemoved.Length - lineStartOffset;
-            if (length > 0)
+            // find end of identical part at start
+            int minEnd = Math.Min(endRemoved, endAdded);
+            while (lengthIdenticalAtStart < minEnd
+                && textRemoved[lengthIdenticalAtStart] == textAdded[lengthIdenticalAtStart])
             {
-                yield return CreateDimmedMarker(lineRemoved.Offset + lineStartOffset, length, _removedBackColor);
+                ++lengthIdenticalAtStart;
+            }
+
+            // find start of identical part at end
+            int startIndexIdenticalAtEndRemoved = endRemoved;
+            int startIndexIdenticalAtEndAdded = endAdded;
+            while (startIndexIdenticalAtEndRemoved > lengthIdenticalAtStart && startIndexIdenticalAtEndAdded > lengthIdenticalAtStart
+                && textRemoved[startIndexIdenticalAtEndRemoved - 1] == textAdded[startIndexIdenticalAtEndAdded - 1])
+            {
+                --startIndexIdenticalAtEndRemoved;
+                --startIndexIdenticalAtEndAdded;
+                ++lengthIdenticalAtEnd;
+            }
+
+            int lengthDifferentRemoved = startIndexIdenticalAtEndRemoved - lengthIdenticalAtStart;
+            int lengthDifferentAdded = startIndexIdenticalAtEndAdded - lengthIdenticalAtStart;
+            if (lengthDifferentRemoved == 0 && lengthDifferentAdded > 0)
+            {
+                markers.Add(CreateAnchorMarker(offsetRemoved + lengthIdenticalAtStart, _addedForeColor));
+            }
+            else if (lengthDifferentRemoved > 0 && lengthDifferentAdded == 0)
+            {
+                markers.Add(CreateAnchorMarker(offsetAdded + lengthIdenticalAtStart, _removedForeColor));
             }
         }
+
+        return (lengthIdenticalAtStart, lengthIdenticalAtEnd);
     }
 
     /// <summary>
@@ -378,6 +404,9 @@ public abstract class DiffHighlightService : TextHighlightService
             MarkInlineDifferences(document, linesRemoved, linesAdded, diffContentOffset);
         }
     }
+
+    private static TextMarker CreateAnchorMarker(int offset, Color color)
+        => new(offset, length: 0, TextMarkerType.InterChar, color);
 
     private static TextMarker CreateDimmedMarker(int offset, int length, Color color)
         => CreateTextMarker(offset, length, ColorHelper.DimColor(ColorHelper.DimColor(color)));

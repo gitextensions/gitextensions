@@ -27,7 +27,8 @@ public class DiffHighlightServiceTests
         TextMarker addedLine = new(offset: text.IndexOf(addedLineText), addedLineText.Length, textMarkerType: dontCare);
         const int beginOffset = 1;
 
-        IEnumerable<TextMarker> markers = DiffHighlightService.GetDifferenceMarkers(GetCharAt, removedLine, addedLine, beginOffset);
+        List<TextMarker> markers = [];
+        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset);
         IReadOnlyList<TextMarker> sortedMarkers = markers.ToImmutableSortedSet(new MarkerComparer());
 
         TextMarker[] expectedMarkers =
@@ -44,7 +45,58 @@ public class DiffHighlightServiceTests
         TextMarker CreateDimmedMarker(ISegment line, int offset, int length)
             => DiffHighlightServiceTests.CreateDimmedMarker(line.Offset + beginOffset + offset, length, isAdded: line == addedLine);
 
-        char GetCharAt(int offset) => text[offset];
+        string GetText(ISegment line) => (line == removedLine ? removedLineText : addedLineText)[beginOffset..];
+    }
+
+    [Test]
+    public void GetDifferenceMarkers_should_add_anchor_markers()
+    {
+        // LineSegment is hard to create. Use TextMarker as implementation type of ISegment for this test.
+        const TextMarkerType dontCare = TextMarkerType.SolidBlock;
+
+        const string deletion = nameof(deletion);
+        const string insertion = nameof(insertion);
+        const string identicalPartBefore = " identical_part_before ";
+        const string identicalPartAfter = " identical_part_after ";
+        const string differentRemoved = "RemovedX";
+        const string differentAdded = "AddedY";
+        const string removedLineText = $"-{deletion}{identicalPartBefore}{differentRemoved}{identicalPartAfter}";
+        const string addedLineText = $"+{identicalPartBefore}{differentAdded}{identicalPartAfter}{insertion}";
+        const string text = $"{removedLineText}\n{addedLineText}";
+        TextMarker removedLine = new(offset: text.IndexOf(removedLineText), removedLineText.Length, textMarkerType: dontCare);
+        TextMarker addedLine = new(offset: text.IndexOf(addedLineText), addedLineText.Length, textMarkerType: dontCare);
+        const int beginOffset = 1;
+
+        List<TextMarker> markers = [];
+        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset);
+        IReadOnlyList<TextMarker> sortedMarkers = markers.ToImmutableSortedSet(new MarkerComparer());
+
+        TextMarker[] expectedMarkers =
+        [
+            CreateDimmedMarker(removedLine, offset: deletion.Length, length: identicalPartBefore.Length),
+            CreateDimmedMarker(removedLine, offset: deletion.Length + identicalPartBefore.Length + differentRemoved.Length, length: identicalPartAfter.Length),
+            CreateAnchorMarker(removedLine, offset: removedLine.Length - 1),
+            CreateAnchorMarker(addedLine, offset: 0),
+            CreateDimmedMarker(addedLine, offset: 0, length: identicalPartBefore.Length),
+            CreateDimmedMarker(addedLine, offset: identicalPartBefore.Length + differentAdded.Length, length: identicalPartAfter.Length),
+        ];
+        sortedMarkers.Should().BeEquivalentTo(expectedMarkers);
+
+        return;
+
+        TextMarker CreateAnchorMarker(ISegment line, int offset)
+            => DiffHighlightServiceTests.CreateAnchorMarker(line.Offset + beginOffset + offset, isAdded: line == addedLine);
+
+        TextMarker CreateDimmedMarker(ISegment line, int offset, int length)
+            => DiffHighlightServiceTests.CreateDimmedMarker(line.Offset + beginOffset + offset, length, isAdded: line == addedLine);
+
+        string GetText(ISegment line) => (line == removedLine ? removedLineText : addedLineText)[beginOffset..];
+    }
+
+    private static TextMarker CreateAnchorMarker(int offset, bool isAdded)
+    {
+        Color color = (isAdded ? AppColor.AnsiTerminalRedForeBold : AppColor.AnsiTerminalGreenForeBold).GetThemeColor();
+        return new TextMarker(offset, length: 0, TextMarkerType.InterChar, color);
     }
 
     private static TextMarker CreateDimmedMarker(int offset, int length, bool isAdded)

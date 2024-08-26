@@ -29,18 +29,19 @@ public class LinesMatcherTests
     }
 
     [Test]
-    [TestCase("", new string[] { })]
-    [TestCase("a", new string[] { "a" })]
-    [TestCase("a-", new string[] { "a" })]
-    [TestCase("-a", new string[] { "a" })]
-    [TestCase("a bc", new string[] { "a", "bc" })]
-    [TestCase("-a bc", new string[] { "a", "bc" })]
-    [TestCase("a bc-", new string[] { "a", "bc" })]
-    [TestCase("---abc---123---def_7---", new string[] { "abc", "123", "def_7" })]
-    public void GetWords(string text, string[] words)
+    [TestCase("", new string[] { }, new int[] { })]
+    [TestCase("a", new string[] { "a" }, new int[] { 0 })]
+    [TestCase("a-", new string[] { "a" }, new int[] { 0 })]
+    [TestCase("-a", new string[] { "a" }, new int[] { 1 })]
+    [TestCase("a bc", new string[] { "a", "bc" }, new int[] { 0, 2 })]
+    [TestCase("-a bc", new string[] { "a", "bc" }, new int[] { 1, 3 })]
+    [TestCase("a bc-", new string[] { "a", "bc" }, new int[] { 0, 2 })]
+    [TestCase("---abc---123---def_7---", new string[] { "abc", "123", "def_7" }, new int[] { 3, 9, 15 })]
+    public void GetWords(string text, string[] words, int[] offsets)
     {
-        LinesMatcher.GetWords(text, TextUtilities.IsLetterDigitOrUnderscore)
-            .Should().BeEquivalentTo(words);
+        (string Word, int Offset)[] result = LinesMatcher.GetWords(text, TextUtilities.IsLetterDigitOrUnderscore).ToArray();
+        result.Select(LinesMatcher.SelectWord).Should().BeEquivalentTo(words);
+        result.Select(LinesMatcher.SelectStartIndex).Should().BeEquivalentTo(offsets);
     }
 
     [Test]

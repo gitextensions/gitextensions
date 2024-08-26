@@ -106,6 +106,22 @@ internal static class LinesMatcher
         }
     }
 
+    internal static (string? CommonWord, int StartIndexRemoved, int StartIndexAdded) FindBestMatch(string textRemoved, string textAdded)
+    {
+        (string Word, int StartIndex) notFound = ("", -1);
+        (string Word, int StartIndex)[] wordsRemoved = GetWords(textRemoved).ToArray();
+        (string? commonWord, int startIndexOfCommonWordAdded) = GetWords(textAdded)
+            .IntersectBy(wordsRemoved.Select(SelectWord), SelectWord)
+            .Union([notFound])
+            .MaxBy(pair => pair.Word.Length);
+        if (startIndexOfCommonWordAdded != notFound.StartIndex)
+        {
+            return (commonWord, wordsRemoved.First(pair => pair.Word == commonWord).StartIndex, startIndexOfCommonWordAdded);
+        }
+
+        return (null, 0, 0);
+    }
+
     /// <summary>
     ///  Iterates all combinations of indices - starting with (0,0), (1,0), (0,1), (2,0), (1,1), ...
     /// </summary>
@@ -133,7 +149,9 @@ internal static class LinesMatcher
         }
     }
 
-    internal static IEnumerable<string> GetWords(string text, Func<char, bool> isWordChar)
+    internal static IEnumerable<(string Word, int StartIndex)> GetWords(string text) => GetWords(text, IsWordChar);
+
+    internal static IEnumerable<(string Word, int StartIndex)> GetWords(string text, Func<char, bool> isWordChar)
     {
         int length = text.Length;
         int start = 0;
@@ -160,13 +178,19 @@ internal static class LinesMatcher
                 if (end >= length || !isWordChar(text[end]))
                 {
                     // word end found, yield and find next word
-                    yield return text[start..end];
+                    yield return (text[start..end], start);
                     start = end + 1;
                     break;
                 }
             }
         }
     }
+
+    internal static bool IsWordChar(char c) => TextUtilities.IsLetterDigitOrUnderscore(c);
+
+    internal static string SelectWord((string Word, int StartIndex) pair) => pair.Word;
+
+    internal static int SelectStartIndex((string Word, int StartIndex) pair) => pair.StartIndex;
 
     [DebuggerDisplay("{Line.Offset}: {Trimmed}")]
     private readonly struct LineData
@@ -182,7 +206,7 @@ internal static class LinesMatcher
             Line = line;
             Full = text;
             Trimmed = text.Trim();
-            Words = GetWords(Trimmed, TextUtilities.IsLetterDigitOrUnderscore).ToHashSet();
+            Words = GetWords(Trimmed).Select(SelectWord).ToHashSet();
             WordsTotalLength = Words.Sum(w => w.Length);
         }
     }
