@@ -22,23 +22,34 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.Init(pageHost);
         }
 
+        protected override void OnRuntimeLoad()
+        {
+            // align 1st columns across all tables
+            tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowConsoleTab, chkShowGpgInformation);
+            tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowConsoleTab, chkShowGpgInformation);
+
+            base.OnRuntimeLoad();
+        }
+
         protected override void PageToSettings()
         {
-            AppSettings.ShowConEmuTab.Value = chkChowConsoleTab.Checked;
+            AppSettings.ShowConEmuTab.Value = chkShowConsoleTab.Checked;
             AppSettings.UseBrowseForFileHistory.Value = chkUseBrowseForFileHistory.Checked;
             AppSettings.UseDiffViewerForBlame.Value = chkUseDiffViewerForBlame.Checked;
             AppSettings.ShowGpgInformation.Value = chkShowGpgInformation.Checked;
-
+            AppSettings.ShowFindInCommitFilesGitGrep.Value = chkShowFindInCommitFilesGitGrep.Checked;
             AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem).Name.ToLowerInvariant();
+
             base.PageToSettings();
         }
 
         protected override void SettingsToPage()
         {
-            chkChowConsoleTab.Checked = AppSettings.ShowConEmuTab.Value;
+            chkShowConsoleTab.Checked = AppSettings.ShowConEmuTab.Value;
             chkUseBrowseForFileHistory.Checked = AppSettings.UseBrowseForFileHistory.Value;
             chkUseDiffViewerForBlame.Checked = AppSettings.UseDiffViewerForBlame.Value;
             chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation.Value;
+            chkShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
 
             foreach (IShellDescriptor shell in _shellProvider.GetShells())
             {

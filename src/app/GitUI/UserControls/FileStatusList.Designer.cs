@@ -38,8 +38,8 @@
             FilterToolTip = new ToolTip(components);
             lblSplitter = new Label();
             DeleteFilterButton = new Label();
-            SearchComboBox = new ComboBox();
-            SearchWatermarkLabel = new Label();
+            cboFindInCommitFilesGitGrep = new ComboBox();
+            lblFindInCommitFilesGitGrepWatermark = new Label();
             DeleteSearchButton = new Label();
             SuspendLayout();
             // 
@@ -99,35 +99,35 @@
             LoadingFiles.Size = new Size(65, 15);
             LoadingFiles.TabIndex = 2;
             // 
-            // SearchComboBox
+            // cboFindInCommitFilesGitGrep
             // 
-            SearchComboBox.Dock = DockStyle.Top;
-            SearchComboBox.FlatStyle = FlatStyle.Flat;
-            SearchComboBox.FormattingEnabled = true;
-            SearchComboBox.Location = new Point(0, 0);
-            SearchComboBox.Margin = new Padding(0);
-            SearchComboBox.Name = "SearchComboBox";
-            SearchComboBox.Size = new Size(682, 23);
-            SearchComboBox.TabIndex = 0;
-            SearchComboBox.Tag = "ToolBar_group:Text search";
-            SearchComboBox.SelectedIndexChanged += SearchComboBox_SelectedIndexChanged;
-            SearchComboBox.TextUpdate += SearchComboBox_TextUpdate;
-            SearchComboBox.SizeChanged += SearchComboBox_SizeChanged;
-            SearchComboBox.GotFocus += SearchComboBox_GotFocus;
-            SearchComboBox.LostFocus += SearchComboBox_LostFocus;
+            cboFindInCommitFilesGitGrep.Dock = DockStyle.Top;
+            cboFindInCommitFilesGitGrep.FlatStyle = FlatStyle.Flat;
+            cboFindInCommitFilesGitGrep.FormattingEnabled = true;
+            cboFindInCommitFilesGitGrep.Location = new Point(0, 0);
+            cboFindInCommitFilesGitGrep.Margin = new Padding(0);
+            cboFindInCommitFilesGitGrep.Name = "cboFindInCommitFilesGitGrep";
+            cboFindInCommitFilesGitGrep.Size = new Size(682, 23);
+            cboFindInCommitFilesGitGrep.TabIndex = 0;
+            cboFindInCommitFilesGitGrep.Tag = "ToolBar_group:Text search";
+            cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
+            cboFindInCommitFilesGitGrep.TextUpdate += cboFindInCommitFilesGitGrep_TextUpdate;
+            cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
+            cboFindInCommitFilesGitGrep.GotFocus += cboFindInCommitFilesGitGrep_GotFocus;
+            cboFindInCommitFilesGitGrep.LostFocus += cboFindInCommitFilesGitGrep_LostFocus;
             // 
-            // SearchWatermarkLabel
+            // lblFindInCommitFilesGitGrepWatermark
             // 
-            SearchWatermarkLabel.AutoSize = true;
-            SearchWatermarkLabel.BackColor = SystemColors.Window;
-            SearchWatermarkLabel.ForeColor = SystemColors.GrayText;
-            SearchWatermarkLabel.Location = new Point(0);
-            SearchWatermarkLabel.Name = "SearchWatermarkLabel";
-            SearchWatermarkLabel.Padding = new Padding(2);
-            SearchWatermarkLabel.Size = new Size(273, 15);
-            SearchWatermarkLabel.TabIndex = 3;
-            SearchWatermarkLabel.Text = "Search files in commit using a regular expression...";
-            SearchWatermarkLabel.Click += SearchWatermarkLabel_Click;
+            lblFindInCommitFilesGitGrepWatermark.AutoSize = true;
+            lblFindInCommitFilesGitGrepWatermark.BackColor = SystemColors.Window;
+            lblFindInCommitFilesGitGrepWatermark.ForeColor = SystemColors.GrayText;
+            lblFindInCommitFilesGitGrepWatermark.Location = new Point(0);
+            lblFindInCommitFilesGitGrepWatermark.Name = "lblFindInCommitFilesGitGrepWatermark";
+            lblFindInCommitFilesGitGrepWatermark.Padding = new Padding(2);
+            lblFindInCommitFilesGitGrepWatermark.Size = new Size(273, 15);
+            lblFindInCommitFilesGitGrepWatermark.TabIndex = 3;
+            lblFindInCommitFilesGitGrepWatermark.Text = "Find in commit files using git-grep regular expression...";
+            lblFindInCommitFilesGitGrepWatermark.Click += lblFindInCommitFilesGitGrepWatermark_Click;
             // 
             // DeleteSearchButton
             // 
@@ -206,11 +206,11 @@
             AutoScaleMode = AutoScaleMode.Inherit;
             Controls.Add(LoadingFiles);
             Controls.Add(NoFiles);
-            Controls.Add(SearchWatermarkLabel);
+            Controls.Add(lblFindInCommitFilesGitGrepWatermark);
             Controls.Add(DeleteSearchButton);
             Controls.Add(FilterWatermarkLabel);
             Controls.Add(DeleteFilterButton);
-            Controls.Add(SearchComboBox);
+            Controls.Add(cboFindInCommitFilesGitGrep);
             Controls.Add(FileStatusListView);
             Controls.Add(FilterComboBox);
             Controls.Add(lblSplitter);
@@ -232,8 +232,8 @@
         private ToolTip FilterToolTip;
         private Label lblSplitter;
         private Label DeleteFilterButton;
-        private ComboBox SearchComboBox;
-        private Label SearchWatermarkLabel;
+        private ComboBox cboFindInCommitFilesGitGrep;
+        private Label lblFindInCommitFilesGitGrepWatermark;
         private Label DeleteSearchButton;
     }
 }

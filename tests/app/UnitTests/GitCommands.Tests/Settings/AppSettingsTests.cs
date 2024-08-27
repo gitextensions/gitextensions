@@ -296,7 +296,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RevisionGridQuickSearchTimeout)], 4000, false, false);
                 yield return (properties[nameof(AppSettings.MaxRevisionGraphCommits)], 100000, false, false);
                 yield return (properties[nameof(AppSettings.ShowDiffForAllParents)], true, false, false);
-                yield return (properties[nameof(AppSettings.ShowSearchCommit)], false, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.ShowFindInCommitFilesGitGrep)], false, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.ShowAvailableDiffTools)], true, isNotNullable, isNoISetting);
                 yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, isNotNullable, isNoISetting);
                 yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", isNotNullable, isISetting);

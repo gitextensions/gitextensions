@@ -1371,7 +1371,7 @@ namespace GitCommands
             set => SetBool("showdiffforallparents", value);
         }
 
-        public static ISetting<bool> ShowSearchCommit { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowSearchCommit), false);
+        public static ISetting<bool> ShowFindInCommitFilesGitGrep { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowFindInCommitFilesGitGrep), false);
 
         public static bool ShowAvailableDiffTools
         {

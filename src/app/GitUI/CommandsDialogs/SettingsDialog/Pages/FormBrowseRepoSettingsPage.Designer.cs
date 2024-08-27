@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitUI.UserControls.Settings;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class FormBrowseRepoSettingsPage
     {
@@ -28,131 +30,257 @@
         /// </summary>
         private void InitializeComponent()
         {
-            chkShowGpgInformation = new CheckBox();
-            chkChowConsoleTab = new CheckBox();
+            chkShowGpgInformation = new SettingsCheckBox();
+            chkShowConsoleTab = new SettingsCheckBox();
             cboTerminal = new ComboBox();
-            label2 = new Label();
-            chkUseBrowseForFileHistory = new CheckBox();
-            chkUseDiffViewerForBlame = new CheckBox();
-            gbGeneral = new GroupBox();
+            lblDefaultShell = new Label();
+            chkUseBrowseForFileHistory = new SettingsCheckBox();
+            chkUseDiffViewerForBlame = new SettingsCheckBox();
+            chkShowFindInCommitFilesGitGrep = new SettingsCheckBox();
+            tlpnlMain = new TableLayoutPanel();
+            groupBox1 = new GroupBox();
+            tlpnlGeneral = new TableLayoutPanel();
             gbTabs = new GroupBox();
-            gbGeneral.SuspendLayout();
+            tlpnlTabs = new TableLayoutPanel();
+            tlpnlMain.SuspendLayout();
+            groupBox1.SuspendLayout();
+            tlpnlGeneral.SuspendLayout();
             gbTabs.SuspendLayout();
+            tlpnlTabs.SuspendLayout();
             SuspendLayout();
             // 
             // chkShowGpgInformation
             // 
             chkShowGpgInformation.AutoSize = true;
-            chkShowGpgInformation.Location = new Point(9, 48);
+            chkShowGpgInformation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkShowGpgInformation.Checked = false;
+            chkShowGpgInformation.Dock = DockStyle.Fill;
+            chkShowGpgInformation.Location = new Point(4, 28);
+            chkShowGpgInformation.ManualSectionAnchorName = "tabs-show-gpg-information";
+            chkShowGpgInformation.Margin = new Padding(4, 3, 4, 3);
             chkShowGpgInformation.Name = "chkShowGpgInformation";
-            chkShowGpgInformation.Size = new Size(147, 19);
-            chkShowGpgInformation.TabIndex = 7;
+            chkShowGpgInformation.Size = new Size(170, 19);
+            chkShowGpgInformation.TabIndex = 1;
             chkShowGpgInformation.Text = "Show GPG information";
-            chkShowGpgInformation.UseVisualStyleBackColor = true;
+            chkShowGpgInformation.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
+            chkShowGpgInformation.ToolTipText = "View help";
             // 
-            // chkChowConsoleTab
+            // chkShowConsoleTab
             // 
-            chkChowConsoleTab.AutoSize = true;
-            chkChowConsoleTab.Location = new Point(9, 25);
-            chkChowConsoleTab.Name = "chkChowConsoleTab";
-            chkChowConsoleTab.Size = new Size(141, 19);
-            chkChowConsoleTab.TabIndex = 6;
-            chkChowConsoleTab.Text = "Show the Console tab";
-            chkChowConsoleTab.UseVisualStyleBackColor = true;
+            chkShowConsoleTab.AutoSize = true;
+            chkShowConsoleTab.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkShowConsoleTab.Checked = false;
+            chkShowConsoleTab.Dock = DockStyle.Fill;
+            chkShowConsoleTab.Location = new Point(4, 3);
+            chkShowConsoleTab.ManualSectionAnchorName = "general-show-blame-in-diff-view";
+            chkShowConsoleTab.Margin = new Padding(4, 3, 4, 3);
+            chkShowConsoleTab.Name = "chkShowConsoleTab";
+            chkShowConsoleTab.Size = new Size(170, 19);
+            chkShowConsoleTab.TabIndex = 0;
+            chkShowConsoleTab.Text = "Show the Console tab";
+            chkShowConsoleTab.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
+            chkShowConsoleTab.ToolTipText = "View help";
             // 
             // cboTerminal
             // 
             cboTerminal.DropDownStyle = ComboBoxStyle.DropDownList;
             cboTerminal.FormattingEnabled = true;
-            cboTerminal.Location = new Point(146, 22);
+            cboTerminal.Location = new Point(255, 2);
             cboTerminal.Margin = new Padding(3, 2, 3, 2);
             cboTerminal.Name = "cboTerminal";
             cboTerminal.Size = new Size(262, 23);
-            cboTerminal.TabIndex = 3;
+            cboTerminal.TabIndex = 1;
             // 
-            // label2
+            // lblDefaultShell
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(6, 25);
-            label2.Name = "label2";
-            label2.Size = new Size(72, 15);
-            label2.TabIndex = 2;
-            label2.Text = "Default shell";
+            lblDefaultShell.AutoSize = true;
+            lblDefaultShell.Dock = DockStyle.Fill;
+            lblDefaultShell.Location = new Point(3, 0);
+            lblDefaultShell.Name = "lblDefaultShell";
+            lblDefaultShell.Size = new Size(246, 27);
+            lblDefaultShell.TabIndex = 0;
+            lblDefaultShell.Text = "Default shell";
+            lblDefaultShell.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // chkUseBrowseForFileHistory
             // 
             chkUseBrowseForFileHistory.AutoSize = true;
-            chkUseBrowseForFileHistory.Location = new Point(9, 48);
+            chkUseBrowseForFileHistory.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkUseBrowseForFileHistory.Checked = false;
+            chkUseBrowseForFileHistory.Dock = DockStyle.Fill;
+            chkUseBrowseForFileHistory.Location = new Point(4, 30);
+            chkUseBrowseForFileHistory.ManualSectionAnchorName = "general-show-file-history-in-the-main-window";
+            chkUseBrowseForFileHistory.Margin = new Padding(4, 3, 4, 3);
             chkUseBrowseForFileHistory.Name = "chkUseBrowseForFileHistory";
-            chkUseBrowseForFileHistory.Size = new Size(165, 19);
-            chkUseBrowseForFileHistory.TabIndex = 4;
+            chkUseBrowseForFileHistory.Size = new Size(244, 19);
+            chkUseBrowseForFileHistory.TabIndex = 2;
             chkUseBrowseForFileHistory.Text = "Show file history in the main window";
-            chkUseBrowseForFileHistory.UseVisualStyleBackColor = true;
+            chkUseBrowseForFileHistory.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
+            chkUseBrowseForFileHistory.ToolTipText = "View help";
             // 
             // chkUseDiffViewerForBlame
             // 
             chkUseDiffViewerForBlame.AutoSize = true;
-            chkUseDiffViewerForBlame.Location = new Point(9, 71);
+            chkUseDiffViewerForBlame.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkUseDiffViewerForBlame.Checked = false;
+            chkUseDiffViewerForBlame.Dock = DockStyle.Fill;
+            chkUseDiffViewerForBlame.Location = new Point(4, 55);
+            chkUseDiffViewerForBlame.ManualSectionAnchorName = "general-show-blame-in-diff-view";
+            chkUseDiffViewerForBlame.Margin = new Padding(4, 3, 4, 3);
             chkUseDiffViewerForBlame.Name = "chkUseDiffViewerForBlame";
-            chkUseDiffViewerForBlame.Size = new Size(162, 19);
-            chkUseDiffViewerForBlame.TabIndex = 5;
+            chkUseDiffViewerForBlame.Size = new Size(244, 19);
+            chkUseDiffViewerForBlame.TabIndex = 3;
             chkUseDiffViewerForBlame.Text = "Show blame in diff viewer";
-            chkUseDiffViewerForBlame.UseVisualStyleBackColor = true;
+            chkUseDiffViewerForBlame.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
+            chkUseDiffViewerForBlame.ToolTipText = "View help";
             // 
-            // gbGeneral
+            // chkShowFindInCommitFilesGitGrep
             // 
-            gbGeneral.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            gbGeneral.Controls.Add(cboTerminal);
-            gbGeneral.Controls.Add(label2);
-            gbGeneral.Controls.Add(chkUseBrowseForFileHistory);
-            gbGeneral.Controls.Add(chkUseDiffViewerForBlame);
-            gbGeneral.Location = new Point(11, 11);
-            gbGeneral.Name = "gbGeneral";
-            gbGeneral.Size = new Size(435, 104);
-            gbGeneral.TabIndex = 1;
-            gbGeneral.TabStop = false;
-            gbGeneral.Text = "General";
+            chkShowFindInCommitFilesGitGrep.AutoSize = true;
+            chkShowFindInCommitFilesGitGrep.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkShowFindInCommitFilesGitGrep.Checked = false;
+            chkShowFindInCommitFilesGitGrep.Dock = DockStyle.Fill;
+            chkShowFindInCommitFilesGitGrep.Location = new Point(4, 80);
+            chkShowFindInCommitFilesGitGrep.ManualSectionAnchorName = null;
+            chkShowFindInCommitFilesGitGrep.Margin = new Padding(4, 3, 4, 3);
+            chkShowFindInCommitFilesGitGrep.Name = "chkShowFindInCommitFilesGitGrep";
+            chkShowFindInCommitFilesGitGrep.Size = new Size(244, 19);
+            chkShowFindInCommitFilesGitGrep.TabIndex = 4;
+            chkShowFindInCommitFilesGitGrep.Text = "Show 'Find in commit files using git-grep'";
+            chkShowFindInCommitFilesGitGrep.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
+            chkShowFindInCommitFilesGitGrep.ToolTipText = null;
+            // 
+            // tlpnlMain
+            // 
+            tlpnlMain.ColumnCount = 1;
+            tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+            tlpnlMain.Controls.Add(groupBox1, 0, 0);
+            tlpnlMain.Controls.Add(gbTabs, 0, 1);
+            tlpnlMain.Dock = DockStyle.Fill;
+            tlpnlMain.Location = new Point(8, 8);
+            tlpnlMain.Name = "tlpnlMain";
+            tlpnlMain.RowCount = 4;
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlMain.Size = new Size(1943, 1155);
+            tlpnlMain.TabIndex = 0;
+            // 
+            // groupBox1
+            // 
+            groupBox1.AutoSize = true;
+            groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            groupBox1.Controls.Add(tlpnlGeneral);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Location = new Point(3, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(8);
+            groupBox1.Size = new Size(1937, 134);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "General";
+            // 
+            // tlpnlGeneral
+            // 
+            tlpnlGeneral.AutoSize = true;
+            tlpnlGeneral.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlGeneral.ColumnCount = 2;
+            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
+            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
+            tlpnlGeneral.Controls.Add(cboTerminal, 1, 0);
+            tlpnlGeneral.Controls.Add(lblDefaultShell, 0, 0);
+            tlpnlGeneral.Controls.Add(chkUseBrowseForFileHistory, 0, 1);
+            tlpnlGeneral.Controls.Add(chkUseDiffViewerForBlame, 0, 2);
+            tlpnlGeneral.Controls.Add(chkShowFindInCommitFilesGitGrep, 0, 3);
+            tlpnlGeneral.Dock = DockStyle.Fill;
+            tlpnlGeneral.Location = new Point(8, 24);
+            tlpnlGeneral.Name = "tlpnlGeneral";
+            tlpnlGeneral.RowCount = 4;
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle());
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlGeneral.Size = new Size(1921, 102);
+            tlpnlGeneral.TabIndex = 0;
             // 
             // gbTabs
             // 
-            gbTabs.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            gbTabs.Controls.Add(chkShowGpgInformation);
-            gbTabs.Controls.Add(chkChowConsoleTab);
-            gbTabs.Location = new Point(11, 121);
+            gbTabs.AutoSize = true;
+            gbTabs.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gbTabs.Controls.Add(tlpnlTabs);
+            gbTabs.Dock = DockStyle.Fill;
+            gbTabs.Location = new Point(3, 143);
             gbTabs.Name = "gbTabs";
-            gbTabs.Size = new Size(435, 82);
-            gbTabs.TabIndex = 5;
+            gbTabs.Padding = new Padding(8);
+            gbTabs.Size = new Size(1937, 82);
+            gbTabs.TabIndex = 1;
             gbTabs.TabStop = false;
             gbTabs.Text = "Tabs (restart required)";
+            // 
+            // tlpnlTabs
+            // 
+            tlpnlTabs.AutoSize = true;
+            tlpnlTabs.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpnlTabs.ColumnCount = 2;
+            tlpnlTabs.ColumnStyles.Add(new ColumnStyle());
+            tlpnlTabs.ColumnStyles.Add(new ColumnStyle());
+            tlpnlTabs.Controls.Add(chkShowGpgInformation, 0, 1);
+            tlpnlTabs.Controls.Add(chkShowConsoleTab, 0, 0);
+            tlpnlTabs.Dock = DockStyle.Fill;
+            tlpnlTabs.Location = new Point(8, 24);
+            tlpnlTabs.Name = "tlpnlTabs";
+            tlpnlTabs.RowCount = 2;
+            tlpnlTabs.RowStyles.Add(new RowStyle());
+            tlpnlTabs.RowStyles.Add(new RowStyle());
+            tlpnlTabs.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlTabs.Size = new Size(1921, 50);
+            tlpnlTabs.TabIndex = 0;
             // 
             // FormBrowseRepoSettingsPage
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            Controls.Add(gbTabs);
-            Controls.Add(gbGeneral);
+            Controls.Add(tlpnlMain);
             Name = "FormBrowseRepoSettingsPage";
             Padding = new Padding(8);
-            Size = new Size(457, 215);
+            Size = new Size(1959, 1171);
             Text = "Browse repository window";
-            gbGeneral.ResumeLayout(false);
-            gbGeneral.PerformLayout();
+            tlpnlMain.ResumeLayout(false);
+            tlpnlMain.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            tlpnlGeneral.ResumeLayout(false);
+            tlpnlGeneral.PerformLayout();
             gbTabs.ResumeLayout(false);
             gbTabs.PerformLayout();
+            tlpnlTabs.ResumeLayout(false);
+            tlpnlTabs.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
-
         }
 
         #endregion
 
-        private CheckBox chkShowGpgInformation;
-        private CheckBox chkChowConsoleTab;
+        private SettingsCheckBox chkShowGpgInformation;
+        private SettingsCheckBox chkShowConsoleTab;
         private ComboBox cboTerminal;
-        private Label label2;
-        private CheckBox chkUseBrowseForFileHistory;
-        private CheckBox chkUseDiffViewerForBlame;
-        private GroupBox gbGeneral;
+        private Label lblDefaultShell;
+        private SettingsCheckBox chkUseBrowseForFileHistory;
+        private SettingsCheckBox chkUseDiffViewerForBlame;
+        private SettingsCheckBox chkShowFindInCommitFilesGitGrep;
+        private TableLayoutPanel tlpnlMain;
+        private GroupBox groupBox1;
+        private TableLayoutPanel tlpnlGeneral;
         private GroupBox gbTabs;
+        private TableLayoutPanel tlpnlTabs;
     }
 }

@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
             HotkeysEnabled = true;
-            DiffFiles.SearchEnabledForList = true;
+            DiffFiles.CanUseFindInCommitFilesGitGrep = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _revisionDiffController = new RevisionDiffController(() => Module, _fullPathResolver);
             _findFilePredicateProvider = new FindFilePredicateProvider();
@@ -69,6 +69,9 @@ namespace GitUI.CommandsDialogs
             BlameControl.HideCommitInfo();
             diffFilterFileInGridToolStripMenuItem.Text = TranslatedStrings.FilterFileInGrid;
             copyPathsToolStripMenuItem.Initialize(() => UICommands, () => DiffFiles.SelectedItems.Select(fsi => fsi.Item.Name));
+
+            showFindInCommitFilesGitGrepToolStripMenuItem.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
+            DiffFiles.SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
         }
 
         private void FileViewer_TopScrollReached(object sender, EventArgs e)
@@ -136,7 +139,7 @@ namespace GitUI.CommandsDialogs
             SelectFirstGroupChanges = 14,
             FindFile = 15,
             OpenWorkingDirectoryFileWith = 16,
-            SearchCommit = 17,
+            FindInCommitFilesUsingGitGrep = 17,
             GoToFirstParent = 18,
             GoToLastParent = 19,
         }
@@ -148,7 +151,7 @@ namespace GitUI.CommandsDialogs
 
         protected override bool ExecuteCommand(int cmd)
         {
-            if ((DiffFiles.FilterFocused || DiffFiles.SearchFocused) && IsTextEditKey(GetShortcutKeys(cmd)))
+            if ((DiffFiles.FilterFilesByNameRegexFocused || DiffFiles.FindInCommitFilesGitGrepFocused) && IsTextEditKey(GetShortcutKeys(cmd)))
             {
                 return false;
             }
@@ -174,7 +177,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FilterFileInGrid: diffFilterFileInGridToolStripMenuItem.PerformClick(); break;
                 case Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFileNotFocused();
                 case Command.FindFile: findInDiffToolStripMenuItem.PerformClick(); break;
-                case Command.SearchCommit: showSearchCommitToolStripMenuItem.PerformClick(); break;
+                case Command.FindInCommitFilesUsingGitGrep: showFindInCommitFilesGitGrepDialogToolStripMenuItem.PerformClick(); break;
                 case Command.GoToFirstParent: return ForwardToRevisionGrid(RevisionGridControl.Command.GoToFirstParent);
                 case Command.GoToLastParent: return ForwardToRevisionGrid(RevisionGridControl.Command.GoToLastParent);
                 default: return base.ExecuteCommand(cmd);
@@ -234,7 +237,7 @@ namespace GitUI.CommandsDialogs
             diffShowInFileTreeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowFileTree);
             diffFilterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
             findInDiffToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
-            showSearchCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.SearchCommit);
+            showFindInCommitFilesGitGrepDialogToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindInCommitFilesUsingGitGrep);
 
             DiffText.ReloadHotkeys();
         }
@@ -589,7 +592,7 @@ namespace GitUI.CommandsDialogs
             BlameControl.Visible = true;
 
             // Avoid that focus is switched to the file filter after changing visibility
-            if (ensureNoSwitchToFilter && (DiffFiles.FilterFocused || DiffFiles.SearchFocused))
+            if (ensureNoSwitchToFilter && (DiffFiles.FilterFilesByNameRegexFocused || DiffFiles.FindInCommitFilesGitGrepFocused))
             {
                 BlameControl.Focus();
             }
@@ -614,7 +617,7 @@ namespace GitUI.CommandsDialogs
             DiffText.Visible = true;
 
             // Avoid that focus is switched to the file filter after changing visibility
-            if (ensureNoSwitchToFilter && (DiffFiles.FilterFocused || DiffFiles.SearchFocused))
+            if (ensureNoSwitchToFilter && (DiffFiles.FilterFilesByNameRegexFocused || DiffFiles.FindInCommitFilesGitGrepFocused))
             {
                 DiffText.Focus();
             }
@@ -874,9 +877,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void showSearchCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showFindInCommitFilesGitGrepDialogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DiffFiles.ShowSearchCommit_Click(DiffText.GetSelectedText());
+            DiffFiles.ShowFindInCommitFileGitGrepDialog(DiffText.GetSelectedText());
         }
 
         private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
@@ -1365,6 +1368,12 @@ namespace GitUI.CommandsDialogs
             }
 
             RequestRefresh();
+        }
+
+        private void showFindInCommitFilesGitGrepToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.ShowFindInCommitFilesGitGrep.Value = showFindInCommitFilesGitGrepToolStripMenuItem.Checked;
+            DiffFiles.SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
         }
 
         public void SwitchFocus(bool alreadyContainedFocus)

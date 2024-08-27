@@ -60,12 +60,13 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem = new ToolStripMenuItem();
             blameToolStripMenuItem = new ToolStripMenuItem();
             findInDiffToolStripMenuItem = new ToolStripMenuItem();
-            showSearchCommitToolStripMenuItem = new ToolStripMenuItem();
+            showFindInCommitFilesGitGrepDialogToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparatorScript = new ToolStripSeparator();
             runScriptToolStripMenuItem = new ToolStripMenuItem();
             DiffText = new GitUI.Editor.FileViewer();
             BlameControl = new Blame.BlameControl();
             saveToolStripMenuItem = new ToolStripMenuItem();
+            showFindInCommitFilesGitGrepToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(DiffSplitContainer)).BeginInit();
             DiffSplitContainer.Panel1.SuspendLayout();
             DiffSplitContainer.Panel2.SuspendLayout();
@@ -148,7 +149,8 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem,
             blameToolStripMenuItem,
             findInDiffToolStripMenuItem,
-            showSearchCommitToolStripMenuItem,
+            showFindInCommitFilesGitGrepDialogToolStripMenuItem,
+            showFindInCommitFilesGitGrepToolStripMenuItem,
             toolStripSeparatorScript,
             runScriptToolStripMenuItem});
             DiffContextMenu.Name = "DiffContextMenu";
@@ -440,13 +442,21 @@ namespace GitUI.CommandsDialogs
             findInDiffToolStripMenuItem.Text = "&Find file...";
             findInDiffToolStripMenuItem.Click += findInDiffToolStripMenuItem_Click;
             // 
-            // showSearchCommitToolStripMenuItem
+            // showFindInCommitFilesGitGrepDialogToolStripMenuItem
             // 
-            showSearchCommitToolStripMenuItem.Image = Properties.Images.ViewFile;
-            showSearchCommitToolStripMenuItem.Name = "showSearchCommitToolStripMenuItem";
-            showSearchCommitToolStripMenuItem.Size = new Size(262, 22);
-            showSearchCommitToolStripMenuItem.Text = "Sear&ch files in commit...";
-            showSearchCommitToolStripMenuItem.Click += showSearchCommitToolStripMenuItem_Click;
+            showFindInCommitFilesGitGrepDialogToolStripMenuItem.Image = Properties.Images.ViewFile;
+            showFindInCommitFilesGitGrepDialogToolStripMenuItem.Name = "showFindInCommitFilesGitGrepDialogToolStripMenuItem";
+            showFindInCommitFilesGitGrepDialogToolStripMenuItem.Size = new Size(262, 22);
+            showFindInCommitFilesGitGrepDialogToolStripMenuItem.Text = "Find in &commit files using git-grep...";
+            showFindInCommitFilesGitGrepDialogToolStripMenuItem.Click += showFindInCommitFilesGitGrepDialogToolStripMenuItem_Click;
+            // 
+            // showFindInCommitFilesGitGrepToolStripMenuItem
+            // 
+            showFindInCommitFilesGitGrepToolStripMenuItem.CheckOnClick = true;
+            showFindInCommitFilesGitGrepToolStripMenuItem.Name = "showFindInCommitFilesGitGrepToolStripMenuItem";
+            showFindInCommitFilesGitGrepToolStripMenuItem.Size = new Size(262, 22);
+            showFindInCommitFilesGitGrepToolStripMenuItem.Text = "Show 'Find in commit fi&les using git-grep'";
+            showFindInCommitFilesGitGrepToolStripMenuItem.Click += showFindInCommitFilesGitGrepToolStripMenuItem_Click;
             // 
             // toolStripSeparatorScript
             // 
@@ -505,7 +515,8 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem firstToLocalToolStripMenuItem;
         private ToolStripMenuItem firstToSelectedToolStripMenuItem;
         private ToolStripMenuItem findInDiffToolStripMenuItem;
-        private ToolStripMenuItem showSearchCommitToolStripMenuItem;
+        private ToolStripMenuItem showFindInCommitFilesGitGrepDialogToolStripMenuItem;
+        private ToolStripMenuItem showFindInCommitFilesGitGrepToolStripMenuItem;
         private ToolStripMenuItem diffFilterFileInGridToolStripMenuItem;
         private ToolStripMenuItem blameToolStripMenuItem;
         private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
