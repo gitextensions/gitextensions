@@ -44,12 +44,12 @@ namespace GitCommands.Settings
                 string? dir = Path.GetDirectoryName(SettingsFilePath);
                 if (Directory.Exists(dir))
                 {
+                    // Notifications may not fire
+                    _forceFileChangeChecks = PathUtil.IsWslPath(SettingsFilePath);
+
                     _fileWatcher.Path = dir;
                     _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
                     _fileWatcher.EnableRaisingEvents = true;
-
-                    // Notifications may not fire
-                    _forceFileChangeChecks = PathUtil.IsWslPath(SettingsFilePath);
                 }
             }
             catch
