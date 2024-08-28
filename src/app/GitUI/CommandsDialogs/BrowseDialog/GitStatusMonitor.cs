@@ -221,9 +221,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
-            _gitDirWatcher.EnableRaisingEvents = Directory.Exists(_gitDirWatcher.Path)
-                    && !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
+            try
+            {
+                _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
+                _gitDirWatcher.EnableRaisingEvents = Directory.Exists(_gitDirWatcher.Path)
+                        && !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
+            }
+            catch
+            {
+                _workTreeWatcher.EnableRaisingEvents = false;
+                _gitDirWatcher.EnableRaisingEvents = false;
+            }
         }
 
         private GitStatusMonitorState CurrentStatus
