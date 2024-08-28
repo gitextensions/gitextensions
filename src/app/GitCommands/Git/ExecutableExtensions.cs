@@ -32,7 +32,7 @@ namespace GitCommands
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
-        /// <returns>The concatenation of standard output and standard error. To receive these outputs separately, use <see cref="Execute"/> instead.</returns>
+        /// <returns>The concatenation of standard output (standard error is ignored). To receive these outputs separately, use <see cref="Execute"/> instead.</returns>
         [MustUseReturnValue("If output text is not required, use " + nameof(RunCommand) + " instead")]
         public static string GetOutput(
             this IExecutable executable,
@@ -58,7 +58,7 @@ namespace GitCommands
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from each process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
-        /// <returns>The concatenation of standard output and standard error. To receive these outputs separately, use <see cref="Execute"/> instead.</returns>
+        /// <returns>The concatenation of standard output (standard error is ignored). To receive these outputs separately, use <see cref="Execute"/> instead.</returns>
         [MustUseReturnValue("If output text is not required, use " + nameof(RunCommand) + " instead")]
         public static string GetBatchOutput(
             this IExecutable executable,
@@ -86,7 +86,7 @@ namespace GitCommands
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
-        /// <returns>A task that yields the concatenation of standard output and standard error. To receive these outputs separately, use <see cref="ExecuteAsync"/> instead.</returns>
+        /// <returns>A task that yields the concatenation of standard output (standard error is ignored). To receive these outputs separately, use <see cref="ExecuteAsync"/> instead.</returns>
         public static async Task<string> GetOutputAsync(
             this IExecutable executable,
             ArgumentString arguments = default,
@@ -97,9 +97,9 @@ namespace GitCommands
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            if (cache?.TryGet(arguments, out byte[]? output, out byte[]? error) is true)
+            if (cache?.TryGet(arguments, out string? output, out string? _) is true)
             {
-                return ComposeOutput();
+                return output;
             }
 
             using IProcess process = executable.Start(
@@ -130,22 +130,13 @@ namespace GitCommands
 
             await Task.WhenAll(outputTask, exitTask);
 
-            output = outputBuffer.ToArray();
-            error = Array.Empty<byte>();
-
+            string outputStr = CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(outputBuffer.ToArray(), error: [], ref outputEncoding));
             if (cache is not null && await exitTask == 0)
             {
-                cache.Add(arguments, output, error);
+                cache.Add(arguments, outputStr, error: "");
             }
 
-            return ComposeOutput();
-
-            string ComposeOutput()
-            {
-                return CleanString(
-                    stripAnsiEscapeCodes,
-                    EncodingHelper.DecodeString(output, error, ref outputEncoding));
-            }
+            return outputStr;
         }
 
         /// <summary>
@@ -266,7 +257,7 @@ namespace GitCommands
             CancellationToken cancellationToken = default)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes, throwOnErrorExit, cancellationToken));
+                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, extraCacheKey: "", stripAnsiEscapeCodes, throwOnErrorExit, cancellationToken));
         }
 
         /// <summary>
@@ -286,19 +277,21 @@ namespace GitCommands
             Action<StreamWriter>? writeInput = null,
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
+            string extraCacheKey = "",
             bool stripAnsiEscapeCodes = true,
             bool throwOnErrorExit = true,
             CancellationToken cancellationToken = default)
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            if (cache?.TryGet(arguments, out byte[]? cachedOutput, out byte[]? cachedError) is true)
+            string cacheKey = $"{arguments}::{executable.GetWorkingDirectory()}::{stripAnsiEscapeCodes}::{extraCacheKey}";
+            if (cache?.TryGet(cacheKey, out string? cachedOutput, out string? cachedError) is true)
             {
                 return new ExecutionResult(
                     executable,
                     arguments,
-                    CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(cachedOutput, error: null, ref outputEncoding)),
-                    CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(output: null, cachedError, ref outputEncoding)),
+                    cachedOutput,
+                    cachedError,
                     exitCode: 0);
             }
 
@@ -359,19 +352,18 @@ namespace GitCommands
                 throw;
             }
 
-            string output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
-            string error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
-
+            string output = CleanString(stripAnsiEscapeCodes, outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length));
+            string error = CleanString(stripAnsiEscapeCodes, outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length));
             if (cache is not null && exitCode == 0)
             {
-                cache.Add(arguments, outputBuffer.ToArray(), errorBuffer.ToArray());
+                cache.Add(cacheKey, output, error);
             }
 
             return new ExecutionResult(
                 executable,
                 arguments,
-                CleanString(stripAnsiEscapeCodes, output),
-                CleanString(stripAnsiEscapeCodes, error),
+                output,
+                error,
                 exitCode);
         }
 

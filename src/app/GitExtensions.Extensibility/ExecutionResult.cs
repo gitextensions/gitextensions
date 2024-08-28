@@ -11,7 +11,7 @@ public readonly struct ExecutionResult
     public string StandardError { get; }
     public int? ExitCode { get; }
 
-    public ExecutionResult(IExecutable executable, string arguments, string standardOutput, string standardError, int? exitCode)
+    public ExecutionResult(IExecutable executable, ArgumentString arguments, string standardOutput, string standardError, int? exitCode)
     {
         Command = executable.Command;
         WorkingDir = executable.WorkingDir;

@@ -2186,6 +2186,7 @@ namespace GitCommands
             string? oldFileName,
             ArgumentString extraDiffArguments,
             bool cacheResult,
+            string extraCacheKey,
             bool isTracked,
             bool useGitColoring,
             CancellationToken cancellationToken)
@@ -2217,8 +2218,10 @@ namespace GitCommands
 
             ExecutionResult result = await _gitExecutable.ExecuteAsync(
                 args,
-                cache: cache,
+                writeInput: null,
                 outputEncoding: LosslessEncoding,
+                cache: cache,
+                extraCacheKey,
                 stripAnsiEscapeCodes: !useGitColoring,
                 throwOnErrorExit: false,
                 cancellationToken: cancellationToken);

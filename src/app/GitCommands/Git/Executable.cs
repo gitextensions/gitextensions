@@ -48,6 +48,8 @@ namespace GitCommands
             return new ProcessWrapper(fileName, _prefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
         }
 
+        public string GetWorkingDirectory() => _workingDir;
+
         #region ProcessWrapper
 
         /// <summary>

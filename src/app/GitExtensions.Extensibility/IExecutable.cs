@@ -36,4 +36,10 @@ public interface IExecutable
                    bool useShellExecute = false,
                    bool throwOnErrorExit = true,
                    CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the directory the execueble is running in.
+    /// </summary>
+    /// <returns>The working directory.</returns>
+    string GetWorkingDirectory();
 }
