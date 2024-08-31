@@ -21,10 +21,7 @@
 
         public static void ResizeDropDownWidth(this ComboBox comboBox, int minWidth, int maxWidth)
         {
-            if (comboBox is null)
-            {
-                throw new ArgumentNullException(nameof(comboBox));
-            }
+            ArgumentNullException.ThrowIfNull(comboBox);
 
             int calculatedWidth = GetPreferredDropDownWidth(comboBox);
             comboBox.DropDownWidth = Math.Min(Math.Max(calculatedWidth, minWidth), maxWidth);
@@ -32,22 +29,22 @@
 
         public static void ResizeDropDownWidth(this ToolStripComboBox comboBox, int minWidth, int maxWidth)
         {
-            if (comboBox is null)
-            {
-                throw new ArgumentNullException(nameof(comboBox));
-            }
+            ArgumentNullException.ThrowIfNull(comboBox);
 
-            int calculatedWidth = GetPreferredDropDownWidth(comboBox.Control);
+            int calculatedWidth = GetPreferredDropDownWidth((ComboBox)comboBox.Control);
             comboBox.DropDownWidth = Math.Min(Math.Max(calculatedWidth, minWidth), maxWidth);
         }
 
-        private static int GetPreferredDropDownWidth(dynamic comboBox)
+        private static int GetPreferredDropDownWidth(ComboBox comboBox)
         {
             int calculatedWidth = 0;
-            using dynamic graphics = comboBox.CreateGraphics();
-            foreach (object obj in comboBox.Items)
+            using Graphics graphics = comboBox.CreateGraphics();
+
+            Font font = comboBox.Font;
+
+            foreach (object item in comboBox.Items)
             {
-                dynamic area = graphics.MeasureString(obj.ToString(), comboBox.Font);
+                SizeF area = graphics.MeasureString(item.ToString(), font);
                 calculatedWidth = Math.Max((int)area.Width, calculatedWidth);
             }
 
