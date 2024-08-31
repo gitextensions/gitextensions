@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using System.Runtime.InteropServices;
+
+namespace GitUI
 {
     public static class ComboBoxExtensions
     {
@@ -49,7 +51,7 @@
                 calculatedWidth = Math.Max((int)area.Width, calculatedWidth);
             }
 
-            return calculatedWidth;
+            return calculatedWidth + CalculateVerticalScrollBarWidth(comboBox);
         }
 
         private static string GetDisplayValue(string displayMemberName, object item)
@@ -71,6 +73,22 @@
             return displayMemberProperty
                 .GetValue(item)
                 ?.ToString();
+        }
+
+        private static int CalculateVerticalScrollBarWidth(ComboBox comboBox)
+        {
+            NativeMethods.COMBOBOXINFO cboInfo = NativeMethods.COMBOBOXINFO.Create();
+            if (!NativeMethods.GetComboBoxInfo(comboBox.Handle, ref cboInfo))
+            {
+                return 0;
+            }
+
+            int listStyle = NativeMethods.GetWindowLong(cboInfo.hwndList, NativeMethods.GWL_STYLE);
+            bool hasVerticalScrollBar = (listStyle & NativeMethods.WS_VSCROLL) == NativeMethods.WS_VSCROLL;
+
+            return hasVerticalScrollBar
+                ? SystemInformation.VerticalScrollBarWidth
+                : 0;
         }
     }
 }
