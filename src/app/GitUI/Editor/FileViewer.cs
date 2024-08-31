@@ -73,6 +73,9 @@ namespace GitUI.Editor
             ShowEntireFile = false;
             NumberOfContextLines = AppSettings.NumberOfContextLines;
             InitializeComponent();
+
+            encodingToolStripComboBox.Size = DpiUtil.Scale(encodingToolStripComboBox.Size);
+
             InitializeComplete();
 
             UICommandsSourceSet += OnUICommandsSourceSet;
