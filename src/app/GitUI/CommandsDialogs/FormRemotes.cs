@@ -259,7 +259,7 @@ Inactive remote is completely invisible to git.");
                 Url.DataSource = repositoryHistory.ToList();
                 Url.DisplayMember = nameof(Repository.Path);
                 Url.SelectedItem = null;
-                Url.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+                Url.ResizeDropDownWidth(DpiUtil.Scale(AppSettings.BranchDropDownMinWidth), DpiUtil.Scale(AppSettings.BranchDropDownMaxWidth));
 
                 comboBoxPushUrl.DataSource = repositoryHistory.ToList();
                 comboBoxPushUrl.DisplayMember = nameof(Repository.Path);

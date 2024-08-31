@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
             _NO_TRANSLATE_Directory.DataSource = GetDirectories(currentModule, repositoryHistory);
-            _NO_TRANSLATE_Directory.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            _NO_TRANSLATE_Directory.ResizeDropDownWidth(DpiUtil.Scale(AppSettings.BranchDropDownMinWidth), DpiUtil.Scale(AppSettings.BranchDropDownMaxWidth));
 
             Load.Select();
             _NO_TRANSLATE_Directory.Focus();
