@@ -40,15 +40,37 @@
             int calculatedWidth = 0;
             using Graphics graphics = comboBox.CreateGraphics();
 
+            string displayMemberName = comboBox.DisplayMember;
             Font font = comboBox.Font;
 
             foreach (object item in comboBox.Items)
             {
-                SizeF area = graphics.MeasureString(item.ToString(), font);
+                SizeF area = graphics.MeasureString(GetDisplayValue(displayMemberName, item), font);
                 calculatedWidth = Math.Max((int)area.Width, calculatedWidth);
             }
 
             return calculatedWidth;
+        }
+
+        private static string GetDisplayValue(string displayMemberName, object item)
+        {
+            if (displayMemberName.Length == 0)
+            {
+                return item.ToString();
+            }
+
+            System.Reflection.PropertyInfo displayMemberProperty = item
+                .GetType()
+                .GetProperty(displayMemberName);
+
+            if (displayMemberProperty is null)
+            {
+                return item.ToString();
+            }
+
+            return displayMemberProperty
+                .GetValue(item)
+                ?.ToString();
         }
     }
 }
