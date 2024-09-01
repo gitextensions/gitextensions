@@ -61,7 +61,7 @@ namespace GitUI
                 return item.ToString();
             }
 
-            System.Reflection.PropertyInfo displayMemberProperty = item
+            System.Reflection.PropertyInfo? displayMemberProperty = item
                 .GetType()
                 .GetProperty(displayMemberName);
 
