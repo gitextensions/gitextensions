@@ -59,7 +59,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return LocalizationHelpers.GetRelativeDateString(DateTime.Now, dt, displayWeeks: false);
                 }
 
-                return dt.ToString("G");
+                return dt.ToString("g");
             }
         }
 
