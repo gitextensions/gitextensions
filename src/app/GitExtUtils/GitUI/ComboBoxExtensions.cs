@@ -1,15 +1,10 @@
-﻿using System.Runtime.InteropServices;
-
-namespace GitUI
+﻿namespace GitUI
 {
     public static class ComboBoxExtensions
     {
         public static void AdjustWidthToFitContent(this ComboBox comboBox)
         {
-            if (comboBox is null)
-            {
-                throw new ArgumentNullException(nameof(comboBox));
-            }
+            ArgumentNullException.ThrowIfNull(comboBox);
 
             int width = GetPreferredDropDownWidth(comboBox);
 
@@ -54,7 +49,7 @@ namespace GitUI
             return calculatedWidth + CalculateVerticalScrollBarWidth(comboBox);
         }
 
-        private static string GetDisplayValue(string displayMemberName, object item)
+        private static string? GetDisplayValue(string displayMemberName, object item)
         {
             if (displayMemberName.Length == 0)
             {
