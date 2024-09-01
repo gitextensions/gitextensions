@@ -60,6 +60,7 @@
                 .GetType()
                 .GetProperty(displayMemberName);
 
+            // When an item doesn't have a property, ComboBox falls back to ToString() - but not if the property contains null
             if (displayMemberProperty is null)
             {
                 return item.ToString();
