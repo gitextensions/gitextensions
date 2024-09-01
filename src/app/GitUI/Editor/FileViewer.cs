@@ -868,7 +868,7 @@ namespace GitUI.Editor
 
             string[] encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
             encodingToolStripComboBox.Items.AddRange(encodings);
-            encodingToolStripComboBox.ResizeDropDownWidth(DpiUtil.Scale(50), DpiUtil.Scale(250));
+            encodingToolStripComboBox.ResizeDropDownWidth(minWidth: DpiUtil.Scale(50), maxWidth: DpiUtil.Scale(250));
         }
 
         // Private methods
