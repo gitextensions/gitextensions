@@ -308,7 +308,7 @@ namespace GitUI.CommandsDialogs
             }
 
             gpgSignCommitToolStripComboBox.Size = DpiUtil.Scale(gpgSignCommitToolStripComboBox.Size);
-            gpgSignCommitToolStripComboBox.ResizeDropDownWidth(DpiUtil.Scale(50), DpiUtil.Scale(250));
+            gpgSignCommitToolStripComboBox.ResizeDropDownWidth(minWidth: DpiUtil.Scale(50), maxWidth: DpiUtil.Scale(250));
 
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowImageMargin = true;
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowCheckMargin = false;
