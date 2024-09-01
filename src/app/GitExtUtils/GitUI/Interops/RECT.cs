@@ -5,7 +5,7 @@ namespace System;
 internal static partial class NativeMethods
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct RECT
+    internal struct RECT
     {
         public int left;
         public int top;

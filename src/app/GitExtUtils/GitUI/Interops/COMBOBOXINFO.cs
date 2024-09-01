@@ -5,7 +5,7 @@ namespace System;
 internal static partial class NativeMethods
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct COMBOBOXINFO
+    internal struct COMBOBOXINFO
     {
         public int cbSize;
         public RECT rcItem;
