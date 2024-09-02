@@ -73,8 +73,7 @@
 
         private static int CalculateVerticalScrollBarWidth(ComboBox comboBox)
         {
-            NativeMethods.COMBOBOXINFO cboInfo = new();
-            cboInfo.cbSize = NativeMethods.COMBOBOXINFO.SizeOf;
+            NativeMethods.COMBOBOXINFO cboInfo = new() { cbSize = NativeMethods.COMBOBOXINFO.SizeOf };
             if (!NativeMethods.GetComboBoxInfo(comboBox.Handle, ref cboInfo))
             {
                 return 0;
