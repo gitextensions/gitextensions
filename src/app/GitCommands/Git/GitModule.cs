@@ -535,7 +535,7 @@ namespace GitCommands
             string editor = GetEffectiveSetting("core.editor").ToLower();
             bool createWindow = !editor.Contains("gitextensions") && !editor.Contains("notepad");
 
-            return _gitExecutable.RunCommand(arguments, createWindow: createWindow);
+            return _gitExecutable.RunCommand(arguments, createWindow: createWindow, throwOnErrorExit: false);
         }
 
         public bool InTheMiddleOfConflictedMerge(bool throwOnErrorExit = true)
@@ -1779,7 +1779,8 @@ namespace GitCommands
                 {
                     "--add",
                     file.ToPosixPath().Quote()
-                });
+                },
+                throwOnErrorExit: false);
         }
 
         /// <summary>
@@ -1889,7 +1890,8 @@ namespace GitCommands
                 {
                     "--intent-to-add",
                     file.Name.Quote()
-                });
+                },
+                throwOnErrorExit: false);
         }
 
         public async Task<bool> AddInteractiveAsync(GitItemStatus file)
@@ -3769,13 +3771,12 @@ namespace GitCommands
                 return false;
             }
 
-            branchName = branchName.Replace("\"", "\\\"");
             GitArgumentBuilder args = new("check-ref-format")
             {
                 "--branch",
                 branchName.QuoteNE()
             };
-            return _gitExecutable.RunCommand(args);
+            return _gitExecutable.RunCommand(args, throwOnErrorExit: false);
         }
 
         public string FormatBranchName(string branchName)
