@@ -3761,10 +3761,7 @@ namespace GitCommands
 
         public bool CheckBranchFormat(string branchName)
         {
-            if (branchName is null)
-            {
-                throw new ArgumentNullException(nameof(branchName));
-            }
+            ArgumentNullException.ThrowIfNull(branchName);
 
             if (string.IsNullOrWhiteSpace(branchName))
             {
@@ -3776,7 +3773,7 @@ namespace GitCommands
                 "--branch",
                 branchName.QuoteNE()
             };
-            return _gitExecutable.RunCommand(args, throwOnErrorExit: false);
+            return _gitExecutable.Execute(args, throwOnErrorExit: false).ExitedSuccessfully;
         }
 
         public string FormatBranchName(string branchName)
