@@ -7,14 +7,14 @@ internal static partial class NativeMethods
     [StructLayout(LayoutKind.Sequential)]
     internal struct COMBOBOXINFO
     {
-        public int cbSize;
+        internal static readonly uint SizeOf = (uint)Marshal.SizeOf<COMBOBOXINFO>();
+
+        public uint cbSize;
         public RECT rcItem;
         public RECT rcButton;
         public ComboBoxButtonState buttonState;
-        public IntPtr hwndCombo;
-        public IntPtr hwndEdit;
-        public IntPtr hwndList;
-
-        public static COMBOBOXINFO Create() => new() { cbSize = Marshal.SizeOf<COMBOBOXINFO>() };
+        public nuint hwndCombo;
+        public nuint hwndEdit;
+        public nuint hwndList;
     }
 }
