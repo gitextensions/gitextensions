@@ -13,8 +13,8 @@ internal static partial class NativeMethods
         public RECT rcItem;
         public RECT rcButton;
         public ComboBoxButtonState buttonState;
-        public nuint hwndCombo;
-        public nuint hwndEdit;
-        public nuint hwndList;
+        public nint hwndCombo;
+        public nint hwndEdit;
+        public nint hwndList;
     }
 }
