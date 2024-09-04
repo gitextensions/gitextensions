@@ -766,8 +766,17 @@
   <data name="ArchiveRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ArchiveRevision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="GoToFirstParentCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\GoToFirstParentCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GoToLastParentCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\GoToLastParentCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="GoToParentCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\GoToParentCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GoToMergeBaseCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\GoToMergeBaseCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NavigateForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\NavigateForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

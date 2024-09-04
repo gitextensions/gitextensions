@@ -137,6 +137,8 @@ namespace GitUI.CommandsDialogs
             FindFile = 15,
             OpenWorkingDirectoryFileWith = 16,
             SearchCommit = 17,
+            GoToFirstParent = 18,
+            GoToLastParent = 19,
         }
 
         public bool ExecuteCommand(Command cmd)
@@ -173,10 +175,25 @@ namespace GitUI.CommandsDialogs
                 case Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFileNotFocused();
                 case Command.FindFile: findInDiffToolStripMenuItem.PerformClick(); break;
                 case Command.SearchCommit: showSearchCommitToolStripMenuItem.PerformClick(); break;
+                case Command.GoToFirstParent: return ForwardToRevisionGrid(RevisionGridControl.Command.GoToFirstParent);
+                case Command.GoToLastParent: return ForwardToRevisionGrid(RevisionGridControl.Command.GoToLastParent);
                 default: return base.ExecuteCommand(cmd);
             }
 
             return true;
+
+            bool ForwardToRevisionGrid(RevisionGridControl.Command command)
+            {
+                if (DiffFiles.Focused
+                    && FindForm() is FormBrowse formBrowse
+                    && formBrowse.RevisionGridControl.ExecuteCommand(command))
+                {
+                    DiffFiles.Focus();
+                    return true;
+                }
+
+                return false;
+            }
 
             bool SelectFirstGroupChangesIfFileNotFocused()
             {
