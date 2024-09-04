@@ -151,20 +151,22 @@ namespace GitCommands
         /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="createWindow">A flag indicating whether a console window should be created and bound to the process.</param>
+        /// <param name="throwOnErrorExit">A flag configuring whether to throw an exception if the exit code is not 0.</param>
         /// <returns><c>true</c> if the process's exit code was zero, otherwise <c>false</c>.</returns>
         [MustUseReturnValue("Callers should verify that " + nameof(RunCommand) + " returned true")]
         public static bool RunCommand(
             this IExecutable executable,
             ArgumentString arguments = default,
             byte[]? input = null,
-            bool createWindow = false)
+            bool createWindow = false,
+            bool throwOnErrorExit = true)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.RunCommandAsync(arguments, input, createWindow));
+                () => executable.RunCommandAsync(arguments, input, createWindow, throwOnErrorExit));
         }
 
         /// <summary>
-        /// Launches a process for the executable per batch item, and returns <c>true</c> if all process exit codes were zero.
+        /// Launches a process for the executable per batch item, and returns <see cref="ExecutionResult"/>.
         /// </summary>
         /// <remarks>
         /// This method uses <see cref="RunCommand"/> to execute multiple commands in batch, used in accordance with
@@ -175,20 +177,22 @@ namespace GitCommands
         /// <param name="executable">The executable from which to launch processes.</param>
         /// <param name="batchArguments">The array of batch arguments to pass to the executable.</param>
         /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
+        /// <param name="throwOnErrorExit">A flag configuring whether to throw an exception if the exit code is not 0.</param>
         /// <returns>An <see cref="ExecutionResult"/> object that gives access to exit code, standard output and standard error values.</returns>
         [MustUseReturnValue("Callers should verify that " + nameof(RunBatchCommand) + " returned true")]
         public static ExecutionResult? RunBatchCommand(
             this IExecutable executable,
             ICollection<BatchArgumentItem> batchArguments,
             Action<BatchProgressEventArgs>? action = null,
-            Action<StreamWriter>? writeInput = null)
+            Action<StreamWriter>? writeInput = null,
+            bool throwOnErrorExit = true)
         {
             int total = batchArguments.Sum(item => item.BatchItemsCount);
             ExecutionResult? result = null;
 
             foreach (BatchArgumentItem item in batchArguments)
             {
-                ExecutionResult itemResult = executable.Execute(item.Argument, writeInput);
+                ExecutionResult itemResult = executable.Execute(item.Argument, writeInput, throwOnErrorExit: throwOnErrorExit);
                 result = result is null
                     ? itemResult
                     : new ExecutionResult(
@@ -212,16 +216,19 @@ namespace GitCommands
         /// <param name="arguments">The arguments to pass to the executable.</param>
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="createWindow">A flag indicating whether a console window should be created and bound to the process.</param>
+        /// <param name="throwOnErrorExit">A flag configuring whether to throw an exception if the exit code is not 0.</param>
         /// <returns>A task that yields <c>true</c> if the process's exit code was zero, otherwise <c>false</c>.</returns>
         public static async Task<bool> RunCommandAsync(
             this IExecutable executable,
             ArgumentString arguments = default,
             byte[]? input = null,
-            bool createWindow = false)
+            bool createWindow = false,
+            bool throwOnErrorExit = true)
         {
-            using IProcess process = executable.Start(arguments, createWindow: createWindow, redirectInput: input is not null);
+            using IProcess process = executable.Start(arguments, createWindow: createWindow, redirectInput: input is not null, throwOnErrorExit: throwOnErrorExit);
             if (input is not null)
             {
+                // Note that output is not redirected, any output is written to the console
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
                 process.StandardInput.Close();
             }

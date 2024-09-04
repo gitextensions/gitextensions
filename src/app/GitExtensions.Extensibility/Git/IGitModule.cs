@@ -370,7 +370,7 @@ public interface IGitModule
     string? GetTagMessage(string? tag, CancellationToken cancellationToken);
     void UnstageFile(string file);
     bool UnstageFiles(IReadOnlyList<GitItemStatus> files, out string allOutput);
-    bool StageFile(string file);
+    void StageFile(string file);
     bool StageFiles(IReadOnlyList<GitItemStatus> files, out string allOutput);
     IEnumerable<IGitRef> GetRemoteBranches();
     IEnumerable<string?> GetPreviousCommitMessages(int count, string revision, string authorPattern);

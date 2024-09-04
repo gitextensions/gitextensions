@@ -535,7 +535,7 @@ namespace GitCommands
             string editor = GetEffectiveSetting("core.editor").ToLower();
             bool createWindow = !editor.Contains("gitextensions") && !editor.Contains("notepad");
 
-            return _gitExecutable.RunCommand(arguments, createWindow: createWindow);
+            return _gitExecutable.RunCommand(arguments, createWindow: createWindow, throwOnErrorExit: false);
         }
 
         public bool InTheMiddleOfConflictedMerge(bool throwOnErrorExit = true)
@@ -1772,9 +1772,9 @@ namespace GitCommands
             return !wereErrors;
         }
 
-        public bool StageFile(string file)
+        public void StageFile(string file)
         {
-            return _gitExecutable.RunCommand(
+            _gitExecutable.RunCommand(
                 new GitArgumentBuilder("update-index")
                 {
                     "--add",
@@ -1882,27 +1882,8 @@ namespace GitCommands
             return shouldRescanChanges;
         }
 
-        private async Task<bool> ExpressIntentToAddAsync(GitItemStatus file)
-        {
-            return await _gitExecutable.RunCommandAsync(
-                new GitArgumentBuilder("add")
-                {
-                    "--intent-to-add",
-                    file.Name.Quote()
-                });
-        }
-
         public async Task<bool> AddInteractiveAsync(GitItemStatus file)
         {
-            if (file.IsNew)
-            {
-                bool result = await ExpressIntentToAddAsync(file);
-                if (!result)
-                {
-                    return result;
-                }
-            }
-
             GitArgumentBuilder args = new("add")
             {
                 "--patch",
@@ -3759,23 +3740,19 @@ namespace GitCommands
 
         public bool CheckBranchFormat(string branchName)
         {
-            if (branchName is null)
-            {
-                throw new ArgumentNullException(nameof(branchName));
-            }
+            ArgumentNullException.ThrowIfNull(branchName);
 
             if (string.IsNullOrWhiteSpace(branchName))
             {
                 return false;
             }
 
-            branchName = branchName.Replace("\"", "\\\"");
             GitArgumentBuilder args = new("check-ref-format")
             {
                 "--branch",
                 branchName.QuoteNE()
             };
-            return _gitExecutable.RunCommand(args);
+            return _gitExecutable.Execute(args, throwOnErrorExit: false).ExitedSuccessfully;
         }
 
         public string FormatBranchName(string branchName)
