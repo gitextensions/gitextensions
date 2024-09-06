@@ -74,18 +74,17 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
 
         AnsiEscapeUtilities.ParseEscape(in_text, sb, textMarkers);
 
-        // sb.ToString().Should().Be("Text with red escape sequence\nextra line\nSome bold red\nNow bold reverse red\nand some dim red\nand some default\n  \n  ");
         sb.ToString().Should().Be(expected);
         textMarkers.Should().HaveCount(4);
 
         textMarkers[0].Offset.Should().Be(10);
         textMarkers[0].Length.Should().Be(3);
-        textMarkers[0].Color.Should().Be(Color.White);
+        textMarkers[0].Color.Should().Be(SystemColors.Window);
         textMarkers[0].ForeColor.Should().Be(_redAnsiTheme[0]);
 
         textMarkers[1].Offset.Should().Be(46);
         textMarkers[1].Length.Should().Be(8);
-        textMarkers[1].Color.Should().Be(Color.White);
+        textMarkers[1].Color.Should().Be(SystemColors.Window);
         textMarkers[1].ForeColor.Should().Be(_redAnsiTheme[2]);
 
         textMarkers[2].Offset.Should().Be(59);
@@ -95,7 +94,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
 
         textMarkers[3].Offset.Should().Be(85);
         textMarkers[3].Length.Should().Be(7);
-        textMarkers[3].Color.Should().Be(Color.White);
+        textMarkers[3].Color.Should().Be(SystemColors.Window);
         textMarkers[3].ForeColor.Should().Be(_redAnsiTheme[1]);
     }
 
@@ -134,7 +133,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
 
         textMarkers[0].Offset.Should().Be(10);
         textMarkers[0].Length.Should().Be(32);
-        textMarkers[0].Color.Should().Be(Color.White);
+        textMarkers[0].Color.Should().Be(SystemColors.Window);
         textMarkers[0].ForeColor.Should().Be(Color.FromArgb(255, 255, 0, 0));
 
         textMarkers[1].Offset.Should().Be(42);
@@ -144,12 +143,12 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
 
         textMarkers[2].Offset.Should().Be(62);
         textMarkers[2].Length.Should().Be(6);
-        textMarkers[2].Color.Should().Be(Color.White);
+        textMarkers[2].Color.Should().Be(SystemColors.Window);
         textMarkers[2].ForeColor.Should().Be(Color.FromArgb(255, 0, 0, 255));
 
         textMarkers[3].Offset.Should().Be(100);
         textMarkers[3].Length.Should().Be(62);
-        textMarkers[3].Color.Should().Be(Color.White);
+        textMarkers[3].Color.Should().Be(SystemColors.Window);
         textMarkers[3].ForeColor.Should().Be(Color.FromArgb(0x00, 0x00, 0x00));
     }
 }
