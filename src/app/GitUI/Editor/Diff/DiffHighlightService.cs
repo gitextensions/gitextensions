@@ -26,11 +26,6 @@ public abstract class DiffHighlightService : TextHighlightService
     {
         _useGitColoring = useGitColoring;
         SetText(ref text);
-
-        if (!_useGitColoring)
-        {
-            HighlightAddedAndDeletedLines(_textMarkers);
-        }
     }
 
     public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring, string command)
@@ -114,19 +109,7 @@ public abstract class DiffHighlightService : TextHighlightService
     }
 
     public override void AddTextHighlighting(IDocument document)
-    {
-        // Apply GE word highlighting for Patch display (may apply to Difftastic setting, if not available for a repo)
-        if (!_useGitColoring || AppSettings.DiffDisplayAppearance.Value != GitCommands.Settings.DiffDisplayAppearance.GitWordDiff)
-        {
-            MarkInlineDifferences(document);
-        }
-
-        foreach (TextMarker tm in _textMarkers)
-        {
-            document.MarkerStrategy.AddMarker(tm);
-        }
-
-    }
+        => document.MarkerStrategy.AddMarkers(_textMarkers);
 
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
         => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.MinusPlus or DiffLineType.Grep);
@@ -144,6 +127,27 @@ public abstract class DiffHighlightService : TextHighlightService
         AnsiEscapeUtilities.ParseEscape(text, sb, _textMarkers);
 
         text = sb.ToString();
+    }
+
+    /// <summary>
+    /// Set highlighting for <paramref name="text"/>.
+    /// The parsed added/removed lines in <see cref="_diffLinesInfo"/> is used as well as
+    /// the highlighting in <see cref="_textMarkers"/> (if Git highlighting <see cref="_useGitColoring"/>),
+    /// is used to mark inline differences (dim unchanged part of lines).
+    /// </summary>
+    /// <param name="text">The text to process.</param>
+    internal void SetHighlighting(string text)
+    {
+        if (!_useGitColoring)
+        {
+            HighlightAddedAndDeletedLines(_textMarkers);
+        }
+
+        // Apply GE word highlighting for Patch display (may apply to Difftastic setting, if not available for a repo)
+        if (!_useGitColoring || AppSettings.DiffDisplayAppearance.Value != GitCommands.Settings.DiffDisplayAppearance.GitWordDiff)
+        {
+            MarkInlineDifferences(text, _textMarkers);
+        }
     }
 
     /// <summary>
@@ -172,14 +176,13 @@ public abstract class DiffHighlightService : TextHighlightService
     /// <summary>
     ///  Matches related removed and added lines in a consecutive block of a patch document and marks identical parts dimmed.
     /// </summary>
-    private void MarkInlineDifferences(IDocument document)
+    private void MarkInlineDifferences(string text, List<TextMarker> textMarkers)
     {
         int index = 0;
         List<DiffLineInfo> diffLines = [.. _diffLinesInfo.DiffLines.Values.OrderBy(i => i.LineNumInDiff)];
         bool found = false;
-
+        int insertLine = 0;
         const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+'
-        MarkerStrategy markerStrategy = document.MarkerStrategy;
 
         // Process the next blocks of removed / added diffLines and mark in-line differences
         while (index < diffLines.Count)
@@ -190,24 +193,9 @@ public abstract class DiffHighlightService : TextHighlightService
             IReadOnlyList<ISegment> linesRemoved = GetBlockOfLines(diffLines, DiffLineType.Minus, ref index, ref found);
             IReadOnlyList<ISegment> linesAdded = GetBlockOfLines(diffLines, DiffLineType.Plus, ref index, ref found);
 
-            foreach (TextMarker marker in GetDifferenceMarkers(GetText, linesRemoved, linesAdded, diffContentOffset))
-            {
-                markerStrategy.AddMarker(marker);
-            }
-        }
-
-        return;
-
-        string GetText(ISegment line)
-        {
-            int len = line.Length - diffContentOffset;
-            if (line.Offset + line.Length >= document.TextLength)
-            {
-                // This is likely a test, where last line do not have a newline
-                --len;
-            }
-
-            return document.GetText(line.Offset + diffContentOffset, len);
+            IEnumerable<TextMarker> addMarkers = GetDifferenceMarkers(text, linesRemoved, linesAdded, diffContentOffset);
+            textMarkers.InsertRange(insertLine, addMarkers);
+            insertLine += addMarkers.Count();
         }
     }
 
@@ -259,15 +247,27 @@ public abstract class DiffHighlightService : TextHighlightService
         return result;
     }
 
-    private static List<TextMarker> GetDifferenceMarkers(Func<ISegment, string> getText, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
+    private static IEnumerable<TextMarker> GetDifferenceMarkers(string text, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
     {
         List<TextMarker> markers = [];
-        foreach ((ISegment lineRemoved, ISegment lineAdded) in LinesMatcher.FindLinePairs(getText, linesRemoved, linesAdded))
+        foreach ((ISegment lineRemoved, ISegment lineAdded) in LinesMatcher.FindLinePairs(GetText, linesRemoved, linesAdded))
         {
-            AddDifferenceMarkers(markers, getText, lineRemoved, lineAdded, beginOffset);
+            AddDifferenceMarkers(markers, GetText, lineRemoved, lineAdded, beginOffset);
         }
 
         return markers;
+
+        string GetText(ISegment line)
+        {
+            int len = line.Length - beginOffset;
+            if (line.Offset + len == text.Length)
+            {
+                // This is likely a test, where last line do not have a newline
+                --len;
+            }
+
+            return text.Substring(line.Offset + beginOffset, len);
+        }
     }
 
     internal static void AddDifferenceMarkers(List<TextMarker> markers, Func<ISegment, string> getText, ISegment lineRemoved, ISegment lineAdded, int beginOffset)
