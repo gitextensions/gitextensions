@@ -11,6 +11,7 @@ public class CombinedDiffHighlightService : DiffHighlightService
     {
         _diffLinesInfo = DiffLineNumAnalyzer.Analyze(text, _textMarkers, isCombinedDiff: true);
         lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: true);
+        SetHighlighting(text);
     }
 
     public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
