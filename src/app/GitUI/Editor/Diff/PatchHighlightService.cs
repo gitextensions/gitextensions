@@ -2,7 +2,6 @@
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
-using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
@@ -17,16 +16,12 @@ public class PatchHighlightService : DiffHighlightService
     private const string _removedLinePrefix = "-";
     private static readonly string[] _diffFullPrefixes = [" ", _addedLinePrefix, _removedLinePrefix];
 
-    public PatchHighlightService(ref string text, bool useGitColoring)
+    public PatchHighlightService(ref string text, bool useGitColoring, DiffViewerLineNumberControl lineNumbersControl)
         : base(ref text, useGitColoring)
     {
-    }
-
-    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
-    {
         bool isGitWordDiff = _useGitColoring && AppSettings.DiffDisplayAppearance.Value == GitCommands.Settings.DiffDisplayAppearance.GitWordDiff;
-        DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(textEditor, isCombinedDiff: false, isGitWordDiff);
-        lineNumbersControl.DisplayLineNum(result, showLeftColumn: true);
+        _diffLinesInfo = DiffLineNumAnalyzer.Analyze(text, _textMarkers, isCombinedDiff: false, isGitWordDiff);
+        lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: true);
     }
 
     public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)
@@ -35,10 +30,10 @@ public class PatchHighlightService : DiffHighlightService
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
 
     protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
-        => LinePrefixHelper.GetLinesStartingWith(document, ref line, _addedLinePrefix, ref found);
+        => LinePrefixHelper.GetLinesStartingWith(document, _diffLinesInfo, DiffLineType.Plus, ref line, _addedLinePrefix, ref found);
 
     protected override List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
-        => LinePrefixHelper.GetLinesStartingWith(document, ref line, _removedLinePrefix, ref found);
+        => LinePrefixHelper.GetLinesStartingWith(document, _diffLinesInfo, DiffLineType.Minus, ref line, _removedLinePrefix, ref found);
 
     protected override int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
     {

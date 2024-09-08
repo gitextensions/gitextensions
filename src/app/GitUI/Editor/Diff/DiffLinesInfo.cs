@@ -1,4 +1,4 @@
-﻿namespace GitUI.Editor.Diff;
+namespace GitUI.Editor.Diff;
 
 public sealed class DiffLinesInfo
 {

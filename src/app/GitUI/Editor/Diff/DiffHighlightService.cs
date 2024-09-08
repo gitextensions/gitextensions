@@ -20,6 +20,7 @@ public abstract class DiffHighlightService : TextHighlightService
 
     protected readonly bool _useGitColoring;
     protected readonly List<TextMarker> _textMarkers = [];
+    protected DiffLinesInfo _diffLinesInfo;
 
     public DiffHighlightService(ref string text, bool useGitColoring)
     {

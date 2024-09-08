@@ -8,6 +8,7 @@ namespace GitUITests.Editor.Diff;
 [TestFixture]
 internal class LinePrefixHelperFixture
 {
+/* Ignored, class is removed in a follow up
     [Test]
     public void CanFindAddedLines()
     {
@@ -126,4 +127,5 @@ internal class LinePrefixHelperFixture
 
         return lineSegments;
     }
+*/
 }

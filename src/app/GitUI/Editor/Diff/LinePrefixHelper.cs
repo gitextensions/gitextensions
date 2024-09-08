@@ -11,12 +11,12 @@ public class LinePrefixHelper
         _segmentGetter = segmentGetter;
     }
 
-    public List<ISegment> GetLinesStartingWith(IDocument document, ref int beginIndex, string prefixStr, ref bool found)
+    public List<ISegment> GetLinesStartingWith(IDocument document, DiffLinesInfo diffLinesInfo, DiffLineType diffLineType, ref int beginIndex, string prefixStr, ref bool found)
     {
-        return GetLinesStartingWith(document, ref beginIndex, new[] { prefixStr }, ref found);
+        return GetLinesStartingWith(document, diffLinesInfo, diffLineType, ref beginIndex, new[] { prefixStr }, ref found);
     }
 
-    public List<ISegment> GetLinesStartingWith(IDocument document, ref int beginIndex, string[] prefixStrs, ref bool found)
+    public List<ISegment> GetLinesStartingWith(IDocument document, DiffLinesInfo diffLinesInfo, DiffLineType diffLineType, ref int beginIndex, string[] prefixStrs, ref bool found)
     {
         List<ISegment> result = [];
 
@@ -27,6 +27,16 @@ public class LinePrefixHelper
             if (lineSegment.Length > 0
                 && DoesLineStartWith(document, lineSegment.Offset, prefixStrs))
             {
+                if (diffLinesInfo.DiffLines.TryGetValue(beginIndex, out DiffLineInfo diffLine)
+                    && diffLine.Segment is not null
+                    && diffLine.LineType == diffLineType
+                    && diffLine.IsMovedLine)
+                {
+                    // Ignore this line, seem to be moved
+                    beginIndex++;
+                    continue;
+                }
+
                 found = true;
                 result.Add(lineSegment);
                 beginIndex++;
