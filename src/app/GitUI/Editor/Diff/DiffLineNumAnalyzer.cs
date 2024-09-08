@@ -72,6 +72,7 @@ public partial class DiffLineNumAnalyzer
                     LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
                     RightLineNumber = DiffLineInfo.NotApplicableLineNum,
                     LineSegment = new Segment() { Offset = textOffset, Length = lineLength },
+                    IsMovedLine = false,
                 };
 
                 if (IsMinusLineInCombinedDiff(line))
@@ -104,6 +105,7 @@ public partial class DiffLineNumAnalyzer
                     LineType = isGitWordDiff ? DiffLineType.MinusLeft : DiffLineType.Minus,
                     LineSegment = new Segment() { Offset = textOffset, Length = lineLength },
                 };
+                meta.IsMovedLine = IsMovedLine(textMarkers.Value, meta);
                 ret.Add(meta);
 
                 leftLineNum++;
@@ -118,6 +120,7 @@ public partial class DiffLineNumAnalyzer
                     LineType = isGitWordDiff ? DiffLineType.PlusRight : DiffLineType.Plus,
                     LineSegment = new Segment() { Offset = textOffset, Length = lineLength },
                 };
+                meta.IsMovedLine = IsMovedLine(textMarkers.Value, meta);
                 ret.Add(meta);
                 rightLineNum++;
             }
@@ -166,6 +169,14 @@ public partial class DiffLineNumAnalyzer
         }
 
         return ret;
+
+        // git-diff colors moved lines in other than red green
+        // However, Git may mark trailing whitespaces (diff.colorMovedWS is ignored)
+        bool IsMovedLine(List<TextMarker> textMarkers, DiffLineInfo meta)
+            => textMarkers.Count > 0
+                && !MarkerColorMatch(textMarkers[0], meta.LineType)
+                && (textMarkers.Count <= 1 || !MarkerColorMatch(textMarkers[^1], meta.LineType) || text.AsSpan()[textMarkers[^1].Offset..textMarkers[^1].EndOffset].IsWhiteSpace())
+                && (textMarkers.Count <= 2 || !textMarkers[1..^1].All(m => MarkerColorMatch(m, meta.LineType)));
 
         bool IsGitWordMatch(DiffLineType lineType, string line, int textOffset, int textLength, List<TextMarker> textMarkers)
         {

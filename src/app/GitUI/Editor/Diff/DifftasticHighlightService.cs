@@ -269,6 +269,7 @@ public partial class DifftasticHighlightService : TextHighlightService
                     RightLineNumber = rightLineNo,
                     LineType = lineType,
                     LineSegment = null,
+                    IsMovedLine = false,
                 });
             foreach (TextMarker tm in textMarkers)
             {

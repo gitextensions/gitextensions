@@ -239,6 +239,11 @@ public abstract class DiffHighlightService : TextHighlightService
             }
 
             ArgumentNullException.ThrowIfNull(diffLine.LineSegment);
+            if (diffLine.IsMovedLine)
+            {
+                // Ignore this line, seem to be moved
+                continue;
+            }
 
             // In block, continue to add
             found = true;
