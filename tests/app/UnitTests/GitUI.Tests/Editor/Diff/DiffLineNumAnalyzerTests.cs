@@ -154,6 +154,9 @@ public class DiffLineNumAnalyzerTests
     [Test]
     public void CanGetGitWordDiffInfo()
     {
+        GitCommands.Settings.DiffDisplayAppearance theme = AppSettings.DiffDisplayAppearance.Value;
+        AppSettings.DiffDisplayAppearance.Value = GitCommands.Settings.DiffDisplayAppearance.GitWordDiff;
+
         string text = _sampleGitWordDiff;
         DiffHighlightService diffHighlightService = new PatchHighlightService(ref text, useGitColoring: true);
         _textEditor.Text = text;
@@ -164,21 +167,42 @@ public class DiffLineNumAnalyzerTests
         result.DiffLines[5].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[5].LineType.Should().Be(DiffLineType.Header);
 
-        result.DiffLines[6].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
-        result.DiffLines[6].RightLineNumber.Should().Be(1);
-        result.DiffLines[6].LineType.Should().Be(DiffLineType.PlusRight);
+        result.DiffLines[9].LeftLineNumber.Should().Be(8);
+        result.DiffLines[9].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[9].LineType.Should().Be(DiffLineType.MinusLeft);
 
-        result.DiffLines[8].LeftLineNumber.Should().Be(1);
-        result.DiffLines[8].RightLineNumber.Should().Be(3);
-        result.DiffLines[8].LineType.Should().Be(DiffLineType.Context);
+        result.DiffLines[17].LeftLineNumber.Should().Be(16);
+        result.DiffLines[17].RightLineNumber.Should().Be(14);
+        result.DiffLines[17].LineType.Should().Be(DiffLineType.Context);
 
-        result.DiffLines[15].LeftLineNumber.Should().Be(19);
-        result.DiffLines[15].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
-        result.DiffLines[15].LineType.Should().Be(DiffLineType.MinusLeft);
+        result.DiffLines[18].LeftLineNumber.Should().Be(17);
+        result.DiffLines[18].RightLineNumber.Should().Be(15);
+        result.DiffLines[18].LineType.Should().Be(DiffLineType.MinusPlus);
 
-        result.DiffLines[23].LeftLineNumber.Should().Be(28);
-        result.DiffLines[23].RightLineNumber.Should().Be(28);
+        result.DiffLines[23].LeftLineNumber.Should().Be(22);
+        result.DiffLines[23].RightLineNumber.Should().Be(20);
         result.DiffLines[23].LineType.Should().Be(DiffLineType.MinusPlus);
+
+        // Git output dubious: Bad presentation
+        result.DiffLines[25].LeftLineNumber.Should().Be(24);
+        result.DiffLines[25].RightLineNumber.Should().Be(22);
+        result.DiffLines[25].LineType.Should().Be(DiffLineType.Context);
+
+        // Git output dubious: PlusRight that start intended
+        result.DiffLines[26].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[26].RightLineNumber.Should().Be(23);
+        result.DiffLines[26].LineType.Should().Be(DiffLineType.PlusRight);
+
+        result.DiffLines[27].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
+        result.DiffLines[27].RightLineNumber.Should().Be(24);
+        result.DiffLines[27].LineType.Should().Be(DiffLineType.PlusRight);
+
+        // Git output dubious: Context that should be MinusLeft
+        result.DiffLines[34].LeftLineNumber.Should().Be(31);
+        result.DiffLines[34].RightLineNumber.Should().Be(29);
+        result.DiffLines[34].LineType.Should().Be(DiffLineType.Context);
+
+        AppSettings.DiffDisplayAppearance.Value = theme;
     }
 
     [Test]
