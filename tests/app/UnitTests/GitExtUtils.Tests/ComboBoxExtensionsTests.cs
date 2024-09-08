@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI;
 
 namespace GitExtUtilsTests
@@ -23,6 +22,40 @@ namespace GitExtUtilsTests
         public void ResizeDropDownWidth_ToolStripComboBox_should_throw_if_combo_null()
         {
             ((Action)(() => ((ToolStripComboBox)null).ResizeDropDownWidth(1, 2))).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void AdjustWidthToFitContent_ComboBox_Should_Account_For_Scrollbar()
+        {
+            // Arrange
+            string somewhatLongString = "This is a somewhat long string to force ComboBox drop-down to be adjusted";
+
+            ComboBox comboBox = new();
+            comboBox.Items.Add(somewhatLongString);
+
+            int initialWidth = comboBox.Width;
+
+            // Act
+            comboBox.AdjustWidthToFitContent();
+            int adjustedWidth1 = comboBox.Width;
+
+            comboBox.Items.Add(somewhatLongString);
+            comboBox.AdjustWidthToFitContent();
+            int adjustedWidth2 = comboBox.Width;
+
+            for (int i = 0; i < 50; i++)
+            {
+                comboBox.Items.Add(somewhatLongString);
+            }
+
+            comboBox.AdjustWidthToFitContent();
+            int adjustedWidth52 = comboBox.Width;
+
+            // Assert
+            adjustedWidth1.Should().BeGreaterThan(initialWidth);
+            // For some reason in headless mode a vertical scrollbar appears with just 2 items
+            adjustedWidth2.Should().BeGreaterThan(adjustedWidth1);
+            adjustedWidth52.Should().Be(adjustedWidth2);
         }
 
         [Test]

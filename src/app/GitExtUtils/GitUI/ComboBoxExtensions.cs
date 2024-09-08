@@ -99,15 +99,16 @@ namespace GitUI
                 ?.ToString();
         }
 
-        private static int CalculateVerticalScrollBarWidth(ComboBox comboBox)
+        private static unsafe int CalculateVerticalScrollBarWidth(ComboBox comboBox)
         {
-            NativeMethods.COMBOBOXINFO cboInfo = new() { cbSize = NativeMethods.COMBOBOXINFO.SizeOf };
-            if (!NativeMethods.GetComboBoxInfo(comboBox.Handle, ref cboInfo))
+            NativeMethods.COMBOBOXINFO cboInfo = new() { cbSize = (uint)sizeof(NativeMethods.COMBOBOXINFO) };
+
+            if (NativeMethods.GetComboBoxInfo(comboBox.Handle, &cboInfo) != Interop.BOOL.TRUE)
             {
                 return 0;
             }
 
-            int listStyle = NativeMethods.GetWindowLong(cboInfo.hwndList, NativeMethods.GWL_STYLE);
+            nint listStyle = NativeMethods.GetWindowLongPtrW(cboInfo.hwndList, NativeMethods.GWL.STYLE);
             bool hasVerticalScrollBar = (listStyle & NativeMethods.WS_VSCROLL) == NativeMethods.WS_VSCROLL;
 
             return hasVerticalScrollBar

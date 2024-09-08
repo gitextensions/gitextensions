@@ -1,9 +1,10 @@
 ﻿using System.Runtime.InteropServices;
+using static System.Interop;
 
 namespace System;
 
 internal static partial class NativeMethods
 {
     [DllImport("user32.dll")]
-    internal static extern bool GetComboBoxInfo(nint hWnd, ref COMBOBOXINFO pcbi);
+    internal static unsafe extern BOOL GetComboBoxInfo(nint hWnd, COMBOBOXINFO* pcbi);
 }
