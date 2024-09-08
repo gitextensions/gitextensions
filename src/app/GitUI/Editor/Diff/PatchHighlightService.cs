@@ -1,8 +1,5 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
-using GitExtUtils.GitUI.Theming;
-using GitUI.Theming;
-using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
 
@@ -12,9 +9,7 @@ namespace GitUI.Editor.Diff;
 public class PatchHighlightService : DiffHighlightService
 {
     // Patterns to check for patches in diff files
-    private const string _addedLinePrefix = "+";
-    private const string _removedLinePrefix = "-";
-    private static readonly string[] _diffFullPrefixes = [" ", _addedLinePrefix, _removedLinePrefix];
+    private static readonly string[] _diffFullPrefixes = [" ", "+", "-"];
 
     public PatchHighlightService(ref string text, bool useGitColoring, DiffViewerLineNumberControl lineNumbersControl)
         : base(ref text, useGitColoring)
@@ -28,17 +23,4 @@ public class PatchHighlightService : DiffHighlightService
         => GetGitCommandConfiguration(module, useGitColoring, "diff");
 
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
-
-    protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
-        => LinePrefixHelper.GetLinesStartingWith(document, _diffLinesInfo, DiffLineType.Plus, ref line, _addedLinePrefix, ref found);
-
-    protected override List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
-        => LinePrefixHelper.GetLinesStartingWith(document, _diffLinesInfo, DiffLineType.Minus, ref line, _removedLinePrefix, ref found);
-
-    protected override int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
-    {
-        ProcessLineSegment(document, ref line, lineSegment, _addedLinePrefix, AppColor.AnsiTerminalGreenBackNormal.GetThemeColor());
-        ProcessLineSegment(document, ref line, lineSegment, _removedLinePrefix, AppColor.AnsiTerminalRedBackNormal.GetThemeColor());
-        return line;
-    }
 }
