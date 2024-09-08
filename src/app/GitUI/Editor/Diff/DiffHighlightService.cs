@@ -346,38 +346,32 @@ public abstract class DiffHighlightService : TextHighlightService
     private void MarkInlineDifferences(IDocument document)
     {
         int line = 0;
-
         bool found = false;
-        int diffContentOffset;
-        List<ISegment> linesRemoved = GetRemovedLines(document, ref line, ref found);
-        List<ISegment> linesAdded = GetAddedLines(document, ref line, ref found);
 
-        // The first pair of removed / added lines uses to contain the filenames which could also have changed but have a different prefix length.
-        if (linesAdded.Count == 1 && linesRemoved.Count == 1)
+        // Skip the first pair of removed / added lines, which uses to contain the filenames - but without highlighting
+        _ = GetRemovedLines(document, ref line, ref found);
+        if (found)
         {
-            ISegment lineA = linesRemoved[0];
-            ISegment lineB = linesAdded[0];
-            if (lineA.Length > 4 && lineB.Length > 4 &&
-                document.GetCharAt(lineA.Offset + 4) == 'a' &&
-                document.GetCharAt(lineB.Offset + 4) == 'b')
-            {
-                diffContentOffset = 5;
-            }
-            else
-            {
-                diffContentOffset = 4;
-            }
-
-            MarkInlineDifferences(document, linesRemoved, linesAdded, diffContentOffset);
+            _ = GetAddedLines(document, ref line, ref found);
         }
 
         // Process the next blocks of removed / added lines and mark in-line differences
-        diffContentOffset = 1; // in order to skip the prefixes '-' / '+'
+        const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+'
         while (line < document.TotalNumberOfLines)
         {
             found = false;
-            linesRemoved = GetRemovedLines(document, ref line, ref found);
-            linesAdded = GetAddedLines(document, ref line, ref found);
+
+            List<ISegment> linesRemoved = GetRemovedLines(document, ref line, ref found);
+            if (!found)
+            {
+                continue;
+            }
+
+            List<ISegment> linesAdded = GetAddedLines(document, ref line, ref found);
+            if (!found)
+            {
+                continue;
+            }
 
             MarkInlineDifferences(document, linesRemoved, linesAdded, diffContentOffset);
         }
