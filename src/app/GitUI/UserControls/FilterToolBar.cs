@@ -2,7 +2,6 @@
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using ResourceManager;
@@ -35,7 +34,7 @@ namespace GitUI.UserControls
                     @"--exclude=refs/remotes/EXCLUDE_REMOTE_REGEX_PATTERN"
                     ])
                 .ToArray());
-            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(DpiUtil.Scale(AppSettings.BranchDropDownMinWidth), DpiUtil.Scale(AppSettings.BranchDropDownMaxWidth));
+            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private IRevisionGridFilter RevisionGridFilter
@@ -338,7 +337,7 @@ namespace GitUI.UserControls
                 tscboBranchFilter.Items.Clear();
                 tscboBranchFilter.Items.AddRange(matches);
                 tscboBranchFilter.SelectionStart = index;
-                tscboBranchFilter.ComboBox.ResizeDropDownWidth(DpiUtil.Scale(AppSettings.BranchDropDownMinWidth), DpiUtil.Scale(AppSettings.BranchDropDownMaxWidth));
+                tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
             }
         }
 

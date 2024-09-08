@@ -1,7 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
-using GitExtUtils.GitUI;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -37,7 +36,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Directory.DisplayMember = nameof(Repository.Path);
             _NO_TRANSLATE_Directory.SelectedIndex = -1;
             _NO_TRANSLATE_Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
-            _NO_TRANSLATE_Directory.ResizeDropDownWidth(DpiUtil.Scale(AppSettings.BranchDropDownMinWidth), DpiUtil.Scale(AppSettings.BranchDropDownMaxWidth));
+            _NO_TRANSLATE_Directory.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void InitClick(object sender, EventArgs e)

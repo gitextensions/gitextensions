@@ -2,7 +2,6 @@
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitExtUtils.GitUI;
 
 namespace GitUI.UserControls
 {
@@ -50,7 +49,7 @@ namespace GitUI.UserControls
                     ? GetLocalBranches()
                     : GetRemoteBranches());
 
-            Branches.ResizeDropDownWidth(DpiUtil.Scale(AppSettings.BranchDropDownMinWidth), DpiUtil.Scale(AppSettings.BranchDropDownMaxWidth));
+            Branches.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
             if (_containRevisions is not null && Branches.Items.Count == 1)
             {
