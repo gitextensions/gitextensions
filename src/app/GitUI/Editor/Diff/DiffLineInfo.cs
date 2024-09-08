@@ -14,4 +14,9 @@ public class DiffLineInfo
     /// offset and length in document, set for line type Minus/Plus.
     /// </summary>
     public ISegment? LineSegment { get; set; }
+
+    /// <summary>
+    /// Heuristics for Minus/Plus lines where Git coloring indicates that the line is not standard added/removed line.
+    /// </summary>
+    public bool IsMovedLine { get; set; }
 }
