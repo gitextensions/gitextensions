@@ -2,7 +2,6 @@
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using ResourceManager;
@@ -24,9 +23,6 @@ namespace GitUI.UserControls
         public FilterToolBar()
         {
             InitializeComponent();
-
-            tscboBranchFilter.Size = new Size(DpiUtil.Scale(tscboBranchFilter.Size.Width), tscboBranchFilter.Size.Height);
-            tstxtRevisionFilter.Size = new Size(DpiUtil.Scale(tstxtRevisionFilter.Size.Width), tstxtRevisionFilter.Size.Height);
 
             // Select an option until we get a filter bound.
             SelectShowBranchesFilterOption(selectedIndex: 0);

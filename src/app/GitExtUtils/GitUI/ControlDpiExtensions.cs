@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Windows.Forms;
 using GitExtUtils.GitUI;
 
 namespace GitUI
@@ -100,6 +101,31 @@ namespace GitUI
                         // Work around a bug in WinForms where the control's margin gets scaled beyond expectations
                         // see https://github.com/gitextensions/gitextensions/issues/5098
                         upDown.Margin = DpiUtil.Scale(new Padding(3));
+                        break;
+                    }
+
+                    case ToolStrip toolStrip:
+                    {
+                        foreach (ToolStripItem toolStripItem in toolStrip.FindToolStripItems())
+                        {
+                            switch (toolStripItem)
+                            {
+                                case ToolStripComboBox toolStripComboBox:
+                                {
+                                    if (toolStripComboBox.Tag as string != "__DPI_SCALED__")
+                                    {
+                                        toolStripComboBox.Tag = "__DPI_SCALED__";
+
+                                        // ToolStrip items are adjusting vertically, but not horizontally. Furthermore, in some cases vertical adjustments
+                                        // done here come out overblown so we only adjust the width.
+                                        toolStripComboBox.Size = new Size(DpiUtil.Scale(toolStripComboBox.Size.Width), toolStripComboBox.Size.Height);
+                                    }
+
+                                    break;
+                                }
+                            }
+                        }
+
                         break;
                     }
                 }
