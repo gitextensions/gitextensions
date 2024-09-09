@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
-using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
@@ -133,7 +131,7 @@ public partial class AnsiEscapeUtilities
         {
             // Reset escape sequence, end of segment
 
-            if (currentHighlight.Length < 0)
+            if (currentHighlight.Length < 0 || sb.Length == currentHighlight.DocOffset)
             {
                 // Previous was a reset, just ignore.
                 return;
@@ -150,7 +148,18 @@ public partial class AnsiEscapeUtilities
             currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
             if (TryGetTextMarker(currentHighlight, out TextMarker tm))
             {
-                textMarkers.Add(tm);
+                if (textMarkers.Count > 0
+                    && textMarkers[^1].EndOffset + 1 == currentHighlight.DocOffset
+                    && textMarkers[^1].Color == currentHighlight.BackColor
+                    && textMarkers[^1].ForeColor == currentHighlight.ForeColor)
+                {
+                    // Add to existing, Git often have consequtive sections
+                    textMarkers[^1].Length += currentHighlight.Length;
+                }
+                else
+                {
+                    textMarkers.Add(tm);
+                }
             }
 
             currentHighlight.Length = -1;
@@ -488,12 +497,8 @@ public partial class AnsiEscapeUtilities
             return false;
         }
 
-        if (hl.BackColor is null)
-        {
-            // BackColor must always be set
-            // TODO get default back color, guess if the user has not set the value
-            hl.BackColor = Color.White; // document.LineSegmentCollection.FirstOrDefault().GetColorForPosition(0).BackgroundColor;
-        }
+        // BackColor must always be set
+        hl.BackColor ??= SystemColors.Window;
 
         textMarker = hl.ForeColor is null
             ? new TextMarker(hl.DocOffset, hl.Length, TextMarkerType.SolidBlock, (Color)hl.BackColor)
