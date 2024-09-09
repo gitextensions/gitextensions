@@ -16,6 +16,7 @@ public partial class DiffLineNumAnalyzer
     public static DiffLinesInfo Analyze(TextEditorControl textEditor, bool isCombinedDiff, bool isGitWordDiff = false)
     {
         DiffLinesInfo ret = new();
+        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
         int lineNumInDiff = 0;
         int leftLineNum = DiffLineInfo.NotApplicableLineNum;
         int rightLineNum = DiffLineInfo.NotApplicableLineNum;
@@ -32,6 +33,7 @@ public partial class DiffLineNumAnalyzer
 
             int textLength = lines[i].Length + 1;
             Lazy<List<TextMarker>> textMarkers = new(() => textEditor.Document.MarkerStrategy.GetMarkers(textOffset, textLength));
+
             lineNumInDiff++;
             if (line.StartsWith("@@"))
             {
@@ -50,7 +52,11 @@ public partial class DiffLineNumAnalyzer
                 ret.Add(meta);
                 isHeaderLineLocated = true;
             }
-            else if (isHeaderLineLocated && isCombinedDiff)
+            else if (!isHeaderLineLocated)
+            {
+                // No marker to add
+            }
+            else if (isCombinedDiff)
             {
                 DiffLineInfo meta = new()
                 {
@@ -61,6 +67,7 @@ public partial class DiffLineNumAnalyzer
 
                 if (IsMinusLineInCombinedDiff(line))
                 {
+                    // left line is from two documents, so undefined
                     meta.LineType = DiffLineType.Minus;
                 }
                 else if (IsPlusLineInCombinedDiff(line))
@@ -78,10 +85,7 @@ public partial class DiffLineNumAnalyzer
 
                 ret.Add(meta);
             }
-            else if (isHeaderLineLocated && ((!isGitWordDiff && IsMinusLine(line))
-
-                // Heuristics: For GitWordDiff AppSettings.ReverseGitColoring is assumed, otherwise just DiffLineType.Mixed is detected
-                || (isGitWordDiff && textMarkers.Value.Count > 0 && textMarkers.Value.All(i => i.Color == AppColor.AnsiTerminalRedBackNormal.GetThemeColor()))))
+            else if (!isGitWordDiff ? IsMinusLine(line) : IsGitWordMatch(DiffLineType.MinusLeft, line, textOffset, textLength, textMarkers.Value))
             {
                 DiffLineInfo meta = new()
                 {
@@ -94,8 +98,7 @@ public partial class DiffLineNumAnalyzer
 
                 leftLineNum++;
             }
-            else if (isHeaderLineLocated && ((!isGitWordDiff && IsPlusLine(line))
-                || (isGitWordDiff && textMarkers.Value.Count > 0 && textMarkers.Value.All(i => i.Color == AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()))))
+            else if (!isGitWordDiff ? IsPlusLine(line) : IsGitWordMatch(DiffLineType.PlusRight, line, textOffset, textLength, textMarkers.Value))
             {
                 DiffLineInfo meta = new()
                 {
@@ -107,7 +110,7 @@ public partial class DiffLineNumAnalyzer
                 ret.Add(meta);
                 rightLineNum++;
             }
-            else if (isHeaderLineLocated && isGitWordDiff && textMarkers.Value.Count > 0)
+            else if (isGitWordDiff && textMarkers.Value.Count > 0)
             {
                 DiffLineInfo meta = new()
                 {
@@ -131,7 +134,7 @@ public partial class DiffLineNumAnalyzer
                 };
                 ret.Add(meta);
             }
-            else if (isHeaderLineLocated)
+            else
             {
                 DiffLineInfo meta = new()
                 {
@@ -150,25 +153,60 @@ public partial class DiffLineNumAnalyzer
         }
 
         return ret;
-    }
 
-    private static bool IsMinusLine(string line)
-    {
-        return line.StartsWith('-');
-    }
+        bool IsGitWordMatch(DiffLineType lineType, string line, int textOffset, int textLength, List<TextMarker> textMarkers)
+        {
+            // Heuristics (or wild guessing): For GitWordDiff find if the line is exclusive (otherwise DiffLineType.MinusPlus).
+            // If the marker covers the line this should be true.
+            // Git output is impossible to parse, some guesses are done.
+            // Whitespace only lines are still incorrect (no marker at all in Git),
+            // as well as some other situations.
 
-    private static bool IsPlusLine(string line)
-    {
-        return line.StartsWith('+');
-    }
+            int firstNonWhiteSpace = line.Length - line.AsSpan().TrimStart().Length;
 
-    private static bool IsPlusLineInCombinedDiff(string line)
-    {
-        return line.StartsWith("++") || line.StartsWith("+ ") || line.StartsWith(" +");
-    }
+            return textMarkers.Count == 1
 
-    private static bool IsMinusLineInCombinedDiff(string line)
-    {
-        return line.StartsWith("--") || line.StartsWith("- ") || line.StartsWith(" -");
+                    // start may be indented, if a new block of changes starts with white spaces
+                    && (textMarkers[0].Offset <= textOffset || (firstNonWhiteSpace > 0 && textMarkers[0].Offset <= textOffset + firstNonWhiteSpace))
+
+                    // Compensate length->ending and remove the trailing newline chars (no check for \r\n vs \n)
+                    && (textMarkers[0].EndOffset >= textOffset + textLength - 3)
+
+                    // Assume the user has not overridden colors
+                    && MarkerColorMatch(textMarkers[0], lineType);
+        }
+
+        bool MarkerColorMatch(TextMarker textMarker, DiffLineType lineType)
+        {
+            // The expected marker color for a line type, for heuristics.
+
+            return lineType is (DiffLineType.Minus or DiffLineType.MinusLeft)
+                ? (reverseGitColoring
+                    ? textMarker.Color == AppColor.AnsiTerminalRedBackNormal.GetThemeColor()
+                    : textMarker.ForeColor == AppColor.AnsiTerminalRedForeNormal.GetThemeColor())
+                : (reverseGitColoring
+                    ? textMarker.Color == AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()
+                    : textMarker.ForeColor == AppColor.AnsiTerminalGreenForeNormal.GetThemeColor());
+        }
+
+        static bool IsMinusLine(string line)
+        {
+            return line.StartsWith('-');
+        }
+
+        static bool IsPlusLine(string line)
+        {
+            return line.StartsWith('+');
+        }
+
+        static bool IsPlusLineInCombinedDiff(string line)
+        {
+            return line.StartsWith("++") || line.StartsWith("+ ") || line.StartsWith(" +");
+        }
+
+        static bool IsMinusLineInCombinedDiff(string line)
+        {
+            return line.StartsWith("--") || line.StartsWith("- ") || line.StartsWith(" -");
+        }
     }
 }
