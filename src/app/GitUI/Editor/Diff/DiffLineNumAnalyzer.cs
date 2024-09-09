@@ -123,8 +123,10 @@ public partial class DiffLineNumAnalyzer
                 leftLineNum++;
                 rightLineNum++;
             }
-            else if (i == lines.Length - 1 && line.StartsWith(GitModule.NoNewLineAtTheEnd))
+            else if (!isGitWordDiff && line.StartsWith('\\'))
             {
+                // git-diff has inserted this line, present it as a header
+                // The only known string is GitModule.NoNewLineAtTheEnd
                 DiffLineInfo meta = new()
                 {
                     LineNumInDiff = lineNumInDiff,
