@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿#nullable enable
+
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -39,6 +41,11 @@ namespace GitUI.ScriptsEngine
 
             internal static (string? arguments, bool abort, bool cancel) ParseUserInputs(string scriptName, string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
             {
+                if (arguments is null)
+                {
+                    return (arguments: null, abort: false, cancel: false);
+                }
+
                 string userInputCaption = string.Format(TranslatedStrings.ScriptUserInputCaption, scriptName);
 
                 // Specific handling of "UserInput" because the value entered should replace only "UserInput" with same label
@@ -57,7 +64,7 @@ namespace GitUI.ScriptsEngine
 
                     string label = match.Groups["label"].Value;
 
-                    using (IUserInputPrompt prompt = uiCommands.GetService<ISimplePromptCreator>().Create(userInputCaption, label, defaultValue.arguments))
+                    using (IUserInputPrompt prompt = uiCommands.GetRequiredService<ISimplePromptCreator>().Create(userInputCaption, label, defaultValue.arguments))
                     {
                         DialogResult result = prompt.ShowDialog(owner);
                         if (result != DialogResult.OK)
@@ -73,7 +80,7 @@ namespace GitUI.ScriptsEngine
                 if (ScriptOptionsParser.Contains(arguments, userInput))
                 {
                     userInputCaption = string.Format(TranslatedStrings.ScriptUserInputCaption, scriptName);
-                    using (IUserInputPrompt prompt = uiCommands.GetService<ISimplePromptCreator>().Create(userInputCaption, label: null, defaultValue: string.Empty))
+                    using (IUserInputPrompt prompt = uiCommands.GetRequiredService<ISimplePromptCreator>().Create(userInputCaption, label: null, defaultValue: string.Empty))
                     {
                         DialogResult result = prompt.ShowDialog(owner);
                         if (result == DialogResult.Cancel)
@@ -87,7 +94,7 @@ namespace GitUI.ScriptsEngine
 
                 if (ScriptOptionsParser.Contains(arguments, userFiles))
                 {
-                    using (IUserInputPrompt prompt = uiCommands.GetService<IFilePromptCreator>().Create())
+                    using (IUserInputPrompt prompt = uiCommands.GetRequiredService<IFilePromptCreator>().Create())
                     {
                         if (prompt.ShowDialog(owner) != DialogResult.OK)
                         {
@@ -130,7 +137,7 @@ namespace GitUI.ScriptsEngine
 
                 string? originalCommand = script.Command;
 
-                (arguments, bool abort, bool cancelled) = ParseUserInputs(script.Name, script.Arguments, uiCommands, owner, scriptOptionsProvider);
+                (arguments, bool abort, bool cancelled) = ParseUserInputs(script.Name ?? "<_nameless_script_>", script.Arguments, uiCommands, owner, scriptOptionsProvider);
 
                 if (cancelled)
                 {
@@ -194,7 +201,7 @@ namespace GitUI.ScriptsEngine
                     if (!string.IsNullOrEmpty(command))
                     {
                         ExecutionResult result = new Executable(command, uiCommands.Module.WorkingDir).Execute(argument);
-                        string revisionRef = result.StandardOutput.Split('\n').FirstOrDefault();
+                        string? revisionRef = result.StandardOutput.Split('\n').FirstOrDefault();
 
                         if (revisionRef is not null)
                         {
@@ -207,8 +214,7 @@ namespace GitUI.ScriptsEngine
 
                 if (!script.RunInBackground)
                 {
-                    // TODO: Remove downcast from IGitUICommands to GitUICommands after https://github.com/gitextensions/gitextensions/pull/11269
-                    bool success = FormProcess.ShowDialog(owner, uiCommands as GitUICommands, argument, uiCommands.Module.WorkingDir, null, true, process: command);
+                    bool success = FormProcess.ShowDialog(owner, uiCommands, argument, uiCommands.Module.WorkingDir, null, true, process: command);
                     if (!success)
                     {
                         return false;

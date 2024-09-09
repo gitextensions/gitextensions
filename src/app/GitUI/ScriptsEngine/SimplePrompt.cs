@@ -1,10 +1,12 @@
-﻿namespace GitUI.ScriptsEngine;
+﻿#nullable enable
+
+namespace GitUI.ScriptsEngine;
 
 internal partial class SimplePrompt : Form, IUserInputPrompt
 {
     public string UserInput { get; private set; } = "";
 
-    public SimplePrompt(string title, string label, string defaultValue)
+    public SimplePrompt(string? title, string? label, string? defaultValue)
     {
         InitializeComponent();
         txtUserInput.Text = defaultValue;
@@ -16,7 +18,7 @@ internal partial class SimplePrompt : Form, IUserInputPrompt
 
         if (!string.IsNullOrWhiteSpace(label))
         {
-            labelInput.Text = label + ":";
+            labelInput.Text = $"{label}:";
         }
     }
 
