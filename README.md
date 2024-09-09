@@ -1,4 +1,4 @@
-![Git Extensions logo](https://cdn.rawgit.com/gitextensions/gitextensions/master/Logo/git-extensions-logo.svg)
+![Git Extensions logo](https://cdn.rawgit.com/gitextensions/gitextensions/master/setup/assets/Logo/git-extensions-logo.svg)
 
 # Git Extensions
 
@@ -72,11 +72,11 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>Latest Release: v4.2.1</strong>
+      <strong>Latest Release: v5.0</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
-      <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?label=GitHub%20downloads%20(latest)&cacheSeconds=3600"></a> <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions/v4.svg?label=SourceForge%20downloads%20(latest)&cacheSeconds=3600"></a>
+      <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?label=GitHub%20downloads%20(latest)&cacheSeconds=3600"></a>
     </td>
   </tr>
   <tr>
@@ -103,19 +103,6 @@ If you want to **update a portable version**, you should delete all the files an
     </td>
     <td>
       <a href="https://marketplace.visualstudio.com/items?itemName=GitExtensionsApp.v341">[ Download ]</a> or install from Visual Studio via Extensions
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <strong>Visual Studio addin (2010/2012/2013)</strong>
-    </td>
-    <td>
-      Included with installer for the 2.x branch. <a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.05">Download and run setup.exe</a><br />
-      <ul>
-        <li><a href="https://github.com/gitextensions/gitextensions/files/2646204/Visual.Studio.2010.Addin.zip">Visual Studio 2010 Addin.zip</a></li>
-        <li><a href="https://github.com/gitextensions/gitextensions/files/2646205/Visual.Studio.2012.Addin.zip">Visual Studio 2012 Addin.zip</a></li>
-        <li><a href="https://github.com/gitextensions/gitextensions/files/2646203/Visual.Studio.2013.Addin.zip">Visual Studio 2013 Addin.zip</a></li>
-      </ul>
     </td>
   </tr>
   <tr>
@@ -162,9 +149,9 @@ For more information see our [code of conduct](CODE_OF_CONDUCT.md).
 * We thank all the people who contribute, the project exists because of you<br />
   <a href="https://github.com/gitextensions/gitextensions/contributors"><img src="https://opencollective.com/gitextensions/contributors.svg?width=890&button=false" /></a>
 * We thank [Transifex](https://www.transifex.com/) for helping us with translations<br />
-  <a href="https://www.transifex.com/" target="_blank"><img src="./GitUI/Resources/Icons/originals/transifex.svg"></a>
+  <a href="https://www.transifex.com/" target="_blank"><img src="./src/app/GitUI/Resources/Icons/originals/transifex.svg"></a>
 * We thank [SignPath.io](https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension) for the free code signing<br />
-  <a href="https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension" target="_blank"><img src="./GitUI/Resources/Icons/originals/signpath_logo.png"></a>
+  <a href="https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension" target="_blank"><img src="./src/app/GitUI/Resources/Icons/originals/signpath_logo.png"></a>
 * We thank [SignPath Foundation](https://signpath.org/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension) for the signing certificate
 * We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/))
 
