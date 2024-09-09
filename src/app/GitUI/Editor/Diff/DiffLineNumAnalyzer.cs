@@ -16,6 +16,7 @@ public partial class DiffLineNumAnalyzer
     public static DiffLinesInfo Analyze(TextEditorControl textEditor, bool isCombinedDiff, bool isGitWordDiff = false)
     {
         DiffLinesInfo ret = new();
+        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
         int lineNumInDiff = 0;
         int leftLineNum = DiffLineInfo.NotApplicableLineNum;
         int rightLineNum = DiffLineInfo.NotApplicableLineNum;
@@ -153,7 +154,7 @@ public partial class DiffLineNumAnalyzer
 
         return ret;
 
-        static bool IsGitWordMatch(DiffLineType lineType, string line, int textOffset, int textLength, List<TextMarker> textMarkers)
+        bool IsGitWordMatch(DiffLineType lineType, string line, int textOffset, int textLength, List<TextMarker> textMarkers)
         {
             // Heuristics (or wild guessing): For GitWordDiff find if the line is exclusive (otherwise DiffLineType.MinusPlus).
             // If the marker covers the line this should be true.
@@ -165,7 +166,7 @@ public partial class DiffLineNumAnalyzer
 
             return textMarkers.Count == 1
 
-                    // start may be intended, if a new block of changes starts with white spaces
+                    // start may be indented, if a new block of changes starts with white spaces
                     && (textMarkers[0].Offset <= textOffset || (firstNonWhiteSpace > 0 && textMarkers[0].Offset <= textOffset + firstNonWhiteSpace))
 
                     // Compensate length->ending and remove the trailing newline chars (no check for \r\n vs \n)
@@ -175,15 +176,15 @@ public partial class DiffLineNumAnalyzer
                     && MarkerColorMatch(textMarkers[0], lineType);
         }
 
-        static bool MarkerColorMatch(TextMarker textMarker, DiffLineType lineType)
+        bool MarkerColorMatch(TextMarker textMarker, DiffLineType lineType)
         {
             // The expected marker color for a line type, for heuristics.
 
             return lineType is (DiffLineType.Minus or DiffLineType.MinusLeft)
-                ? (AppSettings.ReverseGitColoring.Value
+                ? (reverseGitColoring
                     ? textMarker.Color == AppColor.AnsiTerminalRedBackNormal.GetThemeColor()
                     : textMarker.ForeColor == AppColor.AnsiTerminalRedForeNormal.GetThemeColor())
-                : (AppSettings.ReverseGitColoring.Value
+                : (reverseGitColoring
                     ? textMarker.Color == AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()
                     : textMarker.ForeColor == AppColor.AnsiTerminalGreenForeNormal.GetThemeColor());
         }
