@@ -28,7 +28,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using FindLargeFilesForm frm = new(_sizeLargeFile.ValueOrDefault(Settings), args);
+            using FindLargeFilesForm frm = new(_sizeLargeFile.ValueOrDefault(Settings), args.GitUICommands);
             frm.ShowDialog(args.OwnerForm);
 
             return true;
