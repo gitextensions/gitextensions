@@ -9279,6 +9279,14 @@ See the changes in the commit form.</source>
         <source>Go to c&amp;urrent revision</source>
         <target />
       </trans-unit>
+      <trans-unit id="GotoFirstParentCommit.Text">
+        <source>Go to f&amp;irst parent commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GotoLastParentCommit.Text">
+        <source>Go to &amp;last parent commit</source>
+        <target />
+      </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.Text">
         <source>Go to common &amp;ancestor (merge base)</source>
         <target />

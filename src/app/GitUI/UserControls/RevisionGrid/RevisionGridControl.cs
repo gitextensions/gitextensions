@@ -2773,6 +2773,24 @@ namespace GitUI
             }
         }
 
+        private void GoToFirstParent()
+        {
+            GitRevision r = LatestSelectedRevision;
+            if (r?.HasParent is true)
+            {
+                _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId);
+            }
+        }
+
+        private void GoToLastParent()
+        {
+            GitRevision r = LatestSelectedRevision;
+            if (r?.HasParent is true)
+            {
+                _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.ParentIds.Last());
+            }
+        }
+
         private void goToParentToolStripMenuItem_Click()
         {
             GitRevision r = LatestSelectedRevision;
@@ -3203,6 +3221,8 @@ namespace GitUI
                     break;
                 case Command.GoToCommit: MenuCommands.GotoCommitExecute(); break;
                 case Command.GoToParent: goToParentToolStripMenuItem_Click(); break;
+                case Command.GoToFirstParent: GoToFirstParent(); break;
+                case Command.GoToLastParent: GoToLastParent(); break;
                 case Command.SelectNextForkPointAsDiffBase: SelectNextForkPointAsDiffBase(); break;
                 case Command.GoToMergeBase: GoToMergeBase(); break;
                 case Command.GoToChild: goToChildToolStripMenuItem_Click(); break;
