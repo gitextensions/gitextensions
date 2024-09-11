@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32104.313
@@ -247,6 +248,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 		tests\plugins\UnitTests\Directory.Build.props = tests\plugins\UnitTests\Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindLargeFiles.Tests", "tests\plugins\UnitTests\FindLargeFiles.Tests\FindLargeFiles.Tests.csproj", "{85006436-9332-4ADA-89BF-A9541F90F761}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -447,6 +450,10 @@ Global
 		{790D97FD-8C38-46B2-8469-C3755CD55E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{790D97FD-8C38-46B2-8469-C3755CD55E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{790D97FD-8C38-46B2-8469-C3755CD55E9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85006436-9332-4ADA-89BF-A9541F90F761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85006436-9332-4ADA-89BF-A9541F90F761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85006436-9332-4ADA-89BF-A9541F90F761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85006436-9332-4ADA-89BF-A9541F90F761}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -516,6 +523,7 @@ Global
 		{8D26B963-EC2E-4D08-A5B4-2177BAC602AE} = {449DD87E-63E9-4C61-B797-A94F8CBE8837}
 		{1110DC9C-5A1E-43E8-A91C-819B3B5207A1} = {449DD87E-63E9-4C61-B797-A94F8CBE8837}
 		{0C71ED08-A7BC-42CC-B690-81F53C62A731} = {1110DC9C-5A1E-43E8-A91C-819B3B5207A1}
+		{85006436-9332-4ADA-89BF-A9541F90F761} = {0C71ED08-A7BC-42CC-B690-81F53C62A731}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
