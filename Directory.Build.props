@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <LangVersion>12</LangVersion>
-    <NoWarn>$(NoWarn);1573;1591;1712;NU1903</NoWarn>
+    <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
 
