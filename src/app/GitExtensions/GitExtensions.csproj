@@ -31,7 +31,7 @@
     <PackageReference Include="vswhere" GeneratePathProperty="true">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="WiX" GeneratePathProperty="true" NoWarn="NU1903">
+    <PackageReference Include="WiX" GeneratePathProperty="true">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
