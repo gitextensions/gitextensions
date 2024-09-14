@@ -1675,7 +1675,7 @@ namespace GitUI.CommandsDialogs
             deleteFileToolStripMenuItem.Enabled = !isAnyDeleted;
             openContainingFolderToolStripMenuItem.Enabled = !isAnyDeleted;
 
-            UnstagedFileContext.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
+            toolStripSeparatorScript.Visible = UnstagedFileContext.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1696,7 +1696,7 @@ namespace GitUI.CommandsDialogs
             stagedOpenWithToolStripMenuItem8.Enabled = !isAnyDeleted;
             stagedOpenFolderToolStripMenuItem10.Enabled = !isAnyDeleted;
 
-            StagedFileContext.AddUserScripts(stagedRunScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
+            toolStripSeparatorScript.Visible = StagedFileContext.AddUserScripts(stagedRunScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void UnstagedSubmoduleContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
