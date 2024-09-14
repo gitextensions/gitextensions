@@ -53,6 +53,8 @@ public partial class AnsiEscapeUtilities
                             BackColor = backColor,
                             ForeColor = foreColor
                         },
+                                prevMarker: null,
+                                sb,
                                 out TextMarker tm))
                         {
                             textMarkers.Add(tm);
@@ -82,8 +84,8 @@ public partial class AnsiEscapeUtilities
         {
             DocOffset = sb.Length,
             Length = -1,
-            BackColor = Color.White,
-            ForeColor = Color.Black
+            BackColor = SystemColors.Window,
+            ForeColor = SystemColors.WindowText,
         };
 
         for (Match match = EscapeRegex().Match(text); match.Success; match = match.NextMatch())
@@ -101,13 +103,8 @@ public partial class AnsiEscapeUtilities
                     // End current match so new can be started, this is expected but normally not used by Git (?).
                     // Also assume that the new colors are "complete", not just overlay.
                     ++errorCount;
-                    Trace.WriteLineIf(traceErrors && errorCount <= 3, $"New start marker without end for grep ({sb.Length}, {match.Index}){(errorCount == 1 ? " in:\n" + text : "")}");
-
-                    currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
-                    if (TryGetTextMarker(currentHighlight, out TextMarker tm))
-                    {
-                        textMarkers.Add(tm);
-                    }
+                    Trace.WriteLineIf(traceErrors && errorCount <= 3, $"New start marker without explicit end ({sb.Length}, {match.Index}){(errorCount == 1 ? " in:\n" + text : "")}");
+                    EndCurrentHighlight();
                 }
 
                 // Start of new segment
@@ -145,21 +142,20 @@ public partial class AnsiEscapeUtilities
                 return;
             }
 
-            currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
-            if (TryGetTextMarker(currentHighlight, out TextMarker tm))
+            int len = sb.Length - currentHighlight.DocOffset;
+            if (len == 1 && sb[^1] == '\r')
             {
-                if (textMarkers.Count > 0
-                    && textMarkers[^1].EndOffset + 1 == currentHighlight.DocOffset
-                    && textMarkers[^1].Color == currentHighlight.BackColor
-                    && textMarkers[^1].ForeColor == currentHighlight.ForeColor)
-                {
-                    // Add to existing, Git often have consequtive sections
-                    textMarkers[^1].Length += currentHighlight.Length;
-                }
-                else
-                {
-                    textMarkers.Add(tm);
-                }
+                // Marker without any visible effect, likely diff.colorMovedWS
+                currentHighlight.Length = -1;
+                ++currentHighlight.DocOffset;
+                return;
+            }
+
+            currentHighlight.Length = len;
+            TextMarker? prevMarker = textMarkers.Count == 0 ? null : textMarkers[^1];
+            if (TryGetTextMarker(currentHighlight, prevMarker, sb, out TextMarker tm))
+            {
+                textMarkers.Add(tm);
             }
 
             currentHighlight.Length = -1;
@@ -174,7 +170,7 @@ public partial class AnsiEscapeUtilities
     /// <param name="backColor">Background color if set.</param>
     /// <param name="foreColor">Foreground color if set.</param>
     /// <param name="currentColorId">The fore color ANSI id (not argb color) if it was set. Can be used in follow-up sequences.</param>
-    /// <returns><see langword="true"/> if a color was set; otherwise <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if a color was set; if just reset <see langword="false"/>.</returns>
     private static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId, bool themeColors)
     {
         bool result = false;
@@ -487,7 +483,11 @@ public partial class AnsiEscapeUtilities
     /// Add pre-parsed highlight info (parsed ANSI escape sequences) as markers in the document.
     /// </summary>
     /// <param name="hl">Info to set.</param>
-    public static bool TryGetTextMarker(HighlightInfo hl, out TextMarker? textMarker)
+    /// <param name="prevMarker">Previous marker to potentially merge with.</param>
+    /// <param name="sb">Text in the document.</param>
+    /// <param name="textMarker">The created text marker or null</param>
+    /// <returns><see langword="true"/> if a marker was created, otherwise <see langword="false"/>.</returns>
+    public static bool TryGetTextMarker(HighlightInfo hl, TextMarker? prevMarker, StringBuilder sb, out TextMarker? textMarker)
     {
         if (hl.DocOffset < 0 || hl.Length < 0)
         {
@@ -499,6 +499,40 @@ public partial class AnsiEscapeUtilities
 
         // BackColor must always be set
         hl.BackColor ??= SystemColors.Window;
+
+        // Check if segment can be merged with the previous
+        if (prevMarker is not null
+            && prevMarker.Color == hl.BackColor
+            && prevMarker.ForeColor == hl.ForeColor)
+        {
+            int gapLen = hl.DocOffset - prevMarker.EndOffset - 1;
+            if (gapLen == 0)
+            {
+                // zero gap, Git often have consequtive sections (like '+' in separate)
+            }
+            else if (gapLen == 1
+                && sb[hl.DocOffset - 1] == '\n')
+            {
+                // Only \n, gap is a newline, not colored in the viewer
+            }
+            else if (gapLen == 2
+                && sb[hl.DocOffset - 2] == '\r'
+                && sb[hl.DocOffset - 1] == '\n')
+            {
+                // Only \r\n
+            }
+            else
+            {
+                gapLen = -1;
+            }
+
+            if (gapLen >= 0)
+            {
+                prevMarker.Length += gapLen + hl.Length;
+                textMarker = null;
+                return false;
+            }
+        }
 
         textMarker = hl.ForeColor is null
             ? new TextMarker(hl.DocOffset, hl.Length, TextMarkerType.SolidBlock, (Color)hl.BackColor)
