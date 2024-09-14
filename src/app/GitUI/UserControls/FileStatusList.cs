@@ -22,7 +22,7 @@ namespace GitUI
 {
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private const string _showAllDifferencesItemName = "ShowDiffForAllParentsText";
+        private const string _showDiffForAllParentsItemName = nameof(TranslatedStrings.ShowDiffForAllParentsText);
 
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
         private readonly IFullPathResolver _fullPathResolver;
@@ -33,7 +33,7 @@ namespace GitUI
         private readonly ToolStripItem _openInVisualStudioSeparator = new ToolStripSeparator();
         private readonly ToolStripItem _NO_TRANSLATE_openInVisualStudioMenuItem;
         private readonly CancellationTokenSequence _reloadSequence = new();
-        private readonly ToolStripItem _showAllDifferencesSeparator = new ToolStripSeparator() { Name = _showAllDifferencesItemName + "Separator" };
+        private readonly ToolStripItem _showDiffForAllParentsSeparator = new ToolStripSeparator() { Name = _showDiffForAllParentsItemName + "Separator" };
         private readonly ToolStripItem _sortBySeparator = new ToolStripSeparator();
 
         private int _nextIndexToSelect = -1;
@@ -1507,17 +1507,17 @@ namespace GitUI
             // Show 'Show file differences for all parents' menu item if it is possible that there are multiple first revisions
             bool mayBeMultipleRevs = _enableDisablingShowDiffForAllParents && GitItemStatusesWithDescription.Count > 1;
 
-            ToolStripItem[] diffItem = cm.Items.Find(_showAllDifferencesItemName, true);
+            ToolStripItem[] diffItem = cm.Items.Find(_showDiffForAllParentsItemName, true);
             if (diffItem.Length == 0)
             {
-                cm.Items.Add(_showAllDifferencesSeparator);
-                _showAllDifferencesSeparator.Visible = mayBeMultipleRevs;
+                cm.Items.Add(_showDiffForAllParentsSeparator);
+                _showDiffForAllParentsSeparator.Visible = mayBeMultipleRevs;
 
                 ToolStripMenuItem showAllDifferencesItem = new(TranslatedStrings.ShowDiffForAllParentsText)
                 {
                     Checked = AppSettings.ShowDiffForAllParents,
                     ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip,
-                    Name = _showAllDifferencesItemName,
+                    Name = _showDiffForAllParentsItemName,
                     CheckOnClick = true,
                     Visible = mayBeMultipleRevs
                 };
@@ -1540,7 +1540,7 @@ namespace GitUI
             {
                 diffItem[0].Visible = mayBeMultipleRevs;
 
-                ToolStripItem[] sepItem = cm.Items.Find(_showAllDifferencesSeparator.Name, true);
+                ToolStripItem[] sepItem = cm.Items.Find(_showDiffForAllParentsSeparator.Name, true);
                 if (sepItem.Length > 0)
                 {
                     sepItem[0].Visible = mayBeMultipleRevs;
