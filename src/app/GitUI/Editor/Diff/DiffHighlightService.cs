@@ -57,10 +57,21 @@ public abstract class DiffHighlightService : TextHighlightService
         if (AppSettings.ReverseGitColoring.Value)
         {
             // Fix: Force black foreground to avoid that foreground is calculated to white
-            SetIfUnsetInGit(key: "color.diff.oldMoved", value: "black brightmagenta");
-            SetIfUnsetInGit(key: "color.diff.newMoved", value: "black brightblue");
-            SetIfUnsetInGit(key: "color.diff.oldMovedAlternative", value: "black brightcyan");
-            SetIfUnsetInGit(key: "color.diff.newMovedAlternative", value: "black brightyellow");
+            GitVersion supportsBrightColors = new("2.26.0.0");
+            if (module.GitVersion >= supportsBrightColors)
+            {
+                SetIfUnsetInGit(key: "color.diff.oldMoved", value: "black brightmagenta");
+                SetIfUnsetInGit(key: "color.diff.newMoved", value: "black brightblue");
+                SetIfUnsetInGit(key: "color.diff.oldMovedAlternative", value: "black brightcyan");
+                SetIfUnsetInGit(key: "color.diff.newMovedAlternative", value: "black brightyellow");
+            }
+            else
+            {
+                SetIfUnsetInGit(key: "color.diff.oldMoved", value: "reverse bold magenta");
+                SetIfUnsetInGit(key: "color.diff.newMoved", value: "reverse bold blue");
+                SetIfUnsetInGit(key: "color.diff.oldMovedAlternative", value: "reverse bold cyan");
+                SetIfUnsetInGit(key: "color.diff.newMovedAlternative", value: "reverse bold yellow");
+            }
         }
 
         // Set dimmed colors, default is gray dimmed/italic
