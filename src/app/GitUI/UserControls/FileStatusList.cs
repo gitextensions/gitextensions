@@ -22,6 +22,8 @@ namespace GitUI
 {
     public sealed partial class FileStatusList : GitModuleControl
     {
+        private const string _showDiffForAllParentsItemName = nameof(TranslatedStrings.ShowDiffForAllParentsText);
+
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FileStatusDiffCalculator _diffCalculator;
@@ -31,6 +33,8 @@ namespace GitUI
         private readonly ToolStripItem _openInVisualStudioSeparator = new ToolStripSeparator();
         private readonly ToolStripItem _NO_TRANSLATE_openInVisualStudioMenuItem;
         private readonly CancellationTokenSequence _reloadSequence = new();
+        private readonly ToolStripItem _showDiffForAllParentsSeparator = new ToolStripSeparator() { Name = $"{_showDiffForAllParentsItemName}Separator" };
+        private readonly ToolStripItem _sortBySeparator = new ToolStripSeparator();
 
         private int _nextIndexToSelect = -1;
         private bool _enableSelectedIndexChangeEvent = true;
@@ -1496,28 +1500,24 @@ namespace GitUI
 
             if (!cm.Items.Find(_sortByContextMenu.Name, true).Any())
             {
-                cm.Items.Add(new ToolStripSeparator());
+                cm.Items.Add(_sortBySeparator);
                 cm.Items.Add(_sortByContextMenu);
             }
 
             // Show 'Show file differences for all parents' menu item if it is possible that there are multiple first revisions
             bool mayBeMultipleRevs = _enableDisablingShowDiffForAllParents && GitItemStatusesWithDescription.Count > 1;
 
-            const string showAllDifferencesItemName = "ShowDiffForAllParentsText";
-            ToolStripItem[] diffItem = cm.Items.Find(showAllDifferencesItemName, true);
-            const string separatorKey = showAllDifferencesItemName + "Separator";
+            ToolStripItem[] diffItem = cm.Items.Find(_showDiffForAllParentsItemName, true);
             if (diffItem.Length == 0)
             {
-                cm.Items.Add(new ToolStripSeparator
-                {
-                    Name = separatorKey,
-                    Visible = mayBeMultipleRevs
-                });
+                cm.Items.Add(_showDiffForAllParentsSeparator);
+                _showDiffForAllParentsSeparator.Visible = mayBeMultipleRevs;
+
                 ToolStripMenuItem showAllDifferencesItem = new(TranslatedStrings.ShowDiffForAllParentsText)
                 {
                     Checked = AppSettings.ShowDiffForAllParents,
                     ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip,
-                    Name = showAllDifferencesItemName,
+                    Name = _showDiffForAllParentsItemName,
                     CheckOnClick = true,
                     Visible = mayBeMultipleRevs
                 };
@@ -1534,14 +1534,13 @@ namespace GitUI
                         UpdateFileStatusListView(gitItemStatusesWithDescription);
                     });
                 };
-
                 cm.Items.Add(showAllDifferencesItem);
             }
             else
             {
                 diffItem[0].Visible = mayBeMultipleRevs;
 
-                ToolStripItem[] sepItem = cm.Items.Find(separatorKey, true);
+                ToolStripItem[] sepItem = cm.Items.Find(_showDiffForAllParentsSeparator.Name, true);
                 if (sepItem.Length > 0)
                 {
                     sepItem[0].Visible = mayBeMultipleRevs;
