@@ -33,7 +33,7 @@ namespace GitUI
         private readonly ToolStripItem _openInVisualStudioSeparator = new ToolStripSeparator();
         private readonly ToolStripItem _NO_TRANSLATE_openInVisualStudioMenuItem;
         private readonly CancellationTokenSequence _reloadSequence = new();
-        private readonly ToolStripItem _showDiffForAllParentsSeparator = new ToolStripSeparator() { Name = _showDiffForAllParentsItemName + "Separator" };
+        private readonly ToolStripItem _showDiffForAllParentsSeparator = new ToolStripSeparator() { Name = $"{_showDiffForAllParentsItemName}Separator" };
         private readonly ToolStripItem _sortBySeparator = new ToolStripSeparator();
 
         private int _nextIndexToSelect = -1;
