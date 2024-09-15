@@ -728,7 +728,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Branch.Items.AddRange(GetLocalBranches().ToArray());
 
-            _NO_TRANSLATE_Branch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            _NO_TRANSLATE_Branch.ResizeDropDownWidth();
 
             _NO_TRANSLATE_Branch.Text = curBranch;
         }
@@ -762,7 +762,7 @@ namespace GitUI.CommandsDialogs
                 RemoteBranch.Items.AddRange(GetRemoteBranches(_selectedRemote.Name).Select(head => head.LocalName).Where(head => _NO_TRANSLATE_Branch.Text != head).ToArray());
             }
 
-            RemoteBranch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            RemoteBranch.ResizeDropDownWidth();
 
             // Set text again as workaround for appearing focused after setting DropDownWidth
             RemoteBranch.Text = RemoteBranch.Text;
@@ -922,7 +922,7 @@ namespace GitUI.CommandsDialogs
             tags.Insert(0, AllRefs);
             TagComboBox.DataSource = tags;
 
-            TagComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            TagComboBox.ResizeDropDownWidth();
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)

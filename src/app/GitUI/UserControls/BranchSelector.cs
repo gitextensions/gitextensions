@@ -49,7 +49,7 @@ namespace GitUI.UserControls
                     ? GetLocalBranches()
                     : GetRemoteBranches());
 
-            Branches.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            Branches.ResizeDropDownWidth();
 
             if (_containRevisions is not null && Branches.Items.Count == 1)
             {

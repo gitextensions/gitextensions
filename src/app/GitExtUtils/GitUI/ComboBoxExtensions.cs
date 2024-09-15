@@ -4,6 +4,9 @@ namespace GitUI
 {
     public static class ComboBoxExtensions
     {
+        public const int BranchDropDownMinWidth = 200;
+        public const int BranchDropDownMaxWidth = 600;
+
         public static void AdjustWidthToFitContent(this ComboBox comboBox)
         {
             ArgumentNullException.ThrowIfNull(comboBox);
@@ -22,12 +25,22 @@ namespace GitUI
         ///  Resizes the drop-down width of a <see cref="ComboBox"/> to fit within provided bounds.
         /// </summary>
         /// <param name="comboBox">Target control</param>
-        /// <param name="minWidth">Minimum drop-down width</param>
-        /// <param name="maxWidth">Maximum drop-down width</param>
+        /// <param name="minWidth">Minimum drop-down width. Defaults to <see cref="ComboBoxExtensions.BranchDropDownMinWidth"/>.</param>
+        /// <param name="maxWidth">Maximum drop-down width. Defaults to <see cref="ComboBoxExtensions.BranchDropDownMaxWidth"/>.</param>
         /// <param name="dpiScaleBounds">Whether to apply Dpi scaling to <paramref name="minWidth"/> and <paramref name="maxWidth"/>. Defaults to <c>true</c>.</param>
-        public static void ResizeDropDownWidth(this ComboBox comboBox, int minWidth, int maxWidth, bool dpiScaleBounds = true)
+        public static void ResizeDropDownWidth(this ComboBox comboBox, int minWidth = -1, int maxWidth = -1, bool dpiScaleBounds = true)
         {
             ArgumentNullException.ThrowIfNull(comboBox);
+
+            if (minWidth < 0)
+            {
+                minWidth = BranchDropDownMinWidth;
+            }
+
+            if (maxWidth < 0)
+            {
+                maxWidth = BranchDropDownMaxWidth;
+            }
 
             if (dpiScaleBounds)
             {
@@ -43,21 +56,13 @@ namespace GitUI
         ///  Resizes the drop-down width of a <see cref="ToolStripComboBox"/> to fit within provided bounds.
         /// </summary>
         /// <param name="comboBox">Target control</param>
-        /// <param name="minWidth">Minimum drop-down width</param>
-        /// <param name="maxWidth">Maximum drop-down width</param>
+        /// <param name="minWidth">Minimum drop-down width. Defaults to <see cref="ComboBoxExtensions.BranchDropDownMinWidth"/>.</param>
+        /// <param name="maxWidth">Maximum drop-down width. Defaults to <see cref="ComboBoxExtensions.BranchDropDownMaxWidth"/>.</param>
         /// <param name="dpiScaleBounds">Whether to apply Dpi scaling to <paramref name="minWidth"/> and <paramref name="maxWidth"/>. Defaults to <c>true</c>.</param>
-        public static void ResizeDropDownWidth(this ToolStripComboBox comboBox, int minWidth, int maxWidth, bool dpiScaleBounds = true)
+        public static void ResizeDropDownWidth(this ToolStripComboBox comboBox, int minWidth = -1, int maxWidth = -1, bool dpiScaleBounds = true)
         {
             ArgumentNullException.ThrowIfNull(comboBox);
-
-            if (dpiScaleBounds)
-            {
-                minWidth = DpiUtil.Scale(minWidth);
-                maxWidth = DpiUtil.Scale(maxWidth);
-            }
-
-            int calculatedWidth = GetPreferredDropDownWidth((ComboBox)comboBox.Control);
-            comboBox.DropDownWidth = Math.Min(Math.Max(calculatedWidth, minWidth), maxWidth);
+            ResizeDropDownWidth((ComboBox)comboBox.Control, minWidth, maxWidth, dpiScaleBounds);
         }
 
         private static int GetPreferredDropDownWidth(ComboBox comboBox)

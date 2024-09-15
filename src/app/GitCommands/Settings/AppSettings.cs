@@ -50,9 +50,6 @@ namespace GitCommands
         [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex VersionRegex();
 
-        public static readonly int BranchDropDownMinWidth = 200;
-        public static readonly int BranchDropDownMaxWidth = 600;
-
         public static event Action? Saved;
 
         static AppSettings()
