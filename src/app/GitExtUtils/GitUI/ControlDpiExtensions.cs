@@ -108,21 +108,11 @@ namespace GitUI
                     {
                         foreach (ToolStripItem toolStripItem in toolStrip.FindToolStripItems())
                         {
-                            switch (toolStripItem)
+                            if (toolStripItem is ToolStripComboBox toolStripComboBox)
                             {
-                                case ToolStripComboBox toolStripComboBox:
-                                {
-                                    if (toolStripComboBox.Tag as string != "__DPI_SCALED__")
-                                    {
-                                        toolStripComboBox.Tag = "__DPI_SCALED__";
-
-                                        // ToolStrip items are adjusting vertically, but not horizontally. Furthermore, in some cases vertical adjustments
-                                        // done here come out overblown so we only adjust the width.
-                                        toolStripComboBox.Size = new Size(DpiUtil.Scale(toolStripComboBox.Size.Width), toolStripComboBox.Size.Height);
-                                    }
-
-                                    break;
-                                }
+                                // ToolStrip items are adjusting vertically, but not horizontally. Furthermore, in some cases vertical adjustments
+                                // done here come out overblown so we only adjust the width.
+                                toolStripComboBox.Size = new Size(DpiUtil.Scale(toolStripComboBox.Size.Width), toolStripComboBox.Size.Height);
                             }
                         }
 

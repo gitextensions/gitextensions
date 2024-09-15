@@ -20,16 +20,11 @@ public static class ToolStripUtil
 
             yield return item;
 
-            switch (item)
+            if (item is ToolStripDropDownItem toolStripDropDownItem)
             {
-                case ToolStripDropDownItem toolStripDropDownItem:
+                foreach (ToolStripItem dropDownItem in toolStripDropDownItem.DropDownItems)
                 {
-                    foreach (ToolStripItem dropDownItem in toolStripDropDownItem.DropDownItems)
-                    {
-                        queue.Enqueue(dropDownItem);
-                    }
-
-                    break;
+                    queue.Enqueue(dropDownItem);
                 }
             }
         }
