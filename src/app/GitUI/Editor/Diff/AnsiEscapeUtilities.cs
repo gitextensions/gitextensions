@@ -47,12 +47,12 @@ public partial class AnsiEscapeUtilities
                         sb.Append("@!");
                         TryGetColorsFromEscapeSequence(new List<int>() { 0, dim, i + 30 + (fore ? 0 : 10) + (bold ? 60 : 0) }, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors: false);
                         if (TryGetTextMarker(new()
-                        {
-                            DocOffset = sb.Length - 2,
-                            Length = 2,
-                            BackColor = backColor,
-                            ForeColor = foreColor
-                        },
+                                {
+                                    DocOffset = sb.Length - 2,
+                                    Length = 2,
+                                    BackColor = backColor,
+                                    ForeColor = foreColor
+                                },
                                 prevMarker: null,
                                 sb,
                                 out TextMarker tm))
@@ -508,10 +508,10 @@ public partial class AnsiEscapeUtilities
             int gapLen = hl.DocOffset - prevMarker.EndOffset - 1;
             if (gapLen == 0)
             {
-                // zero gap, Git often have consequtive sections (like '+' in separate)
+                // zero gap, Git often have consecutive sections (like '+' in separate)
             }
             else if (gapLen == 1
-                && sb[hl.DocOffset - 1] == '\n')
+                && sb[hl.DocOffset - 1] is ('\n' or '\r'))
             {
                 // Only \n, gap is a newline, not colored in the viewer
             }
