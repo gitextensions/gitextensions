@@ -2,7 +2,7 @@
 
 namespace System;
 
-internal static class NativeMethods
+internal static partial class NativeMethods
 {
     internal const int ComCtl32CLRNone = unchecked((int)0xFFFFFFFF);
 
