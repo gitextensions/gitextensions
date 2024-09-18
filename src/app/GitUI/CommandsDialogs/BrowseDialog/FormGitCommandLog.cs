@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 Encoding encoding = GitModule.SystemEncoding;
                 commandCacheOutput.Text =
-                    PrintableChars(command) +
+                    command +
                     "\n-------------------------------------\n\n" +
                     PrintableChars(cmdOut) +
                     "\n-------------------------------------\n\n" +
