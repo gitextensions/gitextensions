@@ -34,12 +34,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
         #endregion
 
         private const string UpstreamRemoteName = "upstream";
+        private readonly IGitUICommands _commands;
         private readonly IRepositoryHostPlugin _gitHoster;
         private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
 
-        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged)
+        public ForkAndCloneForm(IGitUICommands commands, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged)
         {
             _gitModuleChanged = gitModuleChanged;
+            _commands = commands;
             _gitHoster = gitHoster;
             InitializeComponent();
             InitializeComplete();
@@ -370,11 +372,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            GitUICommands uiCommands = new(GitUICommands.EmptyServiceProvider, new GitModule(null));
+            ArgumentString cmd = Commands.Clone(repo.CloneUrl, targetDir, _commands.Module.GetPathForGitExecution, depth: GetDepth());
 
-            ArgumentString cmd = Commands.Clone(repo.CloneUrl, targetDir, uiCommands.Module.GetPathForGitExecution, depth: GetDepth());
-
-            FormRemoteProcess formRemoteProcess = new(uiCommands, cmd)
+            FormRemoteProcess formRemoteProcess = new(_commands, cmd)
             {
                 Remote = repo.CloneUrl
             };
