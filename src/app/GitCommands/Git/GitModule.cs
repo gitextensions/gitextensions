@@ -3463,17 +3463,20 @@ namespace GitCommands
             }
         }
 
-        public string GetFileText(ObjectId id, Encoding encoding)
+        public string GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes)
         {
             GitArgumentBuilder args = new("cat-file")
             {
                 "blob",
                 id.ToString().QuoteNE()
             };
+
+            // Always get with escape sequences, caller to strip
             return _gitExecutable.GetOutput(
                 args,
                 cache: GitCommandCache,
-                outputEncoding: encoding);
+                outputEncoding: encoding,
+                stripAnsiEscapeCodes: stripAnsiEscapeCodes);
         }
 
         public ObjectId? GetFileBlobHash(string fileName, ObjectId objectId)

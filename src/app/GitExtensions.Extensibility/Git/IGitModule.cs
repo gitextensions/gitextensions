@@ -434,7 +434,7 @@ public interface IGitModule
 
     bool ExistsMergeCommit(string? startRev, string? endRev);
 
-    string GetFileText(ObjectId id, Encoding encoding);
+    string GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes);
 
     MemoryStream? GetFileStream(string blob);
 
