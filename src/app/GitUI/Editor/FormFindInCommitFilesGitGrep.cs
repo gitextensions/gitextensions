@@ -66,6 +66,11 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         cboFindInCommitFilesGitGrep.EndUpdate();
     }
 
+    internal void SetShowFindInCommitFilesGitGrep(bool visible)
+    {
+        chkShowSearchBox.Checked = visible;
+    }
+
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
         if (keyData == Keys.Escape)
@@ -94,7 +99,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     private void FormFindInCommitFilesGitGrep_FormClosing(object sender, FormClosingEventArgs e)
     {
         // Close the search if search is not visible (or user has cleared input)
-        if (string.IsNullOrEmpty(GitGrepExpressionText) || !AppSettings.ShowFindInCommitFilesGitGrep.Value)
+        if (string.IsNullOrEmpty(GitGrepExpressionText) || !chkShowSearchBox.Checked)
         {
             FilesGitGrepLocator?.Invoke("", 0);
         }
@@ -107,7 +112,6 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         txtOptions.Text = AppSettings.GitGrepUserArguments.Value;
         chkMatchCase.Checked = !AppSettings.GitGrepIgnoreCase.Value;
         chkMatchWholeWord.Checked = AppSettings.GitGrepMatchWholeWord.Value;
-        chkShowSearchBox.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
         cboFindInCommitFilesGitGrep.Focus();
         _hasLoaded = true;
     }
