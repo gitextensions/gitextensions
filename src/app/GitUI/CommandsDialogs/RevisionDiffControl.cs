@@ -344,7 +344,8 @@ namespace GitUI.CommandsDialogs
 
         public void InitSplitterManager(SplitterManager splitterManager)
         {
-            splitterManager.AddSplitter(DiffSplitContainer, "DiffSplitContainer");
+            splitterManager.AddSplitter(DiffSplitContainer, nameof(DiffSplitContainer));
+            splitterManager.AddSplitter(LeftSplitContainer, $"{nameof(RevisionDiffControl)}.{nameof(LeftSplitContainer)}");
         }
 
         public SplitContainer HorizontalSplitter => DiffSplitContainer;
