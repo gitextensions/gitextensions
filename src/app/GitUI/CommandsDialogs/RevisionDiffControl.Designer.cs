@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionDiffControl));
             DiffSplitContainer = new SplitContainer();
+            LeftSplitContainer = new SplitContainer();
             DiffFiles = new FileStatusList();
             DiffContextMenu = new ContextMenuStrip(components);
             diffUpdateSubmoduleMenuItem = new ToolStripMenuItem();
@@ -72,6 +73,9 @@ namespace GitUI.CommandsDialogs
             DiffSplitContainer.Panel1.SuspendLayout();
             DiffSplitContainer.Panel2.SuspendLayout();
             DiffSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LeftSplitContainer).BeginInit();
+            LeftSplitContainer.Panel1.SuspendLayout();
+            LeftSplitContainer.SuspendLayout();
             DiffContextMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -86,7 +90,7 @@ namespace GitUI.CommandsDialogs
             // 
             // DiffSplitContainer.Panel1
             // 
-            DiffSplitContainer.Panel1.Controls.Add(DiffFiles);
+            DiffSplitContainer.Panel1.Controls.Add(LeftSplitContainer);
             // 
             // DiffSplitContainer.Panel2
             // 
@@ -96,6 +100,27 @@ namespace GitUI.CommandsDialogs
             DiffSplitContainer.SplitterDistance = 300;
             DiffSplitContainer.SplitterWidth = 7;
             DiffSplitContainer.TabIndex = 0;
+            // 
+            // LeftSplitContainer
+            // 
+            LeftSplitContainer.BackColor = SystemColors.Control;
+            LeftSplitContainer.Dock = DockStyle.Fill;
+            LeftSplitContainer.FixedPanel = FixedPanel.Panel2;
+            LeftSplitContainer.Location = new Point(0, 0);
+            LeftSplitContainer.Margin = new Padding(0);
+            LeftSplitContainer.Name = "LeftSplitContainer";
+            LeftSplitContainer.Orientation = Orientation.Horizontal;
+            // 
+            // LeftSplitContainer.Panel1
+            // 
+            LeftSplitContainer.Panel1.BackColor = SystemColors.Window;
+            LeftSplitContainer.Panel1.Controls.Add(DiffFiles);
+            LeftSplitContainer.Panel2Collapsed = true;
+            LeftSplitContainer.Size = new Size(300, 415);
+            LeftSplitContainer.SplitterDistance = 197;
+            LeftSplitContainer.SplitterWidth = 7;
+            LeftSplitContainer.TabIndex = 0;
+            LeftSplitContainer.TabStop = false;
             // 
             // DiffFiles
             // 
@@ -501,6 +526,9 @@ namespace GitUI.CommandsDialogs
             DiffSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DiffSplitContainer).EndInit();
             DiffSplitContainer.ResumeLayout(false);
+            LeftSplitContainer.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)LeftSplitContainer).EndInit();
+            LeftSplitContainer.ResumeLayout(false);
             DiffContextMenu.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -545,6 +573,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem rememberSecondRevDiffToolStripMenuItem;
         private ToolStripMenuItem rememberFirstRevDiffToolStripMenuItem;
         private SplitContainer DiffSplitContainer;
+        public SplitContainer LeftSplitContainer;
         private ContextMenuStrip DiffContextMenu;
         private FileStatusList DiffFiles;
         private Editor.FileViewer DiffText;

@@ -238,6 +238,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.FocusGpgInfo, Keys.Control | Keys.D5),
                     Hk(FormBrowse.Command.FocusGitConsole, Keys.Control | Keys.D6),
                     Hk(FormBrowse.Command.FocusBuildServerStatus, Keys.Control | Keys.D7),
+                    Hk(FormBrowse.Command.FocusOutputHistoryAndToggleIfPanel, Keys.Control | Keys.D9),
                     Hk(FormBrowse.Command.FocusNextTab, Keys.Control | Keys.Tab),
                     Hk(FormBrowse.Command.FocusPrevTab, Keys.Control | Keys.Shift | Keys.Tab),
                     Hk(FormBrowse.Command.FocusFilter, Keys.Control | Keys.E),
