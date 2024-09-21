@@ -1,18 +1,11 @@
-﻿namespace GitUI.UserControls.RevisionGrid.Graph
+﻿using System.Diagnostics;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
+
+namespace GitUI.UserControls.RevisionGrid.Graph
 {
     public static class RevisionGraphLaneColor
     {
-        internal static readonly IReadOnlyList<Color> PresetGraphColors = new[]
-        {
-            Color.FromArgb(240, 100, 160), // red-pink
-            Color.FromArgb(120, 180, 230), // light blue
-            Color.FromArgb(36, 194, 33), // green
-            Color.FromArgb(160, 120, 240), // light violet
-            Color.FromArgb(221, 50, 40), // red
-            Color.FromArgb(26, 198, 166), // cyan-green
-            Color.FromArgb(231, 176, 15) // orange
-        };
-
         public static int GetColorForLane(int seed)
         {
             return Math.Abs(seed) % PresetGraphBrushes.Count;
@@ -26,7 +19,19 @@
 
         static RevisionGraphLaneColor()
         {
-            foreach (Color color in PresetGraphColors)
+            Color[] branchColors = Enum.GetNames(typeof(AppColor))
+                .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
+                .Select(name => ((AppColor)Enum.Parse(typeof(AppColor), name)).GetThemeColor())
+                .Where(color => !color.IsEmpty)
+                .ToArray();
+
+            if (branchColors.Length < 2)
+            {
+                Trace.WriteLine("At least two graph colors must be configured");
+                branchColors = [Color.Magenta, Color.Cyan];
+            }
+
+            foreach (Color color in branchColors)
             {
                 PresetGraphBrushes.Add(new SolidBrush(color));
             }
