@@ -1,9 +1,9 @@
-[1mdiff --git a/diff2.txt b/diff2.txt[m
+[1mdiff --git a/tests/app/UnitTests/GitUI.Tests/Editor/Diff/diff_removed_moved.diff b/tests/app/UnitTests/GitUI.Tests/Editor/Diff/diff_removed_moved.diff[m
 [1mindex 0732af53..78580cd3 100644[m
-[1m--- a/diff2.txt[m
-[1m+++ b/diff2.txt[m
+[1m--- a/tests/app/UnitTests/GitUI.Tests/Editor/Diff/diff_removed_moved.diff[m
+[1m+++ b/tests/app/UnitTests/GitUI.Tests/Editor/Diff/diff_removed_moved.diff[m
 [36m@@ -1,16 +1,17 @@[m
- start context line[m
+ start context line https://github.com/gerhardol/tmp_tests/commit/62058dba356a40750836e5cfcdc11629ac15c39d[m
 [7;31m-another start line[m
 [2;7;34m+[m[2;7;34m  block1[m
 [2;7;34m+[m[2;7;34m  block1-2[m

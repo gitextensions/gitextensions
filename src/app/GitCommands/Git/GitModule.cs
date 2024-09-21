@@ -3471,7 +3471,6 @@ namespace GitCommands
                 id.ToString().QuoteNE()
             };
 
-            // Always get with escape sequences, caller to strip
             return _gitExecutable.GetOutput(
                 args,
                 cache: GitCommandCache,

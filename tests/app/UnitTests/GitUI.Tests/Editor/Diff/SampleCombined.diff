@@ -1,4 +1,4 @@
-﻿diff --combined GitCommands/System.cs
+﻿Note that this file is used in testcases, it is not renedered as combined diffs when viewed in Git Extensions viewer. A  more recent example is df5a7bce4a1d2687ee4b335917ca60a7a18052ce Plugins/DeleteUnusedBranches/DeleteUnusedBranchesForm.cs
 index b63d05e,ab6e492..a283699
 --- a/GitCommands/System.cs
 +++ b/GitCommands/System.cs
