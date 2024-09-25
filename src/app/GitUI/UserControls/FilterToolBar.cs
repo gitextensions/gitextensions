@@ -81,8 +81,8 @@ namespace GitUI.UserControls
                 // Ignore quoting, Git revisions do not allow spaces.
                 foreach (string branch in filter.Split((char[])null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 {
-                    bool wildcardBranchFilter = branch.IndexOfAny(new[] { '?', '*', '[' }) >= 0;
-                    if (branch.StartsWith("--") || refs.Any(r => r.LocalName == branch))
+                    bool wildcardBranchFilter = branch.IndexOfAny(['?', '*', '[']) >= 0;
+                    if (branch.StartsWith("--") || refs.Any(r => r.LocalName == branch) || branch.Contains(".."))
                     {
                         // Added as git-log option or revision filter
                     }
@@ -92,7 +92,8 @@ namespace GitUI.UserControls
                     }
                     else
                     {
-                        ObjectId oid = GetModule().RevParse(branch);
+                        string gitref = branch.StartsWith('^') ? branch[1..] : branch;
+                        ObjectId oid = GetModule().RevParse(gitref);
                         if (oid is null)
                         {
                             TaskDialogPage page = new()
