@@ -21,7 +21,7 @@
     {
         private readonly SettingsPageWithHeader? _page;
 
-        public SettingsPageHeader(SettingsPageWithHeader? page)
+        public SettingsPageHeader(SettingsPageWithHeader? page, bool isRepoValid)
         {
             InitializeComponent();
             InitializeComplete();
@@ -33,13 +33,13 @@
                 settingsPagePanel.Controls.Add(page);
                 page.Dock = DockStyle.Fill;
                 _page = page;
-                ConfigureHeader();
+                ConfigureHeader(isRepoValid);
             }
         }
 
-        private void ConfigureHeader()
+        private void ConfigureHeader(bool isRepoValid)
         {
-            if (!(_page is ILocalSettingsPage localSettingsPage))
+            if (!(_page is ILocalSettingsPage localSettingsPage) || !isRepoValid)
             {
                 GlobalRB.Checked = true;
 
