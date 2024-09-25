@@ -17,8 +17,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private IConfigFileRemoteSettingsManager? _remotesManager;
         private JoinableTask<object>? _populateBuildServerTypeTask;
 
-        public BuildServerIntegrationSettingsPage(IServiceProvider serviceProvider)
-           : base(serviceProvider)
+        public BuildServerIntegrationSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+           : base(serviceProvider, canSaveInsideRepo)
         {
             InitializeComponent();
             InitializeComplete();

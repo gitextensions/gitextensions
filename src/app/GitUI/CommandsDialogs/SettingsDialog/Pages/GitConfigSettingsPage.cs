@@ -15,8 +15,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly GitConfigSettingsPageController _controller;
         private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
-        public GitConfigSettingsPage(IServiceProvider serviceProvider)
-           : base(serviceProvider)
+        public GitConfigSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+           : base(serviceProvider, canSaveInsideRepo)
         {
             InitializeComponent();
 

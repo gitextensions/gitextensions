@@ -13,8 +13,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _addTemplate = new("Add {0} templates");
         private ExternalLinksManager? _externalLinksManager;
 
-        public RevisionLinksSettingsPage(IServiceProvider serviceProvider)
-           : base(serviceProvider)
+        public RevisionLinksSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+           : base(serviceProvider, canSaveInsideRepo)
         {
             InitializeComponent();
             CaptionCol.Width = DpiUtil.Scale(150);

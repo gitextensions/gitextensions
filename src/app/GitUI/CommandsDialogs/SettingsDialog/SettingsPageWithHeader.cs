@@ -8,16 +8,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public partial class SettingsPageWithHeader : SettingsPageBase, IGlobalSettingsPage
     {
         private SettingsPageHeader? _header;
-        private bool _isrepoValid;
+        private bool _canSaveInsideRepo;
 
-        public SettingsPageWithHeader(IServiceProvider serviceProvider)
+        public SettingsPageWithHeader(IServiceProvider serviceProvider, bool canSaveInsideRepo)
             : base(serviceProvider)
         {
-            IGitModule gitModule = (serviceProvider as GitUICommands).Module;
-            _isrepoValid = gitModule.IsValidGitWorkingDir();
+            _canSaveInsideRepo = canSaveInsideRepo;
         }
 
-        public override Control GuiControl => _header ??= new SettingsPageHeader(this, _isrepoValid);
+        public override Control GuiControl => _header ??= new SettingsPageHeader(this, _canSaveInsideRepo);
 
         public virtual void SetGlobalSettings()
         {

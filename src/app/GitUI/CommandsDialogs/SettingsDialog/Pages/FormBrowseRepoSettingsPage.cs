@@ -9,8 +9,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly ShellProvider _shellProvider = new();
         private int _cboTerminalPreviousIndex = -1;
 
-        public FormBrowseRepoSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public FormBrowseRepoSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+            : base(serviceProvider, canSaveInsideRepo)
         {
             InitializeComponent();
             cboTerminal.DisplayMember = "Name";

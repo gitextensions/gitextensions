@@ -59,9 +59,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             _pageHost = pageHost;
         }
 
-        public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost, IServiceProvider serviceProvider) where T : SettingsPageBase
+        public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost, IServiceProvider serviceProvider, bool canSaveInsideRepo) where T : SettingsPageBase
         {
-            T result = (T)Activator.CreateInstance(typeof(T), serviceProvider);
+            T result = (T)Activator.CreateInstance(typeof(T), serviceProvider, canSaveInsideRepo);
 
             result.AdjustForDpiScaling();
             result.EnableRemoveWordHotkey();

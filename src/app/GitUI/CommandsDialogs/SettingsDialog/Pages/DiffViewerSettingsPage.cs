@@ -5,8 +5,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class DiffViewerSettingsPage : SettingsPageWithHeader
     {
-        public DiffViewerSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public DiffViewerSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+            : base(serviceProvider, canSaveInsideRepo)
         {
             InitializeComponent();
             InitializeComplete();

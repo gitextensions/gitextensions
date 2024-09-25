@@ -6,8 +6,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class DetailedSettingsPage : DistributedSettingsPage
     {
-        public DetailedSettingsPage(IServiceProvider serviceProvider)
-           : base(serviceProvider)
+        public DetailedSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+           : base(serviceProvider, canSaveInsideRepo)
         {
             InitializeComponent();
             InitializeComplete();

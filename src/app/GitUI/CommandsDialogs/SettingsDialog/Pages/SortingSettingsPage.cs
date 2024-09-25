@@ -16,8 +16,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             "The remotes matching the pattern will be shown before the others.\n" +
             "Separate the priorities with ';'.");
 
-        public SortingSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public SortingSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+            : base(serviceProvider, canSaveInsideRepo)
         {
             InitializeComponent();
             InitializeComplete();

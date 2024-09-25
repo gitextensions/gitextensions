@@ -6,8 +6,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public partial class ConfigFileSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
     {
-        public ConfigFileSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public ConfigFileSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+            : base(serviceProvider, canSaveInsideRepo)
         {
         }
 

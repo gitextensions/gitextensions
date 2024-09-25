@@ -8,8 +8,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class SshSettingsPage : SettingsPageWithHeader
     {
-        public SshSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public SshSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
+            : base(serviceProvider, canSaveInsideRepo)
         {
             InitializeComponent();
             InitializeComplete();
