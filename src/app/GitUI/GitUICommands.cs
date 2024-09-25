@@ -1302,7 +1302,7 @@ namespace GitUI
         {
             WrapRepoHostingCall(TranslatedStrings.ForkCloneRepo, gitHoster, gh =>
             {
-                using ForkAndCloneForm frm = new(gh, gitModuleChanged);
+                using ForkAndCloneForm frm = new(this, gh, gitModuleChanged);
                 frm.ShowDialog(owner);
             });
         }
