@@ -600,7 +600,9 @@ namespace GitUI.Editor
                     }
                     else
                     {
-                        internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring: false, contentIdentification: fileName);
+                        // If the file seem to be a diff, color with escape sequences if they exist
+                        bool useGitColoring = _viewMode.IsDiffView() && text.Contains('\u001b');
+                        internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, contentIdentification: fileName);
 
                         if (line is not null)
                         {
@@ -693,8 +695,13 @@ namespace GitUI.Editor
 
             string GetFileTextIfBlobExists()
             {
+                // If the file blob seem to be a diff file, get also escape sequences, that possibly are stored in the diff
+                // _viewMode is not set yet, similar check there
+                bool stripAnsiEscapeCodes = string.IsNullOrEmpty(file.Name)
+                    || (!file.Name.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
+                       && !file.Name.EndsWith(".patch", StringComparison.OrdinalIgnoreCase));
                 FilePreamble = [];
-                return file.TreeGuid is not null ? Module.GetFileText(file.TreeGuid, Encoding) : string.Empty;
+                return file.TreeGuid is not null ? Module.GetFileText(file.TreeGuid, Encoding, stripAnsiEscapeCodes) : string.Empty;
             }
 
             Image? GetImage()

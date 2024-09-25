@@ -291,7 +291,7 @@ namespace GitCommands
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            string cacheKey = $"{arguments}::{executable.GetWorkingDirectory()}::{stripAnsiEscapeCodes}::{extraCacheKey}";
+            string cacheKey = $"{arguments} #{executable.GetWorkingDirectory()}::{stripAnsiEscapeCodes}::{extraCacheKey}";
             if (cache?.TryGet(cacheKey, out string? cachedOutput, out string? cachedError) is true)
             {
                 return new ExecutionResult(
