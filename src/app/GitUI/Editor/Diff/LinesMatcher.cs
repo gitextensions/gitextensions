@@ -110,13 +110,24 @@ internal static class LinesMatcher
     {
         (string Word, int StartIndex) notFound = ("", -1);
         (string Word, int StartIndex)[] wordsRemoved = GetWords(textRemoved).ToArray();
-        (string? commonWord, int startIndexOfCommonWordAdded) = GetWords(textAdded)
+        (string Word, int StartIndex)[] wordsAdded = GetWords(textAdded).ToArray();
+        (string? commonWord, int startIndexOfCommonWordAdded) = wordsAdded
             .IntersectBy(wordsRemoved.Select(SelectWord), SelectWord)
             .Union([notFound])
             .MaxBy(pair => pair.Word.Length);
         if (startIndexOfCommonWordAdded != notFound.StartIndex)
         {
             return (commonWord, wordsRemoved.First(pair => pair.Word == commonWord).StartIndex, startIndexOfCommonWordAdded);
+        }
+
+        (string Word, int StartIndex)[] subwordsRemoved = GetSubwords(wordsRemoved).ToArray();
+        (commonWord, startIndexOfCommonWordAdded) = GetSubwords(wordsAdded)
+            .IntersectBy(subwordsRemoved.Select(SelectWord), SelectWord)
+            .Union([notFound])
+            .MaxBy(pair => pair.Word.Length);
+        if (startIndexOfCommonWordAdded != notFound.StartIndex)
+        {
+            return (commonWord, subwordsRemoved.First(pair => pair.Word == commonWord).StartIndex, startIndexOfCommonWordAdded);
         }
 
         return (null, 0, 0);
@@ -145,6 +156,64 @@ internal static class LinesMatcher
             for (int secondIndex = diagonalIndex; secondIndex < diagonalEnd; ++secondIndex)
             {
                 yield return (FirstIndex: firstEnd - 1 + diagonalIndex - secondIndex, secondIndex);
+            }
+        }
+    }
+
+    internal static IEnumerable<(string Word, int StartIndex)> GetSubwords(string word)
+    {
+        int endIndex = word.Length;
+        if (endIndex == 0)
+        {
+            yield break;
+        }
+
+        int startIndex = 0;
+        bool previousUpper = char.IsUpper(word[0]);
+        for (int index = 0; index < endIndex; ++index)
+        {
+            bool currentUpper = char.IsUpper(word[index]);
+            if (previousUpper != currentUpper)
+            {
+                previousUpper = currentUpper;
+                if (currentUpper)
+                {
+                    // emit previous word, but no single '_'
+                    if (!(index == 1 && !char.IsLetterOrDigit(word[0])))
+                    {
+                        yield return (word[startIndex..index], startIndex);
+                    }
+
+                    startIndex = index;
+                }
+            }
+
+            // end word at '_', but join preceding '_' to first word
+            if (index > 0 && !char.IsLetterOrDigit(word[index]))
+            {
+                if (startIndex < index && char.IsLetterOrDigit(word[index - 1]))
+                {
+                    yield return (word[startIndex..index], startIndex);
+                }
+
+                startIndex = index + 1;
+                previousUpper = true;
+            }
+        }
+
+        if (startIndex < endIndex && !(endIndex == 1 && !char.IsLetterOrDigit(word[0])))
+        {
+            yield return (word[startIndex..endIndex], startIndex);
+        }
+    }
+
+    internal static IEnumerable<(string Word, int StartIndex)> GetSubwords(IEnumerable<(string Word, int StartIndex)> words)
+    {
+        foreach ((string Word, int StartIndex) word in words)
+        {
+            foreach ((string Word, int StartIndex) subword in GetSubwords(word.Word))
+            {
+                yield return (subword.Word, subword.StartIndex + word.StartIndex);
             }
         }
     }
