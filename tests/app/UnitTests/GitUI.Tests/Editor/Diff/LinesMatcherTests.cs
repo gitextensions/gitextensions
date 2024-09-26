@@ -45,6 +45,25 @@ public class LinesMatcherTests
     }
 
     [Test]
+    [TestCase("", new string[] { }, new int[] { })]
+    [TestCase("_", new string[] { }, new int[] { })]
+    [TestCase("a", new string[] { "a" }, new int[] { 0 })]
+    [TestCase("A", new string[] { "A" }, new int[] { 0 })]
+    [TestCase("camelCase", new string[] { "camel", "Case" }, new int[] { 0, 5 })]
+    [TestCase("DelphiCase", new string[] { "Delphi", "Case" }, new int[] { 0, 6 })]
+    [TestCase("_precedingUnderScore", new string[] { "_preceding", "Under", "Score" }, new int[] { 0, 10, 15 })]
+    [TestCase("python_style", new string[] { "python", "style" }, new int[] { 0, 7 })]
+    [TestCase("multiple__under___scores_", new string[] { "multiple", "under", "scores" }, new int[] { 0, 10, 18 })]
+    [TestCase("CAPITALSwithsuffixNext_Upper_lower", new string[] { "CAPITALSwithsuffix", "Next", "Upper", "lower" }, new int[] { 0, 18, 23, 29 })]
+    [TestCase("    sum += x;", new string[] { "sum", "x" }, new int[] { 4, 11 })]
+    public void GetSubwords(string text, string[] words, int[] offsets)
+    {
+        (string Word, int Offset)[] result = LinesMatcher.GetSubwords(text).ToArray();
+        result.Select(LinesMatcher.SelectWord).Should().BeEquivalentTo(words);
+        result.Select(LinesMatcher.SelectStartIndex).Should().BeEquivalentTo(offsets);
+    }
+
+    [Test]
     public void FindLinePairs_shall_not_search_in_too_large_blocks()
     {
         const int removedCount = 10;
