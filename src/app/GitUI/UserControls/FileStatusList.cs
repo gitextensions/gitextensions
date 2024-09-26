@@ -102,6 +102,8 @@ namespace GitUI
             LoadingFiles.Font = new Font(LoadingFiles.Font, FontStyle.Italic);
             FilterWatermarkLabel.Font = new Font(FilterWatermarkLabel.Font, FontStyle.Italic);
             FilterComboBox.Font = new Font(FilterComboBox.Font, FontStyle.Bold);
+            FilterComboBox.Items.Add("^(?!.*NotThisWord)");
+            FilterComboBox.Items.Add(@"^(?!.*\bg?tests?/)");
             lblFindInCommitFilesGitGrepWatermark.Font = new Font(lblFindInCommitFilesGitGrepWatermark.Font, FontStyle.Italic);
             cboFindInCommitFilesGitGrep.Font = new Font(cboFindInCommitFilesGitGrep.Font, FontStyle.Bold);
 
