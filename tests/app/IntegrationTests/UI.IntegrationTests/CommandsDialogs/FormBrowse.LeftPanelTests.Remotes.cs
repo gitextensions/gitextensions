@@ -159,7 +159,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                     // assert
                     List<string> inactiveNodes = remotesNode.Nodes.OfType<TreeNode>().Last().Nodes.OfType<TreeNode>().Select(n => n.Text).ToList();
-                    inactiveNodes.Count.Should().Be(3);
+                    inactiveNodes.Should().HaveCount(3);
                     inactiveNodes.Should().BeEquivalentTo(RemoteNames[3], RemoteNames[0], RemoteNames[1]);
                     inactiveNodes.Should().BeInAscendingOrder();
                 });

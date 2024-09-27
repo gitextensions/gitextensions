@@ -92,7 +92,7 @@ namespace GitUITests.UserControls.CommitInfo
             {
                 branches.Sort(new GitUI.CommitInfo.CommitInfo.BranchComparer(branches, currentBranch ?? ""));
 
-                branches.Count.Should().Be(expectedBranches.Count);
+                branches.Should().HaveCount(expectedBranches.Count);
                 for (int index = 0; index < branches.Count; ++index)
                 {
                     branches[index].Should().BeSameAs(expectedBranches[index]);

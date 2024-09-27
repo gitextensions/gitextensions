@@ -137,7 +137,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -146,7 +146,7 @@ namespace GitCommandsTests.Submodules
             // Make a change in repo2
             _repo1.CreateFile(_repo2Module.WorkingDir, "test.txt", "test");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[1].Detailed.Should().BeNull();
@@ -170,7 +170,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -179,7 +179,7 @@ namespace GitCommandsTests.Submodules
             // Update commit in repo2
             _repo2Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
@@ -204,7 +204,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -214,7 +214,7 @@ namespace GitCommandsTests.Submodules
             _repo1.CreateFile(_repo2Module.WorkingDir, "test.txt", "test");
             _repo2Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
@@ -240,7 +240,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -249,7 +249,7 @@ namespace GitCommandsTests.Submodules
             // Make a change in repo3
             _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
@@ -275,7 +275,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -285,7 +285,7 @@ namespace GitCommandsTests.Submodules
             _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
             _repo2Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
@@ -298,7 +298,7 @@ namespace GitCommandsTests.Submodules
             // Revert the change for repo3
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
@@ -323,7 +323,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -332,7 +332,7 @@ namespace GitCommandsTests.Submodules
             // Update commit in repo3
             _repo3Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
@@ -358,7 +358,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -367,7 +367,7 @@ namespace GitCommandsTests.Submodules
             // Make a change in repo1
             _repo1.CreateFile(_repo1Module.WorkingDir, "test.txt", "test");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.Should().BeNull();
             result.AllSubmodules[1].Detailed.Should().BeNull();
@@ -391,7 +391,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -400,7 +400,7 @@ namespace GitCommandsTests.Submodules
             // Update commit in topmodule
             currentModule.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -422,7 +422,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
@@ -431,7 +431,7 @@ namespace GitCommandsTests.Submodules
             // Make a change in repo1
             _repo1.CreateFile(_repo1Module.WorkingDir, "test.txt", "test");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
@@ -453,7 +453,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
@@ -462,7 +462,7 @@ namespace GitCommandsTests.Submodules
             // Make a change in repo3
             _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
@@ -487,7 +487,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
@@ -496,7 +496,7 @@ namespace GitCommandsTests.Submodules
             // Update commit in repo3
             _repo3Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
@@ -521,7 +521,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
@@ -529,7 +529,7 @@ namespace GitCommandsTests.Submodules
             // Make a change in repo3
             _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
@@ -553,7 +553,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
@@ -561,7 +561,7 @@ namespace GitCommandsTests.Submodules
             // Update commit in repo3
             _repo3Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
@@ -582,7 +582,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
@@ -590,7 +590,7 @@ namespace GitCommandsTests.Submodules
             // Update commit in repo2
             _repo2Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();
@@ -612,7 +612,7 @@ namespace GitCommandsTests.Submodules
 
             // No changes in repo
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -622,7 +622,7 @@ namespace GitCommandsTests.Submodules
             DateTime statusStart = DateTime.Now;
             _repo1.CreateFile(_repo1Module.WorkingDir, "test.txt", "test");
             changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles, false);
             result.AllSubmodules[0].Detailed.Should().BeNull();
             result.AllSubmodules[1].Detailed.Should().BeNull();
@@ -653,7 +653,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Should().BeNull();
 
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -741,7 +741,7 @@ namespace GitCommandsTests.Submodules
             // Make a change in repo3, still not changing
             _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
-            changedFiles.Should().HaveCount(1);
+            changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
@@ -764,7 +764,7 @@ namespace GitCommandsTests.Submodules
         private async Task CheckRevertedStatus(SubmoduleInfoResult result)
         {
             IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(_repo1Module);
-            changedFiles.Should().HaveCount(0);
+            changedFiles.Should().BeEmpty();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, _repo1Module, changedFiles);
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.TopProject.Detailed.Should().BeNull();

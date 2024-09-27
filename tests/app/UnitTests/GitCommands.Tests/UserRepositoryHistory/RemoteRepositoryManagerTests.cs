@@ -45,7 +45,7 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
-            newHistory.Count.Should().Be(5);
+            newHistory.Should().HaveCount(5);
             newHistory[0].Path.Should().Be(repoToAdd);
         }
 
@@ -65,7 +65,7 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
-            newHistory.Count.Should().Be(5);
+            newHistory.Should().HaveCount(5);
             newHistory[0].Path.Should().Be(repoToAdd);
         }
 
@@ -86,7 +86,7 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
-            newHistory.Count.Should().Be(6);
+            newHistory.Should().HaveCount(6);
             newHistory[0].Path.Should().Be(repoToAdd);
             newHistory[4].Path.Should().Be(repoToAdd);
         }
@@ -107,7 +107,7 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             IList<Repository> newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
-            newHistory.Count.Should().Be(5);
+            newHistory.Should().HaveCount(5);
             newHistory[0].Path.Should().Be(repoToAdd);
             _repositoryStorage.DidNotReceive().Save(Key, Arg.Any<IList<Repository>>());
         }
@@ -128,7 +128,7 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
-            newHistory.Count.Should().Be(4);
+            newHistory.Should().HaveCount(4);
             newHistory.Should().NotContain(repoToDelete);
 
             _repositoryStorage.Received(1).Load(Key);
@@ -151,7 +151,7 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
-            newHistory.Count.Should().Be(5);
+            newHistory.Should().HaveCount(5);
             newHistory.Should().NotContain(repoToDelete);
 
             _repositoryStorage.Received(1).Load(Key);

@@ -60,7 +60,7 @@ namespace UITests.UserControls
 
                 IReadOnlyList<PatchFile> patches = patchGrid.GetTestAccessor().GetInteractiveRebasePatchFiles();
 
-                patches.Count.Should().Be(3);
+                patches.Should().HaveCount(3);
                 VerifyPatch(patches[0], "pick", commitDone, isApplied: true);
                 VerifyPatch(patches[1], "pick", commitApplying, isApplied: false, isNext: true);
                 VerifyPatch(patches[2], "pick", commitToDo, isApplied: false);
@@ -99,7 +99,7 @@ pick {commitToDoPicked.RebaseLine}");
 
                 IReadOnlyList<PatchFile> patches = patchGrid.GetTestAccessor().GetInteractiveRebasePatchFiles();
 
-                patches.Count.Should().Be(5);
+                patches.Should().HaveCount(5);
                 VerifyPatch(patches[0], "drop", commitDoneDelete, isApplied: true); // Line moved up "during interactive rebase"
                 VerifyPatch(patches[1], "pick", commitDonePicked, isApplied: true);
                 VerifyPatch(patches[2], "pick", commitApplying, isApplied: false, isNext: true);

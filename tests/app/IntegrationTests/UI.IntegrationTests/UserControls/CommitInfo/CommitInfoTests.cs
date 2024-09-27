@@ -81,7 +81,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
                 IDictionary<string, int> refs = commitInfo.GetTestAccessor().GetSortedTags();
 
-                refs.Count.Should().Be(3);
+                refs.Should().HaveCount(3);
                 refs.Should().BeEquivalentTo(expected);
 
                 return Task.CompletedTask;
@@ -106,7 +106,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
                 IDictionary<string, int> refs = commitInfo.GetTestAccessor().GetSortedTags();
 
-                refs.Count.Should().Be(4);
+                refs.Should().HaveCount(4);
                 refs.Should().BeEquivalentTo(expected);
 
                 return Task.CompletedTask;
@@ -132,7 +132,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
                 IDictionary<string, int> refs = commitInfo.GetTestAccessor().GetSortedTags();
 
-                refs.Count.Should().Be(5);
+                refs.Should().HaveCount(5);
                 refs.Should().BeEquivalentTo(expected);
 
                 return Task.CompletedTask;
@@ -157,7 +157,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
 
                 IDictionary<string, int> refs = commitInfo.GetTestAccessor().GetSortedTags();
 
-                refs.Count.Should().Be(4);
+                refs.Should().HaveCount(4);
                 refs.Should().BeEquivalentTo(expected);
 
                 return Task.CompletedTask;

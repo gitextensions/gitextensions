@@ -368,7 +368,7 @@ namespace GitlabIntegrationTests
 
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
 
-            result.Count.Should().Be(expectedPages);
+            result.Should().HaveCount(expectedPages);
         }
 
         [Test]

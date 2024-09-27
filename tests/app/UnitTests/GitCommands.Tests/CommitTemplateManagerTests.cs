@@ -76,7 +76,7 @@ namespace GitCommandsTests
             int count = _manager.RegisteredTemplates.Count();
             _manager.Register(templateName, () => "text1", null);
             _manager.Register(templateName, () => "text2", null);
-            _manager.RegisteredTemplates.Count().Should().Be(count + 1);
+            _manager.RegisteredTemplates.Should().HaveCount(count + 1);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace GitCommandsTests
             int expectedCount = _manager.RegisteredTemplates.Count();
             expectedCount.Should().BeGreaterThan(0);
             ((IList)_manager.RegisteredTemplates).Clear();
-            _manager.RegisteredTemplates.Count().Should().Be(expectedCount);
+            _manager.RegisteredTemplates.Should().HaveCount(expectedCount);
         }
 
         public class IntegrationTests

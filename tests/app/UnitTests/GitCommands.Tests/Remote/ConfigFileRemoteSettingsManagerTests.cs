@@ -44,7 +44,7 @@ namespace GitCommandsTests.Remote
 
             IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(true);
 
-            remotes.Count().Should().Be(0);
+            remotes.Should().BeEmpty();
             _module.Received(1).GetRemoteNames();
             _module.DidNotReceive().GetSetting(Arg.Any<string>());
             _module.DidNotReceive().GetSettings(Arg.Any<string>());
@@ -57,7 +57,7 @@ namespace GitCommandsTests.Remote
 
             IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(true);
 
-            remotes.Count().Should().Be(0);
+            remotes.Should().BeEmpty();
             _module.Received(1).GetRemoteNames();
             _module.DidNotReceive().GetSetting(Arg.Any<string>());
             _module.DidNotReceive().GetSettings(Arg.Any<string>());
@@ -75,7 +75,7 @@ namespace GitCommandsTests.Remote
 
             IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(loadDisabled);
 
-            remotes.Count().Should().Be(loadDisabled ? 2 : 1);
+            remotes.Should().HaveCount(loadDisabled ? 2 : 1);
 
             _module.Received(1).GetRemoteNames();
             _module.Received(1).GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName1));

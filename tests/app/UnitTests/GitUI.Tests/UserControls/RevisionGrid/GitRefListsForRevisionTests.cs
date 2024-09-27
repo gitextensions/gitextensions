@@ -49,14 +49,14 @@ namespace GitUITests.UserControls.RevisionGrid
         public void AllBranches_must_return_all_revision_branches()
         {
             GitRefListsForRevision grl = new(_revision);
-            grl.AllBranches.Count.Should().Be(2);
+            grl.AllBranches.Should().HaveCount(2);
         }
 
         [Test]
         public void AllTags_must_return_all_revision_tags()
         {
             GitRefListsForRevision grl = new(_revision);
-            grl.AllTags.Count.Should().Be(1);
+            grl.AllTags.Should().ContainSingle();
         }
 
         [Test]

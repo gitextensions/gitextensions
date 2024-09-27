@@ -93,23 +93,23 @@ so could be removed after this (some were missing from that menu). checkoutBranc
 
             List<LogLine> logLines = _parser.Parse(log.Replace("\r\n", "\n").Split('\n')).ToList();
 
-            logLines.Count.Should().Be(18);
+            logLines.Should().HaveCount(18);
 
             LogLine line = logLines.SingleOrDefault(l => l.Commit == "77fc3cb50");
             line.Should().NotBeNull();
-            line.MessageLines.Count.Should().Be(10);
+            line.MessageLines.Should().HaveCount(10);
 
             line = logLines.SingleOrDefault(l => l.Commit == "57ab3ff2d6546");
             line.Should().NotBeNull();
-            line.MessageLines.Count.Should().Be(1);
+            line.MessageLines.Should().ContainSingle();
 
             line = logLines.SingleOrDefault(l => l.Commit == "ef98f");
             line.Should().NotBeNull();
-            line.MessageLines.Count.Should().Be(1);
+            line.MessageLines.Should().ContainSingle();
 
             line = logLines.SingleOrDefault(l => l.Commit == "eb945eff4");
             line.Should().NotBeNull();
-            line.MessageLines.Count.Should().Be(3);
+            line.MessageLines.Should().HaveCount(3);
         }
     }
 }
