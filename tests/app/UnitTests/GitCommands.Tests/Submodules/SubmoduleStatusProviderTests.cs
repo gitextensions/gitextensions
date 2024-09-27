@@ -152,7 +152,7 @@ namespace GitCommandsTests.Submodules
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change
             File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
@@ -182,11 +182,11 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change
             _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
@@ -217,11 +217,11 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change
             File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
@@ -252,12 +252,12 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[1].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
@@ -288,12 +288,12 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[1].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change for repo3
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
@@ -301,11 +301,11 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change
             _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
@@ -335,12 +335,12 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeFalse();
-            result.AllSubmodules[1].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change
             _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
@@ -373,7 +373,7 @@ namespace GitCommandsTests.Submodules
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change
             File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
@@ -465,9 +465,9 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[1].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
@@ -499,9 +499,9 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeFalse();
-            result.AllSubmodules[1].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
@@ -532,9 +532,9 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[1].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
             // Revert the change
@@ -628,7 +628,7 @@ namespace GitCommandsTests.Submodules
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             (DateTime.Now - statusStart).TotalSeconds.Should().BeGreaterOrEqualTo(14);
 
             // Revert the change
@@ -658,7 +658,7 @@ namespace GitCommandsTests.Submodules
             result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
-            result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
 
             // Revert the change
             File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
@@ -679,7 +679,7 @@ namespace GitCommandsTests.Submodules
 
             result.AllSubmodules[0].Detailed.Should().NotBeNull();
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
@@ -734,7 +734,7 @@ namespace GitCommandsTests.Submodules
 
             result.AllSubmodules[0].Detailed.Should().NotBeNull();
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.AllSubmodules[1].Detailed.Should().BeNull();
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
@@ -744,9 +744,9 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.FastForward);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[1].Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
             // Revert the change

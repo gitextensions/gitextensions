@@ -42,12 +42,12 @@ namespace GitExtensions.UITests.CommandsDialogs
                 {
                     FormClone.TestAccessor accessor = form.GetTestAccessor();
 
-                    accessor.TryExtractUrl(text, out string url).Should().Equals(expected);
+                    accessor.TryExtractUrl(text, out string url).Should().Be(expected);
 
                     // No need to compare URL if the result was expected to be false
                     if (expected)
                     {
-                        url.Should().Equals(expectedUrl);
+                        url.Should().Be(expectedUrl);
                     }
                 });
         }

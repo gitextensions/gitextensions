@@ -57,13 +57,13 @@ namespace GitCommandsTests.Git.Gpg
         [TestCase]
         public void Validate_GetRevisionCommitSignatureStatusAsync_null_revision()
         {
-            ((Func<Task>)(() => _gpgController.GetRevisionCommitSignatureStatusAsync(null))).Should().Throw<ArgumentNullException>();
+            ((Func<Task>)(() => _gpgController.GetRevisionCommitSignatureStatusAsync(null))).Should().ThrowAsync<ArgumentNullException>();
         }
 
         [TestCase]
         public void Validate_GetRevisionTagSignatureStatusAsync_null_revision()
         {
-            ((Func<Task>)(() => _gpgController.GetRevisionTagSignatureStatusAsync(null))).Should().Throw<ArgumentNullException>();
+            ((Func<Task>)(() => _gpgController.GetRevisionTagSignatureStatusAsync(null))).Should().ThrowAsync<ArgumentNullException>();
         }
 
         [TestCase(TagStatus.NoTag, 0)]
