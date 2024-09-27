@@ -122,7 +122,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public void AssignCategoryAsync_should_throw_if_key_null()
         {
             Func<Task> f = async () => { await _manager.AssignCategoryAsync(null, null); };
-            f.Should().Throw<ArgumentNullException>();
+            f.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Test]
@@ -197,7 +197,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
             newHistory.Should().HaveCount(4);
-            newHistory.Should().NotContain(repoToDelete);
+            newHistory.Should().NotContain(r => r.Path == repoToDelete);
 
             _repositoryStorage.Received(1).Load(KeyRecentHistory);
             _repositoryStorage.Received(1).Save(KeyRecentHistory, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path != repoToDelete)));
@@ -221,7 +221,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             IList<Repository> newHistory = await _manager.RemoveFavouriteAsync(repoToDelete);
 
             newHistory.Should().HaveCount(5);
-            newHistory.Should().NotContain(repoToDelete);
+            newHistory.Should().NotContain(r => r.Path == repoToDelete);
 
             _repositoryStorage.Received(1).Load(KeyFavouriteHistory);
             _repositoryStorage.DidNotReceive().Save(KeyFavouriteHistory, Arg.Any<IEnumerable<Repository>>());
@@ -248,7 +248,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             IList<Repository> newHistory = await _manager.RemoveFavouriteAsync(repoToDelete);
 
             newHistory.Should().HaveCount(4);
-            newHistory.Should().NotContain(repoToDelete);
+            newHistory.Should().NotContain(r => r.Path == repoToDelete);
 
             _repositoryStorage.Received(1).Load(KeyFavouriteHistory);
             _repositoryStorage.Received(1).Save(KeyFavouriteHistory, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path != repoToDelete)));
@@ -274,7 +274,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             IList<Repository> newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
             newHistory.Should().HaveCount(5);
-            newHistory.Should().NotContain(repoToDelete);
+            newHistory.Should().NotContain(r => r.Path == repoToDelete);
 
             _repositoryStorage.Received(1).Load(KeyRecentHistory);
             _repositoryStorage.DidNotReceive().Save(KeyRecentHistory, Arg.Any<IEnumerable<Repository>>());
@@ -284,7 +284,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public void SaveFavouriteHistoryAsync_should_throw_if_repositories_null()
         {
             Func<Task> action = async () => await _manager.SaveFavouriteHistoryAsync(null);
-            action.Should().Throw<ArgumentNullException>();
+            action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Test]
@@ -308,7 +308,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public void SaveRecentHistoryAsync_should_throw_if_repositories_null()
         {
             Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null);
-            action.Should().Throw<ArgumentNullException>();
+            action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Test]

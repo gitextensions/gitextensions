@@ -77,14 +77,14 @@ namespace GitUITests.UserControls.RevisionGrid
         public void GetDeletableRefs_must_return_branches_names()
         {
             GitRefListsForRevision grl = new(_revision);
-            grl.GetDeletableRefs("branch1").Should().BeEquivalentTo(_refs[2], _refs[0]);
+            grl.GetDeletableRefs("branch1").Should().BeEquivalentTo([_refs[2], _refs[0]]);
         }
 
         [Test]
         public void GetRenameableLocalBranches_must_return_branches_names()
         {
             GitRefListsForRevision grl = new(_revision);
-            grl.GetRenameableLocalBranches().Should().BeEquivalentTo(_refs[1]);
+            grl.GetRenameableLocalBranches().Should().BeEquivalentTo([_refs[1]]);
         }
     }
 }

@@ -222,7 +222,7 @@ namespace GitlabIntegrationTests
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
 
             _apiClient.Received(2).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
-            result.OrderBy(x => x.Id).SequenceEqual(expected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
+            result.Should().BeEquivalentTo(expected, o => o.Using<BuildInfo>(new BuildInfoEqualityComparer()));
         }
 
         [Test]
@@ -252,7 +252,7 @@ namespace GitlabIntegrationTests
             List<BuildInfo> result = ProcessGetFinishedBuildsRequest();
 
             _apiClient.Received(1).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
-            result.OrderBy(x => x.Id).SequenceEqual(firstExpected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
+            result.Should().BeEquivalentTo(firstExpected, o => o.Using<BuildInfo>(new BuildInfoEqualityComparer()));
 
             // Request running build
             PagedResponse<GitlabPipeline> runningResponse = new()
@@ -278,7 +278,7 @@ namespace GitlabIntegrationTests
             result = ProcessGetRunningBuildsRequest();
 
             _apiClient.Received(2).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
-            result.OrderBy(x => x.Id).SequenceEqual(runningExpected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
+            result.Should().BeEquivalentTo(runningExpected, o => o.Using<BuildInfo>(new BuildInfoEqualityComparer()));
 
             // Simulate running build to be finished
             PagedResponse<GitlabPipeline> secondResponse = new()
@@ -306,7 +306,7 @@ namespace GitlabIntegrationTests
             result = ProcessGetFinishedBuildsRequest();
 
             _apiClient.Received(3).GetPipelinesAsync(Arg.Any<DateTime?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
-            result.OrderBy(x => x.Id).SequenceEqual(secondExpected.OrderBy(x => x.Id), new BuildInfoEqualityComparer()).Should().BeTrue();
+            result.Should().BeEquivalentTo(secondExpected, o => o.Using<BuildInfo>(new BuildInfoEqualityComparer()));
         }
 
         [TestCase(3, null, 3)]

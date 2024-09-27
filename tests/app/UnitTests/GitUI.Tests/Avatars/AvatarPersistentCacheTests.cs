@@ -125,7 +125,7 @@ namespace GitUITests.Avatars
                 .Do(x => throw new DivideByZeroException());
 
             Func<Task> act = () => _cacheCleaner.ClearCacheAsync();
-            act.Should().NotThrow();
+            act.Should().NotThrowAsync();
         }
     }
 }

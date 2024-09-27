@@ -24,7 +24,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         public void MigrateAsync_should_throw_if_currentHistory_null()
         {
             Func<Task> f = async () => { await _historyMigrator.MigrateAsync(null); };
-            f.Should().Throw<ArgumentNullException>();
+            f.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Test]
