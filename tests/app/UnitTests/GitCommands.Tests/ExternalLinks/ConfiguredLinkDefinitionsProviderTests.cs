@@ -68,7 +68,7 @@ namespace GitCommandsTests.ExternalLinks
 
             IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_userRoaming);
 
-            effectiveSettings.Count.Should().Be(1);
+            effectiveSettings.Should().ContainSingle();
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace GitCommandsTests.ExternalLinks
 
             // 1 comes from the user roaming settings
             // 3 come from the distributed
-            effectiveSettings.Count.Should().Be(4);
+            effectiveSettings.Should().HaveCount(4);
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace GitCommandsTests.ExternalLinks
             // 1 comes from the user roaming settings
             // 3 come from the distributed
             // 1 comes from the local
-            effectiveSettings.Count.Should().Be(5);
+            effectiveSettings.Should().HaveCount(5);
         }
     }
 }

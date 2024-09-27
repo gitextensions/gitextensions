@@ -26,7 +26,7 @@ internal class LinePrefixHelperFixture
         List<ISegment> lines = new LinePrefixHelper(lineSegmentGetter)
             .GetLinesStartingWith(doc, ref beginIndex, "+", ref found);
 
-        lines.Count.Should().Be(2);
+        lines.Should().HaveCount(2);
         beginIndex.Should().Be(2);
         found.Should().BeTrue();
     }
@@ -49,7 +49,7 @@ internal class LinePrefixHelperFixture
         List<ISegment> lines = new LinePrefixHelper(lineSegmentGetter)
             .GetLinesStartingWith(doc, ref beginIndex, "-", ref found);
 
-        lines.Count.Should().Be(2);
+        lines.Should().HaveCount(2);
         beginIndex.Should().Be(4);
         found.Should().BeTrue();
     }
