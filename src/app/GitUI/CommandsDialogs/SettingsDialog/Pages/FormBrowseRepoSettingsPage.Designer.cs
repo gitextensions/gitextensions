@@ -298,6 +298,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Controls.Add(tlpnlMain);
             Name = "FormBrowseRepoSettingsPage";
             Padding = new Padding(8);
+            Text = "Browse repository window";
             Size = new Size(1601, 658);
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
