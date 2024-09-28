@@ -779,6 +779,8 @@ namespace GitUI.CommandsDialogs
             }
 
             toolStripSeparatorScript.Visible = DiffContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
+
+            showFindInCommitFilesGitGrepToolStripMenuItem.Checked = DiffFiles.FindInCommitFilesGitGrepVisible;
         }
 
         private void DiffContextMenu_Opening(object sender, CancelEventArgs e)

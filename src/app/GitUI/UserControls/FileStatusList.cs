@@ -347,6 +347,7 @@ namespace GitUI
 
         public bool FilterFilesByNameRegexFocused => FilterComboBox.Focused;
         public bool FindInCommitFilesGitGrepFocused => cboFindInCommitFilesGitGrep.Focused;
+        public bool FindInCommitFilesGitGrepVisible => cboFindInCommitFilesGitGrep.Visible;
 
         /// <summary>
         ///  Indicates whether the git-grep search functionality is enabled for this control.
@@ -366,6 +367,8 @@ namespace GitUI
 
         private void SetFindInCommitFilesGitGrepVisibilityImpl(bool visible)
         {
+            _formFindInCommitFilesGitGrep?.SetShowFindInCommitFilesGitGrep(visible);
+
             cboFindInCommitFilesGitGrep.Visible = visible;
             if (visible)
             {
@@ -1605,6 +1608,7 @@ namespace GitUI
 
             _formFindInCommitFilesGitGrep.GitGrepExpressionText = !string.IsNullOrEmpty(text) ? text : (cboFindInCommitFilesGitGrep.Visible && !string.IsNullOrWhiteSpace(cboFindInCommitFilesGitGrep.Text) ? cboFindInCommitFilesGitGrep.Text : null);
             _formFindInCommitFilesGitGrep.SetSearchItems(cboFindInCommitFilesGitGrep.Items);
+            _formFindInCommitFilesGitGrep.SetShowFindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Visible);
             _formFindInCommitFilesGitGrep.Show();
             _formFindInCommitFilesGitGrep.Focus();
         }
