@@ -311,13 +311,16 @@ public partial class AnsiEscapeUtilities
             }
         }
 
-        if (themeColors && !reverse
+        if (themeColors && !reverse && !dim
             && (currentBack < 0 || backColor is null)
             && foreColor is null
-            && currentFore is 1 or 2 && !dim)
+            && currentFore is 1 or 2)
         {
             // Assume this is a fit for the theme colors with reverse color (e.g. difftastic)
-            reverse = true;
+            // Change bold -> normal, normal -> dim to match GE theme better
+            // difftastic 'normal' is not only unchanged why GE unchanged dim-dim is not used
+            backColor = Get8bitColor(currentFore, fore: false, bold: false, dim: !bold);
+            currentFore = -1;
         }
 
         if (isChange && (foreColor is null && backColor is null && currentFore < 0 && currentBack < 0))
