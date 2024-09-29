@@ -27,7 +27,8 @@ public class DiffHighlightServiceTests
         TextMarker addedLine = new(offset: text.IndexOf(addedLineText), addedLineText.Length, textMarkerType: dontCare);
         const int beginOffset = 1;
 
-        IEnumerable<TextMarker> markers = DiffHighlightService.GetDifferenceMarkers(GetText, removedLine, addedLine, beginOffset);
+        List<TextMarker> markers = [];
+        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset);
         IReadOnlyList<TextMarker> sortedMarkers = markers.ToImmutableSortedSet(new MarkerComparer());
 
         TextMarker[] expectedMarkers =
@@ -66,7 +67,8 @@ public class DiffHighlightServiceTests
         TextMarker addedLine = new(offset: text.IndexOf(addedLineText), addedLineText.Length, textMarkerType: dontCare);
         const int beginOffset = 1;
 
-        IEnumerable<TextMarker> markers = DiffHighlightService.GetDifferenceMarkers(GetText, removedLine, addedLine, beginOffset);
+        List<TextMarker> markers = [];
+        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset);
         IReadOnlyList<TextMarker> sortedMarkers = markers.ToImmutableSortedSet(new MarkerComparer());
 
         TextMarker[] expectedMarkers =

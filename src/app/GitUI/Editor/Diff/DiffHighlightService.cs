@@ -235,24 +235,23 @@ public abstract class DiffHighlightService : TextHighlightService
         document.MarkerStrategy.AddMarkers(GetDifferenceMarkers(getText, linesRemoved, linesAdded, beginOffset));
     }
 
-    private static IEnumerable<TextMarker> GetDifferenceMarkers(Func<ISegment, string> getText, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
+    private static List<TextMarker> GetDifferenceMarkers(Func<ISegment, string> getText, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
     {
+        List<TextMarker> markers = [];
         foreach ((ISegment lineRemoved, ISegment lineAdded) in LinesMatcher.FindLinePairs(getText, linesRemoved, linesAdded))
         {
-            foreach (TextMarker marker in GetDifferenceMarkers(getText, lineRemoved, lineAdded, beginOffset))
-            {
-                yield return marker;
-            }
+            AddDifferenceMarkers(markers, getText, lineRemoved, lineAdded, beginOffset);
         }
+
+        return markers;
     }
 
-    internal static IReadOnlyList<TextMarker> GetDifferenceMarkers(Func<ISegment, string> getText, ISegment lineRemoved, ISegment lineAdded, int beginOffset)
+    internal static void AddDifferenceMarkers(List<TextMarker> markers, Func<ISegment, string> getText, ISegment lineRemoved, ISegment lineAdded, int beginOffset)
     {
         string textRemoved = getText(lineRemoved);
         string textAdded = getText(lineAdded);
         int offsetRemoved = lineRemoved.Offset + beginOffset;
         int offsetAdded = lineAdded.Offset + beginOffset;
-        List<TextMarker> markers = [];
         (int lengthIdenticalAtStart, int lengthIdenticalAtEnd) = AddDifferenceMarkers(markers, textRemoved, textAdded, offsetRemoved, offsetAdded);
 
         if (lengthIdenticalAtStart > 0)
@@ -266,8 +265,6 @@ public abstract class DiffHighlightService : TextHighlightService
             markers.Add(CreateDimmedMarker(offsetRemoved + textRemoved.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, _removedBackColor));
             markers.Add(CreateDimmedMarker(offsetAdded + textAdded.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, _addedBackColor));
         }
-
-        return markers;
     }
 
     private static (int LengthIdenticalAtStart, int LengthIdenticalAtEnd) AddDifferenceMarkers(List<TextMarker> markers, string textRemoved, string textAdded, int offsetRemoved, int offsetAdded)
