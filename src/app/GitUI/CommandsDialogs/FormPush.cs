@@ -123,9 +123,10 @@ namespace GitUI.CommandsDialogs
 
                 _NO_TRANSLATE_Branch.Text = IsDetachedHead(_currentBranchName) ? HeadText : _currentBranchName;
 
-                BindRemotesDropDown(null);
-
+                UpdateBranchDropDown();
                 UpdateRemoteBranchDropDown();
+
+                BindRemotesDropDown(null);
 
                 Push.Focus();
 
