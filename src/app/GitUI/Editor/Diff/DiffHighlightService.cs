@@ -248,8 +248,8 @@ public abstract class DiffHighlightService : TextHighlightService
 
     internal static void AddDifferenceMarkers(List<TextMarker> markers, Func<ISegment, string> getText, ISegment lineRemoved, ISegment lineAdded, int beginOffset)
     {
-        string textRemoved = getText(lineRemoved);
-        string textAdded = getText(lineAdded);
+        ReadOnlySpan<char> textRemoved = getText(lineRemoved).AsSpan();
+        ReadOnlySpan<char> textAdded = getText(lineAdded).AsSpan();
         int offsetRemoved = lineRemoved.Offset + beginOffset;
         int offsetAdded = lineAdded.Offset + beginOffset;
         (int lengthIdenticalAtStart, int lengthIdenticalAtEnd) = AddDifferenceMarkers(markers, textRemoved, textAdded, offsetRemoved, offsetAdded);
@@ -267,7 +267,7 @@ public abstract class DiffHighlightService : TextHighlightService
         }
     }
 
-    private static (int LengthIdenticalAtStart, int LengthIdenticalAtEnd) AddDifferenceMarkers(List<TextMarker> markers, string textRemoved, string textAdded, int offsetRemoved, int offsetAdded)
+    private static (int LengthIdenticalAtStart, int LengthIdenticalAtEnd) AddDifferenceMarkers(List<TextMarker> markers, ReadOnlySpan<char> textRemoved, ReadOnlySpan<char> textAdded, int offsetRemoved, int offsetAdded)
     {
         // removed:             added:              "d" stands for "deleted" / "i" for "inserted" -> anchor marker in added / removed
         // "d b R a "           " b A a i"          split at "b" (stands for "before")
@@ -289,7 +289,7 @@ public abstract class DiffHighlightService : TextHighlightService
             return (lengthIdenticalAtStart, lengthIdenticalAtEnd);
         }
 
-        (string? commonWord, int startIndexIdenticalRemoved, int startIndexIdenticalAdded) = LinesMatcher.FindBestMatch(textRemoved, textAdded);
+        (string? commonWord, int startIndexIdenticalRemoved, int startIndexIdenticalAdded) = LinesMatcher.FindBestMatch(textRemoved.ToString(), textAdded.ToString());
         if (commonWord is not null)
         {
             int lengthIdentical = commonWord.Length;
