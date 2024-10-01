@@ -6,6 +6,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public sealed partial class FormGoToCommit : GitModuleForm
     {
+        private const int _maxDropDownCount = 20_000;
+
         /// <summary>
         /// this will be used when Go() is called.
         /// </summary>
@@ -23,6 +25,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             InitializeComponent();
             InitializeComplete();
+        }
+
+        private void FormGoToCommit_Closed(object sender, FormClosedEventArgs e)
+        {
+            _branchesLoader.Cancel();
+            _tagsLoader.Cancel();
         }
 
         private void FormGoToCommit_Load(object sender, EventArgs e)
@@ -65,12 +73,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             comboBoxTags.Text = TranslatedStrings.LoadingData;
             return _tagsLoader.LoadAsync(
-                () => Module.GetRefs(RefsFilter.Tags).ToList(),
+                () => Module.GetRefs(RefsFilter.Tags).Take(_maxDropDownCount).ToList(),
                 list =>
                 {
                     comboBoxTags.Text = string.Empty;
-                    comboBoxTags.DataSource = list;
                     comboBoxTags.DisplayMember = nameof(IGitRef.LocalName);
+                    comboBoxTags.DataSource = list;
+                    comboBoxTags.TextChanged += comboBoxTags_TextChanged;
                     SetSelectedRevisionByFocusedControl();
                 });
         }
@@ -79,12 +88,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             comboBoxBranches.Text = TranslatedStrings.LoadingData;
             return _branchesLoader.LoadAsync(
-                () => Module.GetRefs(RefsFilter.Heads).ToList(),
+                () => Module.GetRefs(RefsFilter.Heads).Take(_maxDropDownCount).ToList(),
                 list =>
                 {
                     comboBoxBranches.Text = string.Empty;
-                    comboBoxBranches.DataSource = list;
                     comboBoxBranches.DisplayMember = nameof(IGitRef.LocalName);
+                    comboBoxBranches.DataSource = list;
+                    comboBoxBranches.TextChanged += comboBoxBranches_TextChanged;
                     SetSelectedRevisionByFocusedControl();
                 });
         }

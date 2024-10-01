@@ -112,7 +112,6 @@
             comboBoxTags.Size = new Size(287, 23);
             comboBoxTags.TabIndex = 1;
             comboBoxTags.SelectionChangeCommitted += comboBoxTags_SelectionChangeCommitted;
-            comboBoxTags.TextChanged += comboBoxTags_TextChanged;
             comboBoxTags.Enter += comboBoxTags_Enter;
             comboBoxTags.KeyUp += comboBoxTags_KeyUp;
             // 
@@ -136,7 +135,6 @@
             comboBoxBranches.Size = new Size(287, 23);
             comboBoxBranches.TabIndex = 2;
             comboBoxBranches.SelectionChangeCommitted += comboBoxBranches_SelectionChangeCommitted;
-            comboBoxBranches.TextChanged += comboBoxBranches_TextChanged;
             comboBoxBranches.Enter += comboBoxBranches_Enter;
             comboBoxBranches.KeyUp += comboBoxBranches_KeyUp;
             // 
@@ -161,6 +159,7 @@
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Go to commit";
+            FormClosed += FormGoToCommit_Closed;
             Load += FormGoToCommit_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
