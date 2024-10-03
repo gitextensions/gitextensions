@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public sealed partial class FormGoToCommit : GitModuleForm
     {
-        private const int _maxDropDownCount = 20_000;
+        private const int _maxDropDownCount = 1_000;
 
         /// <summary>
         /// this will be used when Go() is called.
