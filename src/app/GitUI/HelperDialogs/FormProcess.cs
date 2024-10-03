@@ -185,9 +185,10 @@ namespace GitUI.HelperDialogs
 
         private void DataReceivedCore(object sender, TextEventArgs e)
         {
-            if (e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
+            // CarriageReturn has its literal meaning here, i.e. it is not a line end, but terminates transient progress information
+            if (e.Text.EndsWith(Delimiters.CarriageReturn))
             {
-                this.InvokeAndForget(() => SetProgressAsync(e.Text));
+                this.InvokeAndForget(() => SetProgressAsync(e.Text.TrimEnd()));
             }
             else
             {

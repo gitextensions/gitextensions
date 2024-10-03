@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
+using GitExtUtils;
 using Microsoft;
 using Timer = System.Windows.Forms.Timer;
 
@@ -147,8 +148,9 @@ namespace GitUI.UserControls
 
                 _process = new() { StartInfo = startInfo, EnableRaisingEvents = true };
 
-                _process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
-                _process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
+                AsyncStreamReader? outputReader = null;
+                AsyncStreamReader? errorReader = null;
+
                 _process.Exited += delegate
                 {
                     ThreadHelper.FileAndForget(async () =>
@@ -187,6 +189,21 @@ namespace GitUI.UserControls
                             }
 
                             _exitcode = _process.ExitCode;
+
+                            using CancellationTokenSource eofTimeoutTokenSource = new(millisecondsDelay: 5000);
+
+                            if (outputReader is not null)
+                            {
+                                await outputReader.WaitUntilEofAsync(eofTimeoutTokenSource.Token);
+                                outputReader.Dispose();
+                            }
+
+                            if (errorReader is not null)
+                            {
+                                await errorReader.WaitUntilEofAsync(eofTimeoutTokenSource.Token);
+                                errorReader.Dispose();
+                            }
+
                             await this.SwitchToMainThreadAsync();
                             operation.LogProcessEnd(_exitcode);
                             _process.Dispose();
@@ -201,8 +218,8 @@ namespace GitUI.UserControls
                 _process.Start();
                 operation.SetProcessId(_process.Id);
                 _input = _process.StandardInput;
-                _process.BeginOutputReadLine();
-                _process.BeginErrorReadLine();
+                outputReader = new AsyncStreamReader(_process.StandardOutput, ForwardOutput);
+                errorReader = new AsyncStreamReader(_process.StandardError, ForwardOutput);
             }
             catch (Exception ex)
             {
@@ -210,6 +227,25 @@ namespace GitUI.UserControls
                 ex.Data.Add("command", command);
                 ex.Data.Add("arguments", arguments);
                 throw;
+            }
+
+            return;
+
+            void ForwardOutput(string output)
+            {
+                output = output.Replace("\r\n", "\n");
+
+                for (int startIndex = 0; startIndex < output.Length;)
+                {
+                    int nextLineEnd = output.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex) + 1;
+                    if (nextLineEnd == 0)
+                    {
+                        nextLineEnd = output.Length;
+                    }
+
+                    FireDataReceived(new TextEventArgs(output[startIndex..nextLineEnd]));
+                    startIndex = nextLineEnd;
+                }
             }
         }
 
