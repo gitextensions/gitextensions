@@ -105,53 +105,51 @@ namespace GitUI.CommandsDialogs
         {
             base.OnRuntimeLoad(e);
 
-            bool canSaveInsideRepo = Module.IsValidGitWorkingDir();
-
             settingsTreeView.SuspendLayout();
 
             IServiceProvider serviceProvider = UICommands;
 
-            ChecklistSettingsPage checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(this, serviceProvider, canSaveInsideRepo);
+            ChecklistSettingsPage checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(this, serviceProvider);
 
             // Git Extensions settings
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null, Images.GitExtensionsLogo16);
             SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
             settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef, icon: null, asRoot: true);
 
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GeneralSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.GeneralSettings);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GeneralSettingsPage>(this, serviceProvider), gitExtPageRef, Images.GeneralSettings);
 
             // >> Appearance
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.Appearance);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Appearance);
             SettingsPageReference appearanceSettingsPage = AppearanceSettingsPage.GetPageReference();
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<SortingSettingsPage>(this, serviceProvider, canSaveInsideRepo), appearanceSettingsPage, Images.SortBy);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this, serviceProvider, canSaveInsideRepo), appearanceSettingsPage, Images.Colors);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this, serviceProvider, canSaveInsideRepo), appearanceSettingsPage, Images.Font.AdaptLightness());
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConsoleStyleSettingsPage>(this, serviceProvider, canSaveInsideRepo), appearanceSettingsPage, Images.Console);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<RevisionLinksSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.Link.AdaptLightness());
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<SortingSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.SortBy);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Colors);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Font.AdaptLightness());
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConsoleStyleSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Console);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<RevisionLinksSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Link.AdaptLightness());
 
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.Integration);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ScriptsSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.Console);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<HotkeysSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.Hotkey);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Integration);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ScriptsSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Console);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<HotkeysSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Hotkey);
 
             if (EnvUtils.RunningOnWindows())
             {
-                settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ShellExtensionSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.ShellExtensions);
+                settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ShellExtensionSettingsPage>(this, serviceProvider), gitExtPageRef, Images.ShellExtensions);
             }
 
             // >> Advanced
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AdvancedSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.AdvancedSettings);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AdvancedSettingsPage>(this, serviceProvider), gitExtPageRef, Images.AdvancedSettings);
             SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConfirmationsSettingsPage>(this, serviceProvider, canSaveInsideRepo), advancedPageRef, Images.BisectGood);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConfirmationsSettingsPage>(this, serviceProvider), advancedPageRef, Images.BisectGood);
 
             // >> Detailed
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DetailedSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitExtPageRef, Images.Settings);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DetailedSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Settings);
             SettingsPageReference detailedSettingsPage = DetailedSettingsPage.GetPageReference();
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this, serviceProvider, canSaveInsideRepo), detailedSettingsPage, Images.BranchFolder);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<CommitDialogSettingsPage>(this, serviceProvider, canSaveInsideRepo), detailedSettingsPage, Images.CommitSummary);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DiffViewerSettingsPage>(this, serviceProvider, canSaveInsideRepo), detailedSettingsPage, Images.Diff);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<BlameViewerSettingsPage>(this, serviceProvider, canSaveInsideRepo), detailedSettingsPage, Images.Blame);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.BranchFolder);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<CommitDialogSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.CommitSummary);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DiffViewerSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.Diff);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<BlameViewerSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.Blame);
 
-            SshSettingsPage sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this, serviceProvider, canSaveInsideRepo);
+            SshSettingsPage sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this, serviceProvider);
             settingsTreeView.AddSettingsPage(sshSettingsPage, gitExtPageRef, Images.Key);
             checklistSettingsPage.SshSettingsPage = sshSettingsPage;
 
@@ -159,21 +157,21 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(new GitSettingsGroup(), null, Images.GitLogo16);
             SettingsPageReference gitPageRef = GitSettingsGroup.GetPageReference();
 
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitPageRef, Images.FolderOpen);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitPageRef, Images.GeneralSettings);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigAdvancedSettingsPage>(this, serviceProvider, canSaveInsideRepo), gitPageRef, Images.AdvancedSettings);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitRootIntroductionPage>(this, serviceProvider, canSaveInsideRepo), gitPageRef, icon: null, asRoot: true);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this, serviceProvider), gitPageRef, Images.FolderOpen);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigSettingsPage>(this, serviceProvider), gitPageRef, Images.GeneralSettings);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitConfigAdvancedSettingsPage>(this, serviceProvider), gitPageRef, Images.AdvancedSettings);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitRootIntroductionPage>(this, serviceProvider), gitPageRef, icon: null, asRoot: true);
 
             // Plugins settings
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null, Images.Plugin);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<PluginRootIntroductionPage>(this, serviceProvider, canSaveInsideRepo), pluginsPageRef, icon: null, asRoot: true);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<PluginRootIntroductionPage>(this, serviceProvider), pluginsPageRef, icon: null, asRoot: true);
 
             lock (PluginRegistry.Plugins)
             {
                 IOrderedEnumerable<(IGitPlugin plugin, PluginSettingsPage page)> pluginEntries = PluginRegistry.Plugins
                     .Where(p => p.HasSettings)
-                    .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin, UICommands, canSaveInsideRepo)))
+                    .Select(plugin => (Plugin: plugin, Page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin, UICommands)))
                     .OrderBy(entry => entry.Page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
 
                 foreach ((IGitPlugin plugin, PluginSettingsPage page) entry in pluginEntries)

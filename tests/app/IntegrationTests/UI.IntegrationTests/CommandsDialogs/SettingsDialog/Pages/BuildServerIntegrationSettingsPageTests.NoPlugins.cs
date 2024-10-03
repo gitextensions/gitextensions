@@ -63,7 +63,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
                         Size = new(800, 400)
                     };
 
-                    _settingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(_form, GitUICommands.EmptyServiceProvider, canSaveInsideRepo: false);
+                    _settingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(_form, GitUICommands.EmptyServiceProvider);
                     _settingsPage.Dock = DockStyle.Fill;
 
                     _form.Controls.Add(_settingsPage);
