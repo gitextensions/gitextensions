@@ -528,7 +528,7 @@ namespace GitUI.Editor
             => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring.Value);
 
         /// <summary>
-        /// Present the text as a patch in the file viewer, for GitHub.
+        /// Present the text as a patch in the file viewer.
         /// </summary>
         /// <param name="fileName">The fileName to present.</param>
         /// <param name="text">The patch text.</param>
@@ -562,7 +562,7 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Present the text in the file viewer, for GitHub.
+        /// Present the text in the file viewer.
         /// </summary>
         /// <param name="fileName">The fileName to present.</param>
         /// <param name="text">The patch text.</param>
@@ -583,7 +583,7 @@ namespace GitUI.Editor
                     ResetView(ViewMode.Text, fileName, item: item);
 
                     // Check for binary file. Using gitattributes could be misleading for a changed file,
-                    // but not much other can be done
+                    // but not much else can be done
                     bool isBinary = (checkGitAttributes && FileHelper.IsBinaryFileName(Module, fileName))
                                     || FileHelper.IsBinaryFileAccordingToContent(text);
 
