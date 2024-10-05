@@ -786,7 +786,7 @@ namespace GitUI.Editor
             string GetFileText()
             {
                 using FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using StreamReader reader = new(stream, GitModule.LosslessEncoding);
+                using StreamReader reader = ICSharpCode.TextEditor.Util.FileReader.OpenStream(stream, GitModule.LosslessEncoding);
 #pragma warning disable VSTHRD103 // Call async methods when in an async method
                 string content = reader.ReadToEnd();
 #pragma warning restore VSTHRD103 // Call async methods when in an async method
