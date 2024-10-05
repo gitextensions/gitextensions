@@ -129,18 +129,11 @@ namespace GitUI.CommandsDialogs
             {
                 if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
                 {
-                    FileUtility.SafeWriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding);
+                    FileUtility.SafeWriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding, filePreamble: []);
                 }
                 else
                 {
-                    using MemoryStream bytes = new();
-                    bytes.Write(fileViewer.FilePreamble, 0, fileViewer.FilePreamble.Length);
-                    using (StreamWriter writer = new(bytes, Module.FilesEncoding))
-                    {
-                        writer.Write(fileViewer.GetText());
-                    }
-
-                    File.WriteAllBytes(_fileName, bytes.ToArray());
+                    FileUtility.SafeWriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding, fileViewer.FilePreamble);
                 }
 
                 // we've written the changes out to disk now, nothing to save.
