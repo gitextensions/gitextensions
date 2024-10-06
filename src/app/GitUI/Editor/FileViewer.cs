@@ -19,6 +19,7 @@ using GitUI.Properties;
 using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using ICSharpCode.TextEditor.Util;
 using Microsoft;
 using ResourceManager;
 
@@ -786,7 +787,7 @@ namespace GitUI.Editor
             string GetFileText()
             {
                 using FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using StreamReader reader = ICSharpCode.TextEditor.Util.FileReader.OpenStream(stream, GitModule.LosslessEncoding);
+                using StreamReader reader = FileReader.OpenStream(stream, GitModule.LosslessEncoding);
 #pragma warning disable VSTHRD103 // Call async methods when in an async method
                 string content = reader.ReadToEnd();
 #pragma warning restore VSTHRD103 // Call async methods when in an async method
