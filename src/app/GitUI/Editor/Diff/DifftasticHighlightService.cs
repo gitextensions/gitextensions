@@ -109,29 +109,13 @@ public partial class DifftasticHighlightService : TextHighlightService
                 }
             }
 
+            // Trim left lineno from text, marker
             if (leftLen > 0)
             {
                 lineBuilder = lineBuilder.Remove(0, leftLen);
-                int i = 0;
-                while (i < textMarkers.Count && textMarkers[i].Offset < leftLen)
-                {
-                    if (textMarkers[i].Offset < leftLen)
-                    {
-                        // Remove markers in lineno part
-                        textMarkers.RemoveAt(i);
-                        --i;
-                    }
-                    else
-                    {
-                        textMarkers[i].Offset = leftLen;
-                    }
-
-                    ++i;
-                }
-
                 foreach (TextMarker tm in textMarkers)
                 {
-                    tm.Offset = Math.Max(0, tm.Offset - leftLen);
+                    RemoveLineNoPart(tm, 0, leftLen);
                 }
             }
 
@@ -163,93 +147,66 @@ public partial class DifftasticHighlightService : TextHighlightService
                     Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic no right lineno. This is OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
                     debugPrinted = true;
                 }
+
+                AddInfo(leftLineNo, rightLineNo, lineType, textMarkers, lineBuilder);
+                continue;
             }
-            else
+
+            if (lineType == DiffLineType.PlusRight)
             {
-                if (lineType == DiffLineType.PlusRight)
+                Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic has PlusRight and right lineno. This is OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
+                debugPrinted = true;
+            }
+
+            if (matchRight.Groups["lineNo"].Success && int.TryParse(matchRight.Groups["lineNo"].ValueSpan, out int rightNo))
+            {
+                rightLineNo = rightNo;
+            }
+
+            // Remove right line no from text, markers
+            int rightLen = matchRight.Length;
+            lineBuilder = lineBuilder.Remove(rightStartOffset, rightLen);
+            int columnGap = 0;
+
+            if (rightStartOffset > 0)
+            {
+                if (rightColumnStart == 0)
                 {
-                    Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic has PlusRight and right lineno. This is OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
-                    debugPrinted = true;
+                    rightColumnStart = rightStartOffset;
                 }
 
-                if (matchRight.Groups["lineNo"].Success && int.TryParse(matchRight.Groups["lineNo"].ValueSpan, out int lineNo))
+                // Add spaces so both-sides markers are aligned
+                columnGap = rightColumnStart - rightStartOffset;
+                if (columnGap > 0)
                 {
-                    rightLineNo = lineNo;
+                    lineBuilder = lineBuilder.Insert(rightStartOffset, new string(' ', columnGap));
+                }
+            }
+
+            bool first = true;
+            foreach (TextMarker tm in textMarkers)
+            {
+                if (tm.EndOffset < rightStartOffset)
+                {
+                    continue;
                 }
 
-                int rightLen = matchRight.Length;
-                lineBuilder = lineBuilder.Remove(rightStartOffset, rightLen);
-                int columnGap = 0;
-
-                int i = 0;
-                bool first = true;
-                while (i < textMarkers.Count)
+                if (first)
                 {
-                    if (textMarkers[i].EndOffset < rightStartOffset)
+                    first = false;
+
+                    Color c = AppSettings.ReverseGitColoring.Value ? tm.Color : tm.ForeColor;
+                    if (c.R != c.G)
                     {
-                        ++i;
-                        continue;
-                    }
-
-                    if (textMarkers[i].Offset >= rightStartOffset + rightLen)
-                    {
-                        break;
-                    }
-
-                    if (first)
-                    {
-                        first = false;
-
-                        Color c = AppSettings.ReverseGitColoring.Value ? textMarkers[i].Color : textMarkers[i].ForeColor;
-                        if (c.R != c.G)
-                        {
-                            // Merge line type with existing left line type
-                            lineType = lineType == DiffLineType.Context ? DiffLineType.PlusRight : DiffLineType.MinusPlus;
-                        }
-                    }
-
-                    if (textMarkers[i].Offset > rightStartOffset)
-                    {
-                        textMarkers[i].Length -= textMarkers[i].Offset - rightStartOffset;
-                        textMarkers[i].Offset = rightStartOffset;
-                    }
-
-                    if (textMarkers[i].EndOffset < rightStartOffset + rightLen - 1)
-                    {
-                        // textMarkers[i].Length += rightStartOffset + rightLen - textMarkers[i].EndOffset;
-                    }
-
-                    if (textMarkers[i].Length <= 0
-                        || (rightStartOffset >= textMarkers[i].Offset && textMarkers[i].EndOffset <= rightStartOffset + rightLen))
-                    {
-                        textMarkers.RemoveAt(i);
-                        --i;
-                    }
-
-                    ++i;
-                }
-
-                if (rightStartOffset > 0)
-                {
-                    if (rightColumnStart == 0)
-                    {
-                        rightColumnStart = rightStartOffset;
-                    }
-
-                    // Add spaces so both-sides markers are aligned
-                    columnGap = rightColumnStart - rightStartOffset;
-                    if (columnGap > 0)
-                    {
-                        lineBuilder = lineBuilder.Insert(rightStartOffset, new string(' ', columnGap));
+                        // Merge line type with existing left line type
+                        lineType = lineType == DiffLineType.Context ? DiffLineType.PlusRight : DiffLineType.MinusPlus;
                     }
                 }
 
-                foreach (TextMarker tm in textMarkers)
+                RemoveLineNoPart(tm, rightStartOffset, rightLen);
+                if (tm.Offset >= rightStartOffset)
                 {
-                    if (tm.Offset >= rightStartOffset && columnGap > 0)
-                    {
-                        tm.Offset += columnGap;
-                    }
+                    tm.Offset += columnGap;
                 }
             }
 
@@ -260,6 +217,40 @@ public partial class DifftasticHighlightService : TextHighlightService
         lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: true);
 
         return;
+
+        static void RemoveLineNoPart(TextMarker tm, int offset, int length)
+        {
+            if (tm.Offset + tm.Length <= offset)
+            {
+                // All is before the gap
+                return;
+            }
+
+            if (tm.Offset >= offset + length)
+            {
+                // All is after the gap
+                tm.Offset -= length;
+                return;
+            }
+
+            if (tm.Offset <= offset && offset + length <= tm.Offset + tm.Length)
+            {
+                // Gap is covered
+                tm.Length -= length;
+                return;
+            }
+
+            if (tm.Offset > offset)
+            {
+                // Remove the start in the gap
+                tm.Length -= tm.Offset - offset;
+                tm.Offset = offset;
+                return;
+            }
+
+            // the end part of the gap
+            tm.Length -= tm.Offset + tm.Length - offset;
+        }
 
         void AddInfo(int leftLineNo, int rightLineNo, DiffLineType lineType, List<TextMarker> textMarkers, StringBuilder lineBuilder)
         {
@@ -273,8 +264,16 @@ public partial class DifftasticHighlightService : TextHighlightService
                     LineSegment = null,
                     IsMovedLine = false,
                 });
-            foreach (TextMarker tm in textMarkers)
+            for (int i = 0; i < textMarkers.Count; ++i)
             {
+                TextMarker tm = textMarkers[i];
+                if (tm.Length <= 0)
+                {
+                    textMarkers.RemoveAt(i);
+                    --i;
+                    continue;
+                }
+
                 tm.Offset += sb.Length;
             }
 
