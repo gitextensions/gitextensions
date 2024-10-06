@@ -432,11 +432,13 @@ public class DiffLineNumAnalyzerTests
         bool theme = AppSettings.ReverseGitColoring.Value;
         AppSettings.ReverseGitColoring.Value = false;
 
-        _ = new DifftasticHighlightService(ref text, _diffViewerLineNumber);
+        _ = new DifftasticHighlightService(ref text, _diffViewerLineNumber, out int vrulerpos);
         _textEditor.Text = text;
         DiffLinesInfo result = _diffViewerLineNumber.GetTestAccessor().Result;
 
         GenericResultCheck(result, allowNotApplicable: false);
+
+        vrulerpos.Should().Be(97);
 
         result.DiffLines[5].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[5].RightLineNumber.Should().Be(16);
