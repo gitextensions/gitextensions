@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
