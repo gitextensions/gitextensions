@@ -36,7 +36,7 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
     }
 
     [Test]
-    public void TryGetColorsFromEscapeSequence_ShouldReturnFalse_WhenEscapeCodesIsEmpty()
+    public void TryGetColorsFromEscapeSequence_ShouldReset_WhenEscapeCodesIsEmpty()
     {
         // currentColorId should be preserved
         IList<int> escapeCodes = new List<int>();
@@ -47,7 +47,7 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
         result.Should().BeFalse();
         backColor.Should().BeNull();
         foreColor.Should().BeNull();
-        currentColorId.Should().Be(_yellowId);
+        currentColorId.Should().Be(_blackId);
     }
 
     [Test]

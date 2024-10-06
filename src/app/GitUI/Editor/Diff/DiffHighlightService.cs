@@ -86,9 +86,11 @@ public abstract class DiffHighlightService : TextHighlightService
         // range-diff
         if (command == "range-diff")
         {
-            SetIfUnsetInGit(key: "color.diff.contextBold", value: $"normal bold {reverse}");
+            // No override for contextBold, contextDimmed
             SetIfUnsetInGit(key: "color.diff.oldBold", value: $"brightred {reverse}");
-            SetIfUnsetInGit(key: "color.diff.newBold", value: $"brightgreen  {reverse}");
+            SetIfUnsetInGit(key: "color.diff.newBold", value: $"brightgreen {reverse}");
+            SetIfUnsetInGit(key: "color.diff.oldDimmed", value: $"red dim {reverse}");
+            SetIfUnsetInGit(key: "color.diff.newDimmed", value: $"green dim {reverse}");
         }
 
         return commandConfiguration;

@@ -131,6 +131,7 @@ public partial class AnsiEscapeUtilities
             if (currentHighlight.Length < 0 || sb.Length == currentHighlight.DocOffset)
             {
                 // Previous was a reset, just ignore.
+                currentHighlight.Length = -1;
                 return;
             }
 
@@ -184,6 +185,12 @@ public partial class AnsiEscapeUtilities
         bool bold = false;
         bool dim = false;
         bool isChange = false; // Handle only bold/dim changes to current colors
+
+        if (escapeCodes.Count == 0)
+        {
+            // Empty sequence is the same as reset to normal
+            escapeCodes = [0];
+        }
 
         for (int i = 0; i < escapeCodes.Count; ++i)
         {
