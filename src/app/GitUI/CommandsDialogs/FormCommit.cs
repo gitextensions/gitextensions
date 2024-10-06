@@ -1408,7 +1408,7 @@ namespace GitUI.CommandsDialogs
                         _commitMessageManager.CommitMessagePath,
                         Module.GetPathForGitExecution,
                         noVerifyToolStripMenuItem.Checked,
-                        gpgSignCommitToolStripComboBox.SelectedIndex == 0 ? null : gpgSignCommitToolStripComboBox.SelectedIndex > 0,
+                        gpgSignCommitToolStripComboBox.SelectedIndex == 0 ? null : gpgSignCommitToolStripComboBox.SelectedIndex > 1,
                         toolStripGpgKeyTextBox.Text,
                         Staged.IsEmpty,
                         resetAuthor);
