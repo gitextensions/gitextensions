@@ -18,8 +18,10 @@ public partial class DifftasticHighlightService : TextHighlightService
     [GeneratedRegex(@"^(\s*(?<matchStart>(?<lineNo>\d+)|(\.+)) )", RegexOptions.ExplicitCapture)]
     private static partial Regex LineNoRegex();
 
-    public DifftasticHighlightService(ref string text, DiffViewerLineNumberControl lineNumbersControl)
+    public DifftasticHighlightService(ref string text, DiffViewerLineNumberControl lineNumbersControl, out int rightColumnStart)
     {
+        // Hide VRulerPos by default
+        rightColumnStart = 0;
         if (!int.TryParse(new EnvironmentAbstraction().GetEnvironmentVariable("DFT_WIDTH"), out int column))
         {
             column = 80;
@@ -29,7 +31,6 @@ public partial class DifftasticHighlightService : TextHighlightService
         StringBuilder lineBuilder = column > 0 ? new(column) : new();
         List<TextMarker> textMarkers = [];
         int halfColumn = column / 2;
-        int rightColumnStart = 0;
         bool nextIsHeader = true;
         bool debugPrinted = false;
 
@@ -178,6 +179,7 @@ public partial class DifftasticHighlightService : TextHighlightService
 
                 int rightLen = matchRight.Length;
                 lineBuilder = lineBuilder.Remove(rightStartOffset, rightLen);
+                int columnGap = 0;
 
                 int i = 0;
                 bool first = true;
@@ -234,19 +236,19 @@ public partial class DifftasticHighlightService : TextHighlightService
                         rightColumnStart = rightStartOffset;
                     }
 
-                    int columnOffset = rightColumnStart - rightStartOffset;
-
                     // Add spaces so both-sides markers are aligned
-                    // It would be nicer to set VRulerRow at rightColumnStart, but that need to be reset for next file
-                    lineBuilder = lineBuilder.Insert(rightStartOffset, new string(' ', columnOffset) + '|');
-                    rightLen -= columnOffset + 1;
+                    columnGap = rightColumnStart - rightStartOffset;
+                    if (columnGap > 0)
+                    {
+                        lineBuilder = lineBuilder.Insert(rightStartOffset, new string(' ', columnGap));
+                    }
                 }
 
                 foreach (TextMarker tm in textMarkers)
                 {
-                    if (tm.Offset >= rightStartOffset)
+                    if (tm.Offset >= rightStartOffset && columnGap > 0)
                     {
-                        tm.Offset = Math.Max(0, tm.Offset - rightLen);
+                        tm.Offset += columnGap;
                     }
                 }
             }
