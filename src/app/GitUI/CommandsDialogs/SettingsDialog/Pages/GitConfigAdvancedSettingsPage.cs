@@ -43,8 +43,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 gitSetting.MappedCheckbox.CheckState = CurrentSettings.GetValue(gitSetting.GitSettingKey) switch
                     {
-                        "true" => CheckState.Checked,
-                        "false" => CheckState.Unchecked,
+                        "true" or "yes" or "on" or "1" => CheckState.Checked,
+                        "false" or "no" or "off" or "0" or "" => CheckState.Unchecked,
                         _ => CheckState.Indeterminate
                     };
             }
