@@ -172,30 +172,33 @@ namespace GitCommandsTests_Git
         {
             Assert.AreEqual(
                 "commit -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath).Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments);
             Assert.AreEqual(
                 "commit -F \"adapted_commit_message_path\"",
-                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", path => "adapted_commit_message_path").Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", path => "adapted_commit_message_path", gpgSign: null).Arguments);
             Assert.AreEqual(
                 "commit --amend -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: true, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath).Arguments);
+                Commands.Commit(amend: true, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments);
             Assert.AreEqual(
                 "commit --signoff -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, signOff: true, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath).Arguments);
+                Commands.Commit(amend: false, signOff: true, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments);
             Assert.AreEqual(
                 "commit --author=\"foo\" -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, signOff: false, author: "foo", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath).Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "foo", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments);
             Assert.AreEqual(
                 "commit",
-                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: false, commitMessageFile: null, PathUtil.ToPosixPath).Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: false, commitMessageFile: null, PathUtil.ToPosixPath, gpgSign: null).Arguments);
             Assert.AreEqual(
                 "commit --no-verify -F \"COMMITMESSAGE\"",
-                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify: true).Arguments);
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify: true, gpgSign: null).Arguments);
             Assert.AreEqual(
-                "commit -S -F \"COMMITMESSAGE\"",
+                "commit --no-gpg-sign -F \"COMMITMESSAGE\"",
+                Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: false).Arguments);
+            Assert.AreEqual(
+                "commit --gpg-sign -F \"COMMITMESSAGE\"",
                 Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: true).Arguments);
             Assert.AreEqual(
-                "commit -Skey -F \"COMMITMESSAGE\"",
+                "commit --gpg-sign=key -F \"COMMITMESSAGE\"",
                 Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: true, gpgKeyId: "key").Arguments);
         }
 
@@ -208,18 +211,19 @@ namespace GitCommandsTests_Git
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
-        [TestCase(false, false, @"", false, false, false, @"", @"commit")]
-        [TestCase(true, false, @"", false, false, false, @"", @"commit --amend")]
-        [TestCase(false, true, @"", false, false, false, @"", @"commit --signoff")]
-        [TestCase(false, false, @"", true, false, false, @"", @"commit -F ""COMMITMESSAGE""")]
-        [TestCase(false, false, @"", false, true, false, @"", @"commit --no-verify")]
-        [TestCase(false, false, @"", false, false, false, @"12345678", @"commit")]
-        [TestCase(false, false, @"", false, false, true, @"", @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, @"      ", @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, null, @"commit -S")]
-        [TestCase(false, false, @"", false, false, true, @"12345678", @"commit -S12345678")]
-        [TestCase(true, true, @"", true, true, true, @"12345678", @"commit --amend --no-verify --signoff -S12345678 -F ""COMMITMESSAGE""")]
-        public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool gpgSign, string gpgKeyId, string expected)
+        [TestCase(false, false, @"", false, false, null, @"", @"commit")]
+        [TestCase(false, false, @"", false, false, false, @"", @"commit --no-gpg-sign")]
+        [TestCase(true, false, @"", false, false, false, @"", @"commit --amend --no-gpg-sign")]
+        [TestCase(false, true, @"", false, false, false, @"", @"commit --signoff --no-gpg-sign")]
+        [TestCase(false, false, @"", true, false, false, @"", @"commit --no-gpg-sign -F ""COMMITMESSAGE""")]
+        [TestCase(false, false, @"", false, true, false, @"", @"commit --no-verify --no-gpg-sign")]
+        [TestCase(false, false, @"", false, false, false, @"12345678", @"commit --no-gpg-sign")]
+        [TestCase(false, false, @"", false, false, true, @"", @"commit --gpg-sign")]
+        [TestCase(false, false, @"", false, false, true, @"      ", @"commit --gpg-sign")]
+        [TestCase(false, false, @"", false, false, true, null, @"commit --gpg-sign")]
+        [TestCase(false, false, @"", false, false, true, @"12345678", @"commit --gpg-sign=12345678")]
+        [TestCase(true, true, @"", true, true, true, @"12345678", @"commit --amend --no-verify --signoff --gpg-sign=12345678 -F ""COMMITMESSAGE""")]
+        public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool? gpgSign, string gpgKeyId, string expected)
         {
             ArgumentString actual = Commands.Commit(amend, signOff, author, useExplicitCommitMessage, "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify, gpgSign, gpgKeyId);
             StringAssert.AreEqualIgnoringCase(expected, actual);
