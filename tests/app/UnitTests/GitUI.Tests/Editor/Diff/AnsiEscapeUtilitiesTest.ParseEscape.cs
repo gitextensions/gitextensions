@@ -57,7 +57,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
             Some {_escape_sequence}0;1;31mbold red{_escape_sequence}0m
             Now {_escape_sequence}101mbold reverse red{_escape_sequence}0m
             and some {_escape_sequence}2:31mdim red{_escape_sequence}0m
-            and some {_escape_sequence}mdefault{_escape_sequence}0m
+            {_escape_sequence}31m{_escape_sequence}mdefault not red{_escape_sequence}0m{_escape_sequence}31m, red no end
               
             """.ReplaceLineEndings("\n");
         string expected = """
@@ -66,7 +66,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
             Some bold red
             Now bold reverse red
             and some dim red
-            and some default
+            default not red, red no end
               
             """.ReplaceLineEndings("\n");
         StringBuilder sb = new();
@@ -75,7 +75,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         AnsiEscapeUtilities.ParseEscape(in_text, sb, textMarkers);
 
         sb.ToString().Should().Be(expected);
-        textMarkers.Should().HaveCount(4);
+        textMarkers.Should().HaveCount(5);
 
         textMarkers[0].Offset.Should().Be(10);
         textMarkers[0].Length.Should().Be(3);
@@ -96,6 +96,11 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         textMarkers[3].Length.Should().Be(7);
         textMarkers[3].Color.Should().Be(SystemColors.Window);
         textMarkers[3].ForeColor.Should().Be(_redAnsiTheme[1]);
+
+        textMarkers[4].Offset.Should().Be(108);
+        textMarkers[4].Length.Should().Be(15);
+        textMarkers[4].Color.Should().Be(SystemColors.Window);
+        textMarkers[4].ForeColor.Should().Be(_redAnsiTheme[0]);
     }
 
     [Test]
@@ -204,7 +209,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         textMarkers[2].ForeColor.Should().Be(_redAnsiTheme[2]);
 
         textMarkers[3].Offset.Should().Be(102);
-        textMarkers[3].Length.Should().Be(14);
+        textMarkers[3].Length.Should().Be(13);
         textMarkers[3].Color.Should().Be(SystemColors.Window);
         textMarkers[3].ForeColor.Should().Be(_redAnsiTheme[1]);
 
