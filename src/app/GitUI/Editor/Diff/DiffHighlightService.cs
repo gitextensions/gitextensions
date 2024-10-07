@@ -126,8 +126,6 @@ public abstract class DiffHighlightService : TextHighlightService
 
         MarkInlineDifferences(document);
         HighlightAddedAndDeletedLines(document);
-
-        return;
     }
 
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
@@ -156,23 +154,18 @@ public abstract class DiffHighlightService : TextHighlightService
     {
         foreach (ISegment segment in GetAllLines(DiffLineType.Minus))
         {
-            document.MarkerStrategy.AddMarker(CreateTextMarker(segment, AppColor.AnsiTerminalRedBackNormal.GetThemeColor()));
+            document.MarkerStrategy.AddMarker(CreateTextMarker(segment.Offset, segment.Length, _removedBackColor));
         }
 
         foreach (ISegment segment in GetAllLines(DiffLineType.Plus))
         {
-            document.MarkerStrategy.AddMarker(CreateTextMarker(segment, AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()));
+            document.MarkerStrategy.AddMarker(CreateTextMarker(segment.Offset, segment.Length, _addedBackColor));
         }
 
         foreach (ISegment segment in GetAllLines(DiffLineType.Header))
         {
-            document.MarkerStrategy.AddMarker(CreateTextMarker(segment, AppColor.DiffSection.GetThemeColor()));
+            document.MarkerStrategy.AddMarker(CreateTextMarker(segment.Offset, segment.Length, AppColor.DiffSection.GetThemeColor()));
         }
-
-        return;
-
-        static TextMarker CreateTextMarker(ISegment segment, Color color)
-            => new(segment.Offset, segment.Length, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color));
     }
 
     /// <summary>
