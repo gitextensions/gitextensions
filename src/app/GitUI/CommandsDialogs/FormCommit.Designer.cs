@@ -1379,7 +1379,7 @@ namespace GitUI.CommandsDialogs
             gpgSignCommitToolStripComboBox.BackColor = SystemColors.Control;
             gpgSignCommitToolStripComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             gpgSignCommitToolStripComboBox.Items.AddRange(new object[] {
-            "Git default",
+            "Git default GPG signing",
             "Do not sign commit",
             "Sign with default GPG",
             "Sign with specific GPG"});
