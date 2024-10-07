@@ -371,6 +371,9 @@ namespace GitUI.NBugReports
             // Turns single quotes to double quotes on Windows if there are any at all around the repo path.
             // in : git config --global -add safe.directory '%(prefix)///unc_machine/folder/to/repo'
             // out: git config --global -add safe.directory "%(prefix)///unc_machine/folder/to/repo"
+            // as well as:
+            // in : git config --global -add safe.directory 'd:/folder/to/repo with space in name'
+            // out: git config --global -add safe.directory "d:/folder/to/repo with space in name"
             static string ReplaceRepoPathQuotes(string command)
             {
                 if (!EnvUtils.RunningOnWindows() || !command.EndsWith('\''))
@@ -378,7 +381,7 @@ namespace GitUI.NBugReports
                     return command;
                 }
 
-                int quoteIndex = command.IndexOf("'%(prefix)");
+                int quoteIndex = command.IndexOf('\'');
                 return quoteIndex < 0 ? command : @$"{command[..quoteIndex]}""{command[(quoteIndex + 1)..^1]}""";
             }
         }
