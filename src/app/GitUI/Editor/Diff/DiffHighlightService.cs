@@ -188,12 +188,25 @@ public abstract class DiffHighlightService : TextHighlightService
             // git-diff presents the removed lines directly followed by the added in a "block"
             IReadOnlyList<ISegment> linesRemoved = GetBlockOfLines(diffLines, DiffLineType.Minus, ref index, ref found);
             IReadOnlyList<ISegment> linesAdded = GetBlockOfLines(diffLines, DiffLineType.Plus, ref index, ref found);
-            string getText(ISegment line) => document.GetText(line.Offset + diffContentOffset, line.Length - diffContentOffset);
 
-            foreach (TextMarker marker in GetDifferenceMarkers(getText, linesRemoved, linesAdded, diffContentOffset))
+            foreach (TextMarker marker in GetDifferenceMarkers(GetText, linesRemoved, linesAdded, diffContentOffset))
             {
                 markerStrategy.AddMarker(marker);
             }
+        }
+
+        return;
+
+        string GetText(ISegment line)
+        {
+            int len = line.Length - diffContentOffset;
+            if (line.Offset + line.Length >= document.TextLength)
+            {
+                // This is likely a test, where last line do not have a newline
+                --len;
+            }
+
+            return document.GetText(line.Offset + diffContentOffset, len);
         }
     }
 
