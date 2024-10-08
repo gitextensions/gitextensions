@@ -1,7 +1,6 @@
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
@@ -16,26 +15,15 @@ public partial class RangeDiffHighlightService : DiffHighlightService
 
     private static readonly string[] _diffFullPrefixes = ["      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    "];
 
-    public RangeDiffHighlightService(ref string text)
+    public RangeDiffHighlightService(ref string text, DiffViewerLineNumberControl lineNumbersControl)
         : base(ref text, useGitColoring: true)
     {
-    }
-
-    // git-range-diff has an extended subset of git-diff options, base is the same
-    public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module)
-        => DiffHighlightService.GetGitCommandConfiguration(module, useGitColoring: true, "range-diff");
-
-    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
-        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Header;
-
-    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
-    {
-        DiffLinesInfo result = new();
+        _diffLinesInfo = new();
         int bufferLine = 0;
-        foreach (string line in textEditor.Text.Split(Delimiters.LineFeed))
+        foreach (string line in text.Split(Delimiters.LineFeed))
         {
             ++bufferLine;
-            result.Add(new DiffLineInfo
+            _diffLinesInfo.Add(new DiffLineInfo
             {
                 LineNumInDiff = bufferLine,
                 LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
@@ -46,8 +34,15 @@ public partial class RangeDiffHighlightService : DiffHighlightService
             });
         }
 
-        lineNumbersControl.DisplayLineNum(result, showLeftColumn: false);
+        lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: false);
     }
+
+    // git-range-diff has an extended subset of git-diff options, base is the same
+    public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module)
+        => DiffHighlightService.GetGitCommandConfiguration(module, useGitColoring: true, "range-diff");
+
+    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Header;
 
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
 
