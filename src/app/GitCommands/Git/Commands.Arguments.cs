@@ -190,7 +190,7 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString Commit(bool amend, bool signOff, string author, bool useExplicitCommitMessage, string? commitMessageFile, Func<string, string?> getPathForGitExecution, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
+        public static ArgumentString Commit(bool amend, bool signOff, string author, bool useExplicitCommitMessage, string? commitMessageFile, Func<string, string?> getPathForGitExecution, bool noVerify = false, bool? gpgSign = null, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
         {
             if (useExplicitCommitMessage && string.IsNullOrEmpty(commitMessageFile))
             {
@@ -203,8 +203,9 @@ namespace GitCommands.Git
                 { noVerify, "--no-verify" },
                 { signOff, "--signoff" },
                 { !string.IsNullOrEmpty(author), $"--author=\"{author?.Trim().Trim('"')}\"" },
-                { gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
-                { gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
+                { gpgSign is false, "--no-gpg-sign" },
+                { gpgSign is true && string.IsNullOrWhiteSpace(gpgKeyId), "--gpg-sign" },
+                { gpgSign is true && !string.IsNullOrWhiteSpace(gpgKeyId), $"--gpg-sign={gpgKeyId}" },
                 { useExplicitCommitMessage, $"-F {getPathForGitExecution(commitMessageFile).Quote()}" },
                 { allowEmpty, "--allow-empty" },
                 { resetAuthor && amend, "--reset-author" }
