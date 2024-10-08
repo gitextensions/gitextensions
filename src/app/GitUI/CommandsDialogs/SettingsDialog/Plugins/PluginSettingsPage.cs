@@ -9,8 +9,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         private IGitPlugin? _gitPlugin;
         private GitPluginSettingsContainer? _settingsContainer;
 
-        public PluginSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-           : base(serviceProvider, canSaveInsideRepo)
+        public PluginSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+           : base(serviceProvider, pageHost)
         {
             InitializeComponent();
         }

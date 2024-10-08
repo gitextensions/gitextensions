@@ -4,8 +4,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class CommitDialogSettingsPage : SettingsPageWithHeader
     {
-        public CommitDialogSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-            : base(serviceProvider, canSaveInsideRepo)
+        public CommitDialogSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

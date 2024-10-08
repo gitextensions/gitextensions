@@ -16,8 +16,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 * Unchecked: not added to the menu");
 
         private bool _isLoading = false;
-        public ShellExtensionSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-            : base(serviceProvider, canSaveInsideRepo)
+        public ShellExtensionSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             UpdateRegistrationStatus();

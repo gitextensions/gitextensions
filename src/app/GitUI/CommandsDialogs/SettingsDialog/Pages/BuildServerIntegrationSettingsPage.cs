@@ -17,17 +17,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private IConfigFileRemoteSettingsManager? _remotesManager;
         private JoinableTask<object>? _populateBuildServerTypeTask;
 
-        public BuildServerIntegrationSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-           : base(serviceProvider, canSaveInsideRepo)
+        public BuildServerIntegrationSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+           : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();
         }
 
-        protected override void Init(ISettingsPageHost pageHost)
+        protected override void Init()
         {
-            base.Init(pageHost);
-
+            base.Init();
             _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
             _populateBuildServerTypeTask = ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>

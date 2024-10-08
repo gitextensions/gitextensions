@@ -8,8 +8,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private Font? _consoleFont;
 
-        public ConsoleStyleSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-            : base(serviceProvider, canSaveInsideRepo)
+        public ConsoleStyleSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

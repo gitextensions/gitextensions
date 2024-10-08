@@ -8,8 +8,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _homeIsSetToString = new("HOME is set to:");
 
-        public GitSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-            : base(serviceProvider, canSaveInsideRepo)
+        public GitSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

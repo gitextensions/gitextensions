@@ -8,8 +8,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private record GitSettingUiMapping(string GitSettingKey, CheckBox MappedCheckbox);
         private readonly List<GitSettingUiMapping> _gitSettings;
 
-        public GitConfigAdvancedSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-           : base(serviceProvider, canSaveInsideRepo)
+        public GitConfigAdvancedSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+           : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

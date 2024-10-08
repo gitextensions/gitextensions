@@ -6,18 +6,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public partial class DistributedSettingsPage : SettingsPageWithHeader, IDistributedSettingsPage
     {
-        public DistributedSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-           : base(serviceProvider, canSaveInsideRepo)
+        public DistributedSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+           : base(serviceProvider, pageHost)
         {
         }
 
         protected DistributedSettingsSet DistributedSettingsSet => CommonLogic.DistributedSettingsSet;
         protected DistributedSettings? CurrentSettings { get; private set; }
 
-        protected override void Init(ISettingsPageHost pageHost)
+        protected override void Init()
         {
-            base.Init(pageHost);
-
+            base.Init();
             CurrentSettings = DistributedSettingsSet.EffectiveSettings;
         }
 

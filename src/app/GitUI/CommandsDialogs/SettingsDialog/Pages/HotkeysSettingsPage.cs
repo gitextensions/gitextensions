@@ -2,8 +2,8 @@
 {
     public partial class HotkeysSettingsPage : SettingsPageWithHeader
     {
-        public HotkeysSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-            : base(serviceProvider, canSaveInsideRepo)
+        public HotkeysSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

@@ -5,8 +5,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitRootIntroductionPage : SettingsPageBase
     {
-        public GitRootIntroductionPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-            : base(serviceProvider)
+        public GitRootIntroductionPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

@@ -10,10 +10,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private SettingsPageHeader? _header;
         private bool _canSaveInsideRepo;
 
-        public SettingsPageWithHeader(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-            : base(serviceProvider)
+        public SettingsPageWithHeader(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
-            _canSaveInsideRepo = canSaveInsideRepo;
+            _canSaveInsideRepo = pageHost.CheckSettingsLogic.CommonLogic.Module.IsValidGitWorkingDir();
         }
 
         public override Control GuiControl => _header ??= new SettingsPageHeader(this, _canSaveInsideRepo);

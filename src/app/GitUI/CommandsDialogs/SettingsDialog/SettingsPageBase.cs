@@ -16,10 +16,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private IReadOnlyList<string>? _childrenText;
         private ISettingsPageHost? _pageHost;
 
-        protected SettingsPageBase(IServiceProvider serviceProvider)
+        protected SettingsPageBase(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
         {
             InitializeComponent();
             ServiceProvider = serviceProvider;
+            _pageHost = pageHost;
         }
 
         protected ISettingsPageHost PageHost
@@ -54,21 +55,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected ToolTip ToolTip => toolTip1;
 
-        protected virtual void Init(ISettingsPageHost pageHost)
+        protected virtual void Init()
         {
-            _pageHost = pageHost;
         }
 
         public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost, IServiceProvider serviceProvider) where T : SettingsPageBase
         {
-            bool canSaveInsideRepo = pageHost.CheckSettingsLogic.CommonLogic.Module.IsValidGitWorkingDir();
-            T result = (T)Activator.CreateInstance(typeof(T), serviceProvider, canSaveInsideRepo);
+            T result = (T)Activator.CreateInstance(typeof(T), serviceProvider, pageHost);
 
             result.AdjustForDpiScaling();
             result.EnableRemoveWordHotkey();
             result.FixVisualStyle();
 
-            result.Init(pageHost);
+            result.Init();
             return result;
         }
 

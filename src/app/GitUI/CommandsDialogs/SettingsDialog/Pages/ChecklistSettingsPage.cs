@@ -134,8 +134,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         public SshSettingsPage? SshSettingsPage { get; set; }
 
-        public ChecklistSettingsPage(IServiceProvider serviceProvider, bool canSaveInsideRepo)
-            : base(serviceProvider, canSaveInsideRepo)
+        public ChecklistSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();
