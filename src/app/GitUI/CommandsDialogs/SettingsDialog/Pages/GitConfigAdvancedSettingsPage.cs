@@ -41,7 +41,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(CurrentSettings);
             foreach (GitSettingUiMapping gitSetting in _gitSettings)
             {
-                gitSetting.MappedCheckbox.Checked = CurrentSettings.GetValue<bool>(gitSetting.GitSettingKey) is true;
+                gitSetting.MappedCheckbox.CheckState = CurrentSettings.GetValue(gitSetting.GitSettingKey) switch
+                    {
+                        "true" or "yes" or "on" or "1" => CheckState.Checked,
+                        "false" or "no" or "off" or "0" or "" => CheckState.Unchecked,
+                        _ => CheckState.Indeterminate
+                    };
             }
 
             base.SettingsToPage();
@@ -50,7 +55,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             Validates.NotNull(CurrentSettings);
-            foreach (GitSettingUiMapping gitSetting in _gitSettings)
+            foreach (GitSettingUiMapping gitSetting in _gitSettings.Where(s => s.MappedCheckbox.CheckState != CheckState.Indeterminate))
             {
                 CurrentSettings.SetValue(gitSetting.GitSettingKey, gitSetting.MappedCheckbox.Checked ? "true" : "false");
             }
