@@ -780,24 +780,27 @@ namespace GitUI.CommandsDialogs
             {
                 if (PushToRemote.Checked)
                 {
-                    if (_NO_TRANSLATE_Branch.SelectedItem is GitRef branch)
+                    IGitRef selectedRef = _NO_TRANSLATE_Branch.SelectedItem as IGitRef;
+                    if (selectedRef == null && !string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
                     {
-                        if (_selectedRemote is not null)
-                        {
-                            string? defaultRemote = _remotesManager.GetDefaultPushRemote(_selectedRemote, branch.Name);
-                            if (!string.IsNullOrEmpty(defaultRemote))
-                            {
-                                RemoteBranch.Text = defaultRemote;
-                                return;
-                            }
+                        selectedRef = _gitRefs.FirstOrDefault(r => r.Name == _NO_TRANSLATE_Branch.Text);
+                    }
 
-                            if (branch.TrackingRemote.Equals(_selectedRemote.Name, StringComparison.OrdinalIgnoreCase))
+                    if (selectedRef != null && _selectedRemote is not null)
+                    {
+                        string? defaultRemote = _remotesManager.GetDefaultPushRemote(_selectedRemote, selectedRef.Name);
+                        if (!string.IsNullOrEmpty(defaultRemote))
+                        {
+                            RemoteBranch.Text = defaultRemote;
+                            return;
+                        }
+
+                        if (selectedRef.TrackingRemote.Equals(_selectedRemote.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            RemoteBranch.Text = selectedRef.MergeWith;
+                            if (!string.IsNullOrEmpty(RemoteBranch.Text))
                             {
-                                RemoteBranch.Text = branch.MergeWith;
-                                if (!string.IsNullOrEmpty(RemoteBranch.Text))
-                                {
-                                    return;
-                                }
+                                return;
                             }
                         }
                     }
