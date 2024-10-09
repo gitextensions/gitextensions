@@ -5,8 +5,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
     {
-        public ConfirmationsSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public ConfirmationsSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

@@ -9,17 +9,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly ShellProvider _shellProvider = new();
         private int _cboTerminalPreviousIndex = -1;
 
-        public FormBrowseRepoSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public FormBrowseRepoSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             cboTerminal.DisplayMember = "Name";
             InitializeComplete();
-        }
-
-        protected override void Init(ISettingsPageHost pageHost)
-        {
-            base.Init(pageHost);
         }
 
         protected override void OnRuntimeLoad()
