@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
-using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
@@ -14,13 +13,15 @@ namespace GitUI.Editor.Diff;
 public partial class DifftasticHighlightService : TextHighlightService
 {
     protected readonly List<TextMarker> _textMarkers = [];
-    private DiffLinesInfo _matchInfos = new();
+    private DiffLinesInfo _diffLinesInfo = new();
 
     [GeneratedRegex(@"^(\s*(?<matchStart>(?<lineNo>\d+)|(\.+)) )", RegexOptions.ExplicitCapture)]
     private static partial Regex LineNoRegex();
 
-    public DifftasticHighlightService(ref string text)
+    public DifftasticHighlightService(ref string text, DiffViewerLineNumberControl lineNumbersControl, out int rightColumnStart)
     {
+        // Hide VRulerPos by default
+        rightColumnStart = 0;
         if (!int.TryParse(new EnvironmentAbstraction().GetEnvironmentVariable("DFT_WIDTH"), out int column))
         {
             column = 80;
@@ -30,7 +31,6 @@ public partial class DifftasticHighlightService : TextHighlightService
         StringBuilder lineBuilder = column > 0 ? new(column) : new();
         List<TextMarker> textMarkers = [];
         int halfColumn = column / 2;
-        int rightColumnStart = 0;
         bool nextIsHeader = true;
         bool debugPrinted = false;
 
@@ -63,7 +63,7 @@ public partial class DifftasticHighlightService : TextHighlightService
             if (!matchLeft.Success)
             {
                 // This could also be a side-by-diff with zero context where ... are not printed
-                Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic output, no left line. This could occur for last line and may be OK if another difftool is used. ({_matchInfos.DiffLines.Count}) {lineBuilder}");
+                Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic output, no left line. This could occur for last line and may be OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
                 debugPrinted = true;
                 AddInfo(leftLineNo, rightLineNo, lineType, textMarkers, lineBuilder);
                 continue;
@@ -160,7 +160,7 @@ public partial class DifftasticHighlightService : TextHighlightService
             {
                 if (lineType != DiffLineType.PlusRight)
                 {
-                    Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic no right lineno. This is OK if another difftool is used. ({_matchInfos.DiffLines.Count}) {lineBuilder}");
+                    Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic no right lineno. This is OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
                     debugPrinted = true;
                 }
             }
@@ -168,7 +168,7 @@ public partial class DifftasticHighlightService : TextHighlightService
             {
                 if (lineType == DiffLineType.PlusRight)
                 {
-                    Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic has PlusRight and right lineno. This is OK if another difftool is used. ({_matchInfos.DiffLines.Count}) {lineBuilder}");
+                    Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic has PlusRight and right lineno. This is OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
                     debugPrinted = true;
                 }
 
@@ -179,6 +179,7 @@ public partial class DifftasticHighlightService : TextHighlightService
 
                 int rightLen = matchRight.Length;
                 lineBuilder = lineBuilder.Remove(rightStartOffset, rightLen);
+                int columnGap = 0;
 
                 int i = 0;
                 bool first = true;
@@ -235,19 +236,19 @@ public partial class DifftasticHighlightService : TextHighlightService
                         rightColumnStart = rightStartOffset;
                     }
 
-                    int columnOffset = rightColumnStart - rightStartOffset;
-
                     // Add spaces so both-sides markers are aligned
-                    // It would be nicer to set VRulerRow at rightColumnStart, but that need to be reset for next file
-                    lineBuilder = lineBuilder.Insert(rightStartOffset, new string(' ', columnOffset) + '|');
-                    rightLen -= columnOffset + 1;
+                    columnGap = rightColumnStart - rightStartOffset;
+                    if (columnGap > 0)
+                    {
+                        lineBuilder = lineBuilder.Insert(rightStartOffset, new string(' ', columnGap));
+                    }
                 }
 
                 foreach (TextMarker tm in textMarkers)
                 {
-                    if (tm.Offset >= rightStartOffset)
+                    if (tm.Offset >= rightStartOffset && columnGap > 0)
                     {
-                        tm.Offset = Math.Max(0, tm.Offset - rightLen);
+                        tm.Offset += columnGap;
                     }
                 }
             }
@@ -256,17 +257,21 @@ public partial class DifftasticHighlightService : TextHighlightService
         }
 
         text = sb.ToString();
+        lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: true);
+
         return;
 
         void AddInfo(int leftLineNo, int rightLineNo, DiffLineType lineType, List<TextMarker> textMarkers, StringBuilder lineBuilder)
         {
-            _matchInfos.Add(
+            _diffLinesInfo.Add(
                 new()
                 {
-                    LineNumInDiff = _matchInfos.DiffLines.Count + 1,
+                    LineNumInDiff = _diffLinesInfo.DiffLines.Count + 1,
                     LeftLineNumber = leftLineNo,
                     RightLineNumber = rightLineNo,
                     LineType = lineType,
+                    LineSegment = null,
+                    IsMovedLine = false,
                 });
             foreach (TextMarker tm in textMarkers)
             {
@@ -288,10 +293,5 @@ public partial class DifftasticHighlightService : TextHighlightService
         {
             document.MarkerStrategy.AddMarker(tm);
         }
-    }
-
-    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
-    {
-        lineNumbersControl.DisplayLineNum(_matchInfos, showLeftColumn: true);
     }
 }
