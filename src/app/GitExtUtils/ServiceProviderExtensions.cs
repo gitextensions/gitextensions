@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Design;
 
-namespace GitUIPluginInterfaces;
+namespace GitExtUtils;
 
 /// <summary>
 /// Extension methods for getting services from an <see cref="IServiceProvider" />.
