@@ -120,7 +120,7 @@ namespace GitUITests.Editor
             test.TextEditor.ActiveTextAreaControl.TextArea.ScrollToCaret();
             test.TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 18;
             test.LineNumberControl = new DiffViewerLineNumberControl(test.TextEditor.ActiveTextAreaControl.TextArea);
-            DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(test.TextEditor, isCombinedDiff: false);
+            DiffLinesInfo result = DiffLineNumAnalyzer.Analyze(test.TextEditor.Text, allTextMarkers: [], isCombinedDiff: false);
             test.LineNumberControl.DisplayLineNum(result, showLeftColumn: true);
 
             _viewPositionCache.GetTestAccessor().SetCurrentIdentification("dummy");
@@ -169,66 +169,59 @@ namespace GitUITests.Editor
 
             _viewPositionCache.GetTestAccessor().SetCapturedIdentification("current");
 
-            ITextHighlightService highlightService = new PatchHighlightService(ref text, true);
             test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
+            ITextHighlightService highlightService = new PatchHighlightService(ref text, true, test.LineNumberControl);
             _viewPositionCache.Restore("current");
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(existingViewPosition.CaretPosition,
                 "position should be restored to the (inserted) existingViewPosition");
 
             _viewPositionCache.Capture();
-            test.TextEditor.Text = "";
             test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
+            test.TextEditor.Text = "";
             _viewPositionCache.Restore("empty");
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(new TextLocation(0, 0),
                 "empty file, set the position to the first");
 
-            highlightService = new PatchHighlightService(ref text, true);
+            test.LineNumberControl.Clear();
+            highlightService = new PatchHighlightService(ref text, true, test.LineNumberControl);
             _viewPositionCache.Capture();
             test.TextEditor.Text = text;
-            test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
             _viewPositionCache.Restore("current");
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(existingViewPosition.CaretPosition,
                 "the captured position should not be reset by an empty text");
 
+            test.LineNumberControl.Clear();
             _viewPositionCache.Capture();
             test.TextEditor.Text = "some\ninfo\n\nnot empty";
-            test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
             _viewPositionCache.Restore("");
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(new TextLocation(0, 0),
                 "Empty name, position should be the first");
 
-            highlightService = new PatchHighlightService(ref text, true);
+            test.LineNumberControl.Clear();
+            highlightService = new PatchHighlightService(ref text, true, test.LineNumberControl);
             _viewPositionCache.Capture();
             test.TextEditor.Text = text;
-            test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
             _viewPositionCache.Restore("current");
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(existingViewPosition.CaretPosition,
                 "the captured position should not be reset by empty name");
 
+            test.LineNumberControl.Clear();
             _viewPositionCache.Capture();
             test.TextEditor.Text = "some\ninfo\n\nnot empty";
-            test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
             _viewPositionCache.Restore(null);
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(new TextLocation(0, 0),
                 "null name, set the position to the first");
 
-            highlightService = new PatchHighlightService(ref text, true);
+            test.LineNumberControl.Clear();
+            highlightService = new PatchHighlightService(ref text, true, test.LineNumberControl);
             _viewPositionCache.Capture();
             test.TextEditor.Text = text;
-            test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
             _viewPositionCache.Restore("current");
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(existingViewPosition.CaretPosition,
@@ -236,20 +229,18 @@ namespace GitUITests.Editor
 
             string text2 = "dummy text\ndummy";
             _viewPositionCache.Capture();
-            highlightService = new PatchHighlightService(ref text2, true);
-            test.TextEditor.Text = text2;
             test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
+            highlightService = new PatchHighlightService(ref text2, true, test.LineNumberControl);
+            test.TextEditor.Text = text2;
             _viewPositionCache.Restore("dummy");
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(new TextLocation(0, 0),
                 "a new file will set the position back to 0,0");
 
-            highlightService = new PatchHighlightService(ref text, true);
+            test.LineNumberControl.Clear();
+            highlightService = new PatchHighlightService(ref text, true, test.LineNumberControl);
             _viewPositionCache.Capture();
             test.TextEditor.Text = text;
-            test.LineNumberControl.Clear();
-            highlightService.SetLineControl(test.LineNumberControl, test.TextEditor);
             _viewPositionCache.Restore("current");
 
             test.TextEditor.ActiveTextAreaControl.TextArea.Caret.Position.Should().Be(new TextLocation(0, 0),

@@ -5,8 +5,6 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitExtUtils.GitUI.Theming;
-using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
@@ -14,19 +12,22 @@ namespace GitUI.Editor.Diff;
 public partial class GrepHighlightService : TextHighlightService
 {
     private readonly List<TextMarker> _textMarkers = [];
-    private DiffLinesInfo _matchInfos = new();
+    private DiffLinesInfo _diffLinesInfo = new();
 
     [GeneratedRegex(@"^(?<line>\d+)(?<kind>:|.)(?<text>.*)$", RegexOptions.ExplicitCapture)]
     private static partial Regex GrepLineRegex();
 
-    public GrepHighlightService(ref string text)
-        => SetText(ref text);
+    public GrepHighlightService(ref string text, DiffViewerLineNumberControl lineNumbersControl)
+    {
+        SetText(ref text);
+        lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: false);
+    }
+
+    public override void AddTextHighlighting(IDocument document)
+        => document.MarkerStrategy.AddMarkers(_textMarkers);
 
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
         => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.MinusPlus or DiffLineType.Grep);
-
-    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)
-        => lineNumbersControl.DisplayLineNum(_matchInfos, showLeftColumn: false);
 
     /// <summary>
     /// Get the next/previous line for the grep match.
@@ -39,12 +40,12 @@ public partial class GrepHighlightService : TextHighlightService
         int increase = next ? 1 : -1;
 
         // If start index is on a match, move to next
-        if (_matchInfos.DiffLines.TryGetValue(rowIndexInText, out DiffLineInfo lineInfo) && lineInfo.LineType == DiffLineType.Grep)
+        if (_diffLinesInfo.DiffLines.TryGetValue(rowIndexInText, out DiffLineInfo lineInfo) && lineInfo.LineType == DiffLineType.Grep)
         {
             rowIndexInText += increase;
         }
 
-        while (_matchInfos.DiffLines.TryGetValue(rowIndexInText, out lineInfo) && lineInfo.LineType != DiffLineType.Grep)
+        while (_diffLinesInfo.DiffLines.TryGetValue(rowIndexInText, out lineInfo) && lineInfo.LineType != DiffLineType.Grep)
         {
             rowIndexInText += increase;
         }
@@ -82,14 +83,6 @@ public partial class GrepHighlightService : TextHighlightService
         }
     }
 
-    public override void AddTextHighlighting(IDocument document)
-    {
-        foreach (TextMarker tm in _textMarkers)
-        {
-            document.MarkerStrategy.AddMarker(tm);
-        }
-    }
-
     private void SetText(ref string text)
     {
         StringBuilder sb = new(text.Length);
@@ -99,7 +92,7 @@ public partial class GrepHighlightService : TextHighlightService
             {
                 if (sb.Length > 0)
                 {
-                    _matchInfos.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, false));
+                    _diffLinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, false));
                     sb.Append('\n');
                 }
 
@@ -123,7 +116,7 @@ public partial class GrepHighlightService : TextHighlightService
             }
 
             bool isMatch = match.Groups["kind"].Success && match.Groups["kind"].Value == ":";
-            _matchInfos.Add(GetDiffLineInfo(lineNo, isMatch));
+            _diffLinesInfo.Add(GetDiffLineInfo(lineNo, isMatch));
             string grepText = match.Groups["text"].Value;
 
             AnsiEscapeUtilities.ParseEscape(grepText, sb, _textMarkers);
@@ -148,7 +141,7 @@ public partial class GrepHighlightService : TextHighlightService
     private DiffLineInfo GetDiffLineInfo(int lineno, bool match)
         => new()
         {
-            LineNumInDiff = _matchInfos.DiffLines.Count + 1,
+            LineNumInDiff = _diffLinesInfo.DiffLines.Count + 1,
             LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
             RightLineNumber = lineno,
             LineType = lineno == DiffLineInfo.NotApplicableLineNum
