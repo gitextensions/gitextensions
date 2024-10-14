@@ -7,13 +7,13 @@ internal partial class OutputHistoryTabController : OutputHistoryControllerBase
 {
     private TabPage? _tabPage;
 
-    internal OutputHistoryTabController(IOutputHistoryModel outputHistoryModel,
+    internal OutputHistoryTabController(IOutputHistoryProvider outputHistoryProvider,
                                         OutputHistoryControl outputHistoryControl,
                                         TabControl parent,
                                         string tabCaption)
-        : base(outputHistoryModel, outputHistoryControl)
+        : base(outputHistoryProvider, outputHistoryControl)
     {
-        if (!outputHistoryModel.Enabled)
+        if (!outputHistoryProvider.Enabled)
         {
             return;
         }

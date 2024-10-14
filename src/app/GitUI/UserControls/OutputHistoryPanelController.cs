@@ -12,20 +12,20 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
     private readonly SplitContainer _verticalSplitContainer2;
     private readonly Timer _timer = new() { Interval = 25 };
 
-    internal OutputHistoryPanelController(IOutputHistoryModel outputHistoryModel,
+    internal OutputHistoryPanelController(IOutputHistoryProvider outputHistoryProvider,
                                           OutputHistoryControl outputHistoryControl,
                                           Control parent,
                                           SplitContainer verticalSplitContainer1,
                                           SplitContainer verticalSplitContainer2,
                                           SplitContainer horizontalSplitContainer)
-        : base(outputHistoryModel, outputHistoryControl)
+        : base(outputHistoryProvider, outputHistoryControl)
     {
         _outputHistoryControl = outputHistoryControl;
         _verticalSplitContainer1 = verticalSplitContainer1;
         _verticalSplitContainer2 = verticalSplitContainer2;
         _horizontalSplitContainer = horizontalSplitContainer;
 
-        if (!outputHistoryModel.Enabled)
+        if (!outputHistoryProvider.Enabled)
         {
             return;
         }
@@ -60,7 +60,7 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
 
     internal override bool FocusAndToggleIfPanel()
     {
-        if (!_outputHistoryModel.Enabled)
+        if (!_outputHistoryProvider.Enabled)
         {
             return false;
         }

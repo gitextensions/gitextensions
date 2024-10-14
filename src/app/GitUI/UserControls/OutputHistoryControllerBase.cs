@@ -5,32 +5,32 @@ namespace GitUI.UserControls;
 
 internal abstract class OutputHistoryControllerBase : IDisposable
 {
-    protected IOutputHistoryModel _outputHistoryModel;
+    protected IOutputHistoryProvider _outputHistoryProvider;
     protected RichTextBox _textBox;
 
-    internal OutputHistoryControllerBase(IOutputHistoryModel outputHistoryModel, OutputHistoryControl outputHistoryControl)
+    internal OutputHistoryControllerBase(IOutputHistoryProvider outputHistoryProvider, OutputHistoryControl outputHistoryControl)
     {
-        _outputHistoryModel = outputHistoryModel;
+        _outputHistoryProvider = outputHistoryProvider;
         _textBox = outputHistoryControl.TextBox;
 
         _textBox.LinkClicked += (_, e) => OsShellUtil.OpenUrlInDefaultBrowser(e.LinkText);
-        outputHistoryControl.tsmiClear.Click += (_, _) => _outputHistoryModel.ClearHistory();
+        outputHistoryControl.tsmiClear.Click += (_, _) => _outputHistoryProvider.ClearHistory();
         outputHistoryControl.tsmiCopy.Click += CopyToClipboard;
 
-        _outputHistoryModel.HistoryChanged += Update;
+        _outputHistoryProvider.HistoryChanged += Update;
         Update(this, EventArgs.Empty);
     }
 
     public void Dispose()
     {
-        _outputHistoryModel.HistoryChanged -= Update;
+        _outputHistoryProvider.HistoryChanged -= Update;
     }
 
     internal abstract bool FocusAndToggleIfPanel();
 
     private void Update(object sender, EventArgs args)
     {
-        string history = _outputHistoryModel.History;
+        string history = _outputHistoryProvider.History;
         _textBox.InvokeAndForget(() =>
         {
             _textBox.Text = history;

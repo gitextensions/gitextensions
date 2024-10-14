@@ -494,9 +494,9 @@ namespace GitUI.CommandsDialogs
             this.InvokeAndForget(async () =>
             {
                 _outputHistoryController = AppSettings.ShowOutputHistoryAsTab.Value
-                    ? new OutputHistoryTabController(UICommands.GetRequiredService<IOutputHistoryModel>(), new OutputHistoryControl(), parent: CommitInfoTabControl,
+                    ? new OutputHistoryTabController(UICommands.GetRequiredService<IOutputHistoryProvider>(), new OutputHistoryControl(), parent: CommitInfoTabControl,
                         tabCaption: _outputHistoryTabCaption.Text)
-                    : new OutputHistoryPanelController(UICommands.GetRequiredService<IOutputHistoryModel>(), new OutputHistoryControl(), parent: toolPanel.ContentPanel,
+                    : new OutputHistoryPanelController(UICommands.GetRequiredService<IOutputHistoryProvider>(), new OutputHistoryControl(), parent: toolPanel.ContentPanel,
                         verticalSplitContainer1: LeftSplitContainer, verticalSplitContainer2: revisionDiff.LeftSplitContainer, horizontalSplitContainer: revisionDiff.HorizontalSplitter);
 
                 await TaskScheduler.Default;
