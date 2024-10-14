@@ -5,45 +5,7 @@ using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Models;
 
-public interface IOutputHistoryModel
-{
-    /// <summary>
-    ///  Is invoked when something was added to the output history.
-    /// </summary>
-    event EventHandler HistoryChanged;
-
-    /// <summary>
-    ///  Gets whether the output history is enabled.
-    /// </summary>
-    bool Enabled { get; }
-
-    /// <summary>
-    ///  Gets the current output history formatted as string.
-    /// </summary>
-    string History { get; }
-
-    /// <summary>
-    ///  Clears the recorded history.
-    /// </summary>
-    void ClearHistory();
-
-    /// <summary>
-    ///  Records the output after a process has run.
-    /// </summary>
-    void RecordHistory(in RunProcessInfo runProcess);
-
-    /// <summary>
-    ///  Records an exception.
-    /// </summary>
-    void RecordHistory(in Exception exception);
-
-    /// <summary>
-    ///  Records a string message.
-    /// </summary>
-    void RecordHistory(in string message);
-}
-
-internal sealed class OutputHistoryModel : IOutputHistoryModel
+internal sealed class OutputHistoryModel : IOutputHistoryProvider, IOutputHistoryRecorder
 {
     private const string _endMark = "###";
     private const string _noExecutable = "---";

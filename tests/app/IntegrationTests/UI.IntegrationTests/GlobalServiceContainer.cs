@@ -17,7 +17,7 @@ namespace GitExtensions.UITests
         {
             ServiceContainer serviceContainer = new();
 
-            serviceContainer.AddService(Substitute.For<IOutputHistoryModel>());
+            serviceContainer.AddService(Substitute.For<IOutputHistoryProvider>());
 
             serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
             serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());

@@ -37,7 +37,8 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IHotkeySettingsLoader>(hotkeySettingsManager);
         serviceContainer.AddService<ISimplePromptCreator>(new SimplePromptCreator());
         serviceContainer.AddService<IFilePromptCreator>(new FilePromptCreator());
-        serviceContainer.AddService<IOutputHistoryModel>(outputHistoryModel);
+        serviceContainer.AddService<IOutputHistoryProvider>(outputHistoryModel);
+        serviceContainer.AddService<IOutputHistoryRecorder>(outputHistoryModel);
 
         RepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider = new();
         InvalidRepositoryRemover invalidRepositoryRemover = new();
