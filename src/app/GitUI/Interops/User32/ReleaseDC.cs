@@ -4,7 +4,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.User32)]
-        public static extern void ReleaseDC(IntPtr hwnd, IntPtr dc);
+        [LibraryImport(Libraries.User32)]
+        public static partial void ReleaseDC(IntPtr hwnd, IntPtr dc);
     }
 }

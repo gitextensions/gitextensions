@@ -5,7 +5,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.User32, ExactSpelling = true, SetLastError = true)]
-        public static extern BOOL DestroyIcon(IntPtr handle);
+        [LibraryImport(Libraries.User32, SetLastError = true)]
+        public static partial BOOL DestroyIcon(IntPtr handle);
     }
 }
