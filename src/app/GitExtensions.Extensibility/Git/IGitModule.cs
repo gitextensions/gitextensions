@@ -501,7 +501,6 @@ public interface IGitModule
     /// </returns>
     string GetRemoteBranch(string branch);
 
-    string RenameBranch(string name, string newName);
     IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken);
     Task<ExecutionResult> GetGrepFileAsync(
         ObjectId objectId,

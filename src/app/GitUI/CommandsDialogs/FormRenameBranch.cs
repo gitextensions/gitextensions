@@ -1,14 +1,14 @@
-﻿using System.Diagnostics;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUI.HelperDialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormRenameBranch : GitModuleForm
     {
-        private readonly TranslationString _branchRenameFailed = new("Rename failed.");
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
         private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
         private readonly string _oldName;
@@ -51,22 +51,10 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            try
-            {
-                string renameBranchResult = Module.RenameBranch(_oldName, newName);
+            ArgumentString command = Commands.RenameBranch(_oldName, newName);
+            bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
-                if (!string.IsNullOrEmpty(renameBranchResult))
-                {
-                    MessageBox.Show(this, _branchRenameFailed.Text + Environment.NewLine + renameBranchResult, Text,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-
-            DialogResult = DialogResult.OK;
+            DialogResult = success ? DialogResult.OK : DialogResult.None;
         }
     }
 }

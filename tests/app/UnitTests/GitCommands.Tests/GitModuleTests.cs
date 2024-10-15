@@ -486,19 +486,6 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void RenameBranch()
-        {
-            const string oldName = "foo";
-            const string newName = "far";
-            const string output = "bar";
-
-            using (_executable.StageOutput($"branch -m \"{oldName}\" \"{newName}\"", output))
-            {
-                Assert.AreEqual(output, _gitModule.RenameBranch(oldName, newName));
-            }
-        }
-
-        [Test]
         public void AddRemote()
         {
             const string name = "foo";

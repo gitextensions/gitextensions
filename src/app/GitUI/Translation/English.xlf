@@ -6643,10 +6643,6 @@ Value has been reset to empty value.</source>
         <source>Rename</source>
         <target />
       </trans-unit>
-      <trans-unit id="_branchRenameFailed.Text">
-        <source>Rename failed.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="label1.Text">
         <source>New name</source>
         <target />
