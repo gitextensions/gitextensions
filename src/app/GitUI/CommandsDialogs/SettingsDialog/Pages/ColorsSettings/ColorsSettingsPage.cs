@@ -18,8 +18,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private static readonly TranslationString DefaultThemeName =
             new("default");
 
-        public ColorsSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public ColorsSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             sbOpenThemeFolder.AutoSize = false;

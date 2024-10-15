@@ -16,8 +16,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _fetchAll = new("Fetch all");
         private readonly TranslationString _fetchAndPruneAll = new("Fetch and prune all");
 
-        public GeneralSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public GeneralSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 

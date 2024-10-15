@@ -2,8 +2,8 @@
 {
     public partial class HotkeysSettingsPage : SettingsPageWithHeader
     {
-        public HotkeysSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public HotkeysSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

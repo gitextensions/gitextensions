@@ -9,8 +9,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         private IGitPlugin? _gitPlugin;
         private GitPluginSettingsContainer? _settingsContainer;
 
-        public PluginSettingsPage(IServiceProvider serviceProvider)
-           : base(serviceProvider)
+        public PluginSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+           : base(serviceProvider, pageHost)
         {
             InitializeComponent();
         }

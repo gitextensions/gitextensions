@@ -8,8 +8,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _blameWarningTooltip = new("Could prevent blame to calculate the accurate line number when blaming previous revisions.");
 
-        public BlameViewerSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public BlameViewerSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

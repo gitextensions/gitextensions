@@ -6,18 +6,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public partial class ConfigFileSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
     {
-        public ConfigFileSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public ConfigFileSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
         }
 
         protected ConfigFileSettingsSet ConfigFileSettingsSet => CommonLogic.ConfigFileSettingsSet;
         protected ConfigFileSettings? CurrentSettings { get; private set; }
 
-        protected override void Init(ISettingsPageHost pageHost)
+        protected override void Init()
         {
-            base.Init(pageHost);
-
+            base.Init();
             CurrentSettings = CommonLogic.ConfigFileSettingsSet.EffectiveSettings;
         }
 
