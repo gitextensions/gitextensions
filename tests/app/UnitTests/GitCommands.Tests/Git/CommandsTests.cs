@@ -568,6 +568,17 @@ namespace GitCommandsTests_Git
                 Commands.Remove(files: new[] { "a", "b", "c" }).Arguments);
         }
 
+        [Test]
+        public void RenameBranch()
+        {
+            const string oldName = "foo";
+            const string newName = "far";
+
+            Assert.AreEqual(
+                $"branch -m \"{oldName}\" \"{newName}\"",
+                Commands.RenameBranch(oldName, newName).Arguments);
+        }
+
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]

@@ -575,6 +575,16 @@ namespace GitCommands.Git
             };
         }
 
+        public static ArgumentString RenameBranch(string name, string newName)
+        {
+            return new GitArgumentBuilder("branch")
+            {
+                "-m",
+                name.QuoteNE(),
+                newName.QuoteNE()
+            };
+        }
+
         /// <summary>
         /// The Git command line for reset.
         /// </summary>

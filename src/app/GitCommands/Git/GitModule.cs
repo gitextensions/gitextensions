@@ -1975,17 +1975,6 @@ namespace GitCommands
             return _gitExecutable.GetOutput(args);
         }
 
-        public string RenameBranch(string name, string newName)
-        {
-            GitArgumentBuilder args = new("branch")
-            {
-                "-m",
-                name.QuoteNE(),
-                newName.QuoteNE()
-            };
-            return _gitExecutable.GetOutput(args);
-        }
-
         public string AddRemote(string? name, string? path)
         {
             if (string.IsNullOrEmpty(name))
