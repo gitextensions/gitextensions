@@ -176,7 +176,7 @@ public abstract class DiffHighlightService : TextHighlightService
     private void MarkInlineDifferences(IDocument document)
     {
         int index = 0;
-        DiffLineInfo[] diffLines = _diffLinesInfo.DiffLines.Values.OrderBy(l => l.LineNumInDiff).ToArray();
+        DiffLineInfo[] diffLines = [.. _diffLinesInfo.DiffLines.Values.OrderBy(l => l.LineNumInDiff)];
 
         const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+'
         MarkerStrategy markerStrategy = document.MarkerStrategy;
@@ -208,7 +208,7 @@ public abstract class DiffHighlightService : TextHighlightService
     }
 
     private IEnumerable<ISegment> GetAllLines(DiffLineType diffLineType)
-    => _diffLinesInfo?.DiffLines.Where(i => i.Value.LineType == diffLineType && i.Value.LineSegment is not null)
+        => _diffLinesInfo?.DiffLines.Where(i => i.Value.LineType == diffLineType && i.Value.LineSegment is not null)
             .Select(l => l.Value.LineSegment)
             ?? [];
 
