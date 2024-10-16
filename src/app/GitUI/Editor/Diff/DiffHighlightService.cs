@@ -195,16 +195,7 @@ public abstract class DiffHighlightService : TextHighlightService
         return;
 
         string GetText(ISegment line)
-        {
-            int len = line.Length - diffContentOffset;
-            if (line.Offset + line.Length >= document.TextLength)
-            {
-                // This is likely a test, where last line do not have a newline
-                --len;
-            }
-
-            return document.GetText(line.Offset + diffContentOffset, len);
-        }
+            => document.GetText(line.Offset + diffContentOffset, line.Length - diffContentOffset);
     }
 
     private IEnumerable<ISegment> GetAllLines(DiffLineType diffLineType)

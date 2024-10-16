@@ -30,7 +30,7 @@ public partial class DiffLineNumAnalyzer
                 break;
             }
 
-            int lineLength = lines[i].Length + 1;
+            int lineLength = Math.Min(lines[i].Length + 1, text.Length - textOffset);
             Lazy<List<TextMarker>> textMarkers = new(()
                 => allTextMarkers.Where(m => (m.Offset < textOffset + lineLength && m.EndOffset >= textOffset)).ToList());
 
