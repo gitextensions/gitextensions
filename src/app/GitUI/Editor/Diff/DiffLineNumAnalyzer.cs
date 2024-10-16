@@ -22,15 +22,23 @@ public partial class DiffLineNumAnalyzer
         bool isHeaderLineLocated = false;
         string[] lines = text.Split(Delimiters.LineFeed);
         int textOffset = 0;
-        for (int i = 0; i < lines.Length; i++)
+        int lastLine = lines.Length - 1;
+        for (int i = 0; i <= lastLine; i++)
         {
             string line = lines[i];
-            if (i == lines.Length - 1 && string.IsNullOrEmpty(line))
+            int lineLength = line.Length;
+            int lineEndLength = Math.Min(1, text.Length - (textOffset + lineLength));
+            if (line.EndsWith(Delimiters.CarriageReturn))
+            {
+                ++lineEndLength;
+                --lineLength;
+            }
+
+            if (i == lastLine && lineLength == 0)
             {
                 break;
             }
 
-            int lineLength = Math.Min(lines[i].Length + 1, text.Length - textOffset);
             Lazy<List<TextMarker>> textMarkers = new(()
                 => allTextMarkers.Where(m => (m.Offset < textOffset + lineLength && m.EndOffset >= textOffset)).ToList());
 
@@ -157,7 +165,7 @@ public partial class DiffLineNumAnalyzer
                 rightLineNum++;
             }
 
-            textOffset += lineLength;
+            textOffset += Math.Min(lineLength + lineEndLength, text.Length - textOffset);
         }
 
         return ret;
