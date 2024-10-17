@@ -184,11 +184,19 @@ public abstract class DiffHighlightService : TextHighlightService
         // Process the next blocks of removed / added diffLines and mark in-line differences
         while (index < diffLines.Length)
         {
-            bool found = false;
-
             // git-diff presents the removed lines directly followed by the added in a "block"
-            IReadOnlyList<ISegment> linesRemoved = GetBlockOfLines(diffLines, DiffLineType.Minus, ref index, ref found);
-            IReadOnlyList<ISegment> linesAdded = GetBlockOfLines(diffLines, DiffLineType.Plus, ref index, ref found);
+            IReadOnlyList<ISegment> linesRemoved = GetBlockOfLines(diffLines, DiffLineType.Minus, ref index, found: false);
+            if (linesRemoved.Count == 0)
+            {
+                continue;
+            }
+
+            IReadOnlyList<ISegment> linesAdded = GetBlockOfLines(diffLines, DiffLineType.Plus, ref index, found: true);
+            if (linesAdded.Count == 0)
+            {
+                continue;
+            }
+
             markerStrategy.AddMarkers(GetDifferenceMarkers(GetText, linesRemoved, linesAdded, diffContentOffset));
         }
 
@@ -211,7 +219,7 @@ public abstract class DiffHighlightService : TextHighlightService
     /// <param name="index">The index in diffLines to start with.</param>
     /// <param name="found">If a lineInDiff was found. This is also used to get the added diffLines just after the removed.</param>
     /// <returns>The block of segments.</returns>
-    private static List<ISegment> GetBlockOfLines(DiffLineInfo[] diffLines, DiffLineType diffLineType, ref int index, ref bool found)
+    private static List<ISegment> GetBlockOfLines(DiffLineInfo[] diffLines, DiffLineType diffLineType, ref int index, bool found)
     {
         List<ISegment> result = [];
 
