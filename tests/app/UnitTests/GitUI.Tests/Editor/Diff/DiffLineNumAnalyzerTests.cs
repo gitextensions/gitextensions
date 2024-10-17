@@ -198,7 +198,7 @@ public class DiffLineNumAnalyzerTests
         result.DiffLines[8].LineType.Should().Be(DiffLineType.Minus);
         result.DiffLines[8].IsMovedLine.Should().Be(true);
         result.DiffLines[8].LineSegment.Offset.Should().Be(449);
-        result.DiffLines[8].LineSegment.Length.Should().Be(10);
+        result.DiffLines[8].LineSegment.Length.Should().Be(9);
 
         result.DiffLines[9].LineType.Should().Be(DiffLineType.Minus);
         result.DiffLines[10].LineType.Should().Be(DiffLineType.Minus);
@@ -208,21 +208,21 @@ public class DiffLineNumAnalyzerTests
         result.DiffLines[11].LineType.Should().Be(DiffLineType.Minus);
         result.DiffLines[11].IsMovedLine.Should().Be(false);
         result.DiffLines[11].LineSegment.Offset.Should().Be(500);
-        result.DiffLines[11].LineSegment.Length.Should().Be(22);
+        result.DiffLines[11].LineSegment.Length.Should().Be(21);
 
         result.DiffLines[12].LeftLineNumber.Should().Be(7);
         result.DiffLines[12].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[12].LineType.Should().Be(DiffLineType.Minus);
         result.DiffLines[12].IsMovedLine.Should().Be(true);
         result.DiffLines[12].LineSegment.Offset.Should().Be(522);
-        result.DiffLines[12].LineSegment.Length.Should().Be(31);
+        result.DiffLines[12].LineSegment.Length.Should().Be(30);
 
         result.DiffLines[13].LeftLineNumber.Should().Be(8);
         result.DiffLines[13].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[13].LineType.Should().Be(DiffLineType.Minus);
         result.DiffLines[13].IsMovedLine.Should().Be(true);
         result.DiffLines[13].LineSegment.Offset.Should().Be(553);
-        result.DiffLines[13].LineSegment.Length.Should().Be(39);
+        result.DiffLines[13].LineSegment.Length.Should().Be(37);
 
         result.DiffLines[14].LineType.Should().Be(DiffLineType.Minus);
         result.DiffLines[14].IsMovedLine.Should().Be(true);
@@ -239,56 +239,56 @@ public class DiffLineNumAnalyzerTests
         result.DiffLines[21].LineType.Should().Be(DiffLineType.Minus);
         result.DiffLines[21].IsMovedLine.Should().Be(false);
         result.DiffLines[21].LineSegment.Offset.Should().Be(856);
-        result.DiffLines[21].LineSegment.Length.Should().Be(22);
+        result.DiffLines[21].LineSegment.Length.Should().Be(21);
 
         result.DiffLines[22].LeftLineNumber.Should().Be(17);
         result.DiffLines[22].RightLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[22].LineType.Should().Be(DiffLineType.Minus);
         result.DiffLines[22].IsMovedLine.Should().Be(false);
         result.DiffLines[22].LineSegment.Offset.Should().Be(878);
-        result.DiffLines[22].LineSegment.Length.Should().Be(15);
+        result.DiffLines[22].LineSegment.Length.Should().Be(14);
 
         result.DiffLines[23].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[23].RightLineNumber.Should().Be(9);
         result.DiffLines[23].LineType.Should().Be(DiffLineType.Plus);
         result.DiffLines[23].IsMovedLine.Should().Be(false);
         result.DiffLines[23].LineSegment.Offset.Should().Be(893);
-        result.DiffLines[23].LineSegment.Length.Should().Be(23);
+        result.DiffLines[23].LineSegment.Length.Should().Be(22);
 
         result.DiffLines[24].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[24].RightLineNumber.Should().Be(10);
         result.DiffLines[24].LineType.Should().Be(DiffLineType.Plus);
         result.DiffLines[24].IsMovedLine.Should().Be(true);
         result.DiffLines[24].LineSegment.Offset.Should().Be(916);
-        result.DiffLines[24].LineSegment.Length.Should().Be(10);
+        result.DiffLines[24].LineSegment.Length.Should().Be(9);
 
         result.DiffLines[25].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[25].RightLineNumber.Should().Be(11);
         result.DiffLines[25].LineType.Should().Be(DiffLineType.Plus);
         result.DiffLines[25].IsMovedLine.Should().Be(true);
         result.DiffLines[25].LineSegment.Offset.Should().Be(926);
-        result.DiffLines[25].LineSegment.Length.Should().Be(12);
+        result.DiffLines[25].LineSegment.Length.Should().Be(11);
 
         result.DiffLines[26].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[26].RightLineNumber.Should().Be(12);
         result.DiffLines[26].LineType.Should().Be(DiffLineType.Plus);
         result.DiffLines[26].IsMovedLine.Should().Be(true);
         result.DiffLines[26].LineSegment.Offset.Should().Be(938);
-        result.DiffLines[26].LineSegment.Length.Should().Be(29);
+        result.DiffLines[26].LineSegment.Length.Should().Be(28);
 
         result.DiffLines[27].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[27].RightLineNumber.Should().Be(13);
         result.DiffLines[27].LineType.Should().Be(DiffLineType.Plus);
         result.DiffLines[27].IsMovedLine.Should().Be(true);
         result.DiffLines[27].LineSegment.Offset.Should().Be(967);
-        result.DiffLines[27].LineSegment.Length.Should().Be(31);
+        result.DiffLines[27].LineSegment.Length.Should().Be(30);
 
         result.DiffLines[28].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);
         result.DiffLines[28].RightLineNumber.Should().Be(14);
         result.DiffLines[28].LineType.Should().Be(DiffLineType.Plus);
         result.DiffLines[28].IsMovedLine.Should().Be(true);
         result.DiffLines[28].LineSegment.Offset.Should().Be(998);
-        result.DiffLines[28].LineSegment.Length.Should().Be(39);
+        result.DiffLines[28].LineSegment.Length.Should().Be(37);
 
         result.DiffLines[29].LineType.Should().Be(DiffLineType.Plus);
         result.DiffLines[30].LineType.Should().Be(DiffLineType.Context);
