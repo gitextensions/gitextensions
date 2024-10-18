@@ -15,8 +15,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly GitConfigSettingsPageController _controller;
         private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
-        public GitConfigSettingsPage(IServiceProvider serviceProvider)
-           : base(serviceProvider)
+        public GitConfigSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+           : base(serviceProvider, pageHost)
         {
             InitializeComponent();
 
@@ -38,10 +38,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _controller = new GitConfigSettingsPageController();
         }
 
-        protected override void Init(ISettingsPageHost pageHost)
+        protected override void Init()
         {
-            base.Init(pageHost);
-
+            base.Init();
             _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(() => CurrentSettings);
 
             CommonLogic.FillEncodings(Global_FilesEncoding);

@@ -10,8 +10,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private Font? _commitFont;
         private Font? _monospaceFont;
 
-        public AppearanceFontsSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public AppearanceFontsSettingsPage(IServiceProvider serviceProvider, ISettingsPageHost pageHost)
+            : base(serviceProvider, pageHost)
         {
             InitializeComponent();
             InitializeComplete();

@@ -21,7 +21,7 @@
     {
         private readonly SettingsPageWithHeader? _page;
 
-        public SettingsPageHeader(SettingsPageWithHeader? page)
+        public SettingsPageHeader(SettingsPageWithHeader? page, bool canSaveInsideRepo)
         {
             InitializeComponent();
             InitializeComplete();
@@ -33,13 +33,13 @@
                 settingsPagePanel.Controls.Add(page);
                 page.Dock = DockStyle.Fill;
                 _page = page;
-                ConfigureHeader();
+                ConfigureHeader(canSaveInsideRepo);
             }
         }
 
-        private void ConfigureHeader()
+        private void ConfigureHeader(bool canSaveInsideRepo)
         {
-            if (!(_page is ILocalSettingsPage localSettingsPage))
+            if (!(_page is ILocalSettingsPage localSettingsPage) || !canSaveInsideRepo)
             {
                 GlobalRB.Checked = true;
 
