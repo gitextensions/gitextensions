@@ -28,6 +28,13 @@ namespace GitExtensions
         [STAThread]
         private static void Main()
         {
+            // If you want to suppress the BugReportInvoker when debugging and exit quickly, uncomment the condition:
+            ////if (!Debugger.IsAttached)
+            {
+                AppDomain.CurrentDomain.UnhandledException += (s, e) => BugReportInvoker.Report((Exception)e.ExceptionObject, e.IsTerminating);
+                Application.ThreadException += (s, e) => BugReportInvoker.Report(e.Exception, isTerminating: false);
+            }
+
             if (Environment.OSVersion.Version.Major >= 6)
             {
                 SetProcessDPIAware();
@@ -83,13 +90,6 @@ namespace GitExtensions
             try
             {
                 DiagnosticsClient.Initialize(ThisAssembly.Git.IsDirty);
-
-                // If you want to suppress the BugReportInvoker when debugging and exit quickly, uncomment the condition:
-                ////if (!Debugger.IsAttached)
-                {
-                    AppDomain.CurrentDomain.UnhandledException += (s, e) => BugReportInvoker.Report((Exception)e.ExceptionObject, e.IsTerminating);
-                    Application.ThreadException += (s, e) => BugReportInvoker.Report(e.Exception, isTerminating: false);
-                }
             }
             catch (TypeInitializationException tie)
             {
