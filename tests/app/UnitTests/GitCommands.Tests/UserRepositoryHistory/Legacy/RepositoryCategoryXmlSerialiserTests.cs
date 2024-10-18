@@ -36,10 +36,10 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
 
             IReadOnlyList<RepositoryCategory> categorisedHistory = _repositoryXmlSerialiser.Deserialize(xml);
 
-            categorisedHistory.Count.Should().Be(2);
+            categorisedHistory.Should().HaveCount(2);
             categorisedHistory[0].Description.Should().Be("3rd Party");
             categorisedHistory[0].CategoryType.Should().Be("Repositories");
-            categorisedHistory[0].Repositories.Count.Should().Be(2);
+            categorisedHistory[0].Repositories.Should().HaveCount(2);
             categorisedHistory[0].Repositories[0].Description.Should().Be("Check it out!");
             categorisedHistory[0].Repositories[0].Path.Should().Be("C:\\Development\\RibbonWinForms\\");
             categorisedHistory[0].Repositories[0].Anchor.Should().Be("None");
@@ -47,7 +47,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             categorisedHistory[0].Repositories[1].Anchor.Should().Be("None");
             categorisedHistory[1].Description.Should().Be("Test");
             categorisedHistory[1].CategoryType.Should().Be("Repositories");
-            categorisedHistory[1].Repositories.Count.Should().Be(1);
+            categorisedHistory[1].Repositories.Should().ContainSingle();
             categorisedHistory[1].Repositories[0].Title.Should().Be("Git Extensions");
             categorisedHistory[1].Repositories[0].Description.Should().Be("Mega project!");
             categorisedHistory[1].Repositories[0].Path.Should().Be("C:\\Development\\gitextensions\\");

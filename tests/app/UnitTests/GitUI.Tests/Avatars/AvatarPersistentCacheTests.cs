@@ -109,11 +109,11 @@ namespace GitUITests.Avatars
 
             fileSystem.AddFile(Path.Combine(_avatarImageCachePath, "a@a.com.16px.png"), new MockFileData(""));
             fileSystem.AddFile(Path.Combine(_avatarImageCachePath, "b@b.com.16px.png"), new MockFileData(""));
-            fileSystem.AllFiles.Count().Should().Be(2);
+            fileSystem.AllFiles.Should().HaveCount(2);
 
             await _cacheCleaner.ClearCacheAsync();
 
-            fileSystem.AllFiles.Count().Should().Be(0);
+            fileSystem.AllFiles.Should().BeEmpty();
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace GitUITests.Avatars
                 .Do(x => throw new DivideByZeroException());
 
             Func<Task> act = () => _cacheCleaner.ClearCacheAsync();
-            act.Should().NotThrow();
+            act.Should().NotThrowAsync();
         }
     }
 }

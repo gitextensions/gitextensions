@@ -30,9 +30,9 @@ public class RecentRepoSplitterTests
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        topRepoList.Count.Should().Be(1);
+        topRepoList.Should().ContainSingle();
         topRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
-        recentRepoList.Count.Should().Be(1);
+        recentRepoList.Should().ContainSingle();
     }
 
     [Test]
@@ -51,9 +51,9 @@ public class RecentRepoSplitterTests
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        topRepoList.Count.Should().Be(1);
+        topRepoList.Should().ContainSingle();
         topRepoList[0].Caption.Should().Be(repoAnchoredInTopPath1);
-        recentRepoList.Count.Should().Be(1);
+        recentRepoList.Should().ContainSingle();
     }
 
     [Test]
@@ -72,9 +72,9 @@ public class RecentRepoSplitterTests
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        topRepoList.Count.Should().Be(1);
+        topRepoList.Should().ContainSingle();
         topRepoList[0].Caption.Should().StartWith(@"~\AppData").And.EndWith(_relativeLongRepoPath);
-        recentRepoList.Count.Should().Be(1);
+        recentRepoList.Should().ContainSingle();
     }
 
     [Test]
@@ -96,9 +96,9 @@ public class RecentRepoSplitterTests
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        topRepoList.Count.Should().Be(1);
+        topRepoList.Should().ContainSingle();
         topRepoList[0].Caption.Should().Be(@"~\AppData\..\long\repo_path");
-        recentRepoList.Count.Should().Be(1);
+        recentRepoList.Should().ContainSingle();
     }
     #endregion
 
@@ -124,10 +124,10 @@ public class RecentRepoSplitterTests
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        topRepoList.Count.Should().Be(2);
+        topRepoList.Should().HaveCount(2);
         topRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
         topRepoList[1].Caption.Should().Be("repo_anchored_in_top_path2");
-        recentRepoList.Count.Should().Be(4);
+        recentRepoList.Should().HaveCount(4);
         recentRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
         recentRepoList[1].Caption.Should().Be("repo_anchored_in_top_path2");
         recentRepoList[2].Caption.Should().Be("repo_anchored_in_recent_path");
@@ -156,10 +156,10 @@ public class RecentRepoSplitterTests
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        topRepoList.Count.Should().Be(2);
+        topRepoList.Should().HaveCount(2);
         topRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
         topRepoList[1].Caption.Should().Be("repo_anchored_in_top_path2");
-        recentRepoList.Count.Should().Be(4);
+        recentRepoList.Should().HaveCount(4);
         recentRepoList[0].Caption.Should().Be("repo_anchored_in_recent_path");
         recentRepoList[1].Caption.Should().Be("repo_anchored_in_top_path1");
         recentRepoList[2].Caption.Should().Be("repo_anchored_in_top_path2");
@@ -189,10 +189,10 @@ public class RecentRepoSplitterTests
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
-        topRepoList.Count.Should().Be(2);
+        topRepoList.Should().HaveCount(2);
         topRepoList[0].Caption.Should().Be("repo_anchored_in_top_path1");
         topRepoList[1].Caption.Should().Be("repo_anchored_in_top_path2");
-        recentRepoList.Count.Should().Be(2);
+        recentRepoList.Should().HaveCount(2);
         recentRepoList[0].Caption.Should().Be("repo_anchored_in_recent_path");
         recentRepoList[1].Caption.Should().Be("repo_not_anchored_path");
     }

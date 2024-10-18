@@ -49,14 +49,14 @@ namespace GitUITests.UserControls.RevisionGrid
         public void AllBranches_must_return_all_revision_branches()
         {
             GitRefListsForRevision grl = new(_revision);
-            grl.AllBranches.Count.Should().Be(2);
+            grl.AllBranches.Should().HaveCount(2);
         }
 
         [Test]
         public void AllTags_must_return_all_revision_tags()
         {
             GitRefListsForRevision grl = new(_revision);
-            grl.AllTags.Count.Should().Be(1);
+            grl.AllTags.Should().ContainSingle();
         }
 
         [Test]
@@ -77,14 +77,14 @@ namespace GitUITests.UserControls.RevisionGrid
         public void GetDeletableRefs_must_return_branches_names()
         {
             GitRefListsForRevision grl = new(_revision);
-            grl.GetDeletableRefs("branch1").Should().BeEquivalentTo(_refs[2], _refs[0]);
+            grl.GetDeletableRefs("branch1").Should().BeEquivalentTo([_refs[2], _refs[0]]);
         }
 
         [Test]
         public void GetRenameableLocalBranches_must_return_branches_names()
         {
             GitRefListsForRevision grl = new(_revision);
-            grl.GetRenameableLocalBranches().Should().BeEquivalentTo(_refs[1]);
+            grl.GetRenameableLocalBranches().Should().BeEquivalentTo([_refs[1]]);
         }
     }
 }

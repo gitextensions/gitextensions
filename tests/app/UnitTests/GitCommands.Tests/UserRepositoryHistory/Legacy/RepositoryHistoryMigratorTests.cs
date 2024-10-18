@@ -24,7 +24,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         public void MigrateAsync_should_throw_if_currentHistory_null()
         {
             Func<Task> f = async () => { await _historyMigrator.MigrateAsync(null); };
-            f.Should().Throw<ArgumentNullException>();
+            f.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
 
             (IList<Current.Repository> currentHistory, bool migrated) = await _historyMigrator.MigrateAsync(new List<Current.Repository>());
 
-            currentHistory.Count.Should().Be(8);
+            currentHistory.Should().HaveCount(8);
             currentHistory.Count(r => r.Category == "Git Extensions").Should().Be(1);
             currentHistory.Count(r => r.Category == "3rd Party").Should().Be(2);
             currentHistory.Count(r => r.Category == "Tests").Should().Be(5);

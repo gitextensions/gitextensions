@@ -47,11 +47,11 @@ namespace GitCommandsTests.Git
 
             FilteredGitRefsProvider filteredRefs = new(_module);
 
-            filteredRefs.GetRefs(RefsFilter.NoFilter).Count.Should().Be(3);
-            filteredRefs.GetRefs(RefsFilter.Remotes).Count.Should().Be(1);
-            filteredRefs.GetRefs(RefsFilter.Heads).Count.Should().Be(2);
-            filteredRefs.GetRefs(RefsFilter.Tags).Count.Should().Be(0);
-            filteredRefs.GetRefs(RefsFilter.Remotes | RefsFilter.Heads).Count.Should().Be(3);
+            filteredRefs.GetRefs(RefsFilter.NoFilter).Should().HaveCount(3);
+            filteredRefs.GetRefs(RefsFilter.Remotes).Should().ContainSingle();
+            filteredRefs.GetRefs(RefsFilter.Heads).Should().HaveCount(2);
+            filteredRefs.GetRefs(RefsFilter.Tags).Should().BeEmpty();
+            filteredRefs.GetRefs(RefsFilter.Remotes | RefsFilter.Heads).Should().HaveCount(3);
         }
     }
 }

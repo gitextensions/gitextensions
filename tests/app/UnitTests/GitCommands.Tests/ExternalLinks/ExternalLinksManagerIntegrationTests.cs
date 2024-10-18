@@ -51,13 +51,13 @@ namespace GitCommandsTests.ExternalLinks
         [Test]
         public void Add_should_add_new_definition_to_the_lowest_level_level2()
         {
-            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
+            _externalLinksStorage.Load(_userRoaming).Should().ContainSingle();
 
             ExternalLinksManager manager = new(_repoDistributed);
 
             // 1 comes from the user roaming settings
             // 3 come from the distributed
-            manager.GetEffectiveSettings().Count.Should().Be(4);
+            manager.GetEffectiveSettings().Should().HaveCount(4);
 
             ExternalLinkDefinition definition = new()
             {
@@ -70,24 +70,24 @@ namespace GitCommandsTests.ExternalLinks
 
             // 2 comes from the user roaming settings
             // 3 come from the distributed
-            effectiveSettings.Count.Should().Be(5);
+            effectiveSettings.Should().HaveCount(5);
 
             manager.Save();
 
-            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(2);
+            _externalLinksStorage.Load(_userRoaming).Should().HaveCount(2);
         }
 
         [Test]
         public void Add_should_add_new_definition_to_the_lowest_level_level3()
         {
-            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
+            _externalLinksStorage.Load(_userRoaming).Should().ContainSingle();
 
             ExternalLinksManager manager = new(_repoLocal);
 
             // 1 comes from the user roaming settings
             // 3 come from the distributed
             // 1 comes from the local
-            manager.GetEffectiveSettings().Count.Should().Be(5);
+            manager.GetEffectiveSettings().Should().HaveCount(5);
 
             ExternalLinkDefinition definition = new()
             {
@@ -101,25 +101,25 @@ namespace GitCommandsTests.ExternalLinks
             // 1 comes from the local
             // 3 come from the distributed
             // 2 comes from the local
-            effectiveSettings.Count.Should().Be(6);
+            effectiveSettings.Should().HaveCount(6);
 
             manager.Save();
 
-            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(2);
+            _externalLinksStorage.Load(_userRoaming).Should().HaveCount(2);
         }
 
         [Test]
         public void Add_should_add_definition_present_in_lower_level_to_higher_level()
         {
-            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
-            _externalLinksStorage.Load(_repoDistributed).Count.Should().Be(3);
+            _externalLinksStorage.Load(_userRoaming).Should().ContainSingle();
+            _externalLinksStorage.Load(_repoDistributed).Should().HaveCount(3);
 
             ExternalLinksManager manager = new(_repoLocal);
 
             // 1 comes from the user roaming settings
             // 3 come from the distributed
             // 1 comes from the local
-            manager.GetEffectiveSettings().Count.Should().Be(5);
+            manager.GetEffectiveSettings().Should().HaveCount(5);
 
             ExternalLinkDefinition definition = new()
             {
@@ -133,19 +133,19 @@ namespace GitCommandsTests.ExternalLinks
             // 1 comes from the user roaming settings
             // 4 come from the distributed
             // 1 comes from the local
-            effectiveSettings.Count.Should().Be(6);
+            effectiveSettings.Should().HaveCount(6);
 
             manager.Save();
 
-            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
-            _externalLinksStorage.Load(_repoDistributed).Count.Should().Be(4);
+            _externalLinksStorage.Load(_userRoaming).Should().ContainSingle();
+            _externalLinksStorage.Load(_repoDistributed).Should().HaveCount(4);
         }
 
         [Test]
         public void Remove_should_remove_definition_from_collection()
         {
-            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
-            _externalLinksStorage.Load(_repoDistributed).Count.Should().Be(3);
+            _externalLinksStorage.Load(_userRoaming).Should().ContainSingle();
+            _externalLinksStorage.Load(_repoDistributed).Should().HaveCount(3);
 
             ExternalLinksManager manager = new(_repoLocal);
 
@@ -154,7 +154,7 @@ namespace GitCommandsTests.ExternalLinks
             // 1 comes from the user roaming settings
             // 3 come from the distributed
             // 1 comes from the local
-            effective.Count.Should().Be(5);
+            effective.Should().HaveCount(5);
 
             manager.Remove(effective[^1]);
 
@@ -165,10 +165,10 @@ namespace GitCommandsTests.ExternalLinks
             // 0 comes from the user roaming settings
             // 3 come from the distributed
             // 1 comes from the local
-            effectiveSettings.Count.Should().Be(4);
+            effectiveSettings.Should().HaveCount(4);
 
-            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(0);
-            _externalLinksStorage.Load(_repoDistributed).Count.Should().Be(3);
+            _externalLinksStorage.Load(_userRoaming).Should().BeEmpty();
+            _externalLinksStorage.Load(_repoDistributed).Should().HaveCount(3);
         }
     }
 }

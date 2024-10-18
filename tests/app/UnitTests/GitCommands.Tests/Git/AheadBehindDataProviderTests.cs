@@ -83,7 +83,7 @@ namespace GitCommandsTests.Git
 
             IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
-            data.Should().HaveCount(0);
+            data.Should().BeEmpty();
         }
 
         [TestCase("::ahead 1::::::my-branch")]
@@ -94,7 +94,7 @@ namespace GitCommandsTests.Git
 
             IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
-            data.Should().HaveCount(0);
+            data.Should().BeEmpty();
         }
 
         [Test]

@@ -23,7 +23,7 @@ namespace AppVeyorIntegrationTests
         {
             IEnumerable<AppVeyorBuildInfo> buildInfo = new AppVeyorAdapter().ExtractBuildInfo(_projectId, string.Empty);
 
-            buildInfo.Should().HaveCount(0);
+            buildInfo.Should().BeEmpty();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
