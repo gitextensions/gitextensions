@@ -20,6 +20,7 @@ public abstract class DiffHighlightService : TextHighlightService
 
     protected readonly bool _useGitColoring;
     protected readonly List<TextMarker> _textMarkers = [];
+    protected DiffLinesInfo _diffLinesInfo;
 
     public DiffHighlightService(ref string text, bool useGitColoring)
     {
@@ -126,94 +127,13 @@ public abstract class DiffHighlightService : TextHighlightService
         }
 
         MarkInlineDifferences(document);
-
-        for (int line = 0; line < document.TotalNumberOfLines; line++)
-        {
-            LineSegment lineSegment = document.GetLineSegment(line);
-
-            if (lineSegment.TotalLength == 0)
-            {
-                continue;
-            }
-
-            line = TryHighlightAddedAndDeletedLines(document, line, lineSegment);
-
-            ProcessLineSegment(document, ref line, lineSegment, "@", AppColor.DiffSection.GetThemeColor());
-            ProcessLineSegment(document, ref line, lineSegment, "\\", AppColor.DiffSection.GetThemeColor());
-        }
+        HighlightAddedAndDeletedLines(document);
     }
 
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
         => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.MinusPlus or DiffLineType.Grep);
 
     public abstract string[] GetFullDiffPrefixes();
-
-    protected readonly LinePrefixHelper LinePrefixHelper = new(new LineSegmentGetter());
-
-    /// <summary>
-    /// Parse the text in the document from line and return the added lines directly following.
-    /// Overridden in the HighlightServices where GE coloring is used (AddTextHighlighting() for Patch and CombinedDiff).
-    /// </summary>
-    /// <param name="document">The document to analyze.</param>
-    /// <param name="line">The line number to start with, updated with the last line processed.</param>
-    /// <param name="found">Ref updated if any added lines were found.</param>
-    /// <returns>List with the segments of added lines.</returns>
-    protected virtual List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
-        => [];
-
-    /// <summary>
-    /// Parse the text in the document from line and return the removed lines directly following.
-    /// Overridden in the HighlightServices where GE coloring is used (AddTextHighlighting() for Patch and CombinedDiff).
-    /// </summary>
-    /// <param name="document">The document to analyze.</param>
-    /// <param name="line">The line number to start with, updated with the last line processed.</param>
-    /// <param name="found">Ref updated if any removed lines were found.</param>
-    /// <returns>List with the segments of removed lines.</returns>
-    protected virtual List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
-        => [];
-
-    /// <summary>
-    /// Highlight the directly following lines.
-    /// Overridden in the HighlightServices where GE coloring is used (AddTextHighlighting() for Patch and CombinedDiff).
-    /// </summary>
-    /// <param name="document">The document to analyze.</param>
-    /// <param name="line">The line number to start with.</param>
-    /// <param name="lineSegment">The segment for the starting line.</param>
-    /// <returns>The last line number processed.</returns>
-    protected virtual int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
-        => line;
-
-    protected void ProcessLineSegment(IDocument document, ref int line,
-        LineSegment lineSegment, string prefixStr, Color color, bool invertMatch = false)
-    {
-        if (!DoesLineStartWith(document, lineSegment.Offset, prefixStr, invertMatch))
-        {
-            return;
-        }
-
-        LineSegment endLine = document.GetLineSegment(line);
-
-        for (;
-            line < document.TotalNumberOfLines
-            && DoesLineStartWith(document, endLine.Offset, prefixStr, invertMatch);
-            line++)
-        {
-            endLine = document.GetLineSegment(line);
-        }
-
-        line = Math.Max(0, line - 2);
-        endLine = document.GetLineSegment(line);
-
-        document.MarkerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
-            (endLine.Offset + endLine.TotalLength) -
-            lineSegment.Offset, TextMarkerType.SolidBlock, color,
-            ColorHelper.GetForeColorForBackColor(color)));
-
-        return;
-
-        bool DoesLineStartWith(IDocument document, int offset, string prefixStr, bool invertMatch)
-            => invertMatch ^ LinePrefixHelper.DoesLineStartWith(document, offset, prefixStr);
-    }
 
     private void SetText(ref string text)
     {
@@ -229,12 +149,103 @@ public abstract class DiffHighlightService : TextHighlightService
     }
 
     /// <summary>
-    ///  Matches related removed and added lines in a consecutive block and marks identical parts dimmed.
+    /// Highlight lines that are added, removed and header lines.
+    /// This is an alternative configuration to use the Git diff coloring (that has more features).
     /// </summary>
-    private static void MarkInlineDifferences(IDocument document, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
+    private void HighlightAddedAndDeletedLines(IDocument document)
     {
-        Func<ISegment, string> getText = line => document.GetText(line.Offset + beginOffset, line.Length - beginOffset);
-        document.MarkerStrategy.AddMarkers(GetDifferenceMarkers(getText, linesRemoved, linesAdded, beginOffset));
+        foreach (ISegment segment in GetAllLines(DiffLineType.Minus))
+        {
+            document.MarkerStrategy.AddMarker(CreateTextMarker(segment.Offset, segment.Length, _removedBackColor));
+        }
+
+        foreach (ISegment segment in GetAllLines(DiffLineType.Plus))
+        {
+            document.MarkerStrategy.AddMarker(CreateTextMarker(segment.Offset, segment.Length, _addedBackColor));
+        }
+
+        foreach (ISegment segment in GetAllLines(DiffLineType.Header))
+        {
+            document.MarkerStrategy.AddMarker(CreateTextMarker(segment.Offset, segment.Length, AppColor.DiffSection.GetThemeColor()));
+        }
+    }
+
+    /// <summary>
+    ///  Matches related removed and added lines in a consecutive block of a patch document and marks identical parts dimmed.
+    /// </summary>
+    private void MarkInlineDifferences(IDocument document)
+    {
+        int index = 0;
+        DiffLineInfo[] diffLines = [.. _diffLinesInfo.DiffLines.Values.OrderBy(l => l.LineNumInDiff)];
+
+        const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+'
+        MarkerStrategy markerStrategy = document.MarkerStrategy;
+
+        // Process the next blocks of removed / added diffLines and mark in-line differences
+        while (index < diffLines.Length)
+        {
+            // git-diff presents the removed lines directly followed by the added in a "block"
+            IReadOnlyList<ISegment> linesRemoved = GetBlockOfLines(diffLines, DiffLineType.Minus, ref index, found: false);
+            if (linesRemoved.Count == 0)
+            {
+                continue;
+            }
+
+            IReadOnlyList<ISegment> linesAdded = GetBlockOfLines(diffLines, DiffLineType.Plus, ref index, found: true);
+            if (linesAdded.Count == 0)
+            {
+                continue;
+            }
+
+            markerStrategy.AddMarkers(GetDifferenceMarkers(GetText, linesRemoved, linesAdded, diffContentOffset));
+        }
+
+        return;
+
+        string GetText(ISegment line)
+            => document.GetText(line.Offset + diffContentOffset, line.Length - diffContentOffset);
+    }
+
+    private IEnumerable<ISegment> GetAllLines(DiffLineType diffLineType)
+        => _diffLinesInfo?.DiffLines.Where(i => i.Value.LineType == diffLineType && i.Value.LineSegment is not null)
+            .Select(l => l.Value.LineSegment)
+            ?? [];
+
+    /// <summary>
+    /// Get next block of diffLines following beginline
+    /// </summary>
+    /// <param name="diffLines">The parsed diffLines for the document.</param>
+    /// <param name="diffLineType">The type of diffLines to find (e.g. added/removed).</param>
+    /// <param name="index">The index in diffLines to start with.</param>
+    /// <param name="found">If a lineInDiff was found. This is also used to get the added diffLines just after the removed.</param>
+    /// <returns>The block of segments.</returns>
+    private static List<ISegment> GetBlockOfLines(DiffLineInfo[] diffLines, DiffLineType diffLineType, ref int index, bool found)
+    {
+        List<ISegment> result = [];
+
+        for (; index < diffLines.Length; ++index)
+        {
+            DiffLineInfo diffLine = diffLines[index];
+            if (diffLine.LineType != diffLineType)
+            {
+                if (!found)
+                {
+                    // Start of block not found yet
+                    continue;
+                }
+
+                // Block ended, no more to add (next start search here)
+                break;
+            }
+
+            ArgumentNullException.ThrowIfNull(diffLine.LineSegment);
+
+            // In block, continue to add
+            found = true;
+            result.Add(diffLine.LineSegment);
+        }
+
+        return result;
     }
 
     private static List<TextMarker> GetDifferenceMarkers(Func<ISegment, string> getText, IReadOnlyList<ISegment> linesRemoved, IReadOnlyList<ISegment> linesAdded, int beginOffset)
@@ -366,43 +377,6 @@ public abstract class DiffHighlightService : TextHighlightService
         }
 
         return (lengthIdenticalAtStart, lengthIdenticalAtEnd);
-    }
-
-    /// <summary>
-    ///  Matches related removed and added lines in a consecutive block of a patch document and marks identical parts dimmed.
-    /// </summary>
-    private void MarkInlineDifferences(IDocument document)
-    {
-        int line = 0;
-        bool found = false;
-
-        // Skip the first pair of removed / added lines, which uses to contain the filenames - but without highlighting
-        _ = GetRemovedLines(document, ref line, ref found);
-        if (found)
-        {
-            _ = GetAddedLines(document, ref line, ref found);
-        }
-
-        // Process the next blocks of removed / added lines and mark in-line differences
-        const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+'
-        while (line < document.TotalNumberOfLines)
-        {
-            found = false;
-
-            List<ISegment> linesRemoved = GetRemovedLines(document, ref line, ref found);
-            if (!found)
-            {
-                continue;
-            }
-
-            List<ISegment> linesAdded = GetAddedLines(document, ref line, ref found);
-            if (!found)
-            {
-                continue;
-            }
-
-            MarkInlineDifferences(document, linesRemoved, linesAdded, diffContentOffset);
-        }
     }
 
     private static TextMarker CreateAnchorMarker(int offset, Color color)

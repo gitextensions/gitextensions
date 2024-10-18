@@ -1,4 +1,6 @@
-﻿namespace GitUI.Editor.Diff;
+﻿using ICSharpCode.TextEditor.Document;
+
+namespace GitUI.Editor.Diff;
 
 public class DiffLineInfo
 {
@@ -7,4 +9,9 @@ public class DiffLineInfo
     public int LeftLineNumber { get; set; }
     public int RightLineNumber { get; set; }
     public DiffLineType LineType { get; set; }
+
+    /// <summary>
+    /// offset and length in document, set for line type Minus/Plus.
+    /// </summary>
+    public ISegment? LineSegment { get; set; }
 }
