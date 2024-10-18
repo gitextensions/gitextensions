@@ -358,7 +358,7 @@ namespace GitCommands.Git
                 }
 
                 // Error always end with \n and start at previous index
-                int ind = trimmedStatus.LastIndexOfAny(Delimiters.LineFeedCarriageReturnAndNull, lastNewLinePos - 1);
+                int ind = trimmedStatus.LastIndexOfAny(Delimiters.LineFeedAndCarriageReturnAndNull, lastNewLinePos - 1);
 
                 trimmedStatus = trimmedStatus.Remove(ind + 1, lastNewLinePos - ind);
                 lastNewLinePos = trimmedStatus.LastIndexOfAny(Delimiters.LineFeedAndCarriageReturn);
