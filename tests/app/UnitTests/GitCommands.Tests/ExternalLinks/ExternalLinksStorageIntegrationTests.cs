@@ -31,7 +31,7 @@ namespace GitCommandsTests.ExternalLinks
             DistributedSettings settings = new(lowerPriority: null, settingsCache, SettingLevel.Unknown);
 
             IReadOnlyList<ExternalLinkDefinition> definitions = _externalLinksStorage.Load(settings);
-            definitions.Count.Should().Be(expected);
+            definitions.Should().HaveCount(expected);
         }
 
         [Test]

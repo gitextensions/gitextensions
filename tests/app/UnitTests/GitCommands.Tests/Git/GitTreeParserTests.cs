@@ -25,7 +25,7 @@ namespace GitCommandsTests.Git
         {
             List<GitItem> items = _parser.Parse(GetLsTreeOutput()).ToList();
 
-            items.Count.Should().Be(10);
+            items.Should().HaveCount(10);
 
             items[3].Guid.Should().Be("46cccae116d2e5a1a2f818b0b31adde4ab3800a9");
             items[3].Mode.Should().Be(100644);

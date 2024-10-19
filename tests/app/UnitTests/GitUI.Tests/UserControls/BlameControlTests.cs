@@ -198,7 +198,7 @@ namespace GitUITests.UserControls
             List<GitUI.Editor.GitBlameEntry> blameEntries = sut.CalculateBlameGutterData(blameLines);
 
             // Then
-            blameEntries.Should().HaveCount(1);
+            blameEntries.Should().ContainSingle();
             blameEntries[0].AgeBucketIndex.Should().Be(0);
         }
 
@@ -212,7 +212,7 @@ namespace GitUITests.UserControls
             List<GitUI.Editor.GitBlameEntry> blameEntries = _blameControl.GetTestAccessor().CalculateBlameGutterData(blameLines);
 
             // Then
-            blameEntries.Should().HaveCount(1);
+            blameEntries.Should().ContainSingle();
             blameEntries[0].AgeBucketIndex.Should().Be(3);
         }
 

@@ -28,7 +28,7 @@ namespace GitUITests.CommandsDialogs
 
             _controller.RemoteDelete(remotes, oldRemoteUrl);
 
-            remotes.Count.Should().Be(2);
+            remotes.Should().HaveCount(2);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace GitUITests.CommandsDialogs
 
             _controller.RemoteDelete(remotes, "foo");
 
-            remotes.Count.Should().Be(2);
+            remotes.Should().HaveCount(2);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace GitUITests.CommandsDialogs
 
             _controller.RemoteDelete(remotes, "b");
 
-            remotes.Count.Should().Be(1);
+            remotes.Should().ContainSingle();
             remotes[0].Path.Should().Be("a");
         }
 
@@ -73,7 +73,7 @@ namespace GitUITests.CommandsDialogs
 
             _controller.RemoteUpdate(remotes, "who cares", newRemoteUrl);
 
-            remotes.Count.Should().Be(2);
+            remotes.Should().HaveCount(2);
             remotes[0].Path.Should().Be("a");
             remotes[1].Path.Should().Be("b");
         }
@@ -89,7 +89,7 @@ namespace GitUITests.CommandsDialogs
 
             _controller.RemoteUpdate(remotes, "a", "a1");
 
-            remotes.Count.Should().Be(2);
+            remotes.Should().HaveCount(2);
             remotes.Select(r => r.Path).Should().BeEquivalentTo(new[] { "a1", "b" });
         }
 
@@ -105,14 +105,14 @@ namespace GitUITests.CommandsDialogs
 
             _controller.RemoteUpdate(remotes, "c", "a1");
 
-            remotes.Count.Should().Be(3);
+            remotes.Should().HaveCount(3);
             remotes[0].Path.Should().Be("a1");
             remotes[1].Path.Should().Be("a");
             remotes[2].Path.Should().Be("b");
 
             _controller.RemoteUpdate(remotes, null, "q");
 
-            remotes.Count.Should().Be(4);
+            remotes.Should().HaveCount(4);
             remotes[0].Path.Should().Be("q");
             remotes[1].Path.Should().Be("a1");
             remotes[2].Path.Should().Be("a");
