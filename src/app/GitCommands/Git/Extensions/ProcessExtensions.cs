@@ -4,7 +4,7 @@ using GitCommands.Utils;
 
 namespace GitCommands.Git.Extensions
 {
-    public static class ProcessExtensions
+    public static partial class ProcessExtensions
     {
         public static void TerminateTree(this Process process)
         {
@@ -27,17 +27,19 @@ namespace GitCommands.Git.Extensions
             }
         }
 
-        private static class NativeMethods
+        private static partial class NativeMethods
         {
-            [DllImport("kernel32.dll")]
-            public static extern bool SetConsoleCtrlHandler(IntPtr handlerRoutine, bool add);
-
-            [DllImport("kernel32.dll", SetLastError = true)]
-            public static extern bool AttachConsole(int dwProcessId);
-
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [LibraryImport("kernel32.dll")]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, int dwProcessGroupId);
+            public static partial bool SetConsoleCtrlHandler(IntPtr handlerRoutine, [MarshalAs(UnmanagedType.Bool)] bool add);
+
+            [LibraryImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static partial bool AttachConsole(int dwProcessId);
+
+            [LibraryImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static partial bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, int dwProcessGroupId);
         }
     }
 }
