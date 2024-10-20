@@ -18,6 +18,8 @@ public abstract class DiffHighlightService : TextHighlightService
     private static readonly Color _removedBackColor = AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
     private static readonly Color _removedForeColor = AppColor.AnsiTerminalRedForeBold.GetThemeColor();
 
+    private static bool _dimBackground;
+
     protected readonly bool _useGitColoring;
     protected readonly List<TextMarker> _textMarkers = [];
     protected DiffLinesInfo _diffLinesInfo;
@@ -184,6 +186,8 @@ public abstract class DiffHighlightService : TextHighlightService
     /// </summary>
     private void AddInlineDifferenceMarkers(List<TextMarker> textMarkers, string text)
     {
+        _dimBackground = !_useGitColoring || AppSettings.ReverseGitColoring.Value;
+
         int index = 0;
         DiffLineInfo[] diffLines = [.. _diffLinesInfo.DiffLines.Values.OrderBy(l => l.LineNumInDiff)];
         const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+'
@@ -273,14 +277,14 @@ public abstract class DiffHighlightService : TextHighlightService
 
         if (lengthIdenticalAtStart > 0)
         {
-            markers.Add(CreateDimmedMarker(offsetRemoved, lengthIdenticalAtStart, _removedBackColor));
-            markers.Add(CreateDimmedMarker(offsetAdded, lengthIdenticalAtStart, _addedBackColor));
+            markers.Add(CreateDimmedMarker(offsetRemoved, lengthIdenticalAtStart, isRemoved: true));
+            markers.Add(CreateDimmedMarker(offsetAdded, lengthIdenticalAtStart, isRemoved: false));
         }
 
         if (lengthIdenticalAtEnd > 0)
         {
-            markers.Add(CreateDimmedMarker(offsetRemoved + textRemoved.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, _removedBackColor));
-            markers.Add(CreateDimmedMarker(offsetAdded + textAdded.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, _addedBackColor));
+            markers.Add(CreateDimmedMarker(offsetRemoved + textRemoved.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, isRemoved: true));
+            markers.Add(CreateDimmedMarker(offsetAdded + textAdded.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, isRemoved: false));
         }
     }
 
@@ -343,8 +347,8 @@ public abstract class DiffHighlightService : TextHighlightService
             }
             else
             {
-                markers.Add(CreateDimmedMarker(offsetRemoved + startIndexIdenticalRemoved, lengthIdentical, _removedBackColor));
-                markers.Add(CreateDimmedMarker(offsetAdded + startIndexIdenticalAdded, lengthIdentical, _addedBackColor));
+                markers.Add(CreateDimmedMarker(offsetRemoved + startIndexIdenticalRemoved, lengthIdentical, isRemoved: true));
+                markers.Add(CreateDimmedMarker(offsetAdded + startIndexIdenticalAdded, lengthIdentical, isRemoved: false));
             }
         }
         else
@@ -386,9 +390,16 @@ public abstract class DiffHighlightService : TextHighlightService
     private static TextMarker CreateAnchorMarker(int offset, Color color)
         => new(offset, length: 0, TextMarkerType.InterChar, color);
 
-    private static TextMarker CreateDimmedMarker(int offset, int length, Color color)
-        => CreateTextMarker(offset, length, ColorHelper.DimColor(ColorHelper.DimColor(color)));
+    private static TextMarker CreateDimmedMarker(int offset, int length, bool isRemoved)
+        => _dimBackground
+            ? CreateTextMarker(offset, length, ColorHelper.DimColor(ColorHelper.DimColor(isRemoved ? _removedBackColor : _addedBackColor)))
+            : new(offset, length, TextMarkerType.SolidBlock, SystemColors.Window, ColorHelper.DimColor(isRemoved ? _removedForeColor : _addedForeColor));
 
     private static TextMarker CreateTextMarker(int offset, int length, Color color)
         => new(offset, length, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color));
+
+    internal class TestAccessor
+    {
+        internal static void SetDimBackground(bool value) => _dimBackground = value;
+    }
 }
