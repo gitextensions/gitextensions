@@ -45,12 +45,4 @@ public partial class RangeDiffHighlightService : DiffHighlightService
         => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Header;
 
     public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
-
-    public override void AddTextHighlighting(IDocument document)
-    {
-        foreach (TextMarker tm in _textMarkers)
-        {
-            document.MarkerStrategy.AddMarker(tm);
-        }
-    }
 }
