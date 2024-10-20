@@ -398,4 +398,9 @@ public abstract class DiffHighlightService : TextHighlightService
 
     private static TextMarker CreateTextMarker(int offset, int length, Color color)
         => new(offset, length, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color));
+
+    internal class TestAccessor
+    {
+        internal static void SetDimBackground(bool value) => _dimBackground = value;
+    }
 }
