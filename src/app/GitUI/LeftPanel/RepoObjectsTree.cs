@@ -31,6 +31,7 @@ namespace GitUI.LeftPanel
         private LocalBranchTree _branchesTree;
         private RemoteBranchTree _remotesTree;
         private TagTree _tagTree;
+        private FavoritesTree _favoritesTree;
         private StashTree _stashTree;
         private SubmoduleTree _submoduleTree;
         private List<TreeNode>? _searchResult;
@@ -72,6 +73,7 @@ namespace GitUI.LeftPanel
             tsbShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
             tsbShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;
             tsbShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
+            tsbShowFavorites.Checked = AppSettings.RepoObjectsTreeShowFavorites;
             tsbShowSubmodules.Checked = AppSettings.RepoObjectsTreeShowSubmodules;
             tsbShowStashes.Checked = AppSettings.RepoObjectsTreeShowStashes;
 
@@ -126,7 +128,7 @@ namespace GitUI.LeftPanel
                         { nameof(Images.SubmoduleRevisionUpDirty), Pad(Images.SubmoduleRevisionUpDirty) },
                         { nameof(Images.SubmoduleRevisionDownDirty), Pad(Images.SubmoduleRevisionDownDirty) },
                         { nameof(Images.SubmoduleRevisionSemiUpDirty), Pad(Images.SubmoduleRevisionSemiUpDirty) },
-                        { nameof(Images.SubmoduleRevisionSemiDownDirty), Pad(Images.SubmoduleRevisionSemiDownDirty) },
+                        { nameof(Images.SubmoduleRevisionSemiDownDirty), Pad(Images.SubmoduleRevisionSemiDownDirty) }
                     }
                 };
                 treeMain.SelectedImageKey = treeMain.ImageKey;
@@ -246,6 +248,7 @@ namespace GitUI.LeftPanel
             _remotesTree.Refresh(getRefs, forceRefresh);
             _tagTree.Refresh(getRefs, forceRefresh);
             _stashTree.Refresh(getStashRevs);
+            _favoritesTree.Refresh(getRefs, forceRefresh);
         }
 
         /// <summary>
@@ -259,6 +262,7 @@ namespace GitUI.LeftPanel
             _remotesTree.UpdateVisibility();
             _tagTree.UpdateVisibility();
             _stashTree.UpdateVisibility();
+            _favoritesTree.UpdateVisibility();
         }
 
         /// <summary>
@@ -270,10 +274,12 @@ namespace GitUI.LeftPanel
             _branchesTree.Refresh(getRefs);
             _remotesTree.Refresh(getRefs);
             _tagTree.Refresh(getRefs);
+            _favoritesTree.Refresh(getRefs);
 
             _branchesTree.UpdateVisibility();
             _remotesTree.UpdateVisibility();
             _tagTree.UpdateVisibility();
+            _favoritesTree.UpdateVisibility();
         }
 
         public void ReloadHotkeys()
@@ -351,6 +357,7 @@ namespace GitUI.LeftPanel
 
             base.OnUICommandsSourceSet(source);
 
+            CreateFavoriteBranches();
             CreateBranches();
             CreateRemotes();
             CreateTags();
@@ -402,6 +409,20 @@ namespace GitUI.LeftPanel
             };
 
             _tagTree = new TagTree(rootNode, UICommandsSource, _refsSource);
+        }
+
+        private void CreateFavoriteBranches()
+        {
+            // Create a Favorites node
+
+            TreeNode rootNode = new(TranslatedStrings.Favorites)
+            {
+                Name = TranslatedStrings.Favorites,
+                ImageKey = nameof(Images.Star),
+                SelectedImageKey = nameof(Images.Star)
+            };
+
+            _favoritesTree = new FavoritesTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource, _revisionGridInfo);
         }
 
         private void CreateSubmodules()

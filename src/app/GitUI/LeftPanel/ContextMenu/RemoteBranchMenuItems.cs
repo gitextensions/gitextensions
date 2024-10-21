@@ -35,4 +35,26 @@ namespace GitUI.LeftPanel.ContextMenu
             strings.Tooltips[MenuItemKey.Delete] = DeleteTooltip;
         }
     }
+
+    internal class FavoritesBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
+        where TNode : class, INode
+    {
+        public FavoritesBranchMenuItems(IMenuItemFactory menuItemFactory) : base(menuItemFactory)
+        {
+            new FavoriteBranchMenuItemsStrings().ApplyTo(Strings);
+        }
+    }
+
+    public class FavoriteBranchMenuItemsStrings : Translate
+    {
+        public FavoriteBranchMenuItemsStrings()
+        {
+            Translator.Translate(this, AppSettings.CurrentTranslation);
+        }
+
+        public void ApplyTo(MenuItemsStrings strings)
+        {
+            new BranchMenuItemsStrings().ApplyTo(strings);
+        }
+    }
 }
