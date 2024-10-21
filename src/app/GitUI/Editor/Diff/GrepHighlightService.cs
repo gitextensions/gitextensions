@@ -23,6 +23,9 @@ public partial class GrepHighlightService : TextHighlightService
         lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: false);
     }
 
+    public override void AddTextHighlighting(IDocument document)
+        => document.MarkerStrategy.AddMarkers(_textMarkers);
+
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
         => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.MinusPlus or DiffLineType.Grep);
 
@@ -77,14 +80,6 @@ public partial class GrepHighlightService : TextHighlightService
             {
                 commandConfiguration.Add(new GitConfigItem(key, value), "grep");
             }
-        }
-    }
-
-    public override void AddTextHighlighting(IDocument document)
-    {
-        foreach (TextMarker tm in _textMarkers)
-        {
-            document.MarkerStrategy.AddMarker(tm);
         }
     }
 

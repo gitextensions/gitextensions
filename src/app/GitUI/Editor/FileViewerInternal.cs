@@ -98,11 +98,7 @@ namespace GitUI.Editor
             TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
 
             IList<TextMarker> selectionMarkers = GetTextMarkersMatchingWord(text);
-
-            foreach (TextMarker selectionMarker in selectionMarkers)
-            {
-                TextEditor.Document.MarkerStrategy.AddMarker(selectionMarker);
-            }
+            TextEditor.Document.MarkerStrategy.AddMarkers(selectionMarkers);
 
             _textHighlightService.AddTextHighlighting(TextEditor.Document);
             TextEditor.ActiveTextAreaControl.TextArea.Invalidate();
