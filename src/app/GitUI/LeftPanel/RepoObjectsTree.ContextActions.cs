@@ -29,6 +29,8 @@ namespace GitUI.LeftPanel
         /// </summary>
         private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
 
+        private MenuItemsGenerator<BaseBranchLeafNode> _favoritesMenuItem;
+
         private static void EnableMenuItems(bool enabled, params ToolStripItem[] items)
         {
             foreach (ToolStripItem item in items)
@@ -140,6 +142,11 @@ namespace GitUI.LeftPanel
             _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
             _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
+            _favoritesMenuItem = new FavoritesBranchMenuItems<BaseBranchLeafNode>(this);
+
+            RegisterClick<BaseBranchLeafNode>(mnubtnAddToFavorites, node => AddToFavorites(node));
+            RegisterClick<BaseBranchLeafNode>(mnubtnRemoveFromFavorites, node => RemoveFromFavorites(node));
+
             menuMain.InsertItems(_tagNodeMenuItems.Select(s => s.Item).Prepend(new ToolStripSeparator()), after: filterForSelectedRefsMenuItem);
             menuMain.InsertItems(_remoteBranchMenuItems.Select(s => s.Item).Prepend(new ToolStripSeparator()), after: filterForSelectedRefsMenuItem);
             menuMain.InsertItems(_localBranchMenuItems.Select(s => s.Item).Prepend(new ToolStripSeparator()), after: filterForSelectedRefsMenuItem);
@@ -244,6 +251,9 @@ namespace GitUI.LeftPanel
             EnableMoveTreeUpDownContexMenu(hasSingleSelection, selectedNode);
             EnableSortContextMenu(hasSingleSelection, selectedNode);
 
+            // Enable or disable favorites context menu items
+            EnableFavoritesContextMenu(hasSingleSelection, selectedNode);
+
             if (hasSingleSelection && selectedLocalBranch?.Visible == true)
             {
                 contextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.AddToRevisionGridContextMenu, UICommands);
@@ -288,6 +298,39 @@ namespace GitUI.LeftPanel
             result.ToolTipText = toolTip.Text;
             RegisterClick(result, onClick);
             return result;
+        }
+
+        private void EnableFavoritesContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+        {
+            if (hasSingleSelection)
+            {
+                string rootNodeName = selectedNode?.TreeViewNode?.FullPath?.Split('/').FirstOrDefault();
+                if (rootNodeName != null && rootNodeName.Contains(TranslatedStrings.Favorites))
+                {
+                    EnableMenuItems(true, mnubtnRemoveFromFavorites);
+                    EnableMenuItems(false, mnubtnAddToFavorites);
+                }
+                else
+                {
+                    if (selectedNode is LocalBranchNode || selectedNode is RemoteBranchNode)
+                    {
+                        EnableMenuItems(false, mnubtnRemoveFromFavorites);
+                        EnableMenuItems(true, mnubtnAddToFavorites);
+                    }
+                }
+            }
+        }
+
+        private void AddToFavorites(NodeBase node)
+        {
+            // Implementation for adding to favorites
+            _favoritesTree.Add(node);
+        }
+
+        private void RemoveFromFavorites(NodeBase node)
+        {
+            // Implementation for removing from favorites
+            _favoritesTree.Remove(node);
         }
     }
 }
