@@ -8661,6 +8661,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Fetch and prune all remotes</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnAddToFavorites.Text">
+        <source>Add To Favorites</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnAddToFavorites.ToolTipText">
+        <source>Add this item to favorites</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnApplyStash.Text">
         <source>&amp;Apply stash</source>
         <target />
@@ -8841,6 +8849,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Fetch then checkout this remote branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnRemoveFromFavorites.Text">
+        <source>Remove from Favorites</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnRemoveFromFavorites.ToolTipText">
+        <source>Remove this item from favorites</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.Text">
         <source>&amp;Reset</source>
         <target />
@@ -8895,6 +8911,14 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="tsbShowBranches.ToolTipText">
         <source>Branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsbShowFavorites.Text">
+        <source>&amp;Favorites</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsbShowFavorites.ToolTipText">
+        <source>Favorites</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbShowRemotes.Text">
@@ -10389,6 +10413,10 @@ Select this commit to populate the full message.</source>
 {0}
 
 Copy error details to clipboard?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_favoriteText.Text">
+        <source>Favorites</source>
         <target />
       </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
