@@ -13,8 +13,6 @@ public class DiffHighlightServiceTests
     [Test]
     public void GetDifferenceMarkers_should_dim_identical_parts_at_begin_and_end()
     {
-        DiffHighlightService.TestAccessor.SetDimBackground(true);
-
         const string identicalPartBefore = "identical_part_before_";
         const string identicalPartAfter = "_identical_part_after";
         const string differentRemoved = "RemovedX";
@@ -27,7 +25,7 @@ public class DiffHighlightServiceTests
         const int beginOffset = 1;
 
         List<TextMarker> markers = [];
-        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset);
+        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset, dimBackground: true);
         IReadOnlyList<TextMarker> sortedMarkers = markers.ToImmutableSortedSet(new MarkerComparer());
 
         TextMarker[] expectedMarkers =
@@ -50,8 +48,6 @@ public class DiffHighlightServiceTests
     [Test]
     public void GetDifferenceMarkers_should_add_anchor_markers()
     {
-        DiffHighlightService.TestAccessor.SetDimBackground(true);
-
         const string deletion = nameof(deletion);
         const string insertion = nameof(insertion);
         const string identicalPartBefore = " identical_part_before ";
@@ -66,7 +62,7 @@ public class DiffHighlightServiceTests
         const int beginOffset = 1;
 
         List<TextMarker> markers = [];
-        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset);
+        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset, dimBackground: true);
         IReadOnlyList<TextMarker> sortedMarkers = markers.ToImmutableSortedSet(new MarkerComparer());
 
         TextMarker[] expectedMarkers =
