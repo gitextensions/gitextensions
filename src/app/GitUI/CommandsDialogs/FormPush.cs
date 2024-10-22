@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs
                 // refresh registered git remotes
                 UserGitRemotes = _remotesManager.LoadRemotes(false).ToList();
 
-                _NO_TRANSLATE_Branch.Text = IsDetachedHead(_currentBranchName) ? HeadText : _currentBranchName;
+                _NO_TRANSLATE_Branch.Text = DetachedHeadParser.IsDetachedHead(_currentBranchName) ? HeadText : _currentBranchName;
 
                 BindRemotesDropDown(null);
 
@@ -143,8 +143,6 @@ namespace GitUI.CommandsDialogs
                 BranchGrid.ColumnHeaderMouseClick += BranchGrid_ColumnHeaderMouseClick;
             }
         }
-
-        private bool IsDetachedHead(string branchName) => branchName.IndexOfAny(['(', ' ', ')']) != -1;
 
         /// <summary>
         /// Gets the list of remotes configured in .git/config file.
@@ -752,7 +750,7 @@ namespace GitUI.CommandsDialogs
         {
             RemoteBranch.Items.Clear();
 
-            if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text) && !IsDetachedHead(_NO_TRANSLATE_Branch.Text) && _NO_TRANSLATE_Branch.Text != HeadText)
+            if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text) && !DetachedHeadParser.IsDetachedHead(_NO_TRANSLATE_Branch.Text) && _NO_TRANSLATE_Branch.Text != HeadText)
             {
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
             }
