@@ -212,3 +212,4 @@ YYYY/MM/DD, github id, Full name, email
 2024/06/17, astos-marcb, Marc Becker, marc.becker@astos.de
 2024/09/12, ericstj, Eric StJohn, ericstj(at)microsoft.com
 2024/09/26, georg138, Georg Siebke, github(at)georgsiebke.de
+2024/10/21, chkoddi,Chandar,chkoddi@live.com
