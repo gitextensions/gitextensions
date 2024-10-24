@@ -656,7 +656,7 @@ namespace GitUI.LeftPanel
             // 
             tsbShowFavorites.CheckOnClick = true;
             tsbShowFavorites.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbShowFavorites.Image = Properties.Images.TagHorizontal;
+            tsbShowFavorites.Image = Properties.Images.Star;
             tsbShowFavorites.ImageTransparentColor = Color.Magenta;
             tsbShowFavorites.Name = "tsbShowFavorites";
             tsbShowFavorites.Size = new Size(29, 24);
