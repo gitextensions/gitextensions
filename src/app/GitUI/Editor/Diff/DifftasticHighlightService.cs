@@ -33,6 +33,7 @@ public partial class DifftasticHighlightService : TextHighlightService
         int halfColumn = column / 2;
         bool nextIsHeader = true;
         bool debugPrinted = false;
+        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
 
         foreach (string rawLine in text.LazySplit('\n'))
         {
@@ -45,7 +46,7 @@ public partial class DifftasticHighlightService : TextHighlightService
 
             lineBuilder.Clear();
             textMarkers.Clear();
-            AnsiEscapeUtilities.ParseEscape(rawLine, lineBuilder, textMarkers, themeColors: AppSettings.ReverseGitColoring.Value);
+            AnsiEscapeUtilities.ParseEscape(rawLine, lineBuilder, textMarkers, themeColors: reverseGitColoring);
 
             int leftLineNo = DiffLineInfo.NotApplicableLineNum;
             int rightLineNo = DiffLineInfo.NotApplicableLineNum;
@@ -90,11 +91,12 @@ public partial class DifftasticHighlightService : TextHighlightService
 
                 if (textMarkers.Count > 0 && textMarkers[0].Offset < leftLen)
                 {
-                    // GE theme colors sets reverse colors
-                    Color c = AppSettings.ReverseGitColoring.Value ? textMarkers[0].Color : textMarkers[0].ForeColor;
+                    // Use lineno coloring to guess if this is added or removed.
+                    // Assume the theme in Diffstatic sets gray for unchanged and
+                    // use mostly red/green to detect removed/added.
+                    Color c = reverseGitColoring ? textMarkers[0].Color : textMarkers[0].ForeColor;
                     if (c.R != c.G)
                     {
-                        // Assume the theme in Diffstatic sets gray and the GE theme has the same value for red/green when context
                         if (c.R > c.G)
                         {
                             lineType = DiffLineType.MinusLeft;
@@ -195,7 +197,10 @@ public partial class DifftasticHighlightService : TextHighlightService
                 {
                     first = false;
 
-                    Color c = AppSettings.ReverseGitColoring.Value ? tm.Color : tm.ForeColor;
+                    // Use lineno coloring to guess if this is added or removed.
+                    // Assume the theme in Diffstatic sets gray for unchanged,
+                    // otherwise this right lineno is assumed to be added (and likely green).
+                    Color c = reverseGitColoring ? tm.Color : tm.ForeColor;
                     if (c.R != c.G)
                     {
                         // Merge line type with existing left line type
