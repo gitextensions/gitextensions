@@ -1,7 +1,7 @@
 ﻿using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.CommandsDialogs.BrowseDialog;
-using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.Hotkey;
 

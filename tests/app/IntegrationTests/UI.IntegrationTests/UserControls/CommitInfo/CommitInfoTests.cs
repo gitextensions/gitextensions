@@ -5,6 +5,7 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using NSubstitute;

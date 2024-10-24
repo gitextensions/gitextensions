@@ -13,8 +13,6 @@ namespace GitUI.HelperDialogs
     public partial class FormProcess : FormStatus
     {
         public string Remote { get; set; }
-        public string ProcessString { get; }
-        public string ProcessArguments { get; set; }
         public string? ProcessInput { get; }
         public readonly string WorkingDirectory;
         public HandleOnExit? HandleOnExitCallback { get; set; }

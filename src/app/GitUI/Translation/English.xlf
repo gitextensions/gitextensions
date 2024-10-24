@@ -2420,6 +2420,10 @@ compare with first:</source>
         <source>No working directory</source>
         <target />
       </trans-unit>
+      <trans-unit id="_outputHistoryTabCaption.Text">
+        <source>Output</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_pullFetch.Text">
         <source>Fetch</source>
         <target />
@@ -3046,6 +3050,15 @@ Do you want to continue?</source>
         <source>Browse repository window</source>
         <target />
       </trans-unit>
+      <trans-unit id="_outputHistoryTooltip.Text">
+        <source>The output displayed in the process dialog and some trace output is retained and shown in the output history.
+
+- With this set, the output history is displayed in a tab in the lower pane of the Browse Repository window.
+- With this unset, the output history is displayed in a panel docked to the lower left corner of the Browse Repository window.
+
+Focus the output history and (when displayed as panel) toggle its visibility using the hotkey {0}.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkShowConsoleTab.Text">
         <source>Show the Console tab</source>
         <target />
@@ -3064,6 +3077,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.ToolTipText">
         <source>View help</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowOutputHistoryAsTab.Text">
+        <source>Show output history as tab (otherwise as panel)</source>
         <target />
       </trans-unit>
       <trans-unit id="chkUseBrowseForFileHistory.Text">
@@ -3092,6 +3109,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="lblDefaultShell.Text">
         <source>Default shell</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblOutputHistoryDepth.Text">
+        <source>Output history depth (0 to disable):</source>
         <target />
       </trans-unit>
     </body>
@@ -8513,6 +8534,18 @@ Do you want to trust this host key and then try again?</source>
         <source>Since this repository has submodules, it's necessary to update them on every checkout.
 
 This will just checkout on the submodule the commit determined by the superproject.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="OutputHistoryControl" source-language="en">
+    <body>
+      <trans-unit id="tsmiClear.Text">
+        <source>C&amp;lear</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCopy.Text">
+        <source>&amp;Copy</source>
         <target />
       </trans-unit>
     </body>

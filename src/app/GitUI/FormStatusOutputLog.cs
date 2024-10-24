@@ -13,6 +13,7 @@ namespace GitUI
                 throw new ArgumentNullException(nameof(text));
             }
 
+            text = text.Replace('\v', '\n').ReplaceLineEndings();
             lock (_outputString)
             {
                 _outputString.Append(text);
