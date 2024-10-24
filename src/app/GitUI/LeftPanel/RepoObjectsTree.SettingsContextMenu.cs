@@ -28,6 +28,7 @@ namespace GitUI.LeftPanel
         {
             return new Dictionary<Tree, int>
             {
+                [_favoritesTree] = AppSettings.RepoObjectsTreeFavoritesIndex,
                 [_branchesTree] = AppSettings.RepoObjectsTreeBranchesIndex,
                 [_remotesTree] = AppSettings.RepoObjectsTreeRemotesIndex,
                 [_tagTree] = AppSettings.RepoObjectsTreeTagsIndex,
@@ -38,6 +39,7 @@ namespace GitUI.LeftPanel
 
         private void SaveTreeToPositionIndex(Dictionary<Tree, int> treeToPositionIndex)
         {
+            AppSettings.RepoObjectsTreeFavoritesIndex = treeToPositionIndex[_favoritesTree];
             AppSettings.RepoObjectsTreeBranchesIndex = treeToPositionIndex[_branchesTree];
             AppSettings.RepoObjectsTreeRemotesIndex = treeToPositionIndex[_remotesTree];
             AppSettings.RepoObjectsTreeTagsIndex = treeToPositionIndex[_tagTree];
@@ -80,6 +82,7 @@ namespace GitUI.LeftPanel
             RemoveTree(_branchesTree);
             RemoveTree(_remotesTree);
             RemoveTree(_tagTree);
+            RemoveTree(_favoritesTree);
             RemoveTree(_submoduleTree);
             RemoveTree(_stashTree);
             ShowEnabledTrees();
@@ -87,6 +90,7 @@ namespace GitUI.LeftPanel
 
         public void ClearTrees()
         {
+            _favoritesTree.ClearTree();
             _branchesTree.ClearTree();
             _remotesTree.ClearTree();
             _tagTree.ClearTree();
@@ -96,6 +100,11 @@ namespace GitUI.LeftPanel
 
         private void ShowEnabledTrees()
         {
+            if (tsbShowFavorites.Checked)
+            {
+                AddTree(_favoritesTree);
+            }
+
             if (tsbShowBranches.Checked)
             {
                 AddTree(_branchesTree);
@@ -149,6 +158,22 @@ namespace GitUI.LeftPanel
             else
             {
                 RemoveTree(_remotesTree);
+            }
+        }
+
+        private void tsbShowFavorites_Click(object sender, EventArgs e)
+        {
+            AppSettings.RepoObjectsTreeShowFavorites = tsbShowFavorites.Checked;
+            _searchResult = null;
+
+            if (tsbShowFavorites.Checked)
+            {
+                AddTree(_favoritesTree);
+                _searchResult = null;
+            }
+            else
+            {
+                RemoveTree(_favoritesTree);
             }
         }
 

@@ -1882,6 +1882,12 @@ namespace GitCommands
             set => SetEnum("DiffListSortType", value);
         }
 
+        public static bool RepoObjectsTreeShowFavorites
+        {
+            get => GetBool("RepoObjectsTree.ShowFavorites", true);
+            set => SetBool("RepoObjectsTree.ShowFavorites", value);
+        }
+
         public static string GetGitExtensionsFullPath()
         {
 #if DEBUG
@@ -1960,33 +1966,39 @@ namespace GitCommands
             set => SetBool("RepoObjectsTree.ShowSubmodules", value);
         }
 
+        public static int RepoObjectsTreeFavoritesIndex
+        {
+            get => GetInt("RepoObjectsTree.FavoritesIndex", 0);
+            set => SetInt("RepoObjectsTree.FavoritesIndex", value);
+        }
+
         public static int RepoObjectsTreeBranchesIndex
         {
-            get => GetInt("RepoObjectsTree.BranchesIndex", 0);
+            get => GetInt("RepoObjectsTree.BranchesIndex", 1);
             set => SetInt("RepoObjectsTree.BranchesIndex", value);
         }
 
         public static int RepoObjectsTreeRemotesIndex
         {
-            get => GetInt("RepoObjectsTree.RemotesIndex", 1);
+            get => GetInt("RepoObjectsTree.RemotesIndex", 2);
             set => SetInt("RepoObjectsTree.RemotesIndex", value);
         }
 
         public static int RepoObjectsTreeTagsIndex
         {
-            get => GetInt("RepoObjectsTree.TagsIndex", 2);
+            get => GetInt("RepoObjectsTree.TagsIndex", 3);
             set => SetInt("RepoObjectsTree.TagsIndex", value);
         }
 
         public static int RepoObjectsTreeSubmodulesIndex
         {
-            get => GetInt("RepoObjectsTree.SubmodulesIndex", 3);
+            get => GetInt("RepoObjectsTree.SubmodulesIndex", 4);
             set => SetInt("RepoObjectsTree.SubmodulesIndex", value);
         }
 
         public static int RepoObjectsTreeStashesIndex
         {
-            get => GetInt("RepoObjectsTree.StashesIndex", 4);
+            get => GetInt("RepoObjectsTree.StashesIndex", 5);
             set => SetInt("RepoObjectsTree.StashesIndex", value);
         }
 
