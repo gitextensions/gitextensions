@@ -52,7 +52,7 @@ namespace GitUI.LeftPanel
         protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
         {
             Nodes nodes = new(this);
-            Dictionary<string, BaseRevisionNode> pathToNodesRemote = new();
+            Dictionary<string, BaseRevisionNode> pathToNodesRemote = [];
             Dictionary<string, BaseRevisionNode> pathToNodeLocal = [];
             IDictionary<string, AheadBehindData> aheadBehindDataLocal = _aheadBehindDataProvider?.GetData();
             IDictionary<string, AheadBehindData>? aheadBehindDataRemote = aheadBehindDataLocal?.DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
@@ -71,6 +71,7 @@ namespace GitUI.LeftPanel
                 }
             }
 
+            _cachedFavorites.Favorites.ToList().Except(branches.Select(p => p.ObjectId?.ToString())).ForEach(p => _cachedFavorites.Favorites.Remove(p));
             return nodes;
         }
 
