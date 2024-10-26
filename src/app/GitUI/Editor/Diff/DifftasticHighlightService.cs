@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -92,11 +93,10 @@ public partial class DifftasticHighlightService : TextHighlightService
                 if (textMarkers.Count > 0 && textMarkers[0].Offset < leftLen)
                 {
                     // Use lineno coloring to guess if this is added or removed.
-                    // Assume the theme in Diffstatic sets gray for unchanged and
-                    // use mostly red/green to detect removed/added.
                     Color c = reverseGitColoring ? textMarkers[0].Color : textMarkers[0].ForeColor;
-                    if (c.R != c.G)
+                    if (!IsUnchanged(c))
                     {
+                        // Use mostly red/green to detect removed/added.
                         if (c.R > c.G)
                         {
                             lineType = DiffLineType.MinusLeft;
@@ -198,11 +198,12 @@ public partial class DifftasticHighlightService : TextHighlightService
                     first = false;
 
                     // Use lineno coloring to guess if this is added or removed.
-                    // Assume the theme in Diffstatic sets gray for unchanged,
-                    // otherwise this right lineno is assumed to be added (and likely green).
+                    // If not unchanged this right lineno is assumed to be added (and is likely green).
                     Color c = reverseGitColoring ? tm.Color : tm.ForeColor;
-                    if (c.R != c.G)
+                    if (!IsUnchanged(c))
                     {
+                        DebugHelpers.Assert(lineType != DiffLineType.PlusRight, $"Left status for rightline {rightLineNo} is {lineType}, incorrect leftline parsing?");
+
                         // Merge line type with existing left line type
                         lineType = lineType == DiffLineType.Context ? DiffLineType.PlusRight : DiffLineType.MinusPlus;
                     }
@@ -222,6 +223,11 @@ public partial class DifftasticHighlightService : TextHighlightService
         lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: true);
 
         return;
+
+        // Use lineno coloring to guess if this is added or removed.
+        // Assume the theme in Diffstatic sets gray for unchanged.
+        static bool IsUnchanged(Color c)
+            => c.R == c.G;
 
         static void RemoveLineNoPart(TextMarker tm, int offset, int length)
         {
