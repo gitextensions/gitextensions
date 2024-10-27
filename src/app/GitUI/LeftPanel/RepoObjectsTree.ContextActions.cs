@@ -307,8 +307,13 @@ namespace GitUI.LeftPanel
                 string rootNodeName = selectedNode?.TreeViewNode?.FullPath?.Split('/').FirstOrDefault();
                 if (rootNodeName != null && rootNodeName.Contains(TranslatedStrings.Favorites))
                 {
-                    EnableMenuItems(true, mnubtnRemoveFromFavorites);
-                    EnableMenuItems(false, mnubtnAddToFavorites);
+                    if (selectedNode is LocalBranchNode || selectedNode is RemoteBranchNode)
+                    {
+                        EnableMenuItems(true, mnubtnRemoveFromFavorites);
+                        EnableMenuItems(false, mnubtnAddToFavorites);
+
+                        return;
+                    }
                 }
                 else
                 {
@@ -316,8 +321,13 @@ namespace GitUI.LeftPanel
                     {
                         EnableMenuItems(false, mnubtnRemoveFromFavorites);
                         EnableMenuItems(true, mnubtnAddToFavorites);
+
+                        return;
                     }
                 }
+
+                EnableMenuItems(false, mnubtnRemoveFromFavorites);
+                EnableMenuItems(false, mnubtnAddToFavorites);
             }
         }
 

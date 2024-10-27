@@ -4,6 +4,7 @@ using GitCommands.Remotes;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandDialogs;
+using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using Microsoft;
 
@@ -14,19 +15,19 @@ namespace GitUI.LeftPanel
         private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
         private readonly IRevisionGridInfo _revisionGridInfo;
         private readonly CachedFavorites _cachedFavorites = new();
+        private readonly IGitUICommandsSource _refUiCommand;
 
         public FavoritesTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo)
             : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes | RefsFilter.Heads)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _revisionGridInfo = revisionGridInfo;
+            _refUiCommand = uiCommands;
 
             if (refsSource is GitModuleControl { Module.WorkingDirGitDir: not null } gitModuleControl)
             {
                 _cachedFavorites.Location = gitModuleControl.Module.WorkingDirGitDir;
             }
-
-            _cachedFavorites.Load();
         }
 
         public void Add(NodeBase node)
@@ -51,11 +52,12 @@ namespace GitUI.LeftPanel
 
         protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
         {
-            Nodes nodes = new(this);
+            FavoriteNode remoteNode = new(this, TranslatedStrings.Remotes, nameof(Images.BranchRemoteRoot)) { Visible = true };
+            FavoriteNode localNode = new(this, TranslatedStrings.Local, nameof(Images.BranchLocalRoot)) { Visible = true };
+
             Dictionary<string, BaseRevisionNode> pathToNodesRemote = [];
             Dictionary<string, BaseRevisionNode> pathToNodeLocal = [];
             IDictionary<string, AheadBehindData> aheadBehindDataLocal = _aheadBehindDataProvider?.GetData();
-            IDictionary<string, AheadBehindData>? aheadBehindDataRemote = aheadBehindDataLocal?.DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
 
             foreach (IGitRef branch in branches)
             {
@@ -63,15 +65,20 @@ namespace GitUI.LeftPanel
 
                 if (branch.IsRemote)
                 {
-                    CreateRemoteBranchTree(branch, pathToNodesRemote, nodes, aheadBehindDataRemote);
+                    CreateRemoteBranchTree(branch, pathToNodesRemote, remoteNode.Nodes, aheadBehindDataLocal);
                 }
                 else if (branch.IsHead)
                 {
-                    CreateLocalBranchTree(branch, pathToNodeLocal, nodes, aheadBehindDataLocal);
+                    CreateLocalBranchTree(branch, pathToNodeLocal, localNode.Nodes, aheadBehindDataLocal);
                 }
             }
 
-            _cachedFavorites.Favorites.ToList().Except(branches.Select(p => p.ObjectId?.ToString())).ForEach(p => _cachedFavorites.Favorites.Remove(p));
+            _cachedFavorites.Favorites.ToList().Except(branches.Select(p => p.ObjectId?.ToString())).ForEach(p => _cachedFavorites.Remove(p));
+
+            Nodes nodes = new(this);
+            nodes.AddNode(localNode);
+            nodes.AddNode(remoteNode);
+
             return nodes;
         }
 
@@ -83,7 +90,7 @@ namespace GitUI.LeftPanel
             }
         }
 
-        private void CreateLocalBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodeLocal, Nodes nodes, IDictionary<string, AheadBehindData>? aheadBehindDataLocal)
+        private void CreateLocalBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes, IDictionary<string, AheadBehindData>? aheadBehindData)
         {
             Validates.NotNull(branch.ObjectId);
 
@@ -94,22 +101,29 @@ namespace GitUI.LeftPanel
 
             string currentBranch = _revisionGridInfo.GetCurrentBranch();
 
-            LocalBranchNode localBranchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, true) { Visible = false };
+            LocalBranchNode branchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, true);
 
-            if (aheadBehindDataLocal?.TryGetValue(localBranchNode.FullPath, out AheadBehindData aheadBehind) is true)
+            if (aheadBehindData?.TryGetValue(branchNode.FullPath, out AheadBehindData aheadBehind) is true)
             {
-                localBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), aheadBehind.RemoteRef);
+                branchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), aheadBehind.RemoteRef);
             }
 
-            BaseRevisionNode parent = localBranchNode.CreateRootNode(pathToNodeLocal, (tree, parentPath) => new BranchPathNode(tree, parentPath));
+            BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, CreatePathNode);
 
             if (parent is not null)
             {
                 nodes.AddNode(parent);
             }
+
+            BaseRevisionNode CreatePathNode(Tree tree, string parentPath)
+            {
+                BranchPathNode branchPathNode = new(tree, parentPath);
+
+                return branchPathNode;
+            }
         }
 
-        private void CreateRemoteBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes, IDictionary<string, AheadBehindData>? aheadBehindDataRemote)
+        private void CreateRemoteBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes, IDictionary<string, AheadBehindData>? aheadBehindData)
         {
             Validates.NotNull(branch.ObjectId);
 
@@ -125,16 +139,14 @@ namespace GitUI.LeftPanel
 
             if (remoteByName.TryGetValue(remoteName, out Remote remote))
             {
-                RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, true);
+                RemoteBranchNode branchNode = new(this, branch.ObjectId, branch.Name, true);
 
-                if (aheadBehindDataRemote?.TryGetValue(branch.CompleteName, out AheadBehindData aheadBehind) is true)
+                if (aheadBehindData?.TryGetValue(branch.CompleteName, out AheadBehindData aheadBehind) is true)
                 {
-                    remoteBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
+                    branchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
                 }
 
-                BaseRevisionNode parent = remoteBranchNode.CreateRootNode(
-                    pathToNodes,
-                    (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
+                BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
                 if (parent is not null)
                 {
@@ -146,7 +158,7 @@ namespace GitUI.LeftPanel
             {
                 if (parentPath == remote.Name)
                 {
-                    return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true) { Visible = false };
+                    return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true);
                 }
 
                 return new BasePathNode(tree, parentPath);

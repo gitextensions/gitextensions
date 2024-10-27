@@ -1,84 +1,124 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
+﻿using System.Text.Json;
 
 namespace GitUI.LeftPanel
 {
     public class CachedFavorites
     {
-        private static readonly XmlSerializer _serializer = new(typeof(string[]), new XmlRootAttribute("RepoFavorites"));
+        private readonly HashSet<string> _favorites = new();
+        private readonly object _lock = new();
+        private bool _isLoaded;
 
-        public HashSet<string> Favorites { get; } = [];
+        public IReadOnlyCollection<string> Favorites => _favorites;
 
-        public string Location { get; set; }
+        public string Location { get; set; } = string.Empty;
 
-        private string FavConfigFile => Path.Combine(Location, "repofav");
-        public void Load()
+        private string ConfigFile
         {
-            if (File.Exists(FavConfigFile))
-            {
-                try
-                {
-                    using StringReader reader = new(File.ReadAllText(FavConfigFile));
-                    string[] deserialize = (string[])_serializer.Deserialize(reader);
+            get => Path.Combine(Location, "favorites");
+        }
 
-                    if (deserialize != null)
+        public void Add(string branch)
+        {
+            if (string.IsNullOrEmpty(branch))
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                if (_favorites.Add(branch))
+                {
+                    Save();
+                }
+            }
+        }
+
+        public void Remove(string branch)
+        {
+            if (string.IsNullOrEmpty(branch))
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                if (_favorites.Remove(branch))
+                {
+                    Save();
+                }
+            }
+        }
+
+        public bool Contains(string branch)
+        {
+            if (string.IsNullOrEmpty(branch))
+            {
+                return false;
+            }
+
+            LoadIfNeeded();
+
+            lock (_lock)
+            {
+                return _favorites.Contains(branch);
+            }
+        }
+
+        private void Load()
+        {
+            if (_isLoaded || !File.Exists(ConfigFile))
+            {
+                return;
+            }
+
+            try
+            {
+                string json;
+
+                lock (_lock)
+                {
+                    json = File.ReadAllText(ConfigFile);
+                }
+
+                string[]? deserialized = JsonSerializer.Deserialize<string[]>(json);
+
+                if (deserialized != null)
+                {
+                    lock (_lock)
                     {
-                        foreach (string item in deserialize)
-                        {
-                            Favorites.Add(item);
-                        }
+                        _favorites.UnionWith(deserialized);
                     }
                 }
-                catch
-                {
-                    // ignore
-                }
+
+                _isLoaded = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load favorites: {ex.Message}");
             }
         }
 
-        public void Save()
+        private void Save()
         {
-            if (Favorites.Any())
+            try
             {
-                try
+                lock (_lock)
                 {
-                    XmlWriterSettings xmlWriterSettings = new() { Indent = true };
-                    using StringWriter sw = new();
-
-                    // Create empty namespaces to remove xmlns:xsi and xmlns:xsd
-                    XmlSerializerNamespaces namespaces = new();
-                    namespaces.Add("", ""); // Add an empty namespace
-
-                    using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
-
-                    _serializer.Serialize(xmlWriter, Favorites.ToArray(), namespaces);
-                    File.WriteAllText(FavConfigFile, sw.ToString());
+                    string json = JsonSerializer.Serialize(_favorites, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText(ConfigFile, json);
                 }
-                catch
-                {
-                    // ignore
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save favorites: {ex.Message}");
             }
         }
 
-        public bool Contains(string match)
+        private void LoadIfNeeded()
         {
-            return Favorites.Contains(match);
-        }
-
-        public void Add(string key)
-        {
-            if (Favorites.Add(key))
+            if (!_isLoaded)
             {
-                Save();
-            }
-        }
-
-        public void Remove(string key)
-        {
-            if (Favorites.Remove(key))
-            {
-                Save();
+                Load();
             }
         }
     }
