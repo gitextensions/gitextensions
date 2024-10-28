@@ -1207,7 +1207,10 @@ namespace GitUI
                         listItem.Selected = true;
                     }
 
+                    // Also set .Text in order to provide accessibility information
+                    listItem.Text = item.ToString();
                     listItem.Tag = new FileStatusItem(i.FirstRev, i.SecondRev, item, i.BaseA, i.BaseB);
+
                     list.Add(listItem);
                 }
             }
