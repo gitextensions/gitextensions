@@ -2222,6 +2222,7 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("diff", commandConfiguration)
             {
+                "--no-ext-diff",
                 "--find-renames",
                 "--find-copies",
                 { useGitColoring, "--color=always" },
@@ -2418,6 +2419,7 @@ namespace GitCommands
             return _gitExecutable.Execute(
                 new GitArgumentBuilder("diff")
                 {
+                    "--no-ext-diff",
                     "--find-renames",
                     "--find-copies",
                     "--name-status",
@@ -2686,6 +2688,7 @@ namespace GitCommands
         {
             GitArgumentBuilder args = new("diff")
             {
+                "--no-ext-diff",
                 "--find-renames",
                 "--find-copies",
                 "-z",

@@ -279,6 +279,7 @@ namespace GitCommands.Git
         {
             return new GitArgumentBuilder("diff", gitOptions: noLocks ? (ArgumentString)"--no-optional-locks" : default)
                 {
+                    "--no-ext-diff",
                     "--find-renames",
                     "--find-copies",
                     { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
