@@ -73,7 +73,7 @@ namespace GitUI.LeftPanel
             tsbShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
             tsbShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;
             tsbShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
-            tsbShowFavorites.Checked = AppSettings.RepoObjectsTreeShowFavorites;
+            tsbShowFavorites.Checked = AppSettings.RepoObjectsTreeShowFavorites.Value;
             tsbShowSubmodules.Checked = AppSettings.RepoObjectsTreeShowSubmodules;
             tsbShowStashes.Checked = AppSettings.RepoObjectsTreeShowStashes;
 
@@ -414,8 +414,6 @@ namespace GitUI.LeftPanel
 
         private void CreateFavoriteBranches()
         {
-            // Create a Favorites node
-
             TreeNode rootNode = new(TranslatedStrings.Favorites)
             {
                 Name = TranslatedStrings.Favorites,
@@ -423,7 +421,7 @@ namespace GitUI.LeftPanel
                 SelectedImageKey = nameof(Images.Star)
             };
 
-            _favoritesTree = new FavoritesTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource, _revisionGridInfo);
+            _favoritesTree = new FavoritesTree(rootNode, UICommandsSource, _refsSource, _revisionGridInfo);
         }
 
         private void CreateSubmodules()

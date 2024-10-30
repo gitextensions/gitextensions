@@ -37,18 +37,18 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.ShowAuthorAvatarColumn = false;
 
             // Show all root nodes for test, restore when done
-            _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowFavorites);
+            _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowFavorites.Value);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowBranches);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowRemotes);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowTags);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowStashes);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowSubmodules);
-            AppSettings.RepoObjectsTreeShowFavorites = true;
             AppSettings.RepoObjectsTreeShowBranches = true;
             AppSettings.RepoObjectsTreeShowRemotes = true;
             AppSettings.RepoObjectsTreeShowTags = true;
             AppSettings.RepoObjectsTreeShowStashes = true;
             AppSettings.RepoObjectsTreeShowSubmodules = true;
+            AppSettings.RepoObjectsTreeShowFavorites.Value = true;
         }
 
         [OneTimeTearDown]
@@ -57,12 +57,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
             AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
 
-            AppSettings.RepoObjectsTreeShowFavorites = _originalRepoObjectsTreeShow[5];
             AppSettings.RepoObjectsTreeShowBranches = _originalRepoObjectsTreeShow[0];
             AppSettings.RepoObjectsTreeShowRemotes = _originalRepoObjectsTreeShow[1];
             AppSettings.RepoObjectsTreeShowTags = _originalRepoObjectsTreeShow[2];
             AppSettings.RepoObjectsTreeShowSubmodules = _originalRepoObjectsTreeShow[3];
             AppSettings.RepoObjectsTreeShowStashes = _originalRepoObjectsTreeShow[4];
+            AppSettings.RepoObjectsTreeShowFavorites.Value = _originalRepoObjectsTreeShow[5];
         }
 
         [SetUp]

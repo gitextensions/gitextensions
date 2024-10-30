@@ -8662,7 +8662,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnAddToFavorites.Text">
-        <source>Add To Favorites</source>
+        <source>&amp;Add To Favorites</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnAddToFavorites.ToolTipText">
@@ -8850,7 +8850,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnRemoveFromFavorites.Text">
-        <source>Remove from Favorites</source>
+        <source>Remo&amp;ve from Favorites</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnRemoveFromFavorites.ToolTipText">

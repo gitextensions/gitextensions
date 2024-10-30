@@ -326,6 +326,7 @@ Copy error details to clipboard?");
         public static string ShowReflogTooltip = _instance.Value._showReflogTooltip.Text;
         public static string ShowCurrentBranchOnly = _instance.Value._showCurrentBranchOnly.Text;
         public static string SimplifyByDecoration = _instance.Value._simplifyByDecoration.Text;
+        public static string Favorites = _instance.Value._favoriteText.Text;
 
         #region Scripts
 
@@ -337,10 +338,6 @@ Copy error details to clipboard?");
         private readonly TranslationString _scriptText = new("Script");
         private readonly TranslationString _scriptUserInputCaption = new("User input for script '{0}'");
         private readonly TranslationString _scriptUserCanceledRun = new("Script not started.");
-        public static string Favorites
-        {
-            get => _instance.Value._favoriteText.Text;
-        }
 
         public static string ScriptConfirmExecute => _instance.Value._scriptConfirmExecuteText.Text;
         public static string ScriptErrorCantFind => _instance.Value._scriptErrorCantFindText.Text;

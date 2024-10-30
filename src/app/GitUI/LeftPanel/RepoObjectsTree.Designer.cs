@@ -431,7 +431,7 @@ namespace GitUI.LeftPanel
             mnubtnAddToFavorites.Image = Properties.Images.Star;
             mnubtnAddToFavorites.Name = "mnubtnAddToFAv";
             mnubtnAddToFavorites.Size = new Size(266, 26);
-            mnubtnAddToFavorites.Text = "Add To Favorites";
+            mnubtnAddToFavorites.Text = "&Add To Favorites";
             mnubtnAddToFavorites.ToolTipText = "Add this item to favorites";
             // 
             // mnubtnCreateBranch
@@ -439,7 +439,7 @@ namespace GitUI.LeftPanel
             mnubtnRemoveFromFavorites.Image = Properties.Images.StarRemove;
             mnubtnRemoveFromFavorites.Name = "mnubtnREmoveFromFav";
             mnubtnRemoveFromFavorites.Size = new Size(266, 26);
-            mnubtnRemoveFromFavorites.Text = "Remove from Favorites";
+            mnubtnRemoveFromFavorites.Text = "Remo&ve from Favorites";
             mnubtnRemoveFromFavorites.ToolTipText = "Remove this item from favorites";
 
             // 
@@ -599,12 +599,12 @@ namespace GitUI.LeftPanel
             leftPanelToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             leftPanelToolStrip.Items.AddRange(new ToolStripItem[] {
             tsbCollapseAll,
+            tsbShowFavorites,
             tsbShowBranches,
             tsbShowRemotes,
             tsbShowTags,
             tsbShowSubmodules,
-            tsbShowStashes,
-            tsbShowFavorites});
+            tsbShowStashes});
             leftPanelToolStrip.Location = new Point(0, 0);
             leftPanelToolStrip.Name = "leftPanelToolStrip";
             leftPanelToolStrip.Size = new Size(300, 27);

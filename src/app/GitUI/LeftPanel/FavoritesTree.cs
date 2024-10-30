@@ -1,6 +1,4 @@
-﻿using GitCommands;
-using GitCommands.Git;
-using GitCommands.Remotes;
+﻿using GitCommands.Remotes;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandDialogs;
@@ -8,161 +6,200 @@ using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using Microsoft;
 
-namespace GitUI.LeftPanel
+namespace GitUI.LeftPanel;
+
+internal sealed class FavoritesTree : BaseRefTree
 {
-    internal sealed class FavoritesTree : BaseRefTree
+    private readonly IRevisionGridInfo _revisionGridInfo;
+    private readonly FavoriteBranchesCache _favoriteBranchesCache = new();
+    private FileSystemWatcher _configWatcher;
+
+    public FavoritesTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo)
+        : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes | RefsFilter.Heads)
     {
-        private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
-        private readonly IRevisionGridInfo _revisionGridInfo;
-        private readonly CachedFavorites _cachedFavorites = new();
-        private readonly IGitUICommandsSource _refUiCommand;
+        _revisionGridInfo = revisionGridInfo;
+    }
 
-        public FavoritesTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo)
-            : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes | RefsFilter.Heads)
+    public void Add(NodeBase node)
+    {
+        StopFileWatcher();
+
+        if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId != null)
         {
-            _aheadBehindDataProvider = aheadBehindDataProvider;
-            _revisionGridInfo = revisionGridInfo;
-            _refUiCommand = uiCommands;
+            _favoriteBranchesCache.Add(baseRevisionNode.ObjectId, baseRevisionNode.FullPath);
+        }
 
-            if (refsSource is GitModuleControl { Module.WorkingDirGitDir: not null } gitModuleControl)
+        Refresh(new FilteredGitRefsProvider(UICommands.Module).GetRefs, true);
+        ResumeFileWatcher();
+    }
+
+    public void Remove(NodeBase node)
+    {
+        StopFileWatcher();
+
+        if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId != null)
+        {
+            _favoriteBranchesCache.Remove(baseRevisionNode.ObjectId, baseRevisionNode.FullPath);
+        }
+
+        Refresh(new FilteredGitRefsProvider(UICommands.Module).GetRefs, true);
+        ResumeFileWatcher();
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        StopFileWatcher();
+    }
+
+    protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
+    {
+        StopFileWatcher();
+        _favoriteBranchesCache.Location = UICommands.Module.WorkingDirGitDir;
+        FavoriteNode remoteNode = new(this, TranslatedStrings.Remotes, nameof(Images.BranchRemoteRoot)) { Visible = true };
+        FavoriteNode localNode = new(this, TranslatedStrings.Local, nameof(Images.BranchLocalRoot)) { Visible = true };
+
+        Dictionary<string, BaseRevisionNode> pathToNodesRemote = [];
+        Dictionary<string, BaseRevisionNode> pathToNodeLocal = [];
+
+        foreach (IGitRef branch in branches)
+        {
+            token.ThrowIfCancellationRequested();
+
+            if (branch.IsRemote)
             {
-                _cachedFavorites.Location = gitModuleControl.Module.WorkingDirGitDir;
+                CreateRemoteBranchTree(branch, pathToNodesRemote, remoteNode.Nodes);
+            }
+            else if (branch.IsHead)
+            {
+                CreateLocalBranchTree(branch, pathToNodeLocal, localNode.Nodes);
             }
         }
 
-        public void Add(NodeBase node)
-        {
-            if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId != null)
-            {
-                _cachedFavorites.Add(baseRevisionNode.ObjectId.ToString());
-            }
+        _favoriteBranchesCache.CleanUp(branches);
 
-            Refresh(new FilteredGitRefsProvider(UICommands.Module).GetRefs, true);
+        Nodes nodes = new(this);
+        nodes.AddNode(localNode);
+        nodes.AddNode(remoteNode);
+        ResumeFileWatcher();
+
+        return nodes;
+    }
+
+    protected override void PostFillTreeViewNode(bool firstTime)
+    {
+        if (firstTime)
+        {
+            TreeViewNode.Collapse();
+        }
+    }
+
+    private void CreateLocalBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes)
+    {
+        Validates.NotNull(branch.ObjectId);
+
+        if (!_favoriteBranchesCache.Contains(branch.ObjectId, branch.Name))
+        {
+            return;
         }
 
-        public void Remove(NodeBase node)
-        {
-            if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId != null)
-            {
-                _cachedFavorites.Remove(baseRevisionNode.ObjectId.ToString());
-            }
+        string currentBranch = _revisionGridInfo.GetCurrentBranch();
 
-            Refresh(new FilteredGitRefsProvider(UICommands.Module).GetRefs, true);
+        LocalBranchNode branchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, true);
+
+        BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, CreatePathNode);
+
+        if (parent is not null)
+        {
+            nodes.AddNode(parent);
         }
 
-        protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
+        BaseRevisionNode CreatePathNode(Tree tree, string parentPath)
         {
-            FavoriteNode remoteNode = new(this, TranslatedStrings.Remotes, nameof(Images.BranchRemoteRoot)) { Visible = true };
-            FavoriteNode localNode = new(this, TranslatedStrings.Local, nameof(Images.BranchLocalRoot)) { Visible = true };
+            BranchPathNode branchPathNode = new(tree, parentPath);
 
-            Dictionary<string, BaseRevisionNode> pathToNodesRemote = [];
-            Dictionary<string, BaseRevisionNode> pathToNodeLocal = [];
-            IDictionary<string, AheadBehindData> aheadBehindDataLocal = _aheadBehindDataProvider?.GetData();
+            return branchPathNode;
+        }
+    }
 
-            foreach (IGitRef branch in branches)
-            {
-                token.ThrowIfCancellationRequested();
+    private void CreateRemoteBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes)
+    {
+        Validates.NotNull(branch.ObjectId);
 
-                if (branch.IsRemote)
-                {
-                    CreateRemoteBranchTree(branch, pathToNodesRemote, remoteNode.Nodes, aheadBehindDataLocal);
-                }
-                else if (branch.IsHead)
-                {
-                    CreateLocalBranchTree(branch, pathToNodeLocal, localNode.Nodes, aheadBehindDataLocal);
-                }
-            }
-
-            _cachedFavorites.Favorites.ToList().Except(branches.Select(p => p.ObjectId?.ToString())).ForEach(p => _cachedFavorites.Remove(p));
-
-            Nodes nodes = new(this);
-            nodes.AddNode(localNode);
-            nodes.AddNode(remoteNode);
-
-            return nodes;
+        if (!_favoriteBranchesCache.Contains(branch.ObjectId, branch.Name))
+        {
+            return;
         }
 
-        protected override void PostFillTreeViewNode(bool firstTime)
+        ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
+        Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToDictionary(r => r.Name);
+
+        string remoteName = branch.Name.SubstringUntil('/');
+
+        if (remoteByName.TryGetValue(remoteName, out Remote remote))
         {
-            if (firstTime)
-            {
-                TreeViewNode.Collapse();
-            }
-        }
+            RemoteBranchNode branchNode = new(this, branch.ObjectId, branch.Name, true);
 
-        private void CreateLocalBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes, IDictionary<string, AheadBehindData>? aheadBehindData)
-        {
-            Validates.NotNull(branch.ObjectId);
-
-            if (!_cachedFavorites.Contains(branch.ObjectId.ToString()))
-            {
-                return;
-            }
-
-            string currentBranch = _revisionGridInfo.GetCurrentBranch();
-
-            LocalBranchNode branchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, true);
-
-            if (aheadBehindData?.TryGetValue(branchNode.FullPath, out AheadBehindData aheadBehind) is true)
-            {
-                branchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), aheadBehind.RemoteRef);
-            }
-
-            BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, CreatePathNode);
+            BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
             if (parent is not null)
             {
                 nodes.AddNode(parent);
             }
-
-            BaseRevisionNode CreatePathNode(Tree tree, string parentPath)
-            {
-                BranchPathNode branchPathNode = new(tree, parentPath);
-
-                return branchPathNode;
-            }
         }
 
-        private void CreateRemoteBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes, IDictionary<string, AheadBehindData>? aheadBehindData)
+        BaseRevisionNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
         {
-            Validates.NotNull(branch.ObjectId);
-
-            if (!_cachedFavorites.Contains(branch.ObjectId.ToString()))
+            if (parentPath == remote.Name)
             {
-                return;
+                return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true);
             }
 
-            ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
-            Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToDictionary(r => r.Name);
-
-            string remoteName = branch.Name.SubstringUntil('/');
-
-            if (remoteByName.TryGetValue(remoteName, out Remote remote))
-            {
-                RemoteBranchNode branchNode = new(this, branch.ObjectId, branch.Name, true);
-
-                if (aheadBehindData?.TryGetValue(branch.CompleteName, out AheadBehindData aheadBehind) is true)
-                {
-                    branchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
-                }
-
-                BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
-
-                if (parent is not null)
-                {
-                    nodes.AddNode(parent);
-                }
-            }
-
-            BaseRevisionNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
-            {
-                if (parentPath == remote.Name)
-                {
-                    return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true);
-                }
-
-                return new BasePathNode(tree, parentPath);
-            }
+            return new BasePathNode(tree, parentPath);
         }
+    }
+
+    private void ResumeFileWatcher()
+    {
+        StopFileWatcher();
+        _favoriteBranchesCache.Location = UICommands.Module.WorkingDirGitDir;
+        string configFile = _favoriteBranchesCache.ConfigFile;
+        _configWatcher = new FileSystemWatcher { Path = Path.GetDirectoryName(configFile), Filter = Path.GetFileName(configFile), NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName };
+
+        _configWatcher.Changed += OnConfigFileChanged;
+        _configWatcher.Created += OnConfigFileChanged;
+        _configWatcher.Deleted += OnConfigFileChanged;
+        _configWatcher.Renamed += OnConfigFileRenamed;
+
+        _configWatcher.EnableRaisingEvents = true;
+    }
+
+    private void StopFileWatcher()
+    {
+        if (_configWatcher is not null)
+        {
+            _configWatcher.EnableRaisingEvents = false;
+            _configWatcher.Changed -= OnConfigFileChanged;
+            _configWatcher.Created -= OnConfigFileChanged;
+            _configWatcher.Deleted -= OnConfigFileChanged;
+            _configWatcher.Renamed -= OnConfigFileRenamed;
+            _configWatcher.Dispose();
+        }
+    }
+
+    private void OnConfigFileChanged(object sender, FileSystemEventArgs e)
+    {
+        ReloadFavoritesAndUpdate();
+    }
+
+    private void ReloadFavoritesAndUpdate()
+    {
+        _favoriteBranchesCache.Load();
+        Refresh(new FilteredGitRefsProvider(UICommands.Module).GetRefs, true);
+    }
+
+    private void OnConfigFileRenamed(object sender, RenamedEventArgs e)
+    {
+        ReloadFavoritesAndUpdate();
     }
 }

@@ -28,7 +28,7 @@ namespace GitUI.LeftPanel
         {
             return new Dictionary<Tree, int>
             {
-                [_favoritesTree] = AppSettings.RepoObjectsTreeFavoritesIndex,
+                [_favoritesTree] = AppSettings.RepoObjectsTreeFavoritesIndex.Value,
                 [_branchesTree] = AppSettings.RepoObjectsTreeBranchesIndex,
                 [_remotesTree] = AppSettings.RepoObjectsTreeRemotesIndex,
                 [_tagTree] = AppSettings.RepoObjectsTreeTagsIndex,
@@ -39,7 +39,7 @@ namespace GitUI.LeftPanel
 
         private void SaveTreeToPositionIndex(Dictionary<Tree, int> treeToPositionIndex)
         {
-            AppSettings.RepoObjectsTreeFavoritesIndex = treeToPositionIndex[_favoritesTree];
+            AppSettings.RepoObjectsTreeFavoritesIndex.Value = treeToPositionIndex[_favoritesTree];
             AppSettings.RepoObjectsTreeBranchesIndex = treeToPositionIndex[_branchesTree];
             AppSettings.RepoObjectsTreeRemotesIndex = treeToPositionIndex[_remotesTree];
             AppSettings.RepoObjectsTreeTagsIndex = treeToPositionIndex[_tagTree];
@@ -79,10 +79,10 @@ namespace GitUI.LeftPanel
             SaveTreeToPositionIndex(treeToIndex);
 
             // Remove all trees, then show enabled ones at new indices
+            RemoveTree(_favoritesTree);
             RemoveTree(_branchesTree);
             RemoveTree(_remotesTree);
             RemoveTree(_tagTree);
-            RemoveTree(_favoritesTree);
             RemoveTree(_submoduleTree);
             RemoveTree(_stashTree);
             ShowEnabledTrees();
@@ -163,7 +163,7 @@ namespace GitUI.LeftPanel
 
         private void tsbShowFavorites_Click(object sender, EventArgs e)
         {
-            AppSettings.RepoObjectsTreeShowFavorites = tsbShowFavorites.Checked;
+            AppSettings.RepoObjectsTreeShowFavorites.Value = tsbShowFavorites.Checked;
             _searchResult = null;
 
             if (tsbShowFavorites.Checked)
