@@ -1724,10 +1724,7 @@ namespace GitUI
         private bool RunFileHistoryCommand(IReadOnlyList<string> args, bool showBlame)
         {
             string fileHistoryFileName = args[2];
-            if (new FormFileHistoryController().TryGetExactPath(_fullPathResolver.Resolve(fileHistoryFileName), out string exactFileName))
-            {
-                fileHistoryFileName = NormalizeFileName(exactFileName);
-            }
+            fileHistoryFileName = NormalizeFileName(fileHistoryFileName);
 
             if (string.IsNullOrWhiteSpace(fileHistoryFileName))
             {
