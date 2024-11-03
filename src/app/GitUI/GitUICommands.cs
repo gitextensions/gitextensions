@@ -1723,11 +1723,8 @@ namespace GitUI
         /// <returns>false on error.</returns>
         private bool RunFileHistoryCommand(IReadOnlyList<string> args, bool showBlame)
         {
-            string fileHistoryFileName = args[2];
-            if (new FormFileHistoryController().TryGetExactPath(_fullPathResolver.Resolve(fileHistoryFileName), out string exactFileName))
-            {
-                fileHistoryFileName = NormalizeFileName(exactFileName);
-            }
+            // Use the capitalization of the filename as passed because filenames in Git may differ from Windows file system.
+            string fileHistoryFileName = NormalizeFileName(args[2]);
 
             if (string.IsNullOrWhiteSpace(fileHistoryFileName))
             {
