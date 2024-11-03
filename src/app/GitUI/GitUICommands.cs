@@ -1723,11 +1723,8 @@ namespace GitUI
         /// <returns>false on error.</returns>
         private bool RunFileHistoryCommand(IReadOnlyList<string> args, bool showBlame)
         {
-            string fileHistoryFileName = args[2];
-
-            // The filename filter of "git log" is case-sensitive.
-            // So, just normalize the filename, but do not try to get the "exact" filename from a case-insensitive filesystem.
-            fileHistoryFileName = NormalizeFileName(fileHistoryFileName);
+            // Use the capitalization of the filename as passed because filenames in Git may differ from Windows file system.
+            string fileHistoryFileName = NormalizeFileName(args[2]);
 
             if (string.IsNullOrWhiteSpace(fileHistoryFileName))
             {
