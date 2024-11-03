@@ -25,6 +25,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
+        private readonly CancellationTokenSequence _populateDiffFilesSequence = new();
         private readonly CancellationTokenSequence _viewChangesSequence = new();
 
         private readonly ToolTip _toolTipControl = new();
@@ -103,6 +104,7 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
+                _populateDiffFilesSequence.Dispose();
                 _viewChangesSequence.Dispose();
                 components?.Dispose();
             }
@@ -147,7 +149,7 @@ namespace GitUI.CommandsDialogs
                 revisions = new[] { _secondRevision, _firstRevision };
             }
 
-            DiffFiles.InvokeAndForget(() => DiffFiles.SetDiffsAsync(revisions, _currentHead.Value, _viewChangesSequence.Next()));
+            DiffFiles.InvokeAndForget(() => DiffFiles.SetDiffsAsync(revisions, _currentHead.Value, _populateDiffFilesSequence.Next()));
         }
 
         private void ShowSelectedFileDiff()
