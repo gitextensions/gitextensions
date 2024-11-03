@@ -40,7 +40,8 @@ internal partial class GitBlameParser : IGitBlameParser
             // git-config diff algorithm option must be overridden for user preferences and tests
             GitArgumentBuilder args = new("diff")
             {
-                $"-U0",
+                "--no-ext-diff",
+                "-U0",
                 $"--diff-algorithm={(AppSettings.UseHistogramDiffAlgorithm ? "histogram" : "default")}",
                 { AppSettings.DetectCopyInFileOnBlame, "--find-renames" }, // git-blame only has -M
                 { AppSettings.DetectCopyInAllOnBlame, "--find-copies" }, // git-blame only has -C

@@ -2403,6 +2403,7 @@ namespace GitUI.CommandsDialogs
             {
                 GitArgumentBuilder args = new("diff")
                 {
+                    "--no-ext-diff",
                     "--cached",
                     "-z",
                     "--",
