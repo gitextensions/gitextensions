@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.IO.Abstractions;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using GitExtensions.Extensibility.Git;
 
@@ -10,6 +12,8 @@ internal sealed class FavoriteBranchesCache
     {
         WriteIndented = true, Converters = { new ObjectIdConverter() } // Add the custom converter here
     };
+
+    private readonly FileSystem _fileSystem = new();
 
     private readonly HashSet<BranchIdentifier> _favorites = new();
     private readonly object _lock = new();
@@ -37,29 +41,6 @@ internal sealed class FavoriteBranchesCache
     }
 
     /// <summary>
-    /// Adds a branch to the favorites list.
-    /// </summary>
-    /// <param name="objectId">The unique ObjectId of the branch's latest commit.</param>
-    /// <param name="branchName">The name of the branch (fully qualified).</param>
-    internal void Add(ObjectId objectId, string branchName)
-    {
-        BranchIdentifier branch = new(objectId, branchName);
-
-        if (!BranchIdentifier.IsValid(branch))
-        {
-            return;
-        }
-
-        lock (_lock)
-        {
-            if (_favorites.Add(branch))
-            {
-                Save();
-            }
-        }
-    }
-
-    /// <summary>
     /// Removes a branch from the favorites list.
     /// </summary>
     /// <param name="objectId">The unique ObjectId of the branch's latest commit.</param>
@@ -76,6 +57,29 @@ internal sealed class FavoriteBranchesCache
         lock (_lock)
         {
             if (_favorites.Remove(branch))
+            {
+                Save();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds a branch to the favorites list.
+    /// </summary>
+    /// <param name="objectId">The unique ObjectId of the branch's latest commit.</param>
+    /// <param name="branchName">The name of the branch (fully qualified).</param>
+    internal void Add(ObjectId objectId, string branchName)
+    {
+        BranchIdentifier branch = new(objectId, branchName);
+
+        if (!BranchIdentifier.IsValid(branch))
+        {
+            return;
+        }
+
+        lock (_lock)
+        {
+            if (_favorites.Add(branch))
             {
                 Save();
             }
@@ -153,7 +157,7 @@ internal sealed class FavoriteBranchesCache
 
             lock (_lock)
             {
-                json = File.ReadAllText(ConfigFile);
+                json = _fileSystem.File.ReadAllText(ConfigFile);
             }
 
             BranchIdentifier[]? deserialized = JsonSerializer.Deserialize<BranchIdentifier[]>(json, _jsonOptions);
@@ -162,6 +166,7 @@ internal sealed class FavoriteBranchesCache
             {
                 lock (_lock)
                 {
+                    _favorites.Clear();
                     _favorites.UnionWith(deserialized);
                 }
             }
@@ -170,7 +175,7 @@ internal sealed class FavoriteBranchesCache
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load favorites: {ex.Message}");
+            Debug.WriteLine($"Failed to load favorites: {ex.Message}");
         }
     }
 
@@ -181,12 +186,12 @@ internal sealed class FavoriteBranchesCache
             lock (_lock)
             {
                 string json = JsonSerializer.Serialize(_favorites, _jsonOptions);
-                File.WriteAllText(ConfigFile, json);
+                _fileSystem.File.WriteAllText(ConfigFile, json);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to save favorites: {ex.Message}");
+            Debug.WriteLine($"Failed to save favorites: {ex.Message}");
         }
     }
 
