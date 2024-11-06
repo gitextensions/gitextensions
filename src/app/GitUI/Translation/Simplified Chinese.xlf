@@ -65,7 +65,7 @@ If yes, embeds the fully functional console emulator. This is experimental and m
 If no, redirects select strings from stdout/stderr into an edit box. This is the classic mode.
 
 Turn off if you experience problems with the console emulator.</source>
-        <target>控制台程序显示在命令进度对话框中的样式，如克隆和拉动。
+        <target>控制在控制台程序中显示命令进度对话的样式，如克隆和拉动。
 
 如果是，则嵌入全功能控制台仿真器。这是实验性的，可能具有副作用。
 如果否，则重定向从stdout / stderr中选择字符串到编辑框中。这是经典模式。
@@ -333,7 +333,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="fallbackAvatarStyleToolStripMenuItem.Text">
         <source>Fallback generated avatar style</source>
-        <target>默认头像风格</target>
+        <target>回退生成的头像样式</target>
         
       </trans-unit>
       <trans-unit id="registerGravatarToolStripMenuItem.Text">
@@ -401,7 +401,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInThisFile.Text">
         <source>Detect moved or copied lines within blamed file</source>
-        <target>在归咎文件中检测移动或复制的行</target>
+        <target>在追溯文件中检测移动或复制的行</target>
         
       </trans-unit>
       <trans-unit id="cbDisplayAuthorFirst.Text">
@@ -431,7 +431,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="cbShowAuthorTime.Text">
         <source>Show author time</source>
-        <target>显示创作时间</target>
+        <target>显示作者时间</target>
         
       </trans-unit>
       <trans-unit id="cbShowLineNumbers.Text">
@@ -2929,7 +2929,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
         <source>&amp;Configure this menu...</source>
-        <target>設定此選單(&amp;C)...</target>
+        <target>配置此菜单(&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -3388,7 +3388,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
         <source>Plugins &amp;settings...</source>
-        <target>外掛設定(&amp;S)...</target>
+        <target>插件设置(&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="pluginsLoadingToolStripMenuItem.Text">
@@ -3423,7 +3423,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
         <source>Pull - &amp;rebase</source>
-        <target>拉取病重设基准&amp;r</target>
+        <target>拉取并重设基准&amp;r</target>
         
       </trans-unit>
       <trans-unit id="recoverLostObjectsToolStripMenuItem.Text">
@@ -3443,7 +3443,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
         <source>Rep&amp;ository settings...</source>
-        <target>儲存庫設定(&amp;o)...</target>
+        <target>存储库设置(&amp;o)</target>
         
       </trans-unit>
       <trans-unit id="reportAnIssueToolStripMenuItem.Text">
@@ -3473,7 +3473,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
         <source>&amp;Settings...</source>
-        <target>設定(&amp;S)...</target>
+        <target>设置(&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="startAuthenticationAgentToolStripMenuItem.Text">
@@ -3991,7 +3991,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="cbxAddReference.Text">
         <source>A&amp;dd commit reference to commit message</source>
-        <target>在提交訊息中增加提交參照(&amp;d)</target>
+        <target>在提交信息中增加提交参考(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="cbxAutoCommit.Text">
@@ -4479,7 +4479,7 @@ Git 将不会检查此文件是否被修改，借此改善文件状态检查功�
       </trans-unit>
       <trans-unit id="_commitMessageSettings.Text">
         <source>&amp;Edit commit message templates and settings...</source>
-        <target>編輯提交訊息範本及設定(&amp;E)...</target>
+        <target>编辑提交信息模板和设置(&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="_commitMsgFirstLineInvalid.Text">
@@ -11172,7 +11172,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="copyPathsToolStripMenuItem.Text">
         <source>Copy &amp;path(s)</source>
-        <target>複製路徑(&amp;p)</target>
+        <target>复制路径(&amp;p)</target>
         
       </trans-unit>
       <trans-unit id="diffCommitSubmoduleChanges.Text">
@@ -11242,7 +11242,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
         <source>&amp;Find file...</source>
-        <target>尋找檔案(&amp;F)...</target>
+        <target>查找文件(&amp;F)</target>
         
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
@@ -11434,7 +11434,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="expandToolStripMenuItem.Text">
         <source>&amp;Expand</source>
-        <target>展開(&amp;E)</target>
+        <target>展开(&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -11464,7 +11464,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
         <source>&amp;Find file...</source>
-        <target>尋找檔案(&amp;F)...</target>
+        <target>查找文件(&amp;F)</target>
         
       </trans-unit>
       <trans-unit id="openFileToolStripMenuItem.Text">
@@ -11509,7 +11509,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
         <source>S&amp;ave as...</source>
-        <target>另存為(&amp;a)...</target>
+        <target>另存为(&amp;a)...</target>
         
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
@@ -12603,7 +12603,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>&amp;Delete tag...</source>
-        <target>刪除標籤...(&amp;D)</target>
+        <target>删除标签…(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="DeleteTooltip.Text">
@@ -12637,7 +12637,7 @@ When OpenSSH is used, command line dialogs are shown!
     <body>
       <trans-unit id="_addUpstreamRemote.Text">
         <source>Add upstream remote</source>
-        <target>新增上游遠端倉庫</target>
+        <target>添加远程资源库</target>
         
       </trans-unit>
       <trans-unit id="_areYouSure.Text">
@@ -13068,7 +13068,7 @@ following command.
       </trans-unit>
       <trans-unit id="_hideErrorMessage.Text">
         <source>Hide error message...</source>
-        <target>隱藏錯誤訊息...</target>
+        <target>隐藏错误信息...</target>
         
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">
@@ -13247,7 +13247,7 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_reportIssue.Text">
         <source>Report the issue</source>
-        <target>報告此問題</target>
+        <target>报告此问题</target>
         
       </trans-unit>
       <trans-unit id="_reportIssueDescription.Text">
@@ -13257,7 +13257,7 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_reportReproducedIssueDescription.Text">
         <source>If you can consistently reproduce the issue, please report it.</source>
-        <target>如果您能夠持續重現此問題，請報告它。</target>
+        <target>如能持续复现此问题，请提交上报。</target>
         
       </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
@@ -13277,14 +13277,14 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_restartApplication.Text">
         <source>Restart Git Extensions</source>
-        <target>重新啟動 Git Extensions</target>
+        <target>重新启动 Git Extensions</target>
         
       </trans-unit>
       <trans-unit id="_restartApplicationDescription.Text">
         <source>Usually restarting the application solves the issue.
 Sometimes Windows may need to be restarted too.</source>
-        <target>通常重新啟動應用程式可以解決問題。
-有時可能需要重新啟動 Windows。</target>
+        <target>通常重启应用可以解决此问题。
+有时可能需要重新启动Windows。</target>
         
       </trans-unit>
       <trans-unit id="_rotInactive.Text">
@@ -13344,7 +13344,7 @@ Sometimes Windows may need to be restarted too.</source>
       </trans-unit>
       <trans-unit id="_seeErrorMessage.Text">
         <source>See error message...</source>
-        <target>查看錯誤訊息...</target>
+        <target>查看错误信息...</target>
         
       </trans-unit>
       <trans-unit id="_settingsTypeToFind.Text">
@@ -13628,7 +13628,7 @@ The action cannot be undone.</source>
       </trans-unit>
       <trans-unit id="tsmiCategoryRename.Text">
         <source>Rename category</source>
-        <target>分类目录名修改</target>
+        <target>修改类别名</target>
         
       </trans-unit>
       <trans-unit id="tsmiOpenFolder.Text">

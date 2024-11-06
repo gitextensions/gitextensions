@@ -1,6 +1,124 @@
 Changelog
 =========
 
+### Version 5.1 (10 Nov 2024)
+
+#### Changes:
+* [#12018] fix: Add missing defaults to git attributes parser
+* [#12016] fix(File History): Do not change capitalization of filename
+* [#12014] fix(FilterToolBar): Correctly resize branch dropdown
+* [#12013] fix(FormCommit): Restore file selection
+* [#12012] fix(FormDiff): Avoid "A task was canceled."
+* [#12007] fix(git diff): Suppress `diff.external`
+* [#12004] fix(FileStatusList): Set `Text` for accessibility
+* [#11999] fix(Push): fix false positive detection of "detached head" state
+* [#11995] Singed for contributing 
+* [#11994] fix(in-line diff): Support non-reversed git coloring
+* [#11993] Improve unit tests code
+* [#11992] fix: Handle dubious repo ownership, too, if detected by GitStatusMonitor
+* [#11987] fix(FormRenameBranch): Run git interactively
+* [#11983] fix(difftastic): Adjust endmarkers
+* [#11981] feat: Cache the diff highlighting
+* [#11965] fix(ReportDubiousOwnership): Support normal paths, too
+* [#11963] fix: commit gpgSign Git defaults
+* [#11962] fix: Reset current ansi terminal color
+* [#11960] Fix FileViewer's encoding bug when showing unstaged files
+* [#11959] fix(settings): Ignore non-boolean advanced git config settings
+* [#11955] fix: Restrict settings to "global" when not in a repository
+* [#11954] fix(push): fix tracking reference not well selected
+* [#11952] fix(FormGoToCommit): Improve performance
+* [#11948] fix(show git-grep): Sync and use actual visibility
+* [#11947] feat: Avoid coloring moved lines
+* [#11946] fix: Align difftastic colors
+* [#11937] Use "-D" instead of "-d" when deleting unmerged branches
+* [#11930] fix!: View colors in git-blob diff files
+* [#11927] Use "real" GitUICommands instance
+* [#11923] fix: Allow ^and .. in manual branch filters
+* [#11922] fix: Always present git inserted as Header
+* [#11921] fix: Merge git-diff textmarkers separated by newlines
+* [#11917] FormCommit: Disable ResetSoft if command not applicable
+* [#11916] FileStatusList: Reuse context menu separators
+* [#11915] fix: support Git < 2.26 with bright colors
+* [#11913] feat(settings): deeper checks for GitExtensions install directory
+* [#11912] chore: Update wix to v3.14.1 (security update)
+* [#11911] Move NoWarn=NU1903 to the Wix PackageReference
+* [#11900] Correctly escape paths
+* [#11893] Fix NRE in scripts if `arguments` unset
+* [#11889] Update README.md to v5.0
+* [#11888] fix: LineNumber presentation for Git word-diff
+* [#11887] fix: merge adjacent textmarkers
+* [#11884] Add navigation commands "Go to first / last parent commit"
+* [#11871] fix: RunCommand() should not throw when exit is checked
+* [#11865] Adjust ToolStripComboBox size based on DPI scaling
+* [#11864] Make DropDownWidth calculation Dpi aware and account for vertical scrollbar
+* [#11862] Improve in-line diff highlight and add anchor markers
+* [#11858] Expose git-grep in settings and context menu
+* [#11855] fix: try-catch for FileSystemWatcher
+* [#11853] feat: Recommend Git 2.46.0
+* [#11851] Diff View: Match similar lines in changed blocks
+* [#11850] feat: GitCache: Add current directory to key
+* [#11849] fix: bold attributes applies to both fore/back
+* [#10307] Add control with last interactive Git outputs and traces
+
+
+[#12018]:https://github.com/gitextensions/gitextensions/pull/12018
+[#12016]:https://github.com/gitextensions/gitextensions/pull/12016
+[#12014]:https://github.com/gitextensions/gitextensions/pull/12014
+[#12013]:https://github.com/gitextensions/gitextensions/pull/12013
+[#12012]:https://github.com/gitextensions/gitextensions/pull/12012
+[#12007]:https://github.com/gitextensions/gitextensions/pull/12007
+[#12004]:https://github.com/gitextensions/gitextensions/pull/12004
+[#11999]:https://github.com/gitextensions/gitextensions/pull/11999
+[#11995]:https://github.com/gitextensions/gitextensions/pull/11995
+[#11994]:https://github.com/gitextensions/gitextensions/pull/11994
+[#11993]:https://github.com/gitextensions/gitextensions/pull/11993
+[#11992]:https://github.com/gitextensions/gitextensions/pull/11992
+[#11987]:https://github.com/gitextensions/gitextensions/pull/11987
+[#11983]:https://github.com/gitextensions/gitextensions/pull/11983
+[#11981]:https://github.com/gitextensions/gitextensions/pull/11981
+[#11965]:https://github.com/gitextensions/gitextensions/pull/11965
+[#11963]:https://github.com/gitextensions/gitextensions/pull/11963
+[#11962]:https://github.com/gitextensions/gitextensions/pull/11962
+[#11960]:https://github.com/gitextensions/gitextensions/pull/11960
+[#11959]:https://github.com/gitextensions/gitextensions/pull/11959
+[#11955]:https://github.com/gitextensions/gitextensions/pull/11955
+[#11954]:https://github.com/gitextensions/gitextensions/pull/11954
+[#11952]:https://github.com/gitextensions/gitextensions/pull/11952
+[#11948]:https://github.com/gitextensions/gitextensions/pull/11948
+[#11947]:https://github.com/gitextensions/gitextensions/pull/11947
+[#11946]:https://github.com/gitextensions/gitextensions/pull/11946
+[#11937]:https://github.com/gitextensions/gitextensions/pull/11937
+[#11930]:https://github.com/gitextensions/gitextensions/pull/11930
+[#11927]:https://github.com/gitextensions/gitextensions/pull/11927
+[#11923]:https://github.com/gitextensions/gitextensions/pull/11923
+[#11922]:https://github.com/gitextensions/gitextensions/pull/11922
+[#11921]:https://github.com/gitextensions/gitextensions/pull/11921
+[#11917]:https://github.com/gitextensions/gitextensions/pull/11917
+[#11916]:https://github.com/gitextensions/gitextensions/pull/11916
+[#11915]:https://github.com/gitextensions/gitextensions/pull/11915
+[#11913]:https://github.com/gitextensions/gitextensions/pull/11913
+[#11912]:https://github.com/gitextensions/gitextensions/pull/11912
+[#11911]:https://github.com/gitextensions/gitextensions/pull/11911
+[#11900]:https://github.com/gitextensions/gitextensions/pull/11900
+[#11893]:https://github.com/gitextensions/gitextensions/pull/11893
+[#11889]:https://github.com/gitextensions/gitextensions/pull/11889
+[#11888]:https://github.com/gitextensions/gitextensions/pull/11888
+[#11887]:https://github.com/gitextensions/gitextensions/pull/11887
+[#11884]:https://github.com/gitextensions/gitextensions/pull/11884
+[#11871]:https://github.com/gitextensions/gitextensions/pull/11871
+[#11865]:https://github.com/gitextensions/gitextensions/pull/11865
+[#11864]:https://github.com/gitextensions/gitextensions/pull/11864
+[#11862]:https://github.com/gitextensions/gitextensions/pull/11862
+[#11858]:https://github.com/gitextensions/gitextensions/pull/11858
+[#11855]:https://github.com/gitextensions/gitextensions/pull/11855
+[#11853]:https://github.com/gitextensions/gitextensions/pull/11853
+[#11851]:https://github.com/gitextensions/gitextensions/pull/11851
+[#11850]:https://github.com/gitextensions/gitextensions/pull/11850
+[#11849]:https://github.com/gitextensions/gitextensions/pull/11849
+[#10307]:https://github.com/gitextensions/gitextensions/pull/10307
+
+
+
 ### Version 5.0.0 (1 Sep 2024)
 
 #### Changes:
