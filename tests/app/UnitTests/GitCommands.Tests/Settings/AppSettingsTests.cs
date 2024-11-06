@@ -191,6 +191,9 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, true);
                 yield return (properties[nameof(AppSettings.ConEmuStyle)], "<Solarized Light>", true, true);
                 yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", true, true);
+                yield return (properties[nameof(AppSettings.OutputHistoryDepth)], 20, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.OutputHistoryPanelVisible)], false, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.ShowOutputHistoryAsTab)], true, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.UseBrowseForFileHistory)], true, false, true);
                 yield return (properties[nameof(AppSettings.UseDiffViewerForBlame)], false, false, true);
                 yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, true);
@@ -296,7 +299,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RevisionGridQuickSearchTimeout)], 4000, false, false);
                 yield return (properties[nameof(AppSettings.MaxRevisionGraphCommits)], 100000, false, false);
                 yield return (properties[nameof(AppSettings.ShowDiffForAllParents)], true, false, false);
-                yield return (properties[nameof(AppSettings.ShowSearchCommit)], false, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.ShowFindInCommitFilesGitGrep)], false, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.ShowAvailableDiffTools)], true, isNotNullable, isNoISetting);
                 yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, isNotNullable, isNoISetting);
                 yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", isNotNullable, isISetting);

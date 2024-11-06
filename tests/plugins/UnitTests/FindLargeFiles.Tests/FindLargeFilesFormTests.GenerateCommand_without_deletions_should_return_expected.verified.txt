@@ -1,0 +1,4 @@
+﻿SET gitexe="C:\Program Files\Git\bin\git.exe"
+for /f "usebackq" %%a IN (`"%gitexe% for-each-ref --format="%%^(refname^)" refs/original/"`) DO %gitexe% update-ref -d %%a
+%gitexe% reflog expire --expire=now --all
+%gitexe% gc --aggressive --prune=now

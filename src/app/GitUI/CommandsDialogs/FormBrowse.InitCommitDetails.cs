@@ -23,7 +23,8 @@ namespace GitUI.CommandsDialogs
                     { nameof(Images.FileTree), Images.FileTree },
                     { nameof(Images.Diff), Images.Diff },
                     { nameof(Images.Key), Images.Key },
-                    { nameof(Images.Console), Images.Console }
+                    { nameof(Images.Console), Images.Console },
+                    { nameof(Images.GitCommandLog), Images.GitCommandLog }
                 }
             }
             .FixImageTransparencyRegression();

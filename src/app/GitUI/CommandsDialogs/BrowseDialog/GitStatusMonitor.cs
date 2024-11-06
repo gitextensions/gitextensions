@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUI.NBugReports;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -221,9 +223,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
-            _gitDirWatcher.EnableRaisingEvents = Directory.Exists(_gitDirWatcher.Path)
-                    && !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
+            try
+            {
+                _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
+                _gitDirWatcher.EnableRaisingEvents = Directory.Exists(_gitDirWatcher.Path)
+                        && !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
+            }
+            catch
+            {
+                _workTreeWatcher.EnableRaisingEvents = false;
+                _gitDirWatcher.EnableRaisingEvents = false;
+            }
         }
 
         private GitStatusMonitorState CurrentStatus
@@ -504,8 +514,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         {
                             // No action
                         }
-                        catch
+                        catch (Exception exception)
                         {
+                            if (exception.Message?.Contains(ExecutableExtensions.DubiousOwnershipSecurityConfigString) is true)
+                            {
+                                BugReportInvoker.Report(exception, isTerminating: false);
+                            }
+                            else
+                            {
+                                Trace.WriteLine(exception.Message);
+                            }
+
                             try
                             {
                                 if (++_consecutiveErrorCount < _maxConsecutiveErrors)

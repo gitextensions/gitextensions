@@ -116,15 +116,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             string command = (string)CommandCacheItems.SelectedItem;
 
-            if (GitModule.GitCommandCache.TryGet(command, out byte[]? cmdOut, out byte[]? cmdErr))
+            if (GitModule.GitCommandCache.TryGet(command, out string? cmdOut, out string? cmdErr))
             {
                 Encoding encoding = GitModule.SystemEncoding;
                 commandCacheOutput.Text =
                     command +
                     "\n-------------------------------------\n\n" +
-                    PrintableChars(EncodingHelper.DecodeString(cmdOut, [], ref encoding)) +
+                    PrintableChars(cmdOut) +
                     "\n-------------------------------------\n\n" +
-                    PrintableChars(EncodingHelper.DecodeString([], cmdErr, ref encoding));
+                    PrintableChars(cmdErr);
             }
             else
             {

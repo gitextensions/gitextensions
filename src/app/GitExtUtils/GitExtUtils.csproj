@@ -1,9 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\GitUI\Interops\BOOL.cs" Link="GitUI\Interops\BOOL.cs" />
+    <Compile Include="..\GitUI\Interops\RECT.cs" Link="GitUI\Interops\RECT.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AdysTech.CredentialManager" />

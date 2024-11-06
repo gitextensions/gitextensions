@@ -98,11 +98,7 @@ namespace GitUI.Editor
             TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
 
             IList<TextMarker> selectionMarkers = GetTextMarkersMatchingWord(text);
-
-            foreach (TextMarker selectionMarker in selectionMarkers)
-            {
-                TextEditor.Document.MarkerStrategy.AddMarker(selectionMarker);
-            }
+            TextEditor.Document.MarkerStrategy.AddMarkers(selectionMarkers);
 
             _textHighlightService.AddTextHighlighting(TextEditor.Document);
             TextEditor.ActiveTextAreaControl.TextArea.Invalidate();
@@ -253,20 +249,32 @@ namespace GitUI.Editor
             OpenWithDifftool = openWithDifftool;
 
             // Get the highlight service, possibly clean escape sequences in the text and create highlight.
+            _lineNumbersControl.Clear();
+            int vrulerpos = -1;
             _textHighlightService = viewMode switch
             {
                 ViewMode.Text => TextHighlightService.Instance,
-                ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(ref text, useGitColoring),
-                ViewMode.CombinedDiff => new CombinedDiffHighlightService(ref text, useGitColoring),
-                ViewMode.Difftastic => new DifftasticHighlightService(ref text),
-                ViewMode.RangeDiff => new RangeDiffHighlightService(ref text),
-                ViewMode.Grep => new GrepHighlightService(ref text),
+                ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(ref text, useGitColoring, _lineNumbersControl),
+                ViewMode.CombinedDiff => new CombinedDiffHighlightService(ref text, useGitColoring, _lineNumbersControl),
+                ViewMode.Difftastic => new DifftasticHighlightService(ref text, _lineNumbersControl, out vrulerpos),
+                ViewMode.RangeDiff => new RangeDiffHighlightService(ref text, _lineNumbersControl),
+                ViewMode.Grep => new GrepHighlightService(ref text, _lineNumbersControl),
                 _ => throw new ArgumentException($"Unexpected viewMode: {viewMode}", nameof(viewMode))
             };
 
+            if (vrulerpos >= 0)
+            {
+                // Difftastic set the position (0 to hide)
+                VRulerPosition = vrulerpos;
+            }
+            else if (VRulerPosition != AppSettings.DiffVerticalRulerPosition)
+            {
+                // Reset if Difftastic changed the position
+                VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+            }
+
             TextEditor.Text = text;
             bool hasLineNumberControl = viewMode.IsPartialTextView();
-            _lineNumbersControl.Clear();
             _lineNumbersControl.SetVisibility(hasLineNumberControl);
 
             if (hasLineNumberControl)
@@ -276,8 +284,6 @@ namespace GitUI.Editor
                 {
                     TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
                 }
-
-                _textHighlightService.SetLineControl(_lineNumbersControl, TextEditor);
             }
 
             // important to set after the text was changed

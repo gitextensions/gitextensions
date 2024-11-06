@@ -1,4 +1,5 @@
 using System.Text;
+using GitExtensions.Extensibility;
 
 namespace GitUI
 {
@@ -13,6 +14,7 @@ namespace GitUI
                 throw new ArgumentNullException(nameof(text));
             }
 
+            text = text.Replace(Delimiters.VerticalFeed, Delimiters.LineFeed).ReplaceLineEndings();
             lock (_outputString)
             {
                 _outputString.Append(text);

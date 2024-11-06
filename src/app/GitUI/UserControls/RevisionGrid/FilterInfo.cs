@@ -450,14 +450,14 @@ namespace GitUI.UserControls.RevisionGrid
                 // If BranchFilter contains wildcards, "--branches=" must be prepended.
                 // Use the simple branch filter if without wildcards (must be Git revision)
                 // in order to avoid git adding implicit /* to the "--branches=" filter.
-                // Also add apparent options.
+                // Also add apparent options and all ".." patterns.
 
                 // Split at whitespace (char[])null is default) but with split options.
                 // Ignore quouting, Git revisions do not allow spaces.
                 foreach (string branch in BranchFilter.Split((char[])null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 {
-                    bool wildcardBranchFilter = branch.IndexOfAny(new[] { '?', '*', '[' }) >= 0;
-                    filter.Add(wildcardBranchFilter && !branch.StartsWith("--")
+                    bool wildcardBranchFilter = branch.IndexOfAny(['?', '*', '[']) >= 0;
+                    filter.Add(wildcardBranchFilter && !branch.StartsWith("--") && !branch.Contains("..")
                         ? $"--branches={branch}"
                         : branch);
                 }

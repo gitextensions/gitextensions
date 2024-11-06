@@ -48,7 +48,7 @@ namespace AzureDevOpsIntegrationTests
 
             IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
-            filteredRunningBuilds.Should().HaveCount(1).And.ContainInOrder(firstBuildStartedOnACommit);
+            filteredRunningBuilds.Should().ContainSingle().And.ContainInOrder(firstBuildStartedOnACommit);
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace AzureDevOpsIntegrationTests
 
             IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
-            filteredRunningBuilds.Should().HaveCount(1);
+            filteredRunningBuilds.Should().ContainSingle();
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace AzureDevOpsIntegrationTests
 
             IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
-            filteredRunningBuilds.Should().HaveCount(1).And.ContainInOrder(startedBuild);
+            filteredRunningBuilds.Should().ContainSingle().And.ContainInOrder(startedBuild);
         }
     }
 }

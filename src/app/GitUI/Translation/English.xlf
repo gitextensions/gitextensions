@@ -1519,16 +1519,16 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="SearchWatermarkLabel.Text">
-        <source>Search files in commit using a regular expression...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
         <source>&amp;Sort by...</source>
         <target />
       </trans-unit>
       <trans-unit id="columnHeader.Text">
         <source>Files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblFindInCommitFilesGitGrepWatermark.Text">
+        <source>Find in commit files using git-grep regular expression...</source>
         <target />
       </trans-unit>
     </body>
@@ -2420,6 +2420,10 @@ compare with first:</source>
         <source>No working directory</source>
         <target />
       </trans-unit>
+      <trans-unit id="_outputHistoryTabCaption.Text">
+        <source>Output</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_pullFetch.Text">
         <source>Fetch</source>
         <target />
@@ -3046,32 +3050,69 @@ Do you want to continue?</source>
         <source>Browse repository window</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkChowConsoleTab.Text">
+      <trans-unit id="_outputHistoryTooltip.Text">
+        <source>The output displayed in the process dialog and some trace output is retained and shown in the output history.
+
+- With this set, the output history is displayed in a tab in the lower pane of the Browse Repository window.
+- With this unset, the output history is displayed in a panel docked to the lower left corner of the Browse Repository window.
+
+Focus the output history and (when displayed as panel) toggle its visibility using the hotkey {0}.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowConsoleTab.Text">
         <source>Show the Console tab</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowConsoleTab.ToolTipText">
+        <source>View help</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowFindInCommitFilesGitGrep.Text">
+        <source>Show 'Find in commit files using git-grep'</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
         <source>Show GPG information</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkShowGpgInformation.ToolTipText">
+        <source>View help</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowOutputHistoryAsTab.Text">
+        <source>Show output history as tab (otherwise as panel)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkUseBrowseForFileHistory.Text">
         <source>Show file history in the main window</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkUseBrowseForFileHistory.ToolTipText">
+        <source>View help</source>
         <target />
       </trans-unit>
       <trans-unit id="chkUseDiffViewerForBlame.Text">
         <source>Show blame in diff viewer</source>
         <target />
       </trans-unit>
-      <trans-unit id="gbGeneral.Text">
-        <source>General</source>
+      <trans-unit id="chkUseDiffViewerForBlame.ToolTipText">
+        <source>View help</source>
         <target />
       </trans-unit>
       <trans-unit id="gbTabs.Text">
         <source>Tabs (restart required)</source>
         <target />
       </trans-unit>
-      <trans-unit id="label2.Text">
+      <trans-unit id="groupBox1.Text">
+        <source>General</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblDefaultShell.Text">
         <source>Default shell</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblOutputHistoryDepth.Text">
+        <source>Output history depth (0 to disable):</source>
         <target />
       </trans-unit>
     </body>
@@ -4778,6 +4819,42 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="lblSelectFiles.Text">
         <source>Select file(s)</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormFindInCommitFilesGitGrep" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Find in commit files using git-grep</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnSearch.Text">
+        <source>&amp;Find</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMatchCase.Text">
+        <source>Match &amp;case</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkMatchWholeWord.Text">
+        <source>Match &amp;whole word</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowSearchBox.Text">
+        <source>&amp;Show 'Find in commit files using git-grep'</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Fi&amp;nd what:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblOptions.Text">
+        <source>&amp;Options:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblSearchCommitGitGrepWatermark.Text">
+        <source>git-grep regular expression...</source>
         <target />
       </trans-unit>
     </body>
@@ -6587,10 +6664,6 @@ Value has been reset to empty value.</source>
         <source>Rename</source>
         <target />
       </trans-unit>
-      <trans-unit id="_branchRenameFailed.Text">
-        <source>Rename failed.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="label1.Text">
         <source>New name</source>
         <target />
@@ -7252,38 +7325,6 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_until.Text">
         <source>&amp;Until</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormSearchCommit" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Search files in commit</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="btnSearch.Text">
-        <source>Search</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkMatchCase.Text">
-        <source>Match &amp;case</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkMatchWholeWord.Text">
-        <source>Match &amp;whole word</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkShowSearchBox.Text">
-        <source>Show search &amp;box</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>&amp;Search:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblOptions.Text">
-        <source>&amp;Options:</source>
         <target />
       </trans-unit>
     </body>
@@ -8497,6 +8538,18 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="OutputHistoryControl" source-language="en">
+    <body>
+      <trans-unit id="tsmiClear.Text">
+        <source>C&amp;lear</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCopy.Text">
+        <source>&amp;Copy</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="PatchGrid" source-language="en">
     <body>
       <trans-unit id="Action.HeaderText">
@@ -9061,8 +9114,12 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>&amp;Second -&gt; Working directory</source>
         <target />
       </trans-unit>
-      <trans-unit id="showSearchCommitToolStripMenuItem.Text">
-        <source>Sear&amp;ch files in commit...</source>
+      <trans-unit id="showFindInCommitFilesGitGrepDialogToolStripMenuItem.Text">
+        <source>Find in &amp;commit files using git-grep...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showFindInCommitFilesGitGrepToolStripMenuItem.Text">
+        <source>Show 'Find in commit fi&amp;les using git-grep'</source>
         <target />
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
@@ -9277,6 +9334,14 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="GotoCurrentRevision.Text">
         <source>Go to c&amp;urrent revision</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GotoFirstParentCommit.Text">
+        <source>Go to f&amp;irst parent commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GotoLastParentCommit.Text">
+        <source>Go to &amp;last parent commit</source>
         <target />
       </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.Text">

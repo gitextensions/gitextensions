@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using NSubstitute;
@@ -26,6 +27,18 @@ public class ScriptsManagerScriptRunnerTests
         _commands.Module.Returns(_module);
     }
 
+    // Regression test for https://github.com/gitextensions/gitextensions/issues/11892
+    [Test]
+    public void Parse_should_not_fail_if_arguments_null()
+    {
+        (string? arguments, bool abort, bool cancel) result = ScriptRunner.ParseUserInputs("script_name", arguments: null, _commands,
+            owner: null, scriptOptionsProvider: _scriptOptionsProvider);
+
+        result.abort.Should().Be(false);
+        result.cancel.Should().Be(false);
+        result.arguments.Should().BeNull();
+    }
+
     [Test]
     public void Parse_should_parse_distincts_userInput()
     {
@@ -34,6 +47,7 @@ public class ScriptsManagerScriptRunnerTests
             owner: null, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
+        result.cancel.Should().Be(false);
         result.arguments.Should().Be(@"foo1_""bar1""_foo2_""foo2""");
     }
 
@@ -45,6 +59,7 @@ public class ScriptsManagerScriptRunnerTests
             owner: null, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
+        result.cancel.Should().Be(false);
         result.arguments.Should().Be(@"foo1");
     }
 
@@ -56,6 +71,7 @@ public class ScriptsManagerScriptRunnerTests
             owner: null, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
+        result.cancel.Should().Be(false);
         result.arguments.Should().Be(@"foo1_foo1_""foo1""");
     }
 
@@ -68,6 +84,7 @@ public class ScriptsManagerScriptRunnerTests
             owner: null, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
+        result.cancel.Should().Be(false);
         result.arguments.Should().Be(@"file_foo.bak");
     }
 
@@ -124,6 +141,7 @@ public class ScriptsManagerScriptRunnerTests
             owner: null, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
+        result.cancel.Should().Be(false);
         result.arguments.Should().Be(@"unquoted path:C:\a_file_path\file.txt - quoted path:""C:\a_file_path\file.txt""");
     }
 

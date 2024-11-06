@@ -39,15 +39,22 @@ namespace GitCommands.Settings
             _fileWatcher.Deleted += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Changed;
 
-            string? dir = Path.GetDirectoryName(SettingsFilePath);
-            if (Directory.Exists(dir))
+            try
             {
-                _fileWatcher.Path = dir;
-                _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
-                _fileWatcher.EnableRaisingEvents = true;
+                string? dir = Path.GetDirectoryName(SettingsFilePath);
+                if (Directory.Exists(dir))
+                {
+                    // Notifications may not fire
+                    _forceFileChangeChecks = PathUtil.IsWslPath(SettingsFilePath);
 
-                // Notifications may not fire
-                _forceFileChangeChecks = PathUtil.IsWslPath(SettingsFilePath);
+                    _fileWatcher.Path = dir;
+                    _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
+                    _fileWatcher.EnableRaisingEvents = true;
+                }
+            }
+            catch
+            {
+                _fileWatcher.EnableRaisingEvents = false;
             }
 
             FileChanged();

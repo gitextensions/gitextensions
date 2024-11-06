@@ -1,7 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿#nullable enable
+
+using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
@@ -160,7 +163,7 @@ namespace GitUI.ScriptsEngine
 
             return (arguments, abort: false);
 
-            static IEnumerable<string> GetOptions(IReadOnlyList<string> options, IScriptOptionsProvider scriptOptionsProvider)
+            static IEnumerable<string> GetOptions(IReadOnlyList<string> options, IScriptOptionsProvider? scriptOptionsProvider)
                 => scriptOptionsProvider is null ? options : options.Union(scriptOptionsProvider.Options);
         }
 

@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs
                 // refresh registered git remotes
                 UserGitRemotes = _remotesManager.LoadRemotes(false).ToList();
 
-                _NO_TRANSLATE_Branch.Text = IsDetachedHead(_currentBranchName) ? HeadText : _currentBranchName;
+                _NO_TRANSLATE_Branch.Text = DetachedHeadParser.IsDetachedHead(_currentBranchName) ? HeadText : _currentBranchName;
 
                 BindRemotesDropDown(null);
 
@@ -143,8 +143,6 @@ namespace GitUI.CommandsDialogs
                 BranchGrid.ColumnHeaderMouseClick += BranchGrid_ColumnHeaderMouseClick;
             }
         }
-
-        private bool IsDetachedHead(string branchName) => branchName.IndexOfAny(['(', ' ', ')']) != -1;
 
         /// <summary>
         /// Gets the list of remotes configured in .git/config file.
@@ -728,7 +726,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Branch.Items.AddRange(GetLocalBranches().ToArray());
 
-            _NO_TRANSLATE_Branch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            _NO_TRANSLATE_Branch.ResizeDropDownWidth();
 
             _NO_TRANSLATE_Branch.Text = curBranch;
         }
@@ -752,7 +750,7 @@ namespace GitUI.CommandsDialogs
         {
             RemoteBranch.Items.Clear();
 
-            if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text) && !IsDetachedHead(_NO_TRANSLATE_Branch.Text) && _NO_TRANSLATE_Branch.Text != HeadText)
+            if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text) && !DetachedHeadParser.IsDetachedHead(_NO_TRANSLATE_Branch.Text) && _NO_TRANSLATE_Branch.Text != HeadText)
             {
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
             }
@@ -762,7 +760,7 @@ namespace GitUI.CommandsDialogs
                 RemoteBranch.Items.AddRange(GetRemoteBranches(_selectedRemote.Name).Select(head => head.LocalName).Where(head => _NO_TRANSLATE_Branch.Text != head).ToArray());
             }
 
-            RemoteBranch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            RemoteBranch.ResizeDropDownWidth();
 
             // Set text again as workaround for appearing focused after setting DropDownWidth
             RemoteBranch.Text = RemoteBranch.Text;
@@ -780,24 +778,30 @@ namespace GitUI.CommandsDialogs
             {
                 if (PushToRemote.Checked)
                 {
-                    if (_NO_TRANSLATE_Branch.SelectedItem is GitRef branch)
+                    // Handle case where current branch is selected but SelectedItem is still null
+                    // because refs are lazy loaded until user interact with the control
+                    // (to improve performance on repos with a lot of local branches)
+                    IGitRef selectedBranchRef = _NO_TRANSLATE_Branch.SelectedItem as IGitRef;
+                    if (selectedBranchRef is null && !string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
                     {
-                        if (_selectedRemote is not null)
-                        {
-                            string? defaultRemote = _remotesManager.GetDefaultPushRemote(_selectedRemote, branch.Name);
-                            if (!string.IsNullOrEmpty(defaultRemote))
-                            {
-                                RemoteBranch.Text = defaultRemote;
-                                return;
-                            }
+                        selectedBranchRef = _gitRefs.FirstOrDefault(r => r.Name == _NO_TRANSLATE_Branch.Text);
+                    }
 
-                            if (branch.TrackingRemote.Equals(_selectedRemote.Name, StringComparison.OrdinalIgnoreCase))
+                    if (selectedBranchRef is not null && _selectedRemote is not null)
+                    {
+                        string? defaultRemote = _remotesManager.GetDefaultPushRemote(_selectedRemote, selectedBranchRef.Name);
+                        if (!string.IsNullOrEmpty(defaultRemote))
+                        {
+                            RemoteBranch.Text = defaultRemote;
+                            return;
+                        }
+
+                        if (selectedBranchRef.TrackingRemote.Equals(_selectedRemote.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            RemoteBranch.Text = selectedBranchRef.MergeWith;
+                            if (!string.IsNullOrEmpty(RemoteBranch.Text))
                             {
-                                RemoteBranch.Text = branch.MergeWith;
-                                if (!string.IsNullOrEmpty(RemoteBranch.Text))
-                                {
-                                    return;
-                                }
+                                return;
                             }
                         }
                     }
@@ -922,7 +926,7 @@ namespace GitUI.CommandsDialogs
             tags.Insert(0, AllRefs);
             TagComboBox.DataSource = tags;
 
-            TagComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            TagComboBox.ResizeDropDownWidth();
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)

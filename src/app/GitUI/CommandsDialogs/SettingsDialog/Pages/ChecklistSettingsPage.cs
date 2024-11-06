@@ -530,7 +530,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return false;
             }
 
-            if (installDir.EndsWith(".exe"))
+            if (installDir.EndsWith(".exe") || !Directory.Exists(installDir))
+            {
+                RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsFaulty.Text);
+                return false;
+            }
+
+            if (!System.Diagnostics.Debugger.IsAttached && installDir != AppSettings.GetGitExtensionsDirectory())
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsFaulty.Text);
                 return false;

@@ -197,7 +197,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                     {
                         GitArgumentBuilder args = new("branch")
                         {
-                            "-d",
+                            includeUnmergedBranches.Checked ? "-D" : "-d",
                             localBranch.Name
                         };
 

@@ -1,5 +1,4 @@
-﻿using ICSharpCode.TextEditor;
-using ICSharpCode.TextEditor.Document;
+﻿using ICSharpCode.TextEditor.Document;
 using JetBrains.Annotations;
 
 namespace GitUI.Editor.Diff;
@@ -22,13 +21,4 @@ public interface ITextHighlightService
     /// <param name="indexInText">The index in the viewer text.</param>
     /// <returns><see langword="true"/> if the line is a searchmatch; otherwise <see langword="false"/>.</returns>
     bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText);
-
-    /// <summary>
-    /// Set info in line number control for e.g. Patch/Diff views
-    /// where the line number is non sequential.
-    /// Other views (like normal text) do not use this control.
-    /// </summary>
-    /// <param name="lineNumbersControl">The line number control</param>
-    /// <param name="textEditor">The textEditor contol with text to adjust for.</param>
-    void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor);
 }

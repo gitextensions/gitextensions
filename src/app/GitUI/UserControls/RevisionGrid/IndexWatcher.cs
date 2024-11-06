@@ -89,8 +89,15 @@ namespace GitUI.UserControls.RevisionGrid
             set
             {
                 _indexChanged = value;
-                GitIndexWatcher.EnableRaisingEvents = !IndexChanged
-                    && Directory.Exists(GitIndexWatcher.Path);
+                try
+                {
+                    GitIndexWatcher.EnableRaisingEvents = !IndexChanged
+                        && Directory.Exists(GitIndexWatcher.Path);
+                }
+                catch
+                {
+                    GitIndexWatcher.EnableRaisingEvents = false;
+                }
 
                 Changed?.Invoke(this, new IndexChangedEventArgs(IndexChanged));
             }

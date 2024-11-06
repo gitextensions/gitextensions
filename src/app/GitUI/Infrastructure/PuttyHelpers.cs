@@ -85,7 +85,7 @@ namespace GitUI.Infrastructure
 
             ThrowIfFileNotFound(sshKeyFile, $"'{sshKeyFile}'", TranslatedStrings.ErrorSshKeyNotFound);
 
-            return pageantExecutable.RunCommand(sshKeyFile.Quote());
+            return pageantExecutable.RunCommand(sshKeyFile.Quote(), throwOnErrorExit: false);
 
             static bool IsPageantRunning()
             {

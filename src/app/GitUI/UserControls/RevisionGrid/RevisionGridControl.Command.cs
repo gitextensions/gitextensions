@@ -19,6 +19,8 @@
             ShowRemoteBranches = 12,
             ShowFirstParent = 13,
             GoToParent = 14,
+            GoToFirstParent = 45,
+            GoToLastParent = 46,
             GoToChild = 15,
             ToggleHighlightSelectedBranch = 16,
             NextQuickSearch = 17,

@@ -4,6 +4,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using FluentAssertions.Specialized;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.NBugReports;

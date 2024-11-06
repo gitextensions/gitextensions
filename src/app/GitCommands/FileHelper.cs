@@ -63,7 +63,7 @@ namespace GitCommands
         /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
         private static bool? IsBinaryAccordingToGitAttributes(IGitModule module, string fileName)
         {
-            string[] diffValues = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "fortran", "html", "java", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "tex" };
+            string[] diffValues = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "css", "dts", "elixir", "fortran", "html", "java", "kotlin", "markdown", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "rust", "scheme", "tex" };
             GitArgumentBuilder cmd = new("check-attr")
             {
                 "-z",

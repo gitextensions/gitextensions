@@ -12,7 +12,7 @@ namespace GitUI.UserControls
     internal partial class FilterToolBar : ToolStripEx
     {
         internal const string ReflogButtonName = nameof(tsbShowReflog);
-        private static readonly string[] _noResultsFound = { TranslatedStrings.NoResultsFound };
+        private static readonly string[] _noResultsFound = [TranslatedStrings.NoResultsFound];
         private Func<IGitModule>? _getModule;
         private IRevisionGridFilter? _revisionGridFilter;
         private bool _isApplyingFilter;
@@ -34,7 +34,7 @@ namespace GitUI.UserControls
                     @"--exclude=refs/remotes/EXCLUDE_REMOTE_REGEX_PATTERN"
                     ])
                 .ToArray());
-            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth();
         }
 
         private IRevisionGridFilter RevisionGridFilter
@@ -81,8 +81,8 @@ namespace GitUI.UserControls
                 // Ignore quoting, Git revisions do not allow spaces.
                 foreach (string branch in filter.Split((char[])null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 {
-                    bool wildcardBranchFilter = branch.IndexOfAny(new[] { '?', '*', '[' }) >= 0;
-                    if (branch.StartsWith("--") || refs.Any(r => r.LocalName == branch))
+                    bool wildcardBranchFilter = branch.IndexOfAny(['?', '*', '[']) >= 0;
+                    if (branch.StartsWith("--") || refs.Any(r => r.LocalName == branch) || branch.Contains(".."))
                     {
                         // Added as git-log option or revision filter
                     }
@@ -92,7 +92,8 @@ namespace GitUI.UserControls
                     }
                     else
                     {
-                        ObjectId oid = GetModule().RevParse(branch);
+                        string gitref = branch.StartsWith('^') ? branch[1..] : branch;
+                        ObjectId oid = GetModule().RevParse(gitref);
                         if (oid is null)
                         {
                             TaskDialogPage page = new()
@@ -334,10 +335,14 @@ namespace GitUI.UserControls
                 }
 
                 int index = tscboBranchFilter.SelectionStart;
+                tscboBranchFilter.BeginUpdate();
                 tscboBranchFilter.Items.Clear();
                 tscboBranchFilter.Items.AddRange(matches);
+                tscboBranchFilter.ComboBox.ResizeDropDownWidth();
+                tscboBranchFilter.ComboBox.DroppedDown = true;
+                tscboBranchFilter.Text = filter;
                 tscboBranchFilter.SelectionStart = index;
-                tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+                tscboBranchFilter.EndUpdate();
             }
         }
 

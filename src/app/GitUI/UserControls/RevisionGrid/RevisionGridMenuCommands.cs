@@ -78,6 +78,8 @@ namespace GitUI.UserControls.RevisionGrid
                     C   Go to commit...
                     F   Navigate forward
                     H   Go to child commit
+                    I   Go to first parent commit
+                    L   Go to last parent commit
                     N   Quick search next
                     P   Go to parent commit
                     Q   Quick search
@@ -131,9 +133,26 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
+                    Name = "GotoFirstParentCommit",
+                    Text = "Go to f&irst parent commit",
+                    Image = Images.GoToFirstParentCommit,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.GoToFirstParent),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToFirstParent)
+                },
+                new MenuCommand
+                {
+                    Name = "GotoLastParentCommit",
+                    Text = "Go to &last parent commit",
+                    Image = Images.GoToLastParentCommit,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.GoToLastParent),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToLastParent)
+                },
+                new MenuCommand
+                {
                     Name = "GotoMergeBaseCommit",
                     Text = "Go to common &ancestor (merge base)",
                     ToolTipText = "Selects the common ancestor commit (merge base), which is the most recent shared ancestor of the selected commits (or if only one commit is selected, between it and the checked out commit (HEAD))",
+                    Image = Images.GoToMergeBaseCommit,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.GoToMergeBase),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToMergeBase)
                 },

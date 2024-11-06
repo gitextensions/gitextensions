@@ -2,7 +2,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
-using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
@@ -13,6 +12,18 @@ public partial class AnsiEscapeUtilities
 {
     [GeneratedRegex(@"\u001b\[((?<escNo>\d+)\s*[:;]?\s*)*m", RegexOptions.ExplicitCapture)]
     private static partial Regex EscapeRegex();
+    private static readonly List<bool> _fores = [true, false];
+    private static readonly List<bool> _bolds = [false, true];
+
+    // Color code definitions
+    private const int _blackId = 0;
+    private const int _redId = 1;
+    private const int _greenId = 2;
+    private const int _yellowId = 3;
+    private const int _blueId = 4;
+    private const int _magentaId = 5;
+    private const int _cyanId = 6;
+    private const int _whiteId = 7;
 
     private const int _boldOffset = 8;
 
@@ -25,33 +36,25 @@ public partial class AnsiEscapeUtilities
         sb.Append('\n');
 
         // color id (standard) colors
-        foreach (bool fore in new List<bool>() { true, false })
+        foreach (bool fore in _fores)
         {
-            foreach (int offset in new List<int>() { 0, _boldOffset })
+            foreach (bool bold in _bolds)
             {
                 foreach (int dim in new List<int>() { 0, 2 })
                 {
-                    if (dim == 0)
-                    {
-                        sb.Append($"{offset:d1} ");
-                    }
-                    else
-                    {
-                        sb.Append($"{" ",2}");
-                    }
-
-                    for (int i = 0; i < 8; i++)
+                    for (int i = _blackId; i <= _whiteId; i++)
                     {
                         sb.Append("@!");
-                        int colorId = i + offset;
-                        TryGetColorsFromEscapeSequence(new List<int>() { 0, dim, 38 + (fore ? 0 : 10), 5, colorId }, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors: false);
+                        TryGetColorsFromEscapeSequence(new List<int>() { 0, dim, i + 30 + (fore ? 0 : 10) + (bold ? 60 : 0) }, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors: false);
                         if (TryGetTextMarker(new()
-                        {
-                            DocOffset = sb.Length - 2,
-                            Length = 2,
-                            BackColor = backColor,
-                            ForeColor = foreColor
-                        },
+                                {
+                                    DocOffset = sb.Length - 2,
+                                    Length = 2,
+                                    BackColor = backColor,
+                                    ForeColor = foreColor
+                                },
+                                prevMarker: null,
+                                sb,
                                 out TextMarker tm))
                         {
                             textMarkers.Add(tm);
@@ -81,8 +84,8 @@ public partial class AnsiEscapeUtilities
         {
             DocOffset = sb.Length,
             Length = -1,
-            BackColor = Color.White,
-            ForeColor = Color.Black
+            BackColor = SystemColors.Window,
+            ForeColor = SystemColors.WindowText,
         };
 
         for (Match match = EscapeRegex().Match(text); match.Success; match = match.NextMatch())
@@ -100,13 +103,8 @@ public partial class AnsiEscapeUtilities
                     // End current match so new can be started, this is expected but normally not used by Git (?).
                     // Also assume that the new colors are "complete", not just overlay.
                     ++errorCount;
-                    Trace.WriteLineIf(traceErrors && errorCount <= 3, $"New start marker without end for grep ({sb.Length}, {match.Index}){(errorCount == 1 ? " in:\n" + text : "")}");
-
-                    currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
-                    if (TryGetTextMarker(currentHighlight, out TextMarker tm))
-                    {
-                        textMarkers.Add(tm);
-                    }
+                    Trace.WriteLineIf(traceErrors && errorCount <= 3, $"New start marker without explicit end ({sb.Length}, {match.Index}){(errorCount == 1 ? " in:\n" + text : "")}");
+                    EndCurrentHighlight();
                 }
 
                 // Start of new segment
@@ -130,9 +128,10 @@ public partial class AnsiEscapeUtilities
         {
             // Reset escape sequence, end of segment
 
-            if (currentHighlight.Length < 0)
+            if (currentHighlight.Length < 0 || sb.Length == currentHighlight.DocOffset)
             {
                 // Previous was a reset, just ignore.
+                currentHighlight.Length = -1;
                 return;
             }
 
@@ -144,8 +143,18 @@ public partial class AnsiEscapeUtilities
                 return;
             }
 
-            currentHighlight.Length = sb.Length - currentHighlight.DocOffset;
-            if (TryGetTextMarker(currentHighlight, out TextMarker tm))
+            int len = sb.Length - currentHighlight.DocOffset;
+            if (len == 1 && sb[^1] == '\r')
+            {
+                // Marker without any visible effect, likely diff.colorMovedWS
+                currentHighlight.Length = -1;
+                ++currentHighlight.DocOffset;
+                return;
+            }
+
+            currentHighlight.Length = len;
+            TextMarker? prevMarker = textMarkers.Count == 0 ? null : textMarkers[^1];
+            if (TryGetTextMarker(currentHighlight, prevMarker, sb, out TextMarker tm))
             {
                 textMarkers.Add(tm);
             }
@@ -162,20 +171,27 @@ public partial class AnsiEscapeUtilities
     /// <param name="backColor">Background color if set.</param>
     /// <param name="foreColor">Foreground color if set.</param>
     /// <param name="currentColorId">The fore color ANSI id (not argb color) if it was set. Can be used in follow-up sequences.</param>
-    /// <returns><see langword="true"/> if a color was set; otherwise <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if a color was set; if just reset <see langword="false"/>.</returns>
     private static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId, bool themeColors)
     {
         bool result = false;
         backColor = null;
         foreColor = null;
+        int currentFore = -1;
+        int currentBack = -1;
 
         // A subset of attributes supported, most are ignored, other handled as bold/dim
         bool reverse = false; // swap fore/back
-        bool fore = true; // fore color is first in list
+        bool bold = false;
+        bool dim = false;
+        bool isChange = false; // Handle only bold/dim changes to current colors
 
-        (int id, bool bold, bool dim) initCurrent = (-1, false, false);
-        (int id, bool bold, bool dim) currentFore = initCurrent;
-        (int id, bool bold, bool dim) currentBack = initCurrent;
+        if (escapeCodes.Count == 0)
+        {
+            // Empty sequence is the same as reset to normal
+            escapeCodes = [0];
+        }
+
         for (int i = 0; i < escapeCodes.Count; ++i)
         {
             switch (escapeCodes[i])
@@ -185,72 +201,52 @@ public partial class AnsiEscapeUtilities
                     reverse = false;
                     backColor = null;
                     foreColor = null;
-                    currentColorId = 0; // default black
-                    currentFore = initCurrent;
-                    currentBack = initCurrent;
+                    currentColorId = _blackId;
+                    currentFore = -1;
+                    currentBack = -1;
+                    bold = false;
+                    dim = false;
                     break;
                 case 1: // bold
                 case 4: // underline/ul
                 case 5: // slow blink
                 case 6: // fast blink
                 case 9: // strike
-                    if (fore)
-                    {
-                        currentFore.bold = true;
-                        if (currentFore.id < 0 && foreColor is null)
-                        {
-                            // Something is set for foreground, use default color
-                            currentFore.id = currentColorId;
-                        }
-                    }
-                    else
-                    {
-                        currentBack.bold = true;
-                    }
-
+                    bold = true;
+                    isChange = true;
                     break;
                 case 2: // dim
                 case 3: // italic
                 case 8: // conceal
-                    if (fore)
-                    {
-                        currentFore.dim = true;
-                        if (currentFore.id < 0)
-                        {
-                            // Something is set for foreground, use default color
-                            currentFore.id = currentColorId;
-                        }
-                    }
-                    else
-                    {
-                        currentBack.dim = true;
-                    }
-
+                    dim = true;
+                    isChange = true;
                     break;
                 case 7: // reverse
                     reverse = true;
                     break;
+                case 22: // normal color, intensity
+                    bold = false;
+                    dim = false;
+                    break;
                 case 39: // Default foreground color
                     foreColor = null;
-                    currentFore.id = currentColorId = 0;
+                    currentFore = currentColorId = _blackId;
                     break;
                 case 49: // Default background color
                     backColor = null;
-                    currentBack.id = 7; // White theme
+                    currentBack = _whiteId;
                     break;
                 case >= 30 and <= 37: // Set foreground color
+                    currentFore = escapeCodes[i] - 30;
+                    break;
                 case >= 90 and <= 97: // Set bold foreground color
-                    fore = true;
-                    currentFore.bold = currentFore.bold || escapeCodes[i] >= 90;
-                    currentColorId = escapeCodes[i] - (escapeCodes[i] >= 90 ? 90 : 30);
-                    currentFore.id = currentColorId;
-
+                    currentFore = escapeCodes[i] - 90 + _boldOffset;
                     break;
                 case >= 40 and <= 47: // Set background color
+                    currentBack = escapeCodes[i] - 40;
+                    break;
                 case >= 100 and <= 107: // Set bold background color
-                    fore = false;
-                    currentBack.bold = currentBack.bold || escapeCodes[i] >= 100;
-                    currentBack.id = escapeCodes[i] - (escapeCodes[i] >= 100 ? 100 : 40);
+                    currentBack = escapeCodes[i] - 100 + _boldOffset;
                     break;
                 case 38: // Set foreground color with sequence
                 case 48: // Set background color with sequence
@@ -262,24 +258,22 @@ public partial class AnsiEscapeUtilities
                     }
 
                     Color color;
-                    fore = escapeCodes[i] == 38;
+                    bool fore = escapeCodes[i] == 38;
                     ++i;
 
                     if (escapeCodes[i] == 5)
                     {
                         // ESC[38:5:⟨n⟩m Select foreground color
                         ++i;
-                        bool bold = escapeCodes[i] is >= _boldOffset and < 2 * _boldOffset;
-                        int id = escapeCodes[i] - (bold ? _boldOffset : 0);
+                        int id = escapeCodes[i];
+                        currentColorId = _blackId;
                         if (fore)
                         {
-                            currentFore.bold = bold;
-                            currentFore.id = id;
+                            currentFore = id;
                         }
                         else
                         {
-                            currentBack.bold = bold;
-                            currentBack.id = id;
+                            currentBack = id;
                         }
                     }
                     else if (escapeCodes[i] == 2)
@@ -297,17 +291,17 @@ public partial class AnsiEscapeUtilities
 
                         // Unknown fixed identifier, reset id
                         // Reset also for background to avoid CS0165
-                        currentColorId = 0;
+                        currentColorId = _blackId;
 
                         // Set the color, override if set later
                         if (fore)
                         {
-                            currentFore.id = -1;
+                            currentFore = -1;
                             foreColor = color;
                         }
                         else
                         {
-                            currentBack.id = -1;
+                            currentBack = -1;
                             backColor = color;
                         }
                     }
@@ -324,13 +318,21 @@ public partial class AnsiEscapeUtilities
             }
         }
 
-        if (themeColors && !reverse
-            && (currentBack.id < 0 || backColor is null)
+        if (themeColors && !reverse && !dim
+            && (currentBack < 0 || backColor is null)
             && foreColor is null
-            && currentFore.id is 1 or 2 && !currentFore.dim)
+            && currentFore is 1 or 2)
         {
             // Assume this is a fit for the theme colors with reverse color (e.g. difftastic)
-            reverse = true;
+            // Change bold -> normal, normal -> dim to match GE theme better
+            // difftastic 'normal' is not only unchanged why GE unchanged dim-dim is not used
+            backColor = Get8bitColor(currentFore, fore: false, bold: false, dim: !bold);
+            currentFore = -1;
+        }
+
+        if (isChange && (foreColor is null && backColor is null && currentFore < 0 && currentBack < 0))
+        {
+            currentFore = currentColorId;
         }
 
         if (reverse)
@@ -339,14 +341,20 @@ public partial class AnsiEscapeUtilities
             (currentBack, currentFore) = (currentFore, currentBack);
         }
 
-        if (currentFore.id >= 0)
+        if (currentFore >= 0)
         {
-            foreColor = Get8bitColor(currentFore.id + (currentFore.bold ? _boldOffset : 0), fore: true, currentFore.dim, out currentColorId);
+            if (currentFore <= _whiteId + _boldOffset)
+            {
+                // Mask bold, last three bits
+                currentColorId = currentFore & (_boldOffset - 1);
+            }
+
+            foreColor = Get8bitColor(currentFore, fore: true, bold, dim);
         }
 
-        if (currentBack.id >= 0)
+        if (currentBack >= 0)
         {
-            backColor = Get8bitColor(currentBack.id + (currentBack.bold ? _boldOffset : 0), fore: false, currentBack.dim, out _);
+            backColor = Get8bitColor(currentBack, fore: false, bold, dim);
         }
 
         if (backColor is not null && foreColor is null)
@@ -371,88 +379,70 @@ public partial class AnsiEscapeUtilities
     /// https://github.com/mintty/mintty/blob/master/themes/helmholtz
     /// </summary>
     /// <param name="colorCode">The color code to decode.</param>
-    /// <param name="colorId">ANSI color id if known, otherwise default black.</param>
     /// <returns>The 24-bit RGB color.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Unexpected value.</exception>
-    private static Color Get8bitColor(int colorCode, bool fore, bool dim, out int colorId)
+    private static Color Get8bitColor(int colorCode, bool fore, bool bold, bool dim)
     {
-        // Color code definitions
-        const int blackId = 0;
-        const int redId = 1;
-        const int greenId = 2;
-        const int yellowId = 3;
-        const int blueId = 4;
-        const int magentaId = 5;
-        const int cyanId = 6;
-        const int whiteId = 7;
-
-        if (colorCode is >= blackId and <= whiteId
-            or >= blackId + _boldOffset and <= whiteId + _boldOffset)
+        if (bold && colorCode is >= _blackId and <= _whiteId)
         {
-            // Mask bold, last three bits
-            colorId = colorCode & 7;
-        }
-        else
-        {
-            // Reset to default (black)
-            colorId = 0;
+            colorCode += _boldOffset;
         }
 
         Color color = colorCode switch
         {
-            blackId => fore
+            _blackId => fore
                 ? AppColor.AnsiTerminalBlackForeNormal.GetThemeColor()
                 : AppColor.AnsiTerminalBlackBackNormal.GetThemeColor(),
-            blackId + _boldOffset => fore
+            _blackId + _boldOffset => fore
                 ? AppColor.AnsiTerminalBlackForeBold.GetThemeColor()
                 : AppColor.AnsiTerminalBlackBackBold.GetThemeColor(),
 
-            redId => fore
+            _redId => fore
                 ? AppColor.AnsiTerminalRedForeNormal.GetThemeColor()
                 : AppColor.AnsiTerminalRedBackNormal.GetThemeColor(),
-            redId + _boldOffset => fore
+            _redId + _boldOffset => fore
                 ? AppColor.AnsiTerminalRedForeBold.GetThemeColor()
                 : AppColor.AnsiTerminalRedBackBold.GetThemeColor(),
 
-            greenId => fore
+            _greenId => fore
                 ? AppColor.AnsiTerminalGreenForeNormal.GetThemeColor()
                 : AppColor.AnsiTerminalGreenBackNormal.GetThemeColor(),
-            greenId + _boldOffset => fore
+            _greenId + _boldOffset => fore
                 ? AppColor.AnsiTerminalGreenForeBold.GetThemeColor()
                 : AppColor.AnsiTerminalGreenBackBold.GetThemeColor(),
 
-            yellowId => fore
+            _yellowId => fore
                 ? AppColor.AnsiTerminalYellowForeNormal.GetThemeColor()
                 : AppColor.AnsiTerminalYellowBackNormal.GetThemeColor(),
-            yellowId + _boldOffset => fore
+            _yellowId + _boldOffset => fore
                 ? AppColor.AnsiTerminalYellowForeBold.GetThemeColor()
                 : AppColor.AnsiTerminalYellowBackBold.GetThemeColor(),
 
-            blueId => fore
+            _blueId => fore
                 ? AppColor.AnsiTerminalBlueForeNormal.GetThemeColor()
                 : AppColor.AnsiTerminalBlueBackNormal.GetThemeColor(),
-            blueId + _boldOffset => fore
+            _blueId + _boldOffset => fore
                 ? AppColor.AnsiTerminalBlueForeBold.GetThemeColor()
                 : AppColor.AnsiTerminalBlueBackBold.GetThemeColor(),
 
-            magentaId => fore
+            _magentaId => fore
                 ? AppColor.AnsiTerminalMagentaForeNormal.GetThemeColor()
                 : AppColor.AnsiTerminalMagentaBackNormal.GetThemeColor(),
-            magentaId + _boldOffset => fore
+            _magentaId + _boldOffset => fore
                 ? AppColor.AnsiTerminalMagentaForeBold.GetThemeColor()
                 : AppColor.AnsiTerminalMagentaBackBold.GetThemeColor(),
 
-            cyanId => fore
+            _cyanId => fore
                 ? AppColor.AnsiTerminalCyanForeNormal.GetThemeColor()
                 : AppColor.AnsiTerminalCyanBackNormal.GetThemeColor(),
-            cyanId + _boldOffset => fore
+            _cyanId + _boldOffset => fore
                 ? AppColor.AnsiTerminalCyanForeBold.GetThemeColor()
                 : AppColor.AnsiTerminalCyanBackBold.GetThemeColor(),
 
-            whiteId => fore
+            _whiteId => fore
                 ? AppColor.AnsiTerminalWhiteForeNormal.GetThemeColor()
                 : AppColor.AnsiTerminalWhiteBackNormal.GetThemeColor(),
-            whiteId + _boldOffset => fore
+            _whiteId + _boldOffset => fore
                 ? AppColor.AnsiTerminalWhiteForeBold.GetThemeColor()
                 : AppColor.AnsiTerminalWhiteBackBold.GetThemeColor(),
 
@@ -463,7 +453,7 @@ public partial class AnsiEscapeUtilities
 
         if (dim)
         {
-            color = DimColor(color);
+            color = ColorHelper.DimColor(color);
         }
 
         return color;
@@ -490,20 +480,15 @@ public partial class AnsiEscapeUtilities
         }
     }
 
-    private static Color DimColor(Color color)
-    {
-        // Blend the color with the background, halve each value first
-        // Note: With themes, defaultBackground must be dynamic
-        const uint defaultBackground = 0xff_ffff;
-        int dimCode = (int)(((color.ToArgb() & 0xFEFEFEFE) >> 1) + ((defaultBackground & 0xFEFEFEFE) >> 1));
-        return Color.FromArgb((dimCode >> 16) & 0xff, (dimCode >> 8) & 0xff, dimCode & 0xff);
-    }
-
     /// <summary>
     /// Add pre-parsed highlight info (parsed ANSI escape sequences) as markers in the document.
     /// </summary>
     /// <param name="hl">Info to set.</param>
-    public static bool TryGetTextMarker(HighlightInfo hl, out TextMarker? textMarker)
+    /// <param name="prevMarker">Previous marker to potentially merge with.</param>
+    /// <param name="sb">Text in the document.</param>
+    /// <param name="textMarker">The created text marker or null</param>
+    /// <returns><see langword="true"/> if a marker was created, otherwise <see langword="false"/>.</returns>
+    public static bool TryGetTextMarker(HighlightInfo hl, TextMarker? prevMarker, StringBuilder sb, out TextMarker? textMarker)
     {
         if (hl.DocOffset < 0 || hl.Length < 0)
         {
@@ -513,11 +498,41 @@ public partial class AnsiEscapeUtilities
             return false;
         }
 
-        if (hl.BackColor is null)
+        // BackColor must always be set
+        hl.BackColor ??= SystemColors.Window;
+
+        // Check if segment can be merged with the previous
+        if (prevMarker is not null
+            && prevMarker.Color == hl.BackColor
+            && prevMarker.ForeColor == hl.ForeColor)
         {
-            // BackColor must always be set
-            // TODO get default back color, guess if the user has not set the value
-            hl.BackColor = Color.White; // document.LineSegmentCollection.FirstOrDefault().GetColorForPosition(0).BackgroundColor;
+            int gapLen = hl.DocOffset - prevMarker.EndOffset - 1;
+            if (gapLen == 0)
+            {
+                // zero gap, Git often have consecutive sections (like '+' in separate)
+            }
+            else if (gapLen == 1
+                && sb[hl.DocOffset - 1] is ('\n' or '\r'))
+            {
+                // Only \n, gap is a newline, not colored in the viewer
+            }
+            else if (gapLen == 2
+                && sb[hl.DocOffset - 2] == '\r'
+                && sb[hl.DocOffset - 1] == '\n')
+            {
+                // Only \r\n
+            }
+            else
+            {
+                gapLen = -1;
+            }
+
+            if (gapLen >= 0)
+            {
+                prevMarker.Length += gapLen + hl.Length;
+                textMarker = null;
+                return false;
+            }
         }
 
         textMarker = hl.ForeColor is null
@@ -531,8 +546,8 @@ public partial class AnsiEscapeUtilities
         public static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId)
             => AnsiEscapeUtilities.TryGetColorsFromEscapeSequence(escapeCodes, out backColor, out foreColor, ref currentColorId, themeColors: false);
 
-        public static Color Get8bitColor(int colorCode, bool fore, bool dim, out int colorId)
-            => AnsiEscapeUtilities.Get8bitColor(colorCode, fore, dim, out colorId);
+        public static Color Get8bitColor(int colorCode, bool fore, bool bold, bool dim)
+            => AnsiEscapeUtilities.Get8bitColor(colorCode, fore, bold, dim);
 
         public static int GetBoldOffset() => _boldOffset;
     }

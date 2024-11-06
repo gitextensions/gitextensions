@@ -220,7 +220,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.DataSource = new[] { new ConfigFileRemote { Name = AllRemotes } }.Union(remotes).ToList();
             _NO_TRANSLATE_Remotes.DisplayMember = nameof(ConfigFileRemote.Name);
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
-            _NO_TRANSLATE_Remotes.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            _NO_TRANSLATE_Remotes.ResizeDropDownWidth();
 
             if (string.IsNullOrEmpty(selectedRemoteName))
             {
@@ -348,7 +348,7 @@ namespace GitUI.CommandsDialogs
                 _heads.Insert(0, GitRef.NoHead(Module));
                 Branches.DataSource = _heads;
 
-                Branches.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+                Branches.ResizeDropDownWidth();
             }
         }
 

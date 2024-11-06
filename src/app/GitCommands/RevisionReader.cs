@@ -170,9 +170,13 @@ namespace GitCommands
 
             // output can be cached if Git Notes is not included and hash is valid
             bool canCache = !hasNotes && !string.IsNullOrWhiteSpace(commitHash);
-            if (canCache && GitModule.GitCommandCache.TryGet(arguments.ToString(), out byte[]? commandOutput, out _) is true)
+            ReadOnlyMemory<byte> commandBytes;
+            if (canCache && GitModule.GitCommandCache.TryGet(arguments.ToString(), out string? commandOutput, out _) is true)
             {
-                // OK
+                commandBytes = new ReadOnlyMemory<byte>(Convert.FromBase64String(commandOutput));
+
+                // Already cached, reading adds it first to the MRU cache
+                canCache = false;
             }
             else
             {
@@ -180,20 +184,21 @@ namespace GitCommands
                 Debug.WriteLine($"git {arguments}");
 #endif
                 using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: null);
-                commandOutput = process.StandardOutput.BaseStream.SplitLogOutput().SingleOrDefault().ToArray();
                 string errorOutput = process.StandardError.ReadToEnd();
                 if (!string.IsNullOrWhiteSpace(errorOutput) && throwOnError)
                 {
                     throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(), innerException: new Exception(errorOutput));
                 }
+
+                commandBytes = new ReadOnlyMemory<byte>(process.StandardOutput.BaseStream.SplitLogOutput().SingleOrDefault().ToArray());
             }
 
-            if (!TryParseRevision(commandOutput, out GitRevision? revision))
+            if (!TryParseRevision(commandBytes, out GitRevision? revision))
             {
                 if (throwOnError)
                 {
                     throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(),
-                        innerException: new Exception($"invalid revision{Environment.NewLine}{commandOutput}"));
+                        innerException: new Exception($"invalid revision{Environment.NewLine}{commandBytes}"));
                 }
 
                 return null;
@@ -201,7 +206,10 @@ namespace GitCommands
 
             if (canCache)
             {
-                GitModule.GitCommandCache.Add(arguments.ToString(), output: commandOutput, error: []);
+                // store the byte stream as a Base64 string to allow that it can be converted back.
+                // The output is not directly readable in the cache viewer.
+                commandOutput = Convert.ToBase64String(commandBytes.ToArray());
+                GitModule.GitCommandCache.Add(arguments.ToString(), output: commandOutput, error: "");
             }
 
             return revision;

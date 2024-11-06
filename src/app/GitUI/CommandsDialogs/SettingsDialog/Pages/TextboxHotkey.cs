@@ -1,5 +1,5 @@
-﻿using GitUI.Hotkey;
-using GitUIPluginInterfaces;
+﻿using GitExtUtils;
+using GitUI.Hotkey;
 using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

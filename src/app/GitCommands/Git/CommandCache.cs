@@ -32,7 +32,7 @@ namespace GitCommands
         /// </summary>
         public event EventHandler? Changed;
 
-        private readonly MruCache<string, (byte[] output, byte[] error)> _cache;
+        private readonly MruCache<string, (string output, string error)> _cache;
 
         /// <summary>
         /// Initialises a new instance of <see cref="CommandCache"/> with specified <paramref name="capacity"/>.
@@ -40,7 +40,7 @@ namespace GitCommands
         /// <param name="capacity">The maximum number of commands to cache.</param>
         public CommandCache(int capacity = 50)
         {
-            _cache = new MruCache<string, (byte[] output, byte[] error)>(capacity: capacity);
+            _cache = new MruCache<string, (string output, string error)>(capacity: capacity);
         }
 
         /// <summary>
@@ -61,14 +61,14 @@ namespace GitCommands
         /// <param name="output">Stored output bytes of the command, if found.</param>
         /// <param name="error">Stored error bytes of the command, if found.</param>
         /// <returns><c>true</c> if the command was found, otherwise <c>false</c>.</returns>
-        public bool TryGet(string? cmd, [NotNullWhen(returnValue: true)] out byte[]? output, [NotNullWhen(returnValue: true)] out byte[]? error)
+        public bool TryGet(string? cmd, [NotNullWhen(returnValue: true)] out string? output, [NotNullWhen(returnValue: true)] out string? error)
         {
             // Never cache empty commands
             if (!string.IsNullOrEmpty(cmd))
             {
                 lock (_cache)
                 {
-                    if (_cache.TryGetValue(cmd, out (byte[] output, byte[] error) item))
+                    if (_cache.TryGetValue(cmd, out (string output, string error) item))
                     {
                         (output, error) = item;
                         return true;
@@ -87,7 +87,7 @@ namespace GitCommands
         /// <param name="cmd">The command to add to the cache.</param>
         /// <param name="output">Output bytes of the command.</param>
         /// <param name="error">Error bytes of the command.</param>
-        public void Add(string? cmd, byte[] output, byte[] error)
+        public void Add(string? cmd, string output, string error)
         {
             // Never cache empty commands
             if (string.IsNullOrEmpty(cmd))

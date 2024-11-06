@@ -3,12 +3,12 @@ using ICSharpCode.TextEditor.Actions;
 
 namespace GitUI
 {
-	partial class FormSearchCommit
+    partial class FormFindInCommitFilesGitGrep
     {
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
         #region Windows Form Designer generated code
 
@@ -20,42 +20,44 @@ namespace GitUI
         {
             label1 = new Label();
             lblOptions = new Label();
-            txtSearchFor = new ComboBox();
+            cboFindInCommitFilesGitGrep = new ComboBox();
             txtOptions = new TextBox();
             chkMatchWholeWord = new CheckBox();
             chkMatchCase = new CheckBox();
             btnSearch = new Button();
             chkShowSearchBox = new CheckBox();
+            lblSearchCommitGitGrepWatermark = new Label();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
             SuspendLayout();
             // 
             // MainPanel
             // 
+            MainPanel.Controls.Add(lblSearchCommitGitGrepWatermark);
             MainPanel.Controls.Add(chkMatchCase);
             MainPanel.Controls.Add(chkMatchWholeWord);
             MainPanel.Controls.Add(txtOptions);
-            MainPanel.Controls.Add(txtSearchFor);
+            MainPanel.Controls.Add(cboFindInCommitFilesGitGrep);
             MainPanel.Controls.Add(lblOptions);
             MainPanel.Controls.Add(label1);
             MainPanel.Padding = new Padding(9);
-            MainPanel.Size = new Size(419, 103);
+            MainPanel.Size = new Size(425, 103);
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(btnSearch);
             ControlsPanel.Controls.Add(chkShowSearchBox);
             ControlsPanel.Location = new Point(0, 50);
-            ControlsPanel.Size = new Size(419, 41);
+            ControlsPanel.Size = new Size(425, 41);
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Location = new Point(12, 9);
             label1.Name = "label1";
-            label1.Size = new Size(45, 15);
+            label1.Size = new Size(62, 15);
             label1.TabIndex = 0;
-            label1.Text = "&Search:";
+            label1.Text = "Fi&nd what:";
             // 
             // lblOptions
             // 
@@ -66,20 +68,22 @@ namespace GitUI
             lblOptions.TabIndex = 2;
             lblOptions.Text = "&Options:";
             // 
-            // txtSearchFor
+            // cboFindInCommitFilesGitGrep
             // 
-            txtSearchFor.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtSearchFor.Location = new Point(90, 6);
-            txtSearchFor.Name = "txtSearchFor";
-            txtSearchFor.Size = new Size(317, 23);
-            txtSearchFor.TabIndex = 1;
+            cboFindInCommitFilesGitGrep.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cboFindInCommitFilesGitGrep.Location = new Point(90, 6);
+            cboFindInCommitFilesGitGrep.Name = "cboFindInCommitFilesGitGrep";
+            cboFindInCommitFilesGitGrep.Size = new Size(323, 23);
+            cboFindInCommitFilesGitGrep.TabIndex = 1;
+            cboFindInCommitFilesGitGrep.GotFocus += cboSearchCommitGitGrep_GotFocus;
+            cboFindInCommitFilesGitGrep.LostFocus += cboSearchCommitGitGrep_LostFocus;
             // 
             // txtOptions
             // 
             txtOptions.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtOptions.Location = new Point(90, 32);
             txtOptions.Name = "txtOptions";
-            txtOptions.Size = new Size(317, 23);
+            txtOptions.Size = new Size(323, 23);
             txtOptions.TabIndex = 2;
             txtOptions.TextChanged += txtOptions_TextChanged;
             // 
@@ -108,42 +112,57 @@ namespace GitUI
             // btnSearch
             // 
             btnSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnSearch.AutoSize = true;
             btnSearch.DialogResult = DialogResult.Cancel;
-            btnSearch.Location = new Point(306, 8);
+            btnSearch.Location = new Point(337, 8);
             btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(100, 25);
+            btnSearch.Size = new Size(75, 25);
             btnSearch.TabIndex = 7;
-            btnSearch.Text = "Search";
+            btnSearch.Text = "&Find";
             btnSearch.UseVisualStyleBackColor = true;
             btnSearch.Click += btnSearch_Click;
             // 
             // chkShowSearchBox
             // 
             chkShowSearchBox.AutoSize = true;
-            chkShowSearchBox.Location = new Point(12, 10);
+            chkShowSearchBox.Location = new Point(89, 8);
+            chkShowSearchBox.MinimumSize = new Size(0, 25);
             chkShowSearchBox.Name = "chkShowSearchBox";
-            chkShowSearchBox.Size = new Size(125, 19);
+            chkShowSearchBox.Size = new Size(242, 25);
             chkShowSearchBox.TabIndex = 6;
-            chkShowSearchBox.Text = "Show search &box";
+            chkShowSearchBox.Text = "&Show 'Find in commit files using git-grep'";
             chkShowSearchBox.UseVisualStyleBackColor = true;
             chkShowSearchBox.CheckedChanged += chkShowSearchBox_CheckedChanged;
             // 
-            // FormSearchCommit
+            // lblSearchCommitGitGrepWatermark
+            // 
+            lblSearchCommitGitGrepWatermark.AutoSize = true;
+            lblSearchCommitGitGrepWatermark.BackColor = SystemColors.Window;
+            lblSearchCommitGitGrepWatermark.ForeColor = SystemColors.GrayText;
+            lblSearchCommitGitGrepWatermark.Location = new Point(93, 8);
+            lblSearchCommitGitGrepWatermark.Name = "lblSearchCommitGitGrepWatermark";
+            lblSearchCommitGitGrepWatermark.Padding = new Padding(2);
+            lblSearchCommitGitGrepWatermark.Size = new Size(162, 19);
+            lblSearchCommitGitGrepWatermark.TabIndex = 3;
+            lblSearchCommitGitGrepWatermark.Text = "git-grep regular expression...";
+            lblSearchCommitGitGrepWatermark.Click += lblSearchCommitGitGrepWatermark_Click;
+            // 
+            // FormFindInCommitFilesGitGrep
             // 
             AcceptButton = btnSearch;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(419, 144);
+            ClientSize = new Size(425, 144);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             HelpButton = true;
             ManualSectionAnchorName = "diff";
             ManualSectionSubfolder = "browse_repository";
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "FormSearchCommit";
+            Name = "FormFindInCommitFilesGitGrep";
             StartPosition = FormStartPosition.Manual;
-            Text = "Search files in commit";
-            FormClosing += FormSearchCommit_FormClosing;
+            Text = "Find in commit files using git-grep";
+            FormClosing += FormFindInCommitFilesGitGrep_FormClosing;
             MainPanel.ResumeLayout(false);
             MainPanel.PerformLayout();
             ControlsPanel.ResumeLayout(false);
@@ -154,13 +173,14 @@ namespace GitUI
 
         #endregion
 
+        private Label lblSearchCommitGitGrepWatermark;
         private Label label1;
-		private Label lblOptions;
-		private ComboBox txtSearchFor;
-		private TextBox txtOptions;
-		private CheckBox chkMatchWholeWord;
-		private CheckBox chkMatchCase;
-		private Button btnSearch;
+        private Label lblOptions;
+        private ComboBox cboFindInCommitFilesGitGrep;
+        private TextBox txtOptions;
+        private CheckBox chkMatchWholeWord;
+        private CheckBox chkMatchCase;
+        private Button btnSearch;
         private CheckBox chkShowSearchBox;
     }
 }

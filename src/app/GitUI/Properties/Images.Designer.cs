@@ -1343,9 +1343,43 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap GoToFirstParentCommit {
+            get {
+                object obj = ResourceManager.GetObject("GoToFirstParentCommit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap GoToLastParentCommit
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("GoToLastParentCommit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap GotoManual {
             get {
                 object obj = ResourceManager.GetObject("GotoManual", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap GoToMergeBaseCommit
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("GoToMergeBaseCommit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

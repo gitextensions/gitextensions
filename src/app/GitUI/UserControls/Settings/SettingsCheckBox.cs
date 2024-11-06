@@ -53,6 +53,7 @@ namespace GitUI.UserControls.Settings
         /// The URL structure:
         /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
         /// </remarks>
+        [DefaultValue(null)]
         public string? ManualSectionSubfolder { get; set; }
 
         [EditorBrowsable(EditorBrowsableState.Always)]

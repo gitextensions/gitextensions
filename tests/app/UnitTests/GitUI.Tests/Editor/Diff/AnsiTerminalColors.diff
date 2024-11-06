@@ -1,0 +1,16 @@
+
+normal, normal dim, bold, bold dim
+For background, foreground choosen by GE
+Note: GE configures black foreground for bold yellow/blue/magenta/cyan
+tests/app/UnitTests/GitUI.Tests/Editor/Diff/AnsiTerminalColors.diff
+Can be generated from AnsiEscapeUtilities.cs PrintColors()
+
+ [0;30m@![m[31m@![m[32m@![m[33m@![m[34m@![m[35m@![m[36m@![m[37m@![m
+ [0;2;30m@![m[2;31m@![m[2;32m@![m[2;33m@![m[2;34m@![m[2;35m@![m[2;36m@![m[2;37m@![m
+ [0;90m@![m[91m@![m[92m@![m[93m@![m[94m@![m[95m@![m[96m@![m[97m@![m
+ [0;2;90m@![m[2;91m@![m[2;92m@![m[2;93m@![m[2;94m@![m[2;95m@![m[2;96m@![m[2;97m@![m
+
+ [0;40m@![m[41m@![m[42m@![m[43m@![m[44m@![m[45m@![m[46m@![m[47m@![m
+ [0;2;40m@![m[2;41m@![m[2;42m@![m[2;43m@![m[2;44m@![m[2;45m@![m[2;46m@![m[2;47m@![m
+ [0;100m@![m[101m@![m[102m@![m[103m@![m[104m@![m[105m@![m[106m@![m[107m@![m
+ [0;2;100m@![m[2;101m@![m[2;102m@![m[2;103m@![m[2;104m@![m[2;105m@![m[2;106m@![m[2;107m@![m

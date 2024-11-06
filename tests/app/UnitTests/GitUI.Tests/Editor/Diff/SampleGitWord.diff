@@ -1,37 +1,37 @@
-[1mdiff --git a/GitUI/Editor/Diff/PatchHighlightService.cs b/GitUI/Editor/Diff/PatchHighlightService.cs[m
-[1mindex 6e386..cad79 100644[m
-[1m--- a/GitUI/Editor/Diff/PatchHighlightService.cs[m
-[1m+++ b/GitUI/Editor/Diff/PatchHighlightService.cs[m
-[36m@@ -1,4 +1,5 @@[m
-﻿using [38;2;0;0;0;48;2;200;255;200mGitCommands;[m
-[38;2;0;0;0;48;2;200;255;200musing[m GitExtUtils;
-using GitExtUtils.GitUI.Theming;[m
-using GitUI.Theming;[m
-using GitUIPluginInterfaces;[m
-[36m@@ -16,7 +17,6 @@[m [mpublic class PatchHighlightService : DiffHighlightService[m
-    private const string _addedLinePrefix = "+";[m
-    private const string _removedLinePrefix = "-";[m
-    private static readonly string[] _diffFullPrefixes = [" ", _addedLinePrefix, _removedLinePrefix];[m
-[38;2;0;0;0;48;2;255;200;200m    private static readonly string[] _diffSearchPrefixes = [_addedLinePrefix, _removedLinePrefix];[m
+[1mdiff --git a/src/app/GitUI/Editor/Diff/GrepHighlightService.cs b/src/app/GitUI/Editor/Diff/GrepHighlightService.cs[m
+[1mindex 5a619..bdfe1 100644[m
+[1m--- a/src/app/GitUI/Editor/Diff/GrepHighlightService.cs[m
+[1m+++ b/src/app/GitUI/Editor/Diff/GrepHighlightService.cs[m
+[36m@@ -5,8 +5,6 @@[m
+using GitExtensions.Extensibility;[m
+using GitExtensions.Extensibility.Git;[m
+using GitExtUtils;[m
+[7;31musing GitExtUtils.GitUI.Theming;[m
+[7;31musing ICSharpCode.TextEditor;[m
+using ICSharpCode.TextEditor.Document;[m
 
-    public PatchHighlightService(ref string text, bool useGitColoring)[m
-        : base(ref text, useGitColoring)[m
-[36m@@ -25,9 +25,9 @@[m [mpublic PatchHighlightService(ref string text, bool useGitColoring)[m
+namespace GitUI.Editor.Diff;[m
+[36m@@ -14,20 +12,20 @@[m [mnamespace GitUI.Editor.Diff;[m
+public partial class GrepHighlightService : TextHighlightService[m
+{[m
+    private readonly List<TextMarker> _textMarkers = [];[m
+    private DiffLinesInfo [7;31m_matchInfos[m[7;32m_diffLinesInfo[m = new();
 
-    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)[m
-    {[m
-        [38;2;0;0;0;48;2;255;200;200m// Note: This is the fourth time the text is parsed...[m[38;2;0;0;0;48;2;200;255;200mbool isGitWordDiff = _useGitColoring && AppSettings.ShowGitWordColoring.Value;[m
-        DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(textEditor[38;2;0;0;0;48;2;255;200;200m.Text[m, isCombinedDiff: false[38;2;0;0;0;48;2;200;255;200m, isGitWordDiff[m);
-        lineNumbersControl.DisplayLineNum(result, showLeftColumn: [38;2;0;0;0;48;2;255;200;200mtrue[m[38;2;0;0;0;48;2;200;255;200m!isGitWordDiff[m);
-    }[m
+    [GeneratedRegex(@"^(?<line>\d+)(?<kind>:|.)(?<text>.*)$", RegexOptions.ExplicitCapture)][m
+    private static partial Regex GrepLineRegex();[m
 
-    public static GitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring)[m
-[36m@@ -35,8 +35,6 @@[m [mpublic static GitCommandConfiguration GetGitCommandConfiguration(IGitModule modu[m
+    public GrepHighlightService(ref string text[7;32m, DiffViewerLineNumberControl lineNumbersControl[m)
+    [7;31m=>[m[7;32m{[m
+        SetText(ref text);
+        [7;32mlineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: false);[m
+[7;32m    }[m
 
-    public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;[m
+    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)[m
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is (DiffLineType.Minus or DiffLineType.Plus or DiffLineType.MinusPlus or DiffLineType.Grep);[m
 
-[38;2;0;0;0;48;2;255;200;200m    public override bool IsSearchMatch(string line) => line.StartsWithAny(_diffSearchPrefixes);[m
+[7;31m    public override void SetLineControl(DiffViewerLineNumberControl lineNumbersControl, TextEditorControl textEditor)[m
+[7;31m        => lineNumbersControl.DisplayLineNum(_matchInfos, showLeftColumn: false);[m
 
-    protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)[m
-        => LinePrefixHelper.GetLinesStartingWith(document, ref line, _addedLinePrefix, ref found);[m
-
+    /// <summary>[m
+    /// Get the next/previous line for the grep match.[m
+    /// </summary>[m

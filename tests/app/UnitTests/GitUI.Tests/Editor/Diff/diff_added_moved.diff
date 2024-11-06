@@ -1,0 +1,31 @@
+[1mdiff --git a/tests/app/UnitTests/GitUI.Tests/Editor/Diff/diff_added_moved.diff b/tests/app/UnitTests/GitUI.Tests/Editor/Diff/diff_added_moved.diff[m
+[1mindex c7b2a24a..0732af53 100644[m
+[1m--- a/tests/app/UnitTests/GitUI.Tests/Editor/Diff/diff_added_moved.diff[m
+[1m+++ b/tests/app/UnitTests/GitUI.Tests/Editor/Diff/diff_added_moved.diff[m
+[36m@@ -1,18 +1,16 @@[m
+ https://github.com/gerhardol/tmp_tests/commit/112dc36c0059f3dae53f0c7cb51963b582e7bb78[m
+ another start line[m
+[2;7;35m-  block1[m
+[2;7;35m-  block1-2[m
+[2;7;35m-block1 is now over 20 chars[m
+[7;31m-  line to be removed[m
+[2;7;35m-  line with trailing spaces  [m
+[2;7;35m-  line with trailing carriage return[m
+[2;7;35m-  this block2 is big enough[m
+ some random text just added to be longer[m
+ than the previous lines, really[m
+ does not have to unique but longer than the previous block[m
+   to show alternate colors and dimmed zebra[m
+ otherwise this block is considered moved[m
+   6th line[m
+[7;31m-  normal line change[m
+[7;31m-  this block2[m
+[7;32m+[m[7;32m  normal line changed[m
+[2;7;34m+[m[2;7;34m  block1[m
+[2;7;34m+[m[2;7;34m  block1-2[m
+[30;104m+[m[30;104mblock1 is now over 20 chars[m
+[30;103m+[m[30;103m  line with trailing spaces[m[41m  [m
+[2;7;33m+[m[2;7;33m  line with trailing carriage return[m[41m[m
+[2;7;33m+[m[2;7;33m  this block2 is big enough[m
+   ending line[m
+\ No newline at end of file[m

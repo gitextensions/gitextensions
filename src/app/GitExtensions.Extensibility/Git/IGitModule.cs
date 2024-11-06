@@ -247,6 +247,20 @@ public interface IGitModule
     /// <returns>the Git output.</returns>
     string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Run a command line difftool async.
+    /// </summary>
+    /// <param name="firstId">The first commit id to compare.</param>
+    /// <param name="secondId">The second commit id.</param>
+    /// <param name="fileName">The current filename.</param>
+    /// <param name="oldFileName">The file name in the first commit or null.</param>
+    /// <param name="extraDiffArguments">git-difftool arguments.</param>
+    /// <param name="cacheResult">If the result may be stored in the command cache.</param>
+    /// <param name="extraCacheKey">Additional cache keeys, like environment variables and values affacting the commend.</param>
+    /// <param name="isTracked">If the file is tracked by Git.</param>
+    /// <param name="useGitColoring">If Git coloring should be used.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>The result for the command.</returns>
     Task<ExecutionResult> GetSingleDifftoolAsync(
         ObjectId? firstId,
         ObjectId? secondId,
@@ -254,6 +268,7 @@ public interface IGitModule
         string? oldFileName,
         ArgumentString extraDiffArguments,
         bool cacheResult,
+        string extraCacheKey,
         bool isTracked,
         bool useGitColoring,
         CancellationToken cancellationToken);
@@ -355,7 +370,7 @@ public interface IGitModule
     string? GetTagMessage(string? tag, CancellationToken cancellationToken);
     void UnstageFile(string file);
     bool UnstageFiles(IReadOnlyList<GitItemStatus> files, out string allOutput);
-    bool StageFile(string file);
+    void StageFile(string file);
     bool StageFiles(IReadOnlyList<GitItemStatus> files, out string allOutput);
     IEnumerable<IGitRef> GetRemoteBranches();
     IEnumerable<string?> GetPreviousCommitMessages(int count, string revision, string authorPattern);
@@ -419,7 +434,7 @@ public interface IGitModule
 
     bool ExistsMergeCommit(string? startRev, string? endRev);
 
-    string GetFileText(ObjectId id, Encoding encoding);
+    string GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes);
 
     MemoryStream? GetFileStream(string blob);
 
@@ -486,7 +501,6 @@ public interface IGitModule
     /// </returns>
     string GetRemoteBranch(string branch);
 
-    string RenameBranch(string name, string newName);
     IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken);
     Task<ExecutionResult> GetGrepFileAsync(
         ObjectId objectId,

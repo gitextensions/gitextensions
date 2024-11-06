@@ -31,6 +31,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm
     {
+        private const string _resetSoftRevision = "HEAD~1";
+
         #region Translation
 
         private readonly TranslationString _amendCommit
@@ -306,6 +308,8 @@ namespace GitUI.CommandsDialogs
             {
                 gpgSignCommitToolStripComboBox.SelectedIndex = 0;
             }
+
+            gpgSignCommitToolStripComboBox.ResizeDropDownWidth(minWidth: 50, maxWidth: 250);
 
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowImageMargin = true;
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowCheckMargin = false;
@@ -1152,7 +1156,7 @@ namespace GitUI.CommandsDialogs
 
         private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus>? lastSelection)
         {
-            if (!_currentFilesList.IsEmpty)
+            if (_currentFilesList.IsEmpty)
             {
                 SelectStoredNextIndex();
                 return;
@@ -1404,7 +1408,7 @@ namespace GitUI.CommandsDialogs
                         _commitMessageManager.CommitMessagePath,
                         Module.GetPathForGitExecution,
                         noVerifyToolStripMenuItem.Checked,
-                        gpgSignCommitToolStripComboBox.SelectedIndex > 0,
+                        gpgSignCommitToolStripComboBox.SelectedIndex == 0 ? null : gpgSignCommitToolStripComboBox.SelectedIndex > 1,
                         toolStripGpgKeyTextBox.Text,
                         Staged.IsEmpty,
                         resetAuthor);
@@ -1675,7 +1679,7 @@ namespace GitUI.CommandsDialogs
             deleteFileToolStripMenuItem.Enabled = !isAnyDeleted;
             openContainingFolderToolStripMenuItem.Enabled = !isAnyDeleted;
 
-            UnstagedFileContext.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
+            toolStripSeparatorScript.Visible = UnstagedFileContext.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1696,7 +1700,7 @@ namespace GitUI.CommandsDialogs
             stagedOpenWithToolStripMenuItem8.Enabled = !isAnyDeleted;
             stagedOpenFolderToolStripMenuItem10.Enabled = !isAnyDeleted;
 
-            StagedFileContext.AddUserScripts(stagedRunScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
+            toolStripSeparatorScript.Visible = StagedFileContext.AddUserScripts(stagedRunScriptToolStripMenuItem, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
         }
 
         private void UnstagedSubmoduleContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -2174,7 +2178,7 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                ArgumentString cmd = Commands.Reset(ResetMode.Soft, "HEAD~1");
+                ArgumentString cmd = Commands.Reset(ResetMode.Soft, _resetSoftRevision);
                 Module.GitExecutable.RunCommand(cmd);
                 Amend.Enabled = false;
                 Amend.Checked = false;
@@ -2399,6 +2403,7 @@ namespace GitUI.CommandsDialogs
             {
                 GitArgumentBuilder args = new("diff")
                 {
+                    "--no-ext-diff",
                     "--cached",
                     "-z",
                     "--",
@@ -3400,6 +3405,8 @@ namespace GitUI.CommandsDialogs
             {
                 ReplaceMessage(Module.GetPreviousCommitMessages(count: 1, revision: "HEAD", authorPattern: string.Empty).FirstOrDefault()?.Trim());
             }
+
+            ResetSoft.Enabled = ResetSoft.Visible && Amend.Checked && Module.RevParse(_resetSoftRevision) is not null;
 
             if (AppSettings.CommitAndPushForcedWhenAmend)
             {
