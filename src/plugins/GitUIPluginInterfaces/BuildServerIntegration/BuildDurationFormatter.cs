@@ -8,14 +8,6 @@
     public class BuildDurationFormatter : IBuildDurationFormatter
     {
         public string Format(long? durationMilliseconds)
-        {
-            if (durationMilliseconds.HasValue)
-            {
-                string timeText = TimeSpan.FromMilliseconds(durationMilliseconds.Value).ToString(@"mm\:ss");
-                return $"({timeText})";
-            }
-
-            return string.Empty;
-        }
+            => durationMilliseconds.HasValue ? TimeSpan.FromMilliseconds(durationMilliseconds.Value).ToString(@"mm\:ss") : string.Empty;
     }
 }
