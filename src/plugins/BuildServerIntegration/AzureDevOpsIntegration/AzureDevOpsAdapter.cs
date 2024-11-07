@@ -2,6 +2,7 @@ using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Text.Json.Nodes;
 using AzureDevOpsIntegration.Settings;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
@@ -315,19 +316,59 @@ Detail of the error:");
             (string duration, string tooltip) = CreateBuildTooltip(buildDetail);
             Validates.NotNull(buildDetail.SourceVersion);
 
+            string pullRequestTooltip = string.Empty;
+            string pullRequestUrl = null;
+            if (buildDetail.IsPullRequest)
+            {
+                // It's a PR and we need to dive into "Parameters" json to get the real commit hash
+                JsonNode pullRequestNode = JsonNode.Parse(buildDetail.Parameters);
+                string commitHash = GetNodeValue(pullRequestNode, "system.pullRequest.sourceCommitId");
+                if (!string.IsNullOrEmpty(commitHash))
+                {
+                    buildDetail.SourceVersion = commitHash;
+                }
+
+                string pullRequestId = GetNodeValue(pullRequestNode, "system.pullRequest.pullRequestId");
+                if (!string.IsNullOrWhiteSpace(pullRequestId))
+                {
+                    pullRequestTooltip = $"{Environment.NewLine}PR #{pullRequestId}";
+                    pullRequestUrl = $"{buildDetail.Repository.Url}/pullrequest/{pullRequestId}";
+                }
+            }
+
             BuildInfo buildInfo = new()
             {
                 Id = buildDetail.BuildNumber,
                 StartDate = buildDetail.StartTime ?? DateTime.MinValue,
                 Status = buildDetail.IsInProgress ? BuildStatus.InProgress : MapResult(buildDetail.Result),
                 Description = duration + " " + buildDetail.BuildNumber,
-                Tooltip = tooltip,
-                CommitHashList = new[] { ObjectId.Parse(buildDetail.SourceVersion) },
+                Tooltip = tooltip + pullRequestTooltip,
+                CommitHashList = [ObjectId.Parse(buildDetail.SourceVersion)],
                 Url = buildDetail._links?.Web?.Href,
-                ShowInBuildReportTab = false
+                ShowInBuildReportTab = false,
+                PullRequestUrl = pullRequestUrl
             };
 
             return buildInfo;
+        }
+
+        private static string? GetNodeValue(JsonNode node, string key)
+        {
+            if (node is null)
+            {
+                return null;
+            }
+
+            try
+            {
+                return node[key].GetValue<string>();
+            }
+            catch (Exception)
+            {
+                // Ignore if not the expected format.
+            }
+
+            return null;
         }
 
         private static string ConvertResult(string? result)
