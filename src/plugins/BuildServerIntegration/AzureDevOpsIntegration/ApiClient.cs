@@ -47,7 +47,7 @@ namespace AzureDevOpsIntegration
             string apiTokenHeaderValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{apiToken}"));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", apiTokenHeaderValue);
 
-            _httpClient.BaseAddress = new Uri(projectUrl.EndsWith("/") ? projectUrl + "_apis/" : projectUrl + "/_apis/");
+            _httpClient.BaseAddress = new Uri(projectUrl.EndsWith('/') ? projectUrl + "_apis/" : projectUrl + "/_apis/");
         }
 
         private async Task<T> HttpGetAsync<T>(string url)
@@ -113,18 +113,21 @@ namespace AzureDevOpsIntegration
                 ? $"&minTime={sinceDate.Value.ToUniversalTime():s}&api-version=4.1"
                 : "&api-version=2.0";
 
-            IList<Build> finishedBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
-            Validates.NotNull(finishedBuilds);
-            return finishedBuilds;
+            return await QueryBuildsAsync(queryUrl);
+        }
+
+        private async Task<IList<Build>> QueryBuildsAsync(string queryUrl)
+        {
+            IList<Build> builds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
+            Validates.NotNull(builds);
+            return builds;
         }
 
         public async Task<IList<Build>> QueryRunningBuildsAsync(string buildDefinitionsToQuery)
         {
             string queryUrl = QueryForBuildStatus(buildDefinitionsToQuery, "cancelling,inProgress,none,notStarted,postponed") + "&api-version=2.0";
 
-            IList<Build> runningBuilds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
-            Validates.NotNull(runningBuilds);
-            return runningBuilds;
+            return await QueryBuildsAsync(queryUrl);
         }
 
         // Api doc: https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-4.1
@@ -133,8 +136,13 @@ namespace AzureDevOpsIntegration
 
         public void Dispose()
         {
-            _httpClient?.Dispose();
+            Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            _httpClient?.Dispose();
         }
     }
 
