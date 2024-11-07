@@ -2,8 +2,8 @@
 using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI;
-using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid;

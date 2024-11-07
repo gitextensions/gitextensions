@@ -124,6 +124,11 @@ namespace GitUI.Theming
         private static Color GetColor(string themeFileName, StyleRule rule)
         {
             string cssColorValue = rule.Style.Color;
+            if (cssColorValue == "" && rule.SelectorText.StartsWith($".{nameof(AppColor.GraphBranch1)[..^1]}"))
+            {
+                return Color.Empty;
+            }
+
             if (string.IsNullOrWhiteSpace(cssColorValue) || !cssColorValue.StartsWith("rgb("))
             {
                 throw StyleRuleThemeException(rule, themeFileName);

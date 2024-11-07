@@ -4,13 +4,13 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using NSubstitute;
 

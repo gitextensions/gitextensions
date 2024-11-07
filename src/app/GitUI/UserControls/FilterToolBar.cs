@@ -335,10 +335,14 @@ namespace GitUI.UserControls
                 }
 
                 int index = tscboBranchFilter.SelectionStart;
+                tscboBranchFilter.BeginUpdate();
                 tscboBranchFilter.Items.Clear();
                 tscboBranchFilter.Items.AddRange(matches);
-                tscboBranchFilter.SelectionStart = index;
                 tscboBranchFilter.ComboBox.ResizeDropDownWidth();
+                tscboBranchFilter.ComboBox.DroppedDown = true;
+                tscboBranchFilter.Text = filter;
+                tscboBranchFilter.SelectionStart = index;
+                tscboBranchFilter.EndUpdate();
             }
         }
 

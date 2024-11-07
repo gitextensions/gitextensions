@@ -13,9 +13,6 @@ public class DiffHighlightServiceTests
     [Test]
     public void GetDifferenceMarkers_should_dim_identical_parts_at_begin_and_end()
     {
-        // LineSegment is hard to create. Use TextMarker as implementation type of ISegment for this test.
-        const TextMarkerType dontCare = TextMarkerType.SolidBlock;
-
         const string identicalPartBefore = "identical_part_before_";
         const string identicalPartAfter = "_identical_part_after";
         const string differentRemoved = "RemovedX";
@@ -23,12 +20,12 @@ public class DiffHighlightServiceTests
         const string removedLineText = $"-{identicalPartBefore}{differentRemoved}{identicalPartAfter}";
         const string addedLineText = $"+{identicalPartBefore}{differentAdded}{identicalPartAfter}";
         const string text = $"{removedLineText}\n{addedLineText}";
-        TextMarker removedLine = new(offset: text.IndexOf(removedLineText), removedLineText.Length, textMarkerType: dontCare);
-        TextMarker addedLine = new(offset: text.IndexOf(addedLineText), addedLineText.Length, textMarkerType: dontCare);
+        ISegment removedLine = new Segment() { Offset = text.IndexOf(removedLineText), Length = removedLineText.Length };
+        ISegment addedLine = new Segment() { Offset = text.IndexOf(addedLineText), Length = addedLineText.Length };
         const int beginOffset = 1;
 
         List<TextMarker> markers = [];
-        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset);
+        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset, dimBackground: true);
         IReadOnlyList<TextMarker> sortedMarkers = markers.ToImmutableSortedSet(new MarkerComparer());
 
         TextMarker[] expectedMarkers =
@@ -51,9 +48,6 @@ public class DiffHighlightServiceTests
     [Test]
     public void GetDifferenceMarkers_should_add_anchor_markers()
     {
-        // LineSegment is hard to create. Use TextMarker as implementation type of ISegment for this test.
-        const TextMarkerType dontCare = TextMarkerType.SolidBlock;
-
         const string deletion = nameof(deletion);
         const string insertion = nameof(insertion);
         const string identicalPartBefore = " identical_part_before ";
@@ -63,12 +57,12 @@ public class DiffHighlightServiceTests
         const string removedLineText = $"-{deletion}{identicalPartBefore}{differentRemoved}{identicalPartAfter}";
         const string addedLineText = $"+{identicalPartBefore}{differentAdded}{identicalPartAfter}{insertion}";
         const string text = $"{removedLineText}\n{addedLineText}";
-        TextMarker removedLine = new(offset: text.IndexOf(removedLineText), removedLineText.Length, textMarkerType: dontCare);
-        TextMarker addedLine = new(offset: text.IndexOf(addedLineText), addedLineText.Length, textMarkerType: dontCare);
+        ISegment removedLine = new Segment() { Offset = text.IndexOf(removedLineText), Length = removedLineText.Length };
+        ISegment addedLine = new Segment() { Offset = text.IndexOf(addedLineText), Length = addedLineText.Length };
         const int beginOffset = 1;
 
         List<TextMarker> markers = [];
-        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset);
+        DiffHighlightService.AddDifferenceMarkers(markers, GetText, removedLine, addedLine, beginOffset, dimBackground: true);
         IReadOnlyList<TextMarker> sortedMarkers = markers.ToImmutableSortedSet(new MarkerComparer());
 
         TextMarker[] expectedMarkers =
