@@ -381,7 +381,7 @@ namespace GitUI
             else if (_formFindInCommitFilesGitGrep?.Visible is false or null && cboFindInCommitFilesGitGrep.Text.Length > 0)
             {
                 cboFindInCommitFilesGitGrep.Text = "";
-                FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, 0);
+                FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
             }
 
             // Adjust locations
@@ -2106,7 +2106,7 @@ namespace GitUI
 
         private void cboFindInCommitFilesGitGrep_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, 0);
+            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
         }
 
         private void cboFindInCommitFilesGitGrep_GotFocus(object sender, EventArgs e)
@@ -2132,7 +2132,7 @@ namespace GitUI
         private void DeleteSearchButton_Click(object sender, EventArgs e)
         {
             cboFindInCommitFilesGitGrep.Text = "";
-            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, 0);
+            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
         }
 
         private void SortByFilePath()
