@@ -292,7 +292,7 @@ Detail of the error:");
             return runningBuilds;
         }
 
-        private static BuildInfo CreateBuildInfo(Build buildDetail)
+        private static (string duration, string tooltip) CreateBuildTooltip(Build buildDetail)
         {
             string duration = string.Empty;
 
@@ -302,16 +302,17 @@ Detail of the error:");
                 && buildDetail.Status != "postponed"
                 && buildDetail.StartTime.HasValue)
             {
-                if (buildDetail.Status == "inProgress")
-                {
-                    duration = _buildDurationFormatter.Format((long)(DateTime.UtcNow - buildDetail.StartTime.Value).TotalMilliseconds);
-                }
-                else
-                {
-                    duration = buildDetail.FinishTime.HasValue ? _buildDurationFormatter.Format((long)(buildDetail.FinishTime.Value - buildDetail.StartTime.Value).TotalMilliseconds) : "???";
-                }
+                duration = buildDetail.Status == "inProgress"
+                    ? _buildDurationFormatter.Format((long)(DateTime.UtcNow - buildDetail.StartTime.Value).TotalMilliseconds)
+                    : buildDetail.FinishTime.HasValue ? _buildDurationFormatter.Format((long)(buildDetail.FinishTime.Value - buildDetail.StartTime.Value).TotalMilliseconds) : "???";
             }
 
+            return (duration, $"{buildDetail.BuildNumber} {ConvertResult(buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result)} - {duration} [{buildDetail.Definition.Name}]");
+        }
+
+        private static BuildInfo CreateBuildInfo(Build buildDetail)
+        {
+            (string duration, string tooltip) = CreateBuildTooltip(buildDetail);
             Validates.NotNull(buildDetail.SourceVersion);
 
             BuildInfo buildInfo = new()
@@ -320,13 +321,29 @@ Detail of the error:");
                 StartDate = buildDetail.StartTime ?? DateTime.MinValue,
                 Status = buildDetail.IsInProgress ? BuildStatus.InProgress : MapResult(buildDetail.Result),
                 Description = duration + " " + buildDetail.BuildNumber,
-                Tooltip = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + Environment.NewLine + duration + Environment.NewLine + buildDetail.BuildNumber,
+                Tooltip = tooltip,
                 CommitHashList = new[] { ObjectId.Parse(buildDetail.SourceVersion) },
                 Url = buildDetail._links?.Web?.Href,
                 ShowInBuildReportTab = false
             };
 
             return buildInfo;
+        }
+
+        private static string ConvertResult(string? result)
+        {
+            return result switch
+            {
+                "failed" => "❌",
+                "canceled" => "⏹️",
+                "succeeded" => "✔",
+                "partiallySucceeded" => "❗",
+                Build.StatusCancelling => "⏹️",
+                Build.StatusInProgress => "▶️",
+                Build.StatusNotStarted => "⏸",
+                Build.StatusPostponed => "⏱",
+                _ => "❓"
+            };
         }
 
         private static BuildStatus MapResult(string? status)
