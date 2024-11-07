@@ -1,24 +1,29 @@
 ﻿using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI.LeftPanel;
 
 internal sealed class FavoriteBranchesCache
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new()
-    {
-        WriteIndented = true, Converters = { new ObjectIdConverter() } // Add the custom converter here
-    };
+    private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true, Converters = { new ObjectIdConverter() } };
 
-    private readonly FileSystem _fileSystem = new();
+    private readonly IFileSystem _fileSystem;
 
     private readonly HashSet<BranchIdentifier> _favorites = new();
     private readonly object _lock = new();
     private bool _isLoaded;
     private string _location = string.Empty;
+
+    public FavoriteBranchesCache(IFileSystem fileSystem)
+    {
+        _fileSystem = fileSystem;
+    }
+
+    public FavoriteBranchesCache() : this(new FileSystem())
+    {
+    }
 
     internal string ConfigFile
     {
@@ -115,24 +120,14 @@ internal sealed class FavoriteBranchesCache
     /// <param name="branches">A list of branches to retain in the favorites list.</param>
     internal void CleanUp(IReadOnlyList<IGitRef> branches)
     {
-        List<BranchIdentifier> removableList = new();
-
         lock (_lock)
         {
-            foreach (IGitRef? branch in branches)
-            {
-                if (branch.ObjectId != null)
-                {
-                    BranchIdentifier item = new(branch.ObjectId, branch.Name);
+            IEnumerable<BranchIdentifier>? branchIdentifiers = branches
+                                                               .Where(branch => branch.ObjectId is not null)
+                                                               .Select(branch => new BranchIdentifier(branch.ObjectId, branch.Name));
 
-                    if (!_favorites.Contains(item))
-                    {
-                        removableList.Add(item);
-                    }
-                }
-            }
+            _favorites.RemoveWhere(fav => !branchIdentifiers.Contains(fav));
 
-            removableList.ForEach(item => _favorites.Remove(item));
             Save();
         }
     }
@@ -146,52 +141,108 @@ internal sealed class FavoriteBranchesCache
     /// </remarks>
     internal void Load()
     {
-        if (!File.Exists(ConfigFile))
+        if (!_fileSystem.File.Exists(ConfigFile))
         {
             return;
         }
 
-        try
+        lock (_lock)
         {
-            string json;
-
-            lock (_lock)
-            {
-                json = _fileSystem.File.ReadAllText(ConfigFile);
-            }
-
-            BranchIdentifier[]? deserialized = JsonSerializer.Deserialize<BranchIdentifier[]>(json, _jsonOptions);
-
-            if (deserialized is not null)
-            {
-                lock (_lock)
+            TryInvokeIfFileAccessible(ConfigFile,
+                () =>
                 {
-                    _favorites.Clear();
-                    _favorites.UnionWith(deserialized);
-                }
-            }
+                    try
+                    {
+                        string json = null;
+                        json = _fileSystem.File.ReadAllText(ConfigFile);
 
-            _isLoaded = true;
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Failed to load favorites: {ex.Message}");
+                        if (!string.IsNullOrEmpty(json))
+                        {
+                            BranchIdentifier[]? deserialized = Deserialize<BranchIdentifier[]>(json);
+
+                            if (deserialized is not null)
+                            {
+                                _favorites.Clear();
+                                _favorites.UnionWith(deserialized);
+                            }
+
+                            _isLoaded = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine($"Failed to load favorites: {ex.Message}");
+                    }
+                });
         }
     }
 
-    private void Save()
+    internal static T? Deserialize<T>(string json)
     {
-        try
+        return JsonSerializer.Deserialize<T>(json, _jsonOptions);
+    }
+
+    internal static string Serialize<T>(T favorites)
+    {
+        return JsonSerializer.Serialize(favorites, _jsonOptions);
+    }
+
+    internal void Save()
+    {
+        lock (_lock)
         {
-            lock (_lock)
-            {
-                string json = JsonSerializer.Serialize(_favorites, _jsonOptions);
-                _fileSystem.File.WriteAllText(ConfigFile, json);
-            }
+            TryInvokeIfFileAccessible(ConfigFile,
+                () =>
+                {
+                    try
+                    {
+                        string json = Serialize(_favorites);
+                        _fileSystem.File.WriteAllText(ConfigFile, json);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine($"Failed to save favorites: {ex.Message}");
+                    }
+                });
         }
-        catch (Exception ex)
+    }
+
+    private void TryInvokeIfFileAccessible(string filePath, Action callBack, int maxAttempts = 5, int delay = 100)
+    {
+        int attempt = 0;
+
+        while (attempt < maxAttempts)
         {
-            Debug.WriteLine($"Failed to save favorites: {ex.Message}");
+            try
+            {
+                if (!string.IsNullOrEmpty(filePath) && _fileSystem.File.Exists(filePath))
+                {
+                    using FileSystemStream? fs = _fileSystem.File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                    fs.Close();
+                }
+
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    callBack.Invoke();
+                });
+
+                return;
+            }
+            catch (IOException)
+            {
+                // File is locked, increment attempt count and wait before retrying
+                attempt++;
+
+                if (attempt < maxAttempts)
+                {
+                    Thread.Sleep(delay);
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
     }
 
@@ -203,55 +254,6 @@ internal sealed class FavoriteBranchesCache
             {
                 Load();
             }
-        }
-    }
-
-    private class ObjectIdConverter : JsonConverter<ObjectId>
-    {
-        public override ObjectId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                string? idString = reader.GetString();
-
-                return idString is not null
-                    ? ObjectId.Parse(idString)
-                    : default;
-            }
-
-            throw new JsonException($"Unexpected token type {reader.TokenType}, expected a JSON string for ObjectId.");
-        }
-
-        public override void Write(Utf8JsonWriter writer, ObjectId value, JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value.ToString());
-        }
-    }
-
-    internal class BranchIdentifier(ObjectId objectId, string name)
-    {
-        public ObjectId ObjectId { get; } = objectId;
-
-        public string Name { get; set; } = name;
-
-        public override bool Equals(object obj)
-        {
-            if (obj is not BranchIdentifier other)
-            {
-                return false;
-            }
-
-            return ObjectId == other.ObjectId || Name == other.Name;
-        }
-
-        public override int GetHashCode()
-        {
-            return 0;
-        }
-
-        public static bool IsValid(BranchIdentifier branch)
-        {
-            return branch is not null && branch.ObjectId != default && !string.IsNullOrEmpty(branch.Name);
         }
     }
 }

@@ -302,33 +302,16 @@ namespace GitUI.LeftPanel
 
         private void EnableFavoritesContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
         {
-            if (hasSingleSelection)
+            if (!hasSingleSelection || selectedNode is not (LocalBranchNode or RemoteBranchNode))
             {
-                string rootNodeName = selectedNode?.TreeViewNode?.FullPath?.Split('/').FirstOrDefault();
-                if (rootNodeName != null && rootNodeName.Contains(TranslatedStrings.Favorites))
-                {
-                    if (selectedNode is LocalBranchNode || selectedNode is RemoteBranchNode)
-                    {
-                        EnableMenuItems(true, mnubtnRemoveFromFavorites);
-                        EnableMenuItems(false, mnubtnAddToFavorites);
-
-                        return;
-                    }
-                }
-                else
-                {
-                    if (selectedNode is LocalBranchNode || selectedNode is RemoteBranchNode)
-                    {
-                        EnableMenuItems(false, mnubtnRemoveFromFavorites);
-                        EnableMenuItems(true, mnubtnAddToFavorites);
-
-                        return;
-                    }
-                }
-
-                EnableMenuItems(false, mnubtnRemoveFromFavorites);
-                EnableMenuItems(false, mnubtnAddToFavorites);
+                EnableMenuItems(false, mnubtnRemoveFromFavorites, mnubtnAddToFavorites);
+                return;
             }
+
+            bool isFavorite = selectedNode?.TreeViewNode?.FullPath?.Split('/').FirstOrDefault()?.Contains(TranslatedStrings.Favorites) ?? false;
+
+            EnableMenuItems(isFavorite, mnubtnRemoveFromFavorites);
+            EnableMenuItems(!isFavorite, mnubtnAddToFavorites);
         }
 
         private void AddToFavorites(NodeBase node)

@@ -11,7 +11,7 @@ namespace GitUI.LeftPanel;
 internal sealed class FavoritesTree : BaseRefTree
 {
     private readonly IRevisionGridInfo _revisionGridInfo;
-    private readonly FavoriteBranchesCache _favoriteBranchesCache = new();
+    internal readonly FavoriteBranchesCache _favoriteBranchesCache = new();
     private FileSystemWatcher _configWatcher;
 
     public FavoritesTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo)
@@ -24,7 +24,7 @@ internal sealed class FavoritesTree : BaseRefTree
     {
         StopFileWatcher();
 
-        if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId != null)
+        if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId is not null)
         {
             _favoriteBranchesCache.Add(baseRevisionNode.ObjectId, baseRevisionNode.FullPath);
         }
@@ -37,7 +37,7 @@ internal sealed class FavoritesTree : BaseRefTree
     {
         StopFileWatcher();
 
-        if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId != null)
+        if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId is not null)
         {
             _favoriteBranchesCache.Remove(baseRevisionNode.ObjectId, baseRevisionNode.FullPath);
         }
@@ -164,7 +164,7 @@ internal sealed class FavoritesTree : BaseRefTree
         StopFileWatcher();
         _favoriteBranchesCache.Location = UICommands.Module.WorkingDirGitDir;
         string configFile = _favoriteBranchesCache.ConfigFile;
-        _configWatcher = new FileSystemWatcher { Path = Path.GetDirectoryName(configFile), Filter = Path.GetFileName(configFile), NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName };
+        _configWatcher = new FileSystemWatcher { Path = Path.GetDirectoryName(configFile), Filter = Path.GetFileName(configFile), NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Size };
 
         _configWatcher.Changed += OnConfigFileChanged;
         _configWatcher.Created += OnConfigFileChanged;
