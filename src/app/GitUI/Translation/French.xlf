@@ -397,6 +397,7 @@ Cliquez sur cette icône d'information pour plus de détails.</target>
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInThisFile.Text">
         <source>Detect moved or copied lines within blamed file</source>
+        <target>Détecter les lignes déplacées ou copiées à l'intérieur du fichier fautif</target>
         
       </trans-unit>
       <trans-unit id="cbDisplayAuthorFirst.Text">
@@ -1629,10 +1630,12 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       </trans-unit>
       <trans-unit id="chkRenderGraphWithDiagonals.Text">
         <source>Render graph with diagonals</source>
+        <target>Dessiner les graphes avec des diagonales</target>
         
       </trans-unit>
       <trans-unit id="chkStraightenGraphDiagonals.Text">
         <source>Straighten graph diagonals</source>
+        <target>Raccourcir les diagonales du graphe</target>
         
       </trans-unit>
       <trans-unit id="chkUseSSL.Text">
@@ -1691,10 +1694,12 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       </trans-unit>
       <trans-unit id="chkRememberDiffAppearancePreference.Text">
         <source>Remember the 'Diff appearance' preference</source>
+        <target>Mémoriser la préférence 'Apparence des différences'</target>
         
       </trans-unit>
       <trans-unit id="chkRememberDiffAppearancePreference.ToolTipText">
         <source>Diff appearance: patch (default), Git word-diff or Difftastic.</source>
+        <target>Apparence du diff : patch (défaut), Git word-diff ou Diffstatic.</target>
         
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
@@ -1749,6 +1754,7 @@ L'outil de différentiation par défaut peut être choisi via le menu principal.
       </trans-unit>
       <trans-unit id="chkUseGitColoring.Text">
         <source>Git coloring</source>
+        <target>Coloration git</target>
         
       </trans-unit>
       <trans-unit id="chkUseGitColoring.ToolTipText">
@@ -2022,6 +2028,7 @@ L'outil de différentiation par défaut peut être choisi via le menu principal.
       </trans-unit>
       <trans-unit id="showDifftasticToolStripMenuItem.Text">
         <source>Diff&amp;tastic</source>
+        <target>Diff&amp;tastic</target>
         
       </trans-unit>
       <trans-unit id="showEntireFileButton.ToolTipText">
@@ -2050,6 +2057,7 @@ L'outil de différentiation par défaut peut être choisi via le menu principal.
       </trans-unit>
       <trans-unit id="showPatchToolStripMenuItem.Text">
         <source>&amp;Patch</source>
+        <target>&amp;Patch</target>
         
       </trans-unit>
       <trans-unit id="showSyntaxHighlighting.ToolTipText">
@@ -3824,6 +3832,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_createBranch.Text">
         <source>Cr&amp;eate local branch with same name:</source>
+        <target>Cr&amp;éer une branche locale avec le même nom :</target>
         
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -5454,6 +5463,7 @@ Continuer ?</target>
       </trans-unit>
       <trans-unit id="DeleteLocalTrackingBranch.Text">
         <source>Delete &amp;local tracking branch (if available)</source>
+        <target>Effacer la branche &amp;locale liée (si disponible)</target>
         
       </trans-unit>
       <trans-unit id="DeleteRemote.Text">
@@ -5463,6 +5473,7 @@ Continuer ?</target>
       </trans-unit>
       <trans-unit id="_andMore.Text">
         <source>and {0} more...</source>
+        <target>et {0} en plus...</target>
         
       </trans-unit>
       <trans-unit id="_confirmDeleteUnmergedRemoteBranchMessage.Text">
@@ -6301,6 +6312,41 @@ _ReSharper*/
 .idea/
 #Nuget packages folder
 packages/</source>
+        <target>Indiquez les filtres de noms de fichiers que git doit ignorer.
+
+Exemple :
+#Ignorer les miniatures crées par Windows
+Thumbs.db
+#Ignorer les fichiers générés par Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+.vs/
+.idea/
+#Dossier de paquets Nuget
+packages/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
@@ -8948,6 +8994,7 @@ Voulez-vous utiliser le script de fusion personnalisé?</target>
       </trans-unit>
       <trans-unit id="_committer.Text">
         <source>&amp;Committer</source>
+        <target>Auteur du &amp;commit</target>
         
       </trans-unit>
       <trans-unit id="_diffContent.Text">
@@ -9818,6 +9865,7 @@ du menu contextuel pour des opérations supplémentaires</target>
       </trans-unit>
       <trans-unit id="btnMergeToolBrowse.AccessibleName">
         <source>Browse Path to mergetool</source>
+        <target>Parcourir les répertoires jusqu'à l'outil de fusion</target>
         
       </trans-unit>
       <trans-unit id="btnMergeToolBrowse.Text">
@@ -9827,6 +9875,7 @@ du menu contextuel pour des opérations supplémentaires</target>
       </trans-unit>
       <trans-unit id="btnMergeToolCommandSuggest.AccessibleName">
         <source>Suggest Mergetool command</source>
+        <target>Suggérer la ligne de commande de l'outil de fusion</target>
         
       </trans-unit>
       <trans-unit id="btnMergeToolCommandSuggest.Text">

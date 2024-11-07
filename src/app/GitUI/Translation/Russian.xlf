@@ -400,6 +400,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInThisFile.Text">
         <source>Detect moved or copied lines within blamed file</source>
+        <target>Обнаружение перемещенных или скопированных строк в файле</target>
         
       </trans-unit>
       <trans-unit id="cbDisplayAuthorFirst.Text">
@@ -549,6 +550,11 @@ Click this info icon for more details.</source>
 Because of this, make sure to fill in all the fields in the report template please.
 
 Send report?</source>
+        <target>Предоставьте как можно больше информации, чтобы помочь разработчикам решить эту проблему. В противном случае ваша заявка может быть закрыта без каких-либо действий со стороны разработчиков.
+
+Обязательно заполните все поля шаблона отчета.
+
+Отправить отчет в любом случае?</target>
         
       </trans-unit>
       <trans-unit id="_title.Text">
@@ -1605,6 +1611,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
         <source>&amp;Push window</source>
+        <target>Окно отправки</target>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
@@ -1614,6 +1621,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">
         <source>Merge graph lanes having common parent</source>
+        <target>Объединить полосы графа, имеющие общего предка</target>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
@@ -1623,10 +1631,12 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="chkRenderGraphWithDiagonals.Text">
         <source>Render graph with diagonals</source>
+        <target>Рендеринг графа с диагоналями</target>
         
       </trans-unit>
       <trans-unit id="chkStraightenGraphDiagonals.Text">
         <source>Straighten graph diagonals</source>
+        <target>Выпрямить диагонали графа</target>
         
       </trans-unit>
       <trans-unit id="chkUseSSL.Text">
@@ -1641,6 +1651,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
         <source>&amp;Email settings for sending patches</source>
+        <target>Настройки эл.почты для отправки патчей</target>
         
       </trans-unit>
       <trans-unit id="lblSmtpServerName.Text">
@@ -1684,6 +1695,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="chkRememberDiffAppearancePreference.Text">
         <source>Remember the 'Diff appearance' preference</source>
+        <target>Запомнить настройку 'Внешний вид Diff'</target>
         
       </trans-unit>
       <trans-unit id="chkRememberDiffAppearancePreference.ToolTipText">
@@ -1734,10 +1746,12 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.Text">
         <source>Use theme coloring</source>
+        <target>Использовать оформление темы</target>
         
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.ToolTipText">
         <source>Apply Git theme colors (with inverse backround) instead of Git default colors.</source>
+        <target>Применить цвета темы Git (с инвертирванным фоном) вместо цветов Git по умолчанию.</target>
         
       </trans-unit>
       <trans-unit id="chkUseGitColoring.Text">
@@ -1748,6 +1762,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       <trans-unit id="chkUseGitColoring.ToolTipText">
         <source>Use Git coloring engine to show moved code etc.
 </source>
+        <target>Использовать механизм раскраски Git, чтобы показать перемещенный код и т. д.</target>
         
       </trans-unit>
       <trans-unit id="gbDiffColoring.Text">
@@ -1874,6 +1889,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="SearchWatermarkLabel.Text">
         <source>Search files in commit using a regular expression...</source>
+        <target>Найти файлы, используя регуляное выражение...</target>
         
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
@@ -1907,10 +1923,12 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
         <source>Copy &amp;new version</source>
+        <target>Скопировать &amp;новую версию</target>
         
       </trans-unit>
       <trans-unit id="copyOldVersionToolStripMenuItem.Text">
         <source>Copy &amp;old version</source>
+        <target>Скопировать с&amp;тарую версию</target>
         
       </trans-unit>
       <trans-unit id="copyPatchToolStripMenuItem.Text">
@@ -1930,6 +1948,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="decreaseNumberOfLinesToolStripMenuItem.Text">
         <source>&amp;Decrease the number of lines of context</source>
+        <target>Уменьшить количество строк контекста</target>
         
       </trans-unit>
       <trans-unit id="diffAppearanceToolStripMenuItem.Text">
@@ -1943,10 +1962,12 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="goToLineToolStripMenuItem.Text">
         <source>&amp;Go to line</source>
+        <target>Перейти к строке</target>
         
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore all &amp;whitespace changes</source>
+        <target>Игнорировать все изменения в пробелах</target>
         
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaces.ToolTipText">
@@ -1966,10 +1987,12 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="ignoreWhitespaceAtEolToolStripMenuItem.Text">
         <source>Ignore whitespace changes at end of &amp;line</source>
+        <target>Игнорировать изменения пробелов в конце строки</target>
         
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore changes in &amp;amount of whitespace</source>
+        <target>Игнорировать изменения в количестве пробелов</target>
         
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -1979,6 +2002,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="increaseNumberOfLinesToolStripMenuItem.Text">
         <source>&amp;Increase the number of lines of context</source>
+        <target>Увеличить количество строк контекста</target>
         
       </trans-unit>
       <trans-unit id="nextChangeButton.ToolTipText">
@@ -1993,6 +2017,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="replaceToolStripMenuItem.Text">
         <source>&amp;Replace...</source>
+        <target>Заменить...</target>
         
       </trans-unit>
       <trans-unit id="resetSelectedLinesToolStripMenuItem.Text">
@@ -2016,6 +2041,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="showEntireFileToolStripMenuItem.Text">
         <source>Show &amp;entire file</source>
+        <target>Показать весь файл</target>
         
       </trans-unit>
       <trans-unit id="showGitWordColoringToolStripMenuItem.Text">
@@ -2029,6 +2055,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="showNonprintableCharactersToolStripMenuItem.Text">
         <source>S&amp;how nonprinting characters</source>
+        <target>Показать непечатаемые символы</target>
         
       </trans-unit>
       <trans-unit id="showPatchToolStripMenuItem.Text">
@@ -2043,6 +2070,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="showSyntaxHighlightingToolStripMenuItem.Text">
         <source>Show synta&amp;x highlighting</source>
+        <target>Показать подсветку синтаксиса</target>
         
       </trans-unit>
       <trans-unit id="stageSelectedLinesToolStripMenuItem.Text">
@@ -2052,6 +2080,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
         <source>&amp;Treat all files as text</source>
+        <target>Считать все файлы текстовыми</target>
         
       </trans-unit>
       <trans-unit id="unstageSelectedLinesToolStripMenuItem.Text">
@@ -2897,6 +2926,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
         <source>&amp;Configure this menu...</source>
+        <target>&amp;Настроить это меню...</target>
         
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -3355,6 +3385,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
         <source>Plugins &amp;settings...</source>
+        <target>&amp;Настройки плагинов...</target>
         
       </trans-unit>
       <trans-unit id="pluginsLoadingToolStripMenuItem.Text">
@@ -3409,6 +3440,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
         <source>Rep&amp;ository settings...</source>
+        <target>Настройки репо&amp;зитория...</target>
         
       </trans-unit>
       <trans-unit id="reportAnIssueToolStripMenuItem.Text">
@@ -3810,6 +3842,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_createBranch.Text">
         <source>Cr&amp;eate local branch with same name:</source>
+        <target>Создать локальную ветку с именем:</target>
         
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -4738,6 +4771,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="btnResetUnstagedChanges.Text">
         <source>Reset u&amp;nstaged changes</source>
+        <target>Сброс неиндексированных</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -5541,6 +5575,7 @@ Deleting a branch can cause commits to be deleted too!</source>
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
         <source>&amp;Blame</source>
+        <target>&amp;Авторство изменений</target>
         
       </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
@@ -6290,6 +6325,41 @@ _ReSharper*/
 .idea/
 #Nuget packages folder
 packages/</source>
+        <target>Укажите шаблоны файлов, которые git должен игнорировать.
+
+Например:
+#Игнорировать миниатюры, созданные Windows
+Thumbs.db
+#Игнорировать файлы, созданные Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+.vs/
+.idea/
+#Папка пакетов Nuget
+packages/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
@@ -8500,18 +8570,22 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_contextChooseLocalMergeText.Text">
         <source>Choose local/current (ours)</source>
+        <target>Выбрать локальный/текущий (наш)</target>
         
       </trans-unit>
       <trans-unit id="_contextChooseLocalRebaseText.Text">
         <source>Choose local/current (theirs)</source>
+        <target>Выбрать локальный/текущий (их)</target>
         
       </trans-unit>
       <trans-unit id="_contextChooseRemoteMergeText.Text">
         <source>Choose remote/incoming (theirs)</source>
+        <target>Выбрать внешний/входящий (их)</target>
         
       </trans-unit>
       <trans-unit id="_contextChooseRemoteRebaseText.Text">
         <source>Choose remote/incoming (ours)</source>
+        <target>Выбрать внешний/входящий (наш)</target>
         
       </trans-unit>
       <trans-unit id="_currentFormatFilter.Text">
@@ -8776,14 +8850,17 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="labelBase.Text">
         <source>Base</source>
+        <target>Базовый</target>
         
       </trans-unit>
       <trans-unit id="labelLocalCurrent.Text">
         <source>Local/current</source>
+        <target>Локальный/текущий</target>
         
       </trans-unit>
       <trans-unit id="labelRemoteIncoming.Text">
         <source>Remote/incoming</source>
+        <target>Внешний/входящий</target>
         
       </trans-unit>
       <trans-unit id="merge.Text">
@@ -8984,14 +9061,17 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="btnSearch.Text">
         <source>Search</source>
+        <target>Поиск</target>
         
       </trans-unit>
       <trans-unit id="chkMatchCase.Text">
         <source>Match &amp;case</source>
+        <target>Учитывать регистр</target>
         
       </trans-unit>
       <trans-unit id="chkMatchWholeWord.Text">
         <source>Match &amp;whole word</source>
+        <target>Слово целиком</target>
         
       </trans-unit>
       <trans-unit id="chkShowSearchBox.Text">
@@ -9000,10 +9080,12 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Search:</source>
+        <target>Поиск:</target>
         
       </trans-unit>
       <trans-unit id="lblOptions.Text">
         <source>&amp;Options:</source>
+        <target>&amp;Настройки:</target>
         
       </trans-unit>
     </body>
@@ -10384,6 +10466,7 @@ help</source>
       </trans-unit>
       <trans-unit id="_confirmBranchCheckout.Text">
         <source>Are you sure you want to check out branch &quot;{0}&quot;?</source>
+        <target>Вы уверены, что хотите проверить ветку &quot;{0}&quot;?</target>
         
       </trans-unit>
       <trans-unit id="_confirmBranchCheckoutCaption.Text">
@@ -11143,6 +11226,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
         <source>&amp;Find file...</source>
+        <target>Н&amp;айти файл…</target>
         
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
@@ -11182,6 +11266,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run script</source>
+        <target>Запустить скрипт</target>
         
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem1.Text">
@@ -11310,10 +11395,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem1.Text">
         <source>&amp;Blame</source>
+        <target>&amp;Авторство изменений</target>
         
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
         <source>Co&amp;llapse all</source>
+        <target>Свернуть все</target>
         
       </trans-unit>
       <trans-unit id="copyPathsToolStripMenuItem.Text">
@@ -11323,10 +11410,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
         <source>&amp;Edit working directory file</source>
+        <target>Редактировать файл в рабочем каталоге</target>
         
       </trans-unit>
       <trans-unit id="expandToolStripMenuItem.Text">
         <source>&amp;Expand</source>
+        <target>Раскрыть</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -11343,6 +11432,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
         <source>Show &amp;in folder</source>
+        <target>Показать в папке</target>
         
       </trans-unit>
       <trans-unit id="filterFileInGridToolStripMenuItem.Text">
@@ -11352,14 +11442,17 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
         <source>&amp;Find file...</source>
+        <target>Н&amp;айти файл…</target>
         
       </trans-unit>
       <trans-unit id="openFileToolStripMenuItem.Text">
         <source>Ope&amp;n this revision (temp file)</source>
+        <target>Открыть эту ревизию (временный файл)</target>
         
       </trans-unit>
       <trans-unit id="openFileWithToolStripMenuItem.Text">
         <source>Open this revision &amp;with... (temp file)</source>
+        <target>Открыть эту ревизию с помощью... (временный файл)</target>
         
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
@@ -11374,6 +11467,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
         <source>&amp;Open working directory file with...</source>
+        <target>Открыть файл в рабочем каталоге с помощью...</target>
         
       </trans-unit>
       <trans-unit id="rememberFileStripMenuItem.Text">
@@ -11386,10 +11480,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run script</source>
+        <target>Запустить скрипт</target>
         
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
         <source>S&amp;ave as...</source>
+        <target>Сохранить как...</target>
         
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
@@ -13072,6 +13168,7 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_reportReproducedIssueDescription.Text">
         <source>If you can consistently reproduce the issue, please report it.</source>
+        <target>Если удается постоянно воспроизводить проблему, сообщите об этом.</target>
         
       </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
