@@ -179,16 +179,27 @@ namespace AzureDevOpsIntegration
         public const string StatusNotStarted = "notStarted"; // The build has not yet started.
         public const string StatusPostponed = "postponed"; // The build is inactive in the queue.
 
+        public const string ReasonPullRequest = "validateShelveset"; // The build is triggered from a Pull Request.
+
         public string? SourceVersion { get; set; }
         public string? Status { get; set; }
         public string? BuildNumber { get; set; }
         public string? Result { get; set; }
+        public string? Reason { get; set; }
+        public Repository? Repository { get; set; }
+        public string? Parameters { get; set; }
         public BuildDefinition? Definition { get; set; }
         public BuildLinks? _links { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? FinishTime { get; set; }
 
         public bool IsInProgress => Status != StatusCompleted;
+        public bool IsPullRequest => Reason == ReasonPullRequest;
+    }
+
+    public class Repository
+    {
+        public string? Url { get; set; }
     }
 
     public class BuildLinks
