@@ -164,7 +164,14 @@ internal sealed class FavoritesTree : BaseRefTree
         StopFileWatcher();
         _favoriteBranchesCache.Location = UICommands.Module.WorkingDirGitDir;
         string configFile = _favoriteBranchesCache.ConfigFile;
-        _configWatcher = new FileSystemWatcher { Path = Path.GetDirectoryName(configFile), Filter = Path.GetFileName(configFile), NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Size };
+        string directoryName = Path.GetDirectoryName(configFile);
+
+        if (!Directory.Exists(directoryName))
+        {
+            return;
+        }
+
+        _configWatcher = new FileSystemWatcher { Path = directoryName, Filter = Path.GetFileName(configFile), NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Size };
 
         _configWatcher.Changed += OnConfigFileChanged;
         _configWatcher.Created += OnConfigFileChanged;
