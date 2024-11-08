@@ -263,7 +263,10 @@ namespace GitUI
             // Show/hide the search box if settings are changed
             void UICommands_PostSettings(object sender, GitUIPostActionEventArgs? e)
             {
-                BeginInvoke(() => SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value));
+                if (CanUseFindInCommitFilesGitGrep && Visible)
+                {
+                    BeginInvoke(() => SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value));
+                }
             }
         }
 
@@ -375,6 +378,11 @@ namespace GitUI
                 // Adjust sizes "automatically" changed by visibility
                 cboFindInCommitFilesGitGrep.Top = 0;
             }
+            else if (_formFindInCommitFilesGitGrep?.Visible is not true && cboFindInCommitFilesGitGrep.Text.Length > 0)
+            {
+                cboFindInCommitFilesGitGrep.Text = "";
+                FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
+            }
 
             // Adjust locations
             // Note that 'LoadingFiles' location depends on visibility of Filter box, must be set each time made visible
@@ -385,7 +393,7 @@ namespace GitUI
             DeleteFilterButton.Top = FilterComboBox.Top;
 
             SetFindInCommitFilesGitGrepWatermarkVisibility();
-            SetFileStatusListVisibility(!NoFiles.Visible);
+            SetFileStatusListVisibility(filesPresent: !NoFiles.Visible);
         }
 
         private void SetFileStatusListVisibility(bool filesPresent)
@@ -2098,7 +2106,7 @@ namespace GitUI
 
         private void cboFindInCommitFilesGitGrep_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, 0);
+            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
         }
 
         private void cboFindInCommitFilesGitGrep_GotFocus(object sender, EventArgs e)
@@ -2124,7 +2132,7 @@ namespace GitUI
         private void DeleteSearchButton_Click(object sender, EventArgs e)
         {
             cboFindInCommitFilesGitGrep.Text = "";
-            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, 0);
+            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
         }
 
         private void SortByFilePath()
