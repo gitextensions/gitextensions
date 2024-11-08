@@ -378,7 +378,7 @@ namespace GitUI
                 // Adjust sizes "automatically" changed by visibility
                 cboFindInCommitFilesGitGrep.Top = 0;
             }
-            else if (_formFindInCommitFilesGitGrep?.Visible is false or null && cboFindInCommitFilesGitGrep.Text.Length > 0)
+            else if (_formFindInCommitFilesGitGrep?.Visible is not true && cboFindInCommitFilesGitGrep.Text.Length > 0)
             {
                 cboFindInCommitFilesGitGrep.Text = "";
                 FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
