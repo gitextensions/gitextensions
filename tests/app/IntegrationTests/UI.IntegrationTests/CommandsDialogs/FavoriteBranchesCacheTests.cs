@@ -1,6 +1,8 @@
-﻿using System.IO.Abstractions;
+﻿using System.ComponentModel.Design;
+using System.IO.Abstractions;
 using FluentAssertions;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.LeftPanel;
 using NSubstitute;
 
@@ -17,11 +19,13 @@ public class FavoriteBranchesCacheTests
     [SetUp]
     public void Setup()
     {
+        ServiceContainer serviceContainer = new();
         _file = Substitute.For<FileBase>();
         _fileSystem = Substitute.For<IFileSystem>();
         _fileSystem.File.Returns(_file);
+        serviceContainer.AddService(_fileSystem);
 
-        _cache = new FavoriteBranchesCache(_fileSystem);
+        _cache = new FavoriteBranchesCache(serviceContainer);
     }
 
     [Test]

@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using System.Text.Json;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 
 namespace GitUI.LeftPanel;
 
@@ -16,13 +17,9 @@ internal sealed class FavoriteBranchesCache
     private bool _isLoaded;
     private string _location = string.Empty;
 
-    public FavoriteBranchesCache(IFileSystem fileSystem)
+    public FavoriteBranchesCache(IServiceProvider serviceProvider)
     {
-        _fileSystem = fileSystem;
-    }
-
-    public FavoriteBranchesCache() : this(new FileSystem())
-    {
+        _fileSystem = serviceProvider.GetRequiredService<IFileSystem>();
     }
 
     internal string ConfigFile

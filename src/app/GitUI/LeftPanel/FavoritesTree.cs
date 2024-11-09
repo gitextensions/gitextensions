@@ -11,13 +11,17 @@ namespace GitUI.LeftPanel;
 internal sealed class FavoritesTree : BaseRefTree
 {
     private readonly IRevisionGridInfo _revisionGridInfo;
-    internal readonly FavoriteBranchesCache _favoriteBranchesCache = new();
+    internal readonly FavoriteBranchesCache _favoriteBranchesCache;
     private FileSystemWatcher _configWatcher;
 
     public FavoritesTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo)
         : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes | RefsFilter.Heads)
     {
         _revisionGridInfo = revisionGridInfo;
+
+        // Whilst the UICommands may change, the service registrations are constant.
+        IServiceProvider serviceProvider = uiCommands.UICommands;
+        _favoriteBranchesCache = new(serviceProvider);
     }
 
     public void Add(NodeBase node)
