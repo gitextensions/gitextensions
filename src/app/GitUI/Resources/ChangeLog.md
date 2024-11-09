@@ -1,7 +1,16 @@
 Changelog
 =========
 
-### Version 5.1 (10 Nov 2024)
+### Version 5.1.1 (10 Nov 2024)
+
+#### Changes:
+* [#12028] fix(Diff View): Avoid exception on open
+
+
+[#12028]:https://github.com/gitextensions/gitextensions/pull/12028
+
+
+### Version 5.1 (7 Nov 2024)
 
 #### Changes:
 * [#12018] fix: Add missing defaults to git attributes parser
