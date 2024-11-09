@@ -25,7 +25,7 @@
     </PackageReference>
 
     <!-- This is needed for eng\Publish.targets to resolve .NET references -->
-    <PackageReference Include="NETStandard.Library" GeneratePathProperty="true" VersionOverride="2.0.0">
+    <PackageReference Include="NETStandard.Library" GeneratePathProperty="true" VersionOverride="2.0.3">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="vswhere" GeneratePathProperty="true">

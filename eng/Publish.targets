@@ -10,8 +10,8 @@
       <Output ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true"/>
     </ParameterGroup>
     <Task>
-      <Reference Include="$(PkgNETStandard_Library)\build\netstandard2.0\ref\System.Runtime.dll"/>
-      <Reference Include="$(PkgNETStandard_Library)\build\netstandard2.0\ref\System.Xml.ReaderWriter.dll"/>
+      <Reference Include="$(PkgNETStandard_Library)\build\netstandard2.0.3\ref\System.Runtime.dll"/>
+      <Reference Include="$(PkgNETStandard_Library)\build\netstandard2.0.3\ref\System.Xml.ReaderWriter.dll"/>
       <Reference Include="Microsoft.Build"/>
       <Using Namespace="Microsoft.Build.Construction"/>
       <Using Namespace="Microsoft.Build.Evaluation"/>

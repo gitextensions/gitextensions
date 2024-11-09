@@ -30,25 +30,26 @@
     <PackageVersion Include="System.Reactive.Linq" Version="5.0.0" />
     <PackageVersion Include="System.Reactive.Interfaces" Version="5.0.0" />
     <PackageVersion Include="System.ValueTuple" Version="4.5.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
-
+    
     <!-- Analyzers -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0-beta1.23364.2" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
-
+    
     <!-- Setup infra -->
     <PackageVersion Include="vswhere" Version="2.8.4" />
     <PackageVersion Include="WiX" Version="3.14.1" />
-
+    
     <!-- Test infra -->
     <PackageVersion Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.0.0" /> <!-- Required? -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.0.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.0.0" /> <!-- Required? -->
     <PackageVersion Include="NSubstitute" Version="4.2.1" />
     <PackageVersion Include="NUnit.ConsoleRunner" Version="3.16.3" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="NUnit" Version="3.13.3" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="19.2.18" />
+    <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" /> <!-- CVE-2019-0820, see https://github.com/advisories/GHSA-cmhx-cq75-c4mj -->
     <PackageVersion Include="Verify.NUnit" Version="20.3.0" />
     <PackageVersion Include="YamlDotNet" Version="11.2.1" />
 
