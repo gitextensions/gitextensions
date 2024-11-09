@@ -31,7 +31,11 @@ public static class ServiceContainerRegistry
             }
         };
 
-        serviceContainer.AddService<IFileSystem>(new FileSystem());
+        if (serviceContainer.GetService(typeof(IFileSystem)) == null)
+        {
+            serviceContainer.AddService<IFileSystem>(new FileSystem());
+        }
+
         serviceContainer.AddService<IWindowsJumpListManager>(new WindowsJumpListManager(serviceContainer.GetRequiredService<IRepositoryDescriptionProvider>()));
         serviceContainer.AddService<IScriptsManager>(scriptsManager);
         serviceContainer.AddService<IScriptsRunner>(scriptsManager);
