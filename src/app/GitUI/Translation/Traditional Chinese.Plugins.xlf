@@ -1185,6 +1185,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
+        <target>Jira插件设置未完成！</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">

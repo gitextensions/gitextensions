@@ -946,26 +946,32 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
+        <target>Получить ID проекта с сервера</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>Не удалось получить проект с сервера. Проверьте токен API и (/или) URL-адрес сервера.</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
+        <target>Перейти на страницу управления токенами</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
+        <target>URL-адрес сервера</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
+        <target>Api токен</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
+        <target>ID проекта</target>
         
       </trans-unit>
     </body>

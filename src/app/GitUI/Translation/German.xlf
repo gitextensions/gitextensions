@@ -244,6 +244,7 @@ Klicken Sie auf dieses Info-Symbol für weitere Details.</target>
       </trans-unit>
       <trans-unit id="gbAuthorImages.Text">
         <source>&amp;Author images</source>
+        <target>Autorenbilder</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -546,6 +547,11 @@ Klicken Sie auf dieses Info-Symbol für weitere Details.</target>
 Because of this, make sure to fill in all the fields in the report template please.
 
 Send report?</source>
+        <target>Bitte geben Sie so viele Informationen wie möglich an, um den Entwicklern zu helfen das Problem zu lösen. Andernfalls könnte Ihr Ticket zum Problem geschlossen werden ohne weitere Aktionen von den Entwicklern.
+
+Bitte befüllen Sie deswegen alle Felder in dem Template für den Problembericht.
+
+Den Report trotzdem absenden?</target>
         
       </trans-unit>
       <trans-unit id="_title.Text">
@@ -1743,6 +1749,7 @@ Das vorrangige Diff-Werkzeug kann weiterhin durch Klicken auf den Hauptmenüeint
       </trans-unit>
       <trans-unit id="gbDiffColoring.Text">
         <source>Diff coloring</source>
+        <target>Änderungen farblich hervorzuheben</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -3468,6 +3475,7 @@ Wollen Sie weiter machen?</target>
       </trans-unit>
       <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
+        <target>Linkes Panel ein-/ausblenden</target>
         
       </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
@@ -3927,10 +3935,12 @@ Sind Sie sicher?</target>
       </trans-unit>
       <trans-unit id="cbxAddReference.Text">
         <source>A&amp;dd commit reference to commit message</source>
+        <target>Commit-Referenz zu Commit-Nachricht hinzufügen</target>
         
       </trans-unit>
       <trans-unit id="cbxAutoCommit.Text">
         <source>&amp;Automatically create a commit</source>
+        <target>&amp;Automatisch einen Commit erzeugen</target>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -4088,6 +4098,7 @@ Sind Sie sicher?</target>
       </trans-unit>
       <trans-unit id="checkBoxIncludePathFilter.Text">
         <source>Affect the following directory path(s) only:</source>
+        <target>Nur folgende(n) Pfad(e) einschließen:</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -4102,10 +4113,12 @@ Sind Sie sicher?</target>
       </trans-unit>
       <trans-unit id="labelPathHintExclude.Text">
         <source>(one path per line)</source>
+        <target>(ein Pfad pro Zeile)</target>
         
       </trans-unit>
       <trans-unit id="labelPathHintInclude.Text">
         <source>(one path per line)</source>
+        <target>(ein Pfad pro Zeile)</target>
         
       </trans-unit>
     </body>
@@ -4289,6 +4302,7 @@ gitex.cmd / gitex (befinden sich im gleichen Ordner wie GitExtensions.exe):</tar
       </trans-unit>
       <trans-unit id="ResetAuthor.Text">
         <source>R&amp;eset author</source>
+        <target>Autor zurücksetzen</target>
         
       </trans-unit>
       <trans-unit id="ResetSoft.Text">
@@ -6145,6 +6159,7 @@ Für weitere Informationen folgenden Befehl ausführen:
       </trans-unit>
       <trans-unit id="mnuSaveToFile.Text">
         <source>&amp;Save to file</source>
+        <target>In Datei speichern</target>
         
       </trans-unit>
       <trans-unit id="tabPageCommandCache.Text">
@@ -12008,10 +12023,12 @@ File(s):
       </trans-unit>
       <trans-unit id="RegisterButton.Text">
         <source>&amp;Enable shell extension</source>
+        <target>Shell-Erweiterung aktivieren</target>
         
       </trans-unit>
       <trans-unit id="UnregisterButton.Text">
         <source>&amp;Disable shell extension</source>
+        <target>Shell-Erweiterung deaktivieren</target>
         
       </trans-unit>
       <trans-unit id="_menuHelp.Text">
@@ -12036,6 +12053,7 @@ File(s):
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
         <source>Windows Explorer integration</source>
+        <target>Integration im Windows Explorer</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -12545,6 +12563,7 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       </trans-unit>
       <trans-unit id="_failedToLoadPlugin.Text">
         <source>Plugin loading failure</source>
+        <target>Plugin-Ladefehler</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadPluginPopupText.Text">

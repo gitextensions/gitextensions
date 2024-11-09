@@ -8392,17 +8392,17 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="ContextChooseBase.Text">
         <source>Choose base</source>
-        <target>baseを選択</target>
+        <target>ベースを選択</target>
         
       </trans-unit>
       <trans-unit id="ContextChooseLocal.Text">
         <source>Choose local</source>
-        <target>localを選択</target>
+        <target>ローカルを選択</target>
         
       </trans-unit>
       <trans-unit id="ContextChooseRemote.Text">
         <source>Choose remote</source>
-        <target>remoteを選択</target>
+        <target>リモートを選択</target>
         
       </trans-unit>
       <trans-unit id="ContextMarkAsSolved.Text">
@@ -8412,32 +8412,32 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="ContextOpenBaseWith.Text">
         <source>Open base with</source>
-        <target>baseをプログラムから開く</target>
+        <target>ベースをプログラムから開く</target>
         
       </trans-unit>
       <trans-unit id="ContextOpenLocalWith.Text">
         <source>Open local with</source>
-        <target>localをプログラムから開く</target>
+        <target>ローカルをプログラムから開く</target>
         
       </trans-unit>
       <trans-unit id="ContextOpenRemoteWith.Text">
         <source>Open remote with</source>
-        <target>remoteをプログラムから開く</target>
+        <target>リモートをプログラムから開く</target>
         
       </trans-unit>
       <trans-unit id="ContextSaveBaseAs.Text">
         <source>Save base as</source>
-        <target>名前を付けてbaseを保存</target>
+        <target>名前を付けてベースを保存</target>
         
       </trans-unit>
       <trans-unit id="ContextSaveLocalAs.Text">
         <source>Save local as</source>
-        <target>名前を付けてlocalを保存</target>
+        <target>名前を付けてローカルを保存</target>
         
       </trans-unit>
       <trans-unit id="ContextSaveRemoteAs.Text">
         <source>Save remote as</source>
-        <target>名前を付けてremoteを保存</target>
+        <target>名前を付けてリモートを保存</target>
         
       </trans-unit>
       <trans-unit id="FileName.HeaderText">
@@ -8570,12 +8570,12 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_chooseBaseFileFailedText.Text">
         <source>Choose base file failed.</source>
-        <target>ベース ファイルの選択に失敗しました。</target>
+        <target>ベースファイルの選択に失敗しました。</target>
         
       </trans-unit>
       <trans-unit id="_chooseLocalButtonText.Text">
         <source>Choose local</source>
-        <target>localを選択</target>
+        <target>ローカルを選択</target>
         
       </trans-unit>
       <trans-unit id="_chooseLocalFileFailedText.Text">
@@ -8585,7 +8585,7 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_chooseRemoteButtonText.Text">
         <source>Choose remote</source>
-        <target>remoteを選択</target>
+        <target>リモートを選択</target>
         
       </trans-unit>
       <trans-unit id="_chooseRemoteFileFailedText.Text">

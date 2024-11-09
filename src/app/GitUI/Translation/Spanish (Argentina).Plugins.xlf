@@ -12,6 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>Compilación automática de submódulos</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -864,6 +865,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
+        <target>Un buen modelo de ramas para tu proyecto con Git...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -911,6 +913,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>Nota: Es necesario reiniciar Git Extensions para que el token sea tenido en cuenta.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -943,26 +946,32 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
+        <target>Obtener ID de proyecto del servidor</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>No se pudo obtener el proyecto del servidor. Intenta especificar un token de API válido o verifica la URL de la instancia.</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
+        <target>Ir a la página de administración de tokens</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
+        <target>URL de la instancia</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
+        <target>Api Token</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
+        <target>ID de proyecto</target>
         
       </trans-unit>
     </body>
@@ -1172,6 +1181,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
+        <target>¡Configuración del plugin de Jira incompleta!</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
@@ -1191,6 +1201,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
         <source>Auth type</source>
+        <target>Tipo de autenticación</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

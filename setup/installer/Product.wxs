@@ -3,11 +3,11 @@
   <?include Config.wxi?>
   <Product Id="*" UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductName) $(var.Version)" Manufacturer="$(var.Manufacturer)" Version="$(var.NumericVersion)" Language="1033">
     <?if $(var.Platform) = x64 ?>
-      <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+    <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
     <?elseif $(var.Platform) = arm64 ?>
-      <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+    <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
     <?else ?>
-      <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+    <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
     <?endif ?>
     <Package InstallerVersion="500" Compressed="yes" Description="$(var.ProductName)" />
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />

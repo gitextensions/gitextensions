@@ -1182,6 +1182,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
+        <target>Jira eklentisi yapılandırması tamamlanmadı!</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
