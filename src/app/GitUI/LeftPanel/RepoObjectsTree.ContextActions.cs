@@ -144,8 +144,8 @@ namespace GitUI.LeftPanel
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
             _favoritesMenuItem = new FavoritesBranchMenuItems<BaseBranchLeafNode>(this);
 
-            RegisterClick<BaseBranchLeafNode>(mnubtnAddToFavorites, node => AddToFavorites(node));
-            RegisterClick<BaseBranchLeafNode>(mnubtnRemoveFromFavorites, node => RemoveFromFavorites(node));
+            RegisterClick<BaseBranchLeafNode>(mnubtnAddToFavorites, node => _favoritesTree.Add(node));
+            RegisterClick<BaseBranchLeafNode>(mnubtnRemoveFromFavorites, node => _favoritesTree.Remove(node));
 
             menuMain.InsertItems(_tagNodeMenuItems.Select(s => s.Item).Prepend(new ToolStripSeparator()), after: filterForSelectedRefsMenuItem);
             menuMain.InsertItems(_remoteBranchMenuItems.Select(s => s.Item).Prepend(new ToolStripSeparator()), after: filterForSelectedRefsMenuItem);
@@ -312,18 +312,6 @@ namespace GitUI.LeftPanel
 
             EnableMenuItems(isFavorite, mnubtnRemoveFromFavorites);
             EnableMenuItems(!isFavorite, mnubtnAddToFavorites);
-        }
-
-        private void AddToFavorites(NodeBase node)
-        {
-            // Implementation for adding to favorites
-            _favoritesTree.Add(node);
-        }
-
-        private void RemoveFromFavorites(NodeBase node)
-        {
-            // Implementation for removing from favorites
-            _favoritesTree.Remove(node);
         }
     }
 }

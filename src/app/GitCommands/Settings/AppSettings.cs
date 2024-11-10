@@ -47,6 +47,7 @@ namespace GitCommands
         private static readonly SettingsPath RepoFavorites = new AppSettingsPath("RepoFavorites");
         private static readonly SettingsPath ShowFavorites = new AppSettingsPath(RepoFavorites, "ShowFavorites");
         private static readonly SettingsPath FavoriteIndex = new AppSettingsPath(RepoFavorites, "FavoriteIndex");
+        private static readonly SettingsPath RepoObjectsTreePath = new AppSettingsPath("RepoObjectsTree");
 
         private static Mutex _globalMutex;
 
@@ -1570,7 +1571,7 @@ namespace GitCommands
 
         public static ISetting<bool> StraightenGraphDiagonals { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphDiagonals), true);
 
-        public static ISetting<bool> RepoObjectsTreeShowFavorites { get; set; } = Setting.Create(ShowFavorites, nameof(RepoObjectsTreeShowFavorites), true);
+        public static ISetting<bool> RepoObjectsTreeShowFavorites { get; set; } = Setting.Create(RepoObjectsTreePath, nameof(RepoObjectsTreeShowFavorites), true);
 
         /// <summary>
         ///  The limit when to skip the straightening of revision graph segments.
