@@ -49,7 +49,12 @@ public sealed class AsyncStreamReader : IDisposable
                     {
                         if (streamReader.EndOfStream)
                         {
-                            break;
+                            if (received.Length > 0)
+                            {
+                                notify(received);
+                            }
+
+                            return;
                         }
 
                         continue;
