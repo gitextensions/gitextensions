@@ -25,7 +25,7 @@ public sealed class AsyncStreamReader : IDisposable
     /// <summary>
     ///  Starts reading the stream and forwards its output to the <paramref name="notify"/> functor.
     /// </summary>
-    public AsyncStreamReader(StreamReader streamReader, Action<string> notify)
+    public AsyncStreamReader(IStreamReader streamReader, Action<string> notify)
     {
         CancellationToken cancellationToken = _cancellationTokenSource.Token;
         _taskManager.FileAndForget(async () =>
@@ -98,6 +98,14 @@ public sealed class AsyncStreamReader : IDisposable
             readTimeoutCancellationTokenSource = new CancellationTokenSource(_nextCharReadTimeout);
             return cancellationToken.CombineWith(readTimeoutCancellationTokenSource.Token).Token;
         }
+    }
+
+    /// <summary>
+    ///  Starts reading the stream and forwards its output to the <paramref name="notify"/> functor.
+    /// </summary>
+    public AsyncStreamReader(StreamReader streamReader, Action<string> notify)
+        : this(new StreamReaderFacade(streamReader), notify)
+    {
     }
 
     public void Dispose()
