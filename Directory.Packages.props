@@ -30,15 +30,15 @@
     <PackageVersion Include="System.Reactive.Linq" Version="5.0.0" />
     <PackageVersion Include="System.Reactive.Interfaces" Version="5.0.0" />
     <PackageVersion Include="System.ValueTuple" Version="4.5.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
-    
+
     <!-- Analyzers -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0-beta1.23364.2" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
-    
+
     <!-- Setup infra -->
     <PackageVersion Include="vswhere" Version="2.8.4" />
     <PackageVersion Include="WiX" Version="3.14.1" />
-    
+
     <!-- Test infra -->
     <PackageVersion Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.1" />
