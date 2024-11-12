@@ -1,3 +1,4 @@
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -36,6 +37,8 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
 
             labelResetBranchWarning.SetForeColorForBackColor();
+
+            Ok.Enabled = false;
         }
 
         private void Application_Idle(object sender, EventArgs e)
@@ -98,7 +101,7 @@ namespace GitUI.HelperDialogs
                 return;
             }
 
-            ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, Module.GetPathForGitExecution, ForceReset.Checked);
+            ArgumentString command = Commands.UpdateRef(gitRefToReset.CompleteName, _revision.ObjectId);
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {
@@ -126,6 +129,27 @@ namespace GitUI.HelperDialogs
                 Branches.SelectionStart = selectionStart;
                 Branches.SelectionLength = selectionLength;
             }
+        }
+
+        private void UpdateOkButton(object sender, EventArgs e)
+        {
+            Ok.Enabled = false;
+
+            IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
+            if (gitRefToReset is null)
+            {
+                return;
+            }
+
+            ThreadHelper.FileAndForget(async () =>
+            {
+                ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, Module.GetPathForGitExecution, ForceReset.Checked, dryRun: true);
+                ExecutionResult executionResult = await Module.GitExecutable.ExecuteAsync(command, throwOnErrorExit: false);
+
+                await this.SwitchToMainThreadAsync();
+
+                Ok.Enabled = executionResult.ExitedSuccessfully;
+            });
         }
     }
 }

@@ -445,12 +445,12 @@ namespace GitCommandsTests_Git
                 Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2).Arguments);
         }
 
-        [TestCase("mybranch", ".", false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
-        [TestCase("branch2", "/my/path", true, ExpectedResult = @"push ""file:///my/path"" ""1111111111111111111111111111111111111111:branch2"" --force")]
-        [TestCase("branchx", @"c:/my/path", true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force")]
-        public string PushLocalCmd(string gitRef, string repoDir, bool force)
+        [TestCase("mybranch", ".", false, false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
+        [TestCase("branch2", "/my/path", true, false, ExpectedResult = @"push ""file:///my/path"" ""1111111111111111111111111111111111111111:branch2"" --force")]
+        [TestCase("branchx", @"c:/my/path", true, true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force --dry-run")]
+        public string PushLocalCmd(string gitRef, string repoDir, bool force, bool dryRun)
         {
-            return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, PathUtil.ToPosixPath, force).Arguments;
+            return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, PathUtil.ToPosixPath, force, dryRun).Arguments;
         }
 
         [Test]
@@ -722,6 +722,12 @@ namespace GitCommandsTests_Git
             Assert.AreEqual($"{config}submodule sync \"foo\"", Commands.SubmoduleSync("foo").Arguments);
             Assert.AreEqual($"{config}submodule sync", Commands.SubmoduleSync("").Arguments);
             Assert.AreEqual($"{config}submodule sync", Commands.SubmoduleSync(null).Arguments);
+        }
+
+        [TestCase("mybranch", "2111111111111111111111111111111111111111", ExpectedResult = @"update-ref ""mybranch"" 2111111111111111111111111111111111111111")]
+        public string UpdateRef(string gitRef, string hash)
+        {
+            return Commands.UpdateRef(gitRef, ObjectId.Parse(hash)).Arguments;
         }
     }
 }
