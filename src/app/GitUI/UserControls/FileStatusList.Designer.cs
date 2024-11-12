@@ -33,7 +33,7 @@
             columnHeader = new ColumnHeader();
             NoFiles = new Label();
             LoadingFiles = new Label();
-            FilterComboBox = new ComboBox();
+            _NO_TRANSLATE_FilterComboBox = new ComboBox();
             FilterWatermarkLabel = new Label();
             FilterToolTip = new ToolTip(components);
             lblSplitter = new Label();
@@ -142,22 +142,22 @@
             DeleteSearchButton.TabIndex = 4;
             DeleteSearchButton.Click += DeleteSearchButton_Click;
             // 
-            // FilterComboBox
+            // _NO_TRANSLATE_FilterComboBox
             // 
-            FilterComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            FilterComboBox.FlatStyle = FlatStyle.Flat;
-            FilterComboBox.FormattingEnabled = true;
-            FilterComboBox.Location = new Point(0, 23);
-            FilterComboBox.Margin = new Padding(0);
-            FilterComboBox.Name = "FilterComboBox";
-            FilterComboBox.Size = new Size(682, 23);
-            FilterComboBox.TabIndex = 5;
-            FilterComboBox.SelectedIndexChanged += FilterComboBox_SelectedIndexChanged;
-            FilterComboBox.TextUpdate += FilterComboBox_TextUpdate;
-            FilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
-            FilterComboBox.GotFocus += FilterComboBox_GotFocus;
-            FilterComboBox.LostFocus += FilterComboBox_LostFocus;
-            FilterComboBox.MouseEnter += FilterComboBox_MouseEnter;
+            _NO_TRANSLATE_FilterComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _NO_TRANSLATE_FilterComboBox.FlatStyle = FlatStyle.Flat;
+            _NO_TRANSLATE_FilterComboBox.FormattingEnabled = true;
+            _NO_TRANSLATE_FilterComboBox.Location = new Point(0, 23);
+            _NO_TRANSLATE_FilterComboBox.Margin = new Padding(0);
+            _NO_TRANSLATE_FilterComboBox.Name = "_NO_TRANSLATE_FilterComboBox";
+            _NO_TRANSLATE_FilterComboBox.Size = new Size(682, 23);
+            _NO_TRANSLATE_FilterComboBox.TabIndex = 5;
+            _NO_TRANSLATE_FilterComboBox.SelectedIndexChanged += FilterComboBox_SelectedIndexChanged;
+            _NO_TRANSLATE_FilterComboBox.TextUpdate += FilterComboBox_TextUpdate;
+            _NO_TRANSLATE_FilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
+            _NO_TRANSLATE_FilterComboBox.GotFocus += FilterComboBox_GotFocus;
+            _NO_TRANSLATE_FilterComboBox.LostFocus += FilterComboBox_LostFocus;
+            _NO_TRANSLATE_FilterComboBox.MouseEnter += FilterComboBox_MouseEnter;
             // 
             // FilterWatermarkLabel
             // 
@@ -212,7 +212,7 @@
             Controls.Add(DeleteFilterButton);
             Controls.Add(cboFindInCommitFilesGitGrep);
             Controls.Add(FileStatusListView);
-            Controls.Add(FilterComboBox);
+            Controls.Add(_NO_TRANSLATE_FilterComboBox);
             Controls.Add(lblSplitter);
             Margin = new Padding(3, 4, 3, 4);
             Name = "FileStatusList";
@@ -227,7 +227,7 @@
         private Label NoFiles;
         private Label LoadingFiles;
         private ColumnHeader columnHeader;
-        private ComboBox FilterComboBox;
+        private ComboBox _NO_TRANSLATE_FilterComboBox;
         private Label FilterWatermarkLabel;
         private ToolTip FilterToolTip;
         private Label lblSplitter;
