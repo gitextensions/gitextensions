@@ -101,7 +101,9 @@ namespace GitUI
             NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
             LoadingFiles.Font = new Font(LoadingFiles.Font, FontStyle.Italic);
             FilterWatermarkLabel.Font = new Font(FilterWatermarkLabel.Font, FontStyle.Italic);
-            FilterComboBox.Font = new Font(FilterComboBox.Font, FontStyle.Bold);
+            _NO_TRANSLATE_FilterComboBox.Font = new Font(_NO_TRANSLATE_FilterComboBox.Font, FontStyle.Bold);
+            _NO_TRANSLATE_FilterComboBox.Items.Add("^(?!.*NotThisWord)");
+            _NO_TRANSLATE_FilterComboBox.Items.Add(@"^(?!.*\bg?tests?/)");
             lblFindInCommitFilesGitGrepWatermark.Font = new Font(lblFindInCommitFilesGitGrepWatermark.Font, FontStyle.Italic);
             cboFindInCommitFilesGitGrep.Font = new Font(cboFindInCommitFilesGitGrep.Font, FontStyle.Bold);
 
@@ -348,7 +350,7 @@ namespace GitUI
         [Browsable(false)]
         public Func<ObjectId?, string>? DescribeRevision { get; set; }
 
-        public bool FilterFilesByNameRegexFocused => FilterComboBox.Focused;
+        public bool FilterFilesByNameRegexFocused => _NO_TRANSLATE_FilterComboBox.Focused;
         public bool FindInCommitFilesGitGrepFocused => cboFindInCommitFilesGitGrep.Focused;
         public bool FindInCommitFilesGitGrepVisible => cboFindInCommitFilesGitGrep.Visible;
 
@@ -389,10 +391,10 @@ namespace GitUI
             // Adjust locations
             // Note that 'LoadingFiles' location depends on visibility of Filter box, must be set each time made visible
             int top = !visible ? 0 : cboFindInCommitFilesGitGrep.Bottom + cboFindInCommitFilesGitGrep.Margin.Bottom;
-            FilterComboBox.Top = top;
-            FilterComboBox.Width = FileStatusListView.Width;
-            FilterWatermarkLabel.Top = FilterComboBox.Top;
-            DeleteFilterButton.Top = FilterComboBox.Top;
+            _NO_TRANSLATE_FilterComboBox.Top = top;
+            _NO_TRANSLATE_FilterComboBox.Width = FileStatusListView.Width;
+            FilterWatermarkLabel.Top = _NO_TRANSLATE_FilterComboBox.Top;
+            DeleteFilterButton.Top = _NO_TRANSLATE_FilterComboBox.Top;
 
             SetFindInCommitFilesGitGrepWatermarkVisibility();
             SetFileStatusListVisibility(filesPresent: !NoFiles.Visible);
@@ -404,12 +406,12 @@ namespace GitUI
 
             // Use variable to prevent bad value retrieved from `Visible` property
             bool filesToFilter = filesPresent || (cboFindInCommitFilesGitGrep.Visible && !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text));
-            FilterComboBox.Visible = filesToFilter;
+            _NO_TRANSLATE_FilterComboBox.Visible = filesToFilter;
             NoFiles.Visible = !filesToFilter;
             if (!filesToFilter)
             {
                 // Workaround for startup issue if set in EnableSearchForList()
-                NoFiles.Top = FilterComboBox.Top;
+                NoFiles.Top = _NO_TRANSLATE_FilterComboBox.Top;
                 NoFiles.BringToFront();
             }
 
@@ -418,7 +420,7 @@ namespace GitUI
             SetDeleteSearchButtonVisibility();
             SetFindInCommitFilesGitGrepWatermarkVisibility();
 
-            int top = FilterComboBox.Visible ? FilterComboBox.Bottom + FilterComboBox.Margin.Top + FilterComboBox.Margin.Bottom : 0;
+            int top = _NO_TRANSLATE_FilterComboBox.Visible ? _NO_TRANSLATE_FilterComboBox.Bottom + _NO_TRANSLATE_FilterComboBox.Margin.Top + _NO_TRANSLATE_FilterComboBox.Margin.Bottom : 0;
             int height = ClientRectangle.Height - top - FileStatusListView.Margin.Top - FileStatusListView.Margin.Bottom;
             FileStatusListView.SetBounds(0, top, 0, height, BoundsSpecified.Y | BoundsSpecified.Height);
         }
@@ -562,7 +564,7 @@ namespace GitUI
 
         public int UnfilteredItemsCount => GitItemStatusesWithDescription?.Sum(tuple => tuple.Statuses.Count) ?? 0;
 
-        public bool IsFilterActive => !string.IsNullOrEmpty(FilterComboBox.Text);
+        public bool IsFilterActive => !string.IsNullOrEmpty(_NO_TRANSLATE_FilterComboBox.Text);
 
         // Public methods
 
@@ -1071,7 +1073,7 @@ namespace GitUI
 
         private void SetDeleteFilterButtonVisibility()
         {
-            DeleteFilterButton.Visible = FilterComboBox.Visible && !string.IsNullOrEmpty(FilterComboBox.Text);
+            DeleteFilterButton.Visible = _NO_TRANSLATE_FilterComboBox.Visible && !string.IsNullOrEmpty(_NO_TRANSLATE_FilterComboBox.Text);
             if (DeleteFilterButton.Visible)
             {
                 DeleteFilterButton.BringToFront();
@@ -1080,7 +1082,7 @@ namespace GitUI
 
         private void SetFilterWatermarkLabelVisibility()
         {
-            FilterWatermarkLabel.Visible = FilterComboBox.Visible && !FilterComboBox.Focused && string.IsNullOrEmpty(FilterComboBox.Text);
+            FilterWatermarkLabel.Visible = _NO_TRANSLATE_FilterComboBox.Visible && !_NO_TRANSLATE_FilterComboBox.Focused && string.IsNullOrEmpty(_NO_TRANSLATE_FilterComboBox.Text);
             if (FilterWatermarkLabel.Visible)
             {
                 FilterWatermarkLabel.BringToFront();
@@ -1109,7 +1111,7 @@ namespace GitUI
         {
             // Show "Files loading" below the filterbox
             NoFiles.Visible = false;
-            int top = FilterComboBox.Visible ? FilterComboBox.Bottom + FilterComboBox.Margin.Top + FilterComboBox.Margin.Bottom : 0;
+            int top = _NO_TRANSLATE_FilterComboBox.Visible ? _NO_TRANSLATE_FilterComboBox.Bottom + _NO_TRANSLATE_FilterComboBox.Margin.Top + _NO_TRANSLATE_FilterComboBox.Margin.Bottom : 0;
             LoadingFiles.Top = top;
             LoadingFiles.Visible = true;
             LoadingFiles.BringToFront();
@@ -1896,7 +1898,7 @@ namespace GitUI
 
         public void SetFilter(string value)
         {
-            FilterComboBox.Text = value;
+            _NO_TRANSLATE_FilterComboBox.Text = value;
             FilterFiles(value);
         }
 
@@ -1967,18 +1969,18 @@ namespace GitUI
 
             void AddToSelectionFilter(string filter)
             {
-                if (FilterComboBox.Items.Cast<string>().Any(candidate => candidate == filter))
+                if (_NO_TRANSLATE_FilterComboBox.Items.Cast<string>().Any(candidate => candidate == filter))
                 {
                     return;
                 }
 
                 const int SelectionFilterMaxLength = 10;
-                if (FilterComboBox.Items.Count == SelectionFilterMaxLength)
+                if (_NO_TRANSLATE_FilterComboBox.Items.Count == SelectionFilterMaxLength)
                 {
-                    FilterComboBox.Items.RemoveAt(SelectionFilterMaxLength - 1);
+                    _NO_TRANSLATE_FilterComboBox.Items.RemoveAt(SelectionFilterMaxLength - 1);
                 }
 
-                FilterComboBox.Items.Insert(0, filter);
+                _NO_TRANSLATE_FilterComboBox.Items.Insert(0, filter);
             }
         }
 
@@ -1987,13 +1989,13 @@ namespace GitUI
             // show DeleteFilterButton at once
             SetDeleteFilterButtonVisibility();
 
-            string filterText = FilterComboBox.Text;
+            string filterText = _NO_TRANSLATE_FilterComboBox.Text;
 
             // workaround for text getting selected if it matches the start of the combobox items
-            if (FilterComboBox.SelectionLength == filterText.Length && FilterComboBox.SelectionStart == 0)
+            if (_NO_TRANSLATE_FilterComboBox.SelectionLength == filterText.Length && _NO_TRANSLATE_FilterComboBox.SelectionStart == 0)
             {
-                FilterComboBox.SelectionLength = 0;
-                FilterComboBox.SelectionStart = filterText.Length;
+                _NO_TRANSLATE_FilterComboBox.SelectionLength = 0;
+                _NO_TRANSLATE_FilterComboBox.SelectionStart = filterText.Length;
             }
 
             _filterSubject.OnNext(filterText);
@@ -2001,12 +2003,12 @@ namespace GitUI
 
         private void FilterComboBox_MouseEnter(object sender, EventArgs e)
         {
-            FilterToolTip.SetToolTip(FilterComboBox, _toolTipText);
+            FilterToolTip.SetToolTip(_NO_TRANSLATE_FilterComboBox, _toolTipText);
         }
 
         private void FilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FilterFiles(FilterComboBox.Text);
+            FilterFiles(_NO_TRANSLATE_FilterComboBox.Text);
         }
 
         private void FilterComboBox_GotFocus(object sender, EventArgs e)
@@ -2021,13 +2023,13 @@ namespace GitUI
 
         private void FilterWatermarkLabel_Click(object sender, EventArgs e)
         {
-            FilterComboBox.Focus();
+            _NO_TRANSLATE_FilterComboBox.Focus();
         }
 
         private void FilterComboBox_SizeChanged(object sender, EventArgs e)
         {
             // strangely it does not invalidate itself on resize so its look becomes distorted
-            FilterComboBox.Invalidate();
+            _NO_TRANSLATE_FilterComboBox.Invalidate();
         }
 
         private void cboFindInCommitFilesGitGrep_TextUpdate(object sender, EventArgs e)
@@ -2160,7 +2162,7 @@ namespace GitUI
             SetDeleteFilterButtonVisibility();
             if (string.IsNullOrEmpty(value))
             {
-                FilterComboBox.BackColor = SystemColors.Window;
+                _NO_TRANSLATE_FilterComboBox.BackColor = SystemColors.Window;
                 _filter = null;
                 return;
             }
@@ -2168,11 +2170,11 @@ namespace GitUI
             try
             {
                 _filter = new Regex(value, RegexOptions.IgnoreCase);
-                FilterComboBox.BackColor = _activeInputColor;
+                _NO_TRANSLATE_FilterComboBox.BackColor = _activeInputColor;
             }
             catch
             {
-                FilterComboBox.BackColor = _invalidInputColor;
+                _NO_TRANSLATE_FilterComboBox.BackColor = _invalidInputColor;
                 throw;
             }
         }
@@ -2280,7 +2282,7 @@ namespace GitUI
             internal Color InvalidInputColor => _fileStatusList._invalidInputColor;
             internal Label DeleteFilterButton => _fileStatusList.DeleteFilterButton;
             internal ListView FileStatusListView => _fileStatusList.FileStatusListView;
-            internal ComboBox FilterComboBox => _fileStatusList.FilterComboBox;
+            internal ComboBox FilterComboBox => _fileStatusList._NO_TRANSLATE_FilterComboBox;
             internal Regex? Filter => _fileStatusList._filter;
             internal bool FilterWatermarkLabelVisible => _fileStatusList.FilterWatermarkLabel.Visible;
             internal void StoreFilter(string value) => _fileStatusList.StoreFilter(value);
