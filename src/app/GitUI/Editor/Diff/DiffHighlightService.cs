@@ -276,8 +276,8 @@ public abstract class DiffHighlightService : TextHighlightService
 
     internal static void AddDifferenceMarkers(List<TextMarker> markers, Func<ISegment, string> getText, ISegment lineRemoved, ISegment lineAdded, int beginOffset, bool dimBackground)
     {
-        ReadOnlySpan<char> textRemoved = getText(lineRemoved).AsSpan();
-        ReadOnlySpan<char> textAdded = getText(lineAdded).AsSpan();
+        ReadOnlySpan<char> textRemoved = LimitLength(getText(lineRemoved).AsSpan());
+        ReadOnlySpan<char> textAdded = LimitLength(getText(lineAdded).AsSpan());
         int offsetRemoved = lineRemoved.Offset + beginOffset;
         int offsetAdded = lineAdded.Offset + beginOffset;
         (int lengthIdenticalAtStart, int lengthIdenticalAtEnd) = AddDifferenceMarkers(markers, textRemoved, textAdded, offsetRemoved, offsetAdded, dimBackground);
@@ -292,6 +292,14 @@ public abstract class DiffHighlightService : TextHighlightService
         {
             markers.Add(CreateDimmedMarker(offsetRemoved + textRemoved.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, isRemoved: true, dimBackground));
             markers.Add(CreateDimmedMarker(offsetAdded + textAdded.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, isRemoved: false, dimBackground));
+        }
+
+        return;
+
+        static ReadOnlySpan<char> LimitLength(ReadOnlySpan<char> text)
+        {
+            const int maxLength = 2000;
+            return text.Length <= maxLength ? text : text[..maxLength];
         }
     }
 
