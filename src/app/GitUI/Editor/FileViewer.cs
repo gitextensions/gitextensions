@@ -893,6 +893,10 @@ namespace GitUI.Editor
                     {
                         GoToLine(line.Value);
                     }
+                    else if (viewMode == ViewMode.Grep && ShowEntireFile)
+                    {
+                        internalFileViewer.GoToNextChange(NumberOfContextLines);
+                    }
 
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
