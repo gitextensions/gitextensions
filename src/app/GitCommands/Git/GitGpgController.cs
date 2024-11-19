@@ -244,7 +244,7 @@ namespace GitCommands.Gpg
             };
 
             // 'verify-tag' returns info in stderr
-            return GetModule().GitExecutable.Execute(args).StandardError;
+            return GetModule().GitExecutable.Execute(args, throwOnErrorExit: false).StandardError;
         }
 
         private string? EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)
