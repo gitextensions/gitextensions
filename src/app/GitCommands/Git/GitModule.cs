@@ -2394,7 +2394,7 @@ namespace GitCommands
                 grepString,
                 !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
                 "--",
-                fileName
+                fileName.Quote()
             };
 
             return await _gitExecutable.ExecuteAsync(
