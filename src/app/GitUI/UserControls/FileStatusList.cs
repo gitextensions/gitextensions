@@ -1061,6 +1061,12 @@ namespace GitUI
                     firstSelectedItem.Focused = true;
                     firstSelectedItem.Selected = true;
                     firstSelectedItem.EnsureVisible();
+
+                    ListViewGroup? group = firstSelectedItem?.Group;
+                    if (group?.CollapsedState is ListViewGroupCollapsedState.Collapsed)
+                    {
+                        group.CollapsedState = ListViewGroupCollapsedState.Expanded;
+                    }
                 }
             }
             finally
