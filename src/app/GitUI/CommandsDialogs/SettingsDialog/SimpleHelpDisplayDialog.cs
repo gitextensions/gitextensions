@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog
+﻿using System.ComponentModel;
+
+namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public partial class SimpleHelpDisplayDialog : Form
     {
@@ -7,8 +9,10 @@
             InitializeComponent();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? DialogTitle { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? ContentText { get; set; }
 
         protected override void OnLoad(EventArgs e)

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.ComponentModel;
+using System.Data;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
@@ -39,6 +40,7 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<IGitRef>? _gitRefs;
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool ErrorOccurred { get; private set; }
         private int _pushColumnIndex;
 

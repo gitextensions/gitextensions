@@ -1,4 +1,6 @@
-﻿namespace GitExtensions.Extensibility.Settings.UserControls;
+﻿using System.ComponentModel;
+
+namespace GitExtensions.Extensibility.Settings.UserControls;
 
 public partial class CredentialsControl : UserControl
 {
@@ -9,6 +11,7 @@ public partial class CredentialsControl : UserControl
         ChangeLabelText(userNameLabelText, passwordLabelText);
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string UserName
     {
         get => userNameTextBox.Text;
@@ -16,6 +19,7 @@ public partial class CredentialsControl : UserControl
         set => userNameTextBox.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string Password
     {
         get => passwordTextBox.Text;

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -17,8 +18,11 @@ namespace GitUI.CommandsDialogs
         private readonly IGitBranchNameNormaliser _branchNameNormaliser = new GitBranchNameNormaliser();
         private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool CheckoutAfterCreation { get; set; } = true;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool UserAbleToChangeRevision { get; set; } = true;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool CouldBeOrphan { get; set; } = true;
 
         public FormCreateBranch(IGitUICommands commands, ObjectId? objectId, string? newBranchNamePrefix = null)

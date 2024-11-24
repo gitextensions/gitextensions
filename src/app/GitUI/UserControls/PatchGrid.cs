@@ -59,6 +59,7 @@ namespace GitUI
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IReadOnlyList<PatchFile>? PatchFiles { get; private set; }
 
         private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)

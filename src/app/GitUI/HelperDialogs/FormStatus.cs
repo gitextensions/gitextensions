@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -54,7 +55,9 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? ProcessString { get; protected init; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? ProcessArguments { get; set; }
 
         /// <summary>

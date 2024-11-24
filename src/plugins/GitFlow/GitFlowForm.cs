@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -22,6 +23,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         private readonly AsyncLoader _task = new();
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsRefreshNeeded { get; set; }
 
         private string? CurrentBranch { get; set; }

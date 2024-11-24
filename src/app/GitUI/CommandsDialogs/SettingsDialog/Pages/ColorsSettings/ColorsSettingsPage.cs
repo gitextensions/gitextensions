@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -31,6 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComplete();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ThemeId SelectedThemeId
         {
             get
@@ -62,6 +64,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string[] SelectedThemeVariations
         {
             get => chkColorblind.Checked
@@ -71,18 +74,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             set => chkColorblind.Checked = value.Contains(ThemeVariations.Colorblind);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool UseSystemVisualStyle
         {
             get => chkUseSystemVisualStyle.Checked;
             set => chkUseSystemVisualStyle.Checked = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool LabelRestartIsNeededVisible
         {
             get => lblRestartNeeded.Visible;
             set => lblRestartNeeded.Visible = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsChoosingVisualStyleEnabled
         {
             get => chkUseSystemVisualStyle.Enabled;

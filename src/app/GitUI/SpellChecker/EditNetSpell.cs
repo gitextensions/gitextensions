@@ -52,6 +52,7 @@ namespace GitUI.SpellChecker
 
         private readonly IWordAtCursorExtractor _wordAtCursorExtractor;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font TextBoxFont { get; set; }
 
         public bool IsUndoInProgress;
@@ -71,6 +72,7 @@ namespace GitUI.SpellChecker
             _ = new TextBoxSilencer(TextBox);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override string Text
         {
             get

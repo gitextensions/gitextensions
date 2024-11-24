@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Git;
+﻿using System.ComponentModel;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI.CommandsDialogs
 {
@@ -23,6 +24,7 @@ namespace GitUI.CommandsDialogs
             branchSelector.Focus();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? BranchName { get; private set; }
 
         private void btnCompare_Click(object sender, EventArgs e)

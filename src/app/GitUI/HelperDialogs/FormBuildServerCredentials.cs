@@ -1,4 +1,5 @@
-﻿using GitUIPluginInterfaces.BuildServerIntegration;
+﻿using System.ComponentModel;
+using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.HelperDialogs
 {
@@ -11,6 +12,7 @@ namespace GitUI.HelperDialogs
             labelHeader.Text = string.Format(labelHeader.Text, buildServerUniqueKey);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IBuildServerCredentials? BuildServerCredentials { get; set; }
 
         private void buttonOK_Click(object sender, EventArgs e)

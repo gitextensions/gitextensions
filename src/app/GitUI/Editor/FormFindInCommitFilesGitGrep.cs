@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
@@ -28,6 +29,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         ShowInTaskbar = false;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string? GitGrepExpressionText
     {
         get => cboFindInCommitFilesGitGrep.Text;

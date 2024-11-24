@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -12,9 +13,11 @@ namespace GitUI.HelperDialogs
 
     public partial class FormProcess : FormStatus
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string Remote { get; set; }
         public string? ProcessInput { get; }
         public readonly string WorkingDirectory;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public HandleOnExit? HandleOnExitCallback { get; set; }
         public readonly Dictionary<string, string> ProcessEnvVariables = [];
 

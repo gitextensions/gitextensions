@@ -199,6 +199,7 @@ namespace GitUI.Editor
         // Public properties
 
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public byte[]? FilePreamble { get; private set; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -806,6 +807,7 @@ namespace GitUI.Editor
         /// <summary>
         /// If the file viewer contents support line patches.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool SupportLinePatching { get; private set; }
 
         /// <summary>
@@ -813,6 +815,7 @@ namespace GitUI.Editor
         /// by clearing <see cref="AllowLinePatching" />
         /// Used for index/worktree where line patches modifies the diff.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool LinePatchingBlocksUntilReload { private get; set; }
 
         /// <summary>

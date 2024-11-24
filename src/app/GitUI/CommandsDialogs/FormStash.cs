@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
@@ -16,6 +17,7 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _asyncLoader = new();
         private int _lastSelectedStashIndex = -1;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool ManageStashes { get; set; }
         private GitStash? _currentWorkingDirStashItem;
 

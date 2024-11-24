@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GitUI
 {
@@ -16,6 +17,7 @@ namespace GitUI
             return result == DialogResult.Retry;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? KeyPath { get; private set; }
 
         public FormPuttyError()

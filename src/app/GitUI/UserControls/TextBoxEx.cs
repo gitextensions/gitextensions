@@ -1,4 +1,6 @@
-﻿namespace GitUI.UserControls
+﻿using System.ComponentModel;
+
+namespace GitUI.UserControls
 {
     internal sealed class TextBoxEx : TextBox
     {
@@ -13,6 +15,7 @@
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color BorderDefaultColor
         {
             get => _borderDefaultColor;
@@ -23,6 +26,7 @@
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color BorderHoveredColor
         {
             get => _borderHoveredColor;
@@ -33,6 +37,7 @@
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color BorderFocusedColor
         {
             get => _borderFocusedColor;

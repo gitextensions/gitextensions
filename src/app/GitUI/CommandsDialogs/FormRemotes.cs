@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
@@ -129,6 +130,7 @@ Inactive remote is completely invisible to git.");
         /// remote name will be preselected in the listbox.
         /// </summary>
         /// <remarks>exclusive of <see cref="PreselectLocalOnLoad"/>.</remarks>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? PreselectRemoteOnLoad { get; set; }
 
         /// <summary>
@@ -136,6 +138,7 @@ Inactive remote is completely invisible to git.");
         /// and the given local name will be preselected in the listbox.
         /// </summary>
         /// <remarks>exclusive of <see cref="PreselectRemoteOnLoad"/>.</remarks>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? PreselectLocalOnLoad { get; set; }
 
         /// <summary>

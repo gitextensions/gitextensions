@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using GitCommands;
@@ -51,6 +52,7 @@ namespace GitUI.Blame
         private readonly IGitBlameParser _gitBlameParser;
 
         // Relative path of the file to blame when blaming a new revision
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? PathToBlame { get; private set; }
 
         public BlameControl()

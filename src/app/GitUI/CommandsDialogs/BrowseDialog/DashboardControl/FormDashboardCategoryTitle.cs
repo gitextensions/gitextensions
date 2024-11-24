@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using System.ComponentModel;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
@@ -35,6 +36,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <summary>
         /// Gets the new category.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? Category { get; private set; }
 
         private void OkButton_Click(object sender, EventArgs e)

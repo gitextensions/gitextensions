@@ -29,6 +29,7 @@ namespace GitUI
         public event EventHandler SelectedValueChanged;
 
         private IReadOnlyList<IGitRef>? _branchesToSelect;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IReadOnlyList<IGitRef>? BranchesToSelect
         {
             get

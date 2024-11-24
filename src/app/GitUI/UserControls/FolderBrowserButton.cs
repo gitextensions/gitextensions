@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using Microsoft;
 using ResourceManager;
 
@@ -16,6 +17,7 @@ namespace GitUI.UserControls
         /// The Text property of this control will be filled with the selected path
         /// and the Text property is used as path to initialize the folder browser's default selection.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Control? PathShowingControl { get; set; }
 
         /// <summary>

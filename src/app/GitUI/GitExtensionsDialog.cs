@@ -36,6 +36,7 @@ namespace GitUI
         /// The URL structure:
         /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
         /// </remarks>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? ManualSectionAnchorName { get; set; }
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace GitUI
         /// The URL structure:
         /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
         /// </remarks>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? ManualSectionSubfolder { get; set; }
 
         /// <summary>
