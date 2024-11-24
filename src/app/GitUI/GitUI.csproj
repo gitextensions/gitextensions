@@ -7,7 +7,7 @@
     <Nullable>annotations</Nullable>
 
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
-
+    <NoWarn>$(NoWarn);WFO5002</NoWarn>
     <!--
     For debug purposes uncomment these lines:
 
