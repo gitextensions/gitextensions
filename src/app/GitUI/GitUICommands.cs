@@ -1322,14 +1322,14 @@ namespace GitUI
             WrapRepoHostingCall(TranslatedStrings.AddUpstreamRemote, gitHoster,
                                 gh =>
                                 {
-                                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                                    ThreadHelper.FileAndForget(async () =>
                                     {
                                         string remoteName = await gh.AddUpstreamRemoteAsync();
                                         if (!string.IsNullOrEmpty(remoteName))
                                         {
                                             StartPullDialogAndPullImmediately(owner, remoteBranch: null, remoteName, GitPullAction.Fetch);
                                         }
-                                    }).FileAndForget();
+                                    });
                                 });
         }
 

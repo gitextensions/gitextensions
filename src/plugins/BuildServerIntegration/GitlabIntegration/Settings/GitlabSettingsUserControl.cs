@@ -64,14 +64,14 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
             {
                 if (host is not null)
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    ThreadHelper.FileAndForget(async () =>
                     {
                         projectId = await UpdateProjectIdAsync(host, apiToken);
                         if (projectId is > 0)
                         {
                             ProjectIdTextBox.Text = projectId.ToString();
                         }
-                    }).FileAndForget();
+                    });
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
 
             GetProjectIdStatusText.Visible = false;
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
                 int? projectId = await UpdateProjectIdAsync(InstanceUrlTextBox.Text, ApiTokenTextBox.Text);
                 if (projectId is > 0)
@@ -135,7 +135,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
                 {
                     GetProjectIdStatusText.Visible = true;
                 }
-            }).FileAndForget();
+            });
         }
 
         private void TokenManagementLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
