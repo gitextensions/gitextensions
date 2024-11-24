@@ -121,15 +121,8 @@ namespace ResourceManager
 
         public static string ProcessSubmoduleStatus(IGitModule module, GitSubmoduleStatus status, bool moduleIsParent = true, bool limitOutput = false)
         {
-            if (module is null)
-            {
-                throw new ArgumentNullException(nameof(module));
-            }
-
-            if (status is null)
-            {
-                throw new ArgumentNullException(nameof(status));
-            }
+            ArgumentNullException.ThrowIfNull(module);
+            ArgumentNullException.ThrowIfNull(status);
 
             IGitModule gitModule = moduleIsParent ? module.GetSubmodule(status.Name) : module;
             StringBuilder sb = new();

@@ -57,15 +57,8 @@ namespace System.Linq
             this TSource[] source,
             [InstantHandle] Func<TSource, TSource> transformer)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (transformer is null)
-            {
-                throw new ArgumentNullException(nameof(transformer));
-            }
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(transformer);
 
             for (int i = 0; i < source.Length; i++)
             {

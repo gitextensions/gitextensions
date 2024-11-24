@@ -8,10 +8,7 @@ namespace GitUI
     {
         public static void AdjustForDpiScaling(this Control control)
         {
-            if (control is null)
-            {
-                throw new ArgumentNullException(nameof(control));
-            }
+            ArgumentNullException.ThrowIfNull(control);
 
             bool isDpiScaled = DpiUtil.IsNonStandard;
 

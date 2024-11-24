@@ -21,10 +21,7 @@
 
         public ChainedAvatarProvider(IEnumerable<IAvatarProvider> avatarProviders)
         {
-            if (avatarProviders is null)
-            {
-                throw new ArgumentNullException(nameof(avatarProviders));
-            }
+            ArgumentNullException.ThrowIfNull(avatarProviders);
 
             _avatarProviders = avatarProviders.ToArray();
         }
