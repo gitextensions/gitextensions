@@ -151,7 +151,7 @@ namespace GitUI.BuildServerIntegration
                     {
                         byte[] protectedData = new byte[stream.Length];
 
-                        stream.Read(protectedData, 0, (int)stream.Length);
+                        stream.ReadExactly(protectedData, 0, (int)stream.Length);
                         try
                         {
                             byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null,
