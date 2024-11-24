@@ -225,7 +225,9 @@ namespace GitUI.CommandsDialogs
                         : CredentialCache.DefaultNetworkCredentials;
                 }
 
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
 
                 smtpClient.Send(mail);
             }
