@@ -102,12 +102,12 @@ namespace GitCommands.Logging
                 if (FileName.StartsWith("wsl "))
                 {
                     fileName = "wsl";
-                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "").TrimEnd();
+                    arguments = GetGitArgumentsWithoutConfiguration(Arguments);
                 }
                 else if (FileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
-                    arguments = GitArgumentsWithoutConfigurationRegex().Replace(Arguments, "").TrimEnd();
+                    arguments = GetGitArgumentsWithoutConfiguration(Arguments);
                 }
                 else
                 {
@@ -170,6 +170,9 @@ namespace GitCommands.Logging
                 return s.ToString();
             }
         }
+
+        public static string GetGitArgumentsWithoutConfiguration(string arguments)
+            => GitArgumentsWithoutConfigurationRegex().Replace(arguments, "").TrimEnd();
     }
 
     public static class CommandLog
