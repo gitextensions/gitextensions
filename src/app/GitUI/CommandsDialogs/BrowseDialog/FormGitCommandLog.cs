@@ -197,6 +197,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
+        private void tsmiClearCache_Click(object sender, EventArgs e)
+        {
+            GitModule.GitCommandCache.Clear();
+            RefreshCommandCacheItems();
+        }
+
         #region Single instance static members
 
         private static FormGitCommandLog? instance;

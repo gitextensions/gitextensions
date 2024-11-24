@@ -5111,6 +5111,10 @@ command "git help gitattributes"
         <source>Command log</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiClearCache.Text">
+        <source>C&amp;lear</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormGitIgnore" source-language="en">

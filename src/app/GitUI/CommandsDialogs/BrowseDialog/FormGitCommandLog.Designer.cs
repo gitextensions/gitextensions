@@ -43,6 +43,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             tabPageCommandCache = new TabPage();
             splitContainer1 = new SplitContainer();
             CommandCacheItems = new ListBox();
+            cmsCache = new ContextMenuStrip(components);
+            tsmiClearCache = new ToolStripMenuItem();
             commandCacheOutput = new RichTextBox();
             chkAlwaysOnTop = new CheckBox();
             chkWordWrap = new CheckBox();
@@ -59,6 +61,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            cmsCache.SuspendLayout();
             SuspendLayout();
             // 
             // TabControl
@@ -76,6 +79,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // tabPageCommandLog
             // 
             tabPageCommandLog.BackColor = SystemColors.ControlLight;
+            tabPageCommandLog.ContextMenuStrip = contextMenu;
             tabPageCommandLog.Controls.Add(splitContainer2);
             tabPageCommandLog.Location = new Point(1, 23);
             tabPageCommandLog.Margin = new Padding(0);
@@ -122,14 +126,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // 
             contextMenu.Items.AddRange(new ToolStripItem[] { mnuSaveToFile, mnuCopyCommandLine, mnuClear });
             contextMenu.Name = "logContextMenuStrip";
-            contextMenu.Size = new Size(225, 92);
+            contextMenu.Size = new Size(247, 70);
             // 
             // mnuSaveToFile
             // 
             mnuSaveToFile.Image = Properties.Images.SaveAs;
             mnuSaveToFile.Name = "mnuSaveToFile";
             mnuSaveToFile.ShortcutKeys = Keys.Control | Keys.S;
-            mnuSaveToFile.Size = new Size(224, 22);
+            mnuSaveToFile.Size = new Size(246, 22);
             mnuSaveToFile.Text = "&Save to file";
             mnuSaveToFile.Click += mnuSaveToFile_Click;
             // 
@@ -138,7 +142,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             mnuCopyCommandLine.Image = Properties.Images.CopyToClipboard;
             mnuCopyCommandLine.Name = "mnuCopyCommandLine";
             mnuCopyCommandLine.ShortcutKeys = Keys.Control | Keys.C;
-            mnuCopyCommandLine.Size = new Size(224, 22);
+            mnuCopyCommandLine.Size = new Size(246, 22);
             mnuCopyCommandLine.Text = "&Copy full command line";
             mnuCopyCommandLine.Click += mnuCopyCommandLine_Click;
             // 
@@ -147,7 +151,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             mnuClear.Image = Properties.Images.ClearLog;
             mnuClear.Name = "mnuClear";
             mnuClear.ShortcutKeys = Keys.Control | Keys.L;
-            mnuClear.Size = new Size(224, 22);
+            mnuClear.Size = new Size(246, 22);
             mnuClear.Text = "C&lear";
             mnuClear.Click += mnuClear_Click;
             // 
@@ -166,6 +170,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // tabPageCommandCache
             // 
             tabPageCommandCache.BackColor = SystemColors.ControlLight;
+            tabPageCommandCache.ContextMenuStrip = cmsCache;
             tabPageCommandCache.Controls.Add(splitContainer1);
             tabPageCommandCache.Location = new Point(1, 23);
             tabPageCommandCache.Margin = new Padding(0);
@@ -195,6 +200,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // CommandCacheItems
             // 
             CommandCacheItems.BorderStyle = BorderStyle.None;
+            CommandCacheItems.ContextMenuStrip = cmsCache;
             CommandCacheItems.Dock = DockStyle.Fill;
             CommandCacheItems.FormattingEnabled = true;
             CommandCacheItems.ItemHeight = 15;
@@ -204,6 +210,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             CommandCacheItems.Size = new Size(657, 183);
             CommandCacheItems.TabIndex = 0;
             CommandCacheItems.SelectedIndexChanged += CommandCacheItems_SelectedIndexChanged;
+            // 
+            // cmsCache
+            // 
+            cmsCache.Items.AddRange(new ToolStripItem[] { tsmiClearCache });
+            cmsCache.Name = "logContextMenuStrip";
+            cmsCache.Size = new Size(144, 26);
+            // 
+            // tsmiClearCache
+            // 
+            tsmiClearCache.Image = Properties.Images.ClearLog;
+            tsmiClearCache.Name = "tsmiClearCache";
+            tsmiClearCache.ShortcutKeys = Keys.Control | Keys.L;
+            tsmiClearCache.Size = new Size(143, 22);
+            tsmiClearCache.Text = "C&lear";
+            tsmiClearCache.Click += tsmiClearCache_Click;
             // 
             // commandCacheOutput
             // 
@@ -276,6 +297,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            cmsCache.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -298,5 +320,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private ToolStripMenuItem mnuClear;
         private CheckBox chkCaptureCallStacks;
         private ToolStripMenuItem mnuCopyCommandLine;
+        private ContextMenuStrip cmsCache;
+        private ToolStripMenuItem tsmiClearCache;
     }
 }
