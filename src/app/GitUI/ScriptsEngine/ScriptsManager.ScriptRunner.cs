@@ -35,7 +35,7 @@ namespace GitUI.ScriptsEngine
                 }
                 catch (ExternalOperationException ex) when (ex is not UserExternalOperationException)
                 {
-                    throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorFailedToExecute}: '{script.Name}'", ex);
+                    throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorFailedToExecute}: '{script.GetDisplayName()}'", ex);
                 }
             }
 
@@ -123,13 +123,13 @@ namespace GitUI.ScriptsEngine
                                                                             && ScriptOptionsParser.Contains(arguments, option));
                     if (optionDependingOnSelectedRevision is not null)
                     {
-                        throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.Name}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {TranslatedStrings.ScriptErrorOptionWithoutRevisionGridText}",
+                        throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.GetDisplayName()}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {TranslatedStrings.ScriptErrorOptionWithoutRevisionGridText}",
                             new ExternalOperationException(script.Command, arguments, uiCommands.Module.WorkingDir));
                     }
                 }
 
                 if (script.AskConfirmation &&
-                    MessageBox.Show(owner, $"{TranslatedStrings.ScriptConfirmExecute}: '{script.Name}'?", TranslatedStrings.ScriptText,
+                    MessageBox.Show(owner, $"{TranslatedStrings.ScriptConfirmExecute}: '{script.GetDisplayName()}'?", TranslatedStrings.ScriptText,
                                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 {
                     return false;
@@ -137,11 +137,11 @@ namespace GitUI.ScriptsEngine
 
                 string? originalCommand = script.Command;
 
-                (arguments, bool abort, bool cancelled) = ParseUserInputs(script.Name ?? "<_nameless_script_>", script.Arguments, uiCommands, owner, scriptOptionsProvider);
+                (arguments, bool abort, bool cancelled) = ParseUserInputs(script.GetDisplayName() ?? "<_nameless_script_>", script.Arguments, uiCommands, owner, scriptOptionsProvider);
 
                 if (cancelled)
                 {
-                    MessageBox.Show(owner, TranslatedStrings.ScriptUserCanceledRun, script.Name, MessageBoxButtons.OK);
+                    MessageBox.Show(owner, TranslatedStrings.ScriptUserCanceledRun, script.GetDisplayName(), MessageBoxButtons.OK);
                     return false;
                 }
 
@@ -150,7 +150,7 @@ namespace GitUI.ScriptsEngine
                     : ScriptOptionsParser.Parse(arguments, uiCommands, owner, scriptOptionsProvider);
                 if (abort)
                 {
-                    throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.Name}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",
+                    throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{script.GetDisplayName()}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",
                         new ExternalOperationException(script.Command, arguments, uiCommands.Module.WorkingDir));
                 }
 

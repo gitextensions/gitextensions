@@ -135,7 +135,7 @@ namespace GitExtensions.UITests.ScriptEngine
 
             ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _commands))).Should()
                 .Throw<UserExternalOperationException>();
-            ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\nA valid revision is required to substitute the argument options");
+            ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\nA valid revision is required to substitute the argument options");
             ex.And.Command.Should().Be(_exampleScript.Command);
             ex.And.Arguments.Should().Be(_exampleScript.Arguments);
             ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
@@ -151,7 +151,7 @@ namespace GitExtensions.UITests.ScriptEngine
 
             ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands))).Should()
                 .Throw<UserExternalOperationException>();
-            ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\n'sHash' option is only supported when invoked from the revision grid");
+            ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\n'sHash' option is only supported when invoked from the revision grid");
             ex.And.Command.Should().Be(_exampleScript.Command);
             ex.And.Arguments.Should().Be(_exampleScript.Arguments);
             ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
@@ -175,7 +175,7 @@ namespace GitExtensions.UITests.ScriptEngine
 
                 ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands))).Should()
                         .Throw<UserExternalOperationException>();
-                ex.And.Context.Should().Be($"Script: '{_exampleScript.Name}'\r\nA valid revision is required to substitute the argument options");
+                ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\nA valid revision is required to substitute the argument options");
                 ex.And.Command.Should().Be(_exampleScript.Command);
                 ex.And.Arguments.Should().Be(_exampleScript.Arguments);
                 ex.And.WorkingDirectory.Should().Be(_referenceRepository.Module.WorkingDir);

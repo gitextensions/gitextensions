@@ -140,7 +140,7 @@ namespace GitUI.ScriptsEngine
                 new ScriptInfo
                 {
                     HotkeyCommandIdentifier = 9002,
-                    Name = "Example",
+                    Name = "&Example",
                     Command = @"c:\windows\system32\calc.exe",
                     Arguments = "",
                     RunInBackground = false,
