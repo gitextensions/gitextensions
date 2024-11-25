@@ -6,9 +6,11 @@ using System.Text;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.Toolkit.HighPerformance.Buffers;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
@@ -157,6 +159,21 @@ namespace GitCommands
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The retrieved git revision or <see langword="null"/> if it does not exist.</returns>
         public GitRevision? GetRevision(string commitHash, bool hasNotes, bool throwOnError, CancellationToken cancellationToken)
+            => ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await TaskScheduler.Default;
+                    return await GetRevisionAsync(commitHash, hasNotes, throwOnError, cancellationToken);
+                });
+
+        /// <summary>
+        ///  Retrieves the <see cref="GitRevision"/> for a real commit.
+        /// </summary>
+        /// <param name="commitHash">The Git commit hash.</param>
+        /// <param name="hasNotes">Specifies whether Git Notes should be retrieved.</param>
+        /// <param name="throwOnError">Specifies whether an <see cref="ExternalOperationException"/> shall be thrown if the revision does not exist.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>The retrieved git revision or <see langword="null"/> if it does not exist.</returns>
+        public async Task<GitRevision?> GetRevisionAsync(string commitHash, bool hasNotes, bool throwOnError, CancellationToken cancellationToken)
         {
             GitArgumentBuilder arguments = new("log")
             {
@@ -184,13 +201,21 @@ namespace GitCommands
                 Debug.WriteLine($"git {arguments}");
 #endif
                 using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: null);
-                string errorOutput = process.StandardError.ReadToEnd();
+
+                // StandardError.ReadToEnd[Async] may become unresponsive if lengthy StandardOutput is not consumed in parallel. So, buffer the StandardOutput.
+                using MemoryStream standardOutputBuffer = new();
+                Task standardOutputTask = process.StandardOutput.BaseStream.CopyToAsync(standardOutputBuffer, cancellationToken);
+                Task<string> errorOutputTask = process.StandardError.ReadToEndAsync(cancellationToken);
+
+                string errorOutput = await errorOutputTask;
                 if (!string.IsNullOrWhiteSpace(errorOutput) && throwOnError)
                 {
                     throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(), innerException: new Exception(errorOutput));
                 }
 
-                commandBytes = new ReadOnlyMemory<byte>(process.StandardOutput.BaseStream.SplitLogOutput().SingleOrDefault().ToArray());
+                await standardOutputTask;
+                standardOutputBuffer.Position = 0;
+                commandBytes = new ReadOnlyMemory<byte>(standardOutputBuffer.SplitLogOutput().SingleOrDefault().ToArray());
             }
 
             if (!TryParseRevision(commandBytes, out GitRevision? revision))
