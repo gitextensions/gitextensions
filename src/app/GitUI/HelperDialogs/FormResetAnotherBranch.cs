@@ -134,8 +134,10 @@ namespace GitUI.HelperDialogs
         private void UpdateOkButton(object sender, EventArgs e)
         {
             Ok.Enabled = false;
+            Ok.BackColor = SystemColors.ButtonFace;
 
             IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
+            Branches.BackColor = gitRefToReset is null ? Color.LightCoral : SystemColors.Window;
             if (gitRefToReset is null)
             {
                 return;
@@ -149,6 +151,10 @@ namespace GitUI.HelperDialogs
                 await this.SwitchToMainThreadAsync();
 
                 Ok.Enabled = executionResult.ExitedSuccessfully;
+                if (!executionResult.ExitedSuccessfully)
+                {
+                    Ok.BackColor = Color.LightCoral;
+                }
             });
         }
     }
