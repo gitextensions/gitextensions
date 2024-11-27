@@ -240,9 +240,7 @@ Detail of the error:");
                         Buttons = { btnOpenSettings, btnIgnore }
                     };
 
-#pragma warning disable WFO5002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-                    TaskDialogButton result = await TaskDialog.ShowDialogAsync(page);
-#pragma warning restore WFO5002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+                    TaskDialogButton result = TaskDialog.ShowDialog(page);
                     if (result == btnOpenSettings)
                     {
                         _projectOnErrorKey = null;

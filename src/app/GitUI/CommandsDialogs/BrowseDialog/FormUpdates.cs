@@ -145,9 +145,7 @@ public partial class FormUpdates : GitExtensionsDialog
 
                 if (!Visible)
                 {
-#pragma warning disable WFO5002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-                    await ShowDialogAsync(OwnerWindow);
-#pragma warning restore WFO5002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+                    ShowDialog(OwnerWindow);
                 }
             }
             else
