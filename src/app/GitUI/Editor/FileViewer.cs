@@ -1058,18 +1058,11 @@ namespace GitUI.Editor
                 return icon.ToBitmap();
             }
 
-            return new Bitmap(CopyStream());
+            return new Bitmap(stream);
 
             bool IsIcon()
             {
                 return fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase);
-            }
-
-            MemoryStream CopyStream()
-            {
-                MemoryStream copy = new();
-                stream.CopyTo(copy);
-                return copy;
             }
         }
 

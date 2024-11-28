@@ -8,7 +8,7 @@ namespace GitCommands.Utils
         public static string Serialize<T>(T? myObject) where T : class
         {
             DataContractJsonSerializer json = new(typeof(T));
-            MemoryStream stream = new();
+            using MemoryStream stream = new();
             json.WriteObject(stream, myObject);
             return Encoding.UTF8.GetString(stream.ToArray());
         }
@@ -16,7 +16,7 @@ namespace GitCommands.Utils
         public static T? Deserialize<T>(string myString) where T : class
         {
             DataContractJsonSerializer json = new(typeof(T));
-            MemoryStream stream = new(Encoding.UTF8.GetBytes(myString));
+            using MemoryStream stream = new(Encoding.UTF8.GetBytes(myString));
             return (T?)json.ReadObject(stream);
         }
     }
