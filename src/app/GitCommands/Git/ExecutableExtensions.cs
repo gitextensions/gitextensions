@@ -124,7 +124,7 @@ namespace GitCommands
             }
 #endif
 
-            MemoryStream outputBuffer = new();
+            using MemoryStream outputBuffer = new();
             Task outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
             Task<int> exitTask = process.WaitForExitAsync();
 
@@ -305,8 +305,8 @@ namespace GitCommands
             cancellationToken.ThrowIfCancellationRequested();
 
             using IProcess process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding, throwOnErrorExit: throwOnErrorExit, cancellationToken: cancellationToken);
-            MemoryStream outputBuffer = new();
-            MemoryStream errorBuffer = new();
+            using MemoryStream outputBuffer = new();
+            using MemoryStream errorBuffer = new();
             Task outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer, cancellationToken);
             Task errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer, cancellationToken);
 
