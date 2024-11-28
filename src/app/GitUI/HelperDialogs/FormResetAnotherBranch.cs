@@ -137,11 +137,12 @@ namespace GitUI.HelperDialogs
         {
             CancellationToken cancellationToken = _cancellationTokenSequence.Next();
 
-            Ok.Enabled = ForceReset.Checked;
-            Ok.BackColor = SystemColors.ButtonFace;
-
             IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
             Branches.BackColor = gitRefToReset is null ? Color.LightCoral : SystemColors.Window;
+
+            Ok.Enabled = gitRefToReset is not null && ForceReset.Checked;
+            Ok.BackColor = SystemColors.ButtonFace;
+
             if (gitRefToReset is null || ForceReset.Checked)
             {
                 return;
