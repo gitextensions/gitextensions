@@ -11,9 +11,11 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormResetAnotherBranch : GitModuleForm
     {
-        private IGitRef[]? _localGitRefs;
-        private readonly GitRevision _revision;
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
         private readonly TranslationString _localRefInvalid = new("The entered value '{0}' is not the name of an existing local branch.");
+        private readonly GitRevision _revision;
+
+        private IGitRef[]? _localGitRefs;
 
         public static FormResetAnotherBranch Create(IGitUICommands commands, GitRevision revision)
             => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision));
@@ -133,12 +135,14 @@ namespace GitUI.HelperDialogs
 
         private void UpdateOkButton(object sender, EventArgs e)
         {
-            Ok.Enabled = false;
+            CancellationToken cancellationToken = _cancellationTokenSequence.Next();
+
+            Ok.Enabled = ForceReset.Checked;
             Ok.BackColor = SystemColors.ButtonFace;
 
             IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
             Branches.BackColor = gitRefToReset is null ? Color.LightCoral : SystemColors.Window;
-            if (gitRefToReset is null)
+            if (gitRefToReset is null || ForceReset.Checked)
             {
                 return;
             }
@@ -146,9 +150,13 @@ namespace GitUI.HelperDialogs
             ThreadHelper.FileAndForget(async () =>
             {
                 ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, Module.GetPathForGitExecution, ForceReset.Checked, dryRun: true);
-                ExecutionResult executionResult = await Module.GitExecutable.ExecuteAsync(command, throwOnErrorExit: false);
+                ExecutionResult executionResult = await Module.GitExecutable.ExecuteAsync(command, throwOnErrorExit: false, cancellationToken: cancellationToken);
 
-                await this.SwitchToMainThreadAsync();
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 Ok.Enabled = executionResult.ExitedSuccessfully;
                 if (!executionResult.ExitedSuccessfully)
