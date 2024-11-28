@@ -1,4 +1,6 @@
-﻿using System.Buffers.Text;
+﻿#nullable enable
+
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -215,7 +217,7 @@ namespace GitCommands
 
                 await standardOutputTask;
                 standardOutputBuffer.Position = 0;
-                commandBytes = new ReadOnlyMemory<byte>(standardOutputBuffer.SplitLogOutput().SingleOrDefault().ToArray());
+                commandBytes = standardOutputBuffer.SplitLogOutput().SingleOrDefault();
             }
 
             if (!TryParseRevision(commandBytes, out GitRevision? revision))
@@ -349,7 +351,7 @@ namespace GitCommands
             };
         }
 
-        private (ReadOnlyMemory<byte> buffer, ObjectId objectId) _cache = (null, null);
+        private (ReadOnlyMemory<byte> buffer, ObjectId objectId)? _cache = null;
 
         [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         private bool TryParseRevision(in ReadOnlyMemory<byte> buffer, [NotNullWhen(returnValue: true)] out GitRevision? revision)
@@ -374,9 +376,9 @@ namespace GitCommands
             ReadOnlyMemory<byte> commitHash = buffer.Slice(0, ObjectId.Sha1CharCount);
             ReadOnlySpan<byte> commitHashSpan = commitHash.Span;
             ObjectId? objectId;
-            if (_cache.objectId is not null && commitHashSpan.SequenceEqual(_cache.buffer.Span))
+            if (_cache is not null && commitHashSpan.SequenceEqual(_cache.Value.buffer.Span))
             {
-                objectId = _cache.objectId;
+                objectId = _cache.Value.objectId;
             }
             else
             {
@@ -441,7 +443,7 @@ namespace GitCommands
                 for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
                     ReadOnlyMemory<byte> hashParent = buffer.Slice(offset, ObjectId.Sha1CharCount);
-                    if (!ObjectId.TryParse(hashParent.Span, out ObjectId parentId))
+                    if (!ObjectId.TryParse(hashParent.Span, out ObjectId? parentId))
                     {
                         ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                         revision = default;
