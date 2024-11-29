@@ -3515,28 +3515,7 @@ namespace GitCommands
         }
 
         public MemoryStream? GetFileStream(string blob)
-        {
-            // TODO why return a stream here? should just return a byte[]
-
-            try
-            {
-                GitArgumentBuilder args = new("cat-file")
-                {
-                    "blob",
-                    blob
-                };
-                using IProcess process = _gitCommandRunner.RunDetached(CancellationToken.None, args, redirectOutput: true);
-                MemoryStream stream = new();
-                process.StandardOutput.BaseStream.CopyTo(stream);
-                stream.Position = 0;
-                return stream;
-            }
-            catch (Win32Exception ex)
-            {
-                Trace.WriteLine(ex);
-                return null;
-            }
-        }
+            => GitFileStreamGetter.GetFileStream(blob, _gitCommandRunner);
 
         public IEnumerable<string?> GetPreviousCommitMessages(int count, string revision, string authorPattern)
         {
