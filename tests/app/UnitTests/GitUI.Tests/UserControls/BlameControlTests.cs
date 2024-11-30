@@ -282,6 +282,9 @@ namespace GitUITests.UserControls
             GitRevision rev3 = new(ObjectId.Parse(_commit3));
             GitRevision rev2 = new(ObjectId.Parse(_commit2));
 
+            // Avoid InvalidOperationException "The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?"
+            _blameControl.HideCommitInfo();
+
             await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
 
@@ -312,6 +315,9 @@ namespace GitUITests.UserControls
             GitRevision rev3 = new(ObjectId.Parse(_commit3));
             GitRevision rev2 = new(ObjectId.Parse(_commit2));
 
+            // Avoid InvalidOperationException "The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?"
+            _blameControl.HideCommitInfo();
+
             await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
 
@@ -341,6 +347,9 @@ namespace GitUITests.UserControls
         {
             GitRevision rev1 = new(ObjectId.Parse(_referenceRepository.CommitHash));
 
+            // Avoid InvalidOperationException "The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?"
+            _blameControl.HideCommitInfo();
+
             await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
 
@@ -354,6 +363,9 @@ namespace GitUITests.UserControls
         public async Task BlameControlShouldGotoRequestedLineAtStartAndIfReloaded()
         {
             GitRevision rev1 = new(ObjectId.Parse(_referenceRepository.CommitHash));
+
+            // Avoid InvalidOperationException "The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?"
+            _blameControl.HideCommitInfo();
 
             await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, null, initialLine: 4);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);

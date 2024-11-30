@@ -120,7 +120,7 @@ namespace GitCommands
 
         private bool OnLoadingError(Exception exception)
         {
-            AsyncErrorEventArgs args = new(exception);
+            AsyncErrorEventArgs args = new(exception) { Handled = LoadingError is not null };
             LoadingError?.Invoke(this, args);
             return args.Handled;
         }
