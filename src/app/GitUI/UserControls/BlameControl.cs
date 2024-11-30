@@ -47,6 +47,8 @@ namespace GitUI.Blame
         private bool _changingScrollPosition;
         private IRepositoryHostPlugin? _gitHoster;
         private static readonly IList<Color> AgeBucketGradientColors = GetAgeBucketGradientColors();
+        private static readonly TranslationString _blameActualPreviousRevision = new("&Blame actual previous revision");
+        private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame visible previous revision");
         private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
         private readonly IGitBlameParser _gitBlameParser;
 
@@ -559,7 +561,7 @@ namespace GitUI.Blame
 
             contextMenu.Tag = new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId);
 
-            if (!TryGetSelectedRevision(out (GitRevision selectedRevision, string filename) blameinfo))
+            if (!TryGetSelectedRevision(out (GitRevision? SelectedRevision, string? Filename) blameinfo))
             {
                 blameRevisionToolStripMenuItem.Enabled = false;
 
@@ -569,15 +571,24 @@ namespace GitUI.Blame
             }
 
             blameRevisionToolStripMenuItem.Enabled = true;
-            blamePreviousRevisionToolStripMenuItem.Enabled = RevisionHasParent(blameinfo.selectedRevision);
 
             // Get parent for the actual revision, the selected revision may have rewritten parents.
             // The menu will be slightly slower in this situation.
-            bool RevisionHasParent(GitRevision? selectedRevision)
+            if (RevisionHasParent(_revisionGridInfo?.GetActualRevision(blameinfo.SelectedRevision)))
             {
-                GitRevision actualRevision = _revisionGridInfo?.GetActualRevision(selectedRevision);
-                return (actualRevision?.HasParent ?? false) && (_revisionGridInfo?.GetRevision(actualRevision?.FirstParentId) is not null);
+                blamePreviousRevisionToolStripMenuItem.Enabled = true;
+                blamePreviousRevisionToolStripMenuItem.Text = _blameActualPreviousRevision.Text;
             }
+            else
+            {
+                blamePreviousRevisionToolStripMenuItem.Enabled = RevisionHasParent(blameinfo.SelectedRevision);
+                blamePreviousRevisionToolStripMenuItem.Text = _blameVisiblePreviousRevision.Text;
+            }
+
+            return;
+
+            bool RevisionHasParent(GitRevision? revision)
+                => (revision?.HasParent is true) && (_revisionGridInfo?.GetRevision(revision?.FirstParentId) is not null);
         }
 
         private GitBlameCommit? GetBlameCommit()
@@ -647,21 +658,25 @@ namespace GitUI.Blame
 
         private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetSelectedRevision(out (GitRevision selectedRevision, string filename) blameInfo))
+            if (!TryGetSelectedRevision(out (GitRevision? SelectedRevision, string? Filename) blameInfo))
             {
                 return;
             }
 
-            // Try get actual parent revision, get popup if it does not exist.
-            // (The menu should be disabled if previous is not in grid).
-            GitRevision selectedRevision = _revisionGridInfo!.GetActualRevision(blameInfo.selectedRevision);
+            GitRevision? selectedRevision = blameInfo.SelectedRevision;
+            if (blamePreviousRevisionToolStripMenuItem.Text == _blameActualPreviousRevision.Text)
+            {
+                // Try get actual parent revision, get popup if it does not exist.
+                // (The menu should be disabled if previous is not in grid).
+                selectedRevision = _revisionGridInfo!.GetActualRevision(selectedRevision);
+            }
 
             // Origin line of commit selected is final line of the previous blame commit
             int finalLineNumberOfPreviousBlame = _lastBlameLine!.OriginLineNumber;
-            int originalLineNumberOfPreviousBlame = _gitBlameParser.GetOriginalLineInPreviousCommit(selectedRevision, blameInfo.filename, finalLineNumberOfPreviousBlame);
+            int originalLineNumberOfPreviousBlame = _gitBlameParser.GetOriginalLineInPreviousCommit(selectedRevision, blameInfo.Filename, finalLineNumberOfPreviousBlame);
 
             _clickedBlameLine = new GitBlameLine(_lastBlameLine.Commit, finalLineNumberOfPreviousBlame, originalLineNumberOfPreviousBlame, "Dummy Git blame line used only to store the good 'originLineNumber' value to display and select it");
-            BlameRevision(selectedRevision.FirstParentId, blameInfo.filename);
+            BlameRevision(selectedRevision.FirstParentId, blameInfo.Filename);
         }
 
         /// <summary>
