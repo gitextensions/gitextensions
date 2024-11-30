@@ -484,7 +484,12 @@ namespace GitUI.UserControls.RevisionGrid
 
                 if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
                 {
-                    // Nothing to select or interrupted
+                    // Nothing to select or interrupted, select the first shown real commit or the first row (which exists here)
+                    int index = GetFallbackRowIndexToSelect();
+                    Rows[index].Selected = true;
+                    CurrentCell = Rows[index].Cells[1];
+                    EnsureRowVisible(index);
+
                     MarkAsDataLoadingComplete();
                     return;
                 }
@@ -518,6 +523,21 @@ namespace GitUI.UserControls.RevisionGrid
 
                 MarkAsDataLoadingComplete();
             });
+
+            return;
+
+            int GetFallbackRowIndexToSelect()
+            {
+                for (int index = 0; index < _revisionGraph.Count; ++index)
+                {
+                    if (_revisionGraph.GetNodeForRow(index)?.GitRevision?.IsArtificial is false)
+                    {
+                        return index;
+                    }
+                }
+
+                return 0;
+            }
         }
 
         public void MarkAsDataLoadingComplete()
