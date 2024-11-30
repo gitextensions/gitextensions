@@ -131,8 +131,16 @@ namespace GitUI.Blame
             await BlameAuthor.ClearAsync();
             await BlameFile.ClearAsync();
 
-            await _blameLoader.LoadAsync(cancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, lines: null, cancellationToken: cancellationToken),
-                () => ProcessBlame(fileName, revision, children, controlToMask, line, cancellationToken));
+            try
+            {
+                await _blameLoader.LoadAsync(cancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, lines: null, cancellationToken: cancellationToken),
+                    () => ProcessBlame(fileName, revision, children, controlToMask, line, cancellationToken));
+            }
+            catch (ExternalOperationException ex)
+            {
+                _blame = null;
+                await BlameFile.ViewTextAsync(fileName, ex.Message);
+            }
         }
 
         private void commitInfo_CommandClicked(object sender, CommandEventArgs e)
