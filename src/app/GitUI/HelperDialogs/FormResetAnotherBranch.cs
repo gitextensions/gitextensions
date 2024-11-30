@@ -133,12 +133,17 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        private void UpdateOkButton(object sender, EventArgs e)
+        private void Validate(object sender, EventArgs e)
         {
+            if (_localGitRefs is null)
+            {
+                return;
+            }
+
             CancellationToken cancellationToken = _cancellationTokenSequence.Next();
 
             IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
-            Branches.BackColor = gitRefToReset is null ? Color.LightCoral : SystemColors.Window;
+            Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? Color.LightCoral : SystemColors.Window;
 
             Ok.Enabled = gitRefToReset is not null && ForceReset.Checked;
             Ok.BackColor = SystemColors.ButtonFace;
