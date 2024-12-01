@@ -93,14 +93,7 @@ internal static class GitFileStreamGetter
             return false;
         }
 
-        char[] buffer = new char[lfsVersionPrefix.Length];
-        using (StreamReader reader = new(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, buffer.Length, leaveOpen: true))
-        {
-            reader.Read(buffer);
-        }
-
-        stream.Position = 0;
-
-        return lfsVersionPrefix.AsSpan().Equals(buffer, StringComparison.Ordinal);
+        string prefix = Encoding.UTF8.GetString(stream.GetBuffer(), 0, lfsVersionPrefix.Length);
+        return prefix == lfsVersionPrefix;
     }
 }
