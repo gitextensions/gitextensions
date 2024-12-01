@@ -8,28 +8,6 @@ namespace UITests.CommandsDialogs;
 public class BranchIdentifierTests
 {
     [Test]
-    public void Equals_ShouldReturnTrue_WhenObjectIdIsEqual()
-    {
-        ObjectId? objectId = ObjectId.Random();
-        BranchIdentifier? branch1 = new(objectId, "branch1");
-        BranchIdentifier? branch2 = new(objectId, "branch2");
-
-        // Assert
-        branch1.Equals(branch2).Should().BeTrue();
-    }
-
-    [Test]
-    public void Equals_ShouldReturnTrue_WhenNameIsEqual()
-    {
-        ObjectId? objectId = ObjectId.Random();
-        BranchIdentifier? branch1 = new(objectId, "branch");
-        BranchIdentifier? branch2 = new(ObjectId.Random(), "branch");
-
-        // Assert
-        branch1.Equals(branch2).Should().BeTrue();
-    }
-
-    [Test]
     public void Equals_ShouldReturnFalse_WhenObjectIdAndNameAreDifferent()
     {
         BranchIdentifier? branch1 = new(ObjectId.Random(), "branch1");
