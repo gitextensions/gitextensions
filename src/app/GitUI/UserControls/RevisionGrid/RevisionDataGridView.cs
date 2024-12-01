@@ -485,10 +485,13 @@ namespace GitUI.UserControls.RevisionGrid
                 if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
                 {
                     // Nothing to select or interrupted, select the first shown real commit or the first row (which exists here)
-                    int index = GetFallbackRowIndexToSelect();
-                    Rows[index].Selected = true;
-                    CurrentCell = Rows[index].Cells[1];
-                    EnsureRowVisible(index);
+                    if (SelectedRows.Count == 0)
+                    {
+                        int index = GetFallbackRowIndexToSelect();
+                        Rows[index].Selected = true;
+                        CurrentCell = Rows[index].Cells[1];
+                        EnsureRowVisible(index);
+                    }
 
                     MarkAsDataLoadingComplete();
                     return;
