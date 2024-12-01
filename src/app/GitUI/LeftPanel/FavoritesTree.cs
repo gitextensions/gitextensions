@@ -11,7 +11,7 @@ namespace GitUI.LeftPanel;
 internal sealed class FavoritesTree : BaseRefTree
 {
     private readonly IRevisionGridInfo _revisionGridInfo;
-    internal readonly FavoriteBranchesCache _favoriteBranchesCache;
+    private readonly FavoriteBranchesCache _favoritesCache;
     private FileSystemWatcher _configWatcher;
 
     public FavoritesTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo)
@@ -21,7 +21,7 @@ internal sealed class FavoritesTree : BaseRefTree
 
         // Whilst the UICommands may change, the service registrations are constant.
         IServiceProvider serviceProvider = uiCommands.UICommands;
-        _favoriteBranchesCache = new(serviceProvider);
+        _favoritesCache = new FavoriteBranchesCache(serviceProvider);
     }
 
     public void Add(NodeBase node)
@@ -30,7 +30,7 @@ internal sealed class FavoritesTree : BaseRefTree
 
         if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId is not null)
         {
-            _favoriteBranchesCache.Add(baseRevisionNode.ObjectId, baseRevisionNode.FullPath);
+            _favoritesCache.Add(baseRevisionNode.ObjectId, baseRevisionNode.FullPath);
         }
 
         Refresh(new FilteredGitRefsProvider(UICommands.Module).GetRefs, true);
@@ -41,13 +41,35 @@ internal sealed class FavoritesTree : BaseRefTree
     {
         StopFileWatcher();
 
-        if (node is BaseRevisionNode baseRevisionNode && baseRevisionNode.ObjectId is not null)
-        {
-            _favoriteBranchesCache.Remove(baseRevisionNode.ObjectId, baseRevisionNode.FullPath);
-        }
+        RemoveNode(node);
 
         Refresh(new FilteredGitRefsProvider(UICommands.Module).GetRefs, true);
         ResumeFileWatcher();
+    }
+
+    private void RemoveNode(NodeBase node)
+    {
+        if (node is BaseRevisionNode { ObjectId: not null } baseRevisionNode)
+        {
+            _favoritesCache.Remove(baseRevisionNode.ObjectId, baseRevisionNode.FullPath);
+        }
+        else
+        {
+            if (node is FavoriteNode favoriteNode)
+            {
+                if (favoriteNode.HasChildren)
+                {
+                    foreach (Node childNode in favoriteNode.Nodes)
+                    {
+                        RemoveNode(childNode);
+                    }
+                }
+                else
+                {
+                    _favoritesCache.Remove(favoriteNode.ObjectId, favoriteNode.FullPath);
+                }
+            }
+        }
     }
 
     public override void Dispose()
@@ -56,17 +78,23 @@ internal sealed class FavoritesTree : BaseRefTree
         StopFileWatcher();
     }
 
-    protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
+    protected override Nodes FillTree(IReadOnlyList<IGitRef> gitRefs, CancellationToken token)
     {
         StopFileWatcher();
-        _favoriteBranchesCache.Location = UICommands.Module.WorkingDirGitDir;
+        _favoritesCache.Location = UICommands.Module.WorkingDirGitDir;
+        _favoritesCache.Load();
+
         FavoriteNode remoteNode = new(this, TranslatedStrings.Remotes, nameof(Images.BranchRemoteRoot)) { Visible = true };
         FavoriteNode localNode = new(this, TranslatedStrings.Local, nameof(Images.BranchLocalRoot)) { Visible = true };
+        FavoriteNode untraceableNode = new(this, "Untraceable", nameof(Images.Warning)) { Visible = true };
 
         Dictionary<string, BaseRevisionNode> pathToNodesRemote = [];
         Dictionary<string, BaseRevisionNode> pathToNodeLocal = [];
+        Dictionary<string, BaseRevisionNode> pathToUntraceable = [];
 
-        foreach (IGitRef branch in branches)
+        IEnumerable<IGitRef> favGitRefs = _favoritesCache.Synchronize(gitRefs, out IList<BranchIdentifier>? noMatches);
+
+        foreach (IGitRef branch in favGitRefs)
         {
             token.ThrowIfCancellationRequested();
 
@@ -80,11 +108,24 @@ internal sealed class FavoritesTree : BaseRefTree
             }
         }
 
-        _favoriteBranchesCache.CleanUp(branches);
+        foreach (BranchIdentifier identifier in noMatches)
+        {
+            CreateUntraceableBranchTree(identifier, pathToUntraceable, untraceableNode.Nodes);
+        }
+
+        // noMatches.ForEach(p => _favoritesCache.Remove(p.ObjectId, p.Name));
+
+        _favoritesCache.Save();
 
         Nodes nodes = new(this);
         nodes.AddNode(localNode);
         nodes.AddNode(remoteNode);
+
+        if (untraceableNode.HasChildren)
+        {
+            nodes.AddNode(untraceableNode);
+        }
+
         ResumeFileWatcher();
 
         return nodes;
@@ -98,42 +139,43 @@ internal sealed class FavoritesTree : BaseRefTree
         }
     }
 
-    private void CreateLocalBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes)
+    private void CreateUntraceableBranchTree(BranchIdentifier branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes)
     {
         Validates.NotNull(branch.ObjectId);
 
-        if (!_favoriteBranchesCache.Contains(branch.ObjectId, branch.Name))
+        FavoriteNode branchNode = new(this, branch.Name, nameof(Images.BranchDelete))
         {
-            return;
-        }
+            ObjectId = branch.ObjectId
+        };
 
-        string currentBranch = _revisionGridInfo.GetCurrentBranch();
-
-        LocalBranchNode branchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, true);
-
-        BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, CreatePathNode);
+        BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes,
+            (tree, parentPath) => new FavoriteNode(this, parentPath, nameof(Images.BranchFolder)));
 
         if (parent is not null)
         {
             nodes.AddNode(parent);
         }
+    }
 
-        BaseRevisionNode CreatePathNode(Tree tree, string parentPath)
+    private void CreateLocalBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes)
+    {
+        Validates.NotNull(branch.ObjectId);
+
+        string currentBranch = _revisionGridInfo.GetCurrentBranch();
+
+        LocalBranchNode branchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, true);
+
+        BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BranchPathNode(tree, parentPath));
+
+        if (parent is not null)
         {
-            BranchPathNode branchPathNode = new(tree, parentPath);
-
-            return branchPathNode;
+            nodes.AddNode(parent);
         }
     }
 
     private void CreateRemoteBranchTree(IGitRef branch, Dictionary<string, BaseRevisionNode> pathToNodes, Nodes nodes)
     {
         Validates.NotNull(branch.ObjectId);
-
-        if (!_favoriteBranchesCache.Contains(branch.ObjectId, branch.Name))
-        {
-            return;
-        }
 
         ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
         Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToDictionary(r => r.Name);
@@ -154,7 +196,7 @@ internal sealed class FavoritesTree : BaseRefTree
 
         BaseRevisionNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
         {
-            if (parentPath == remote.Name)
+            if (string.Equals(parentPath, remote.Name, StringComparison.Ordinal))
             {
                 return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true);
             }
@@ -166,8 +208,8 @@ internal sealed class FavoritesTree : BaseRefTree
     private void ResumeFileWatcher()
     {
         StopFileWatcher();
-        _favoriteBranchesCache.Location = UICommands.Module.WorkingDirGitDir;
-        string configFile = _favoriteBranchesCache.ConfigFile;
+        _favoritesCache.Location = UICommands.Module.WorkingDirGitDir;
+        string configFile = _favoritesCache.ConfigFile;
         string directoryName = Path.GetDirectoryName(configFile);
 
         if (!Directory.Exists(directoryName))
@@ -205,7 +247,6 @@ internal sealed class FavoritesTree : BaseRefTree
 
     private void ReloadFavoritesAndUpdate()
     {
-        _favoriteBranchesCache.Load();
         Refresh(new FilteredGitRefsProvider(UICommands.Module).GetRefs, true);
     }
 

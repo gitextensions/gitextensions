@@ -12,8 +12,9 @@ internal sealed class FavoriteBranchesCache
 
     private readonly IFileSystem _fileSystem;
 
-    private readonly HashSet<BranchIdentifier> _favorites = new();
+    private readonly HashSet<BranchIdentifier> _favorites = [];
     private readonly object _lock = new();
+
     private bool _isLoaded;
     private string _location = string.Empty;
 
@@ -24,7 +25,18 @@ internal sealed class FavoriteBranchesCache
 
     internal string ConfigFile
     {
-        get => Path.Combine(Location, "GitExtensions.favorite");
+        get
+        {
+            string? path = _fileSystem.Path.Combine(Location, "GitExtensions.favorite");
+
+            if (_fileSystem.Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                return path;
+            }
+
+            Trace.WriteLine($"Invalid or not accessible directory: {Location}. Please set a valid location.");
+            throw new DirectoryNotFoundException("missing or not accessible directory.");
+        }
     }
 
     /// <summary>
@@ -35,7 +47,7 @@ internal sealed class FavoriteBranchesCache
         get => _location;
         set
         {
-            if (_location != value)
+            if (!string.Equals(_location, value, StringComparison.Ordinal))
             {
                 _location = value;
             }
@@ -62,6 +74,59 @@ internal sealed class FavoriteBranchesCache
             {
                 Save();
             }
+        }
+    }
+
+    public IEnumerable<IGitRef> Synchronize(IReadOnlyList<IGitRef> gitRefs, out IList<BranchIdentifier> noMatches)
+    {
+        HashSet<IGitRef> matches = [];
+        noMatches = [];
+
+        lock (_lock)
+        {
+            LoadIfNeeded();
+            IGitModule gitModule = gitRefs[0].Module;
+
+            foreach (BranchIdentifier? favorite in _favorites)
+            {
+                IGitRef exactMatch = gitRefs.FirstOrDefault(b => b.ObjectId == favorite.ObjectId && b.Name == favorite.Name);
+
+                if (exactMatch is not null)
+                {
+                    matches.Add(exactMatch);
+
+                    continue;
+                }
+
+                IGitRef nameMatch = gitRefs.FirstOrDefault(b => b.Name == favorite.Name);
+
+                if (nameMatch is not null)
+                {
+                    favorite.ObjectId = nameMatch.ObjectId;
+                    matches.Add(nameMatch);
+
+                    continue;
+                }
+
+                IGitRef objectIdMatch = gitRefs.FirstOrDefault(b => b.ObjectId == favorite.ObjectId);
+
+                if (objectIdMatch is not null)
+                {
+                    ObjectId? latestCommitId = GetLatestCommitId(gitModule, favorite.ObjectId.ToString());
+
+                    if (latestCommitId != null)
+                    {
+                        // favorite.Name = latestCommitId;
+                        matches.Add(objectIdMatch);
+
+                        continue;
+                    }
+                }
+
+                noMatches.Add(favorite);
+            }
+
+            return matches;
         }
     }
 
@@ -112,24 +177,6 @@ internal sealed class FavoriteBranchesCache
     }
 
     /// <summary>
-    /// Cleans up the favorites list by removing branches that no longer exist.
-    /// </summary>
-    /// <param name="branches">A list of branches to retain in the favorites list.</param>
-    internal void CleanUp(IReadOnlyList<IGitRef> branches)
-    {
-        lock (_lock)
-        {
-            IEnumerable<BranchIdentifier>? branchIdentifiers = branches
-                                                               .Where(branch => branch.ObjectId is not null)
-                                                               .Select(branch => new BranchIdentifier(branch.ObjectId, branch.Name));
-
-            _favorites.RemoveWhere(fav => !branchIdentifiers.Contains(fav));
-
-            Save();
-        }
-    }
-
-    /// <summary>
     /// Loads the list of favorite branches from the configuration file into memory.
     /// </summary>
     /// <remarks>
@@ -153,18 +200,20 @@ internal sealed class FavoriteBranchesCache
                         string json = null;
                         json = _fileSystem.File.ReadAllText(ConfigFile);
 
-                        if (!string.IsNullOrEmpty(json))
+                        if (string.IsNullOrEmpty(json))
                         {
-                            BranchIdentifier[]? deserialized = Deserialize<BranchIdentifier[]>(json);
-
-                            if (deserialized is not null)
-                            {
-                                _favorites.Clear();
-                                _favorites.UnionWith(deserialized);
-                            }
-
-                            _isLoaded = true;
+                            return;
                         }
+
+                        BranchIdentifier[]? deserialized = JsonSerializer.Deserialize<BranchIdentifier[]>(json, _jsonOptions);
+
+                        if (deserialized is not null)
+                        {
+                            _favorites.Clear();
+                            _favorites.UnionWith(deserialized);
+                        }
+
+                        _isLoaded = true;
                     }
                     catch (Exception ex)
                     {
@@ -172,16 +221,6 @@ internal sealed class FavoriteBranchesCache
                     }
                 });
         }
-    }
-
-    internal static T? Deserialize<T>(string json)
-    {
-        return JsonSerializer.Deserialize<T>(json, _jsonOptions);
-    }
-
-    internal static string Serialize<T>(T favorites)
-    {
-        return JsonSerializer.Serialize(favorites, _jsonOptions);
     }
 
     internal void Save()
@@ -193,7 +232,7 @@ internal sealed class FavoriteBranchesCache
                 {
                     try
                     {
-                        string json = Serialize(_favorites);
+                        string json = JsonSerializer.Serialize(_favorites, _jsonOptions);
                         _fileSystem.File.WriteAllText(ConfigFile, json);
                     }
                     catch (Exception ex)
@@ -202,6 +241,12 @@ internal sealed class FavoriteBranchesCache
                     }
                 });
         }
+    }
+
+    internal ObjectId? GetLatestCommitId(IGitModule gitModule, string nameMatchName)
+    {
+        // Use the RevParse method to get the latest commit ID for the branch name
+        return gitModule.RevParse(nameMatchName);
     }
 
     private void TryInvokeIfFileAccessible(string filePath, Action callBack, int maxAttempts = 5, int delay = 100)

@@ -4,7 +4,7 @@ namespace GitUI.LeftPanel;
 
 internal class BranchIdentifier(ObjectId objectId, string name)
 {
-    public ObjectId ObjectId { get; } = objectId;
+    public ObjectId ObjectId { get; set; } = objectId;
 
     public string Name { get; set; } = name;
 
@@ -15,16 +15,16 @@ internal class BranchIdentifier(ObjectId objectId, string name)
             return false;
         }
 
-        return ObjectId == other.ObjectId || Name == other.Name;
+        return ObjectId == other.ObjectId && Name == other.Name;
     }
 
     public override int GetHashCode()
     {
-        return 0;
+        return HashCode.Combine(ObjectId, Name);
     }
 
     public static bool IsValid(BranchIdentifier branch)
     {
-        return branch != null && branch.ObjectId != default && !string.IsNullOrEmpty(branch.Name);
+        return branch is not null && branch.ObjectId != default && !string.IsNullOrEmpty(branch.Name);
     }
 }

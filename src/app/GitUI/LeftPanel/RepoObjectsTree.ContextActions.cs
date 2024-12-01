@@ -146,6 +146,7 @@ namespace GitUI.LeftPanel
 
             RegisterClick<BaseBranchLeafNode>(mnubtnAddToFavorites, node => _favoritesTree.Add(node));
             RegisterClick<BaseBranchLeafNode>(mnubtnRemoveFromFavorites, node => _favoritesTree.Remove(node));
+            RegisterClick<FavoriteNode>(mnubtnRemoveFromFavorites, node => _favoritesTree.Remove(node));
 
             menuMain.InsertItems(_tagNodeMenuItems.Select(s => s.Item).Prepend(new ToolStripSeparator()), after: filterForSelectedRefsMenuItem);
             menuMain.InsertItems(_remoteBranchMenuItems.Select(s => s.Item).Prepend(new ToolStripSeparator()), after: filterForSelectedRefsMenuItem);
@@ -302,9 +303,16 @@ namespace GitUI.LeftPanel
 
         private void EnableFavoritesContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
         {
-            if (!hasSingleSelection || selectedNode is not (LocalBranchNode or RemoteBranchNode))
+            if (!hasSingleSelection)
             {
                 EnableMenuItems(false, mnubtnRemoveFromFavorites, mnubtnAddToFavorites);
+                return;
+            }
+
+            if (selectedNode is not (LocalBranchNode or RemoteBranchNode))
+            {
+                EnableMenuItems(false, mnubtnAddToFavorites);
+                EnableMenuItems(selectedNode is FavoriteNode, mnubtnRemoveFromFavorites);
                 return;
             }
 

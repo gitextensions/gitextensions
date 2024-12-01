@@ -129,7 +129,9 @@ namespace GitUI.LeftPanel
                         { nameof(Images.SubmoduleRevisionDownDirty), Pad(Images.SubmoduleRevisionDownDirty) },
                         { nameof(Images.SubmoduleRevisionSemiUpDirty), Pad(Images.SubmoduleRevisionSemiUpDirty) },
                         { nameof(Images.SubmoduleRevisionSemiDownDirty), Pad(Images.SubmoduleRevisionSemiDownDirty) },
-                        { nameof(Images.Star), Pad(Images.Star) }
+                        { nameof(Images.Star), Pad(Images.Star) },
+                        { nameof(Images.BranchDelete), Pad(Images.BranchDelete) },
+                        { nameof(Images.Warning), Pad(Images.Warning) }
                     }
                 };
                 treeMain.SelectedImageKey = treeMain.ImageKey;
