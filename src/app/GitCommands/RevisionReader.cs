@@ -204,12 +204,12 @@ namespace GitCommands
 #endif
                 using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: null);
 
-                // StandardError.ReadToEnd[Async] may become unresponsive if lengthy StandardOutput is not consumed in parallel. So, buffer the StandardOutput.
+                // StandardError.CopyToAsync - done by the IProcess instance - may become unresponsive if lengthy StandardOutput is not consumed in parallel. So, buffer the StandardOutput.
                 using MemoryStream standardOutputBuffer = new();
                 Task standardOutputTask = process.StandardOutput.BaseStream.CopyToAsync(standardOutputBuffer, cancellationToken);
-                Task<string> errorOutputTask = process.StandardError.ReadToEndAsync(cancellationToken);
 
-                string errorOutput = await errorOutputTask;
+                await process.WaitForExitAsync(cancellationToken);
+                string errorOutput = process.StandardError;
                 if (!string.IsNullOrWhiteSpace(errorOutput) && throwOnError)
                 {
                     throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(), innerException: new Exception(errorOutput));

@@ -14,6 +14,8 @@ namespace GitUI.NBugReports
 {
     public static class BugReportInvoker
     {
+        public const string DubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
+
         private static Form? OwnerForm
             => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
 
@@ -126,7 +128,7 @@ namespace GitUI.NBugReports
 
             ExternalOperationException externalOperationException = exception as ExternalOperationException;
 
-            if (externalOperationException?.InnerException?.Message?.Contains(ExecutableExtensions.DubiousOwnershipSecurityConfigString) is true)
+            if (externalOperationException?.InnerException?.Message?.Contains(DubiousOwnershipSecurityConfigString) is true)
             {
                 ReportDubiousOwnership(externalOperationException.InnerException);
                 return;
@@ -275,9 +277,9 @@ namespace GitUI.NBugReports
                 AllowCancel = true,
                 SizeToContent = true,
             };
-            int startIndex = error.IndexOf(ExecutableExtensions.DubiousOwnershipSecurityConfigString);
+            int startIndex = error.IndexOf(DubiousOwnershipSecurityConfigString);
             string gitConfigTrustRepoCommand = ReplaceRepoPathQuotes(error[startIndex..].Trim());
-            string folderPath = error[(startIndex + ExecutableExtensions.DubiousOwnershipSecurityConfigString.Length + 1)..];
+            string folderPath = error[(startIndex + DubiousOwnershipSecurityConfigString.Length + 1)..];
 
             TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);
             openExplorerButton.Click += (_, _) => OsShellUtil.OpenWithFileExplorer(PathUtil.ToNativePath(folderPath));

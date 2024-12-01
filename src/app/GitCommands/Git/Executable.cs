@@ -63,6 +63,8 @@ namespace GitCommands
             private readonly TaskCompletionSource<int> _exitTaskCompletionSource = new();
 
             private readonly CancellationToken _cancellationToken;
+            private readonly Encoding? _errorEncoding;
+            private readonly MemoryStream? _errorOutputStream;
             private readonly ProcessOperation _logOperation;
             private readonly Process _process;
             private readonly bool _redirectInput;
@@ -72,6 +74,7 @@ namespace GitCommands
 
             private bool _disposed;
             private bool _exitHandlerRemoved;
+            private string? _errorOutput;
 
             public ProcessWrapper(string fileName,
                                   string prefixArguments,
@@ -91,10 +94,15 @@ namespace GitCommands
                 _throwOnErrorExit = throwOnErrorExit;
                 _cancellationToken = cancellationToken;
 
-                Encoding errorEncoding = outputEncoding;
+                _errorEncoding = outputEncoding;
                 if (throwOnErrorExit)
                 {
-                    errorEncoding ??= Encoding.Default;
+                    _errorEncoding ??= Encoding.Default;
+                }
+
+                if (throwOnErrorExit || redirectOutput)
+                {
+                    _errorOutputStream = new MemoryStream();
                 }
 
                 _process = new Process
@@ -108,9 +116,9 @@ namespace GitCommands
                         CreateNoWindow = !createWindow,
                         RedirectStandardInput = redirectInput,
                         RedirectStandardOutput = redirectOutput,
-                        RedirectStandardError = redirectOutput || throwOnErrorExit,
+                        RedirectStandardError = _errorOutputStream is not null,
                         StandardOutputEncoding = outputEncoding,
-                        StandardErrorEncoding = errorEncoding,
+                        StandardErrorEncoding = _errorEncoding,
                         FileName = fileName,
                         Arguments = $"{prefixArguments}{arguments}",
                         WorkingDirectory = workDir
@@ -124,6 +132,12 @@ namespace GitCommands
                 try
                 {
                     _process.Start();
+
+                    if (_errorOutputStream is not null)
+                    {
+                        _process.StandardError.BaseStream.CopyToAsync(_errorOutputStream, cancellationToken);
+                    }
+
                     try
                     {
                         _logOperation.SetProcessId(_process.Id);
@@ -180,14 +194,16 @@ namespace GitCommands
 
                 string? ReadErrorOutput()
                 {
-                    if (!_throwOnErrorExit)
+                    if (_errorOutputStream is null)
                     {
                         return null;
                     }
 
                     try
                     {
-                        return _process.StandardError.ReadToEnd().Trim();
+                        _errorOutput = _errorEncoding.GetString(_errorOutputStream.GetBuffer(), 0, (int)_errorOutputStream.Length);
+
+                        return _errorOutput.Trim();
                     }
                     catch (Exception ex)
                     {
@@ -237,16 +253,16 @@ namespace GitCommands
                 }
             }
 
-            public StreamReader StandardError
+            public string StandardError
             {
                 get
                 {
-                    if (!_redirectOutput)
+                    if (_errorOutput is null)
                     {
                         throw new InvalidOperationException("Process was not created with redirected output.");
                     }
 
-                    return _process.StandardError;
+                    return _errorOutput;
                 }
             }
 
@@ -307,6 +323,8 @@ namespace GitCommands
                 _process.Dispose();
 
                 _logOperation.NotifyDisposed();
+
+                _errorOutputStream?.Dispose();
             }
         }
 
