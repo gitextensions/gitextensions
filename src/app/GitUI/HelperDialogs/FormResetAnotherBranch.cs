@@ -16,6 +16,7 @@ namespace GitUI.HelperDialogs
         private readonly GitRevision _revision;
 
         private IGitRef[]? _localGitRefs;
+        private string? _validatedBranch;
 
         public static FormResetAnotherBranch Create(IGitUICommands commands, GitRevision revision)
             => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision));
@@ -53,14 +54,14 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        private IGitRef[] GetLocalBranchesWithoutCurrent()
+        private void InitLocalBranchesWithoutCurrent()
         {
             string currentBranch = Module.GetSelectedBranch();
             bool isDetachedHead = currentBranch == DetachedHeadParser.DetachedBranch;
 
             List<IGitRef> selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
 
-            IGitRef[] resetableLocalRefs = Module.GetRefs(RefsFilter.Heads)
+            _localGitRefs = Module.GetRefs(RefsFilter.Heads)
                 .Where(r => r.IsHead)
                 .Where(r => isDetachedHead || r.LocalName != currentBranch)
                 .Where(r => _revision.ObjectId != r.ObjectId) // Don't display local branches already at this revision
@@ -71,20 +72,18 @@ namespace GitUI.HelperDialogs
             if (selectedRevisionRemotes.Count == 1)
             {
                 IGitRef availableRemote = selectedRevisionRemotes[0];
-                IGitRef[] defaultCandidateRefs = resetableLocalRefs
+                IGitRef[] defaultCandidateRefs = _localGitRefs
                     .Where(r => r.IsTrackingRemote(availableRemote) || r.LocalName == availableRemote.LocalName).ToArray();
                 if (defaultCandidateRefs.Length == 1)
                 {
                     Branches.Text = defaultCandidateRefs[0].Name;
                 }
             }
-
-            return resetableLocalRefs;
         }
 
         private void FormResetAnotherBranch_Load(object sender, EventArgs e)
         {
-            _localGitRefs = GetLocalBranchesWithoutCurrent();
+            InitLocalBranchesWithoutCurrent();
 
             Branches.DisplayMember = nameof(IGitRef.Name);
             Branches.Items.AddRange(_localGitRefs);
@@ -135,14 +134,17 @@ namespace GitUI.HelperDialogs
 
         private void Validate(object sender, EventArgs e)
         {
-            if (_localGitRefs is null)
+            string branch = Branches.Text;
+
+            if (_localGitRefs is null || (branch == _validatedBranch && !ForceReset.Checked))
             {
                 return;
             }
 
+            _validatedBranch = null;
             CancellationToken cancellationToken = _cancellationTokenSequence.Next();
 
-            IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
+            IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == branch);
             Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? Color.LightCoral : SystemColors.Window;
 
             Ok.Enabled = gitRefToReset is not null && ForceReset.Checked;
@@ -152,6 +154,8 @@ namespace GitUI.HelperDialogs
             {
                 return;
             }
+
+            _validatedBranch = branch;
 
             ThreadHelper.FileAndForget(async () =>
             {
