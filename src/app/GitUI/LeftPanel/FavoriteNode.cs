@@ -1,5 +1,5 @@
 ﻿namespace GitUI.LeftPanel;
-
+#nullable enable
 internal class FavoriteNode : BaseRevisionNode
 {
     private readonly string _imageKey;

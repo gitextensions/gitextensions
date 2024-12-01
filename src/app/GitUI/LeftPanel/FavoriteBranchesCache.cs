@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿#nullable enable
+
+using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Text.Json;
 using GitExtensions.Extensibility.Git;
@@ -17,6 +19,7 @@ internal sealed class FavoriteBranchesCache
 
     private bool _isLoaded;
     private string _location = string.Empty;
+    private bool _isFeatureEnabled = false; // Flag to check if the feature is enabled
 
     public FavoriteBranchesCache(IServiceProvider serviceProvider)
     {
@@ -31,11 +34,14 @@ internal sealed class FavoriteBranchesCache
 
             if (_fileSystem.Directory.Exists(Path.GetDirectoryName(path)))
             {
+                _isFeatureEnabled = true;
                 return path;
             }
 
             Trace.WriteLine($"Invalid or not accessible directory: {Location}. Please set a valid location.");
-            throw new DirectoryNotFoundException("missing or not accessible directory.");
+            _isFeatureEnabled = false; // Disable the feature if the directory is invalid
+
+            return string.Empty;
         }
     }
 
@@ -59,8 +65,13 @@ internal sealed class FavoriteBranchesCache
     /// </summary>
     /// <param name="objectId">The unique ObjectId of the branch's latest commit.</param>
     /// <param name="branchName">The name of the branch (fully qualified).</param>
-    public void Remove(ObjectId objectId, string branchName)
+    public void Remove(ObjectId? objectId, string branchName)
     {
+        if (!_isFeatureEnabled || objectId == null || string.IsNullOrEmpty(branchName))
+        {
+            return;
+        }
+
         BranchIdentifier branch = new(objectId, branchName);
 
         if (!BranchIdentifier.IsValid(branch))
@@ -79,6 +90,13 @@ internal sealed class FavoriteBranchesCache
 
     public IEnumerable<IGitRef> Synchronize(IReadOnlyList<IGitRef> gitRefs, out IList<BranchIdentifier> noMatches)
     {
+        if (!_isFeatureEnabled)
+        {
+            noMatches = new List<BranchIdentifier>(); // Return an empty list when feature is disabled
+
+            return Enumerable.Empty<IGitRef>(); // Explicitly return empty if the feature is disabled
+        }
+
         HashSet<IGitRef> matches = [];
         noMatches = [];
 
@@ -89,7 +107,7 @@ internal sealed class FavoriteBranchesCache
 
             foreach (BranchIdentifier? favorite in _favorites)
             {
-                IGitRef exactMatch = gitRefs.FirstOrDefault(b => b.ObjectId == favorite.ObjectId && b.Name == favorite.Name);
+                IGitRef? exactMatch = gitRefs.FirstOrDefault(b => b.ObjectId == favorite.ObjectId && b.Name == favorite.Name);
 
                 if (exactMatch is not null)
                 {
@@ -98,7 +116,7 @@ internal sealed class FavoriteBranchesCache
                     continue;
                 }
 
-                IGitRef nameMatch = gitRefs.FirstOrDefault(b => b.Name == favorite.Name);
+                IGitRef? nameMatch = gitRefs.FirstOrDefault(b => b.Name == favorite.Name);
 
                 if (nameMatch is not null)
                 {
@@ -108,18 +126,21 @@ internal sealed class FavoriteBranchesCache
                     continue;
                 }
 
-                IGitRef objectIdMatch = gitRefs.FirstOrDefault(b => b.ObjectId == favorite.ObjectId);
+                IGitRef? objectIdMatch = gitRefs.FirstOrDefault(b => b.ObjectId == favorite.ObjectId);
 
                 if (objectIdMatch is not null)
                 {
-                    ObjectId? latestCommitId = GetLatestCommitId(gitModule, favorite.ObjectId.ToString());
-
-                    if (latestCommitId != null)
+                    if (favorite.ObjectId != null)
                     {
-                        // favorite.Name = latestCommitId;
-                        matches.Add(objectIdMatch);
+                        ObjectId? latestCommitId = GetLatestCommitId(gitModule, favorite.ObjectId.ToString());
 
-                        continue;
+                        if (latestCommitId != null)
+                        {
+                            // favorite.Name = latestCommitId;
+                            matches.Add(objectIdMatch);
+
+                            continue;
+                        }
                     }
                 }
 
@@ -137,6 +158,11 @@ internal sealed class FavoriteBranchesCache
     /// <param name="branchName">The name of the branch (fully qualified).</param>
     internal void Add(ObjectId objectId, string branchName)
     {
+        if (!_isFeatureEnabled)
+        {
+            return; // Explicitly ignore if the feature is disabled
+        }
+
         BranchIdentifier branch = new(objectId, branchName);
 
         if (!BranchIdentifier.IsValid(branch))
@@ -161,6 +187,11 @@ internal sealed class FavoriteBranchesCache
     /// <returns><c>true</c> if the branch is a favorite; otherwise, <c>false</c>.</returns>
     internal bool Contains(ObjectId objectId, string branchName)
     {
+        if (!_isFeatureEnabled)
+        {
+            return false; // Explicitly return false if the feature is disabled
+        }
+
         BranchIdentifier branch = new(objectId, branchName);
 
         if (!BranchIdentifier.IsValid(branch))
@@ -185,7 +216,7 @@ internal sealed class FavoriteBranchesCache
     /// </remarks>
     internal void Load()
     {
-        if (!_fileSystem.File.Exists(ConfigFile))
+        if (!_isFeatureEnabled || !_fileSystem.File.Exists(ConfigFile))
         {
             return;
         }
@@ -197,7 +228,7 @@ internal sealed class FavoriteBranchesCache
                 {
                     try
                     {
-                        string json = null;
+                        string? json = null;
                         json = _fileSystem.File.ReadAllText(ConfigFile);
 
                         if (string.IsNullOrEmpty(json))
@@ -225,6 +256,11 @@ internal sealed class FavoriteBranchesCache
 
     internal void Save()
     {
+        if (!_isFeatureEnabled)
+        {
+            return; // Explicitly ignore saving if the feature is disabled
+        }
+
         lock (_lock)
         {
             TryInvokeIfFileAccessible(ConfigFile,
@@ -245,6 +281,11 @@ internal sealed class FavoriteBranchesCache
 
     internal ObjectId? GetLatestCommitId(IGitModule gitModule, string nameMatchName)
     {
+        if (!_isFeatureEnabled)
+        {
+            return null; // Explicitly return null if the feature is disabled
+        }
+
         // Use the RevParse method to get the latest commit ID for the branch name
         return gitModule.RevParse(nameMatchName);
     }

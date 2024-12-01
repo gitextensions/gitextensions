@@ -5,6 +5,7 @@ using GitUI.CommandDialogs;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using Microsoft;
+#nullable enable
 
 namespace GitUI.LeftPanel;
 
@@ -12,7 +13,7 @@ internal sealed class FavoritesTree : BaseRefTree
 {
     private readonly IRevisionGridInfo _revisionGridInfo;
     private readonly FavoriteBranchesCache _favoritesCache;
-    private FileSystemWatcher _configWatcher;
+    private FileSystemWatcher? _configWatcher;
 
     public FavoritesTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo)
         : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes | RefsFilter.Heads)
@@ -148,7 +149,7 @@ internal sealed class FavoritesTree : BaseRefTree
             ObjectId = branch.ObjectId
         };
 
-        BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes,
+        BaseRevisionNode? parent = branchNode.CreateRootNode(pathToNodes,
             (tree, parentPath) => new FavoriteNode(this, parentPath, nameof(Images.BranchFolder)));
 
         if (parent is not null)
@@ -165,7 +166,7 @@ internal sealed class FavoritesTree : BaseRefTree
 
         LocalBranchNode branchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, true);
 
-        BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BranchPathNode(tree, parentPath));
+        BaseRevisionNode? parent = branchNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BranchPathNode(tree, parentPath));
 
         if (parent is not null)
         {
@@ -186,7 +187,7 @@ internal sealed class FavoritesTree : BaseRefTree
         {
             RemoteBranchNode branchNode = new(this, branch.ObjectId, branch.Name, true);
 
-            BaseRevisionNode parent = branchNode.CreateRootNode(pathToNodes, (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
+            BaseRevisionNode? parent = branchNode.CreateRootNode(pathToNodes, (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
             if (parent is not null)
             {
@@ -210,9 +211,9 @@ internal sealed class FavoritesTree : BaseRefTree
         StopFileWatcher();
         _favoritesCache.Location = UICommands.Module.WorkingDirGitDir;
         string configFile = _favoritesCache.ConfigFile;
-        string directoryName = Path.GetDirectoryName(configFile);
+        string? directoryName = Path.GetDirectoryName(configFile);
 
-        if (!Directory.Exists(directoryName))
+        if (string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
         {
             return;
         }

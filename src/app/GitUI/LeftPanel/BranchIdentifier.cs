@@ -1,14 +1,14 @@
 ﻿using GitExtensions.Extensibility.Git;
-
+#nullable enable
 namespace GitUI.LeftPanel;
 
 internal class BranchIdentifier(ObjectId objectId, string name)
 {
-    public ObjectId ObjectId { get; set; } = objectId;
+    public ObjectId? ObjectId { get; set; } = objectId;
 
     public string Name { get; set; } = name;
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is not BranchIdentifier other)
         {
