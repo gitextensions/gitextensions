@@ -1,3 +1,4 @@
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -10,9 +11,12 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormResetAnotherBranch : GitModuleForm
     {
-        private IGitRef[]? _localGitRefs;
-        private readonly GitRevision _revision;
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
         private readonly TranslationString _localRefInvalid = new("The entered value '{0}' is not the name of an existing local branch.");
+        private readonly GitRevision _revision;
+
+        private IGitRef[]? _localGitRefs;
+        private string? _validatedBranch;
 
         public static FormResetAnotherBranch Create(IGitUICommands commands, GitRevision revision)
             => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision));
@@ -36,6 +40,8 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
 
             labelResetBranchWarning.SetForeColorForBackColor();
+
+            Ok.Enabled = false;
         }
 
         private void Application_Idle(object sender, EventArgs e)
@@ -48,14 +54,14 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        private IGitRef[] GetLocalBranchesWithoutCurrent()
+        private void InitLocalBranchesWithoutCurrent()
         {
             string currentBranch = Module.GetSelectedBranch();
             bool isDetachedHead = currentBranch == DetachedHeadParser.DetachedBranch;
 
             List<IGitRef> selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
 
-            IGitRef[] resetableLocalRefs = Module.GetRefs(RefsFilter.Heads)
+            _localGitRefs = Module.GetRefs(RefsFilter.Heads)
                 .Where(r => r.IsHead)
                 .Where(r => isDetachedHead || r.LocalName != currentBranch)
                 .Where(r => _revision.ObjectId != r.ObjectId) // Don't display local branches already at this revision
@@ -66,20 +72,18 @@ namespace GitUI.HelperDialogs
             if (selectedRevisionRemotes.Count == 1)
             {
                 IGitRef availableRemote = selectedRevisionRemotes[0];
-                IGitRef[] defaultCandidateRefs = resetableLocalRefs
+                IGitRef[] defaultCandidateRefs = _localGitRefs
                     .Where(r => r.IsTrackingRemote(availableRemote) || r.LocalName == availableRemote.LocalName).ToArray();
                 if (defaultCandidateRefs.Length == 1)
                 {
                     Branches.Text = defaultCandidateRefs[0].Name;
                 }
             }
-
-            return resetableLocalRefs;
         }
 
         private void FormResetAnotherBranch_Load(object sender, EventArgs e)
         {
-            _localGitRefs = GetLocalBranchesWithoutCurrent();
+            InitLocalBranchesWithoutCurrent();
 
             Branches.DisplayMember = nameof(IGitRef.Name);
             Branches.Items.AddRange(_localGitRefs);
@@ -98,7 +102,7 @@ namespace GitUI.HelperDialogs
                 return;
             }
 
-            ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, Module.GetPathForGitExecution, ForceReset.Checked);
+            ArgumentString command = Commands.UpdateRef(gitRefToReset.CompleteName, _revision.ObjectId);
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {
@@ -126,6 +130,50 @@ namespace GitUI.HelperDialogs
                 Branches.SelectionStart = selectionStart;
                 Branches.SelectionLength = selectionLength;
             }
+        }
+
+        private void Validate(object sender, EventArgs e)
+        {
+            string branch = Branches.Text;
+
+            if (_localGitRefs is null || (branch == _validatedBranch && !ForceReset.Checked))
+            {
+                return;
+            }
+
+            _validatedBranch = null;
+            CancellationToken cancellationToken = _cancellationTokenSequence.Next();
+
+            IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == branch);
+            Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? Color.LightCoral : SystemColors.Window;
+
+            Ok.Enabled = gitRefToReset is not null && ForceReset.Checked;
+            Ok.BackColor = SystemColors.ButtonFace;
+
+            if (gitRefToReset is null || ForceReset.Checked)
+            {
+                return;
+            }
+
+            _validatedBranch = branch;
+
+            ThreadHelper.FileAndForget(async () =>
+            {
+                ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, Module.GetPathForGitExecution, ForceReset.Checked, dryRun: true);
+                ExecutionResult executionResult = await Module.GitExecutable.ExecuteAsync(command, throwOnErrorExit: false, cancellationToken: cancellationToken);
+
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                Ok.Enabled = executionResult.ExitedSuccessfully;
+                if (!executionResult.ExitedSuccessfully)
+                {
+                    Ok.BackColor = Color.LightCoral;
+                }
+            });
         }
     }
 }

@@ -478,14 +478,16 @@ namespace GitCommands.Git
         /// <param name="targetId">The commit to move to.</param>
         /// <param name="repoDir">Directory to the current repo.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
+        /// <param name="dryRun">Just test whether Git would perform the operation.</param>
         /// <returns>The Git command to execute.</returns>
-        public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, Func<string, string?> getPathForGitExecution, bool force = false)
+        public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, Func<string, string?> getPathForGitExecution, bool force = false, bool dryRun = false)
         {
             return new GitArgumentBuilder("push")
             {
                 $@"""file://{getPathForGitExecution(repoDir)}""",
                 $"{targetId}:{gitRef}".QuoteNE(),
-                { force, "--force" }
+                { force, "--force" },
+                { dryRun, "--dry-run" }
             };
         }
 
@@ -688,6 +690,22 @@ namespace GitCommands.Git
         public static ArgumentString SubmoduleUpdate(string? name, IEnumerable<GitConfigItem>? configs = null)
         {
             return SubmoduleUpdateCommand((name ?? "").Trim().QuoteNE(), configs);
+        }
+
+        /// <summary>
+        ///  Update a local reference to a new commit.
+        ///  This is similar to "git branch --force "branch" "commit".
+        /// </summary>
+        /// <param name="gitRef">The branch to move.</param>
+        /// <param name="targetId">The commit to move to.</param>
+        /// <returns>The Git command to execute.</returns>
+        public static ArgumentString UpdateRef(string gitRef, ObjectId targetId)
+        {
+            return new GitArgumentBuilder("update-ref")
+            {
+                gitRef.QuoteNE(),
+                targetId
+            };
         }
 
         private static ArgumentString SubmoduleUpdateCommand(string name, IEnumerable<GitConfigItem>? configs)
