@@ -13,6 +13,7 @@ namespace GitUI.HelperDialogs
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public IBuildServerCredentials? BuildServerCredentials { get; set; }
 
         private void buttonOK_Click(object sender, EventArgs e)

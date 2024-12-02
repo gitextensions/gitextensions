@@ -127,6 +127,7 @@ namespace GitUI.CommandsDialogs
         private static partial Regex IsRefRemoved();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ErrorOccurred { get; private set; }
 
         public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, GitPullAction pullAction)

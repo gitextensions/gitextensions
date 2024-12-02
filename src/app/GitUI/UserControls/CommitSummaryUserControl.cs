@@ -45,6 +45,7 @@ namespace GitUI.UserControls
         /// Gets or sets a revision for which to show a summary.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public GitRevision? Revision
         {
             get => _revision;

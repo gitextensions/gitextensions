@@ -49,6 +49,7 @@ namespace GitExtensions.Plugins.GitStatistics
                 };
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string DirectoriesToIgnore { get; set; } = "";
 
         public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodules)

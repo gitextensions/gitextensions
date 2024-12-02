@@ -24,6 +24,7 @@ namespace GitExtensions.Plugins.GitFlow
         private readonly AsyncLoader _task = new();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool IsRefreshNeeded { get; set; }
 
         private string? CurrentBranch { get; set; }

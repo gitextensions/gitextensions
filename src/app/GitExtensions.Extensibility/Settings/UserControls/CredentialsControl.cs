@@ -11,6 +11,7 @@ public partial class CredentialsControl : UserControl
         ChangeLabelText(userNameLabelText, passwordLabelText);
     }
 
+    [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string UserName
     {
@@ -19,6 +20,7 @@ public partial class CredentialsControl : UserControl
         set => userNameTextBox.Text = value;
     }
 
+    [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string Password
     {

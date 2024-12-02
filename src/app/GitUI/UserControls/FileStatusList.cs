@@ -323,6 +323,7 @@ namespace GitUI
         public int AllItemsCount => FileStatusListView.Items.Count;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public override ContextMenuStrip ContextMenuStrip
         {
             get { return FileStatusListView.ContextMenuStrip; }
@@ -446,6 +447,7 @@ namespace GitUI
         private IReadOnlyList<FileStatusWithDescription> GitItemStatusesWithDescription { get; set; } = Array.Empty<FileStatusWithDescription>();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool GroupByRevision { get; set; } = false;
 
         [Browsable(false)]

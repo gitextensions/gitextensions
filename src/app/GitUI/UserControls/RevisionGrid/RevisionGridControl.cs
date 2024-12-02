@@ -134,28 +134,35 @@ namespace GitUI
         // NOTE internal properties aren't serialised by the WinForms designer
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
 
         internal ObjectId? CurrentCheckout { get; private set; }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         internal Lazy<string> CurrentBranch { get; private set; } = new(() => "");
         internal FilterInfo CurrentFilter => _filterInfo;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         internal bool ShowUncommittedChangesIfPossible { get; set; } = true;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         internal bool ShowBuildServerInfo { get; set; }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         internal bool DoubleClickDoesNotOpenCommitInfo { get; set; }
 
         /// <summary>
         /// The last selected commit in the grid (with related CommitInfo in Browse).
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         internal ObjectId? SelectedId { private get; set; }
 
         /// <summary>
         /// The first selected, the first commit in a diff.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         internal ObjectId? FirstId { private get; set; }
 
         internal RevisionGridMenuCommands MenuCommands { get; }
@@ -166,6 +173,7 @@ namespace GitUI
         /// The property is explicitly initialized by FileHistory.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         internal Dictionary<ObjectId, string>? FilePathByObjectId { get; set; } = null;
 
         public RevisionGridControl()
@@ -368,6 +376,7 @@ namespace GitUI
         internal GitRevision? LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         internal bool MultiSelect
         {
             get => _gridView.MultiSelect;

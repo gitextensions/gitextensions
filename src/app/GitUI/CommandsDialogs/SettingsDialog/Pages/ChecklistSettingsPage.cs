@@ -134,6 +134,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// TODO: remove this direct dependency to another SettingsPage later when possible.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public SshSettingsPage? SshSettingsPage { get; set; }
 
         public ChecklistSettingsPage(IServiceProvider serviceProvider)

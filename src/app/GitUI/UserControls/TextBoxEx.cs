@@ -16,6 +16,7 @@ namespace GitUI.UserControls
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public Color BorderDefaultColor
         {
             get => _borderDefaultColor;
@@ -27,6 +28,7 @@ namespace GitUI.UserControls
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public Color BorderHoveredColor
         {
             get => _borderHoveredColor;
@@ -38,6 +40,7 @@ namespace GitUI.UserControls
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public Color BorderFocusedColor
         {
             get => _borderFocusedColor;

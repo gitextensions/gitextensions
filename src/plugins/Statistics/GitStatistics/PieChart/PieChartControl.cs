@@ -44,12 +44,14 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </summary>
         /// <value>The tool tips.</value>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string[]? ToolTips { get; set; }
 
         /// <summary>
         ///   Sets the initial angle from which pies are drawn.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public float InitialAngle
         {
             get => _initialAngle;

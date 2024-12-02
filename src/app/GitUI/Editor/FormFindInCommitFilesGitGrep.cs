@@ -30,6 +30,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
     public string? GitGrepExpressionText
     {
         get => cboFindInCommitFilesGitGrep.Text;

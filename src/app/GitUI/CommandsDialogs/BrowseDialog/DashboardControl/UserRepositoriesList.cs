@@ -134,6 +134,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         [Category("Appearance")]
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Color ForeColor
         {
@@ -154,6 +155,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         [Category("Appearance")]
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color HeaderColor
         {
@@ -172,6 +174,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         [Category("Appearance")]
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color HeaderBackColor
         {
@@ -202,6 +205,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         [Category("Appearance")]
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color HoverColor
         {
@@ -221,6 +225,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         [Category("Appearance")]
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color MainBackColor
         {

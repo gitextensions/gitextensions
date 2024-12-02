@@ -56,8 +56,10 @@ namespace GitUI.HelperDialogs
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? ProcessString { get; protected init; }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? ProcessArguments { get; set; }
 
         /// <summary>

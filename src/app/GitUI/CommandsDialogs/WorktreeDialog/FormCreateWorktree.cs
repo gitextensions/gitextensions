@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         public bool OpenWorktree => openWorktreeCheckBox.Checked;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public IReadOnlyList<IGitRef>? ExistingBranches { get; set; }
 
         public FormCreateWorktree(IGitUICommands commands, string? path)

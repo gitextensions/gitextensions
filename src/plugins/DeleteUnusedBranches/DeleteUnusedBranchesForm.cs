@@ -38,6 +38,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
         private readonly GitBranchOutputCommandParser _commandOutputParser;
         private CancellationTokenSource? _refreshCancellation;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool HasDeletedBranch { get; internal set; }
 
         public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands? gitUiCommands, IGitPlugin gitPlugin)

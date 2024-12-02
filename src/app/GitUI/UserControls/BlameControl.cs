@@ -53,6 +53,7 @@ namespace GitUI.Blame
 
         // Relative path of the file to blame when blaming a new revision
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? PathToBlame { get; private set; }
 
         public BlameControl()

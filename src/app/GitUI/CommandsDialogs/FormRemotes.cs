@@ -131,6 +131,7 @@ Inactive remote is completely invisible to git.");
         /// </summary>
         /// <remarks>exclusive of <see cref="PreselectLocalOnLoad"/>.</remarks>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? PreselectRemoteOnLoad { get; set; }
 
         /// <summary>
@@ -139,6 +140,7 @@ Inactive remote is completely invisible to git.");
         /// </summary>
         /// <remarks>exclusive of <see cref="PreselectRemoteOnLoad"/>.</remarks>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? PreselectLocalOnLoad { get; set; }
 
         /// <summary>

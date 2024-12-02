@@ -50,6 +50,7 @@ namespace GitUI
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ReplaceMode
         {
             get { return txtReplaceWith.Visible; }

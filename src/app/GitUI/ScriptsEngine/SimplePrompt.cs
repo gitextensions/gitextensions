@@ -7,6 +7,7 @@ namespace GitUI.ScriptsEngine;
 internal partial class SimplePrompt : Form, IUserInputPrompt
 {
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
     public string UserInput { get; private set; } = "";
 
     public SimplePrompt(string? title, string? label, string? defaultValue)

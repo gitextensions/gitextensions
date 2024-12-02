@@ -178,6 +178,7 @@ See the changes in the commit form.");
         /// this file is used as a fallback.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? FallbackFollowedFile { get; set; } = null;
 
         public void LoadRevision(GitRevision? revision)

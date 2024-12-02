@@ -30,6 +30,7 @@ namespace GitUI
 
         private IReadOnlyList<IGitRef>? _branchesToSelect;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public IReadOnlyList<IGitRef>? BranchesToSelect
         {
             get

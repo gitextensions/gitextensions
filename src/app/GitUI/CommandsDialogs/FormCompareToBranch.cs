@@ -25,6 +25,7 @@ namespace GitUI.CommandsDialogs
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? BranchName { get; private set; }
 
         private void btnCompare_Click(object sender, EventArgs e)

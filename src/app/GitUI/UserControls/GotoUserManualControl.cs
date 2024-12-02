@@ -27,6 +27,7 @@ namespace GitUI.UserControls
 
         private string _manualSectionAnchorName;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string ManualSectionAnchorName
         {
             get { return _manualSectionAnchorName; }
@@ -42,6 +43,7 @@ namespace GitUI.UserControls
 
         private string _manualSectionSubfolder;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string ManualSectionSubfolder
         {
             get { return _manualSectionSubfolder; }

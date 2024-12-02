@@ -18,6 +18,7 @@ namespace BugReporter
             InitializeComponent();
         }
 
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int InformationColumnWidth
         {
@@ -32,6 +33,7 @@ namespace BugReporter
             }
         }
 
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int PropertyColumnWidth
         {

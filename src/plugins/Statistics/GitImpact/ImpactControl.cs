@@ -47,6 +47,7 @@ namespace GitExtensions.Plugins.GitImpact
         private readonly Pen _selectedAuthorPen = new(SystemColors.WindowText, 2);
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string SelectedAuthor { get; private set; } = string.Empty;
 
         public ImpactControl()

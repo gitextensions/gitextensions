@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         /// <summary>Gets or sets the KeyData.</summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public Keys KeyData
         {
             get => _keyData;

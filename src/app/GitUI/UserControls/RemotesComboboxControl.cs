@@ -13,6 +13,7 @@ namespace GitUI.UserControls
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string SelectedRemote
         {
             get => comboBoxRemotes.Text;
@@ -21,6 +22,7 @@ namespace GitUI.UserControls
 
         private bool _allowMultiselect;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool AllowMultiselect
         {
             get { return _allowMultiselect; }

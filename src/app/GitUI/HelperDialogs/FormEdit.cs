@@ -15,6 +15,7 @@ namespace GitUI.HelperDialogs
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool IsReadOnly
         {
             get => Viewer.IsReadOnly;

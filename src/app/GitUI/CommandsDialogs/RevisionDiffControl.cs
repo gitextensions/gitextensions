@@ -283,6 +283,7 @@ namespace GitUI.CommandsDialogs
         /// this file is used as a fallback.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? FallbackFollowedFile
         {
             get => _fallbackFollowedFile;

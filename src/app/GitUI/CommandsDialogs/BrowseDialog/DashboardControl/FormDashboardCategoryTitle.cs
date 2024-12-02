@@ -36,6 +36,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <summary>
         /// Gets the new category.
         /// </summary>
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? Category { get; private set; }
 

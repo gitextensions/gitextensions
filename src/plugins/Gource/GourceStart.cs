@@ -35,12 +35,15 @@ namespace GitExtensions.Plugins.Gource
         private GitUIEventArgs GitUIArgs { get; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string PathToGource { get; set; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? GitWorkingDir { get; set; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string GourceArguments { get; set; }
 
         private void RunRealCmdDetached(string cmd, string arguments)

@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public ActionEnum SelectedAction { get; private set; }
 
         public FormResetChanges(bool hasExistingFiles, bool hasNewFiles, string? confirmationMessage = null)

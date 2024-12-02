@@ -21,6 +21,7 @@ namespace GitUI.UserControls
         private int _progress;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool IsAnimating
         {
             get => _isAnimating;

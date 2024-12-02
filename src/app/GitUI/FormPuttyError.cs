@@ -18,6 +18,7 @@ namespace GitUI
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? KeyPath { get; private set; }
 
         public FormPuttyError()

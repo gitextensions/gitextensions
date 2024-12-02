@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs
             new("You need to choose a target revision.");
 
         private GitRevision? _selectedRevision;
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public GitRevision? SelectedRevision
         {

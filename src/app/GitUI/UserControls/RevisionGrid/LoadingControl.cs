@@ -29,6 +29,7 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool IsAnimating
         {
             get => _waitSpinner.IsAnimating;

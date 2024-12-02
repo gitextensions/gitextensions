@@ -140,6 +140,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public new Font Font
         {
             get => TextEditor.Font;
@@ -147,6 +148,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public Action? OpenWithDifftool { get; private set; }
 
         /// <summary>
@@ -226,6 +228,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool? ShowLineNumbers { get; set; }
 
         /// <summary>
@@ -545,6 +548,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public int HScrollPosition
         {
             get { return TextEditor.ActiveTextAreaControl.HScrollBar?.Value ?? 0; }
@@ -563,6 +567,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public int VScrollPosition
         {
             get { return TextEditor.ActiveTextAreaControl.VScrollBar?.Value ?? 0; }
@@ -581,6 +586,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public EolMarkerStyle EolMarkerStyle
         {
             get => TextEditor.EolMarkerStyle;
@@ -588,6 +594,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ShowSpaces
         {
             get => TextEditor.ShowSpaces;
@@ -595,6 +602,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ShowTabs
         {
             get => TextEditor.ShowTabs;
@@ -602,6 +610,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public int VRulerPosition
         {
             get => TextEditor.VRulerRow;
@@ -707,6 +716,7 @@ namespace GitUI.Editor
         public int TotalNumberOfLines => TextEditor.Document.TotalNumberOfLines;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool IsReadOnly
         {
             get => TextEditor.IsReadOnly;
@@ -756,6 +766,7 @@ namespace GitUI.Editor
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ShowGutterAvatars
         {
             get => _showGutterAvatars;

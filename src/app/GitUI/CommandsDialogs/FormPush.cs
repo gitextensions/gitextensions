@@ -41,6 +41,7 @@ namespace GitUI.CommandsDialogs
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ErrorOccurred { get; private set; }
         private int _pushColumnIndex;
 

@@ -18,6 +18,7 @@ namespace GitUI.UserControls
         /// and the Text property is used as path to initialize the folder browser's default selection.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public Control? PathShowingControl { get; set; }
 
         /// <summary>

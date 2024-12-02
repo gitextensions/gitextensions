@@ -10,9 +10,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? DialogTitle { get; set; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? ContentText { get; set; }
 
         protected override void OnLoad(EventArgs e)

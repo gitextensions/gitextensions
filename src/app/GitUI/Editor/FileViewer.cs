@@ -808,6 +808,7 @@ namespace GitUI.Editor
         /// If the file viewer contents support line patches.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool SupportLinePatching { get; private set; }
 
         /// <summary>
@@ -816,6 +817,7 @@ namespace GitUI.Editor
         /// Used for index/worktree where line patches modifies the diff.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool LinePatchingBlocksUntilReload { private get; set; }
 
         /// <summary>

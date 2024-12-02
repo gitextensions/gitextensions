@@ -8,8 +8,10 @@ namespace TeamCityIntegration.Settings
         private readonly TeamCityAdapter _teamCityAdapter = new();
         private TreeNode? _previouslySelectedProject;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string TeamCityProjectName { get; private set; }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string TeamCityBuildIdFilter { get; private set; }
 
         public TeamCityBuildChooser(string teamCityServerUrl, string teamCityProjectName, string teamCityBuildIdFilter)

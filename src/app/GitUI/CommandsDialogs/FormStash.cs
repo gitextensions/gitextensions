@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs
         private int _lastSelectedStashIndex = -1;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ManageStashes { get; set; }
         private GitStash? _currentWorkingDirStashItem;
 

@@ -23,6 +23,7 @@ namespace GitUI.CommandsDialogs
 
         private const int _parentsListItemHeight = 18;
 
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public GitRevision? Revision { get; set; }
 
