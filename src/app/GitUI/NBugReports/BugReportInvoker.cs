@@ -284,7 +284,6 @@ namespace GitUI.NBugReports
             pageSecurity.Buttons.Add(openExplorerButton);
 
             AddTrustRepoButton(TranslatedStrings.GitDubiousOwnershipTrustRepository, gitConfigTrustRepoCommand);
-            AddTrustAllReposButton(TranslatedStrings.GitDubiousOwnershipTrustAllRepositories);
 
             TaskDialogButton helpButton = TaskDialogButton.Help;
             helpButton.Click += (_, _) =>
@@ -322,35 +321,6 @@ namespace GitUI.NBugReports
                 {
                     new GitModule(".").GitExecutable.Start(command);
                     ShowGitRepo(OwnerForm, folderPath);
-                };
-
-                pageSecurity.Buttons.Add(button);
-            }
-
-            void AddTrustAllReposButton(string buttonText)
-            {
-                TaskDialogCommandLinkButton button = new(buttonText, allowCloseDialog: false)
-                {
-                    DescriptionText = $"git {ExecutableExtensions.DubiousOwnershipSecurityConfigString} *",
-                };
-
-                button.Click += (_, _) =>
-                {
-                    string tempFile = Path.GetTempFileName();
-                    File.WriteAllText(tempFile, $"{TranslatedStrings.GitDubiousOwnershipTrustAllInstruction}\r\n\r\ngit {ExecutableExtensions.DubiousOwnershipSecurityConfigString} \"*\"");
-
-                    // TODO: if FormEditor ever changed to use the DI, we'll need to configure the container
-                    using FormEditor formEditor = new(new GitUICommands(GitUICommands.EmptyServiceProvider, new GitModule(null)), tempFile, showWarning: false, readOnly: true);
-                    formEditor.ShowDialog();
-
-                    try
-                    {
-                        File.Delete(tempFile);
-                    }
-                    catch
-                    {
-                        // no-op
-                    }
                 };
 
                 pageSecurity.Buttons.Add(button);
