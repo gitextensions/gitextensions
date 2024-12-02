@@ -105,7 +105,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // 
             splitContainer2.Panel2.Controls.Add(LogOutput);
             splitContainer2.Size = new Size(657, 418);
-            splitContainer2.SplitterDistance = 279;
+            splitContainer2.SplitterDistance = 264;
             splitContainer2.TabIndex = 1;
             // 
             // LogItems

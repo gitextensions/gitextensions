@@ -23,9 +23,9 @@ namespace GitCommands.Logging
             _raiseCommandsChanged = raiseCommandsChanged;
         }
 
-        public void LogProcessEnd(int exitCode) => LogProcessEnd(exitCode, ex: null);
+        public void LogProcessEnd(int exitCode, string? error = null) => LogProcessEnd(exitCode, error, ex: null);
 
-        public void LogProcessEnd(Exception ex) => LogProcessEnd(exitCode: null, ex);
+        public void LogProcessEnd(Exception ex) => LogProcessEnd(exitCode: null, error: null, ex);
 
         public void SetProcessId(int processId)
         {
@@ -44,16 +44,17 @@ namespace GitCommands.Logging
         {
             if (_entry.Duration is null)
             {
-                LogProcessEnd();
+                LogProcessEnd(exitCode: null, error: ".NET object disposed", ex: null);
             }
         }
 
-        private void LogProcessEnd(int? exitCode = null, Exception? ex = null)
+        private void LogProcessEnd(int? exitCode, string? error, Exception? ex)
         {
             try
             {
                 _entry.Duration = _stopwatch.Elapsed;
                 _entry.ExitCode = exitCode;
+                _entry.Error = error;
                 _entry.Exception = ex;
                 _raiseCommandsChanged();
             }
@@ -77,6 +78,7 @@ namespace GitCommands.Logging
         public TimeSpan? Duration { get; internal set; }
         public int? ProcessId { get; set; }
         public int? ExitCode { get; set; }
+        public string? Error { get; set; }
         public Exception? Exception { get; set; }
         public StackTrace? CallStack { get; set; }
 
@@ -165,6 +167,7 @@ namespace GitCommands.Logging
                 s.Append("UI Thread?:  ").AppendLine($"{IsOnMainThread}");
                 s.Append("Duration:    ").AppendLine(Duration is not null ? $"{Duration.Value.TotalMilliseconds:0.###} ms" : "still running");
                 s.Append("Exit code:   ").AppendLine(ExitCode is not null ? $"{ExitCode}" : Exception is not null ? $"{Exception}" : "unknown");
+                s.Append("Error:       ").AppendLine(Error is not null ? Error : "not captured");
                 s.Append("Call stack:  ").Append(CallStack is not null ? $"{Environment.NewLine}{CallStack}" : "not captured");
 
                 return s.ToString();

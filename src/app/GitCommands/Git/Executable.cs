@@ -148,12 +148,12 @@ namespace GitCommands
                 try
                 {
                     int exitCode = _process.ExitCode;
-                    _logOperation.LogProcessEnd(exitCode);
+                    string? errorOutput = ReadErrorOutput();
+                    _logOperation.LogProcessEnd(exitCode, errorOutput);
 
                     if (_throwOnErrorExit && exitCode != 0)
                     {
-                        string errorOutput = _process.StandardError.ReadToEnd().Trim();
-                        string errorMessage = errorOutput.Length > 0 ? errorOutput : "External program returned non-zero exit code.";
+                        string errorMessage = errorOutput?.Length is > 0 ? errorOutput : "External program returned non-zero exit code.";
                         Exception ex
                             = new ExternalOperationException(command: _process.StartInfo.FileName,
                                     _process.StartInfo.Arguments,
@@ -165,7 +165,6 @@ namespace GitCommands
                             ex = new OperationCanceledException("Ctrl+C pressed or console closed", ex);
                         }
 
-                        _logOperation.LogProcessEnd(ex);
                         _exitTaskCompletionSource.TrySetException(ex);
                     }
 
@@ -175,6 +174,25 @@ namespace GitCommands
                 {
                     _logOperation.LogProcessEnd(ex);
                     _exitTaskCompletionSource.TrySetException(ex);
+                }
+
+                return;
+
+                string? ReadErrorOutput()
+                {
+                    if (!_throwOnErrorExit)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return _process.StandardError.ReadToEnd().Trim();
+                    }
+                    catch (Exception ex)
+                    {
+                        return $"Failed to read: {ex}";
+                    }
                 }
             }
 
