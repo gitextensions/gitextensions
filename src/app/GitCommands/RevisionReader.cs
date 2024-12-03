@@ -202,7 +202,7 @@ namespace GitCommands
 #if DEBUG
                 Debug.WriteLine($"git {arguments}");
 #endif
-                using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: null);
+                using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: null, throwOnErrorExit: false);
 
                 // StandardError.CopyToAsync - done by the IProcess instance - may become unresponsive if lengthy StandardOutput is not consumed in parallel. So, buffer the StandardOutput.
                 using MemoryStream standardOutputBuffer = new();
