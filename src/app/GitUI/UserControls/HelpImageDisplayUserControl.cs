@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitExtUtils.GitUI;
 using ResourceManager;
 
@@ -33,6 +34,8 @@ namespace GitUI.Help
             _isLoaded = true;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool IsExpanded
         {
             get { return _isExpanded; }
@@ -59,6 +62,8 @@ namespace GitUI.Help
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? UniqueIsExpandedSettingsId { get; set; }
 
         private void UpdateIsExpandedState()
@@ -87,6 +92,8 @@ namespace GitUI.Help
             UpdateControlSize();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public Image? Image1
         {
             get { return _image1; }
@@ -101,6 +108,8 @@ namespace GitUI.Help
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public Image? Image2
         {
             get { return _image2; }
@@ -118,6 +127,8 @@ namespace GitUI.Help
         /// <summary>
         /// see also IsOnHoverShowImage2NoticeText.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool IsOnHoverShowImage2
         {
             get { return _showImage2OnHover; }
@@ -135,6 +146,8 @@ namespace GitUI.Help
         /// <summary>
         /// only shown when IsOnHoverShowImage2 is true.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string IsOnHoverShowImage2NoticeText
         {
             get => labelHoverText.Text;

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -47,6 +48,8 @@ namespace GitExtensions.Plugins.GitStatistics
                     Color.Purple
                 };
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string DirectoriesToIgnore { get; set; } = "";
 
         public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodules)

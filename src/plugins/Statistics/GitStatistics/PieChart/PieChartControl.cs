@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using GitExtensions.Extensibility;
 
@@ -42,11 +43,15 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         ///   Gets or sets the tool tips.
         /// </summary>
         /// <value>The tool tips.</value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string[]? ToolTips { get; set; }
 
         /// <summary>
         ///   Sets the initial angle from which pies are drawn.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public float InitialAngle
         {
             get => _initialAngle;
