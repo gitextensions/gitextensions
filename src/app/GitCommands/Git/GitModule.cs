@@ -639,9 +639,12 @@ namespace GitCommands
             return retValue;
         }
 
-        public void SaveBlobAs(string saveAs, string blob)
+        public void SaveBlobAs(string saveAs, string blob, CancellationToken cancellationToken = default)
+            => ThreadHelper.FileAndForget(() => SaveBlobAsAsync(saveAs, blob, cancellationToken));
+
+        public async Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken)
         {
-            using MemoryStream blobStream = GetFileStream(blob);
+            using MemoryStream blobStream = await GetFileStreamAsync(blob, cancellationToken);
             if (blobStream is null)
             {
                 return;
@@ -657,7 +660,7 @@ namespace GitCommands
             }
 
             using FileStream stream = File.Create(saveAs);
-            stream.Write(blobData, 0, blobData.Length);
+            await stream.WriteAsync(blobData, 0, blobData.Length);
         }
 
         private static string GetSide(string side)
@@ -3514,8 +3517,8 @@ namespace GitCommands
             return null;
         }
 
-        public MemoryStream? GetFileStream(string blob)
-            => GitFileStreamGetter.GetFileStream(blob, _gitCommandRunner);
+        public Task<MemoryStream?> GetFileStreamAsync(string blob, CancellationToken cancellationToken)
+            => GitFileStreamGetter.GetFileStreamAsync(blob, _gitCommandRunner, cancellationToken);
 
         public IEnumerable<string?> GetPreviousCommitMessages(int count, string revision, string authorPattern)
         {
