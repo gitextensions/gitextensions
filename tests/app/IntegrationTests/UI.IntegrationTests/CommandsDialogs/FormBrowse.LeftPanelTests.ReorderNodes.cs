@@ -37,6 +37,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.ShowAuthorAvatarColumn = false;
 
             // Show all root nodes for test, restore when done
+            _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowFavorites.Value);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowBranches);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowRemotes);
             _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowTags);
@@ -47,6 +48,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.RepoObjectsTreeShowTags = true;
             AppSettings.RepoObjectsTreeShowStashes = true;
             AppSettings.RepoObjectsTreeShowSubmodules = true;
+            AppSettings.RepoObjectsTreeShowFavorites.Value = true;
         }
 
         [OneTimeTearDown]
@@ -60,6 +62,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.RepoObjectsTreeShowTags = _originalRepoObjectsTreeShow[2];
             AppSettings.RepoObjectsTreeShowSubmodules = _originalRepoObjectsTreeShow[3];
             AppSettings.RepoObjectsTreeShowStashes = _originalRepoObjectsTreeShow[4];
+            AppSettings.RepoObjectsTreeShowFavorites.Value = _originalRepoObjectsTreeShow[5];
         }
 
         [SetUp]
@@ -89,19 +92,19 @@ namespace GitExtensions.UITests.CommandsDialogs
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
                     // assert
-                    AssertListCount(currNodes, 5);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                    AssertListCount(currNodes, 6);
+                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
 
                     int first = 0;
                     int last = currNodes.Count - 1;
 
                     // Trying to move first node up should do nothing
                     testAccessor.ReorderTreeNode(currNodes[first], up: true);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
 
                     // Similarly, moving last node down should do nothing
                     testAccessor.ReorderTreeNode(currNodes[last], up: false);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
                 });
         }
 
@@ -118,24 +121,24 @@ namespace GitExtensions.UITests.CommandsDialogs
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
                     // assert
-                    AssertListCount(currNodes, 5);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                    AssertListCount(currNodes, 6);
+                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
 
                     // Move first down
                     testAccessor.ReorderTreeNode(currNodes[0], up: false);
-                    ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4);
+                    ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4, 5);
                     testAccessor.ReorderTreeNode(currNodes[1], up: false);
-                    ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4);
+                    ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4, 5);
                     testAccessor.ReorderTreeNode(currNodes[2], up: false);
-                    ValidateOrder(initialNodes, currNodes, 1, 2, 3, 0, 4);
+                    ValidateOrder(initialNodes, currNodes, 1, 2, 3, 0, 4, 5);
 
                     // Then back up
                     testAccessor.ReorderTreeNode(currNodes[3], up: true);
-                    ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4);
+                    ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4, 5);
                     testAccessor.ReorderTreeNode(currNodes[2], up: true);
-                    ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4);
+                    ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4, 5);
                     testAccessor.ReorderTreeNode(currNodes[1], up: true);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
                 });
         }
 
@@ -150,14 +153,14 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // act
                     TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
                     List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
-                    AssertListCount(initialNodes, 5);
+                    AssertListCount(initialNodes, 6);
 
                     // Hide nodes between first and last
                     testAccessor.SetTreeVisibleByIndex(1, false);
                     testAccessor.SetTreeVisibleByIndex(2, false);
 
                     // assert
-                    AssertListCount(currNodes, 3);
+                    AssertListCount(currNodes, 4);
 
                     // Move node 0 down, which should move it to index 3
                     testAccessor.ReorderTreeNode(currNodes[0], up: false);
@@ -167,10 +170,10 @@ namespace GitExtensions.UITests.CommandsDialogs
                     testAccessor.SetTreeVisibleByIndex(2, true);
 
                     // Reset currNodes, should be back
-                    AssertListCount(currNodes, 5);
+                    AssertListCount(currNodes, 6);
 
                     // Only first and last nodes should have swapped
-                    ValidateOrder(initialNodes, currNodes, 3, 1, 2, 0, 4);
+                    ValidateOrder(initialNodes, currNodes, 3, 1, 2, 0, 4, 5);
                 });
         }
 

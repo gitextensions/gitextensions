@@ -44,6 +44,10 @@ namespace GitCommands
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
         private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
         private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
+        private static readonly SettingsPath RepoFavorites = new AppSettingsPath("RepoFavorites");
+        private static readonly SettingsPath ShowFavorites = new AppSettingsPath(RepoFavorites, "ShowFavorites");
+        private static readonly SettingsPath FavoriteIndex = new AppSettingsPath(RepoFavorites, "FavoriteIndex");
+        private static readonly SettingsPath RepoObjectsTreePath = new AppSettingsPath("RepoObjectsTree");
 
         private static Mutex _globalMutex;
 
@@ -1567,6 +1571,8 @@ namespace GitCommands
 
         public static ISetting<bool> StraightenGraphDiagonals { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphDiagonals), true);
 
+        public static ISetting<bool> RepoObjectsTreeShowFavorites { get; set; } = Setting.Create(RepoObjectsTreePath, nameof(RepoObjectsTreeShowFavorites), true);
+
         /// <summary>
         ///  The limit when to skip the straightening of revision graph segments.
         /// </summary>
@@ -1992,6 +1998,8 @@ namespace GitCommands
             get => GetInt("RepoObjectsTree.StashesIndex", 4);
             set => SetInt("RepoObjectsTree.StashesIndex", value);
         }
+
+        public static ISetting<int> RepoObjectsTreeFavoritesIndex { get; set; } = Setting.Create(FavoriteIndex, nameof(RepoObjectsTreeFavoritesIndex), 5);
 
         public static string PrioritizedBranchNames
         {

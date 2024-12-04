@@ -38,6 +38,7 @@ namespace GitUI
         private readonly TranslationString _branchesText = new("Branches");
         private readonly TranslationString _remotesText = new("Remotes");
         private readonly TranslationString _tagsText = new("Tags");
+        private readonly TranslationString _favoriteText = new("Favorites");
         private readonly TranslationString _stashesText = new("Stashes");
         private readonly TranslationString _submodulesText = new("Submodules");
         private readonly TranslationString _bodyNotLoaded = new("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
@@ -315,6 +316,7 @@ Copy error details to clipboard?");
         public static string ShowReflogTooltip = _instance.Value._showReflogTooltip.Text;
         public static string ShowCurrentBranchOnly = _instance.Value._showCurrentBranchOnly.Text;
         public static string SimplifyByDecoration = _instance.Value._simplifyByDecoration.Text;
+        public static string Favorites = _instance.Value._favoriteText.Text;
 
         #region Scripts
 
