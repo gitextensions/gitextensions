@@ -61,14 +61,16 @@ internal static class GitFileStreamGetter
             await process.StandardOutput.BaseStream.CopyToAsync(smudgedStream, cancellationToken);
             smudgedStream.Position = 0;
 
-            string errorOutput = await process.StandardError.ReadToEndAsync();
+            int exitCode = await process.WaitForExitAsync(cancellationToken);
+
+            string errorOutput = process.StandardError;
             if (!string.IsNullOrWhiteSpace(errorOutput))
             {
                 Trace.WriteLine(errorOutput);
                 return lfsPointerStream;
             }
 
-            if (await process.WaitForExitAsync(cancellationToken) != ExecutionResult.Success)
+            if (exitCode != ExecutionResult.Success)
             {
                 return lfsPointerStream;
             }
