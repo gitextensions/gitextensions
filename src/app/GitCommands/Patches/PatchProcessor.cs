@@ -39,7 +39,7 @@ namespace GitCommands.Patches
         [GeneratedRegex(@$"(---|\+\+\+) [""]?[^/\s]+/(?<filename>.*)[""]?", RegexOptions.ExplicitCapture)]
         private static partial Regex FileNameRegex();
 
-        [GeneratedRegex(@$"^({_escapeSequenceRegex})?[-+@ ]", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@$"^({_escapeSequenceRegex})?[\-+@ ]", RegexOptions.ExplicitCapture)]
         private static partial Regex StartOfContentsRegex();
 
         /// <summary>
