@@ -1,3 +1,4 @@
+﻿using System.Collections;
 using System.Text;
 using GitCommands;
 using GitCommands.Patches;
@@ -240,6 +241,41 @@ index cdf8bebba,55ff37bb9..000000000
                 patchText.Append(line).Append("\n");
                 patchOutput.Append(GitModule.ReEncodeString(line, Encoding.UTF8, GitModule.LosslessEncoding));
                 patchOutput.Append("\n");
+            }
+        }
+
+        [TestCaseSource(typeof(CreatePatchFromStringTestData), nameof(CreatePatchFromStringTestData.TestCases))]
+        public async Task CreatePatchFromString_Text_ChangeFile(Encoding filesContentEncoding)
+        {
+            const char escape = '\u001b';
+            string patchText = $"""
+                From 42a3043eafe08409c55b48c36661cf6cf3055c68 Mon Sep 17 00:00:00 2001
+                From: Some One <else@mail.net>
+                Date: Mon, 2 Sep 2024 17:42:00 +0200
+                Subject: Patch for test
+
+                ---
+                {escape}[1mdiff --git a/old.txt b/new.txt{escape}[m
+                {escape}[1mindex cb36533..5550a88 100644{escape}[m
+                {escape}[1m--- a/old.txt{escape}[m
+                {escape}[1m+++ b/new.txt{escape}[m
+                {escape}[7;37m@@ -1 +1 @@{escape}[m
+                {escape}[7;31m-Ð ÐÐÐÐ{escape}[m
+                {escape}[7;32m+{escape}[m{escape}[7;32mA ÐÐÐÐ{escape}[m
+                """.Replace("\r\n", "\n");
+            await Verifier.Verify(PatchProcessor.CreatePatchesFromString(patchText, new Lazy<Encoding>(filesContentEncoding)));
+        }
+
+        public class CreatePatchFromStringTestData
+        {
+            public static IEnumerable TestCases
+            {
+                get
+                {
+                    yield return new TestCaseData(Encoding.UTF8);
+                    yield return new TestCaseData(Encoding.ASCII);
+                    yield return new TestCaseData(Encoding.Latin1);
+                }
             }
         }
 
