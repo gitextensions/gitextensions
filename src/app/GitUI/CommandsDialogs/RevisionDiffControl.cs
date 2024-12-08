@@ -1072,7 +1072,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.FileAndForget(() =>
+            ThreadHelper.FileAndForget(async () =>
             {
                 ObjectId blob = Module.GetFileBlobHash(item.Item.Name, item.SecondRevision.ObjectId);
 
@@ -1083,7 +1083,7 @@ namespace GitUI.CommandsDialogs
 
                 string fileName = PathUtil.GetFileName(item.Item.Name);
                 fileName = (Path.GetTempPath() + fileName).ToNativePath();
-                Module.SaveBlobAs(fileName, blob.ToString());
+                await Module.SaveBlobAsAsync(fileName, blob.ToString());
 
                 onSaved(fileName);
             });
