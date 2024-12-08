@@ -33,8 +33,11 @@ namespace GitUI.CommandsDialogs
                     path = path[1..^1];
                 }
 
-                revisionDiff.FallbackFollowedFile = path;
-                fileTree.FallbackFollowedFile = path;
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    revisionDiff.FallbackFollowedFile = path;
+                    fileTree.FallbackFollowedFile = path;
+                }
             };
 
             bool firstTimeInFileHistoryMode = isFileHistoryMode;
