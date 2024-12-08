@@ -17,7 +17,7 @@
 [31m-        private static partial Regex DiffCommandRegex();[m
 [31m-        [GeneratedRegex(@$"^{_escapeSequenceRegex}diff --(cc|combined) [""]?(?<filenamea>.*?)[""]?{_escapeSequenceRegex}$", RegexOptions.ExplicitCapture)][m
 [31m-        private static partial Regex CombinedDiffCommandRegex();[m
-[31m-        [GeneratedRegex(@$"{_escapeSequenceRegex}[-+]{{3}} [""]?[abiwco12]/(?<filename>.*)[""]?{_escapeSequenceRegex}", RegexOptions.ExplicitCapture)][m
+[31m-        [GeneratedRegex(@$"{_escapeSequenceRegex}[\-+]{{3}} [""]?[abiwco12]/(?<filename>.*)[""]?{_escapeSequenceRegex}", RegexOptions.ExplicitCapture)][m
 [32m+[m
 [32m+[m[32m        // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs[m
 [32m+[m[32m        // diff --git b/Benchmarks/App.config a/Benchmarks/App.config[m
@@ -28,13 +28,13 @@
 [32m+[m[32m        ////private static partial Regex DiffCommandRegex();[m
 [32m+[m[32m        ////[GeneratedRegex(@$"^diff --(cc|combined) [""]?(?<filenamea>.*?)[""]?$", RegexOptions.ExplicitCapture)][m
 [32m+[m[32m        ////private static partial Regex CombinedDiffCommandRegex();[m
-[32m+[m[32m        [GeneratedRegex(@$"[-+]{{3}} [""]?[abiwco12]/(?<filename>.*)[""]?", RegexOptions.ExplicitCapture)][m
+[32m+[m[32m        [GeneratedRegex(@$"[\-+]{{3}} [""]?[abiwco12]/(?<filename>.*)[""]?", RegexOptions.ExplicitCapture)][m
          private static partial Regex FileNameRegex();[m
 [31m-        [GeneratedRegex(@$"^{_escapeSequenceRegex}(?<line>,*)", RegexOptions.ExplicitCapture)][m
 [31m-        private static partial Regex StartOfLineRegex();[m
 [32m+[m[32m        [GeneratedRegex(@$"^@@", RegexOptions.ExplicitCapture)][m
 [32m+[m[32m        private static partial Regex StartOfChunkRegex();[m
-         [GeneratedRegex(@$"^{_escapeSequenceRegex}?[ -+@]", RegexOptions.ExplicitCapture)][m
+         [GeneratedRegex(@$"^{_escapeSequenceRegex}?[\-+@ ]", RegexOptions.ExplicitCapture)][m
          private static partial Regex StartOfContentsRegex();[m
 [31m-        [GeneratedRegex(@$"^{_escapeSequenceRegex}?@@", RegexOptions.ExplicitCapture)][m
 [31m-        private static partial Regex StartOfChunkRegex();[m

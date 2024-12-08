@@ -1,0 +1,11 @@
+﻿[
+  {
+    "Header": "diff --git a/old.txt b/new.txt",
+    "Index": "index cb36533..5550a88 100644",
+    "FileType": "Text",
+    "FileNameA": "old.txt",
+    "FileNameB": "new.txt",
+    "ChangeType": "ChangeFile",
+    "Text": "diff --git a/old.txt b/new.txt\nindex cb36533..5550a88 100644\n--- a/old.txt\n+++ b/new.txt\n\u001b[7;37m@@ -1 +1 @@\u001b[m\n\u001b[7;31m-И ПОКА\u001b[m\n\u001b[7;32m+\u001b[m\u001b[7;32mA ПОКА\u001b[m"
+  }
+]

@@ -68,7 +68,7 @@ namespace GitCommands
         [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
         private static partial Regex EscapedOctalCodePointRegex();
 
-        [GeneratedRegex(@"^(?<code>[ -+U])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"^(?<code>[\-+U ])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShaRegex();
 
         [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$", RegexOptions.ExplicitCapture)]
