@@ -47,8 +47,8 @@ namespace GitUI.Blame
         private bool _changingScrollPosition;
         private IRepositoryHostPlugin? _gitHoster;
         private static readonly IList<Color> AgeBucketGradientColors = GetAgeBucketGradientColors();
-        private static readonly TranslationString _blameActualPreviousRevision = new("&Blame actual previous revision");
-        private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame visible previous revision");
+        private static readonly TranslationString _blameActualPreviousRevision = new("&Blame previous actual revision");
+        private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame previous visible revision");
         private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
         private readonly IGitBlameParser _gitBlameParser;
 

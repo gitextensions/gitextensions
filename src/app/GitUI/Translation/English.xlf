@@ -273,11 +273,11 @@ Click this info icon for more details.</source>
   <file datatype="plaintext" original="BlameControl" source-language="en">
     <body>
       <trans-unit id="_blameActualPreviousRevision.Text">
-        <source>&amp;Blame actual previous revision</source>
+        <source>&amp;Blame previous actual revision</source>
         <target />
       </trans-unit>
       <trans-unit id="_blameVisiblePreviousRevision.Text">
-        <source>&amp;Blame visible previous revision</source>
+        <source>&amp;Blame previous visible revision</source>
         <target />
       </trans-unit>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
