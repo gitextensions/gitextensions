@@ -168,6 +168,7 @@
             Assert.AreEqual(expected, str.QuoteIfNotQuotedAndNE());
         }
 
+        [TestCase(null, null)]
         [TestCase("", "")]
         [TestCase("\"", "\"")]
         [TestCase("\"\"", "")]
