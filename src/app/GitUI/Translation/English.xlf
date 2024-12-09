@@ -4689,6 +4689,10 @@ If you are not sure just close this window.</source>
         <source>Build Report</source>
         <target />
       </trans-unit>
+      <trans-unit id="_fileNotFound.Text">
+        <source> - Git could not identify the file {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="blameSettingsToolStripMenuItem.Text">
         <source>Blame settings:</source>
         <target />
