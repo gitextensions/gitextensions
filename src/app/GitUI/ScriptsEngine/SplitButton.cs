@@ -54,6 +54,7 @@ namespace GitUI.ScriptsEngine
         #region Properties
 
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override ContextMenuStrip? ContextMenuStrip
         {
             get => SplitMenuStrip;

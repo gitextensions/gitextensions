@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Git;
+﻿using System.ComponentModel;
+using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -20,6 +21,7 @@ namespace GitUI.CommandsDialogs
             new("You need to choose a target revision.");
 
         private GitRevision? _selectedRevision;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public GitRevision? SelectedRevision
         {
             get { return _selectedRevision; }

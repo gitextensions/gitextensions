@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Git;
+﻿using System.ComponentModel;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI.HelperDialogs
 {
@@ -13,6 +14,7 @@ namespace GitUI.HelperDialogs
             Viewer.IsReadOnly = false;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsReadOnly
         {
             get => Viewer.IsReadOnly;

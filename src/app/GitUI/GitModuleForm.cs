@@ -24,14 +24,17 @@ namespace GitUI
         /// <summary>
         /// Indicates that the process is run by unit tests runner.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal static bool IsUnitTestActive { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IHotkeySettingsLoader HotkeySettingsReader
         {
             get => _hotkeySettingsLoader ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
             private set => _hotkeySettingsLoader = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IScriptsRunner ScriptsRunner
         {
             get => _scriptsRunner ?? throw new InvalidOperationException($"{GetType().FullName} was constructed incorrectly.");
@@ -40,6 +43,7 @@ namespace GitUI
 
         /// <inheritdoc />
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IGitUICommands UICommands
         {
             get

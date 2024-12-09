@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -15,6 +16,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         public string WorktreeDirectory => newWorktreeDirectory.Text;
         public bool OpenWorktree => openWorktreeCheckBox.Checked;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IReadOnlyList<IGitRef>? ExistingBranches { get; set; }
 
         public FormCreateWorktree(IGitUICommands commands, string? path)

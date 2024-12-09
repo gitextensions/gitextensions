@@ -155,7 +155,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         }
                         catch (Exception ex)
                         {
-                            TaskDialog.ShowDialog(new TaskDialogPage
+#pragma warning disable WFO5002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+                            await TaskDialog.ShowDialogAsync(new TaskDialogPage
                                 {
                                     Icon = TaskDialogIcon.Error,
                                     Caption = _strRemoteFailToLoadBranches.Text,
@@ -163,6 +164,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                     Buttons = { TaskDialogButton.OK },
                                     SizeToContent = true
                                 });
+#pragma warning restore WFO5002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
                         }
                     });
         }
