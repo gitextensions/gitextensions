@@ -148,5 +148,41 @@
         {
             Assert.AreEqual(expected, s.EscapeForCommandLine(forWindows));
         }
+
+        [TestCase(null, null)]
+        [TestCase("", "")]
+        [TestCase(" \"", "\" \\\"\"")]
+        [TestCase("\"\"", "\"\"")]
+        [TestCase("file", "\"file\"")]
+        [TestCase("\"file", "\"file")]
+        [TestCase("\"file\"", "\"file\"")]
+        [TestCase("file with spaces", "\"file with spaces\"")]
+        [TestCase("\"file with spaces", "\"file with spaces")]
+        [TestCase("\"file with spaces\"", "\"file with spaces\"")]
+        [TestCase("wei\"rd", "\"wei\\\"rd\"")]
+        [TestCase("\"wei\"rd\"", "\"wei\"rd\"")]
+        [TestCase("weird\"", "\"weird\\\"\"")]
+
+        public void QuoteIfUnquotedAndNE(string? str, string? expected)
+        {
+            Assert.AreEqual(expected, str.QuoteIfNotQuotedAndNE());
+        }
+
+        [TestCase(null, null)]
+        [TestCase("", "")]
+        [TestCase("\"", "\"")]
+        [TestCase("\"\"", "")]
+        [TestCase("\" \"\"", " \"")]
+        [TestCase("\" \\\"", " \\")]
+        [TestCase("\" \\\"\"", " \\\"")]
+        [TestCase("\"file\"", "file")]
+        [TestCase("\"file", "\"file")]
+        [TestCase("file\"", "file\"")]
+        [TestCase("\"file with spaces\"", "file with spaces")]
+
+        public void RemoveQuotes(string? str, string? expected)
+        {
+            Assert.AreEqual(expected, str.RemoveQuotes());
+        }
     }
 }
