@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs
 
         private BuildReportTabPageExtension? _buildReportTabPageExtension;
 
-        private string FileName { get; set; }
+        private string FileName { get; init; }
 
         /// <summary>
         /// Open FileHistory form.
@@ -79,7 +79,11 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ShowBuildServerInfo = true;
             RevisionGrid.FilePathByObjectId = [];
 
-            FileName = fileName;
+            // Replace windows path separator to Linux path separator.
+            // This is needed to keep the file history working when started from file tree in
+            // browse dialog.
+            FileName = fileName.RemoveQuotes().ToPosixPath();
+
             SetTitle();
 
             Diff.ExtraDiffArgumentsChanged += (sender, e) => UpdateSelectedFileViewers();
@@ -212,12 +216,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            // Replace windows path separator to Linux path separator.
-            // This is needed to keep the file history working when started from file tree in
-            // browse dialog.
-            FileName = FileName.ToPosixPath();
-
-            RevisionGrid.SetAndApplyPathFilter(FileName);
+            RevisionGrid.SetAndApplyPathFilter(FileName.Quote());
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
@@ -266,7 +265,7 @@ namespace GitUI.CommandsDialogs
             IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             string fileName = GetFileNameForRevision(revision) ?? FileName;
 
-            SetTitle(fileName);
+            SetTitle(alternativeFileName: fileName);
 
             TabPage preferredTab = null;
             if (revision.IsArtificial)
@@ -282,7 +281,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (fileName.EndsWith("/"))
+            if (fileName.EndsWith('/'))
             {
                 // Note that artificial commits for object type tree (folder) will be handled here too,
                 // i.e. no tab at all is visible
@@ -299,7 +298,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (revision.IsArtificial || fileName.EndsWith("/"))
+            if (revision.IsArtificial || fileName.EndsWith('/'))
             {
                 BlameTab.Parent = null;
                 ViewTab.Parent = null;

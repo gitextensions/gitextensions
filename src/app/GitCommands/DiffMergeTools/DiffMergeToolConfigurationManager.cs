@@ -160,7 +160,7 @@ namespace GitCommands.DiffMergeTools
             else
             {
                 // query static settings for defined fullPath to executable
-                string? command = UnquoteString(GetToolSetting(diffTool.Name, DiffMergeToolType.Merge, "path"));
+                string? command = GetToolSetting(diffTool.Name, DiffMergeToolType.Merge, "path")?.RemoveQuotes();
                 if (!string.IsNullOrWhiteSpace(command))
                 {
                     fullPath = command;
@@ -219,22 +219,6 @@ namespace GitCommands.DiffMergeTools
             return string.IsNullOrWhiteSpace(toolName) ?
                 string.Empty :
                 _getFileSettings()?.GetValue(string.Concat(prefix, ".", toolName, ".", settingSuffix));
-        }
-
-        private static string? UnquoteString(string? str)
-        {
-            if (string.IsNullOrEmpty(str))
-            {
-                return str;
-            }
-
-            int length = str.Length;
-            if (length > 1 && str[0] == '\"' && str[length - 1] == '\"')
-            {
-                str = str.Substring(1, length - 2);
-            }
-
-            return str;
         }
 
         internal TestAccessor GetTestAccessor()
