@@ -264,9 +264,10 @@ namespace System
         ///  Returns the string with quotes removed from start and end (if they existed).
         /// </summary>
         [Pure]
+        [return: NotNullIfNotNull(nameof(str))]
         public static string RemoveQuotes(this string str, char quote = '"')
         {
-            if (str.Length >= 2 && str[0] == quote && str[^1] == quote)
+            if (str?.Length is >= 2 && str[0] == quote && str[^1] == quote)
             {
                 return str[1..^1];
             }

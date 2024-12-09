@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ShowBuildServerInfo = true;
             RevisionGrid.FilePathByObjectId = [];
 
-            // Replace windows path separator to Linux path separator.
+            // Replace Windows path separator to Linux path separator.
             // This is needed to keep the file history working when started from file tree in
             // browse dialog.
             FileName = fileName.RemoveQuotes().ToPosixPath();
