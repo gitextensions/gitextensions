@@ -273,7 +273,7 @@ Click this info icon for more details.</source>
   <file datatype="plaintext" original="BlameControl" source-language="en">
     <body>
       <trans-unit id="_blameActualPreviousRevision.Text">
-        <source>&amp;Blame previous actual revision</source>
+        <source>&amp;Blame previous revision</source>
         <target />
       </trans-unit>
       <trans-unit id="_blameVisiblePreviousRevision.Text">
