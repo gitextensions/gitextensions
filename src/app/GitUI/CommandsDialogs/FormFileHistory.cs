@@ -19,15 +19,16 @@ namespace GitUI.CommandsDialogs
         private const string FormBrowseName = "FormBrowse";
 
         private readonly TranslationString _buildReportTabCaption = new("Build Report");
+        private readonly TranslationString _fileNotFound = new(" - Git could not identify the file {0}");
         private readonly AsyncLoader _asyncLoader = new();
         private readonly ICommitDataManager _commitDataManager;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly FormFileHistoryController _controller = new();
         private readonly CancellationTokenSequence _customDiffToolsSequence = new();
         private readonly CancellationTokenSequence _viewChangesSequence = new();
 
         private BuildReportTabPageExtension? _buildReportTabPageExtension;
+        private string? _commitInfoTabPageText;
 
         private string FileName { get; init; }
 
@@ -264,8 +265,15 @@ namespace GitUI.CommandsDialogs
             GitRevision revision = selectedRevisions[0];
             IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             string fileName = GetFileNameForRevision(revision) ?? FileName;
+            bool isFolder = fileName.EndsWith('/');
+            ObjectId? fileBlobHash = isFolder ? null : Module.GetFileBlobHash(fileName, revision.ObjectId);
 
             SetTitle(alternativeFileName: fileName);
+
+            _commitInfoTabPageText ??= CommitInfoTabPage.Text;
+            CommitInfoTabPage.Text
+                = _commitInfoTabPageText
+                + (isFolder || fileBlobHash is not null ? "" : string.Format(_fileNotFound.Text, fileName.Quote()));
 
             TabPage preferredTab = null;
             if (revision.IsArtificial)
@@ -281,7 +289,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (fileName.EndsWith('/'))
+            if (fileBlobHash is null)
             {
                 // Note that artificial commits for object type tree (folder) will be handled here too,
                 // i.e. no tab at all is visible
@@ -298,7 +306,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (revision.IsArtificial || fileName.EndsWith('/'))
+            if (revision.IsArtificial || fileBlobHash is null)
             {
                 BlameTab.Parent = null;
                 ViewTab.Parent = null;
