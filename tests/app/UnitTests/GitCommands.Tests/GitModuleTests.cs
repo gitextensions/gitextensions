@@ -641,7 +641,7 @@ namespace GitCommandsTests
         [TestCase("", "")] // empty message
         [TestCase("a\r\nb\r\n\r\nc\r\n\r\n\r\n\r\nd", "a\r\nb\r\n\r\nc\r\n\r\nd")] // various amount of new lines between text lines
         [TestCase("\r\n\r\n\r\n\r\na\r\nb\r\n\r\n\r\n\r\n\r\n\r\n", "a\r\nb")] // trimmable message
-        [TestCase("a\n\n\nb\r\n\r\nc\r\rd", "a\r\n\r\nb\r\n\r\nc\r\n\r\nd")] // mix of new line types
+        [TestCase("a\n\n\nb\r\n\r\nc\n\nd", "a\r\n\r\nb\r\n\r\nc\r\n\r\nd")] // mix of new line types
         [TestCase("Hello, this is a single line message", "Hello, this is a single line message")] // single line message
         [TestCase("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13", "1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\r\n10\r\n11\r\n12\r\n13")] // message with more than 10 lines (a previous limitation)
         public void GetTagMessage(string tagMessage, string expectedReturnedMessage)
