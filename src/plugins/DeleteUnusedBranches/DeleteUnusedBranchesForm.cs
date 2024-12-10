@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.ComponentModel;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -36,6 +37,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
         private readonly IGitPlugin _gitPlugin;
         private readonly GitBranchOutputCommandParser _commandOutputParser;
         private CancellationTokenSource? _refreshCancellation;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool HasDeletedBranch { get; internal set; }
 
         public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands? gitUiCommands, IGitPlugin gitPlugin)

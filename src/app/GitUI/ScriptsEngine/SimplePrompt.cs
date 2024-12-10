@@ -1,9 +1,12 @@
 ﻿#nullable enable
 
+using System.ComponentModel;
+
 namespace GitUI.ScriptsEngine;
 
 internal partial class SimplePrompt : Form, IUserInputPrompt
 {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string UserInput { get; private set; } = "";
 
     public SimplePrompt(string? title, string? label, string? defaultValue)

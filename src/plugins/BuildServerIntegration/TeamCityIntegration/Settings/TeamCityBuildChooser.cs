@@ -1,4 +1,5 @@
-﻿using Microsoft;
+﻿using System.ComponentModel;
+using Microsoft;
 
 namespace TeamCityIntegration.Settings
 {
@@ -6,7 +7,9 @@ namespace TeamCityIntegration.Settings
     {
         private readonly TeamCityAdapter _teamCityAdapter = new();
         private TreeNode? _previouslySelectedProject;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string TeamCityProjectName { get; private set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string TeamCityBuildIdFilter { get; private set; }
 
         public TeamCityBuildChooser(string teamCityServerUrl, string teamCityProjectName, string teamCityBuildIdFilter)

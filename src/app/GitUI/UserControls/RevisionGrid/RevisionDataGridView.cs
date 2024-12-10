@@ -81,8 +81,10 @@ namespace GitUI.UserControls.RevisionGrid
         ///
         /// This property is intended to be used by tests.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsDataLoadComplete { get; private set; } = true;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool UpdatingVisibleRows { get; private set; }
 
         // _toBeSelectedGraphIndexesCache is init in Clear()
@@ -190,10 +192,12 @@ namespace GitUI.UserControls.RevisionGrid
             base.Dispose(disposing);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal AuthorRevisionHighlighting? AuthorHighlighting { get; set; }
 
         // Contains the object Id's that will be selected as soon as all of them have been loaded.
         // The object Id's are in the order in which they were originally selected.
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IReadOnlyList<ObjectId> ToBeSelectedObjectIds { get; set; } = Array.Empty<ObjectId>();
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
