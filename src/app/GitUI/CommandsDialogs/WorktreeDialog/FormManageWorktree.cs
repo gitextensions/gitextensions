@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -18,6 +19,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private List<WorkTree>? _worktrees;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ShouldRefreshRevisionGrid { get; private set; }
 
         public FormManageWorktree(IGitUICommands commands)
@@ -43,6 +46,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         /// If this is not null before showing the dialog the given
         /// remote name will be preselected in the listbox.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? PreselectRemoteOnLoad { get; set; }
 
         protected override void OnRuntimeLoad(EventArgs e)

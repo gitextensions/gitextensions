@@ -1,4 +1,6 @@
-﻿namespace GitUI.UserControls.RevisionGrid
+﻿using System.ComponentModel;
+
+namespace GitUI.UserControls.RevisionGrid
 {
     public sealed class LoadingControl : UserControl
     {
@@ -26,6 +28,8 @@
             this.AdjustForDpiScaling();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool IsAnimating
         {
             get => _waitSpinner.IsAnimating;

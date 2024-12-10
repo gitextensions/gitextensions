@@ -126,6 +126,8 @@ namespace GitUI.CommandsDialogs
         [GeneratedRegex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.", RegexOptions.ExplicitCapture)]
         private static partial Regex IsRefRemoved();
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ErrorOccurred { get; private set; }
 
         public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, GitPullAction pullAction)

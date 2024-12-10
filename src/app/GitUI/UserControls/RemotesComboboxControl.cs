@@ -1,4 +1,5 @@
-﻿using GitCommands.Remotes;
+﻿using System.ComponentModel;
+using GitCommands.Remotes;
 
 namespace GitUI.UserControls
 {
@@ -11,6 +12,8 @@ namespace GitUI.UserControls
             AllowMultiselect = false;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string SelectedRemote
         {
             get => comboBoxRemotes.Text;
@@ -18,6 +21,8 @@ namespace GitUI.UserControls
         }
 
         private bool _allowMultiselect;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool AllowMultiselect
         {
             get { return _allowMultiselect; }

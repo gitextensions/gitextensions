@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Imaging;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -33,10 +34,16 @@ namespace GitExtensions.Plugins.Gource
 
         private GitUIEventArgs GitUIArgs { get; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string PathToGource { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? GitWorkingDir { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string GourceArguments { get; set; }
 
         private void RunRealCmdDetached(string cmd, string arguments)

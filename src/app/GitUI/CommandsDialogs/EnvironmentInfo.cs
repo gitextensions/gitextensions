@@ -17,6 +17,8 @@ namespace GitUI.CommandsDialogs
             environmentIssueInfo.Text = UserEnvironmentInformation.GetInformation().Replace("- ", "");
         }
 
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ToolTip? ToolTip { get; set; }
 
         public void SetCopyButtonTooltip(string tooltip)

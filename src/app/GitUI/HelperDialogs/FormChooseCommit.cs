@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Git;
+﻿using System.ComponentModel;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
@@ -38,6 +39,8 @@ namespace GitUI.HelperDialogs
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public GitRevision? SelectedRevision { get; private set; }
 
         protected override void OnLoad(EventArgs e)
