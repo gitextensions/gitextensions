@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -25,6 +26,7 @@ namespace GitUI.UserControls
         }
 
         private string _manualSectionAnchorName;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string ManualSectionAnchorName
         {
             get { return _manualSectionAnchorName; }
@@ -39,6 +41,7 @@ namespace GitUI.UserControls
         }
 
         private string _manualSectionSubfolder;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string ManualSectionSubfolder
         {
             get { return _manualSectionSubfolder; }

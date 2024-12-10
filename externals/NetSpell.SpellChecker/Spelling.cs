@@ -1204,6 +1204,7 @@ namespace NetSpell.SpellChecker
         [Browsable(true)]
         [Category("Dictionary")]
         [Description("The WordDictionary object to use when spell checking")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public WordDictionary Dictionary
         {
             get

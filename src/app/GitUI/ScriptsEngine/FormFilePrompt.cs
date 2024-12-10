@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI;
 
@@ -6,6 +7,7 @@ namespace GitUI.ScriptsEngine
 {
     internal partial class FormFilePrompt : GitExtensionsForm, IUserInputPrompt
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string UserInput { get; private set; } = string.Empty;
 
         public FormFilePrompt()

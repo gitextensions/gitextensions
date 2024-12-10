@@ -266,10 +266,12 @@ namespace GitUI.BuildServerIntegration
             using FormBuildServerCredentials form = new(buildServerUniqueKey);
             form.BuildServerCredentials = buildServerCredentials;
 
-            if (form.ShowDialog(_revisionGrid) == DialogResult.OK)
+#pragma warning disable WFO5002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+            if (await form.ShowDialogAsync(_revisionGrid) == DialogResult.OK)
             {
                 return buildServerCredentials;
             }
+#pragma warning restore WFO5002 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
             return null;
         }

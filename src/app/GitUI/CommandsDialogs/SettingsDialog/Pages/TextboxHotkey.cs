@@ -1,4 +1,5 @@
-﻿using GitExtUtils;
+﻿using System.ComponentModel;
+using GitExtUtils;
 using GitUI.Hotkey;
 using ResourceManager.Hotkey;
 
@@ -22,6 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         }
 
         /// <summary>Gets or sets the KeyData.</summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Keys KeyData
         {
             get => _keyData;

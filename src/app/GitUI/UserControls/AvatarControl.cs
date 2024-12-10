@@ -83,9 +83,11 @@ namespace GitUI
         }
 
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? Email { get; private set; }
 
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string? AuthorName { get; private set; }
 
         public void LoadImage(string? email, string? name)
