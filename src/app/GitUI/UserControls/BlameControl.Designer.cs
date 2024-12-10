@@ -121,7 +121,7 @@
             blameRevisionToolStripMenuItem.Image = Properties.Resources.Blame;
             blameRevisionToolStripMenuItem.Name = "blameRevisionToolStripMenuItem";
             blameRevisionToolStripMenuItem.Size = new Size(199, 22);
-            blameRevisionToolStripMenuItem.Text = "Blame this revision";
+            blameRevisionToolStripMenuItem.Text = "Blame &this revision";
             blameRevisionToolStripMenuItem.Click += blameRevisionToolStripMenuItem_Click;
             // 
             // blamePreviousRevisionToolStripMenuItem
@@ -137,7 +137,7 @@
             showChangesToolStripMenuItem.Image = Properties.Resources.information;
             showChangesToolStripMenuItem.Name = "showChangesToolStripMenuItem";
             showChangesToolStripMenuItem.Size = new Size(238, 22);
-            showChangesToolStripMenuItem.Text = "Show changes";
+            showChangesToolStripMenuItem.Text = "&Show changes";
             showChangesToolStripMenuItem.Click += showChangesToolStripMenuItem_Click;
             // 
             // copyToClipboardToolStripMenuItem
@@ -149,14 +149,14 @@
             copyToClipboardToolStripMenuItem.Image = Properties.Resources.CopyToClipboard;
             copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
             copyToClipboardToolStripMenuItem.Size = new Size(199, 22);
-            copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
+            copyToClipboardToolStripMenuItem.Text = "&Copy to clipboard";
             // 
             // commitHashToolStripMenuItem
             // 
             commitHashToolStripMenuItem.Image = Properties.Resources.CommitId;
             commitHashToolStripMenuItem.Name = "commitHashToolStripMenuItem";
             commitHashToolStripMenuItem.Size = new Size(180, 22);
-            commitHashToolStripMenuItem.Text = "Commit hash";
+            commitHashToolStripMenuItem.Text = "Commit &hash";
             commitHashToolStripMenuItem.Click += copyCommitHashToClipboardToolStripMenuItem_Click;
             // 
             // commitMessageToolStripMenuItem
@@ -164,7 +164,7 @@
             commitMessageToolStripMenuItem.Image = Properties.Resources.Message;
             commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
             commitMessageToolStripMenuItem.Size = new Size(180, 22);
-            commitMessageToolStripMenuItem.Text = "Commit message";
+            commitMessageToolStripMenuItem.Text = "Commit &message";
             commitMessageToolStripMenuItem.Click += copyLogMessageToolStripMenuItem_Click;
             // 
             // allCommitInfoToolStripMenuItem
@@ -172,7 +172,7 @@
             allCommitInfoToolStripMenuItem.Image = Properties.Resources.CommitSummary;
             allCommitInfoToolStripMenuItem.Name = "allCommitInfoToolStripMenuItem";
             allCommitInfoToolStripMenuItem.Size = new Size(180, 22);
-            allCommitInfoToolStripMenuItem.Text = "All commit info";
+            allCommitInfoToolStripMenuItem.Text = "&All commit info";
             allCommitInfoToolStripMenuItem.Click += copyAllCommitInfoToClipboardToolStripMenuItem_Click;
             // 
             // BlameFile
