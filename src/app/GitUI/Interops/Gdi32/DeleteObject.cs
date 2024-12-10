@@ -5,7 +5,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.Gdi32, ExactSpelling = true)]
-        public static extern BOOL DeleteObject(IntPtr hObject);
+        [LibraryImport(Libraries.Gdi32)]
+        public static partial BOOL DeleteObject(IntPtr hObject);
     }
 }
