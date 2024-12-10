@@ -35,8 +35,8 @@ namespace GitCommandsTests.Git
 
             // Submodule name with spaces in the name
 
-            text = "diff --git a/Assets/Core/Vehicle Physics core assets b/Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- a/Assets/Core/Vehicle Physics core assets\t\n+++ b/Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
-            fileName = "Assets/Core/Vehicle Physics core assets";
+            text = "diff --git a/Main Assets/Core/Vehicle Physics core assets b/Main Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- a/Main Assets/Core/Vehicle Physics core assets\t\n+++ b/Main Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
+            fileName = "Main Assets/Core/Vehicle Physics core assets";
 
             status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
@@ -69,7 +69,7 @@ namespace GitCommandsTests.Git
 
             // With user customized `diff.srcPrefix` and `diff.dstPrefix` settings: Submodule name with spaces in the name
 
-            text = "diff --git before:/Assets/Core/Vehicle Physics core assets after:/Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- before:/Assets/Core/Vehicle Physics core assets\t\n+++ after:/Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
+            text = "diff --git b/Assets/Core/Vehicle Physics core assets a/Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- b/Assets/Core/Vehicle Physics core assets\t\n+++ a/Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
             fileName = "Assets/Core/Vehicle Physics core assets";
 
             status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
