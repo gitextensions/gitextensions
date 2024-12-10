@@ -244,6 +244,20 @@ index cdf8bebba,55ff37bb9..000000000
             }
         }
 
+        [Test]
+        public async Task CreatePatchFromString_with_spaces()
+        {
+            string patchText = """
+                diff --git a/sub modules/test submodule b/sub modules/test submodule
+                --- a/sub modules/test submodule    
+                +++ b/sub modules/test submodule    
+                @@ -1 +1 @@
+                -Subproject commit 4c54fbefd8032acb59aa33ade3fb4bdff32bdde7
+                +Subproject commit 4c54fbefd8032acb59aa33ade3fb4bdff32bdde7-dirty
+                """;
+            await Verifier.Verify(PatchProcessor.CreatePatchesFromString(patchText, new Lazy<Encoding>(Encoding.UTF8)));
+        }
+
         [TestCaseSource(typeof(CreatePatchFromStringTestData), nameof(CreatePatchFromStringTestData.TestCases))]
         public async Task CreatePatchFromString_Text_ChangeFile(Encoding filesContentEncoding)
         {
