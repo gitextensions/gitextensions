@@ -3119,25 +3119,13 @@ namespace GitCommands
             }
 
             string output = exec.StandardOutput;
-            string[] messageLines = output.Split(
-                new string[] { "\r\n", "\r", "\n" },
-                StringSplitOptions.None);
+            string[] messageLines = output.Split(Delimiters.NewLines, StringSplitOptions.None);
 
-            if (messageLines.Length <= StandardCatFileTagHeaderLength)
-            {
-                return null;
-            }
-
-            StringBuilder annotationBuilder = new();
-
-            // skip the last line as it will always be an empty line (for nice console output)
-            for (int i = StandardCatFileTagHeaderLength; i < messageLines.Length - 1; ++i)
-            {
-                annotationBuilder.AppendLine(messageLines[i]);
-            }
-
-            // return message, trimming off last new line (added by AppendLine)
-            return annotationBuilder.ToString().Trim();
+            return messageLines.Length <= StandardCatFileTagHeaderLength
+                ? null
+                : messageLines[StandardCatFileTagHeaderLength..]
+                    .Join(Environment.NewLine)
+                    .TrimEnd();
         }
 
         /// <summary>
