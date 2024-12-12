@@ -1391,7 +1391,7 @@ namespace GitUI.CommandsDialogs
             // toolStripGpgKeyTextBox
             // 
             toolStripGpgKeyTextBox.BorderStyle = BorderStyle.FixedSingle;
-            toolStripGpgKeyTextBox.MaxLength = 16;
+            toolStripGpgKeyTextBox.MaxLength = 40;
             toolStripGpgKeyTextBox.Name = "toolStripGpgKeyTextBox";
             toolStripGpgKeyTextBox.Size = new Size(230, 23);
             toolStripGpgKeyTextBox.Visible = false;
