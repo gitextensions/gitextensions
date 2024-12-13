@@ -93,7 +93,7 @@ namespace GitUI
 
             SafeInvoke(() =>
             {
-                string repositoryDescription = _repositoryDescriptionProvider.Get(workingDir);
+                string repositoryDescription = _repositoryDescriptionProvider.GetDescriptiveUnique(workingDir);
                 if (string.IsNullOrWhiteSpace(repositoryDescription))
                 {
                     return;
