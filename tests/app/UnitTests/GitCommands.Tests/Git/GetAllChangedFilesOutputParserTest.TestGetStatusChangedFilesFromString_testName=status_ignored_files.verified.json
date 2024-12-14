@@ -2,6 +2,10 @@
   {
     "Name": "adfs.h",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
@@ -29,6 +33,10 @@
   {
     "Name": "untracked_file",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,

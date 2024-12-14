@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
 
 namespace GitUI
@@ -119,7 +120,7 @@ namespace GitUI
                     {
                         // Create an artificial commit
                         fileStatusDescs.Add(new FileStatusWithDescription(
-                            firstRev: new GitRevision(ObjectId.CombinedDiffId), secondRev: selectedRev, summary: TranslatedStrings.CombinedDiff, statuses: conflicts));
+                            firstRev: new GitRevision(ObjectId.CombinedDiffId), secondRev: selectedRev, summary: TranslatedStrings.CombinedDiff, statuses: conflicts, iconName: nameof(Images.DiffC)));
                     }
                 }
 
@@ -254,12 +255,14 @@ namespace GitUI
                 firstRev: revBase,
                 secondRev: selectedRev,
                 summary: $"{TranslatedStrings.DiffBaseWith} B {GetDescriptionForRevision(selectedRev.ObjectId)}",
-                statuses: allBaseToB));
+                statuses: allBaseToB,
+                iconName: nameof(Images.DiffB)));
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: firstRev,
                 summary: $"{TranslatedStrings.DiffBaseWith} A {GetDescriptionForRevision(firstRev.ObjectId)}",
-                statuses: allBaseToA));
+                statuses: allBaseToA,
+                iconName: nameof(Images.DiffA)));
 
             if (!module.GitVersion.SupportRangeDiffTool)
             {
@@ -317,7 +320,8 @@ namespace GitUI
                                firstRev: null,
                                secondRev: selectedRev,
                                summary: $"{_grepSummaryPrefix}{_fileStatusDiffCalculatorInfo.GrepArguments} {GetDescriptionForRevision(selectedRev.ObjectId)}",
-                               statuses);
+                               statuses,
+                               iconName: nameof(Images.ViewFile));
         }
 
         private string GetDescriptionForRevision(ObjectId objectId)

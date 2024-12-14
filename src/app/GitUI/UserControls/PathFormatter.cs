@@ -24,25 +24,22 @@ namespace GitUI
             _font = font ?? throw new ArgumentNullException(nameof(font));
         }
 
-        public (string? prefix, string? text, string? suffix, int width) FormatTextForDrawing(int maxWidth, string name, string? oldName)
+        public (string? prefix, string? text, string? suffix) FormatTextForDrawing(int maxWidth, string name, string? oldName)
         {
             string? prefix = null;
             string? text = string.Empty;
             string? suffix = null;
-            int width = 0;
 
             switch (AppSettings.TruncatePathMethod)
             {
                 case TruncatePathMethod.FileNameOnly:
                     (text, suffix) = FormatTextForFileNameOnly(name, oldName);
-                    width = MeasureString(prefix, text, suffix).Width;
-                    return (prefix, text, suffix, width);
+                    return (prefix, text, suffix);
 
                 case TruncatePathMethod.None:
                 case TruncatePathMethod.Compact when !EnvUtils.RunningOnWindows():
                     (prefix, text, suffix) = FormatString(name, oldName, step: 0, isNameTruncated: false);
-                    width = MeasureString(prefix, text, suffix).Width;
-                    return (prefix, text, suffix, width);
+                    return (prefix, text, suffix);
 
                 default:
                     int maxStep = oldName is null
@@ -60,13 +57,12 @@ namespace GitUI
                             prefix = tmpPrefix;
                             text = tmpText;
                             suffix = tmpSuffix;
-                            width = measuredWidth;
                         }
 
                         return isShortEnough;
                     });
 
-                    return (prefix, text, suffix, width);
+                    return (prefix, text, suffix);
             }
         }
 

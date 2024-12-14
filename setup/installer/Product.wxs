@@ -208,6 +208,9 @@
       <Component Id="SpellChecker.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\SpellChecker.dll" />
       </Component>
+      <Component Id="StrongOf.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\BenjaminAbt.StrongOf.dll" />
+      </Component>
       <Component Id="System.ComponentModel.Composition.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\System.ComponentModel.Composition.dll" />
       </Component>
@@ -690,6 +693,7 @@
       <ComponentRef Id="SmartFormat.dll" />
       <ComponentRef Id="SmartFormat.ZString.dll" />
       <ComponentRef Id="SpellChecker.dll" />
+      <ComponentRef Id="StrongOf.dll" />
       <ComponentRef Id="System.ComponentModel.Composition.dll" />
       <ComponentRef Id="System.Composition.AttributedModel.dll" />
       <ComponentRef Id="System.Composition.Convention.dll" />

@@ -2,6 +2,10 @@
   {
     "Name": "GitUI/CommandsDialogs/FormFormatPatch.cs",
     "OldName": null,
+    "Path": {
+      "Length": 21,
+      "Value": "GitUI/CommandsDialogs"
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
@@ -29,6 +33,10 @@
   {
     "Name": "GitUI/CommandsDialogs/FormFormatPatch.cs",
     "OldName": null,
+    "Path": {
+      "Length": 21,
+      "Value": "GitUI/CommandsDialogs"
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,

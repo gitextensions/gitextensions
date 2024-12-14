@@ -2,6 +2,10 @@
   {
     "Name": "unknown info",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
@@ -29,6 +33,10 @@
   {
     "Name": "adfs.h",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
@@ -56,6 +64,10 @@
   {
     "Name": "adfs.h",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
