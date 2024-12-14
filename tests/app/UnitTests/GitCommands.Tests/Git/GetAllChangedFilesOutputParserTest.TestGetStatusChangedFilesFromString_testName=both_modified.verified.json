@@ -2,6 +2,10 @@
   {
     "Name": "GitUI/CommandsDialogs/FormFormatPatch.Designer.cs",
     "OldName": null,
+    "Path": {
+      "Length": 21,
+      "Value": "GitUI/CommandsDialogs"
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,

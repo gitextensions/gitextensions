@@ -14,6 +14,7 @@
     <PackageVersion Include="LibGit2Sharp" Version="0.27.2" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageVersion Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+    <PackageVersion Include="StrongOf" Version="1.2.4" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="6.0.0" /> <!-- Required by GitExtensions.PluginManager -->
     <PackageVersion Include="Microsoft.VisualStudio.Composition" Version="17.2.41" />
     <PackageVersion Include="Microsoft.VisualStudio.Threading" Version="17.4.27" />

@@ -1,0 +1,96 @@
+﻿{
+  "Text": "",
+  "Tag": "RelativePath: ",
+  "Nodes": [
+    {
+      "Text": "1",
+      "Tag": "RelativePath: 1",
+      "Nodes": [
+        {
+          "Text": "2/file12",
+          "Tag": "FileStatusItem: 1/2/file12",
+          "Nodes": []
+        },
+        {
+          "Text": "3",
+          "Tag": "RelativePath: 1/3",
+          "Nodes": [
+            {
+              "Text": "4/file134",
+              "Tag": "FileStatusItem: 1/3/4/file134",
+              "Nodes": []
+            },
+            {
+              "Text": "file13",
+              "Tag": "FileStatusItem: 1/3/file13",
+              "Nodes": []
+            }
+          ]
+        },
+        {
+          "Text": "file1",
+          "Tag": "FileStatusItem: 1/file1",
+          "Nodes": []
+        }
+      ]
+    },
+    {
+      "Text": "5",
+      "Tag": "RelativePath: 5",
+      "Nodes": [
+        {
+          "Text": "6",
+          "Tag": "RelativePath: 5/6",
+          "Nodes": [
+            {
+              "Text": "file56a",
+              "Tag": "FileStatusItem: 5/6/file56a",
+              "Nodes": []
+            },
+            {
+              "Text": "file56b",
+              "Tag": "FileStatusItem: 5/6/file56b",
+              "Nodes": []
+            }
+          ]
+        },
+        {
+          "Text": "7",
+          "Tag": "RelativePath: 5/7",
+          "Nodes": [
+            {
+              "Text": "8/file578",
+              "Tag": "FileStatusItem: 5/7/8/file578",
+              "Nodes": []
+            },
+            {
+              "Text": "file57a",
+              "Tag": "FileStatusItem: 5/7/file57a",
+              "Nodes": []
+            },
+            {
+              "Text": "file57b",
+              "Tag": "FileStatusItem: 5/7/file57b",
+              "Nodes": []
+            }
+          ]
+        },
+        {
+          "Text": "file1",
+          "Tag": "FileStatusItem: 5/file1",
+          "Nodes": []
+        }
+      ]
+    },
+    {
+      "Text": ".hidden_root_file",
+      "Tag": "FileStatusItem: .hidden_root_file",
+      "Nodes": []
+    },
+    {
+      "Text": "root_file",
+      "Tag": "FileStatusItem: root_file",
+      "Nodes": []
+    }
+  ]
+}

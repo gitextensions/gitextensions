@@ -72,6 +72,40 @@ public static class TreeViewExtensions
         return null;
     }
 
+    public static IEnumerable<TreeNode> Items(this TreeView? treeView)
+    {
+        if (treeView is null)
+        {
+            yield break;
+        }
+
+        foreach (TreeNode node in Recurse(treeView.Nodes))
+        {
+            yield return node;
+        }
+    }
+
+    public static IEnumerable<TreeNode> Items(this TreeNode? node)
+    {
+        if (node is null)
+        {
+            yield break;
+        }
+
+        yield return node;
+
+        foreach (TreeNode subNode in Recurse(node.Nodes))
+        {
+            yield return subNode;
+        }
+    }
+
+    public static IEnumerable<T> ItemTags<T>(this TreeView? treeView) where T : class
+        => treeView.Items().ItemTags<T>();
+
+    public static IEnumerable<T> ItemTags<T>(this TreeNode? node) where T : class
+        => node.Items().ItemTags<T>();
+
     /// <summary>
     /// Restores the expanded state of nodes under the input node using the set returned by GetExpandedNodesState.
     /// </summary>
@@ -92,6 +126,9 @@ public static class TreeViewExtensions
         }
     }
 
+    public static IEnumerable<T> SelectedItemTags<T>(this MultiSelectTreeView? treeView) where T : class
+        => treeView?.SelectedNodes.ItemTags<T>();
+
     private static void DoGetExpandedNodesState(this TreeNode node, HashSet<string> expandedNodes)
     {
         if (node.IsExpanded)
@@ -102,6 +139,23 @@ public static class TreeViewExtensions
         foreach (TreeNode childNode in node.Nodes)
         {
             DoGetExpandedNodesState(childNode, expandedNodes);
+        }
+    }
+
+    /// <summary>
+    ///  Returns the Tag of the nodes which can be casted to T - without iterating subnodes.
+    /// </summary>
+    private static IEnumerable<T> ItemTags<T>(this IEnumerable<TreeNode> nodes) where T : class
+        => nodes.Select(node => node.Tag as T).Where(value => value is not null);
+
+    private static IEnumerable<TreeNode> Recurse(TreeNodeCollection nodes)
+    {
+        foreach (TreeNode node in nodes)
+        {
+            foreach (TreeNode treeNode in node.Items())
+            {
+                yield return treeNode;
+            }
         }
     }
 }

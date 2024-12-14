@@ -2,6 +2,10 @@
   {
     "Name": "subm1",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
@@ -29,6 +33,10 @@
   {
     "Name": "subm2",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
