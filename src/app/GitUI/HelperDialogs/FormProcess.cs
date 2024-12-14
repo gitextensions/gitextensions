@@ -185,9 +185,9 @@ namespace GitUI.HelperDialogs
 
         private void DataReceivedCore(object sender, TextEventArgs e)
         {
-            if (e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
+            if (e.Text.EndsWith(Delimiters.CarriageReturn))
             {
-                this.InvokeAndForget(() => SetProgressAsync(e.Text));
+                this.InvokeAndForget(() => SetProgressAsync(e.Text.TrimEnd()));
             }
             else
             {
