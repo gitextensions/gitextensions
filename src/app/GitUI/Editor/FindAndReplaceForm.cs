@@ -367,13 +367,21 @@ namespace GitUI
             textArea.Document.UndoStack.StartUndoGroup();
             try
             {
+                int removedLength = 0;
                 if (textArea.SelectionManager.HasSomethingSelected)
                 {
+                    removedLength = textArea.SelectionManager.SelectionCollection[0].Length;
                     textArea.Caret.Position = textArea.SelectionManager.SelectionCollection[0].StartPosition;
                     textArea.SelectionManager.RemoveSelectedText();
                 }
 
                 textArea.InsertString(text);
+                if (_search.HasScanRegion)
+                {
+                    // EndOffset actually is a LastOffset
+                    int selectionLength = _search.EndOffset + 1 - _search.BeginOffset;
+                    _search.SetScanRegion(_search.BeginOffset, selectionLength + text.Length - removedLength);
+                }
             }
             finally
             {
