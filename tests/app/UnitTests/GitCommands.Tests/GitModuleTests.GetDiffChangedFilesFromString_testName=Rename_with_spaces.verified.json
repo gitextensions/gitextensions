@@ -2,6 +2,10 @@
   {
     "Name": " CONTRIBUTI NG.md",
     "OldName": "CONTRIBUTING.md",
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": "100",
@@ -29,6 +33,10 @@
   {
     "Name": " apa.md",
     "OldName": "apa.md",
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": "70",
@@ -56,6 +64,10 @@
   {
     "Name": " co decov.yml",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
@@ -83,6 +95,10 @@
   {
     "Name": "CODE_OF_CONDUCT.md",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,

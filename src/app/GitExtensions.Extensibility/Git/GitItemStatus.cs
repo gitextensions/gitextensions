@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿#nullable enable
+
+using System.Text;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
@@ -48,6 +50,23 @@ public sealed class GitItemStatus
     {
         Requires.NotNull(name, nameof(name));
         Name = name;
+
+        int pathEndIndex = GetPathEndIndex(Name);
+        Path = RelativePath.From(pathEndIndex >= 1 ? Name[..pathEndIndex] : "");
+
+        return;
+
+        static int GetPathEndIndex(string name)
+        {
+            if (name.Length == 0)
+            {
+                return 0;
+            }
+
+            int lastIndex = name.Length - 1;
+            int startIndex = name[lastIndex] == '/' ? lastIndex - 1 : lastIndex;
+            return name.LastIndexOf('/', startIndex);
+        }
     }
 
     /// <summary>
@@ -62,6 +81,7 @@ public sealed class GitItemStatus
 
     public string Name { get; set; }
     public string? OldName { get; set; }
+    public RelativePath Path { get; init; }
     public string? ErrorMessage { get; set; }
     public ObjectId? TreeGuid { get; set; }
     public string? RenameCopyPercentage { get; set; }

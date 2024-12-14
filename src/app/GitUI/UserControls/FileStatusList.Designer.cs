@@ -1,4 +1,6 @@
-﻿namespace GitUI
+﻿using GitUI.UserControls;
+
+namespace GitUI
 {
     partial class FileStatusList
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            FileStatusListView = new UserControls.NativeListView();
+            FileStatusListView = new MultiSelectTreeView();
             columnHeader = new ColumnHeader();
             NoFiles = new Label();
             LoadingFiles = new Label();
@@ -47,28 +49,21 @@
             // 
             FileStatusListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             FileStatusListView.BorderStyle = BorderStyle.None;
-            FileStatusListView.Columns.AddRange(new ColumnHeader[] { columnHeader });
+            FileStatusListView.DrawMode = TreeViewDrawMode.OwnerDrawText;
             FileStatusListView.FullRowSelect = true;
-            FileStatusListView.HeaderStyle = ColumnHeaderStyle.None;
-            FileStatusListView.LabelWrap = false;
+            FileStatusListView.HideSelection = false;
             FileStatusListView.Location = new Point(0, 46);
             FileStatusListView.Margin = new Padding(0);
             FileStatusListView.Name = "FileStatusListView";
-            FileStatusListView.OwnerDraw = true;
-            FileStatusListView.ShowItemToolTips = true;
+            FileStatusListView.ShowRootLines = false;
             FileStatusListView.Size = new Size(682, 439);
-            FileStatusListView.Sorting = SortOrder.Ascending;
             FileStatusListView.TabIndex = 9;
-            FileStatusListView.UseCompatibleStateImageBehavior = false;
-            FileStatusListView.View = View.Details;
-            FileStatusListView.DrawSubItem += FileStatusListView_DrawSubItem;
-            FileStatusListView.ClientSizeChanged += FileStatusListView_ClientSizeChanged;
+            FileStatusListView.DrawNode += FileStatusListView_DrawNode;
             FileStatusListView.DoubleClick += FileStatusListView_DoubleClick;
             FileStatusListView.KeyDown += FileStatusListView_KeyDown;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseUp += FileStatusListView_MouseUp;
-            FileStatusListView.Scroll += FileStatusListView_Scroll;
             // 
             // columnHeader
             // 
@@ -223,7 +218,7 @@
 
         #endregion
 
-        private GitUI.UserControls.NativeListView FileStatusListView;
+        private MultiSelectTreeView FileStatusListView;
         private Label NoFiles;
         private Label LoadingFiles;
         private ColumnHeader columnHeader;
