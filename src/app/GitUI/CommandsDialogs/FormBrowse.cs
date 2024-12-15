@@ -569,8 +569,8 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnDeactivate(EventArgs e)
         {
-            bool applicationNotActivated = ActiveForm is null;
-            _windowsJumpListManager.EnableThumbnailToolbar(applicationNotActivated && _dashboard?.Visible is not true && Module.IsValidGitWorkingDir());
+            bool formDeactivatedByOwnModalDialog = ActiveForm is not null;
+            _windowsJumpListManager.EnableThumbnailToolbar(!formDeactivatedByOwnModalDialog && _dashboard?.Visible is not true && Module.IsValidGitWorkingDir());
 
             base.OnDeactivate(e);
         }

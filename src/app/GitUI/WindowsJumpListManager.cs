@@ -203,7 +203,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Disables display of thumbnail toolbars.
+        ///  Sets the enabled state of thumbnail toolbar buttons.
         /// </summary>
         public void EnableThumbnailToolbar(bool enable)
         {
