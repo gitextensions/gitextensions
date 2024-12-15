@@ -14,6 +14,7 @@ internal static class GitFileStreamGetter
     /// </summary>
     /// <param name="blob">The Git file identifier.</param>
     /// <param name="gitCommandRunner">The wrapper for the Git executable, which handles file encoding.</param>
+    /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A <see cref="MemoryStream"/> with the file contents or <see langword="null"/> on error.</returns>
     public static async Task<MemoryStream?> GetFileStreamAsync(string blob, IGitCommandRunner gitCommandRunner, CancellationToken cancellationToken)
     {
