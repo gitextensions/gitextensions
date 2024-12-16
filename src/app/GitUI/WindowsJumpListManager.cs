@@ -15,7 +15,7 @@ namespace GitUI
 
         void AddToRecent(string workingDir);
         void CreateJumpList(IntPtr windowHandle, WindowsThumbnailToolbarButtons buttons);
-        void DisableThumbnailToolbar();
+        void EnableThumbnailToolbar(bool enable);
         void UpdateCommitIcon(Image image);
     }
 
@@ -203,9 +203,9 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Disables display of thumbnail toolbars.
+        ///  Sets the enabled state of thumbnail toolbar buttons.
         /// </summary>
-        public void DisableThumbnailToolbar()
+        public void EnableThumbnailToolbar(bool enable)
         {
             if (!ToolbarButtonsCreated)
             {
@@ -218,11 +218,13 @@ namespace GitUI
                 Validates.NotNull(_commitButton);
                 Validates.NotNull(_pushButton);
                 Validates.NotNull(_pullButton);
-                _closeAllButton.Enabled = false;
-                _commitButton.Enabled = false;
-                _pushButton.Enabled = false;
-                _pullButton.Enabled = false;
-            }, nameof(DisableThumbnailToolbar));
+
+                // _closeAllButton is applicable always
+
+                _commitButton.Enabled = enable;
+                _pushButton.Enabled = enable;
+                _pullButton.Enabled = enable;
+            }, nameof(EnableThumbnailToolbar));
         }
 
         /// <summary>
