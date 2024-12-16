@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Git;
+﻿using System.ComponentModel;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -43,6 +44,7 @@ namespace GitUI.UserControls
         /// <summary>
         /// Gets or sets a revision for which to show a summary.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public GitRevision? Revision
         {
             get => _revision;

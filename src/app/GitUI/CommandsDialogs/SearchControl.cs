@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs
 {
@@ -11,6 +12,7 @@ namespace GitUI.CommandsDialogs
         public event Action? OnTextEntered;
         public event Action? OnCancelled;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override string Text
         {
             get => txtSearchBox.Text;
@@ -44,30 +46,35 @@ namespace GitUI.CommandsDialogs
             listBoxSearchResult.Visible = false;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public BorderStyle SearchBoxBorderStyle
         {
             get => txtSearchBox.BorderStyle;
             set => txtSearchBox.BorderStyle = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color SearchBoxBorderDefaultColor
         {
             get => txtSearchBox.BorderDefaultColor;
             set => txtSearchBox.BorderDefaultColor = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color SearchBoxBorderHoveredColor
         {
             get => txtSearchBox.BorderHoveredColor;
             set => txtSearchBox.BorderHoveredColor = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color SearchBoxBorderFocusedColor
         {
             get => txtSearchBox.BorderFocusedColor;
             set => txtSearchBox.BorderFocusedColor = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private void SearchForCandidates(IEnumerable<T> candidates)
         {
             int selectionStart = txtSearchBox.SelectionStart;

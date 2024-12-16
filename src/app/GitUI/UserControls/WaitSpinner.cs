@@ -1,4 +1,5 @@
-﻿using System.Drawing.Drawing2D;
+﻿using System.ComponentModel;
+using System.Drawing.Drawing2D;
 using GitExtUtils.GitUI;
 using Timer = System.Windows.Forms.Timer;
 
@@ -19,6 +20,7 @@ namespace GitUI.UserControls
         private PointF _centre;
         private int _progress;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsAnimating
         {
             get => _isAnimating;

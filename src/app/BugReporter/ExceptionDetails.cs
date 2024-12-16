@@ -4,6 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.ComponentModel;
 using BugReporter.Serialization;
 
 namespace BugReporter
@@ -17,6 +18,7 @@ namespace BugReporter
             InitializeComponent();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int InformationColumnWidth
         {
             get
@@ -30,6 +32,7 @@ namespace BugReporter
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int PropertyColumnWidth
         {
             get
