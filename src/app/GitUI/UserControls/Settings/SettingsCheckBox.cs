@@ -30,6 +30,8 @@ namespace GitUI.UserControls.Settings
             };
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool Checked
         {
             get => checkBox.Checked;
@@ -43,6 +45,8 @@ namespace GitUI.UserControls.Settings
         /// The URL structure:
         /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
         /// </remarks>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? ManualSectionAnchorName { get; set; }
 
         /// <summary>
@@ -66,6 +70,8 @@ namespace GitUI.UserControls.Settings
             set => checkBox.Text = value;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? ToolTipText
         {
             get => _toolTipText;
@@ -79,6 +85,8 @@ namespace GitUI.UserControls.Settings
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public ToolTipIcon ToolTipIcon
         {
             get => _toolTipIcon;

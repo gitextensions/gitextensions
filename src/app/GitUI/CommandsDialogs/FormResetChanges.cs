@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using System.ComponentModel;
+
+namespace GitUI.CommandsDialogs
 {
     /// <summary>
     /// Shows a form asking if the user wants to reset their changes.
@@ -14,6 +16,8 @@
             ResetAndDelete
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public ActionEnum SelectedAction { get; private set; }
 
         public FormResetChanges(bool hasExistingFiles, bool hasNewFiles, string? confirmationMessage = null)

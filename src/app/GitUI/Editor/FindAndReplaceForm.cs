@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility;
+﻿using System.ComponentModel;
+using GitExtensions.Extensibility;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using Microsoft;
@@ -48,6 +49,8 @@ namespace GitUI
             ShowInTaskbar = false;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool ReplaceMode
         {
             get { return txtReplaceWith.Visible; }

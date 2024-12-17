@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
 using GitExtensions.Extensibility;
@@ -42,6 +43,8 @@ Do you want to register the host's fingerprint and restart the process?");
             return !formRemoteProcess.ErrorOccurred();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public bool Plink { get; set; }
 
         private IGitUICommands Commands { get; }

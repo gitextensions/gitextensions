@@ -282,6 +282,8 @@ namespace GitUI.CommandsDialogs
         /// When switching commits, the last selected file is "followed" if available in the new commit,
         /// this file is used as a fallback.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string? FallbackFollowedFile
         {
             get => _fallbackFollowedFile;
