@@ -24,11 +24,14 @@ namespace GitUITests.UserControls
         public void Should_show_all_sort_options()
         {
             Assert.IsTrue(_itemUnderTest.HasDropDownItems);
-            Assert.AreEqual(3, _itemUnderTest.DropDownItems.Count);
+            Assert.AreEqual(6, _itemUnderTest.DropDownItems.Count);
 
-            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[0], "File &Path", DiffListSortType.FilePath);
-            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[1], "File &Extension", DiffListSortType.FileExtension);
-            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[2], "File &Status", DiffListSortType.FileStatus);
+            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[0], "File &path - tree", DiffListSortType.FilePath);
+            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[1], "&File path - flat", DiffListSortType.FilePathFlat);
+            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[2], "File &extension - tree", DiffListSortType.FileExtension);
+            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[3], "File e&xtension - flat", DiffListSortType.FileExtensionFlat);
+            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[4], "File &status - tree", DiffListSortType.FileStatus);
+            AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[5], "File s&tatus - flat", DiffListSortType.FileStatusFlat);
         }
 
         [Test]

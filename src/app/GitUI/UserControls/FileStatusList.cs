@@ -3,11 +3,12 @@
 using System.Collections.Frozen;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text.RegularExpressions;
+using System.Windows.Automation;
 using GitCommands;
-using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
@@ -29,7 +30,7 @@ namespace GitUI
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FileStatusDiffCalculator _diffCalculator;
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
-        private readonly StatusSorter _sorter = new();
+        private static readonly StatusSorter _sorter = new();
         private readonly IReadOnlyList<GitItemStatus> _noItemStatuses;
         private readonly ToolStripItem _NO_TRANSLATE_openSubmoduleMenuItem;
         private readonly ToolStripItem _openInVisualStudioSeparator = new ToolStripSeparator();
@@ -42,6 +43,7 @@ namespace GitUI
         private GitItemStatus? _nextItemToSelect = null;
         private bool _enableSelectedIndexChangeEvent = true;
         private bool _flatList = false;
+        private GroupBy? _groupBy = null;
         private bool _mouseEntered;
         private Rectangle _dragBoxFromMouseDown;
         private IDisposable? _selectedIndexChangeSubscription;
@@ -300,32 +302,40 @@ namespace GitUI
             _diffListSortSubscription?.Dispose();
 
             _diffListSortSubscription = DiffListSortService.Instance.CurrentAndFutureSorting()
-                .Do(sortingMethod =>
+                .Do(sortType =>
                 {
-                    switch (sortingMethod)
+                    _groupBy = sortType switch
                     {
-                        case DiffListSortType.FilePath:
-                            SortByFilePath();
-                            break;
+                        DiffListSortType.FilePath or DiffListSortType.FilePathFlat
+                            => null,
+                        DiffListSortType.FileExtension or DiffListSortType.FileExtensionFlat
+                            => new GroupBy(status => GroupKey.From(Path.GetExtension(status.Name)), GetImageKey: _ => nameof(Images.File), GetLabel: group => group.Key.Value),
+                        DiffListSortType.FileStatus or DiffListSortType.FileStatusFlat
+                            => new GroupBy(GetStatusKey, GetImageKey: group => GetItemImageKey(group.First()), GetLabel: _ => ""),
+                        _ => throw new NotSupportedException($"{sortType} is not a supported sorting method.")
+                    };
 
-                        case DiffListSortType.FileExtension:
-                            SortByFileExtension();
-                            break;
+                    _flatList = sortType.ToString().EndsWith("Flat");
 
-                        case DiffListSortType.FileStatus:
-                            SortByFileStatus();
-                            break;
-
-                        default:
-                            throw new NotSupportedException(sortingMethod.ToString() + " is not a supported sorting method.");
-                    }
+                    UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
                 })
-                .Catch<DiffListSortType, NotSupportedException>(e =>
+                .Catch<DiffListSortType, Exception>(ex =>
                 {
-                    // TODO log the error can we display it to the user somehow?
+                    Trace.WriteLine(ex);
                     return Observable.Empty<DiffListSortType>();
                 })
                 .Subscribe();
+
+            return;
+
+            static GroupKey GetStatusKey(GitItemStatus status)
+            {
+                char inverseDiffStatus = (char)((int)'Z' - (int)status.DiffStatus);
+                int imageIndex = _imageListData.StateImageIndexMap[GetItemImageKey(status)];
+                DebugHelpers.Assert(inverseDiffStatus >= 0, $"offset of {nameof(inverseDiffStatus)} needs to be adapted");
+                DebugHelpers.Assert(imageIndex < 100, $"width of {nameof(imageIndex)} needs to be adapted");
+                return GroupKey.From($"{inverseDiffStatus}{imageIndex:D02}");
+            }
         }
 
         // Properties
@@ -728,9 +738,10 @@ namespace GitUI
 
         public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
         {
-            _enableDisablingShowDiffForAllParents = true;
             await this.SwitchToMainThreadAsync(cancellationToken);
             FileStatusListLoading();
+
+            _enableDisablingShowDiffForAllParents = true;
 
             await TaskScheduler.Default;
             cancellationToken.ThrowIfCancellationRequested();
@@ -739,10 +750,11 @@ namespace GitUI
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
-            UpdateFileStatusListView(gitItemStatusesWithDescription);
+            bool withGitGrep = !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
+            UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: withGitGrep ? GitGrepState.Preparing : GitGrepState.None);
 
             // git grep, fetched as a separate step
-            if (string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text))
+            if (!withGitGrep)
             {
                 return;
             }
@@ -753,7 +765,7 @@ namespace GitUI
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
-            UpdateFileStatusListView(gitItemStatusesWithDescription);
+            UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: GitGrepState.Provided);
         }
 
         /// <summary>
@@ -1007,152 +1019,83 @@ namespace GitUI
                 : cboFindInCommitFilesGitGrep.Visible ? cboFindInCommitFilesGitGrep.Bottom + cboFindInCommitFilesGitGrep.Margin.Top + cboFindInCommitFilesGitGrep.Margin.Bottom
                 : 0;
 
-        private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false)
+        private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false, GitGrepState gitGrepState = GitGrepState.Unknown)
         {
-            GitItemStatusesWithDescription = items ?? throw new ArgumentNullException(nameof(items));
-            bool hasGrepGroup = GitItemStatusesWithDescription.Any(FileStatusDiffCalculator.IsGrepItemStatuses);
-            bool filesPresent = GitItemStatusesWithDescription.Any(x => x.Statuses.Count > 0 && !FileStatusDiffCalculator.IsGrepItemStatuses(x));
-            bool showGroupLabel = (filesPresent && (GitItemStatusesWithDescription.Count > 1 || GroupByRevision)) || !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
-            if (filesPresent)
-            {
-                EnsureSelectedIndexChangeSubscription();
-            }
-
             HashSet<GitItemStatus>? previouslySelectedItems = null;
-            HashSet<TreeNode> toBeSelectedItems = [];
-
             if (updateCausedByFilter)
             {
                 previouslySelectedItems = FileStatusListView.SelectedItemTags<FileStatusItem>()
                     .Select(i => i.Item)
                     .ToHashSet();
-
-                DataSourceChanged?.Invoke(this, EventArgs.Empty);
             }
 
-            FileStatusListView.BeginUpdate();
+            (List<TreeNodeInfo> nodes, HashSet<TreeNode> toBeSelectedItems, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, gitGrepState, _noItemStatuses);
+
+            GitItemStatusesWithDescription = items;
+            if (filesPresent)
+            {
+                EnsureSelectedIndexChangeSubscription();
+            }
+
             SetFileStatusListVisibility(filesPresent);
-            _showDiffGroups = GitItemStatusesWithDescription.Count > 1 || (GroupByRevision && !(GitItemStatusesWithDescription.Count == 1 && GitItemStatusesWithDescription[0].Statuses.Count == 0));
-            FileStatusListView.Nodes.Clear();
 
-            foreach (FileStatusWithDescription i in GitItemStatusesWithDescription)
+            try
             {
-                int shownCount = 0;
+                FileStatusListView.BeginUpdate();
 
-                // Collapse some groups for diffs with common BASE
-                // Always expand grep results
-                bool expandDiffGroup = hasGrepGroup
-                    ? FileStatusDiffCalculator.IsGrepItemStatuses(i)
-                    : ((i.Statuses.Count <= 7 && i.IconName == nameof(Images.Diff)) || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0]);
+                FileStatusListView.Nodes.Clear();
 
-                TreeNode diffGroup;
+                foreach ((TreeNode node, ExpandCollapseState state) in nodes)
                 {
-                    IEnumerable<GitItemStatus> itemStatuses;
-                    if (showGroupLabel && i.Statuses.Count == 0)
-                    {
-                        itemStatuses = _noItemStatuses;
-                        expandDiffGroup = false;
-                    }
-                    else
-                    {
-                        itemStatuses = i.Statuses.Where(IsFilterMatch);
-                    }
+                    FileStatusListView.Nodes.Add(node);
 
-                    diffGroup = _sorter.CreateTreeSortedByPath(itemStatuses, _flatList, CreateNode);
-                    diffGroup.ImageIndex = _imageListData.StateImageIndexMap[i.IconName];
-                    diffGroup.SelectedImageIndex = diffGroup.ImageIndex;
+                    switch (state)
+                    {
+                        case ExpandCollapseState.Collapsed:
+                            foreach (TreeNode subnode in node.Nodes)
+                            {
+                                subnode.ExpandAll();
+                            }
+
+                            break;
+
+                        case ExpandCollapseState.Expanded:
+                            node.ExpandAll();
+                            break;
+
+                        case ExpandCollapseState.PartiallyExpanded:
+                            node.Expand();
+                            break;
+                    }
                 }
 
-                TreeNode CreateNode(GitItemStatus item)
+                switch (FileStatusListView.Nodes.Count)
                 {
-                    ++shownCount;
+                    case 0: FileStatusListView_SelectedIndexChanged(); break;
+                    case 1: FileStatusListView.SelectedNode = FileStatusListView.Nodes[0]; break;
+                    default:
+                        FileStatusListView.TopNode = FileStatusListView.Nodes[0];
+                        FileStatusListView.ScrollLeftMost();
 
-                    // Also set .Text in order to provide accessibility information (needed for partial standard drawing by TreeView control, too)
-                    string oldName = item.OldName is null ? "" : $" ({item.OldName})";
-                    TreeNode listItem = new(text: $"{item.Name}{oldName}");
-
-                    listItem.ImageIndex = GetItemImageIndex(item, FileStatusDiffCalculator.IsGrepItemStatuses(i));
-                    listItem.SelectedImageIndex = listItem.ImageIndex;
-
-                    if (item.IsSubmodule
-                        && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> task)
-                    {
-                        GitItemStatus capturedItem = item;
-
-                        ThreadHelper.FileAndForget(async () =>
+                        if (updateCausedByFilter == false && SelectFirstItemOnSetItems)
                         {
-#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
-                            await task;
-#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
+                            SelectFirstVisibleItem();
+                        }
+                        else if (toBeSelectedItems.Count > 0)
+                        {
+                            SelectItems(toBeSelectedItems.Contains);
+                        }
 
-                            await this.SwitchToMainThreadAsync();
-
-                            listItem.ImageIndex = GetItemImageIndex(capturedItem, isGitGrep: false);
-                            listItem.SelectedImageIndex = listItem.ImageIndex;
-                        });
-                    }
-
-                    if (previouslySelectedItems?.Contains(item) is true)
-                    {
-                        toBeSelectedItems.Add(listItem);
-                    }
-
-                    listItem.Tag = new FileStatusItem(i.FirstRev, i.SecondRev, item, i.BaseA, i.BaseB);
-
-                    return listItem;
-                }
-
-                if (_showDiffGroups)
-                {
-                    if (diffGroup.Nodes.Count == 1 && diffGroup.Nodes[0].Tag is FileStatusItem fileStatusItem && fileStatusItem.Item.IsRangeDiff)
-                    {
-                        diffGroup = diffGroup.Nodes[0];
-                    }
-                    else
-                    {
-                        diffGroup.Tag = i.FirstRev;
-                        diffGroup.Text = GetGroupName(i, shownCount);
-                    }
-
-                    FileStatusListView.Nodes.Add(diffGroup);
-                    diffGroup.ExpandAll();
-                    if (!expandDiffGroup)
-                    {
-                        diffGroup.Collapse(ignoreChildren: true);
-                    }
-                }
-                else
-                {
-                    foreach (TreeNode node in diffGroup.Nodes)
-                    {
-                        FileStatusListView.Nodes.Add(node);
-                        node.ExpandAll();
-                    }
+                        break;
                 }
             }
-
-            if (FileStatusListView.Nodes.Count > 0)
+            finally
             {
-                FileStatusListView.TopNode = FileStatusListView.Nodes[0];
-                FileStatusListView.ScrollLeftMost();
+                FileStatusListView.EndUpdate();
             }
 
-            if (toBeSelectedItems.Count > 0)
-            {
-                SelectItems(toBeSelectedItems.Contains);
-            }
+            DataSourceChanged?.Invoke(this, EventArgs.Empty);
 
-            if (updateCausedByFilter == false)
-            {
-                FileStatusListView_SelectedIndexChanged();
-                DataSourceChanged?.Invoke(this, EventArgs.Empty);
-                if (SelectFirstItemOnSetItems)
-                {
-                    SelectFirstVisibleItem();
-                }
-            }
-
-            FileStatusListView.EndUpdate();
             return;
 
             void EnsureSelectedIndexChangeSubscription()
@@ -1165,6 +1108,167 @@ namespace GitUI
                     .ObserveOn(MainThreadScheduler.Instance)
                     .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
             }
+        }
+
+        private record struct TreeNodeInfo(TreeNode Node, ExpandCollapseState State);
+
+        private static (List<TreeNodeInfo> Nodes, HashSet<TreeNode> ToBeSelectedItems, bool ShowDiffGroups, bool FilesPresent) GetNodes(
+            IReadOnlyList<FileStatusWithDescription> items,
+            HashSet<GitItemStatus>? previouslySelectedItems,
+            bool groupByRevision,
+            Func<GitItemStatus, bool> isFilterMatch,
+            GroupBy? groupBy,
+            bool flatList,
+            GitGrepState gitGrepState,
+            IReadOnlyList<GitItemStatus> noItemStatuses)
+        {
+            List<TreeNodeInfo> rootNodes = [];
+            HashSet<TreeNode> toBeSelectedItems = [];
+            bool showDiffGroups = items.Count > 1 || (groupByRevision && !(items.Count == 1 && items[0].Statuses.Count == 0));
+            bool filesPresent = items.Any(x => x.Statuses.Count > 0);
+            bool hasGrepGroup = gitGrepState != GitGrepState.None && (gitGrepState != GitGrepState.Unknown || items.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
+            bool showGroupLabel = (filesPresent && (items.Count > 1 || groupByRevision)) || hasGrepGroup;
+
+            foreach (FileStatusWithDescription i in items)
+            {
+                bool emptyGroup = showGroupLabel && i.Statuses.Count == 0;
+
+                // Always expand grep results
+                // Collapse some groups for diffs with common BASE
+                ExpandCollapseState state
+                    = emptyGroup
+                        ? ExpandCollapseState.Collapsed
+                        : hasGrepGroup
+                            ? FileStatusDiffCalculator.IsGrepItemStatuses(i)
+                                ? i.Statuses.Count < 100
+                                    ? ExpandCollapseState.Expanded
+                                    : ExpandCollapseState.PartiallyExpanded
+                                : ExpandCollapseState.Collapsed
+                            : ((i.Statuses.Count <= 7 && i.IconName == nameof(Images.Diff)) || items.Count < 3 || i == items[0]) && i.Statuses.Count > 0
+                                ? ExpandCollapseState.Expanded
+                                : ExpandCollapseState.Collapsed;
+
+                TreeNode diffGroup
+                    = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
+                        ? CreateNode(i.Statuses[0], i)
+                        : CreateGroup(emptyGroup ? noItemStatuses : i.Statuses.Where(isFilterMatch), i);
+
+                if (showDiffGroups)
+                {
+                    rootNodes.Add(new TreeNodeInfo(diffGroup, state));
+                }
+                else
+                {
+                    // Add nodes of single group as root nodes
+
+                    if (state == ExpandCollapseState.PartiallyExpanded)
+                    {
+                        state = ExpandCollapseState.Collapsed;
+                    }
+
+                    foreach (TreeNode node in diffGroup.Nodes)
+                    {
+                        rootNodes.Add(new TreeNodeInfo(node, state));
+                    }
+                }
+            }
+
+            return (rootNodes, toBeSelectedItems, showDiffGroups, filesPresent);
+
+            TreeNode CreateGroup(IEnumerable<GitItemStatus> itemStatuses, FileStatusWithDescription fileStatusWithDescription)
+            {
+                TreeNode diffGroup;
+
+                int shownCount = 0;
+
+                if (groupBy is null)
+                {
+                    diffGroup = _sorter.CreateTreeSortedByPath(itemStatuses, flatList, CreateCountedNode);
+                }
+                else
+                {
+                    diffGroup = new TreeNode();
+                    IOrderedEnumerable<IGrouping<GroupKey, GitItemStatus>> grouped = itemStatuses.GroupBy(groupBy.GetGroupKey).OrderBy(group => group.Key);
+                    foreach (IGrouping<GroupKey, GitItemStatus> group in grouped)
+                    {
+                        TreeNode groupNode = _sorter.CreateTreeSortedByPath(group, flatList, CreateCountedNode);
+                        if (groupNode.Nodes.Count == 1 && groupNode.Nodes[0].Nodes.Count == 0)
+                        {
+                            groupNode = groupNode.Nodes[0];
+                        }
+                        else
+                        {
+                            groupNode.Text = groupBy.GetLabel(group);
+                            groupNode.ImageIndex = _imageListData.StateImageIndexMap[groupBy.GetImageKey(group)];
+                            groupNode.SelectedImageIndex = groupNode.ImageIndex;
+                        }
+
+                        diffGroup.Nodes.Add(groupNode);
+                    }
+
+                    if (diffGroup.Nodes.Count == 1 && diffGroup.Nodes[0].Nodes.Count > 0)
+                    {
+                        diffGroup = diffGroup.Nodes[0];
+                    }
+                }
+
+                diffGroup.ImageIndex = _imageListData.StateImageIndexMap[fileStatusWithDescription.IconName];
+                diffGroup.SelectedImageIndex = diffGroup.ImageIndex;
+
+                diffGroup.Tag = fileStatusWithDescription.FirstRev;
+                diffGroup.Text = GetGroupName(fileStatusWithDescription, shownCount);
+
+                return diffGroup;
+
+                TreeNode CreateCountedNode(GitItemStatus item)
+                {
+                    ++shownCount;
+                    return CreateNode(item, fileStatusWithDescription);
+                }
+            }
+
+            TreeNode CreateNode(GitItemStatus item, FileStatusWithDescription fileStatusWithDescription)
+            {
+                // Also set .Text in order to provide accessibility information (needed for partial standard drawing by TreeView control, too)
+                string oldName = item.OldName is null ? "" : $" ({item.OldName})";
+                TreeNode listItem = new(text: $"{item.Name}{oldName}");
+
+                listItem.ImageIndex = GetItemImageIndex(item, FileStatusDiffCalculator.IsGrepItemStatuses(fileStatusWithDescription));
+                listItem.SelectedImageIndex = listItem.ImageIndex;
+
+                if (item.IsSubmodule
+                    && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> task)
+                {
+                    GitItemStatus capturedItem = item;
+
+                    ThreadHelper.FileAndForget(async () =>
+                    {
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
+                        await task;
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
+
+                        if (Form.ActiveForm is not Form activeForm)
+                        {
+                            return;
+                        }
+
+                        await activeForm.SwitchToMainThreadAsync();
+
+                        listItem.ImageIndex = GetItemImageIndex(capturedItem, isGitGrep: false);
+                        listItem.SelectedImageIndex = listItem.ImageIndex;
+                        listItem.Text = AppendItemSubmoduleStatus(listItem.Text, capturedItem);
+                    });
+                }
+
+                if (previouslySelectedItems?.Contains(item) is true)
+                {
+                    toBeSelectedItems.Add(listItem);
+                }
+
+                listItem.Tag = new FileStatusItem(fileStatusWithDescription.FirstRev, fileStatusWithDescription.SecondRev, item, fileStatusWithDescription.BaseA, fileStatusWithDescription.BaseB);
+
+                return listItem;
+            }
 
             static string GetGroupName(FileStatusWithDescription i, int shownCount)
             {
@@ -1176,124 +1280,124 @@ namespace GitUI
             int GetItemImageIndex(GitItemStatus gitItemStatus, bool isGitGrep)
             {
                 string imageKey = gitItemStatus.IsStatusOnly || !string.IsNullOrWhiteSpace(gitItemStatus.ErrorMessage)
-                    ? gitItemStatus == _noItemStatuses[0] && !isGitGrep ? nameof(Images.FileStatusCopiedSame) : nameof(Images.FileStatusUnknown)
+                    ? gitItemStatus == noItemStatuses[0] && !isGitGrep ? nameof(Images.FileStatusCopiedSame) : nameof(Images.FileStatusUnknown)
                     : GetItemImageKey(gitItemStatus);
                 return _imageListData.StateImageIndexMap.TryGetValue(imageKey, out int value)
                     ? value
                     : _imageListData.StateImageIndexMap[nameof(Images.FileStatusUnknown)];
             }
+        }
 
-            static string GetItemImageKey(GitItemStatus gitItemStatus)
+        private static string GetItemImageKey(GitItemStatus gitItemStatus)
+        {
+            if (gitItemStatus.IsDeleted)
             {
-                if (gitItemStatus.IsDeleted)
+                return gitItemStatus.DiffStatus switch
                 {
-                    return gitItemStatus.DiffStatus switch
-                    {
-                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRemovedOnlyA),
-                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRemovedOnlyB),
-                        DiffBranchStatus.SameChange => nameof(Images.FileStatusRemovedSame),
-                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRemovedUnequal),
-                        _ => nameof(Images.FileStatusRemoved)
-                    };
-                }
-
-                if (gitItemStatus.IsRangeDiff)
-                {
-                    return nameof(Images.DiffR);
-                }
-
-                if (!string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
-                {
-                    return nameof(FileStatusDiffCalculator.GitGrepIconName);
-                }
-
-                if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
-                {
-                    return gitItemStatus.DiffStatus switch
-                    {
-                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusAddedOnlyA),
-                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusAddedOnlyB),
-                        DiffBranchStatus.SameChange => nameof(Images.FileStatusAddedSame),
-                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusAddedUnequal),
-                        _ => nameof(Images.FileStatusAdded)
-                    };
-                }
-
-                if (gitItemStatus.IsUnmerged)
-                {
-                    return nameof(Images.Unmerged);
-                }
-
-                if (gitItemStatus.IsSubmodule)
-                {
-                    if (gitItemStatus.GetSubmoduleStatusAsync() is not Task<GitSubmoduleStatus> task
-                        || task is null
-                        || !task.IsCompleted
-                        || task.CompletedResult() is not GitSubmoduleStatus status
-                        || status is null)
-                    {
-                        return gitItemStatus.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.SubmodulesManage);
-                    }
-
-                    return status.Status switch
-                    {
-                        SubmoduleStatus.FastForward => status.IsDirty
-                            ? nameof(Images.SubmoduleRevisionUpDirty)
-                            : nameof(Images.SubmoduleRevisionUp),
-                        SubmoduleStatus.Rewind => status.IsDirty
-                            ? nameof(Images.SubmoduleRevisionDownDirty)
-                            : nameof(Images.SubmoduleRevisionDown),
-                        SubmoduleStatus.NewerTime => status.IsDirty
-                            ? nameof(Images.SubmoduleRevisionSemiUpDirty)
-                            : nameof(Images.SubmoduleRevisionSemiUp),
-                        SubmoduleStatus.OlderTime => status.IsDirty
-                            ? nameof(Images.SubmoduleRevisionSemiDownDirty)
-                            : nameof(Images.SubmoduleRevisionSemiDown),
-                        _ => status.IsDirty
-                            ? nameof(Images.SubmoduleDirty)
-                            : nameof(Images.FolderSubmodule)
-                    };
-                }
-
-                if (gitItemStatus.IsChanged || (gitItemStatus.IsRenamed && gitItemStatus.RenameCopyPercentage != "100"))
-                {
-                    return gitItemStatus.DiffStatus switch
-                    {
-                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusModifiedOnlyA),
-                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusModifiedOnlyB),
-                        DiffBranchStatus.SameChange => nameof(Images.FileStatusModifiedSame),
-                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusModifiedUnequal),
-                        _ => nameof(Images.FileStatusModified)
-                    };
-                }
-
-                if (gitItemStatus.IsRenamed)
-                {
-                    return gitItemStatus.DiffStatus switch
-                    {
-                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRenamedOnlyA),
-                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRenamedOnlyB),
-                        DiffBranchStatus.SameChange => nameof(Images.FileStatusRenamedSame),
-                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRenamedUnequal),
-                        _ => nameof(Images.FileStatusRenamed)
-                    };
-                }
-
-                if (gitItemStatus.IsCopied)
-                {
-                    return gitItemStatus.DiffStatus switch
-                    {
-                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusCopiedOnlyA),
-                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusCopiedOnlyB),
-                        DiffBranchStatus.SameChange => nameof(Images.FileStatusCopiedSame),
-                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusCopiedUnequal),
-                        _ => nameof(Images.FileStatusCopied)
-                    };
-                }
-
-                // Illegal flag combinations or no flags set?
-                return nameof(Images.FileStatusUnknown);
+                    DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRemovedOnlyA),
+                    DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRemovedOnlyB),
+                    DiffBranchStatus.SameChange => nameof(Images.FileStatusRemovedSame),
+                    DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRemovedUnequal),
+                    _ => nameof(Images.FileStatusRemoved)
+                };
             }
+
+            if (gitItemStatus.IsRangeDiff)
+            {
+                return nameof(Images.DiffR);
+            }
+
+            if (!string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
+            {
+                return nameof(FileStatusDiffCalculator.GitGrepIconName);
+            }
+
+            if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
+            {
+                return gitItemStatus.DiffStatus switch
+                {
+                    DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusAddedOnlyA),
+                    DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusAddedOnlyB),
+                    DiffBranchStatus.SameChange => nameof(Images.FileStatusAddedSame),
+                    DiffBranchStatus.UnequalChange => nameof(Images.FileStatusAddedUnequal),
+                    _ => nameof(Images.FileStatusAdded)
+                };
+            }
+
+            if (gitItemStatus.IsUnmerged)
+            {
+                return nameof(Images.Unmerged);
+            }
+
+            if (gitItemStatus.IsSubmodule)
+            {
+                if (gitItemStatus.GetSubmoduleStatusAsync() is not Task<GitSubmoduleStatus> task
+                    || task is null
+                    || !task.IsCompleted
+                    || task.CompletedResult() is not GitSubmoduleStatus status
+                    || status is null)
+                {
+                    return gitItemStatus.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.SubmodulesManage);
+                }
+
+                return status.Status switch
+                {
+                    SubmoduleStatus.FastForward => status.IsDirty
+                        ? nameof(Images.SubmoduleRevisionUpDirty)
+                        : nameof(Images.SubmoduleRevisionUp),
+                    SubmoduleStatus.Rewind => status.IsDirty
+                        ? nameof(Images.SubmoduleRevisionDownDirty)
+                        : nameof(Images.SubmoduleRevisionDown),
+                    SubmoduleStatus.NewerTime => status.IsDirty
+                        ? nameof(Images.SubmoduleRevisionSemiUpDirty)
+                        : nameof(Images.SubmoduleRevisionSemiUp),
+                    SubmoduleStatus.OlderTime => status.IsDirty
+                        ? nameof(Images.SubmoduleRevisionSemiDownDirty)
+                        : nameof(Images.SubmoduleRevisionSemiDown),
+                    _ => status.IsDirty
+                        ? nameof(Images.SubmoduleDirty)
+                        : nameof(Images.FolderSubmodule)
+                };
+            }
+
+            if (gitItemStatus.IsChanged || (gitItemStatus.IsRenamed && gitItemStatus.RenameCopyPercentage != "100"))
+            {
+                return gitItemStatus.DiffStatus switch
+                {
+                    DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusModifiedOnlyA),
+                    DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusModifiedOnlyB),
+                    DiffBranchStatus.SameChange => nameof(Images.FileStatusModifiedSame),
+                    DiffBranchStatus.UnequalChange => nameof(Images.FileStatusModifiedUnequal),
+                    _ => nameof(Images.FileStatusModified)
+                };
+            }
+
+            if (gitItemStatus.IsRenamed)
+            {
+                return gitItemStatus.DiffStatus switch
+                {
+                    DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRenamedOnlyA),
+                    DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRenamedOnlyB),
+                    DiffBranchStatus.SameChange => nameof(Images.FileStatusRenamedSame),
+                    DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRenamedUnequal),
+                    _ => nameof(Images.FileStatusRenamed)
+                };
+            }
+
+            if (gitItemStatus.IsCopied)
+            {
+                return gitItemStatus.DiffStatus switch
+                {
+                    DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusCopiedOnlyA),
+                    DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusCopiedOnlyB),
+                    DiffBranchStatus.SameChange => nameof(Images.FileStatusCopiedSame),
+                    DiffBranchStatus.UnequalChange => nameof(Images.FileStatusCopiedUnequal),
+                    _ => nameof(Images.FileStatusCopied)
+                };
+            }
+
+            // Illegal flag combinations or no flags set?
+            return nameof(Images.FileStatusUnknown);
         }
 
         public void SelectPreviousVisibleItem()
@@ -1919,30 +2023,6 @@ namespace GitUI
             FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
         }
 
-        private void SortByFilePath()
-        {
-#if false // TODO
-            FileStatusListView.ListViewItemSorter = new GitStatusListSorter(new GitItemStatusNameComparer());
-            FileStatusListView.Sort();
-#endif
-        }
-
-        private void SortByFileExtension()
-        {
-#if false // TODO
-            FileStatusListView.ListViewItemSorter = new GitStatusListSorter(new GitItemStatusFileExtensionComparer());
-            FileStatusListView.Sort();
-#endif
-        }
-
-        private void SortByFileStatus()
-        {
-#if false // TODO
-            FileStatusListView.ListViewItemSorter = new ImageIndexListSorter();
-            FileStatusListView.Sort();
-#endif
-        }
-
         private void StoreFilter(string value)
         {
             SetDeleteFilterButtonVisibility();
@@ -1964,88 +2044,6 @@ namespace GitUI
                 throw;
             }
         }
-
-#nullable disable
-        private class GitStatusListSorter : Comparer<ListViewItem>
-        {
-            private IComparer<GitItemStatus> StatusComparer { get; }
-
-            public GitStatusListSorter(IComparer<GitItemStatus> gitStatusItemSorter)
-            {
-                StatusComparer = gitStatusItemSorter;
-            }
-
-            // RangeDiff should always be sorted last in the group
-            public static int CompareRangeDiff(ListViewItem x, ListViewItem y)
-            {
-                if (ReferenceEquals(x, y))
-                {
-                    return 0;
-                }
-                else if (x?.Tag is null)
-                {
-                    return -1;
-                }
-                else if (y?.Tag is null)
-                {
-                    return 1;
-                }
-
-                if (((FileStatusItem)x.Tag).Item.IsRangeDiff)
-                {
-                    return 1;
-                }
-                else if (((FileStatusItem)y.Tag).Item.IsRangeDiff)
-                {
-                    return -1;
-                }
-
-                return 0;
-            }
-
-            public override int Compare(ListViewItem x, ListViewItem y)
-            {
-                int statusResult = CompareRangeDiff(x, y);
-                if (statusResult != 0)
-                {
-                    return statusResult;
-                }
-
-                return StatusComparer.Compare(((FileStatusItem)x.Tag).Item, ((FileStatusItem)y.Tag).Item);
-            }
-        }
-
-        private class ImageIndexListSorter : Comparer<ListViewItem>
-        {
-            /// <summary>
-            /// Secondary sort should be by file path.
-            /// </summary>
-            private static readonly GitStatusListSorter ThenBy = new(new GitItemStatusNameComparer());
-
-            public override int Compare(ListViewItem x, ListViewItem y)
-            {
-                int statusResult = GitStatusListSorter.CompareRangeDiff(x, y);
-                if (statusResult != 0)
-                {
-                    return statusResult;
-                }
-
-                // All indexes, does not have "overlay", check explicitly
-                // Sort in reverse alphabetic order with Unequal first
-                statusResult = -((FileStatusItem)x.Tag).Item.DiffStatus.CompareTo(((FileStatusItem)y.Tag).Item.DiffStatus);
-                if (statusResult == 0)
-                {
-                    statusResult = x.ImageIndex.CompareTo(y.ImageIndex);
-                    if (statusResult == 0)
-                    {
-                        return ThenBy.Compare(x, y);
-                    }
-                }
-
-                return statusResult;
-            }
-        }
-#nullable enable
 
         #endregion
 
