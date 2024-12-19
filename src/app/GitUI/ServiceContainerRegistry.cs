@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using System.IO.Abstractions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
@@ -29,6 +30,11 @@ public static class ServiceContainerRegistry
                 outputHistoryModel.RecordHistory(message);
             }
         };
+
+        if (serviceContainer.GetService(typeof(IFileSystem)) == null)
+        {
+            serviceContainer.AddService<IFileSystem>(new FileSystem());
+        }
 
         serviceContainer.AddService<IWindowsJumpListManager>(new WindowsJumpListManager(serviceContainer.GetRequiredService<IRepositoryDescriptionProvider>()));
         serviceContainer.AddService<IScriptsManager>(scriptsManager);

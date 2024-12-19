@@ -88,6 +88,8 @@ namespace GitUI.LeftPanel
             mnubtnFetchOneBranch = new ToolStripMenuItem();
             toolStripSeparator6 = new ToolStripSeparator();
             mnubtnCreateBranch = new ToolStripMenuItem();
+            mnubtnAddToFavorites = new ToolStripMenuItem();
+            mnubtnRemoveFromFavorites = new ToolStripMenuItem();
             mnubtnDeleteAllBranches = new ToolStripMenuItem();
             toolStripSeparator10 = new ToolStripSeparator();
             mnubtnStashAllFromRootNode = new ToolStripMenuItem();
@@ -114,6 +116,7 @@ namespace GitUI.LeftPanel
             tsbShowBranches = new ToolStripButton();
             tsbShowRemotes = new ToolStripButton();
             tsbShowTags = new ToolStripButton();
+            tsbShowFavorites = new ToolStripButton();
             tsbShowStashes = new ToolStripButton();
             tsbShowSubmodules = new ToolStripButton();
             branchSearchPanel = new TableLayoutPanel();
@@ -145,6 +148,8 @@ namespace GitUI.LeftPanel
             copyContextMenuItem,
             filterForSelectedRefsMenuItem,
             toolStripSeparator2,
+            mnubtnAddToFavorites,
+            mnubtnRemoveFromFavorites,
             mnuBtnManageRemotesFromRootNode,
             mnuBtnFetchAllRemotes,
             mnuBtnPruneAllRemotes,
@@ -419,6 +424,24 @@ namespace GitUI.LeftPanel
             mnubtnCreateBranch.Size = new Size(266, 26);
             mnubtnCreateBranch.Text = "Create Branch...";
             mnubtnCreateBranch.ToolTipText = "Create a local branch";
+
+            // 
+            // mnubtnCreateBranch
+            // 
+            mnubtnAddToFavorites.Image = Properties.Images.Star;
+            mnubtnAddToFavorites.Name = "mnubtnAddToFAv";
+            mnubtnAddToFavorites.Size = new Size(266, 26);
+            mnubtnAddToFavorites.Text = "&Add To Favorites";
+            mnubtnAddToFavorites.ToolTipText = "Add this item to favorites";
+            // 
+            // mnubtnCreateBranch
+            // 
+            mnubtnRemoveFromFavorites.Image = Properties.Images.StarRemove;
+            mnubtnRemoveFromFavorites.Name = "mnubtnREmoveFromFav";
+            mnubtnRemoveFromFavorites.Size = new Size(266, 26);
+            mnubtnRemoveFromFavorites.Text = "Remo&ve from Favorites";
+            mnubtnRemoveFromFavorites.ToolTipText = "Remove this item from favorites";
+
             // 
             // mnubtnDeleteAllBranches
             // 
@@ -576,6 +599,7 @@ namespace GitUI.LeftPanel
             leftPanelToolStrip.GripStyle = ToolStripGripStyle.Hidden;
             leftPanelToolStrip.Items.AddRange(new ToolStripItem[] {
             tsbCollapseAll,
+            tsbShowFavorites,
             tsbShowBranches,
             tsbShowRemotes,
             tsbShowTags,
@@ -627,6 +651,17 @@ namespace GitUI.LeftPanel
             tsbShowTags.Size = new Size(29, 24);
             tsbShowTags.Text = "&Tags";
             tsbShowTags.Click += tsbShowTags_Click;
+            // 
+            // tsbShowTags
+            // 
+            tsbShowFavorites.CheckOnClick = true;
+            tsbShowFavorites.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbShowFavorites.Image = Properties.Images.Star;
+            tsbShowFavorites.ImageTransparentColor = Color.Magenta;
+            tsbShowFavorites.Name = "tsbShowFavorites";
+            tsbShowFavorites.Size = new Size(29, 24);
+            tsbShowFavorites.Text = "&Favorites";
+            tsbShowFavorites.Click += tsbShowFavorites_Click;
             // 
             // tsbShowSubmodules
             // 
@@ -725,6 +760,7 @@ namespace GitUI.LeftPanel
         private ToolStripButton tsbShowBranches;
         private ToolStripButton tsbShowRemotes;
         private ToolStripButton tsbShowTags;
+        private ToolStripButton tsbShowFavorites;
         private ToolStripButton tsbShowStashes;
         private ToolStripButton tsbShowSubmodules;
         private UserControls.RevisionGrid.CopyContextMenuItem copyContextMenuItem;
@@ -759,6 +795,8 @@ namespace GitUI.LeftPanel
         private ToolStripMenuItem mnubtnFetchCreateBranch;
         private ToolStripMenuItem mnubtnFetchOneBranch;
         private ToolStripMenuItem mnubtnCreateBranch;
+        private ToolStripMenuItem mnubtnAddToFavorites;
+        private ToolStripMenuItem mnubtnRemoveFromFavorites;
         private ToolStripMenuItem mnubtnDeleteAllBranches;
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripMenuItem mnubtnStashAllFromRootNode;

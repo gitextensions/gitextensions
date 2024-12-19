@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using System.IO.Abstractions;
 using GitCommands;
 using GitCommands.Submodules;
 using GitExtUtils;
@@ -19,6 +20,7 @@ namespace GitExtensions.UITests
 
             serviceContainer.AddService(Substitute.For<IOutputHistoryProvider>());
 
+            serviceContainer.AddService(Substitute.For<IFileSystem>());
             serviceContainer.AddService(Substitute.For<IAppTitleGenerator>());
             serviceContainer.AddService(Substitute.For<IWindowsJumpListManager>());
             serviceContainer.AddService(Substitute.For<ILinkFactory>());

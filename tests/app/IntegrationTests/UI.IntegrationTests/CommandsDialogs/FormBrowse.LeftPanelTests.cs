@@ -37,6 +37,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
             AppSettings.ShowAuthorAvatarColumn = false;
 
+            AppSettings.RepoObjectsTreeShowFavorites.Value = true;
             AppSettings.RepoObjectsTreeShowTags = true;
             AppSettings.RepoObjectsTreeShowStashes = true;
         }
