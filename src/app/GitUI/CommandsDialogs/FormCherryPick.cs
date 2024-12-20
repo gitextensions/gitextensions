@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -22,6 +23,7 @@ namespace GitUI.CommandsDialogs
 
         private const int _parentsListItemHeight = 18;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public GitRevision? Revision { get; set; }
 
         public FormCherryPick(IGitUICommands commands, GitRevision? revision)
