@@ -1,6 +1,7 @@
 using System.ComponentModel.Design;
 using System.Configuration;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
@@ -15,12 +16,13 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitExtensions
 {
-    internal static class Program
+    internal static partial class Program
     {
         private static readonly ServiceContainer _serviceContainer = new();
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool SetProcessDPIAware();
+        [LibraryImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool SetProcessDPIAware();
 
         /// <summary>
         /// The main entry point for the application.
