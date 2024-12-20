@@ -412,32 +412,16 @@ namespace GitUI.CommandsDialogs
             };
         }
 
-        private bool GetNextPatchFile(bool searchBackward, bool loop, out int fileIndex, out Task loadFileContent)
+        private bool GetNextPatchFile(bool searchBackward, bool loop, out FileStatusItem? selectedItem, out Task loadFileContent)
         {
-            fileIndex = -1;
+            selectedItem = null;
             loadFileContent = Task.CompletedTask;
-            if (DiffFiles.SelectedItem is null)
+
+            FileStatusItem prevItem = DiffFiles.SelectedItem;
+            selectedItem = DiffFiles.SelectNextItem(searchBackward, loop, notify: false);
+            if (selectedItem is null || (!loop && selectedItem == prevItem))
             {
                 return false;
-            }
-
-            int idx = DiffFiles.SelectedIndex;
-            if (idx == -1)
-            {
-                return false;
-            }
-
-            fileIndex = DiffFiles.GetNextIndex(searchBackward, loop);
-            if (fileIndex == idx)
-            {
-                if (!loop)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                DiffFiles.SetSelectedIndex(fileIndex, notify: false);
             }
 
             loadFileContent = ShowSelectedFileDiffAsync(ensureNoSwitchToFilter: false, line: 0);

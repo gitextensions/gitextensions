@@ -452,9 +452,13 @@ namespace GitUI
         [DefaultValue(true)]
         public bool IsEmpty => GitItemStatuses is null || !GitItemStatuses.Any();
 
+        [Browsable(false)]
+        [DefaultValue(true)]
+        public bool HasSelection => SelectedIndex != -1;
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public int SelectedIndex
+        private int SelectedIndex
         {
             get
             {
@@ -508,7 +512,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IEnumerable<GitItemStatus> SelectedGitItems
+        public IReadOnlyList<GitItemStatus> SelectedGitItems
         {
             set
             {
@@ -606,41 +610,45 @@ namespace GitUI
             return (image, prefix, text, suffix, prefixTextStartX, textWidth, textMaxWidth);
         }
 
-        public int GetNextIndex(bool searchBackward, bool loop)
+        public FileStatusItem? SelectNextItem(bool backwards, bool loop, bool notify = true)
         {
             int curIdx = SelectedIndex;
 
             if (curIdx < 0)
             {
-                return -1;
+                return null;
             }
 
             ListViewItem currentItem = FileStatusListView.Items[curIdx];
             ListViewGroup? currentGroup = currentItem.Group;
             if (currentGroup is null)
             {
-                return curIdx;
+                return null;
             }
 
-            if (searchBackward)
+            if (backwards)
             {
                 ListViewItem? nextItem = FindPrevItemInGroups();
                 if (nextItem is null)
                 {
-                    return loop ? GetLastIndex() : curIdx;
+                    SetSelectedIndex(loop ? GetLastIndex() : curIdx, notify);
+                    return SelectedItem;
                 }
 
-                return nextItem.Index;
+                SetSelectedIndex(nextItem.Index, notify);
+                return SelectedItem;
             }
             else
             {
                 ListViewItem? nextItem = FindNextItemInGroups();
                 if (nextItem is null)
                 {
-                    return loop ? GetFirstIndex() : curIdx;
+                    SetSelectedIndex(loop ? GetFirstIndex() : curIdx, notify);
+                    return SelectedItem;
                 }
 
-                return nextItem.Index;
+                SetSelectedIndex(nextItem.Index, notify);
+                return SelectedItem;
             }
 
             ListViewItem? FindPrevItemInGroups()
@@ -941,7 +949,7 @@ namespace GitUI
             NoFiles.Text = text;
         }
 
-        public void SetSelectedIndex(int idx, bool notify)
+        private void SetSelectedIndex(int idx, bool notify)
         {
             _enableSelectedIndexChangeEvent = notify;
             try
@@ -1434,81 +1442,17 @@ namespace GitUI
 
         public void SelectPreviousVisibleItem()
         {
-            if (FileStatusListView.Items.Count <= 1)
+            if (SelectNextItem(backwards: true, loop: true) is null)
             {
-                return;
-            }
-
-            if (FileStatusListView.Groups.Count == 0)
-            {
-                int index = SelectedIndex == 0 ? FileStatusListView.Items.Count - 1 : SelectedIndex - 1;
-                ListViewItem item = FileStatusListView.Items[index];
-                item.Selected = true;
-                item.EnsureVisible();
-            }
-
-            ListViewItem? selectedItemFound = null;
-            for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
-            {
-                ListViewGroup group = FileStatusListView.Groups[i];
-                IEnumerable<ListViewItem> groupItems = FileStatusListView.Items
-                    .Cast<ListViewItem>()
-                    .Where(item => item.Group == group)
-                    .Reverse();
-                foreach (ListViewItem item in groupItems)
-                {
-                    if (selectedItemFound is not null)
-                    {
-                        selectedItemFound.Selected = false;
-                        item.Selected = true;
-                        item.EnsureVisible();
-                        return;
-                    }
-
-                    if (item.Selected)
-                    {
-                        selectedItemFound = item;
-                    }
-                }
+                SelectFirstVisibleItem();
             }
         }
 
         public void SelectNextVisibleItem()
         {
-            if (FileStatusListView.Items.Count <= 1)
+            if (SelectNextItem(backwards: false, loop: true) is null)
             {
-                return;
-            }
-
-            if (FileStatusListView.Groups.Count == 0)
-            {
-                int index = SelectedIndex >= FileStatusListView.Items.Count - 1 ? 0 : SelectedIndex + 1;
-                ListViewItem item = FileStatusListView.Items[index];
-                item.Selected = true;
-                item.EnsureVisible();
-            }
-
-            ListViewItem? selectedItemFound = null;
-            foreach (object group in FileStatusListView.Groups)
-            {
-                IEnumerable<ListViewItem> groupItems = FileStatusListView.Items
-                    .Cast<ListViewItem>()
-                    .Where(item => item.Group == group);
-                foreach (ListViewItem item in groupItems)
-                {
-                    if (selectedItemFound is not null)
-                    {
-                        selectedItemFound.Selected = false;
-                        item.Selected = true;
-                        item.EnsureVisible();
-                        return;
-                    }
-
-                    if (item.Selected)
-                    {
-                        selectedItemFound = item;
-                    }
-                }
+                SelectFirstVisibleItem();
             }
         }
 

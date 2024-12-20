@@ -51,7 +51,7 @@ namespace GitUI
             List<FileStatusWithDescription> fileStatusDescs = refreshDiff
                 ? CalculateDiffs(_fileStatusDiffCalculatorInfo.Revisions, selectedRev,
                     _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken)
-                : prevList.Where(p => !p.Summary.StartsWith(_grepSummaryPrefix)).ToList();
+                : prevList.Where(p => !IsGrepItemStatuses(p)).ToList();
 
             FileStatusWithDescription? grepItemStatuses = refreshGrep
                 ? GetGrepItemStatuses(selectedRev, cancellationToken)
