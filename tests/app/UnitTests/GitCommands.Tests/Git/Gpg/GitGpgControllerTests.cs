@@ -1,7 +1,7 @@
 ﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using GitCommands.Gpg;
+using GitCommands.Git.Gpg;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUIPluginInterfaces;
