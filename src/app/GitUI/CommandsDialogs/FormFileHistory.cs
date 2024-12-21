@@ -266,14 +266,17 @@ namespace GitUI.CommandsDialogs
             IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             string fileName = GetFileNameForRevision(revision) ?? FileName;
             bool isFolder = fileName.EndsWith('/');
-            ObjectId? fileBlobHash = isFolder ? null : Module.GetFileBlobHash(fileName, revision.ObjectId);
+            bool fileAvailable
+                = isFolder ? false
+                : revision.IsArtificial ? File.Exists(fileName)
+                : Module.GetFileBlobHash(fileName, revision.ObjectId) is not null;
 
             SetTitle(alternativeFileName: fileName);
 
             _commitInfoTabPageText ??= CommitInfoTabPage.Text;
             CommitInfoTabPage.Text
                 = _commitInfoTabPageText
-                + (isFolder || fileBlobHash is not null ? "" : string.Format(_fileNotFound.Text, fileName.Quote()));
+                + (isFolder || fileAvailable ? "" : string.Format(_fileNotFound.Text, fileName.Quote()));
 
             TabPage preferredTab = null;
             if (revision.IsArtificial)
@@ -289,7 +292,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (fileBlobHash is null)
+            if (!fileAvailable)
             {
                 // Note that artificial commits for object type tree (folder) will be handled here too,
                 // i.e. no tab at all is visible
@@ -306,7 +309,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (revision.IsArtificial || fileBlobHash is null)
+            if (revision.IsArtificial || !fileAvailable)
             {
                 BlameTab.Parent = null;
                 ViewTab.Parent = null;
