@@ -1,6 +1,4 @@
 using GitExtUtils.GitUI;
-using GitUI.Interops.DwmApi;
-using GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI
@@ -34,12 +32,6 @@ namespace GitUI
             Button cancelButton = new();
             cancelButton.Click += CancelButtonClick;
             CancelButton = cancelButton;
-
-            if (ThemeModule.IsDarkTheme)
-            {
-                // Warning: This call freezes the CI in AppVeyor, however dark theme is not used on build machines
-                DwmApi.UseImmersiveDarkMode(Handle, true);
-            }
 
             void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
             {

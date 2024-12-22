@@ -228,32 +228,6 @@ namespace GitUI.Theming
                 CBXS_DISABLED = 4,
             }
 
-#if SUPPORT_THEME_HOOKS
-            public enum DropDownRight
-            {
-                CBXSR_NORMAL = 1,
-                CBXSR_HOT = 2,
-                CBXSR_PRESSED = 3,
-                CBXSR_DISABLED = 4,
-            }
-
-            public enum DropDownLeft
-            {
-                CBXSL_NORMAL = 1,
-                CBXSL_HOT = 2,
-                CBXSL_PRESSED = 3,
-                CBXSL_DISABLED = 4,
-            }
-
-            public enum TransparentBack
-            {
-                CBTBS_NORMAL = 1,
-                CBTBS_HOT = 2,
-                CBTBS_DISABLED = 3,
-                CBTBS_FOCUSED = 4,
-            }
-#endif
-
             public enum Border
             {
                 CBB_NORMAL = 1,
@@ -269,16 +243,6 @@ namespace GitUI.Theming
                 CBRO_PRESSED = 3,
                 CBRO_DISABLED = 4,
             }
-
- #if SUPPORT_THEME_HOOKS
-            public enum CueBanner
-            {
-                CBCB_NORMAL = 1,
-                CBCB_HOT = 2,
-                CBCB_PRESSED = 3,
-                CBCB_DISABLED = 4,
-            }
-#endif
         }
     }
 }

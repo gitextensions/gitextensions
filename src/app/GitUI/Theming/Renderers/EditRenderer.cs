@@ -185,16 +185,6 @@ namespace GitUI.Theming
                 EBS_ASSIST = 6,
             }
 
- #if SUPPORT_THEME_HOOKS
-            public enum BackgroundWithBorder
-            {
-                EBWBS_NORMAL = 1,
-                EBWBS_HOT = 2,
-                EBWBS_DISABLED = 3,
-                EBWBS_FOCUSED = 4,
-            }
-#endif
-
             public enum BorderNoScroll
             {
                 EPSN_NORMAL = 1,
@@ -202,32 +192,6 @@ namespace GitUI.Theming
                 EPSN_FOCUSED = 3,
                 EPSN_DISABLED = 4,
             }
-
-#if SUPPORT_THEME_HOOKS
-            public enum BorderHScroll
-            {
-                EPSH_NORMAL = 1,
-                EPSH_HOT = 2,
-                EPSH_FOCUSED = 3,
-                EPSH_DISABLED = 4,
-            }
-
-            public enum BorderVScroll
-            {
-                EPSV_NORMAL = 1,
-                EPSV_HOT = 2,
-                EPSV_FOCUSED = 3,
-                EPSV_DISABLED = 4,
-            }
-
-            public enum BorderHVScroll
-            {
-                EPSHV_NORMAL = 1,
-                EPSHV_HOT = 2,
-                EPSHV_FOCUSED = 3,
-                EPSHV_DISABLED = 4,
-            }
-#endif
         }
     }
 }

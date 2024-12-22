@@ -305,20 +305,6 @@ namespace GitUI.Theming
                 ABS_RIGHTHOVER = 20,
             }
 
-#if SUPPORT_THEME_HOOKS
-            public enum SizeBox
-            {
-                SZB_HALFBOTTOMLEFTALIGN = 6,
-                SZB_HALFBOTTOMRIGHTALIGN = 5,
-                SZB_HALFTOPLEFTALIGN = 8,
-                SZB_HALFTOPRIGHTALIGN = 7,
-                SZB_LEFTALIGN = 2,
-                SZB_RIGHTALIGN = 1,
-                SZB_TOPLEFTALIGN = 4,
-                SZB_TOPRIGHTALIGN = 3,
-            }
-#endif
-
             public enum TrackThumb
             {
                 SCRBS_NORMAL = 1,

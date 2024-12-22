@@ -11,7 +11,7 @@ namespace GitUI.Theming
     {
         /// <summary>
         /// Result code indicating theming method's task was not achieved.
-        /// In this case original win32 theming api method is applied by <see cref="Win32ThemeHooks"/>.
+        /// In this case original win32 theming api method is applied/>.
         /// </summary>
         public const int Unhandled = 1;
 

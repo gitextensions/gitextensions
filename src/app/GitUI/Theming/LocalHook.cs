@@ -90,13 +90,6 @@ namespace EasyHook
             }
 
             m_IsExclusive = false;
-
-#if SUPPORT_THEME_HOOKS
-            if (m_Handle == IntPtr.Zero)
-               NativeAPI.LhSetGlobalInclusiveACL(m_ACL, m_ACL.Length);
-            else
-               NativeAPI.LhSetInclusiveACL(m_ACL, m_ACL.Length, m_Handle);
-#endif
         }
 
         /// <summary>
@@ -125,13 +118,6 @@ namespace EasyHook
             }
 
             m_IsExclusive = true;
-
-#if SUPPORT_THEME_HOOKS
-            if (m_Handle == IntPtr.Zero)
-               NativeAPI.LhSetGlobalExclusiveACL(m_ACL, m_ACL.Length);
-            else
-               NativeAPI.LhSetExclusiveACL(m_ACL, m_ACL.Length, m_Handle);
-#endif
         }
 
         /// <summary>
@@ -231,9 +217,6 @@ namespace EasyHook
                 }
 
                 IntPtr address = IntPtr.Zero;
-#if SUPPORT_THEME_HOOKS
-                NativeAPI.LhGetHookBypassAddress(m_Handle, out address);
-#endif
                 return address;
             }
         }
@@ -302,10 +285,6 @@ namespace EasyHook
                 throw new ObjectDisposedException(typeof(LocalHook).FullName);
             }
 
-#if SUPPORT_THEME_HOOKS
-            NativeAPI.LhIsThreadIntercepted(m_Handle, InThreadID, out Result);
-#endif
-
             return Result;
         }
 
@@ -337,10 +316,6 @@ namespace EasyHook
                 {
                     return;
                 }
-
-#if SUPPORT_THEME_HOOKS
-                NativeAPI.LhUninstallHook(m_Handle);
-#endif
 
                 Marshal.FreeCoTaskMem(m_Handle);
 
@@ -412,26 +387,6 @@ namespace EasyHook
 
             Marshal.WriteIntPtr(Result.m_Handle, IntPtr.Zero);
 
-            try
-            {
-#if SUPPORT_THEME_HOOKS
-                NativeAPI.LhInstallHook(
-                   InTargetProc,
-                   Marshal.GetFunctionPointerForDelegate(Result.m_HookProc),
-                   GCHandle.ToIntPtr(Result.m_SelfHandle),
-                   Result.m_Handle);
-#endif
-            }
-            catch (Exception)
-            {
-                Marshal.FreeCoTaskMem(Result.m_Handle);
-                Result.m_Handle = IntPtr.Zero;
-
-                Result.m_SelfHandle.Free();
-
-                throw;
-            }
-
             Result.m_ThreadACL = new HookAccessControl(Result.m_Handle);
 
             return Result;
@@ -462,19 +417,6 @@ namespace EasyHook
             String InModule,
             String InSymbolName)
         {
-#if SUPPORT_THEME_HOOKS
-            IntPtr Module = NativeAPI.GetModuleHandle(InModule);
-
-            if (Module == IntPtr.Zero)
-               throw new DllNotFoundException("The given library is not loaded into the current process.");
-
-            IntPtr Method = NativeAPI.GetProcAddress(Module, InSymbolName);
-
-            if (Method == IntPtr.Zero)
-               throw new MissingMethodException("The given method does not exist.");
-
-            return Method;
-#endif
             return IntPtr.Zero;
         }
 
@@ -486,10 +428,6 @@ namespace EasyHook
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-
-#if SUPPORT_THEME_HOOKS
-            NativeAPI.LhWaitForPendingRemovals();
-#endif
         }
     }
 }
