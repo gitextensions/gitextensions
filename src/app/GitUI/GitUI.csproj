@@ -83,7 +83,7 @@
 
   <ItemGroup>
     <Content Update="Themes\dark.css">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
