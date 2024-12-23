@@ -3412,7 +3412,7 @@ namespace GitUI.CommandsDialogs
             {
                 CommitAndPush.BackColor = PushForced
                     ? OtherColors.AmendButtonForcedColor
-                    : SystemColors.ButtonFace.AdaptBackColor();
+                    : SystemColors.ButtonFace;
 
                 CommitAndPush.SetForeColorForBackColor();
             }

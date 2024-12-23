@@ -446,7 +446,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.CloseCommitDialogAfterLastCommit = false;
             AppSettings.CloseProcessDialog = true;
 
-            int defaultBackColor = SystemColors.ButtonFace.AdaptBackColor().ToArgb();
+            int defaultBackColor = SystemColors.ButtonFace.ToArgb();
             int forceBackColor = OtherColors.AmendButtonForcedColor.ToArgb();
 
             const string originalCommitMessage = "commit to be amended by reset soft";
