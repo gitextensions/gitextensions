@@ -370,6 +370,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RepoObjectsTreeTagsIndex)], 2, false, false);
                 yield return (properties[nameof(AppSettings.RepoObjectsTreeSubmodulesIndex)], 3, false, false);
                 yield return (properties[nameof(AppSettings.RepoObjectsTreeStashesIndex)], 4, false, false);
+                yield return (properties[nameof(AppSettings.RepoObjectsTreeFavoritesIndex)], 5, false, false);
                 yield return (properties[nameof(AppSettings.BlameDisplayAuthorFirst)], false, false, false);
                 yield return (properties[nameof(AppSettings.BlameShowAuthor)], true, false, false);
                 yield return (properties[nameof(AppSettings.BlameShowAuthorDate)], true, false, false);
