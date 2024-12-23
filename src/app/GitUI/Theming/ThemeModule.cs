@@ -5,8 +5,6 @@ namespace GitUI.Theming
 {
     public static class ThemeModule
     {
-        private static bool _suppressWin32HooksForTests;
-
         public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
         private static ThemeRepository Repository { get; } = new();
@@ -76,12 +74,6 @@ namespace GitUI.Theming
         {
             public static void ReloadThemeSettings(IThemeRepository repository) =>
                 Settings = LoadThemeSettings(repository);
-
-            public static bool SuppressWin32Hooks
-            {
-                get => _suppressWin32HooksForTests;
-                set => _suppressWin32HooksForTests = value;
-            }
         }
     }
 }
