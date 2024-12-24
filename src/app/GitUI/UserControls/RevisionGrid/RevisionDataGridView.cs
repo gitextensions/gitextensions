@@ -26,6 +26,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private readonly SolidBrush _alternatingRowBackgroundBrush;
         private readonly SolidBrush _authoredHighlightBrush;
+        private readonly SolidBrush _inactiveSelectionHighlightBrush;
 
         private readonly BackgroundUpdater _rowCountUpdater;
         private readonly BackgroundUpdater _visibleRowRangeUpdater;
@@ -100,6 +101,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             _alternatingRowBackgroundBrush = new SolidBrush(KnownColor.Window.MakeBackgroundDarkerBy(0.025)); // 0.018
             _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
+            _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
 
             UpdateRowHeight();
 
@@ -263,7 +265,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             if (isSelected)
             {
-                return isFocused ? SystemBrushes.Highlight : OtherColors.InactiveSelectionHighlightBrush;
+                return isFocused ? SystemBrushes.Highlight : _inactiveSelectionHighlightBrush;
             }
 
             if (_highlightAuthoredRevisions && revision?.IsArtificial is false && AuthorHighlighting?.IsHighlighted(revision) is true)

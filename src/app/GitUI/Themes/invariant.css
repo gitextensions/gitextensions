@@ -34,29 +34,31 @@
 .MenuHighlight           { color: #3399ff; }
 
 /* Application colors */
-.OtherTag                { color: #808080; }
-.AuthoredHighlight       { color: #eaf1ff; }
-.HighlightAllOccurences  { color: #e8e8ff; }
-.Tag                     { color: #00008b; }
-.Graph                   { color: #8b0000; }
-.Graph.colorblind        { color: #0600a8; }
+.AuthoredHighlight { color: #eaf1ff; }
+.HighlightAllOccurences { color: #e8e8ff; }
+.InactiveSelectionHighlight { color: #e6e6e6; }
 
-.GraphBranch1            { color: #f064a0; }
-.GraphBranch2            { color: #78b4e6; }
-.GraphBranch3            { color: #24c221; }
-.GraphBranch4            { color: #a078f0; }
-.GraphBranch5            { color: #dd3228; }
-.GraphBranch6            { color: #1ac6a6; }
-.GraphBranch7            { color: #e7b00f; }
-.GraphBranch8            { } /* color not specified, color slot will not be used */
+.OtherTag { color: #808080; }
+.Tag { color: #00008b; }
+.Graph { color: #8b0000; }
+.Graph.colorblind { color: #0600a8; }
 
-.Branch                  { color: #008000; }
-.RemoteBranch            { color: #8b0009; }
+.GraphBranch1 { color: #f064a0; }
+.GraphBranch2 { color: #78b4e6; }
+.GraphBranch3 { color: #24c221; }
+.GraphBranch4 { color: #a078f0; }
+.GraphBranch5 { color: #dd3228; }
+.GraphBranch6 { color: #1ac6a6; }
+.GraphBranch7 { color: #e7b00f; }
+.GraphBranch8 { } /* color not specified, color slot will not be used */
+
+.Branch { color: #008000; }
+.RemoteBranch { color: #8b0009; }
 .RemoteBranch.colorblind { color: #0600a8; }
-.DiffSection             { color: #e6e6e6; }
+.DiffSection { color: #e6e6e6; }
 
 /* translation of terminal (cli) ansi color output sequences */
-/* Named 3/4 bit colors from the "theme" at https://github.com/mintty/mintty/blob/master/themes/helmholtz */
+/* Partly based on 3/4 bit colors from the "theme" at https://github.com/mintty/mintty/blob/master/themes/helmholtz */
 
 .AnsiTerminalBlackForeNormal { color: #000000; }
 .AnsiTerminalBlackBackNormal { color: #606060; }
