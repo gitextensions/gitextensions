@@ -37,6 +37,8 @@ namespace GitExtUtils.GitUI.Theming
                 .ForEach(SetupLinkLabel);
             container.DescendantsToFix<ToolStrip>()
                 .ForEach(SetupToolStrip);
+            container.DescendantsToFix<Button>()
+                .ForEach(SetupButton);
             container.ContextMenusToFix()
                 .ForEach(SetupContextMenu);
         }
@@ -92,6 +94,18 @@ namespace GitExtUtils.GitUI.Theming
             label.LinkColor = label.LinkColor.AdaptTextColor();
             label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
             label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
+        }
+
+        private static void SetupButton(this Button button)
+        {
+            // .net9 fix for https://github.com/dotnet/winforms/issues/11949 (only supposed to occur for 100%)
+#pragma warning disable WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+            if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
+            {
+                button.TouchBackColor();
+                button.TouchForeColor();
+            }
+#pragma warning restore WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         }
 
         private static void SetupGroupBox(this GroupBox box)

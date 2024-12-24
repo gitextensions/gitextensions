@@ -21,6 +21,7 @@ using GitUI.HelperDialogs;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.SpellChecker;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -348,10 +349,10 @@ namespace GitUI.CommandsDialogs
 
             toolStripStatusBranchIcon.AdaptImageLightness();
 
-            splitLeft.Panel1.BackColor = OtherColors.PanelBorderColor;
-            splitLeft.Panel2.BackColor = OtherColors.PanelBorderColor;
-            splitRight.Panel1.BackColor = OtherColors.PanelBorderColor;
-            splitRight.Panel2.BackColor = OtherColors.PanelBorderColor;
+            splitLeft.Panel1.BackColor = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBorder);
+            splitLeft.Panel2.BackColor = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBorder);
+            splitRight.Panel1.BackColor = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBorder);
+            splitRight.Panel2.BackColor = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBorder);
 
             BackColor = OtherColors.BackgroundColor;
 
@@ -3412,7 +3413,7 @@ namespace GitUI.CommandsDialogs
             {
                 CommitAndPush.BackColor = PushForced
                     ? OtherColors.AmendButtonForcedColor
-                    : SystemColors.ButtonFace.AdaptBackColor();
+                    : SystemColors.ButtonFace;
 
                 CommitAndPush.SetForeColorForBackColor();
             }

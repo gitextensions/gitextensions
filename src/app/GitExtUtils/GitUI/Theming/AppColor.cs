@@ -9,9 +9,11 @@
     /// </remarks>
     public enum AppColor
     {
-        OtherTag,
         AuthoredHighlight,
         HighlightAllOccurences,
+        InactiveSelectionHighlight,
+        PanelBorder,
+        OtherTag,
         Tag,
         Graph,
         GraphBranch1,
@@ -57,5 +59,6 @@
         AnsiTerminalWhiteBackNormal,
         AnsiTerminalWhiteForeBold,
         AnsiTerminalWhiteBackBold,
+        DarkModePseudoColor, // This color is used to determine if the theme is dark or light.
     }
 }

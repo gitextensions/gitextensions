@@ -30,6 +30,7 @@ using GitUI.NBugReports;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.Shells;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -2907,9 +2908,9 @@ namespace GitUI.CommandsDialogs
             RevisionInfo.Parent.BackColor = RevisionInfo.BackColor;
             RevisionInfo.ResumeLayout(performLayout: true);
 
-            MainSplitContainer.Panel1.BackColor = OtherColors.PanelBorderColor;
-            RevisionsSplitContainer.Panel1.BackColor = OtherColors.PanelBorderColor;
-            RevisionsSplitContainer.Panel2.BackColor = OtherColors.PanelBorderColor;
+            MainSplitContainer.Panel1.BackColor = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBorder);
+            RevisionsSplitContainer.Panel1.BackColor = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBorder);
+            RevisionsSplitContainer.Panel2.BackColor = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBorder);
 
             CommitInfoTabControl.ResumeLayout(performLayout: true);
             RevisionsSplitContainer.ResumeLayout(performLayout: true);

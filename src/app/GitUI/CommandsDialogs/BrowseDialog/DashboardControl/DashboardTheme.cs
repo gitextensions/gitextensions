@@ -9,6 +9,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         static DashboardTheme()
         {
+            // TODO replace these with SystemColors/AppColors
             // Palette URL: http://paletton.com/#uid=13I0u0k7UUa3cZA5wXlaiQ5cFL3
             Light = new DashboardTheme(primary: Color.FromArgb(248, 248, 255), // 238, 243, 253), // Color.FromArgb(184, 203, 237),
                                        primaryLight: Color.FromArgb(219, 235, 248),
