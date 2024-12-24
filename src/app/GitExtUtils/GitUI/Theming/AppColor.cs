@@ -9,9 +9,10 @@
     /// </remarks>
     public enum AppColor
     {
-        OtherTag,
         AuthoredHighlight,
         HighlightAllOccurences,
+        InactiveSelectionHighlight,
+        OtherTag,
         Tag,
         Graph,
         GraphBranch1,
