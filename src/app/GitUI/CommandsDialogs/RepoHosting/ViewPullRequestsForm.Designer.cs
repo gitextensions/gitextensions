@@ -163,6 +163,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _pullRequestsList.UseCompatibleStateImageBehavior = false;
             _pullRequestsList.View = View.Details;
             _pullRequestsList.SelectedIndexChanged += _pullRequestsList_SelectedIndexChanged;
+            _pullRequestsList.Resize += _pullRequestsList_Resize;
             // 
             // columnHeaderId
             // 

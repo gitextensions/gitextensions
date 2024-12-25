@@ -393,6 +393,11 @@ Diff selection:
             btnMoveDown.Enabled = index < _scripts.Count - 1;
         }
 
+        private void lvScripts_Resize(object sender, EventArgs e)
+        {
+            lvScripts.Columns[^1].Width = lvScripts.ClientSize.Width - lvScripts.Columns[0].Width - lvScripts.Columns[1].Width;
+        }
+
         private void SetPropertyGridWidthOnce()
         {
             const string widthSetTag = "width_set";
