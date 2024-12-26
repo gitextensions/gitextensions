@@ -145,7 +145,7 @@
             GcmDetected.Cursor = Cursors.Hand;
             GcmDetected.Dock = DockStyle.Fill;
             GcmDetected.FlatAppearance.BorderSize = 0;
-            GcmDetected.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            GcmDetected.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             GcmDetected.FlatStyle = FlatStyle.Flat;
             GcmDetected.ForeColor = SystemColors.ControlText;
             GcmDetected.Location = new Point(3, 348);
@@ -202,7 +202,7 @@
             GitFound.Cursor = Cursors.Hand;
             GitFound.Dock = DockStyle.Fill;
             GitFound.FlatAppearance.BorderSize = 0;
-            GitFound.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            GitFound.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             GitFound.FlatStyle = FlatStyle.Flat;
             GitFound.ForeColor = SystemColors.ControlText;
             GitFound.Location = new Point(3, 24);
@@ -222,7 +222,7 @@
             translationConfig.Cursor = Cursors.Hand;
             translationConfig.Dock = DockStyle.Fill;
             translationConfig.FlatAppearance.BorderSize = 0;
-            translationConfig.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            translationConfig.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             translationConfig.FlatStyle = FlatStyle.Flat;
             translationConfig.ForeColor = SystemColors.ControlText;
             translationConfig.Location = new Point(3, 312);
@@ -281,7 +281,7 @@
             SshConfig.Cursor = Cursors.Hand;
             SshConfig.Dock = DockStyle.Fill;
             SshConfig.FlatAppearance.BorderSize = 0;
-            SshConfig.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            SshConfig.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             SshConfig.FlatStyle = FlatStyle.Flat;
             SshConfig.ForeColor = SystemColors.ControlText;
             SshConfig.Location = new Point(3, 276);
@@ -301,7 +301,7 @@
             UserNameSet.Cursor = Cursors.Hand;
             UserNameSet.Dock = DockStyle.Fill;
             UserNameSet.FlatAppearance.BorderSize = 0;
-            UserNameSet.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            UserNameSet.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             UserNameSet.FlatStyle = FlatStyle.Flat;
             UserNameSet.ForeColor = SystemColors.ControlText;
             UserNameSet.Location = new Point(3, 60);
@@ -360,7 +360,7 @@
             MergeTool.Cursor = Cursors.Hand;
             MergeTool.Dock = DockStyle.Fill;
             MergeTool.FlatAppearance.BorderSize = 0;
-            MergeTool.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            MergeTool.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             MergeTool.FlatStyle = FlatStyle.Flat;
             MergeTool.ForeColor = SystemColors.ControlText;
             MergeTool.Location = new Point(3, 96);
@@ -380,7 +380,7 @@
             GitExtensionsInstall.Cursor = Cursors.Hand;
             GitExtensionsInstall.Dock = DockStyle.Fill;
             GitExtensionsInstall.FlatAppearance.BorderSize = 0;
-            GitExtensionsInstall.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            GitExtensionsInstall.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             GitExtensionsInstall.FlatStyle = FlatStyle.Flat;
             GitExtensionsInstall.ForeColor = SystemColors.ControlText;
             GitExtensionsInstall.Location = new Point(3, 240);
@@ -400,7 +400,7 @@
             GitBinFound.Cursor = Cursors.Hand;
             GitBinFound.Dock = DockStyle.Fill;
             GitBinFound.FlatAppearance.BorderSize = 0;
-            GitBinFound.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            GitBinFound.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             GitBinFound.FlatStyle = FlatStyle.Flat;
             GitBinFound.ForeColor = SystemColors.ControlText;
             GitBinFound.Location = new Point(3, 204);
@@ -446,7 +446,7 @@
             DiffTool.Cursor = Cursors.Hand;
             DiffTool.Dock = DockStyle.Fill;
             DiffTool.FlatAppearance.BorderSize = 0;
-            DiffTool.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            DiffTool.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             DiffTool.FlatStyle = FlatStyle.Flat;
             DiffTool.ForeColor = SystemColors.ControlText;
             DiffTool.Location = new Point(3, 132);
@@ -466,7 +466,7 @@
             ShellExtensionsRegistered.Cursor = Cursors.Hand;
             ShellExtensionsRegistered.Dock = DockStyle.Fill;
             ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
-            ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 255);
             ShellExtensionsRegistered.FlatStyle = FlatStyle.Flat;
             ShellExtensionsRegistered.ForeColor = SystemColors.ControlText;
             ShellExtensionsRegistered.Location = new Point(3, 168);

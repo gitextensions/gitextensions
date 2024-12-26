@@ -329,7 +329,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     style.NormalFont,
                     ref currentOffset,
                     label,
-                    Color.OrangeRed,
+                    Color.OrangeRed.AdaptBackColor(),
                     isSelected ? RefArrowType.Filled : RefArrowType.NotFilled,
                     messageBounds,
                     e.Graphics,

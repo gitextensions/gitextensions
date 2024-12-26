@@ -3,6 +3,7 @@ using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Utils;
 using GitExtensions.Extensibility.Translations;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
 using Microsoft;
 using ResourceManager;
@@ -138,6 +139,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             : base(serviceProvider)
         {
             InitializeComponent();
+            GcmDetected.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            GitFound.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            translationConfig.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            SshConfig.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            UserNameSet.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            MergeTool.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            GitExtensionsInstall.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            GitBinFound.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            DiffTool.FlatAppearance.MouseOverBackColor.AdaptBackColor();
+            ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor.AdaptBackColor();
             InitializeComplete();
         }
 
@@ -568,8 +579,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
         {
-            settingButton.BackColor = Color.PaleGreen;
-            settingButton.ForeColor = Color.DarkGreen;
+            settingButton.BackColor = Color.PaleGreen.AdaptBackColor();
+            settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
             settingButton.Text = text;
             settingFixButton.Visible = false;
         }
@@ -579,16 +590,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
         {
-            settingButton.BackColor = Color.LavenderBlush;
-            settingButton.ForeColor = Color.Crimson;
+            settingButton.BackColor = Color.LavenderBlush.AdaptBackColor();
+            settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
             settingButton.Text = text;
             settingFixButton.Visible = true;
         }
 
         private static void RenderSettingNotRecommended(Button settingButton, Button settingFixButton, string text)
         {
-            settingButton.BackColor = Color.Coral;
-            settingButton.ForeColor = Color.Black;
+            settingButton.BackColor = Color.Coral.AdaptBackColor();
+            settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
             settingButton.Text = text;
             settingFixButton.Visible = true;
         }

@@ -2927,7 +2927,7 @@ namespace GitUI.CommandsDialogs
                             len = lineLength - offset;
                             if (len > 0)
                             {
-                                Message.ChangeTextColor(line, offset, len, Color.Red);
+                                Message.ChangeTextColor(line, offset, len, Color.Red.AdaptTextColor());
                             }
                         }
                     }
