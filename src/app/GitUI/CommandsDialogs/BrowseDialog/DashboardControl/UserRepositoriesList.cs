@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -42,7 +43,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         private readonly Font _secondaryFont;
-        private static readonly Color DefaultFavouriteColor = Color.DarkGoldenrod;
+        private static readonly Color DefaultFavouriteColor = Color.DarkGoldenrod.AdaptBackColor();
         private static readonly Color DefaultBranchNameColor = SystemColors.HotTrack;
         private Color _favouriteColor = DefaultFavouriteColor;
         private Color _branchNameColor = DefaultBranchNameColor;
@@ -81,6 +82,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints - 1f);
             lblRecentRepositories.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
+            lblRecentRepositories.ForeColor.AdaptTextColor();
 
             textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
 

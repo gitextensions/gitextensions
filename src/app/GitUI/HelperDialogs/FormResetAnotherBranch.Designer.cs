@@ -118,7 +118,7 @@
             // 
             // labelResetBranchWarning
             // 
-            labelResetBranchWarning.ForeColor = Color.Black;
+            labelResetBranchWarning.ForeColor = SystemColors.WindowText;
             labelResetBranchWarning.Location = new Point(25, 0);
             labelResetBranchWarning.Name = "labelResetBranchWarning";
             labelResetBranchWarning.Size = new Size(250, 20);

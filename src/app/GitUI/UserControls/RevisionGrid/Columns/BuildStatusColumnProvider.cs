@@ -19,7 +19,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private readonly RevisionDataGridView _gridView;
         private readonly Func<IGitModule> _module;
 
-        // Increase contrast to selected rows
+        // Increase contrast to selected rows (adapted to theme at use)
         private readonly Color _lightBlue = Color.FromArgb(130, 180, 240);
         private Font? _fontWithUnicodeCache = null;
 

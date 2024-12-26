@@ -74,6 +74,8 @@ namespace GitUI.Editor
             ShowEntireFile = false;
             NumberOfContextLines = AppSettings.NumberOfContextLines;
             InitializeComponent();
+            _NO_TRANSLATE_lblShowPreview.BackColor.AdaptBackColor();
+
             InitializeComplete();
 
             UICommandsSourceSet += OnUICommandsSourceSet;

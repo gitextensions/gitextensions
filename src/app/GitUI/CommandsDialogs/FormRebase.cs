@@ -190,14 +190,12 @@ namespace GitUI.CommandsDialogs
             btnSolveConflicts.ForeColor = SystemColors.ControlText;
             MergeToolPanel.BackColor = Color.Transparent;
 
-            Color highlightColor = Color.Yellow.AdaptBackColor();
-
             if (conflictedMerge)
             {
                 AcceptButton = btnSolveConflicts;
                 btnSolveConflicts.Focus();
                 btnSolveConflicts.Text = _solveConflictsText2.Text;
-                MergeToolPanel.BackColor = highlightColor;
+                MergeToolPanel.BackColor = Color.Yellow.AdaptBackColor();
             }
             else if (Module.InTheMiddleOfRebase())
             {

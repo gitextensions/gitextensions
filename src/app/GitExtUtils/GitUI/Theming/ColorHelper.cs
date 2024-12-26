@@ -15,13 +15,14 @@
 
         /// <summary>
         ///  Blends the color with the default background color, halves each value first.
+        ///  Keep the original alpha, SystemColors.Window.A==255 and we do not want rounding errors.
         /// </summary>
         public static Color DimColor(Color color)
         {
             const uint maskWithoutLeastSignificantBits = 0xFE_FE_FE_FE;
             uint defaultBackground = (uint)SystemColors.Window.ToArgb();
             int dimCode = (int)((((uint)color.ToArgb() & maskWithoutLeastSignificantBits) >> 1) + ((defaultBackground & maskWithoutLeastSignificantBits) >> 1));
-            return Color.FromArgb((dimCode >> 16) & 0xff, (dimCode >> 8) & 0xff, dimCode & 0xff);
+            return Color.FromArgb(color.A, (dimCode >> 16) & 0xff, (dimCode >> 8) & 0xff, dimCode & 0xff);
         }
 
         public static void SetForeColorForBackColor(this Control control) =>
@@ -200,7 +201,9 @@
 
             double actualL = ActualL(originalRgbHsl.rgb, perceptedL);
 
+            // Keep the original alpha (not expected to have alpha!=255 in the SystemColors)
             Color result = originalRgbHsl.hsl.WithLuminosity(actualL).ToColor();
+            result = Color.FromArgb(original.A, result);
             return result;
 
             double PerceptedL((Color rgb, HslColor hsl) c) =>
