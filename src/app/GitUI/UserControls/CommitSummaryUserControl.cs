@@ -18,8 +18,8 @@ namespace GitUI.UserControls
         private readonly IDateFormatter _dateFormatter = new DateFormatter();
         private readonly string _tagsCaption;
         private readonly string _branchesCaption;
-        private readonly Color _tagsBackColor = Color.LightSteelBlue;
-        private readonly Color _branchesBackColor = Color.LightSalmon;
+        private readonly Color _tagsBackColor = Color.LightSteelBlue.AdaptBackColor();
+        private readonly Color _branchesBackColor = Color.LightSalmon.AdaptBackColor();
         private GitRevision? _revision;
 
         private readonly int _messageY;
@@ -38,6 +38,7 @@ namespace GitUI.UserControls
 
             labelMessage.Font = new Font(labelMessage.Font, FontStyle.Bold);
             labelAuthor.Font = new Font(labelAuthor.Font, FontStyle.Bold);
+            labelTags.BackColor.AdaptBackColor();
         }
 
         /// <summary>

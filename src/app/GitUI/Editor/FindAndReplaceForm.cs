@@ -1,4 +1,5 @@
 ﻿using GitExtensions.Extensibility;
+using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
@@ -263,7 +264,7 @@ namespace GitUI
                     count++;
 
                     TextMarker m = new(range.Offset, range.Length,
-                                           TextMarkerType.SolidBlock, Color.Yellow, Color.Black);
+                                           TextMarkerType.SolidBlock, Color.Yellow.AdaptBackColor());
                     group.AddMarker(m);
                 }
 
@@ -538,9 +539,9 @@ namespace GitUI
         public void SetScanRegion(int offset, int length)
         {
             Validates.NotNull(_document);
-            Color bkgColor = _document.HighlightingStrategy.GetColorFor("Default").BackgroundColor;
+            Color bkgColor = _document.HighlightingStrategy.GetColorFor("Default").BackgroundColor.AdaptBackColor();
             _region = new TextMarker(offset, length, TextMarkerType.SolidBlock,
-                                     Globals.HalfMix(bkgColor, Color.FromArgb(160, 160, 160)));
+                                     Globals.HalfMix(bkgColor, Color.FromArgb(160, 160, 160).AdaptTextColor()));
             _document.MarkerStrategy.AddMarker(_region);
             _document.TextContentChanged += DocumentOnTextContentChanged;
             ScanRegionChanged?.Invoke(this, EventArgs.Empty);

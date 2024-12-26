@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
 using GitUI.SpellChecker;
 using GitUI.UserControls.RevisionGrid;
@@ -1038,7 +1039,7 @@ namespace GitUI.CommandsDialogs
             //
             // SolveMergeconflicts
             // 
-            SolveMergeconflicts.BackColor = Color.SeaShell;
+            SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeconflicts.FlatStyle = FlatStyle.Flat;
             SolveMergeconflicts.Image = Properties.Images.SolveMerge;
             SolveMergeconflicts.ImageAlign = ContentAlignment.MiddleLeft;
