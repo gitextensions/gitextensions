@@ -84,6 +84,7 @@ namespace GitUI
                 _formFindInCommitFilesGitGrep?.Dispose();
             };
 
+            CreateTreeContextMenuItems();
             _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
             _NO_TRANSLATE_openInVisualStudioMenuItem = CreateOpenInVisualStudioMenuItem();
             _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
@@ -1427,6 +1428,9 @@ namespace GitUI
             }
 
             ContextMenuStrip cm = (ContextMenuStrip)sender;
+
+            InsertTreeContextMenuItems(cm.Items, index: 0);
+            UpdateStatusOfTreeContextMenuItems();
 
             // TODO The handling of _NO_TRANSLATE_openSubmoduleMenuItem need to be revised
             // This code handles the 'bold' in the menu for submodules. Other default actions are not set to bold.
