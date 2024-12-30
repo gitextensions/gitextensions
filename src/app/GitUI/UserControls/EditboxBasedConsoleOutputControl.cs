@@ -188,7 +188,7 @@ namespace GitUI.UserControls
 
                             _exitcode = _process.ExitCode;
 
-                            using CancellationTokenSource eofTimeoutTokenSource = new(millisecondsDelay: 1000);
+                            using CancellationTokenSource eofTimeoutTokenSource = new(millisecondsDelay: 5000);
 
                             if (outputReader is not null)
                             {
