@@ -1527,6 +1527,18 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="_collapse.Text">
+        <source>&amp;Collapse</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_expand.Text">
+        <source>&amp;Expand</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectAll.Text">
+        <source>&amp;Select all</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
         <source>&amp;Sort by...</source>
         <target />
