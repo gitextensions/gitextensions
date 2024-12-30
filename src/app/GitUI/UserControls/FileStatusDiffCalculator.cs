@@ -277,16 +277,12 @@ namespace GitUI
             // first and selected has a common merge base and count must be available
             // Only a printout, so no Validates
             string desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ BASE {GetDescriptionForRevision(baseRevId)}";
-            allAToB = allAToB.Append(new GitItemStatus(name: desc) { IsRangeDiff = true }).ToList();
-
-            // Replace the A->B group with new statuses
-            fileStatusDescs[0] = new(
-                firstRev: fileStatusDescs[0].FirstRev,
-                secondRev: fileStatusDescs[0].SecondRev,
-                summary: fileStatusDescs[0].Summary,
-                statuses: allAToB,
-                baseA: baseA,
-                baseB: baseB);
+            fileStatusDescs.Add(new FileStatusWithDescription(
+                firstRev: firstRev,
+                secondRev: selectedRev,
+                summary: desc,
+                statuses: [new GitItemStatus(name: desc) { IsRangeDiff = true }],
+                iconName: nameof(Images.DiffR)));
 
             return fileStatusDescs;
 
