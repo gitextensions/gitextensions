@@ -166,7 +166,7 @@ namespace GitUI.UserControls
                             // we wait for exit, probably a timing issue...
                             try
                             {
-                                // Please do not ask me why WaitForExit[Async] blocks here.
+                                // WaitForExit[Async] blocks here for unknown reason if the process has already exited
                                 if (!_process.HasExited)
                                 {
                                     await _process.WaitForExitAsync();
