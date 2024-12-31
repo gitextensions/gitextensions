@@ -4,21 +4,11 @@ namespace GitUI.UserControls
 {
     public class NativeListView : ListView
     {
-        internal static event EventHandler? BeginCreateHandle;
-        internal static event EventHandler? EndCreateHandle;
         internal event ScrollEventHandler? Scroll;
 
         public NativeListView()
         {
             DoubleBuffered = true;
-        }
-
-        protected override void CreateHandle()
-        {
-            BeginCreateHandle?.Invoke(this, EventArgs.Empty);
-            base.CreateHandle();
-            NativeMethods.SetWindowTheme(Handle, "explorer", null);
-            EndCreateHandle?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void WndProc(ref Message m)
