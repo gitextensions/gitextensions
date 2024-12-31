@@ -245,7 +245,6 @@ namespace GitUI.UserControls
             tsmiCommitterFilter,
             tsmiAuthorFilter,
             tsmiDiffContainsFilter});
-            tsddbtnRevisionFilter.ImageTransparentColor = Color.Magenta;
             tsddbtnRevisionFilter.Name = "tsddbtnRevisionFilter";
             tsddbtnRevisionFilter.Size = new Size(29, 22);
             tsddbtnRevisionFilter.Tag = "ToolBar_group:Text filter";
@@ -255,7 +254,6 @@ namespace GitUI.UserControls
             // 
             tsmiShowOnlyFirstParent.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsmiShowOnlyFirstParent.Image = Properties.Images.ShowOnlyFirstParent;
-            tsmiShowOnlyFirstParent.ImageTransparentColor = Color.Magenta;
             tsmiShowOnlyFirstParent.Name = "tsmiShowOnlyFirstParent";
             tsmiShowOnlyFirstParent.Size = new Size(23, 20);
             tsmiShowOnlyFirstParent.Click += tsmiShowOnlyFirstParent_Click;

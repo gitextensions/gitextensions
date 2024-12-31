@@ -160,7 +160,6 @@ namespace GitUI.CommandsDialogs
                 ToolStripButton clonedToolStripMenuItem = new()
                 {
                     Image = toolStripMenuItem.Image,
-                    ImageTransparentColor = toolStripMenuItem.ImageTransparentColor,
                     Name = FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
                     Size = toolStripMenuItem.Size,
                     Text = toolTipText,

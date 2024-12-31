@@ -590,7 +590,6 @@ namespace GitUI.LeftPanel
             // 
             tsbCollapseAll.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsbCollapseAll.Image = Properties.Images.CollapseAll;
-            tsbCollapseAll.ImageTransparentColor = Color.Magenta;
             tsbCollapseAll.Name = "tsbCollapseAll";
             tsbCollapseAll.Size = new Size(29, 24);
             tsbCollapseAll.Click += btnCollapseAll_Click;
@@ -600,7 +599,6 @@ namespace GitUI.LeftPanel
             tsbShowBranches.CheckOnClick = true;
             tsbShowBranches.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsbShowBranches.Image = Properties.Images.BranchLocalRoot;
-            tsbShowBranches.ImageTransparentColor = Color.Magenta;
             tsbShowBranches.Name = "tsbShowBranches";
             tsbShowBranches.Size = new Size(29, 24);
             tsbShowBranches.Text = "&Branches";
@@ -611,7 +609,6 @@ namespace GitUI.LeftPanel
             tsbShowRemotes.CheckOnClick = true;
             tsbShowRemotes.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsbShowRemotes.Image = Properties.Images.BranchRemoteRoot;
-            tsbShowRemotes.ImageTransparentColor = Color.Magenta;
             tsbShowRemotes.Name = "tsbShowRemotes";
             tsbShowRemotes.Size = new Size(29, 24);
             tsbShowRemotes.Text = "&Remotes";
@@ -622,7 +619,6 @@ namespace GitUI.LeftPanel
             tsbShowTags.CheckOnClick = true;
             tsbShowTags.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsbShowTags.Image = Properties.Images.TagHorizontal;
-            tsbShowTags.ImageTransparentColor = Color.Magenta;
             tsbShowTags.Name = "tsbShowTags";
             tsbShowTags.Size = new Size(29, 24);
             tsbShowTags.Text = "&Tags";
@@ -633,7 +629,6 @@ namespace GitUI.LeftPanel
             tsbShowSubmodules.CheckOnClick = true;
             tsbShowSubmodules.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsbShowSubmodules.Image = Properties.Images.FolderSubmodule;
-            tsbShowSubmodules.ImageTransparentColor = Color.Magenta;
             tsbShowSubmodules.Name = "tsbShowSubmodules";
             tsbShowSubmodules.Size = new Size(29, 24);
             tsbShowSubmodules.Text = "&Submodules";
@@ -644,7 +639,6 @@ namespace GitUI.LeftPanel
             tsbShowStashes.CheckOnClick = true;
             tsbShowStashes.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsbShowStashes.Image = Properties.Images.Stash;
-            tsbShowStashes.ImageTransparentColor = Color.Magenta;
             tsbShowStashes.Name = "tsbShowStashes";
             tsbShowStashes.Size = new Size(29, 24);
             tsbShowStashes.Text = "St&ashes";
