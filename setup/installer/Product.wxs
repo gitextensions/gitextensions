@@ -314,6 +314,8 @@
       <Component Id="Themes.bright.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\bright.css" />
       </Component>
+      <Component Id="Themes.dark.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\dark.css" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
@@ -605,6 +607,7 @@
       <ComponentRef Id="Themes.README.md" />
       <ComponentRef Id="Themes.invariant.css" />
       <ComponentRef Id="Themes.bright.css" />
+      <ComponentRef Id="Themes.dark.css" />
     </ComponentGroup>
     <ComponentGroup Id="Component.Translation">
       <ComponentRef Id="English.gif" />

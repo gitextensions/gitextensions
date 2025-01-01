@@ -4,7 +4,7 @@
     {
         public static readonly Color FallbackColor = Color.Magenta;
 
-        private static readonly Dictionary<AppColor, Color> Values =
+        private static readonly Dictionary<AppColor, Color> _values =
             new()
             {
                 { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
@@ -55,10 +55,11 @@
                 { AppColor.AnsiTerminalWhiteForeNormal, Color.FromArgb(0xbf, 0xbf, 0xbf) },
                 { AppColor.AnsiTerminalWhiteBackNormal, Color.FromArgb(0xe0, 0xe0, 0xe0) },
                 { AppColor.AnsiTerminalWhiteForeBold, Color.FromArgb(0xff, 0xff, 0xff) },
-                { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) }
+                { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) },
+                { AppColor.DarkModePseudoColor, Color.Empty },
             };
 
-        private static readonly Dictionary<string, Dictionary<AppColor, Color>> Variations = new()
+        private static readonly Dictionary<string, Dictionary<AppColor, Color>> _variations = new()
         {
             {
                 "colorblind", new()
@@ -73,7 +74,7 @@
 
         public static Color GetBy(AppColor name, string[]? variations = null)
         {
-            if (!Values.TryGetValue(name, out Color result))
+            if (!_values.TryGetValue(name, out Color result))
             {
                 result = FallbackColor;
             }
@@ -85,7 +86,7 @@
 
             foreach (string variation in variations)
             {
-                if (!Variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
+                if (!_variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
                 {
                     continue;
                 }

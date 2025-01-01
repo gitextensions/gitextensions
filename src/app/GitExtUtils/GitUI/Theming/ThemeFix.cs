@@ -21,6 +21,8 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
+            container.DescendantsToFix<DataGridView>()
+                .ForEach(SetupDataGridView);
             container.DescendantsToFix<TreeView>()
                 .ForEach(SetupTreeView);
             container.DescendantsToFix<TabControl>()
@@ -31,6 +33,8 @@ namespace GitExtUtils.GitUI.Theming
                 .ForEach(SetupLinkLabel);
             container.DescendantsToFix<ToolStrip>()
                 .ForEach(SetupToolStrip);
+            container.DescendantsToFix<Button>()
+                .ForEach(SetupButton);
             container.ContextMenusToFix()
                 .ForEach(SetupContextMenu);
         }
@@ -79,6 +83,19 @@ namespace GitExtUtils.GitUI.Theming
             label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
         }
 
+        private static void SetupButton(this Button button)
+        {
+            // .net9 fix for https://github.com/dotnet/winforms/issues/11949 (only supposed to occur for 100%)
+#pragma warning disable WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+            if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
+            {
+                // In addition to not setting the BackColor (TouchBackColor() will fix),
+                // FlatStyle.Standard buttons look ugly in dark mode
+                button.FlatStyle = FlatStyle.Flat;
+            }
+#pragma warning restore WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        }
+
         private static void SetupTabControl(TabControl tabControl)
         {
             new TabControlRenderer(tabControl).Setup();
@@ -92,6 +109,12 @@ namespace GitExtUtils.GitUI.Theming
             {
                 page.TouchBackColor();
             }
+        }
+
+        private static void SetupDataGridView(DataGridView view)
+        {
+            view.EnableHeadersVisualStyles = false;
+            view.ColumnHeadersDefaultCellStyle.BackColor = view.ColumnHeadersDefaultCellStyle.BackColor;
         }
 
         private static void SetupTreeView(TreeView view)

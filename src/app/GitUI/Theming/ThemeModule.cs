@@ -14,7 +14,11 @@ namespace GitUI.Theming
         {
             new ThemeMigration(Repository).Migrate();
             Settings = LoadThemeSettings(Repository);
-            IsDarkTheme = Settings.Theme.GetNonEmptyColor(KnownColor.Window).GetBrightness() < 0.5;
+            IsDarkTheme = Settings.Theme.GetColor(AppColor.DarkModePseudoColor) != Color.Empty;
+#pragma warning disable WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+            SystemColorMode mode = IsDarkTheme ? SystemColorMode.Dark : SystemColorMode.Classic;
+            Application.SetColorMode(mode);
+#pragma warning restore WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
         }
