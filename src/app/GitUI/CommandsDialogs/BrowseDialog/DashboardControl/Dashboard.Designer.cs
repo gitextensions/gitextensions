@@ -46,7 +46,6 @@
             // pnlLeft
             // 
             pnlLeft.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            pnlLeft.BackColor = Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(228)))), ((int)(((byte)(235)))));
             pnlLeft.Controls.Add(flpnlStart);
             pnlLeft.Controls.Add(flpnlContribute);
             pnlLeft.Controls.Add(pnlLogo);
@@ -58,7 +57,6 @@
             // 
             // flpnlStart
             // 
-            flpnlStart.BackColor = Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(50)))), ((int)(((byte)(58)))));
             flpnlStart.Dock = DockStyle.Fill;
             flpnlStart.FlowDirection = FlowDirection.TopDown;
             flpnlStart.Location = new Point(0, 68);
@@ -71,7 +69,6 @@
             // 
             // flpnlContribute
             // 
-            flpnlContribute.BackColor = Color.Transparent;
             flpnlContribute.Controls.Add(lblContribute);
             flpnlContribute.Dock = DockStyle.Bottom;
             flpnlContribute.FlowDirection = FlowDirection.TopDown;
@@ -87,7 +84,6 @@
             // 
             lblContribute.AutoSize = true;
             lblContribute.Font = new Font("Segoe UI", 14.25F);
-            lblContribute.ForeColor = SystemColors.GrayText;
             lblContribute.Location = new Point(22, 20);
             lblContribute.Margin = new Padding(2, 0, 2, 8);
             lblContribute.Name = "lblContribute";
@@ -97,7 +93,6 @@
             // 
             // pnlLogo
             // 
-            pnlLogo.BackColor = Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(57)))));
             pnlLogo.Controls.Add(pbLogo);
             pnlLogo.Dock = DockStyle.Top;
             pnlLogo.Location = new Point(0, 0);
@@ -119,14 +114,9 @@
             // 
             // userRepositoriesList
             // 
-            userRepositoriesList.BranchNameColor = SystemColors.HotTrack;
             userRepositoriesList.Dock = DockStyle.Fill;
-            userRepositoriesList.HeaderBackColor = Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(183)))), ((int)(((byte)(226)))));
-            userRepositoriesList.HeaderColor = Color.Empty;
             userRepositoriesList.HeaderHeight = 70;
-            userRepositoriesList.HoverColor = Color.Empty;
             userRepositoriesList.Location = new Point(246, 0);
-            userRepositoriesList.MainBackColor = Color.Empty;
             userRepositoriesList.Margin = new Padding(0);
             userRepositoriesList.Name = "userRepositoriesList";
             userRepositoriesList.Size = new Size(405, 358);
@@ -156,7 +146,6 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoScroll = true;
-            BackColor = Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(243)))), ((int)(((byte)(253)))));
             Controls.Add(tableLayoutPanel1);
             DoubleBuffered = true;
             Margin = new Padding(2, 1, 2, 1);

@@ -65,18 +65,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             {
                 BackgroundImage = selectedTheme.BackgroundImage;
 
-                BackColor = selectedTheme.Primary;
-                pnlLogo.BackColor = selectedTheme.PrimaryVeryDark;
-                flpnlStart.BackColor = selectedTheme.PrimaryLight;
-                flpnlContribute.BackColor = selectedTheme.PrimaryVeryLight;
+                BackColor = SystemColors.Window;
+                pnlLogo.BackColor = selectedTheme.LogoBackColor;
+                flpnlStart.BackColor = selectedTheme.StartBackColor;
+                flpnlContribute.BackColor = selectedTheme.ContributeBackColor;
                 lblContribute.ForeColor = selectedTheme.SecondaryHeadingText;
+                userRepositoriesList.MainBackColor = SystemColors.Window;
                 userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
                 userRepositoriesList.FavouriteColor = selectedTheme.AccentedText;
                 userRepositoriesList.ForeColor = selectedTheme.PrimaryText;
                 userRepositoriesList.HeaderColor = selectedTheme.SecondaryHeadingText;
-                userRepositoriesList.HeaderBackColor = selectedTheme.PrimaryDark;
-                userRepositoriesList.HoverColor = selectedTheme.PrimaryLight;
-                userRepositoriesList.MainBackColor = selectedTheme.Primary;
+                userRepositoriesList.HeaderBackColor = selectedTheme.HeaderBackColor;
+                userRepositoriesList.HoverColor = selectedTheme.StartBackColor;
+                userRepositoriesList.SearchBackColor = selectedTheme.SearchBackColor;
 
                 foreach (LinkLabel item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
                 {
