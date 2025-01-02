@@ -104,8 +104,8 @@ namespace GitUI
 
             _needsPositionRestore = false;
 
-            IReadOnlyList<Rectangle> workingArea = _getScreensWorkingArea();
-            if (!workingArea.Any(screen => screen.IntersectsWith(position.Rect)))
+            IReadOnlyList<Rectangle> workingAreas = _getScreensWorkingArea();
+            if (!workingAreas.Any(screen => screen.IntersectsWith(position.Rect)))
             {
                 if (position.State == FormWindowState.Maximized)
                 {
@@ -130,7 +130,7 @@ namespace GitUI
             {
                 Point calculatedLocation = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
 
-                DesktopLocation = WindowPositionManager.FitWindowOnScreen(new Rectangle(calculatedLocation, Size), workingArea);
+                DesktopLocation = WindowPositionManager.FitWindowOnScreen(new Rectangle(calculatedLocation, Size), workingAreas);
             }
             else
             {
@@ -138,7 +138,7 @@ namespace GitUI
                 Point calculatedLocation = new(
                     Owner.Left + (Owner.Width / 2) - (Width / 2),
                     Owner.Top + (Owner.Height / 2) - (Height / 2));
-                Location = WindowPositionManager.FitWindowOnScreen(new Rectangle(calculatedLocation, Size), workingArea);
+                Location = WindowPositionManager.FitWindowOnScreen(new Rectangle(calculatedLocation, Size), workingAreas);
             }
 
             if (WindowState != position.State)
