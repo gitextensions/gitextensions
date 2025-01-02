@@ -35,7 +35,8 @@ namespace GitUITests
         [TestCase(-500, 100, 500, 500, false)] // less than 10% visible horizontally
         [TestCase(-192, 100, 500, 500, true)] // 10% visible horizontally
         //// clipped on the top
-        [TestCase(50, -50, 500, 500, false)]
+        [TestCase(50, -250, 500, 500, true)]
+        [TestCase(50, -251, 500, 500, false)]
         //// clipped on the right
         [TestCase(1727, 100, 500, 500, true)] // 10% visible horizontally, (1920 * 90% - 1)
         [TestCase(1728, 100, 500, 500, false)] // less than 10% visible horizontally, (1920 * 90%)

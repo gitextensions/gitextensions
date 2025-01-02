@@ -42,7 +42,7 @@ namespace GitUI
                 }
             }
 
-            return workingAreas.FirstOrDefault().Location;
+            return workingAreas.FirstOrDefault(screen => !screen.IsEmpty).Location;
         }
 
         private static bool IsDisplayedOn10Percent(Rectangle screen, Rectangle window)
