@@ -149,7 +149,6 @@
             // 
             Add.BackColor = SystemColors.Control;
             Add.Image = Properties.Resources.FileStatusAdded;
-            Add.ImageTransparentColor = Color.Magenta;
             Add.Name = "Add";
             Add.Size = new Size(61, 22);
             Add.Text = "Add";
@@ -163,7 +162,6 @@
             // Remove
             // 
             Remove.Image = Properties.Resources.FileStatusRemoved;
-            Remove.ImageTransparentColor = Color.Magenta;
             Remove.Name = "Remove";
             Remove.Size = new Size(70, 22);
             Remove.Text = "Remove";

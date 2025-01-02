@@ -329,7 +329,6 @@ namespace GitUI.CommandsDialogs
             loadHistoryOnShowToolStripMenuItem,
             loadBlameOnShowToolStripMenuItem});
             toolStripSplitLoad.Image = Properties.Images.ReloadRevisions;
-            toolStripSplitLoad.ImageTransparentColor = Color.Magenta;
             toolStripSplitLoad.Name = "toolStripSplitLoad";
             toolStripSplitLoad.Size = new Size(32, 22);
             toolStripSplitLoad.ToolTipText = "Load file history";
@@ -360,7 +359,6 @@ namespace GitUI.CommandsDialogs
             showFullHistoryToolStripMenuItem,
             simplifyMergesToolStripMenuItem});
             ShowFullHistory.Image = Properties.Images.FileHistory;
-            ShowFullHistory.ImageTransparentColor = Color.Magenta;
             ShowFullHistory.Name = "ShowFullHistory";
             ShowFullHistory.Size = new Size(29, 22);
             ShowFullHistory.ToolTipText = "Show Full History";
@@ -397,7 +395,6 @@ namespace GitUI.CommandsDialogs
             showLineNumbersToolStripMenuItem,
             showOriginalFilePathToolStripMenuItem});
             toolStripBlameOptions.Image = Properties.Images.Blame;
-            toolStripBlameOptions.ImageTransparentColor = Color.Magenta;
             toolStripBlameOptions.Name = "toolStripBlameOptions";
             toolStripBlameOptions.Size = new Size(29, 22);
             toolStripBlameOptions.Text = "Blame options";

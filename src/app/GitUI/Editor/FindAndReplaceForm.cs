@@ -1,4 +1,6 @@
 ﻿using GitExtensions.Extensibility;
+using GitExtUtils.GitUI.Theming;
+using GitUI.UserControls;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using Microsoft;
@@ -6,7 +8,7 @@ using ResourceManager;
 
 namespace GitUI
 {
-    public delegate bool GetNextFileFnc(bool seekBackward, bool loop, out int fileIndex, out Task loadFileContent);
+    public delegate bool GetNextFileFnc(bool seekBackward, bool loop, out FileStatusItem? fileStatusItem, out Task loadFileContent);
 
     public partial class FindAndReplaceForm : GitExtensionsForm
     {
@@ -145,8 +147,8 @@ namespace GitUI
             _search.MatchCase = chkMatchCase.Checked;
             _search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
 
-            int startIdx = -1;
-            int currentIdx = -1;
+            FileStatusItem startItem = null;
+            FileStatusItem currentItem = null;
             TextRange? range;
             do
             {
@@ -174,15 +176,15 @@ namespace GitUI
                 else if (isMultiFileSearch)
                 {
                     range = null;
-                    if (currentIdx != -1 && startIdx == -1)
+                    if (currentItem is not null && startItem is null)
                     {
-                        startIdx = currentIdx;
+                        startItem = currentItem;
                     }
 
                     Validates.NotNull(_fileLoader);
-                    if (_fileLoader(searchBackward, true, out int fileIndex, out Task loadFileContent))
+                    if (_fileLoader(searchBackward, true, out FileStatusItem? selectedItem, out Task loadFileContent))
                     {
-                        currentIdx = fileIndex;
+                        currentItem = selectedItem;
                         try
                         {
                             await loadFileContent;
@@ -198,7 +200,7 @@ namespace GitUI
                     }
                 }
             }
-            while (range is null && startIdx != currentIdx && currentIdx != -1);
+            while (range is null && startItem != currentItem && currentItem is not null);
             if (range is null && messageIfNotFound is not null)
             {
                 MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -262,7 +264,7 @@ namespace GitUI
                     count++;
 
                     TextMarker m = new(range.Offset, range.Length,
-                                           TextMarkerType.SolidBlock, Color.Yellow, Color.Black);
+                                           TextMarkerType.SolidBlock, Color.Yellow.AdaptBackColor());
                     group.AddMarker(m);
                 }
 
@@ -537,9 +539,9 @@ namespace GitUI
         public void SetScanRegion(int offset, int length)
         {
             Validates.NotNull(_document);
-            Color bkgColor = _document.HighlightingStrategy.GetColorFor("Default").BackgroundColor;
+            Color bkgColor = _document.HighlightingStrategy.GetColorFor("Default").BackgroundColor.AdaptBackColor();
             _region = new TextMarker(offset, length, TextMarkerType.SolidBlock,
-                                     Globals.HalfMix(bkgColor, Color.FromArgb(160, 160, 160)));
+                                     Globals.HalfMix(bkgColor, Color.FromArgb(160, 160, 160).AdaptTextColor()));
             _document.MarkerStrategy.AddMarker(_region);
             _document.TextContentChanged += DocumentOnTextContentChanged;
             ScanRegionChanged?.Invoke(this, EventArgs.Empty);

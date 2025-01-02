@@ -1,10 +1,13 @@
 ﻿# Overview
 
-Git Extensions supports color customization, specifically a user can choose between
-a default (operating system defined), a bright or a dark themes.
+Git Extensions supports color customization to some extent:
 
-There is a [Wiki page on Dark Theme](https://github.com/gitextensions/gitextensions/wiki/Dark-Theme)
-with some background information and a list of known issues.
+- Activate Windows light or dark app mode
+- Customize app spceific colors
+
+There is no full theme support, system colors cannot be changed.
+
+Git Extensions includes a bright theme (with a few changes to the built-in light theme) and a dark theme.
 
 ## Themes location
 
@@ -40,12 +43,10 @@ It only uses pre-installed themes from `{App install}\Themes` directory.
 Copy `Themes\dark.css` or `Theme\bright.css` and change color values. Use a text editor, preferably
 with .css syntax highlighting and inline color display.
 
-Currently only application colors like branch labels in the revision grid and
-diff colors can be changed, the system colors listed in the templates will not be changed.
-Furthermore a dark theme is only usable if the Windows system theme is dark.
-(Dark mode in Windows settings is not sufficient to change system colors to be dark.)
+Only application colors like branch labels in the revision grid and
+diff colors can be changed, the system colors cannot be changed.
 
-There is a plugin for Visual Studio to show .css colors inline.
+There is an extension for Visual Studio to show .css colors inline.
 
 Visual Studio Code and JetBrains Rider displays .css colors inline out-of-the-box.
 

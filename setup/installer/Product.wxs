@@ -106,17 +106,6 @@
       <Component Id="EnvDTE.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\EnvDTE.dll" />
       </Component>
-      <!--
-      <Component Id="EasyHook.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\EasyHook.dll" />
-      </Component>
-      <Component Id="EasyHook32.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\EasyHook32.dll" />
-      </Component>
-      <Component Id="EasyHook64.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\EasyHook64.dll" />
-      </Component>
-      -->
       <Component Id="ExCSS.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\ExCSS.dll" />
       </Component>
@@ -207,6 +196,9 @@
       </Component>
       <Component Id="SpellChecker.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\SpellChecker.dll" />
+      </Component>
+      <Component Id="StrongOf.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\BenjaminAbt.StrongOf.dll" />
       </Component>
       <Component Id="System.ComponentModel.Composition.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\System.ComponentModel.Composition.dll" />
@@ -322,8 +314,8 @@
       <Component Id="Themes.bright.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\bright.css" />
       </Component>
-      <Component Id="Themes.highcontrast_dark.css" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Themes\highcontrast_dark.css" />
+      <Component Id="Themes.dark.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\dark.css" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
@@ -615,7 +607,7 @@
       <ComponentRef Id="Themes.README.md" />
       <ComponentRef Id="Themes.invariant.css" />
       <ComponentRef Id="Themes.bright.css" />
-      <ComponentRef Id="Themes.highcontrast_dark.css" />
+      <ComponentRef Id="Themes.dark.css" />
     </ComponentGroup>
     <ComponentGroup Id="Component.Translation">
       <ComponentRef Id="English.gif" />
@@ -654,11 +646,6 @@
       <ComponentRef Id="BugReporter.exe" />
       <ComponentRef Id="BugReporter.runtimeconfig.json" />
       <ComponentRef Id="ConEmuWinForms.dll" />
-      <!--
-      <ComponentRef Id="EasyHook.dll" />
-      <ComponentRef Id="EasyHook32.dll" />
-      <ComponentRef Id="EasyHook64.dll" />
-      -->
       <ComponentRef Id="EnvDTE.dll" />
       <ComponentRef Id="ExCSS.dll" />
       <ComponentRef Id="Git.hub.dll" />
@@ -690,6 +677,7 @@
       <ComponentRef Id="SmartFormat.dll" />
       <ComponentRef Id="SmartFormat.ZString.dll" />
       <ComponentRef Id="SpellChecker.dll" />
+      <ComponentRef Id="StrongOf.dll" />
       <ComponentRef Id="System.ComponentModel.Composition.dll" />
       <ComponentRef Id="System.Composition.AttributedModel.dll" />
       <ComponentRef Id="System.Composition.Convention.dll" />

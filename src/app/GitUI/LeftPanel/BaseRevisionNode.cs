@@ -2,6 +2,7 @@
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using GitUI.Theming;
 
 namespace GitUI.LeftPanel
 {
@@ -9,7 +10,7 @@ namespace GitUI.LeftPanel
     internal abstract class BaseRevisionNode : Node
     {
         protected const char PathSeparator = '/';
-        private static readonly Color _invisibleForeColor = Color.Silver.AdaptTextColor();
+        private static readonly Color _invisibleForeColor = ThemeModule.IsDarkTheme ? SystemColors.GrayText : Color.Silver;
 
         protected BaseRevisionNode(Tree tree, string fullPath, bool visible)
             : base(tree)

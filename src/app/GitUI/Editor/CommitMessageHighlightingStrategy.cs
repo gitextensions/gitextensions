@@ -1,4 +1,5 @@
 ﻿using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -10,8 +11,8 @@ namespace GitUI.Editor
 
         private readonly List<TextMarker> _overlengthDescriptionMarkers = [];
 
-        private readonly TextMarker _markerSummaryTooLong = new(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "Summary line is too long." };
-        private readonly TextMarker _markerSpacerNeeded = new(0, 0, TextMarkerType.WaveLine, Color.Red) { ToolTip = "There must be a blank line after the summary." };
+        private readonly TextMarker _markerSummaryTooLong = new(0, 0, TextMarkerType.WaveLine, Color.Red.AdaptBackColor()) { ToolTip = "Summary line is too long." };
+        private readonly TextMarker _markerSpacerNeeded = new(0, 0, TextMarkerType.WaveLine, Color.Red.AdaptBackColor()) { ToolTip = "There must be a blank line after the summary." };
 
         public CommitMessageHighlightingStrategy(IGitModule module)
             : base("GitCommitMessage", module)
@@ -140,7 +141,7 @@ namespace GitUI.Editor
                     }
                     else
                     {
-                        overlengthMarker = new TextMarker(markerOffset, markerLength, TextMarkerType.WaveLine, Color.Red) { ToolTip = "Line is too long." };
+                        overlengthMarker = new TextMarker(markerOffset, markerLength, TextMarkerType.WaveLine, Color.Red.AdaptBackColor()) { ToolTip = "Line is too long." };
                         _overlengthDescriptionMarkers.Add(overlengthMarker);
                         document.MarkerStrategy.AddMarker(overlengthMarker);
                     }

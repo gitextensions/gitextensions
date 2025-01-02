@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return Math.Abs(seed) % PresetGraphBrushes.Count;
         }
 
-        public static Color NonRelativeColor { get; } = Color.LightGray;
+        public static Color NonRelativeColor { get; } = Color.LightGray.AdaptBackColor();
 
         internal static Brush NonRelativeBrush { get; }
 
@@ -28,7 +28,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             if (branchColors.Length < 2)
             {
                 Trace.WriteLine("At least two graph colors must be configured");
-                branchColors = [Color.Magenta, Color.Cyan];
+                branchColors = [Color.Magenta.AdaptBackColor(), Color.Cyan.AdaptBackColor()];
             }
 
             foreach (Color color in branchColors)

@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
             // 
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            BackColor = Color.Lime;
+            BackColor = Color.Transparent;
             ClientSize = new Size(325, 213);
             ControlBox = false;
             Controls.Add(tableLayoutPanel1);
@@ -78,7 +78,6 @@ namespace GitUI.CommandsDialogs
             ShowInTaskbar = false;
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
-            TransparencyKey = Color.Lime;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);

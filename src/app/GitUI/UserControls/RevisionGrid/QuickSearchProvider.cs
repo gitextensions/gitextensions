@@ -1,5 +1,6 @@
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls.RevisionGrid;
 using Timer = System.Windows.Forms.Timer;
 
@@ -176,7 +177,7 @@ namespace GitUI
             }
             else
             {
-                _label.ForeColor = Color.DarkRed;
+                _label.ForeColor = Color.DarkRed.AdaptTextColor();
             }
 
             int? SearchForward()

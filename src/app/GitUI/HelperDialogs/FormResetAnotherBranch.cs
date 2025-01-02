@@ -31,6 +31,7 @@ namespace GitUI.HelperDialogs
             pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image);
             labelResetBranchWarning.AutoSize = true;
             labelResetBranchWarning.Dock = DockStyle.Fill;
+            labelResetBranchWarning.SetForeColorForBackColor();
 
             Height = tableLayoutPanel1.Height + tableLayoutPanel1.Top;
             tableLayoutPanel1.Dock = DockStyle.Fill;
@@ -38,8 +39,6 @@ namespace GitUI.HelperDialogs
             ActiveControl = Branches;
 
             InitializeComplete();
-
-            labelResetBranchWarning.SetForeColorForBackColor();
 
             Ok.Enabled = false;
         }
@@ -145,7 +144,7 @@ namespace GitUI.HelperDialogs
             CancellationToken cancellationToken = _cancellationTokenSequence.Next();
 
             IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == branch);
-            Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? Color.LightCoral : SystemColors.Window;
+            Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? Color.LightCoral.AdaptBackColor() : SystemColors.Window;
 
             Ok.Enabled = gitRefToReset is not null && ForceReset.Checked;
             Ok.BackColor = SystemColors.ButtonFace;
@@ -171,7 +170,7 @@ namespace GitUI.HelperDialogs
                 Ok.Enabled = executionResult.ExitedSuccessfully;
                 if (!executionResult.ExitedSuccessfully)
                 {
-                    Ok.BackColor = Color.LightCoral;
+                    Ok.BackColor = Color.LightCoral.AdaptBackColor();
                 }
             });
         }

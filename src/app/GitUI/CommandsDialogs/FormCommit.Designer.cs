@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
 using GitUI.SpellChecker;
 using GitUI.UserControls.RevisionGrid;
@@ -754,7 +755,6 @@ namespace GitUI.CommandsDialogs
             // 
             toolRefreshItem.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolRefreshItem.Image = Properties.Images.ReloadRevisions;
-            toolRefreshItem.ImageTransparentColor = Color.Magenta;
             toolRefreshItem.Name = "toolRefreshItem";
             toolRefreshItem.Size = new Size(23, 20);
             toolRefreshItem.Text = "Refresh";
@@ -944,7 +944,6 @@ namespace GitUI.CommandsDialogs
             toolStageAllItem.Alignment = ToolStripItemAlignment.Right;
             toolStageAllItem.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStageAllItem.Image = Properties.Images.StageAll;
-            toolStageAllItem.ImageTransparentColor = Color.Magenta;
             toolStageAllItem.Name = "toolStageAllItem";
             toolStageAllItem.Size = new Size(23, 23);
             toolStageAllItem.Click += toolStageAllItem_Click;
@@ -960,7 +959,6 @@ namespace GitUI.CommandsDialogs
             toolStageItem.Alignment = ToolStripItemAlignment.Right;
             toolStageItem.AutoToolTip = false;
             toolStageItem.Image = Properties.Images.Stage;
-            toolStageItem.ImageTransparentColor = Color.Magenta;
             toolStageItem.Name = "toolStageItem";
             toolStageItem.Size = new Size(56, 23);
             toolStageItem.Text = "&Stage";
@@ -971,7 +969,6 @@ namespace GitUI.CommandsDialogs
             // 
             toolUnstageAllItem.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolUnstageAllItem.Image = Properties.Images.UnstageAll;
-            toolUnstageAllItem.ImageTransparentColor = Color.Magenta;
             toolUnstageAllItem.Name = "toolUnstageAllItem";
             toolUnstageAllItem.Size = new Size(23, 23);
             toolUnstageAllItem.Click += toolUnstageAllItem_Click;
@@ -985,7 +982,6 @@ namespace GitUI.CommandsDialogs
             // 
             toolUnstageItem.AutoToolTip = false;
             toolUnstageItem.Image = Properties.Images.Unstage;
-            toolUnstageItem.ImageTransparentColor = Color.Magenta;
             toolUnstageItem.Name = "toolUnstageItem";
             toolUnstageItem.Size = new Size(70, 23);
             toolUnstageItem.Text = "&Unstage";
@@ -1043,7 +1039,7 @@ namespace GitUI.CommandsDialogs
             //
             // SolveMergeconflicts
             // 
-            SolveMergeconflicts.BackColor = Color.SeaShell;
+            SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeconflicts.FlatStyle = FlatStyle.Flat;
             SolveMergeconflicts.Image = Properties.Images.SolveMerge;
             SolveMergeconflicts.ImageAlign = ContentAlignment.MiddleLeft;
@@ -1407,7 +1403,6 @@ namespace GitUI.CommandsDialogs
             // createBranchToolStripButton
             // 
             createBranchToolStripButton.Image = Properties.Images.BranchCreate;
-            createBranchToolStripButton.ImageTransparentColor = Color.Magenta;
             createBranchToolStripButton.Name = "createBranchToolStripButton";
             createBranchToolStripButton.Size = new Size(101, 20);
             createBranchToolStripButton.Text = "Create &branch";

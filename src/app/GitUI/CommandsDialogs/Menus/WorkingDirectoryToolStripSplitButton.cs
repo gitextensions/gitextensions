@@ -31,7 +31,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
 
         Image = Properties.Resources.RepoOpen;
         ImageAlign = ContentAlignment.MiddleLeft;
-        ImageTransparentColor = Color.Magenta;
         TextAlign = ContentAlignment.MiddleLeft;
     }
 

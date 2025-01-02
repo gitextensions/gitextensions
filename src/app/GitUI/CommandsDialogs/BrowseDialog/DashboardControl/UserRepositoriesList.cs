@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -42,7 +43,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         private readonly Font _secondaryFont;
-        private static readonly Color DefaultFavouriteColor = Color.DarkGoldenrod;
+        private static readonly Color DefaultFavouriteColor = Color.DarkGoldenrod.AdaptBackColor();
         private static readonly Color DefaultBranchNameColor = SystemColors.HotTrack;
         private Color _favouriteColor = DefaultFavouriteColor;
         private Color _branchNameColor = DefaultBranchNameColor;
@@ -50,6 +51,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private Color _headerColor;
         private Color _headerBackColor;
         private Color _mainBackColor;
+        private Color _searchBackColor;
         private Brush _foreColorBrush;
         private Brush _branchNameColorBrush = new SolidBrush(DefaultBranchNameColor);
         private Brush _favouriteColorBrush = new SolidBrush(DefaultFavouriteColor);
@@ -80,6 +82,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints - 1f);
             lblRecentRepositories.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
+            lblRecentRepositories.ForeColor.AdaptTextColor();
 
             textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
 
@@ -170,6 +173,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         [Category("Appearance")]
+        [DefaultValue(typeof(SystemColors), "Window")]
         public Color HeaderBackColor
         {
             get { return _headerBackColor; }
@@ -230,6 +234,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _mainBackColor = value;
                 BackColor = value;
                 listView1.BackColor = value;
+            }
+        }
+
+        [Category("Appearance")]
+        [DefaultValue(typeof(SystemColors), "Window")]
+        public Color SearchBackColor
+        {
+            get { return _searchBackColor; }
+            set
+            {
+                if (_searchBackColor == value)
+                {
+                    return;
+                }
+
+                _searchBackColor = value;
+                textBoxSearch.BackColor = value;
             }
         }
 

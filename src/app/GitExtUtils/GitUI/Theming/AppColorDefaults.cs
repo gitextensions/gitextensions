@@ -4,12 +4,13 @@
     {
         public static readonly Color FallbackColor = Color.Magenta;
 
-        private static readonly Dictionary<AppColor, Color> Values =
+        private static readonly Dictionary<AppColor, Color> _values =
             new()
             {
-                { AppColor.OtherTag, Color.Gray },
                 { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
                 { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
+                { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },
+                { AppColor.OtherTag, Color.Gray },
                 { AppColor.Tag, Color.DarkBlue },
                 { AppColor.Graph, Color.DarkRed },
                 { AppColor.GraphBranch1, Color.FromArgb(0xf0, 0x64, 0xa0) },
@@ -54,10 +55,11 @@
                 { AppColor.AnsiTerminalWhiteForeNormal, Color.FromArgb(0xbf, 0xbf, 0xbf) },
                 { AppColor.AnsiTerminalWhiteBackNormal, Color.FromArgb(0xe0, 0xe0, 0xe0) },
                 { AppColor.AnsiTerminalWhiteForeBold, Color.FromArgb(0xff, 0xff, 0xff) },
-                { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) }
+                { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) },
+                { AppColor.DarkModePseudoColor, Color.Empty },
             };
 
-        private static readonly Dictionary<string, Dictionary<AppColor, Color>> Variations = new()
+        private static readonly Dictionary<string, Dictionary<AppColor, Color>> _variations = new()
         {
             {
                 "colorblind", new()
@@ -72,7 +74,7 @@
 
         public static Color GetBy(AppColor name, string[]? variations = null)
         {
-            if (!Values.TryGetValue(name, out Color result))
+            if (!_values.TryGetValue(name, out Color result))
             {
                 result = FallbackColor;
             }
@@ -84,7 +86,7 @@
 
             foreach (string variation in variations)
             {
-                if (!Variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
+                if (!_variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
                 {
                     continue;
                 }
