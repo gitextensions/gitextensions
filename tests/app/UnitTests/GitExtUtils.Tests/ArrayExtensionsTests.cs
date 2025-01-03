@@ -1,47 +1,46 @@
 ﻿using GitExtUtils;
 
-namespace GitCommandsTests
+namespace GitExtUtilsTests;
+
+[TestFixture]
+public sealed class ArrayExtensionsTests
 {
-    [TestFixture]
-    public sealed class ArrayExtensionsTests
+    [Test]
+    public void Subsequence()
     {
-        [Test]
-        public void Subsequence()
-        {
-            int[] nums = Enumerable.Range(0, 10).ToArray();
+        int[] nums = Enumerable.Range(0, 10).ToArray();
 
-            Assert.AreEqual(
-                new[] { 0, 1, 2, 3 },
-                nums.Subsequence(0, 4));
-            Assert.AreEqual(
-                new[] { 1, 2, 3, 4 },
-                nums.Subsequence(1, 4));
+        Assert.AreEqual(
+            new[] { 0, 1, 2, 3 },
+            nums.Subsequence(0, 4));
+        Assert.AreEqual(
+            new[] { 1, 2, 3, 4 },
+            nums.Subsequence(1, 4));
 
-            Assert.AreEqual(
-                nums,
-                nums.Subsequence(0, 10));
+        Assert.AreEqual(
+            nums,
+            nums.Subsequence(0, 10));
 
-            Assert.AreEqual(
-                Array.Empty<int>(),
-                nums.Subsequence(0, 0));
+        Assert.AreEqual(
+            Array.Empty<int>(),
+            nums.Subsequence(0, 0));
 
-            Assert.AreEqual(
-                Array.Empty<int>(),
-                nums.Subsequence(9, 0));
-        }
+        Assert.AreEqual(
+            Array.Empty<int>(),
+            nums.Subsequence(9, 0));
+    }
 
-        [Test]
-        public void Append()
-        {
-            Assert.AreEqual(
-                new[] { 0, 1 },
-                new[] { 0 }.Append(1));
-            Assert.AreEqual(
-                new[] { 0 },
-                Array.Empty<int>().Append(0));
-            Assert.AreEqual(
-                new[] { 0, 1, 2 },
-                Array.Empty<int>().Append(0).Append(1).Append(2));
-        }
+    [Test]
+    public void Append()
+    {
+        Assert.AreEqual(
+            new[] { 0, 1 },
+            new[] { 0 }.Append(1));
+        Assert.AreEqual(
+            new[] { 0 },
+            Array.Empty<int>().Append(0));
+        Assert.AreEqual(
+            new[] { 0, 1, 2 },
+            Array.Empty<int>().Append(0).Append(1).Append(2));
     }
 }
