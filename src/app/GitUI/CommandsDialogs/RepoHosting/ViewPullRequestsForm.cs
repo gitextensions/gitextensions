@@ -319,6 +319,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
             LoadDiscussion();
         }
 
+        private void _pullRequestsList_Resize(object sender, EventArgs e)
+        {
+            _pullRequestsList.Columns[1].Width = _pullRequestsList.ClientSize.Width - _pullRequestsList.Columns[0].Width - _pullRequestsList.Columns[2].Width - _pullRequestsList.Columns[3].Width - _pullRequestsList.Columns[4].Width;
+        }
+
         private void LoadDiscussion()
         {
             ThreadHelper.FileAndForget(async () =>

@@ -175,6 +175,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
+        private void listMappings_Resize(object sender, EventArgs e)
+        {
+            columnKey.Width = listMappings.ClientSize.Width - columnCommand.Width;
+        }
+
         private void bResetToDefaults_Click(object sender, EventArgs e)
         {
             Settings = HotkeySettingsManager.CreateDefaultSettings();

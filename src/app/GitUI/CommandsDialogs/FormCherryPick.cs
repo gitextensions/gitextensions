@@ -202,5 +202,10 @@ namespace GitUI.CommandsDialogs
 
             OnRevisionChanged();
         }
+
+        private void lvParentsList_Resize(object sender, EventArgs e)
+        {
+            lvParentsList.Columns[1].Width = lvParentsList.ClientSize.Width - lvParentsList.Columns[0].Width - lvParentsList.Columns[2].Width - lvParentsList.Columns[3].Width;
+        }
     }
 }

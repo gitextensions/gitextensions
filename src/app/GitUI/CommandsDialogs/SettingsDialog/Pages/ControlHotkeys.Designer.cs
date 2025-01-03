@@ -98,6 +98,7 @@
             listMappings.UseCompatibleStateImageBehavior = false;
             listMappings.View = View.Details;
             listMappings.SelectedIndexChanged += listMappings_SelectedIndexChanged;
+            listMappings.Resize += listMappings_Resize;
             // 
             // columnCommand
             // 

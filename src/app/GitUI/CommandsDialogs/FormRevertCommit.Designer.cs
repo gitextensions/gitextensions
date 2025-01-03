@@ -106,6 +106,7 @@
             lvParentsList.TabIndex = 4;
             lvParentsList.UseCompatibleStateImageBehavior = false;
             lvParentsList.View = View.Details;
+            lvParentsList.Resize += lvParentsList_Resize;
             // 
             // columnHeader1
             // 
