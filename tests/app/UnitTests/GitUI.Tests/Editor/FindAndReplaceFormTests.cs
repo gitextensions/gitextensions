@@ -1,4 +1,7 @@
-﻿using GitUI;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI;
+using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -182,11 +185,12 @@ namespace GitUITests.Editor
             TextRange[] expectedRanges)
         {
             int currentIndex = 0;
+            FileStatusItem dummy = new(firstRev: null, secondRev: new GitRevision(ObjectId.Random()), new GitItemStatus(nameof(dummy)));
 
-            bool FileLoader(bool backward, bool loop, out int index, out Task content)
+            bool FileLoader(bool backward, bool loop, out FileStatusItem? fileStatusItem, out Task content)
             {
                 currentIndex = (currentIndex + 1) % texts.Length;
-                index = currentIndex;
+                fileStatusItem = dummy;
                 content = Task.CompletedTask;
                 _textEditorControl.Text = texts[currentIndex];
 
