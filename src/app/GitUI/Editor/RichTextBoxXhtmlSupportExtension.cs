@@ -328,25 +328,25 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             internal const int LF_FACESIZE = 32;
 
-            [DllImport("user32", CharSet = CharSet.Auto)]
+            [DllImport(Libraries.User32, CharSet = CharSet.Auto)]
             internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 IntPtr lParam);
 
-            [DllImport("user32", CharSet = CharSet.Auto)]
+            [DllImport(Libraries.User32, CharSet = CharSet.Auto)]
             internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 ref Point lParam);
 
-            [DllImport("user32", CharSet = CharSet.Auto)]
+            [DllImport(Libraries.User32, CharSet = CharSet.Auto)]
             internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 ref PARAFORMAT lp);
 
-            [DllImport("user32", CharSet = CharSet.Auto)]
+            [DllImport(Libraries.User32, CharSet = CharSet.Auto)]
             internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
