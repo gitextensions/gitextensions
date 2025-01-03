@@ -24,22 +24,25 @@ namespace GitUI
     {
         private static WindowPositionList? _windowPositionList;
 
-        public static Point FitWindowOnScreen(Rectangle calculatedWindowBounds, IEnumerable<Rectangle> workingArea)
+        /// <summary>
+        /// Ensures the window with its new size and location will be accessible to the user.
+        /// If all fails, we will display the window at the top left of the first screen or at (0, 0).
+        /// </summary>
+        /// <param name="calculatedWindowBounds">The intended location of the window.</param>
+        /// <param name="workingAreas">The working areas of all available screens.</param>
+        /// <returns>A most likely visible location for the window.</returns>
+        public static Point FitWindowOnScreen(Rectangle calculatedWindowBounds, IEnumerable<Rectangle> workingAreas)
         {
-            // Ensure the window with its new size and location will be accessible to the user
-            // If all fails, we'll display the window the (0, 0)
-            Point location = Point.Empty;
-            foreach (Rectangle screen in workingArea)
+            foreach (Rectangle screen in workingAreas)
             {
                 bool isDisplayed = IsDisplayedOn10Percent(screen, calculatedWindowBounds);
                 if (isDisplayed)
                 {
-                    location = calculatedWindowBounds.Location;
-                    break;
+                    return calculatedWindowBounds.Location;
                 }
             }
 
-            return location;
+            return workingAreas.FirstOrDefault(screen => !screen.IsEmpty).Location;
         }
 
         private static bool IsDisplayedOn10Percent(Rectangle screen, Rectangle window)
@@ -83,6 +86,25 @@ namespace GitUI
                 if (middleTop)
                 {
                     Debug.WriteLine($"{screen.ToString()} contains {p} (W/2+, T)");
+                    return true;
+                }
+            }
+
+            if (screen.Contains(new Point(window.Left, window.Top + (window.Height / 2))))
+            {
+                p = new Point(window.Left + requireWidth, window.Top + (window.Height / 2) - requiredHeight);
+                bool middleTop = screen.Contains(p);
+                if (middleTop)
+                {
+                    Debug.WriteLine($"{screen.ToString()} contains {p} (L, H/2-)");
+                    return true;
+                }
+
+                p = new Point(window.Left + requireWidth, window.Top + (window.Height / 2) + requiredHeight);
+                middleTop = screen.Contains(p);
+                if (middleTop)
+                {
+                    Debug.WriteLine($"{screen.ToString()} contains {p} (L, H/2+)");
                     return true;
                 }
             }
