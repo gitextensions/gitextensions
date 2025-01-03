@@ -2,6 +2,10 @@
   {
     "Name": "testfile.txt",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,
@@ -29,6 +33,10 @@
   {
     "Name": "testfile2.txt",
     "OldName": null,
+    "Path": {
+      "Length": 0,
+      "Value": ""
+    },
     "ErrorMessage": null,
     "TreeGuid": null,
     "RenameCopyPercentage": null,

@@ -105,13 +105,13 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            DiffFiles.StoreNextIndexToSelect();
+            DiffFiles.StoreNextItemToSelect();
             DiffFiles.InvokeAndForget(async () =>
             {
                 await SetDiffsAsync(revisions);
                 if (DiffFiles.SelectedItem is null)
                 {
-                    DiffFiles.SelectStoredNextIndex();
+                    DiffFiles.SelectStoredNextItem();
                 }
             });
         }
@@ -1257,7 +1257,7 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                DiffFiles.StoreNextIndexToSelect();
+                DiffFiles.StoreNextItemToSelect();
 
                 try
                 {

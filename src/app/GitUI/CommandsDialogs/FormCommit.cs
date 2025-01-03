@@ -1176,14 +1176,14 @@ namespace GitUI.CommandsDialogs
 
             void SelectStoredNextIndex()
             {
-                Unstaged.SelectStoredNextIndex(0);
+                Unstaged.SelectStoredNextItem(orSelectFirst: true);
                 if (Unstaged.GitItemStatuses.Any())
                 {
-                    Staged.SelectStoredNextIndex();
+                    Staged.SelectStoredNextItem();
                 }
                 else
                 {
-                    Staged.SelectStoredNextIndex(0);
+                    Staged.SelectStoredNextItem(orSelectFirst: true);
                 }
             }
         }
@@ -1793,7 +1793,7 @@ namespace GitUI.CommandsDialogs
                         return item.IsRenamed ? count + 2 : count + 1;
                     });
 
-                    Staged.StoreNextIndexToSelect();
+                    Staged.StoreNextItemToSelect();
                     bool shouldRescanChanges = Module.BatchUnstageFiles(allFiles, (eventArgs) =>
                     {
                         toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + eventArgs.ProcessedCount);
@@ -1849,7 +1849,7 @@ namespace GitUI.CommandsDialogs
                     Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
                     Staged.SetDiffs(headRev, indexRev, stagedFiles);
                     _skipUpdate = false;
-                    Staged.SelectStoredNextIndex();
+                    Staged.SelectStoredNextItem();
 
                     toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
 
@@ -1992,7 +1992,7 @@ namespace GitUI.CommandsDialogs
                 {
                     IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
-                    Unstaged.StoreNextIndexToSelect();
+                    Unstaged.StoreNextItemToSelect();
                     toolStripProgressBar1.Visible = true;
                     toolStripProgressBar1.Maximum = items.Count * 2;
                     toolStripProgressBar1.Value = 0;
@@ -2077,7 +2077,7 @@ namespace GitUI.CommandsDialogs
                         Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
                         Unstaged.ClearSelected();
                         _skipUpdate = false;
-                        Unstaged.SelectStoredNextIndex();
+                        Unstaged.SelectStoredNextItem();
                     }
 
                     toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
@@ -2124,7 +2124,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // remember max selected index
-                _currentFilesList.StoreNextIndexToSelect();
+                _currentFilesList.StoreNextItemToSelect();
 
                 IReadOnlyList<GitItemStatus> selectedItems = _currentFilesList.SelectedItems.Items().ToList();
                 toolStripProgressBar1.Visible = true;
@@ -2200,7 +2200,7 @@ namespace GitUI.CommandsDialogs
 
                 SelectedDiff.Clear();
 
-                Unstaged.StoreNextIndexToSelect();
+                Unstaged.StoreNextItemToSelect();
                 foreach (FileStatusItem item in Unstaged.SelectedItems)
                 {
                     string path = _fullPathResolver.Resolve(item.Item.Name);
@@ -2529,11 +2529,11 @@ namespace GitUI.CommandsDialogs
         {
             if (_currentItemStaged)
             {
-                Staged.StoreNextIndexToSelect();
+                Staged.StoreNextItemToSelect();
             }
             else
             {
-                Unstaged.StoreNextIndexToSelect();
+                Unstaged.StoreNextItemToSelect();
             }
 
             RescanChanges();

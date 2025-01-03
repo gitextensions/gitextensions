@@ -8,16 +8,19 @@ namespace GitCommands
         /// Sorts by file path alphanumerically
         /// </summary>
         FilePath,
+        FilePathFlat,
 
         /// <summary>
         /// Sorts by file extension then by path
         /// </summary>
         FileExtension,
+        FileExtensionFlat,
 
         /// <summary>
         /// Sorts by git change type. Addition, Deletions, edits, etc. then by path
         /// </summary>
-        FileStatus
+        FileStatus,
+        FileStatusFlat
     }
 
     public interface IDiffListSortService
