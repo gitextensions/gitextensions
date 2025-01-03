@@ -50,6 +50,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private Color _headerColor;
         private Color _headerBackColor;
         private Color _mainBackColor;
+        private Color _searchBackColor;
         private Brush _foreColorBrush;
         private Brush _branchNameColorBrush = new SolidBrush(DefaultBranchNameColor);
         private Brush _favouriteColorBrush = new SolidBrush(DefaultFavouriteColor);
@@ -170,6 +171,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
         [Category("Appearance")]
+        [DefaultValue(typeof(SystemColors), "Window")]
         public Color HeaderBackColor
         {
             get { return _headerBackColor; }
@@ -230,6 +232,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _mainBackColor = value;
                 BackColor = value;
                 listView1.BackColor = value;
+            }
+        }
+
+        [Category("Appearance")]
+        [DefaultValue(typeof(SystemColors), "Window")]
+        public Color SearchBackColor
+        {
+            get { return _searchBackColor; }
+            set
+            {
+                if (_searchBackColor == value)
+                {
+                    return;
+                }
+
+                _searchBackColor = value;
+                textBoxSearch.BackColor = value;
             }
         }
 

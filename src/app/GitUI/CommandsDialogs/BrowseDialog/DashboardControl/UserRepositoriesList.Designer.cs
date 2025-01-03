@@ -221,7 +221,6 @@
             // imageList1
             // 
             imageList1.ImageStream = ((ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            imageList1.TransparentColor = Color.Transparent;
             imageList1.Images.SetKeyName(0, "source_code.png");
             // 
             // textBoxSearch
