@@ -379,7 +379,10 @@ namespace GitUI
             cboFindInCommitFilesGitGrep.Visible = visible;
             if (visible)
             {
-                ActiveControl = cboFindInCommitFilesGitGrep;
+                if (ActiveControl is not null)
+                {
+                    ActiveControl = cboFindInCommitFilesGitGrep;
+                }
 
                 // Adjust sizes "automatically" changed by visibility
                 cboFindInCommitFilesGitGrep.Top = 0;
