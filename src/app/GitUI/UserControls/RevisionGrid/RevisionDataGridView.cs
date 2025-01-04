@@ -101,7 +101,7 @@ namespace GitUI.UserControls.RevisionGrid
             DoubleBuffered = true;
 
             _rowBackgroundBrush = new SolidBrush(AppColor.PanelBackground.GetThemeColor());
-            _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeBackgroundDarkerBy(0.025));
+            _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeBackgroundDarkerBy(ThemeModule.IsDarkTheme ? -0.012 : 0.025));
             _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
 
@@ -412,7 +412,9 @@ namespace GitUI.UserControls.RevisionGrid
             // Reload settings that will be used during drawing
             _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
             _highlightedGrayTextColor = getHighlightedGrayTextColor();
-            _grayTextColor = getGrayTextColor(degreeOfGrayness: 1.4f);
+
+            // Note: The adaptive color fails here, step around 1.17f 145 -> 80
+            _grayTextColor = ThemeModule.IsDarkTheme ? Color.FromArgb(118, 118, 118) : getGrayTextColor(degreeOfGrayness: 1.4f);
             _highlightedGrayTextColorCustom = getHighlightedGrayTextColor(degreeOfGrayness: 1.4f);
             _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;
             _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
