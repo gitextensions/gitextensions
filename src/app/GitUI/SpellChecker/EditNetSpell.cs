@@ -92,9 +92,20 @@ namespace GitUI.SpellChecker
             set
             {
                 HideWatermark();
+                EvaluateForecolor();
                 TextBox.Text = value;
                 ShowWatermark();
                 OnTextAssigned();
+            }
+        }
+
+        public void EvaluateForecolor()
+        {
+            if (Application.IsDarkModeEnabled)
+            {
+                // In dark mode the background color is set to White, but still reported as SystemColors.Window (or adjusted)
+                // The Forecolor must be changed manually
+                TextBox.ForeColor = TextBox.Enabled ? SystemColors.WindowText : SystemColors.HighlightText;
             }
         }
 
