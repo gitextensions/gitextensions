@@ -1,4 +1,5 @@
 ﻿using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Hotkey;
 using Microsoft;
 using ResourceManager;
@@ -53,6 +54,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public ControlHotkeys()
         {
             InitializeComponent();
+            txtHotkey.ForeColor.AdaptTextColor();
             InitializeComplete();
 
             cmbSettings.DisplayMember = nameof(HotkeySettings.Name);

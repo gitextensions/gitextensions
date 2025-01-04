@@ -3,6 +3,7 @@ using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Plugins.GitStatistics.PieChart;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -130,7 +131,7 @@ namespace GitExtensions.Plugins.GitStatistics
             pie.SetFitChart(false);
             pie.SetEdgeColorType(EdgeColorType.DarkerThanSurface);
             pie.SetSliceRelativeHeight(0.20f);
-            pie.SetColors(DecentColors);
+            pie.SetColors(DecentColors.Select(c => c.AdaptBackColor()).ToArray());
             pie.SetShadowStyle(ShadowStyle.GradualShadow);
 
             if (pie.Parent.Width > pie.Parent.Height)

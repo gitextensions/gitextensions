@@ -1,6 +1,7 @@
 using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility.Settings;
+using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 
@@ -26,6 +27,7 @@ namespace TeamCityIntegration.Settings
         public TeamCitySettingsUserControl()
         {
             InitializeComponent();
+            labelRegexError.ForeColor.AdaptTextColor();
             InitializeComplete();
 
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;

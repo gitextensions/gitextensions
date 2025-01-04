@@ -2,6 +2,7 @@
 using System.Drawing.Drawing2D;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 
 namespace GitExtensions.Plugins.GitImpact
 {
@@ -322,7 +323,7 @@ namespace GitExtensions.Plugins.GitImpact
                         // Create a new random brush for the author if none exists yet
                         if (!_brushes.ContainsKey(author))
                         {
-                            Color color = Color.FromArgb((int)(author.GetHashCode() | 0xFF000000));
+                            Color color = Color.FromArgb((int)(author.GetHashCode() | 0xFF000000)).AdaptBackColor();
                             _brushes.Add(author, new SolidBrush(color));
                         }
 

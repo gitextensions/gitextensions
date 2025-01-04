@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using GitExtUtils.GitUI.Theming;
+
+namespace GitUI.CommandsDialogs
 {
     partial class FormApplyPatch
     {
@@ -205,7 +207,7 @@
             // 
             // SolveMergeConflicts
             // 
-            SolveMergeConflicts.BackColor = Color.Salmon;
+            SolveMergeConflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeConflicts.Dock = DockStyle.Top;
             SolveMergeConflicts.FlatStyle = FlatStyle.Flat;
             SolveMergeConflicts.Location = new Point(3, 213);
