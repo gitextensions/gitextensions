@@ -4,6 +4,7 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -55,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void RefreshContent()
         {
-            DashboardTheme selectedTheme = ColorHelper.IsLightTheme() ? DashboardTheme.Light : DashboardTheme.Dark;
+            DashboardTheme selectedTheme = ThemeModule.IsDarkTheme ? DashboardTheme.Dark : DashboardTheme.Light;
 
             InitDashboardLayout();
             ApplyTheme();
