@@ -66,7 +66,6 @@ namespace GitUI.CommandsDialogs
             // 
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            BackColor = Color.Transparent;
             ClientSize = new Size(325, 213);
             ControlBox = false;
             Controls.Add(tableLayoutPanel1);
