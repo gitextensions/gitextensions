@@ -81,10 +81,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="Themes\dark.css">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>

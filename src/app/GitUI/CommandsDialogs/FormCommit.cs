@@ -21,6 +21,7 @@ using GitUI.HelperDialogs;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.SpellChecker;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -205,6 +206,11 @@ namespace GitUI.CommandsDialogs
                 _commitKind = value;
 
                 modifyCommitMessageButton.Visible = _useFormCommitMessage && CommitKind is not (CommitKind.Normal or CommitKind.Amend);
+                if (ThemeModule.IsDarkTheme)
+                {
+                    modifyCommitMessageButton.ForeColor = SystemColors.ControlText;
+                }
+
                 bool messageCanBeChanged = _useFormCommitMessage && CommitKind is (CommitKind.Normal or CommitKind.Amend);
                 Message.Enabled = messageCanBeChanged;
                 commitMessageToolStripMenuItem.Enabled = messageCanBeChanged;
@@ -347,6 +353,10 @@ namespace GitUI.CommandsDialogs
             }
 
             toolStripStatusBranchIcon.AdaptImageLightness();
+
+            // Change the link color
+            commitAuthorStatus.LinkColor = ThemeModule.IsDarkTheme ? Color.CornflowerBlue : Color.FromArgb(0, 0, 0xff);
+            remoteNameLabel.LinkColor = ThemeModule.IsDarkTheme ? Color.CornflowerBlue : Color.Blue;
 
             splitLeft.Panel1.BackColor = OtherColors.PanelBorderColor;
             splitLeft.Panel2.BackColor = OtherColors.PanelBorderColor;
@@ -2820,6 +2830,11 @@ namespace GitUI.CommandsDialogs
             {
                 // always format from 0 to handle pasted text
                 FormatAllText(0);
+                if (!Message.Enabled && ThemeModule.IsDarkTheme)
+                {
+                    // TODO: How can the background be set when input is disabled?
+                    Message.ChangeTextColor(0, 0, Message.Text.Length, Color.Black);
+                }
             }
         }
 
@@ -3466,6 +3481,11 @@ namespace GitUI.CommandsDialogs
         {
             CommitKind = CommitKind.Normal;
             Message.Focus();
+            if (ThemeModule.IsDarkTheme)
+            {
+                // TODO: How can the background be set when input is disabled?
+                Message.ChangeTextColor(0, 0, Message.Text.Length, SystemColors.WindowText);
+            }
         }
 
         private void stopTrackingThisFileToolStripMenuItem_Click(object sender, EventArgs e)
