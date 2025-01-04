@@ -9,25 +9,37 @@ namespace GitUI.Theming
         public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
         private static ThemeRepository Repository { get; } = new();
-        public static bool IsDarkTheme { get; private set; }
 
         public static void Load()
         {
             new ThemeMigration(Repository).Migrate();
             Settings = LoadThemeSettings(Repository);
-            IsDarkTheme = Settings.Theme.GetNonEmptyColor(KnownColor.Window).GetBrightness() < 0.5;
+            bool isDarkMode = IsDarkColor(Settings.Theme.GetColor(AppColor.PanelBackground));
+            SystemColorMode mode = isDarkMode ? SystemColorMode.Dark : SystemColorMode.Classic;
+            Application.SetColorMode(mode);
             UpdateEditorSettings();
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
+
+            static bool IsDarkColor(Color color) => new HslColor(color).L < 0.5;
         }
 
         private static void UpdateEditorSettings()
         {
             DefaultHighlightingStrategy strategy = HighlightingManager.Manager.DefaultHighlighting;
             strategy.SetColorFor("Default",
-                new HighlightColor(SystemColors.WindowText, AppColor.EditorBackground.GetThemeColor(), false, false, adaptable: false));
+                new HighlightColor(SystemColors.WindowText, AppColor.EditorBackground.GetThemeColor(), bold: false, italic: false, adaptable: false));
             strategy.SetColorFor("LineNumbers",
-                new HighlightColor(SystemColors.GrayText, AppColor.LineNumberBackground.GetThemeColor(), false, false, adaptable: false));
+                new HighlightColor(SystemColors.GrayText, AppColor.LineNumberBackground.GetThemeColor(), bold: false, italic: false, adaptable: false));
+            if (Application.IsDarkModeEnabled)
+            {
+                strategy.SetColorFor("EOLMarkers",
+                    new HighlightColor(nameof(SystemColors.ControlDarkDark), bold: false, italic: false));
+                strategy.SetColorFor("SpaceMarkers",
+                    new HighlightColor(nameof(SystemColors.ControlDarkDark), bold: false, italic: false));
+                strategy.SetColorFor("TabMarkers",
+                    new HighlightColor(nameof(SystemColors.ControlDarkDark), bold: false, italic: false));
+            }
         }
 
         private static ThemeSettings LoadThemeSettings(IThemeRepository repository)

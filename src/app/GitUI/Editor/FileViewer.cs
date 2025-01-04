@@ -16,7 +16,6 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Properties;
-using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Util;
@@ -436,7 +435,9 @@ namespace GitUI.Editor
             // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
             // Allow user to override with difftool command line options.
             SetEnvironmentVariable("DFT_COLOR", "always");
-            SetEnvironmentVariable("DFT_BACKGROUND", ThemeModule.IsDarkTheme ? "dark" : "light");
+
+            // DFT_BACKGROUND="dark" applies bold-bold colors, "light" corresponds better with Git colors
+            SetEnvironmentVariable("DFT_BACKGROUND", "light");
             SetEnvironmentVariable("DFT_SYNTAX_HIGHLIGHT", ShowSyntaxHighlightingInDiff ? "on" : "off");
             int contextLines = ShowEntireFile ? 9000 : NumberOfContextLines;
             SetEnvironmentVariable("DFT_CONTEXT", contextLines.ToString());

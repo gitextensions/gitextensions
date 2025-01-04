@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs
                 AcceptButton = btnSolveConflicts;
                 btnSolveConflicts.Focus();
                 btnSolveConflicts.Text = _solveConflictsText2.Text;
-                MergeToolPanel.BackColor = Color.Yellow.AdaptBackColor();
+                MergeToolPanel.BackColor = Application.IsDarkModeEnabled ? Color.FromArgb(136, 136, 0) : Color.Yellow.AdaptBackColor();
             }
             else if (Module.InTheMiddleOfRebase())
             {

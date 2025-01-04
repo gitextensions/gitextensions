@@ -1,5 +1,4 @@
-﻿using GitUI.Theming;
-using static System.NativeMethods;
+﻿using static System.NativeMethods;
 
 namespace GitUI.UserControls
 {
@@ -19,7 +18,7 @@ namespace GitUI.UserControls
             BeginCreateHandle?.Invoke(this, EventArgs.Empty);
             base.CreateHandle();
 
-            if (!ThemeModule.IsDarkTheme)
+            if (!Application.IsDarkModeEnabled)
             {
                 // explorer style selection painting in left panel
                 // Not needed in dark mode, this is the same for "DarkMode_Explorer"

@@ -7,7 +7,6 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
-using GitExtUtils.GitUI.Theming;
 using GitUI.ScriptsEngine;
 using Microsoft;
 using ResourceManager;
@@ -177,7 +176,7 @@ Diff selection:
                 {
                     if (icon.Value is Bitmap bitmap)
                     {
-                        EmbeddedIcons.Images.Add(icon.Key.ToString()!, bitmap.AdaptLightness());
+                        EmbeddedIcons.Images.Add(icon.Key.ToString()!, bitmap);
                     }
                 }
 

@@ -21,8 +21,8 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
-            container.DescendantsToFix<GroupBox>()
-                 .ForEach(SetupGroupBox);
+            container.DescendantsToFix<DataGridView>()
+                .ForEach(SetupDataGridView);
             container.DescendantsToFix<TreeView>()
                 .ForEach(SetupTreeView);
             container.DescendantsToFix<TabControl>()
@@ -33,6 +33,8 @@ namespace GitExtUtils.GitUI.Theming
                 .ForEach(SetupLinkLabel);
             container.DescendantsToFix<ToolStrip>()
                 .ForEach(SetupToolStrip);
+            container.DescendantsToFix<Button>()
+                .ForEach(SetupButton);
             container.ContextMenusToFix()
                 .ForEach(SetupContextMenu);
         }
@@ -81,9 +83,15 @@ namespace GitExtUtils.GitUI.Theming
             label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
         }
 
-        private static void SetupGroupBox(this GroupBox box)
+        private static void SetupButton(this Button button)
         {
-            box.TouchForeColor();
+            // .net9 fix for https://github.com/dotnet/winforms/issues/11949 (only supposed to occur for 100%)
+            if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
+            {
+                // In addition to not setting the BackColor (TouchBackColor() will fix),
+                // FlatStyle.Standard buttons look ugly in dark mode
+                button.FlatStyle = FlatStyle.Flat;
+            }
         }
 
         private static void SetupTabControl(TabControl tabControl)
@@ -99,6 +107,12 @@ namespace GitExtUtils.GitUI.Theming
             {
                 page.TouchBackColor();
             }
+        }
+
+        private static void SetupDataGridView(DataGridView view)
+        {
+            view.EnableHeadersVisualStyles = false;
+            view.ColumnHeadersDefaultCellStyle.BackColor = view.ColumnHeadersDefaultCellStyle.BackColor;
         }
 
         private static void SetupTreeView(TreeView view)

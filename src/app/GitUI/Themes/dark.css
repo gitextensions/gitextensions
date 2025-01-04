@@ -1,17 +1,111 @@
 /* See (App install)\Themes\README.md for instructions on how to create or modify a theme */
 
+/* SystemColorMode.Dark listed for reference
+System colors cannot be changed, used when adapting colors (many occurrences are not themeable)
+
+ActiveBorder: ff464646
+ActiveCaption: ff3c5f78
+ActiveCaptionText: ffffffff
+AppWorkspace: ff3c3c3c
+ButtonFace: ff202020
+ButtonHighlight: ff101010
+ButtonShadow: ff464646
+Control: ff202020
+ControlDark: ff4a4a4a
+ControlDarkDark: ff5a5a5a
+ControlLight: ff2e2e2e
+ControlLightLight: ff1f1f1f
+ControlText: ffffffff
+Desktop: ff101010
+GradientActiveCaption: ff416482
+GradientInactiveCaption: ff557396
+GrayText: ff969696
+Highlight: ff2864b4
+HighlightText: ff000000
+HotTrack: ff2d5faf
+InactiveBorder: ff3c3f41
+InactiveCaption: ff374b5a
+InactiveCaptionText: ffbebebe
+Info: ff50503c
+InfoText: ffbebebe
+Menu: ff373737
+MenuBar: ff373737
+MenuHighlight: ff2a80d2
+MenuText: fff0f0f0
+ScrollBar: ff505050
+Window: ff323232
+WindowFrame: ff282828
+WindowText: fff0f0f0
+*/
+
 /* Application colors */
-.AuthoredHighlight           { color: #2a2b26; }
-.HighlightAllOccurences      { color: #606020; }
-.Branch                      { color: #00d76b; }
-.RemoteBranch                { color: #ff8080; } /* hsl(0,   100%, 75%) */
-.RemoteBranch.colorblind     { color: #0080ff; } /* hsl(210, 100%, 50%) */
-.Tag                         { color: #408080; }
-.OtherTag                    { color: #a1a1a1; }
-.DiffSection                 { color: #4f4f4f; }
-.AnsiTerminalRedBackNormal            { color: #4b0606; } /* hsl(0,   85%,  16%) */
-.AnsiTerminalRedBackNormal.colorblind { color: #080646; } /* hsl(242, 84%,  15%) */
-.AnsiTerminalRedBackBold              { color: #6c0404; } /* hsl(0,   93%,  22%) */
-.AnsiTerminalRedBackBold.colorblind   { color: #09058a; } /* hsl(242, 93%,  28%) */
-.AnsiTerminalGreenBackNormal          { color: #054224; }
-.AnsiTerminalGreenBackBold            { color: #046c38; }
+/* PanelBackground sets Windows Dark mode */
+.PanelBackground { color: #323232; }
+.EditorBackground { color: #323232; }
+.LineNumberBackground { color: #323232; }
+.AuthoredHighlight { color: #393920; }
+.HighlightAllOccurences { color: #1d4897; }
+.InactiveSelectionHighlight { color: #436689; }
+
+.GraphBranch1 { color: #db5b93; }
+.GraphBranch2 { color: #6fa7d4; }
+.GraphBranch3 { color: #1da31b; }
+.GraphBranch4 { color: #8a67cf; }
+.GraphBranch5 { color: #c02a22; }
+.GraphBranch6 { color: #17aa8f; }
+.GraphBranch7 { color: #ca9b0d; }
+.GraphBranch8 { } /* color not specified, color slot will not be used */
+.GraphNonRelativeBranch { color: #707070; }
+
+.Branch { color: #7FE28A; }
+.RemoteBranch { color: #fd9797; } /* hsl(0, 100%, 70%) */
+.RemoteBranch.colorblind { color: #0080ff; } /* hsl(210, 100%, 50%) */
+.Tag { color: #40BAF7; }
+.OtherTag { color: #cfb3b3; }
+.DiffSection { color: #5f5e5e; }
+
+/* translation of terminal (cli) ansi color output sequences */
+/* Named 3/4 bit colors from the "theme" at https://github.com/mintty/mintty/blob/master/themes/kohlrausch */
+/* Adjusted to match dark apps */
+
+.AnsiTerminalBlackForeNormal { color: #000000; }
+.AnsiTerminalBlackBackNormal { color: #606060; }
+.AnsiTerminalBlackForeBold { color: #000000; }
+.AnsiTerminalBlackBackBold { color: #7f7f7f; }
+
+.AnsiTerminalRedForeNormal { color: #a21e29; }
+.AnsiTerminalRedBackNormal { color: #620707; }
+.AnsiTerminalRedBackNormal.colorblind { color: #080646; }
+.AnsiTerminalRedForeBold { color: #ff7676; }
+.AnsiTerminalRedBackBold { color: #920202; }
+.AnsiTerminalRedBackBold.colorblind { color: #09058a; }
+
+.AnsiTerminalGreenForeNormal { color: #1c9b02; }
+.AnsiTerminalGreenForeBold { color: #00f200; }
+.AnsiTerminalGreenBackNormal { color: #086738; }
+.AnsiTerminalGreenBackBold { color: #008f37; }
+
+.AnsiTerminalYellowForeNormal { color: #7c6c19; }
+.AnsiTerminalYellowBackNormal { color: #a1ac09; }
+.AnsiTerminalYellowForeBold { color: #e2e211; }
+.AnsiTerminalYellowBackBold { color: #d3d30e; }
+
+.AnsiTerminalBlueForeNormal { color: #5368d1; }
+.AnsiTerminalBlueBackNormal { color: #6873d8; }
+.AnsiTerminalBlueForeBold { color: #6282ff; }
+.AnsiTerminalBlueBackBold { color: #9090ff; }
+
+.AnsiTerminalMagentaForeNormal { color: #873f96; }
+.AnsiTerminalMagentaBackNormal { color: #a53fb9; }
+.AnsiTerminalMagentaForeBold { color: #ff70ff; }
+.AnsiTerminalMagentaBackBold { color: #c01ac0; }
+
+.AnsiTerminalCyanForeNormal { color: #007e73; }
+.AnsiTerminalCyanBackNormal { color: #039185; }
+.AnsiTerminalCyanForeBold { color: #00f0f0; }
+.AnsiTerminalCyanBackBold { color: #00dbdb; }
+
+.AnsiTerminalWhiteForeNormal { color: #bfbfbf; }
+.AnsiTerminalWhiteBackNormal { color: #bfbfbf; }
+.AnsiTerminalWhiteForeBold { color: #ffffff; }
+.AnsiTerminalWhiteBackBold { color: #ffffff; }

@@ -314,8 +314,11 @@
       <Component Id="Themes.light_plus.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\light+.css" />
       </Component>
-      <Component Id="Themes.highcontrast_dark.css" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Themes\highcontrast_dark.css" />
+      <Component Id="Themes.dark.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\dark.css" />
+      </Component>
+      <Component Id="Themes.dark_plus.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\dark+.css" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
@@ -606,8 +609,9 @@
     <ComponentGroup Id="Component.Themes">
       <ComponentRef Id="Themes.README.md" />
       <ComponentRef Id="Themes.invariant.css" />
-      <ComponentRef Id="Themes.highcontrast_dark.css" />
       <ComponentRef Id="Themes.light_plus.css" />
+      <ComponentRef Id="Themes.dark.css" />
+      <ComponentRef Id="Themes.dark_plus.css" />
     </ComponentGroup>
     <ComponentGroup Id="Component.Translation">
       <ComponentRef Id="English.gif" />

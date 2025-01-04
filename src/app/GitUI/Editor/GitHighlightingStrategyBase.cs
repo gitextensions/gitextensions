@@ -1,5 +1,4 @@
 ﻿using GitExtensions.Extensibility.Git;
-using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor

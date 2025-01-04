@@ -1609,7 +1609,7 @@ namespace GitUI
 
             Rectangle textRect = new(item.Bounds.X - 1, item.Bounds.Top - 1, item.Bounds.Width, item.Bounds.Height);
 
-            Color grayTextColor = selected && Focused
+            Color grayTextColor = selected && Focused && !Application.IsDarkModeEnabled
                 ? ColorHelper.GetHighlightGrayTextColor(
                     backgroundColorName: KnownColor.Window,
                     textColorName: KnownColor.WindowText,
@@ -1617,7 +1617,9 @@ namespace GitUI
                 : SystemColors.GrayText;
 
             Color textColor = selected && Focused
-                ? SystemColors.HighlightText
+                ? (Application.IsDarkModeEnabled
+                    ? SystemColors.ControlText
+                    : SystemColors.HighlightText)
                 : SystemColors.WindowText;
 
             if (!string.IsNullOrEmpty(prefix))
