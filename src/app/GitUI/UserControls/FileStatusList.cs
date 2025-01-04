@@ -379,6 +379,7 @@ namespace GitUI
             cboFindInCommitFilesGitGrep.Visible = visible;
             if (visible)
             {
+                // Focus the box if it is becoming shown, but not on init of parent controls (which broke the form's focus management)
                 if (ActiveControl is not null)
                 {
                     ActiveControl = cboFindInCommitFilesGitGrep;
