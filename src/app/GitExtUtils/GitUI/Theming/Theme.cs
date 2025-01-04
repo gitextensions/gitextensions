@@ -55,7 +55,7 @@
         /// </summary>
         private static IReadOnlyCollection<KnownColor> SysColorNames { get; } =
             new HashSet<KnownColor>(
-                Enum.GetValues(typeof(KnownColor))
+                Enum.GetValues<KnownColor>()
                     .Cast<KnownColor>()
                     .Where(c => IsSystemColor(c)));
 
