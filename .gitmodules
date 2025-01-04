@@ -7,6 +7,3 @@
 [submodule "Externals/ICSharpCode.TextEditor"]
 	path = externals/ICSharpCode.TextEditor
 	url = ../../gitextensions/ICSharpCode.TextEditor.git
-[submodule "Externals/EasyHook"]
-	path = externals/EasyHook
-	url = ../../gitextensions/EasyHook.git

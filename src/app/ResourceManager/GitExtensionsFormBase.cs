@@ -39,10 +39,7 @@ namespace ResourceManager
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
             Icon = Resources.GitExtensionsLogoIcon;
-
-#if !SUPPORT_THEME_HOOKS
             Load += (s, e) => ((Form)s!).FixVisualStyle();
-#endif
         }
 
         /// <summary>

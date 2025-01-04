@@ -50,23 +50,4 @@
             Value="$(ProbingPrivatePath.ToString())" />
   </Target>
 
-  <!--
-
-    Disabled until we find a way to utilise it under .NET
-
-    ============================================================
-                       _BuildEasyHookDll
-
-    Builds EasyHook C++ project in x86 and x64 and copies the outputs to the app's target folder.
-    ============================================================
-  <Target Name="_BuildEasyHookDll" Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.Default.props')" AfterTargets="AfterBuild">
-    <!- - Build x64 version - ->
-    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=x64" />
-    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x64\EasyHook64.dll" DestinationFolder="$(TargetDir)" />
-    <!- - Build x86 version - ->
-    <MSBuild Projects="$(SolutionDir)\Externals\EasyHook\EasyHookDll\EasyHookDll.vcxproj" Properties="Configuration=Release;Platform=Win32" />
-    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x86\EasyHook32.dll" DestinationFolder="$(TargetDir)" />
-  </Target>
-    -->
-
 </Project>

@@ -13,7 +13,6 @@ namespace GitUI.Theming
     public class ThemeLoader : IThemeLoader
     {
         private const string ClassSelector = ".";
-        private const string ColorProperty = "color";
 
         private readonly StylesheetParser _parser;
         private readonly IThemeCssUrlResolver _urlResolver;

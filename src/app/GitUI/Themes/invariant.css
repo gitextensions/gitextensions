@@ -1,11 +1,15 @@
 ﻿/* See (App install)\Themes\README.md for instructions on how to create or modify a theme */
 /* IMPORTANT: DO NOT MODIFY THIS FILE! */
 
-/* System colors */
+/* System colors cannot be overridden */
+/* These Windows default values are required to adjust invariant (hardcoded) colors for themes */
 .ActiveBorder            { color: #b4b4b4; }
 .ActiveCaption           { color: #99b4d1; }
 .ActiveCaptionText       { color: #000000; }
 .AppWorkspace            { color: #ababab; }
+.ButtonFace              { color: #f0f0f0; }
+.ButtonHighlight         { color: #ffffff; }
+.ButtonShadow            { color: #a0a0a0; }
 .Control                 { color: #f0f0f0; }
 .ControlDark             { color: #a0a0a0; }
 .ControlDarkDark         { color: #696969; }
@@ -13,6 +17,8 @@
 .ControlLightLight       { color: #ffffff; }
 .ControlText             { color: #000000; }
 .Desktop                 { color: #000000; }
+.GradientActiveCaption   { color: #b9d1ea; }
+.GradientInactiveCaption { color: #d7e4f2; }
 .GrayText                { color: #6d6d6d; }
 .Highlight               { color: #0078d7; }
 .HighlightText           { color: #ffffff; }
@@ -23,15 +29,13 @@
 .Info                    { color: #ffffe1; }
 .InfoText                { color: #000000; }
 .Menu                    { color: #f0f0f0; }
+.MenuBar                 { color: #f0f0f0; }
+.MenuHighlight           { color: #0078d7; }
 .MenuText                { color: #000000; }
 .ScrollBar               { color: #c8c8c8; }
 .Window                  { color: #ffffff; }
 .WindowFrame             { color: #646464; }
 .WindowText              { color: #000000; }
-.GradientActiveCaption   { color: #b9d1ea; }
-.GradientInactiveCaption { color: #d7e4f2; }
-.MenuBar                 { color: #f0f0f0; }
-.MenuHighlight           { color: #3399ff; }
 
 /* Application colors */
 .OtherTag                { color: #808080; }
@@ -62,32 +66,39 @@
 .AnsiTerminalBlackBackNormal { color: #606060; }
 .AnsiTerminalBlackForeBold { color: #404040; }
 .AnsiTerminalBlackBackBold { color: #404040; }
+
 .AnsiTerminalRedForeNormal { color: #d3000B; }
 .AnsiTerminalRedBackNormal { color: #ffc8c8; }
 .AnsiTerminalRedBackNormal.colorblind { color: #94cbff; }
 .AnsiTerminalRedForeBold { color: #ff5e5e; }
 .AnsiTerminalRedBackBold { color: #ffa5a5; }
 .AnsiTerminalRedBackBold.colorblind { color: #4da6ff; }
+
 .AnsiTerminalGreenForeNormal { color: #189100; }
 .AnsiTerminalGreenBackNormal { color: #c8ffc8; }
 .AnsiTerminalGreenForeBold { color: #21c800; }
 .AnsiTerminalGreenBackBold { color: #87ff87; }
+
 .AnsiTerminalYellowForeNormal { color: #c0a000; }
 .AnsiTerminalYellowBackNormal { color: #f2f293; }
 .AnsiTerminalYellowForeBold { color: #e2c73f; }
 .AnsiTerminalYellowBackBold { color: #ffff00; }
+
 .AnsiTerminalBlueForeNormal { color: #005dff; }
 .AnsiTerminalBlueBackNormal { color: #c8d0f4; }
 .AnsiTerminalBlueForeBold { color: #6080ff; }
 .AnsiTerminalBlueBackBold { color: #93abff; }
+
 .AnsiTerminalMagentaForeNormal { color: #b148c6; }
 .AnsiTerminalMagentaBackNormal { color: #f6ceff; }
 .AnsiTerminalMagentaForeBold { color: #ff6bff; }
 .AnsiTerminalMagentaBackBold { color: #eb9bff; }
+
 .AnsiTerminalCyanForeNormal { color: #00a89a; }
 .AnsiTerminalCyanBackNormal { color: #c9fff9; }
 .AnsiTerminalCyanForeBold { color: #00e0e0; }
 .AnsiTerminalCyanBackBold { color: #8cffef; }
+
 .AnsiTerminalWhiteForeNormal { color: #bfbfbf; }
 .AnsiTerminalWhiteBackNormal { color: #e0e0e0; }
 .AnsiTerminalWhiteForeBold { color: #ffffff; }

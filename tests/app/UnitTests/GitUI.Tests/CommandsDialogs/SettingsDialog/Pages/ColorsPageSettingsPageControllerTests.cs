@@ -15,8 +15,6 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
         [SetUp]
         public void Setup()
         {
-            ThemeModule.TestAccessor.SuppressWin32Hooks = true;
-
             MockColorsSettingsPage page = new();
             IThemeRepository themeRepository = Substitute.For<IThemeRepository>();
             IThemePathProvider themePathProvider = Substitute.For<IThemePathProvider>();
