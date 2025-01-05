@@ -90,12 +90,6 @@ public partial class GrepHighlightService : TextHighlightService
         {
             if (line == "--")
             {
-                if (sb.Length > 0)
-                {
-                    _diffLinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, false));
-                    sb.Append('\n');
-                }
-
                 continue;
             }
 
@@ -115,8 +109,7 @@ public partial class GrepHighlightService : TextHighlightService
                 continue;
             }
 
-            bool isMatch = match.Groups["kind"].Success && match.Groups["kind"].Value == ":";
-            _diffLinesInfo.Add(GetDiffLineInfo(lineNo, isMatch));
+            _diffLinesInfo.Add(GetDiffLineInfo(lineNo, match.Groups["kind"].Success ? match.Groups["kind"].Value : ""));
             string grepText = match.Groups["text"].Value;
 
             AnsiEscapeUtilities.ParseEscape(grepText, sb, _textMarkers);
@@ -138,15 +131,15 @@ public partial class GrepHighlightService : TextHighlightService
     /// for git-diff this is parsed dynamically.
     /// </summary>
     /// <returns>The type of contents for all editor lines.</returns>
-    private DiffLineInfo GetDiffLineInfo(int lineno, bool match)
+    private DiffLineInfo GetDiffLineInfo(int lineno, string kind)
         => new()
         {
             LineNumInDiff = _diffLinesInfo.DiffLines.Count + 1,
             LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
             RightLineNumber = lineno,
-            LineType = lineno == DiffLineInfo.NotApplicableLineNum
+            LineType = lineno == DiffLineInfo.NotApplicableLineNum || kind == "="
                     ? DiffLineType.Header
-                    : match
+                    : kind == ":"
                         ? DiffLineType.Grep
                         : DiffLineType.Context
         };
