@@ -11,6 +11,11 @@ namespace GitUI.Editor.Diff;
 
 public partial class GrepHighlightService : TextHighlightService
 {
+    private const string _grepResultKind_FunctionHeader = "=";
+    private const string _grepResultKind_Match = ":";
+    private const string _grepResultKind_Separator = "--";
+    private const string _grepResultKind_Unknown = "";
+
     private readonly List<TextMarker> _textMarkers = [];
     private DiffLinesInfo _diffLinesInfo = new();
 
@@ -86,10 +91,17 @@ public partial class GrepHighlightService : TextHighlightService
     private void SetText(ref string text)
     {
         StringBuilder sb = new(text.Length);
+        bool keepSeparatorLines = true;
         foreach (string line in text.LazySplit('\n'))
         {
-            if (line == "--")
+            if (line == _grepResultKind_Separator)
             {
+                if (keepSeparatorLines && sb.Length > 0)
+                {
+                    _diffLinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, _grepResultKind_Separator));
+                    sb.Append('\n');
+                }
+
                 continue;
             }
 
@@ -109,8 +121,15 @@ public partial class GrepHighlightService : TextHighlightService
                 continue;
             }
 
-            _diffLinesInfo.Add(GetDiffLineInfo(lineNo, match.Groups["kind"].Success ? match.Groups["kind"].Value : ""));
             string grepText = match.Groups["text"].Value;
+            string kind = match.Groups["kind"].Success ? match.Groups["kind"].Value : _grepResultKind_Unknown;
+
+            if (kind == _grepResultKind_FunctionHeader)
+            {
+                keepSeparatorLines = false;
+            }
+
+            _diffLinesInfo.Add(GetDiffLineInfo(lineNo, kind));
 
             AnsiEscapeUtilities.ParseEscape(grepText, sb, _textMarkers);
             sb.Append('\n');
@@ -137,9 +156,9 @@ public partial class GrepHighlightService : TextHighlightService
             LineNumInDiff = _diffLinesInfo.DiffLines.Count + 1,
             LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
             RightLineNumber = lineno,
-            LineType = lineno == DiffLineInfo.NotApplicableLineNum || kind == "="
+            LineType = lineno == DiffLineInfo.NotApplicableLineNum || kind == _grepResultKind_FunctionHeader
                     ? DiffLineType.Header
-                    : kind == ":"
+                    : kind == _grepResultKind_Match
                         ? DiffLineType.Grep
                         : DiffLineType.Context
         };
