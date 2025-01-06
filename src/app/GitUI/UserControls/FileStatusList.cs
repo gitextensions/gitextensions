@@ -734,7 +734,7 @@ namespace GitUI
             FileStatusListLoading();
             _enableDisablingShowDiffForAllParents = true;
             _diffCalculator.SetDiff(revisions, headId: null, allowMultiDiff: false);
-            UpdateFileStatusListView(_diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken));
+            UpdateFileStatusListView(_diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken), cancellationToken: cancellationToken);
         }
 
         public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
@@ -752,7 +752,7 @@ namespace GitUI
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             bool withGitGrep = !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
-            UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: withGitGrep ? GitGrepState.Preparing : GitGrepState.None);
+            UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: withGitGrep ? GitGrepState.Preparing : GitGrepState.None, cancellationToken: cancellationToken);
 
             // git grep, fetched as a separate step
             if (!withGitGrep)
@@ -766,7 +766,7 @@ namespace GitUI
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
-            UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: GitGrepState.Provided);
+            UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: GitGrepState.Provided, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1020,7 +1020,7 @@ namespace GitUI
                 : cboFindInCommitFilesGitGrep.Visible ? cboFindInCommitFilesGitGrep.Bottom + cboFindInCommitFilesGitGrep.Margin.Top + cboFindInCommitFilesGitGrep.Margin.Bottom
                 : 0;
 
-        private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false, GitGrepState gitGrepState = GitGrepState.Unknown)
+        private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false, GitGrepState gitGrepState = GitGrepState.Unknown, CancellationToken cancellationToken = default)
         {
             HashSet<GitItemStatus>? previouslySelectedItems = null;
             if (updateCausedByFilter)
@@ -1030,7 +1030,7 @@ namespace GitUI
                     .ToHashSet();
             }
 
-            (List<TreeNodeInfo> nodes, HashSet<TreeNode> toBeSelectedItems, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, gitGrepState, _noItemStatuses);
+            (List<TreeNodeInfo> nodes, HashSet<TreeNode> toBeSelectedItems, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, gitGrepState, _noItemStatuses, cancellationToken);
 
             GitItemStatusesWithDescription = items;
             if (filesPresent)
@@ -1121,7 +1121,8 @@ namespace GitUI
             GroupBy? groupBy,
             bool flatList,
             GitGrepState gitGrepState,
-            IReadOnlyList<GitItemStatus> noItemStatuses)
+            IReadOnlyList<GitItemStatus> noItemStatuses,
+            CancellationToken cancellationToken)
         {
             List<TreeNodeInfo> rootNodes = [];
             HashSet<TreeNode> toBeSelectedItems = [];
@@ -1152,7 +1153,7 @@ namespace GitUI
                 TreeNode diffGroup
                     = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
                         ? CreateNode(i.Statuses[0], i)
-                        : CreateGroup(emptyGroup ? noItemStatuses : i.Statuses.Where(isFilterMatch), i);
+                        : CreateGroup(emptyGroup ? noItemStatuses : i.Statuses.Where(isFilterMatch), i, cancellationToken);
 
                 if (showDiffGroups)
                 {
@@ -1176,7 +1177,7 @@ namespace GitUI
 
             return (rootNodes, toBeSelectedItems, showDiffGroups, filesPresent);
 
-            TreeNode CreateGroup(IEnumerable<GitItemStatus> itemStatuses, FileStatusWithDescription fileStatusWithDescription)
+            TreeNode CreateGroup(IEnumerable<GitItemStatus> itemStatuses, FileStatusWithDescription fileStatusWithDescription, CancellationToken cancellationToken)
             {
                 TreeNode diffGroup;
 
@@ -1223,6 +1224,7 @@ namespace GitUI
 
                 TreeNode CreateCountedNode(GitItemStatus item)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     ++shownCount;
                     return CreateNode(item, fileStatusWithDescription);
                 }
@@ -1496,7 +1498,7 @@ namespace GitUI
                         IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: true, refreshGrep: false, cancellationToken);
 
                         await this.SwitchToMainThreadAsync(cancellationToken);
-                        UpdateFileStatusListView(gitItemStatusesWithDescription);
+                        UpdateFileStatusListView(gitItemStatusesWithDescription, cancellationToken: cancellationToken);
                     });
                 };
                 cm.Items.Add(showAllDifferencesItem);
@@ -1933,7 +1935,7 @@ namespace GitUI
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 cboFindInCommitFilesGitGrep.BackColor = string.IsNullOrEmpty(search) ? SystemColors.Window : _activeInputColor;
                 WorkaroundTooEarlyDrawing();
-                UpdateFileStatusListView(gitItemStatusesWithDescription);
+                UpdateFileStatusListView(gitItemStatusesWithDescription, cancellationToken: cancellationToken);
 
                 if (string.IsNullOrEmpty(search))
                 {
