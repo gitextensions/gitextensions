@@ -71,6 +71,7 @@ public partial class GrepHighlightService : TextHighlightService
         commandConfiguration.Add(new GitConfigItem("color.grep.lineNumber", ""), "grep");
         commandConfiguration.Add(new GitConfigItem("color.grep.separator", ""), "grep");
 
+        SetIfUnsetInGit(key: "color.grep.function", value: "white dim reverse");
         if (AppSettings.ReverseGitColoring.Value)
         {
             SetIfUnsetInGit(key: "color.grep.matchSelected", value: "red bold reverse");
@@ -91,15 +92,15 @@ public partial class GrepHighlightService : TextHighlightService
     private void SetText(ref string text)
     {
         StringBuilder sb = new(text.Length);
-        bool keepSeparatorLines = true;
+        bool skipNextSeparator = false;
+        bool pendingSeparator = false;
         foreach (string line in text.LazySplit('\n'))
         {
             if (line == _grepResultKind_Separator)
             {
-                if (keepSeparatorLines && sb.Length > 0)
+                if (!skipNextSeparator && sb.Length > 0)
                 {
-                    _diffLinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, _grepResultKind_Separator));
-                    sb.Append('\n');
+                    pendingSeparator = true;
                 }
 
                 continue;
@@ -116,19 +117,23 @@ public partial class GrepHighlightService : TextHighlightService
                 }
 
                 // git-grep emits an empty line last, should not be displayed.
-                // Other occurrences should not occur, just print them to debug.
+                // Other occurrences should not occur, just print them to debug (no lineno to not add extra line).
                 sb.Append(line);
+                pendingSeparator = false;
                 continue;
             }
 
             string grepText = match.Groups["text"].Value;
             string kind = match.Groups["kind"].Success ? match.Groups["kind"].Value : _grepResultKind_Unknown;
 
-            if (kind == _grepResultKind_FunctionHeader)
+            skipNextSeparator = kind == _grepResultKind_FunctionHeader;
+            if (pendingSeparator && !skipNextSeparator)
             {
-                keepSeparatorLines = false;
+                _diffLinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, _grepResultKind_Separator));
+                sb.Append('\n');
             }
 
+            pendingSeparator = false;
             _diffLinesInfo.Add(GetDiffLineInfo(lineNo, kind));
 
             AnsiEscapeUtilities.ParseEscape(grepText, sb, _textMarkers);
