@@ -112,7 +112,7 @@
 
         public static Color AdaptColor(Color original, bool isForeground)
         {
-            if (IsDefaultTheme())
+            if (IsDefaultTheme)
             {
                 return original;
             }
@@ -200,7 +200,7 @@
 
         public static Bitmap AdaptLightness(this Bitmap original)
         {
-            if (IsDefaultTheme())
+            if (IsDefaultTheme)
             {
                 return original;
             }
@@ -331,7 +331,7 @@
         /// Note that the theme is parsed, so ThemeSettings.Default is another instance.
         /// </summary>
         /// <returns><see langword="true"/> if the theme is default; otherwise <see langword="false"/>.</returns>
-        private static bool IsDefaultTheme() => string.IsNullOrWhiteSpace(ThemeSettings.Theme.Id.Name);
+        private static bool IsDefaultTheme => string.IsNullOrWhiteSpace(ThemeSettings.Theme.Id.Name);
 
         public static Color Lerp(Color colour, Color to, float amount)
         {
