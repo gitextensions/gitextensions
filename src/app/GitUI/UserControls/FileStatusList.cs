@@ -1446,7 +1446,7 @@ namespace GitUI
 
         public void SelectPreviousVisibleItem()
         {
-            if (SelectNextItem(backwards: true, loop: true) is null)
+            if (SelectNextItem(backwards: true, loop: false) is null)
             {
                 SelectFirstVisibleItem();
             }
@@ -1454,7 +1454,7 @@ namespace GitUI
 
         public void SelectNextVisibleItem()
         {
-            if (SelectNextItem(backwards: false, loop: true) is null)
+            if (SelectNextItem(backwards: false, loop: false) is null)
             {
                 SelectFirstVisibleItem();
             }
