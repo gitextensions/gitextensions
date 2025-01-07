@@ -51,6 +51,7 @@
 .GraphBranch6 { color: #1ac6a6; }
 .GraphBranch7 { color: #e7b00f; }
 .GraphBranch8 { } /* color not specified, color slot will not be used */
+.GraphBranchNonRelative { color: #d3d3d3; }
 
 .Branch { color: #008000; }
 .RemoteBranch { color: #8b0009; }

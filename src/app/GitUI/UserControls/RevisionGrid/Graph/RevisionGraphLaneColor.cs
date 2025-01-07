@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return Math.Abs(seed) % PresetGraphBrushes.Count;
         }
 
-        public static Color NonRelativeColor { get; } = Color.LightGray;
+        public static Color NonRelativeColor { get; } = AppColor.GraphBranchNonRelative.GetThemeColor();
 
         internal static Brush NonRelativeBrush { get; }
 

@@ -23,6 +23,7 @@
         GraphBranch6,
         GraphBranch7,
         GraphBranch8,
+        GraphBranchNonRelative,
         Branch,
         RemoteBranch,
         DiffSection,
