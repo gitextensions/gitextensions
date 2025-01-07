@@ -41,8 +41,18 @@ public class MultiSelectTreeView : NativeTreeView
             try
             {
                 _settingFocusedNode = true;
+
+                if (value is not null)
+                {
+                    if (value.TreeView is null)
+                    {
+                        this.ExpandTopDownTo(value);
+                    }
+
+                    value.EnsureVerticallyVisible();
+                }
+
                 base.SelectedNode = value;
-                value?.EnsureVerticallyVisible();
             }
             finally
             {

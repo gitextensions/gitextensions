@@ -51,13 +51,7 @@ partial class FileStatusList
 
     private void Expand_Click(object sender, EventArgs e)
     {
-        if (FileStatusListView.FocusedNode is not TreeNode node)
-        {
-            return;
-        }
-
-        node.ExpandAll();
-        FileStatusListView.FocusedNode = node;
+        ExpandAll(FileStatusListView.FocusedNode);
     }
 
     private void SelectAll_Click(object sender, EventArgs e)
@@ -67,7 +61,7 @@ partial class FileStatusList
             return;
         }
 
-        node.ExpandAll();
+        ExpandAll(node);
         FileStatusListView.SetSelectedNodes(node.Items().Where(node => node.Tag is FileStatusItem).ToHashSet(), focusedNode: node);
     }
 }

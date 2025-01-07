@@ -1,11 +1,19 @@
-﻿namespace GitUI.UserControls;
+﻿using GitExtensions.Extensibility;
+
+namespace GitUI.UserControls;
 
 public static class TreeViewExtensions
 {
     public static void EnsureVerticallyVisible(this TreeNode? node)
     {
-        if (node?.TreeView is not TreeView treeView)
+        if (node is null)
         {
+            return;
+        }
+
+        if (node.TreeView is not TreeView treeView)
+        {
+            DebugHelpers.Fail(@$"{nameof(EnsureVerticallyVisible)}: Node ""{node.Text}"" does not belong to a TreeView.");
             return;
         }
 
@@ -13,6 +21,49 @@ public static class TreeViewExtensions
 
         // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal scroll back to 0.
         treeView.ScrollLeftMost();
+    }
+
+    public static void ExpandTopDownTo(this TreeView? treeView, TreeNode node)
+    {
+        if (treeView is null)
+        {
+            return;
+        }
+
+        List<TreeNode> parents = [];
+        AddParents(parents, node, treeView.Nodes);
+        foreach (TreeNode parent in parents)
+        {
+            parent.Expand();
+        }
+
+        return;
+
+        static bool AddParents(List<TreeNode> parentsOfNode, TreeNode node, TreeNodeCollection nodes)
+        {
+            IEnumerable<TreeNode> actualNodes = GetActualNodes(nodes);
+            foreach (TreeNode parent in actualNodes)
+            {
+                if (parent == node)
+                {
+                    return true;
+                }
+
+                if (parent.Nodes.Count == 0)
+                {
+                    continue;
+                }
+
+                bool found = AddParents(parentsOfNode, node, parent.Nodes);
+                if (found)
+                {
+                    parentsOfNode.Insert(0, parent);
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 
     /// <summary>
@@ -73,17 +124,7 @@ public static class TreeViewExtensions
     }
 
     public static IEnumerable<TreeNode> Items(this TreeView? treeView)
-    {
-        if (treeView is null)
-        {
-            yield break;
-        }
-
-        foreach (TreeNode node in Recurse(treeView.Nodes))
-        {
-            yield return node;
-        }
-    }
+        => treeView is null ? [] : Recurse(treeView.Nodes);
 
     public static IEnumerable<TreeNode> Items(this TreeNode? node)
     {
@@ -142,6 +183,11 @@ public static class TreeViewExtensions
         }
     }
 
+    private static IEnumerable<TreeNode> GetActualNodes(TreeNodeCollection nodes)
+        => nodes.Count == 1 && nodes[0].Tag is TreeNode[] actualNodes
+            ? actualNodes
+            : nodes.Cast<TreeNode>();
+
     /// <summary>
     ///  Returns the Tag of the nodes which can be casted to T - without iterating subnodes.
     /// </summary>
@@ -150,7 +196,7 @@ public static class TreeViewExtensions
 
     private static IEnumerable<TreeNode> Recurse(TreeNodeCollection nodes)
     {
-        foreach (TreeNode node in nodes)
+        foreach (TreeNode node in GetActualNodes(nodes))
         {
             foreach (TreeNode treeNode in node.Items())
             {
