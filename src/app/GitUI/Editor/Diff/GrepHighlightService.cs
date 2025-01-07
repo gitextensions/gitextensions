@@ -11,6 +11,11 @@ namespace GitUI.Editor.Diff;
 
 public partial class GrepHighlightService : TextHighlightService
 {
+    private const string _grepResultKind_FunctionHeader = "=";
+    private const string _grepResultKind_Match = ":";
+    private const string _grepResultKind_Separator = "--";
+    private const string _grepResultKind_Unknown = "";
+
     private readonly List<TextMarker> _textMarkers = [];
     private DiffLinesInfo _diffLinesInfo = new();
 
@@ -66,6 +71,7 @@ public partial class GrepHighlightService : TextHighlightService
         commandConfiguration.Add(new GitConfigItem("color.grep.lineNumber", ""), "grep");
         commandConfiguration.Add(new GitConfigItem("color.grep.separator", ""), "grep");
 
+        SetIfUnsetInGit(key: "color.grep.function", value: "white dim reverse");
         if (AppSettings.ReverseGitColoring.Value)
         {
             SetIfUnsetInGit(key: "color.grep.matchSelected", value: "red bold reverse");
@@ -86,14 +92,15 @@ public partial class GrepHighlightService : TextHighlightService
     private void SetText(ref string text)
     {
         StringBuilder sb = new(text.Length);
+        bool skipNextSeparator = false;
+        bool pendingSeparator = false;
         foreach (string line in text.LazySplit('\n'))
         {
-            if (line == "--")
+            if (line == _grepResultKind_Separator)
             {
-                if (sb.Length > 0)
+                if (!skipNextSeparator && sb.Length > 0)
                 {
-                    _diffLinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, false));
-                    sb.Append('\n');
+                    pendingSeparator = true;
                 }
 
                 continue;
@@ -110,14 +117,24 @@ public partial class GrepHighlightService : TextHighlightService
                 }
 
                 // git-grep emits an empty line last, should not be displayed.
-                // Other occurrences should not occur, just print them to debug.
+                // Other occurrences should not occur, just print them to debug (no lineno to not add extra line).
                 sb.Append(line);
+                pendingSeparator = false;
                 continue;
             }
 
-            bool isMatch = match.Groups["kind"].Success && match.Groups["kind"].Value == ":";
-            _diffLinesInfo.Add(GetDiffLineInfo(lineNo, isMatch));
             string grepText = match.Groups["text"].Value;
+            string kind = match.Groups["kind"].Success ? match.Groups["kind"].Value : _grepResultKind_Unknown;
+
+            skipNextSeparator = kind == _grepResultKind_FunctionHeader;
+            if (pendingSeparator && !skipNextSeparator)
+            {
+                _diffLinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, _grepResultKind_Separator));
+                sb.Append('\n');
+            }
+
+            pendingSeparator = false;
+            _diffLinesInfo.Add(GetDiffLineInfo(lineNo, kind));
 
             AnsiEscapeUtilities.ParseEscape(grepText, sb, _textMarkers);
             sb.Append('\n');
@@ -138,15 +155,15 @@ public partial class GrepHighlightService : TextHighlightService
     /// for git-diff this is parsed dynamically.
     /// </summary>
     /// <returns>The type of contents for all editor lines.</returns>
-    private DiffLineInfo GetDiffLineInfo(int lineno, bool match)
+    private DiffLineInfo GetDiffLineInfo(int lineno, string kind)
         => new()
         {
             LineNumInDiff = _diffLinesInfo.DiffLines.Count + 1,
             LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
             RightLineNumber = lineno,
-            LineType = lineno == DiffLineInfo.NotApplicableLineNum
+            LineType = lineno == DiffLineInfo.NotApplicableLineNum || kind == _grepResultKind_FunctionHeader
                     ? DiffLineType.Header
-                    : match
+                    : kind == _grepResultKind_Match
                         ? DiffLineType.Grep
                         : DiffLineType.Context
         };

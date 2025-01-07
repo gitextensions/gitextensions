@@ -509,6 +509,7 @@ public interface IGitModule
         ArgumentString extraArgs,
         string grepString,
         bool useGitColoring,
+        bool showFunctionName,
         IGitCommandConfiguration commandConfiguration,
         CancellationToken cancellationToken);
 

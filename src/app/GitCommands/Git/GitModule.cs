@@ -2380,6 +2380,7 @@ namespace GitCommands
             ArgumentString extraArgs,
             string grepString,
             bool useGitColoring,
+            bool showFunctionName,
             IGitCommandConfiguration commandConfiguration,
             CancellationToken cancellationToken)
         {
@@ -2388,6 +2389,7 @@ namespace GitCommands
             GitArgumentBuilder args = new("grep", commandConfiguration: commandConfiguration)
             {
                 "--line-number",
+                { showFunctionName, "--show-function" },
                 { !useGitColoring, "--column" },
                 { useGitColoring, "--color=always" },
                 extraArgs,

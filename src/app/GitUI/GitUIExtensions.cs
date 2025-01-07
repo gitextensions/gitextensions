@@ -110,6 +110,7 @@ namespace GitUI
                         fileViewer.GetExtraGrepArguments(),
                         item.Item.GrepString,
                         useGitColoring: true,
+                        showFunctionName: true,
                         commandConfiguration: commandConfiguration,
                         cancellationToken);
 
