@@ -21,7 +21,7 @@
                 { AppColor.GraphBranch6, Color.FromArgb(0x1a, 0xc6, 0xa6) },
                 { AppColor.GraphBranch7, Color.FromArgb(0xe7, 0xb0, 0x0f) },
                 { AppColor.GraphBranch8, Color.Empty },
-                { AppColor.GraphBranchNonRelative, Color.LightGray },
+                { AppColor.GraphNonRelativeBranch, Color.LightGray },
                 { AppColor.Branch, Color.FromArgb(0x00, 0x80, 0x00) },
                 { AppColor.RemoteBranch, Color.FromArgb(0x8b, 0x00, 0x09) },
                 { AppColor.DiffSection, Color.FromArgb(230, 230, 230) },
