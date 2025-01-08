@@ -50,7 +50,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>周期性背景获取</target>
+        <target>周期性后台拉取</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
@@ -937,7 +937,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
-        <target>影响图形</target>
+        <target>影响图</target>
         
       </trans-unit>
     </body>
@@ -1437,7 +1437,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
-        <target>发行注记</target>
+        <target>发布说明生成器</target>
         
       </trans-unit>
     </body>

@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Git Extensions")]
 [assembly: AssemblyProduct("Git Extensions")]
-[assembly: AssemblyCopyright("Copyright © 2008-2019 Git Extensions Team")]
+[assembly: AssemblyCopyright("Copyright © 2008-2025 Git Extensions Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
