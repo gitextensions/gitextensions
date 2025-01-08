@@ -186,7 +186,7 @@ public abstract class DiffHighlightService : TextHighlightService
     {
         int index = 0;
         DiffLineInfo[] diffLines = [.. _diffLinesInfo.DiffLines.Values.OrderBy(l => l.LineNumInDiff)];
-        const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+'
+        const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+' (this is only for normal patch format)
         bool dimBackground = !_useGitColoring || AppSettings.ReverseGitColoring.Value;
 
         // Process the next blocks of removed / added diffLines and mark in-line differences
@@ -233,6 +233,7 @@ public abstract class DiffHighlightService : TextHighlightService
     private static List<ISegment> GetBlockOfLines(DiffLineInfo[] diffLines, DiffLineType diffLineType, ref int index, bool found)
     {
         List<ISegment> result = [];
+        int gapLines = 0;
 
         for (; index < diffLines.Length; ++index)
         {
@@ -245,11 +246,20 @@ public abstract class DiffHighlightService : TextHighlightService
                     continue;
                 }
 
+                const int maxGapLines = 5;
+                if (diffLine?.LineType == DiffLineType.Context && gapLines < maxGapLines)
+                {
+                    // A gap context diffLines, the block can be extended
+                    ++gapLines;
+                    continue;
+                }
+
                 // Block ended, no more to add (next start search here)
                 break;
             }
 
             ArgumentNullException.ThrowIfNull(diffLine.LineSegment);
+            gapLines = 0;
             if (diffLine.IsMovedLine)
             {
                 // Ignore this line, seem to be moved
@@ -266,8 +276,8 @@ public abstract class DiffHighlightService : TextHighlightService
 
     internal static void AddDifferenceMarkers(List<TextMarker> markers, Func<ISegment, string> getText, ISegment lineRemoved, ISegment lineAdded, int beginOffset, bool dimBackground)
     {
-        ReadOnlySpan<char> textRemoved = getText(lineRemoved).AsSpan();
-        ReadOnlySpan<char> textAdded = getText(lineAdded).AsSpan();
+        ReadOnlySpan<char> textRemoved = LimitLength(getText(lineRemoved).AsSpan());
+        ReadOnlySpan<char> textAdded = LimitLength(getText(lineAdded).AsSpan());
         int offsetRemoved = lineRemoved.Offset + beginOffset;
         int offsetAdded = lineAdded.Offset + beginOffset;
         (int lengthIdenticalAtStart, int lengthIdenticalAtEnd) = AddDifferenceMarkers(markers, textRemoved, textAdded, offsetRemoved, offsetAdded, dimBackground);
@@ -282,6 +292,14 @@ public abstract class DiffHighlightService : TextHighlightService
         {
             markers.Add(CreateDimmedMarker(offsetRemoved + textRemoved.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, isRemoved: true, dimBackground));
             markers.Add(CreateDimmedMarker(offsetAdded + textAdded.Length - lengthIdenticalAtEnd, lengthIdenticalAtEnd, isRemoved: false, dimBackground));
+        }
+
+        return;
+
+        static ReadOnlySpan<char> LimitLength(ReadOnlySpan<char> text)
+        {
+            const int maxLength = 2000;
+            return text.Length <= maxLength ? text : text[..maxLength];
         }
     }
 
@@ -395,4 +413,10 @@ public abstract class DiffHighlightService : TextHighlightService
 
     private static TextMarker CreateTextMarker(int offset, int length, Color color)
         => new(offset, length, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color));
+
+    internal class TestAccessor
+    {
+        internal static List<ISegment> GetBlockOfLines(DiffLineInfo[] diffLines, DiffLineType diffLineType, ref int index, bool found)
+            => DiffHighlightService.GetBlockOfLines(diffLines, diffLineType, ref index, found);
+    }
 }

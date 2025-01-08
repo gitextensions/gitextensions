@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.Models;
@@ -38,6 +39,8 @@ namespace GitUI.HelperDialogs
 
             pnlOutput.Controls.Add(ConsoleOutput);
             ConsoleOutput.Dock = DockStyle.Fill;
+
+            ShowPassword.Checked = AppSettings.ShowProcessDialogPasswordInput.Value;
 
             if (_useDialogSettings)
             {
@@ -122,6 +125,8 @@ namespace GitUI.HelperDialogs
 
             form.ProgressBar.Visible = false;
             form.KeepDialogOpen.Visible = false;
+            form.ShowPassword.Visible = false;
+            form.PasswordInput.Visible = false;
             form.Abort.Visible = false;
 
             form.StartPosition = FormStartPosition.CenterParent;
@@ -156,6 +161,18 @@ namespace GitUI.HelperDialogs
         private protected void AppendMessage(string text)
         {
             ConsoleOutput.AppendMessageFreeThreaded(text);
+
+            if (!text.EndsWith(Delimiters.LineFeed))
+            {
+                this.InvokeAndForget(() =>
+                {
+                    if (ShowPassword.CheckState == CheckState.Unchecked)
+                    {
+                        ShowPassword.CheckState = CheckState.Indeterminate;
+                        PasswordInput.Focus();
+                    }
+                });
+            }
         }
 
         private protected void Done(bool isSuccess)
@@ -175,6 +192,8 @@ namespace GitUI.HelperDialogs
                 }
 
                 AppendMessage("Done");
+                ShowPassword.Visible = false;
+                PasswordInput.Visible = false;
                 ProgressBar.Visible = false;
                 Ok.Enabled = true;
                 Ok.Focus();
@@ -202,9 +221,11 @@ namespace GitUI.HelperDialogs
             SetIcon(Images.StatusBadgeWaiting);
             ConsoleOutput.Reset();
             OutputLog.Clear();
+            ShowPassword.Visible = true;
+            PasswordInput.Visible = ShowPassword.CheckState != CheckState.Unchecked;
             ProgressBar.Visible = true;
             Ok.Enabled = false;
-            ActiveControl = null;
+            ActiveControl = PasswordInput.Visible ? PasswordInput : null;
         }
 
         private void SetIcon(Bitmap image)
@@ -277,6 +298,17 @@ namespace GitUI.HelperDialogs
             {
                 Close();
             }
+        }
+
+        private void ShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            AppSettings.ShowProcessDialogPasswordInput.Value = ShowPassword.CheckState == CheckState.Checked;
+            PasswordInput.Visible = ShowPassword.CheckState != CheckState.Unchecked;
+        }
+
+        private void PasswordInput_PasswordEntered(object sender, TextEventArgs e)
+        {
+            ConsoleOutput.AppendInput($"{e.Text}\n");
         }
 
         private void Ok_Click(object sender, EventArgs e)

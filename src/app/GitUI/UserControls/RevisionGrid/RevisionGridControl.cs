@@ -1202,7 +1202,7 @@ namespace GitUI
                     "--follow",
                     FindRenamesAndCopiesOpts(),
                     "--",
-                    path
+                    path.QuoteIfNotQuotedAndNE()
                 };
 
                 HashSet<string?> setOfFileNames = [];
@@ -1580,7 +1580,7 @@ namespace GitUI
                 objectId.ToString(),
                 "--max-count=1",
                 "--",
-                path,
+                path.QuoteIfNotQuotedAndNE(),
             };
 
             return ParseFileNames(args, cancellationToken: default).FirstOrDefault();

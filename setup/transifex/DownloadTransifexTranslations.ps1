@@ -15,7 +15,7 @@ try {
     ./tx.exe pull -a -f -r git-extensions.gitui-translation-english-plugins-xlf--master
 
     # 3. download updated translations
-    ./tx.exe pull -a --minimum-perc 95 -f -r git-extensions.gitui-translation-english-xlf--master
+    ./tx.exe pull -a --minimum-perc 75 -f -r git-extensions.gitui-translation-english-xlf--master
 
     # 4. remove plugins translations without a main translation companion
     Get-ChildItem -Path ./* -Include *.Plugins.xlf  -Exclude '*pseudo*' | `

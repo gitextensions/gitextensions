@@ -1,8 +1,14 @@
-﻿namespace GitUI.ScriptsEngine
+﻿using System.Text.RegularExpressions;
+
+namespace GitUI.ScriptsEngine
 {
     // WARNING: This class is serialized to XML!
-    public class ScriptInfo
+    public partial class ScriptInfo
     {
+        // Match a single '&' (lookahead to not be followed by a second '&')
+        [GeneratedRegex("&(?!&)")]
+        private static partial Regex MnemonicAmpersandRegex();
+
         public ScriptInfo()
         {
             Icon = "bug";
@@ -38,6 +44,11 @@
         /// Gets or sets the path to the file containing the icon.
         /// </summary>
         public string? IconFilePath { get; set; }
+
+        /// <summary>
+        ///  Returns the name with mnemonic ampersands removed.
+        /// </summary>
+        public string GetDisplayName() => MnemonicAmpersandRegex().Replace(Name, "");
 
         /// <summary>
         /// Gets the associated bitmap.

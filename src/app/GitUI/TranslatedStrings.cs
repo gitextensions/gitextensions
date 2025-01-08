@@ -154,19 +154,9 @@ To be able to open this repository, you need to either:
 - add a security exception for the repository to make git trust it, or
 - correct the ownership of the repository.");
         private readonly TranslationString _gitDubiousOwnershipTrustRepository = new("Trust this repository");
-        private readonly TranslationString _gitDubiousOwnershipTrustAllRepositories = new("Trust all repositories");
         private readonly TranslationString _gitDubiousOwnershipOpenRepositoryFolder = new("Open repository in Explorer");
         private readonly TranslationString _gitDubiousOwnershipSeeGitCommandOutput = new("See git command output...");
         private readonly TranslationString _gitDubiousOwnershipHideGitCommandOutput = new("Hide git command output...");
-        private readonly TranslationString _gitDubiousOwnershipTrustAllInstruction = new(@"Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
-By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
-run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
-repositories.
-
-If you wish to trust all git repositories on your system even if they are owned by someone else, run the
-following command.
-
-!!! THIS CAN BE DANGEROUS !!!");
 
         private readonly TranslationString _seeErrorMessage = new("See error message...");
         private readonly TranslationString _hideErrorMessage = new("Hide error message...");
@@ -358,11 +348,9 @@ Copy error details to clipboard?");
         public static string GitDubiousOwnershipHeader => _instance.Value._gitDubiousOwnershipHeader.Text;
         public static string GitDubiousOwnershipText => _instance.Value._gitDubiousOwnershipText.Text;
         public static string GitDubiousOwnershipTrustRepository => _instance.Value._gitDubiousOwnershipTrustRepository.Text;
-        public static string GitDubiousOwnershipTrustAllRepositories => _instance.Value._gitDubiousOwnershipTrustAllRepositories.Text;
         public static string GitDubiousOwnershipOpenRepositoryFolder => _instance.Value._gitDubiousOwnershipOpenRepositoryFolder.Text;
         public static string GitDubiousOwnershipSeeGitCommandOutput => _instance.Value._gitDubiousOwnershipSeeGitCommandOutput.Text;
         public static string GitDubiousOwnershipHideGitCommandOutput => _instance.Value._gitDubiousOwnershipHideGitCommandOutput.Text;
-        public static string GitDubiousOwnershipTrustAllInstruction => _instance.Value._gitDubiousOwnershipTrustAllInstruction.Text;
 
         public static string SeeErrorMessage => _instance.Value._seeErrorMessage.Text;
         public static string HideErrorMessage => _instance.Value._hideErrorMessage.Text;

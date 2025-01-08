@@ -1,4 +1,6 @@
-﻿using System.Buffers.Text;
+﻿#nullable enable
+
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -6,9 +8,11 @@ using System.Text;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.Toolkit.HighPerformance.Buffers;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
@@ -157,6 +161,21 @@ namespace GitCommands
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The retrieved git revision or <see langword="null"/> if it does not exist.</returns>
         public GitRevision? GetRevision(string commitHash, bool hasNotes, bool throwOnError, CancellationToken cancellationToken)
+            => ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await TaskScheduler.Default;
+                    return await GetRevisionAsync(commitHash, hasNotes, throwOnError, cancellationToken);
+                });
+
+        /// <summary>
+        ///  Retrieves the <see cref="GitRevision"/> for a real commit.
+        /// </summary>
+        /// <param name="commitHash">The Git commit hash.</param>
+        /// <param name="hasNotes">Specifies whether Git Notes should be retrieved.</param>
+        /// <param name="throwOnError">Specifies whether an <see cref="ExternalOperationException"/> shall be thrown if the revision does not exist.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>The retrieved git revision or <see langword="null"/> if it does not exist.</returns>
+        public async Task<GitRevision?> GetRevisionAsync(string commitHash, bool hasNotes, bool throwOnError, CancellationToken cancellationToken)
         {
             GitArgumentBuilder arguments = new("log")
             {
@@ -183,14 +202,22 @@ namespace GitCommands
 #if DEBUG
                 Debug.WriteLine($"git {arguments}");
 #endif
-                using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: null);
-                string errorOutput = process.StandardError.ReadToEnd();
+                using IProcess process = _module.GitCommandRunner.RunDetached(cancellationToken, arguments, redirectOutput: true, outputEncoding: null, throwOnErrorExit: false);
+
+                // StandardError.CopyToAsync - done by the IProcess instance - may become unresponsive if lengthy StandardOutput is not consumed in parallel. So, buffer the StandardOutput.
+                using MemoryStream standardOutputBuffer = new();
+                Task standardOutputTask = process.StandardOutput.BaseStream.CopyToAsync(standardOutputBuffer, cancellationToken);
+
+                await process.WaitForExitAsync(cancellationToken);
+                string errorOutput = process.StandardError;
                 if (!string.IsNullOrWhiteSpace(errorOutput) && throwOnError)
                 {
                     throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(), innerException: new Exception(errorOutput));
                 }
 
-                commandBytes = new ReadOnlyMemory<byte>(process.StandardOutput.BaseStream.SplitLogOutput().SingleOrDefault().ToArray());
+                await standardOutputTask;
+                standardOutputBuffer.Position = 0;
+                commandBytes = standardOutputBuffer.SplitLogOutput().SingleOrDefault();
             }
 
             if (!TryParseRevision(commandBytes, out GitRevision? revision))
@@ -324,7 +351,7 @@ namespace GitCommands
             };
         }
 
-        private (ReadOnlyMemory<byte> buffer, ObjectId objectId) _cache = (null, null);
+        private (ReadOnlyMemory<byte> buffer, ObjectId objectId)? _cache = null;
 
         [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
         private bool TryParseRevision(in ReadOnlyMemory<byte> buffer, [NotNullWhen(returnValue: true)] out GitRevision? revision)
@@ -349,9 +376,9 @@ namespace GitCommands
             ReadOnlyMemory<byte> commitHash = buffer.Slice(0, ObjectId.Sha1CharCount);
             ReadOnlySpan<byte> commitHashSpan = commitHash.Span;
             ObjectId? objectId;
-            if (_cache.objectId is not null && commitHashSpan.SequenceEqual(_cache.buffer.Span))
+            if (_cache is not null && commitHashSpan.SequenceEqual(_cache.Value.buffer.Span))
             {
-                objectId = _cache.objectId;
+                objectId = _cache.Value.objectId;
             }
             else
             {
@@ -416,7 +443,7 @@ namespace GitCommands
                 for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
                     ReadOnlyMemory<byte> hashParent = buffer.Slice(offset, ObjectId.Sha1CharCount);
-                    if (!ObjectId.TryParse(hashParent.Span, out ObjectId parentId))
+                    if (!ObjectId.TryParse(hashParent.Span, out ObjectId? parentId))
                     {
                         ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                         revision = default;

@@ -19,17 +19,18 @@ namespace GitUI.CommandsDialogs
         private const string FormBrowseName = "FormBrowse";
 
         private readonly TranslationString _buildReportTabCaption = new("Build Report");
+        private readonly TranslationString _fileNotFound = new(" - Git could not identify the file {0}");
         private readonly AsyncLoader _asyncLoader = new();
         private readonly ICommitDataManager _commitDataManager;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly FormFileHistoryController _controller = new();
         private readonly CancellationTokenSequence _customDiffToolsSequence = new();
         private readonly CancellationTokenSequence _viewChangesSequence = new();
 
         private BuildReportTabPageExtension? _buildReportTabPageExtension;
+        private string? _commitInfoTabPageText;
 
-        private string FileName { get; set; }
+        private string FileName { get; init; }
 
         /// <summary>
         /// Open FileHistory form.
@@ -79,7 +80,11 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ShowBuildServerInfo = true;
             RevisionGrid.FilePathByObjectId = [];
 
-            FileName = fileName;
+            // Replace Windows path separator to Linux path separator.
+            // This is needed to keep the file history working when started from file tree in
+            // browse dialog.
+            FileName = fileName.RemoveQuotes().ToPosixPath();
+
             SetTitle();
 
             Diff.ExtraDiffArgumentsChanged += (sender, e) => UpdateSelectedFileViewers();
@@ -212,12 +217,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            // Replace windows path separator to Linux path separator.
-            // This is needed to keep the file history working when started from file tree in
-            // browse dialog.
-            FileName = FileName.ToPosixPath();
-
-            RevisionGrid.SetAndApplyPathFilter(FileName);
+            RevisionGrid.SetAndApplyPathFilter(FileName.Quote());
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
@@ -265,8 +265,18 @@ namespace GitUI.CommandsDialogs
             GitRevision revision = selectedRevisions[0];
             IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             string fileName = GetFileNameForRevision(revision) ?? FileName;
+            bool isFolder = fileName.EndsWith('/');
+            bool fileAvailable
+                = isFolder ? false
+                : revision.IsArtificial ? File.Exists(fileName)
+                : Module.GetFileBlobHash(fileName, revision.ObjectId) is not null;
 
-            SetTitle(fileName);
+            SetTitle(alternativeFileName: fileName);
+
+            _commitInfoTabPageText ??= CommitInfoTabPage.Text;
+            CommitInfoTabPage.Text
+                = _commitInfoTabPageText
+                + (isFolder || fileAvailable ? "" : string.Format(_fileNotFound.Text, fileName.Quote()));
 
             TabPage preferredTab = null;
             if (revision.IsArtificial)
@@ -282,7 +292,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (fileName.EndsWith("/"))
+            if (!fileAvailable)
             {
                 // Note that artificial commits for object type tree (folder) will be handled here too,
                 // i.e. no tab at all is visible
@@ -299,7 +309,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (revision.IsArtificial || fileName.EndsWith("/"))
+            if (revision.IsArtificial || !fileAvailable)
             {
                 BlameTab.Parent = null;
                 ViewTab.Parent = null;

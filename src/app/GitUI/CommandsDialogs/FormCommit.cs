@@ -675,18 +675,14 @@ namespace GitUI.CommandsDialogs
             SelectedDiff.ScrollToTop();
         }
 
-        private void MoveSelection(int direction)
+        private void MoveSelection(bool backwards)
         {
             if (Message.Focused)
             {
                 _currentFilesList = Staged;
             }
 
-            int itemsCount = _currentFilesList.AllItemsCount;
-            if (itemsCount != 0)
-            {
-                _currentFilesList.SelectedIndex = (_currentFilesList.SelectedIndex + direction + itemsCount) % itemsCount;
-            }
+            _currentFilesList.SelectNextItem(backwards, loop: true);
         }
 
         #region Hotkey commands
@@ -907,10 +903,10 @@ namespace GitUI.CommandsDialogs
                 case Command.Refresh: RescanChanges(); return true;
                 case Command.SelectNext:
                 case Command.SelectNext_AlternativeHotkey1:
-                case Command.SelectNext_AlternativeHotkey2: MoveSelection(1); return true;
+                case Command.SelectNext_AlternativeHotkey2: MoveSelection(backwards: false); return true;
                 case Command.SelectPrevious:
                 case Command.SelectPrevious_AlternativeHotkey1:
-                case Command.SelectPrevious_AlternativeHotkey2: MoveSelection(-1); return true;
+                case Command.SelectPrevious_AlternativeHotkey2: MoveSelection(backwards: true); return true;
                 default: return base.ExecuteCommand(cmd);
             }
         }
@@ -1611,7 +1607,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (Staged.IsFilterActive)
             {
-                Staged.SelectedGitItems = Staged.AllItems.Items();
+                Staged.SelectedGitItems = Staged.AllItems.Items().ToArray();
                 Unstage(canUseUnstageAll: false);
                 Staged.SetFilter(string.Empty);
             }
@@ -1719,9 +1715,9 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Unstaged;
                 _skipUpdate = false;
-                if (!e.ByMouse && Unstaged.AllItems.Any() && Unstaged.SelectedIndex == -1)
+                if (!e.ByMouse && !Unstaged.HasSelection)
                 {
-                    Unstaged.SelectedIndex = 0;
+                    Unstaged.SelectFirstVisibleItem();
                 }
 
                 UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
@@ -1978,9 +1974,9 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Staged;
                 _skipUpdate = false;
-                if (!e.ByMouse && Staged.AllItems.Any() && Staged.SelectedIndex == -1)
+                if (!e.ByMouse && !Staged.HasSelection)
                 {
-                    Staged.SelectedIndex = 0;
+                    Staged.SelectFirstVisibleItem();
                 }
 
                 StagedSelectionChanged(Staged, EventArgs.Empty);
@@ -3461,7 +3457,7 @@ namespace GitUI.CommandsDialogs
             if (Staged.AllItemsCount != 0 && !Staged.SelectedItems.Any())
             {
                 _currentFilesList = Staged;
-                Staged.SelectedIndex = 0;
+                Staged.SelectFirstVisibleItem();
                 StagedSelectionChanged(this, EventArgs.Empty);
             }
         }

@@ -516,7 +516,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         }
                         catch (Exception exception)
                         {
-                            if (exception.Message?.Contains(ExecutableExtensions.DubiousOwnershipSecurityConfigString) is true)
+                            if (exception.Message?.Contains(BugReportInvoker.DubiousOwnershipSecurityConfigString) is true)
                             {
                                 BugReportInvoker.Report(exception, isTerminating: false);
                             }

@@ -1,0 +1,64 @@
+﻿[
+  {
+    Item1: [
+      {
+        Offset: 388,
+        Length: 106
+      },
+      {
+        Offset: 707,
+        Length: 104
+      },
+      {
+        Offset: 812,
+        Length: 1
+      }
+    ],
+    Item2: [
+      {
+        Offset: 967,
+        Length: 106
+      },
+      {
+        Offset: 1074,
+        Length: 1
+      },
+      {
+        Offset: 1147,
+        Length: 1
+      },
+      {
+        Offset: 1149,
+        Length: 104
+      }
+    ]
+  },
+  {
+    Item1: [
+      {
+        Offset: 1580,
+        Length: 10
+      }
+    ],
+    Item2: [
+      {
+        Offset: 1591,
+        Length: 1
+      }
+    ]
+  },
+  {
+    Item1: [
+      {
+        Offset: 1621,
+        Length: 25
+      }
+    ],
+    Item2: [
+      {
+        Offset: 1647,
+        Length: 1
+      }
+    ]
+  }
+]

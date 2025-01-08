@@ -1,0 +1,37 @@
+diff --git a/src/app/GitUI/Editor/Diff/DiffHighlightService.cs b/src/app/GitUI/Editor/Diff/DiffHighlightService.cs
+index d6191..df6ac 100644
+--- a/src/app/GitUI/Editor/Diff/DiffHighlightService.cs
++++ b/src/app/GitUI/Editor/Diff/DiffHighlightService.cs
+@@ -13,16 +13,17 @@ namespace GitUI.Editor.Diff;
+ /// </summary>
+ public abstract class DiffHighlightService : TextHighlightService
+ {
+-    private static readonly Color _addedBackColor = AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
+     private static readonly Color _addedForeColor = AppColor.AnsiTerminalGreenForeBold.GetThemeColor();
+     private static readonly Color _removedBackColor = AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
+-    private static readonly Color _removedForeColor = AppColor.AnsiTerminalRedForeBold.GetThemeColor();
+-
+     protected readonly bool _useGitColoring;
+     protected readonly List<TextMarker> _textMarkers = [];
+     protected DiffLinesInfo _diffLinesInfo;
+ 
++    private static readonly Color _addedBackColor = AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
++
+     public DiffHighlightService(ref string text, bool useGitColoring)
++
++    private static readonly Color _removedForeColor = AppColor.AnsiTerminalRedForeBold.GetThemeColor();
+     {
+         _useGitColoring = useGitColoring;
+         SetText(ref text);
+@@ -31,9 +32,9 @@ public DiffHighlightService(ref string text, bool useGitColoring)
+     public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module, bool useGitColoring, string command)
+     {
+         if (!useGitColoring)
+-        {
++
+             // Use default
+-            return null;
++
+         }
+ 
+         GitCommandConfiguration commandConfiguration = new();

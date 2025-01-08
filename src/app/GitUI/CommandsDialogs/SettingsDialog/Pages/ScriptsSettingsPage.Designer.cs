@@ -123,6 +123,7 @@
             lvScripts.TileSize = new Size(136, 18);
             lvScripts.UseCompatibleStateImageBehavior = false;
             lvScripts.View = View.Details;
+            lvScripts.Resize += lvScripts_Resize;
             // 
             // chdrNames
             // 

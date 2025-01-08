@@ -272,8 +272,16 @@ Click this info icon for more details.</source>
   </file>
   <file datatype="plaintext" original="BlameControl" source-language="en">
     <body>
+      <trans-unit id="_blameActualPreviousRevision.Text">
+        <source>&amp;Blame previous revision</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_blameVisiblePreviousRevision.Text">
+        <source>&amp;Blame previous visible revision</source>
+        <target />
+      </trans-unit>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
-        <source>All commit info</source>
+        <source>&amp;All commit info</source>
         <target />
       </trans-unit>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
@@ -281,23 +289,23 @@ Click this info icon for more details.</source>
         <target />
       </trans-unit>
       <trans-unit id="blameRevisionToolStripMenuItem.Text">
-        <source>Blame this revision</source>
+        <source>Blame &amp;this revision</source>
         <target />
       </trans-unit>
       <trans-unit id="commitHashToolStripMenuItem.Text">
-        <source>Commit hash</source>
+        <source>Commit &amp;hash</source>
         <target />
       </trans-unit>
       <trans-unit id="commitMessageToolStripMenuItem.Text">
-        <source>Commit message</source>
+        <source>Commit &amp;message</source>
         <target />
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
-        <source>Copy to clipboard</source>
+        <source>&amp;Copy to clipboard</source>
         <target />
       </trans-unit>
       <trans-unit id="showChangesToolStripMenuItem.Text">
-        <source>Show changes</source>
+        <source>&amp;Show changes</source>
         <target />
       </trans-unit>
     </body>
@@ -4689,6 +4697,10 @@ If you are not sure just close this window.</source>
         <source>Build Report</source>
         <target />
       </trans-unit>
+      <trans-unit id="_fileNotFound.Text">
+        <source> - Git could not identify the file {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="blameSettingsToolStripMenuItem.Text">
         <source>Blame settings:</source>
         <target />
@@ -5109,6 +5121,10 @@ command "git help gitattributes"
       </trans-unit>
       <trans-unit id="tabPageCommandLog.Text">
         <source>Command log</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiClearCache.Text">
+        <source>C&amp;lear</source>
         <target />
       </trans-unit>
     </body>
@@ -6436,15 +6452,19 @@ Stash them before if you don't want to lose them.</source>
         <target />
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort</source>
+        <source>&amp;Abort</source>
         <target />
       </trans-unit>
       <trans-unit id="KeepDialogOpen.Text">
-        <source>Keep dialog open</source>
+        <source>&amp;Keep dialog open</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowPassword.Text">
+        <source>Show &amp;password input</source>
         <target />
       </trans-unit>
       <trans-unit id="_fingerprintNotRegistredText.Text">
@@ -7476,15 +7496,19 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort</source>
+        <source>&amp;Abort</source>
         <target />
       </trans-unit>
       <trans-unit id="KeepDialogOpen.Text">
-        <source>Keep dialog open</source>
+        <source>&amp;Keep dialog open</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowPassword.Text">
+        <source>Show &amp;password input</source>
         <target />
       </trans-unit>
     </body>
@@ -8546,6 +8570,14 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="tsmiCopy.Text">
         <source>&amp;Copy</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="PasswordInput" source-language="en">
+    <body>
+      <trans-unit id="SendInput.Text">
+        <source>Send input</source>
         <target />
       </trans-unit>
     </body>
@@ -10467,22 +10499,6 @@ Git-tracked directories are considered unsafe if they are owned by someone other
 To be able to open this repository, you need to either:
 - add a security exception for the repository to make git trust it, or
 - correct the ownership of the repository.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
-        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
-By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
-run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
-repositories.
-
-If you wish to trust all git repositories on your system even if they are owned by someone else, run the
-following command.
-
-!!! THIS CAN BE DANGEROUS !!!</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
-        <source>Trust all repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">

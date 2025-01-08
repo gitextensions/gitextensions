@@ -3,10 +3,12 @@ using FluentAssertions;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
 using GitUI.Theming;
+using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUITests.Editor.Diff;
 
+[Apartment(ApartmentState.STA)]
 [TestFixture]
 public class DiffHighlightServiceTests
 {
@@ -85,6 +87,40 @@ public class DiffHighlightServiceTests
             => DiffHighlightServiceTests.CreateDimmedMarker(line.Offset + beginOffset + offset, length, isAdded: line == addedLine);
 
         string GetText(ISegment line) => (line == removedLine ? removedLineText : addedLineText)[beginOffset..];
+    }
+
+    [Test]
+    public async Task MarkInlineGap()
+    {
+        TextEditorControl textEditor = new();
+        DiffViewerLineNumberControl diffViewerLineNumber = new(textEditor.ActiveTextAreaControl.TextArea);
+        string testDataDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "Editor", "Diff");
+        string text = File.ReadAllText(Path.Combine(testDataDir, "gaps.diff"));
+        _ = new PatchHighlightService(ref text, useGitColoring: true, diffViewerLineNumber);
+        DiffLinesInfo result = diffViewerLineNumber.GetTestAccessor().Result;
+        DiffLineInfo[] diffLines = [.. result.DiffLines.Values.OrderBy(l => l.LineNumInDiff)];
+
+        int index = 0;
+        List<(IReadOnlyList<ISegment> removed, IReadOnlyList<ISegment> added)> sections = [];
+        while (index < diffLines.Length)
+        {
+            // git-diff presents the removed lines directly followed by the added in a "block"
+            IReadOnlyList<ISegment> linesRemoved = DiffHighlightService.TestAccessor.GetBlockOfLines(diffLines, DiffLineType.Minus, ref index, found: false);
+            if (linesRemoved.Count == 0)
+            {
+                continue;
+            }
+
+            IReadOnlyList<ISegment> linesAdded = DiffHighlightService.TestAccessor.GetBlockOfLines(diffLines, DiffLineType.Plus, ref index, found: true);
+            if (linesAdded.Count == 0)
+            {
+                continue;
+            }
+
+            sections.Add((removed: linesRemoved, linesAdded));
+        }
+
+        await Verify(sections);
     }
 
     private static TextMarker CreateAnchorMarker(int offset, bool isAdded)

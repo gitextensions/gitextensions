@@ -1,0 +1,10 @@
+﻿[
+  {
+    "Header": "diff --git a/sub modules/test submodule b/sub modules/test submodule",
+    "FileType": "Text",
+    "FileNameA": "sub modules/test submodule",
+    "FileNameB": "sub modules/test submodule",
+    "ChangeType": "ChangeFile",
+    "Text": "diff --git a/sub modules/test submodule b/sub modules/test submodule\n--- a/sub modules/test submodule\n+++ b/sub modules/test submodule\n@@ -1 +1 @@\n-Subproject commit 4c54fbefd8032acb59aa33ade3fb4bdff32bdde7\n+Subproject commit 4c54fbefd8032acb59aa33ade3fb4bdff32bdde7-dirty"
+  }
+]

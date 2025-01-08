@@ -14,7 +14,8 @@ public interface IGitCommandRunner
         bool createWindow = false,
         bool redirectInput = false,
         bool redirectOutput = false,
-        Encoding? outputEncoding = null);
+        Encoding? outputEncoding = null,
+        bool throwOnErrorExit = true);
 
     /// <summary>
     /// Starts git with the given arguments in the background.

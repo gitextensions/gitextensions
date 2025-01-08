@@ -166,6 +166,11 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
+        private void lvParentsList_Resize(object sender, EventArgs e)
+        {
+            lvParentsList.Columns[1].Width = lvParentsList.ClientSize.Width - lvParentsList.Columns[0].Width - lvParentsList.Columns[2].Width - lvParentsList.Columns[3].Width;
+        }
+
         private void btnAbort_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;

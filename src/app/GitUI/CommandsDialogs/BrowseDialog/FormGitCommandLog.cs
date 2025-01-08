@@ -72,7 +72,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (TabControl.SelectedTab == tabPageCommandCache)
             {
-                RefreshListBox(CommandCacheItems, GitModule.GitCommandCache.GetCachedCommands());
+                CommandCacheItems.ValueMember = nameof(CacheItem.DisplayString);
+                RefreshListBox(CommandCacheItems, GitModule.GitCommandCache.GetCachedCommands().Select(key => new CacheItem(key)).ToArray());
             }
         }
 
@@ -114,7 +115,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string command = (string)CommandCacheItems.SelectedItem;
+            string command = ((CacheItem)CommandCacheItems.SelectedItem).Key;
 
             if (GitModule.GitCommandCache.TryGet(command, out string? cmdOut, out string? cmdErr))
             {
@@ -196,6 +197,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
+        private void tsmiClearCache_Click(object sender, EventArgs e)
+        {
+            GitModule.GitCommandCache.Clear();
+            RefreshCommandCacheItems();
+        }
+
         #region Single instance static members
 
         private static FormGitCommandLog? instance;
@@ -217,5 +224,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         #endregion
+
+        private sealed class CacheItem(string key)
+        {
+            public string Key { get; } = key;
+            public string DisplayString { get; } = CommandLogEntry.GetGitArgumentsWithoutConfiguration(key);
+        }
     }
 }

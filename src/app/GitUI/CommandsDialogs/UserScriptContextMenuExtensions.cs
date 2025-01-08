@@ -42,9 +42,9 @@ namespace GitUI.CommandsDialogs
                 ToolStripMenuItem item = new()
                 {
                     Text = script.Name,
-                    Name = $"{script.Name}{ScriptNameSuffix}",
+                    Name = $"{script.GetDisplayName()}{ScriptNameSuffix}",
                     Image = script.GetIcon(),
-                    ShortcutKeyDisplayString = hotkeys.FirstOrDefault(h => h.Name == script.Name)?.KeyData.ToShortcutKeyDisplayString()
+                    ShortcutKeyDisplayString = hotkeys.FirstOrDefault(h => h.Name == script.GetDisplayName())?.KeyData.ToShortcutKeyDisplayString()
                 };
 
                 item.Click += (s, e) =>

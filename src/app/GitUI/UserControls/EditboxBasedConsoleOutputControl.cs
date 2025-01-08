@@ -4,6 +4,8 @@ using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
+using GitExtUtils;
+using Microsoft;
 using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.UserControls
@@ -19,15 +21,20 @@ namespace GitUI.UserControls
 
         private Process? _process;
 
+        private Action? _logProcessKilled;
+
         private ProcessOutputThrottle? _outputThrottle;
+
+        private StreamWriter? _input;
 
         public EditboxBasedConsoleOutputControl()
         {
             _editbox = new RichTextBox
             {
-                BackColor = SystemColors.Window,
+                BackColor = SystemColors.Info,
                 BorderStyle = BorderStyle.FixedSingle,
                 Dock = DockStyle.Fill,
+                Font = AppSettings.MonospaceFont,
                 ReadOnly = true
             };
             Controls.Add(_editbox);
@@ -60,6 +67,12 @@ namespace GitUI.UserControls
             _outputThrottle?.Append(text);
         }
 
+        public override void AppendInput(string text)
+        {
+            Validates.NotNull(_input);
+            _input.Write(text);
+        }
+
         public override void KillProcess()
         {
             if (InvokeRequired)
@@ -72,6 +85,8 @@ namespace GitUI.UserControls
                 return;
             }
 
+            _logProcessKilled();
+
             try
             {
                 _process.TerminateTree();
@@ -81,7 +96,10 @@ namespace GitUI.UserControls
                 Trace.WriteLine(ex);
             }
 
+            _process.Dispose();
             _process = null;
+            _input?.Dispose();
+            _input = null;
             FireProcessExited();
         }
 
@@ -100,9 +118,9 @@ namespace GitUI.UserControls
             {
                 EnvironmentConfiguration.SetEnvironmentVariables();
 
-                bool ssh = UseSsh(arguments);
-
                 KillProcess();
+
+                _logProcessKilled = () => operation.LogProcessEnd(new Exception("Process killed"));
 
                 // process used to execute external commands
                 Encoding outputEncoding = GitModule.SystemEncoding;
@@ -110,7 +128,7 @@ namespace GitUI.UserControls
                 {
                     UseShellExecute = false,
                     ErrorDialog = false,
-                    CreateNoWindow = !ssh && !AppSettings.ShowGitCommandLine,
+                    CreateNoWindow = !AppSettings.ShowGitCommandLine,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -126,17 +144,18 @@ namespace GitUI.UserControls
                     startInfo.EnvironmentVariables.Add(name, value);
                 }
 
-                Process process = new() { StartInfo = startInfo, EnableRaisingEvents = true };
+                _process = new() { StartInfo = startInfo, EnableRaisingEvents = true };
 
-                process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
-                process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
-                process.Exited += delegate
+                AsyncStreamReader? outputReader = null;
+                AsyncStreamReader? errorReader = null;
+
+                _process.Exited += delegate
                 {
-                    this.InvokeAndForget(
-                        () =>
+                    ThreadHelper.FileAndForget(async () =>
                         {
                             if (_process is null)
                             {
+                                await this.SwitchToMainThreadAsync();
                                 operation.LogProcessEnd(new Exception("Process instance is null in Exited event"));
                                 return;
                             }
@@ -147,27 +166,58 @@ namespace GitUI.UserControls
                             // we wait for exit, probably a timing issue...
                             try
                             {
-                                _process.WaitForExit();
+                                // WaitForExit[Async] blocks here for unknown reason if the process has already exited
+                                if (!_process.HasExited)
+                                {
+                                    await _process.WaitForExitAsync();
+                                }
+
+                                _logProcessKilled = null;
+
+                                if (_process is null)
+                                {
+                                    // The process has been killed meanwhile.
+                                    return;
+                                }
                             }
                             catch (Exception ex)
                             {
+                                await this.SwitchToMainThreadAsync();
                                 operation.LogProcessEnd(ex);
                             }
 
                             _exitcode = _process.ExitCode;
+
+                            using CancellationTokenSource eofTimeoutTokenSource = new(millisecondsDelay: 5000);
+
+                            if (outputReader is not null)
+                            {
+                                await outputReader.WaitUntilEofAsync(eofTimeoutTokenSource.Token);
+                                outputReader.Dispose();
+                            }
+
+                            if (errorReader is not null)
+                            {
+                                await errorReader.WaitUntilEofAsync(eofTimeoutTokenSource.Token);
+                                errorReader.Dispose();
+                            }
+
+                            await this.SwitchToMainThreadAsync();
                             operation.LogProcessEnd(_exitcode);
+                            _process.Dispose();
                             _process = null;
-                            _outputThrottle?.FlushOutput();
-                            FireProcessExited();
+                            await _input.DisposeAsync();
+                            _input = null;
                             _outputThrottle?.Stop(flush: true);
+                            FireProcessExited();
                         });
                 };
 
-                process.Start();
-                operation.SetProcessId(process.Id);
-                _process = process;
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+                _process.Start();
+                operation.SetProcessId(_process.Id);
+                _input = _process.StandardInput;
+                outputReader = new AsyncStreamReader(_process.StandardOutput, ForwardOutput);
+                errorReader = new AsyncStreamReader(_process.StandardError, ForwardOutput);
             }
             catch (Exception ex)
             {
@@ -176,37 +226,41 @@ namespace GitUI.UserControls
                 ex.Data.Add("arguments", arguments);
                 throw;
             }
+
+            return;
+
+            void ForwardOutput(string output)
+            {
+                output = output.Replace("\r\n", "\n");
+
+                for (int startIndex = 0; startIndex < output.Length;)
+                {
+                    int nextLineEnd = output.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex) + 1;
+                    if (nextLineEnd == 0)
+                    {
+                        nextLineEnd = output.Length;
+                    }
+
+                    FireDataReceived(new TextEventArgs(output[startIndex..nextLineEnd]));
+                    startIndex = nextLineEnd;
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
             KillProcess();
-            if (disposing && _outputThrottle is not null)
+            if (disposing)
             {
-                _outputThrottle.Dispose();
+                _outputThrottle?.Dispose();
                 _outputThrottle = null;
+                _process?.Dispose();
+                _process = null;
+                _input?.Dispose();
+                _input = null;
             }
 
             base.Dispose(disposing);
-        }
-
-        private static bool UseSsh(string arguments)
-        {
-            return arguments.Contains("plink")
-                || (!GitSshHelpers.IsPlink && DoArgumentsRequireSsh());
-
-            bool DoArgumentsRequireSsh()
-            {
-                return (arguments.Contains('@') && arguments.Contains("://")) ||
-                       (arguments.Contains('@') && arguments.Contains(':')) ||
-                       arguments.Contains("ssh://") ||
-                       arguments.Contains("http://") ||
-                       arguments.Contains("git://") ||
-                       arguments.Contains("push") ||
-                       arguments.Contains("remote") ||
-                       arguments.Contains("fetch") ||
-                       arguments.Contains("pull");
-            }
         }
 
         #region ProcessOutputThrottle
@@ -222,18 +276,19 @@ namespace GitUI.UserControls
             {
                 _doOutput = doOutput;
 
-                _timer = new Timer { Interval = 600, Enabled = true };
+                _timer = new Timer { Interval = 1 };
                 _timer.Tick += delegate { FlushOutput(); };
+                _timer.Start();
             }
 
             public void Stop(bool flush)
             {
-                _timer.Stop();
-
                 if (flush)
                 {
                     FlushOutput();
                 }
+
+                _timer.Stop();
             }
 
             /// <remarks>Can be called on any thread.</remarks>
@@ -247,14 +302,23 @@ namespace GitUI.UserControls
 
             public void FlushOutput()
             {
+                _timer.Stop();
+                _timer.Interval = 100;
+                _timer.Start();
+
+                string textToAdd = "";
                 lock (_textToAdd)
                 {
                     if (_textToAdd.Length > 0)
                     {
-                        _doOutput?.Invoke(_textToAdd.ToString());
+                        textToAdd = _textToAdd.ToString();
+                        _textToAdd.Clear();
                     }
+                }
 
-                    _textToAdd.Clear();
+                if (textToAdd.Length > 0)
+                {
+                    _doOutput?.Invoke(textToAdd);
                 }
             }
 

@@ -687,7 +687,7 @@ namespace GitUI.Editor
             return ViewItemAsync(
                 file.Name,
                 isSubmodule,
-                getImage: GetImage,
+                getImage: () => ThreadHelper.JoinableTaskFactory.Run(GetImageAsync),
                 getFileText: GetFileTextIfBlobExists,
                 getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha, cache: true),
                 item: item,
@@ -705,11 +705,11 @@ namespace GitUI.Editor
                 return file.TreeGuid is not null ? Module.GetFileText(file.TreeGuid, Encoding, stripAnsiEscapeCodes) : string.Empty;
             }
 
-            Image? GetImage()
+            async Task<Image?> GetImageAsync()
             {
                 try
                 {
-                    using MemoryStream stream = Module.GetFileStream(sha);
+                    using MemoryStream stream = await Module.GetFileStreamAsync(sha, cancellationToken: default);
                     if (stream is not null)
                     {
                         return CreateImage(file.Name, stream);
@@ -893,6 +893,10 @@ namespace GitUI.Editor
                     {
                         GoToLine(line.Value);
                     }
+                    else if (viewMode == ViewMode.Grep && ShowEntireFile)
+                    {
+                        internalFileViewer.GoToNextChange(NumberOfContextLines);
+                    }
 
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
@@ -1054,18 +1058,11 @@ namespace GitUI.Editor
                 return icon.ToBitmap();
             }
 
-            return new Bitmap(CopyStream());
+            return new Bitmap(stream);
 
             bool IsIcon()
             {
                 return fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase);
-            }
-
-            MemoryStream CopyStream()
-            {
-                MemoryStream copy = new();
-                stream.CopyTo(copy);
-                return copy;
             }
         }
 

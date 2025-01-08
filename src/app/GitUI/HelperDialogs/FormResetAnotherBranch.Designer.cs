@@ -102,6 +102,7 @@
             ForceReset.TabIndex = 3;
             ForceReset.Text = "&Force reset for a non-fast-forward reset";
             ForceReset.UseVisualStyleBackColor = true;
+            ForceReset.CheckedChanged += Validate;
             // 
             // pictureBox1
             // 
@@ -135,6 +136,9 @@
             Branches.Size = new Size(499, 21);
             Branches.TabIndex = 2;
             Branches.KeyUp += Branches_KeyUp;
+            Branches.Enter += Validate;
+            Branches.DropDownClosed += Validate;
+            Branches.TextChanged += Validate;
             // 
             // tableLayoutPanel1
             // 

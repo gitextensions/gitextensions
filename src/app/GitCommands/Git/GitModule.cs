@@ -68,7 +68,7 @@ namespace GitCommands
         [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
         private static partial Regex EscapedOctalCodePointRegex();
 
-        [GeneratedRegex(@"^(?<code>[ -+U])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"^(?<code>[\-+U ])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
         private static partial Regex ShaRegex();
 
         [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$", RegexOptions.ExplicitCapture)]
@@ -639,9 +639,12 @@ namespace GitCommands
             return retValue;
         }
 
-        public void SaveBlobAs(string saveAs, string blob)
+        public void SaveBlobAs(string saveAs, string blob, CancellationToken cancellationToken = default)
+            => ThreadHelper.FileAndForget(() => SaveBlobAsAsync(saveAs, blob, cancellationToken));
+
+        public async Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken)
         {
-            using MemoryStream blobStream = GetFileStream(blob);
+            using MemoryStream blobStream = await GetFileStreamAsync(blob, cancellationToken);
             if (blobStream is null)
             {
                 return;
@@ -657,7 +660,7 @@ namespace GitCommands
             }
 
             using FileStream stream = File.Create(saveAs);
-            stream.Write(blobData, 0, blobData.Length);
+            await stream.WriteAsync(blobData, 0, blobData.Length);
         }
 
         private static string GetSide(string side)
@@ -2377,6 +2380,7 @@ namespace GitCommands
             ArgumentString extraArgs,
             string grepString,
             bool useGitColoring,
+            bool showFunctionName,
             IGitCommandConfiguration commandConfiguration,
             CancellationToken cancellationToken)
         {
@@ -2385,6 +2389,7 @@ namespace GitCommands
             GitArgumentBuilder args = new("grep", commandConfiguration: commandConfiguration)
             {
                 "--line-number",
+                { showFunctionName, "--show-function" },
                 { !useGitColoring, "--column" },
                 { useGitColoring, "--color=always" },
                 extraArgs,
@@ -2394,7 +2399,7 @@ namespace GitCommands
                 grepString,
                 !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
                 "--",
-                fileName
+                fileName.Quote()
             };
 
             return await _gitExecutable.ExecuteAsync(
@@ -3119,25 +3124,13 @@ namespace GitCommands
             }
 
             string output = exec.StandardOutput;
-            string[] messageLines = output.Split(
-                new string[] { "\r\n", "\r", "\n" },
-                StringSplitOptions.None);
+            string[] messageLines = output.Split(Delimiters.NewLines, StringSplitOptions.None);
 
-            if (messageLines.Length <= StandardCatFileTagHeaderLength)
-            {
-                return null;
-            }
-
-            StringBuilder annotationBuilder = new();
-
-            // skip the last line as it will always be an empty line (for nice console output)
-            for (int i = StandardCatFileTagHeaderLength; i < messageLines.Length - 1; ++i)
-            {
-                annotationBuilder.AppendLine(messageLines[i]);
-            }
-
-            // return message, trimming off last new line (added by AppendLine)
-            return annotationBuilder.ToString().Trim();
+            return messageLines.Length <= StandardCatFileTagHeaderLength
+                ? null
+                : messageLines[StandardCatFileTagHeaderLength..]
+                    .Join(Environment.NewLine)
+                    .TrimEnd();
         }
 
         /// <summary>
@@ -3514,29 +3507,8 @@ namespace GitCommands
             return null;
         }
 
-        public MemoryStream? GetFileStream(string blob)
-        {
-            // TODO why return a stream here? should just return a byte[]
-
-            try
-            {
-                GitArgumentBuilder args = new("cat-file")
-                {
-                    "blob",
-                    blob
-                };
-                using IProcess process = _gitCommandRunner.RunDetached(CancellationToken.None, args, redirectOutput: true);
-                MemoryStream stream = new();
-                process.StandardOutput.BaseStream.CopyTo(stream);
-                stream.Position = 0;
-                return stream;
-            }
-            catch (Win32Exception ex)
-            {
-                Trace.WriteLine(ex);
-                return null;
-            }
-        }
+        public Task<MemoryStream?> GetFileStreamAsync(string blob, CancellationToken cancellationToken)
+            => GitFileStreamGetter.GetFileStreamAsync(blob, _gitCommandRunner, cancellationToken);
 
         public IEnumerable<string?> GetPreviousCommitMessages(int count, string revision, string authorPattern)
         {

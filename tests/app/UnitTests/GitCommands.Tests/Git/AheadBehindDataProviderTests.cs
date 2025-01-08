@@ -12,7 +12,7 @@ namespace GitCommandsTests.Git
         private MemoryStream _standardOutputStream;
         private MemoryStream _standardErrorStream;
         private StreamReader _outputStreamReader;
-        private StreamReader _errorStreamReader;
+        private string _errorOutput = "";
         private IProcess _process;
         private IExecutable _executable;
         private AheadBehindDataProvider _provider;
@@ -23,11 +23,10 @@ namespace GitCommandsTests.Git
             _standardOutputStream = new MemoryStream();
             _standardErrorStream = new MemoryStream();
             _outputStreamReader = new StreamReader(_standardOutputStream);
-            _errorStreamReader = new StreamReader(_standardErrorStream);
 
             _process = Substitute.For<IProcess>();
             _process.StandardOutput.Returns(x => _outputStreamReader);
-            _process.StandardError.Returns(x => _errorStreamReader);
+            _process.StandardError.Returns(x => _errorOutput);
 
             _executable = Substitute.For<IExecutable>();
             _executable.Start(Arg.Any<ArgumentString>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<Encoding>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(x => _process);
@@ -41,7 +40,7 @@ namespace GitCommandsTests.Git
             _standardOutputStream?.Dispose();
             _standardErrorStream?.Dispose();
             _outputStreamReader?.Dispose();
-            _errorStreamReader?.Dispose();
+            _process?.Dispose();
         }
 
         [TestCase(null)]

@@ -229,7 +229,8 @@ public interface IGitModule
 
     (int TotalCount, Dictionary<string, int> CountByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null);
 
-    void SaveBlobAs(string saveAs, string blob);
+    void SaveBlobAs(string saveAs, string blob, CancellationToken cancellationToken = default);
+    Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken = default);
     Task<(char Code, ObjectId CommitId)> GetSuperprojectCurrentCheckoutAsync();
     Task<Patch?> GetCurrentChangesAsync(string? fileName, string? oldFileName, bool staged, string extraDiffArguments, Encoding? encoding = null, bool noLocks = false);
     Task<string?> GetFileContentsAsync(GitItemStatus file);
@@ -436,7 +437,7 @@ public interface IGitModule
 
     string GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes);
 
-    MemoryStream? GetFileStream(string blob);
+    Task<MemoryStream?> GetFileStreamAsync(string blob, CancellationToken cancellationToken);
 
     IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None);
 
@@ -508,6 +509,7 @@ public interface IGitModule
         ArgumentString extraArgs,
         string grepString,
         bool useGitColoring,
+        bool showFunctionName,
         IGitCommandConfiguration commandConfiguration,
         CancellationToken cancellationToken);
 
