@@ -491,7 +491,7 @@ namespace GitUI.LeftPanel
                 return;
             }
 
-            node.EnsureVisible();
+            node.EnsureVerticallyVisible();
             treeMain.SelectedNode = node;
 
             return;

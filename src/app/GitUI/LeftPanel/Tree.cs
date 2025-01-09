@@ -194,27 +194,14 @@ namespace GitUI.LeftPanel
 
         private void ExpandPathToSelectedNode()
         {
-            if (TreeViewNode.TreeView.SelectedNode is not null)
+            if (TreeViewNode.TreeView.Nodes.Count == 0)
             {
-                EnsureNodeVisible(TreeViewNode.TreeView.Handle, TreeViewNode.TreeView.SelectedNode);
-            }
-            else if (TreeViewNode.TreeView.Nodes.Count > 0)
-            {
-                // No selected node, just make sure the first node is visible
-                EnsureNodeVisible(TreeViewNode.TreeView.Handle, TreeViewNode.TreeView.Nodes[0]);
+                return;
             }
 
-            return;
-
-            static void EnsureNodeVisible(IntPtr hwnd, TreeNode node)
-            {
-                node.EnsureVisible();
-
-                // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal
-                // scroll back to 0. Note that we use SendMessage rather than SetScrollPos as the former works
-                // outside of Begin/EndUpdate.
-                NativeMethods.SendMessageW(hwnd, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SBH.LEFT, IntPtr.Zero);
-            }
+            // If no selected node, just make sure that the first node is visible
+            TreeNode node = TreeViewNode.TreeView.SelectedNode ?? TreeViewNode.TreeView.Nodes[0];
+            node.EnsureVerticallyVisible();
         }
     }
 }

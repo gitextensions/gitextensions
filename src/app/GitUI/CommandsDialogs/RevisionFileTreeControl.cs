@@ -150,7 +150,7 @@ See the changes in the commit form.");
                 tvGitTree.AfterSelect -= new TreeViewEventHandler(tvGitTree_AfterSelect);
                 tvGitTree.SelectedNode = foundNode;
                 tvGitTree.AfterSelect += new TreeViewEventHandler(tvGitTree_AfterSelect);
-                tvGitTree.SelectedNode.EnsureVisible();
+                tvGitTree.SelectedNode.EnsureVerticallyVisible();
 
                 this.InvokeAndForget(() => ShowGitItemAsync(gitItem, line));
             }
@@ -231,7 +231,7 @@ See the changes in the commit form.");
                         if (_revisionFileTreeController.SelectFileOrFolder(tvGitTree, path))
                         {
                             // Try scroll
-                            tvGitTree.SelectedNode.EnsureVisible();
+                            tvGitTree.SelectedNode.EnsureVerticallyVisible();
                             break;
                         }
                     }

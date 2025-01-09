@@ -2,6 +2,19 @@
 
 public static class TreeViewExtensions
 {
+    public static void EnsureVerticallyVisible(this TreeNode? node)
+    {
+        if (node?.TreeView is not TreeView treeView)
+        {
+            return;
+        }
+
+        node.EnsureVisible();
+
+        // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal scroll back to 0.
+        treeView.ScrollLeftMost();
+    }
+
     /// <summary>
     /// Returns a set of expanded node paths to be used with RestoreExpandedNodeState starting from the input node.
     /// This function makes use of GetFullNamePath, rather than TreeNode.FullPath, so you can vary the node's Text,
@@ -68,6 +81,14 @@ public static class TreeViewExtensions
         {
             TreeNode foundNode = GetNodeFromPath(node, path);
             foundNode?.Expand();
+        }
+    }
+
+    public static void ScrollLeftMost(this TreeView? treeView)
+    {
+        if (treeView is not null)
+        {
+            NativeMethods.SendMessageW(treeView.Handle, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SBH.LEFT, IntPtr.Zero);
         }
     }
 
