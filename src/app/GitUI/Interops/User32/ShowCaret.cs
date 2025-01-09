@@ -5,7 +5,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
-        [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern BOOL ShowCaret(IntPtr hWnd);
+        [LibraryImport(Libraries.User32)]
+        public static partial BOOL ShowCaret(IntPtr hWnd);
     }
 }
