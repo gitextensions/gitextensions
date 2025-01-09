@@ -3,6 +3,18 @@
 public static class TreeViewExtensions
 {
     /// <summary>
+    /// Returns a set of expanded node paths to be used with RestoreExpandedNodeState starting from the input node.
+    /// This function makes use of GetFullNamePath, rather than TreeNode.FullPath, so you can vary the node's Text,
+    /// as long as the node's Name remains stable.
+    /// </summary>
+    public static HashSet<string> GetExpandedNodesState(this TreeNode node)
+    {
+        HashSet<string> result = [];
+        node.DoGetExpandedNodesState(result);
+        return result;
+    }
+
+    /// <summary>
     /// Similar to TreeNode.FullPath, this function returns a full path made up of TreeNode.Name rather
     /// than TreeNode.Text, if the former is non-empty. This is useful as it allows the node's Text to
     /// be changed, while the node's Name can remain a key for operations such as getting and restoring
@@ -28,16 +40,23 @@ public static class TreeViewExtensions
         }
     }
 
-    /// <summary>
-    /// Returns a set of expanded node paths to be used with RestoreExpandedNodeState starting from the input node.
-    /// This function makes use of GetFullNamePath, rather than TreeNode.FullPath, so you can vary the node's Text,
-    /// as long as the node's Name remains stable.
-    /// </summary>
-    public static HashSet<string> GetExpandedNodesState(this TreeNode node)
+    public static TreeNode? GetNodeFromPath(this TreeNode node, string? path)
     {
-        HashSet<string> result = [];
-        node.DoGetExpandedNodesState(result);
-        return result;
+        if (GetFullNamePath(node) == path)
+        {
+            return node;
+        }
+
+        foreach (TreeNode childNode in node.Nodes)
+        {
+            TreeNode foundNode = GetNodeFromPath(childNode, path);
+            if (foundNode is not null)
+            {
+                return foundNode;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -63,24 +82,5 @@ public static class TreeViewExtensions
         {
             DoGetExpandedNodesState(childNode, expandedNodes);
         }
-    }
-
-    public static TreeNode? GetNodeFromPath(this TreeNode node, string? path)
-    {
-        if (GetFullNamePath(node) == path)
-        {
-            return node;
-        }
-
-        foreach (TreeNode childNode in node.Nodes)
-        {
-            TreeNode foundNode = GetNodeFromPath(childNode, path);
-            if (foundNode is not null)
-            {
-                return foundNode;
-            }
-        }
-
-        return null;
     }
 }
