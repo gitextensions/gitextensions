@@ -15,6 +15,7 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.NBugReports;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -37,6 +38,7 @@ namespace GitUI
         private readonly CancellationTokenSequence _reloadSequence = new();
         private readonly ToolStripItem _showDiffForAllParentsSeparator = new ToolStripSeparator() { Name = $"{_showDiffForAllParentsItemName}Separator" };
         private readonly ToolStripItem _sortBySeparator = new ToolStripSeparator();
+        private readonly SolidBrush _inactiveSelectionHighlightBrush = new(AppColor.InactiveSelectionHighlight.GetThemeColor());
 
         private int _nextIndexToSelect = -1;
         private bool _enableSelectedIndexChangeEvent = true;
@@ -1628,7 +1630,7 @@ namespace GitUI
 
             if (item.Selected)
             {
-                e.Graphics.FillRectangle(Focused ? SystemBrushes.Highlight : OtherColors.InactiveSelectionHighlightBrush, e.Bounds);
+                e.Graphics.FillRectangle(Focused ? SystemBrushes.Highlight : _inactiveSelectionHighlightBrush, e.Bounds);
             }
 
             if (image is not null)

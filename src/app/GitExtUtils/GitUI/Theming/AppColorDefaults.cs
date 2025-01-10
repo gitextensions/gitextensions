@@ -7,9 +7,10 @@
         private static readonly Dictionary<AppColor, Color> Values =
             new()
             {
-                { AppColor.OtherTag, Color.Gray },
                 { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
                 { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
+                { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },
+                { AppColor.OtherTag, Color.Gray },
                 { AppColor.Tag, Color.DarkBlue },
                 { AppColor.Graph, Color.DarkRed },
                 { AppColor.GraphBranch1, Color.FromArgb(0xf0, 0x64, 0xa0) },
@@ -20,6 +21,7 @@
                 { AppColor.GraphBranch6, Color.FromArgb(0x1a, 0xc6, 0xa6) },
                 { AppColor.GraphBranch7, Color.FromArgb(0xe7, 0xb0, 0x0f) },
                 { AppColor.GraphBranch8, Color.Empty },
+                { AppColor.GraphNonRelativeBranch, Color.LightGray },
                 { AppColor.Branch, Color.FromArgb(0x00, 0x80, 0x00) },
                 { AppColor.RemoteBranch, Color.FromArgb(0x8b, 0x00, 0x09) },
                 { AppColor.DiffSection, Color.FromArgb(230, 230, 230) },
