@@ -106,17 +106,6 @@
       <Component Id="EnvDTE.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\EnvDTE.dll" />
       </Component>
-      <!--
-      <Component Id="EasyHook.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\EasyHook.dll" />
-      </Component>
-      <Component Id="EasyHook32.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\EasyHook32.dll" />
-      </Component>
-      <Component Id="EasyHook64.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\EasyHook64.dll" />
-      </Component>
-      -->
       <Component Id="ExCSS.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\ExCSS.dll" />
       </Component>
@@ -654,11 +643,6 @@
       <ComponentRef Id="BugReporter.exe" />
       <ComponentRef Id="BugReporter.runtimeconfig.json" />
       <ComponentRef Id="ConEmuWinForms.dll" />
-      <!--
-      <ComponentRef Id="EasyHook.dll" />
-      <ComponentRef Id="EasyHook32.dll" />
-      <ComponentRef Id="EasyHook64.dll" />
-      -->
       <ComponentRef Id="EnvDTE.dll" />
       <ComponentRef Id="ExCSS.dll" />
       <ComponentRef Id="Git.hub.dll" />

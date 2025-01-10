@@ -5,14 +5,6 @@
     /// </summary>
     public class Theme : IThemeSerializationData
     {
-        private static readonly IReadOnlyDictionary<KnownColor, KnownColor> Duplicates =
-            new Dictionary<KnownColor, KnownColor>
-            {
-                [KnownColor.ButtonFace] = KnownColor.Control,
-                [KnownColor.ButtonShadow] = KnownColor.ControlDark,
-                [KnownColor.ButtonHighlight] = KnownColor.ControlLight
-            };
-
         private static Theme? _default;
 
         private readonly IReadOnlyDictionary<AppColor, Color> _appColorValues;
@@ -65,7 +57,7 @@
             new HashSet<KnownColor>(
                 Enum.GetValues(typeof(KnownColor))
                     .Cast<KnownColor>()
-                    .Where(c => IsSystemColor(c) && !Duplicates.ContainsKey(c)));
+                    .Where(c => IsSystemColor(c)));
 
         /// <summary>
         /// Get .Net system color value as defined by this instance. If not defined, returns
@@ -78,11 +70,7 @@
                 throw new ArgumentException($"{name} is not system color");
             }
 
-            KnownColor actualName = Duplicates.TryGetValue(name, out KnownColor duplicate)
-                ? duplicate
-                : name;
-
-            return GetSysColor(actualName);
+            return GetSysColor(name);
         }
 
         /// <summary>
