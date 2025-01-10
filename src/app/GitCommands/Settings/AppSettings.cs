@@ -2149,7 +2149,7 @@ namespace GitCommands
         public static Font GetFont(string name, Font defaultValue) => SettingsContainer.GetFont(name, defaultValue);
         public static void SetFont(string name, Font value) => SettingsContainer.SetFont(name, value);
 
-        [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is")]
+        [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is. Only used by ThemeMigration.")]
         public static Color GetColor(AppColor name)
         {
             return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));

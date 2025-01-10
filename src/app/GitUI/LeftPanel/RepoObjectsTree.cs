@@ -158,8 +158,8 @@ namespace GitUI.LeftPanel
 
                 search.SearchBoxBorderStyle = BorderStyle.FixedSingle;
                 search.SearchBoxBorderDefaultColor = Color.LightGray.AdaptBackColor();
-                search.SearchBoxBorderHoveredColor = SystemColors.Highlight.AdaptBackColor();
-                search.SearchBoxBorderFocusedColor = SystemColors.HotTrack.AdaptBackColor();
+                search.SearchBoxBorderHoveredColor = SystemColors.Highlight;
+                search.SearchBoxBorderFocusedColor = SystemColors.HotTrack;
 
                 return search;
 
