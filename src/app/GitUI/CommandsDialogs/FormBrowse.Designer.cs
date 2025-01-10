@@ -230,7 +230,6 @@ namespace GitUI.CommandsDialogs
             // 
             RefreshButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             RefreshButton.Image = Properties.Images.ReloadRevisions;
-            RefreshButton.ImageTransparentColor = Color.White;
             RefreshButton.Name = "RefreshButton";
             RefreshButton.Size = new Size(23, 22);
             RefreshButton.ToolTipText = "Refresh";
@@ -305,7 +304,6 @@ namespace GitUI.CommandsDialogs
             // 
             toolStripButtonLevelUp.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStripButtonLevelUp.Image = Properties.Images.SubmodulesManage;
-            toolStripButtonLevelUp.ImageTransparentColor = Color.Magenta;
             toolStripButtonLevelUp.Name = "toolStripButtonLevelUp";
             toolStripButtonLevelUp.Size = new Size(32, 22);
             toolStripButtonLevelUp.ToolTipText = "Submodules";
@@ -320,7 +318,6 @@ namespace GitUI.CommandsDialogs
             // branchSelect
             // 
             branchSelect.Image = Properties.Resources.branch;
-            branchSelect.ImageTransparentColor = Color.Magenta;
             branchSelect.Name = "branchSelect";
             branchSelect.Size = new Size(60, 22);
             branchSelect.Text = "Branch";
@@ -344,7 +341,6 @@ namespace GitUI.CommandsDialogs
             manageStashesToolStripMenuItem,
             createAStashToolStripMenuItem});
             toolStripSplitStash.Image = Properties.Images.Stash;
-            toolStripSplitStash.ImageTransparentColor = Color.Magenta;
             toolStripSplitStash.Name = "toolStripSplitStash";
             toolStripSplitStash.Size = new Size(32, 22);
             toolStripSplitStash.ToolTipText = "Manage stashes";
@@ -398,7 +394,6 @@ namespace GitUI.CommandsDialogs
             // 
             toolStripButtonCommit.Image = Properties.Images.RepoStateClean;
             toolStripButtonCommit.ImageAlign = ContentAlignment.MiddleLeft;
-            toolStripButtonCommit.ImageTransparentColor = Color.Magenta;
             toolStripButtonCommit.Name = "toolStripButtonCommit";
             toolStripButtonCommit.Size = new Size(71, 22);
             toolStripButtonCommit.Text = "Commit";
@@ -419,7 +414,6 @@ namespace GitUI.CommandsDialogs
             toolStripSeparator14,
             setDefaultPullButtonActionToolStripMenuItem});
             toolStripButtonPull.Image = Properties.Images.Pull;
-            toolStripButtonPull.ImageTransparentColor = Color.Magenta;
             toolStripButtonPull.Name = "toolStripButtonPull";
             toolStripButtonPull.Size = new Size(32, 22);
             toolStripButtonPull.Text = "Pull";
@@ -491,7 +485,6 @@ namespace GitUI.CommandsDialogs
             // 
             toolStripButtonPush.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStripButtonPush.Image = Properties.Images.Push;
-            toolStripButtonPush.ImageTransparentColor = Color.Magenta;
             toolStripButtonPush.Name = "toolStripButtonPush";
             toolStripButtonPush.Size = new Size(23, 22);
             toolStripButtonPush.Text = "Push";
@@ -506,7 +499,6 @@ namespace GitUI.CommandsDialogs
             // 
             toolStripFileExplorer.Enabled = false;
             toolStripFileExplorer.Image = Properties.Images.BrowseFileExplorer;
-            toolStripFileExplorer.ImageTransparentColor = Color.Gray;
             toolStripFileExplorer.Name = "toolStripFileExplorer";
             toolStripFileExplorer.Size = new Size(23, 22);
             toolStripFileExplorer.ToolTipText = "File Explorer";
@@ -515,7 +507,6 @@ namespace GitUI.CommandsDialogs
             // userShell
             // 
             userShell.Image = Properties.Images.GitForWindows;
-            userShell.ImageTransparentColor = Color.Magenta;
             userShell.Name = "userShell";
             userShell.Size = new Size(23, 22);
             userShell.ToolTipText = "Git bash";
@@ -790,7 +781,6 @@ namespace GitUI.CommandsDialogs
             // refreshToolStripMenuItem
             // 
             refreshToolStripMenuItem.Image = Properties.Images.ReloadRevisions;
-            refreshToolStripMenuItem.ImageTransparentColor = Color.Transparent;
             refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             refreshToolStripMenuItem.Size = new Size(221, 22);
             refreshToolStripMenuItem.Text = "&Refresh";
@@ -799,7 +789,6 @@ namespace GitUI.CommandsDialogs
             // refreshDashboardToolStripMenuItem
             // 
             refreshDashboardToolStripMenuItem.Image = Properties.Images.ReloadRevisions;
-            refreshDashboardToolStripMenuItem.ImageTransparentColor = Color.Transparent;
             refreshDashboardToolStripMenuItem.Name = "refreshDashboardToolStripMenuItem";
             refreshDashboardToolStripMenuItem.Size = new Size(113, 22);
             refreshDashboardToolStripMenuItem.Text = "&Refresh";

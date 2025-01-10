@@ -120,7 +120,6 @@
             // 
             toolStripSaveButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStripSaveButton.Image = Properties.Images.Save;
-            toolStripSaveButton.ImageTransparentColor = Color.Magenta;
             toolStripSaveButton.Name = "toolStripSaveButton";
             toolStripSaveButton.Size = new Size(23, 22);
             toolStripSaveButton.ToolTipText = "Save";

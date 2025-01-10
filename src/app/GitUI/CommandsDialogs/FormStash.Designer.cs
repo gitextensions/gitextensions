@@ -327,7 +327,6 @@ namespace GitUI.CommandsDialogs
             refreshToolStripButton.Alignment = ToolStripItemAlignment.Right;
             refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             refreshToolStripButton.Image = Properties.Images.ReloadRevisions;
-            refreshToolStripButton.ImageTransparentColor = Color.Magenta;
             refreshToolStripButton.Name = "refreshToolStripButton";
             refreshToolStripButton.Overflow = ToolStripItemOverflow.Never;
             refreshToolStripButton.Size = new Size(36, 37);
