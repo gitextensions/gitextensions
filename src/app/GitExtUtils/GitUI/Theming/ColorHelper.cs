@@ -27,9 +27,6 @@
         public static void SetForeColorForBackColor(this Control control) =>
             control.ForeColor = GetForeColorForBackColor(control.BackColor);
 
-        public static void SetForeColorForBackColor(this ToolStripItem control) =>
-            control.ForeColor = GetForeColorForBackColor(control.BackColor);
-
         public static Color GetForeColorForBackColor(Color backColor)
         {
             HslColor hsl1 = backColor.ToPerceptedHsl();
@@ -55,12 +52,6 @@
                     (0.25 * (hsl1.H - hsl2.H).Modulo(1));
             }
         }
-
-        public static Color AdaptTextColor(this Color original) =>
-            AdaptColor(original, isForeground: true);
-
-        public static Color AdaptBackColor(this Color original) =>
-            AdaptColor(original, isForeground: false);
 
         /// <summary>
         /// Get a color to be used instead of SystemColors.GrayText
@@ -97,7 +88,7 @@
         }
 
         /// <summary>
-        /// Get a color to be used instead of SystemColors.GrayText which is more ore less gray than
+        /// Get a color to be used instead of SystemColors.GrayText which is more or less gray than
         /// the usual SystemColors.GrayText.
         /// </summary>
         public static Color GetGrayTextColor(KnownColor textColorName, float degreeOfGrayness = 1f)
@@ -110,6 +101,19 @@
             return AdaptTextColor(highlightGrayTextHsl.ToColor());
         }
 
+        public static Color AdaptTextColor(this Color original) =>
+            AdaptColor(original, isForeground: true);
+
+        public static Color AdaptBackColor(this Color original) =>
+            AdaptColor(original, isForeground: false);
+
+        /// <summary>
+        /// Adapt invariant colors to the current theme, by comparing to Text/Background color pairs in the invariant theme.
+        /// Note that <see cref="SystemColors"/> and <see cref="AppColor"/> should not be adapted.
+        /// </summary>
+        /// <param name="original">The original <see cref="Color"/></param>
+        /// <param name="isForeground"><see ref="true"/> if foreground/text, <see ref="false"/> if background.</param>
+        /// <returns>The adapted color.</returns>
         public static Color AdaptColor(Color original, bool isForeground)
         {
             if (IsDefaultTheme)
@@ -136,6 +140,74 @@
                 HslColor hsl2 = ThemeSettings.InvariantTheme.GetNonEmptyColor(c2).ToPerceptedHsl();
                 return Math.Abs(hsl1.L - hsl2.L) + (0.25 * Math.Abs(hsl1.S - hsl2.S));
             }
+        }
+
+        /// <remarks>0.05 is subtle. 0.3 is quite strong.</remarks>
+        public static Color MakeBackgroundDarkerBy(this KnownColor name, double amount) =>
+            ThemeSettings.Theme.GetNonEmptyColor(name)
+                    .TransformHsl(l: l => l - amount);
+
+        public static void AdaptImageLightness(this ToolStripItem item) =>
+            item.Image = ((Bitmap)item.Image)?.AdaptLightness();
+
+        public static void AdaptImageLightness(this ButtonBase button) =>
+            button.Image = ((Bitmap)button.Image)?.AdaptLightness();
+
+        public static Bitmap AdaptLightness(this Bitmap original)
+        {
+            if (IsDefaultTheme)
+            {
+                return original;
+            }
+
+            Bitmap clone = (Bitmap)original.Clone();
+            new LightnessCorrection(clone).Execute();
+            return clone;
+        }
+
+        /// <summary>
+        /// Transform the invariant color to be related to the known colors
+        /// in the same way in the current theme as in the invariant theme.
+        /// </summary>
+        /// <param name="original">Original color.</param>
+        /// <param name="exampleName">The name of foreground/background for the pair.</param>
+        /// <param name="oppositeName">The name of background/foreground for the pair.</param>
+        /// <returns>The transformed color.</returns>
+        private static Color AdaptColor(Color original, KnownColor exampleName, KnownColor oppositeName)
+        {
+            Color exampleOriginal = ThemeSettings.InvariantTheme.GetNonEmptyColor(exampleName);
+            Color oppositeOriginal = ThemeSettings.InvariantTheme.GetNonEmptyColor(oppositeName);
+            Color example = ThemeSettings.Theme.GetNonEmptyColor(exampleName);
+            Color opposite = ThemeSettings.Theme.GetNonEmptyColor(oppositeName);
+
+            if (ThemeSettings.Variations.Contains(ThemeVariations.Colorblind))
+            {
+                original = original.AdaptToColorblindness();
+            }
+
+            (Color rgb, HslColor hsl) exampleOrigRgbHsl = RgbHsl(exampleOriginal);
+            (Color rgb, HslColor hsl) oppositeOrigRgbHsl = RgbHsl(oppositeOriginal);
+            (Color rgb, HslColor hsl) exampleRgbHsl = RgbHsl(example);
+            (Color rgb, HslColor hsl) oppositeRgbHsl = RgbHsl(opposite);
+            (Color rgb, HslColor hsl) originalRgbHsl = RgbHsl(original);
+
+            double perceptedL = Transform(
+                PerceptedL(originalRgbHsl),
+                PerceptedL(exampleOrigRgbHsl),
+                PerceptedL(oppositeOrigRgbHsl),
+                PerceptedL(exampleRgbHsl),
+                PerceptedL(oppositeRgbHsl));
+
+            double actualL = ActualL(originalRgbHsl.rgb, perceptedL);
+
+            Color result = originalRgbHsl.hsl.WithLuminosity(actualL).ToColor();
+            return result;
+
+            double PerceptedL((Color rgb, HslColor hsl) c) =>
+                ColorHelper.PerceptedL(c.rgb, c.hsl.L);
+
+            (Color rgb, HslColor hsl) RgbHsl(Color c) =>
+                (c, new HslColor(c));
         }
 
         /// <summary>
@@ -176,75 +248,6 @@
             // delta / deltaOrig = deltaExample / deltaExampleOrig
             double result = opposite + (deltaOrig / deltaExampleOrig * deltaExample);
             return result.WithinRange(0, 1);
-        }
-
-        /// <remarks>0.05 is subtle. 0.3 is quite strong.</remarks>
-        public static Color MakeBackgroundDarkerBy(this KnownColor name, double amount) =>
-            ThemeSettings.InvariantTheme.GetNonEmptyColor(name)
-                .TransformHsl(l: l => l - amount)
-                .AdaptBackColor();
-
-        public static bool IsLightTheme()
-        {
-            return IsLightColor(SystemColors.Window);
-        }
-
-        public static Color GetSplitterColor() =>
-            KnownColor.Window.MakeBackgroundDarkerBy(0);
-
-        public static void AdaptImageLightness(this ToolStripItem item) =>
-            item.Image = ((Bitmap)item.Image)?.AdaptLightness();
-
-        public static void AdaptImageLightness(this ButtonBase button) =>
-            button.Image = ((Bitmap)button.Image)?.AdaptLightness();
-
-        public static Bitmap AdaptLightness(this Bitmap original)
-        {
-            if (IsDefaultTheme)
-            {
-                return original;
-            }
-
-            Bitmap clone = (Bitmap)original.Clone();
-            new LightnessCorrection(clone).Execute();
-            return clone;
-        }
-
-        private static Color AdaptColor(Color original, KnownColor exampleName, KnownColor oppositeName)
-        {
-            Color exampleOriginal = ThemeSettings.InvariantTheme.GetNonEmptyColor(exampleName);
-            Color oppositeOriginal = ThemeSettings.InvariantTheme.GetNonEmptyColor(oppositeName);
-            Color example = ThemeSettings.Theme.GetNonEmptyColor(exampleName);
-            Color opposite = ThemeSettings.Theme.GetNonEmptyColor(oppositeName);
-
-            if (ThemeSettings.Variations.Contains(ThemeVariations.Colorblind))
-            {
-                original = original.AdaptToColorblindness();
-            }
-
-            (Color rgb, HslColor hsl) exampleOrigRgbHsl = RgbHsl(exampleOriginal);
-            (Color rgb, HslColor hsl) oppositeOrigRgbHsl = RgbHsl(oppositeOriginal);
-            (Color rgb, HslColor hsl) exampleRgbHsl = RgbHsl(example);
-            (Color rgb, HslColor hsl) oppositeRgbHsl = RgbHsl(opposite);
-            (Color rgb, HslColor hsl) originalRgbHsl = RgbHsl(original);
-
-            double perceptedL = Transform(
-                PerceptedL(originalRgbHsl),
-                PerceptedL(exampleOrigRgbHsl),
-                PerceptedL(oppositeOrigRgbHsl),
-                PerceptedL(exampleRgbHsl),
-                PerceptedL(oppositeRgbHsl));
-
-            double actualL = ActualL(originalRgbHsl.rgb, perceptedL);
-
-            Color result = originalRgbHsl.hsl.WithLuminosity(actualL).ToColor();
-            return result;
-
-            double PerceptedL((Color rgb, HslColor hsl) c) =>
-                ColorHelper.PerceptedL(c.rgb, c.hsl.L);
-
-            (Color rgb, HslColor hsl) RgbHsl(Color c) =>
-                (c, new HslColor(c));
         }
 
         private static Color TransformHsl(
@@ -300,11 +303,6 @@
 
         public static HslColor ToActualHsl(this HslColor hsl, Color rgb) =>
             hsl.WithLuminosity(ActualL(rgb, hsl.L));
-
-        private static bool IsLightColor(this Color color)
-        {
-            return new HslColor(color).L > 0.5;
-        }
 
         private static Color AdaptToColorblindness(this Color color)
         {
