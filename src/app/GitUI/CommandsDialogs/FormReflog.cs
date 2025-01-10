@@ -5,6 +5,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -39,6 +40,7 @@ namespace GitUI.CommandsDialogs
             : base(uiCommands)
         {
             InitializeComponent();
+            lblDirtyWorkingDirectory.ForeColor.AdaptTextColor();
             InitializeComplete();
 
             gridReflog.RowTemplate.Height = DpiUtil.Scale(24);

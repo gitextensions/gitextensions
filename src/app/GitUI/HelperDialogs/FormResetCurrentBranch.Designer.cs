@@ -94,7 +94,6 @@
             Soft.BackColor = Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             Soft.Checked = true;
             Soft.Dock = DockStyle.Fill;
-            Soft.ForeColor = Color.Black;
             Soft.Location = new Point(3, 3);
             Soft.Name = "Soft";
             Soft.Padding = new Padding(3);
@@ -108,7 +107,6 @@
             Mixed.AutoSize = true;
             Mixed.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             Mixed.Dock = DockStyle.Fill;
-            Mixed.ForeColor = Color.Black;
             Mixed.Location = new Point(3, 45);
             Mixed.Name = "Mixed";
             Mixed.Padding = new Padding(3);
@@ -123,7 +121,6 @@
             Keep.AutoSize = true;
             Keep.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             Keep.Dock = DockStyle.Fill;
-            Keep.ForeColor = Color.Black;
             Keep.Location = new Point(3, 87);
             Keep.Name = "Keep";
             Keep.Padding = new Padding(3);
@@ -138,7 +135,6 @@
             Merge.AutoSize = true;
             Merge.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             Merge.Dock = DockStyle.Fill;
-            Merge.ForeColor = Color.Black;
             Merge.Location = new Point(3, 129);
             Merge.Name = "Merge";
             Merge.Padding = new Padding(3);
@@ -153,7 +149,6 @@
             Hard.AutoSize = true;
             Hard.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             Hard.Dock = DockStyle.Fill;
-            Hard.ForeColor = Color.Black;
             Hard.Location = new Point(3, 171);
             Hard.Name = "Hard";
             Hard.Padding = new Padding(3);

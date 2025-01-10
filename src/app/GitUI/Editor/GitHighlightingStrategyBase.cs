@@ -1,4 +1,5 @@
 ﻿using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor
@@ -7,7 +8,7 @@ namespace GitUI.Editor
     {
         protected static HighlightColor ColorNormal { get; } = new(SystemColors.WindowText, bold: false, italic: false);
 
-        private static HighlightColor ColorComment { get; } = new(Color.DarkGreen, bold: false, italic: false);
+        private static HighlightColor ColorComment { get; } = new(Color.DarkGreen.AdaptBackColor(), bold: false, italic: false);
 
         private readonly DefaultHighlightingStrategy _defaultHighlightingStrategy = new();
 

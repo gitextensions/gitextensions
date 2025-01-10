@@ -1,4 +1,5 @@
 ﻿using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -19,13 +20,13 @@ namespace GitUI.Editor
 
         private static readonly Dictionary<char, (string longForm, HighlightColor color, string[] options)> _commandByFirstChar = new()
         {
-            { 'p', ("pick", new HighlightColor(Color.Black, bold: true, italic: false), Array.Empty<string>()) },
-            { 'r', ("reword", new HighlightColor(Color.Purple, bold: true, italic: false), Array.Empty<string>()) },
-            { 'e', ("edit", new HighlightColor(Color.Black, bold: true, italic: false), Array.Empty<string>()) },
-            { 's', ("squash", new HighlightColor(Color.DarkBlue, bold: true, italic: false), Array.Empty<string>()) },
-            { 'f', ("fixup", new HighlightColor(Color.LightCoral, bold: true, italic: false), new[] { "-C", "-c" }) },
-            { 'x', ("exec", new HighlightColor(Color.Black, bold: true, italic: false), Array.Empty<string>()) },
-            { 'd', ("drop", new HighlightColor(Color.Red, bold: true, italic: false), Array.Empty<string>()) }
+            { 'p', ("pick", new HighlightColor(SystemColors.InfoText, bold: true, italic: false), Array.Empty<string>()) },
+            { 'r', ("reword", new HighlightColor(Color.Purple.AdaptTextColor(), bold: true, italic: false), Array.Empty<string>()) },
+            { 'e', ("edit", new HighlightColor(Color.DarkGray.AdaptTextColor(), bold: true, italic: false), Array.Empty<string>()) },
+            { 's', ("squash", new HighlightColor(Color.DarkBlue.AdaptTextColor(), bold: true, italic: false), Array.Empty<string>()) },
+            { 'f', ("fixup", new HighlightColor(Color.LightCoral.AdaptTextColor(), bold: true, italic: false), new[] { "-C", "-c" }) },
+            { 'x', ("exec", new HighlightColor(SystemColors.GrayText, bold: true, italic: false), Array.Empty<string>()) },
+            { 'd', ("drop", new HighlightColor(Color.Red.AdaptTextColor(), bold: true, italic: false), Array.Empty<string>()) }
         };
 
         public RebaseTodoHighlightingStrategy(IGitModule module)

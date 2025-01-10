@@ -28,7 +28,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             if (branchColors.Length < 2)
             {
                 Trace.WriteLine("At least two graph colors must be configured");
-                branchColors = [Color.Magenta, Color.Cyan];
+                branchColors = [Color.Magenta.AdaptTextColor(), Color.Cyan.AdaptTextColor()];
             }
 
             foreach (Color color in branchColors)

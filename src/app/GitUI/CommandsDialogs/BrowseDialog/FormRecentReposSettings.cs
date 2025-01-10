@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils.GitUI.Theming;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -156,7 +157,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (!Directory.Exists(repo.Repo.Path))
             {
-                item.ForeColor = Color.Red;
+                item.ForeColor = Color.Red.AdaptTextColor();
             }
 
             return item;
