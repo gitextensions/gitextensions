@@ -1,6 +1,72 @@
 Changelog
 =========
 
+### Version v5.2 (no due date)
+
+#### Changes:
+* [#12130] feat(git-grep): Show function name of matches
+* [#12121] feat: Add syntax highlighting for some files
+* [#12120] fix(git-grep): Do not update on AddToSearchFilter
+* [#12118] feat: SystemColors.Window in Dashboard theme
+* [#12117] feat: branch diff adjust icons for file status
+* [#12115] refactor(`FileStatusList`): Remove `SelectedIndex` API
+* [#12113] fix: expand last column to ListView size
+* [#12109] chore(FileStatusList): Enable `nullable` decoration
+* [#12105] Rename FormBrowseController -> GpgInfoProvider
+* [#12096] fix(Submodules): Allow spaces in folder name
+* [#12093] fix(File History): Indicate not identifiable file
+* [#12092] fix(File History): Correctly quote filename
+* [#12089] fix(FormBrowse): Keep file context on deactivation of filter
+* [#12085] fix(ProcessWrapper): Provide git error message instead of "External program returned non-zero exit code."
+* [#12081] chore(dubious ownership): Remove "Trust all repositories" button
+* [#12080] fix(RevisionDataGridView): Always select a revision
+* [#12075] chore(MemoryStream): Add missing `using` statement
+* [#12065] fix(Scripts): Do not display mnemonic ampersand
+* [#12063] fix: ReadExactly from stream
+* [#12062] chore(stylecop): update to 1.2.0-beta.556
+* [#12060] feat(Git Command Log): Improve display of command cache
+* [#12057] chore: Convert remaining post-fix `FileAndForget`
+* [#12056] Fix(git-grep)
+* [#12034] feat(FileStatusList): Add examples of negative file filter
+* [#12033] feat(FileStatusList): Focus git-grep box on show
+* [#12032] feat: skip gaps in blocks for mark inline
+* [#12031] Address  CVE-2019-0820
+* [#12029] feat(CI/ADO): Add support for pull requests
+* [#12023] feat(EditboxBasedConsoleOutputControl): Improve UX and add [password] input field
+
+
+[#12130]:https://github.com/gitextensions/gitextensions/pull/12130
+[#12121]:https://github.com/gitextensions/gitextensions/pull/12121
+[#12120]:https://github.com/gitextensions/gitextensions/pull/12120
+[#12118]:https://github.com/gitextensions/gitextensions/pull/12118
+[#12117]:https://github.com/gitextensions/gitextensions/pull/12117
+[#12115]:https://github.com/gitextensions/gitextensions/pull/12115
+[#12113]:https://github.com/gitextensions/gitextensions/pull/12113
+[#12109]:https://github.com/gitextensions/gitextensions/pull/12109
+[#12105]:https://github.com/gitextensions/gitextensions/pull/12105
+[#12096]:https://github.com/gitextensions/gitextensions/pull/12096
+[#12093]:https://github.com/gitextensions/gitextensions/pull/12093
+[#12092]:https://github.com/gitextensions/gitextensions/pull/12092
+[#12089]:https://github.com/gitextensions/gitextensions/pull/12089
+[#12085]:https://github.com/gitextensions/gitextensions/pull/12085
+[#12081]:https://github.com/gitextensions/gitextensions/pull/12081
+[#12080]:https://github.com/gitextensions/gitextensions/pull/12080
+[#12075]:https://github.com/gitextensions/gitextensions/pull/12075
+[#12065]:https://github.com/gitextensions/gitextensions/pull/12065
+[#12063]:https://github.com/gitextensions/gitextensions/pull/12063
+[#12062]:https://github.com/gitextensions/gitextensions/pull/12062
+[#12060]:https://github.com/gitextensions/gitextensions/pull/12060
+[#12057]:https://github.com/gitextensions/gitextensions/pull/12057
+[#12056]:https://github.com/gitextensions/gitextensions/pull/12056
+[#12034]:https://github.com/gitextensions/gitextensions/pull/12034
+[#12033]:https://github.com/gitextensions/gitextensions/pull/12033
+[#12032]:https://github.com/gitextensions/gitextensions/pull/12032
+[#12031]:https://github.com/gitextensions/gitextensions/pull/12031
+[#12029]:https://github.com/gitextensions/gitextensions/pull/12029
+[#12023]:https://github.com/gitextensions/gitextensions/pull/12023
+
+
+
 ### Version 5.1.1 (10 Nov 2024)
 
 #### Changes:
