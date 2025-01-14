@@ -2213,15 +2213,27 @@ namespace GitUI.CommandsDialogs
 
         public static void OpenContainingFolder(FileStatusList diffFiles, IGitModule module)
         {
-            if (!diffFiles.SelectedItems.Any())
+            if (module.WorkingDir is not string workindDir)
             {
+                return;
+            }
+
+            if (diffFiles.SelectedFolder is RelativePath relativePath)
+            {
+                OpenInContainingFolder(workindDir, relativePath.Length == 0 ? "" : $"{relativePath.Value}/");
                 return;
             }
 
             foreach (FileStatusItem item in diffFiles.SelectedItems)
             {
-                string filePath = Path.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
+                OpenInContainingFolder(workindDir, item.Item.Name);
+            }
 
+            return;
+
+            static void OpenInContainingFolder(string workingDir, string relativePath)
+            {
+                string filePath = Path.Combine(workingDir, relativePath.ToNativePath());
                 if (!string.IsNullOrWhiteSpace(filePath))
                 {
                     FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);

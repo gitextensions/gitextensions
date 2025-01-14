@@ -172,7 +172,9 @@ namespace GitUITests.CommandsDialogs
             _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\folder2\\item3.txt", Arg.Any<string>());
         }
 
-        private static ContextMenuSelectionInfo CreateContextMenuSelectionInfo(GitRevision selectedRevision = null,
+        private static ContextMenuSelectionInfo CreateContextMenuSelectionInfo(
+            GitRevision? selectedRevision = null,
+            RelativePath? relativePath = null,
             bool isDisplayOnlyDiff = false,
             bool isStatusOnly = false,
             int selectedGitItemCount = 1,
@@ -187,7 +189,9 @@ namespace GitUITests.CommandsDialogs
             bool isDeleted = false,
             bool isAnySubmodule = false)
         {
-            return new ContextMenuSelectionInfo(selectedRevision,
+            return new ContextMenuSelectionInfo(
+                selectedRevision,
+                relativePath,
                 isDisplayOnlyDiff,
                 isStatusOnly,
                 selectedGitItemCount,

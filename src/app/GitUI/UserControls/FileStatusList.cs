@@ -487,6 +487,30 @@ namespace GitUI
         [DefaultValue(true)]
         public bool HasSelection => FileStatusListView.SelectedNodes.Count > 0;
 
+        /// <summary>
+        ///  Gets the <see cref="RelativePath"/> of a single selected folder node.
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public RelativePath? SelectedFolder
+        {
+            get
+            {
+                if (FileStatusListView.SelectedNodes.Count != 1)
+                {
+                    return null;
+                }
+
+                TreeNode selectedNode = FileStatusListView.SelectedNodes.First();
+                if (selectedNode.Nodes.Count == 0)
+                {
+                    return null;
+                }
+
+                return selectedNode.Tag is RelativePath relativePath ? relativePath : RelativePath.From("");
+            }
+        }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemStatus? SelectedGitItem
@@ -553,7 +577,9 @@ namespace GitUI
         [Browsable(false)]
         public IEnumerable<FileStatusItem> SelectedItems
         {
-            get => FileStatusListView.SelectedItemTags<FileStatusItem>();
+            get => FileStatusListView.SelectedNodes.Count == 1
+                ? FileStatusListView.SelectedNodes.First().ItemTags<FileStatusItem>().Where(item => item.Item != _noItemStatuses[0])
+                : FileStatusListView.SelectedItemTags<FileStatusItem>();
             set
             {
                 if (value is null)
