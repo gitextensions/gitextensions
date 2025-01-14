@@ -621,9 +621,42 @@ namespace GitUI.CommandsDialogs
         private void ShowSelectedFile(bool ensureNoSwitchToFilter = false, int? line = null)
         {
             DiffText.InvokeAndForget(() =>
-                blameToolStripMenuItem.Checked
-                    ? ShowSelectedFileBlameAsync(ensureNoSwitchToFilter, line)
-                    : ShowSelectedFileDiffAsync(ensureNoSwitchToFilter, line));
+                DiffFiles.SelectedFolder is RelativePath relativePath
+                    ? ShowSelectedFolderAsync(relativePath)
+                    : blameToolStripMenuItem.Checked
+                        ? ShowSelectedFileBlameAsync(ensureNoSwitchToFilter, line)
+                        : ShowSelectedFileDiffAsync(ensureNoSwitchToFilter, line));
+        }
+
+        private Task ShowSelectedFolderAsync(RelativePath relativePath)
+        {
+            (string path, string description) = GetDescription(relativePath, DiffFiles.SelectedItems.ToArray());
+            BlameControl.Visible = false;
+            DiffText.Visible = true;
+            return DiffText.ViewTextAsync(fileName: path, text: description);
+
+            static (string Path, string Text) GetDescription(RelativePath relativePath, FileStatusItem[] items)
+            {
+                string path = relativePath.Value;
+                int nameStartIndex = path.Length;
+                if (!path.EndsWith(PathUtil.PosixDirectorySeparatorChar))
+                {
+                    path += PathUtil.PosixDirectorySeparatorChar;
+                    if (path.Length > 1)
+                    {
+                        ++nameStartIndex;
+                    }
+                }
+
+                StringBuilder description = new();
+                description.Append('(').Append(items.Length).Append(") ").AppendLine(path);
+                foreach (FileStatusItem item in items)
+                {
+                    description.AppendLine().Append(item.Item.Name[nameStartIndex..]);
+                }
+
+                return (path, description.ToString());
+            }
         }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
