@@ -7,7 +7,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
-    public interface IRevisionDiffController
+    internal interface IRevisionDiffController
     {
         void SaveFiles(List<FileStatusItem> files, Func<string, string?> userSelection);
         bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo);
@@ -27,67 +27,27 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo);
     }
 
-    public sealed class ContextMenuSelectionInfo
+    internal sealed record ContextMenuSelectionInfo(
+        GitRevision? SelectedRevision,
+        RelativePath? SelectedFolder,
+        bool IsDisplayOnlyDiff,
+        bool IsStatusOnly,
+        int SelectedGitItemCount,
+        bool IsAnyItemIndex,
+        bool IsAnyItemWorkTree,
+        bool IsBareRepository,
+        bool AllFilesExist,
+        bool AllDirectoriesExist,
+        bool AllFilesOrUntrackedDirectoriesExist,
+        bool IsAnyTracked,
+        bool SupportPatches,
+        bool IsDeleted,
+        bool IsAnySubmodule);
+
+    internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPathResolver fullPathResolver) : IRevisionDiffController
     {
-        // Defaults are set to simplify test cases, the defaults enables most
-        public ContextMenuSelectionInfo(
-            GitRevision? selectedRevision,
-            bool isDisplayOnlyDiff,
-            bool isStatusOnly,
-            int selectedGitItemCount,
-            bool isAnyItemIndex,
-            bool isAnyItemWorkTree,
-            bool isBareRepository,
-            bool allFilesExist,
-            bool allDirectoriesExist,
-            bool allFilesOrUntrackedDirectoriesExist,
-            bool isAnyTracked,
-            bool supportPatches,
-            bool isDeleted,
-            bool isAnySubmodule)
-        {
-            SelectedRevision = selectedRevision;
-            IsDisplayOnlyDiff = isDisplayOnlyDiff;
-            IsStatusOnly = isStatusOnly;
-            SelectedGitItemCount = selectedGitItemCount;
-            IsAnyItemIndex = isAnyItemIndex;
-            IsAnyItemWorkTree = isAnyItemWorkTree;
-            IsBareRepository = isBareRepository;
-            AllFilesExist = allFilesExist;
-            AllDirectoriesExist = allDirectoriesExist;
-            AllFilesOrUntrackedDirectoriesExist = allFilesOrUntrackedDirectoriesExist;
-            IsAnyTracked = isAnyTracked;
-            SupportPatches = supportPatches;
-            IsDeleted = isDeleted;
-            IsAnySubmodule = isAnySubmodule;
-        }
-
-        public GitRevision? SelectedRevision { get; }
-        public bool IsDisplayOnlyDiff { get; }
-        public bool IsStatusOnly { get; }
-        public int SelectedGitItemCount { get; }
-        public bool IsAnyItemIndex { get; }
-        public bool IsAnyItemWorkTree { get; }
-        public bool IsBareRepository { get; }
-        public bool AllFilesExist { get; }
-        public bool AllDirectoriesExist { get; }
-        public bool AllFilesOrUntrackedDirectoriesExist { get; }
-        public bool IsAnyTracked { get; }
-        public bool SupportPatches { get; }
-        public bool IsDeleted { get; }
-        public bool IsAnySubmodule { get; }
-    }
-
-    public sealed class RevisionDiffController : IRevisionDiffController
-    {
-        private readonly Func<IGitModule> _getModule;
-        private readonly IFullPathResolver _fullPathResolver;
-
-        public RevisionDiffController(Func<IGitModule> getModule, IFullPathResolver fullPathResolver)
-        {
-            _getModule = getModule;
-            _fullPathResolver = fullPathResolver;
-        }
+        private readonly Func<IGitModule> _getModule = getModule;
+        private readonly IFullPathResolver _fullPathResolver = fullPathResolver;
 
         public void SaveFiles(List<FileStatusItem> files, Func<string, string?> userSelection)
         {
@@ -246,7 +206,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnyTracked;
+            return (selectionInfo.SelectedGitItemCount == 1 || !string.IsNullOrEmpty(selectionInfo.SelectedFolder?.Value)) && selectionInfo.IsAnyTracked;
         }
 
         public bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo)
