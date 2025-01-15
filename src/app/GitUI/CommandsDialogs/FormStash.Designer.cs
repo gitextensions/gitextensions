@@ -41,8 +41,6 @@ namespace GitUI.CommandsDialogs
             toolStrip1 = new GitUI.ToolStripEx();
             showToolStripLabel = new ToolStripLabel();
             Stashes = new ToolStripComboBox();
-            refreshToolStripButton = new ToolStripButton();
-            toolStripSeparator1 = new ToolStripSeparator();
             View = new GitUI.Editor.FileViewer();
             toolTip = new ToolTip(components);
             ((System.ComponentModel.ISupportInitialize)(gitStashBindingSource)).BeginInit();
@@ -293,9 +291,7 @@ namespace GitUI.CommandsDialogs
             toolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip1.Items.AddRange(new ToolStripItem[] {
             showToolStripLabel,
-            Stashes,
-            refreshToolStripButton,
-            toolStripSeparator1});
+            Stashes});
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Padding = new Padding(4);
@@ -312,6 +308,7 @@ namespace GitUI.CommandsDialogs
             // 
             // Stashes
             // 
+            Stashes.AutoSize = false;
             Stashes.DropDownStyle = ComboBoxStyle.DropDownList;
             Stashes.DropDownWidth = 200;
             Stashes.MaxDropDownItems = 30;
@@ -321,23 +318,6 @@ namespace GitUI.CommandsDialogs
             Stashes.ToolTipText = "Select a stash";
             Stashes.SelectedIndexChanged += StashesSelectedIndexChanged;
             Stashes.DropDown += Stashes_DropDown;
-            // 
-            // refreshToolStripButton
-            // 
-            refreshToolStripButton.Alignment = ToolStripItemAlignment.Right;
-            refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            refreshToolStripButton.Image = Properties.Images.ReloadRevisions;
-            refreshToolStripButton.Name = "refreshToolStripButton";
-            refreshToolStripButton.Overflow = ToolStripItemOverflow.Never;
-            refreshToolStripButton.Size = new Size(36, 37);
-            refreshToolStripButton.Text = "Refresh";
-            refreshToolStripButton.Click += RefreshClick;
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Overflow = ToolStripItemOverflow.Never;
-            toolStripSeparator1.Size = new Size(6, 40);
             // 
             // View
             // 
@@ -394,12 +374,10 @@ namespace GitUI.CommandsDialogs
         private RichTextBox StashMessage;
         private FileViewer View;
         private ToolStripEx toolStrip1;
-        private ToolStripButton refreshToolStripButton;
         private ToolStripLabel showToolStripLabel;
         private ToolStripComboBox Stashes;
         private GitUI.UserControls.RevisionGrid.LoadingControl Loading;
         private CheckBox StashKeepIndex;
-        private ToolStripSeparator toolStripSeparator1;
         private CheckBox chkIncludeUntrackedFiles;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel1;
