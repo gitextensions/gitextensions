@@ -96,7 +96,7 @@ namespace GitUI
             // 
             // cboFindInCommitFilesGitGrep
             // 
-            cboFindInCommitFilesGitGrep.Dock = DockStyle.Top;
+            cboFindInCommitFilesGitGrep.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             cboFindInCommitFilesGitGrep.FlatStyle = FlatStyle.Flat;
             cboFindInCommitFilesGitGrep.FormattingEnabled = true;
             cboFindInCommitFilesGitGrep.Location = new Point(0, 0);
@@ -116,9 +116,9 @@ namespace GitUI
             lblFindInCommitFilesGitGrepWatermark.AutoSize = true;
             lblFindInCommitFilesGitGrepWatermark.BackColor = SystemColors.Window;
             lblFindInCommitFilesGitGrepWatermark.ForeColor = SystemColors.GrayText;
-            lblFindInCommitFilesGitGrepWatermark.Location = new Point(0);
+            lblFindInCommitFilesGitGrepWatermark.Location = new Point(0, 0);
             lblFindInCommitFilesGitGrepWatermark.Name = "lblFindInCommitFilesGitGrepWatermark";
-            lblFindInCommitFilesGitGrepWatermark.Padding = new Padding(2);
+            lblFindInCommitFilesGitGrepWatermark.Padding = new Padding(2, 3, 2, 2);
             lblFindInCommitFilesGitGrepWatermark.Size = new Size(273, 15);
             lblFindInCommitFilesGitGrepWatermark.TabIndex = 3;
             lblFindInCommitFilesGitGrepWatermark.Text = "Find in commit files using git-grep regular expression...";
@@ -132,7 +132,6 @@ namespace GitUI
             DeleteSearchButton.Image = Properties.Resources.DeleteText;
             DeleteSearchButton.Location = new Point(646, 0);
             DeleteSearchButton.Name = "DeleteSearchButton";
-            DeleteSearchButton.Padding = new Padding(0);
             DeleteSearchButton.Size = new Size(18, 23);
             DeleteSearchButton.TabIndex = 4;
             DeleteSearchButton.Click += DeleteSearchButton_Click;
@@ -161,7 +160,7 @@ namespace GitUI
             FilterWatermarkLabel.ForeColor = SystemColors.GrayText;
             FilterWatermarkLabel.Location = new Point(0, 23);
             FilterWatermarkLabel.Name = "FilterWatermarkLabel";
-            FilterWatermarkLabel.Padding = new Padding(2);
+            FilterWatermarkLabel.Padding = new Padding(2, 3, 2, 2);
             FilterWatermarkLabel.Size = new Size(206, 15);
             FilterWatermarkLabel.TabIndex = 6;
             FilterWatermarkLabel.Text = "Filter files using a regular expression...";
