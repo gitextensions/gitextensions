@@ -22,13 +22,12 @@ namespace GitCommands.UserRepositoryHistory
     ///  https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain:
     ///  ...The description file is used only by the GitWeb program, so don’t worry about it...
     /// </remarks>
-    public sealed partial class RepositoryDescriptionProvider : IRepositoryDescriptionProvider
+    public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvider
     {
         private const string RepositoryDescriptionFileName = "description";
         private const string DefaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
 
-        [GeneratedRegex("^(repo(sitory)?)$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-        private static partial Regex UninformativeNameRegex();
+        private readonly Regex _uninformativeNameRegex = new($"^{AppSettings.UninformativeRepoNameRegex.Value}$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
         private readonly IGitDirectoryResolver _gitDirectoryResolver;
 
@@ -58,7 +57,7 @@ namespace GitCommands.UserRepositoryHistory
                 return desc;
             }
 
-            if (UninformativeNameRegex().IsMatch(dirInfo.Name))
+            while (dirInfo.Parent is not null && _uninformativeNameRegex.IsMatch(dirInfo.Name))
             {
                 dirInfo = dirInfo.Parent;
             }
