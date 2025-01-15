@@ -40,6 +40,7 @@ namespace GitCommands
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
         private static readonly SettingsPath DialogSettingsPath = new AppSettingsPath("Dialogs");
         private static readonly SettingsPath ExperimentalSettingsPath = new AppSettingsPath(DetailedSettingsPath, "Experimental");
+        private static readonly SettingsPath FileStatusSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "FileStatus");
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
         private static readonly SettingsPath RecentRepositories = new AppSettingsPath("RecentRepositories");
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
@@ -300,6 +301,12 @@ namespace GitCommands
             get => ReadStringRegValue("CascadeShellMenuItems", "110111000111111111");
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
+
+        public static ISetting<int> FileStatusFindInFilesGitGrepTypeIndex { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusFindInFilesGitGrepTypeIndex), 1);
+
+        public static ISetting<bool> FileStatusMergeSingleItemWithFolder { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusMergeSingleItemWithFolder), false);
+
+        public static ISetting<bool> FileStatusShowGroupNodesInFlatList { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusShowGroupNodesInFlatList), false);
 
         public static string SshPath
         {

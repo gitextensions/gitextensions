@@ -230,7 +230,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
             accessor.FilterComboBox.Text = filterText; // must be set first because it does not need to update the visibility
-            accessor.SetFileStatusListVisibility(filesPresent: true);
+            accessor.SetFileStatusListVisibility(showNoFiles: false);
 
             if (filterFocused)
             {
@@ -246,15 +246,15 @@ namespace GitExtensions.UITests.CommandsDialogs
             FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
             accessor.FilterComboBox.Text = "";
-            accessor.SetFileStatusListVisibility(filesPresent: true);
+            accessor.SetFileStatusListVisibility(showNoFiles: false);
             accessor.FilterWatermarkLabelVisible.Should().BeTrue();
 
             accessor.FilterComboBox.Focus();
-            accessor.SetFileStatusListVisibility(filesPresent: true);
+            accessor.SetFileStatusListVisibility(showNoFiles: false);
             accessor.FilterWatermarkLabelVisible.Should().BeFalse();
 
             accessor.FileStatusListView.Focus();
-            accessor.SetFileStatusListVisibility(filesPresent: true);
+            accessor.SetFileStatusListVisibility(showNoFiles: false);
             accessor.FilterWatermarkLabelVisible.Should().BeTrue();
         }
 
@@ -269,7 +269,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             string expectedRegex = string.IsNullOrEmpty(regex) ? null : regex;
 
             _fileStatusList.SetFilter(regex);
-            accessor.SetFileStatusListVisibility(filesPresent: true);
+            accessor.SetFileStatusListVisibility(showNoFiles: false);
 
             CheckStoreFilter(expectedColor, expectedRegex, accessor);
 

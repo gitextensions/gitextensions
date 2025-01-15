@@ -342,7 +342,7 @@ namespace GitUI.CommandsDialogs
             _revisionFileTree = revisionFileTree;
             _pathFilter = pathFilter;
             _refreshGitStatus = refreshGitStatus;
-            DiffFiles.Bind(objectId => DescribeRevision(objectId), _revisionGridInfo.GetActualRevision);
+            DiffFiles.Bind(RefreshArtificial, canAutoRefresh: true, objectId => DescribeRevision(objectId), _revisionGridInfo.GetActualRevision);
         }
 
         public void InitSplitterManager(SplitterManager splitterManager)

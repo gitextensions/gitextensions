@@ -19,7 +19,7 @@ namespace GitUI.UserControls
         {
             _sortService = sortService ?? throw new ArgumentNullException(nameof(sortService));
             Image = Images.SortBy;
-            Text = TranslatedStrings.SortBy;
+            Text = TranslatedStrings.SortGroupBy;
 
             _allItems =
             [
