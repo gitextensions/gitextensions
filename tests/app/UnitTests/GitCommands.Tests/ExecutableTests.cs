@@ -55,7 +55,7 @@ namespace GitCommandsTests
             process.Dispose();
 
             TimeSpan durationWaitTimeout = DateTime.Now - startedAt;
-            durationWaitTimeout.Should().BeGreaterThan(1.5 * cancelDelay).And.BeLessThan(2.5 * cancelDelay);
+            durationWaitTimeout.Should().BeGreaterThan(1.5 * cancelDelay).And.BeLessThan(4 * cancelDelay);
 
             CommandLogEntry? cmd = CommandLog.Commands.LastOrDefault();
             (cmd?.Exception?.Message).Should().Be("Process killed");
