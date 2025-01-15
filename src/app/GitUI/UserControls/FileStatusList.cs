@@ -94,7 +94,8 @@ namespace GitUI
             };
 
             SetupUnifiedDiffListSorting();
-            lblSplitter.Height = DpiUtil.Scale(1);
+            UpdateToolbar();
+            lblSplitter.Height = DpiUtil.Scale(Toolbar.Visible ? 0 : 1);
             FileStatusListView.BackColor = AppColor.PanelBackground.GetThemeColor();
             InitializeComplete();
 
@@ -102,6 +103,7 @@ namespace GitUI
 
             FileStatusListView.Indent = DpiUtil.Scale(14);
             FileStatusListView.ImageList = _imageListData.ImageList;
+            FileStatusListView.StateImageList = _imageListData.ImageList;
 
             NoFiles.Text = TranslatedStrings.NoChanges;
             NoFiles.BackColor = AppColor.PanelBackground.GetThemeColor();
@@ -292,8 +294,12 @@ namespace GitUI
             }
         }
 
-        public void Bind(Func<ObjectId?, string> describeRevision, Func<GitRevision, GitRevision> getActualRevision)
+        public void Bind(Action refreshArtificial, bool canAutoRefresh = false, Func<ObjectId?, string>? describeRevision = null, Func<GitRevision, GitRevision>? getActualRevision = null)
         {
+            btnRefresh.Click += (s, e) => refreshArtificial();
+            btnRefresh.Visible = true;
+            tsmiRefreshOnFormFocus.Enabled = canAutoRefresh;
+
             DescribeRevision = describeRevision;
             _diffCalculator.DescribeRevision = describeRevision;
             _diffCalculator.GetActualRevision = getActualRevision;
@@ -412,7 +418,11 @@ namespace GitUI
                 }
 
                 // Adjust sizes "automatically" changed by visibility
-                cboFindInCommitFilesGitGrep.Top = 0;
+                int findTop = lblSplitter.Bottom;
+                cboFindInCommitFilesGitGrep.Top = findTop;
+                lblFindInCommitFilesGitGrepWatermark.Top = findTop;
+                DeleteSearchButton.Top = findTop;
+                DeleteSearchButton.Height = cboFindInCommitFilesGitGrep.Height;
             }
             else if (_formFindInCommitFilesGitGrep?.Visible is not true && cboFindInCommitFilesGitGrep.Text.Length > 0)
             {
@@ -420,30 +430,31 @@ namespace GitUI
                 FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
             }
 
-            // Adjust locations
-            // Note that 'LoadingFiles' location depends on visibility of Filter box, must be set each time made visible
-            int top = !visible ? 0 : cboFindInCommitFilesGitGrep.Bottom + cboFindInCommitFilesGitGrep.Margin.Bottom;
-            _NO_TRANSLATE_FilterComboBox.Top = top;
-            _NO_TRANSLATE_FilterComboBox.Width = FileStatusListView.Width;
-            FilterWatermarkLabel.Top = _NO_TRANSLATE_FilterComboBox.Top;
-            DeleteFilterButton.Top = _NO_TRANSLATE_FilterComboBox.Top;
-
-            SetFindInCommitFilesGitGrepWatermarkVisibility();
-            SetFileStatusListVisibility(filesPresent: !NoFiles.Visible);
+            SetFileStatusListVisibility(showNoFiles: NoFiles.Visible);
         }
 
-        private void SetFileStatusListVisibility(bool filesPresent)
+        private void SetFileStatusListVisibility(bool showNoFiles)
         {
             LoadingFiles.Visible = false;
 
+            // Adjust locations
+            // Note that 'LoadingFiles' location depends on visibility of Filter box, must be set each time made visible
+            int top = !cboFindInCommitFilesGitGrep.Visible ? lblSplitter.Bottom : cboFindInCommitFilesGitGrep.Bottom + cboFindInCommitFilesGitGrep.Margin.Bottom;
+            _NO_TRANSLATE_FilterComboBox.Top = top;
+            _NO_TRANSLATE_FilterComboBox.Width = FileStatusListView.Width;
+            FilterWatermarkLabel.Top = top;
+            DeleteFilterButton.Top = top;
+            DeleteFilterButton.Height = _NO_TRANSLATE_FilterComboBox.Height;
+
             // Use variable to prevent bad value retrieved from `Visible` property
-            bool filesToFilter = filesPresent || (cboFindInCommitFilesGitGrep.Visible && !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text));
-            _NO_TRANSLATE_FilterComboBox.Visible = filesToFilter;
-            NoFiles.Visible = !filesToFilter;
-            if (!filesToFilter)
+            bool showFilesFilter = !showNoFiles || (cboFindInCommitFilesGitGrep.Visible && cboFindInCommitFilesGitGrep.Text.Length > 0);
+            _NO_TRANSLATE_FilterComboBox.Visible = showFilesFilter;
+
+            NoFiles.Visible = showNoFiles;
+            if (showNoFiles)
             {
                 // Workaround for startup issue if set in EnableSearchForList()
-                NoFiles.Top = _NO_TRANSLATE_FilterComboBox.Top;
+                NoFiles.Top = top;
                 NoFiles.BringToFront();
             }
 
@@ -452,7 +463,7 @@ namespace GitUI
             SetDeleteSearchButtonVisibility();
             SetFindInCommitFilesGitGrepWatermarkVisibility();
 
-            int top = GetFileStatusListTop();
+            top = GetFileStatusListTop(showFilesFilter);
             int height = ClientRectangle.Height - top - FileStatusListView.Margin.Top - FileStatusListView.Margin.Bottom;
             FileStatusListView.SetBounds(0, top, 0, height, BoundsSpecified.Y | BoundsSpecified.Height);
         }
@@ -762,6 +773,7 @@ namespace GitUI
         {
             CancellationToken cancellationToken = _reloadSequence.Next();
             FileStatusListLoading();
+            UpdateToolbar(revisions);
             _enableDisablingShowDiffForAllParents = true;
             _diffCalculator.SetDiff(revisions, headId: null, allowMultiDiff: false);
             UpdateFileStatusListView(_diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken), cancellationToken: cancellationToken);
@@ -771,6 +783,7 @@ namespace GitUI
         {
             await this.SwitchToMainThreadAsync(cancellationToken);
             FileStatusListLoading();
+            UpdateToolbar(revisions);
 
             _enableDisablingShowDiffForAllParents = true;
 
@@ -818,6 +831,7 @@ namespace GitUI
             IReadOnlyList<GitItemStatus> workTreeItems)
         {
             FileStatusListLoading();
+            UpdateToolbar([workTreeRev, indexRev]);
             UpdateFileStatusListView(new List<FileStatusWithDescription>
             {
                 new(
@@ -836,6 +850,7 @@ namespace GitUI
         public void SetDiffs(GitRevision? firstRev, GitRevision secondRev, IReadOnlyList<GitItemStatus> items)
         {
             FileStatusListLoading();
+            UpdateToolbar([secondRev]);
             UpdateFileStatusListView(new List<FileStatusWithDescription>
             {
                 new(
@@ -848,6 +863,7 @@ namespace GitUI
 
         public void ClearDiffs()
         {
+            UpdateToolbar([]);
             UpdateFileStatusListView([]);
         }
 
@@ -1034,7 +1050,7 @@ namespace GitUI
         {
             // Show "Files loading" below the filterbox
             NoFiles.Visible = false;
-            int top = GetFileStatusListTop();
+            int top = GetFileStatusListTop(_NO_TRANSLATE_FilterComboBox.Visible);
             LoadingFiles.Top = top;
             LoadingFiles.Visible = true;
             LoadingFiles.BringToFront();
@@ -1045,10 +1061,10 @@ namespace GitUI
             FileStatusListView.EndUpdate();
         }
 
-        private int GetFileStatusListTop()
-            => _NO_TRANSLATE_FilterComboBox.Visible ? _NO_TRANSLATE_FilterComboBox.Bottom + _NO_TRANSLATE_FilterComboBox.Margin.Top + _NO_TRANSLATE_FilterComboBox.Margin.Bottom
+        private int GetFileStatusListTop(bool isFilesFilterVisible)
+            => isFilesFilterVisible ? _NO_TRANSLATE_FilterComboBox.Bottom + _NO_TRANSLATE_FilterComboBox.Margin.Top + _NO_TRANSLATE_FilterComboBox.Margin.Bottom
                 : cboFindInCommitFilesGitGrep.Visible ? cboFindInCommitFilesGitGrep.Bottom + cboFindInCommitFilesGitGrep.Margin.Top + cboFindInCommitFilesGitGrep.Margin.Bottom
-                : 0;
+                : lblSplitter.Bottom;
 
         private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false, GitGrepState gitGrepState = GitGrepState.Unknown, CancellationToken cancellationToken = default)
         {
@@ -1063,12 +1079,12 @@ namespace GitUI
             (List<TreeNodeInfo> nodes, HashSet<TreeNode> toBeSelectedItems, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, gitGrepState, _noItemStatuses, cancellationToken);
 
             GitItemStatusesWithDescription = items;
-            if (filesPresent)
+            if (nodes.Count > 0)
             {
                 EnsureSelectedIndexChangeSubscription();
             }
 
-            SetFileStatusListVisibility(filesPresent);
+            SetFileStatusListVisibility(showNoFiles: !filesPresent && items.Count <= 1);
 
             try
             {
@@ -1123,6 +1139,7 @@ namespace GitUI
             finally
             {
                 FileStatusListView.EndUpdate();
+                UpdateToolbar();
             }
 
             DataSourceChanged?.Invoke(this, EventArgs.Empty);
@@ -1160,6 +1177,8 @@ namespace GitUI
             bool filesPresent = items.Any(x => x.Statuses.Count > 0);
             bool hasGrepGroup = gitGrepState != GitGrepState.None && (gitGrepState != GitGrepState.Unknown || items.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
             bool showGroupLabel = (filesPresent && (items.Count > 1 || groupByRevision)) || hasGrepGroup;
+            bool mergeSingleItemsWithFolder = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+            bool showGroupNodes = !flatList || AppSettings.FileStatusShowGroupNodesInFlatList.Value;
 
             foreach (FileStatusWithDescription i in items)
             {
@@ -1215,7 +1234,7 @@ namespace GitUI
 
                 if (groupBy is null)
                 {
-                    diffGroup = _sorter.CreateTreeSortedByPath(itemStatuses, flatList, CreateCountedNode);
+                    diffGroup = _sorter.CreateTreeSortedByPath(itemStatuses, flatList, mergeSingleItemsWithFolder, CreateCountedNode);
                 }
                 else
                 {
@@ -1223,8 +1242,8 @@ namespace GitUI
                     IOrderedEnumerable<IGrouping<GroupKey, GitItemStatus>> grouped = itemStatuses.GroupBy(groupBy.GetGroupKey).OrderBy(group => group.Key);
                     foreach (IGrouping<GroupKey, GitItemStatus> group in grouped)
                     {
-                        TreeNode groupNode = _sorter.CreateTreeSortedByPath(group, flatList, CreateCountedNode);
-                        if (groupNode.Nodes.Count == 1 && groupNode.Nodes[0].Nodes.Count == 0)
+                        TreeNode groupNode = _sorter.CreateTreeSortedByPath(group, flatList, mergeSingleItemsWithFolder, CreateCountedNode);
+                        if (showGroupNodes && groupNode.Nodes.Count == 1 && groupNode.Nodes[0].Nodes.Count == 0)
                         {
                             groupNode = groupNode.Nodes[0];
                         }
@@ -1235,7 +1254,14 @@ namespace GitUI
                             groupNode.SelectedImageIndex = groupNode.ImageIndex;
                         }
 
-                        diffGroup.Nodes.Add(groupNode);
+                        if (showGroupNodes)
+                        {
+                            diffGroup.Nodes.Add(groupNode);
+                        }
+                        else
+                        {
+                            diffGroup.Nodes.AddRange(groupNode.Nodes.Cast<TreeNode>().ToArray());
+                        }
                     }
 
                     if (diffGroup.Nodes.Count == 1 && diffGroup.Nodes[0].Nodes.Count > 0)
@@ -1823,6 +1849,11 @@ namespace GitUI
                 return true;
             }
 
+            if (!IsDiffStatusMatch(item.DiffStatus))
+            {
+                return false;
+            }
+
             if (_filter is null)
             {
                 return true;
@@ -2109,7 +2140,7 @@ namespace GitUI
             internal Regex? Filter => _fileStatusList._filter;
             internal bool FilterWatermarkLabelVisible => _fileStatusList.FilterWatermarkLabel.Visible;
             internal void StoreFilter(string value) => _fileStatusList.StoreFilter(value);
-            internal void SetFileStatusListVisibility(bool filesPresent) => _fileStatusList.SetFileStatusListVisibility(filesPresent);
+            internal void SetFileStatusListVisibility(bool showNoFiles) => _fileStatusList.SetFileStatusListVisibility(showNoFiles);
         }
     }
 }
