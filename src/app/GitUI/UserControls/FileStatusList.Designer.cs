@@ -4,12 +4,12 @@ namespace GitUI
 {
     partial class FileStatusList
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -24,8 +24,8 @@ namespace GitUI
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
@@ -72,70 +72,25 @@ namespace GitUI
             // 
             // NoFiles
             // 
-            NoFiles.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             NoFiles.AutoSize = true;
             NoFiles.BackColor = SystemColors.Window;
             NoFiles.ForeColor = SystemColors.GrayText;
             NoFiles.Location = new Point(0, 23);
             NoFiles.Name = "NoFiles";
             NoFiles.Padding = new Padding(2);
-            NoFiles.Size = new Size(65, 15);
+            NoFiles.Size = new Size(4, 19);
             NoFiles.TabIndex = 1;
             // 
             // LoadingFiles
             // 
-            LoadingFiles.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             LoadingFiles.AutoSize = true;
             LoadingFiles.BackColor = SystemColors.Window;
             LoadingFiles.ForeColor = SystemColors.GrayText;
             LoadingFiles.Location = new Point(0, 46);
             LoadingFiles.Name = "LoadingFiles";
             LoadingFiles.Padding = new Padding(2);
-            LoadingFiles.Size = new Size(65, 15);
+            LoadingFiles.Size = new Size(4, 19);
             LoadingFiles.TabIndex = 2;
-            // 
-            // cboFindInCommitFilesGitGrep
-            // 
-            cboFindInCommitFilesGitGrep.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            cboFindInCommitFilesGitGrep.FlatStyle = FlatStyle.Flat;
-            cboFindInCommitFilesGitGrep.FormattingEnabled = true;
-            cboFindInCommitFilesGitGrep.Location = new Point(0, 0);
-            cboFindInCommitFilesGitGrep.Margin = new Padding(0);
-            cboFindInCommitFilesGitGrep.Name = "cboFindInCommitFilesGitGrep";
-            cboFindInCommitFilesGitGrep.Size = new Size(682, 23);
-            cboFindInCommitFilesGitGrep.TabIndex = 0;
-            cboFindInCommitFilesGitGrep.Tag = "ToolBar_group:Text search";
-            cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
-            cboFindInCommitFilesGitGrep.TextUpdate += cboFindInCommitFilesGitGrep_TextUpdate;
-            cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
-            cboFindInCommitFilesGitGrep.GotFocus += cboFindInCommitFilesGitGrep_GotFocus;
-            cboFindInCommitFilesGitGrep.LostFocus += cboFindInCommitFilesGitGrep_LostFocus;
-            // 
-            // lblFindInCommitFilesGitGrepWatermark
-            // 
-            lblFindInCommitFilesGitGrepWatermark.AutoSize = true;
-            lblFindInCommitFilesGitGrepWatermark.BackColor = SystemColors.Window;
-            lblFindInCommitFilesGitGrepWatermark.ForeColor = SystemColors.GrayText;
-            lblFindInCommitFilesGitGrepWatermark.Location = new Point(0, 0);
-            lblFindInCommitFilesGitGrepWatermark.Name = "lblFindInCommitFilesGitGrepWatermark";
-            lblFindInCommitFilesGitGrepWatermark.Padding = new Padding(2, 3, 2, 2);
-            lblFindInCommitFilesGitGrepWatermark.Size = new Size(273, 15);
-            lblFindInCommitFilesGitGrepWatermark.TabIndex = 3;
-            lblFindInCommitFilesGitGrepWatermark.Text = "Find in commit files using git-grep regular expression...";
-            lblFindInCommitFilesGitGrepWatermark.Click += lblFindInCommitFilesGitGrepWatermark_Click;
-            // 
-            // DeleteSearchButton
-            // 
-            DeleteSearchButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            DeleteSearchButton.BackColor = SystemColors.Window;
-            DeleteSearchButton.FlatStyle = FlatStyle.Flat;
-            DeleteSearchButton.Image = Properties.Resources.DeleteText;
-            DeleteSearchButton.Location = new Point(646, 0);
-            DeleteSearchButton.Name = "DeleteSearchButton";
-            DeleteSearchButton.Padding = new Padding(0, 1, 0, 0);
-            DeleteSearchButton.Size = new Size(18, 23);
-            DeleteSearchButton.TabIndex = 4;
-            DeleteSearchButton.Click += DeleteSearchButton_Click;
             // 
             // _NO_TRANSLATE_FilterComboBox
             // 
@@ -162,7 +117,7 @@ namespace GitUI
             FilterWatermarkLabel.Location = new Point(0, 23);
             FilterWatermarkLabel.Name = "FilterWatermarkLabel";
             FilterWatermarkLabel.Padding = new Padding(2, 3, 2, 2);
-            FilterWatermarkLabel.Size = new Size(206, 15);
+            FilterWatermarkLabel.Size = new Size(210, 20);
             FilterWatermarkLabel.TabIndex = 6;
             FilterWatermarkLabel.Text = "Filter files using a regular expression...";
             FilterWatermarkLabel.Click += FilterWatermarkLabel_Click;
@@ -179,7 +134,7 @@ namespace GitUI
             // lblSplitter
             // 
             lblSplitter.Dock = DockStyle.Top;
-            lblSplitter.Location = new Point(0, 46);
+            lblSplitter.Location = new Point(0, 0);
             lblSplitter.Name = "lblSplitter";
             lblSplitter.Size = new Size(682, 2);
             lblSplitter.TabIndex = 8;
@@ -196,6 +151,49 @@ namespace GitUI
             DeleteFilterButton.Size = new Size(18, 23);
             DeleteFilterButton.TabIndex = 7;
             DeleteFilterButton.Click += DeleteFilterButton_Click;
+            // 
+            // cboFindInCommitFilesGitGrep
+            // 
+            cboFindInCommitFilesGitGrep.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cboFindInCommitFilesGitGrep.FlatStyle = FlatStyle.Flat;
+            cboFindInCommitFilesGitGrep.FormattingEnabled = true;
+            cboFindInCommitFilesGitGrep.Location = new Point(0, 0);
+            cboFindInCommitFilesGitGrep.Margin = new Padding(0);
+            cboFindInCommitFilesGitGrep.Name = "cboFindInCommitFilesGitGrep";
+            cboFindInCommitFilesGitGrep.Size = new Size(682, 23);
+            cboFindInCommitFilesGitGrep.TabIndex = 0;
+            cboFindInCommitFilesGitGrep.Tag = "ToolBar_group:Text search";
+            cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
+            cboFindInCommitFilesGitGrep.TextUpdate += cboFindInCommitFilesGitGrep_TextUpdate;
+            cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
+            cboFindInCommitFilesGitGrep.GotFocus += cboFindInCommitFilesGitGrep_GotFocus;
+            cboFindInCommitFilesGitGrep.LostFocus += cboFindInCommitFilesGitGrep_LostFocus;
+            // 
+            // lblFindInCommitFilesGitGrepWatermark
+            // 
+            lblFindInCommitFilesGitGrepWatermark.AutoSize = true;
+            lblFindInCommitFilesGitGrepWatermark.BackColor = SystemColors.Window;
+            lblFindInCommitFilesGitGrepWatermark.ForeColor = SystemColors.GrayText;
+            lblFindInCommitFilesGitGrepWatermark.Location = new Point(0, 0);
+            lblFindInCommitFilesGitGrepWatermark.Name = "lblFindInCommitFilesGitGrepWatermark";
+            lblFindInCommitFilesGitGrepWatermark.Padding = new Padding(2, 3, 2, 2);
+            lblFindInCommitFilesGitGrepWatermark.Size = new Size(302, 20);
+            lblFindInCommitFilesGitGrepWatermark.TabIndex = 3;
+            lblFindInCommitFilesGitGrepWatermark.Text = "Find in commit files using git-grep regular expression...";
+            lblFindInCommitFilesGitGrepWatermark.Click += lblFindInCommitFilesGitGrepWatermark_Click;
+            // 
+            // DeleteSearchButton
+            // 
+            DeleteSearchButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            DeleteSearchButton.BackColor = SystemColors.Window;
+            DeleteSearchButton.FlatStyle = FlatStyle.Flat;
+            DeleteSearchButton.Image = Properties.Resources.DeleteText;
+            DeleteSearchButton.Location = new Point(646, 0);
+            DeleteSearchButton.Name = "DeleteSearchButton";
+            DeleteSearchButton.Padding = new Padding(0, 1, 0, 0);
+            DeleteSearchButton.Size = new Size(18, 23);
+            DeleteSearchButton.TabIndex = 4;
+            DeleteSearchButton.Click += DeleteSearchButton_Click;
             // 
             // FileStatusList
             // 
