@@ -204,8 +204,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1
-                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false)
+            return (selectionInfo.SelectedGitItemCount == 1 || selectionInfo.SelectedFolder is not null)
                 && !selectionInfo.IsDeleted
                 && !selectionInfo.IsStatusOnly;
         }
@@ -217,7 +216,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo)
         {
-            return ShouldShowMenuFileHistory(selectionInfo) && !selectionInfo.IsAnySubmodule;
+            return ShouldShowMenuFileHistory(selectionInfo) && !selectionInfo.IsAnySubmodule && selectionInfo.SelectedFolder is null;
         }
         #endregion
 

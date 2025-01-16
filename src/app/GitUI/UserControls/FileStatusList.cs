@@ -44,6 +44,7 @@ namespace GitUI
         private bool _enableSelectedIndexChangeEvent = true;
         private bool _flatList = false;
         private GroupBy? _groupBy = null;
+        private bool _isFileTreeMode = false;
         private bool _mouseEntered;
         private Rectangle _dragBoxFromMouseDown;
         private IDisposable? _selectedIndexChangeSubscription;
@@ -91,9 +92,6 @@ namespace GitUI
                 Name = "sortListByContextMenuItem"
             };
 
-            SetupUnifiedDiffListSorting();
-            UpdateToolbar();
-            lblSplitter.Height = DpiUtil.Scale(Toolbar.Visible ? 0 : 1);
             InitializeComplete();
 
             SelectFirstItemOnSetItems = true;
@@ -316,7 +314,7 @@ namespace GitUI
             }
         }
 
-        public void Bind(Action refreshArtificial, bool canAutoRefresh = false, Func<ObjectId?, string>? describeRevision = null, Func<GitRevision, GitRevision>? getActualRevision = null)
+        public void Bind(Action refreshArtificial, bool canAutoRefresh = false, Func<ObjectId?, string>? describeRevision = null, Func<GitRevision, GitRevision>? getActualRevision = null, bool isFileTreeMode = false)
         {
             btnRefresh.Click += (s, e) => refreshArtificial();
             btnRefresh.Visible = true;
@@ -325,6 +323,52 @@ namespace GitUI
             DescribeRevision = describeRevision;
             _diffCalculator.DescribeRevision = describeRevision;
             _diffCalculator.GetActualRevision = getActualRevision;
+            _isFileTreeMode = isFileTreeMode;
+            if (_isFileTreeMode)
+            {
+                Toolbar.Visible = false;
+                lblSplitter.Height = DpiUtil.Scale(1);
+                SetFindInCommitFilesGitGrepVisibilityImpl(visible: false);
+                CanUseFindInCommitFilesGitGrep = false;
+                _diffCalculator.SetGrep(@"-e ""^""", applyAppSettings: false);
+                GroupByRevision = false;
+                FileStatusListView.ShowRootLines = true;
+            }
+            else
+            {
+                SetupUnifiedDiffListSorting();
+                UpdateToolbar();
+                lblSplitter.Height = 0;
+            }
+        }
+
+        /// <summary>
+        ///  Selects the tree node matching the passed relative path.
+        /// </summary>
+        /// <param name="relativePath">The relative POSIX path to the item or folder.</param>
+        /// <returns><c>true</c> if a matching tree node was found.</returns>
+        public bool SelectFileOrFolder(RelativePath relativePath, bool firstGroupOnly = false)
+        {
+            if (FileStatusListView.Nodes.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (TreeNode node in firstGroupOnly && _showDiffGroups ? FileStatusListView.Nodes[0].Items() : FileStatusListView.Items())
+            {
+                if (node.Tag switch
+                {
+                    RelativePath nodePath => nodePath == relativePath,
+                    FileStatusItem fileStatusItem => fileStatusItem.Item.Name == relativePath.Value,
+                    _ => false
+                })
+                {
+                    FileStatusListView.SelectedNode = node;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private string? SelectedItemAbsolutePath => _fullPathResolver.Resolve(SelectedItem?.Item.Name)?.NormalizePath();
@@ -652,15 +696,12 @@ namespace GitUI
 
         public new void Focus()
         {
-            if (FileStatusListView.Nodes.Count > 0)
+            if (FileStatusListView.FocusedNode is null)
             {
-                if (SelectedItem is null)
-                {
-                    SelectFirstVisibleItem();
-                }
-
-                FileStatusListView.Focus();
+                SelectFirstVisibleItem();
             }
+
+            FileStatusListView.Focus();
         }
 
         private static (string? prefix, string text, string? suffix) FormatListViewItem(TreeNode node, PathFormatter formatter, int itemWidth)
@@ -772,7 +813,8 @@ namespace GitUI
             {
                 // Skip collapsed or empty groups
                 if ((_showDiffGroups && !rootNode.IsExpanded)
-                    || (rootNode.Nodes.Count == 1 && rootNode.Nodes[0].Tag is FileStatusItem fileStatusItem && fileStatusItem.Item == _noItemStatuses[0]))
+                    || (rootNode.Nodes.Count == 1 && rootNode.Nodes[0].Tag is FileStatusItem fileStatusItem && fileStatusItem.Item == _noItemStatuses[0])
+                    || (_isFileTreeMode && _filter is null))
                 {
                     continue;
                 }
@@ -818,31 +860,40 @@ namespace GitUI
             FileStatusListLoading();
             UpdateToolbar(revisions);
 
-            _enableDisablingShowDiffForAllParents = true;
-
-            await TaskScheduler.Default;
-            cancellationToken.ThrowIfCancellationRequested();
-            _diffCalculator.SetDiff(revisions, headId, allowMultiDiff: true);
-            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken);
-
-            await this.SwitchToMainThreadAsync(cancellationToken);
-            cancellationToken.ThrowIfCancellationRequested();
-            bool withGitGrep = !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
-            UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: withGitGrep ? GitGrepState.Preparing : GitGrepState.None, cancellationToken: cancellationToken);
-
-            // git grep, fetched as a separate step
-            if (!withGitGrep)
+            if (_isFileTreeMode)
             {
-                return;
+                _diffCalculator.SetDiff(revisions, headId, allowMultiDiff: false);
+                GitItemStatusesWithDescription = [];
+            }
+            else
+            {
+                _enableDisablingShowDiffForAllParents = true;
+
+                await TaskScheduler.Default;
+                cancellationToken.ThrowIfCancellationRequested();
+
+                _diffCalculator.SetDiff(revisions, headId, allowMultiDiff: true);
+                IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken);
+
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                bool withGitGrep = !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
+                UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: withGitGrep ? GitGrepState.Preparing : GitGrepState.None, cancellationToken: cancellationToken);
+
+                // git grep, fetched as a separate step
+                if (!withGitGrep)
+                {
+                    return;
+                }
             }
 
             await TaskScheduler.Default;
             cancellationToken.ThrowIfCancellationRequested();
-            gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
+            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithGitGrep = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
-            UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: GitGrepState.Provided, cancellationToken: cancellationToken);
+            UpdateFileStatusListView(gitItemStatusesWithGitGrep, gitGrepState: GitGrepState.Provided, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1082,6 +1133,16 @@ namespace GitUI
         private void FileStatusListLoading()
         {
             // Show "Files loading" below the filterbox
+
+            if (_isFileTreeMode)
+            {
+                SetFileStatusListVisibility(showNoFiles: false);
+            }
+            else if (_diffListSortSubscription is null)
+            {
+                SetupUnifiedDiffListSorting();
+            }
+
             NoFiles.Visible = false;
             int top = GetFileStatusListTop();
             LoadingFiles.Top = top;
@@ -1092,6 +1153,8 @@ namespace GitUI
             ClearSelected();
             FileStatusListView.Nodes.Clear();
             FileStatusListView.EndUpdate();
+
+            Update();
         }
 
         private int GetFileStatusListTop()
@@ -1117,7 +1180,7 @@ namespace GitUI
                 EnsureSelectedIndexChangeSubscription();
             }
 
-            SetFileStatusListVisibility(showNoFiles: nodes.Count == 0);
+            SetFileStatusListVisibility(showNoFiles: nodes.Count == 0 && !_isFileTreeMode);
 
             try
             {
@@ -1561,7 +1624,7 @@ namespace GitUI
             _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = canOpenInVisualStudio;
             _openInVisualStudioSeparator.Visible = canOpenInVisualStudio;
 
-            if (!cm.Items.Find(_sortByContextMenu.Name!, true).Any())
+            if (!_isFileTreeMode && !cm.Items.Find(_sortByContextMenu.Name!, true).Any())
             {
                 cm.Items.Add(_sortBySeparator);
                 cm.Items.Add(_sortByContextMenu);
@@ -2027,7 +2090,7 @@ namespace GitUI
                     searchArg = $@"-e ""{searchArg}""";
                 }
 
-                _diffCalculator.SetGrep(searchArg);
+                _diffCalculator.SetGrep(searchArg, applyAppSettings: true);
                 IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: false, refreshGrep: true, cancellationToken);
 
                 await this.SwitchToMainThreadAsync(cancellationToken);

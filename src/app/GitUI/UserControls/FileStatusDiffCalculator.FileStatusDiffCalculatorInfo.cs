@@ -11,6 +11,7 @@ namespace GitUI
             public ObjectId? HeadId { get; set; }
             public bool AllowMultiDiff { get; set; }
             public string GrepArguments { get; set; }
+            public bool ApplyGrepAppSettings { get; set; }
         }
     }
 }

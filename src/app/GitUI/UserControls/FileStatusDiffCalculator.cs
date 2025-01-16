@@ -38,9 +38,10 @@ namespace GitUI
             _fileStatusDiffCalculatorInfo.AllowMultiDiff = allowMultiDiff;
         }
 
-        public void SetGrep(string grepArguments)
+        public void SetGrep(string grepArguments, bool applyAppSettings)
         {
             _fileStatusDiffCalculatorInfo.GrepArguments = grepArguments;
+            _fileStatusDiffCalculatorInfo.ApplyGrepAppSettings = applyAppSettings;
         }
 
         public IReadOnlyList<FileStatusWithDescription> Calculate(IReadOnlyList<FileStatusWithDescription> prevList, bool refreshDiff, bool refreshGrep, CancellationToken cancellationToken)
@@ -312,7 +313,7 @@ namespace GitUI
                 return null;
             }
 
-            IReadOnlyList<GitItemStatus> statuses = GetModule().GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, cancellationToken);
+            IReadOnlyList<GitItemStatus> statuses = GetModule().GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, _fileStatusDiffCalculatorInfo.ApplyGrepAppSettings, cancellationToken);
 
             return new FileStatusWithDescription(
                                firstRev: null,
