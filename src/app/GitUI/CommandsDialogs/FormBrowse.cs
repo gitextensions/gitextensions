@@ -1313,13 +1313,13 @@ namespace GitUI.CommandsDialogs
 
         private void CommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ForceActivate();
+            this.ForceActivate();
             UICommands.StartCommitDialog(this);
         }
 
         private void PushToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ForceActivate();
+            this.ForceActivate();
             UICommands.StartPushDialog(this, pushOnShow: ModifierKeys.HasFlag(Keys.Shift));
         }
 
@@ -2308,7 +2308,7 @@ namespace GitUI.CommandsDialogs
 
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ForceActivate();
+            this.ForceActivate();
 
             // "Pull/Fetch..." menu item always opens the dialog
             DoPull(pullAction: AppSettings.FormPullAction, isSilent: false);
@@ -2746,17 +2746,6 @@ namespace GitUI.CommandsDialogs
             string? shellType = AppSettings.ConEmuTerminal.Value;
             IShellDescriptor shell = _shellProvider.GetShell(shellType);
             _terminal?.ChangeFolder(shell, path);
-        }
-
-        /// <summary>
-        ///  Brings this window to the front and activates it. Needed when a <see cref="WindowsThumbnailToolbarButton"/> is clicked.
-        /// </summary>
-        private void ForceActivate()
-        {
-            TopMost = true;
-            BringToFront();
-            TopMost = false;
-            Activate();
         }
 
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
