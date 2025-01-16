@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs
             CommitInfoTabPage = new TabPage();
             RevisionInfo = new GitUI.CommitInfo.CommitInfo();
             TreeTabPage = new TabPage();
-            fileTree = new GitUI.CommandsDialogs.RevisionFileTreeControl();
+            fileTree = new GitUI.CommandsDialogs.RevisionDiffControl();
             DiffTabPage = new TabPage();
             revisionDiff = new GitUI.CommandsDialogs.RevisionDiffControl();
             GpgInfoTabPage = new TabPage();
@@ -1467,7 +1467,7 @@ namespace GitUI.CommandsDialogs
         private CommitInfo.CommitInfo RevisionInfo;
         private GitUI.LeftPanel.RepoObjectsTree repoObjectsTree;
         private ToolTip FilterToolTip;
-        private RevisionFileTreeControl fileTree;
+        private RevisionDiffControl fileTree;
         private RevisionDiffControl revisionDiff;
         private ToolStripContainer toolPanel;
         private RevisionGpgInfoControl revisionGpgInfo1;

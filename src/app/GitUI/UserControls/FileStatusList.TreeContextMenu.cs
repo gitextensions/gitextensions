@@ -8,6 +8,7 @@ namespace GitUI;
 partial class FileStatusList
 {
     private ToolStripMenuItem _collapseAll = new("C&ollapse all", Images.CollapseAll);
+    private ToolStripMenuItem _collapseRootFolders = new("Co&llapse root folders", Images.TreeCollapseAll);
     private ToolStripMenuItem _expandAll = new("E&xpand all", Images.ExpandAll);
     private ToolStripMenuItem _selectAll = new("S&elect all", Images.FileTree);
     private ToolStripSeparator _treeContextMenuSeparator = new() { Name = nameof(_treeContextMenuSeparator) };
@@ -17,6 +18,7 @@ partial class FileStatusList
         _selectAll.Click += SelectAll_Click;
         _collapseAll.Click += CollapseAll_Click;
         _expandAll.Click += ExpandAll_Click;
+        _collapseRootFolders.Click += CollapseRootFolders_Click;
     }
 
     private void InsertTreeContextMenuItems(ToolStripItemCollection items, int index)
@@ -30,6 +32,7 @@ partial class FileStatusList
         items.Insert(index++, _collapseAll);
         items.Insert(index++, _expandAll);
         items.Insert(index++, _treeContextMenuSeparator);
+        items.Add(_collapseRootFolders);
     }
 
     private void UpdateStatusOfTreeContextMenuItems()
@@ -40,6 +43,8 @@ partial class FileStatusList
         _expandAll.Visible = hasSubnodes;
         _selectAll.Visible = hasSubnodes;
         _treeContextMenuSeparator.Visible = hasSubnodes;
+
+        _collapseRootFolders.Visible = _isFileTreeMode && FileStatusListView.Nodes.Cast<TreeNode>().Any(node => node.IsExpanded);
     }
 
     private void CollapseAll_Click(object? sender, EventArgs e)
@@ -47,6 +52,24 @@ partial class FileStatusList
         foreach (TreeNode node in FileStatusListView.SelectedNodes)
         {
             node.Collapse(ignoreChildren: false);
+        }
+    }
+
+    private void CollapseRootFolders_Click(object? sender, EventArgs e)
+    {
+        if (FileStatusListView.FocusedNode?.Parent is TreeNode parent)
+        {
+            while (parent.Parent is not null)
+            {
+                parent = parent.Parent;
+            }
+
+            FileStatusListView.SelectedNode = parent;
+        }
+
+        foreach (TreeNode node in FileStatusListView.Nodes)
+        {
+            node.Collapse(ignoreChildren: true);
         }
     }
 

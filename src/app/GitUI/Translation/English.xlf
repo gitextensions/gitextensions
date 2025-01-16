@@ -1531,6 +1531,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>C&amp;ollapse all</source>
         <target />
       </trans-unit>
+      <trans-unit id="_collapseRootFolders.Text">
+        <source>Co&amp;llapse root folders</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_expandAll.Text">
         <source>E&amp;xpand all</source>
         <target />
