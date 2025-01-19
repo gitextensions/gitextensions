@@ -39,6 +39,7 @@ namespace GitUI
         private readonly ToolStripItem _showDiffForAllParentsSeparator = new ToolStripSeparator() { Name = $"{_showDiffForAllParentsItemName}Separator" };
         private readonly ToolStripItem _sortBySeparator = new ToolStripSeparator();
         private readonly SolidBrush _inactiveSelectionHighlightBrush = new(AppColor.InactiveSelectionHighlight.GetThemeColor());
+        private readonly SolidBrush _backgroundBrush = new(AppColor.PanelBackground.GetThemeColor());
 
         private GitItemStatus? _nextItemToSelect = null;
         private bool _enableSelectedIndexChangeEvent = true;
@@ -92,6 +93,7 @@ namespace GitUI
                 Name = "sortListByContextMenuItem"
             };
 
+            FileStatusListView.BackColor = AppColor.PanelBackground.GetThemeColor();
             InitializeComplete();
 
             SelectFirstItemOnSetItems = true;
@@ -101,7 +103,9 @@ namespace GitUI
             FileStatusListView.StateImageList = _imageListData.ImageList;
 
             NoFiles.Text = TranslatedStrings.NoChanges;
+            NoFiles.BackColor = AppColor.PanelBackground.GetThemeColor();
             LoadingFiles.Text = TranslatedStrings.LoadingData;
+            LoadingFiles.BackColor = AppColor.PanelBackground.GetThemeColor();
 
             NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
             LoadingFiles.Font = new Font(LoadingFiles.Font, FontStyle.Italic);
@@ -1753,7 +1757,7 @@ namespace GitUI
                 ? Focused
                     ? SystemBrushes.Highlight
                     : _inactiveSelectionHighlightBrush
-                : SystemBrushes.Window;
+                : _backgroundBrush;
             e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
 
             if (string.IsNullOrEmpty(text))
