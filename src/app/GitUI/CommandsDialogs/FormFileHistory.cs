@@ -5,8 +5,10 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -50,7 +52,7 @@ namespace GitUI.CommandsDialogs
 
             Color toolForeColor = SystemColors.WindowText;
             Color toolBackColor = Color.Transparent;
-            BackColor = SystemColors.Window;
+            BackColor = AppColor.PanelBackground.GetThemeColor();
             ForeColor = toolForeColor;
             ToolStripFilters.BackColor = toolBackColor;
             ToolStripFilters.ForeColor = toolForeColor;

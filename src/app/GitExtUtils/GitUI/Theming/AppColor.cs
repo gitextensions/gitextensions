@@ -9,6 +9,7 @@
     /// </remarks>
     public enum AppColor
     {
+        PanelBackground,
         EditorBackground,
         LineNumberBackground,
         AuthoredHighlight,
