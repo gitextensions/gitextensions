@@ -14,13 +14,13 @@
         public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
         /// <summary>
-        ///  Blends the color with the default background color, halves each value first.
+        ///  Blends the color with the default Editor background color, halves each value first.
         ///  Keep the original alpha, SystemColors.Window.A==255 and we do not want rounding errors.
         /// </summary>
         public static Color DimColor(Color color)
         {
             const uint maskWithoutLeastSignificantBits = 0xFE_FE_FE_FE;
-            uint defaultBackground = (uint)SystemColors.Window.ToArgb();
+            uint defaultBackground = (uint)ThemeSettings.Theme.GetColor(AppColor.EditorBackground).ToArgb();
             int dimCode = (int)((((uint)color.ToArgb() & maskWithoutLeastSignificantBits) >> 1) + ((defaultBackground & maskWithoutLeastSignificantBits) >> 1));
             return Color.FromArgb(color.A, (dimCode >> 16) & 0xff, (dimCode >> 8) & 0xff, dimCode & 0xff);
         }
