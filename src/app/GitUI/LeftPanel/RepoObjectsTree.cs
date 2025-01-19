@@ -10,6 +10,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -48,6 +49,8 @@ namespace GitUI.LeftPanel
             InitImageList();
             _txtBranchCriterion = CreateSearchBox();
             branchSearchPanel.Controls.Add(_txtBranchCriterion, 1, 0);
+            treeMain.BackColor = AppColor.PanelBackground.GetThemeColor();
+            leftPanelToolStrip.BackColor = SystemColors.Control;
 
             mnubtnCollapse.AdaptImageLightness();
             tsbCollapseAll.AdaptImageLightness();

@@ -7,6 +7,7 @@
         private static readonly Dictionary<AppColor, Color> Values =
             new()
             {
+                { AppColor.PanelBackground, Color.FromArgb(0xf6, 0xf6, 0xf6) }, // KnownColor.Control.MakeBackgroundDarkerBy(-0.02)
                 { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
                 { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
                 { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },

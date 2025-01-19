@@ -5,10 +5,12 @@ using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -58,6 +60,7 @@ See the changes in the commit form.");
         public RevisionFileTreeControl()
         {
             InitializeComponent();
+            tvGitTree.BackColor = AppColor.PanelBackground.GetThemeColor();
             InitializeComplete();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);

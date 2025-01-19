@@ -39,6 +39,7 @@ namespace GitUI
         private readonly ToolStripItem _showDiffForAllParentsSeparator = new ToolStripSeparator() { Name = $"{_showDiffForAllParentsItemName}Separator" };
         private readonly ToolStripItem _sortBySeparator = new ToolStripSeparator();
         private readonly SolidBrush _inactiveSelectionHighlightBrush = new(AppColor.InactiveSelectionHighlight.GetThemeColor());
+        private readonly SolidBrush _backgroundBrush = new(AppColor.PanelBackground.GetThemeColor());
 
         private int _nextIndexToSelect = -1;
         private bool _enableSelectedIndexChangeEvent = true;
@@ -92,6 +93,7 @@ namespace GitUI
 
             SetupUnifiedDiffListSorting();
             lblSplitter.Height = DpiUtil.Scale(1);
+            FileStatusListView.BackColor = AppColor.PanelBackground.GetThemeColor();
             InitializeComplete();
 
             SelectFirstItemOnSetItems = true;
@@ -100,7 +102,9 @@ namespace GitUI
             FileStatusListView.LargeImageList = _imageListData.ImageList;
 
             NoFiles.Text = TranslatedStrings.NoChanges;
+            NoFiles.BackColor = AppColor.PanelBackground.GetThemeColor();
             LoadingFiles.Text = TranslatedStrings.LoadingData;
+            LoadingFiles.BackColor = AppColor.PanelBackground.GetThemeColor();
 
             NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
             LoadingFiles.Font = new Font(LoadingFiles.Font, FontStyle.Italic);
@@ -1628,10 +1632,12 @@ namespace GitUI
 
             (Image? image, string? prefix, string text, string? suffix, int prefixTextStartX, int _, int textMaxWidth) = FormatListViewItem(item, formatter, item.Bounds.Width);
 
-            if (item.Selected)
-            {
-                e.Graphics.FillRectangle(Focused ? SystemBrushes.Highlight : _inactiveSelectionHighlightBrush, e.Bounds);
-            }
+            Brush backgroundBrush = item.Selected
+                ? Focused
+                    ? SystemBrushes.Highlight
+                    : _inactiveSelectionHighlightBrush
+                : _backgroundBrush;
+            e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
 
             if (image is not null)
             {
