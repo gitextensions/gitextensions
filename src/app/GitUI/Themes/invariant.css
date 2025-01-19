@@ -38,6 +38,7 @@
 .WindowText              { color: #000000; }
 
 /* Application colors */
+.PanelBackground { color: #ffffff; }
 .EditorBackground { color: #ffffff; }
 .LineNumberBackground { color: #ffffff; }
 .AuthoredHighlight { color: #eaf1ff; }

@@ -7,6 +7,7 @@
         private static readonly Dictionary<AppColor, Color> _values =
             new()
             {
+                { AppColor.PanelBackground, SystemColors.Window },
                 { AppColor.EditorBackground, SystemColors.Window },
                 { AppColor.LineNumberBackground, SystemColors.Window },
                 { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
