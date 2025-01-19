@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 
 namespace GitCommands.UserRepositoryHistory
 {
@@ -79,25 +80,15 @@ namespace GitCommands.UserRepositoryHistory
 
         public string GetDescriptiveUnique(string repositoryDir)
         {
+            const int maxDescriptiveLength = 25;
+            string descriptive = Get(repositoryDir);
+            int endOfLineIndex = descriptive.IndexOfAny(Delimiters.LineFeedAndCarriageReturnAndNull);
+            int descriptiveEnd = endOfLineIndex >= 0 ? endOfLineIndex : descriptive.Length;
+            descriptiveEnd = Math.Min(descriptiveEnd, maxDescriptiveLength);
+            ReadOnlySpan<char> shortName = descriptive.AsSpan(0, descriptiveEnd).Trim();
+
             string unique = GetUnique(repositoryDir);
-
-            ReadOnlySpan<char> path = repositoryDir.AsSpan();
-            while (true)
-            {
-                int nameSeparatorIndex = path.LastIndexOf(Path.DirectorySeparatorChar);
-                ReadOnlySpan<char> name = path[(nameSeparatorIndex + 1)..];
-                if (name.Length > 0 && !_uninformativeNameRegex.IsMatch(name))
-                {
-                    return $"{name} ({unique})";
-                }
-
-                if (nameSeparatorIndex <= 0)
-                {
-                    return unique;
-                }
-
-                path = path[..nameSeparatorIndex];
-            }
+            return shortName.Length == 0 ? unique : $"{shortName} ({unique})";
         }
 
         public string GetUnique(string repositoryDir)
