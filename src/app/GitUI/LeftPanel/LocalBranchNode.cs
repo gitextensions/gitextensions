@@ -18,7 +18,7 @@ namespace GitUI.LeftPanel
         public bool IsCurrent { get; }
 
         protected override FontStyle GetFontStyle()
-            => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
+            => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold | FontStyle.Italic : FontStyle.Regular);
 
         public override bool Equals(object obj)
             => base.Equals(obj) && obj is LocalBranchNode;
