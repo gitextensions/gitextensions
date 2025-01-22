@@ -57,17 +57,38 @@ public class MultiSelectTreeView : NativeTreeView
     {
         set
         {
-            if (value is null
-                ? _selectedNodes.Count == 0
-                : (_selectedNodes.Count == 1 && _selectedNodes.Contains(value)))
+            if (value is null)
             {
-                return;
-            }
+                if (_selectedNodes.Count == 0)
+                {
+                    return;
+                }
 
-            _selectedNodes = value is null ? [] : [value];
-            if (value is not null)
+                _selectedNodes = [];
+            }
+            else
             {
-                FocusedNode = value;
+                bool alreadyFocused = FocusedNode == value;
+                bool alreadySelected = _selectedNodes.Count == 1 && _selectedNodes.First() == value;
+                if (alreadyFocused && alreadySelected)
+                {
+                    return;
+                }
+
+                if (!alreadySelected)
+                {
+                    _selectedNodes = [value];
+                }
+
+                if (alreadyFocused)
+                {
+                    // Notify that the node is also selected now
+                    FocusedNodeChanged?.Invoke(this, EventArgs.Empty);
+                }
+                else
+                {
+                    FocusedNode = value;
+                }
             }
 
             Invalidate();
