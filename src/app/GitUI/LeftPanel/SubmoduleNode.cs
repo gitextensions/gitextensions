@@ -128,7 +128,7 @@ namespace GitUI.LeftPanel
         }
 
         protected override FontStyle GetFontStyle()
-            => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
+            => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold | FontStyle.Italic : FontStyle.Regular);
 
         private void ApplyStatus()
         {
