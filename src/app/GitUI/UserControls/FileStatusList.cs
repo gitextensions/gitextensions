@@ -1517,7 +1517,7 @@ namespace GitUI
             }
 
             // Show 'Show file differences for all parents' menu item if it is possible that there are multiple first revisions
-            bool mayBeMultipleRevs = _enableDisablingShowDiffForAllParents && GitItemStatusesWithDescription.Count > 1;
+            bool mayBeMultipleRevs = _enableDisablingShowDiffForAllParents;
 
             ToolStripItem[] diffItem = cm.Items.Find(_showDiffForAllParentsItemName, true);
             if (diffItem.Length == 0)
