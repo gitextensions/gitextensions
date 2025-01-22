@@ -586,7 +586,7 @@ namespace GitUI.CommandsDialogs
                 ? _revisionGridInfo.GetActualRevision(_revisionGridInfo.CurrentCheckout)
                 : DiffFiles.SelectedItem.SecondRevision;
             await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, _revisionGridUpdate,
-                controlToMask: null, DiffText.Encoding, line, cancellationToken: _viewChangesSequence.Next());
+                controlToMask: null, DiffText.Encoding, line, cancellationTokenSequence: _viewChangesSequence);
         }
 
         /// <summary>

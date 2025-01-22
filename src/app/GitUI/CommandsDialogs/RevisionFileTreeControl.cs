@@ -456,7 +456,7 @@ See the changes in the commit form.");
 
                         FileText.Visible = false;
                         BlameControl.Visible = true;
-                        return BlameControl.LoadBlameAsync(_revision, children: null, gitItem.FileName, _revisionGridInfo, _revisionGridUpdate, controlToMask: null, FileText.Encoding, line, cancellationToken: _viewBlameSequence.Next());
+                        return BlameControl.LoadBlameAsync(_revision, children: null, gitItem.FileName, _revisionGridInfo, _revisionGridUpdate, controlToMask: null, FileText.Encoding, line, cancellationTokenSequence: _viewBlameSequence);
                     }
 
                 case GitObjectType.Commit:

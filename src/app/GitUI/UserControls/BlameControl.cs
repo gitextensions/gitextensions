@@ -16,6 +16,7 @@ using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.Blame
@@ -31,7 +32,6 @@ namespace GitUI.Blame
 
         private readonly AsyncLoader _blameLoader = new();
         private int _lineIndex;
-
         private GitBlameLine? _lastBlameLine;
         private GitBlameLine? _clickedBlameLine;
         private GitBlameCommit? _highlightedCommit;
@@ -41,8 +41,8 @@ namespace GitUI.Blame
         private ObjectId? _blameId;
         private string? _fileName;
         private Encoding? _encoding;
-        private int _lastTooltipX = -100;
-        private int _lastTooltipY = -100;
+        private int _lastTooltipX = int.MinValue;
+        private int _lastTooltipY = int.MinValue;
         private GitBlameCommit? _tooltipCommit;
         private bool _changingScrollPosition;
         private IRepositoryHostPlugin? _gitHoster;
@@ -51,6 +51,7 @@ namespace GitUI.Blame
         private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame previous visible revision");
         private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
         private readonly IGitBlameParser _gitBlameParser;
+        private bool _loading;
 
         // Relative path of the file to blame when blaming a new revision
         public string? PathToBlame { get; private set; }
@@ -104,14 +105,14 @@ namespace GitUI.Blame
             CommitInfo.CommandClicked -= commitInfo_CommandClicked;
         }
 
-        public async Task LoadBlameAsync(GitRevision revision, IReadOnlyList<ObjectId>? children, string fileName, IRevisionGridInfo? revisionGridInfo, IRevisionGridUpdate? revisionGridUpdate, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
+        public async Task LoadBlameAsync(GitRevision revision, IReadOnlyList<ObjectId>? children, string fileName, IRevisionGridInfo? revisionGridInfo, IRevisionGridUpdate? revisionGridUpdate, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationTokenSequence? cancellationTokenSequence = null)
         {
             ObjectId objectId = revision.ObjectId;
 
             // refresh only when something changed
             if (!force && objectId == _blameId && fileName == _fileName && revisionGridInfo == _revisionGridInfo && _revisionGridUpdate == revisionGridUpdate && encoding == _encoding)
             {
-                if (initialLine is not null)
+                if (initialLine is not null && !_loading)
                 {
                     BlameFile.GoToLine(initialLine.Value);
                 }
@@ -119,8 +120,10 @@ namespace GitUI.Blame
                 return;
             }
 
-            int line = _clickedBlameLine is not null ? _clickedBlameLine.OriginLineNumber
-                : initialLine ?? (fileName == _fileName ? BlameFile.CurrentFileLine : 1);
+            CancellationToken cancellationToken = cancellationTokenSequence?.Next() ?? default;
+            _loading = true;
+
+            int line = _clickedBlameLine?.OriginLineNumber ?? initialLine ?? (fileName == _fileName ? BlameFile.CurrentFileLine : 1);
             _revisionGridInfo = revisionGridInfo;
             _revisionGridUpdate = revisionGridUpdate;
             _fileName = fileName;
@@ -135,7 +138,8 @@ namespace GitUI.Blame
 
             try
             {
-                await _blameLoader.LoadAsync(cancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, lines: null, cancellationToken: cancellationToken),
+                await _blameLoader.LoadAsync(
+                    loaderCancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, lines: null, cancellationToken: loaderCancellationToken.CombineWith(cancellationToken).Token),
                     () => ProcessBlame(fileName, revision, children, controlToMask, line, cancellationToken));
             }
             catch (ExternalOperationException ex)
@@ -143,6 +147,8 @@ namespace GitUI.Blame
                 _blame = null;
                 await BlameFile.ViewTextAsync(fileName, ex.Message);
             }
+
+            _loading = false;
         }
 
         private void commitInfo_CommandClicked(object sender, CommandEventArgs e)
