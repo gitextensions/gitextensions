@@ -304,13 +304,14 @@ namespace GitUI.CommandsDialogs
             FileStatusItem prevSelectedItem = DiffFiles.SelectedItem;
             FileStatusItem prevDiffItem = DiffFiles.FirstGroupItems.Contains(prevSelectedItem) ? prevSelectedItem : null;
             await DiffFiles.SetDiffsAsync(revisions, _revisionGridInfo.CurrentCheckout, cancellationToken);
+            FileStatusItem[] firstGroupItems = DiffFiles.FirstGroupItems.ToArray();
             await this.SwitchToMainThreadAsync(cancellationToken);
 
             _isImplicitListSelection = true;
 
             // First try the last item explicitly selected
             if (_lastExplicitlySelectedItem is not null
-                && DiffFiles.FirstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(_lastExplicitlySelectedItem.Item.Name))?.Item is GitItemStatus explicitItem)
+                && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(_lastExplicitlySelectedItem.Item.Name))?.Item is GitItemStatus explicitItem)
             {
                 DiffFiles.SelectedGitItem = explicitItem;
                 return;
@@ -318,7 +319,7 @@ namespace GitUI.CommandsDialogs
 
             // Second go back to the filtered file
             if (!string.IsNullOrWhiteSpace(FallbackFollowedFile)
-                && DiffFiles.FirstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(FallbackFollowedFile))?.Item is GitItemStatus fallbackItem)
+                && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(FallbackFollowedFile))?.Item is GitItemStatus fallbackItem)
             {
                 DiffFiles.SelectedGitItem = fallbackItem;
                 return;
@@ -326,7 +327,7 @@ namespace GitUI.CommandsDialogs
 
             // Third try to restore the previous item
             if (prevDiffItem is not null
-                && DiffFiles.FirstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(prevDiffItem.Item.Name))?.Item is GitItemStatus prevItem)
+                && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(prevDiffItem.Item.Name))?.Item is GitItemStatus prevItem)
             {
                 DiffFiles.SelectedGitItem = prevItem;
             }
