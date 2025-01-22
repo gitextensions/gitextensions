@@ -1,4 +1,6 @@
-﻿using GitUI;
+﻿#nullable enable
+
+using GitUI;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
@@ -26,13 +28,13 @@ namespace GitCommands
 
         public async Task LoadAsync(Action<CancellationToken> loadContent, Action onLoaded)
         {
-            await LoadAsync(
+            await LoadAsync<object?>(
                 token =>
                 {
                     loadContent(token);
-                    return (object?)null;
+                    return null;
                 },
-                _ => onLoaded());
+                nullValue => onLoaded());
         }
 
         public Task LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
@@ -42,25 +44,19 @@ namespace GitCommands
 
         public async Task LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
-            if (Volatile.Read(ref _disposed) != 0)
-            {
-                throw new ObjectDisposedException(nameof(AsyncLoader));
-            }
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
-            // Stop any prior operation
-            Cancel();
-
-            // Create a new cancellation token
+            // Create a new cancellation token, which requests cancellation of any prior operation
             CancellationToken token = _cancellationSequence.Next();
 
-            T? result;
+            T result;
 
             try
             {
                 // Defer the load operation if requested
                 if (Delay > TimeSpan.Zero)
                 {
-                    await Task.Delay(Delay, token).ConfigureAwait(false);
+                    await Task.Delay(Delay, token).ConfigureAwait(continueOnCapturedContext: false);
                 }
                 else
                 {
@@ -75,14 +71,15 @@ namespace GitCommands
 
                 // Load content
                 result = loadContent(token);
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                return;
             }
             catch (Exception e)
             {
-                if (e is OperationCanceledException && token.IsCancellationRequested)
-                {
-                    return;
-                }
-
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                 if (!OnLoadingError(e))
@@ -91,14 +88,6 @@ namespace GitCommands
                 }
 
                 return;
-            }
-
-            try
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-            }
-            catch (OperationCanceledException) when (token.IsCancellationRequested)
-            {
             }
 
             // Invoke continuation unless cancelled
@@ -127,10 +116,7 @@ namespace GitCommands
 
         public void Cancel()
         {
-            if (Volatile.Read(ref _disposed) != 0)
-            {
-                throw new ObjectDisposedException(nameof(AsyncLoader));
-            }
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
             _cancellationSequence.CancelCurrent();
         }
