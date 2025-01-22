@@ -1071,19 +1071,24 @@ namespace GitUI
                     }
                 }
 
-                if (FileStatusListView.Nodes.Count > 0)
+                switch (FileStatusListView.Nodes.Count)
                 {
-                    FileStatusListView.TopNode = FileStatusListView.Nodes[0];
-                    FileStatusListView.ScrollLeftMost();
-                }
+                    case 0: FileStatusListView_SelectedIndexChanged(); break;
+                    case 1: FileStatusListView.SelectedNode = FileStatusListView.Nodes[0]; break;
+                    default:
+                        FileStatusListView.TopNode = FileStatusListView.Nodes[0];
+                        FileStatusListView.ScrollLeftMost();
 
-                if (updateCausedByFilter == false && SelectFirstItemOnSetItems)
-                {
-                    SelectFirstVisibleItem();
-                }
-                else if (toBeSelectedItems.Count > 0)
-                {
-                    SelectItems(toBeSelectedItems.Contains);
+                        if (updateCausedByFilter == false && SelectFirstItemOnSetItems)
+                        {
+                            SelectFirstVisibleItem();
+                        }
+                        else if (toBeSelectedItems.Count > 0)
+                        {
+                            SelectItems(toBeSelectedItems.Contains);
+                        }
+
+                        break;
                 }
             }
             finally
