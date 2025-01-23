@@ -7,7 +7,6 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
-using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
