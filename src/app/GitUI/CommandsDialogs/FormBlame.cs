@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs
 
             FileName = fileName;
 
-            _ = blameControl1.LoadBlameAsync(revision ?? Module.GetRevision(), children: null, fileName, revisionGridInfo: null, revisionGridUpdate: null, controlToMask: null, Module.FilesEncoding, initialLine);
+            _ = blameControl1.LoadBlameAsync(revision ?? Module.GetRevision(), children: null, fileName, revisionGridInfo: null, revisionGridFileUpdate: null, controlToMask: null, Module.FilesEncoding, initialLine);
             blameControl1.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
         }
 
