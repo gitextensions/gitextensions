@@ -16,7 +16,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class RevisionDiffControl : GitModuleControl
+    public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUpdate
     {
         private readonly TranslationString _saveFileFilterCurrentFormat = new("Current format");
         private readonly TranslationString _saveFileFilterAllFiles = new("All files");
@@ -585,7 +585,7 @@ namespace GitUI.CommandsDialogs
             GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
                 ? _revisionGridInfo.GetActualRevision(_revisionGridInfo.CurrentCheckout)
                 : DiffFiles.SelectedItem.SecondRevision;
-            await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, _revisionGridUpdate,
+            await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, revisionGridFileUpdate: this,
                 controlToMask: null, DiffText.Encoding, line, cancellationTokenSequence: _viewChangesSequence);
         }
 
@@ -1484,6 +1484,12 @@ namespace GitUI.CommandsDialogs
         internal void RegisterGitHostingPluginInBlameControl()
         {
             BlameControl.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
+        }
+
+        bool IRevisionGridFileUpdate.SelectFileInRevision(ObjectId objectId, RelativePath filename)
+        {
+            _lastExplicitlySelectedItem = filename;
+            return _revisionGridUpdate.SetSelectedRevision(objectId);
         }
 
         internal TestAccessor GetTestAccessor()
