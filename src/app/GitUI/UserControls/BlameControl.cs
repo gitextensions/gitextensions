@@ -8,7 +8,7 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
-using GitUI.CommandDialogs;
+using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
