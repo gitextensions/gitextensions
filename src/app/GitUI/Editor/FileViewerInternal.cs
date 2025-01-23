@@ -78,12 +78,8 @@ namespace GitUI.Editor
             };
             TextEditor.ActiveTextAreaControl.TextArea.MouseWheel += TextArea_MouseWheel;
 
-            HighlightingManager.Manager.DefaultHighlighting.SetColorFor("LineNumbers",
-                new HighlightColor(SystemColors.ControlText, SystemColors.Control, false, false));
             TextEditor.ActiveTextAreaControl.TextEditorProperties.EnableFolding = false;
-
             _lineNumbersControl = new DiffViewerLineNumberControl(TextEditor.ActiveTextAreaControl.TextArea);
-
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
 

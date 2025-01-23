@@ -11,7 +11,7 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
-using GitUI.CommandDialogs;
+using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;

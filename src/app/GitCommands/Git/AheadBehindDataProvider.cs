@@ -51,7 +51,7 @@ namespace GitCommands.Git
                 // Callers setting branch name has the responsibility to ensure that not all are needed
                 if (string.IsNullOrWhiteSpace(branchName) && !string.IsNullOrWhiteSpace(_branchName))
                 {
-                    Trace.WriteLine($"Call for all branches after cache filled with specific branch {_branchName}");
+                    Debug.WriteLine($"Call for all branches after cache filled with specific branch {_branchName}");
                     ResetCache();
                 }
 

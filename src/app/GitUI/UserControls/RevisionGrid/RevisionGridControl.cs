@@ -17,7 +17,6 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
 using GitUI.BuildServerIntegration;
-using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
@@ -3144,6 +3143,8 @@ namespace GitUI
         {
             if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
+                FindForm()?.ForceActivate();
+
                 if (fileNameArray.Length > 10)
                 {
                     // Some users need to be protected against themselves!

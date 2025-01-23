@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using GitCommands.Git;
 
 namespace GitCommands.UserRepositoryHistory
@@ -25,6 +26,9 @@ namespace GitCommands.UserRepositoryHistory
     {
         private const string RepositoryDescriptionFileName = "description";
         private const string DefaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
+
+        private readonly Regex _uninformativeNameRegex = new($"^{AppSettings.UninformativeRepoNameRegex.Value}$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
+
         private readonly IGitDirectoryResolver _gitDirectoryResolver;
 
         public RepositoryDescriptionProvider(IGitDirectoryResolver gitDirectoryResolver)
@@ -51,6 +55,11 @@ namespace GitCommands.UserRepositoryHistory
             if (!string.IsNullOrWhiteSpace(desc))
             {
                 return desc;
+            }
+
+            while (dirInfo.Parent is not null && _uninformativeNameRegex.IsMatch(dirInfo.Name))
+            {
+                dirInfo = dirInfo.Parent;
             }
 
             return dirInfo.Name;

@@ -5,7 +5,6 @@ using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
-using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
@@ -16,7 +15,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class RevisionFileTreeControl : GitModuleControl
+    public partial class RevisionFileTreeControl : GitModuleControl, IRevisionGridFileUpdate
     {
         private readonly TranslationString _resetFileCaption = new("Reset");
         private readonly TranslationString _resetFileText = new("Are you sure you want to reset this file or directory?");
@@ -47,6 +46,7 @@ See the changes in the commit form.");
         private readonly IRevisionFileTreeController _revisionFileTreeController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider = new FindFilePredicateProvider();
+        private RelativePath? _pathToBlame;
         private GitRevision? _revision;
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
@@ -193,9 +193,9 @@ See the changes in the commit form.");
 
                 // When blame control is visible, taking the filename from the revision selected to blame
                 // because the file could have been renamed in between
-                if (BlameControl.Visible && !string.IsNullOrWhiteSpace(BlameControl.PathToBlame))
+                if (BlameControl.Visible && _pathToBlame is not null)
                 {
-                    tryNodes.Add(BlameControl.PathToBlame);
+                    tryNodes.Add(_pathToBlame.Value);
                 }
                 else if (tvGitTree.SelectedNode is not null)
                 {
@@ -456,7 +456,7 @@ See the changes in the commit form.");
 
                         FileText.Visible = false;
                         BlameControl.Visible = true;
-                        return BlameControl.LoadBlameAsync(_revision, children: null, gitItem.FileName, _revisionGridInfo, _revisionGridUpdate, controlToMask: null, FileText.Encoding, line, cancellationToken: _viewBlameSequence.Next());
+                        return BlameControl.LoadBlameAsync(_revision, children: null, gitItem.FileName, _revisionGridInfo, revisionGridFileUpdate: this, controlToMask: null, FileText.Encoding, line, cancellationTokenSequence: _viewBlameSequence);
                     }
 
                 case GitObjectType.Commit:
@@ -982,6 +982,12 @@ See the changes in the commit form.");
         internal void RegisterGitHostingPluginInBlameControl()
         {
             BlameControl.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
+        }
+
+        public bool SelectFileInRevision(ObjectId objectId, RelativePath filename)
+        {
+            _pathToBlame = filename;
+            return _revisionGridUpdate.SetSelectedRevision(objectId);
         }
 
         internal TestAccessor GetTestAccessor()
