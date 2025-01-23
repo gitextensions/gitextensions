@@ -48,15 +48,23 @@ namespace GitCommands.UserRepositoryHistory
         public string Get(string repositoryDir)
         {
             DirectoryInfo repositoryDirInfo = new(repositoryDir);
-            for (DirectoryInfo? superProjectDirInfo = repositoryDirInfo.Parent; superProjectDirInfo?.Exists is true; superProjectDirInfo = superProjectDirInfo.Parent)
-            {
-                if (GitModule.IsValidGitWorkingDir(superProjectDirInfo.FullName))
-                {
-                    return $"{GetShortName(repositoryDirInfo)} - {GetShortName(superProjectDirInfo)}";
-                }
-            }
+            return GetRootProjectDirInfo(repositoryDirInfo) is DirectoryInfo rootProjectDirInfo
+                ? $"{GetShortName(repositoryDirInfo)} - {GetShortName(rootProjectDirInfo)}"
+                : GetShortName(repositoryDirInfo);
 
-            return GetShortName(repositoryDirInfo);
+            DirectoryInfo? GetRootProjectDirInfo(DirectoryInfo repositoryDirInfo)
+            {
+                DirectoryInfo? rootProjectDirInfo = null;
+                for (DirectoryInfo? superProjectDirInfo = repositoryDirInfo.Parent; superProjectDirInfo?.Exists is true; superProjectDirInfo = superProjectDirInfo.Parent)
+                {
+                    if (GitModule.IsValidGitWorkingDir(superProjectDirInfo.FullName))
+                    {
+                        rootProjectDirInfo = superProjectDirInfo;
+                    }
+                }
+
+                return rootProjectDirInfo;
+            }
 
             string GetShortName(DirectoryInfo dirInfo)
             {
