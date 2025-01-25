@@ -101,7 +101,7 @@ namespace GitUI.CommitInfo
             _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
             _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-            Color messageBackground = KnownColor.Window.MakeBackgroundDarkerBy(0.04);
+            Color messageBackground = SystemColors.Window.MakeBackgroundDarkerBy(0.04);
             pnlCommitMessage.BackColor = messageBackground;
             rtbxCommitMessage.BackColor = messageBackground;
 
