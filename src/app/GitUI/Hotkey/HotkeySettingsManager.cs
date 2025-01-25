@@ -376,17 +376,6 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.StageSelectedFile, Keys.S),
                     Hk(RevisionDiffControl.Command.UnStageSelectedFile, Keys.U)),
                 new HotkeySettings(
-                    RevisionFileTreeControl.HotkeySettingsName,
-                    Hk(RevisionFileTreeControl.Command.Blame, BlameHotkey),
-                    Hk(RevisionFileTreeControl.Command.EditFile, EditFileHotkey),
-                    Hk(RevisionFileTreeControl.Command.FilterFileInGrid, Keys.F),
-                    Hk(RevisionFileTreeControl.Command.FindFile, Keys.Control | Keys.F),
-                    Hk(RevisionFileTreeControl.Command.OpenAsTempFile, OpenAsTempFileHotkey),
-                    Hk(RevisionFileTreeControl.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
-                    Hk(RevisionFileTreeControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
-                    Hk(RevisionFileTreeControl.Command.OpenWorkingDirectoryFileWith, Keys.Control | Keys.O),
-                    Hk(RevisionFileTreeControl.Command.ShowHistory, ShowHistoryHotkey)),
-                new HotkeySettings(
                     FormStash.HotkeySettingsName,
                     Hk(FormStash.Command.NextStash, Keys.Control | Keys.N),
                     Hk(FormStash.Command.PreviousStash, Keys.Control | Keys.P),
