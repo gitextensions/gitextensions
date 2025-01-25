@@ -1,5 +1,6 @@
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
+using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Theming
 {
@@ -15,8 +16,18 @@ namespace GitUI.Theming
             new ThemeMigration(Repository).Migrate();
             Settings = LoadThemeSettings(Repository);
             IsDarkTheme = Settings.Theme.GetNonEmptyColor(KnownColor.Window).GetBrightness() < 0.5;
+            UpdateEditorSettings();
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
+        }
+
+        private static void UpdateEditorSettings()
+        {
+            DefaultHighlightingStrategy strategy = HighlightingManager.Manager.DefaultHighlighting;
+            strategy.SetColorFor("Default",
+                new HighlightColor(SystemColors.WindowText, AppColor.EditorBackground.GetThemeColor(), false, false, adaptable: false));
+            strategy.SetColorFor("LineNumbers",
+                new HighlightColor(SystemColors.GrayText, AppColor.LineNumberBackground.GetThemeColor(), false, false, adaptable: false));
         }
 
         private static ThemeSettings LoadThemeSettings(IThemeRepository repository)

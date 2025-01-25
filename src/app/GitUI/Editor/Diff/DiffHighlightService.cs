@@ -409,7 +409,7 @@ public abstract class DiffHighlightService : TextHighlightService
     private static TextMarker CreateDimmedMarker(int offset, int length, bool isRemoved, bool dimBackground)
         => dimBackground
             ? CreateTextMarker(offset, length, ColorHelper.DimColor(ColorHelper.DimColor(isRemoved ? _removedBackColor : _addedBackColor)))
-            : new(offset, length, TextMarkerType.SolidBlock, SystemColors.Window, ColorHelper.DimColor(isRemoved ? _removedForeColor : _addedForeColor));
+            : new(offset, length, TextMarkerType.SolidBlock, AppColor.EditorBackground.GetThemeColor(), ColorHelper.DimColor(isRemoved ? _removedForeColor : _addedForeColor));
 
     private static TextMarker CreateTextMarker(int offset, int length, Color color)
         => new(offset, length, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color));
