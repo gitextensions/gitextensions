@@ -99,7 +99,7 @@ namespace GitUI.UserControls.RevisionGrid
             InitializeComponent();
             DoubleBuffered = true;
 
-            _alternatingRowBackgroundBrush = new SolidBrush(KnownColor.Window.MakeBackgroundDarkerBy(0.025)); // 0.018
+            _alternatingRowBackgroundBrush = new SolidBrush(SystemColors.Window.MakeBackgroundDarkerBy(0.025)); // 0.018
             _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
 

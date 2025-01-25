@@ -144,9 +144,8 @@
         }
 
         /// <remarks>0.05 is subtle. 0.3 is quite strong.</remarks>
-        public static Color MakeBackgroundDarkerBy(this KnownColor name, double amount) =>
-            ThemeSettings.Theme.GetNonEmptyColor(name)
-                    .TransformHsl(l: l => l - amount);
+        public static Color MakeBackgroundDarkerBy(this Color color, double amount) =>
+            color.TransformHsl(l: l => l - amount);
 
         public static void AdaptImageLightness(this ToolStripItem item) =>
             item.Image = ((Bitmap)item.Image)?.AdaptLightness();
