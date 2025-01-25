@@ -6,11 +6,11 @@ namespace GitUI.Editor
 {
     internal abstract class GitHighlightingStrategyBase : IHighlightingStrategy
     {
-        protected static HighlightColor ColorNormal { get; } = new(SystemColors.WindowText, bold: false, italic: false);
+        protected static HighlightColor ColorNormal { get; } = new(nameof(SystemColors.WindowText), bold: false, italic: false);
 
-        private static HighlightColor ColorComment { get; } = new(Color.DarkGreen.AdaptBackColor(), bold: false, italic: false);
+        private static HighlightColor ColorComment { get; } = new(Color.DarkGreen, bold: false, italic: false);
 
-        private readonly DefaultHighlightingStrategy _defaultHighlightingStrategy = new();
+        private readonly DefaultHighlightingStrategy _defaultHighlightingStrategy = HighlightingManager.Manager.DefaultHighlighting;
 
         private readonly char _commentChar;
 
