@@ -984,10 +984,10 @@ See the changes in the commit form.");
             BlameControl.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
         }
 
-        public bool SelectFileInRevision(ObjectId objectId, RelativePath filename)
+        public bool SelectFileInRevision(ObjectId commitId, RelativePath filename)
         {
             _pathToBlame = filename;
-            return _revisionGridUpdate.SetSelectedRevision(objectId);
+            return _revisionGridUpdate.SetSelectedRevision(commitId);
         }
 
         internal TestAccessor GetTestAccessor()

@@ -1486,10 +1486,10 @@ namespace GitUI.CommandsDialogs
             BlameControl.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
         }
 
-        bool IRevisionGridFileUpdate.SelectFileInRevision(ObjectId objectId, RelativePath filename)
+        bool IRevisionGridFileUpdate.SelectFileInRevision(ObjectId commitId, RelativePath filename)
         {
             _lastExplicitlySelectedItem = filename;
-            return _revisionGridUpdate.SetSelectedRevision(objectId);
+            return _revisionGridUpdate.SetSelectedRevision(commitId);
         }
 
         internal TestAccessor GetTestAccessor()

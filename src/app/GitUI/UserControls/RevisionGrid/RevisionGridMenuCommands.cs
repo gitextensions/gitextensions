@@ -509,13 +509,13 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            ObjectId objectId = formGoToCommit.ValidateAndGetSelectedRevision();
+            ObjectId commitId = formGoToCommit.ValidateAndGetSelectedRevision();
 
-            if (objectId is not null)
+            if (commitId is not null)
             {
-                if (!_revisionGrid.SetSelectedRevision(objectId))
+                if (!_revisionGrid.SetSelectedRevision(commitId))
                 {
-                    MessageBoxes.RevisionFilteredInGrid(_revisionGrid, objectId);
+                    MessageBoxes.RevisionFilteredInGrid(_revisionGrid, commitId);
                 }
             }
             else

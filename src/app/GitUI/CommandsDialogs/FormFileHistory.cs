@@ -551,11 +551,11 @@ namespace GitUI.CommandsDialogs
             if (e.Command == "gotocommit")
             {
                 Validates.NotNull(e.Data);
-                if (Module.TryResolvePartialCommitId(e.Data, out ObjectId? objectId))
+                if (Module.TryResolvePartialCommitId(e.Data, out ObjectId? commitId))
                 {
-                    if (!RevisionGrid.SetSelectedRevision(objectId))
+                    if (!RevisionGrid.SetSelectedRevision(commitId))
                     {
-                        MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                        MessageBoxes.RevisionFilteredInGrid(this, commitId);
                     }
                }
             }
@@ -696,8 +696,8 @@ namespace GitUI.CommandsDialogs
             FormGitCommandLog.ShowOrActivate(this);
         }
 
-        bool IRevisionGridFileUpdate.SelectFileInRevision(ObjectId objectId, RelativePath ignoredFilename)
-            => RevisionGrid.SetSelectedRevision(objectId);
+        bool IRevisionGridFileUpdate.SelectFileInRevision(ObjectId commitId, RelativePath ignoredFilename)
+            => RevisionGrid.SetSelectedRevision(commitId);
 
         internal TestAccessor GetTestAccessor()
             => new(this);

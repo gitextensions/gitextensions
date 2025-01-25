@@ -202,11 +202,11 @@ namespace GitUI
             _quickSearchProvider = new QuickSearchProvider(_gridView, () => Module.WorkingDir);
 
             // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
-            _parentChildNavigationHistory = new ParentChildNavigationHistory(objectId =>
+            _parentChildNavigationHistory = new ParentChildNavigationHistory(commitId =>
             {
-                if (!SetSelectedRevision(objectId))
+                if (!SetSelectedRevision(commitId))
                 {
-                    MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                    MessageBoxes.RevisionFilteredInGrid(this, commitId);
                 }
             });
             _authorHighlighting = new AuthorRevisionHighlighting();
@@ -458,10 +458,10 @@ namespace GitUI
         {
             if (_navigationHistory.CanNavigateBackward)
             {
-                ObjectId objectId = _navigationHistory.NavigateBackward();
-                if (!SetSelectedRevision(objectId))
+                ObjectId commitId = _navigationHistory.NavigateBackward();
+                if (!SetSelectedRevision(commitId))
                 {
-                    MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                    MessageBoxes.RevisionFilteredInGrid(this, commitId);
                 }
             }
         }
@@ -470,10 +470,10 @@ namespace GitUI
         {
             if (_navigationHistory.CanNavigateForward)
             {
-                ObjectId objectId = _navigationHistory.NavigateForward();
-                if (!SetSelectedRevision(objectId))
+                ObjectId commitId = _navigationHistory.NavigateForward();
+                if (!SetSelectedRevision(commitId))
                 {
-                    MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                    MessageBoxes.RevisionFilteredInGrid(this, commitId);
                 }
             }
         }
@@ -590,25 +590,25 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Selects row containing revision matching <paramref name="objectId"/>.
+        /// Selects row containing revision matching <paramref name="commitId"/>.
         /// Returns whether the required revision was found and selected.
         /// </summary>
-        /// <param name="objectId">Id of the revision to select.</param>
+        /// <param name="commitId">Id of the revision to select.</param>
         /// <param name="toggleSelection">Toggle if the selected state for the revision.</param>
         /// <returns><c>true</c> if the required revision was found and selected, otherwise <c>false</c>.</returns>
-        public bool SetSelectedRevision(ObjectId? objectId, bool toggleSelection = false, bool updateNavigationHistory = true)
+        public bool SetSelectedRevision(ObjectId? commitId, bool toggleSelection = false, bool updateNavigationHistory = true)
         {
             _gridView.ClearToBeSelected();
-            if (_gridView.TryGetRevisionIndex(objectId) is not int index || index < 0 || index >= _gridView.RowCount)
+            if (_gridView.TryGetRevisionIndex(commitId) is not int index || index < 0 || index >= _gridView.RowCount)
             {
                 return false;
             }
 
-            Validates.NotNull(objectId);
+            Validates.NotNull(commitId);
             SetSelectedIndex(_gridView, index, toggleSelection);
             if (updateNavigationHistory)
             {
-                _navigationHistory.Push(objectId);
+                _navigationHistory.Push(commitId);
             }
 
             return true;
@@ -2879,10 +2879,10 @@ namespace GitUI
                 return;
             }
 
-            ObjectId objectId = ObjectId.Parse(mergeBaseCommitId);
-            if (!SetSelectedRevision(objectId))
+            ObjectId commitId = ObjectId.Parse(mergeBaseCommitId);
+            if (!SetSelectedRevision(commitId))
             {
-                MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                MessageBoxes.RevisionFilteredInGrid(this, commitId);
             }
         }
 
@@ -2916,12 +2916,12 @@ namespace GitUI
                 refName = sha1;
             }
 
-            ObjectId? revisionId = Module.RevParse(refName);
-            if (revisionId is not null)
+            ObjectId? commitId = Module.RevParse(refName);
+            if (commitId is not null)
             {
-                if (!SetSelectedRevision(revisionId, toggleSelection) && showNoRevisionMsg)
+                if (!SetSelectedRevision(commitId, toggleSelection) && showNoRevisionMsg)
                 {
-                    MessageBoxes.RevisionFilteredInGrid(this, revisionId);
+                    MessageBoxes.RevisionFilteredInGrid(this, commitId);
                 }
             }
             else if (showNoRevisionMsg)

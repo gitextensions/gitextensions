@@ -669,23 +669,23 @@ namespace GitUI.Blame
         /// <summary>
         /// Blame a specific revision
         /// </summary>
-        /// <param name="revisionId">the commit id to blame</param>
+        /// <param name="commitId">the commit id to blame</param>
         /// <param name="filename">the relative path of the file to blame in this commit (because it could have been renamed)</param>
-        private void BlameRevision(ObjectId revisionId, string filename, GitBlameLine blameLine)
+        private void BlameRevision(ObjectId commitId, string filename, GitBlameLine blameLine)
         {
             _clickedBlameLine = blameLine;
 
             if (_revisionGridFileUpdate is not null)
             {
-                if (!_revisionGridFileUpdate.SelectFileInRevision(revisionId, RelativePath.From(filename)))
+                if (!_revisionGridFileUpdate.SelectFileInRevision(commitId, RelativePath.From(filename)))
                 {
-                    MessageBoxes.RevisionFilteredInGrid(this, revisionId);
+                    MessageBoxes.RevisionFilteredInGrid(this, commitId);
                 }
 
                 return;
             }
 
-            using FormCommitDiff frm = new(UICommands, revisionId);
+            using FormCommitDiff frm = new(UICommands, commitId);
             frm.ShowDialog(this);
         }
 
