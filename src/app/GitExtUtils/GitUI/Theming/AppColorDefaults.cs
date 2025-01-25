@@ -4,9 +4,11 @@
     {
         public static readonly Color FallbackColor = Color.Magenta;
 
-        private static readonly Dictionary<AppColor, Color> Values =
+        private static readonly Dictionary<AppColor, Color> _values =
             new()
             {
+                { AppColor.EditorBackground, SystemColors.Window },
+                { AppColor.LineNumberBackground, SystemColors.Window },
                 { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
                 { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
                 { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },
@@ -58,7 +60,7 @@
                 { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) }
             };
 
-        private static readonly Dictionary<string, Dictionary<AppColor, Color>> Variations = new()
+        private static readonly Dictionary<string, Dictionary<AppColor, Color>> _variations = new()
         {
             {
                 "colorblind", new()
@@ -72,7 +74,7 @@
 
         public static Color GetBy(AppColor name, string[]? variations = null)
         {
-            if (!Values.TryGetValue(name, out Color result))
+            if (!_values.TryGetValue(name, out Color result))
             {
                 result = FallbackColor;
             }
@@ -84,7 +86,7 @@
 
             foreach (string variation in variations)
             {
-                if (!Variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
+                if (!_variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
                 {
                     continue;
                 }
