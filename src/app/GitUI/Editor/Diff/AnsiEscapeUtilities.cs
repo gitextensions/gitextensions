@@ -112,7 +112,7 @@ public partial class AnsiEscapeUtilities
         {
             DocOffset = sb.Length,
             Length = -1,
-            BackColor = SystemColors.Window,
+            BackColor = AppColor.EditorBackground.GetThemeColor(),
             ForeColor = SystemColors.WindowText,
         };
 
@@ -560,7 +560,7 @@ public partial class AnsiEscapeUtilities
         }
 
         // BackColor must always be set
-        hl.BackColor ??= SystemColors.Window;
+        hl.BackColor ??= AppColor.EditorBackground.GetThemeColor();
 
         // Check if segment can be merged with the previous
         if (prevMarker is not null
