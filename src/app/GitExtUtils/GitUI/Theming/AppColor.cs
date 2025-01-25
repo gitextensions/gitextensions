@@ -9,6 +9,8 @@
     /// </remarks>
     public enum AppColor
     {
+        EditorBackground,
+        LineNumberBackground,
         AuthoredHighlight,
         HighlightAllOccurences,
         InactiveSelectionHighlight,
