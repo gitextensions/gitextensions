@@ -1,0 +1,7 @@
+﻿/* See (App install)\Themes\README.md for instructions on how to create or modify a theme */
+
+@import url("invariant.css");
+
+/* Application colors */
+.PanelBackground { color: #f3f3f3; }
+.LineNumberBackground { color: #ebebeb; }
