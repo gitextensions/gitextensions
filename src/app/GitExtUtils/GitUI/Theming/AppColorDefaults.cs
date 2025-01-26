@@ -10,9 +10,6 @@
                 { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
                 { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
                 { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },
-                { AppColor.OtherTag, Color.Gray },
-                { AppColor.Tag, Color.DarkBlue },
-                { AppColor.Graph, Color.DarkRed },
                 { AppColor.GraphBranch1, Color.FromArgb(0xf0, 0x64, 0xa0) },
                 { AppColor.GraphBranch2, Color.FromArgb(0x78, 0xb4, 0xe6) },
                 { AppColor.GraphBranch3, Color.FromArgb(0x24, 0xc2, 0x21) },
@@ -24,6 +21,8 @@
                 { AppColor.GraphNonRelativeBranch, Color.LightGray },
                 { AppColor.Branch, Color.FromArgb(0x00, 0x80, 0x00) },
                 { AppColor.RemoteBranch, Color.FromArgb(0x8b, 0x00, 0x09) },
+                { AppColor.Tag, Color.DarkBlue },
+                { AppColor.OtherTag, Color.Gray },
                 { AppColor.DiffSection, Color.FromArgb(230, 230, 230) },
                 { AppColor.AnsiTerminalBlackForeNormal, Color.FromArgb(0x00, 0x00, 0x00) },
                 { AppColor.AnsiTerminalBlackBackNormal, Color.FromArgb(0x60, 0x60, 0x60) },
@@ -64,7 +63,6 @@
             {
                 "colorblind", new()
                 {
-                   { AppColor.Graph, Color.FromArgb(0x06, 0x00, 0xa8) },
                    { AppColor.RemoteBranch, Color.FromArgb(0x06, 0x00, 0xa8) },
                    { AppColor.AnsiTerminalRedBackNormal, Color.FromArgb(0x94, 0xcb, 0xff) },
                    { AppColor.AnsiTerminalRedBackBold, Color.FromArgb(0x4d, 0xa6, 0xff) },
