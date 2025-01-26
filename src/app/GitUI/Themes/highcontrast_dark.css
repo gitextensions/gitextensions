@@ -4,11 +4,10 @@
 .OtherTag                    { color: #a1a1a1; }
 .AuthoredHighlight           { color: #2a2b26; }
 .HighlightAllOccurences      { color: #606020; }
-.Tag                         { color: #408080; }
-.Graph                       { color: #882d00; }
 .Branch                      { color: #00d76b; }
 .RemoteBranch                { color: #ff8080; } /* hsl(0,   100%, 75%) */
 .RemoteBranch.colorblind     { color: #0080ff; } /* hsl(210, 100%, 50%) */
+.Tag                         { color: #408080; }
 .DiffSection                 { color: #4f4f4f; }
 .AnsiTerminalRedBackNormal            { color: #4b0606; } /* hsl(0,   85%,  16%) */
 .AnsiTerminalRedBackNormal.colorblind { color: #080646; } /* hsl(242, 84%,  15%) */
