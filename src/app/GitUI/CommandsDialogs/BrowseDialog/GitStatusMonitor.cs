@@ -471,7 +471,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     return;
                 }
 
-                if (!Directory.Exists(_workTreeWatcher.Path))
+                if (!Directory.Exists(_workTreeWatcher.Path) || Module.IsBareRepository())
                 {
                     // The directory no longer exists, watcher cannot be enabled
                     return;

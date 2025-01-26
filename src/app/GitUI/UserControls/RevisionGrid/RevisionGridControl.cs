@@ -926,7 +926,7 @@ namespace GitUI
 
             // Get the "main" stash commit, including the reflog selector
             Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
-                !AppSettings.ShowStashes
+                !AppSettings.ShowStashes || Module.IsBareRepository()
                 ? Array.Empty<GitRevision>()
                 : new RevisionReader(capturedModule).GetStashes(cancellationToken));
 
