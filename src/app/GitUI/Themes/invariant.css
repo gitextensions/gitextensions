@@ -42,11 +42,6 @@
 .HighlightAllOccurences { color: #e8e8ff; }
 .InactiveSelectionHighlight { color: #e6e6e6; }
 
-.OtherTag { color: #808080; }
-.Tag { color: #00008b; }
-.Graph { color: #8b0000; }
-.Graph.colorblind { color: #0600a8; }
-
 .GraphBranch1 { color: #f064a0; }
 .GraphBranch2 { color: #78b4e6; }
 .GraphBranch3 { color: #24c221; }
@@ -60,6 +55,8 @@
 .Branch { color: #008000; }
 .RemoteBranch { color: #8b0009; }
 .RemoteBranch.colorblind { color: #0600a8; }
+.Tag { color: #00008b; }
+.OtherTag { color: #808080; }
 .DiffSection { color: #e6e6e6; }
 
 /* translation of terminal (cli) ansi color output sequences */
