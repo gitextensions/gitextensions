@@ -1,13 +1,15 @@
-﻿namespace GitUI
+﻿using GitUI.UserControls;
+
+namespace GitUI
 {
     partial class FileStatusList
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,14 +24,14 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            FileStatusListView = new UserControls.NativeListView();
+            FileStatusListView = new MultiSelectTreeView();
             columnHeader = new ColumnHeader();
             NoFiles = new Label();
             LoadingFiles = new Label();
@@ -41,34 +43,49 @@
             cboFindInCommitFilesGitGrep = new ComboBox();
             lblFindInCommitFilesGitGrepWatermark = new Label();
             DeleteSearchButton = new Label();
+            Toolbar = new ToolStripEx();
+            btnCollapseGroups = new ToolStripButton();
+            btnRefresh = new ToolStripSplitButton();
+            tsmiRefreshOnFormFocus = new ToolStripMenuItem();
+            btnAsTree = new ToolStripSplitButton();
+            tsmiDenseTree = new ToolStripMenuItem();
+            tsmiGroupNodes = new ToolStripMenuItem();
+            btnByPath = new ToolStripButton();
+            btnByExtension = new ToolStripButton();
+            btnByStatus = new ToolStripButton();
+            sepFilter = new ToolStripSeparator();
+            btnUnequalChange = new ToolStripButton();
+            btnOnlyB = new ToolStripButton();
+            btnOnlyA = new ToolStripButton();
+            btnSameChange = new ToolStripButton();
+            sepOptions = new ToolStripSeparator();
+            btnFindInFilesGitGrep = new ToolStripSplitButton();
+            tsmiFindUsingDialog = new ToolStripMenuItem();
+            tsmiFindUsingInputBox = new ToolStripMenuItem();
+            tsmiFindUsingBoth = new ToolStripMenuItem();
+            Toolbar.SuspendLayout();
             SuspendLayout();
             // 
             // FileStatusListView
             // 
             FileStatusListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             FileStatusListView.BorderStyle = BorderStyle.None;
-            FileStatusListView.Columns.AddRange(new ColumnHeader[] { columnHeader });
+            FileStatusListView.DrawMode = TreeViewDrawMode.OwnerDrawText;
             FileStatusListView.FullRowSelect = true;
-            FileStatusListView.HeaderStyle = ColumnHeaderStyle.None;
-            FileStatusListView.LabelWrap = false;
+            FileStatusListView.HideSelection = false;
             FileStatusListView.Location = new Point(0, 46);
             FileStatusListView.Margin = new Padding(0);
             FileStatusListView.Name = "FileStatusListView";
-            FileStatusListView.OwnerDraw = true;
-            FileStatusListView.ShowItemToolTips = true;
+            FileStatusListView.ShowRootLines = false;
             FileStatusListView.Size = new Size(682, 439);
-            FileStatusListView.Sorting = SortOrder.Ascending;
             FileStatusListView.TabIndex = 9;
-            FileStatusListView.UseCompatibleStateImageBehavior = false;
-            FileStatusListView.View = View.Details;
-            FileStatusListView.DrawSubItem += FileStatusListView_DrawSubItem;
-            FileStatusListView.ClientSizeChanged += FileStatusListView_ClientSizeChanged;
+            FileStatusListView.BeforeExpand += FileStatusListView_BeforeExpand;
+            FileStatusListView.DrawNode += FileStatusListView_DrawNode;
             FileStatusListView.DoubleClick += FileStatusListView_DoubleClick;
             FileStatusListView.KeyDown += FileStatusListView_KeyDown;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseUp += FileStatusListView_MouseUp;
-            FileStatusListView.Scroll += FileStatusListView_Scroll;
             // 
             // columnHeader
             // 
@@ -77,77 +94,32 @@
             // 
             // NoFiles
             // 
-            NoFiles.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             NoFiles.AutoSize = true;
             NoFiles.BackColor = SystemColors.Window;
             NoFiles.ForeColor = SystemColors.GrayText;
             NoFiles.Location = new Point(0, 23);
             NoFiles.Name = "NoFiles";
             NoFiles.Padding = new Padding(2);
-            NoFiles.Size = new Size(65, 15);
+            NoFiles.Size = new Size(4, 19);
             NoFiles.TabIndex = 1;
             // 
             // LoadingFiles
             // 
-            LoadingFiles.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             LoadingFiles.AutoSize = true;
             LoadingFiles.BackColor = SystemColors.Window;
             LoadingFiles.ForeColor = SystemColors.GrayText;
             LoadingFiles.Location = new Point(0, 46);
             LoadingFiles.Name = "LoadingFiles";
             LoadingFiles.Padding = new Padding(2);
-            LoadingFiles.Size = new Size(65, 15);
+            LoadingFiles.Size = new Size(4, 19);
             LoadingFiles.TabIndex = 2;
-            // 
-            // cboFindInCommitFilesGitGrep
-            // 
-            cboFindInCommitFilesGitGrep.Dock = DockStyle.Top;
-            cboFindInCommitFilesGitGrep.FlatStyle = FlatStyle.Flat;
-            cboFindInCommitFilesGitGrep.FormattingEnabled = true;
-            cboFindInCommitFilesGitGrep.Location = new Point(0, 0);
-            cboFindInCommitFilesGitGrep.Margin = new Padding(0);
-            cboFindInCommitFilesGitGrep.Name = "cboFindInCommitFilesGitGrep";
-            cboFindInCommitFilesGitGrep.Size = new Size(682, 23);
-            cboFindInCommitFilesGitGrep.TabIndex = 0;
-            cboFindInCommitFilesGitGrep.Tag = "ToolBar_group:Text search";
-            cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
-            cboFindInCommitFilesGitGrep.TextUpdate += cboFindInCommitFilesGitGrep_TextUpdate;
-            cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
-            cboFindInCommitFilesGitGrep.GotFocus += cboFindInCommitFilesGitGrep_GotFocus;
-            cboFindInCommitFilesGitGrep.LostFocus += cboFindInCommitFilesGitGrep_LostFocus;
-            // 
-            // lblFindInCommitFilesGitGrepWatermark
-            // 
-            lblFindInCommitFilesGitGrepWatermark.AutoSize = true;
-            lblFindInCommitFilesGitGrepWatermark.BackColor = SystemColors.Window;
-            lblFindInCommitFilesGitGrepWatermark.ForeColor = SystemColors.GrayText;
-            lblFindInCommitFilesGitGrepWatermark.Location = new Point(0);
-            lblFindInCommitFilesGitGrepWatermark.Name = "lblFindInCommitFilesGitGrepWatermark";
-            lblFindInCommitFilesGitGrepWatermark.Padding = new Padding(2);
-            lblFindInCommitFilesGitGrepWatermark.Size = new Size(273, 15);
-            lblFindInCommitFilesGitGrepWatermark.TabIndex = 3;
-            lblFindInCommitFilesGitGrepWatermark.Text = "Find in commit files using git-grep regular expression...";
-            lblFindInCommitFilesGitGrepWatermark.Click += lblFindInCommitFilesGitGrepWatermark_Click;
-            // 
-            // DeleteSearchButton
-            // 
-            DeleteSearchButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            DeleteSearchButton.BackColor = SystemColors.Window;
-            DeleteSearchButton.FlatStyle = FlatStyle.Flat;
-            DeleteSearchButton.Image = Properties.Resources.DeleteText;
-            DeleteSearchButton.Location = new Point(646, 0);
-            DeleteSearchButton.Name = "DeleteSearchButton";
-            DeleteSearchButton.Padding = new Padding(0);
-            DeleteSearchButton.Size = new Size(18, 23);
-            DeleteSearchButton.TabIndex = 4;
-            DeleteSearchButton.Click += DeleteSearchButton_Click;
             // 
             // _NO_TRANSLATE_FilterComboBox
             // 
             _NO_TRANSLATE_FilterComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             _NO_TRANSLATE_FilterComboBox.FlatStyle = FlatStyle.Flat;
             _NO_TRANSLATE_FilterComboBox.FormattingEnabled = true;
-            _NO_TRANSLATE_FilterComboBox.Location = new Point(0, 23);
+            _NO_TRANSLATE_FilterComboBox.Location = new Point(0, 48);
             _NO_TRANSLATE_FilterComboBox.Margin = new Padding(0);
             _NO_TRANSLATE_FilterComboBox.Name = "_NO_TRANSLATE_FilterComboBox";
             _NO_TRANSLATE_FilterComboBox.Size = new Size(682, 23);
@@ -164,10 +136,10 @@
             FilterWatermarkLabel.AutoSize = true;
             FilterWatermarkLabel.BackColor = SystemColors.Window;
             FilterWatermarkLabel.ForeColor = SystemColors.GrayText;
-            FilterWatermarkLabel.Location = new Point(0, 23);
+            FilterWatermarkLabel.Location = new Point(0, 48);
             FilterWatermarkLabel.Name = "FilterWatermarkLabel";
-            FilterWatermarkLabel.Padding = new Padding(2);
-            FilterWatermarkLabel.Size = new Size(206, 15);
+            FilterWatermarkLabel.Padding = new Padding(2, 3, 2, 2);
+            FilterWatermarkLabel.Size = new Size(210, 20);
             FilterWatermarkLabel.TabIndex = 6;
             FilterWatermarkLabel.Text = "Filter files using a regular expression...";
             FilterWatermarkLabel.Click += FilterWatermarkLabel_Click;
@@ -184,7 +156,7 @@
             // lblSplitter
             // 
             lblSplitter.Dock = DockStyle.Top;
-            lblSplitter.Location = new Point(0, 46);
+            lblSplitter.Location = new Point(0, 25);
             lblSplitter.Name = "lblSplitter";
             lblSplitter.Size = new Size(682, 2);
             lblSplitter.TabIndex = 8;
@@ -195,11 +167,241 @@
             DeleteFilterButton.BackColor = SystemColors.Window;
             DeleteFilterButton.FlatStyle = FlatStyle.Flat;
             DeleteFilterButton.Image = Properties.Resources.DeleteText;
-            DeleteFilterButton.Location = new Point(646, 23);
+            DeleteFilterButton.Location = new Point(646, 48);
             DeleteFilterButton.Name = "DeleteFilterButton";
             DeleteFilterButton.Size = new Size(18, 23);
             DeleteFilterButton.TabIndex = 7;
             DeleteFilterButton.Click += DeleteFilterButton_Click;
+            // 
+            // cboFindInCommitFilesGitGrep
+            // 
+            cboFindInCommitFilesGitGrep.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cboFindInCommitFilesGitGrep.FlatStyle = FlatStyle.Flat;
+            cboFindInCommitFilesGitGrep.FormattingEnabled = true;
+            cboFindInCommitFilesGitGrep.Location = new Point(0, 25);
+            cboFindInCommitFilesGitGrep.Margin = new Padding(0);
+            cboFindInCommitFilesGitGrep.Name = "cboFindInCommitFilesGitGrep";
+            cboFindInCommitFilesGitGrep.Size = new Size(682, 23);
+            cboFindInCommitFilesGitGrep.TabIndex = 0;
+            cboFindInCommitFilesGitGrep.Tag = "ToolBar_group:Text search";
+            cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
+            cboFindInCommitFilesGitGrep.TextUpdate += cboFindInCommitFilesGitGrep_TextUpdate;
+            cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
+            cboFindInCommitFilesGitGrep.GotFocus += cboFindInCommitFilesGitGrep_GotFocus;
+            cboFindInCommitFilesGitGrep.LostFocus += cboFindInCommitFilesGitGrep_LostFocus;
+            // 
+            // lblFindInCommitFilesGitGrepWatermark
+            // 
+            lblFindInCommitFilesGitGrepWatermark.AutoSize = true;
+            lblFindInCommitFilesGitGrepWatermark.BackColor = SystemColors.Window;
+            lblFindInCommitFilesGitGrepWatermark.ForeColor = SystemColors.GrayText;
+            lblFindInCommitFilesGitGrepWatermark.Location = new Point(0, 25);
+            lblFindInCommitFilesGitGrepWatermark.Name = "lblFindInCommitFilesGitGrepWatermark";
+            lblFindInCommitFilesGitGrepWatermark.Padding = new Padding(2, 3, 2, 2);
+            lblFindInCommitFilesGitGrepWatermark.Size = new Size(302, 20);
+            lblFindInCommitFilesGitGrepWatermark.TabIndex = 3;
+            lblFindInCommitFilesGitGrepWatermark.Text = "Find in commit files using git-grep regular expression...";
+            lblFindInCommitFilesGitGrepWatermark.Click += lblFindInCommitFilesGitGrepWatermark_Click;
+            // 
+            // DeleteSearchButton
+            // 
+            DeleteSearchButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            DeleteSearchButton.BackColor = SystemColors.Window;
+            DeleteSearchButton.FlatStyle = FlatStyle.Flat;
+            DeleteSearchButton.Image = Properties.Resources.DeleteText;
+            DeleteSearchButton.Location = new Point(646, 25);
+            DeleteSearchButton.Name = "DeleteSearchButton";
+            DeleteSearchButton.Size = new Size(18, 23);
+            DeleteSearchButton.TabIndex = 4;
+            DeleteSearchButton.Click += DeleteSearchButton_Click;
+            // 
+            // Toolbar
+            // 
+            Toolbar.ClickThrough = true;
+            Toolbar.DrawBorder = false;
+            Toolbar.GripStyle = ToolStripGripStyle.Hidden;
+            Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, btnRefresh, btnAsTree, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep });
+            Toolbar.Location = new Point(0, 0);
+            Toolbar.Name = "Toolbar";
+            Toolbar.RenderMode = ToolStripRenderMode.System;
+            Toolbar.Size = new Size(682, 25);
+            Toolbar.TabIndex = 0;
+            // 
+            // btnCollapseGroups
+            // 
+            btnCollapseGroups.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnCollapseGroups.Image = Properties.Images.CollapseAll;
+            btnCollapseGroups.Name = "btnCollapseGroups";
+            btnCollapseGroups.Size = new Size(23, 22);
+            btnCollapseGroups.ToolTipText = "Collapse all groups, otherwise expand the selected group";
+            btnCollapseGroups.Click += CollapseGroups_Click;
+            // 
+            // btnRefresh
+            // 
+            btnRefresh.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnRefresh.DropDownItems.AddRange(new ToolStripItem[] { tsmiRefreshOnFormFocus });
+            btnRefresh.Image = Properties.Images.ReloadRevisions;
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(32, 22);
+            btnRefresh.ToolTipText = "Refresh artificial commit";
+            btnRefresh.Visible = false;
+            // 
+            // tsmiRefreshOnFormFocus
+            // 
+            tsmiRefreshOnFormFocus.CheckOnClick = true;
+            tsmiRefreshOnFormFocus.Enabled = false;
+            tsmiRefreshOnFormFocus.Name = "tsmiRefreshOnFormFocus";
+            tsmiRefreshOnFormFocus.Size = new Size(286, 22);
+            tsmiRefreshOnFormFocus.Text = "&Refresh artificial commits on form focus";
+            tsmiRefreshOnFormFocus.Click += RefreshOnFormFocus_Click;
+            // 
+            // btnAsTree
+            // 
+            btnAsTree.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnAsTree.DropDownItems.AddRange(new ToolStripItem[] { tsmiDenseTree, tsmiGroupNodes });
+            btnAsTree.Image = Properties.Images.FileTree;
+            btnAsTree.Name = "btnAsTree";
+            btnAsTree.Size = new Size(32, 22);
+            btnAsTree.ToolTipText = "Toggle flat list / tree";
+            btnAsTree.ButtonClick += AsTree_ButtonClick;
+            // 
+            // tsmiDenseTree
+            // 
+            tsmiDenseTree.Checked = true;
+            tsmiDenseTree.CheckOnClick = true;
+            tsmiDenseTree.CheckState = CheckState.Checked;
+            tsmiDenseTree.Name = "tsmiDenseTree";
+            tsmiDenseTree.Size = new Size(142, 22);
+            tsmiDenseTree.Text = "&Dense tree";
+            // 
+            // tsmiGroupNodes
+            // 
+            tsmiGroupNodes.Checked = true;
+            tsmiGroupNodes.CheckOnClick = true;
+            tsmiGroupNodes.CheckState = CheckState.Checked;
+            tsmiGroupNodes.Name = "tsmiGroupNodes";
+            tsmiGroupNodes.Size = new Size(142, 22);
+            tsmiGroupNodes.Text = "&Group nodes";
+            // 
+            // btnByPath
+            // 
+            btnByPath.Checked = true;
+            btnByPath.CheckState = CheckState.Checked;
+            btnByPath.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnByPath.Image = Properties.Images.FolderClosed;
+            btnByPath.Name = "btnByPath";
+            btnByPath.Size = new Size(23, 22);
+            btnByPath.ToolTipText = "Group by file path";
+            btnByPath.Click += GroupBy_Click;
+            // 
+            // btnByExtension
+            // 
+            btnByExtension.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnByExtension.Image = Properties.Images.File;
+            btnByExtension.Name = "btnByExtension";
+            btnByExtension.Size = new Size(23, 22);
+            btnByExtension.ToolTipText = "Group by file type (extension)";
+            btnByExtension.Click += GroupBy_Click;
+            // 
+            // btnByStatus
+            // 
+            btnByStatus.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnByStatus.Image = Properties.Images.FileStatusModified;
+            btnByStatus.Name = "btnByStatus";
+            btnByStatus.Size = new Size(23, 22);
+            btnByStatus.ToolTipText = "Group by diff status";
+            btnByStatus.Click += GroupBy_Click;
+            // 
+            // sepFilter
+            // 
+            sepFilter.Name = "sepFilter";
+            sepFilter.Size = new Size(6, 25);
+            // 
+            // btnUnequalChange
+            // 
+            btnUnequalChange.Checked = true;
+            btnUnequalChange.CheckOnClick = true;
+            btnUnequalChange.CheckState = CheckState.Checked;
+            btnUnequalChange.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnUnequalChange.Name = "btnUnequalChange";
+            btnUnequalChange.Size = new Size(23, 22);
+            btnUnequalChange.Text = "!";
+            btnUnequalChange.ToolTipText = "Show files with different changes";
+            btnUnequalChange.Click += Filter_ButtonClick;
+            // 
+            // btnOnlyB
+            // 
+            btnOnlyB.Checked = true;
+            btnOnlyB.CheckOnClick = true;
+            btnOnlyB.CheckState = CheckState.Checked;
+            btnOnlyB.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnOnlyB.Name = "btnOnlyB";
+            btnOnlyB.Size = new Size(23, 22);
+            btnOnlyB.Text = "B";
+            btnOnlyB.ToolTipText = "Show files changed in B only";
+            btnOnlyB.Click += Filter_ButtonClick;
+            // 
+            // btnOnlyA
+            // 
+            btnOnlyA.Checked = true;
+            btnOnlyA.CheckOnClick = true;
+            btnOnlyA.CheckState = CheckState.Checked;
+            btnOnlyA.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnOnlyA.Name = "btnOnlyA";
+            btnOnlyA.Size = new Size(23, 22);
+            btnOnlyA.Text = "A";
+            btnOnlyA.ToolTipText = "Show files changed in A only";
+            btnOnlyA.Click += Filter_ButtonClick;
+            // 
+            // btnSameChange
+            // 
+            btnSameChange.Checked = true;
+            btnSameChange.CheckOnClick = true;
+            btnSameChange.CheckState = CheckState.Checked;
+            btnSameChange.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnSameChange.Name = "btnSameChange";
+            btnSameChange.Size = new Size(23, 22);
+            btnSameChange.Text = "=";
+            btnSameChange.ToolTipText = "Show files changed equally";
+            btnSameChange.Click += Filter_ButtonClick;
+            // 
+            // sepOptions
+            // 
+            sepOptions.Name = "sepOptions";
+            sepOptions.Size = new Size(6, 25);
+            // 
+            // btnFindInFilesGitGrep
+            // 
+            btnFindInFilesGitGrep.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnFindInFilesGitGrep.DropDownItems.AddRange(new ToolStripItem[] { tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth });
+            btnFindInFilesGitGrep.Image = Properties.Images.ViewFile;
+            btnFindInFilesGitGrep.Name = "btnFindInFilesGitGrep";
+            btnFindInFilesGitGrep.Size = new Size(32, 22);
+            btnFindInFilesGitGrep.ToolTipText = "Toggle 'Find in commit files using git-grep'";
+            btnFindInFilesGitGrep.ButtonClick += FindInFilesGitGrep_ButtonClick;
+            // 
+            // tsmiFindUsingDialog
+            // 
+            tsmiFindUsingDialog.Name = "tsmiFindUsingDialog";
+            tsmiFindUsingDialog.Size = new Size(158, 22);
+            tsmiFindUsingDialog.Text = "Using &dialog";
+            tsmiFindUsingDialog.Click += FindUsing_Click;
+            // 
+            // tsmiFindUsingInputBox
+            // 
+            tsmiFindUsingInputBox.Checked = true;
+            tsmiFindUsingInputBox.CheckState = CheckState.Checked;
+            tsmiFindUsingInputBox.Name = "tsmiFindUsingInputBox";
+            tsmiFindUsingInputBox.Size = new Size(158, 22);
+            tsmiFindUsingInputBox.Text = "Using &input box";
+            tsmiFindUsingInputBox.Click += FindUsing_Click;
+            // 
+            // tsmiFindUsingBoth
+            // 
+            tsmiFindUsingBoth.Name = "tsmiFindUsingBoth";
+            tsmiFindUsingBoth.Size = new Size(158, 22);
+            tsmiFindUsingBoth.Text = "Using &both";
+            tsmiFindUsingBoth.Click += FindUsing_Click;
             // 
             // FileStatusList
             // 
@@ -214,16 +416,19 @@
             Controls.Add(FileStatusListView);
             Controls.Add(_NO_TRANSLATE_FilterComboBox);
             Controls.Add(lblSplitter);
+            Controls.Add(Toolbar);
             Margin = new Padding(3, 4, 3, 4);
             Name = "FileStatusList";
             Size = new Size(682, 485);
+            Toolbar.ResumeLayout(false);
+            Toolbar.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private GitUI.UserControls.NativeListView FileStatusListView;
+        private MultiSelectTreeView FileStatusListView;
         private Label NoFiles;
         private Label LoadingFiles;
         private ColumnHeader columnHeader;
@@ -235,5 +440,25 @@
         private ComboBox cboFindInCommitFilesGitGrep;
         private Label lblFindInCommitFilesGitGrepWatermark;
         private Label DeleteSearchButton;
+        private ToolStripEx Toolbar;
+        private ToolStripButton btnCollapseGroups;
+        private ToolStripSplitButton btnRefresh;
+        private ToolStripMenuItem tsmiRefreshOnFormFocus;
+        private ToolStripSplitButton btnAsTree;
+        private ToolStripMenuItem tsmiDenseTree;
+        private ToolStripMenuItem tsmiGroupNodes;
+        private ToolStripButton btnByPath;
+        private ToolStripButton btnByExtension;
+        private ToolStripButton btnByStatus;
+        private ToolStripSeparator sepFilter;
+        private ToolStripButton btnUnequalChange;
+        private ToolStripButton btnOnlyB;
+        private ToolStripButton btnOnlyA;
+        private ToolStripButton btnSameChange;
+        private ToolStripSeparator sepOptions;
+        private ToolStripSplitButton btnFindInFilesGitGrep;
+        private ToolStripMenuItem tsmiFindUsingDialog;
+        private ToolStripMenuItem tsmiFindUsingInputBox;
+        private ToolStripMenuItem tsmiFindUsingBoth;
     }
 }

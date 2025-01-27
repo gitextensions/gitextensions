@@ -1,9 +1,8 @@
 ﻿using GitExtensions.Extensibility.Git;
 
-namespace GitUI.CommandDialogs
+namespace GitUI.CommandsDialogs;
+
+public interface IRevisionGridUpdate
 {
-    public interface IRevisionGridUpdate
-    {
-        bool SetSelectedRevision(ObjectId? objectId, bool toggleSelection = false, bool updateNavigationHistory = true);
-    }
+    bool SetSelectedRevision(ObjectId? objectId, bool toggleSelection = false, bool updateNavigationHistory = true);
 }

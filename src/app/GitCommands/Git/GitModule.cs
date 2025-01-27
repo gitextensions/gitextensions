@@ -2328,7 +2328,7 @@ namespace GitCommands
             });
         }
 
-        private ExecutionResult GetGrepFiles(ObjectId objectId, string grepString, CancellationToken cancellationToken = default)
+        private ExecutionResult GetGrepFiles(ObjectId objectId, string grepString, bool applyAppSettings, CancellationToken cancellationToken = default)
         {
             bool noCache = objectId.IsArtificial;
 
@@ -2337,9 +2337,9 @@ namespace GitCommands
                 {
                     "--files-with-matches",
                     "-z",
-                    AppSettings.GitGrepUserArguments.Value,
-                    { AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
-                    { AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+                    { applyAppSettings, AppSettings.GitGrepUserArguments.Value },
+                    { applyAppSettings && AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
+                    { applyAppSettings && AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
                     grepString,
                     !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
                     "--"
@@ -2349,10 +2349,10 @@ namespace GitCommands
                 cancellationToken: cancellationToken);
         }
 
-        public IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken)
+        public IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, bool applyAppSettings, CancellationToken cancellationToken)
         {
             List<GitItemStatus> result = [];
-            ExecutionResult exec = GetGrepFiles(objectId, grepString, cancellationToken);
+            ExecutionResult exec = GetGrepFiles(objectId, grepString, applyAppSettings, cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Cannot see difference from error and no matches

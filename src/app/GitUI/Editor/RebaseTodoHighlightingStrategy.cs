@@ -1,5 +1,6 @@
 ﻿using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
@@ -18,15 +19,15 @@ namespace GitUI.Editor
         d, drop = remove commit
         */
 
-        private static readonly Dictionary<char, (string longForm, HighlightColor color, string[] options)> _commandByFirstChar = new()
+        private readonly Dictionary<char, (string longForm, HighlightColor color, string[] options)> _commandByFirstChar = new()
         {
-            { 'p', ("pick", new HighlightColor(SystemColors.InfoText, bold: true, italic: false), Array.Empty<string>()) },
-            { 'r', ("reword", new HighlightColor(Color.Purple.AdaptTextColor(), bold: true, italic: false), Array.Empty<string>()) },
-            { 'e', ("edit", new HighlightColor(Color.DarkGray.AdaptTextColor(), bold: true, italic: false), Array.Empty<string>()) },
-            { 's', ("squash", new HighlightColor(Color.DarkBlue.AdaptTextColor(), bold: true, italic: false), Array.Empty<string>()) },
-            { 'f', ("fixup", new HighlightColor(Color.LightCoral.AdaptTextColor(), bold: true, italic: false), new[] { "-C", "-c" }) },
-            { 'x', ("exec", new HighlightColor(SystemColors.GrayText, bold: true, italic: false), Array.Empty<string>()) },
-            { 'd', ("drop", new HighlightColor(Color.Red.AdaptTextColor(), bold: true, italic: false), Array.Empty<string>()) }
+            { 'p', ("pick", new HighlightColor(nameof(SystemColors.InfoText), bold: true, italic: false), Array.Empty<string>()) },
+            { 'r', ("reword", new HighlightColor(ThemeModule.IsDarkTheme ? Color.MediumPurple : Color.Purple, bold: true, italic: false, adaptable: false), Array.Empty<string>()) },
+            { 'e', ("edit", new HighlightColor(ThemeModule.IsDarkTheme ? Color.LightGray : Color.DarkGray, bold: true, italic: false, adaptable: false), Array.Empty<string>()) },
+            { 's', ("squash", new HighlightColor(ThemeModule.IsDarkTheme ? Color.CornflowerBlue : Color.DarkBlue, bold: true, italic: false, adaptable: false), Array.Empty<string>()) },
+            { 'f', ("fixup", new HighlightColor(ThemeModule.IsDarkTheme ? Color.Coral : Color.LightCoral, bold: true, italic: false, adaptable: false), new[] { "-C", "-c" }) },
+            { 'x', ("exec", new HighlightColor(nameof(SystemColors.GrayText), bold: true, italic: false), Array.Empty<string>()) },
+            { 'd', ("drop", new HighlightColor(ThemeModule.IsDarkTheme ? Color.IndianRed : Color.Red, bold: true, italic: false, adaptable: false), Array.Empty<string>()) }
         };
 
         public RebaseTodoHighlightingStrategy(IGitModule module)
@@ -57,7 +58,7 @@ namespace GitUI.Editor
             Id
         }
 
-        private static bool TryHighlightInteractiveRebaseCommand(IDocument document, LineSegment line)
+        private bool TryHighlightInteractiveRebaseCommand(IDocument document, LineSegment line)
         {
             if (line.Length < 1)
             {

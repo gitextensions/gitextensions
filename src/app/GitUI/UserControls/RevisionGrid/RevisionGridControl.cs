@@ -17,7 +17,6 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
 using GitUI.BuildServerIntegration;
-using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;

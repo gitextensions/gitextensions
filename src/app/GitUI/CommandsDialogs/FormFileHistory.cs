@@ -14,7 +14,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormFileHistory : GitModuleForm
+    public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUpdate
     {
         private const string FormBrowseName = "FormBrowse";
 
@@ -338,7 +338,7 @@ namespace GitUI.CommandsDialogs
 
             if (tabControl1.SelectedTab == BlameTab)
             {
-                _ = Blame.LoadBlameAsync(revision, children, fileName, revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, controlToMask: BlameTab, Diff.Encoding, force: force, cancellationTokenSequence: _viewChangesSequence);
+                _ = Blame.LoadBlameAsync(revision, children, fileName, revisionGridInfo: RevisionGrid, revisionGridFileUpdate: this, controlToMask: BlameTab, Diff.Encoding, force: force, cancellationTokenSequence: _viewChangesSequence);
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {
@@ -695,6 +695,9 @@ namespace GitUI.CommandsDialogs
         {
             FormGitCommandLog.ShowOrActivate(this);
         }
+
+        bool IRevisionGridFileUpdate.SelectFileInRevision(ObjectId objectId, RelativePath ignoredFilename)
+            => RevisionGrid.SetSelectedRevision(objectId);
 
         internal TestAccessor GetTestAccessor()
             => new(this);

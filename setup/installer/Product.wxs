@@ -197,6 +197,9 @@
       <Component Id="SpellChecker.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\SpellChecker.dll" />
       </Component>
+      <Component Id="StrongOf.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\BenjaminAbt.StrongOf.dll" />
+      </Component>
       <Component Id="System.ComponentModel.Composition.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\System.ComponentModel.Composition.dll" />
       </Component>
@@ -311,8 +314,14 @@
       <Component Id="Themes.bright.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\bright.css" />
       </Component>
-      <Component Id="Themes.highcontrast_dark.css" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Themes\highcontrast_dark.css" />
+      <Component Id="Themes.light_plus.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\light+.css" />
+      </Component>
+      <Component Id="Themes.dark.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\dark.css" />
+      </Component>
+      <Component Id="Themes.dark_plus.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\dark+.css" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
@@ -604,7 +613,9 @@
       <ComponentRef Id="Themes.README.md" />
       <ComponentRef Id="Themes.invariant.css" />
       <ComponentRef Id="Themes.bright.css" />
-      <ComponentRef Id="Themes.highcontrast_dark.css" />
+      <ComponentRef Id="Themes.light_plus.css" />
+      <ComponentRef Id="Themes.dark.css" />
+      <ComponentRef Id="Themes.dark_plus.css" />
     </ComponentGroup>
     <ComponentGroup Id="Component.Translation">
       <ComponentRef Id="English.gif" />
@@ -674,6 +685,7 @@
       <ComponentRef Id="SmartFormat.dll" />
       <ComponentRef Id="SmartFormat.ZString.dll" />
       <ComponentRef Id="SpellChecker.dll" />
+      <ComponentRef Id="StrongOf.dll" />
       <ComponentRef Id="System.ComponentModel.Composition.dll" />
       <ComponentRef Id="System.Composition.AttributedModel.dll" />
       <ComponentRef Id="System.Composition.Convention.dll" />

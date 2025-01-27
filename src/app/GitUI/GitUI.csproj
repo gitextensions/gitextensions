@@ -7,7 +7,7 @@
     <Nullable>annotations</Nullable>
 
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
-
+    <NoWarn>$(NoWarn);WFO5002</NoWarn>
     <!--
     For debug purposes uncomment these lines:
 
@@ -78,12 +78,6 @@
     </Content>
     <Content Include="Themes\README.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Themes\dark.css">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

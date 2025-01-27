@@ -1,12 +1,15 @@
 ﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
 
 namespace GitUI
 {
     public sealed partial class FileStatusDiffCalculator
     {
+        internal const string GitGrepIconName = nameof(GitGrepIconName);
+
         private readonly Func<IGitModule> _getModule;
 
         // Currently bound revisions etc. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
@@ -35,9 +38,10 @@ namespace GitUI
             _fileStatusDiffCalculatorInfo.AllowMultiDiff = allowMultiDiff;
         }
 
-        public void SetGrep(string grepArguments)
+        public void SetGrep(string grepArguments, bool applyAppSettings)
         {
             _fileStatusDiffCalculatorInfo.GrepArguments = grepArguments;
+            _fileStatusDiffCalculatorInfo.ApplyGrepAppSettings = applyAppSettings;
         }
 
         public IReadOnlyList<FileStatusWithDescription> Calculate(IReadOnlyList<FileStatusWithDescription> prevList, bool refreshDiff, bool refreshGrep, CancellationToken cancellationToken)
@@ -119,7 +123,7 @@ namespace GitUI
                     {
                         // Create an artificial commit
                         fileStatusDescs.Add(new FileStatusWithDescription(
-                            firstRev: new GitRevision(ObjectId.CombinedDiffId), secondRev: selectedRev, summary: TranslatedStrings.CombinedDiff, statuses: conflicts));
+                            firstRev: new GitRevision(ObjectId.CombinedDiffId), secondRev: selectedRev, summary: TranslatedStrings.CombinedDiff, statuses: conflicts, iconName: nameof(Images.DiffC)));
                     }
                 }
 
@@ -254,12 +258,14 @@ namespace GitUI
                 firstRev: revBase,
                 secondRev: selectedRev,
                 summary: $"{TranslatedStrings.DiffBaseWith} B {GetDescriptionForRevision(selectedRev.ObjectId)}",
-                statuses: allBaseToB));
+                statuses: allBaseToB,
+                iconName: nameof(Images.DiffB)));
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: firstRev,
                 summary: $"{TranslatedStrings.DiffBaseWith} A {GetDescriptionForRevision(firstRev.ObjectId)}",
-                statuses: allBaseToA));
+                statuses: allBaseToA,
+                iconName: nameof(Images.DiffA)));
 
             if (!module.GitVersion.SupportRangeDiffTool)
             {
@@ -274,16 +280,12 @@ namespace GitUI
             // first and selected has a common merge base and count must be available
             // Only a printout, so no Validates
             string desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ BASE {GetDescriptionForRevision(baseRevId)}";
-            allAToB = allAToB.Append(new GitItemStatus(name: desc) { IsRangeDiff = true }).ToList();
-
-            // Replace the A->B group with new statuses
-            fileStatusDescs[0] = new(
-                firstRev: fileStatusDescs[0].FirstRev,
-                secondRev: fileStatusDescs[0].SecondRev,
-                summary: fileStatusDescs[0].Summary,
-                statuses: allAToB,
-                baseA: baseA,
-                baseB: baseB);
+            fileStatusDescs.Insert(index: 1, new FileStatusWithDescription(
+                firstRev: firstRev,
+                secondRev: selectedRev,
+                summary: desc,
+                statuses: [new GitItemStatus(name: desc) { IsRangeDiff = true }],
+                iconName: nameof(Images.DiffR)));
 
             return fileStatusDescs;
 
@@ -311,13 +313,14 @@ namespace GitUI
                 return null;
             }
 
-            IReadOnlyList<GitItemStatus> statuses = GetModule().GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, cancellationToken);
+            IReadOnlyList<GitItemStatus> statuses = GetModule().GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, _fileStatusDiffCalculatorInfo.ApplyGrepAppSettings, cancellationToken);
 
             return new FileStatusWithDescription(
                                firstRev: null,
                                secondRev: selectedRev,
                                summary: $"{_grepSummaryPrefix}{_fileStatusDiffCalculatorInfo.GrepArguments} {GetDescriptionForRevision(selectedRev.ObjectId)}",
-                               statuses);
+                               statuses,
+                               iconName: GitGrepIconName);
         }
 
         private string GetDescriptionForRevision(ObjectId objectId)
