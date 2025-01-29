@@ -1711,17 +1711,14 @@ namespace GitUI.CommandsDialogs
 
         private void Unstaged_Enter(object sender, EnterEventArgs e)
         {
-            if (_currentFilesList != Unstaged)
+            _currentFilesList = Unstaged;
+            _skipUpdate = false;
+            if (!Unstaged.HasSelection)
             {
-                _currentFilesList = Unstaged;
-                _skipUpdate = false;
-                if (!e.ByMouse && !Unstaged.HasSelection)
-                {
-                    Unstaged.SelectFirstVisibleItem();
-                }
-
-                UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
+                Unstaged.SelectFirstVisibleItem();
             }
+
+            UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
         }
 
         private void Unstaged_FilterChanged(object sender, EventArgs e)
@@ -1970,17 +1967,14 @@ namespace GitUI.CommandsDialogs
 
         private void Staged_Enter(object sender, EnterEventArgs e)
         {
-            if (_currentFilesList != Staged)
+            _currentFilesList = Staged;
+            _skipUpdate = false;
+            if (!Staged.HasSelection)
             {
-                _currentFilesList = Staged;
-                _skipUpdate = false;
-                if (!e.ByMouse && !Staged.HasSelection)
-                {
-                    Staged.SelectFirstVisibleItem();
-                }
-
-                StagedSelectionChanged(Staged, EventArgs.Empty);
+                Staged.SelectFirstVisibleItem();
             }
+
+            StagedSelectionChanged(Staged, EventArgs.Empty);
         }
 
         private void Stage(IReadOnlyList<GitItemStatus> items)
