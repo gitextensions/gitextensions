@@ -380,6 +380,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.AutomaticContinuousScroll)], false, false, false);
                 yield return (properties[nameof(AppSettings.AutomaticContinuousScrollDelay)], 600, false, false);
                 yield return (properties[nameof(AppSettings.IsEditorSettingsMigrated)], false, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.ShowProcessDialogPasswordInput)], false, isNotNullable, isISetting);
             }
 
             static IEnumerable<object> Values()
