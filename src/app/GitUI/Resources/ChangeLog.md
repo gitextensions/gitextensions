@@ -1,6 +1,21 @@
 Changelog
 =========
 
+### Version v5.2.1 (no due date)
+
+#### Changes:
+* [#12171] fix(ShowProcessDialogPasswordInput): Default to false
+* [#12165] fix(bare repo): Skip "git status" and "git stash list"
+* [#12158] fix: Improve blame loading and other minor
+* [#12143] fix(AheadBehindDataProvider): Restrict debug output
+
+
+[#12171]:https://github.com/gitextensions/gitextensions/pull/12171
+[#12165]:https://github.com/gitextensions/gitextensions/pull/12165
+[#12158]:https://github.com/gitextensions/gitextensions/pull/12158
+[#12143]:https://github.com/gitextensions/gitextensions/pull/12143
+
+
 ### Version v5.2 (no due date)
 
 #### Changes:
