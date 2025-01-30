@@ -272,7 +272,7 @@ namespace GitUI.UserControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.ShowError(this, ex.Message);
             }
         }
 
