@@ -158,6 +158,8 @@ namespace GitUI
         /// </summary>
         internal Dictionary<ObjectId, string>? FilePathByObjectId { get; set; } = null;
 
+        internal Action<string>? SelectInLeftPanel { get;  set; } = null;
+
         public RevisionGridControl()
         {
             InitializeComponent();
@@ -1987,6 +1989,7 @@ namespace GitUI
             ContextMenuStrip checkoutBranchDropDown = new();
             ContextMenuStrip mergeBranchDropDown = new();
             ContextMenuStrip renameDropDown = new();
+            ContextMenuStrip selectInLeftPanelDropDown = new();
 
             GitRevision revision = LatestSelectedRevision;
             GitRefListsForRevision gitRefListsForRevision = new(revision);
@@ -1995,6 +1998,7 @@ namespace GitUI
             foreach (IGitRef head in gitRefListsForRevision.AllTags)
             {
                 AddBranchMenuItem(deleteTagDropDown, head, delegate { UICommands.StartDeleteTagDialog(ParentForm, head.Name); });
+                AddBranchMenuItem(selectInLeftPanelDropDown, head, SelectInLeftPanel_Click);
 
                 string refUnambiguousName = GetRefUnambiguousName(head);
                 ToolStripMenuItem mergeItem = AddBranchMenuItem(mergeBranchDropDown, head,
@@ -2042,6 +2046,8 @@ namespace GitUI
             bool firstRemoteBranchForCheckout = false;
             foreach (IGitRef head in allBranches)
             {
+                AddBranchMenuItem(selectInLeftPanelDropDown, head, SelectInLeftPanel_Click);
+
                 // skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
@@ -2140,6 +2146,14 @@ namespace GitUI
             SetEnabled(applyStashToolStripMenuItem, showStash);
             SetEnabled(popStashToolStripMenuItem, showStash);
             SetEnabled(dropStashToolStripMenuItem, showStash);
+
+            int selectInLeftPanelCount = selectInLeftPanelDropDown.Items.Count;
+            SetEnabled(tsmiSelectInLeftPanel, SelectInLeftPanel is not null && selectInLeftPanelCount > 0);
+            tsmiSelectInLeftPanel.DropDown = selectInLeftPanelCount > 1 ? selectInLeftPanelDropDown : null;
+            if (selectInLeftPanelCount > 0)
+            {
+                tsmiSelectInLeftPanel.Tag = selectInLeftPanelDropDown.Items[0].Text;
+            }
 
             SetEnabled(openBuildReportToolStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url));
 
@@ -2505,6 +2519,13 @@ namespace GitUI
             }
 
             UICommands.StartAmendCommitDialog(ParentForm, LatestSelectedRevision);
+        }
+
+        private void SelectInLeftPanel_Click(object? sender, EventArgs e)
+        {
+            mainContextMenu.Close();
+            string gitRef = sender != tsmiSelectInLeftPanel && sender is ToolStripMenuItem item ? item.Text : (string)tsmiSelectInLeftPanel.Tag;
+            SelectInLeftPanel(gitRef);
         }
 
         internal void ToggleShowRelativeDate(EventArgs e)

@@ -68,6 +68,7 @@ namespace GitUI
             amendCommitToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             navigateToolStripMenuItem = new ToolStripMenuItem();
+            tsmiSelectInLeftPanel = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             runScriptToolStripMenuItem = new ToolStripMenuItem();
             openBuildReportToolStripMenuItem = new ToolStripMenuItem();
@@ -152,6 +153,7 @@ namespace GitUI
             compareToolStripMenuItem,
             toolStripSeparator5,
             navigateToolStripMenuItem,
+            tsmiSelectInLeftPanel,
             viewToolStripMenuItem,
             runScriptToolStripMenuItem,
             openBuildReportToolStripMenuItem,
@@ -404,7 +406,7 @@ namespace GitUI
             deleteTagToolStripMenuItem.Image = Properties.Images.TagDelete;
             deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             deleteTagToolStripMenuItem.Size = new Size(264, 24);
-            deleteTagToolStripMenuItem.Text = "De&lete tag...";
+            deleteTagToolStripMenuItem.Text = "&Delete tag...";
             deleteTagToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
@@ -490,6 +492,14 @@ namespace GitUI
             navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
             navigateToolStripMenuItem.Size = new Size(223, 22);
             navigateToolStripMenuItem.Text = "&Navigate";
+            // 
+            // tsmiSelectInLeftPanel
+            // 
+            tsmiSelectInLeftPanel.Image = Properties.Images.FileTree;
+            tsmiSelectInLeftPanel.Name = "tsmiSelectInLeftPanel";
+            tsmiSelectInLeftPanel.Size = new Size(300, 22);
+            tsmiSelectInLeftPanel.Text = "Se&lect in left panel";
+            tsmiSelectInLeftPanel.Click += SelectInLeftPanel_Click;
             // 
             // viewToolStripMenuItem
             // 
@@ -613,6 +623,7 @@ namespace GitUI
         private ToolStripMenuItem squashCommitToolStripMenuItem;
         private ToolStripMenuItem renameBranchToolStripMenuItem;
         private ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
+        private ToolStripMenuItem tsmiSelectInLeftPanel;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem openCommitsWithDiffToolMenuItem;
         private ToolStripMenuItem compareToBranchToolStripMenuItem;

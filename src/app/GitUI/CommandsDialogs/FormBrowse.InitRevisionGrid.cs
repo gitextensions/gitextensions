@@ -94,6 +94,21 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.SelectedId = selectedId;
             RevisionGrid.FirstId = firstId;
+
+            RevisionGrid.SelectInLeftPanel = SelectInLeftPanel;
+
+            return;
+
+            void SelectInLeftPanel(string gitRef)
+            {
+                if (MainSplitContainer.Panel1Collapsed)
+                {
+                    toggleLeftPanel.PerformClick();
+                }
+
+                repoObjectsTree.SelectGitRef(gitRef);
+                repoObjectsTree.Focus();
+            }
         }
     }
 }

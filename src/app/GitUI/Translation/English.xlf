@@ -9681,7 +9681,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
-        <source>De&amp;lete tag...</source>
+        <source>&amp;Delete tag...</source>
         <target />
       </trans-unit>
       <trans-unit id="dropStashToolStripMenuItem.Text">
@@ -9786,6 +9786,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
         <source>Stop bisect</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiSelectInLeftPanel.Text">
+        <source>Se&amp;lect in left panel</source>
         <target />
       </trans-unit>
       <trans-unit id="viewToolStripMenuItem.Text">
