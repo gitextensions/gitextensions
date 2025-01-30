@@ -5,6 +5,8 @@ using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using Microsoft;
 using Timer = System.Windows.Forms.Timer;
 
@@ -31,14 +33,14 @@ namespace GitUI.UserControls
         {
             _editbox = new RichTextBox
             {
-                BackColor = SystemColors.Info,
+                BackColor = AppColor.EditorBackground.GetThemeColor(),
                 BorderStyle = BorderStyle.FixedSingle,
                 Dock = DockStyle.Fill,
                 Font = AppSettings.MonospaceFont,
-                ReadOnly = true
+                ReadOnly = true,
             };
-            Controls.Add(_editbox);
             _editbox.LinkClicked += editbox_LinkClicked;
+            Controls.Add(_editbox);
 
             _outputThrottle = new ProcessOutputThrottle(AppendMessage);
 
