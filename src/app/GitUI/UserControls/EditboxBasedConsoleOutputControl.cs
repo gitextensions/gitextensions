@@ -38,6 +38,7 @@ namespace GitUI.UserControls
                 ReadOnly = true
             };
             Controls.Add(_editbox);
+            _editbox.LinkClicked += editbox_LinkClicked;
 
             _outputThrottle = new ProcessOutputThrottle(AppendMessage);
 
@@ -261,6 +262,18 @@ namespace GitUI.UserControls
             }
 
             base.Dispose(disposing);
+        }
+
+        private void editbox_LinkClicked(object? sender, LinkClickedEventArgs e)
+        {
+            try
+            {
+                OsShellUtil.OpenUrlInDefaultBrowser(e.LinkText);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxes.ShowError(this, ex.Message);
+            }
         }
 
         #region ProcessOutputThrottle
