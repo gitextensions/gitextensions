@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿#nullable enable
+
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using GitExtensions.Extensibility.Configurations;
@@ -73,36 +75,6 @@ namespace GitCommands.Settings
         }
 
         /// <summary>
-        ///  Gets the config setting from git converted in an expected C# value type (bool, int, etc.).
-        /// </summary>
-        /// <typeparam name="T">The expected type of the git setting.</typeparam>
-        /// <param name="setting">The git setting key.</param>
-        /// <returns>The value converted to the <typeparamref name="T" /> type; <see langword="null"/> if the settings is not set.</returns>
-        /// <exception cref="GitExtensions.Extensibility.Settings.GitConfigFormatException">
-        ///  The value of the git setting <paramref name="setting" /> cannot be converted in the specified type <typeparamref name="T" />.
-        /// </exception>
-        public T? GetValue<T>(string setting) where T : struct => ConvertValue<T>(GetValue(setting), setting);
-
-        private T? ConvertValue<T>(string value, string setting) where T : struct
-        {
-            // Handle case where setting is not set
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return null;
-            }
-
-            Type targetType = typeof(T);
-            try
-            {
-                return (T)Convert.ChangeType(value, targetType);
-            }
-            catch (Exception)
-            {
-                throw new GitConfigFormatException($"Git setting '{setting}': failed to convert value '{value}' into type '{targetType}'");
-            }
-        }
-
-        /// <summary>
         /// Gets all configured values for a git setting that accepts multiple values for the same key.
         /// </summary>
         /// <param name="setting">The git setting key</param>
@@ -118,17 +90,6 @@ namespace GitCommands.Settings
             }
 
             SetString(setting, value);
-        }
-
-        public void SetPathValue(string setting, string? value)
-        {
-            // for using unc paths -> these need to be backward slashes
-            if (!string.IsNullOrWhiteSpace(value) && !value.StartsWith("\\\\"))
-            {
-                value = value.ToPosixPath();
-            }
-
-            SetValue(setting, value);
         }
 
         public IReadOnlyList<IConfigSection> GetConfigSections()
@@ -182,7 +143,7 @@ namespace GitCommands.Settings
             // Convert it to lowercase, to ensure matching.
             encodingName = encodingName.ToLowerInvariant();
 
-            if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out Encoding result))
+            if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out Encoding? result))
             {
                 return result;
             }
