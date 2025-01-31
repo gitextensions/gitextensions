@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
@@ -651,7 +650,7 @@ namespace GitCommands
             }
 
             byte[] blobData = blobStream.ToArray();
-            if (((ConfigFileSettings)EffectiveConfigFile).ByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf") is AutoCRLFType.@true)
+            if (GetEffectiveSetting<AutoCRLFType>("core.autocrlf") is AutoCRLFType.@true)
             {
                 if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                 {
@@ -2090,11 +2089,6 @@ namespace GitCommands
 
         public string GetEffectiveSetting(string setting, string defaultValue = "") => EffectiveConfigFile.GetValue(setting) ?? defaultValue;
         public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveConfigFile.GetValue<T>(setting);
-
-        public SettingsSource GetEffectiveSettingsByPath(string path)
-        {
-            return ((ConfigFileSettings)EffectiveConfigFile).ByPath(path);
-        }
 
         public string? GetGitSetting(string setting, string scopeArg, bool cache = false)
         {
