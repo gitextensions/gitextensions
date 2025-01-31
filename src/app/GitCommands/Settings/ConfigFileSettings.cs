@@ -117,7 +117,7 @@ namespace GitCommands.Settings
         }
 
         [MaybeNull]
-        public Encoding FilesEncoding
+        public Encoding? FilesEncoding
         {
             get => GetEncoding("i18n.filesEncoding");
             set => SetEncoding("i18n.filesEncoding", value);

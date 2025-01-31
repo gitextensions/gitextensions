@@ -24,6 +24,12 @@ public interface ISettingsValueGetter
         }
 
         Type targetType = typeof(T);
+
+        if (targetType.IsEnum && Enum.TryParse(value, true, out T result))
+        {
+            return result;
+        }
+
         try
         {
             return (T)Convert.ChangeType(value, targetType);

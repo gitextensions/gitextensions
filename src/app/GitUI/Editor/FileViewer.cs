@@ -1841,7 +1841,7 @@ namespace GitUI.Editor
                 }
             }
 
-            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSettingsByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
+            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
 
             return;
 

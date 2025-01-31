@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿#nullable enable
+
+using System.Text;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
@@ -73,8 +75,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
             Validates.NotNull(CurrentSettings);
 
-            string mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
-            string diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            string? mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            string? diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
 
             Global_FilesEncoding.Text = CurrentSettings.FilesEncoding?.EncodingName ?? "";
 
@@ -91,8 +93,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             txtDiffToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(diffTool, DiffMergeToolType.Diff);
             txtDiffToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
 
-            AutoCRLFType? autocrlf = CurrentSettings.ByPath("core")
-                .GetNullableEnum<AutoCRLFType>("autocrlf");
+            AutoCRLFType? autocrlf = ((ISettingsValueGetter)CurrentSettings).GetValue<AutoCRLFType>("core.autocrlf");
 
             globalAutoCrlfFalse.Checked = autocrlf is AutoCRLFType.@false;
             globalAutoCrlfInput.Checked = autocrlf is AutoCRLFType.input;
@@ -110,7 +111,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             Validates.NotNull(CurrentSettings);
 
-            CurrentSettings.FilesEncoding = (Encoding)Global_FilesEncoding.SelectedItem;
+            CurrentSettings.FilesEncoding = (Encoding?)Global_FilesEncoding.SelectedItem;
 
             base.PageToSettings();
 
@@ -148,27 +149,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 _diffMergeToolConfigurationManager.UnsetCurrentTool(DiffMergeToolType.Merge);
             }
 
-            SettingsSource coreSectionSettingsSource = CurrentSettings.ByPath("core");
-
-            if (globalAutoCrlfFalse.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.@false);
-            }
-
-            if (globalAutoCrlfInput.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.input);
-            }
-
-            if (globalAutoCrlfTrue.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.@true);
-            }
-
-            if (globalAutoCrlfNotSet.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", null);
-            }
+            AutoCRLFType? autoCRLFType =
+                globalAutoCrlfFalse.Checked ? AutoCRLFType.@false
+                : globalAutoCrlfInput.Checked ? AutoCRLFType.input
+                : globalAutoCrlfTrue.Checked ? AutoCRLFType.@true
+                : null;
+            CurrentSettings.SetValue("core.autocrlf", autoCRLFType?.ToString());
         }
 
         private string BrowseDiffMergeTool(string toolName, string path, DiffMergeToolType toolType)

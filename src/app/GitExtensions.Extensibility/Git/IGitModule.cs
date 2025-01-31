@@ -216,8 +216,6 @@ public interface IGitModule
     /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
     string? GetEffectiveGitSetting(string setting, bool cache = false);
 
-    SettingsSource GetEffectiveSettingsByPath(string path);
-
     /// <summary>
     /// Gets the name of the currently checked out branch.
     /// </summary>
