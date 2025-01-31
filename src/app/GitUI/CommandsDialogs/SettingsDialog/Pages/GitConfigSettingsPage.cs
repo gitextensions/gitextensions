@@ -3,6 +3,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 using ResourceManager;
@@ -122,7 +123,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
             CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
             CurrentSettings.SetValue("commit.template", txtCommitTemplatePath.Text);
-            CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
+            ((IConfigValueStore)CurrentSettings).SetPathValue("core.editor", GlobalEditor.Text);
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
