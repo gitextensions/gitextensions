@@ -15,5 +15,22 @@ public interface ISettingsValueGetter
     /// <exception cref="GitConfigFormatException">
     ///  The value of the git setting <paramref name="setting" /> cannot be converted in the specified type <typeparamref name="T" />.
     /// </exception>
-    T? GetValue<T>(string setting) where T : struct;
+    T? GetValue<T>(string setting) where T : struct
+    {
+        string? value = GetValue(setting);
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        Type targetType = typeof(T);
+        try
+        {
+            return (T)Convert.ChangeType(value, targetType);
+        }
+        catch (Exception)
+        {
+            throw new GitConfigFormatException($"Git setting '{setting}': failed to convert value '{value}' into type '{targetType}'");
+        }
+    }
 }

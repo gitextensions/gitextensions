@@ -2,6 +2,7 @@
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitCommands.DiffMergeTools
 {
@@ -74,8 +75,8 @@ namespace GitCommands.DiffMergeTools
 
             (string toolKey, string prefix) = GetInfo(toolType);
             fileSettings.SetValue(toolKey, toolName);
-            fileSettings.SetPathValue(string.Concat(prefix, ".", toolName, ".path"), toolPath);
-            fileSettings.SetPathValue(string.Concat(prefix, ".", toolName, ".cmd"), toolCommand);
+            fileSettings.SetValue(string.Concat(prefix, ".", toolName, ".path"), toolPath.ConvertPathToGitSetting());
+            fileSettings.SetValue(string.Concat(prefix, ".", toolName, ".cmd"), toolCommand.ConvertPathToGitSetting());
         }
 
         /// <summary>

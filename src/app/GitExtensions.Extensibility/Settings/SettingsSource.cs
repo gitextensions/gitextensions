@@ -5,7 +5,7 @@ namespace GitExtensions.Extensibility.Settings;
 
 public abstract class SettingsSource
 {
-    public virtual SettingLevel SettingLevel { get; set; } = SettingLevel.Unknown;
+    public virtual SettingLevel SettingLevel { get; init; } = SettingLevel.Unknown;
 
     public abstract string? GetValue(string name);
 
