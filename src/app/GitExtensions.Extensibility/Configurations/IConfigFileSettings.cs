@@ -1,8 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
+#nullable enable
 
 namespace GitExtensions.Extensibility.Configurations;
 
-public interface IConfigFileSettings : IConfigValueStore
+public interface IConfigFileSettings : IPersistentConfigValueStore
 {
     /// <summary>
     /// Adds the specific configuration section to the .git/config file.
@@ -21,9 +21,4 @@ public interface IConfigFileSettings : IConfigValueStore
     /// <param name="configSectionName">The name of the configuration section.</param>
     /// <param name="performSave">If <see langword="true"/> the configuration changes will be saved immediately.</param>
     void RemoveConfigSection(string configSectionName, bool performSave = false);
-
-    /// <summary>
-    /// Save pending changes.
-    /// </summary>
-    void Save();
 }
