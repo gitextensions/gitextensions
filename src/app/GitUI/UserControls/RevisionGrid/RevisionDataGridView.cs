@@ -24,6 +24,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private static readonly AccessibleDataGridViewTextBoxCell _accessibleDataGridViewTextBoxCell = new();
 
+        private readonly SolidBrush _rowBackgroundBrush;
         private readonly SolidBrush _alternatingRowBackgroundBrush;
         private readonly SolidBrush _authoredHighlightBrush;
         private readonly SolidBrush _inactiveSelectionHighlightBrush;
@@ -99,7 +100,8 @@ namespace GitUI.UserControls.RevisionGrid
             InitializeComponent();
             DoubleBuffered = true;
 
-            _alternatingRowBackgroundBrush = new SolidBrush(KnownColor.Window.MakeBackgroundDarkerBy(0.025)); // 0.018
+            _rowBackgroundBrush = new SolidBrush(AppColor.PanelBackground.GetThemeColor());
+            _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeBackgroundDarkerBy(0.025));
             _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
 
@@ -278,7 +280,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return _alternatingRowBackgroundBrush;
             }
 
-            return SystemBrushes.Window;
+            return _rowBackgroundBrush;
         }
 
         private CellStyle? _cellStyle = null;

@@ -9,12 +9,12 @@
     /// </remarks>
     public enum AppColor
     {
+        PanelBackground,
+        EditorBackground,
+        LineNumberBackground,
         AuthoredHighlight,
         HighlightAllOccurences,
         InactiveSelectionHighlight,
-        OtherTag,
-        Tag,
-        Graph,
         GraphBranch1,
         GraphBranch2,
         GraphBranch3,
@@ -26,6 +26,8 @@
         GraphNonRelativeBranch,
         Branch,
         RemoteBranch,
+        Tag,
+        OtherTag,
         DiffSection,
         AnsiTerminalBlackForeNormal,
         AnsiTerminalBlackBackNormal,

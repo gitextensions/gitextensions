@@ -3,11 +3,6 @@
 @import url("invariant.css");
 
 /* Application colors */
-.Graph                       { color: #8a0000; } /* hsl(0,   100%, 27%) */
-.Graph.colorblind            { color: #0600a8; } /* hsl(242, 100%, 33%) */
 .RemoteBranch                { color: #8a0000; } /* hsl(0,   100%, 27%) */
-.RemoteBranch.colorblind     { color: #0600a8; } /* hsl(242, 100%, 33%) */
 .AnsiTerminalRedBackNormal            { color: #ffc7c7; } /* hsl(0,   100%, 89%) */
-.AnsiTerminalRedBackNormal.colorblind { color: #94cbff; } /* hsl(209, 100%, 79%) */
 .AnsiTerminalRedBackBold              { color: #ffa3a3; } /* hsl(0,   100%, 82%) */
-.AnsiTerminalRedBackBold.colorblind   { color: #4da6ff; } /* hsl(210, 100%, 65%) */
