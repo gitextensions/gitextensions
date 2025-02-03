@@ -12,7 +12,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     //     |
     //     *  <- parent revision
     [DebuggerDisplay("{Objectid} {GitRevision.Subject}")]
-    public class RevisionGraphRevision
+    public sealed class RevisionGraphRevision
     {
         // Enough as initial the majority of times because commits nearly never have more than 2 parents.
         private const int _initialParentStackCapacity = 2;

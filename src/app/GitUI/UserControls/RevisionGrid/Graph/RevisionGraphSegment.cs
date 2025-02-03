@@ -18,7 +18,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     //     | /
     //     *    <- Parent
     [DebuggerDisplay("Child: {Child} - Parent: {Parent}")]
-    public class RevisionGraphSegment
+    public sealed class RevisionGraphSegment
     {
         public RevisionGraphSegment(RevisionGraphRevision parent, RevisionGraphRevision child)
         {
