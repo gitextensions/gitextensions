@@ -47,7 +47,9 @@ namespace GitUI
             btnCollapseGroups = new ToolStripButton();
             btnRefresh = new ToolStripSplitButton();
             tsmiRefreshOnFormFocus = new ToolStripMenuItem();
-            btnAsTree = new ToolStripButton();
+            btnAsTree = new ToolStripSplitButton();
+            tsmiDenseTree = new ToolStripMenuItem();
+            tsmiShowGroupNodesInFlatList = new ToolStripMenuItem();
             btnByPath = new ToolStripButton();
             btnByExtension = new ToolStripButton();
             btnByStatus = new ToolStripButton();
@@ -257,11 +259,28 @@ namespace GitUI
             // btnAsTree
             // 
             btnAsTree.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnAsTree.DropDownItems.AddRange(new ToolStripItem[] { tsmiDenseTree, tsmiShowGroupNodesInFlatList });
             btnAsTree.Image = Properties.Images.FileTree;
             btnAsTree.Name = "btnAsTree";
-            btnAsTree.Size = new Size(23, 22);
+            btnAsTree.Size = new Size(32, 22);
             btnAsTree.ToolTipText = "Toggle flat list / tree";
-            btnAsTree.Click += AsTree_Click;
+            btnAsTree.ButtonClick += AsTree_ButtonClick;
+            // 
+            // tsmiDenseTree
+            // 
+            tsmiDenseTree.CheckOnClick = true;
+            tsmiDenseTree.Name = "tsmiDenseTree";
+            tsmiDenseTree.Size = new Size(340, 22);
+            tsmiDenseTree.Text = "&Dense tree (merge single item with its folder node)";
+            tsmiDenseTree.Click += DenseTree_Click;
+            // 
+            // tsmiShowGroupNodesInFlatList
+            // 
+            tsmiShowGroupNodesInFlatList.CheckOnClick = true;
+            tsmiShowGroupNodesInFlatList.Name = "tsmiShowGroupNodesInFlatList";
+            tsmiShowGroupNodesInFlatList.Size = new Size(340, 22);
+            tsmiShowGroupNodesInFlatList.Text = "Show &group nodes in flat list";
+            tsmiShowGroupNodesInFlatList.Click += ShowGroupNodesInFlatList_Click;
             // 
             // btnByPath
             // 
@@ -424,7 +443,9 @@ namespace GitUI
         private ToolStripButton btnCollapseGroups;
         private ToolStripSplitButton btnRefresh;
         private ToolStripMenuItem tsmiRefreshOnFormFocus;
-        private ToolStripButton btnAsTree;
+        private ToolStripSplitButton btnAsTree;
+        private ToolStripMenuItem tsmiDenseTree;
+        private ToolStripMenuItem tsmiShowGroupNodesInFlatList;
         private ToolStripButton btnByPath;
         private ToolStripButton btnByExtension;
         private ToolStripButton btnByStatus;

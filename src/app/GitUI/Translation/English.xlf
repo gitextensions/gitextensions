@@ -1603,6 +1603,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Find in commit files using git-grep regular expression...</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiDenseTree.Text">
+        <source>&amp;Dense tree (merge single item with its folder node)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiFindUsingBoth.Text">
         <source>Using &amp;both</source>
         <target />
@@ -1617,6 +1621,10 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="tsmiRefreshOnFormFocus.Text">
         <source>&amp;Refresh artificial commits on form focus</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowGroupNodesInFlatList.Text">
+        <source>Show &amp;group nodes in flat list</source>
         <target />
       </trans-unit>
     </body>

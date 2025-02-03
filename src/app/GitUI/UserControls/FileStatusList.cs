@@ -101,6 +101,7 @@ namespace GitUI
 
             FileStatusListView.Indent = DpiUtil.Scale(14);
             FileStatusListView.ImageList = _imageListData.ImageList;
+            FileStatusListView.StateImageList = _imageListData.ImageList;
 
             NoFiles.Text = TranslatedStrings.NoChanges;
             LoadingFiles.Text = TranslatedStrings.LoadingData;
@@ -1171,6 +1172,8 @@ namespace GitUI
             bool filesPresent = items.Any(x => x.Statuses.Count > 0);
             bool hasGrepGroup = gitGrepState != GitGrepState.None && (gitGrepState != GitGrepState.Unknown || items.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
             bool showGroupLabel = (filesPresent && (items.Count > 1 || groupByRevision)) || hasGrepGroup;
+            bool mergeSingleItemsWithFolder = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+            bool showGroupNodes = !flatList || AppSettings.FileStatusShowGroupNodesInFlatList.Value;
 
             foreach (FileStatusWithDescription i in items)
             {
@@ -1226,7 +1229,7 @@ namespace GitUI
 
                 if (groupBy is null)
                 {
-                    diffGroup = _sorter.CreateTreeSortedByPath(itemStatuses, flatList, CreateCountedNode);
+                    diffGroup = _sorter.CreateTreeSortedByPath(itemStatuses, flatList, mergeSingleItemsWithFolder, CreateCountedNode);
                 }
                 else
                 {
@@ -1234,8 +1237,8 @@ namespace GitUI
                     IOrderedEnumerable<IGrouping<GroupKey, GitItemStatus>> grouped = itemStatuses.GroupBy(groupBy.GetGroupKey).OrderBy(group => group.Key);
                     foreach (IGrouping<GroupKey, GitItemStatus> group in grouped)
                     {
-                        TreeNode groupNode = _sorter.CreateTreeSortedByPath(group, flatList, CreateCountedNode);
-                        if (groupNode.Nodes.Count == 1 && groupNode.Nodes[0].Nodes.Count == 0)
+                        TreeNode groupNode = _sorter.CreateTreeSortedByPath(group, flatList, mergeSingleItemsWithFolder, CreateCountedNode);
+                        if (showGroupNodes && groupNode.Nodes.Count == 1 && groupNode.Nodes[0].Nodes.Count == 0)
                         {
                             groupNode = groupNode.Nodes[0];
                         }
@@ -1246,7 +1249,14 @@ namespace GitUI
                             groupNode.SelectedImageIndex = groupNode.ImageIndex;
                         }
 
-                        diffGroup.Nodes.Add(groupNode);
+                        if (showGroupNodes)
+                        {
+                            diffGroup.Nodes.Add(groupNode);
+                        }
+                        else
+                        {
+                            diffGroup.Nodes.AddRange(groupNode.Nodes.Cast<TreeNode>().ToArray());
+                        }
                     }
 
                     if (diffGroup.Nodes.Count == 1 && diffGroup.Nodes[0].Nodes.Count > 0)

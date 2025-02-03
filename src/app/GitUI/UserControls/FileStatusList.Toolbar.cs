@@ -22,7 +22,7 @@ partial class FileStatusList
             : throw new InvalidOperationException("Exactly one group-by button must be checked");
     }
 
-    private void AsTree_Click(object sender, EventArgs e)
+    private void AsTree_ButtonClick(object sender, EventArgs e)
     {
         btnAsTree.Image = btnAsTree.Image == _treeImage ? _flatListImage : _treeImage;
         ApplyGroupBy();
@@ -83,6 +83,12 @@ partial class FileStatusList
         }
     }
 
+    private void DenseTree_Click(object sender, EventArgs e)
+    {
+        AppSettings.FileStatusMergeSingleItemWithFolder.Value = tsmiDenseTree.Checked;
+        UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
+    }
+
     private void Filter_ButtonClick(object sender, EventArgs e)
     {
         FilterFiles(_NO_TRANSLATE_FilterComboBox.Text);
@@ -115,6 +121,11 @@ partial class FileStatusList
 
     private void FindUsing_Click(object sender, EventArgs e)
     {
+        if (sender is ToolStripMenuItem item)
+        {
+            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = btnFindInFilesGitGrep.DropDown.Items.IndexOf(item);
+        }
+
         tsmiFindUsingDialog.Checked = sender == tsmiFindUsingDialog;
         tsmiFindUsingInputBox.Checked = sender == tsmiFindUsingInputBox;
         tsmiFindUsingBoth.Checked = sender == tsmiFindUsingBoth;
@@ -151,17 +162,24 @@ partial class FileStatusList
         AppSettings.RefreshArtificialCommitOnApplicationActivated = tsmiRefreshOnFormFocus.Checked;
     }
 
+    private void ShowGroupNodesInFlatList_Click(object sender, EventArgs e)
+    {
+        AppSettings.FileStatusShowGroupNodesInFlatList.Value = tsmiShowGroupNodesInFlatList.Checked;
+        UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
+    }
+
     private void UpdateToolbar()
     {
+        tsmiRefreshOnFormFocus.Checked = tsmiRefreshOnFormFocus.Enabled && AppSettings.RefreshArtificialCommitOnApplicationActivated;
+
         DiffListSortType sortType = DiffListSortService.Instance.DiffListSorting;
         btnByPath.Checked = sortType is DiffListSortType.FilePath or DiffListSortType.FilePathFlat;
         btnByExtension.Checked = sortType is DiffListSortType.FileExtension or DiffListSortType.FileExtensionFlat;
         btnByStatus.Checked = sortType is DiffListSortType.FileStatus or DiffListSortType.FileStatusFlat;
         btnAsTree.Image = sortType.ToString().EndsWith("Flat") ? _flatListImage : _treeImage;
 
-        bool findInFilesGitGrepVisible = CanUseFindInCommitFilesGitGrep;
-        btnFindInFilesGitGrep.Visible = findInFilesGitGrepVisible;
-        sepOptions.Visible = findInFilesGitGrepVisible;
+        tsmiDenseTree.Checked = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+        tsmiShowGroupNodesInFlatList.Checked = AppSettings.FileStatusShowGroupNodesInFlatList.Value;
 
         bool filterByDiffStatus = HasDiffABGroups();
         btnUnequalChange.Visible = filterByDiffStatus;
@@ -170,7 +188,13 @@ partial class FileStatusList
         btnSameChange.Visible = filterByDiffStatus;
         sepFilter.Visible = filterByDiffStatus;
 
-        tsmiRefreshOnFormFocus.Checked = tsmiRefreshOnFormFocus.Enabled && AppSettings.RefreshArtificialCommitOnApplicationActivated;
+        bool findInFilesGitGrepVisible = CanUseFindInCommitFilesGitGrep;
+        btnFindInFilesGitGrep.Visible = findInFilesGitGrepVisible;
+        sepOptions.Visible = findInFilesGitGrepVisible;
+        for (int itemIndex = 0; itemIndex < btnFindInFilesGitGrep.DropDown.Items.Count; ++itemIndex)
+        {
+            ((ToolStripMenuItem)btnFindInFilesGitGrep.DropDown.Items[itemIndex]).Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;
+        }
 
         return;
 
