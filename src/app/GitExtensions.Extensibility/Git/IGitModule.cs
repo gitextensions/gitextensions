@@ -38,6 +38,14 @@ public interface IGitModule
     /// <returns>An ObjectID representing that git reference</returns>
     ObjectId? RevParse(string revisionExpression);
 
+    /// <summary>
+    ///  Sets or unsets a git config setting.
+    /// </summary>
+    /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
+    /// <param name="setting">The name of the setting (may contain dots, e.g. "core.autocrlf").</param>
+    /// <param name="value">The value of the setting or <see langword="null"/> for removing the setting.</param>
+    void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value);
+
     void SetSetting(string setting, string value);
     void UnsetSetting(string setting);
 
@@ -193,6 +201,13 @@ public interface IGitModule
     /// <param name="cache"><see langword="true"/> if the result shall be cached.</param>
     /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
     string? GetGitSetting(string setting, string scopeArg, bool cache = false);
+
+    /// <summary>
+    ///  Get all config settings from git according to the scope.
+    /// </summary>
+    /// <param name="settingLevel">The scope for the config.</param>
+    /// <returns>The names and values of the settings delimited by '\0'.</returns>
+    string GetGitSettings(GitSettingLevel settingLevel);
 
     /// <summary>
     /// Get the effective config setting from git.

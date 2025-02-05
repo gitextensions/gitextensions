@@ -3,6 +3,7 @@
 using System.Text;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
@@ -34,7 +35,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public CommonLogic(IGitModule module)
         {
-            Requires.NotNull(module, nameof(module));
+            Validates.NotNull(module);
 
             Module = module;
 
@@ -45,24 +46,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 new DistributedSettings(distributedGlobalSettings, distributedPulledSettings.SettingsCache, SettingLevel.Distributed),
                 distributedLocalSettings.SettingsCache,
                 SettingLevel.Effective);
-
-            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(useSharedCache: false);
-            ConfigFileSettings configFileLocalSettings = ConfigFileSettings.CreateLocal(module, useSharedCache: false);
-            ConfigFileSettings configFileEffectiveSettings = new(
-                configFileGlobalSettings,
-                configFileLocalSettings.SettingsCache,
-                SettingLevel.Effective);
-
             DistributedSettingsSet = new DistributedSettingsSet(
                 distributedEffectiveSettings,
                 distributedLocalSettings,
                 distributedPulledSettings,
                 distributedGlobalSettings);
 
+            GitConfigSettings globalGitConfigSettings = new(module, GitSettingLevel.Global);
+            GitConfigSettings localGitConfigSettings = new(module, GitSettingLevel.Local);
+            GitConfigSettings effectiveGitConfigSettings = new(module, GitSettingLevel.Effective);
             GitConfigSettingsSet = new GitConfigSettingsSet(
-                configFileEffectiveSettings,
-                configFileLocalSettings,
-                configFileGlobalSettings);
+                new SettingsSource<IConfigValueStore>(effectiveGitConfigSettings),
+                new SettingsSource<IPersistentConfigValueStore>(localGitConfigSettings),
+                new SettingsSource<IPersistentConfigValueStore>(globalGitConfigSettings));
         }
 
         /// <summary>

@@ -2098,7 +2098,7 @@ namespace GitCommands
 
         public string? GetGitSetting(string setting, string scopeArg, bool cache = false)
         {
-            GitArgumentBuilder args = new("config") { "--includes", scopeArg, "--get", setting };
+            GitArgumentBuilder args = new("config") { "get", scopeArg, "--includes", setting };
             ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
 
             // Handle no value set, is error code 1: https://git-scm.com/docs/git-config#_description
@@ -2113,6 +2113,38 @@ namespace GitCommands
             return result.StandardOutput.Trim();
         }
 
+        public string GetGitSettings(GitSettingLevel settingLevel)
+        {
+            GitArgumentBuilder args = new("config")
+            {
+                "list",
+                settingLevel switch
+                {
+                    GitSettingLevel.Effective => "",
+                    GitSettingLevel.Local => "--local",
+                    GitSettingLevel.Global => "--global",
+                    GitSettingLevel.SystemWide => "--system",
+                    _ => throw new ArgumentOutOfRangeException(nameof(settingLevel))
+                },
+                "--includes",
+                "--null"
+            };
+            ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+
+            if (result.ExitedSuccessfully)
+            {
+                return result.StandardOutput;
+            }
+
+            if (result.StandardError.StartsWith("fatal: unable to read config file") && result.StandardError.EndsWith(": No such file or directory"))
+            {
+                return "";
+            }
+
+            result.ThrowIfErrorExit("Error getting config values");
+            return "unreachable code";
+        }
+
         public string? GetEffectiveGitSetting(string setting, bool cache = false)
         {
             return GetGitSetting(setting, scopeArg: "", cache);
@@ -2121,6 +2153,30 @@ namespace GitCommands
         public void UnsetSetting(string setting)
         {
             SetSetting(setting, null);
+        }
+
+        public void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value)
+        {
+            bool isSet = !string.IsNullOrEmpty(value);
+            GitArgumentBuilder args = new("config")
+            {
+                isSet ? "set" : "unset",
+                settingLevel switch
+                {
+                    GitSettingLevel.Local => "--local",
+                    GitSettingLevel.Global => "--global",
+                    GitSettingLevel.SystemWide => "--system",
+                    GitSettingLevel.Effective or _ => throw new ArgumentOutOfRangeException(nameof(settingLevel))
+                },
+                setting,
+                { isSet, value.Quote() }
+            };
+            ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+            const int exitCodeOnUnsetNotExistingSetting = 5;
+            if (isSet || result.ExitCode != exitCodeOnUnsetNotExistingSetting)
+            {
+                result.ThrowIfErrorExit();
+            }
         }
 
         public void SetSetting(string setting, string? value)
