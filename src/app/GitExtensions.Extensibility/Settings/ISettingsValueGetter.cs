@@ -39,4 +39,11 @@ public interface ISettingsValueGetter
             throw new GitConfigFormatException($"Git setting '{setting}': failed to convert value '{value}' into type '{targetType}'");
         }
     }
+
+    /// <summary>
+    ///  Invalidates the data in order to trigger a reload on next access or in the background.
+    /// </summary>
+    void Invalidate()
+    {
+    }
 }
