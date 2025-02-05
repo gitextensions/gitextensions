@@ -1,13 +1,20 @@
 ﻿#nullable enable
 
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Configurations;
+using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog;
 
 public readonly record struct GitConfigSettingsSet(
-    ConfigFileSettings EffectiveSettings,
-    ConfigFileSettings LocalSettings,
-    ConfigFileSettings GlobalSettings)
+    SettingsSource<IConfigValueStore> EffectiveSettings,
+    SettingsSource<IPersistentConfigValueStore> LocalSettings,
+    SettingsSource<IPersistentConfigValueStore> GlobalSettings)
 {
-    public void Save() => EffectiveSettings.Save();
+    public void Save()
+    {
+        LocalSettings.ConfigValueStore.Save();
+        GlobalSettings.ConfigValueStore.Save();
+        EffectiveSettings.ConfigValueStore.Invalidate();
+    }
 }

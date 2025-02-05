@@ -28,6 +28,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return CurrentSettings;
         }
 
+        protected override void PageToSettings()
+        {
+            base.PageToSettings();
+            GitConfigSettingsSet.Save();
+        }
+
         public void SetEffectiveSettings()
         {
             SetCurrentSettings(GitConfigSettingsSet.EffectiveSettings);
