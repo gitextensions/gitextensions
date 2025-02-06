@@ -1,24 +1,26 @@
-﻿using GitCommands.Settings;
+﻿#nullable enable
+
+using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public partial class ConfigFileSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
+    public partial class GitConfigBaseSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
     {
-        public ConfigFileSettingsPage(IServiceProvider serviceProvider)
+        public GitConfigBaseSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
         }
 
-        protected ConfigFileSettingsSet ConfigFileSettingsSet => CommonLogic.ConfigFileSettingsSet;
+        protected GitConfigSettingsSet GitConfigSettingsSet => CommonLogic.GitConfigSettingsSet;
         protected ConfigFileSettings? CurrentSettings { get; private set; }
 
         protected override void Init(ISettingsPageHost pageHost)
         {
             base.Init(pageHost);
 
-            CurrentSettings = CommonLogic.ConfigFileSettingsSet.EffectiveSettings;
+            CurrentSettings = GitConfigSettingsSet.EffectiveSettings;
         }
 
         protected override SettingsSource GetCurrentSettings()
@@ -29,26 +31,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void SetEffectiveSettings()
         {
-            if (ConfigFileSettingsSet.EffectiveSettings is not null)
-            {
-                SetCurrentSettings(ConfigFileSettingsSet.EffectiveSettings);
-            }
+            SetCurrentSettings(GitConfigSettingsSet.EffectiveSettings);
         }
 
         public void SetLocalSettings()
         {
-            if (ConfigFileSettingsSet.LocalSettings is not null)
-            {
-                SetCurrentSettings(ConfigFileSettingsSet.LocalSettings);
-            }
+            SetCurrentSettings(GitConfigSettingsSet.LocalSettings);
         }
 
         public override void SetGlobalSettings()
         {
-            if (ConfigFileSettingsSet.GlobalSettings is not null)
-            {
-                SetCurrentSettings(ConfigFileSettingsSet.GlobalSettings);
-            }
+            SetCurrentSettings(GitConfigSettingsSet.GlobalSettings);
         }
 
         private void SetCurrentSettings(ConfigFileSettings settings)

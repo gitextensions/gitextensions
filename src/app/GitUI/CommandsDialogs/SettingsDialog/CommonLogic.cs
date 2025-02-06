@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿#nullable enable
+
+using System.Text;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
@@ -21,7 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             new("Select file");
 
         public readonly DistributedSettingsSet DistributedSettingsSet;
-        public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
+        public readonly GitConfigSettingsSet GitConfigSettingsSet;
         public readonly IGitModule Module;
 
         private CommonLogic()
@@ -57,7 +59,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 distributedPulledSettings,
                 distributedGlobalSettings);
 
-            ConfigFileSettingsSet = new ConfigFileSettingsSet(
+            GitConfigSettingsSet = new GitConfigSettingsSet(
                 configFileEffectiveSettings,
                 configFileLocalSettings,
                 configFileGlobalSettings);
@@ -97,10 +99,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             return GetEditorOptions().FirstOrDefault(o => !string.IsNullOrEmpty(o));
 
-            IEnumerable<string> GetEditorOptions()
+            IEnumerable<string?> GetEditorOptions()
             {
                 yield return Environment.GetEnvironmentVariable(PresetGitEditorEnvVariableName);
-                yield return ConfigFileSettingsSet.GlobalSettings.GetValue("core.editor");
+                yield return GitConfigSettingsSet.GlobalSettings.GetValue("core.editor");
                 yield return Environment.GetEnvironmentVariable("VISUAL");
                 yield return Environment.GetEnvironmentVariable(AmbientGitEditorEnvVariableName);
             }
