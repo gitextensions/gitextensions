@@ -68,6 +68,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             txtMergeToolPath.Enabled = canFindGitCmd;
             txtMergeToolCommand.Enabled = canFindGitCmd;
             InvalidGitPathGlobal.Visible = !canFindGitCmd;
+
+            if (ReadOnly)
+            {
+                // Unselect has no effect in SettingsToPage because ComboBox asynchronously lives its own life
+                GlobalEditor.Select(start: GlobalEditor.Text.Length, length: 0);
+            }
         }
 
         protected override void SettingsToPage()
