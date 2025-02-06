@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog
+﻿#nullable enable
+
+namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public interface IGlobalSettingsPage : ISettingsPage
     {
@@ -37,6 +39,15 @@
             }
         }
 
+        public bool ReadOnly
+        {
+            get => !settingsPagePanel.Enabled;
+            private set
+            {
+                settingsPagePanel.Enabled = !value;
+            }
+        }
+
         private void ConfigureHeader(bool canSaveInsideRepo)
         {
             if (!(_page is ILocalSettingsPage localSettingsPage) || !canSaveInsideRepo)
@@ -58,6 +69,7 @@
                     if (LocalRB.Checked)
                     {
                         localSettingsPage.SetLocalSettings();
+                        ReadOnly = false;
                     }
                 };
 
@@ -67,6 +79,7 @@
                     {
                         arrowLocal.ForeColor = EffectiveRB.ForeColor;
                         localSettingsPage.SetEffectiveSettings();
+                        ReadOnly = true;
                     }
                     else
                     {
@@ -78,6 +91,7 @@
                 };
 
                 EffectiveRB.Checked = true;
+                ReadOnly = true;
 
                 if (!(localSettingsPage is IDistributedSettingsPage distributedSettingsPage))
                 {
@@ -91,6 +105,7 @@
                         if (DistributedRB.Checked)
                         {
                             distributedSettingsPage.SetDistributedSettings();
+                            ReadOnly = false;
                         }
                     };
                 }
@@ -102,6 +117,7 @@
             if (GlobalRB.Checked)
             {
                 _page?.SetGlobalSettings();
+                ReadOnly = false;
             }
         }
     }

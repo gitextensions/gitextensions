@@ -1,8 +1,11 @@
-﻿using GitCommands.Settings;
+﻿#nullable enable
+
+using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using JetBrains.Annotations;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -43,6 +46,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public virtual bool IsInstantSavePage => false;
 
+        public virtual bool ReadOnly => false;
+
         protected IGitModule? Module => CommonLogic.Module;
 
         public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
@@ -61,7 +66,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost, IServiceProvider serviceProvider) where T : SettingsPageBase
         {
-            T result = (T)Activator.CreateInstance(typeof(T), serviceProvider);
+            T? result = (T?)Activator.CreateInstance(typeof(T), serviceProvider);
+            Validates.NotNull(result);
 
             result.AdjustForDpiScaling();
             result.EnableRemoveWordHotkey();
@@ -107,7 +113,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void SaveSettings()
         {
-            PageToSettings();
+            if (!ReadOnly)
+            {
+                PageToSettings();
+            }
         }
 
         protected virtual void SettingsToPage()
