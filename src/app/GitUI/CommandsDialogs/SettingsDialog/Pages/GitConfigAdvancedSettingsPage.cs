@@ -1,9 +1,11 @@
-﻿using GitCommands;
+﻿#nullable enable
+
+using GitCommands;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitConfigAdvancedSettingsPage : ConfigFileSettingsPage
+    public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
     {
         private record GitSettingUiMapping(string GitSettingKey, CheckBox MappedCheckbox);
         private readonly List<GitSettingUiMapping> _gitSettings;
