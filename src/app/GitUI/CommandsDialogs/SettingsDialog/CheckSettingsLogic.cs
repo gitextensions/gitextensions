@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             valid = SolveGitExtensionsDir() && valid;
             valid = SolveEditor(CommonLogic) && valid;
 
-            CommonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
+            CommonLogic.GitConfigSettingsSet.EffectiveSettings.Save();
             CommonLogic.DistributedSettingsSet.EffectiveSettings.Save();
 
             return valid;
