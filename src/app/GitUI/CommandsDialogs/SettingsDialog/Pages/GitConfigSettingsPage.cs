@@ -12,7 +12,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitConfigSettingsPage : ConfigFileSettingsPage
+    public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
     {
         private readonly TranslationString _selectFile = new("Select file");
         private readonly GitConfigSettingsPageController _controller;
