@@ -237,8 +237,8 @@ namespace GitUI.CommandsDialogs
                     settingsPage.SaveSettings();
                 }
 
-                _commonLogic.GitConfigSettingsSet.EffectiveSettings.Save();
-                _commonLogic.DistributedSettingsSet.EffectiveSettings.Save();
+                _commonLogic.GitConfigSettingsSet.Save();
+                _commonLogic.DistributedSettingsSet.Save();
 
                 if (EnvUtils.RunningOnWindows())
                 {
