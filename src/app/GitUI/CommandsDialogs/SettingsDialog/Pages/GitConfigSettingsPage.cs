@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string? mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             string? diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
 
-            Global_FilesEncoding.Text = CurrentSettings.FilesEncoding?.EncodingName ?? "";
+            Global_FilesEncoding.Text = new GitEncodingSettingsGetter(CurrentSettings).FilesEncoding?.EncodingName ?? "";
 
             GlobalUserName.Text = CurrentSettings.GetValue(SettingKeyString.UserName);
             GlobalUserEmail.Text = CurrentSettings.GetValue(SettingKeyString.UserEmail);
@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             Validates.NotNull(CurrentSettings);
 
-            CurrentSettings.FilesEncoding = (Encoding?)Global_FilesEncoding.SelectedItem;
+            new GitEncodingSettingsSetter(CurrentSettings).FilesEncoding = (Encoding?)Global_FilesEncoding.SelectedItem;
 
             base.PageToSettings();
 
