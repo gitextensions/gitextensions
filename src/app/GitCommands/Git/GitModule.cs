@@ -1455,7 +1455,7 @@ namespace GitCommands
             // 'git-checkout --' must be used for Index (git-reset will copy HEAD to Index, git-restore from 2.25 could be used).
             // However, Unmerged (Conflict) files cannot be checked out to Index.
             static bool UnmergedIndex(GitItemStatus item, Lazy<List<GitItemStatus>> status)
-                => status.Value.Any(i => (i.IsUnmerged || i.IsNew) && i.Name == item.Name) || !status.Value.Any(i => i.Name == item.Name);
+                => status.Value.Any(i => (i.IsUnmerged || (i.IsNew && i.Staged == item.Staged)) && i.Name == item.Name) || !status.Value.Any(i => i.Name == item.Name);
         }
 
         /// <summary>
