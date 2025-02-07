@@ -1,8 +1,6 @@
 ﻿#nullable enable
 
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
@@ -114,56 +112,6 @@ namespace GitCommands.Settings
         public void RemoveConfigSection(string configSectionName, bool performSave = false)
         {
             SettingsCache.RemoveConfigSection(configSectionName, performSave);
-        }
-
-        [MaybeNull]
-        public Encoding? FilesEncoding
-        {
-            get => GetEncoding("i18n.filesEncoding");
-            set => SetEncoding("i18n.filesEncoding", value);
-        }
-
-        public Encoding? CommitEncoding => GetEncoding("i18n.commitEncoding");
-
-        public Encoding? LogOutputEncoding => GetEncoding("i18n.logoutputencoding");
-
-        private Encoding? GetEncoding(string settingName)
-        {
-            string? encodingName = GetValue(settingName);
-
-            if (string.IsNullOrEmpty(encodingName))
-            {
-                return null;
-            }
-
-            // The keys in AppSettings.AvailableEncodings are lower-case, and the actual
-            // configuration is case-insensitive, and can be configured uppercase on the
-            // command line. If configured as UTF-8, then if we don't use the predefined
-            // encoding, it will use the default, which adds BOM.
-            // Convert it to lowercase, to ensure matching.
-            encodingName = encodingName.ToLowerInvariant();
-
-            if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out Encoding? result))
-            {
-                return result;
-            }
-
-            try
-            {
-                return Encoding.GetEncoding(encodingName);
-            }
-            catch (ArgumentException)
-            {
-                Debug.WriteLine(
-                    "Unsupported encoding set in git config file: {0}\n" +
-                    "Please check the setting {1} in config file.", encodingName, settingName);
-                return null;
-            }
-        }
-
-        private void SetEncoding(string settingName, Encoding? encoding)
-        {
-            SetValue(settingName, encoding?.WebName);
         }
     }
 }
