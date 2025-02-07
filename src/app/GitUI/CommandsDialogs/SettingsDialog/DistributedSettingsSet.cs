@@ -1,4 +1,6 @@
-﻿using GitCommands.Settings;
+﻿#nullable enable
+
+using GitCommands.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -6,5 +8,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         DistributedSettings EffectiveSettings,
         DistributedSettings LocalSettings,
         DistributedSettings DistributedSettings,
-        DistributedSettings GlobalSettings);
+        DistributedSettings GlobalSettings)
+    {
+        public void Save() => EffectiveSettings.Save();
+    }
 }
