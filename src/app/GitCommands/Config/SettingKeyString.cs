@@ -17,6 +17,11 @@
         public static string CredentialHelper = "credential.helper";
 
         /// <summary>
+        /// "i18n.filesencoding"
+        /// </summary>
+        public static readonly string FilesEncoding = "i18n.filesEncoding";
+
+        /// <summary>
         /// "remote.{0}.color"
         /// </summary>
         public static string RemoteColor = "remote.{0}.color";

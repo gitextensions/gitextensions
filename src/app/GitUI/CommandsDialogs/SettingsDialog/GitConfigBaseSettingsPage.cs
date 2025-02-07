@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 
@@ -14,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         protected GitConfigSettingsSet GitConfigSettingsSet => CommonLogic.GitConfigSettingsSet;
-        protected ConfigFileSettings? CurrentSettings { get; private set; }
+        protected SettingsSource? CurrentSettings { get; private set; }
 
         protected override void Init(ISettingsPageHost pageHost)
         {
@@ -44,7 +43,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             SetCurrentSettings(GitConfigSettingsSet.GlobalSettings);
         }
 
-        private void SetCurrentSettings(ConfigFileSettings settings)
+        private void SetCurrentSettings(SettingsSource settings)
         {
             if (CurrentSettings is not null)
             {

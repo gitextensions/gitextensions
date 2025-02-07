@@ -29,6 +29,8 @@ namespace GitCommands
     public sealed partial class GitModule : IGitModule
     {
         private const string GitError = "Git Error";
+
+        private static readonly Encoding _defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
         // the amount of lines we must skip in order to get to an annotated tag's message when doing git cat-file -p <tag_name>
@@ -279,23 +281,23 @@ namespace GitCommands
             }
         }
 
-        private ConfigFileSettings? _effectiveConfigFile;
-
-        public IConfigFileSettings EffectiveConfigFile
+        private GitEncodingSettingsGetter GitEncodingSettingsGetter
         {
             get
             {
-                if (_effectiveConfigFile is null)
+                if (field is null)
                 {
                     lock (_lock)
                     {
-                        _effectiveConfigFile ??= ConfigFileSettings.CreateEffective(module: this);
+                        field ??= new GitEncodingSettingsGetter(ConfigFileSettings.CreateEffective(module: this));
                     }
                 }
 
-                return _effectiveConfigFile;
+                return field;
             }
         }
+
+        public IConfigFileSettings EffectiveConfigFile => (IConfigFileSettings)GitEncodingSettingsGetter.SettingsValueGetter;
 
         public IConfigFileSettings LocalConfigFile
             => new ConfigFileSettings(lowerPriority: null, ((ConfigFileSettings)EffectiveConfigFile).SettingsCache, SettingLevel.Local);
@@ -318,11 +320,11 @@ namespace GitCommands
         // 4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
 
-        public Encoding FilesEncoding => ((ConfigFileSettings)EffectiveConfigFile).FilesEncoding ?? new UTF8Encoding(false);
+        public Encoding FilesEncoding => GitEncodingSettingsGetter.FilesEncoding ?? _defaultEncoding;
 
-        public Encoding CommitEncoding => ((ConfigFileSettings)EffectiveConfigFile).CommitEncoding ?? new UTF8Encoding(false);
+        public Encoding CommitEncoding => GitEncodingSettingsGetter.CommitEncoding ?? _defaultEncoding;
 
-        public Encoding LogOutputEncoding => ((ConfigFileSettings)EffectiveConfigFile).LogOutputEncoding ?? CommitEncoding;
+        public Encoding LogOutputEncoding => GitEncodingSettingsGetter.LogOutputEncoding ?? CommitEncoding;
 
         /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool IsValidGitWorkingDir()
