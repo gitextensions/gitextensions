@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 
 namespace GitCommands.UserRepositoryHistory
 {
@@ -13,6 +14,18 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryDir">Path to repository.</param>
         /// <returns>Short name for repository.</returns>
         string Get(string repositoryDir);
+
+        /// <summary>
+        ///  Returns a short name for the repository followed by a unique name.
+        /// </summary>
+        /// <param name="repositoryDir">Path to repository.</param>
+        string GetDescriptiveUnique(string repositoryDir);
+
+        /// <summary>
+        ///  Returns a unique name for the repository.
+        /// </summary>
+        /// <param name="repositoryDir">Path to repository.</param>
+        string GetUnique(string repositoryDir);
     }
 
     /// <summary>
@@ -63,6 +76,24 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             return dirInfo.Name;
+        }
+
+        public string GetDescriptiveUnique(string repositoryDir)
+        {
+            const int maxDescriptiveLength = 25;
+            string descriptive = Get(repositoryDir);
+            int endOfLineIndex = descriptive.IndexOfAny(Delimiters.LineFeedAndCarriageReturnAndNull);
+            int descriptiveEnd = endOfLineIndex >= 0 ? endOfLineIndex : descriptive.Length;
+            descriptiveEnd = Math.Min(descriptiveEnd, maxDescriptiveLength);
+            ReadOnlySpan<char> shortName = descriptive.AsSpan(0, descriptiveEnd).Trim();
+
+            string unique = GetUnique(repositoryDir);
+            return shortName.Length == 0 ? unique : $"{shortName} ({unique})";
+        }
+
+        public string GetUnique(string repositoryDir)
+        {
+            return repositoryDir.TrimEnd(Path.DirectorySeparatorChar);
         }
 
         /// <summary>
