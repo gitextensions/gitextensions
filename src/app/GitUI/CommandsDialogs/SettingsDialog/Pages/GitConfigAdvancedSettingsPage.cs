@@ -20,6 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             [
                 new("pull.rebase", checkBoxPullRebase),
                 new("fetch.prune", checkBoxFetchPrune),
+                new("merge.autostash", checkboxMergeAutoStash),
                 new("rebase.autostash", checkBoxRebaseAutostash),
                 new("rebase.autosquash", checkBoxRebaseAutosquash),
                 new("rebase.updaterefs", checkBoxUpdateRefs)
@@ -57,9 +58,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             Validates.NotNull(CurrentSettings);
-            foreach (GitSettingUiMapping gitSetting in _gitSettings.Where(s => s.MappedCheckbox.CheckState != CheckState.Indeterminate))
+            foreach (GitSettingUiMapping gitSetting in _gitSettings)
             {
-                CurrentSettings.SetValue(gitSetting.GitSettingKey, gitSetting.MappedCheckbox.Checked ? "true" : "false");
+                CurrentSettings.SetValue(gitSetting.GitSettingKey, gitSetting.MappedCheckbox.CheckState switch { CheckState.Checked => "true", CheckState.Unchecked => "false", _ => null });
             }
 
             base.PageToSettings();
