@@ -311,9 +311,6 @@
       <Component Id="Themes.invariant.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\invariant.css" />
       </Component>
-      <Component Id="Themes.bright.css" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Themes\bright.css" />
-      </Component>
       <Component Id="Themes.light_plus.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\light+.css" />
       </Component>
@@ -609,7 +606,6 @@
     <ComponentGroup Id="Component.Themes">
       <ComponentRef Id="Themes.README.md" />
       <ComponentRef Id="Themes.invariant.css" />
-      <ComponentRef Id="Themes.bright.css" />
       <ComponentRef Id="Themes.highcontrast_dark.css" />
       <ComponentRef Id="Themes.light_plus.css" />
     </ComponentGroup>
