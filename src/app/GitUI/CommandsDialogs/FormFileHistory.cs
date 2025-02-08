@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
 
             Color toolForeColor = SystemColors.WindowText;
             Color toolBackColor = Color.Transparent;
-            BackColor = SystemColors.Window;
+            BackColor = AppColor.PanelBackground.GetThemeColor();
             ForeColor = toolForeColor;
             ToolStripFilters.BackColor = toolBackColor;
             ToolStripFilters.ForeColor = toolForeColor;

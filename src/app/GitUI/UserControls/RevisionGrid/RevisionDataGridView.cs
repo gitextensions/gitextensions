@@ -145,20 +145,20 @@ namespace GitUI.UserControls.RevisionGrid
                 SuspendLayout();
                 AllowUserToAddRows = false;
                 AllowUserToDeleteRows = false;
-                BackgroundColor = SystemColors.Window;
+                BackgroundColor = AppColor.PanelBackground.GetThemeColor();
                 CellBorderStyle = DataGridViewCellBorderStyle.None;
                 ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
-                    BackColor = SystemColors.Window,
+                    BackColor = AppColor.PanelBackground.GetThemeColor(),
                     ForeColor = SystemColors.ControlText,
                     SelectionBackColor = SystemColors.Highlight,
                     SelectionForeColor = SystemColors.HighlightText,
                     WrapMode = DataGridViewTriState.False
                 };
                 Dock = DockStyle.Fill;
-                GridColor = SystemColors.Window;
+                GridColor = AppColor.PanelBackground.GetThemeColor();
                 ReadOnly = true;
                 RowHeadersVisible = false;
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect;
