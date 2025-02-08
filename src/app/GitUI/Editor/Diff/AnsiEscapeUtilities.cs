@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
@@ -12,8 +13,7 @@ public partial class AnsiEscapeUtilities
 {
     [GeneratedRegex(@"\u001b\[((?<escNo>\d+)\s*[:;]?\s*)*m", RegexOptions.ExplicitCapture)]
     private static partial Regex EscapeRegex();
-    private static readonly List<bool> _fores = [true, false];
-    private static readonly List<bool> _bolds = [false, true];
+    private static readonly int _defaultForeColorId = ThemeModule.IsDarkTheme ? _whiteId : _blackId;
 
     // Color code definitions
     private const int _blackId = 0;
@@ -32,20 +32,43 @@ public partial class AnsiEscapeUtilities
     /// </summary>
     public static void PrintColors(StringBuilder sb, List<TextMarker> textMarkers)
     {
-        int currentColorId = 0;
+        int currentColorId = _defaultForeColorId;
+        StringBuilder rawSb = new();
+        rawSb.Append("\nnormal, normal dim, bold, bold dim, bold bold, bold bold dim\nFor foreground, background choosen by GE\nNote: GE configures black foreground for bold yellow/blue/magenta/cyan\nGenerated from AnsiEscapeUtilities.cs PrintColors());\n\n");
         sb.Append('\n');
 
         // color id (standard) colors
-        foreach (bool fore in _fores)
+        foreach (int code in new List<int> { 30, 90, 40, 100 })
         {
-            foreach (bool bold in _bolds)
+            foreach (int bold in new List<int> { 0, 1 })
             {
+                if (bold == 0 && code >= 90)
+                {
+                    // same as bold==1 && code-60
+                    continue;
+                }
+
                 foreach (int dim in new List<int>() { 0, 2 })
                 {
+                    List<int> sequence = [0];
+                    if (bold > 0)
+                    {
+                        sequence.Add(bold);
+                    }
+
+                    if (dim > 0)
+                    {
+                        sequence.Add(dim);
+                    }
+
+                    rawSb.Append($"""{(bold > 0 ? "b" : " ")} {(dim > 0 ? "d" : " ")} {code,3} """);
+                    sb.Append($"""{(bold > 0 ? "b" : " ")} {(dim > 0 ? "d" : " ")} {code,3} """);
                     for (int i = _blackId; i <= _whiteId; i++)
                     {
                         sb.Append("@!");
-                        TryGetColorsFromEscapeSequence(new List<int>() { 0, dim, i + 30 + (fore ? 0 : 10) + (bold ? 60 : 0) }, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors: false);
+                        sequence.Add(i + code);
+                        rawSb.Append($"\x1b[{string.Join(';', sequence)}m@!\x1b[0m");
+                        TryGetColorsFromEscapeSequence(sequence, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors: false);
                         if (TryGetTextMarker(new()
                                 {
                                     DocOffset = sb.Length - 2,
@@ -61,12 +84,17 @@ public partial class AnsiEscapeUtilities
                         }
                     }
 
+                    rawSb.Append('\n');
                     sb.Append('\n');
                 }
             }
 
+            rawSb.Append('\n');
             sb.Append('\n');
         }
+
+        // Write StringBuilder content to a file
+        // File.WriteAllText("../../../../../tests/app/UnitTests/GitUI.Tests/Editor/Diff/AnsiTerminalColors.diff", rawSb.ToString());
     }
 
     /// <summary>
@@ -79,7 +107,7 @@ public partial class AnsiEscapeUtilities
     {
         int errorCount = 0;
         int prevLineOffset = 0;
-        int currentColorId = 0; // current color, used when just bold etc is set
+        int currentColorId = _defaultForeColorId; // current color, used when just bold etc is set
         HighlightInfo currentHighlight = new()
         {
             DocOffset = sb.Length,
@@ -172,7 +200,7 @@ public partial class AnsiEscapeUtilities
     /// <param name="foreColor">Foreground color if set.</param>
     /// <param name="currentColorId">The fore color ANSI id (not argb color) if it was set. Can be used in follow-up sequences.</param>
     /// <returns><see langword="true"/> if a color was set; if just reset <see langword="false"/>.</returns>
-    private static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId, bool themeColors)
+    private static bool TryGetColorsFromEscapeSequence(List<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId, bool themeColors)
     {
         bool result = false;
         backColor = null;
@@ -201,7 +229,7 @@ public partial class AnsiEscapeUtilities
                     reverse = false;
                     backColor = null;
                     foreColor = null;
-                    currentColorId = _blackId;
+                    currentColorId = _defaultForeColorId;
                     currentFore = -1;
                     currentBack = -1;
                     bold = false;
@@ -230,16 +258,18 @@ public partial class AnsiEscapeUtilities
                     break;
                 case 39: // Default foreground color
                     foreColor = null;
-                    currentFore = currentColorId = _blackId;
+                    currentFore = currentColorId = _defaultForeColorId;
                     break;
                 case 49: // Default background color
                     backColor = null;
-                    currentBack = _whiteId;
+                    currentBack = -1;
+                    isChange = true;
                     break;
                 case >= 30 and <= 37: // Set foreground color
                     currentFore = escapeCodes[i] - 30;
                     break;
                 case >= 90 and <= 97: // Set bold foreground color
+                    // can be combined with explicit bold to get extra bold
                     currentFore = escapeCodes[i] - 90 + _boldOffset;
                     break;
                 case >= 40 and <= 47: // Set background color
@@ -266,7 +296,6 @@ public partial class AnsiEscapeUtilities
                         // ESC[38:5:⟨n⟩m Select foreground color
                         ++i;
                         int id = escapeCodes[i];
-                        currentColorId = _blackId;
                         if (fore)
                         {
                             currentFore = id;
@@ -291,7 +320,7 @@ public partial class AnsiEscapeUtilities
 
                         // Unknown fixed identifier, reset id
                         // Reset also for background to avoid CS0165
-                        currentColorId = _blackId;
+                        currentColorId = _defaultForeColorId;
 
                         // Set the color, override if set later
                         if (fore)
@@ -318,19 +347,42 @@ public partial class AnsiEscapeUtilities
             }
         }
 
+        if (currentFore is >= _blackId and <= _whiteId + _boldOffset)
+        {
+            // Mask bold, last three bits
+            currentColorId = currentFore & (_boldOffset - 1);
+        }
+
         if (themeColors && !reverse && !dim
-            && (currentBack < 0 || backColor is null)
+            && (currentBack < _blackId && backColor is null)
             && foreColor is null
-            && currentFore is 1 or 2)
+            && currentFore is _redId or _greenId or _redId + _boldOffset or _greenId + _boldOffset)
         {
             // Assume this is a fit for the theme colors with reverse color (e.g. difftastic)
-            // Change bold -> normal, normal -> dim to match GE theme better
+            // Change extra-bold -> bold, bold -> normal, normal -> dim (and dim -> dim) to match GE theme better
             // difftastic 'normal' is not only unchanged why GE unchanged dim-dim is not used
-            backColor = Get8bitColor(currentFore, fore: false, bold: false, dim: !bold);
+            // Note that dark mode is even one step bolder, could be tuned down
+            bool backBold = bold;
+            bool backDim = false;
+            if (currentFore > _whiteId)
+            {
+                // bold is valid
+                currentFore -= _boldOffset;
+            }
+            else if (bold)
+            {
+                backBold = false;
+            }
+            else
+            {
+                backDim = true;
+            }
+
+            backColor = Get8bitColor(currentFore, fore: false, bold: backBold, dim: backDim);
             currentFore = -1;
         }
 
-        if (isChange && (foreColor is null && backColor is null && currentFore < 0 && currentBack < 0))
+        if (isChange && (foreColor is null && backColor is null && currentFore < _blackId && currentBack < _blackId))
         {
             currentFore = currentColorId;
         }
@@ -341,18 +393,12 @@ public partial class AnsiEscapeUtilities
             (currentBack, currentFore) = (currentFore, currentBack);
         }
 
-        if (currentFore >= 0)
+        if (currentFore >= _blackId)
         {
-            if (currentFore <= _whiteId + _boldOffset)
-            {
-                // Mask bold, last three bits
-                currentColorId = currentFore & (_boldOffset - 1);
-            }
-
             foreColor = Get8bitColor(currentFore, fore: true, bold, dim);
         }
 
-        if (currentBack >= 0)
+        if (currentBack >= _blackId)
         {
             backColor = Get8bitColor(currentBack, fore: false, bold, dim);
         }
@@ -383,9 +429,19 @@ public partial class AnsiEscapeUtilities
     /// <exception cref="ArgumentOutOfRangeException">Unexpected value.</exception>
     private static Color Get8bitColor(int colorCode, bool fore, bool bold, bool dim)
     {
-        if (bold && colorCode is >= _blackId and <= _whiteId)
+        bool extraBold = false;
+        if (bold)
         {
-            colorCode += _boldOffset;
+            if (colorCode is >= _blackId and <= _whiteId)
+            {
+                // bold from defined colors
+                colorCode += _boldOffset;
+            }
+            else if (colorCode <= _whiteId + _boldOffset)
+            {
+                // extra bright adjustment, not standard defined
+                extraBold = true;
+            }
         }
 
         Color color = colorCode switch
@@ -450,6 +506,11 @@ public partial class AnsiEscapeUtilities
             >= 232 and <= 255 => Get24StepGray(colorCode),
             _ => throw new ArgumentOutOfRangeException(nameof(colorCode), colorCode, $"Unexpected value for ANSI color.")
         };
+
+        if (extraBold)
+        {
+            color = color.MakeBackgroundDarkerBy(-0.1);
+        }
 
         if (dim)
         {
@@ -543,8 +604,8 @@ public partial class AnsiEscapeUtilities
 
     internal readonly struct TestAccessor
     {
-        public static bool TryGetColorsFromEscapeSequence(IList<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId)
-            => AnsiEscapeUtilities.TryGetColorsFromEscapeSequence(escapeCodes, out backColor, out foreColor, ref currentColorId, themeColors: false);
+        public static bool TryGetColorsFromEscapeSequence(List<int> escapeCodes, out Color? backColor, out Color? foreColor, ref int currentColorId, bool themeColors = false)
+            => AnsiEscapeUtilities.TryGetColorsFromEscapeSequence(escapeCodes, out backColor, out foreColor, ref currentColorId, themeColors);
 
         public static Color Get8bitColor(int colorCode, bool fore, bool bold, bool dim)
             => AnsiEscapeUtilities.Get8bitColor(colorCode, fore, bold, dim);
