@@ -186,7 +186,7 @@ public interface IGitModule
     /// </exception>
     T? GetSetting<T>(string setting) where T : struct;
 
-    string GetEffectiveSetting(string setting);
+    string GetEffectiveSetting(string setting, string defaultValue = "");
 
     /// <summary>
     ///  Gets the config setting from git converted in an expected C# value type (bool, int, etc.).

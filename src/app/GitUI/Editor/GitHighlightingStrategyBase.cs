@@ -32,9 +32,9 @@ namespace GitUI.Editor
             // characters for each line[0] and take the character with most.
             // That would work well in practice.
 
-            string commentCharSetting = module.EffectiveConfigFile.GetString("core.commentChar", "#");
-
-            _commentChar = commentCharSetting?.Length == 1 ? commentCharSetting[0] : '#';
+            const string defaultValue = "#";
+            string commentCharSetting = module.GetEffectiveSetting("core.commentChar", defaultValue);
+            _commentChar = commentCharSetting.Length == 1 ? commentCharSetting[0] : defaultValue[0];
         }
 
         protected abstract void MarkTokens(IDocument document, IList<LineSegment> lines);

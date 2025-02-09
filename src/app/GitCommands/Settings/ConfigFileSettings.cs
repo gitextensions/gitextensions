@@ -72,8 +72,6 @@ namespace GitCommands.Settings
                 SettingLevel.SystemWide);
         }
 
-        public new string GetValue(string setting) => GetString(setting, string.Empty);
-
         /// <summary>
         ///  Gets the config setting from git converted in an expected C# value type (bool, int, etc.).
         /// </summary>

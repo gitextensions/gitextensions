@@ -1546,9 +1546,9 @@ namespace GitUI
         {
             ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
 
-            string coreEditor = configFileGlobalSettings.GetValue("core.editor");
-            string path = AppSettings.GetInstallDir().ToPosixPath();
-            if (path is not null && coreEditor.ToLowerInvariant().Contains(path.ToLowerInvariant()))
+            string? coreEditor = configFileGlobalSettings.GetValue("core.editor");
+            string? path = AppSettings.GetInstallDir().ToPosixPath();
+            if (path is not null && coreEditor?.Contains(path, StringComparison.InvariantCultureIgnoreCase) is true)
             {
                 configFileGlobalSettings.SetValue("core.editor", "");
             }

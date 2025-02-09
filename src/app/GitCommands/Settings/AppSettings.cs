@@ -752,8 +752,8 @@ namespace GitCommands
             EnvironmentConfiguration.SetEnvironmentVariables();
             ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(useSharedCache: false);
 
-            string path = configFileGlobalSettings.GetValue("core.editor");
-            if (!path.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase))
+            string? path = configFileGlobalSettings.GetValue("core.editor");
+            if (path?.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase) is not true)
             {
                 return;
             }

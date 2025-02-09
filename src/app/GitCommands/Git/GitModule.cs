@@ -2115,10 +2115,10 @@ namespace GitCommands
             return ((ConfigFileSettings)LocalConfigFile).GetValues(setting);
         }
 
-        public string GetSetting(string setting) => LocalConfigFile.GetValue(setting);
+        public string GetSetting(string setting) => LocalConfigFile.GetValue(setting) ?? "";
         public T? GetSetting<T>(string setting) where T : struct => LocalConfigFile.GetValue<T>(setting);
 
-        public string GetEffectiveSetting(string setting) => EffectiveConfigFile.GetValue(setting);
+        public string GetEffectiveSetting(string setting, string defaultValue = "") => EffectiveConfigFile.GetValue(setting) ?? defaultValue;
         public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveConfigFile.GetValue<T>(setting);
 
         public SettingsSource GetEffectiveSettingsByPath(string path)
