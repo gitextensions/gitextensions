@@ -1,8 +1,10 @@
-﻿namespace GitExtensions.Extensibility.Settings;
+﻿#nullable enable
+
+namespace GitExtensions.Extensibility.Settings;
 
 public interface ISettingsValueGetter
 {
-    string GetValue(string setting);
+    string? GetValue(string setting);
 
     /// <summary>
     ///  Gets the config setting from git converted in an expected C# value type (bool, int, etc.).
