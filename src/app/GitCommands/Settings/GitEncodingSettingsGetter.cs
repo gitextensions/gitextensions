@@ -16,7 +16,7 @@ public sealed class GitEncodingSettingsGetter(ISettingsValueGetter settingsValue
 
     public Encoding? FilesEncoding => GetEncoding(SettingKeyString.FilesEncoding);
 
-    public Encoding? CommitEncoding => GetEncoding("i18n.commitEncoding");
+    public Encoding? CommitEncoding => GetEncoding("i18n.commitencoding");
 
     public Encoding? LogOutputEncoding => GetEncoding("i18n.logoutputencoding");
 
