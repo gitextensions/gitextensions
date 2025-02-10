@@ -297,7 +297,7 @@ namespace GitCommands
             }
         }
 
-        public IConfigFileSettings EffectiveConfigFile => (IConfigFileSettings)GitEncodingSettingsGetter.SettingsValueGetter;
+        private ISettingsValueGetter EffectiveConfigFile => GitEncodingSettingsGetter.SettingsValueGetter;
 
         public IConfigFileSettings LocalConfigFile
             => new ConfigFileSettings(lowerPriority: null, ((ConfigFileSettings)EffectiveConfigFile).SettingsCache, SettingLevel.Local);
@@ -1605,8 +1605,8 @@ namespace GitCommands
         {
             return new ArgumentBuilder
             {
-                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("fetch.parallel")), "-c fetch.parallel=0" },
-                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchjobs")), "-c submodule.fetchjobs=0" },
+                { string.IsNullOrWhiteSpace(GetEffectiveSetting("fetch.parallel")), "-c fetch.parallel=0" },
+                { string.IsNullOrWhiteSpace(GetEffectiveSetting("submodule.fetchjobs")), "-c submodule.fetchjobs=0" },
             };
         }
 
@@ -2113,7 +2113,7 @@ namespace GitCommands
 
         public IEnumerable<string> GetSettings(string setting)
         {
-            return ((ConfigFileSettings)LocalConfigFile).GetValues(setting);
+            return LocalConfigFile.GetValues(setting);
         }
 
         public string GetSetting(string setting) => LocalConfigFile.GetValue(setting) ?? "";
@@ -2151,7 +2151,7 @@ namespace GitCommands
 
         public void SetSetting(string setting, string? value)
         {
-            ((ConfigFileSettings)LocalConfigFile).SetValue(setting, value);
+            LocalConfigFile.SetValue(setting, value);
         }
 
         internal GitArgumentBuilder GetStashesCmd(bool noLocks)

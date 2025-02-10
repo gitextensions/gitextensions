@@ -57,8 +57,6 @@ public interface IGitModule
 
     Encoding CommitEncoding { get; }
 
-    IConfigFileSettings EffectiveConfigFile { get; }
-
     Encoding FilesEncoding { get; }
 
     /// <summary>
@@ -443,7 +441,7 @@ public interface IGitModule
     string FormatPatch(string from, string to, string output, int? start = null);
 
     // TODO: convert to IGitCommand
-    ArgumentString PullCmd(string source, string curRemoteBranch, bool checked1, bool? v, bool checked2);
+    ArgumentString PullCmd(string remote, string? remoteBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false);
 
     bool ExistsMergeCommit(string? startRev, string? endRev);
 
