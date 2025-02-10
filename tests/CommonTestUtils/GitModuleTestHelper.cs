@@ -5,6 +5,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using NUnit.Framework;
 
@@ -138,11 +139,11 @@ namespace CommonTestUtils
         /// </summary>
         private static void SetRepoConfig(GitModule module)
         {
-            ConfigFileSettings localConfigFile = (ConfigFileSettings)module.LocalConfigFile;
-            localConfigFile.SetString(SettingKeyString.UserName, "author");
-            localConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
+            IPersistentConfigValueStore localConfigFile = module.LocalConfigFile;
+            localConfigFile.SetValue(SettingKeyString.UserName, "author");
+            localConfigFile.SetValue(SettingKeyString.UserEmail, "author@mail.com");
             new GitEncodingSettingsSetter(localConfigFile).FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-            localConfigFile.SetString(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
+            localConfigFile.SetValue(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
             localConfigFile.Save();
         }
 
@@ -196,7 +197,7 @@ namespace CommonTestUtils
                 // we want to delete, so we need to make sure the timers that will try to auto-save there
                 // are stopped before actually deleting, else the timers will throw on a background thread.
                 // Note that the intermittent failures mentioned below are likely related too.
-                ((ConfigFileSettings)Module.EffectiveConfigFile).SettingsCache.Dispose();
+                ((ConfigFileSettings)Module.LocalConfigFile).SettingsCache.Dispose();
                 Module.EffectiveSettings.SettingsCache.Dispose();
 
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
