@@ -497,6 +497,7 @@ namespace GitUI.CommandsDialogs
                     ? new OutputHistoryTabController(UICommands.GetRequiredService<IOutputHistoryProvider>(), new OutputHistoryControl(), parent: CommitInfoTabControl,
                         tabCaption: _outputHistoryTabCaption.Text)
                     : new OutputHistoryPanelController(UICommands.GetRequiredService<IOutputHistoryProvider>(), new OutputHistoryControl(), parent: toolPanel.ContentPanel,
+                        showVerticalSplitContainer1: toggleLeftPanel.PerformClick,
                         verticalSplitContainer1: LeftSplitContainer, verticalSplitContainer2: revisionDiff.LeftSplitContainer, horizontalSplitContainer: revisionDiff.HorizontalSplitter);
 
                 await TaskScheduler.Default;
