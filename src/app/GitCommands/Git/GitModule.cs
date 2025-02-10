@@ -299,10 +299,9 @@ namespace GitCommands
 
         private ISettingsValueGetter EffectiveConfigFile => GitEncodingSettingsGetter.SettingsValueGetter;
 
-        public IConfigFileSettings LocalConfigFile
-            => new ConfigFileSettings(lowerPriority: null, ((ConfigFileSettings)EffectiveConfigFile).SettingsCache, SettingLevel.Local);
+        private IConfigFileSettings _localConfigFile;
 
-        IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
+        public IConfigFileSettings LocalConfigFile => _localConfigFile ??= ConfigFileSettings.CreateLocal(module: this);
 
         // encoding for files paths
         private static Encoding? _systemEncoding;
