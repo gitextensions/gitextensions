@@ -338,6 +338,20 @@ namespace GitUI.LeftPanel
             }
         }
 
+        public void SelectGitRef(string gitRef)
+        {
+            foreach (TreeNode node in treeMain.Items())
+            {
+                if (node.Tag is BaseRevisionNode revisionNode && revisionNode.FullPath == gitRef)
+                {
+                    SelectNode(revisionNode, multiple: false, includingDescendants: false);
+                    node.EnsureVerticallyVisible();
+                    treeMain.SelectedNode = node;
+                    return;
+                }
+            }
+        }
+
         protected override void OnRuntimeLoad()
         {
             base.OnRuntimeLoad();
