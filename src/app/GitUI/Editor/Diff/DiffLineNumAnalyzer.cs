@@ -171,7 +171,7 @@ public partial class DiffLineNumAnalyzer
         return ret;
 
         // git-diff colors moved lines in other than red green
-        // However, Git may mark trailing whitespaces (diff.colorMovedWS is ignored)
+        // However, Git may mark trailing whitespaces (diff.colormovedws is ignored)
         bool IsMovedLine(List<TextMarker> textMarkers, DiffLineInfo meta)
             => textMarkers.Count > 0
                 && !MarkerColorMatch(textMarkers[0], meta.LineType)

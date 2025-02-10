@@ -31,7 +31,7 @@ namespace GitExtUtilsTests
             };
 
             Assert.AreEqual(
-                "-c log.showSignature=false log -n 1",
+                "-c log.showsignature=false log -n 1",
                 args.ToString());
         }
 
@@ -112,7 +112,7 @@ namespace GitExtUtilsTests
             };
 
             Assert.AreEqual(
-                "-c log.showSignature=false -c bar=baz log -n 1",
+                "-c log.showsignature=false -c bar=baz log -n 1",
                 args.ToString());
         }
 
@@ -126,7 +126,7 @@ namespace GitExtUtilsTests
             };
 
             Assert.AreEqual(
-                "-c log.showSignature=false -c bar=baz log -n 1",
+                "-c log.showsignature=false -c bar=baz log -n 1",
                 args.ToString());
         }
 
@@ -135,12 +135,12 @@ namespace GitExtUtilsTests
         {
             GitArgumentBuilder args = new("log")
             {
-                new GitConfigItem("log.showSignature", "true"),
+                new GitConfigItem("log.showsignature", "true"),
                 "-n 1"
             };
 
             Assert.AreEqual(
-                "-c log.showSignature=true log -n 1",
+                "-c log.showsignature=true log -n 1",
                 args.ToString());
         }
 
