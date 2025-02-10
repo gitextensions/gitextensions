@@ -68,78 +68,78 @@ namespace GitCommandsTests.Git_Commands
             GitModule module = new(Path.GetTempPath());
             ConfigFileSettings localConfigFile = (ConfigFileSettings)module.LocalConfigFile;
             localConfigFile.SetString("fetch.parallel", null);
-            localConfigFile.SetString("submodule.fetchJobs", null);
+            localConfigFile.SetString("submodule.fetchjobs", null);
             {
                 // Specifying a remote and a local branch creates a local branch
                 string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
-                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
+                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
 
             {
                 string fetchCmd = module.FetchCmd("origin", "some-branch", "local", true).Arguments;
-                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"origin\" +some-branch:refs/heads/local --tags", fetchCmd);
+                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"origin\" +some-branch:refs/heads/local --tags", fetchCmd);
             }
 
             {
                 // Using a URL as remote and passing a local branch creates the branch
                 string fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", "local").Arguments;
-                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"https://host.com/repo\" +some-branch:refs/heads/local --no-tags", fetchCmd);
+                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"https://host.com/repo\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
 
             {
                 // Using a URL as remote and not passing a local branch
                 string fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", null).Arguments;
-                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
+                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // No remote branch -> No local branch
                 string fetchCmd = module.FetchCmd("origin", "", "local").Arguments;
-                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"origin\" --no-tags", fetchCmd);
+                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"origin\" --no-tags", fetchCmd);
             }
 
             {
                 // Pull doesn't accept a local branch ever
                 string fetchCmd = module.PullCmd("origin", "some-branch", false).Arguments;
-                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 pull --progress \"origin\" +some-branch --no-tags", fetchCmd);
+                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchjobs=0 pull --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // Not even for URL remote
                 string fetchCmd = module.PullCmd("https://host.com/repo", "some-branch", false).Arguments;
-                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 pull --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
+                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchjobs=0 pull --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // Pull with rebase
                 string fetchCmd = module.PullCmd("origin", "some-branch", true).Arguments;
-                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchJobs=0 pull --rebase --progress \"origin\" +some-branch --no-tags", fetchCmd);
+                Assert.AreEqual("-c fetch.parallel=0 -c submodule.fetchjobs=0 pull --rebase --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // Config test fetch.parallel
                 localConfigFile.SetString("fetch.parallel", "1");
                 string fetchCmd = module.FetchCmd("fetch.parallel", "some-branch", "local").Arguments;
-                Assert.AreEqual("-c submodule.fetchJobs=0 fetch --progress \"fetch.parallel\" +some-branch:refs/heads/local --no-tags", fetchCmd);
+                Assert.AreEqual("-c submodule.fetchjobs=0 fetch --progress \"fetch.parallel\" +some-branch:refs/heads/local --no-tags", fetchCmd);
                 localConfigFile.SetString("fetch.parallel", null);
             }
 
             {
-                // Config test submodule.fetchJobs
-                localConfigFile.SetString("submodule.fetchJobs", "0");
+                // Config test submodule.fetchjobs
+                localConfigFile.SetString("submodule.fetchjobs", "0");
                 string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
                 Assert.AreEqual("-c fetch.parallel=0 fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
-                localConfigFile.SetString("submodule.fetchJobs", null);
+                localConfigFile.SetString("submodule.fetchjobs", null);
             }
 
             {
-                // Config test fetch.parallel and submodule.fetchJobs
+                // Config test fetch.parallel and submodule.fetchjobs
                 localConfigFile.SetString("fetch.parallel", "8");
-                localConfigFile.SetString("submodule.fetchJobs", "99");
+                localConfigFile.SetString("submodule.fetchjobs", "99");
                 string fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
                 localConfigFile.SetString("fetch.parallel", null);
-                localConfigFile.SetString("submodule.fetchJobs", null);
+                localConfigFile.SetString("submodule.fetchjobs", null);
             }
         }
 

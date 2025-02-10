@@ -239,7 +239,7 @@ namespace GitExtensions
             {
                 // If no working dir is yet found, try to find one relative to the current working directory.
                 // This allows the `fileeditor` command to discover repository configuration which is
-                // required for core.commentChar support.
+                // required for core.commentchar support.
                 workingDir = GitModule.TryFindGitWorkingDir(Environment.CurrentDirectory);
             }
 

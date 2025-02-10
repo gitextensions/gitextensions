@@ -259,43 +259,43 @@ namespace GitCommandsTests_Git
         public void GetAllChangedFilesCmd()
         {
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignored --ignore-submodules",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignored --ignore-submodules",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=no --ignore-submodules",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=no --ignore-submodules",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files=all --ignore-submodules",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=all --ignore-submodules",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty).Arguments);
             Assert.AreEqual(
-                "-c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=all",
+                "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=all",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All).Arguments);
             Assert.AreEqual(
-                "--no-optional-locks -c diff.ignoreSubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
+                "--no-optional-locks -c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
                 Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true).Arguments);
         }
 
-        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --no-ext-diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", false)]
-        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --no-ext-diff --find-renames --find-copies extra -- ""new""", "new", "old", false, "extra", false)]
-        [TestCase(@"--no-optional-locks -c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --no-ext-diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", true)]
+        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoresubmodules=none -c core.safecrlf=false diff --no-ext-diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", false)]
+        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoresubmodules=none -c core.safecrlf=false diff --no-ext-diff --find-renames --find-copies extra -- ""new""", "new", "old", false, "extra", false)]
+        [TestCase(@"--no-optional-locks -c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoresubmodules=none -c core.safecrlf=false diff --no-ext-diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", true)]
         public void GetCurrentChangesCmd(string expected, string fileName, string oldFileName, bool staged, string extraDiffArguments, bool noLocks)
         {
             Assert.AreEqual(expected, Commands.GetCurrentChanges(fileName, oldFileName, staged,
@@ -495,21 +495,21 @@ namespace GitCommandsTests_Git
             Assert.Throws<ArgumentException>(() => Commands.Rebase(rebaseOptions));
         }
 
-        [TestCase(false, false, false, false, false, false, true, null, "-c rebase.autoSquash=false rebase \"branch\"")]
-        [TestCase(true, false, false, false, false, false, true, null, "-c rebase.autoSquash=false rebase -i --no-autosquash \"branch\"")]
-        [TestCase(false, true, false, false, false, false, true, null, "-c rebase.autoSquash=false rebase --rebase-merges \"branch\"")]
-        [TestCase(false, false, true, false, false, false, true, null, "-c rebase.autoSquash=false rebase \"branch\"")]
-        [TestCase(false, false, false, true, false, false, true, null, "-c rebase.autoSquash=false rebase --autostash \"branch\"")]
-        [TestCase(true, false, true, false, false, false, true, null, "-c rebase.autoSquash=false rebase -i --autosquash \"branch\"")]
-        [TestCase(false, false, false, false, true, false, true, null, "-c rebase.autoSquash=false rebase --ignore-date \"branch\"")]
-        [TestCase(false, false, false, false, false, true, true, null, "-c rebase.autoSquash=false rebase --committer-date-is-author-date \"branch\"")]
-        [TestCase(false, false, false, true, true, false, true, null, "-c rebase.autoSquash=false rebase --ignore-date --autostash \"branch\"")]
-        [TestCase(false, false, false, true, false, true, true, null, "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"")]
-        [TestCase(true, true, true, true, true, false, true, null, "-c rebase.autoSquash=false rebase --ignore-date --autostash \"branch\"")]
-        [TestCase(true, true, true, true, false, true, true, null, "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"")]
-        [TestCase(true, true, true, true, false, false, true, null, "-c rebase.autoSquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"")]
-        [TestCase(false, false, false, false, false, false, true, false, "-c rebase.autoSquash=false rebase --no-update-refs \"branch\"")]
-        [TestCase(false, false, false, false, false, false, true, true, "-c rebase.autoSquash=false rebase --update-refs \"branch\"")]
+        [TestCase(false, false, false, false, false, false, true, null, "-c rebase.autosquash=false rebase \"branch\"")]
+        [TestCase(true, false, false, false, false, false, true, null, "-c rebase.autosquash=false rebase -i --no-autosquash \"branch\"")]
+        [TestCase(false, true, false, false, false, false, true, null, "-c rebase.autosquash=false rebase --rebase-merges \"branch\"")]
+        [TestCase(false, false, true, false, false, false, true, null, "-c rebase.autosquash=false rebase \"branch\"")]
+        [TestCase(false, false, false, true, false, false, true, null, "-c rebase.autosquash=false rebase --autostash \"branch\"")]
+        [TestCase(true, false, true, false, false, false, true, null, "-c rebase.autosquash=false rebase -i --autosquash \"branch\"")]
+        [TestCase(false, false, false, false, true, false, true, null, "-c rebase.autosquash=false rebase --ignore-date \"branch\"")]
+        [TestCase(false, false, false, false, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date \"branch\"")]
+        [TestCase(false, false, false, true, true, false, true, null, "-c rebase.autosquash=false rebase --ignore-date --autostash \"branch\"")]
+        [TestCase(false, false, false, true, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date --autostash \"branch\"")]
+        [TestCase(true, true, true, true, true, false, true, null, "-c rebase.autosquash=false rebase --ignore-date --autostash \"branch\"")]
+        [TestCase(true, true, true, true, false, true, true, null, "-c rebase.autosquash=false rebase --committer-date-is-author-date --autostash \"branch\"")]
+        [TestCase(true, true, true, true, false, false, true, null, "-c rebase.autosquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"")]
+        [TestCase(false, false, false, false, false, false, true, false, "-c rebase.autosquash=false rebase --no-update-refs \"branch\"")]
+        [TestCase(false, false, false, false, false, false, true, true, "-c rebase.autosquash=false rebase --update-refs \"branch\"")]
         public void RebaseCmd(bool interactive, bool preserveMerges, bool autosquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, bool supportRebaseMerges, bool? updateRefs, string expected)
         {
             Commands.RebaseOptions rebaseOptions = new()
@@ -528,8 +528,8 @@ namespace GitCommandsTests_Git
             Assert.AreEqual(expected, Commands.Rebase(rebaseOptions).Arguments);
         }
 
-        [TestCase(false, false, false, false, false, false, null, "from", "onto", "-c rebase.autoSquash=false rebase --onto onto \"from\" \"branch\"")]
-        [TestCase(false, false, false, false, true, false, null, "from", "onto", "-c rebase.autoSquash=false rebase --ignore-date --onto onto \"from\" \"branch\"")]
+        [TestCase(false, false, false, false, false, false, null, "from", "onto", "-c rebase.autosquash=false rebase --onto onto \"from\" \"branch\"")]
+        [TestCase(false, false, false, false, true, false, null, "from", "onto", "-c rebase.autosquash=false rebase --ignore-date --onto onto \"from\" \"branch\"")]
         public void RebaseCmd_specific_range(bool interactive, bool preserveMerges, bool autoSquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, bool? updateRefs, string from, string onto, string expected)
         {
             Commands.RebaseOptions rebaseOptions = new()

@@ -1606,7 +1606,7 @@ namespace GitCommands
             return new ArgumentBuilder
             {
                 { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("fetch.parallel")), "-c fetch.parallel=0" },
-                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchJobs")), "-c submodule.fetchJobs=0" },
+                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchjobs")), "-c submodule.fetchjobs=0" },
             };
         }
 

@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs
     {
         public static readonly string RefreshWorkingCopyCommandName = "read-tree -m -u HEAD";
 
-        public static readonly string SettingCoreSparseCheckout = "core.sparseCheckout";
+        public static readonly string SettingCoreSparseCheckout = "core.sparsecheckout";
 
         private readonly IGitUICommands _gitCommands;
 

@@ -535,7 +535,7 @@ namespace GitCommandsTests.Config
 ";
             ConfigFile cfg = new("");
             cfg.LoadFromString(configFileContent);
-            string actual = cfg.GetValue("status.showUntrackedFiles", string.Empty);
+            string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
             string expected = "no";
             Assert.AreEqual(expected, actual);
         }
@@ -551,7 +551,7 @@ namespace GitCommandsTests.Config
 ";
             ConfigFile cfg = new("");
             cfg.LoadFromString(configFileContent);
-            string actual = cfg.GetValue("status.showUntrackedFiles", string.Empty);
+            string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
             string expected = "no";
             Assert.AreEqual(expected, actual);
         }
@@ -568,7 +568,7 @@ namespace GitCommandsTests.Config
 ";
             ConfigFile cfg = new("");
             cfg.LoadFromString(configFileContent);
-            string actual = cfg.GetValue("status.showUntrackedFiles", string.Empty);
+            string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
             string expected = "no";
             Assert.AreEqual(expected, actual);
         }
@@ -585,7 +585,7 @@ namespace GitCommandsTests.Config
 ";
             ConfigFile cfg = new("");
             cfg.LoadFromString(configFileContent);
-            IEnumerable<string> actual = cfg.GetValues("status.showUntrackedFiles");
+            IEnumerable<string> actual = cfg.GetValues("status.showuntrackedfiles");
             IEnumerable<string> expected = new[] { "yes", "no" };
             Assert.True(expected.SequenceEqual(actual));
         }

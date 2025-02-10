@@ -173,7 +173,7 @@ public partial class AnsiEscapeUtilities
             int len = sb.Length - currentHighlight.DocOffset;
             if (len == 1 && sb[^1] == '\r')
             {
-                // Marker without any visible effect, likely diff.colorMovedWS
+                // Marker without any visible effect, likely diff.colormovedws
                 currentHighlight.Length = -1;
                 ++currentHighlight.DocOffset;
                 return;

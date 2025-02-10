@@ -19,9 +19,9 @@ namespace GitUI.Editor
 
             // By default, comments start with '#'.
             //
-            // This can be overridden via the "core.commentChar" configuration setting.
+            // This can be overridden via the "core.commentchar" configuration setting.
             //
-            // However, if "core.commentChar" is "auto", then git attempts to choose a
+            // However, if "core.commentchar" is "auto", then git attempts to choose a
             // character from "#;@!$%^&|:" which is not present in the message.
             // In such cases it does not appear that the character is provided to the
             // editor. The only way to determine the character is to inspect the message,
@@ -33,7 +33,7 @@ namespace GitUI.Editor
             // That would work well in practice.
 
             const string defaultValue = "#";
-            string commentCharSetting = module.GetEffectiveSetting("core.commentChar", defaultValue);
+            string commentCharSetting = module.GetEffectiveSetting("core.commentchar", defaultValue);
             _commentChar = commentCharSetting.Length == 1 ? commentCharSetting[0] : defaultValue[0];
         }
 

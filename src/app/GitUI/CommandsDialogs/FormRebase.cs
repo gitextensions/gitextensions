@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs
 
             // Honor the rebase.autosquash configuration.
             chkAutosquash.Checked = Module.GetEffectiveSetting<bool>("rebase.autosquash") is true;
-            if (Module.GitVersion.SupportUpdateRefs && Module.GetEffectiveSetting<bool>("rebase.updateRefs") is true)
+            if (Module.GitVersion.SupportUpdateRefs && Module.GetEffectiveSetting<bool>("rebase.updaterefs") is true)
             {
                 checkBoxUpdateRefs.Checked = true;
             }
@@ -329,7 +329,7 @@ namespace GitUI.CommandsDialogs
                 Skipped.Clear();
 
                 bool? updateRefChoice = null;
-                if (Module.GitVersion.SupportUpdateRefs && Module.GetEffectiveSetting<bool>("rebase.updateRefs") != checkBoxUpdateRefs.Checked)
+                if (Module.GitVersion.SupportUpdateRefs && Module.GetEffectiveSetting<bool>("rebase.updaterefs") != checkBoxUpdateRefs.Checked)
                 {
                     updateRefChoice = checkBoxUpdateRefs.Checked;
                 }

@@ -229,7 +229,7 @@ namespace GitCommandsTests
         public async Task WriteCommitMessageToFileAsync_no_bom(string encodingName)
         {
             GitModule module = _referenceRepository.Module;
-            ((ConfigFileSettings)module.EffectiveConfigFile).SetString("i18n.commitEncoding", encodingName);
+            ((ConfigFileSettings)module.EffectiveConfigFile).SetString("i18n.commitencoding", encodingName);
             module.CommitEncoding.Preamble.Length.Should().Be(0);
             CommitMessageManager manager = new(_owner, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding);
 
