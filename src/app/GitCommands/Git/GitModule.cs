@@ -2115,8 +2115,7 @@ namespace GitCommands
             return LocalConfigFile.GetValues(setting);
         }
 
-        public string GetSetting(string setting) => LocalConfigFile.GetValue(setting) ?? "";
-        public T? GetSetting<T>(string setting) where T : struct => LocalConfigFile.GetValue<T>(setting);
+        public string GetSetting(string setting) => GetEffectiveSetting(setting);
 
         public string GetEffectiveSetting(string setting, string defaultValue = "") => EffectiveConfigFile.GetValue(setting) ?? defaultValue;
         public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveConfigFile.GetValue<T>(setting);
@@ -2145,12 +2144,12 @@ namespace GitCommands
 
         public void UnsetSetting(string setting)
         {
-            SetSetting(setting, null);
+            SetGitSetting(GitSettingLevel.Local, setting, value: null);
         }
 
-        public void SetSetting(string setting, string? value)
+        public void SetSetting(string setting, string value)
         {
-            LocalConfigFile.SetValue(setting, value);
+            SetGitSetting(GitSettingLevel.Local, setting, value);
         }
 
         internal GitArgumentBuilder GetStashesCmd(bool noLocks)
@@ -4128,6 +4127,13 @@ namespace GitCommands
                     ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""
                     : "";
             }
+        }
+
+        private void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value)
+        {
+            Commands.SetGitSetting(GitExecutable, settingLevel, setting, value);
+
+            EffectiveConfigFile.Invalidate();
         }
 
         internal TestAccessor GetTestAccessor() => new(this);

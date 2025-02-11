@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using CommonTestUtils;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using ResourceManager;
 
@@ -63,8 +64,8 @@ namespace GitCommandsTests.Git_Commands
         [Test]
         public void TestFetchArguments()
         {
-            // TODO produce a valid working directory
-            IGitModule module = new GitModule(Path.GetTempPath());
+            using ReferenceRepository referenceRepository = new(createCommit: false);
+            IGitModule module = referenceRepository.Module;
             module.UnsetSetting("fetch.parallel");
             module.UnsetSetting("submodule.fetchjobs");
             {
