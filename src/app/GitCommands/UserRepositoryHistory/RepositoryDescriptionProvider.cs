@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.Text.RegularExpressions;
 using GitCommands.Git;
 
@@ -12,7 +14,7 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="repositoryDir">Path to repository.</param>
         /// <returns>Short name for repository.</returns>
-        string Get(string repositoryDir);
+        string Get(string repositoryDir, Func<string, bool>? isValidGitWorkingDir = default);
     }
 
     /// <summary>
@@ -24,10 +26,10 @@ namespace GitCommands.UserRepositoryHistory
     /// </remarks>
     public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvider
     {
-        private const string RepositoryDescriptionFileName = "description";
-        private const string DefaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
+        private const string _repositoryDescriptionFileName = "description";
+        private const string _defaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
 
-        private readonly Regex _uninformativeNameRegex = new($"^{AppSettings.UninformativeRepoNameRegex.Value}$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
+        private readonly Regex _uninformativeNameRegex = new($"^({AppSettings.UninformativeRepoNameRegex.Value})$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
         private readonly IGitDirectoryResolver _gitDirectoryResolver;
 
@@ -43,26 +45,50 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="repositoryDir">Path to repository.</param>
         /// <returns>Short name for repository.</returns>
-        public string Get(string repositoryDir)
+        public string Get(string repositoryDir, Func<string, bool>? isValidGitWorkingDir)
         {
-            DirectoryInfo dirInfo = new(repositoryDir);
-            if (!dirInfo.Exists)
+            isValidGitWorkingDir ??= GitModule.IsValidGitWorkingDir;
+            DirectoryInfo repositoryDirInfo = new(repositoryDir);
+            return GetRootProjectDirInfo(repositoryDirInfo) is DirectoryInfo rootProjectDirInfo
+                ? $"{GetShortName(repositoryDirInfo)} < {GetShortName(rootProjectDirInfo)}"
+                : GetShortName(repositoryDirInfo);
+
+            DirectoryInfo? GetRootProjectDirInfo(DirectoryInfo repositoryDirInfo)
             {
+                DirectoryInfo? rootSubmoduleDirInfo = null;
+                DirectoryInfo? rootProjectDirInfo = null;
+                for (DirectoryInfo? superProjectDirInfo = repositoryDirInfo.Parent; superProjectDirInfo?.Exists is true; superProjectDirInfo = superProjectDirInfo.Parent)
+                {
+                    if (isValidGitWorkingDir(superProjectDirInfo.FullName))
+                    {
+                        rootSubmoduleDirInfo = rootProjectDirInfo;
+                        rootProjectDirInfo = superProjectDirInfo;
+                    }
+                }
+
+                return rootSubmoduleDirInfo ?? rootProjectDirInfo;
+            }
+
+            string GetShortName(DirectoryInfo dirInfo)
+            {
+                if (!dirInfo.Exists)
+                {
+                    return dirInfo.Name;
+                }
+
+                string? desc = ReadRepositoryDescription(dirInfo.FullName);
+                if (!string.IsNullOrWhiteSpace(desc))
+                {
+                    return desc;
+                }
+
+                while (dirInfo.Parent is not null && _uninformativeNameRegex.IsMatch(dirInfo.Name))
+                {
+                    dirInfo = dirInfo.Parent;
+                }
+
                 return dirInfo.Name;
             }
-
-            string? desc = ReadRepositoryDescription(repositoryDir);
-            if (!string.IsNullOrWhiteSpace(desc))
-            {
-                return desc;
-            }
-
-            while (dirInfo.Parent is not null && _uninformativeNameRegex.IsMatch(dirInfo.Name))
-            {
-                dirInfo = dirInfo.Parent;
-            }
-
-            return dirInfo.Name;
         }
 
         /// <summary>
@@ -73,7 +99,7 @@ namespace GitCommands.UserRepositoryHistory
         private string? ReadRepositoryDescription(string workingDir)
         {
             string gitDir = _gitDirectoryResolver.Resolve(workingDir);
-            string descriptionFilePath = Path.Combine(gitDir, RepositoryDescriptionFileName);
+            string descriptionFilePath = Path.Combine(gitDir, _repositoryDescriptionFileName);
 
             if (!File.Exists(descriptionFilePath))
             {
@@ -82,8 +108,8 @@ namespace GitCommands.UserRepositoryHistory
 
             try
             {
-                string repositoryDescription = File.ReadLines(descriptionFilePath).FirstOrDefault();
-                return string.Equals(repositoryDescription, DefaultDescription, StringComparison.CurrentCulture)
+                string? repositoryDescription = File.ReadLines(descriptionFilePath).FirstOrDefault();
+                return string.Equals(repositoryDescription, _defaultDescription, StringComparison.CurrentCulture)
                     ? null
                     : repositoryDescription;
             }
