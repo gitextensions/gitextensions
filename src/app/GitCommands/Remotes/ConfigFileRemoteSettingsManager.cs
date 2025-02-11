@@ -96,7 +96,6 @@ namespace GitCommands.Remotes
         public void ConfigureRemotes(string remoteName)
         {
             IGitModule module = GetModule();
-            IConfigFileSettings localConfig = module.LocalConfigFile;
             IReadOnlyList<IGitRef> moduleRefs = module.GetRefs(RefsFilter.Heads);
 
             foreach (IGitRef remoteHead in moduleRefs)
@@ -110,7 +109,7 @@ namespace GitCommands.Remotes
                 foreach (IGitRef localHead in moduleRefs)
                 {
                     if (localHead.IsRemote ||
-                        !string.IsNullOrEmpty(localHead.GetTrackingRemote(localConfig)) ||
+                        !string.IsNullOrEmpty(localHead.TrackingRemote) ||
                         !remoteHead.Name.Contains(localHead.Name, StringComparison.InvariantCultureIgnoreCase))
                     {
                         continue;
