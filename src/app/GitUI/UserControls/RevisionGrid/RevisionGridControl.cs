@@ -9,7 +9,6 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
-using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
@@ -1135,9 +1134,8 @@ namespace GitUI
 
                 selectedRef.IsSelected = true;
 
-                IConfigFileSettings localConfigFile = module.LocalConfigFile;
-                string selectedRemote = selectedRef.GetTrackingRemote(localConfigFile);
-                string selectedMerge = selectedRef.GetMergeWith(localConfigFile);
+                string selectedRemote = selectedRef.TrackingRemote;
+                string selectedMerge = selectedRef.MergeWith;
                 IGitRef selectedHeadMergeSource = gitRefs.FirstOrDefault(
                     gitRef => gitRef.IsRemote
                          && selectedRemote == gitRef.Remote

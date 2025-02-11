@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Git;
-using GitExtensions.Extensibility.Settings;
 
 namespace GitCommands
 {
@@ -131,7 +130,7 @@ namespace GitCommands
         [AllowNull]
         public string TrackingRemote
         {
-            get => GetTrackingRemote(Module.LocalConfigFile);
+            get => Module.GetEffectiveSetting(_remoteSettingName);
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -151,16 +150,10 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public string GetTrackingRemote(ISettingsValueGetter configFile)
-        {
-            return configFile.GetValue(_remoteSettingName) ?? "";
-        }
-
-        /// <inheritdoc />
         [AllowNull]
         public string MergeWith
         {
-            get => GetMergeWith(Module.LocalConfigFile);
+            get => Module.GetEffectiveSetting(_mergeSettingName).RemovePrefix(GitRefName.RefsHeadsPrefix);
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -172,12 +165,6 @@ namespace GitCommands
                     Module.SetSetting(_mergeSettingName, GitRefName.GetFullBranchName(value));
                 }
             }
-        }
-
-        /// <inheritdoc />
-        public string GetMergeWith(ISettingsValueGetter configFile)
-        {
-            return (configFile.GetValue(_mergeSettingName) ?? "").RemovePrefix(GitRefName.RefsHeadsPrefix);
         }
 
         public static GitRef NoHead(IGitModule module)
