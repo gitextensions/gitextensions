@@ -33,7 +33,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
             serviceContainer.AddService<ILinkFactory>(_mockLinkFactory);
 
             AppSettings.ShowGitNotes = false;
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
             _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
 
             // mock git executable
@@ -45,9 +45,12 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 .SetValue(_commands.Module, cmdRunner);
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
+            _gitExecutable.Verify();
+            _gitExecutable = null;
+            _commands = null;
             _referenceRepository.Dispose();
         }
 

@@ -172,6 +172,9 @@ namespace CommonTestUtils
             repository.Branches.Update(masterBranch,
                 b => b.Remote = remote.Name,
                 b => b.UpstreamBranch = masterBranch.CanonicalName);
+
+            Module.InvalidateGitSettings();
+            Module.GetEffectiveSetting("reload now");
         }
 
         public void Fetch(string remoteName)
@@ -197,6 +200,9 @@ namespace CommonTestUtils
 
                 repository.Config.Set(SettingKeyString.UserName, "author");
                 repository.Config.Set(SettingKeyString.UserEmail, "author@mail.com");
+
+                Module.InvalidateGitSettings();
+                Module.GetEffectiveSetting("reload now");
             }
 
             CommitMessageManager commitMessageManager = new(DummyOwner, Module.WorkingDirGitDir, Module.CommitEncoding);

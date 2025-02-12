@@ -40,6 +40,9 @@ namespace GitCommandsTests
         [Test]
         public void ParseGitBlame()
         {
+            using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
+            GitVersion.ResetVersion();
+
             string path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/README.blame");
             GitBlame result = _gitModule.ParseGitBlame(File.ReadAllText(path), Encoding.UTF8);
 
@@ -83,6 +86,9 @@ namespace GitCommandsTests
         [Test]
         public void FetchCmd()
         {
+            using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
+            GitVersion.ResetVersion();
+
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
@@ -808,6 +814,8 @@ namespace GitCommandsTests
             module ??= new GitModule(path);
 
             typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(module, executable);
+            typeof(GitModule).GetField("_gitWindowsExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(module, executable);
             GitCommandRunner cmdRunner = new(executable, () => GitModule.SystemEncoding);
             typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
