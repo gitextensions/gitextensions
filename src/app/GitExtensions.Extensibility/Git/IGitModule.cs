@@ -113,6 +113,11 @@ public interface IGitModule
     /// <param name="relativePath">A path relative to the .git directory</param>
     string ResolveGitInternalPath(string relativePath);
 
+    /// <summary>
+    ///  Invalidates the cached git config settings in order to trigger a reload on next access or in the background.
+    /// </summary>
+    void InvalidateGitSettings();
+
     /// <summary>Indicates whether the specified directory contains a git repository.</summary>
     bool IsValidGitWorkingDir();
 
@@ -188,23 +193,6 @@ public interface IGitModule
     ///  The value of the git setting <paramref name="setting" /> cannot be converted in the specified type <typeparamref name="T" />.
     /// </exception>
     T? GetEffectiveSetting<T>(string setting) where T : struct;
-
-    /// <summary>
-    /// Get the config setting from git according to the scope.
-    /// </summary>
-    /// <param name="setting">The setting key.</param>
-    /// <param name="scopeArg">The scope for the config like "--global" according to https://git-scm.com/docs/git-config#_description. An empty string is the effective settings.</param>
-    /// <param name="cache"><see langword="true"/> if the result shall be cached.</param>
-    /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
-    string? GetGitSetting(string setting, string scopeArg, bool cache = false);
-
-    /// <summary>
-    /// Get the effective config setting from git.
-    /// </summary>
-    /// <param name="setting">The setting key.</param>
-    /// <param name="cache"><see langword="true"/> if the result shall be cached.</param>
-    /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
-    string? GetEffectiveGitSetting(string setting, bool cache = false);
 
     /// <summary>
     /// Gets the name of the currently checked out branch.

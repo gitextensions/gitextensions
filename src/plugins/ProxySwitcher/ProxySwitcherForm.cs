@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
@@ -62,8 +63,8 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         private void RefreshProxy()
         {
-            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetEffectiveGitSetting("http.proxy") ?? "");
-            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetGitSetting("http.proxy", "--global") ?? "");
+            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetEffectiveSetting("http.proxy"));
+            GlobalHttpProxy_TextBox.Text = HidePassword(new GitConfigSettings(_gitCommands.GitExecutable, GitSettingLevel.Global).GetValue("http.proxy") ?? "");
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 

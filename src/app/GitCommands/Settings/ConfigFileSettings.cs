@@ -16,13 +16,6 @@ namespace GitCommands.Settings
             SettingLevel = settingLevel;
         }
 
-        public static ConfigFileSettings CreateEffective(IGitModule module)
-        {
-            return CreateLocal(module,
-                CreateGlobal(CreateSystemWide()),
-                SettingLevel.Effective);
-        }
-
         public static ConfigFileSettings CreateLocal(IGitModule module, bool useSharedCache = true)
         {
             return CreateLocal(module, lowerPriority: null, SettingLevel.Local, useSharedCache);
@@ -51,25 +44,6 @@ namespace GitCommands.Settings
             return new ConfigFileSettings(lowerPriority,
                 ConfigFileSettingsCache.Create(configPath, useSharedCache),
                 SettingLevel.Global);
-        }
-
-        public static ConfigFileSettings? CreateSystemWide(bool useSharedCache = true)
-        {
-            // Git 2.xx
-            string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Git", "config");
-            if (!File.Exists(configPath))
-            {
-                // Git 1.xx
-                configPath = Path.Combine(AppSettings.GitCommand, "..", "..", "etc", "gitconfig");
-                if (!File.Exists(configPath))
-                {
-                    return null;
-                }
-            }
-
-            return new ConfigFileSettings(lowerPriority: null,
-                ConfigFileSettingsCache.Create(configPath, useSharedCache),
-                SettingLevel.SystemWide);
         }
 
         /// <summary>

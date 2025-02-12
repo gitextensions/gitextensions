@@ -1441,6 +1441,8 @@ namespace GitUI.CommandsDialogs
 
         private void HandleSettingsChanged(string oldTranslation, CommitInfoPosition oldCommitInfoPosition)
         {
+            Module?.InvalidateGitSettings();
+
             if (oldTranslation != AppSettings.Translation)
             {
                 Translator.Translate(this, AppSettings.CurrentTranslation);

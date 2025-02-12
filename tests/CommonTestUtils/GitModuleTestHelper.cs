@@ -158,7 +158,7 @@ namespace CommonTestUtils
             subModuleHelper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial empty commit""");
 
             // Ensure config is set to allow file submodules
-            string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol)?.Trim('\n');
+            string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol);
             ClassicAssert.That(fileEnabled == "always");
 
             // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
