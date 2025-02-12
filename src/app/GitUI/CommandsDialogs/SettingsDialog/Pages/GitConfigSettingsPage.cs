@@ -1,15 +1,18 @@
-﻿using System.Text;
+﻿#nullable enable
+
+using System.Text;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitConfigSettingsPage : ConfigFileSettingsPage
+    public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
     {
         private readonly TranslationString _selectFile = new("Select file");
         private readonly GitConfigSettingsPageController _controller;
@@ -66,6 +69,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             txtMergeToolPath.Enabled = canFindGitCmd;
             txtMergeToolCommand.Enabled = canFindGitCmd;
             InvalidGitPathGlobal.Visible = !canFindGitCmd;
+
+            if (ReadOnly)
+            {
+                // Unselect has no effect in SettingsToPage because ComboBox asynchronously lives its own life
+                GlobalEditor.Select(start: GlobalEditor.Text.Length, length: 0);
+            }
         }
 
         protected override void SettingsToPage()
@@ -73,10 +82,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
             Validates.NotNull(CurrentSettings);
 
-            string mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
-            string diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            string? mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            string? diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
 
-            Global_FilesEncoding.Text = CurrentSettings.FilesEncoding?.EncodingName ?? "";
+            Global_FilesEncoding.SelectedItem = new GitEncodingSettingsGetter(CurrentSettings).FilesEncoding;
 
             GlobalUserName.Text = CurrentSettings.GetValue(SettingKeyString.UserName);
             GlobalUserEmail.Text = CurrentSettings.GetValue(SettingKeyString.UserEmail);
@@ -91,8 +100,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             txtDiffToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(diffTool, DiffMergeToolType.Diff);
             txtDiffToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
 
-            AutoCRLFType? autocrlf = CurrentSettings.ByPath("core")
-                .GetNullableEnum<AutoCRLFType>("autocrlf");
+            AutoCRLFType? autocrlf = ((ISettingsValueGetter)CurrentSettings).GetValue<AutoCRLFType>("core.autocrlf");
 
             globalAutoCrlfFalse.Checked = autocrlf is AutoCRLFType.@false;
             globalAutoCrlfInput.Checked = autocrlf is AutoCRLFType.input;
@@ -110,7 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             Validates.NotNull(CurrentSettings);
 
-            CurrentSettings.FilesEncoding = (Encoding)Global_FilesEncoding.SelectedItem;
+            new GitEncodingSettingsSetter(CurrentSettings).FilesEncoding = (Encoding?)Global_FilesEncoding.SelectedItem;
 
             base.PageToSettings();
 
@@ -122,7 +130,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
             CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
             CurrentSettings.SetValue("commit.template", txtCommitTemplatePath.Text);
-            CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
+            ((IConfigValueStore)CurrentSettings).SetPathValue("core.editor", GlobalEditor.Text);
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
@@ -148,27 +156,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 _diffMergeToolConfigurationManager.UnsetCurrentTool(DiffMergeToolType.Merge);
             }
 
-            SettingsSource coreSectionSettingsSource = CurrentSettings.ByPath("core");
-
-            if (globalAutoCrlfFalse.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.@false);
-            }
-
-            if (globalAutoCrlfInput.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.input);
-            }
-
-            if (globalAutoCrlfTrue.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.@true);
-            }
-
-            if (globalAutoCrlfNotSet.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", null);
-            }
+            AutoCRLFType? autoCRLFType =
+                globalAutoCrlfFalse.Checked ? AutoCRLFType.@false
+                : globalAutoCrlfInput.Checked ? AutoCRLFType.input
+                : globalAutoCrlfTrue.Checked ? AutoCRLFType.@true
+                : null;
+            CurrentSettings.SetValue("core.autocrlf", autoCRLFType?.ToString());
         }
 
         private string BrowseDiffMergeTool(string toolName, string path, DiffMergeToolType toolType)

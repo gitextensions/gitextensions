@@ -87,7 +87,7 @@ namespace GitUI
 
             string[] doneCommits = ReadCommitsDataFromRebaseFile(doneFilePath);
             string[] todoCommits = ReadCommitsDataFromRebaseFile(rebaseTodoFilePath);
-            string commentChar = Module.EffectiveConfigFile.GetString("core.commentChar", "#");
+            string commentChar = Module.GetEffectiveSetting("core.commentchar", defaultValue: "#");
 
             // Filter comment lines and keep only lines containing at least 3 columns
             // (action, commit hash and commit subject -- that could contain spaces and be cut in more --)

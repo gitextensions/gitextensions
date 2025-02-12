@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
@@ -277,23 +276,25 @@ namespace GitCommands
             }
         }
 
-        private ConfigFileSettings? _effectiveConfigFile;
+        private GitEncodingSettingsGetter? _gitEncodingSettings;
 
-        public IConfigFileSettings EffectiveConfigFile
+        private GitEncodingSettingsGetter GitEncodingSettingsGetter
         {
             get
             {
-                if (_effectiveConfigFile is null)
+                if (_gitEncodingSettings is null)
                 {
                     lock (_lock)
                     {
-                        _effectiveConfigFile ??= ConfigFileSettings.CreateEffective(module: this);
+                        _gitEncodingSettings ??= new GitEncodingSettingsGetter(ConfigFileSettings.CreateEffective(module: this));
                     }
                 }
 
-                return _effectiveConfigFile;
+                return _gitEncodingSettings;
             }
         }
+
+        public IConfigFileSettings EffectiveConfigFile => (IConfigFileSettings)GitEncodingSettingsGetter.SettingsValueGetter;
 
         public IConfigFileSettings LocalConfigFile
             => new ConfigFileSettings(lowerPriority: null, ((ConfigFileSettings)EffectiveConfigFile).SettingsCache, SettingLevel.Local);
@@ -316,11 +317,15 @@ namespace GitCommands
         // 4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
 
-        public Encoding FilesEncoding => ((ConfigFileSettings)EffectiveConfigFile).FilesEncoding ?? new UTF8Encoding(false);
+        private Encoding? _defaultEncoding;
 
-        public Encoding CommitEncoding => ((ConfigFileSettings)EffectiveConfigFile).CommitEncoding ?? new UTF8Encoding(false);
+        private Encoding DefaultEncoding => _defaultEncoding ??= new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
-        public Encoding LogOutputEncoding => ((ConfigFileSettings)EffectiveConfigFile).LogOutputEncoding ?? CommitEncoding;
+        public Encoding FilesEncoding => GitEncodingSettingsGetter.FilesEncoding ?? DefaultEncoding;
+
+        public Encoding CommitEncoding => GitEncodingSettingsGetter.CommitEncoding ?? DefaultEncoding;
+
+        public Encoding LogOutputEncoding => GitEncodingSettingsGetter.LogOutputEncoding ?? CommitEncoding;
 
         /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool IsValidGitWorkingDir()
@@ -651,7 +656,7 @@ namespace GitCommands
             }
 
             byte[] blobData = blobStream.ToArray();
-            if (((ConfigFileSettings)EffectiveConfigFile).ByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf") is AutoCRLFType.@true)
+            if (GetEffectiveSetting<AutoCRLFType>("core.autocrlf") is AutoCRLFType.@true)
             {
                 if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                 {
@@ -1599,7 +1604,7 @@ namespace GitCommands
             return new ArgumentBuilder
             {
                 { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("fetch.parallel")), "-c fetch.parallel=0" },
-                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchJobs")), "-c submodule.fetchJobs=0" },
+                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchjobs")), "-c submodule.fetchjobs=0" },
             };
         }
 
@@ -2085,20 +2090,15 @@ namespace GitCommands
             return ((ConfigFileSettings)LocalConfigFile).GetValues(setting);
         }
 
-        public string GetSetting(string setting) => LocalConfigFile.GetValue(setting);
+        public string GetSetting(string setting) => LocalConfigFile.GetValue(setting) ?? "";
         public T? GetSetting<T>(string setting) where T : struct => LocalConfigFile.GetValue<T>(setting);
 
-        public string GetEffectiveSetting(string setting) => EffectiveConfigFile.GetValue(setting);
+        public string GetEffectiveSetting(string setting, string defaultValue = "") => EffectiveConfigFile.GetValue(setting) ?? defaultValue;
         public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveConfigFile.GetValue<T>(setting);
-
-        public SettingsSource GetEffectiveSettingsByPath(string path)
-        {
-            return ((ConfigFileSettings)EffectiveConfigFile).ByPath(path);
-        }
 
         public string? GetGitSetting(string setting, string scopeArg, bool cache = false)
         {
-            GitArgumentBuilder args = new("config") { "--includes", scopeArg, "--get", setting };
+            GitArgumentBuilder args = new("config") { "get", scopeArg, "--includes", setting };
             ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
 
             // Handle no value set, is error code 1: https://git-scm.com/docs/git-config#_description
@@ -2113,6 +2113,38 @@ namespace GitCommands
             return result.StandardOutput.Trim();
         }
 
+        public string GetGitSettings(GitSettingLevel settingLevel)
+        {
+            GitArgumentBuilder args = new("config")
+            {
+                "list",
+                settingLevel switch
+                {
+                    GitSettingLevel.Effective => "",
+                    GitSettingLevel.Local => "--local",
+                    GitSettingLevel.Global => "--global",
+                    GitSettingLevel.SystemWide => "--system",
+                    _ => throw new ArgumentOutOfRangeException(nameof(settingLevel))
+                },
+                "--includes",
+                "--null"
+            };
+            ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+
+            if (result.ExitedSuccessfully)
+            {
+                return result.StandardOutput;
+            }
+
+            if (result.StandardError.StartsWith("fatal: unable to read config file") && result.StandardError.EndsWith(": No such file or directory"))
+            {
+                return "";
+            }
+
+            result.ThrowIfErrorExit("Error getting config values");
+            return "unreachable code";
+        }
+
         public string? GetEffectiveGitSetting(string setting, bool cache = false)
         {
             return GetGitSetting(setting, scopeArg: "", cache);
@@ -2121,6 +2153,30 @@ namespace GitCommands
         public void UnsetSetting(string setting)
         {
             SetSetting(setting, null);
+        }
+
+        public void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value)
+        {
+            bool isSet = !string.IsNullOrEmpty(value);
+            GitArgumentBuilder args = new("config")
+            {
+                isSet ? "set" : "unset",
+                settingLevel switch
+                {
+                    GitSettingLevel.Local => "--local",
+                    GitSettingLevel.Global => "--global",
+                    GitSettingLevel.SystemWide => "--system",
+                    GitSettingLevel.Effective or _ => throw new ArgumentOutOfRangeException(nameof(settingLevel))
+                },
+                setting,
+                { isSet, value.Quote() }
+            };
+            ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+            const int exitCodeOnUnsetNotExistingSetting = 5;
+            if (isSet || result.ExitCode != exitCodeOnUnsetNotExistingSetting)
+            {
+                result.ThrowIfErrorExit();
+            }
         }
 
         public void SetSetting(string setting, string? value)

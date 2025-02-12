@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿#nullable enable
+
+using System.Diagnostics;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
@@ -72,38 +72,6 @@ namespace GitCommands.Settings
                 SettingLevel.SystemWide);
         }
 
-        public new string GetValue(string setting) => GetString(setting, string.Empty);
-
-        /// <summary>
-        ///  Gets the config setting from git converted in an expected C# value type (bool, int, etc.).
-        /// </summary>
-        /// <typeparam name="T">The expected type of the git setting.</typeparam>
-        /// <param name="setting">The git setting key.</param>
-        /// <returns>The value converted to the <typeparamref name="T" /> type; <see langword="null"/> if the settings is not set.</returns>
-        /// <exception cref="GitExtensions.Extensibility.Settings.GitConfigFormatException">
-        ///  The value of the git setting <paramref name="setting" /> cannot be converted in the specified type <typeparamref name="T" />.
-        /// </exception>
-        public T? GetValue<T>(string setting) where T : struct => ConvertValue<T>(GetValue(setting), setting);
-
-        private T? ConvertValue<T>(string value, string setting) where T : struct
-        {
-            // Handle case where setting is not set
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return null;
-            }
-
-            Type targetType = typeof(T);
-            try
-            {
-                return (T)Convert.ChangeType(value, targetType);
-            }
-            catch (Exception)
-            {
-                throw new GitConfigFormatException($"Git setting '{setting}': failed to convert value '{value}' into type '{targetType}'");
-            }
-        }
-
         /// <summary>
         /// Gets all configured values for a git setting that accepts multiple values for the same key.
         /// </summary>
@@ -120,17 +88,6 @@ namespace GitCommands.Settings
             }
 
             SetString(setting, value);
-        }
-
-        public void SetPathValue(string setting, string? value)
-        {
-            // for using unc paths -> these need to be backward slashes
-            if (!string.IsNullOrWhiteSpace(value) && !value.StartsWith("\\\\"))
-            {
-                value = value.ToPosixPath();
-            }
-
-            SetValue(setting, value);
         }
 
         public IReadOnlyList<IConfigSection> GetConfigSections()
@@ -155,56 +112,6 @@ namespace GitCommands.Settings
         public void RemoveConfigSection(string configSectionName, bool performSave = false)
         {
             SettingsCache.RemoveConfigSection(configSectionName, performSave);
-        }
-
-        [MaybeNull]
-        public Encoding FilesEncoding
-        {
-            get => GetEncoding("i18n.filesEncoding");
-            set => SetEncoding("i18n.filesEncoding", value);
-        }
-
-        public Encoding? CommitEncoding => GetEncoding("i18n.commitEncoding");
-
-        public Encoding? LogOutputEncoding => GetEncoding("i18n.logoutputencoding");
-
-        private Encoding? GetEncoding(string settingName)
-        {
-            string? encodingName = GetValue(settingName);
-
-            if (string.IsNullOrEmpty(encodingName))
-            {
-                return null;
-            }
-
-            // The keys in AppSettings.AvailableEncodings are lower-case, and the actual
-            // configuration is case-insensitive, and can be configured uppercase on the
-            // command line. If configured as UTF-8, then if we don't use the predefined
-            // encoding, it will use the default, which adds BOM.
-            // Convert it to lowercase, to ensure matching.
-            encodingName = encodingName.ToLowerInvariant();
-
-            if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out Encoding result))
-            {
-                return result;
-            }
-
-            try
-            {
-                return Encoding.GetEncoding(encodingName);
-            }
-            catch (ArgumentException)
-            {
-                Debug.WriteLine(
-                    "Unsupported encoding set in git config file: {0}\n" +
-                    "Please check the setting {1} in config file.", encodingName, settingName);
-                return null;
-            }
-        }
-
-        private void SetEncoding(string settingName, Encoding? encoding)
-        {
-            SetValue(settingName, encoding?.WebName);
         }
     }
 }
