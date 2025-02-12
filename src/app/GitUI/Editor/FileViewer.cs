@@ -311,10 +311,7 @@ namespace GitUI.Editor
                     try
                     {
                         const string difftasticCmd = "difftool.difftastic.cmd";
-                        isEnabled = _difftasticCmdCache[Module.WorkingDir] = new Lazy<bool>(() =>
-                            !string.IsNullOrEmpty(PathUtil.IsWslPath(Module.WorkingDir)
-                                ? Module.GetEffectiveGitSetting(difftasticCmd)
-                                : Module.GetEffectiveSetting(difftasticCmd)));
+                        isEnabled = _difftasticCmdCache[Module.WorkingDir] = new Lazy<bool>(() => !string.IsNullOrEmpty(Module.GetEffectiveSetting(difftasticCmd)));
                     }
                     catch (Exception)
                     {

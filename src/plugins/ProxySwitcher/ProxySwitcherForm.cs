@@ -62,8 +62,8 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         private void RefreshProxy()
         {
-            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetEffectiveGitSetting("http.proxy") ?? "");
-            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetGitSetting("http.proxy", "--global") ?? "");
+            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetEffectiveSetting("http.proxy") ?? "");
+            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GetEffectiveSetting("http.proxy", "--global") ?? "");
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 

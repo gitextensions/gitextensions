@@ -288,7 +288,7 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        _gitEncodingSettings ??= new GitEncodingSettingsGetter(ConfigFileSettings.CreateEffective(module: this));
+                        _gitEncodingSettings ??= new GitEncodingSettingsGetter(new EffectiveGitConfigSettings(GitExecutable));
                     }
                 }
 
@@ -323,6 +323,11 @@ namespace GitCommands
         public Encoding CommitEncoding => GitEncodingSettingsGetter.CommitEncoding ?? _defaultEncoding;
 
         public Encoding LogOutputEncoding => GitEncodingSettingsGetter.LogOutputEncoding ?? CommitEncoding;
+
+        public void InvalidateGitSettings()
+        {
+            EffectiveConfigFile.Invalidate();
+        }
 
         /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool IsValidGitWorkingDir()
@@ -2091,28 +2096,6 @@ namespace GitCommands
 
         public string GetEffectiveSetting(string setting, string defaultValue = "") => EffectiveConfigFile.GetValue(setting) ?? defaultValue;
         public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveConfigFile.GetValue<T>(setting);
-
-        public string? GetGitSetting(string setting, string scopeArg, bool cache = false)
-        {
-            GitArgumentBuilder args = new("config") { "--includes", scopeArg, "--get", setting };
-            ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
-
-            // Handle no value set, is error code 1: https://git-scm.com/docs/git-config#_description
-            const int ConfigKeyInvalidOrNotSet = 1;
-            if (result.ExitCode == ConfigKeyInvalidOrNotSet)
-            {
-                return null;
-            }
-
-            result.ThrowIfErrorExit("Error getting config value");
-
-            return result.StandardOutput.Trim();
-        }
-
-        public string? GetEffectiveGitSetting(string setting, bool cache = false)
-        {
-            return GetGitSetting(setting, scopeArg: "", cache);
-        }
 
         public void UnsetSetting(string setting)
         {
@@ -4106,10 +4089,6 @@ namespace GitCommands
             Commands.SetGitSetting(GitExecutable, settingLevel, setting, value);
 
             EffectiveConfigFile.Invalidate();
-            if (settingLevel == GitSettingLevel.Local)
-            {
-                LocalConfigFile.Invalidate();
-            }
         }
 
         internal TestAccessor GetTestAccessor() => new(this);
