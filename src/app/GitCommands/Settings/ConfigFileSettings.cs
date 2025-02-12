@@ -28,24 +28,6 @@ namespace GitCommands.Settings
                 settingLevel);
         }
 
-        public static ConfigFileSettings CreateGlobal(bool useSharedCache = true)
-        {
-            return CreateGlobal(lowerPriority: null, useSharedCache);
-        }
-
-        public static ConfigFileSettings CreateGlobal(ConfigFileSettings? lowerPriority, bool useSharedCache = true)
-        {
-            string configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".config", "git", "config");
-            if (!File.Exists(configPath))
-            {
-                configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".gitconfig");
-            }
-
-            return new ConfigFileSettings(lowerPriority,
-                ConfigFileSettingsCache.Create(configPath, useSharedCache),
-                SettingLevel.Global);
-        }
-
         /// <summary>
         /// Gets all configured values for a git setting that accepts multiple values for the same key.
         /// </summary>
