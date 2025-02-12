@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
@@ -184,6 +185,8 @@ namespace GitCommands
                 SetString("AutoNormaliseSymbol", value);
             }
         }
+
+        public static string FileEditorCommand => @$"""{AppSettings.GetGitExtensionsFullPath()}"" fileeditor";
 
         public static bool RememberAmendCommitState
         {
@@ -750,9 +753,8 @@ namespace GitCommands
             }
 
             EnvironmentConfiguration.SetEnvironmentVariables();
-            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(useSharedCache: false);
-
-            string? path = configFileGlobalSettings.GetValue("core.editor");
+            IPersistentConfigValueStore globalSettings = new GitConfigSettings(new Executable(AppSettings.GitCommand), GitSettingLevel.Global);
+            string? path = globalSettings.GetValue("core.editor");
             if (path?.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase) is not true)
             {
                 return;
@@ -760,13 +762,10 @@ namespace GitCommands
 
 #if DEBUG
             // avoid setting, this may be in the debugger
-            throw new Exception($"Update the core.editor path {path} in {configFileGlobalSettings}");
+            throw new Exception($"Update the core.editor path {path} in global git settings");
 #else
-
-            // Similar in EditorHelper.FileEditorCommand
-            path = $"\"{AppSettings.GetGitExtensionsFullPath().ToPosixPath()}\" fileeditor";
-            configFileGlobalSettings.SetValue("core.editor", path);
-            configFileGlobalSettings.Save();
+            globalSettings.SetValue("core.editor", FileEditorCommand.ConvertPathToGitSetting());
+            globalSettings.Save();
 #endif
         }
 
