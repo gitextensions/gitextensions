@@ -6,6 +6,6 @@ partial class FileStatusList
 {
     internal interface IStatusSorter
     {
-        TreeNode CreateTreeSortedByPath(IEnumerable<GitItemStatus> statuses, bool flat, Func<GitItemStatus, TreeNode> createNode);
+        TreeNode CreateTreeSortedByPath(IEnumerable<GitItemStatus> statuses, bool flat, bool mergeSingleItemsWithFolder, Func<GitItemStatus, TreeNode> createNode);
     }
 }
