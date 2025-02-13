@@ -21,7 +21,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // Segments are not the same as lanes.A crossing segment is a lane, but multiple segments can connect to the revision.
     // Therefore, a single lane can have multiple segments.
     [DebuggerDisplay("{Revision}")]
-    public class RevisionGraphRow : IRevisionGraphRow
+    public sealed class RevisionGraphRow : IRevisionGraphRow
     {
         private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
