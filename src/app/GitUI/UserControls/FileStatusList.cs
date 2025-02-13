@@ -443,10 +443,11 @@ namespace GitUI
             DeleteFilterButton.Height = _NO_TRANSLATE_FilterComboBox.Height;
 
             // Use variable to prevent bad value retrieved from `Visible` property
-            bool filesToFilter = !showNoFiles || (cboFindInCommitFilesGitGrep.Visible && !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text));
-            _NO_TRANSLATE_FilterComboBox.Visible = filesToFilter;
+            bool showFilesFilter = !showNoFiles || (cboFindInCommitFilesGitGrep.Visible && cboFindInCommitFilesGitGrep.Text.Length > 0);
+            _NO_TRANSLATE_FilterComboBox.Visible = showFilesFilter;
+
             NoFiles.Visible = showNoFiles;
-            if (!filesToFilter)
+            if (showNoFiles)
             {
                 // Workaround for startup issue if set in EnableSearchForList()
                 NoFiles.Top = top;
@@ -458,7 +459,7 @@ namespace GitUI
             SetDeleteSearchButtonVisibility();
             SetFindInCommitFilesGitGrepWatermarkVisibility();
 
-            top = GetFileStatusListTop();
+            top = GetFileStatusListTop(showFilesFilter);
             int height = ClientRectangle.Height - top - FileStatusListView.Margin.Top - FileStatusListView.Margin.Bottom;
             FileStatusListView.SetBounds(0, top, 0, height, BoundsSpecified.Y | BoundsSpecified.Height);
         }
@@ -1045,7 +1046,7 @@ namespace GitUI
         {
             // Show "Files loading" below the filterbox
             NoFiles.Visible = false;
-            int top = GetFileStatusListTop();
+            int top = GetFileStatusListTop(_NO_TRANSLATE_FilterComboBox.Visible);
             LoadingFiles.Top = top;
             LoadingFiles.Visible = true;
             LoadingFiles.BringToFront();
@@ -1056,8 +1057,8 @@ namespace GitUI
             FileStatusListView.EndUpdate();
         }
 
-        private int GetFileStatusListTop()
-            => _NO_TRANSLATE_FilterComboBox.Visible ? _NO_TRANSLATE_FilterComboBox.Bottom + _NO_TRANSLATE_FilterComboBox.Margin.Top + _NO_TRANSLATE_FilterComboBox.Margin.Bottom
+        private int GetFileStatusListTop(bool isFilesFilterVisible)
+            => isFilesFilterVisible ? _NO_TRANSLATE_FilterComboBox.Bottom + _NO_TRANSLATE_FilterComboBox.Margin.Top + _NO_TRANSLATE_FilterComboBox.Margin.Bottom
                 : cboFindInCommitFilesGitGrep.Visible ? cboFindInCommitFilesGitGrep.Bottom + cboFindInCommitFilesGitGrep.Margin.Top + cboFindInCommitFilesGitGrep.Margin.Bottom
                 : lblSplitter.Bottom;
 
@@ -1071,7 +1072,7 @@ namespace GitUI
                     .ToHashSet();
             }
 
-            (List<TreeNodeInfo> nodes, HashSet<TreeNode> toBeSelectedItems, _showDiffGroups) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, gitGrepState, _noItemStatuses, cancellationToken);
+            (List<TreeNodeInfo> nodes, HashSet<TreeNode> toBeSelectedItems, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, gitGrepState, _noItemStatuses, cancellationToken);
 
             GitItemStatusesWithDescription = items;
             if (nodes.Count > 0)
@@ -1079,7 +1080,7 @@ namespace GitUI
                 EnsureSelectedIndexChangeSubscription();
             }
 
-            SetFileStatusListVisibility(showNoFiles: nodes.Count == 0);
+            SetFileStatusListVisibility(showNoFiles: !filesPresent && items.Count <= 1);
 
             try
             {
@@ -1155,7 +1156,7 @@ namespace GitUI
 
         private record struct TreeNodeInfo(TreeNode Node, ExpandCollapseState State);
 
-        private static (List<TreeNodeInfo> Nodes, HashSet<TreeNode> ToBeSelectedItems, bool ShowDiffGroups) GetNodes(
+        private static (List<TreeNodeInfo> Nodes, HashSet<TreeNode> ToBeSelectedItems, bool ShowDiffGroups, bool FilesPresent) GetNodes(
             IReadOnlyList<FileStatusWithDescription> items,
             HashSet<GitItemStatus>? previouslySelectedItems,
             bool groupByRevision,
@@ -1219,7 +1220,7 @@ namespace GitUI
                 }
             }
 
-            return (rootNodes, toBeSelectedItems, showDiffGroups);
+            return (rootNodes, toBeSelectedItems, showDiffGroups, filesPresent);
 
             TreeNode CreateGroup(IEnumerable<GitItemStatus> itemStatuses, FileStatusWithDescription fileStatusWithDescription, CancellationToken cancellationToken)
             {
