@@ -1,8 +1,6 @@
-using System.IO.Abstractions;
 using FluentAssertions;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
-using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.UserRepositoryHistory;
@@ -38,20 +36,49 @@ public class RepositoryDescriptionProviderTests
         Directory.CreateDirectory(leafsubmodule);
 
         repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
-            .Should().Be("test_repo");
+            .Should().Be($"test_repo {DriveInfo}{new DirectoryInfo(_tempDir).Name}");
 
         repositoryDescriptionProvider.Get(submodule, IsValidGitWorkingDir)
             .Should().Be("submodule < test_repo");
 
         repositoryDescriptionProvider.Get(subsubmodule, IsValidGitWorkingDir)
-            .Should().Be("subsubmodule < submodule");
+            .Should().Be("subsubmodule < test_repo");
 
         repositoryDescriptionProvider.Get(leafsubmodule, IsValidGitWorkingDir)
-            .Should().Be("leafsubmodule < submodule");
+            .Should().Be("leafsubmodule < test_repo");
     }
 
     [Test]
-    public void RepositoryDescriptionProvider_should_skip_UninformativeRepoName([Values("app", "repo", "repository")] string uninformative)
+    public void RepositoryDescriptionProvider_should_skip_uninformative_submodule_name([Values("app", "repo", "repository")] string uninformative)
+    {
+        IGitDirectoryResolver gitDirectoryResolver = Substitute.For<IGitDirectoryResolver>();
+        RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
+
+        string rootrepo = nameof(rootrepo);
+        string parent = nameof(parent);
+        string repo = @$"{_tempDir}\{rootrepo}\{parent}\{uninformative}";
+        Directory.CreateDirectory(repo);
+
+        repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
+            .Should().Be($"{parent} < {rootrepo}");
+    }
+
+    [Test]
+    public void RepositoryDescriptionProvider_should_not_skip_uninformative_submodule_name_to_parent_repo([Values("app", "repo", "repository")] string uninformative)
+    {
+        IGitDirectoryResolver gitDirectoryResolver = Substitute.For<IGitDirectoryResolver>();
+        RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
+
+        string parentrepo = nameof(parentrepo);
+        string repo = @$"{_tempDir}\{parentrepo}\{uninformative}";
+        Directory.CreateDirectory(repo);
+
+        repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
+            .Should().Be($"{uninformative} < {parentrepo}");
+    }
+
+    [Test]
+    public void RepositoryDescriptionProvider_should_not_skip_uninformative_root_repo_name([Values("app", "repo", "repository")] string uninformative)
     {
         IGitDirectoryResolver gitDirectoryResolver = Substitute.For<IGitDirectoryResolver>();
         RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
@@ -61,8 +88,10 @@ public class RepositoryDescriptionProviderTests
         Directory.CreateDirectory(repo);
 
         repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
-            .Should().Be(parent);
+            .Should().Be($"{uninformative} {DriveInfo}{parent}");
     }
+
+    private string DriveInfo => _tempDir.Length > 2 && (_tempDir[1] == ':' || _tempDir[..2] == @"\\") ? _tempDir[..2] : "< ";
 
     private static bool IsValidGitWorkingDir(string path)
         => path.EndsWith("submodule") || path.EndsWith("repo");

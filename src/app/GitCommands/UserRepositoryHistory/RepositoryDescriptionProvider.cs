@@ -48,25 +48,41 @@ namespace GitCommands.UserRepositoryHistory
         public string Get(string repositoryDir, Func<string, bool>? isValidGitWorkingDir)
         {
             isValidGitWorkingDir ??= GitModule.IsValidGitWorkingDir;
-            DirectoryInfo repositoryDirInfo = new(repositoryDir);
-            return GetRootProjectDirInfo(repositoryDirInfo) is DirectoryInfo rootProjectDirInfo
-                ? $"{GetShortName(repositoryDirInfo)} < {GetShortName(rootProjectDirInfo)}"
-                : GetShortName(repositoryDirInfo);
 
-            DirectoryInfo? GetRootProjectDirInfo(DirectoryInfo repositoryDirInfo)
+            DirectoryInfo repositoryDirInfo = new(repositoryDir);
+            DirectoryInfo rootRepositoryDirInfo = GetRootRepoDirInfo(repositoryDirInfo);
+            string repositoryDescription = GetShortName(repositoryDirInfo);
+            return repositoryDirInfo != rootRepositoryDirInfo ? $"{repositoryDescription} < {GetShortName(rootRepositoryDirInfo)}"
+                : repositoryDirInfo.Parent is not null ? $"{repositoryDescription} {GetDriveInfo(repositoryDirInfo)}{repositoryDirInfo.Parent.Name}"
+                : repositoryDescription;
+
+            static string GetDriveInfo(DirectoryInfo repositoryDirInfo)
             {
-                DirectoryInfo? rootSubmoduleDirInfo = null;
-                DirectoryInfo? rootProjectDirInfo = null;
-                for (DirectoryInfo? superProjectDirInfo = repositoryDirInfo.Parent; superProjectDirInfo?.Exists is true; superProjectDirInfo = superProjectDirInfo.Parent)
+                string path = repositoryDirInfo.FullName;
+                if (path.Length > 2)
                 {
-                    if (isValidGitWorkingDir(superProjectDirInfo.FullName))
+                    string drive = path[..2];
+                    if (drive[1] == ':' || drive == @"\\")
                     {
-                        rootSubmoduleDirInfo = rootProjectDirInfo;
-                        rootProjectDirInfo = superProjectDirInfo;
+                        return drive;
                     }
                 }
 
-                return rootSubmoduleDirInfo ?? rootProjectDirInfo;
+                return "< ";
+            }
+
+            DirectoryInfo GetRootRepoDirInfo(DirectoryInfo repositoryDirInfo)
+            {
+                DirectoryInfo rootRepoDirInfo = repositoryDirInfo;
+                for (DirectoryInfo? parentDirInfo = repositoryDirInfo.Parent; parentDirInfo?.Exists is true; parentDirInfo = parentDirInfo?.Parent)
+                {
+                    if (parentDirInfo is not null && isValidGitWorkingDir(parentDirInfo.FullName))
+                    {
+                        rootRepoDirInfo = parentDirInfo;
+                    }
+                }
+
+                return rootRepoDirInfo;
             }
 
             string GetShortName(DirectoryInfo dirInfo)
@@ -82,7 +98,7 @@ namespace GitCommands.UserRepositoryHistory
                     return desc;
                 }
 
-                while (dirInfo.Parent is not null && _uninformativeNameRegex.IsMatch(dirInfo.Name))
+                while (dirInfo != rootRepositoryDirInfo && dirInfo.Parent is not null && _uninformativeNameRegex.IsMatch(dirInfo.Name) && !isValidGitWorkingDir(dirInfo.Parent.FullName))
                 {
                     dirInfo = dirInfo.Parent;
                 }
