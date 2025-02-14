@@ -9,6 +9,11 @@ using GitUI;
 
 namespace GitCommands.Settings;
 
+/// <summary>
+///  Provides read-only access to git config settings of different scopes (by running "git config list").
+/// </summary>
+/// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the repo of interest.</param>
+/// <param name="gitSettingLevel">The scope (<see cref="GitSettingLevel"/>) of the git config settings.</param>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettingLevel gitSettingLevel) : ISettingsValueGetter
 {
@@ -29,12 +34,11 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
         });
     }
 
-    public void Reload()
-    {
-        Invalidate();
-        Update();
-    }
-
+    /// <summary>
+    ///  Turns the section and value names to lower case in order to match the output of "git config list".
+    /// </summary>
+    /// <param name="name">The setting name.</param>
+    /// <returns>The normalized setting name.</returns>
     protected static string NormalizeSettingName(string name)
     {
         if (name.Any(char.IsAsciiLetterUpper))
@@ -64,8 +68,32 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
         return name;
     }
 
+    private static void Parse(string settings, Action<string, string> storeSetting)
+    {
+        foreach (string setting in settings.TrimEnd('\0').LazySplit('\0'))
+        {
+            int linefeedIndex = setting.IndexOf('\n');
+            if (linefeedIndex > 0)
+            {
+                storeSetting(setting[..linefeedIndex], setting[(linefeedIndex + 1)..]);
+            }
+            else
+            {
+                Trace.WriteLine(@$"Invalid git config ""{setting}"".");
+            }
+        }
+    }
+
+    /// <summary>
+    ///  Reloads the settings if invalid.
+    /// </summary>
     protected abstract void Update();
 
+    /// <summary>
+    ///  Reloads the settings if invalid (generic implementation).
+    /// </summary>
+    /// <param name="clear">Shall clear (previously loaded) git settings, but keep modified settings.</param>
+    /// <param name="storeSetting">Shall store a parsed git setting.</param>
     protected void Update(Action clear, Action<string, string> storeSetting)
     {
         if (Valid)
@@ -86,22 +114,6 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
             Parse(settings, storeSetting);
 
             Valid = true;
-        }
-    }
-
-    private static void Parse(string settings, Action<string, string> storeSetting)
-    {
-        foreach (string setting in settings.TrimEnd('\0').LazySplit('\0'))
-        {
-            int linefeedIndex = setting.IndexOf('\n');
-            if (linefeedIndex > 0)
-            {
-                storeSetting(setting[..linefeedIndex], setting[(linefeedIndex + 1)..]);
-            }
-            else
-            {
-                Trace.WriteLine(@$"Invalid git config ""{setting}"".");
-            }
         }
     }
 
