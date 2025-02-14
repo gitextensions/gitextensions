@@ -11,8 +11,6 @@ namespace GitExtensions.Extensibility.Git;
 /// </summary>
 public interface IGitModule
 {
-    IConfigFileSettings LocalConfigFile { get; }
-
     string AddRemote(string remoteName, string? path);
 
     /// <summary>
