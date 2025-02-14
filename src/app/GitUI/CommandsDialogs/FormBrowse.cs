@@ -264,8 +264,6 @@ namespace GitUI.CommandsDialogs
             toolsToolStripMenuItem.Initialize(() => UICommands);
             _NO_TRANSLATE_WorkingDir.Initialize(() => UICommands, _repositoryHistoryUIService, fileToolStripMenuItem, closeToolStripMenuItem);
 
-            _repositoryHistoryUIService.GitModuleChanged += SetGitModule;
-
             BackColor = OtherColors.BackgroundColor;
 
             WorkaroundPaddingIncreaseBug();
@@ -452,11 +450,6 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                if (_repositoryHistoryUIService is not null)
-                {
-                    _repositoryHistoryUIService.GitModuleChanged -= SetGitModule;
-                }
-
                 _formBrowseMenus?.Dispose();
                 components?.Dispose();
                 _gitStatusMonitor?.Dispose();
