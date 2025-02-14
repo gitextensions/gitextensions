@@ -294,7 +294,9 @@ namespace GitCommands
             }
         }
 
-        private ISettingsValueGetter EffectiveConfigFile => GitEncodingSettingsGetter.SettingsValueGetter;
+        private ISettingsValueGetter EffectiveGitConfigSettings => GitEncodingSettingsGetter.SettingsValueGetter;
+
+        private IGitConfigSettingsGetter LocalGitConfigSettings => field ??= new GitConfigSettings(GitExecutable, GitSettingLevel.Local);
 
         private IConfigFileSettings _localConfigFile;
 
@@ -324,7 +326,8 @@ namespace GitCommands
 
         public void InvalidateGitSettings()
         {
-            EffectiveConfigFile.Invalidate();
+            EffectiveGitConfigSettings.Invalidate();
+            LocalGitConfigSettings.Invalidate();
         }
 
         /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
@@ -2085,15 +2088,12 @@ namespace GitCommands
             }
         }
 
-        public IEnumerable<string> GetSettings(string setting)
-        {
-            return LocalConfigFile.GetValues(setting);
-        }
+        public IEnumerable<string> GetSettings(string setting) => LocalGitConfigSettings.GetValues(setting);
 
         public string GetSetting(string setting) => GetEffectiveSetting(setting);
 
-        public string GetEffectiveSetting(string setting, string defaultValue = "") => EffectiveConfigFile.GetValue(setting) ?? defaultValue;
-        public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveConfigFile.GetValue<T>(setting);
+        public string GetEffectiveSetting(string setting, string defaultValue = "") => EffectiveGitConfigSettings.GetValue(setting) ?? defaultValue;
+        public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveGitConfigSettings.GetValue<T>(setting);
 
         public void UnsetSetting(string setting)
         {
@@ -4086,7 +4086,11 @@ namespace GitCommands
         {
             Commands.SetGitSetting(GitExecutable, settingLevel, setting, value);
 
-            EffectiveConfigFile.Invalidate();
+            EffectiveGitConfigSettings.Invalidate();
+            if (settingLevel == GitSettingLevel.Local)
+            {
+                LocalGitConfigSettings.Invalidate();
+            }
         }
 
         internal TestAccessor GetTestAccessor() => new(this);

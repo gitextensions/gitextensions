@@ -175,6 +175,7 @@ namespace CommonTestUtils
 
             Module.InvalidateGitSettings();
             Module.GetEffectiveSetting("reload now");
+            Module.GetSettings("reload local settings, too");
         }
 
         public void Fetch(string remoteName)
@@ -203,6 +204,7 @@ namespace CommonTestUtils
 
                 Module.InvalidateGitSettings();
                 Module.GetEffectiveSetting("reload now");
+                Module.GetSettings("reload local settings, too");
             }
 
             CommitMessageManager commitMessageManager = new(DummyOwner, Module.WorkingDirGitDir, Module.CommitEncoding);
