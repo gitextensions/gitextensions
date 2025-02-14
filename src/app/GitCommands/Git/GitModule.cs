@@ -27,6 +27,8 @@ namespace GitCommands
     public sealed partial class GitModule : IGitModule
     {
         private const string GitError = "Git Error";
+
+        private static readonly Encoding _defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
         // the amount of lines we must skip in order to get to an annotated tag's message when doing git cat-file -p <tag_name>
@@ -317,13 +319,9 @@ namespace GitCommands
         // 4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
 
-        private Encoding? _defaultEncoding;
+        public Encoding FilesEncoding => GitEncodingSettingsGetter.FilesEncoding ?? _defaultEncoding;
 
-        private Encoding DefaultEncoding => _defaultEncoding ??= new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-
-        public Encoding FilesEncoding => GitEncodingSettingsGetter.FilesEncoding ?? DefaultEncoding;
-
-        public Encoding CommitEncoding => GitEncodingSettingsGetter.CommitEncoding ?? DefaultEncoding;
+        public Encoding CommitEncoding => GitEncodingSettingsGetter.CommitEncoding ?? _defaultEncoding;
 
         public Encoding LogOutputEncoding => GitEncodingSettingsGetter.LogOutputEncoding ?? CommitEncoding;
 
