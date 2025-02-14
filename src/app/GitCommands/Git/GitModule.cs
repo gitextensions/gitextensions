@@ -301,10 +301,6 @@ namespace GitCommands
 
         private IGitConfigSettingsGetter LocalGitConfigSettings => field ??= new GitConfigSettings(GitExecutable, GitSettingLevel.Local);
 
-        private IConfigFileSettings _localConfigFile;
-
-        public IConfigFileSettings LocalConfigFile => _localConfigFile ??= ConfigFileSettings.CreateLocal(module: this);
-
         // encoding for files paths
         private static Encoding? _systemEncoding;
 
@@ -4149,6 +4145,8 @@ namespace GitCommands
             {
                 _gitModule = gitModule;
             }
+
+            public DistributedSettings? EffectiveSettings => _gitModule._effectiveSettings;
 
             public FrozenDictionary<string, Color>? RemoteColors => _gitModule._remoteColors;
 
