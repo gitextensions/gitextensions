@@ -7,6 +7,9 @@ using GitExtensions.Extensibility.Settings;
 
 namespace GitCommands.Settings;
 
+/// <summary>
+///  Provides read access to git config settings for encodings.
+/// </summary>
 public sealed class GitEncodingSettingsGetter(ISettingsValueGetter settingsValueGetter)
 {
     public ISettingsValueGetter SettingsValueGetter { get; } = settingsValueGetter;
