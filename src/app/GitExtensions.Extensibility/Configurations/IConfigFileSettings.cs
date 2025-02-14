@@ -16,13 +16,6 @@ public interface IConfigFileSettings : IPersistentConfigValueStore
     IReadOnlyList<IConfigSection> GetConfigSections();
 
     /// <summary>
-    ///  Retrieves all configured values of a git setting that accepts multiple values for the same key.
-    /// </summary>
-    /// <param name="setting">The git setting key.</param>
-    /// <returns>The collection of all the <see cref="string"/> values.</returns>
-    IReadOnlyList<string> GetValues(string setting);
-
-    /// <summary>
     /// Removes the specific configuration section from the .git/config file.
     /// </summary>
     /// <param name="configSectionName">The name of the configuration section.</param>
