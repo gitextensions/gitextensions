@@ -1,6 +1,4 @@
-﻿using GitCommands.Git.Extensions;
-using GitCommands.Git.Tag;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 
