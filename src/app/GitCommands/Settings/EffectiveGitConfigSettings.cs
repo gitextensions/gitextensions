@@ -7,9 +7,19 @@ using GitExtensions.Extensibility.Git;
 
 namespace GitCommands.Settings;
 
+/// <summary>
+///  Provides read-only access to the effective git config settings (by running "git config list").
+///  "Implements" <see cref="IConfigValueStore"/> so it can be used with <see cref="SettingsSource{T}"/>.
+/// </summary>
+/// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the repo of interest.</param>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 public sealed class EffectiveGitConfigSettings(IExecutable gitExecutable) : GitConfigSettingsBase(gitExecutable, GitSettingLevel.Effective), IConfigValueStore
 {
+    private void Clear()
+    {
+        _uniqueValueSettings.Clear();
+    }
+
     public override string? GetValue(string name)
     {
         name = NormalizeSettingName(name);
@@ -23,11 +33,6 @@ public sealed class EffectiveGitConfigSettings(IExecutable gitExecutable) : GitC
     }
 
     protected override void Update() => Update(Clear, StoreSetting);
-
-    private void Clear()
-    {
-        _uniqueValueSettings.Clear();
-    }
 
     private void StoreSetting(string name, string value)
     {

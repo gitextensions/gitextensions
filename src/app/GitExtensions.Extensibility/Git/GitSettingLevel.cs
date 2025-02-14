@@ -1,5 +1,8 @@
 ﻿namespace GitExtensions.Extensibility.Git;
 
+/// <summary>
+///  The scope of git config settings.
+/// </summary>
 public enum GitSettingLevel
 {
     SystemWide,

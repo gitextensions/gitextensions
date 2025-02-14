@@ -8,12 +8,21 @@ using GitExtensions.Extensibility.Git;
 
 namespace GitCommands.Settings;
 
+/// <summary>
+///  Provides read/write access to git config settings of a specific scope (by running "git config").
+/// </summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 public sealed class GitConfigSettings : GitConfigSettingsBase, IPersistentConfigValueStore
 {
     private readonly Dictionary<string, string?> _modifiedSettings = [];
     private readonly HashSet<string> _multiValueSettings = [];
 
+    /// <summary>
+    ///  The constructor.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the repo of interest.</param>
+    /// <param name="gitSettingLevel">The scope (excluding <see cref="GitSettingLevel.Effective"/>) of the git config settings.</param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public GitConfigSettings(IExecutable gitExecutable, GitSettingLevel gitSettingLevel)
         : base(gitExecutable, gitSettingLevel)
     {
@@ -21,6 +30,12 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IPersistentConfig
         {
             throw new ArgumentOutOfRangeException(nameof(gitSettingLevel), $"Use read-only {nameof(EffectiveGitConfigSettings)} instance instead.");
         }
+    }
+
+    private void Clear()
+    {
+        _multiValueSettings.Clear();
+        _uniqueValueSettings.Clear();
     }
 
     public override string? GetValue(string name)
@@ -83,14 +98,6 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IPersistentConfig
         }
     }
 
-    protected override void Update() => Update(Clear, StoreSetting);
-
-    private void Clear()
-    {
-        _multiValueSettings.Clear();
-        _uniqueValueSettings.Clear();
-    }
-
     private void StoreSetting(string name, string value)
     {
         if (_multiValueSettings.Contains(name))
@@ -105,6 +112,8 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IPersistentConfig
             _uniqueValueSettings.Remove(name);
         }
     }
+
+    protected override void Update() => Update(Clear, StoreSetting);
 
     private new string DebuggerDisplay => $"{{ {_gitSettingLevel}, {(Valid ? "" : "in")}valid, {_uniqueValueSettings.Count} + {_modifiedSettings.Count} - {_multiValueSettings.Count} }}";
 }
