@@ -3922,14 +3922,16 @@ namespace GitCommands
         public string? GetLocalTrackingBranchName(string remoteName, string branch)
         {
             string branchName = remoteName.Length > 0 ? branch[(remoteName.Length + 1)..] : branch;
-            foreach (IConfigSection section in LocalConfigFile.GetConfigSections())
+            IGitConfigSettingsGetter localGitConfigSettings = LocalGitConfigSettings;
+            foreach ((string setting, string value) in localGitConfigSettings.GetAllValues())
             {
-                if (section.SectionName == "branch" && section.GetValue("remote") == remoteName)
+                (string section, string? subsection, string name) = IGitConfigSettingsGetter.SplitSetting(setting);
+                if (section == "branch" && name == "remote" && value == remoteName)
                 {
-                    string remoteBranch = section.GetValue("merge").Replace("refs/heads/", string.Empty);
+                    string remoteBranch = localGitConfigSettings.GetValue($"{section}.{subsection}.merge").Replace("refs/heads/", string.Empty);
                     if (remoteBranch == branchName)
                     {
-                        return section.SubSection;
+                        return subsection;
                     }
                 }
             }
