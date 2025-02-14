@@ -35,6 +35,35 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
         _uniqueValueSettings.Clear();
     }
 
+    public IEnumerable<(string Setting, string Value)> GetAllValues()
+    {
+        Update();
+
+        foreach (KeyValuePair<string, string?> modified in _modifiedSettings)
+        {
+            if (modified.Value is not null)
+            {
+                yield return (modified.Key, modified.Value);
+            }
+        }
+
+        foreach (KeyValuePair<string, string> unique in _uniqueValueSettings)
+        {
+            if (!_modifiedSettings.ContainsKey(unique.Key))
+            {
+                yield return (unique.Key, unique.Value);
+            }
+        }
+
+        foreach (KeyValuePair<string, List<string>> multi in _multiValueSettings)
+        {
+            foreach (string value in multi.Value)
+            {
+                yield return (multi.Key, value);
+            }
+        }
+    }
+
     public override string? GetValue(string name)
     {
         name = NormalizeSettingName(name);
