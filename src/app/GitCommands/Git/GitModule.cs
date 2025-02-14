@@ -298,10 +298,6 @@ namespace GitCommands
 
         private IGitConfigSettingsGetter LocalGitConfigSettings => field ??= new GitConfigSettings(GitExecutable, GitSettingLevel.Local);
 
-        private IConfigFileSettings _localConfigFile;
-
-        public IConfigFileSettings LocalConfigFile => _localConfigFile ??= ConfigFileSettings.CreateLocal(module: this);
-
         // encoding for files paths
         private static Encoding? _systemEncoding;
 
@@ -4109,9 +4105,9 @@ namespace GitCommands
             }
         }
 
-        internal TestAccessor GetTestAccessor() => new(this);
+        public TestAccessor GetTestAccessor() => new(this);
 
-        internal readonly struct TestAccessor
+        public readonly struct TestAccessor
         {
             private readonly GitModule _gitModule;
 
@@ -4119,6 +4115,8 @@ namespace GitCommands
             {
                 _gitModule = gitModule;
             }
+
+            public DistributedSettings? EffectiveSettings => _gitModule._effectiveSettings;
 
             public GitArgumentBuilder UpdateIndexCmd(bool showErrorsWhenStagingFiles) => GitModule.UpdateIndexCmd(showErrorsWhenStagingFiles);
 
