@@ -327,6 +327,8 @@ namespace GitCommands
 
         public Encoding LogOutputEncoding => GitEncodingSettingsGetter.LogOutputEncoding ?? CommitEncoding;
 
+        public IEnumerable<(string Setting, string Value)> GetAllLocalSettings() => LocalGitConfigSettings.GetAllValues();
+
         public void InvalidateGitSettings()
         {
             EffectiveGitConfigSettings.Invalidate();
@@ -2142,9 +2144,9 @@ namespace GitCommands
             SetGitSetting(GitSettingLevel.Local, setting, value: null);
         }
 
-        public void SetSetting(string setting, string value)
+        public void SetSetting(string setting, string value, bool append = false)
         {
-            SetGitSetting(GitSettingLevel.Local, setting, value);
+            SetGitSetting(GitSettingLevel.Local, setting, value, append);
         }
 
         internal GitArgumentBuilder GetStashesCmd(bool noLocks)
@@ -4126,9 +4128,9 @@ namespace GitCommands
             }
         }
 
-        private void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value)
+        private void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value, bool append = false)
         {
-            Commands.SetGitSetting(GitExecutable, settingLevel, setting, value);
+            Commands.SetGitSetting(GitExecutable, settingLevel, setting, value, append);
 
             EffectiveGitConfigSettings.Invalidate();
             if (settingLevel == GitSettingLevel.Local)
