@@ -40,6 +40,7 @@ namespace GitCommandsTests
         [Test]
         public void ParseGitBlame()
         {
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
             using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
             GitVersion.ResetVersion();
 
@@ -86,6 +87,7 @@ namespace GitCommandsTests
         [Test]
         public void FetchCmd()
         {
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
             using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
             GitVersion.ResetVersion();
 
@@ -472,10 +474,16 @@ namespace GitCommandsTests
             const string remoteName = "foo";
             const string output = "bar";
 
-            using (_executable.StageOutput($"remote rm \"{remoteName}\"", output))
-            {
-                Assert.AreEqual(output, _gitModule.RemoveRemote(remoteName));
-            }
+            using IDisposable remoteRemove = _executable.StageOutput($"remote rm \"{remoteName}\"", output);
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+            using IDisposable configListEffective = _executable.StageOutput("config list --includes --null", "");
+            using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
+            GitVersion.ResetVersion();
+
+            Assert.AreEqual(output, _gitModule.RemoveRemote(remoteName));
+
+            _gitModule.GetEffectiveSetting("reload now");
+            _gitModule.GetSettings("reload local settings, too");
         }
 
         [Test]
@@ -485,10 +493,16 @@ namespace GitCommandsTests
             const string newName = "far";
             const string output = "bar";
 
-            using (_executable.StageOutput($"remote rename \"{oldName}\" \"{newName}\"", output))
-            {
-                Assert.AreEqual(output, _gitModule.RenameRemote(oldName, newName));
-            }
+            using IDisposable remoteRename = _executable.StageOutput($"remote rename \"{oldName}\" \"{newName}\"", output);
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+            using IDisposable configListEffective = _executable.StageOutput("config list --includes --null", "");
+            using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
+            GitVersion.ResetVersion();
+
+            Assert.AreEqual(output, _gitModule.RenameRemote(oldName, newName));
+
+            _gitModule.GetEffectiveSetting("reload now");
+            _gitModule.GetSettings("reload local settings, too");
         }
 
         [Test]
@@ -500,7 +514,15 @@ namespace GitCommandsTests
 
             using (_executable.StageOutput($"remote add \"{name}\" \"{path.ToPosixPath()}\"", output))
             {
+                using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+                using IDisposable configListEffective = _executable.StageOutput("config list --includes --null", "");
+                using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
+                GitVersion.ResetVersion();
+
                 Assert.AreEqual(output, _gitModule.AddRemote(name, path));
+
+                _gitModule.GetEffectiveSetting("reload now");
+                _gitModule.GetSettings("reload local settings, too");
             }
 
             Assert.AreEqual("Please enter a name.", _gitModule.AddRemote("", path));

@@ -1965,6 +1965,12 @@ namespace GitCommands
             return InTheMiddleOfConflictedMerge() || InTheMiddleOfRebase();
         }
 
+        public void RemoveConfigSection(string section, string? subsection)
+        {
+            GitExecutable.RemoveConfigSection(GitSettingLevel.Local, section, subsection);
+            InvalidateGitSettings();
+        }
+
         public string RemoveRemote(string remoteName)
         {
             GitArgumentBuilder args = new("remote")
@@ -1972,7 +1978,9 @@ namespace GitCommands
                 "rm",
                 remoteName.QuoteNE()
             };
-            return _gitExecutable.GetOutput(args);
+            string output = _gitExecutable.GetOutput(args);
+            InvalidateGitSettings();
+            return output;
         }
 
         public string RenameRemote(string remoteName, string newName)
@@ -1983,7 +1991,9 @@ namespace GitCommands
                 remoteName.QuoteNE(),
                 newName.QuoteNE()
             };
-            return _gitExecutable.GetOutput(args);
+            string output = _gitExecutable.GetOutput(args);
+            InvalidateGitSettings();
+            return output;
         }
 
         public string AddRemote(string? name, string? path)
@@ -1993,13 +2003,15 @@ namespace GitCommands
                 return "Please enter a name.";
             }
 
-            return _gitExecutable.GetOutput(
-                new GitArgumentBuilder("remote")
-                {
-                    "add",
-                    name.Quote(),
-                    GetPathForGitExecution(path).QuoteNE()
-                });
+            GitArgumentBuilder args = new("remote")
+            {
+                "add",
+                name.Quote(),
+                GetPathForGitExecution(path).QuoteNE()
+            };
+            string output = _gitExecutable.GetOutput(args);
+            InvalidateGitSettings();
+            return output;
         }
 
         public IReadOnlyList<string> GetRemoteNames()
