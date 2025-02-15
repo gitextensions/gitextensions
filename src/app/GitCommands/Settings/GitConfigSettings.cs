@@ -26,10 +26,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IPersistentConfig
     public GitConfigSettings(IExecutable gitExecutable, GitSettingLevel gitSettingLevel)
         : base(gitExecutable, gitSettingLevel)
     {
-        if (gitSettingLevel == GitSettingLevel.Effective)
-        {
-            throw new ArgumentOutOfRangeException(nameof(gitSettingLevel), $"Use read-only {nameof(EffectiveGitConfigSettings)} instance instead.");
-        }
+        ArgumentOutOfRangeException.ThrowIfEqual(gitSettingLevel == GitSettingLevel.Effective, true, $"Use read-only {nameof(EffectiveGitConfigSettings)} instance instead.");
     }
 
     private void Clear()
