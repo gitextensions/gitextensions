@@ -82,10 +82,7 @@ namespace GitCommands
         /// <inheritdoc />
         public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId>? children)
         {
-            if (revision is null)
-            {
-                throw new ArgumentNullException(nameof(revision));
-            }
+            ArgumentNullException.ThrowIfNull(revision);
 
             if (revision.ObjectId is null)
             {

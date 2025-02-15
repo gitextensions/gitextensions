@@ -47,10 +47,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <exception cref="ArgumentNullException"><paramref name="repositories"/> is <see langword="null"/>.</exception>
         public string? Serialize(IEnumerable<Repository> repositories)
         {
-            if (repositories is null)
-            {
-                throw new ArgumentNullException(nameof(repositories));
-            }
+            ArgumentNullException.ThrowIfNull(repositories);
 
             try
             {

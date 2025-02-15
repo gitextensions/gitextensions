@@ -10,10 +10,7 @@
         /// <param name="controls">A set of controls to choose the widest from.</param>
         public static void AdjustWidthToSize(this TableLayoutPanel table, int columnIndex, params Control[] controls)
         {
-            if (table is null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
+            ArgumentNullException.ThrowIfNull(table);
 
             if (table.ColumnCount < 1)
             {
@@ -25,10 +22,7 @@
                 throw new ArgumentOutOfRangeException(nameof(columnIndex), columnIndex, $"Column index must be within [0, {table.ColumnCount - 1}] range");
             }
 
-            if (controls is null)
-            {
-                throw new ArgumentNullException(nameof(controls));
-            }
+            ArgumentNullException.ThrowIfNull(controls);
 
             if (controls.Length < 1)
             {

@@ -13,10 +13,7 @@ namespace GitUI
         /// </remarks>
         public static void EnableRemoveWordHotkey(this Control control)
         {
-            if (control is null)
-            {
-                throw new ArgumentNullException(nameof(control));
-            }
+            ArgumentNullException.ThrowIfNull(control);
 
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
             {

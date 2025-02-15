@@ -820,10 +820,7 @@ namespace GitUI
 
         public bool StartCherryPickDialog(IWin32Window? owner, IEnumerable<GitRevision> revisions)
         {
-            if (revisions is null)
-            {
-                throw new ArgumentNullException(nameof(revisions));
-            }
+            ArgumentNullException.ThrowIfNull(revisions);
 
             bool Action()
             {

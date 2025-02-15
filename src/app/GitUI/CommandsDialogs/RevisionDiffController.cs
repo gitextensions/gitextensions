@@ -91,20 +91,14 @@ namespace GitUI.CommandsDialogs
 
         public void SaveFiles(List<FileStatusItem> files, Func<string, string?> userSelection)
         {
-            if (files is null)
-            {
-                throw new ArgumentNullException(nameof(files));
-            }
+            ArgumentNullException.ThrowIfNull(files);
 
             if (files.Count == 0)
             {
                 return;
             }
 
-            if (userSelection is null)
-            {
-                throw new ArgumentNullException(nameof(userSelection));
-            }
+            ArgumentNullException.ThrowIfNull(userSelection);
 
             if (files.Count > 1)
             {

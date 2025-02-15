@@ -134,10 +134,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <exception cref="ArgumentNullException"><paramref name="repository"/> is <see langword="null"/>.</exception>
         public async Task<IList<Repository>> AssignCategoryAsync(Repository repository, string? category)
         {
-            if (repository is null)
-            {
-                throw new ArgumentNullException(nameof(repository));
-            }
+            ArgumentNullException.ThrowIfNull(repository);
 
             await TaskScheduler.Default;
 
@@ -276,10 +273,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
         public async Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
-            if (repositoryHistory is null)
-            {
-                throw new ArgumentNullException(nameof(repositoryHistory));
-            }
+            ArgumentNullException.ThrowIfNull(repositoryHistory);
 
             await TaskScheduler.Default;
             _repositoryStorage.Save(KeyFavouriteHistory, repositoryHistory);
@@ -294,10 +288,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
         public async Task SaveRecentHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
-            if (repositoryHistory is null)
-            {
-                throw new ArgumentNullException(nameof(repositoryHistory));
-            }
+            ArgumentNullException.ThrowIfNull(repositoryHistory);
 
             await TaskScheduler.Default;
             _repositoryStorage.Save(KeyRecentHistory, AdjustHistorySize(repositoryHistory, AppSettings.RecentRepositoriesHistorySize));
@@ -310,10 +301,7 @@ namespace GitCommands.UserRepositoryHistory
 
         public async Task RemoveInvalidRepositoriesAsync(Func<string, bool> predicate)
         {
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             await TaskScheduler.Default;
 
