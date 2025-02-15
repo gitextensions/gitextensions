@@ -52,24 +52,9 @@ namespace GitCommands.UserRepositoryHistory
             DirectoryInfo repositoryDirInfo = new(repositoryDir);
             DirectoryInfo rootRepositoryDirInfo = GetRootRepoDirInfo(repositoryDirInfo);
             string repositoryDescription = GetShortName(repositoryDirInfo);
-            return repositoryDirInfo != rootRepositoryDirInfo ? $"{repositoryDescription} < {GetShortName(rootRepositoryDirInfo)}"
-                : repositoryDirInfo.Parent is not null ? $"{repositoryDescription} {GetDriveInfo(repositoryDirInfo.Parent)}{repositoryDirInfo.Parent.Name}"
+            return repositoryDirInfo != rootRepositoryDirInfo
+                ? $"{repositoryDescription} < {GetShortName(rootRepositoryDirInfo)}"
                 : repositoryDescription;
-
-            static string GetDriveInfo(DirectoryInfo repositoryDirInfo)
-            {
-                string path = repositoryDirInfo.FullName;
-                if (path.Length > 2)
-                {
-                    string drive = path[..2];
-                    if (drive[1] == ':' || drive == @"\\")
-                    {
-                        return repositoryDirInfo.Name.StartsWith(drive) ? "" : drive;
-                    }
-                }
-
-                return "< ";
-            }
 
             DirectoryInfo GetRootRepoDirInfo(DirectoryInfo repositoryDirInfo)
             {
