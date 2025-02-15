@@ -6,7 +6,6 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
-using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
@@ -41,6 +40,7 @@ namespace GitCommandsTests
         [Test]
         public void ParseGitBlame()
         {
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
             using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
             GitVersion.ResetVersion();
 
@@ -87,6 +87,7 @@ namespace GitCommandsTests
         [Test]
         public void FetchCmd()
         {
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
             using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
             GitVersion.ResetVersion();
 
