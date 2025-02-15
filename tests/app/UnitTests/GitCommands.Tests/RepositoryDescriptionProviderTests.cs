@@ -36,7 +36,7 @@ public class RepositoryDescriptionProviderTests
         Directory.CreateDirectory(leafsubmodule);
 
         repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
-            .Should().Be($"test_repo {DriveInfo}{new DirectoryInfo(_tempDir).Name}");
+            .Should().Be($"test_repo");
 
         repositoryDescriptionProvider.Get(submodule, IsValidGitWorkingDir)
             .Should().Be("submodule < test_repo");
@@ -88,10 +88,8 @@ public class RepositoryDescriptionProviderTests
         Directory.CreateDirectory(repo);
 
         repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
-            .Should().Be($"{uninformative} {DriveInfo}{parent}");
+            .Should().Be($"{uninformative}");
     }
-
-    private string DriveInfo => _tempDir.Length > 2 && (_tempDir[1] == ':' || _tempDir[..2] == @"\\") ? _tempDir[..2] : "< ";
 
     private static bool IsValidGitWorkingDir(string path)
         => path.EndsWith("submodule") || path.EndsWith("repo");
