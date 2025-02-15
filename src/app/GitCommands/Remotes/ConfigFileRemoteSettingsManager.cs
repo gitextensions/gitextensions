@@ -87,6 +87,7 @@ namespace GitCommands.Remotes
     {
         internal static readonly string DisabledSectionPrefix = "-";
         internal static readonly string SectionRemote = "remote";
+        internal static readonly string SectionRemoteDisabled = $"{DisabledSectionPrefix}{SectionRemote}";
         private readonly Func<IGitModule?> _getModule;
 
         public ConfigFileRemoteSettingsManager(Func<IGitModule?> getModule)
@@ -154,29 +155,39 @@ namespace GitCommands.Remotes
         /// </summary>
         public IReadOnlyList<Remote> GetDisabledRemotes()
         {
-            return GetDisabledRemotes().ToList();
+            IGitModule module = GetModule();
 
-            IEnumerable<Remote> GetDisabledRemotes()
-            {
-                foreach (IConfigSection section in GetModule().LocalConfigFile.GetConfigSections())
+            return GetDisabledRemoteNames()
+                .Select(remoteName =>
                 {
-                    if (section.SectionName == $"{DisabledSectionPrefix}remote")
-                    {
-                        Validates.NotNull(section.SubSection);
-                        yield return new Remote(section.SubSection, section.GetValue("url"), section.GetValue("pushurl", section.GetValue("url")));
-                    }
-                }
-            }
+                    string settingPrefix = $"{SectionRemoteDisabled}.{remoteName}.";
+                    string url = module.GetEffectiveSetting($"{settingPrefix}url");
+                    string firstPushUrl = module.GetSettings($"{settingPrefix}pushurl").FirstOrDefault(defaultValue: url);
+                    return new Remote(name: remoteName, fetchUrl: url, firstPushUrl);
+                })
+                .ToList();
         }
 
         public IReadOnlyList<string> GetDisabledRemoteNames()
         {
             IGitModule module = GetModule();
-            return module.LocalConfigFile.GetConfigSections()
-                .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
-                .Select(s => s.SubSection)
+
+            return EnumerateDisabledRemoteNames()
                 .WhereNotNull()
+                .Distinct()
                 .ToList();
+
+            IEnumerable<string> EnumerateDisabledRemoteNames()
+            {
+                foreach ((string setting, string _) in module.GetAllLocalSettings())
+                {
+                    (string section, string? subsection, string _) = IGitConfigSettingsGetter.SplitSetting(setting);
+                    if (section == SectionRemoteDisabled)
+                    {
+                        yield return subsection;
+                    }
+                }
+            }
         }
 
         public IReadOnlyList<string> GetEnabledRemoteNames()
@@ -252,8 +263,7 @@ namespace GitCommands.Remotes
                 return module.RemoveRemote(remote.Name);
             }
 
-            string sectionName = $"{DisabledSectionPrefix}{SectionRemote}";
-            module.RemoveConfigSection(sectionName, subsection: remote.Name);
+            module.RemoveConfigSection(SectionRemoteDisabled, subsection: remote.Name);
             return string.Empty;
         }
 
@@ -349,14 +359,39 @@ namespace GitCommands.Remotes
             }
 
             // disabled is the new state, so if the new state is 'false' (=enabled), then the existing state is 'true' (=disabled, i.e. '-remote')
-            string sectionName = (disabled ? "" : DisabledSectionPrefix) + SectionRemote;
+            string sectionName = disabled ? SectionRemote : SectionRemoteDisabled;
+            string newSectionName = disabled ? SectionRemoteDisabled : SectionRemote;
 
             IGitModule module = GetModule();
-            IReadOnlyList<IConfigSection> sections = module.LocalConfigFile.GetConfigSections();
-            IConfigSection section = sections.FirstOrDefault(s => s.SectionName == sectionName && s.SubSection == remoteName);
-            if (section is null)
+
+            List<(string, string)> newSectionValues = [];
+            bool newSectionAlreadyExists = false;
+            foreach ((string setting, string value) in module.GetAllLocalSettings())
             {
-                // we didn't find it, nothing we can do
+                (string section, string? subsection, string name) = IGitConfigSettingsGetter.SplitSetting(setting);
+                if (subsection != remoteName)
+                {
+                    continue;
+                }
+
+                if (section == newSectionName)
+                {
+                    newSectionAlreadyExists = true;
+                    continue;
+                }
+
+                if (section != sectionName)
+                {
+                    continue;
+                }
+
+                string newSetting = $"{newSectionName}.{remoteName}.{name}";
+                newSectionValues.Add((newSetting, value));
+            }
+
+            if (newSectionValues.Count == 0)
+            {
+                // we didn't find the section, nothing we can do
                 return;
             }
 
@@ -369,25 +404,22 @@ namespace GitCommands.Remotes
                 module.RemoveConfigSection(sectionName, subsection: remoteName);
             }
 
-            string newSectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
-
             // ensure that the section with the same name doesn't already exist
             // use case:
             // - a user has added a remote,
             // - then deactivated the remote via GE
             // - then added a remote with the same name from a command line or via UI
             // - then attempted to deactivate the new remote
-            IConfigSection dupSection = sections.FirstOrDefault(s => s.SectionName == newSectionName && s.SubSection == remoteName);
-            if (dupSection is not null)
+            if (newSectionAlreadyExists)
             {
                 module.RemoveConfigSection(newSectionName, subsection: remoteName);
             }
 
-            // rename the remote
-            section.SectionName = newSectionName;
-
-            module.LocalConfigFile.AddConfigSection(section);
-            module.LocalConfigFile.Save();
+            // add the renamed remote settings
+            foreach ((string setting, string value) in newSectionValues)
+            {
+                module.SetSetting(setting, value, append: true);
+            }
         }
 
         private IGitModule GetModule()
