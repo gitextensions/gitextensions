@@ -119,7 +119,7 @@ namespace GitUI.CommitInfo
                         h => richTextBox.ContentsResized -= h)
                     .Throttle(TimeSpan.FromMilliseconds(100))
                     .ObserveOn(MainThreadScheduler.Instance)
-                    .Subscribe(_ => handler(_.EventArgs));
+                    .Subscribe(eventPattern => TaskManager.HandleExceptions(() => handler(eventPattern.EventArgs), Application.OnThreadException));
 
             commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
 

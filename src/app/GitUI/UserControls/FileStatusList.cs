@@ -1107,7 +1107,7 @@ namespace GitUI
                     .Where(x => _enableSelectedIndexChangeEvent)
                     .Throttle(SelectedIndexChangeThrottleDuration, MainThreadScheduler.Instance)
                     .ObserveOn(MainThreadScheduler.Instance)
-                    .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
+                    .Subscribe(_ => TaskManager.HandleExceptions(FileStatusListView_SelectedIndexChanged, Application.OnThreadException));
             }
         }
 
@@ -1824,7 +1824,7 @@ namespace GitUI
                 .Throttle(TimeSpan.FromMilliseconds(250))
                 .ObserveOn(synchronizationContext)
                 .Subscribe(
-                    filterText =>
+                    filterText => TaskManager.HandleExceptions(() =>
                     {
                         _toolTipText = "";
                         int fileCount = 0;
@@ -1841,7 +1841,8 @@ namespace GitUI
                         {
                             AddToSelectionFilter(filterText);
                         }
-                    });
+                    },
+                    Application.OnThreadException));
 
             void AddToSelectionFilter(string filter)
             {
