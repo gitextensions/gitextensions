@@ -87,7 +87,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
     {
         foreach ((string name, string? value) in _modifiedSettings)
         {
-            _gitExecutable.SetGitSetting(_gitSettingLevel, name, value);
+            _gitExecutable.SetGitSetting(_gitSettingLevel, name, value, append: false);
 
             if (value is null)
             {
