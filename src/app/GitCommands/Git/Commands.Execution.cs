@@ -76,7 +76,7 @@ public static partial class Commands
     /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
     /// <param name="setting">The name of the setting (may contain dots, e.g. "core.autocrlf").</param>
     /// <param name="value">The value of the setting or <see langword="null"/> for removing the setting.</param>
-    public static void SetGitSetting(this IExecutable gitExecutable, GitSettingLevel settingLevel, string setting, string? value)
+    public static void SetGitSetting(this IExecutable gitExecutable, GitSettingLevel settingLevel, string setting, string? value, bool append)
     {
         bool isSet = !string.IsNullOrEmpty(value);
         bool newSyntax = gitExecutable.SupportNewGitConfigSyntax();
@@ -84,6 +84,7 @@ public static partial class Commands
             {
                 { newSyntax, isSet ? "set" : "unset" },
                 { !newSyntax && !isSet, "--unset" },
+                { isSet && append, newSyntax ? "--append" : "--add" },
                 settingLevel switch
                 {
                     GitSettingLevel.Local => "--local",
@@ -91,7 +92,8 @@ public static partial class Commands
                     GitSettingLevel.SystemWide => "--system",
                     GitSettingLevel.Effective or _ => throw new ArgumentOutOfRangeException(nameof(settingLevel))
                 },
-                setting,
+                "--",
+                setting.Quote(),
                 { isSet, QuoteSettingValue(value) }
             };
         ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);
