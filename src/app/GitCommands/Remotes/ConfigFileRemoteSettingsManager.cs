@@ -252,8 +252,8 @@ namespace GitCommands.Remotes
                 return module.RemoveRemote(remote.Name);
             }
 
-            string sectionName = $"{DisabledSectionPrefix}{SectionRemote}.{remote.Name}";
-            module.LocalConfigFile.RemoveConfigSection(sectionName, true);
+            string sectionName = $"{DisabledSectionPrefix}{SectionRemote}";
+            module.RemoveConfigSection(sectionName, subsection: remote.Name);
             return string.Empty;
         }
 
@@ -366,7 +366,7 @@ namespace GitCommands.Remotes
             }
             else
             {
-                module.LocalConfigFile.RemoveConfigSection($"{sectionName}.{remoteName}");
+                module.RemoveConfigSection(sectionName, subsection: remoteName);
             }
 
             string newSectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
@@ -380,7 +380,7 @@ namespace GitCommands.Remotes
             IConfigSection dupSection = sections.FirstOrDefault(s => s.SectionName == newSectionName && s.SubSection == remoteName);
             if (dupSection is not null)
             {
-                module.LocalConfigFile.RemoveConfigSection($"{newSectionName}.{remoteName}");
+                module.RemoveConfigSection(newSectionName, subsection: remoteName);
             }
 
             // rename the remote

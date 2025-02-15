@@ -246,7 +246,7 @@ namespace GitCommandsTests.Remote
 
             _configFile.Received(1).GetConfigSections();
             _module.Received(remoteDisabled ? 1 : 0).RemoveRemote(remoteName);
-            _configFile.Received(remoteDisabled ? 0 : 1).RemoveConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{remoteName}");
+            _module.Received(remoteDisabled ? 0 : 1).RemoveConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}", remoteName);
 
             _configFile.Received(1).AddConfigSection(sections[remoteDisabled ? 1 : 0]);
             _configFile.Received(1).Save();
@@ -432,6 +432,9 @@ namespace GitCommandsTests.Remote
 
                 helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
                 manager.ToggleRemoteState(remoteName, false);
+
+                helper.Module.GetEffectiveSetting("reload now");
+                helper.Module.GetSettings("reload local settings, too");
             }
 
             [Test]
@@ -446,6 +449,9 @@ namespace GitCommandsTests.Remote
 
                 helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
                 manager.ToggleRemoteState(remoteName, true);
+
+                helper.Module.GetEffectiveSetting("reload now");
+                helper.Module.GetSettings("reload local settings, too");
             }
         }
     }
