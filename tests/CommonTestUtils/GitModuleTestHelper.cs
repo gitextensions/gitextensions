@@ -141,7 +141,7 @@ namespace CommonTestUtils
             ConfigFileSettings localConfigFile = (ConfigFileSettings)module.LocalConfigFile;
             localConfigFile.SetString(SettingKeyString.UserName, "author");
             localConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
-            localConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            new GitEncodingSettingsSetter(localConfigFile).FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
             localConfigFile.SetString(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
             localConfigFile.Save();
         }
