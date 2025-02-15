@@ -243,7 +243,7 @@ namespace GitUI.Editor
             showPatchToolStripMenuItem.Name = "showPatchToolStripMenuItem";
             showPatchToolStripMenuItem.Size = new Size(243, 22);
             showPatchToolStripMenuItem.Text = "&Patch";
-            showPatchToolStripMenuItem.Click += ToggleGitWordColoringToolStripMenuItemClick;
+            showPatchToolStripMenuItem.Click += ResetPatchAppearanceToolStripMenuItemClick;
             // 
             // showGitWordColoringToolStripMenuItem
             // 
