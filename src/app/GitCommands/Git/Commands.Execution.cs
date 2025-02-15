@@ -45,6 +45,31 @@ public static partial class Commands
     }
 
     /// <summary>
+    ///  Removes a git config (sub)section.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the affected repo.</param>
+    /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
+    /// <param name="section">The name of the section.</param>
+    /// <param name="subsection">The optional name of the subsection.</param>
+    public static void RemoveConfigSection(this IExecutable gitExecutable, GitSettingLevel settingLevel, string section, string? subsection = null)
+    {
+        GitArgumentBuilder args = new("config")
+            {
+                gitExecutable.SupportNewGitConfigSyntax() ? "remove-section" : "--remove-section",
+                settingLevel switch
+                {
+                    GitSettingLevel.Local => "--local",
+                    GitSettingLevel.Global => "--global",
+                    GitSettingLevel.SystemWide => "--system",
+                    GitSettingLevel.Effective or _ => throw new ArgumentOutOfRangeException(nameof(settingLevel))
+                },
+                "--",
+                subsection is null ? section : @$"""{section}.{subsection}"""
+            };
+        gitExecutable.Execute(args);
+    }
+
+    /// <summary>
     ///  Sets or unsets a git config setting.
     /// </summary>
     /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the affected repo.</param>
