@@ -16,11 +16,7 @@ public static partial class Commands
     {
         GitArgumentBuilder args = new("config")
             {
-#if UseNewGitConfigSyntax2_46
-                "list",
-#else
-                "--list", // deprecated, but it is too early to force users to update git
-#endif
+                GitVersion.Current.SupportNewGitConfigSyntax ? "list" : "--list",
                 settingLevel switch
                 {
                     GitSettingLevel.Effective => "",
@@ -58,13 +54,11 @@ public static partial class Commands
     public static void SetGitSetting(this IExecutable gitExecutable, GitSettingLevel settingLevel, string setting, string? value)
     {
         bool isSet = !string.IsNullOrEmpty(value);
+        bool newSyntax = GitVersion.Current.SupportNewGitConfigSyntax;
         GitArgumentBuilder args = new("config")
             {
-#if UseNewGitConfigSyntax2_46
-                isSet ? "set" : "unset",
-#else
-                { !isSet, "--unset" }, // deprecated, but it is too early to force users to update git
-#endif
+                { newSyntax, isSet ? "set" : "unset" },
+                { !newSyntax && !isSet, "--unset" },
                 settingLevel switch
                 {
                     GitSettingLevel.Local => "--local",
