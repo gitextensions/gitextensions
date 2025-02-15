@@ -19,6 +19,13 @@ public interface IGitModule
     IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full);
 
     /// <summary>
+    ///  Removes the passed git config (sub)section.
+    /// </summary>
+    /// <param name="section">The name of the section.</param>
+    /// <param name="subsection">The optional name of the subsection.</param>
+    void RemoveConfigSection(string section, string? subsection = null);
+
+    /// <summary>
     /// Removes the registered remote by running <c>git remote rm</c> command.
     /// </summary>
     /// <param name="remoteName">The remote name.</param>
