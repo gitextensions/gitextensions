@@ -15,6 +15,12 @@ public interface IGitModule
     IConfigFileSettings LocalConfigFile { get; }
 
     string AddRemote(string remoteName, string? path);
+
+    /// <summary>
+    ///  Enumerates all configured local git settings.
+    /// </summary>
+    IEnumerable<(string Setting, string Value)> GetAllLocalSettings();
+
     IReadOnlyList<IGitRef> GetRefs(RefsFilter getRef);
     IEnumerable<string> GetSettings(string setting);
     IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full);
@@ -59,7 +65,7 @@ public interface IGitModule
     /// <returns>An ObjectID representing that git reference</returns>
     ObjectId? RevParse(string revisionExpression);
 
-    void SetSetting(string setting, string value);
+    void SetSetting(string setting, string value, bool append = false);
     void UnsetSetting(string setting);
 
     Encoding CommitEncoding { get; }
