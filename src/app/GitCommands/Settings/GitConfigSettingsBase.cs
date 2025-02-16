@@ -82,7 +82,7 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
             }
             else
             {
-                Trace.WriteLine(@$"Invalid git config ""{setting}"".");
+                storeSetting(setting, "true");
             }
         }
     }
