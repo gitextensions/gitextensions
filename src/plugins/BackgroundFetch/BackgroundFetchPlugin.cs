@@ -73,40 +73,51 @@ namespace GitExtensions.Plugins.BackgroundFetch
             Validates.NotNull(_currentGitUiCommands);
 
             IGitModule gitModule = _currentGitUiCommands.Module;
-            if (fetchInterval <= 0 || !gitModule.IsValidGitWorkingDir())
+            bool fetchOnOpening = _fetchImmediatelyOnRepoOpening.ValueOrDefault(Settings);
+            bool isRefreshDisabled = fetchInterval <= 0;
+            if ((isRefreshDisabled && !fetchOnOpening) || !gitModule.IsValidGitWorkingDir())
             {
                 return;
             }
 
-            TimeSpan intervalTimeSpan = TimeSpan.FromSeconds(Math.Max(5, fetchInterval));
-            TimeSpan startTimer = _fetchImmediatelyOnRepoOpening.ValueOrDefault(Settings) ? TimeSpan.FromMilliseconds(10) : intervalTimeSpan;
+            if (isRefreshDisabled)
+            {
+                _cancellationToken = WaitForRunningGitExitsObservable(gitModule)
+                   .ObserveOn(ThreadPoolScheduler.Instance)
+                   .Subscribe(_ => RunBackgroundGitFetch());
+                return;
+            }
 
             _cancellationToken = Observable
-                .Timer(startTimer, intervalTimeSpan)
-                .SelectMany(i =>
-                {
-                    // if git not running - start fetch immediately
-                    if (!gitModule.IsRunningGitProcess())
-                    {
-                        return Observable.Return(i);
-                    }
-
-                    // in other case - every 5 seconds check if git still running
-                    return Observable
-                        .Interval(TimeSpan.FromSeconds(5))
-                        .SkipWhile(ii => gitModule.IsRunningGitProcess())
-                        .FirstAsync()
-                    ;
-                })
+                .Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
+                .SelectMany(_ => WaitForRunningGitExitsObservable(gitModule))
                 .Repeat()
                 .ObserveOn(ThreadPoolScheduler.Instance)
-                .Subscribe(i =>
-                    {
-                        GitArgumentBuilder args;
-                        if (_fetchAllSubmodules.ValueOrDefault(Settings))
-                        {
-                            // The Git command is hardcoded compared, not using _gitCommand
-                            args = new GitArgumentBuilder("submodule")
+                .Subscribe(_ => RunBackgroundGitFetch());
+        }
+
+        private static IObservable<long> WaitForRunningGitExitsObservable(IGitModule gitModule)
+        {
+            // if git not running - start fetch immediately
+            if (!gitModule.IsRunningGitProcess())
+            {
+                return Observable.Return(1L);
+            }
+
+            // in other case - every 5 seconds check if git still running
+            return Observable
+                .Interval(TimeSpan.FromSeconds(5))
+                .SkipWhile(_ => gitModule.IsRunningGitProcess())
+                .FirstAsync();
+        }
+
+        private void RunBackgroundGitFetch()
+        {
+            GitArgumentBuilder args;
+            if (_fetchAllSubmodules.ValueOrDefault(Settings))
+            {
+                // The Git command is hardcoded compared, not using _gitCommand
+                args = new GitArgumentBuilder("submodule")
                             {
                                 "foreach",
                                 "--recursive",
@@ -115,53 +126,52 @@ namespace GitExtensions.Plugins.BackgroundFetch
                                 "--all"
                             };
 
-                            try
-                            {
-                                _currentGitUiCommands.Module.GitExecutable.GetOutput(args);
-                            }
-                            catch
-                            {
-                                // Ignore background errors
-                            }
-                        }
+                try
+                {
+                    _currentGitUiCommands.Module.GitExecutable.GetOutput(args);
+                }
+                catch
+                {
+                    // Ignore background errors
+                }
+            }
 
-                        string gitCmdString = _gitCommand.ValueOrDefault(Settings);
-                        if (string.IsNullOrWhiteSpace(gitCmdString))
-                        {
-                            gitCmdString = _defaultGitCommand;
-                        }
+            string gitCmdString = _gitCommand.ValueOrDefault(Settings);
+            if (string.IsNullOrWhiteSpace(gitCmdString))
+            {
+                gitCmdString = _defaultGitCommand;
+            }
 
-                        string[] gitCmd = gitCmdString.Trim().Split(Delimiters.Space, StringSplitOptions.RemoveEmptyEntries);
-                        args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
-                        string msg;
-                        try
-                        {
-                            // git fetch is writing result details into standard error and not standard output, see:
-                            // https://github.com/gitextensions/gitextensions/pull/10793
-                            // https://lore.kernel.org/git/xmqq7cvqrdu6.fsf@gitster.g/
-                            msg = _currentGitUiCommands.Module.GitExecutable.Execute(args).StandardError;
-                        }
-                        catch
-                        {
-                            // Ignore background errors
-                            return;
-                        }
+            string[] gitCmd = gitCmdString.Trim().Split(Delimiters.Space, StringSplitOptions.RemoveEmptyEntries);
+            args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
+            string msg;
+            try
+            {
+                // git fetch is writing result details into standard error and not standard output, see:
+                // https://github.com/gitextensions/gitextensions/pull/10793
+                // https://lore.kernel.org/git/xmqq7cvqrdu6.fsf@gitster.g/
+                msg = _currentGitUiCommands.Module.GitExecutable.Execute(args).StandardError;
+            }
+            catch
+            {
+                // Ignore background errors
+                return;
+            }
 
-                        if (_autoRefresh.ValueOrDefault(Settings))
-                        {
-                            if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                if (msg.Contains("From"))
-                                {
-                                    _currentGitUiCommands.RepoChangedNotifier.Notify();
-                                }
-                            }
-                            else
-                            {
-                                _currentGitUiCommands.RepoChangedNotifier.Notify();
-                            }
-                        }
-                    });
+            if (_autoRefresh.ValueOrDefault(Settings))
+            {
+                if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (msg.Contains("From"))
+                    {
+                        _currentGitUiCommands.RepoChangedNotifier.Notify();
+                    }
+                }
+                else
+                {
+                    _currentGitUiCommands.RepoChangedNotifier.Notify();
+                }
+            }
         }
 
         private void CancelBackgroundOperation()
