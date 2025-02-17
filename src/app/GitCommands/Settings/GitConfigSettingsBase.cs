@@ -32,7 +32,14 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
             await Task.Delay(millisecondsDelay: 250);
             if (Path.Exists(_gitExecutable.WorkingDir))
             {
-                Update();
+                try
+                {
+                    Update();
+                }
+                catch (ExternalOperationException ex)
+                {
+                    Trace.WriteLine($"{nameof(GitConfigSettingsBase)}: Background update failed:\n{ex}");
+                }
             }
         });
     }
