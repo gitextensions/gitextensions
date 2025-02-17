@@ -31,10 +31,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public async Task AssignCategoryAsync(Repository repository, string? category)
         {
-            if (repository is null)
-            {
-                throw new ArgumentNullException(nameof(repository));
-            }
+            ArgumentNullException.ThrowIfNull(repository);
 
             await _localRepositoryManager.AssignCategoryAsync(repository, category);
         }

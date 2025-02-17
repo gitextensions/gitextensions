@@ -98,10 +98,7 @@ namespace GitCommands.Git
                 return string.Empty;
             }
 
-            if (options is null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
+            ArgumentNullException.ThrowIfNull(options);
 
             // run rules in reverse order
             branchName = Rule10(branchName, options);

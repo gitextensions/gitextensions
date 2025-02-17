@@ -32,10 +32,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public IReadOnlyList<ExternalLinkDefinition> Get(DistributedSettings settings)
         {
-            if (settings is null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            ArgumentNullException.ThrowIfNull(settings);
 
             DistributedSettings cachedSettings = new(null, settings.SettingsCache, SettingLevel.Unknown);
             IEnumerable<ExternalLinkDefinition>? effective = _externalLinksStorage.Load(cachedSettings);

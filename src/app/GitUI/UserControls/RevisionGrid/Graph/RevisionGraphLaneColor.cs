@@ -23,12 +23,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
                 .Select(name => ((AppColor)Enum.Parse(typeof(AppColor), name)).GetThemeColor())
                 .Where(color => !color.IsEmpty)
+                .Distinct()
                 .ToArray();
 
-            if (branchColors.Length < 2)
+            const int minBranchColors = 4;
+            if (branchColors.Length < minBranchColors)
             {
-                Trace.WriteLine("At least two graph colors must be configured");
-                branchColors = [Color.Magenta.AdaptTextColor(), Color.Cyan.AdaptTextColor()];
+                Trace.WriteLine(@"At least {minBranchColors} different graph colors must be configured - using crying fallback");
+                branchColors = [Color.Cyan, Color.Magenta, Color.Yellow, Color.Lime];
             }
 
             foreach (Color color in branchColors)

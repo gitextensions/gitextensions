@@ -52,10 +52,7 @@ namespace GitExtUtils
         /// <exception cref="ArgumentException"><paramref name="command"/> is an invalid string.</exception>
         public GitArgumentBuilder(string command, IGitCommandConfiguration? commandConfiguration = null, ArgumentString gitOptions = default)
         {
-            if (command is null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
+            ArgumentNullException.ThrowIfNull(command);
 
             if (!CommandRegex().IsMatch(command))
             {

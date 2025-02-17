@@ -115,10 +115,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
         public async Task SaveRecentHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
-            if (repositoryHistory is null)
-            {
-                throw new ArgumentNullException(nameof(repositoryHistory));
-            }
+            ArgumentNullException.ThrowIfNull(repositoryHistory);
 
             await TaskScheduler.Default;
 

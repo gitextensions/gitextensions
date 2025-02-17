@@ -25,10 +25,7 @@ namespace BugReporter.Serialization
 
         public SerializableDictionary(IDictionary<TKey, TValue> dictionary)
         {
-            if (dictionary is null)
-            {
-                throw new ArgumentNullException();
-            }
+            ArgumentNullException.ThrowIfNull(dictionary);
 
             foreach (KeyValuePair<TKey, TValue> pair in dictionary)
             {

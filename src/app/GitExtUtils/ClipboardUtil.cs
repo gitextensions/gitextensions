@@ -6,10 +6,7 @@ namespace GitExtUtils
     {
         public static bool TrySetText(string text)
         {
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
+            ArgumentNullException.ThrowIfNull(text);
 
             try
             {

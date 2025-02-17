@@ -129,10 +129,7 @@ namespace GitCommands.Remotes
         // TODO: moved verbatim from FormPush.cs, perhaps needs refactoring
         public string? GetDefaultPushRemote(ConfigFileRemote remote, string branch)
         {
-            if (remote is null)
-            {
-                throw new ArgumentNullException(nameof(remote));
-            }
+            ArgumentNullException.ThrowIfNull(remote);
 
             IGitModule module = GetModule();
             bool IsSettingForBranch(string setting, string branchName)
@@ -221,10 +218,7 @@ namespace GitCommands.Remotes
         /// <returns>Output of <see cref="IGitModule.RemoveRemote"/> operation, if the remote is active; otherwise <see cref="string.Empty"/>.</returns>
         public string RemoveRemote(ConfigFileRemote remote)
         {
-            if (remote is null)
-            {
-                throw new ArgumentNullException(nameof(remote));
-            }
+            ArgumentNullException.ThrowIfNull(remote);
 
             IGitModule module = GetModule();
             if (!remote.Disabled)

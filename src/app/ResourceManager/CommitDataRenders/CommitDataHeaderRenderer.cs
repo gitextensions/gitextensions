@@ -79,10 +79,7 @@ namespace ResourceManager.CommitDataRenders
         /// </summary>
         public string Render(CommitData commitData, bool showRevisionsAsLinks)
         {
-            if (commitData is null)
-            {
-                throw new ArgumentNullException(nameof(commitData));
-            }
+            ArgumentNullException.ThrowIfNull(commitData);
 
             bool isArtificial = commitData.ObjectId.IsArtificial;
             bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
@@ -138,10 +135,7 @@ namespace ResourceManager.CommitDataRenders
         /// </summary>
         public string RenderPlain(CommitData commitData)
         {
-            if (commitData is null)
-            {
-                throw new ArgumentNullException(nameof(commitData));
-            }
+            ArgumentNullException.ThrowIfNull(commitData);
 
             bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);

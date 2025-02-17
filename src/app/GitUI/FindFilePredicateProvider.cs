@@ -15,15 +15,8 @@ namespace GitUI
     {
         public Func<string?, bool> Get(string searchPattern, string workingDir)
         {
-            if (searchPattern is null)
-            {
-                throw new ArgumentNullException(nameof(searchPattern));
-            }
-
-            if (workingDir is null)
-            {
-                throw new ArgumentNullException(nameof(workingDir));
-            }
+            ArgumentNullException.ThrowIfNull(searchPattern);
+            ArgumentNullException.ThrowIfNull(workingDir);
 
             string pattern = searchPattern.ToPosixPath();
             string dir = workingDir.ToPosixPath();

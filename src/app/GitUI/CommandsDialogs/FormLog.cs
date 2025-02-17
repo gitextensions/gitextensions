@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions());
+                TaskManager.HandleExceptions(() => DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions()), Application.OnThreadException);
             }
         }
 

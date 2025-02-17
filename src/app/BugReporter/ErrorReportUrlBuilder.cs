@@ -13,10 +13,7 @@ namespace BugReporter
     {
         public string Build(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo)
         {
-            if (exception is null)
-            {
-                throw new ArgumentNullException(nameof(exception));
-            }
+            ArgumentNullException.ThrowIfNull(exception);
 
             StringBuilder sb = new();
 
@@ -30,10 +27,7 @@ namespace BugReporter
 
         public string CopyText(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo)
         {
-            if (exception is null)
-            {
-                throw new ArgumentNullException(nameof(exception));
-            }
+            ArgumentNullException.ThrowIfNull(exception);
 
             StringBuilder sb = new();
             sb.Append(environmentInfo);

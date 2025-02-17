@@ -44,7 +44,7 @@ namespace GitUI.CommitInfo
                     h => rtbRevisionHeader.ContentsResized -= h)
                 .Throttle(TimeSpan.FromMilliseconds(100))
                 .ObserveOn(MainThreadScheduler.Instance)
-                .Subscribe(_ => rtbRevisionHeader_ContentsResized(_.EventArgs));
+                .Subscribe(eventPattern => TaskManager.HandleExceptions(() => rtbRevisionHeader_ContentsResized(eventPattern.EventArgs), Application.OnThreadException));
         }
 
         public void SetContextMenuStrip(ContextMenuStrip contextMenuStrip)

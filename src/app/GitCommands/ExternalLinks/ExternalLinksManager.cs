@@ -27,10 +27,7 @@ namespace GitCommands.ExternalLinks
         /// <param name="definition">External link definition.</param>
         public void Add(ExternalLinkDefinition definition)
         {
-            if (definition is null)
-            {
-                throw new ArgumentNullException(nameof(definition));
-            }
+            ArgumentNullException.ThrowIfNull(definition);
 
             if (_lowerPriority?.Contains(definition.Name) is false)
             {
@@ -53,10 +50,7 @@ namespace GitCommands.ExternalLinks
         /// <param name="definitions">External link definitions.</param>
         public void AddRange(IEnumerable<ExternalLinkDefinition> definitions)
         {
-            if (definitions is null)
-            {
-                throw new ArgumentNullException(nameof(definitions));
-            }
+            ArgumentNullException.ThrowIfNull(definitions);
 
             foreach (ExternalLinkDefinition externalLinkDefinition in definitions)
             {

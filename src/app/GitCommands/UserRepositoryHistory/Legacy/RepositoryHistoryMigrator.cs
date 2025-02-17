@@ -50,10 +50,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// <exception cref="ArgumentNullException"><paramref name="currentHistory"/> is <see langword="null"/>.</exception>
         public async Task<(IList<Current.Repository> history, bool changed)> MigrateAsync(IEnumerable<Current.Repository> currentHistory)
         {
-            if (currentHistory is null)
-            {
-                throw new ArgumentNullException(nameof(currentHistory));
-            }
+            ArgumentNullException.ThrowIfNull(currentHistory);
 
             List<Current.Repository> history = currentHistory.ToList();
 

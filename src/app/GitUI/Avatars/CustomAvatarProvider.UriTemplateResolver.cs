@@ -40,10 +40,7 @@ namespace GitUI.Avatars
             /// </summary>
             public Uri? ResolveTemplate(UriTemplateData templateData)
             {
-                if (templateData is null)
-                {
-                    throw new ArgumentNullException(nameof(templateData));
-                }
+                ArgumentNullException.ThrowIfNull(templateData);
 
                 string rawUri = _templateResolver(templateData);
 

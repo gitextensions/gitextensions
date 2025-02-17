@@ -367,51 +367,52 @@ namespace GitUI.CommandsDialogs
             _selectionFilterSubject
                 .Throttle(TimeSpan.FromMilliseconds(250))
                 .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(
-                    filterText =>
-                    {
-                        ThreadHelper.AssertOnUIThread();
-
-                        int matchCount = 0;
-                        try
-                        {
-                            matchCount = Unstaged.SetSelectionFilter(filterText);
-                            selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
-                        }
-                        catch (ArgumentException ae)
-                        {
-                            selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
-                        }
-
-                        if (matchCount > 0)
-                        {
-                            AddToSelectionFilter();
-                        }
-
-                        void AddToSelectionFilter()
-                        {
-                            if (selectionFilter.Items.Cast<string>().Any(s => s == filterText))
-                            {
-                                // Item is already in the list
-                                return;
-                            }
-
-                            const int SelectionFilterMaxLength = 10;
-
-                            while (selectionFilter.Items.Count >= SelectionFilterMaxLength)
-                            {
-                                // Remove the last item
-                                selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
-                            }
-
-                            // Insert the next term at the start of the filter control
-                            selectionFilter.Items.Insert(0, filterText);
-                        }
-                    });
+                .Subscribe(filterText => TaskManager.HandleExceptions(() => Update(filterText), Application.OnThreadException));
 
             UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
             return;
+
+            void Update(string filterText)
+            {
+                ThreadHelper.AssertOnUIThread();
+
+                int matchCount = 0;
+                try
+                {
+                    matchCount = Unstaged.SetSelectionFilter(filterText);
+                    selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
+                }
+                catch (ArgumentException ae)
+                {
+                    selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
+                }
+
+                if (matchCount > 0)
+                {
+                    AddToSelectionFilter(filterText);
+                }
+            }
+
+            void AddToSelectionFilter(string filterText)
+            {
+                if (selectionFilter.Items.Cast<string>().Any(s => s == filterText))
+                {
+                    // Item is already in the list
+                    return;
+                }
+
+                const int SelectionFilterMaxLength = 10;
+
+                while (selectionFilter.Items.Count >= SelectionFilterMaxLength)
+                {
+                    // Remove the last item
+                    selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
+                }
+
+                // Insert the next term at the start of the filter control
+                selectionFilter.Items.Insert(0, filterText);
+            }
 
             void ConfigureMessageBox()
             {

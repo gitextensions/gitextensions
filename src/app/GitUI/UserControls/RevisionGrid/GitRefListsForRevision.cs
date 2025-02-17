@@ -12,10 +12,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public GitRefListsForRevision(GitRevision revision)
         {
-            if (revision is null)
-            {
-                throw new ArgumentNullException(nameof(revision));
-            }
+            ArgumentNullException.ThrowIfNull(revision);
 
             if (revision.Refs is null)
             {

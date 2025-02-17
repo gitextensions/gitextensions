@@ -11,10 +11,7 @@ namespace GitCommands
         [Pure]
         public static string GetString(byte[]? output, byte[]? error, Encoding encoding)
         {
-            if (encoding is null)
-            {
-                throw new ArgumentNullException(nameof(encoding));
-            }
+            ArgumentNullException.ThrowIfNull(encoding);
 
             StringBuilder sb = new();
 
@@ -47,10 +44,7 @@ namespace GitCommands
         [Pure]
         public static string DecodeString(byte[]? output, byte[]? error, ref Encoding encoding)
         {
-            if (encoding is null)
-            {
-                throw new ArgumentNullException(nameof(encoding));
-            }
+            ArgumentNullException.ThrowIfNull(encoding);
 
             string outputString = "";
             if (output?.Length is > 0)

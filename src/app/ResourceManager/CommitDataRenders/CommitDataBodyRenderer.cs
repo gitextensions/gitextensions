@@ -34,10 +34,7 @@ namespace ResourceManager.CommitDataRenders
         /// </summary>
         public string Render(CommitData commitData, bool showRevisionsAsLinks)
         {
-            if (commitData is null)
-            {
-                throw new ArgumentNullException(nameof(commitData));
-            }
+            ArgumentNullException.ThrowIfNull(commitData);
 
             string body = WebUtility.HtmlEncode((commitData.Body ?? "").Trim());
 

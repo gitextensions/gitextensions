@@ -29,10 +29,7 @@ namespace GitCommands
         /// <exception cref="ArgumentException"><see cref="IGitItem.Guid"/> is not supplied.</exception>
         public IEnumerable<INamedGitItem> LoadChildren(IGitItem item)
         {
-            if (item is null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
+            ArgumentNullException.ThrowIfNull(item);
 
             if (item.ObjectId is null)
             {
