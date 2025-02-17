@@ -281,7 +281,7 @@ namespace GitCommands
             bool hasNotes,
             CancellationToken cancellationToken)
         {
-            AddAutoStash(_module, subject);
+            AddAutoStash(_module.WorkingDirGitDir, subject);
 
 #if TRACE_REVISIONREADER
             int revisionCount = 0;
@@ -336,9 +336,9 @@ namespace GitCommands
             }
         }
 
-        private static void AddAutoStash(IGitModule gitModule, IObserver<IReadOnlyList<GitRevision>> subject)
+        private static void AddAutoStash(string workingDirGitDir, IObserver<IReadOnlyList<GitRevision>> subject)
         {
-            string autoStashFileName = Path.Combine(gitModule.WorkingDirGitDir, "rebase-merge/autostash");
+            string autoStashFileName = Path.Combine(workingDirGitDir, "rebase-merge/autostash");
             if (!File.Exists(autoStashFileName)
                 || !ObjectId.TryParse(File.ReadLines(autoStashFileName).FirstOrDefault(), out ObjectId? autoStashCommitId))
             {
@@ -359,7 +359,7 @@ namespace GitCommands
                 Subject = "autostash"
             };
 
-            string origHeadFileName = Path.Combine(gitModule.WorkingDirGitDir, "rebase-merge/orig-head");
+            string origHeadFileName = Path.Combine(workingDirGitDir, "rebase-merge/orig-head");
             if (File.Exists(origHeadFileName)
                 && ObjectId.TryParse(File.ReadLines(origHeadFileName).FirstOrDefault(), out ObjectId? origHeadCommitId))
             {
