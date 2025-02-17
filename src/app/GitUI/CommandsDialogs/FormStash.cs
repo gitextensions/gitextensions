@@ -23,6 +23,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
+            Stashed.Bind(() => RefreshAll());
             View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(this, EventArgs.Empty); };
             View.TopScrollReached += FileViewer_TopScrollReached;
             View.BottomScrollReached += FileViewer_BottomScrollReached;
@@ -171,7 +172,6 @@ namespace GitUI.CommandsDialogs
             Loading.Visible = true;
             Loading.IsAnimating = true;
             Stashes.Enabled = false;
-            refreshToolStripButton.Enabled = false;
             StashMessage.ReadOnly = true;
             if (gitStash == _currentWorkingDirStashItem)
             {
@@ -286,18 +286,17 @@ namespace GitUI.CommandsDialogs
             Loading.Visible = false;
             Loading.IsAnimating = false;
             Stashes.Enabled = true;
-            refreshToolStripButton.Enabled = gitStash == _currentWorkingDirStashItem;
         }
 
         private void ResizeStashesWidth()
         {
-            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width, Stashes.Size.Height);
+            Stashes.Width = toolStrip1.Width - 5 - showToolStripLabel.Width;
         }
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
         {
-            _ = View.ViewChangesAsync(Stashed.SelectedItem,
-                cancellationToken: _viewChangesSequence.Next());
+            CancellationToken cancellationToken = _viewChangesSequence.Next();
+            this.InvokeAndForget(() => View.ViewChangesAsync(Stashed.SelectedItem, cancellationToken), cancellationToken: cancellationToken);
             EnablePartialStash();
         }
 
@@ -407,11 +406,6 @@ namespace GitUI.CommandsDialogs
                 minWidth: Stashes.Size.Width,
                 maxWidth: splitContainer1.Width - (2 * showToolStripLabel.Width),
                 dpiScaleBounds: false);
-        }
-
-        private void RefreshClick(object sender, EventArgs e)
-        {
-            RefreshAll();
         }
 
         private void RefreshAll(bool force = false)
