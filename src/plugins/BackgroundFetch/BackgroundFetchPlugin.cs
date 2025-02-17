@@ -80,18 +80,14 @@ namespace GitExtensions.Plugins.BackgroundFetch
                 return;
             }
 
-            if (isRefreshDisabled)
-            {
-                _cancellationToken = WaitForRunningGitExitsObservable(gitModule)
-                   .ObserveOn(ThreadPoolScheduler.Instance)
-                   .Subscribe(_ => RunBackgroundGitFetch());
-                return;
-            }
+            IObservable<long> fetchTriggers = isRefreshDisabled
+                ? WaitForRunningGitExitsObservable(gitModule)
+                : Observable
+                    .Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
+                    .SelectMany(_ => WaitForRunningGitExitsObservable(gitModule))
+                    .Repeat();
 
-            _cancellationToken = Observable
-                .Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
-                .SelectMany(_ => WaitForRunningGitExitsObservable(gitModule))
-                .Repeat()
+            _cancellationToken = fetchTriggers
                 .ObserveOn(ThreadPoolScheduler.Instance)
                 .Subscribe(_ => RunBackgroundGitFetch());
         }
