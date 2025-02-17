@@ -68,13 +68,13 @@ public partial class GrepHighlightService : TextHighlightService
         }
 
         // No coloring, values are parsed
-        commandConfiguration.Add(new GitConfigItem("color.grep.lineNumber", ""), "grep");
+        commandConfiguration.Add(new GitConfigItem("color.grep.linenumber", ""), "grep");
         commandConfiguration.Add(new GitConfigItem("color.grep.separator", ""), "grep");
 
         SetIfUnsetInGit(key: "color.grep.function", value: "white dim reverse");
         if (AppSettings.ReverseGitColoring.Value)
         {
-            SetIfUnsetInGit(key: "color.grep.matchSelected", value: "red bold reverse");
+            SetIfUnsetInGit(key: "color.grep.matchselected", value: "red bold reverse");
         }
 
         return commandConfiguration;

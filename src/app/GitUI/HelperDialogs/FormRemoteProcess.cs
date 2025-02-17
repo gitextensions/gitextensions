@@ -2,6 +2,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitUI.Infrastructure;
 using GitUI.UserControls;
 using ResourceManager;
@@ -94,7 +95,7 @@ Do you want to register the host's fingerprint and restart the process?");
                         if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
                             string.IsNullOrEmpty(Commands.Module.GetSetting("remote.{0}.puttykeyfile")))
                         {
-                            Commands.Module.LocalConfigFile.SetPathValue(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
+                            Commands.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey.ConvertPathToGitSetting());
                         }
 
                         // Retry the command.

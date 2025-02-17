@@ -153,7 +153,7 @@ namespace GitCommands
         /// <inheritdoc />
         public string GetTrackingRemote(ISettingsValueGetter configFile)
         {
-            return configFile.GetValue(_remoteSettingName);
+            return configFile.GetValue(_remoteSettingName) ?? "";
         }
 
         /// <inheritdoc />
@@ -177,7 +177,7 @@ namespace GitCommands
         /// <inheritdoc />
         public string GetMergeWith(ISettingsValueGetter configFile)
         {
-            return configFile.GetValue(_mergeSettingName).RemovePrefix(GitRefName.RefsHeadsPrefix);
+            return (configFile.GetValue(_mergeSettingName) ?? "").RemovePrefix(GitRefName.RefsHeadsPrefix);
         }
 
         public static GitRef NoHead(IGitModule module)
