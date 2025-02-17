@@ -281,6 +281,8 @@ namespace GitCommands
             bool hasNotes,
             CancellationToken cancellationToken)
         {
+            AddAutoStash(_module, subject);
+
 #if TRACE_REVISIONREADER
             int revisionCount = 0;
             Stopwatch sw = Stopwatch.StartNew();
@@ -332,6 +334,39 @@ namespace GitCommands
             {
                 subject.OnCompleted();
             }
+        }
+
+        private static void AddAutoStash(IGitModule gitModule, IObserver<IReadOnlyList<GitRevision>> subject)
+        {
+            string autoStashFileName = Path.Combine(gitModule.WorkingDirGitDir, "rebase-merge/autostash");
+            if (!File.Exists(autoStashFileName)
+                || !ObjectId.TryParse(File.ReadLines(autoStashFileName).FirstOrDefault(), out ObjectId? autoStashCommitId))
+            {
+                return;
+            }
+
+            const string author = "Git";
+            const string email = "git";
+            long now = DateTimeUtils.ToUnixTime(File.GetLastWriteTime(autoStashFileName));
+            GitRevision autoStashRevision = new(autoStashCommitId)
+            {
+                Author = author,
+                AuthorEmail = email,
+                AuthorUnixTime = now,
+                Committer = author,
+                CommitterEmail = email,
+                CommitUnixTime = now,
+                Subject = "autostash"
+            };
+
+            string origHeadFileName = Path.Combine(gitModule.WorkingDirGitDir, "rebase-merge/orig-head");
+            if (File.Exists(origHeadFileName)
+                && ObjectId.TryParse(File.ReadLines(origHeadFileName).FirstOrDefault(), out ObjectId? origHeadCommitId))
+            {
+                autoStashRevision.ParentIds = [origHeadCommitId];
+            }
+
+            subject.OnNext([autoStashRevision]);
         }
 
         private ArgumentBuilder BuildArguments(string revisionFilter, string pathFilter, bool hasNotes)
