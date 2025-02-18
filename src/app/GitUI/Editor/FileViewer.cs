@@ -308,15 +308,19 @@ namespace GitUI.Editor
                     }
 
                     // GetEffectiveSettings() checks Windows only, this need to be checked for each instance
-                    try
+                    const string difftasticCmd = "difftool.difftastic.cmd";
+                    isEnabled = _difftasticCmdCache[Module.WorkingDir] = new Lazy<bool>(() =>
                     {
-                        const string difftasticCmd = "difftool.difftastic.cmd";
-                        isEnabled = _difftasticCmdCache[Module.WorkingDir] = new Lazy<bool>(() => !string.IsNullOrEmpty(Module.GetEffectiveSetting(difftasticCmd)));
-                    }
-                    catch (Exception)
-                    {
-                        isEnabled = new Lazy<bool>(() => false);
-                    }
+                        try
+                        {
+                            return !string.IsNullOrEmpty(Module.GetEffectiveSetting(difftasticCmd));
+                        }
+                        catch (Exception exception)
+                        {
+                            Trace.WriteLine(exception);
+                            return false;
+                        }
+                    });
 
                     return isEnabled;
                 }
