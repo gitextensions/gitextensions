@@ -1,6 +1,8 @@
 ﻿﻿using System.ComponentModel;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.Menus;
+using GitUI.Theming;
 
 namespace GitUI.CommandsDialogs
 {
@@ -544,7 +546,7 @@ namespace GitUI.CommandsDialogs
             // 
             // LeftSplitContainer
             // 
-            LeftSplitContainer.BackColor = SystemColors.Window;
+            LeftSplitContainer.BackColor = AppColor.PanelBackground.GetThemeColor();
             LeftSplitContainer.Dock = DockStyle.Fill;
             LeftSplitContainer.FixedPanel = FixedPanel.Panel2;
             LeftSplitContainer.Location = new Point(1, 1);
@@ -682,7 +684,7 @@ namespace GitUI.CommandsDialogs
             // 
             // RevisionInfo
             // 
-            RevisionInfo.BackColor = SystemColors.Window;
+            RevisionInfo.BackColor = AppColor.PanelBackground.GetThemeColor();
             RevisionInfo.Cursor = Cursors.IBeam;
             RevisionInfo.Dock = DockStyle.Fill;
             RevisionInfo.Location = new Point(0, 0);
