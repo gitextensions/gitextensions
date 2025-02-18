@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 distributedPulledSettings,
                 distributedGlobalSettings);
 
-            IExecutable gitExecutable = module.GitExecutable;
+            IExecutable gitExecutable = module.GitNativeExecutable;
             GitConfigSettings systemGitConfigSettings = new(gitExecutable, GitSettingLevel.SystemWide);
             GitConfigSettings globalGitConfigSettings = new(gitExecutable, GitSettingLevel.Global);
             GitConfigSettings localGitConfigSettings = new(gitExecutable, GitSettingLevel.Local);

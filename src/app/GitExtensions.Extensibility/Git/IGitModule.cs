@@ -60,6 +60,11 @@ public interface IGitModule
     IExecutable GitExecutable { get; }
 
     /// <summary>
+    /// Gets the native Git executable associated with this module (i.e. not WSL on Windows).
+    /// </summary>
+    IExecutable GitNativeExecutable { get; }
+
+    /// <summary>
     /// Gets the access to the current git executable associated with this module.
     /// This command runner can be non-native (i.e. WSL).
     /// </summary>
