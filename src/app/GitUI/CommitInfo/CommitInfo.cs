@@ -318,7 +318,7 @@ namespace GitUI.CommitInfo
             _tagInfo = "";
             _gitDescribeInfo = "";
 
-            if (_revision is not null && !_revision.IsArtificial)
+            if (_revision is not null && !_revision.IsArtificial && !_revision.IsAutostash)
             {
                 if (Module.GetEffectiveSettings() is DistributedSettings distributedSettings)
                 {

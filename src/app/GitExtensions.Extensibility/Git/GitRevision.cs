@@ -108,6 +108,11 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     public bool IsArtificial => ObjectId.IsArtificial;
 
     /// <summary>
+    /// Indicates whether the commit is an autostash commit.
+    /// </summary>
+    public bool IsAutostash { get; set; }
+
+    /// <summary>
     /// Indicates whether the commit is a main stash commit.
     /// </summary>
     public bool IsStash => ReflogSelector is not null;

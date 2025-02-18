@@ -10241,6 +10241,10 @@ When OpenSSH is used, command line dialogs are shown!
         <source>authored and committed</source>
         <target />
       </trans-unit>
+      <trans-unit id="_autostash.Text">
+        <source>Autostash</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
         <source>
 
