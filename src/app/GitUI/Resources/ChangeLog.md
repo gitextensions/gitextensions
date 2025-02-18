@@ -1,6 +1,113 @@
 Changelog
 =========
 
+### Version v5.2.1 (29 Jan 2025)
+
+#### Changes:
+* [#12171] fix(ShowProcessDialogPasswordInput): Default to false
+* [#12165] fix(bare repo): Skip "git status" and "git stash list"
+* [#12158] fix: Improve blame loading and other minor
+* [#12143] fix(AheadBehindDataProvider): Restrict debug output
+
+
+[#12171]:https://github.com/gitextensions/gitextensions/pull/12171
+[#12165]:https://github.com/gitextensions/gitextensions/pull/12165
+[#12158]:https://github.com/gitextensions/gitextensions/pull/12158
+[#12143]:https://github.com/gitextensions/gitextensions/pull/12143
+
+
+### Version v5.2 (11 Jan 2025)
+
+#### Changes:
+* [#12130] feat(git-grep): Show function name of matches
+* [#12121] feat: Add syntax highlighting for some files
+* [#12120] fix(git-grep): Do not update on AddToSearchFilter
+* [#12119] fix(WindowPositionManager): Add vertical heuristic
+* [#12118] feat: SystemColors.Window in Dashboard theme
+* [#12117] feat: branch diff adjust icons for file status
+* [#12115] refactor(`FileStatusList`): Remove `SelectedIndex` API
+* [#12113] fix: expand last column to ListView size
+* [#12109] chore(FileStatusList): Enable `nullable` decoration
+* [#12105] Rename FormBrowseController -> GpgInfoProvider
+* [#12101] fix(Editor): Adapt selection length on replace
+* [#12100] fix(GPG): Remove max length of key id
+* [#12097] fix(Jump List Buttons): Deactivate on modal dialog
+* [#12096] fix(Submodules): Allow spaces in folder name
+* [#12095] fix(GetTagMessage): Do not truncate last line
+* [#12093] fix(File History): Indicate not identifiable file
+* [#12092] fix(File History): Correctly quote filename
+* [#12091] fix(PatchProcessor): Fixup encoding for diff text
+* [#12090] fix(blame previous): Remove restriction to availibility of the actual revision
+* [#12089] fix(FormBrowse): Keep file context on deactivation of filter
+* [#12085] fix(ProcessWrapper): Provide git error message instead of "External program returned non-zero exit code."
+* [#12081] chore(dubious ownership): Remove "Trust all repositories" button
+* [#12080] fix(RevisionDataGridView): Always select a revision
+* [#12078] feat: Support saving LFS files
+* [#12075] chore(MemoryStream): Add missing `using` statement
+* [#12072] fix(RevisionReader): Avoid hang on lengthy StandardOutput
+* [#12065] fix(Scripts): Do not display mnemonic ampersand
+* [#12063] fix: ReadExactly from stream
+* [#12062] chore(stylecop): update to 1.2.0-beta.556
+* [#12060] feat(Git Command Log): Improve display of command cache
+* [#12058] perf(FormResetAnotherBranch): Use quicker command
+* [#12057] chore: Convert remaining post-fix `FileAndForget`
+* [#12056] Fix(git-grep)
+* [#12049] fix(GPG): Ignore exit code from verify-tag
+* [#12040] fix(inline-diff): Limit highlight length
+* [#12034] feat(FileStatusList): Add examples of negative file filter
+* [#12033] feat(FileStatusList): Focus git-grep box on show
+* [#12032] feat: skip gaps in blocks for mark inline
+* [#12031] Address  CVE-2019-0820
+* [#12029] feat(CI/ADO): Add support for pull requests
+* [#12023] feat(EditboxBasedConsoleOutputControl): Improve UX and add [password] input field
+* [#12019] feat(graph): Add branch colors to theme
+
+
+[#12130]:https://github.com/gitextensions/gitextensions/pull/12130
+[#12121]:https://github.com/gitextensions/gitextensions/pull/12121
+[#12120]:https://github.com/gitextensions/gitextensions/pull/12120
+[#12119]:https://github.com/gitextensions/gitextensions/pull/12119
+[#12118]:https://github.com/gitextensions/gitextensions/pull/12118
+[#12117]:https://github.com/gitextensions/gitextensions/pull/12117
+[#12115]:https://github.com/gitextensions/gitextensions/pull/12115
+[#12113]:https://github.com/gitextensions/gitextensions/pull/12113
+[#12109]:https://github.com/gitextensions/gitextensions/pull/12109
+[#12105]:https://github.com/gitextensions/gitextensions/pull/12105
+[#12101]:https://github.com/gitextensions/gitextensions/pull/12101
+[#12100]:https://github.com/gitextensions/gitextensions/pull/12100
+[#12097]:https://github.com/gitextensions/gitextensions/pull/12097
+[#12096]:https://github.com/gitextensions/gitextensions/pull/12096
+[#12095]:https://github.com/gitextensions/gitextensions/pull/12095
+[#12093]:https://github.com/gitextensions/gitextensions/pull/12093
+[#12092]:https://github.com/gitextensions/gitextensions/pull/12092
+[#12091]:https://github.com/gitextensions/gitextensions/pull/12091
+[#12090]:https://github.com/gitextensions/gitextensions/pull/12090
+[#12089]:https://github.com/gitextensions/gitextensions/pull/12089
+[#12085]:https://github.com/gitextensions/gitextensions/pull/12085
+[#12081]:https://github.com/gitextensions/gitextensions/pull/12081
+[#12080]:https://github.com/gitextensions/gitextensions/pull/12080
+[#12078]:https://github.com/gitextensions/gitextensions/pull/12078
+[#12075]:https://github.com/gitextensions/gitextensions/pull/12075
+[#12072]:https://github.com/gitextensions/gitextensions/pull/12072
+[#12065]:https://github.com/gitextensions/gitextensions/pull/12065
+[#12063]:https://github.com/gitextensions/gitextensions/pull/12063
+[#12062]:https://github.com/gitextensions/gitextensions/pull/12062
+[#12060]:https://github.com/gitextensions/gitextensions/pull/12060
+[#12058]:https://github.com/gitextensions/gitextensions/pull/12058
+[#12057]:https://github.com/gitextensions/gitextensions/pull/12057
+[#12056]:https://github.com/gitextensions/gitextensions/pull/12056
+[#12049]:https://github.com/gitextensions/gitextensions/pull/12049
+[#12040]:https://github.com/gitextensions/gitextensions/pull/12040
+[#12034]:https://github.com/gitextensions/gitextensions/pull/12034
+[#12033]:https://github.com/gitextensions/gitextensions/pull/12033
+[#12032]:https://github.com/gitextensions/gitextensions/pull/12032
+[#12031]:https://github.com/gitextensions/gitextensions/pull/12031
+[#12029]:https://github.com/gitextensions/gitextensions/pull/12029
+[#12023]:https://github.com/gitextensions/gitextensions/pull/12023
+[#12019]:https://github.com/gitextensions/gitextensions/pull/12019
+
+
+
 ### Version 5.1.1 (10 Nov 2024)
 
 #### Changes:
