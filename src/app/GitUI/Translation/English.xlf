@@ -7976,6 +7976,10 @@ Context menu for additional operations</source>
         <source>Rebase also dependent branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="checkboxMergeAutoStash.Text">
+        <source>Automatically stash before doing a merge</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en">
@@ -9998,6 +10002,10 @@ Diff selection:
       </trans-unit>
       <trans-unit id="LocalRB.Text">
         <source>Local for current repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SystemRB.Text">
+        <source>System</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
