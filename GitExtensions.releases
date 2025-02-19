@@ -1,3 +1,13 @@
+[Version "5.2.1"]
+    DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v5.2.1/GitExtensions-x64-5.2.1.18061-0d74cfdc3.msi
+    ReleaseType = hotfix
+    ;branch to which bugfixes found in this version should be merged (base for a pull request)
+    BugFixBranch = release/5.0
+[Version "5.2.0"]
+    DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v5.2/GitExtensions-x64-5.2.0.18047-718e2ee7d.msi
+    ReleaseType = major
+    ;branch to which bugfixes found in this version should be merged (base for a pull request)
+    BugFixBranch = release/5.0
 [Version "5.1.1"]
     DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v5.1.1/GitExtensions-x64-5.1.1.17970-939c0edba.msi
     ReleaseType = hotfix
