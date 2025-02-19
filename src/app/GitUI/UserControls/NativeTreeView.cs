@@ -6,11 +6,5 @@
         {
             DoubleBuffered = true;
         }
-
-        protected override void CreateHandle()
-        {
-            base.CreateHandle();
-            NativeMethods.SetWindowTheme(Handle, "explorer", null);
-        }
     }
 }
