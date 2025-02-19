@@ -590,7 +590,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
         {
-            settingButton.BackColor = Color.LavenderBlush.AdaptBackColor();
+            settingButton.BackColor = Color.LavenderBlush; // No .AdaptBackColor();
             settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
             settingButton.Text = text;
             settingFixButton.Visible = true;
