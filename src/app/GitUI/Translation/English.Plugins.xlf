@@ -52,6 +52,10 @@
         <source>Fetch all submodules</source>
         <target />
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target />

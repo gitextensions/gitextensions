@@ -36,6 +36,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
         private readonly NumberSetting<int> _fetchInterval = new("Fetch every (seconds) - set to 0 to disable", 0);
         private readonly BoolSetting _autoRefresh = new("Refresh view after fetch", false);
         private readonly BoolSetting _fetchAllSubmodules = new("Fetch all submodules", false);
+        private readonly BoolSetting _fetchImmediatelyOnRepoOpening = new("Fetch immediately on repository opening", false);
 
         public override IEnumerable<ISetting> GetSettings()
         {
@@ -44,6 +45,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
             yield return _fetchInterval;
             yield return _autoRefresh;
             yield return _fetchAllSubmodules;
+            yield return _fetchImmediatelyOnRepoOpening;
             yield return _warningForceWithLease;
         }
 
@@ -71,89 +73,100 @@ namespace GitExtensions.Plugins.BackgroundFetch
             Validates.NotNull(_currentGitUiCommands);
 
             IGitModule gitModule = _currentGitUiCommands.Module;
-            if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())
+            bool fetchOnOpening = _fetchImmediatelyOnRepoOpening.ValueOrDefault(Settings);
+            bool isRefreshDisabled = fetchInterval <= 0;
+            if ((isRefreshDisabled && !fetchOnOpening) || !gitModule.IsValidGitWorkingDir())
             {
-                _cancellationToken =
-                    Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
-                              .SelectMany(i =>
-                              {
-                                  // if git not running - start fetch immediately
-                                  if (!gitModule.IsRunningGitProcess())
-                                  {
-                                      return Observable.Return(i);
-                                  }
+                return;
+            }
 
-                                  // in other case - every 5 seconds check if git still running
-                                  return Observable
-                                      .Interval(TimeSpan.FromSeconds(5))
-                                      .SkipWhile(ii => gitModule.IsRunningGitProcess())
-                                      .FirstAsync()
-                                  ;
-                              })
-                              .Repeat()
-                              .ObserveOn(ThreadPoolScheduler.Instance)
-                              .Subscribe(i =>
-                                  {
-                                      GitArgumentBuilder args;
-                                      if (_fetchAllSubmodules.ValueOrDefault(Settings))
-                                      {
-                                          // The Git command is hardcoded compared, not using _gitCommand
-                                          args = new GitArgumentBuilder("submodule")
-                                          {
-                                            "foreach",
-                                            "--recursive",
-                                            "git",
-                                            "fetch",
-                                            "--all"
-                                          };
+            IObservable<long> fetchTriggers = isRefreshDisabled
+                ? WaitForRunningGitExitsObservable(gitModule)
+                : Observable
+                    .Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
+                    .SelectMany(_ => WaitForRunningGitExitsObservable(gitModule))
+                    .Repeat();
 
-                                          try
-                                          {
-                                              _currentGitUiCommands.Module.GitExecutable.GetOutput(args);
-                                          }
-                                          catch
-                                          {
-                                              // Ignore background errors
-                                          }
-                                      }
+            _cancellationToken = fetchTriggers
+                .ObserveOn(ThreadPoolScheduler.Instance)
+                .Subscribe(_ => RunBackgroundGitFetch());
+        }
 
-                                      string gitCmdString = _gitCommand.ValueOrDefault(Settings);
-                                      if (string.IsNullOrWhiteSpace(gitCmdString))
-                                      {
-                                          gitCmdString = _defaultGitCommand;
-                                      }
+        private static IObservable<long> WaitForRunningGitExitsObservable(IGitModule gitModule)
+        {
+            // if git not running - start fetch immediately
+            if (!gitModule.IsRunningGitProcess())
+            {
+                return Observable.Return(1L);
+            }
 
-                                      string[] gitCmd = gitCmdString.Trim().Split(Delimiters.Space, StringSplitOptions.RemoveEmptyEntries);
-                                      args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
-                                      string msg;
-                                      try
-                                      {
-                                          // git fetch is writing result details into standard error and not standard output, see:
-                                          // https://github.com/gitextensions/gitextensions/pull/10793
-                                          // https://lore.kernel.org/git/xmqq7cvqrdu6.fsf@gitster.g/
-                                          msg = _currentGitUiCommands.Module.GitExecutable.Execute(args).StandardError;
-                                      }
-                                      catch
-                                      {
-                                          // Ignore background errors
-                                          return;
-                                      }
+            // in other case - every seconds check if git still running
+            return Observable
+                .Interval(TimeSpan.FromSeconds(1))
+                .SkipWhile(_ => gitModule.IsRunningGitProcess())
+                .FirstAsync();
+        }
 
-                                      if (_autoRefresh.ValueOrDefault(Settings))
-                                      {
-                                          if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))
-                                          {
-                                              if (msg.Contains("From"))
-                                              {
-                                                  _currentGitUiCommands.RepoChangedNotifier.Notify();
-                                              }
-                                          }
-                                          else
-                                          {
-                                              _currentGitUiCommands.RepoChangedNotifier.Notify();
-                                          }
-                                      }
-                                  });
+        private void RunBackgroundGitFetch()
+        {
+            GitArgumentBuilder args;
+            if (_fetchAllSubmodules.ValueOrDefault(Settings))
+            {
+                // The Git command is hardcoded compared, not using _gitCommand
+                args = new GitArgumentBuilder("submodule")
+                            {
+                                "foreach",
+                                "--recursive",
+                                "git",
+                                "fetch",
+                                "--all"
+                            };
+
+                try
+                {
+                    _currentGitUiCommands.Module.GitExecutable.GetOutput(args);
+                }
+                catch
+                {
+                    // Ignore background errors
+                }
+            }
+
+            string gitCmdString = _gitCommand.ValueOrDefault(Settings);
+            if (string.IsNullOrWhiteSpace(gitCmdString))
+            {
+                gitCmdString = _defaultGitCommand;
+            }
+
+            string[] gitCmd = gitCmdString.Trim().Split(Delimiters.Space, StringSplitOptions.RemoveEmptyEntries);
+            args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
+            string msg;
+            try
+            {
+                // git fetch is writing result details into standard error and not standard output, see:
+                // https://github.com/gitextensions/gitextensions/pull/10793
+                // https://lore.kernel.org/git/xmqq7cvqrdu6.fsf@gitster.g/
+                msg = _currentGitUiCommands.Module.GitExecutable.Execute(args).StandardError;
+            }
+            catch
+            {
+                // Ignore background errors
+                return;
+            }
+
+            if (_autoRefresh.ValueOrDefault(Settings))
+            {
+                if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (msg.Contains("From"))
+                    {
+                        _currentGitUiCommands.RepoChangedNotifier.Notify();
+                    }
+                }
+                else
+                {
+                    _currentGitUiCommands.RepoChangedNotifier.Notify();
+                }
             }
         }
 
