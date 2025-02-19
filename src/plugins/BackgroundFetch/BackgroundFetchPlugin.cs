@@ -100,9 +100,9 @@ namespace GitExtensions.Plugins.BackgroundFetch
                 return Observable.Return(1L);
             }
 
-            // in other case - every 5 seconds check if git still running
+            // in other case - every seconds check if git still running
             return Observable
-                .Interval(TimeSpan.FromSeconds(5))
+                .Interval(TimeSpan.FromSeconds(1))
                 .SkipWhile(_ => gitModule.IsRunningGitProcess())
                 .FirstAsync();
         }
