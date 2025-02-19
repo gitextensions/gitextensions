@@ -18,15 +18,15 @@ namespace GitExtUtils
             // The set of default configuration items for Git Extensions
             Default = new GitCommandConfiguration();
 
-            Default.Add(new GitConfigItem("rebase.autoSquash", "false"), "rebase");
+            Default.Add(new GitConfigItem("rebase.autosquash", "false"), "rebase");
 
-            Default.Add(new GitConfigItem("log.showSignature", "false"), "log", "show", "whatchanged");
+            Default.Add(new GitConfigItem("log.showsignature", "false"), "log", "show", "whatchanged");
 
             Default.Add(new GitConfigItem("color.ui", "never"), "diff", "range-diff", "grep");
             Default.Add(new GitConfigItem("diff.submodule", "short"), "diff");
             Default.Add(new GitConfigItem("diff.noprefix", "false"), "diff");
             Default.Add(new GitConfigItem("diff.mnemonicprefix", "false"), "diff");
-            Default.Add(new GitConfigItem("diff.ignoreSubmodules", "none"), "diff", "status");
+            Default.Add(new GitConfigItem("diff.ignoresubmodules", "none"), "diff", "status");
             Default.Add(new GitConfigItem("core.safecrlf", "false"), "diff");
         }
 

@@ -46,7 +46,7 @@ public class RevisionFileNameTests
     {
         const string path = "a.txt";
         string actualFileName;
-        string line = $"-c log.showSignature=false log --format=\"????%H\" --name-only --follow --diff-merges=separate  --find-renames --find-copies {objectId} --max-count=1 -- \"a.txt\"";
+        string line = $"-c log.showsignature=false log --format=\"????%H\" --name-only --follow --diff-merges=separate  --find-renames --find-copies {objectId} --max-count=1 -- \"a.txt\"";
 
         bool originalFollowRenamesInFileHistoryExactOnly = AppSettings.FollowRenamesInFileHistoryExactOnly;
         AppSettings.FollowRenamesInFileHistoryExactOnly = false;
