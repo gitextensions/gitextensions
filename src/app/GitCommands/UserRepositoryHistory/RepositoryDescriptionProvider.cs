@@ -2,6 +2,7 @@
 
 using System.Text.RegularExpressions;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 
 namespace GitCommands.UserRepositoryHistory
 {
@@ -15,6 +16,12 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositoryDir">Path to repository.</param>
         /// <returns>Short name for repository.</returns>
         string Get(string repositoryDir, Func<string, bool>? isValidGitWorkingDir = default);
+
+        /// <summary>
+        ///  Returns a short name for the repository followed by a unique name.
+        /// </summary>
+        /// <param name="repositoryDir">Path to repository.</param>
+        string GetDescriptiveUnique(string repositoryDir);
     }
 
     /// <summary>
@@ -90,6 +97,19 @@ namespace GitCommands.UserRepositoryHistory
 
                 return dirInfo.Name;
             }
+        }
+
+        public string GetDescriptiveUnique(string repositoryDir)
+        {
+            const int maxDescriptiveLength = 25;
+            string descriptive = Get(repositoryDir, isValidGitWorkingDir: default);
+            int endOfLineIndex = descriptive.IndexOfAny(Delimiters.LineFeedAndCarriageReturnAndNull);
+            int descriptiveEnd = endOfLineIndex >= 0 ? endOfLineIndex : descriptive.Length;
+            descriptiveEnd = Math.Min(descriptiveEnd, maxDescriptiveLength);
+            ReadOnlySpan<char> shortName = descriptive.AsSpan(0, descriptiveEnd).Trim();
+
+            string unique = repositoryDir.TrimEnd(Path.DirectorySeparatorChar);
+            return shortName.Length == 0 ? unique : $"{shortName} ({unique})";
         }
 
         /// <summary>

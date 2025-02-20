@@ -93,7 +93,7 @@ namespace GitUI
 
             SafeInvoke(() =>
             {
-                string repositoryDescription = _repositoryDescriptionProvider.Get(workingDir);
+                string repositoryDescription = _repositoryDescriptionProvider.GetDescriptiveUnique(workingDir);
                 if (string.IsNullOrWhiteSpace(repositoryDescription))
                 {
                     return;
@@ -107,6 +107,7 @@ namespace GitUI
 
                 // sanitise
                 StringBuilder sb = new(repositoryDescription);
+                sb.Replace(@":\", "_");
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {
                     sb.Replace(c, '_');
