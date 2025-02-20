@@ -22,12 +22,6 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="repositoryDir">Path to repository.</param>
         string GetDescriptiveUnique(string repositoryDir);
-
-        /// <summary>
-        ///  Returns a unique name for the repository.
-        /// </summary>
-        /// <param name="repositoryDir">Path to repository.</param>
-        string GetUnique(string repositoryDir);
     }
 
     /// <summary>
@@ -114,13 +108,8 @@ namespace GitCommands.UserRepositoryHistory
             descriptiveEnd = Math.Min(descriptiveEnd, maxDescriptiveLength);
             ReadOnlySpan<char> shortName = descriptive.AsSpan(0, descriptiveEnd).Trim();
 
-            string unique = GetUnique(repositoryDir);
+            string unique = repositoryDir.TrimEnd(Path.DirectorySeparatorChar);
             return shortName.Length == 0 ? unique : $"{shortName} ({unique})";
-        }
-
-        public string GetUnique(string repositoryDir)
-        {
-            return repositoryDir.TrimEnd(Path.DirectorySeparatorChar);
         }
 
         /// <summary>
