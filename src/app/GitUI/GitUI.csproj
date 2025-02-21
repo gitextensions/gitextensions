@@ -9,10 +9,6 @@
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
      <!-- Suppress suggestion to use experimental API ShowDialogAsync -->
     <NoWarn>$(NoWarn);WFO5002</NoWarn>
-
-    <!-- Enable C#13 keyword "field" -->
-    <LangVersion>preview</LangVersion>
-
     <!--
     For debug purposes uncomment these lines:
 
