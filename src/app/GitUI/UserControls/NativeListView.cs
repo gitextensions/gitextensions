@@ -1,14 +1,32 @@
-﻿using static System.NativeMethods;
+﻿using GitUI.Theming;
+using static System.NativeMethods;
 
 namespace GitUI.UserControls
 {
     public class NativeListView : ListView
     {
+        internal static event EventHandler? BeginCreateHandle;
+        internal static event EventHandler? EndCreateHandle;
         internal event ScrollEventHandler? Scroll;
 
         public NativeListView()
         {
             DoubleBuffered = true;
+        }
+
+        protected override void CreateHandle()
+        {
+            BeginCreateHandle?.Invoke(this, EventArgs.Empty);
+            base.CreateHandle();
+
+            if (!ThemeModule.IsDarkTheme)
+            {
+                // explorer style selection painting in left panel
+                // Not needed in dark mode, this is the same for "DarkMode_Explorer"
+                NativeMethods.SetWindowTheme(Handle, "explorer", null);
+            }
+
+            EndCreateHandle?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void WndProc(ref Message m)
