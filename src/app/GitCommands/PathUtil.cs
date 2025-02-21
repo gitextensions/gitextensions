@@ -121,14 +121,15 @@ namespace GitCommands
                 return false;
             }
 
-            return Uri.IsWellFormedUriString(url, UriKind.Absolute)
+            return (Uri.IsWellFormedUriString(url, UriKind.Absolute) && url.IndexOfAny(['?', '#']) == -1)
                    || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
+                   || url.EndsWith(".git/", StringComparison.CurrentCultureIgnoreCase)
                    || GitModule.IsValidGitWorkingDir(url);
         }
 
         public static string GetFileName(string fileName)
         {
-            char[] pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
+            char[] pathSeparators = [NativeDirectorySeparatorChar, PosixDirectorySeparatorChar];
             int pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
             {
