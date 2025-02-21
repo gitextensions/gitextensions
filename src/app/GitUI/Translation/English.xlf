@@ -7628,15 +7628,19 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
       <trans-unit id="linkChangeLog.Text">
-        <source>Show Change&amp;Log</source>
+        <source>Show release notes and change &amp;log</source>
         <target />
       </trans-unit>
       <trans-unit id="linkDirectDownload.Text">
         <source>&amp;Direct Download</source>
         <target />
       </trans-unit>
-      <trans-unit id="linkRequiredNetRuntime.Text">
+      <trans-unit id="linkRequiredDotNetRuntime.Text">
         <source>Required: .NET {0} Desktop Runtime {1} or later {2}.x</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="linkRequiredDotNetRuntime.ToolTipText">
+        <source>Download latest .NET Desktop Runtime. See docs on how to install .NET runtime without administrative privileges.</source>
         <target />
       </trans-unit>
     </body>
@@ -8226,7 +8230,7 @@ Check if file is accessible.</source>
         <target />
       </trans-unit>
       <trans-unit id="label50.Text">
-        <source>Set the correct paths to Git for Windows. (WSL Git will be used for WSL repositories).</source>
+        <source>Set the correct paths to Git for Windows. (WSL Git will automatically be used for WSL repositories.)</source>
         <target />
       </trans-unit>
       <trans-unit id="lblGitCommand.Text">

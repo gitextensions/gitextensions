@@ -4,6 +4,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using Git.hub;
 using GitCommands;
+using GitUI.UserControls.Settings;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
@@ -37,7 +38,7 @@ public partial class FormUpdates : GitExtensionsDialog
         progressBar1.Visible = true;
         progressBar1.Style = ProgressBarStyle.Marquee;
 
-        linkRequiredNetRuntime.Visible = false;
+        linkRequiredDotNetRuntime.Visible = false;
     }
 
     public void SearchForUpdatesAndShow(IWin32Window ownerWindow, bool alwaysShow)
@@ -149,7 +150,10 @@ public partial class FormUpdates : GitExtensionsDialog
                 linkChangeLog.Visible = true;
                 linkDirectDownload.Visible = true;
 
-                DisplayNetRuntimeLink(format: linkRequiredNetRuntime.Text, _requiredNetRuntimeVersion);
+                if (UpdateRequired(_requiredNetRuntimeVersion, UserEnvironmentInformation.GetDotnetDesktopRuntimeVersions()))
+                {
+                    DisplayNetRuntimeLink(format: linkRequiredDotNetRuntime.Text, _requiredNetRuntimeVersion);
+                }
 
                 if (AppSettings.IsPortable())
                 {
@@ -177,36 +181,37 @@ public partial class FormUpdates : GitExtensionsDialog
     {
         if (requiredNetRuntimeVersion is null)
         {
-            linkRequiredNetRuntime.Visible = false;
+            linkRequiredDotNetRuntime.Visible = false;
             return;
         }
 
         string versionText1 = requiredNetRuntimeVersion.ToString(fieldCount: 2);
         string versionText2 = requiredNetRuntimeVersion.ToString(fieldCount: 3);
         string versionText3 = requiredNetRuntimeVersion.ToString(fieldCount: 1);
-        linkRequiredNetRuntime.Text = string.Format(format, versionText1, versionText2, versionText3);
+        linkRequiredDotNetRuntime.Text = string.Format(format, versionText1, versionText2, versionText3);
 
-        int start = linkRequiredNetRuntime.Text.IndexOf(versionText2, StringComparison.Ordinal);
+        int start = linkRequiredDotNetRuntime.Text.IndexOf(versionText2, StringComparison.Ordinal);
         int length = versionText2.Length;
-        linkRequiredNetRuntime.LinkArea = new LinkArea(start, length);
+        linkRequiredDotNetRuntime.LinkArea = new LinkArea(start, length);
 
         _netRuntimeDownloadUrl = $@"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={RuntimeInformation.OSArchitecture}&rid=win-{RuntimeInformation.OSArchitecture}&apphost_version={requiredNetRuntimeVersion.ToString(fieldCount: 3)}&gui=true";
 
-        linkRequiredNetRuntime.Visible = true;
+        linkRequiredDotNetRuntime.Visible = true;
     }
 
     private void LaunchUrl(LaunchType launchType)
     {
+        const string releases = @"https://github.com/gitextensions/gitextensions/releases";
         switch (launchType)
         {
             case LaunchType.ChangeLog:
-                OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/src/app/GitUI/Resources/ChangeLog.md");
+                OsShellUtil.OpenUrlInDefaultBrowser(releases);
                 break;
 
             case LaunchType.DirectDownload:
                 if (AppSettings.IsPortable())
                 {
-                    OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/releases");
+                    OsShellUtil.OpenUrlInDefaultBrowser(releases);
                 }
                 else
                 {
@@ -215,12 +220,16 @@ public partial class FormUpdates : GitExtensionsDialog
 
                 break;
 
-            case LaunchType.NetRuntime:
+            case LaunchType.DotNetRuntime:
                 if (!string.IsNullOrWhiteSpace(_netRuntimeDownloadUrl))
                 {
                     OsShellUtil.OpenUrlInDefaultBrowser(_netRuntimeDownloadUrl);
                 }
 
+                break;
+
+            case LaunchType.LocalDotNetRuntime:
+                OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/gitextensions/gitextensions/wiki/.NET-Desktop-Runtime");
                 break;
         }
     }
@@ -229,7 +238,9 @@ public partial class FormUpdates : GitExtensionsDialog
 
     private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.DirectDownload);
 
-    private void linkRequiredNetRuntime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.NetRuntime);
+    private void linkRequiredDotNetRuntime_InfoClicked(object sender, EventArgs e) => LaunchUrl(LaunchType.LocalDotNetRuntime);
+
+    private void linkRequiredDotNetRuntime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.DotNetRuntime);
 
     private void btnUpdateNow_Click(object sender, EventArgs e)
     {
@@ -273,11 +284,18 @@ public partial class FormUpdates : GitExtensionsDialog
         });
     }
 
+    private static bool UpdateRequired(Version required, IEnumerable<Version> installed)
+    {
+        IEnumerable<Version> matchingMajor = installed.Where(version => version.Major == required.Major);
+        return !matchingMajor.Any(version => version >= required);
+    }
+
     internal enum LaunchType
     {
         ChangeLog,
         DirectDownload,
-        NetRuntime
+        DotNetRuntime,
+        LocalDotNetRuntime
     }
 
     internal TestAccessor GetTestAccessor() => new(this);
@@ -291,7 +309,7 @@ public partial class FormUpdates : GitExtensionsDialog
             _form = form;
         }
 
-        public LinkLabel linkRequiredNetRuntime => _form.linkRequiredNetRuntime;
+        public SettingsLinkLabel linkRequiredNetRuntime => _form.linkRequiredDotNetRuntime;
 
         public string NetRuntimeDownloadUrl => _form._netRuntimeDownloadUrl;
 
