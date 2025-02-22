@@ -533,7 +533,7 @@ namespace GitUI.Editor
                 text = string.Join("\n", lines);
             }
 
-            ClipboardUtil.TrySetText(text.AdjustLineEndings(Module.GetEffectiveSettingsByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
+            ClipboardUtil.TrySetText(text.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
         }
 
         public int HScrollPosition

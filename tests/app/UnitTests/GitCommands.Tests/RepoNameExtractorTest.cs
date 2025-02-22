@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;
-using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
@@ -11,16 +10,12 @@ namespace GitCommandsTests
     public class RepoNameExtractorTest
     {
         private IGitModule _module;
-        private IConfigFileSettings _configFile;
         private IRepoNameExtractor _repoNameExtractor;
 
         [SetUp]
         public void Setup()
         {
-            _configFile = Substitute.For<IConfigFileSettings>();
-
             _module = Substitute.For<IGitModule>();
-            _module.LocalConfigFile.Returns(_configFile);
             _repoNameExtractor = new RepoNameExtractor(() => _module);
         }
 

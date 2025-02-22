@@ -177,9 +177,7 @@ namespace GitUI.CommandsDialogs
                     Module.UnstageFile(".gitmodules");
                 }
 
-                IConfigFileSettings configFile = Module.LocalConfigFile;
-                configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
-                configFile.Save();
+                Module.RemoveConfigSection("submodule", SubModuleName.Text);
 
                 Initialize();
             }
