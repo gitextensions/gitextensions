@@ -183,7 +183,8 @@ public partial class FormUpdates : GitExtensionsDialog
 
         string versionText1 = requiredNetRuntimeVersion.ToString(fieldCount: 2);
         string versionText2 = requiredNetRuntimeVersion.ToString(fieldCount: 3);
-        linkRequiredNetRuntime.Text = string.Format(format, versionText1, versionText2);
+        string versionText3 = requiredNetRuntimeVersion.ToString(fieldCount: 1);
+        linkRequiredNetRuntime.Text = string.Format(format, versionText1, versionText2, versionText3);
 
         int start = linkRequiredNetRuntime.Text.IndexOf(versionText2, StringComparison.Ordinal);
         int length = versionText2.Length;

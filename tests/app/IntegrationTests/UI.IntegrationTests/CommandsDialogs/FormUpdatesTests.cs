@@ -35,7 +35,7 @@ public class FormUpdatesTests
             {
                 FormUpdates.TestAccessor accessor = form.GetTestAccessor();
 
-                accessor.DisplayNetRuntimeLink("Required: .NET {0} Desktop Runtime {1} or later", requiredNetRuntimeVersion: null);
+                accessor.DisplayNetRuntimeLink("Required: .NET {0} Desktop Runtime {1} or later {2}.x", requiredNetRuntimeVersion: null);
                 accessor.linkRequiredNetRuntime.Visible.Should().BeFalse();
             });
     }
@@ -60,20 +60,20 @@ public class FormUpdatesTests
     {
         yield return new TestCaseData(
             new Version(8, 10, 134),
-            "Required: .NET {0} Desktop Runtime {1} or later",
-            "Required: .NET 8.10 Desktop Runtime 8.10.134 or later",
+            "Required: .NET {0} Desktop Runtime {1} or later {2}.x",
+            "Required: .NET 8.10 Desktop Runtime 8.10.134 or later 8.x",
             new LinkArea(36, 8));
 
         yield return new TestCaseData(
             new Version(10, 0, 2),
-            "Требуется: .NET {0} Desktop Runtime {1} или более поздняя версия",
-            "Требуется: .NET 10.0 Desktop Runtime 10.0.2 или более поздняя версия",
+            "Требуется: .NET {0} Desktop Runtime {1} или более поздняя версия {2}.x",
+            "Требуется: .NET 10.0 Desktop Runtime 10.0.2 или более поздняя версия 10.x",
             new LinkArea(37, 6));
 
         yield return new TestCaseData(
             new Version(7, 11, 10),
-            "Erforderlich: .NET {0} Desktop Runtime {1} oder höher",
-            "Erforderlich: .NET 7.11 Desktop Runtime 7.11.10 oder höher",
+            "Erforderlich: .NET {0} Desktop Runtime {1} oder höher {2}.x",
+            "Erforderlich: .NET 7.11 Desktop Runtime 7.11.10 oder höher 7.x",
             new LinkArea(40, 7));
     }
 
@@ -84,7 +84,7 @@ public class FormUpdatesTests
             form =>
             {
                 FormUpdates.TestAccessor accessor = form.GetTestAccessor();
-                accessor.DisplayNetRuntimeLink("Required: .NET {0} Desktop Runtime {1} or later", runtimeVersion);
+                accessor.DisplayNetRuntimeLink("Required: .NET {0} Desktop Runtime {1} or later {2}.x", runtimeVersion);
 
                 accessor.NetRuntimeDownloadUrl.Should().Be(expectedUrl);
             });

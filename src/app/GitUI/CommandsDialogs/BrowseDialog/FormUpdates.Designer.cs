@@ -142,7 +142,7 @@
             linkRequiredNetRuntime.Name = "linkRequiredNetRuntime";
             linkRequiredNetRuntime.Size = new Size(432, 15);
             linkRequiredNetRuntime.TabIndex = 2;
-            linkRequiredNetRuntime.Text = "Required: .NET {0} Desktop Runtime {1} or later";
+            linkRequiredNetRuntime.Text = "Required: .NET {0} Desktop Runtime {1} or later {2}.x";
             linkRequiredNetRuntime.LinkClicked += linkRequiredNetRuntime_LinkClicked;
             // 
             // FormUpdates

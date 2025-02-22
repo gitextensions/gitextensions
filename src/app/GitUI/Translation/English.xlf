@@ -7636,7 +7636,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
       <trans-unit id="linkRequiredNetRuntime.Text">
-        <source>Required: .NET {0} Desktop Runtime {1} or later</source>
+        <source>Required: .NET {0} Desktop Runtime {1} or later {2}.x</source>
         <target />
       </trans-unit>
     </body>
