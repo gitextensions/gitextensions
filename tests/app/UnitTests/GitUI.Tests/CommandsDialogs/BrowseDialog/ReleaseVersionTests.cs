@@ -5,7 +5,7 @@ using GitUI.CommandsDialogs.BrowseDialog;
 namespace GitUITests.CommandsDialogs.BrowseDialog
 {
     [TestFixture]
-    public class FormUpdateFixture
+    public class ReleaseVersionTests
     {
         private static string GetReleasesConfigFileText()
         {
@@ -31,7 +31,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
                 new Version(2, 49),
                 new Version(2, 50)
             };
-            updates.Select(rv => rv.Version).Should().Equal(expectedVersions);
+            updates.Select(rv => rv.ApplicationVersion).Should().Equal(expectedVersions);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
             {
                 new Version(2, 48)
             };
-            updates.Select(rv => rv.Version).Should().Equal(expectedVersions);
+            updates.Select(rv => rv.ApplicationVersion).Should().Equal(expectedVersions);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
             IEnumerable<ReleaseVersion> availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
-            updates.Select(rv => rv.Version).Should().BeEmpty();
+            updates.Select(rv => rv.ApplicationVersion).Should().BeEmpty();
         }
     }
 }
