@@ -51,7 +51,7 @@ namespace GitCommands.Patches
         /// Everything else (header, warnings, ...) is printed in git encoding (<see cref="GitModule.SystemEncoding"/>).
         /// <para />
         /// Since a patch may contain the diff of more than one file, it would be nice to obtain the encoding for each file
-        /// from <c>.gitattributes</c>. For now, one encoding is used for every file in the repo (<see cref="ConfigFileSettings.FilesEncoding"/>).
+        /// from <c>.gitattributes</c>. For now, one encoding is used for every file in the repo (<see cref="GitEncodingSettingsGetter.FilesEncoding"/>).
         /// <para />
         /// File paths can be quoted (see <c>core.quotepath</c>). They are unquoted by <see cref="GitModule.ReEncodeFileNameFromLossless"/>.
         /// </remarks>

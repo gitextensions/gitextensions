@@ -290,7 +290,6 @@
             gbPaths.ResumeLayout(false);
             gbPaths.PerformLayout();
             ResumeLayout(false);
-
         }
 
         #endregion
