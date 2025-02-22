@@ -1076,7 +1076,7 @@ namespace GitUI
                     .ToHashSet();
             }
 
-            (List<TreeNodeInfo> nodes, HashSet<TreeNode> toBeSelectedItems, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, gitGrepState, _noItemStatuses, cancellationToken);
+            (List<TreeNodeInfo> nodes, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, gitGrepState, _noItemStatuses, cancellationToken);
 
             GitItemStatusesWithDescription = items;
             if (nodes.Count > 0)
@@ -1119,7 +1119,7 @@ namespace GitUI
                 switch (FileStatusListView.Nodes.Count)
                 {
                     case 0: FileStatusListView_SelectedIndexChanged(); break;
-                    case 1: FileStatusListView.SelectedNode = FileStatusListView.Nodes[0]; break;
+                    case 1 when FileStatusListView.Nodes[0].Nodes.Count == 0: FileStatusListView.SelectedNode = FileStatusListView.Nodes[0]; break;
                     default:
                         FileStatusListView.TopNode = FileStatusListView.Nodes[0];
                         FileStatusListView.ScrollLeftMost();
@@ -1128,9 +1128,9 @@ namespace GitUI
                         {
                             SelectFirstVisibleItem();
                         }
-                        else if (toBeSelectedItems.Count > 0)
+                        else if (previouslySelectedItems?.Count is > 0)
                         {
-                            SelectItems(toBeSelectedItems.Contains);
+                            SelectItems(node => node.Tag is FileStatusItem fileStatusItem && previouslySelectedItems.Contains(fileStatusItem.Item));
                         }
 
                         break;
@@ -1160,7 +1160,7 @@ namespace GitUI
 
         private record struct TreeNodeInfo(TreeNode Node, ExpandCollapseState State);
 
-        private static (List<TreeNodeInfo> Nodes, HashSet<TreeNode> ToBeSelectedItems, bool ShowDiffGroups, bool FilesPresent) GetNodes(
+        private static (List<TreeNodeInfo> Nodes, bool ShowDiffGroups, bool FilesPresent) GetNodes(
             IReadOnlyList<FileStatusWithDescription> items,
             HashSet<GitItemStatus>? previouslySelectedItems,
             bool groupByRevision,
@@ -1172,7 +1172,6 @@ namespace GitUI
             CancellationToken cancellationToken)
         {
             List<TreeNodeInfo> rootNodes = [];
-            HashSet<TreeNode> toBeSelectedItems = [];
             bool showDiffGroups = items.Count > 1 || (groupByRevision && !(items.Count == 1 && items[0].Statuses.Count == 0));
             bool filesPresent = items.Any(x => x.Statuses.Count > 0);
             bool hasGrepGroup = gitGrepState != GitGrepState.None && (gitGrepState != GitGrepState.Unknown || items.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
@@ -1224,7 +1223,7 @@ namespace GitUI
                 }
             }
 
-            return (rootNodes, toBeSelectedItems, showDiffGroups, filesPresent);
+            return (rootNodes, showDiffGroups, filesPresent);
 
             TreeNode CreateGroup(IEnumerable<GitItemStatus> itemStatuses, FileStatusWithDescription fileStatusWithDescription, CancellationToken cancellationToken)
             {
@@ -1317,11 +1316,6 @@ namespace GitUI
                         listItem.SelectedImageIndex = listItem.ImageIndex;
                         listItem.Text = AppendItemSubmoduleStatus(listItem.Text, capturedItem);
                     });
-                }
-
-                if (previouslySelectedItems?.Contains(item) is true)
-                {
-                    toBeSelectedItems.Add(listItem);
                 }
 
                 listItem.Tag = new FileStatusItem(fileStatusWithDescription.FirstRev, fileStatusWithDescription.SecondRev, item, fileStatusWithDescription.BaseA, fileStatusWithDescription.BaseB);
