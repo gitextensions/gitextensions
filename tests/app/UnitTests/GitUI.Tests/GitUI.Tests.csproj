@@ -1,4 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+      <!-- Disable C#13+ keyword "field" -->
+    <LangVersion>13</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     <PackageReference Include="JetBrains.Annotations" />

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace GitUI.ScriptsEngine
 {
@@ -9,13 +10,9 @@ namespace GitUI.ScriptsEngine
         [GeneratedRegex("&(?!&)")]
         private static partial Regex MnemonicAmpersandRegex();
 
-        public ScriptInfo()
-        {
-            Icon = "bug";
-            Enabled = true;
-        }
+        private Bitmap? _icon;
 
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
         public string? Name { get; set; }
 
@@ -38,12 +35,28 @@ namespace GitUI.ScriptsEngine
         /// <summary>
         /// Gets or sets the icon name.
         /// </summary>
-        public string? Icon { get; set; }
+        public string? Icon
+        {
+            get;
+            set
+            {
+                field = value;
+                _icon = null;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the path to the file containing the icon.
         /// </summary>
-        public string? IconFilePath { get; set; }
+        public string? IconFilePath
+        {
+            get;
+            set
+            {
+                field = value;
+                _icon = null;
+            }
+        }
 
         /// <summary>
         ///  Returns the name with mnemonic ampersands removed.
@@ -56,39 +69,51 @@ namespace GitUI.ScriptsEngine
         /// <returns>Bitmap image.</returns>
         public Bitmap? GetIcon()
         {
-            if (File.Exists(IconFilePath))
-            {
-                if (IconFilePath.EndsWith(".ico", StringComparison.OrdinalIgnoreCase))
-                {
-                    using Icon icon = new(IconFilePath);
-                    return icon.ToBitmap();
-                }
+            return _icon ??= GetIcon();
 
-                try
+            Bitmap? GetIcon()
+            {
+                if (File.Exists(IconFilePath))
                 {
-                    using Icon? associatedIcon = System.Drawing.Icon.ExtractAssociatedIcon(IconFilePath);
-                    if (associatedIcon is not null)
+                    if (IconFilePath.EndsWith(".ico", StringComparison.OrdinalIgnoreCase))
                     {
-                        return associatedIcon.ToBitmap();
+                        using Icon icon = new(IconFilePath);
+                        return icon.ToBitmap();
+                    }
+
+                    try
+                    {
+                        using Icon? associatedIcon = System.Drawing.Icon.ExtractAssociatedIcon(IconFilePath);
+                        if (associatedIcon is not null)
+                        {
+                            return associatedIcon.ToBitmap();
+                        }
+                    }
+                    catch
+                    {
                     }
                 }
-                catch
+
+                if (string.IsNullOrWhiteSpace(Icon))
                 {
+                    return null;
                 }
+
+                // Get all resources
+                System.Resources.ResourceManager rm
+                    = new("GitUI.Properties.Images",
+                        System.Reflection.Assembly.GetExecutingAssembly());
+
+                Bitmap? bitmap = (Bitmap?)rm.GetObject(Icon);
+                if (bitmap is null)
+                {
+                    // Discard the invalid name in order to not search for it again, which takes long
+                    Trace.WriteLine(@$"The icon ""{Icon}"" for user script ""{GetDisplayName()}"" does not exist.");
+                    Icon = null;
+                }
+
+                return bitmap;
             }
-
-            if (string.IsNullOrWhiteSpace(Icon))
-            {
-                return null;
-            }
-
-            // Get all resources
-            System.Resources.ResourceManager rm
-                = new("GitUI.Properties.Images",
-                    System.Reflection.Assembly.GetExecutingAssembly());
-
-            // return icon
-            return (Bitmap)rm.GetObject(Icon);
         }
     }
 }
