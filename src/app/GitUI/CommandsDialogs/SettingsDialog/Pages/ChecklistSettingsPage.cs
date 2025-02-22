@@ -579,7 +579,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
         {
-            settingButton.BackColor = Color.PaleGreen.AdaptBackColor();
+            settingButton.BackColor = OtherColors.BrightGreen;
             settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
             settingButton.Text = text;
             settingFixButton.Visible = false;
@@ -590,7 +590,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
         {
-            settingButton.BackColor = Color.LavenderBlush.AdaptBackColor();
+            settingButton.BackColor = OtherColors.BrightRed;
             settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
             settingButton.Text = text;
             settingFixButton.Visible = true;
@@ -598,7 +598,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private static void RenderSettingNotRecommended(Button settingButton, Button settingFixButton, string text)
         {
-            settingButton.BackColor = Color.Coral.AdaptBackColor();
+            settingButton.BackColor = OtherColors.BrightYellow;
             settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
             settingButton.Text = text;
             settingFixButton.Visible = true;
