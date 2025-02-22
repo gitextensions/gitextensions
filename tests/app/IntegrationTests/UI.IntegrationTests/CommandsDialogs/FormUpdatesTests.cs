@@ -40,8 +40,8 @@ public class FormUpdatesTests
             });
     }
 
-    [TestCaseSource(nameof(NetRuntimeLinkTestCases))]
-    public void Should_correctly_link_NET_runtime(Version runtimeVersion, string format, string expectedText, LinkArea expectedLinkArea)
+    [TestCaseSource(nameof(NetRuntimeLinkTextTestCases))]
+    public void Should_NET_runtime_link_text_be_correct(Version runtimeVersion, string format, string expectedText, LinkArea expectedLinkArea)
     {
         RunFormTest(
             form =>
@@ -56,7 +56,7 @@ public class FormUpdatesTests
             });
     }
 
-    private static IEnumerable<TestCaseData> NetRuntimeLinkTestCases()
+    private static IEnumerable<TestCaseData> NetRuntimeLinkTextTestCases()
     {
         yield return new TestCaseData(
             new Version(8, 10, 134),
@@ -75,6 +75,34 @@ public class FormUpdatesTests
             "Erforderlich: .NET {0} Desktop Runtime {1} oder höher",
             "Erforderlich: .NET 7.11 Desktop Runtime 7.11.10 oder höher",
             new LinkArea(40, 7));
+    }
+
+    [TestCaseSource(nameof(NetRuntimeLinkTestCases))]
+    public void Should_NET_runtime_link_url_be_correct(Version runtimeVersion, string expectedUrl)
+    {
+        RunFormTest(
+            form =>
+            {
+                FormUpdates.TestAccessor accessor = form.GetTestAccessor();
+                accessor.DisplayNetRuntimeLink("Required: .NET {0} Desktop Runtime {1} or later", runtimeVersion);
+
+                accessor.NetRuntimeDownloadUrl.Should().Be(expectedUrl);
+            });
+    }
+
+    private static IEnumerable<TestCaseData> NetRuntimeLinkTestCases()
+    {
+        yield return new TestCaseData(
+            new Version(8, 10, 134),
+            "https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-8.10.134-windows-x64-installer");
+
+        yield return new TestCaseData(
+            new Version(10, 0, 2),
+            "https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-10.0.2-windows-x64-installer");
+
+        yield return new TestCaseData(
+            new Version(7, 11, 10),
+            "https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-7.11.10-windows-x64-installer");
     }
 
     private void RunFormTest(Action<FormUpdates> testDriver)

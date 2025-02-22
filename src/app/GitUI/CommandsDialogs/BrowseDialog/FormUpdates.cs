@@ -20,9 +20,10 @@ public partial class FormUpdates : GitExtensionsDialog
     private IWin32Window? _ownerWindow;
     private Version _currentVersion;
     private bool _updateFound;
-    private string _updateUrl = "";
+    private string _netRuntimeDownloadUrl = string.Empty;
+    private string _updateUrl = string.Empty;
+    private string _newVersion = string.Empty;
     private Version? _requiredNetRuntimeVersion;
-    private string _newVersion = "";
 
     public FormUpdates(Version currentVersion)
         : base(commands: null, enablePositionRestore: false)
@@ -187,6 +188,8 @@ public partial class FormUpdates : GitExtensionsDialog
         int length = versionText2.Length;
         linkRequiredNetRuntime.LinkArea = new LinkArea(start, length);
 
+        _netRuntimeDownloadUrl = $@"https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-{requiredNetRuntimeVersion.ToString(3)}-windows-x64-installer";
+
         linkRequiredNetRuntime.Visible = true;
     }
 
@@ -209,13 +212,22 @@ public partial class FormUpdates : GitExtensionsDialog
                 }
 
                 break;
+
+            case LaunchType.NetRuntime:
+                if (!string.IsNullOrWhiteSpace(_netRuntimeDownloadUrl))
+                {
+                    OsShellUtil.OpenUrlInDefaultBrowser(_netRuntimeDownloadUrl);
+                }
+
+                break;
         }
     }
 
-    private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-    {
-        LaunchUrl(LaunchType.ChangeLog);
-    }
+    private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.ChangeLog);
+
+    private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.DirectDownload);
+
+    private void linkRequiredNetRuntime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.NetRuntime);
 
     private void btnUpdateNow_Click(object sender, EventArgs e)
     {
@@ -259,15 +271,11 @@ public partial class FormUpdates : GitExtensionsDialog
         });
     }
 
-    private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-    {
-        LaunchUrl(LaunchType.DirectDownload);
-    }
-
-    private enum LaunchType
+    internal enum LaunchType
     {
         ChangeLog,
-        DirectDownload
+        DirectDownload,
+        NetRuntime
     }
 
     internal TestAccessor GetTestAccessor() => new(this);
@@ -283,6 +291,10 @@ public partial class FormUpdates : GitExtensionsDialog
 
         public LinkLabel linkRequiredNetRuntime => _form.linkRequiredNetRuntime;
 
+        public string NetRuntimeDownloadUrl => _form._netRuntimeDownloadUrl;
+
         public void DisplayNetRuntimeLink(string format, Version requiredNetRuntimeVersion) => _form.DisplayNetRuntimeLink(format, requiredNetRuntimeVersion);
+
+        public void LaunchUrl(LaunchType launchType) => _form.LaunchUrl(launchType);
     }
 }
