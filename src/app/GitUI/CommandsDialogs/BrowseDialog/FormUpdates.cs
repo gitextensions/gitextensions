@@ -9,8 +9,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 
 public partial class FormUpdates : GitExtensionsDialog
 {
+    private const string _localDotNetInstallDir = @"DOTNET_ROOT=%LOCALAPPDATA%\Microsoft\dotnet";
+
     #region Translation
-    private readonly TranslationString _newVersionAvailable = new("There is a new version {0} of Git Extensions available");
+    private readonly TranslationString _newVersionAvailable = new("There is a new version {0} of Git Extensions available.\nYou will most likely be requested to update the .NET desktop runtime on first start, too.\n\nNote: It is possible to install the runtime into your profile folder without administrator privileges.\nThen set the following environment variable:");
     private readonly TranslationString _noUpdatesFound = new("No updates found");
     private readonly TranslationString _downloadingUpdate = new("Downloading update...");
     private readonly TranslationString _errorHeading = new("Download Failed");
@@ -139,7 +141,7 @@ public partial class FormUpdates : GitExtensionsDialog
             if (UpdateFound)
             {
                 btnUpdateNow.Visible = !AppSettings.IsPortable();
-                UpdateLabel.Text = string.Format(_newVersionAvailable.Text, NewVersion);
+                UpdateLabel.Text = $"{string.Format(_newVersionAvailable.Text, NewVersion)}\n{_localDotNetInstallDir}";
                 linkChangeLog.Visible = true;
                 linkDirectDownload.Visible = true;
 
@@ -157,16 +159,17 @@ public partial class FormUpdates : GitExtensionsDialog
 
     private void LaunchUrl(LaunchType launchType)
     {
+        const string releases = @"https://github.com/gitextensions/gitextensions/releases";
         switch (launchType)
         {
             case LaunchType.ChangeLog:
-                OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/blob/master/src/app/GitUI/Resources/ChangeLog.md");
+                OsShellUtil.OpenUrlInDefaultBrowser(releases);
                 break;
 
             case LaunchType.DirectDownload:
                 if (AppSettings.IsPortable())
                 {
-                    OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/releases");
+                    OsShellUtil.OpenUrlInDefaultBrowser(releases);
                 }
                 else
                 {

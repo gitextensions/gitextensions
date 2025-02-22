@@ -48,6 +48,7 @@
             // 
             ControlsPanel.Controls.Add(linkDirectDownload);
             ControlsPanel.Controls.Add(btnUpdateNow);
+            MainPanel.Size = new Size(584, 160);
             // 
             // UpdateLabel
             // 
@@ -55,7 +56,7 @@
             UpdateLabel.Dock = DockStyle.Fill;
             UpdateLabel.Location = new Point(3, 0);
             UpdateLabel.Name = "UpdateLabel";
-            UpdateLabel.Size = new Size(426, 15);
+            UpdateLabel.Size = new Size(554, 15);
             UpdateLabel.TabIndex = 0;
             UpdateLabel.Text = "Searching for updates";
             // 
@@ -65,20 +66,20 @@
             progressBar1.Location = new Point(3, 18);
             progressBar1.MinimumSize = new Size(0, 20);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(426, 20);
+            progressBar1.Size = new Size(554, 20);
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.TabIndex = 1;
             // 
             // linkChangeLog
             // 
             linkChangeLog.AutoSize = true;
-            linkChangeLog.Dock = DockStyle.Fill;
-            linkChangeLog.Location = new Point(3, 41);
+            linkChangeLog.Dock = DockStyle.Bottom;
+            linkChangeLog.Location = new Point(3, 110);
             linkChangeLog.Name = "linkChangeLog";
-            linkChangeLog.Size = new Size(426, 15);
+            linkChangeLog.Size = new Size(554, 15);
             linkChangeLog.TabIndex = 2;
             linkChangeLog.TabStop = true;
-            linkChangeLog.Text = "Show Change&Log";
+            linkChangeLog.Text = "Show release notes and change &log";
             linkChangeLog.Visible = false;
             linkChangeLog.LinkClicked += linkChangeLog_LinkClicked;
             // 
@@ -86,7 +87,7 @@
             // 
             btnUpdateNow.AutoSize = true;
             btnUpdateNow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnUpdateNow.Location = new Point(242, 8);
+            btnUpdateNow.Location = new Point(370, 8);
             btnUpdateNow.MinimumSize = new Size(100, 0);
             btnUpdateNow.Name = "btnUpdateNow";
             btnUpdateNow.Size = new Size(100, 25);
@@ -100,7 +101,7 @@
             // 
             linkDirectDownload.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             linkDirectDownload.AutoSize = true;
-            linkDirectDownload.Location = new Point(348, 5);
+            linkDirectDownload.Location = new Point(476, 5);
             linkDirectDownload.Name = "linkDirectDownload";
             linkDirectDownload.Size = new Size(95, 31);
             linkDirectDownload.TabIndex = 1;
@@ -124,16 +125,16 @@
             tlpnlContent.RowCount = 4;
             tlpnlContent.RowStyles.Add(new RowStyle());
             tlpnlContent.RowStyles.Add(new RowStyle());
-            tlpnlContent.RowStyles.Add(new RowStyle());
             tlpnlContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpnlContent.Size = new Size(432, 49);
+            tlpnlContent.RowStyles.Add(new RowStyle(SizeType.Absolute, 1F));
+            tlpnlContent.Size = new Size(560, 126);
             tlpnlContent.TabIndex = 3;
             // 
             // FormUpdates
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(456, 114);
+            ClientSize = new Size(584, 191);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             MaximizeBox = false;
             MinimizeBox = false;
