@@ -305,33 +305,45 @@ namespace GitUI.CommandsDialogs
 
             FileStatusItem prevSelectedItem = DiffFiles.SelectedItem;
             FileStatusItem prevDiffItem = DiffFiles.FirstGroupItems.Contains(prevSelectedItem) ? prevSelectedItem : null;
-            await DiffFiles.SetDiffsAsync(revisions, _revisionGridInfo.CurrentCheckout, cancellationToken);
-            FileStatusItem[] firstGroupItems = DiffFiles.FirstGroupItems.ToArray();
-            await this.SwitchToMainThreadAsync(cancellationToken);
-
-            _isImplicitListSelection = true;
-
-            // First try the last item explicitly selected
-            if (_lastExplicitlySelectedItem is not null
-                && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(_lastExplicitlySelectedItem.Value))?.Item is GitItemStatus explicitItem)
+            try
             {
-                DiffFiles.SelectedGitItem = explicitItem;
-                return;
+                _isImplicitListSelection = true;
+
+                await DiffFiles.SetDiffsAsync(revisions, _revisionGridInfo.CurrentCheckout, cancellationToken);
+                FileStatusItem[] firstGroupItems = DiffFiles.FirstGroupItems.ToArray();
+
+                // First try the last item explicitly selected
+                if (_lastExplicitlySelectedItem is not null
+                    && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(_lastExplicitlySelectedItem.Value))?.Item is GitItemStatus explicitItem)
+                {
+                    DiffFiles.SelectedGitItem = explicitItem;
+                    return;
+                }
+
+                // Second go back to the filtered file
+                if (!string.IsNullOrWhiteSpace(FallbackFollowedFile)
+                    && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(FallbackFollowedFile))?.Item is GitItemStatus fallbackItem)
+                {
+                    DiffFiles.SelectedGitItem = fallbackItem;
+                    return;
+                }
+
+                // Third try to restore the previous item
+                if (prevDiffItem is not null
+                    && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(prevDiffItem.Item.Name))?.Item is GitItemStatus prevItem)
+                {
+                    DiffFiles.SelectedGitItem = prevItem;
+                }
             }
-
-            // Second go back to the filtered file
-            if (!string.IsNullOrWhiteSpace(FallbackFollowedFile)
-                && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(FallbackFollowedFile))?.Item is GitItemStatus fallbackItem)
+            finally
             {
-                DiffFiles.SelectedGitItem = fallbackItem;
-                return;
-            }
-
-            // Third try to restore the previous item
-            if (prevDiffItem is not null
-                && firstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(prevDiffItem.Item.Name))?.Item is GitItemStatus prevItem)
-            {
-                DiffFiles.SelectedGitItem = prevItem;
+                ThreadHelper.FileAndForget(async () =>
+                {
+                    // DiffFiles_SelectedIndexChanged is called asynchronously with throttling. _isImplicitListSelection must not be reset before.
+                    await Task.Delay(FileStatusList.SelectedIndexChangeThrottleDuration + TimeSpan.FromSeconds(1), cancellationToken);
+                    await this.SwitchToMainThreadAsync(cancellationToken);
+                    _isImplicitListSelection = false;
+                });
             }
         }
 

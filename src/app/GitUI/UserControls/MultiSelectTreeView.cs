@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
 using System.ComponentModel;
+using GitExtUtils.GitUI;
+using Microsoft;
 
 namespace GitUI.UserControls;
 
@@ -9,29 +11,13 @@ namespace GitUI.UserControls;
 /// </summary>
 public class MultiSelectTreeView : NativeTreeView
 {
+    private bool _mouseClickHandled = false;
     private HashSet<TreeNode> _selectedNodes = [];
     private bool _settingFocusedNode = false;
+    private TreeNode? _toBeFocusedNode = null;
     private int _updateSuspendCount = 0;
-    private TreeNode? _toBeSelectedNode = null;
 
-    public MultiSelectTreeView()
-    {
-        AfterSelect += AfterSelectHandler;
-        BeforeSelect += BeforeSelectHandler;
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            AfterSelect -= AfterSelectHandler;
-            BeforeSelect -= BeforeSelectHandler;
-        }
-
-        base.Dispose(disposing);
-    }
-
-    public event EventHandler? FocusedNodeChanged;
+    public event EventHandler? SelectedNodesChanged;
 
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -40,11 +26,24 @@ public class MultiSelectTreeView : NativeTreeView
         get => base.SelectedNode;
         set
         {
+            if (base.SelectedNode == value)
+            {
+                return;
+            }
+
             try
             {
                 _settingFocusedNode = true;
+
+                if (value is not null)
+                {
+                    if (!_mouseClickHandled)
+                    {
+                        value.EnsureVerticallyVisible();
+                    }
+                }
+
                 base.SelectedNode = value;
-                value?.EnsureVerticallyVisible();
             }
             finally
             {
@@ -82,12 +81,7 @@ public class MultiSelectTreeView : NativeTreeView
                     _selectedNodes = [value];
                 }
 
-                if (alreadyFocused)
-                {
-                    // Notify that the node is also selected now
-                    FocusedNodeChanged?.Invoke(this, EventArgs.Empty);
-                }
-                else
+                if (!alreadyFocused)
                 {
                     FocusedNode = value;
                 }
@@ -139,6 +133,28 @@ public class MultiSelectTreeView : NativeTreeView
         }
     }
 
+    protected override void OnAfterSelect(TreeViewEventArgs e)
+    {
+        base.OnAfterSelect(e);
+
+        if (!_settingFocusedNode && !_mouseClickHandled)
+        {
+            SelectedNode = FocusedNode;
+        }
+
+        SelectedNodesChanged?.Invoke(this, e);
+    }
+
+    protected override void OnBeforeSelect(TreeViewCancelEventArgs e)
+    {
+        if (_toBeFocusedNode is not null && e.Node != _toBeFocusedNode)
+        {
+            e.Cancel = true;
+        }
+
+        base.OnBeforeSelect(e);
+    }
+
     protected override void OnGotFocus(EventArgs e)
     {
         base.OnGotFocus(e);
@@ -153,74 +169,43 @@ public class MultiSelectTreeView : NativeTreeView
 
     protected override void OnMouseDown(MouseEventArgs e)
     {
-        if (e.Button == MouseButtons.Left && HitTest(e.Location).Node is TreeNode node)
+        Keys modifierKeys = ModifierKeys;
+
+        if (e.Button != MouseButtons.Left
+
+            // or other modifier keys than for selection manipulation
+            || (modifierKeys | Keys.Control | Keys.Shift) != (Keys.Control | Keys.Shift)
+
+            // or no node clicked
+            || HitTest(e.Location).Node is not TreeNode newFocusedNode
+
+            // or starting drag operation
+            || (_selectedNodes.Contains(newFocusedNode) && modifierKeys == Keys.None && !ShallHandleRootIconClick(e.X, newFocusedNode, modifierKeys)))
         {
-            // Expand / collapse root folder nodes
-            if (!ShowRootLines && ModifierKeys == Keys.None && node.Parent is null && node.Nodes.Count > 0)
-            {
-                if (node.IsExpanded)
-                {
-                    node.Collapse(ignoreChildren: true);
-                }
-                else
-                {
-                    node.Expand();
-                }
-
-                _toBeSelectedNode = node;
-                return;
-            }
-
-            if (node == base.SelectedNode)
-            {
-                // Enforce selection event
-                FocusedNode = null;
-            }
-        }
-
-        base.OnMouseDown(e);
-    }
-
-    protected override void OnMouseUp(MouseEventArgs e)
-    {
-        if (_toBeSelectedNode is not null)
-        {
-            this.InvokeAndForget(async () =>
-            {
-                await Task.Delay(millisecondsDelay: 100);
-
-                if (_toBeSelectedNode.TreeView == this)
-                {
-                    SelectedNode = _toBeSelectedNode;
-                }
-
-                _toBeSelectedNode = null;
-            });
+            _mouseClickHandled = false;
+            base.OnMouseDown(e);
             return;
         }
 
-        base.OnMouseUp(e);
-    }
+        _mouseClickHandled = true;
 
-    private void AfterSelectHandler(object? sender, TreeViewEventArgs e)
-    {
-        FocusedNodeChanged?.Invoke(sender, e);
-    }
-
-    private void BeforeSelectHandler(object? sender, TreeViewCancelEventArgs e)
-    {
-        if (!_settingFocusedNode && e.Node is TreeNode newFocusedNode)
+        if (ShallHandleRootIconClick(e.X, newFocusedNode, modifierKeys) && newFocusedNode.Nodes.Count > 0)
         {
-            Keys modifierKeys = ModifierKeys;
-            if ((modifierKeys | Keys.Control | Keys.Shift) != (Keys.Control | Keys.Shift))
+            if (newFocusedNode.IsExpanded)
             {
-                e.Cancel = true;
-                return;
-            }
+                newFocusedNode.Collapse(ignoreChildren: true);
 
-            UpdateSelection(replace: !modifierKeys.HasFlag(Keys.Control), addRange: modifierKeys.HasFlag(Keys.Shift));
-            Invalidate();
+                // Collapsing changes TreeView.SelectedNode without invoking AfterSelectHandler, need to explicitly emit SelectedNodesChanged
+                SelectedNodesChanged?.Invoke(this, e);
+            }
+            else
+            {
+                newFocusedNode.Expand();
+            }
         }
+
+        UpdateSelection(replace: !modifierKeys.HasFlag(Keys.Control), addRange: modifierKeys.HasFlag(Keys.Shift));
+        Invalidate();
 
         return;
 
@@ -232,14 +217,12 @@ public class MultiSelectTreeView : NativeTreeView
             }
             else
             {
-                if (_selectedNodes.Contains(newFocusedNode))
-                {
-                    _selectedNodes.Remove(newFocusedNode);
-                }
-                else
+                if (!_selectedNodes.Remove(newFocusedNode))
                 {
                     _selectedNodes.Add(newFocusedNode);
                 }
+
+                SelectedNodesChanged?.Invoke(this, e);
             }
 
             if (addRange)
@@ -273,9 +256,73 @@ public class MultiSelectTreeView : NativeTreeView
                     }
                 }
 
-                // Keep FocusedNode
-                e.Cancel = true;
+                // Keep FocusedNode, but notify about the changed selection
+                _toBeFocusedNode = FocusedNode;
+                SelectedNodesChanged?.Invoke(this, e);
+                return;
             }
+
+            FocusedNode = newFocusedNode;
+            _toBeFocusedNode = newFocusedNode;
         }
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+        try
+        {
+            if (_toBeFocusedNode is not null)
+            {
+                this.InvokeAndForget(async () =>
+                {
+                    await Task.Delay(millisecondsDelay: 100);
+
+                    if (_toBeFocusedNode?.TreeView == this)
+                    {
+                        FocusedNode = _toBeFocusedNode;
+                    }
+
+                    _toBeFocusedNode = null;
+                });
+                return;
+            }
+
+            if (_mouseClickHandled)
+            {
+                return;
+            }
+
+            Keys modifierKeys = ModifierKeys;
+            if (SelectedNodes.Count > 1
+                && e.Button == MouseButtons.Left
+                && modifierKeys == Keys.None
+                && HitTest(e.Location).Node is TreeNode newFocusedNode
+                && !ShallHandleRootIconClick(e.X, newFocusedNode, modifierKeys))
+            {
+                if (FocusedNode != newFocusedNode)
+                {
+                    SelectedNode = newFocusedNode;
+                }
+                else
+                {
+                    _selectedNodes = [newFocusedNode];
+                    Invalidate();
+                    SelectedNodesChanged?.Invoke(this, e);
+                }
+            }
+
+            base.OnMouseUp(e);
+        }
+        finally
+        {
+            _mouseClickHandled = false;
+        }
+    }
+
+    private bool ShallHandleRootIconClick(int x, TreeNode newFocusedNode, Keys modifierKeys)
+    {
+        Validates.NotNull(ImageList);
+        int spacing = DpiUtil.Scale(8);
+        return modifierKeys == Keys.None && !ShowRootLines && newFocusedNode.Parent is null && x <= (spacing + ImageList.ImageSize.Width);
     }
 }

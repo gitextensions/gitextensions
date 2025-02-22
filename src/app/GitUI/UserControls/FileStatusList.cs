@@ -26,7 +26,7 @@ namespace GitUI
     {
         private const string _showDiffForAllParentsItemName = nameof(TranslatedStrings.ShowDiffForAllParentsText);
 
-        private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
+        public static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FileStatusDiffCalculator _diffCalculator;
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
@@ -582,7 +582,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public FileStatusItem? SelectedItem => FileStatusListView.FocusedNode?.Tag as FileStatusItem;
+        public FileStatusItem? SelectedItem => FileStatusListView.SelectedNodes.Count != 1 ? null : FileStatusListView.SelectedNodes.First().Tag as FileStatusItem;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -628,15 +628,12 @@ namespace GitUI
 
         public new void Focus()
         {
-            if (FileStatusListView.Nodes.Count > 0)
+            if (FileStatusListView.FocusedNode is null)
             {
-                if (SelectedItem is null)
-                {
-                    SelectFirstVisibleItem();
-                }
-
-                FileStatusListView.Focus();
+                SelectFirstVisibleItem();
             }
+
+            FileStatusListView.Focus();
         }
 
         private static (string? prefix, string text, string? suffix) FormatListViewItem(TreeNode node, PathFormatter formatter, int itemWidth)
@@ -782,7 +779,6 @@ namespace GitUI
 
         public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
         {
-            await this.SwitchToMainThreadAsync(cancellationToken);
             FileStatusListLoading();
             UpdateToolbar(revisions);
 
@@ -897,12 +893,12 @@ namespace GitUI
 
         public void StoreNextItemToSelect()
         {
-            if (FileStatusListView.FocusedNode is TreeNode focusedNode)
+            if (FileStatusListView.SelectedNodes.Count > 0)
             {
                 bool found = false;
                 foreach (TreeNode node in FileStatusListView.Items())
                 {
-                    if (node == focusedNode)
+                    if (FileStatusListView.SelectedNodes.Contains(node))
                     {
                         found = true;
                         continue;
@@ -1150,8 +1146,8 @@ namespace GitUI
             void EnsureSelectedIndexChangeSubscription()
             {
                 _selectedIndexChangeSubscription ??= Observable.FromEventPattern(
-                        h => FileStatusListView.FocusedNodeChanged += h,
-                        h => FileStatusListView.FocusedNodeChanged -= h)
+                        h => FileStatusListView.SelectedNodesChanged += h,
+                        h => FileStatusListView.SelectedNodesChanged -= h)
                     .Where(x => _enableSelectedIndexChangeEvent)
                     .Throttle(SelectedIndexChangeThrottleDuration, MainThreadScheduler.Instance)
                     .ObserveOn(MainThreadScheduler.Instance)

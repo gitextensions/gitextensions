@@ -7,16 +7,16 @@ namespace GitUI;
 
 partial class FileStatusList
 {
-    private ToolStripMenuItem _collapse = new("C&ollapse all", Images.CollapseAll);
-    private ToolStripMenuItem _expand = new("E&xpand all", Images.ExpandAll);
+    private ToolStripMenuItem _collapseAll = new("C&ollapse all", Images.CollapseAll);
+    private ToolStripMenuItem _expandAll = new("E&xpand all", Images.ExpandAll);
     private ToolStripMenuItem _selectAll = new("S&elect all", Images.FileTree);
     private ToolStripSeparator _treeContextMenuSeparator = new() { Name = nameof(_treeContextMenuSeparator) };
 
     private void CreateTreeContextMenuItems()
     {
         _selectAll.Click += SelectAll_Click;
-        _collapse.Click += Collapse_Click;
-        _expand.Click += Expand_Click;
+        _collapseAll.Click += CollapseAll_Click;
+        _expandAll.Click += ExpandAll_Click;
     }
 
     private void InsertTreeContextMenuItems(ToolStripItemCollection items, int index)
@@ -27,45 +27,49 @@ partial class FileStatusList
         }
 
         items.Insert(index++, _selectAll);
-        items.Insert(index++, _collapse);
-        items.Insert(index++, _expand);
+        items.Insert(index++, _collapseAll);
+        items.Insert(index++, _expandAll);
         items.Insert(index++, _treeContextMenuSeparator);
     }
 
     private void UpdateStatusOfTreeContextMenuItems()
     {
-        bool hasSubnodes = FileStatusListView.FocusedNode?.Nodes.Count is > 0;
+        bool hasSubnodes = FileStatusListView.SelectedNodes.Any(node => node.Nodes.Count > 0);
 
-        _collapse.Visible = hasSubnodes;
-        _expand.Visible = hasSubnodes;
+        _collapseAll.Visible = hasSubnodes;
+        _expandAll.Visible = hasSubnodes;
         _selectAll.Visible = hasSubnodes;
         _treeContextMenuSeparator.Visible = hasSubnodes;
     }
 
-    private void Collapse_Click(object? sender, EventArgs e)
+    private void CollapseAll_Click(object? sender, EventArgs e)
     {
-        FileStatusListView.FocusedNode?.Collapse(ignoreChildren: false);
+        foreach (TreeNode node in FileStatusListView.SelectedNodes)
+        {
+            node.Collapse(ignoreChildren: false);
+        }
     }
 
-    private void Expand_Click(object? sender, EventArgs e)
+    private void ExpandAll_Click(object? sender, EventArgs e)
     {
-        if (FileStatusListView.FocusedNode is not TreeNode node)
+        foreach (TreeNode node in FileStatusListView.SelectedNodes)
         {
-            return;
+            node.ExpandAll();
         }
-
-        node.ExpandAll();
-        FileStatusListView.FocusedNode = node;
     }
 
     private void SelectAll_Click(object? sender, EventArgs e)
     {
-        if (FileStatusListView.FocusedNode is not TreeNode node)
+        HashSet<TreeNode> selectedItems = [];
+        foreach (TreeNode node in FileStatusListView.SelectedNodes)
         {
-            return;
+            node.ExpandAll();
+            foreach (TreeNode leaf in node.Items().Where(node => node.Tag is FileStatusItem))
+            {
+                selectedItems.Add(leaf);
+            }
         }
 
-        node.ExpandAll();
-        FileStatusListView.SetSelectedNodes(node.Items().Where(node => node.Tag is FileStatusItem).ToHashSet(), focusedNode: node);
+        FileStatusListView.SetSelectedNodes(selectedItems, focusedNode: FileStatusListView.FocusedNode);
     }
 }
