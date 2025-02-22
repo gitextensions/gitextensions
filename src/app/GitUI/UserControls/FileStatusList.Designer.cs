@@ -322,6 +322,7 @@ namespace GitUI
             btnUnequalChange.CheckOnClick = true;
             btnUnequalChange.CheckState = CheckState.Checked;
             btnUnequalChange.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnUnequalChange.ForeColor = Color.FromArgb(255, 0, 0);
             btnUnequalChange.Name = "btnUnequalChange";
             btnUnequalChange.Size = new Size(23, 22);
             btnUnequalChange.Text = "!";
@@ -334,6 +335,7 @@ namespace GitUI
             btnOnlyB.CheckOnClick = true;
             btnOnlyB.CheckState = CheckState.Checked;
             btnOnlyB.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnOnlyB.ForeColor = Color.FromArgb(189, 124, 255);
             btnOnlyB.Name = "btnOnlyB";
             btnOnlyB.Size = new Size(23, 22);
             btnOnlyB.Text = "B";
@@ -346,6 +348,7 @@ namespace GitUI
             btnOnlyA.CheckOnClick = true;
             btnOnlyA.CheckState = CheckState.Checked;
             btnOnlyA.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnOnlyA.ForeColor = Color.FromArgb(168, 168, 0);
             btnOnlyA.Name = "btnOnlyA";
             btnOnlyA.Size = new Size(23, 22);
             btnOnlyA.Text = "A";
@@ -358,6 +361,7 @@ namespace GitUI
             btnSameChange.CheckOnClick = true;
             btnSameChange.CheckState = CheckState.Checked;
             btnSameChange.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnSameChange.ForeColor = Color.FromArgb(0, 168, 0);
             btnSameChange.Name = "btnSameChange";
             btnSameChange.Size = new Size(23, 22);
             btnSameChange.Text = "=";
