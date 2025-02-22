@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
+using System.Runtime.InteropServices;
 using Git.hub;
 using GitCommands;
 using ResourceManager;
@@ -180,15 +181,15 @@ public partial class FormUpdates : GitExtensionsDialog
             return;
         }
 
-        string versionText1 = requiredNetRuntimeVersion.ToString(2);
-        string versionText2 = requiredNetRuntimeVersion.ToString(3);
+        string versionText1 = requiredNetRuntimeVersion.ToString(fieldCount: 2);
+        string versionText2 = requiredNetRuntimeVersion.ToString(fieldCount: 3);
         linkRequiredNetRuntime.Text = string.Format(format, versionText1, versionText2);
 
         int start = linkRequiredNetRuntime.Text.IndexOf(versionText2, StringComparison.Ordinal);
         int length = versionText2.Length;
         linkRequiredNetRuntime.LinkArea = new LinkArea(start, length);
 
-        _netRuntimeDownloadUrl = $@"https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-{requiredNetRuntimeVersion.ToString(3)}-windows-x64-installer";
+        _netRuntimeDownloadUrl = $@"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={RuntimeInformation.OSArchitecture}&rid=win-{RuntimeInformation.OSArchitecture}&apphost_version={requiredNetRuntimeVersion.ToString(fieldCount: 3)}&gui=true";
 
         linkRequiredNetRuntime.Visible = true;
     }

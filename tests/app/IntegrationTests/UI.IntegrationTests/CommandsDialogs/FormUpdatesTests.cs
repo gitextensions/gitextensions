@@ -94,15 +94,15 @@ public class FormUpdatesTests
     {
         yield return new TestCaseData(
             new Version(8, 10, 134),
-            "https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-8.10.134-windows-x64-installer");
+            "https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch=X64&rid=win-X64&apphost_version=8.10.134&gui=true");
 
         yield return new TestCaseData(
             new Version(10, 0, 2),
-            "https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-10.0.2-windows-x64-installer");
+            "https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch=X64&rid=win-X64&apphost_version=10.0.2&gui=true");
 
         yield return new TestCaseData(
             new Version(7, 11, 10),
-            "https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-7.11.10-windows-x64-installer");
+            "https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch=X64&rid=win-X64&apphost_version=7.11.10&gui=true");
     }
 
     private void RunFormTest(Action<FormUpdates> testDriver)
