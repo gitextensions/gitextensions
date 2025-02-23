@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Plugins;
+﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 
@@ -17,11 +18,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         private void CreateSettingsControls()
         {
-            IEnumerable<ISetting> settings = GetSettings();
-
-            foreach (ISetting setting in settings)
+            try
             {
-                AddSettingControl(setting.CreateControlBinding());
+                IEnumerable<ISetting> settings = GetSettings();
+
+                foreach (ISetting setting in settings)
+                {
+                    AddSettingControl(setting.CreateControlBinding());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ExternalOperationException(command: $"Cannot load settings for plugin {_gitPlugin?.Name ?? "unknown"}", innerException: ex);
             }
         }
 
