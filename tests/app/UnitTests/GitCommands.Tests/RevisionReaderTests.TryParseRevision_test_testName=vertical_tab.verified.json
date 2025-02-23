@@ -31,6 +31,7 @@
   "HasMultiLineMessage": true,
   "HasNotes": false,
   "IsArtificial": false,
+  "IsAutostash": false,
   "IsStash": false,
   "ReflogSelector": null,
   "HasParent": true,
