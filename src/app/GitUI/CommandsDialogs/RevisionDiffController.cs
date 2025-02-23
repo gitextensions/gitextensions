@@ -27,23 +27,6 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo);
     }
 
-    internal sealed record ContextMenuSelectionInfo(
-        GitRevision? SelectedRevision,
-        RelativePath? SelectedFolder,
-        bool IsDisplayOnlyDiff,
-        bool IsStatusOnly,
-        int SelectedGitItemCount,
-        bool IsAnyItemIndex,
-        bool IsAnyItemWorkTree,
-        bool IsBareRepository,
-        bool AllFilesExist,
-        bool AllDirectoriesExist,
-        bool AllFilesOrUntrackedDirectoriesExist,
-        bool IsAnyTracked,
-        bool SupportPatches,
-        bool IsDeleted,
-        bool IsAnySubmodule);
-
     internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPathResolver fullPathResolver) : IRevisionDiffController
     {
         private readonly Func<IGitModule> _getModule = getModule;
