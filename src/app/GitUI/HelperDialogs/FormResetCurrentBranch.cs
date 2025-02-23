@@ -31,16 +31,11 @@ namespace GitUI.HelperDialogs
             Revision = revision;
 
             InitializeComponent();
-            Soft.BackColor.AdaptBackColor();
             Soft.SetForeColorForBackColor();
-            Hard.BackColor.AdaptBackColor();
-            Hard.SetForeColorForBackColor();
-            Mixed.BackColor.AdaptBackColor();
             Mixed.SetForeColorForBackColor();
-            Merge.BackColor.AdaptBackColor();
-            Merge.SetForeColorForBackColor();
-            Keep.BackColor.AdaptBackColor();
-            Keep.SetForeColorForBackColor();
+            Keep.ForeColor = Mixed.ForeColor;
+            Merge.ForeColor = Mixed.ForeColor;
+            Hard.SetForeColorForBackColor();
             InitializeComplete();
 
             switch (resetType)
