@@ -7635,6 +7635,10 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>&amp;Direct Download</source>
         <target />
       </trans-unit>
+      <trans-unit id="linkRequiredNetRuntime.Text">
+        <source>Required: .NET {0} Desktop Runtime {1} or later {2}.x</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormVerify" source-language="en">

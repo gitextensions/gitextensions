@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
+using System.Runtime.InteropServices;
 using Git.hub;
 using GitCommands;
 using ResourceManager;
@@ -17,27 +18,31 @@ public partial class FormUpdates : GitExtensionsDialog
     private readonly TranslationString _errorMessage = new("Failed to download an update.");
     #endregion
 
-    public IWin32Window? OwnerWindow;
-    public Version CurrentVersion { get; }
-    public bool UpdateFound;
-    public string UpdateUrl = "";
-    public string NewVersion = "";
+    private IWin32Window? _ownerWindow;
+    private Version _currentVersion;
+    private bool _updateFound;
+    private string _netRuntimeDownloadUrl = string.Empty;
+    private string _updateUrl = string.Empty;
+    private string _newVersion = string.Empty;
+    private Version? _requiredNetRuntimeVersion;
 
     public FormUpdates(Version currentVersion)
         : base(commands: null, enablePositionRestore: false)
     {
-        CurrentVersion = currentVersion;
+        _currentVersion = currentVersion;
 
         InitializeComponent();
         InitializeComplete();
 
         progressBar1.Visible = true;
         progressBar1.Style = ProgressBarStyle.Marquee;
+
+        linkRequiredNetRuntime.Visible = false;
     }
 
     public void SearchForUpdatesAndShow(IWin32Window ownerWindow, bool alwaysShow)
     {
-        OwnerWindow = ownerWindow;
+        _ownerWindow = ownerWindow;
         new Thread(SearchForUpdates).Start();
         if (alwaysShow)
         {
@@ -53,9 +58,9 @@ public partial class FormUpdates : GitExtensionsDialog
             LaunchUrl(LaunchType.ChangeLog);
         }
         else if (keyData == (Keys.Alt | Keys.D))
-            {
-                LaunchUrl(LaunchType.DirectDownload);
-            }
+        {
+            LaunchUrl(LaunchType.DirectDownload);
+        }
 
         return base.ProcessCmdKey(ref msg, keyData);
     }
@@ -111,20 +116,22 @@ public partial class FormUpdates : GitExtensionsDialog
     private void CheckForNewerVersion(string releases)
     {
         IEnumerable<ReleaseVersion> versions = ReleaseVersion.Parse(releases);
-        IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
+        IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(_currentVersion, AppSettings.CheckForReleaseCandidates, versions);
 
-        ReleaseVersion update = updates.OrderBy(version => version.Version).LastOrDefault();
+        ReleaseVersion update = updates.OrderBy(version => version.ApplicationVersion).LastOrDefault();
         if (update is not null)
         {
-            UpdateFound = true;
-            UpdateUrl = update.DownloadPage;
-            NewVersion = update.Version.ToString();
+            _updateFound = true;
+            _updateUrl = update.DownloadPage;
+            _requiredNetRuntimeVersion = update.RequiredNetRuntimeVersion;
+            _newVersion = update.ApplicationVersion.ToString();
             Done();
             return;
         }
 
-        UpdateUrl = "";
-        UpdateFound = false;
+        _updateUrl = string.Empty;
+        _requiredNetRuntimeVersion = null;
+        _updateFound = false;
         Done();
     }
 
@@ -136,16 +143,27 @@ public partial class FormUpdates : GitExtensionsDialog
 
             progressBar1.Visible = false;
 
-            if (UpdateFound)
+            if (_updateFound)
             {
-                btnUpdateNow.Visible = !AppSettings.IsPortable();
-                UpdateLabel.Text = string.Format(_newVersionAvailable.Text, NewVersion);
+                UpdateLabel.Text = string.Format(_newVersionAvailable.Text, _newVersion);
                 linkChangeLog.Visible = true;
                 linkDirectDownload.Visible = true;
 
+                DisplayNetRuntimeLink(format: linkRequiredNetRuntime.Text, _requiredNetRuntimeVersion);
+
+                if (AppSettings.IsPortable())
+                {
+                    linkDirectDownload.Focus();
+                }
+                else
+                {
+                    btnUpdateNow.Visible = true;
+                    btnUpdateNow.Focus();
+                }
+
                 if (!Visible)
                 {
-                    ShowDialog(OwnerWindow);
+                    ShowDialog(_ownerWindow);
                 }
             }
             else
@@ -153,6 +171,28 @@ public partial class FormUpdates : GitExtensionsDialog
                 UpdateLabel.Text = _noUpdatesFound.Text;
             }
         });
+    }
+
+    private void DisplayNetRuntimeLink(string format, Version requiredNetRuntimeVersion)
+    {
+        if (requiredNetRuntimeVersion is null)
+        {
+            linkRequiredNetRuntime.Visible = false;
+            return;
+        }
+
+        string versionText1 = requiredNetRuntimeVersion.ToString(fieldCount: 2);
+        string versionText2 = requiredNetRuntimeVersion.ToString(fieldCount: 3);
+        string versionText3 = requiredNetRuntimeVersion.ToString(fieldCount: 1);
+        linkRequiredNetRuntime.Text = string.Format(format, versionText1, versionText2, versionText3);
+
+        int start = linkRequiredNetRuntime.Text.IndexOf(versionText2, StringComparison.Ordinal);
+        int length = versionText2.Length;
+        linkRequiredNetRuntime.LinkArea = new LinkArea(start, length);
+
+        _netRuntimeDownloadUrl = $@"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={RuntimeInformation.OSArchitecture}&rid=win-{RuntimeInformation.OSArchitecture}&apphost_version={requiredNetRuntimeVersion.ToString(fieldCount: 3)}&gui=true";
+
+        linkRequiredNetRuntime.Visible = true;
     }
 
     private void LaunchUrl(LaunchType launchType)
@@ -170,17 +210,26 @@ public partial class FormUpdates : GitExtensionsDialog
                 }
                 else
                 {
-                    OsShellUtil.OpenUrlInDefaultBrowser(UpdateUrl);
+                    OsShellUtil.OpenUrlInDefaultBrowser(_updateUrl);
+                }
+
+                break;
+
+            case LaunchType.NetRuntime:
+                if (!string.IsNullOrWhiteSpace(_netRuntimeDownloadUrl))
+                {
+                    OsShellUtil.OpenUrlInDefaultBrowser(_netRuntimeDownloadUrl);
                 }
 
                 break;
         }
     }
 
-    private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-    {
-        LaunchUrl(LaunchType.ChangeLog);
-    }
+    private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.ChangeLog);
+
+    private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.DirectDownload);
+
+    private void linkRequiredNetRuntime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => LaunchUrl(LaunchType.NetRuntime);
 
     private void btnUpdateNow_Click(object sender, EventArgs e)
     {
@@ -191,13 +240,13 @@ public partial class FormUpdates : GitExtensionsDialog
 
         ThreadHelper.FileAndForget(async () =>
         {
-            string fileName = Path.GetFileName(UpdateUrl);
+            string fileName = Path.GetFileName(_updateUrl);
             try
             {
 #pragma warning disable SYSLIB0014 // 'WebClient' is obsolete
                 using WebClient webClient = new();
 #pragma warning restore SYSLIB0014 // 'WebClient' is obsolete
-                await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
+                await webClient.DownloadFileTaskAsync(new Uri(_updateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
             }
             catch (Exception ex)
             {
@@ -224,14 +273,30 @@ public partial class FormUpdates : GitExtensionsDialog
         });
     }
 
-    private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-    {
-        LaunchUrl(LaunchType.DirectDownload);
-    }
-
-    private enum LaunchType
+    internal enum LaunchType
     {
         ChangeLog,
-        DirectDownload
+        DirectDownload,
+        NetRuntime
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FormUpdates _form;
+
+        public TestAccessor(FormUpdates form)
+        {
+            _form = form;
+        }
+
+        public LinkLabel linkRequiredNetRuntime => _form.linkRequiredNetRuntime;
+
+        public string NetRuntimeDownloadUrl => _form._netRuntimeDownloadUrl;
+
+        public void DisplayNetRuntimeLink(string format, Version requiredNetRuntimeVersion) => _form.DisplayNetRuntimeLink(format, requiredNetRuntimeVersion);
+
+        public void LaunchUrl(LaunchType launchType) => _form.LaunchUrl(launchType);
     }
 }

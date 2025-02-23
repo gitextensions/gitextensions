@@ -34,15 +34,16 @@
             btnUpdateNow = new Button();
             linkDirectDownload = new LinkLabel();
             tlpnlContent = new TableLayoutPanel();
+            linkRequiredNetRuntime = new LinkLabel();
             MainPanel.SuspendLayout();
-            ControlsPanel.SuspendLayout();
             tlpnlContent.SuspendLayout();
             SuspendLayout();
             // 
             // MainPanel
             // 
             MainPanel.Controls.Add(tlpnlContent);
-            MainPanel.Size = new Size(456, 73);
+            MainPanel.Size = new Size(462, 91);
+            MainPanel.TabIndex = 0;
             // 
             // ControlsPanel
             // 
@@ -55,7 +56,7 @@
             UpdateLabel.Dock = DockStyle.Fill;
             UpdateLabel.Location = new Point(3, 0);
             UpdateLabel.Name = "UpdateLabel";
-            UpdateLabel.Size = new Size(426, 15);
+            UpdateLabel.Size = new Size(432, 15);
             UpdateLabel.TabIndex = 0;
             UpdateLabel.Text = "Searching for updates";
             // 
@@ -65,7 +66,7 @@
             progressBar1.Location = new Point(3, 18);
             progressBar1.MinimumSize = new Size(0, 20);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(426, 20);
+            progressBar1.Size = new Size(432, 20);
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.TabIndex = 1;
             // 
@@ -73,10 +74,10 @@
             // 
             linkChangeLog.AutoSize = true;
             linkChangeLog.Dock = DockStyle.Fill;
-            linkChangeLog.Location = new Point(3, 41);
+            linkChangeLog.Location = new Point(3, 64);
             linkChangeLog.Name = "linkChangeLog";
-            linkChangeLog.Size = new Size(426, 15);
-            linkChangeLog.TabIndex = 2;
+            linkChangeLog.Size = new Size(432, 15);
+            linkChangeLog.TabIndex = 3;
             linkChangeLog.TabStop = true;
             linkChangeLog.Text = "Show Change&Log";
             linkChangeLog.Visible = false;
@@ -86,7 +87,7 @@
             // 
             btnUpdateNow.AutoSize = true;
             btnUpdateNow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnUpdateNow.Location = new Point(242, 8);
+            btnUpdateNow.Location = new Point(248, 8);
             btnUpdateNow.MinimumSize = new Size(100, 0);
             btnUpdateNow.Name = "btnUpdateNow";
             btnUpdateNow.Size = new Size(100, 25);
@@ -100,7 +101,7 @@
             // 
             linkDirectDownload.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             linkDirectDownload.AutoSize = true;
-            linkDirectDownload.Location = new Point(348, 5);
+            linkDirectDownload.Location = new Point(354, 5);
             linkDirectDownload.Name = "linkDirectDownload";
             linkDirectDownload.Size = new Size(95, 31);
             linkDirectDownload.TabIndex = 1;
@@ -116,24 +117,39 @@
             tlpnlContent.ColumnStyles.Add(new ColumnStyle());
             tlpnlContent.Controls.Add(UpdateLabel, 0, 0);
             tlpnlContent.Controls.Add(progressBar1, 0, 1);
-            tlpnlContent.Controls.Add(linkChangeLog, 0, 2);
+            tlpnlContent.Controls.Add(linkRequiredNetRuntime, 0, 3);
+            tlpnlContent.Controls.Add(linkChangeLog, 0, 4);
             tlpnlContent.Dock = DockStyle.Fill;
             tlpnlContent.Location = new Point(12, 12);
             tlpnlContent.Margin = new Padding(0);
             tlpnlContent.Name = "tlpnlContent";
-            tlpnlContent.RowCount = 4;
+            tlpnlContent.RowCount = 6;
             tlpnlContent.RowStyles.Add(new RowStyle());
+            tlpnlContent.RowStyles.Add(new RowStyle());
+            tlpnlContent.RowStyles.Add(new RowStyle(SizeType.Absolute, 8F));
             tlpnlContent.RowStyles.Add(new RowStyle());
             tlpnlContent.RowStyles.Add(new RowStyle());
             tlpnlContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpnlContent.Size = new Size(432, 49);
+            tlpnlContent.Size = new Size(438, 67);
             tlpnlContent.TabIndex = 3;
+            // 
+            // linkRequiredNetRuntime
+            // 
+            linkRequiredNetRuntime.AutoSize = true;
+            linkRequiredNetRuntime.Dock = DockStyle.Fill;
+            linkRequiredNetRuntime.LinkArea = new LinkArea(0, 0);
+            linkRequiredNetRuntime.Location = new Point(3, 49);
+            linkRequiredNetRuntime.Name = "linkRequiredNetRuntime";
+            linkRequiredNetRuntime.Size = new Size(432, 15);
+            linkRequiredNetRuntime.TabIndex = 2;
+            linkRequiredNetRuntime.Text = "Required: .NET {0} Desktop Runtime {1} or later {2}.x";
+            linkRequiredNetRuntime.LinkClicked += linkRequiredNetRuntime_LinkClicked;
             // 
             // FormUpdates
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(456, 114);
+            ClientSize = new Size(462, 132);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -141,9 +157,6 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Check for update";
             MainPanel.ResumeLayout(false);
-            MainPanel.PerformLayout();
-            ControlsPanel.ResumeLayout(false);
-            ControlsPanel.PerformLayout();
             tlpnlContent.ResumeLayout(false);
             tlpnlContent.PerformLayout();
             ResumeLayout(false);
@@ -158,5 +171,6 @@
         private Button btnUpdateNow;
         private LinkLabel linkDirectDownload;
         private TableLayoutPanel tlpnlContent;
+        private LinkLabel linkRequiredNetRuntime;
     }
 }
