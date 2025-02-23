@@ -1244,7 +1244,7 @@ namespace GitUI
                         {
                             groupNode = groupNode.Nodes[0];
                         }
-                        else
+                        else if (groupNode.Nodes.Count > 0)
                         {
                             groupNode.Text = groupBy.GetLabel(group);
                             groupNode.ImageIndex = _imageListData.StateImageIndexMap[groupBy.GetImageKey(group)];
