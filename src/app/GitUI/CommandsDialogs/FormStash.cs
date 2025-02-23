@@ -290,7 +290,8 @@ namespace GitUI.CommandsDialogs
 
         private void ResizeStashesWidth()
         {
-            Stashes.Width = toolStrip1.Width - 5 - showToolStripLabel.Width;
+            const int spacingBetweenLabelAndComboBox = 5;
+            Stashes.Width = toolStrip1.Width - spacingBetweenLabelAndComboBox - showToolStripLabel.Width;
         }
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
