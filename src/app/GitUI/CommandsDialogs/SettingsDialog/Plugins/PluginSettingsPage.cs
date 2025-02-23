@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Plugins;
+﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 
@@ -28,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             }
             catch (Exception ex)
             {
-                throw new Exception($"Cannot load settings for plugin {_gitPlugin?.Name ?? "unknown"}", ex);
+                throw new ExternalOperationException(command: $"Cannot load settings for plugin {_gitPlugin?.Name ?? "unknown"}", innerException: ex);
             }
         }
 
