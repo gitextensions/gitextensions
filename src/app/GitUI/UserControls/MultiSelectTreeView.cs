@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
 using System.ComponentModel;
+using GitExtUtils.GitUI;
+using Microsoft;
 
 namespace GitUI.UserControls;
 
@@ -164,12 +166,16 @@ public class MultiSelectTreeView : NativeTreeView
         }
 
         _mouseClickHandled = true;
-        if (!ShowRootLines && Nodes.Count > 1 && modifierKeys == Keys.None && newFocusedNode.Parent is null && newFocusedNode.Nodes.Count > 0)
+
+        if (!ShowRootLines && IconClicked() && modifierKeys == Keys.None && newFocusedNode.Parent is null && newFocusedNode.Nodes.Count > 0)
         {
             // Expand / collapse root folder nodes unless there is only one
             if (newFocusedNode.IsExpanded)
             {
                 newFocusedNode.Collapse(ignoreChildren: true);
+
+                // Collapsing changes TreeView.SelectedNode without invoking AfterSelectHandler, need to explicitly emit FocusedNodeChanged
+                FocusedNodeChanged?.Invoke(this, e);
             }
             else
             {
@@ -181,6 +187,13 @@ public class MultiSelectTreeView : NativeTreeView
         Invalidate();
 
         return;
+
+        bool IconClicked()
+        {
+            Validates.NotNull(ImageList);
+            int spacing = DpiUtil.Scale(8);
+            return e.X <= spacing + ImageList.ImageSize.Width;
+        }
 
         void UpdateSelection(bool replace, bool addRange)
         {
