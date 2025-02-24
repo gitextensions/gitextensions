@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
@@ -38,6 +39,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComplete();
 
             _controller = new GitConfigSettingsPageController();
+        }
+
+        private string? AdaptCommandIfWsl(string? command)
+        {
+            if (string.IsNullOrEmpty(command) || !PathUtil.IsWslPath(Module?.WorkingDir))
+            {
+                return command;
+            }
+
+            // Replace "D:" with "/mnt/d"
+            int colonIndex = command.IndexOf(':');
+            if (colonIndex == (command[0] == '"' ? 2 : 1))
+            {
+                int windowsDriveIndex = colonIndex - 1;
+                command = $"{command[..windowsDriveIndex]}/mnt/{char.ToLower(command[windowsDriveIndex])}{command[(colonIndex + 1)..]}";
+            }
+
+            return Regex.Replace(command, @"\$(LOCAL|REMOTE|BASE|MERGED)", @"$(wslpath -aw $&)");
         }
 
         protected override void Init(ISettingsPageHost pageHost)
@@ -200,7 +219,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
             DiffMergeToolConfiguration diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtDiffToolPath.Text);
-            txtDiffToolCommand.Text = diffMergeToolConfig.FullDiffCommand;
+            txtDiffToolCommand.Text = AdaptCommandIfWsl(diffMergeToolConfig.FullDiffCommand);
         }
 
         private void SuggestMergeToolCommand()
@@ -214,7 +233,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
             DiffMergeToolConfiguration diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtMergeToolPath.Text);
-            txtMergeToolCommand.Text = diffMergeToolConfig.FullMergeCommand;
+            txtMergeToolCommand.Text = AdaptCommandIfWsl(diffMergeToolConfig.FullMergeCommand);
         }
 
         private void btnMergeToolCommandSuggest_Click(object sender, EventArgs e)
