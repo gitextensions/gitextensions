@@ -172,7 +172,7 @@ public interface IGitModule
     /// </exception>
     T? GetSetting<T>(string setting) where T : struct;
 
-    string GetEffectiveSetting(string setting);
+    string GetEffectiveSetting(string setting, string defaultValue = "");
 
     /// <summary>
     ///  Gets the config setting from git converted in an expected C# value type (bool, int, etc.).
@@ -201,8 +201,6 @@ public interface IGitModule
     /// <param name="cache"><see langword="true"/> if the result shall be cached.</param>
     /// <returns>The value of the setting or <see langword="null"/> if the value is not set.</returns>
     string? GetEffectiveGitSetting(string setting, bool cache = false);
-
-    SettingsSource GetEffectiveSettingsByPath(string path);
 
     /// <summary>
     /// Gets the name of the currently checked out branch.
