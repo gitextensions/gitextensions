@@ -1,11 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#nullable enable
+
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using GitExtensions.Extensibility.Configurations;
 
 namespace GitExtensions.Extensibility.Settings;
 
-public abstract class SettingsSource
+public abstract class SettingsSource : IConfigValueStore
 {
-    public virtual SettingLevel SettingLevel { get; set; } = SettingLevel.Unknown;
+    public virtual SettingLevel SettingLevel { get; init; } = SettingLevel.Unknown;
 
     public abstract string? GetValue(string name);
 
@@ -110,7 +113,7 @@ public abstract class SettingsSource
         SetValue(name, stringValue);
     }
 
-    public Font GetFont(string name, Font defaultValue) => GetValue(name).Parse(defaultValue);
+    public Font GetFont(string name, Font defaultValue) => FontParser.Parse(GetValue(name), defaultValue);
 
     public void SetFont(string name, Font value) => SetValue(name, value.AsString());
 
@@ -151,31 +154,7 @@ public abstract class SettingsSource
 
     public void SetEnum<T>(string name, T value) where T : Enum
     {
-        string? stringValue = value.ToString();
-
-        SetValue(name, stringValue);
-    }
-
-    public T? GetNullableEnum<T>(string name) where T : struct
-    {
-        string? stringValue = GetValue(name);
-
-        if (string.IsNullOrEmpty(stringValue))
-        {
-            return null;
-        }
-
-        if (Enum.TryParse(stringValue, true, out T result))
-        {
-            return result;
-        }
-
-        return null;
-    }
-
-    public void SetNullableEnum<T>(string name, T? value) where T : struct, Enum
-    {
-        string? stringValue = value.HasValue ? value.ToString() : string.Empty;
+        string stringValue = value.ToString();
 
         SetValue(name, stringValue);
     }

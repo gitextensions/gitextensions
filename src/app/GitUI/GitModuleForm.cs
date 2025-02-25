@@ -14,6 +14,7 @@ namespace GitUI
     /// <summary>Base <see cref="Form"/> that provides access to <see cref="GitModule"/> and <see cref="IGitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModuleForm
     {
+        private bool _isReactivation;
         private IHotkeySettingsLoader? _hotkeySettingsLoader;
         private IScriptsRunner? _scriptsRunner;
         private IGitUICommands? _uiCommands;
@@ -124,6 +125,20 @@ namespace GitUI
         public virtual IScriptOptionsProvider? GetScriptOptionsProvider()
         {
             return null;
+        }
+
+        protected override void OnApplicationActivated()
+        {
+            base.OnApplicationActivated();
+
+            if (_isReactivation)
+            {
+                Module.InvalidateGitSettings();
+            }
+            else
+            {
+                _isReactivation = true;
+            }
         }
 
         protected virtual void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
