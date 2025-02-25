@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -15,7 +16,7 @@ namespace GitUI
         private static bool _dirty;
         private static string? _sha;
 
-        [GeneratedRegex(@"^(?=.*\bMicrosoft\.WindowsDesktop\.App\b)[^\n\r]*", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+([0-9.]+)\s+.*$", RegexOptions.Multiline)]
         private static partial Regex DesktopAppRegex();
         [GeneratedRegex(@"^", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
         private static partial Regex LineStartRegex();
@@ -76,24 +77,41 @@ namespace GitUI
             return gitVersion;
         }
 
-        private static string GetDotnetVersionInfo()
+        private static IEnumerable<Match> GetDotnetDesktopRuntimeEntries()
         {
-            StringBuilder sb = new();
             Executable dotnet = new(DOTNET_CMD);
             ArgumentString args = new ArgumentBuilder()
             {
                 "--list-runtimes"
             };
 
+            string output = dotnet.GetOutput(args);
+            return DesktopAppRegex().Matches(output).Cast<Match>();
+        }
+
+        public static IEnumerable<Version> GetDotnetDesktopRuntimeVersions()
+        {
+            try
+            {
+                return GetDotnetDesktopRuntimeEntries().Select(match => new Version(match.Groups[1].Value));
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+                return [];
+            }
+        }
+
+        private static string GetDotnetVersionInfo()
+        {
+            StringBuilder sb = new();
             sb.AppendLine("- Microsoft.WindowsDesktop.App Versions");
             sb.AppendLine();
             sb.AppendLine("```");
             try
             {
-                string output = dotnet.GetOutput(args);
-                IEnumerable<Match> desktopAppMatches = DesktopAppRegex().Matches(output).Cast<Match>();
+                IEnumerable<Match> desktopAppMatches = GetDotnetDesktopRuntimeEntries();
                 string desktopAppLines = string.Join(Environment.NewLine, desktopAppMatches);
-
                 desktopAppLines = LineStartRegex().Replace(desktopAppLines, "    ");
                 sb.AppendLine($"{desktopAppLines}");
             }
