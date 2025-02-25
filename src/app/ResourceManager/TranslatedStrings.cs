@@ -8,6 +8,7 @@ namespace ResourceManager
     /// <summary>Contains common string literals which are translated.</summary>
     public sealed class TranslatedStrings : Translate
     {
+        private readonly TranslationString _autostash = new("Autostash");
         private readonly TranslationString _secondsAgo = new("{0} {1:second|seconds} ago");
         private readonly TranslationString _minutesAgo = new("{0} {1:minute|minutes} ago");
         private readonly TranslationString _hoursAgo = new("{0} {1:hour|hours} ago");
@@ -70,6 +71,7 @@ Yes, I allow telemetry!");
             }
         }
 
+        public static string Autostash => _instance.Value._autostash.Text;
         public static string FindGitExecutable => _instance.Value._findGitExecutable.Text;
         public static string InstallGitInstructions => _instance.Value._installGitInstructions.Text;
         public static string GitExecutableNotFound => _instance.Value._gitExecutableNotFoundText.Text;

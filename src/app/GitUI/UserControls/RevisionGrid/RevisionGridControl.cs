@@ -1107,6 +1107,7 @@ namespace GitUI
                             _filterInfo.GetRevisionFilter(currentCheckout),
                             pathFilter,
                             AppSettings.ShowGitNotes,
+                            ResourceManager.TranslatedStrings.Autostash,
                             cancellationToken);
                     },
                     ex => observeRevisions.OnError(ex));
@@ -2143,7 +2144,7 @@ namespace GitUI
             SetEnabled(createTagToolStripMenuItem, !revision.IsArtificial);
 
             bool showStash = !bareRepositoryOrArtificial && revision.IsStash;
-            SetEnabled(applyStashToolStripMenuItem, showStash);
+            SetEnabled(applyStashToolStripMenuItem, showStash || (!bareRepositoryOrArtificial && revision.IsAutostash));
             SetEnabled(popStashToolStripMenuItem, showStash);
             SetEnabled(dropStashToolStripMenuItem, showStash);
 
