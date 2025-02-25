@@ -1,4 +1,6 @@
-﻿namespace GitUI.HelperDialogs
+﻿using GitExtUtils.GitUI.Theming;
+
+namespace GitUI.HelperDialogs
 {
     partial class FormResetCurrentBranch
     {
@@ -91,7 +93,7 @@
             // Soft
             // 
             Soft.AutoSize = true;
-            Soft.BackColor = Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            Soft.BackColor = OtherColors.BrightGreen;
             Soft.Checked = true;
             Soft.Dock = DockStyle.Fill;
             Soft.Location = new Point(3, 3);
@@ -105,7 +107,7 @@
             // Mixed
             // 
             Mixed.AutoSize = true;
-            Mixed.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            Mixed.BackColor = OtherColors.BrightYellow;
             Mixed.Dock = DockStyle.Fill;
             Mixed.Location = new Point(3, 45);
             Mixed.Name = "Mixed";
@@ -119,7 +121,7 @@
             // Keep
             // 
             Keep.AutoSize = true;
-            Keep.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            Keep.BackColor = OtherColors.BrightYellow;
             Keep.Dock = DockStyle.Fill;
             Keep.Location = new Point(3, 87);
             Keep.Name = "Keep";
@@ -133,7 +135,7 @@
             // Merge
             // 
             Merge.AutoSize = true;
-            Merge.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            Merge.BackColor = OtherColors.BrightYellow;
             Merge.Dock = DockStyle.Fill;
             Merge.Location = new Point(3, 129);
             Merge.Name = "Merge";
@@ -147,7 +149,7 @@
             // Hard
             // 
             Hard.AutoSize = true;
-            Hard.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            Hard.BackColor = OtherColors.BrightRed;
             Hard.Dock = DockStyle.Fill;
             Hard.Location = new Point(3, 171);
             Hard.Name = "Hard";
