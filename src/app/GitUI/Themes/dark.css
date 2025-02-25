@@ -47,7 +47,7 @@ WindowText: fff0f0f0
 .LineNumberBackground { color: #323232; }
 .AuthoredHighlight { color: #25385B; }
 .HighlightAllOccurences { color: #1d4897; }
-.InactiveSelectionHighlight { color: #374758; }
+.InactiveSelectionHighlight { color: #436689; }
 
 .GraphBranch1 { color: #db5b93; }
 .GraphBranch2 { color: #6fa7d4; }
@@ -59,8 +59,8 @@ WindowText: fff0f0f0
 .GraphBranch8 { } /* color not specified, color slot will not be used */
 .GraphNonRelativeBranch { color: #707070; }
 
-.Branch { color: #00d76b; }
-.RemoteBranch { color: #ff8080; } /* hsl(0,   100%, 75%) */
+.Branch { color: #00E06C; }
+.RemoteBranch { color: #FF2626; }
 .RemoteBranch.colorblind { color: #0080ff; } /* hsl(210, 100%, 50%) */
 .Tag { color: #5ba8d0; }
 .OtherTag { color: #cfb3b3; }

@@ -6,3 +6,6 @@
 .PanelBackground { color: #252526; }
 .EditorBackground { color: #1e1e1e; }
 .LineNumberBackground { color: #303030; }
+
+.Branch { color: #00d76b; }
+.RemoteBranch { color: #ff8080; } /* hsl(0,   100%, 75%) */
