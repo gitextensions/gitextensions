@@ -335,7 +335,11 @@ namespace GitCommands
             }
             set
             {
-                GitVersion.ResetVersion();
+                if (GitCommandValue == value)
+                {
+                    return;
+                }
+
                 if (IsPortable())
                 {
                     SetString("gitcommand", value);
@@ -344,6 +348,8 @@ namespace GitCommands
                 {
                     WriteStringRegValue("gitcommand", value);
                 }
+
+                GitVersion.ResetVersion();
             }
         }
 
