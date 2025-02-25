@@ -36,8 +36,9 @@ namespace GitUI.CommandsDialogs.Menus
         private static string GetFilePaths(IEnumerable<string?> selectedFilePaths, string prefixDir, Func<string, string> convertPath)
         {
             return selectedFilePaths
-                .Where(path => !string.IsNullOrEmpty(path))
-                .Select(path => convertPath(Path.Combine(prefixDir, path)))
+                .Where(path => path is not null)
+                .Distinct()
+                .Select(path => prefixDir.Length == 0 && path.Length == 0 ? "." : convertPath(Path.Combine(prefixDir, path)))
                 .Join(Environment.NewLine);
         }
 
