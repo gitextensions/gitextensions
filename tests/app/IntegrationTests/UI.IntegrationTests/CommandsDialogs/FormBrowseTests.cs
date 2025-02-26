@@ -211,6 +211,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 {
                     try
                     {
+                        AppSettings.RevisionGraphShowArtificialCommits.Should().BeFalse();
+
                         // 1. Check with ShowStashes disabled
                         Console.WriteLine("Scenario 1: set 'Show stashes' to false");
                         WaitForRevisionsToBeLoaded(form);
@@ -261,6 +263,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 {
                     try
                     {
+                        AppSettings.RevisionGraphShowArtificialCommits.Should().BeFalse();
+
                         // 1. Check with ShowStashes enabled
                         Console.WriteLine("Scenario 1: set 'Show stash' to true");
                         WaitForRevisionsToBeLoaded(form);
