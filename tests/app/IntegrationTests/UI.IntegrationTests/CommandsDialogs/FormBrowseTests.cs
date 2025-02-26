@@ -216,6 +216,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowStashes.Should().BeFalse();
+                        Console.WriteLine(referenceRepository.Module.GitExecutable.GetOutput("log --glob=stas[h]"));
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().WriteRevisions();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
 
                         // 2. Change ShowStashes to enabled
@@ -224,6 +226,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowStashes.Should().BeTrue();
+                        Console.WriteLine(referenceRepository.Module.GitExecutable.GetOutput("log --glob=stas[h]"));
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().WriteRevisions();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(7);
                     }
                     finally
@@ -262,6 +266,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowStashes.Should().BeTrue();
+                        Console.WriteLine(referenceRepository.Module.GitExecutable.GetOutput("log --glob=stas[h]"));
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().WriteRevisions();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(7);
 
                         // 2. Change ShowStashes to disabled
@@ -270,11 +276,11 @@ namespace GitExtensions.UITests.CommandsDialogs
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowStashes.Should().BeFalse();
-#if DEBUG
                         // https://github.com/gitextensions/gitextensions/issues/10170
                         // This test occasionaly fails with 3 visible revisions
+                        Console.WriteLine(referenceRepository.Module.GitExecutable.GetOutput("log --glob=stas[h]"));
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().WriteRevisions();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
-#endif
                     }
                     finally
                     {

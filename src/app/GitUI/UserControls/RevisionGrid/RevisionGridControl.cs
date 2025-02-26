@@ -3308,6 +3308,15 @@ namespace GitUI
                 _revisionGridControl._gridView.ClearSelection();
                 _revisionGridControl._latestSelectedRowIndex = -1;
             }
+
+            public void WriteRevisions()
+            {
+                for (int row = 0, count = _revisionGridControl._gridView.RowCount; row < count; ++row)
+                {
+                    GitRevision? revision = _revisionGridControl.GetRevision(row);
+                    Console.WriteLine($"{revision?.Guid} {revision?.Subject}");
+                }
+            }
         }
 
         public void OnRepositoryChanged()
