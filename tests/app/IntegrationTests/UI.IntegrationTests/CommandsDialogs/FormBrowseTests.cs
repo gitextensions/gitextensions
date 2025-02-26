@@ -203,9 +203,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             bool showStashes = AppSettings.ShowStashes;
             bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
 
-            AppSettings.ShowStashes = false;
-            AppSettings.RevisionGraphShowArtificialCommits = false;
-
             RunFormTest(
                 form =>
                 {
@@ -238,7 +235,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                         AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
                     }
                 },
-                commands);
+                commands,
+                showStashes: false,
+                revisionGraphShowArtificialCommits: false);
         }
 
         [Test]
@@ -256,8 +255,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             bool showStashes = AppSettings.ShowStashes;
             bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
 
-            AppSettings.ShowStashes = true;
-            AppSettings.RevisionGraphShowArtificialCommits = false;
             RunFormTest(
                 form =>
                 {
@@ -292,13 +289,21 @@ namespace GitExtensions.UITests.CommandsDialogs
                         AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
                     }
                 },
-                commands);
+                commands,
+                showStashes: true,
+                revisionGraphShowArtificialCommits: false);
         }
 
-        private static void RunFormTest(Action<FormBrowse> testDriver, GitUICommands commands)
+        private static void RunFormTest(Action<FormBrowse> testDriver, GitUICommands commands, bool showStashes, bool revisionGraphShowArtificialCommits)
         {
             UITest.RunForm(
-                showForm: () => commands.StartBrowseDialog(owner: null).Should().BeTrue(),
+                showForm: () =>
+                {
+                    AppSettings.ShowStashes = showStashes;
+                    AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
+
+                    commands.StartBrowseDialog(owner: null).Should().BeTrue();
+                },
                 (FormBrowse form) =>
                 {
                     testDriver(form);
