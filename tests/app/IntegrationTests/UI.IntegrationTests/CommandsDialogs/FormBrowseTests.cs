@@ -302,10 +302,18 @@ namespace GitExtensions.UITests.CommandsDialogs
                     AppSettings.ShowStashes = showStashes;
                     AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
 
+                    Application.DoEvents();
+
+                    AppSettings.ShowStashes.Should().Be(showStashes);
+                    AppSettings.RevisionGraphShowArtificialCommits.Should().Be(revisionGraphShowArtificialCommits);
+
                     commands.StartBrowseDialog(owner: null).Should().BeTrue();
                 },
                 (FormBrowse form) =>
                 {
+                    AppSettings.ShowStashes.Should().Be(showStashes);
+                    AppSettings.RevisionGraphShowArtificialCommits.Should().Be(revisionGraphShowArtificialCommits);
+
                     testDriver(form);
                     return Task.CompletedTask;
                 });
