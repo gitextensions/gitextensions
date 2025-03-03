@@ -1527,11 +1527,11 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="_collapse.Text">
+      <trans-unit id="_collapseAll.Text">
         <source>C&amp;ollapse all</source>
         <target />
       </trans-unit>
-      <trans-unit id="_expand.Text">
+      <trans-unit id="_expandAll.Text">
         <source>E&amp;xpand all</source>
         <target />
       </trans-unit>
