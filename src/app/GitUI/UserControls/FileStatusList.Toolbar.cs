@@ -215,6 +215,37 @@ partial class FileStatusList
             ((ToolStripMenuItem)btnFindInFilesGitGrep.DropDown.Items[itemIndex]).Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;
         }
 
+        if (tsmiToolbar.DropDown.Items.Count == 0)
+        {
+            for (int itemIndex = 0; itemIndex < Toolbar.Items.Count; ++itemIndex)
+            {
+                ToolStripItem toolbarItem = Toolbar.Items[itemIndex];
+                ToolStripMenuItem menuItem = new()
+                {
+                    CheckOnClick = true,
+                    Checked = true,
+                    Enabled = toolbarItem != btnAsTree,
+                    Image = toolbarItem.Image,
+                    Text = toolbarItem is ToolStripSeparator ? $"Separator '{Toolbar.Items[itemIndex + 1].ToolTipText}'" : toolbarItem.ToolTipText,
+                };
+                menuItem.Click += (s, e) =>
+                {
+                    toolbarItem.Visible = menuItem.Checked;
+                    UpdateToolbar();
+                };
+                tsmiToolbar.DropDown.Items.Add(menuItem);
+            }
+        }
+
+        for (int itemIndex = 0; itemIndex < Toolbar.Items.Count; ++itemIndex)
+        {
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)tsmiToolbar.DropDown.Items[itemIndex];
+            if (!menuItem.Checked)
+            {
+                Toolbar.Items[itemIndex].Visible = false;
+            }
+        }
+
         return;
 
         bool HasDiffABGroups()
