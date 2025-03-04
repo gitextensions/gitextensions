@@ -1619,12 +1619,40 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Using &amp;input box</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiGroupByFileExtensionFlat.Text">
+        <source>Group by file e&amp;xtension - flat</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileExtensionTree.Text">
+        <source>Group by file &amp;extension - tree</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFilePathFlat.Text">
+        <source>Group by &amp;file path - flat</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFilePathTree.Text">
+        <source>Group by file &amp;path - tree</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileStatusFlat.Text">
+        <source>Group by file s&amp;tatus - flat</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileStatusTree.Text">
+        <source>Group by file &amp;status - tree</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiRefreshOnFormFocus.Text">
         <source>&amp;Refresh artificial commits on form focus</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowGroupNodesInFlatList.Text">
-        <source>Show &amp;group nodes in flat list</source>
+        <source>Show &amp;group nodes in flat list (if multiple)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiToolbar.Text">
+        <source>Toolbar</source>
         <target />
       </trans-unit>
     </body>

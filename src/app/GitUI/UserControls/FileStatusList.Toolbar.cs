@@ -140,6 +140,11 @@ partial class FileStatusList
         ApplyGroupBy();
     }
 
+    private void GroupByToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        DiffListSortService.Instance.DiffListSorting = (DiffListSortType)((ToolStripMenuItem)sender).Tag!;
+    }
+
     private bool IsDiffStatusMatch(DiffBranchStatus diffStatus)
     {
         if (!btnUnequalChange.Visible)
@@ -170,6 +175,11 @@ partial class FileStatusList
 
     private void UpdateToolbar()
     {
+        bool hasGroups = CanUseFindInCommitFilesGitGrep || (FileStatusListView.Nodes.Count > 0 && FileStatusListView.Nodes[0].Tag is GitRevision);
+        btnCollapseGroups.Visible = hasGroups;
+        sepRefresh.Visible = hasGroups && btnRefresh.Visible;
+        sepAsTree.Visible = hasGroups || btnRefresh.Visible;
+
         tsmiRefreshOnFormFocus.Checked = tsmiRefreshOnFormFocus.Enabled && AppSettings.RefreshArtificialCommitOnApplicationActivated;
 
         DiffListSortType sortType = DiffListSortService.Instance.DiffListSorting;
@@ -178,6 +188,12 @@ partial class FileStatusList
         btnByStatus.Checked = sortType is DiffListSortType.FileStatus or DiffListSortType.FileStatusFlat;
         bool flatList = sortType.ToString().EndsWith("Flat");
         btnAsTree.Image = flatList ? _flatListImage : _treeImage;
+        tsmiGroupByFilePathTree.Checked = sortType == DiffListSortType.FilePath;
+        tsmiGroupByFilePathFlat.Checked = sortType == DiffListSortType.FilePathFlat;
+        tsmiGroupByFileExtensionTree.Checked = sortType == DiffListSortType.FileExtension;
+        tsmiGroupByFileExtensionFlat.Checked = sortType == DiffListSortType.FileExtensionFlat;
+        tsmiGroupByFileStatusTree.Checked = sortType == DiffListSortType.FileStatus;
+        tsmiGroupByFileStatusFlat.Checked = sortType == DiffListSortType.FileStatusFlat;
 
         tsmiDenseTree.Checked = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
         tsmiDenseTree.Enabled = !flatList;

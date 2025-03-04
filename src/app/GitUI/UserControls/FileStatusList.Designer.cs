@@ -1,4 +1,5 @@
-﻿using GitUI.UserControls;
+﻿using GitCommands;
+using GitUI.UserControls;
 
 namespace GitUI
 {
@@ -45,11 +46,23 @@ namespace GitUI
             DeleteSearchButton = new Label();
             Toolbar = new ToolStripEx();
             btnCollapseGroups = new ToolStripButton();
+            sepRefresh = new ToolStripSeparator();
             btnRefresh = new ToolStripSplitButton();
             tsmiRefreshOnFormFocus = new ToolStripMenuItem();
+            sepAsTree = new ToolStripSeparator();
             btnAsTree = new ToolStripSplitButton();
+            tsmiGroupByFilePathTree = new ToolStripMenuItem();
+            tsmiGroupByFilePathFlat = new ToolStripMenuItem();
+            tsmiGroupByFileExtensionTree = new ToolStripMenuItem();
+            tsmiGroupByFileExtensionFlat = new ToolStripMenuItem();
+            tsmiGroupByFileStatusTree = new ToolStripMenuItem();
+            tsmiGroupByFileStatusFlat = new ToolStripMenuItem();
+            sepListOptions = new ToolStripSeparator();
             tsmiDenseTree = new ToolStripMenuItem();
             tsmiShowGroupNodesInFlatList = new ToolStripMenuItem();
+            sepToolbar = new ToolStripSeparator();
+            tsmiToolbar = new ToolStripMenuItem();
+            sepGroupBy = new ToolStripSeparator();
             btnByPath = new ToolStripButton();
             btnByExtension = new ToolStripButton();
             btnByStatus = new ToolStripButton();
@@ -221,7 +234,7 @@ namespace GitUI
             Toolbar.ClickThrough = true;
             Toolbar.DrawBorder = false;
             Toolbar.GripStyle = ToolStripGripStyle.Hidden;
-            Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, btnRefresh, btnAsTree, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep });
+            Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep });
             Toolbar.Location = new Point(0, 0);
             Toolbar.Name = "Toolbar";
             Toolbar.RenderMode = ToolStripRenderMode.System;
@@ -235,7 +248,14 @@ namespace GitUI
             btnCollapseGroups.Name = "btnCollapseGroups";
             btnCollapseGroups.Size = new Size(23, 22);
             btnCollapseGroups.ToolTipText = "Collapse all groups, otherwise expand the selected group";
+            btnCollapseGroups.Visible = false;
             btnCollapseGroups.Click += CollapseGroups_Click;
+            // 
+            // sepRefresh
+            // 
+            sepRefresh.Name = "sepRefresh";
+            sepRefresh.Size = new Size(6, 25);
+            sepRefresh.Visible = false;
             // 
             // btnRefresh
             // 
@@ -256,15 +276,73 @@ namespace GitUI
             tsmiRefreshOnFormFocus.Text = "&Refresh artificial commits on form focus";
             tsmiRefreshOnFormFocus.Click += RefreshOnFormFocus_Click;
             // 
+            // sepAsTree
+            // 
+            sepAsTree.Name = "sepAsTree";
+            sepAsTree.Size = new Size(6, 25);
+            // 
             // btnAsTree
             // 
             btnAsTree.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnAsTree.DropDownItems.AddRange(new ToolStripItem[] { tsmiDenseTree, tsmiShowGroupNodesInFlatList });
+            btnAsTree.DropDownItems.AddRange(new ToolStripItem[] { tsmiGroupByFilePathTree, tsmiGroupByFilePathFlat, tsmiGroupByFileExtensionTree, tsmiGroupByFileExtensionFlat, tsmiGroupByFileStatusTree, tsmiGroupByFileStatusFlat, sepListOptions, tsmiDenseTree, tsmiShowGroupNodesInFlatList, sepToolbar, tsmiToolbar });
             btnAsTree.Image = Properties.Images.FileTree;
             btnAsTree.Name = "btnAsTree";
             btnAsTree.Size = new Size(32, 22);
             btnAsTree.ToolTipText = "Toggle flat list / tree";
             btnAsTree.ButtonClick += AsTree_ButtonClick;
+            // 
+            // tsmiGroupByFilePathTree
+            // 
+            tsmiGroupByFilePathTree.Name = "tsmiGroupByFilePathTree";
+            tsmiGroupByFilePathTree.Size = new Size(340, 22);
+            tsmiGroupByFilePathTree.Tag = DiffListSortType.FilePath;
+            tsmiGroupByFilePathTree.Text = "Group by file &path - tree";
+            tsmiGroupByFilePathTree.Click += GroupByToolStripMenuItem_Click;
+            // 
+            // tsmiGroupByFilePathFlat
+            // 
+            tsmiGroupByFilePathFlat.Name = "tsmiGroupByFilePathFlat";
+            tsmiGroupByFilePathFlat.Size = new Size(340, 22);
+            tsmiGroupByFilePathFlat.Tag = DiffListSortType.FilePathFlat;
+            tsmiGroupByFilePathFlat.Text = "Group by &file path - flat";
+            tsmiGroupByFilePathFlat.Click += GroupByToolStripMenuItem_Click;
+            // 
+            // tsmiGroupByFileExtensionTree
+            // 
+            tsmiGroupByFileExtensionTree.Name = "tsmiGroupByFileExtensionTree";
+            tsmiGroupByFileExtensionTree.Size = new Size(340, 22);
+            tsmiGroupByFileExtensionTree.Tag = DiffListSortType.FileExtension;
+            tsmiGroupByFileExtensionTree.Text = "Group by file &extension - tree";
+            tsmiGroupByFileExtensionTree.Click += GroupByToolStripMenuItem_Click;
+            // 
+            // tsmiGroupByFileExtensionFlat
+            // 
+            tsmiGroupByFileExtensionFlat.Name = "tsmiGroupByFileExtensionFlat";
+            tsmiGroupByFileExtensionFlat.Size = new Size(340, 22);
+            tsmiGroupByFileExtensionFlat.Tag = DiffListSortType.FileExtensionFlat;
+            tsmiGroupByFileExtensionFlat.Text = "Group by file e&xtension - flat";
+            tsmiGroupByFileExtensionFlat.Click += GroupByToolStripMenuItem_Click;
+            // 
+            // tsmiGroupByFileStatusTree
+            // 
+            tsmiGroupByFileStatusTree.Name = "tsmiGroupByFileStatusTree";
+            tsmiGroupByFileStatusTree.Size = new Size(340, 22);
+            tsmiGroupByFileStatusTree.Tag = DiffListSortType.FileStatus;
+            tsmiGroupByFileStatusTree.Text = "Group by file &status - tree";
+            tsmiGroupByFileStatusTree.Click += GroupByToolStripMenuItem_Click;
+            // 
+            // tsmiGroupByFileStatusFlat
+            // 
+            tsmiGroupByFileStatusFlat.Name = "tsmiGroupByFileStatusFlat";
+            tsmiGroupByFileStatusFlat.Size = new Size(340, 22);
+            tsmiGroupByFileStatusFlat.Tag = DiffListSortType.FileStatusFlat;
+            tsmiGroupByFileStatusFlat.Text = "Group by file s&tatus - flat";
+            tsmiGroupByFileStatusFlat.Click += GroupByToolStripMenuItem_Click;
+            // 
+            // sepListOptions
+            // 
+            sepListOptions.Name = "sepListOptions";
+            sepListOptions.Size = new Size(337, 6);
             // 
             // tsmiDenseTree
             // 
@@ -279,8 +357,24 @@ namespace GitUI
             tsmiShowGroupNodesInFlatList.CheckOnClick = true;
             tsmiShowGroupNodesInFlatList.Name = "tsmiShowGroupNodesInFlatList";
             tsmiShowGroupNodesInFlatList.Size = new Size(340, 22);
-            tsmiShowGroupNodesInFlatList.Text = "Show &group nodes in flat list";
+            tsmiShowGroupNodesInFlatList.Text = "Show &group nodes in flat list (if multiple)";
             tsmiShowGroupNodesInFlatList.Click += ShowGroupNodesInFlatList_Click;
+            // 
+            // sepToolbar
+            // 
+            sepToolbar.Name = "sepToolbar";
+            sepToolbar.Size = new Size(337, 6);
+            // 
+            // tsmiToolbar
+            // 
+            tsmiToolbar.Name = "tsmiToolbar";
+            tsmiToolbar.Size = new Size(340, 22);
+            tsmiToolbar.Text = "Toolbar";
+            // 
+            // sepGroupBy
+            // 
+            sepGroupBy.Name = "sepGroupBy";
+            sepGroupBy.Size = new Size(6, 25);
             // 
             // btnByPath
             // 
@@ -463,5 +557,17 @@ namespace GitUI
         private ToolStripMenuItem tsmiFindUsingDialog;
         private ToolStripMenuItem tsmiFindUsingInputBox;
         private ToolStripMenuItem tsmiFindUsingBoth;
+        private ToolStripSeparator sepRefresh;
+        private ToolStripSeparator sepAsTree;
+        private ToolStripSeparator sepGroupBy;
+        private ToolStripSeparator sepListOptions;
+        private ToolStripSeparator sepToolbar;
+        private ToolStripMenuItem tsmiGroupByFilePathTree;
+        private ToolStripMenuItem tsmiGroupByFilePathFlat;
+        private ToolStripMenuItem tsmiGroupByFileExtensionTree;
+        private ToolStripMenuItem tsmiGroupByFileExtensionFlat;
+        private ToolStripMenuItem tsmiGroupByFileStatusTree;
+        private ToolStripMenuItem tsmiGroupByFileStatusFlat;
+        private ToolStripMenuItem tsmiToolbar;
     }
 }
