@@ -199,9 +199,9 @@ namespace CommonTestUtils
                 // Note that the intermittent failures mentioned below are likely related too.
                 if (Module.GetTestAccessor().EffectiveSettings is not null)
                 {
-                    if (ThreadHelper.JoinableTaskFactory is null)
+                    if (ThreadHelper.JoinableTaskContext is null)
                     {
-                        Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskFactory)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
+                        Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
                     }
                     else
                     {
