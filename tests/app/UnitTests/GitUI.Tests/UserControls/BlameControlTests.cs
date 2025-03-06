@@ -119,6 +119,17 @@ namespace GitUITests.UserControls
         }
 
         [Test]
+        public void BuildAuthorLine_DoNotPadIfNotNeeded()
+        {
+            StringBuilder line = new();
+
+            _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, 5, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                "fileName.txt", true, false, false, false);
+
+            line.ToString().Should().StartWith("author1");
+        }
+
+        [Test]
         public void BuildBlameContents_WithDateAndTime()
         {
             bool originalValue = AppSettings.BlameShowAuthorTime;
