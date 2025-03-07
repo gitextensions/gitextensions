@@ -222,6 +222,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         // 2. Change ShowStashes to enabled
                         Console.WriteLine("Scenario 2: change 'Show stashes' to enabled");
                         form.GetTestAccessor().RevisionGrid.ToggleShowStashes();
+                        AppSettings.ShowStashes.Should().BeTrue();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowStashes.Should().BeTrue();
@@ -274,6 +275,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         // 2. Change ShowStashes to disabled
                         Console.WriteLine("Scenario 2: change 'Show stash' to disabled");
                         form.GetTestAccessor().RevisionGrid.ToggleShowStashes();
+                        AppSettings.ShowStashes.Should().BeFalse();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowStashes.Should().BeFalse();

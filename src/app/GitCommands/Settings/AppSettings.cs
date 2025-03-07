@@ -1151,7 +1151,20 @@ namespace GitCommands
         public static bool ShowStashes
         {
             get => GetBool("showStashes", true);
-            set => SetBool("showStashes", value);
+            set
+            {
+                string stackTrace = Environment.StackTrace;
+                int startIndex = stackTrace.IndexOf("   at", stackTrace.IndexOf("   at", 1) + 1);
+                startIndex = startIndex < 0 ? 0 : startIndex;
+                int nunitIndex = stackTrace.IndexOf("  at NUnit.");
+                nunitIndex = nunitIndex < 0 ? stackTrace.Length : nunitIndex;
+                int endIndex = stackTrace.LastIndexOf("   at System.Reflection.MethodBaseInvoker", nunitIndex);
+                endIndex = endIndex < 0 ? nunitIndex : endIndex;
+                stackTrace = stackTrace[startIndex..endIndex];
+                Console.WriteLine($"set {nameof(ShowStashes)} = {value} in {AppSettings.SettingsContainer.SettingsCache.SettingsFilePath}\n{stackTrace}");
+
+                SetBool("showStashes", value);
+            }
         }
 
         // Currently not configurable in UI (Set manually in settings file)
