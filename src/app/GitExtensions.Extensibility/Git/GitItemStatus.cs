@@ -312,11 +312,11 @@ public sealed class GitItemStatus
 
         if (IsRenamed)
         {
-            str.Append("Renamed\n   ").Append(OldName).Append("\nto\n   ").Append(Name);
+            str.Append("Renamed\n   ").Append(OldName).Append("\n to\n   ").Append(Name);
         }
         else if (IsCopied)
         {
-            str.Append("Copied\n   ").Append(OldName).Append("\nto\n   ").Append(Name);
+            str.Append("Copied\n   ").Append(OldName).Append("\n to\n   ").Append(Name);
         }
         else
         {
