@@ -1,4 +1,9 @@
-﻿.asm = ^([\w]+):
+﻿namespace GitUI.AutoCompletion;
+
+internal static class AutoCompleteRegexes
+{
+    internal const string Default = """
+.asm = ^([\w]+):
 .au3, .auh = Func\s+([\w]+)|\$([\w]+)
 .bas, .frm, .cls = ^\s*(?:(?:Public (?:Default )?|Private )?(?:Sub|Function|Property Get|Property Set|Property Let) ?)(\w+)\(|^Attribute VB_Name = "(\w+)"
 .bat = ^\:(\w+)|^set\s+(\w+)
@@ -18,3 +23,5 @@
 .sd = ^\s*(?:procedure|function)\s+(\w+)
 .vb, .vb6 = (?:class|function|sub)\s+(\w+)(?:\s*(?:[\(\']|$))
 .xaml = \sname\s*=\s*\"(\w+)\"
+""";
+}
