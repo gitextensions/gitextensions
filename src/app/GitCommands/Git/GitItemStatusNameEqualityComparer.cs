@@ -3,7 +3,7 @@
 namespace GitCommands.Git
 {
     /// <summary>
-    /// Compares the file names
+    /// Compares the file names.
     /// </summary>
     public class GitItemStatusNameEqualityComparer : EqualityComparer<GitItemStatus?>
     {
