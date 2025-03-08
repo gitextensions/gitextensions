@@ -92,6 +92,12 @@ namespace GitUITests.UserControls
             _blameControl.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _referenceRepository.Dispose();
+        }
+
         [TestCase(true, true, true, true, "author1 - 3/22/2010 - fileName.txt")]
         [TestCase(true, true, true, false, "3/22/2010 - author1 - fileName.txt")]
         [TestCase(false, true, true, false, "author1 - fileName.txt")]
