@@ -227,7 +227,8 @@ namespace GitCommands.Settings
                 FileChanged();
             }
 
-            bool needsRefresh = !_lastFileRead.HasValue || _lastFileModificationDate > _lastFileRead.Value;
+            bool needsRefresh = !_lastFileRead.HasValue
+                || (_lastFileModificationDate > _lastFileRead.Value && !(_lastModificationDate.HasValue && _lastModificationDate >= _lastFileModificationDate));
 
             if (needsRefresh)
             {
