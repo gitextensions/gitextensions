@@ -115,8 +115,7 @@ namespace GitUI.AutoCompletion
                 return File.ReadLines(path);
             }
 
-            using StreamReader sr = new(AutoCompleteRegexes.Default);
-            return sr.ReadToEnd().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
+            return AutoCompleteRegexes.Default.Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static Dictionary<string, Regex> ParseRegexes()
