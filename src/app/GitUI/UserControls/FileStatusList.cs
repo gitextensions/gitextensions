@@ -181,37 +181,36 @@ namespace GitUI
                 ImageSize = DpiUtil.Scale(new Size(imageWidth, rowHeight)), // Scale ImageSize and images scale automatically
             };
 
-            // Note: The order of images also affects sorting by file status.
-            // e.g. for for Unequal: Modified, Copied, Renamed etc, then Same: etc
+            // Note: The order of images also affects sorting by file status as second key after DiffBranchStatus
             (string imageKey, Bitmap icon)[] images =
             [
                 (nameof(Images.FolderClosed), Pad(Images.FolderClosed)),
                 (nameof(Images.FileStatusUnknown), Pad(Images.FileStatusUnknown)),
                 (nameof(Images.Unmerged), Pad(Images.Unmerged)),
                 (nameof(Images.FileStatusModifiedUnequal), Pad(Images.FileStatusModifiedUnequal)),
-                (nameof(Images.FileStatusModifiedSame), Pad(Images.FileStatusModifiedSame)),
                 (nameof(Images.FileStatusModifiedOnlyB), Pad(Images.FileStatusModifiedOnlyB)),
                 (nameof(Images.FileStatusModifiedOnlyA), Pad(Images.FileStatusModifiedOnlyA)),
+                (nameof(Images.FileStatusModifiedSame), Pad(Images.FileStatusModifiedSame)),
                 (nameof(Images.FileStatusModified), Pad(Images.FileStatusModified)),
                 (nameof(Images.FileStatusCopiedUnequal), Pad(Images.FileStatusCopiedUnequal)),
-                (nameof(Images.FileStatusCopiedSame), Pad(Images.FileStatusCopiedSame)),
                 (nameof(Images.FileStatusCopiedOnlyB), Pad(Images.FileStatusCopiedOnlyB)),
                 (nameof(Images.FileStatusCopiedOnlyA), Pad(Images.FileStatusCopiedOnlyA)),
+                (nameof(Images.FileStatusCopiedSame), Pad(Images.FileStatusCopiedSame)),
                 (nameof(Images.FileStatusCopied), Pad(Images.FileStatusCopied)),
                 (nameof(Images.FileStatusRenamedUnequal), Pad(Images.FileStatusRenamedUnequal)),
-                (nameof(Images.FileStatusRenamedSame), Pad(Images.FileStatusRenamedSame)),
                 (nameof(Images.FileStatusRenamedOnlyB), Pad(Images.FileStatusRenamedOnlyB)),
                 (nameof(Images.FileStatusRenamedOnlyA), Pad(Images.FileStatusRenamedOnlyA)),
+                (nameof(Images.FileStatusRenamedSame), Pad(Images.FileStatusRenamedSame)),
                 (nameof(Images.FileStatusRenamed), Pad(Images.FileStatusRenamed.AdaptLightness())),
                 (nameof(Images.FileStatusAddedUnequal), Pad(Images.FileStatusAddedUnequal)),
-                (nameof(Images.FileStatusAddedSame), Pad(Images.FileStatusAddedSame)),
                 (nameof(Images.FileStatusAddedOnlyB), Pad(Images.FileStatusAddedOnlyB)),
                 (nameof(Images.FileStatusAddedOnlyA), Pad(Images.FileStatusAddedOnlyA)),
+                (nameof(Images.FileStatusAddedSame), Pad(Images.FileStatusAddedSame)),
                 (nameof(Images.FileStatusAdded), Pad(Images.FileStatusAdded)),
                 (nameof(Images.FileStatusRemovedUnequal), Pad(Images.FileStatusRemovedUnequal)),
-                (nameof(Images.FileStatusRemovedSame), Pad(Images.FileStatusRemovedSame)),
                 (nameof(Images.FileStatusRemovedOnlyB), Pad(Images.FileStatusRemovedOnlyB)),
                 (nameof(Images.FileStatusRemovedOnlyA), Pad(Images.FileStatusRemovedOnlyA)),
+                (nameof(Images.FileStatusRemovedSame), Pad(Images.FileStatusRemovedSame)),
                 (nameof(Images.FileStatusRemoved), Pad(Images.FileStatusRemoved)),
                 (nameof(Images.SubmodulesManage), Pad(Images.SubmodulesManage)),
                 (nameof(Images.FolderSubmodule), Pad(Images.FolderSubmodule)),
