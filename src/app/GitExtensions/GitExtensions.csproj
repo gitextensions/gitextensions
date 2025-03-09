@@ -44,9 +44,4 @@
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="AutoCompleteRegexes.txt" />
-    <EmbeddedResource Include="AutoCompleteRegexes.txt" />
-  </ItemGroup>
-
 </Project>

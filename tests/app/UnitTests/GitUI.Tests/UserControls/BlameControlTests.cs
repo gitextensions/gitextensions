@@ -92,6 +92,12 @@ namespace GitUITests.UserControls
             _blameControl.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _referenceRepository.Dispose();
+        }
+
         [TestCase(true, true, true, true, "author1 - 3/22/2010 - fileName.txt")]
         [TestCase(true, true, true, false, "3/22/2010 - author1 - fileName.txt")]
         [TestCase(false, true, true, false, "author1 - fileName.txt")]
@@ -116,6 +122,17 @@ namespace GitUITests.UserControls
                 "fileName.txt", true, true, true, false);
 
             line.ToString().Should().StartWith("3/22/2010 - author1");
+        }
+
+        [Test]
+        public void BuildAuthorLine_DoNotPadIfNotNeeded()
+        {
+            StringBuilder line = new();
+
+            _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, 5, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                "fileName.txt", true, false, false, false);
+
+            line.ToString().Should().StartWith("author1");
         }
 
         [Test]

@@ -80,12 +80,22 @@ namespace GitExtensions.Plugins.BackgroundFetch
                 return;
             }
 
-            IObservable<long> fetchTriggers = isRefreshDisabled
-                ? WaitForRunningGitExitsObservable(gitModule)
-                : Observable
-                    .Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
+            IObservable<long> fetchTriggers;
+            if (isRefreshDisabled)
+            {
+                // just wait running git exits
+                fetchTriggers = WaitForRunningGitExitsObservable(gitModule);
+            }
+            else
+            {
+                // generate triggers periodically
+                TimeSpan triggersInterval = TimeSpan.FromSeconds(Math.Max(5, fetchInterval));
+                TimeSpan firstTrigger = fetchOnOpening ? TimeSpan.FromMilliseconds(10) : triggersInterval;
+                fetchTriggers = Observable
+                    .Timer(firstTrigger, triggersInterval)
                     .SelectMany(_ => WaitForRunningGitExitsObservable(gitModule))
                     .Repeat();
+            }
 
             _cancellationToken = fetchTriggers
                 .ObserveOn(ThreadPoolScheduler.Instance)

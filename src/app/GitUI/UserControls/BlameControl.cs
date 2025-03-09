@@ -467,7 +467,7 @@ namespace GitUI.Blame
                 authorLineBuilder.Append(line.Commit.FileName);
             }
 
-            authorLineBuilder.Append(' ', lineLength - authorLineBuilder.Length).AppendLine();
+            authorLineBuilder.Append(' ', Math.Max(0, lineLength - authorLineBuilder.Length)).AppendLine();
 
             return authorLineBuilder.ToString();
         }
