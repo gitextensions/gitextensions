@@ -211,7 +211,21 @@ namespace GitCommands.Settings
                         FileChanged();
                     }
 
-                    ReadSettings(SettingsFilePath);
+                    try
+                    {
+                        ReadSettings(SettingsFilePath);
+                    }
+                    catch (IOException ex)
+                    {
+                        const int retryDelayMilliseconds = 1000;
+                        string error = @$"Retrying to load ""{SettingsFilePath}"" in {retryDelayMilliseconds} ms after error on first attempt: {ex.Message}";
+                        Trace.WriteLine(error);
+                        Console.WriteLine(error);
+
+                        Thread.Sleep(retryDelayMilliseconds);
+                        ReadSettings(SettingsFilePath);
+                    }
+
                     _lastFileRead = DateTime.UtcNow;
                 }
                 catch (Exception e)
