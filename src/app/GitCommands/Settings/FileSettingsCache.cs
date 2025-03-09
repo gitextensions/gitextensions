@@ -24,6 +24,16 @@ namespace GitCommands.Settings
 
         protected FileSettingsCache(string settingsFilePath, bool autoSave = true)
         {
+            string stackTrace = Environment.StackTrace;
+            int startIndex = stackTrace.IndexOf("   at", 1);
+            startIndex = startIndex < 0 ? 0 : startIndex;
+            int nunitIndex = stackTrace.IndexOf("  at NUnit.");
+            nunitIndex = nunitIndex < 0 ? stackTrace.Length : nunitIndex;
+            int endIndex = stackTrace.LastIndexOf("   at System.Reflection.MethodBaseInvoker", nunitIndex);
+            endIndex = endIndex < 0 ? nunitIndex : endIndex;
+            stackTrace = stackTrace[startIndex..endIndex];
+            Console.WriteLine($"{nameof(FileSettingsCache)} ctor for {settingsFilePath}, autoSave = {autoSave}\n{stackTrace[..0]}");
+
             SettingsFilePath = settingsFilePath;
             _autoSave = autoSave;
 
@@ -112,9 +122,11 @@ namespace GitCommands.Settings
                     return File.GetLastWriteTimeUtc(SettingsFilePath);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 // no-op
+                Trace.WriteLine(@$"Failed to GetLastWriteTimeUtc(""{SettingsFilePath}""): {ex}");
+                Console.WriteLine(@$"Failed to GetLastWriteTimeUtc(""{SettingsFilePath}""): {ex}");
             }
 
             return DateTime.MaxValue;
@@ -143,9 +155,11 @@ namespace GitCommands.Settings
                     {
                         File.Copy(SettingsFilePath, backupName, true);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         // Ignore errors for the backup file
+                        Trace.WriteLine(@$"Failed to backup settings file ""{SettingsFilePath}"": {ex}");
+                        Console.WriteLine(@$"Failed to backup settings file ""{SettingsFilePath}"": {ex}");
                     }
                 }
 
@@ -164,14 +178,24 @@ namespace GitCommands.Settings
                 catch (Exception ex)
                 {
                     _lastFileRead = null;
+                    Trace.WriteLine(@$"Failed to copy save settings to ""{SettingsFilePath}"": {ex}");
+                    Console.WriteLine(@$"Failed to copy save settings to ""{SettingsFilePath}"": {ex}");
                     throw new SaveSettingsException(ex);
                 }
 
                 FileChanged();
                 _lastFileRead = DateTime.UtcNow;
+                if (NeedRefresh())
+                {
+                    string error = $"Inconsistent timestamps after save: {nameof(_lastFileRead)} = {_lastFileRead}, {nameof(_lastFileModificationDate)} = {_lastFileModificationDate}, {nameof(_forceFileChangeChecks)} = {_forceFileChangeChecks}, {nameof(SettingsFilePath)} = {SettingsFilePath}";
+                    Trace.WriteLine(error);
+                    Console.WriteLine(error);
+                }
             }
             catch (IOException ex)
             {
+                Trace.WriteLine(@$"Failed to save settings to ""{SettingsFilePath}"": {ex}");
+                Console.WriteLine(@$"Failed to save settings to ""{SettingsFilePath}"": {ex}");
                 throw new SaveSettingsException(ex);
             }
         }
@@ -187,12 +211,27 @@ namespace GitCommands.Settings
                         FileChanged();
                     }
 
-                    ReadSettings(SettingsFilePath);
+                    try
+                    {
+                        ReadSettings(SettingsFilePath);
+                    }
+                    catch (IOException ex)
+                    {
+                        const int retryDelayMilliseconds = 1000;
+                        string error = @$"Retrying to load ""{SettingsFilePath}"" in {retryDelayMilliseconds} ms after error on first attempt: {ex.Message}";
+                        Trace.WriteLine(error);
+                        Console.WriteLine(error);
+
+                        Thread.Sleep(retryDelayMilliseconds);
+                        ReadSettings(SettingsFilePath);
+                    }
+
                     _lastFileRead = DateTime.UtcNow;
                 }
                 catch (Exception e)
                 {
                     Trace.WriteLine($"Failed to load {SettingsFilePath}: {e.Message}");
+                    Console.WriteLine($"Failed to load {SettingsFilePath}: {e.Message}");
                 }
             }
             else
@@ -202,6 +241,8 @@ namespace GitCommands.Settings
             }
         }
 
+        private bool _firstCheck = true;
+
         protected override bool NeedRefresh()
         {
             if (_forceFileChangeChecks)
@@ -209,7 +250,22 @@ namespace GitCommands.Settings
                 FileChanged();
             }
 
-            return !_lastFileRead.HasValue || _lastFileModificationDate > _lastFileRead.Value;
+            bool needsRefresh = !_lastFileRead.HasValue
+                || (_lastFileModificationDate > _lastFileRead.Value && !(_lastModificationDate.HasValue && _lastModificationDate >= _lastFileModificationDate));
+
+            if (needsRefresh)
+            {
+                string error = $"Refresh needed: {nameof(_lastFileRead)} = {_lastFileRead}, {nameof(_lastFileModificationDate)} = {_lastFileModificationDate}, {nameof(_lastModificationDate)} = {_lastModificationDate}, {nameof(_forceFileChangeChecks)} = {_forceFileChangeChecks} {nameof(_firstCheck)} = {_firstCheck}, {nameof(SettingsFilePath)} = {SettingsFilePath}";
+                if (!_firstCheck)
+                {
+                    Trace.WriteLine(error);
+                    Console.WriteLine(error);
+                }
+
+                _firstCheck = false;
+            }
+
+            return needsRefresh;
         }
 
         protected override void SettingsChanged()

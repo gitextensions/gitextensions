@@ -1,4 +1,6 @@
-﻿using GitCommands;
+﻿#nullable enable
+
+using GitCommands;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
@@ -235,8 +237,8 @@ namespace GitUI.CommandsDialogs
                     settingsPage.SaveSettings();
                 }
 
-                _commonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
-                _commonLogic.DistributedSettingsSet.EffectiveSettings.Save();
+                _commonLogic.GitConfigSettingsSet.Save();
+                _commonLogic.DistributedSettingsSet.Save();
 
                 if (EnvUtils.RunningOnWindows())
                 {

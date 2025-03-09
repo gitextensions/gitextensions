@@ -19,6 +19,12 @@ namespace GitCommandsTests
             Console.WriteLine("Repo path: " + _gitModule.WorkingDir);
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _refRepo.Dispose();
+        }
+
         [Test]
         public void GetCommitCount_Should_manage_ambiguous_argument()
         {

@@ -28,7 +28,7 @@ public class GitPluginSettingsContainer : SettingsSource, IGitPluginSettingsCont
     public override SettingLevel SettingLevel
     {
         get => ExternalSettings.SettingLevel;
-        set => throw new InvalidOperationException(nameof(SettingLevel));
+        init => throw new InvalidOperationException(nameof(SettingLevel));
     }
 
     public override string? GetValue(string name)
