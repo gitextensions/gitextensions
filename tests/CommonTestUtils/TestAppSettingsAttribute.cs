@@ -12,9 +12,13 @@ namespace CommonTestUtils
         public void BeforeTest(ITest test)
         {
             File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+            AppSettings.SettingsContainer.SettingsCache.Load();
 
             AppSettings.CheckForUpdates = false;
             AppSettings.ShowAvailableDiffTools = false;
+
+            // Create the settings file so that the SettingsCache does not think it should reload the file again and again
+            AppSettings.SettingsContainer.SettingsCache.Save();
         }
 
         public void AfterTest(ITest test)
