@@ -231,7 +231,7 @@ namespace GitCommands.Settings
 
             if (needsRefresh)
             {
-                string error = $"Refresh needed: {nameof(_lastFileRead)} = {_lastFileRead}, {nameof(_lastFileModificationDate)} = {_lastFileModificationDate}, {nameof(_forceFileChangeChecks)} = {_forceFileChangeChecks} {nameof(_firstCheck)} = {_firstCheck}, {nameof(SettingsFilePath)} = {SettingsFilePath}";
+                string error = $"Refresh needed: {nameof(_lastFileRead)} = {_lastFileRead}, {nameof(_lastFileModificationDate)} = {_lastFileModificationDate}, {nameof(_lastModificationDate)} = {_lastModificationDate}, {nameof(_forceFileChangeChecks)} = {_forceFileChangeChecks} {nameof(_firstCheck)} = {_firstCheck}, {nameof(SettingsFilePath)} = {SettingsFilePath}";
                 if (!_firstCheck)
                 {
                     Trace.WriteLine(error);
