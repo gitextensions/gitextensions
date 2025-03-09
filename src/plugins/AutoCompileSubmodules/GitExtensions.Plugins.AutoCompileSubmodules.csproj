@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" />
-    <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\app\GitExtUtils\GitExtUtils.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
       <Private>false</Private>
