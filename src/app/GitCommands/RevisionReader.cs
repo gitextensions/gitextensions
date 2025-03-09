@@ -282,7 +282,10 @@ namespace GitCommands
             string autostashLabel,
             CancellationToken cancellationToken)
         {
-            AddAutoStash(_module.WorkingDirGitDir, subject, autostashLabel);
+            if (AppSettings.ShowStashes)
+            {
+                AddAutoStash(_module.WorkingDirGitDir, subject, autostashLabel);
+            }
 
 #if TRACE_REVISIONREADER
             int revisionCount = 0;
