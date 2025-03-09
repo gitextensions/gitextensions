@@ -122,9 +122,11 @@ namespace GitCommands.Settings
                     return File.GetLastWriteTimeUtc(SettingsFilePath);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 // no-op
+                Trace.WriteLine(@$"Failed to GetLastWriteTimeUtc(""{SettingsFilePath}""): {ex}");
+                Console.WriteLine(@$"Failed to GetLastWriteTimeUtc(""{SettingsFilePath}""): {ex}");
             }
 
             return DateTime.MaxValue;
@@ -153,9 +155,11 @@ namespace GitCommands.Settings
                     {
                         File.Copy(SettingsFilePath, backupName, true);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         // Ignore errors for the backup file
+                        Trace.WriteLine(@$"Failed to backup settings file ""{SettingsFilePath}"": {ex}");
+                        Console.WriteLine(@$"Failed to backup settings file ""{SettingsFilePath}"": {ex}");
                     }
                 }
 
@@ -174,6 +178,8 @@ namespace GitCommands.Settings
                 catch (Exception ex)
                 {
                     _lastFileRead = null;
+                    Trace.WriteLine(@$"Failed to copy save settings to ""{SettingsFilePath}"": {ex}");
+                    Console.WriteLine(@$"Failed to copy save settings to ""{SettingsFilePath}"": {ex}");
                     throw new SaveSettingsException(ex);
                 }
 
@@ -188,6 +194,8 @@ namespace GitCommands.Settings
             }
             catch (IOException ex)
             {
+                Trace.WriteLine(@$"Failed to save settings to ""{SettingsFilePath}"": {ex}");
+                Console.WriteLine(@$"Failed to save settings to ""{SettingsFilePath}"": {ex}");
                 throw new SaveSettingsException(ex);
             }
         }
@@ -209,6 +217,7 @@ namespace GitCommands.Settings
                 catch (Exception e)
                 {
                     Trace.WriteLine($"Failed to load {SettingsFilePath}: {e.Message}");
+                    Console.WriteLine($"Failed to load {SettingsFilePath}: {e.Message}");
                 }
             }
             else
