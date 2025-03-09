@@ -24,6 +24,16 @@ namespace GitCommands.Settings
 
         protected FileSettingsCache(string settingsFilePath, bool autoSave = true)
         {
+            string stackTrace = Environment.StackTrace;
+            int startIndex = stackTrace.IndexOf("   at", 1);
+            startIndex = startIndex < 0 ? 0 : startIndex;
+            int nunitIndex = stackTrace.IndexOf("  at NUnit.");
+            nunitIndex = nunitIndex < 0 ? stackTrace.Length : nunitIndex;
+            int endIndex = stackTrace.LastIndexOf("   at System.Reflection.MethodBaseInvoker", nunitIndex);
+            endIndex = endIndex < 0 ? nunitIndex : endIndex;
+            stackTrace = stackTrace[startIndex..endIndex];
+            Console.WriteLine($"{nameof(FileSettingsCache)} ctor for {settingsFilePath}, autoSave = {autoSave}\n{stackTrace[..0]}");
+
             SettingsFilePath = settingsFilePath;
             _autoSave = autoSave;
 
@@ -169,6 +179,12 @@ namespace GitCommands.Settings
 
                 FileChanged();
                 _lastFileRead = DateTime.UtcNow;
+                if (NeedRefresh())
+                {
+                    string error = $"Inconsistent timestamps after save: {nameof(_lastFileRead)} = {_lastFileRead}, {nameof(_lastFileModificationDate)} = {_lastFileModificationDate}, {nameof(_forceFileChangeChecks)} = {_forceFileChangeChecks}, {nameof(SettingsFilePath)} = {SettingsFilePath}";
+                    Trace.WriteLine(error);
+                    Console.WriteLine(error);
+                }
             }
             catch (IOException ex)
             {
@@ -202,6 +218,8 @@ namespace GitCommands.Settings
             }
         }
 
+        private bool _firstCheck = true;
+
         protected override bool NeedRefresh()
         {
             if (_forceFileChangeChecks)
@@ -209,7 +227,21 @@ namespace GitCommands.Settings
                 FileChanged();
             }
 
-            return !_lastFileRead.HasValue || _lastFileModificationDate > _lastFileRead.Value;
+            bool needsRefresh = !_lastFileRead.HasValue || _lastFileModificationDate > _lastFileRead.Value;
+
+            if (needsRefresh)
+            {
+                string error = $"Refresh needed: {nameof(_lastFileRead)} = {_lastFileRead}, {nameof(_lastFileModificationDate)} = {_lastFileModificationDate}, {nameof(_forceFileChangeChecks)} = {_forceFileChangeChecks} {nameof(_firstCheck)} = {_firstCheck}, {nameof(SettingsFilePath)} = {SettingsFilePath}";
+                if (!_firstCheck)
+                {
+                    Trace.WriteLine(error);
+                    Console.WriteLine(error);
+                }
+
+                _firstCheck = false;
+            }
+
+            return needsRefresh;
         }
 
         protected override void SettingsChanged()
