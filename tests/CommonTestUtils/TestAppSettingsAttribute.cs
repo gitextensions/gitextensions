@@ -19,6 +19,7 @@ namespace CommonTestUtils
 
         public void AfterTest(ITest test)
         {
+            AppSettings.SettingsContainer.SettingsCache.Dispose();
         }
     }
 }
