@@ -64,7 +64,7 @@ namespace GitCommandsTests.Git_Commands
         [Test]
         public void TestFetchArguments()
         {
-            ReferenceRepository referenceRepository = new(createCommit: false);
+            using ReferenceRepository referenceRepository = new(createCommit: false);
             IGitModule module = referenceRepository.Module;
             module.UnsetSetting("fetch.parallel");
             module.UnsetSetting("submodule.fetchjobs");
