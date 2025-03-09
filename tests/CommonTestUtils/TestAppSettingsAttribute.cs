@@ -11,7 +11,20 @@ namespace CommonTestUtils
 
         public void BeforeTest(ITest test)
         {
-            File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+            for (int i = 0; i < 5; ++i)
+            {
+                try
+                {
+                    File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+                    break;
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine(@$"Failed to delete settings file ""{AppSettings.SettingsContainer.SettingsCache.SettingsFilePath}"": {ex}");
+                    Thread.Sleep(1000);
+                }
+            }
+
             AppSettings.SettingsContainer.SettingsCache.Load();
 
             AppSettings.CheckForUpdates = false;
