@@ -3,9 +3,9 @@
 public enum DiffBranchStatus
 {
     Unknown = 0,
+    SameChange,
     OnlyAChange,
     OnlyBChange,
-    SameChange,
 
     // Concurrent changes, different in first(A) and second(B)
     UnequalChange
