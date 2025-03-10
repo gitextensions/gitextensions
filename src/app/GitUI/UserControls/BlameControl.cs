@@ -324,7 +324,7 @@ namespace GitUI.Blame
         private void ProcessBlame(string? filename, GitRevision revision, IReadOnlyList<ObjectId>? children, Control? controlToMask, int lineNumber, CancellationToken cancellationToken = default)
         {
             int avatarSize = BlameAuthor.Font.Height + 1;
-            (string gutter, string body, List<GitBlameEntry> avatars) = BuildBlameContents(filename, avatarSize);
+            (string gutter, string body, List<GitBlameEntry> avatars, int maxLineLength) = BuildBlameContents(filename, avatarSize);
             cancellationToken.ThrowIfCancellationRequested();
 
             BlameAuthor.SetGitBlameGutter(avatars);
@@ -332,6 +332,8 @@ namespace GitUI.Blame
             Validates.NotNull(_fileName);
 
             BlameAuthor.InvokeAndForget(() => BlameAuthor.ViewTextAsync("committer.txt", gutter));
+            Size size = TextRenderer.MeasureText(new string('a', maxLineLength), BlameAuthor.Font);
+            splitContainer2.SplitterDistance = Math.Max(Math.Min(splitContainer2.SplitterDistance, size.Width + avatarSize), avatarSize);
             cancellationToken.ThrowIfCancellationRequested();
             BlameFile.InvokeAndForget(() => BlameFile.ViewTextAsync(_fileName, body));
             cancellationToken.ThrowIfCancellationRequested();
@@ -348,13 +350,13 @@ namespace GitUI.Blame
             controlToMask?.UnMask();
         }
 
-        private (string gutter, string body, List<GitBlameEntry> gitBlameDisplays) BuildBlameContents(string? filename, int avatarSize)
+        private (string gutter, string body, List<GitBlameEntry> gitBlameDisplays, int maxLineLength) BuildBlameContents(string? filename, int avatarSize)
         {
             Validates.NotNull(_blame);
 
             if (_blame.Lines.Count == 0)
             {
-                return ("", "", new List<GitBlameEntry>(0));
+                return ("", "", new List<GitBlameEntry>(0), 0);
             }
 
             StringBuilder body = new(capacity: 4096);
@@ -388,6 +390,7 @@ namespace GitUI.Blame
             Dictionary<string, Image?> cacheAvatars = [];
             Image noAuthorImage = (Image)new Bitmap(Images.User80, avatarSize, avatarSize);
             Dictionary<ObjectId, string> authorLineCache = [];
+            int maxGutterLength = -1;
             for (int index = 0; index < _blame.Lines.Count; index++)
             {
                 GitBlameLine line = _blame.Lines[index];
@@ -421,9 +424,10 @@ namespace GitUI.Blame
 
                     if (!authorLineCache.TryGetValue(line.Commit.ObjectId, out string authorLine))
                     {
-                        authorLine = BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, AppSettings.BlameShowAuthor, AppSettings.BlameShowAuthorDate, AppSettings.BlameShowOriginalFilePath, AppSettings.BlameDisplayAuthorFirst);
+                        (authorLine, int authorLineLength) = BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, AppSettings.BlameShowAuthor, AppSettings.BlameShowAuthorDate, AppSettings.BlameShowOriginalFilePath, AppSettings.BlameDisplayAuthorFirst);
                         authorLineCache.Add(line.Commit.ObjectId, authorLine);
                         lineBuilder.Clear();
+                        maxGutterLength = Math.Max(maxGutterLength, authorLineLength);
                     }
 
                     gutter.Append(authorLine);
@@ -434,10 +438,10 @@ namespace GitUI.Blame
                 lastCommit = line.Commit;
             }
 
-            return (gutter.ToString(), body.ToString(), gitBlameDisplays);
+            return (gutter.ToString(), body.ToString(), gitBlameDisplays, maxGutterLength);
         }
 
-        private static string BuildAuthorLine(GitBlameLine line, StringBuilder authorLineBuilder, int lineLength, string dateTimeFormat,
+        private static (string text, int lineLength) BuildAuthorLine(GitBlameLine line, StringBuilder authorLineBuilder, int lineLength, string dateTimeFormat,
             string? filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
         {
             if (showAuthor && displayAuthorFirst)
@@ -470,9 +474,10 @@ namespace GitUI.Blame
                 authorLineBuilder.Append(line.Commit.FileName);
             }
 
-            authorLineBuilder.Append(' ', Math.Max(0, lineLength - authorLineBuilder.Length)).AppendLine();
+            int authorLineLength = authorLineBuilder.Length;
+            authorLineBuilder.Append(' ', Math.Max(0, lineLength - authorLineLength)).AppendLine();
 
-            return authorLineBuilder.ToString();
+            return (authorLineBuilder.ToString(), authorLineLength);
         }
 
         private static IList<Color> GetAgeBucketGradientColors()
@@ -741,7 +746,7 @@ namespace GitUI.Blame
             public void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, int lineLength, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
                 => BlameControl.BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
 
-            public (string gutter, string body, List<GitBlameEntry> avatars) BuildBlameContents(string filename) => _control.BuildBlameContents(filename, avatarSize: 10);
+            public (string gutter, string body, List<GitBlameEntry> avatars, int maxLineLength) BuildBlameContents(string filename) => _control.BuildBlameContents(filename, avatarSize: 10);
 
             public List<GitBlameEntry> CalculateBlameGutterData(IReadOnlyList<GitBlameLine> blameLines)
                 => _control.CalculateBlameGutterData(blameLines);

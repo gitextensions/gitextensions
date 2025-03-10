@@ -144,7 +144,7 @@ namespace GitUITests.UserControls
             {
                 AppSettings.BlameShowAuthorTime = true;
 
-                (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
+                (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _, int _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
                 string[] gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -173,7 +173,7 @@ namespace GitUITests.UserControls
                 AppSettings.BlameShowAuthorTime = false;
 
                 // When
-                (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
+                (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _, int _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
                 // Then
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
