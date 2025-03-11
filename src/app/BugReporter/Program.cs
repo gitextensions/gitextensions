@@ -16,9 +16,6 @@ namespace BugReporter
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Not adapted to themes, many overrides required for .net9
-            Application.SetColorMode(SystemColorMode.Classic);
-
             // This form created to obtain UI synchronization context only
             using (new Form())
             {
