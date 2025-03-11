@@ -61,6 +61,5 @@
         AnsiTerminalWhiteBackNormal,
         AnsiTerminalWhiteForeBold,
         AnsiTerminalWhiteBackBold,
-        DarkModePseudoColor, // This color is used to determine if the theme is dark or light.
     }
 }

@@ -1,8 +1,5 @@
 /* See (App install)\Themes\README.md for instructions on how to create or modify a theme */
 
-/* Define to enable Windows dark mode */
-.DarkModePseudoColor { color: #000000; }
-
 /* SystemColorMode.Dark listed for reference
 System colors cannot be changed, used when adapting colors (many occurrences are not themeable)
 
@@ -42,6 +39,7 @@ WindowText: fff0f0f0
 */
 
 /* Application colors */
+/* PanelBackground sets Windows Dark mode */
 .PanelBackground { color: #323232; }
 .EditorBackground { color: #323232; }
 .LineNumberBackground { color: #323232; }
