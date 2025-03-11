@@ -14,12 +14,14 @@ namespace GitUI.Theming
         {
             new ThemeMigration(Repository).Migrate();
             Settings = LoadThemeSettings(Repository);
-            bool isDarkMode = Settings.Theme.GetColor(AppColor.DarkModePseudoColor) != Color.Empty;
+            bool isDarkMode = IsDarkColor(Settings.Theme.GetColor(AppColor.PanelBackground));
             SystemColorMode mode = isDarkMode ? SystemColorMode.Dark : SystemColorMode.Classic;
             Application.SetColorMode(mode);
             UpdateEditorSettings();
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
+
+            static bool IsDarkColor(Color color) => new HslColor(color).L < 0.5;
         }
 
         private static void UpdateEditorSettings()
