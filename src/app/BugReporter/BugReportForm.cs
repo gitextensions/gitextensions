@@ -14,6 +14,7 @@ using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.Extensibility.Translations.Xliff;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using Microsoft;
 using ResourceManager;
@@ -77,6 +78,7 @@ Send report?");
 
             // ToDo: Displaying report contents properly requires some more work.
             mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
+            Load += (s, e) => ((Form)s!).FixVisualStyle();
         }
 
         public DialogResult ShowDialog(IWin32Window? owner, SerializableException exception, string exceptionInfo, string environmentInfo, bool canIgnore, bool showIgnore, bool focusDetails)
