@@ -9,17 +9,14 @@ namespace GitUI.Theming
         public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
         private static ThemeRepository Repository { get; } = new();
-        public static bool IsDarkTheme { get; private set; }
 
         public static void Load()
         {
             new ThemeMigration(Repository).Migrate();
             Settings = LoadThemeSettings(Repository);
-            IsDarkTheme = Settings.Theme.GetColor(AppColor.DarkModePseudoColor) != Color.Empty;
-#pragma warning disable WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-            SystemColorMode mode = IsDarkTheme ? SystemColorMode.Dark : SystemColorMode.Classic;
+            bool isDarkMode = Settings.Theme.GetColor(AppColor.DarkModePseudoColor) != Color.Empty;
+            SystemColorMode mode = isDarkMode ? SystemColorMode.Dark : SystemColorMode.Classic;
             Application.SetColorMode(mode);
-#pragma warning restore WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             UpdateEditorSettings();
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
@@ -32,7 +29,7 @@ namespace GitUI.Theming
                 new HighlightColor(SystemColors.WindowText, AppColor.EditorBackground.GetThemeColor(), bold: false, italic: false, adaptable: false));
             strategy.SetColorFor("LineNumbers",
                 new HighlightColor(SystemColors.GrayText, AppColor.LineNumberBackground.GetThemeColor(), bold: false, italic: false, adaptable: false));
-            if (ThemeModule.IsDarkTheme)
+            if (Application.IsDarkModeEnabled)
             {
                 strategy.SetColorFor("EOLMarkers",
                     new HighlightColor(nameof(SystemColors.ControlDarkDark), bold: false, italic: false));

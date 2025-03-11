@@ -86,14 +86,12 @@ namespace GitExtUtils.GitUI.Theming
         private static void SetupButton(this Button button)
         {
             // .net9 fix for https://github.com/dotnet/winforms/issues/11949 (only supposed to occur for 100%)
-#pragma warning disable WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
             {
                 // In addition to not setting the BackColor (TouchBackColor() will fix),
                 // FlatStyle.Standard buttons look ugly in dark mode
                 button.FlatStyle = FlatStyle.Flat;
             }
-#pragma warning restore WFO5001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         }
 
         private static void SetupTabControl(TabControl tabControl)

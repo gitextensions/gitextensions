@@ -4,7 +4,6 @@ using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 using GitUI.AutoCompletion;
-using GitUI.Theming;
 using GitUI.UserControls;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -95,7 +94,7 @@ namespace GitUI.SpellChecker
 
         public void EvaluateForecolor()
         {
-            if (ThemeModule.IsDarkTheme)
+            if (Application.IsDarkModeEnabled)
             {
                 // In dark mode the background color is set to White, but still reported as SystemColors.Window (or adjusted)
                 // The Forecolor must be changed manually
