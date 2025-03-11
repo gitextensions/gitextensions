@@ -4,7 +4,6 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
-using GitUI.Theming;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -196,7 +195,7 @@ namespace GitUI.CommandsDialogs
                 AcceptButton = btnSolveConflicts;
                 btnSolveConflicts.Focus();
                 btnSolveConflicts.Text = _solveConflictsText2.Text;
-                MergeToolPanel.BackColor = ThemeModule.IsDarkTheme ? Color.FromArgb(136, 136, 0) : Color.Yellow.AdaptBackColor();
+                MergeToolPanel.BackColor = Application.IsDarkModeEnabled ? Color.FromArgb(136, 136, 0) : Color.Yellow.AdaptBackColor();
             }
             else if (Module.InTheMiddleOfRebase())
             {
