@@ -209,7 +209,7 @@ namespace GitCommands.Settings
                 FileChanged();
             }
 
-            return !_lastFileRead.HasValue || _lastFileModificationDate > _lastFileRead.Value;
+            return !_lastFileRead.HasValue || (_lastFileModificationDate > _lastFileRead.Value && !(_lastModificationDate.HasValue && _lastModificationDate >= _lastFileModificationDate));
         }
 
         protected override void SettingsChanged()
