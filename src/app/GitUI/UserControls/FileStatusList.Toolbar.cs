@@ -98,7 +98,7 @@ partial class FileStatusList
     {
         bool usingInputBox = !tsmiFindUsingDialog.Checked;
         bool usingDialog = !tsmiFindUsingInputBox.Checked;
-        bool isVisible = usingInputBox ? cboFindInCommitFilesGitGrep.Visible : _formFindInCommitFilesGitGrep?.Visible is true;
+        bool isVisible = (!usingInputBox || cboFindInCommitFilesGitGrep.Visible) && (!usingDialog || _formFindInCommitFilesGitGrep?.Visible is true);
         bool setVisible = sender == btnFindInFilesGitGrep ? !isVisible : true;
 
         bool inputBoxVisible = setVisible && usingInputBox;
