@@ -39,6 +39,6 @@ jobs:
     with:
       model_cache_key: ${{ inputs.model_cache_key }}
       pull_numbers: ${{ inputs.pull_numbers || github.event.number }}
-      label_prefix: "area:"
+      label_prefix: "area: "
       threshold: 0.40
       default_label: "needs-area-label"

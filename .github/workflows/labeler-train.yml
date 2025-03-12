@@ -56,5 +56,5 @@ jobs:
       test_pulls: ${{ inputs.test_pulls }}
       data_limit: ${{ inputs.data_limit && fromJSON(inputs.data_limit) || 0 }}
       cache_key_suffix: ${{ inputs.cache_key_suffix }}
-      label_prefix: "area:"
+      label_prefix: "area: "
       threshold: 0.40
