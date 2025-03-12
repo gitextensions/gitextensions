@@ -147,11 +147,6 @@ partial class FileStatusList
 
     private bool IsDiffStatusMatch(DiffBranchStatus diffStatus)
     {
-        if (!btnUnequalChange.Visible)
-        {
-            return true;
-        }
-
         return diffStatus switch
         {
             DiffBranchStatus.UnequalChange => btnUnequalChange.Checked,
