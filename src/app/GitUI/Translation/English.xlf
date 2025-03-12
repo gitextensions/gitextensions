@@ -1540,7 +1540,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
-        <source>&amp;Sort by...</source>
+        <source>&amp;Sort and group by</source>
         <target />
       </trans-unit>
       <trans-unit id="btnAsTree.ToolTipText">
@@ -8793,11 +8793,11 @@ This will just checkout on the submodule the commit determined by the superproje
         <target />
       </trans-unit>
       <trans-unit id="_sortByContextMenuItem.Text">
-        <source>&amp;Sort by...</source>
+        <source>&amp;Sort by</source>
         <target />
       </trans-unit>
       <trans-unit id="_sortOrderContextMenuItem.Text">
-        <source>&amp;Sort order...</source>
+        <source>&amp;Sort order</source>
         <target />
       </trans-unit>
       <trans-unit id="btnSearch.toolTip">
@@ -10911,11 +10911,15 @@ the last selected commit.</source>
         <target />
       </trans-unit>
       <trans-unit id="_sortBy.Text">
-        <source>&amp;Sort by...</source>
+        <source>&amp;Sort by</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_sortGroupBy.Text">
+        <source>&amp;Sort and group by</source>
         <target />
       </trans-unit>
       <trans-unit id="_sortOrder.Text">
-        <source>&amp;Sort order...</source>
+        <source>&amp;Sort order</source>
         <target />
       </trans-unit>
       <trans-unit id="_stageSelectedLines.Text">

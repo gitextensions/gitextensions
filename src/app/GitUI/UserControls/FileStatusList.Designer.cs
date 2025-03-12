@@ -237,7 +237,7 @@ namespace GitUI
             Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep });
             Toolbar.Location = new Point(0, 0);
             Toolbar.Name = "Toolbar";
-            Toolbar.RenderMode = ToolStripRenderMode.System;
+            Toolbar.RenderMode = ToolStripRenderMode.Professional;
             Toolbar.Size = new Size(682, 25);
             Toolbar.TabIndex = 0;
             // 
@@ -293,6 +293,7 @@ namespace GitUI
             // 
             // tsmiGroupByFilePathTree
             // 
+            tsmiGroupByFilePathTree.Image = Properties.Images.FolderClosed;
             tsmiGroupByFilePathTree.Name = "tsmiGroupByFilePathTree";
             tsmiGroupByFilePathTree.Size = new Size(340, 22);
             tsmiGroupByFilePathTree.Tag = DiffListSortType.FilePath;
@@ -309,6 +310,7 @@ namespace GitUI
             // 
             // tsmiGroupByFileExtensionTree
             // 
+            tsmiGroupByFileExtensionTree.Image = Properties.Images.File;
             tsmiGroupByFileExtensionTree.Name = "tsmiGroupByFileExtensionTree";
             tsmiGroupByFileExtensionTree.Size = new Size(340, 22);
             tsmiGroupByFileExtensionTree.Tag = DiffListSortType.FileExtension;
@@ -325,6 +327,7 @@ namespace GitUI
             // 
             // tsmiGroupByFileStatusTree
             // 
+            tsmiGroupByFileStatusTree.Image = Properties.Images.FileStatusModified;
             tsmiGroupByFileStatusTree.Name = "tsmiGroupByFileStatusTree";
             tsmiGroupByFileStatusTree.Size = new Size(340, 22);
             tsmiGroupByFileStatusTree.Tag = DiffListSortType.FileStatus;
