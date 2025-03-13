@@ -1,3 +1,5 @@
+#nullable enable
+
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 
@@ -36,25 +38,30 @@ namespace GitCommands
         public static IGitVersion Current => CurrentVersion();
 
         /// <summary>
-        /// The GitVersion for the gitIdentifiable
+        /// Gets the Git version for the <paramref name="gitExecutable"/>.
         /// </summary>
-        /// <param name="gitIdentifiable">The unique identification of the Git executable</param>
-        /// <returns>The GitVersion</returns>
-        public static IGitVersion CurrentVersion(IExecutable gitExec = null, string gitIdentifiable = "")
+        /// <returns>A <see cref="GitVersion"/>.</returns>
+        public static IGitVersion CurrentVersion(IExecutable? gitExecutable = null)
         {
-            if (!_current.ContainsKey(gitIdentifiable) || _current[gitIdentifiable] is null || _current[gitIdentifiable].IsUnknown)
+            string gitIdentifiable = gitExecutable is null
+                ? AppSettings.GitCommand
+                : string.IsNullOrWhiteSpace(gitExecutable.PrefixArguments)
+                    ? gitExecutable.Command
+                    : $"{gitExecutable.Command} {gitExecutable.PrefixArguments}";
+            if (!_current.TryGetValue(gitIdentifiable, out GitVersion? gitVersion) || gitVersion.IsUnknown)
             {
-                gitExec ??= new Executable(AppSettings.GitCommand);
-                string output = gitExec.GetOutput("--version");
-                _current[gitIdentifiable] = new GitVersion(output);
-                if (_current[gitIdentifiable] < LastVersionWithoutKnownLimitations)
+                gitExecutable ??= new Executable(gitIdentifiable);
+                string output = gitExecutable.GetOutput("--version");
+                gitVersion = new GitVersion(output);
+                _current[gitIdentifiable] = gitVersion;
+                if (gitVersion < LastVersionWithoutKnownLimitations)
                 {
                     // Report the last supported version rather than the last version without known issues
                     MessageBox.Show(null, $"{_current[gitIdentifiable]} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
-            return _current[gitIdentifiable];
+            return gitVersion;
         }
 
         public static void ResetVersion()

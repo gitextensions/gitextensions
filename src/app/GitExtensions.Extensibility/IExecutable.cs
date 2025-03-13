@@ -10,6 +10,7 @@ public interface IExecutable
 {
     public string WorkingDir { get; }
     public string Command { get; }
+    public string PrefixArguments { get; }
 
     /// <summary>
     /// Starts a process of this executable.
