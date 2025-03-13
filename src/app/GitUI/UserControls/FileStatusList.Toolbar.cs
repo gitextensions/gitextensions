@@ -215,16 +215,18 @@ partial class FileStatusList
             for (int itemIndex = 0; itemIndex < Toolbar.Items.Count; ++itemIndex)
             {
                 ToolStripItem toolbarItem = Toolbar.Items[itemIndex];
+                string settingsKey = $"{nameof(FileStatusList)}.{nameof(Toolbar)}.Visibility.{toolbarItem.Name}";
                 ToolStripMenuItem menuItem = new()
                 {
                     CheckOnClick = true,
-                    Checked = true,
+                    Checked = AppSettings.GetBool(settingsKey, defaultValue: true),
                     Enabled = toolbarItem != btnAsTree,
                     Image = toolbarItem.Image,
                     Text = toolbarItem is ToolStripSeparator ? $"Separator '{Toolbar.Items[itemIndex + 1].ToolTipText}'" : toolbarItem.ToolTipText,
                 };
                 menuItem.Click += (s, e) =>
                 {
+                    AppSettings.SetBool(settingsKey, menuItem.Checked ? null : false);
                     toolbarItem.Visible = menuItem.Checked;
                     UpdateToolbar();
                 };
