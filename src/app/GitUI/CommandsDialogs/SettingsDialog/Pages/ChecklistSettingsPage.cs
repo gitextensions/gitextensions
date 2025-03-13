@@ -3,6 +3,7 @@ using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Git;
 using GitCommands.Utils;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
@@ -423,19 +424,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return false;
             }
 
-            if (GitVersion.Current < GitVersion.LastSupportedVersion)
+            IGitVersion nativeGitVersion = GitVersion.Current;
+            IGitVersion usedGitVersion = ServiceProvider is IGitUICommands uiCommands && uiCommands.Module.IsValidGitWorkingDir() ? GitVersion.CurrentVersion(uiCommands.Module.GitExecutable) : nativeGitVersion;
+            string displayedVersion = nativeGitVersion == usedGitVersion ? $"{nativeGitVersion}" : $"{nativeGitVersion} / WSL {usedGitVersion}";
+
+            if (usedGitVersion < GitVersion.LastSupportedVersion)
             {
-                RenderSettingUnset(GitFound, GitFound_Fix, string.Format(_wrongGitVersion.Text, GitVersion.Current, GitVersion.LastRecommendedVersion));
+                RenderSettingUnset(GitFound, GitFound_Fix, string.Format(_wrongGitVersion.Text, displayedVersion, GitVersion.LastRecommendedVersion));
                 return false;
             }
 
-            if (GitVersion.Current < GitVersion.LastRecommendedVersion)
+            if (usedGitVersion < GitVersion.LastRecommendedVersion)
             {
-                RenderSettingNotRecommended(GitFound, GitFound_Fix, string.Format(_notRecommendedGitVersion.Text, GitVersion.Current, GitVersion.LastRecommendedVersion));
+                RenderSettingNotRecommended(GitFound, GitFound_Fix, string.Format(_notRecommendedGitVersion.Text, displayedVersion, GitVersion.LastRecommendedVersion));
                 return false;
             }
 
-            RenderSettingSet(GitFound, GitFound_Fix, string.Format(_gitVersionFound.Text, GitVersion.Current));
+            RenderSettingSet(GitFound, GitFound_Fix, string.Format(_gitVersionFound.Text, displayedVersion));
             return true;
         }
 
