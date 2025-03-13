@@ -414,7 +414,7 @@ namespace GitUI.UserControls.RevisionGrid
             _highlightedGrayTextColor = getHighlightedGrayTextColor();
 
             // Note: The adaptive color fails here, step around 1.17f 145 -> 80
-            _grayTextColor = ThemeModule.IsDarkTheme ? Color.FromArgb(118, 118, 118) : getGrayTextColor(degreeOfGrayness: 1.4f);
+            _grayTextColor = Application.IsDarkModeEnabled ? Color.FromArgb(118, 118, 118) : getGrayTextColor(degreeOfGrayness: 1.4f);
             _highlightedGrayTextColorCustom = getHighlightedGrayTextColor(degreeOfGrayness: 1.4f);
             _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;
             _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
