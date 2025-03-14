@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -28,8 +29,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             valid = SolveGitExtensionsDir() && valid;
             valid = SolveEditor(CommonLogic) && valid;
 
-            CommonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
-            CommonLogic.DistributedSettingsSet.EffectiveSettings.Save();
+            CommonLogic.GitConfigSettingsSet.Save();
+            CommonLogic.DistributedSettingsSet.Save();
 
             return valid;
         }

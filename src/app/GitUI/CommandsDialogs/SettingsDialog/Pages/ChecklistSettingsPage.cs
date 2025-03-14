@@ -1,7 +1,11 @@
-﻿using GitCommands;
+﻿#nullable enable
+
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
+using GitCommands.Git;
 using GitCommands.Utils;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
@@ -159,9 +163,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CheckSettings();
         }
 
-        private string GetGlobalSetting(string settingName)
+        private string? GetGlobalSetting(string settingName)
         {
-            return CommonLogic.ConfigFileSettingsSet.GlobalSettings.GetValue(settingName);
+            return CommonLogic.GitConfigSettingsSet.GlobalSettings.GetValue(settingName);
         }
 
         private void translationConfig_Click(object sender, EventArgs e)
@@ -227,7 +231,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void DiffToolFix_Click(object sender, EventArgs e)
         {
             Validates.NotNull(_diffMergeToolConfigurationManager);
-            string diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            string? diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
             if (string.IsNullOrEmpty(diffTool))
             {
                 GotoPageGlobalSettings();
@@ -240,7 +244,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
             Validates.NotNull(_diffMergeToolConfigurationManager);
-            string mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            string? mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             if (string.IsNullOrEmpty(mergeTool))
             {
                 GotoPageGlobalSettings();
@@ -295,7 +299,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public bool CheckSettings()
         {
-            _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(() => CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.EffectiveSettings);
+            _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(() => CheckSettingsLogic.CommonLogic.GitConfigSettingsSet.EffectiveSettings);
 
             bool isValid = PerformChecks();
             CheckAtStartup.Checked = IsCheckAtStartupChecked(isValid);
@@ -422,19 +426,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return false;
             }
 
-            if (GitVersion.Current < GitVersion.LastSupportedVersion)
+            IGitVersion nativeGitVersion = GitVersion.Current;
+            IGitVersion usedGitVersion = ServiceProvider is IGitUICommands uiCommands && uiCommands.Module.IsValidGitWorkingDir() ? GitVersion.CurrentVersion(uiCommands.Module.GitExecutable) : nativeGitVersion;
+            string displayedVersion = nativeGitVersion == usedGitVersion ? $"{nativeGitVersion}" : $"{nativeGitVersion} / WSL {usedGitVersion}";
+
+            if (usedGitVersion < GitVersion.LastSupportedVersion)
             {
-                RenderSettingUnset(GitFound, GitFound_Fix, string.Format(_wrongGitVersion.Text, GitVersion.Current, GitVersion.LastRecommendedVersion));
+                RenderSettingUnset(GitFound, GitFound_Fix, string.Format(_wrongGitVersion.Text, displayedVersion, GitVersion.LastRecommendedVersion));
                 return false;
             }
 
-            if (GitVersion.Current < GitVersion.LastRecommendedVersion)
+            if (usedGitVersion < GitVersion.LastRecommendedVersion)
             {
-                RenderSettingNotRecommended(GitFound, GitFound_Fix, string.Format(_notRecommendedGitVersion.Text, GitVersion.Current, GitVersion.LastRecommendedVersion));
+                RenderSettingNotRecommended(GitFound, GitFound_Fix, string.Format(_notRecommendedGitVersion.Text, displayedVersion, GitVersion.LastRecommendedVersion));
                 return false;
             }
 
-            RenderSettingSet(GitFound, GitFound_Fix, string.Format(_gitVersionFound.Text, GitVersion.Current));
+            RenderSettingSet(GitFound, GitFound_Fix, string.Format(_gitVersionFound.Text, displayedVersion));
             return true;
         }
 
@@ -443,7 +451,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
             DiffTool.Visible = true;
-            string diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            string? diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
             if (string.IsNullOrEmpty(diffTool))
             {
                 RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
@@ -466,7 +474,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
             MergeTool.Visible = true;
-            string mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            string? mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
             if (string.IsNullOrEmpty(mergeTool))
             {
                 RenderSettingUnset(MergeTool, MergeTool_Fix, _configureMergeTool.Text);
@@ -533,7 +541,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             GitExtensionsInstall.Visible = true;
 
-            string installDir = AppSettings.GetInstallDir();
+            string? installDir = AppSettings.GetInstallDir();
 
             if (string.IsNullOrEmpty(installDir))
             {
