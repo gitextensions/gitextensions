@@ -45,7 +45,10 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     /// <returns>A <see cref="GitVersion"/>.</returns>
     public static IGitVersion CurrentVersion(IExecutable? gitExecutable = null)
     {
-        string gitIdentifiable = gitExecutable?.Command ?? AppSettings.GitCommand;
+        string gitIdentifiable
+            = gitExecutable is null ? AppSettings.GitCommand
+            : string.IsNullOrWhiteSpace(gitExecutable.PrefixArguments) ? gitExecutable.Command
+            : $"{gitExecutable.Command} {gitExecutable.PrefixArguments}";
         if (_current.TryGetValue(gitIdentifiable, out GitVersion? gitVersion) && !gitVersion.IsUnknown)
         {
             return gitVersion;
