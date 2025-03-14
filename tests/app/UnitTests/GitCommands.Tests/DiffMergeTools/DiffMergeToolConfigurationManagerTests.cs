@@ -2,6 +2,7 @@
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
+using GitCommands.Git;
 using GitExtensions.Extensibility.Configurations;
 using NSubstitute;
 

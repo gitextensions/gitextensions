@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
+using GitCommands.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 
