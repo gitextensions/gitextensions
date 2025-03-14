@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Git;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 
