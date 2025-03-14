@@ -191,7 +191,7 @@ namespace GitCommands
         /// <summary>
         /// GitVersion for the default GitExecutable.
         /// </summary>
-        public IGitVersion GitVersion => GitCommands.GitVersion.CurrentVersion(GitExecutable);
+        public IGitVersion GitVersion => Git.GitVersion.CurrentVersion(GitExecutable);
 
         /// <inherit/>
         public IExecutable GitExecutable => _gitExecutable;
@@ -945,7 +945,7 @@ namespace GitCommands
         {
             // Use Windows Git if custom tool is selected as the list is native to the application.
             bool isWindowsGit = !string.IsNullOrWhiteSpace(customTool);
-            string gui = (isWindowsGit ? GitCommands.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
+            string gui = (isWindowsGit ? Git.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
             GitArgumentBuilder args = new("mergetool")
             {
                 { string.IsNullOrWhiteSpace(customTool), gui, $"--tool={customTool}" },

@@ -31,7 +31,7 @@ namespace BugReporter.Info
 
             try
             {
-                GitVersion = GitCommands.GitVersion.Current?.ToString();
+                GitVersion = GitCommands.Git.GitVersion.Current?.ToString();
             }
             catch (Exception)
             {

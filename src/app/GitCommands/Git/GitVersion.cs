@@ -1,17 +1,19 @@
 #nullable enable
 
+using System.Diagnostics;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 
-namespace GitCommands;
+namespace GitCommands.Git;
 
 public class GitVersion : IComparable<GitVersion>, IGitVersion
 {
-    private static readonly GitVersion v2_19_0 = new("2.19.0");
-    private static readonly GitVersion v2_20_0 = new("2.20.0");
-    private static readonly GitVersion v2_32_0 = new("2.32.0");
-    private static readonly GitVersion v2_35_0 = new("2.35.0");
-    private static readonly GitVersion v2_38_0 = new("2.38.0");
+    private static readonly GitVersion _unknown = new("0.0.0");
+    private static readonly GitVersion _v2_19_0 = new("2.19.0");
+    private static readonly GitVersion _v2_20_0 = new("2.20.0");
+    private static readonly GitVersion _v2_32_0 = new("2.32.0");
+    private static readonly GitVersion _v2_35_0 = new("2.35.0");
+    private static readonly GitVersion _v2_38_0 = new("2.38.0");
 
     /// <summary>
     /// The recommended Git version (normally latest official before a GE release).
@@ -35,7 +37,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     /// <summary>
     /// GitVersion for the native ("Windows") Git
     /// </summary>
-    public static IGitVersion Current => CurrentVersion();
+    public static IGitVersion Current { get; private set; } = CurrentVersion();
 
     /// <summary>
     /// Gets the Git version for the <paramref name="gitExecutable"/>.
@@ -53,14 +55,22 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
             return gitVersion;
         }
 
-        gitExecutable ??= new Executable(gitIdentifiable);
-        string output = gitExecutable.GetOutput("--version");
-        gitVersion = new GitVersion(output);
-        _current[gitIdentifiable] = gitVersion;
-        if (gitVersion < LastVersionWithoutKnownLimitations)
+        try
         {
-            // Report the last supported version rather than the last version without known issues
-            MessageBox.Show(null, $"{_current[gitIdentifiable]} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            gitExecutable ??= new Executable(gitIdentifiable);
+            string output = gitExecutable.GetOutput("--version");
+            gitVersion = new GitVersion(output);
+            _current[gitIdentifiable] = gitVersion;
+            if (gitVersion < LastVersionWithoutKnownLimitations)
+            {
+                // Report the last supported version rather than the last version without known issues
+                MessageBox.Show(null, $"{gitVersion} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        catch (Exception exception)
+        {
+            Trace.WriteLine(exception);
+            gitVersion = _unknown;
         }
 
         return gitVersion;
@@ -69,6 +79,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     public static void ResetVersion()
     {
         _current.Clear();
+        Current = CurrentVersion();
     }
 
     private readonly string _fullVersionMoniker;
@@ -126,15 +137,15 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
         }
     }
 
-    public bool SupportRebaseMerges => this >= v2_19_0;
-    public bool SupportGuiMergeTool => this >= v2_20_0;
-    public bool SupportRangeDiffTool => this >= v2_19_0;
-    public bool SupportStashStaged => this >= v2_35_0;
-    public bool SupportUpdateRefs => this >= v2_38_0;
-    public bool SupportRangeDiffPath => this >= v2_38_0;
-    public bool SupportAmendCommits => this >= v2_32_0;
+    public bool IsUnknown => this == _unknown;
 
-    public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
+    public bool SupportAmendCommits => this >= _v2_32_0;
+    public bool SupportGuiMergeTool => this >= _v2_20_0;
+    public bool SupportRangeDiffPath => this >= _v2_38_0;
+    public bool SupportRangeDiffTool => this >= _v2_19_0;
+    public bool SupportRebaseMerges => this >= _v2_19_0;
+    public bool SupportStashStaged => this >= _v2_35_0;
+    public bool SupportUpdateRefs => this >= _v2_38_0;
 
     private static int Compare(GitVersion? left, GitVersion? right)
     {

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+﻿using GitCommands.Git;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

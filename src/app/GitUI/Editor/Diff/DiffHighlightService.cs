@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;

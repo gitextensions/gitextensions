@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
+using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
