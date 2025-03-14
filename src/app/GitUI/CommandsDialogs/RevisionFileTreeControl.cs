@@ -163,6 +163,7 @@ See the changes in the commit form.");
         public void InitSplitterManager(SplitterManager splitterManager)
         {
             splitterManager.AddSplitter(FileTreeSplitContainer, "FileTreeSplitContainer");
+            BlameControl.InitSplitterManager(splitterManager, "RevisionFileTree");
         }
 
         public void InvokeFindFileDialog()
