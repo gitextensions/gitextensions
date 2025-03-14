@@ -17,7 +17,14 @@ namespace GitUI.UserControls
         {
             BeginCreateHandle?.Invoke(this, EventArgs.Empty);
             base.CreateHandle();
-            NativeMethods.SetWindowTheme(Handle, "explorer", null);
+
+            if (!Application.IsDarkModeEnabled)
+            {
+                // explorer style selection painting in left panel
+                // Not needed in dark mode, this is the same for "DarkMode_Explorer"
+                NativeMethods.SetWindowTheme(Handle, "explorer", null);
+            }
+
             EndCreateHandle?.Invoke(this, EventArgs.Empty);
         }
 

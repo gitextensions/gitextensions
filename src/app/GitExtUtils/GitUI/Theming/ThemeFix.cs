@@ -21,22 +21,20 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
-            container.DescendantsToFix<GroupBox>()
-                 .ForEach(SetupGroupBox);
+            container.DescendantsToFix<DataGridView>()
+                .ForEach(SetupDataGridView);
             container.DescendantsToFix<TreeView>()
                 .ForEach(SetupTreeView);
-            container.DescendantsToFix<ListBox>()
-                .ForEach(SetupListBox);
             container.DescendantsToFix<TabControl>()
                 .ForEach(SetupTabControl);
             container.DescendantsToFix<TextBoxBase>()
                  .ForEach(SetupTextBoxBase);
-            container.DescendantsToFix<ComboBox>()
-                 .ForEach(SetupComboBox);
             container.DescendantsToFix<LinkLabel>()
                 .ForEach(SetupLinkLabel);
             container.DescendantsToFix<ToolStrip>()
                 .ForEach(SetupToolStrip);
+            container.DescendantsToFix<Button>()
+                .ForEach(SetupButton);
             container.ContextMenusToFix()
                 .ForEach(SetupContextMenu);
         }
@@ -71,20 +69,11 @@ namespace GitExtUtils.GitUI.Theming
         private static void SetupToolStrip(ToolStrip strip)
         {
             strip.UseExtendedThemeAwareRenderer();
-            strip.Items.OfType<ToolStripLabel>()
-                .ForEach(SetupToolStripLabel);
         }
 
         private static void SetupContextMenu(ContextMenuStrip strip)
         {
             strip.UseExtendedThemeAwareRenderer();
-        }
-
-        private static void SetupToolStripLabel(ToolStripLabel label)
-        {
-            label.LinkColor = label.LinkColor.AdaptTextColor();
-            label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
-            label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
         }
 
         private static void SetupLinkLabel(this LinkLabel label)
@@ -94,9 +83,15 @@ namespace GitExtUtils.GitUI.Theming
             label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
         }
 
-        private static void SetupGroupBox(this GroupBox box)
+        private static void SetupButton(this Button button)
         {
-            box.TouchForeColor();
+            // .net9 fix for https://github.com/dotnet/winforms/issues/11949 (only supposed to occur for 100%)
+            if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
+            {
+                // In addition to not setting the BackColor (TouchBackColor() will fix),
+                // FlatStyle.Standard buttons look ugly in dark mode
+                button.FlatStyle = FlatStyle.Flat;
+            }
         }
 
         private static void SetupTabControl(TabControl tabControl)
@@ -114,25 +109,14 @@ namespace GitExtUtils.GitUI.Theming
             }
         }
 
+        private static void SetupDataGridView(DataGridView view)
+        {
+            view.EnableHeadersVisualStyles = false;
+            view.ColumnHeadersDefaultCellStyle.BackColor = view.ColumnHeadersDefaultCellStyle.BackColor;
+        }
+
         private static void SetupTreeView(TreeView view)
         {
-            IntPtr unused = view.Handle; // force handle creation
-            view.TouchBackColor();
-            view.TouchForeColor();
-            view.LineColor = SystemColors.ControlDark;
-        }
-
-        private static void SetupListBox(ListBox view)
-        {
-            if (view.BorderStyle == BorderStyle.Fixed3D)
-            {
-                view.BorderStyle = BorderStyle.FixedSingle;
-            }
-        }
-
-        private static void SetupComboBox(this ComboBox menu)
-        {
-            menu.TouchBackColor();
         }
 
         private static void TouchBackColor(this Control c)
