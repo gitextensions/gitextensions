@@ -4,8 +4,10 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
@@ -183,6 +185,8 @@ namespace GitCommands
                 SetString("AutoNormaliseSymbol", value);
             }
         }
+
+        public static string FileEditorCommand => @$"""{AppSettings.GetGitExtensionsFullPath()}"" fileeditor";
 
         public static bool RememberAmendCommitState
         {
@@ -487,7 +491,7 @@ namespace GitCommands
 
         public static CommitInfoPosition CommitInfoPosition
         {
-            get => DetailedSettingsPath.GetNullableEnum<CommitInfoPosition>("CommitInfoPosition") ?? (
+            get => ((ISettingsValueGetter)DetailedSettingsPath).GetValue<CommitInfoPosition>("CommitInfoPosition") ?? (
                 DetailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid") == true // legacy setting
                     ? CommitInfoPosition.RightwardFromList
                     : CommitInfoPosition.BelowList);
@@ -747,23 +751,19 @@ namespace GitCommands
             }
 
             EnvironmentConfiguration.SetEnvironmentVariables();
-            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(useSharedCache: false);
-
-            string path = configFileGlobalSettings.GetValue("core.editor");
-            if (!path.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase))
+            IPersistentConfigValueStore globalSettings = new GitConfigSettings(new Executable(AppSettings.GitCommand), GitSettingLevel.Global);
+            string? path = globalSettings.GetValue("core.editor");
+            if (path?.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase) is not true)
             {
                 return;
             }
 
 #if DEBUG
             // avoid setting, this may be in the debugger
-            throw new Exception($"Update the core.editor path {path} in {configFileGlobalSettings}");
+            throw new Exception($"Update the core.editor path {path} in global git settings");
 #else
-
-            // Similar in EditorHelper.FileEditorCommand
-            path = $"\"{AppSettings.GetGitExtensionsFullPath().ToPosixPath()}\" fileeditor";
-            configFileGlobalSettings.SetValue("core.editor", path);
-            configFileGlobalSettings.Save();
+            globalSettings.SetValue("core.editor", FileEditorCommand.ConvertPathToGitSetting());
+            globalSettings.Save();
 #endif
         }
 
@@ -2167,8 +2167,8 @@ namespace GitCommands
         public static T GetEnum<T>(string name, T defaultValue) where T : struct, Enum => SettingsContainer.GetEnum(name, defaultValue);
         public static void SetEnum<T>(string name, T value) where T : Enum => SettingsContainer.SetEnum(name, value);
 
-        public static T? GetNullableEnum<T>(string name) where T : struct => SettingsContainer.GetNullableEnum<T>(name);
-        public static void SetNullableEnum<T>(string name, T? value) where T : struct, Enum => SettingsContainer.SetNullableEnum(name, value);
+        public static T? GetNullableEnum<T>(string name) where T : struct, Enum => ((ISettingsValueGetter)SettingsContainer).GetValue<T>(name);
+        public static void SetNullableEnum<T>(string name, T? value) where T : struct, Enum => SettingsContainer.SetValue(name, value?.ToString());
         #endregion
 
         private static void LoadEncodings()

@@ -1,5 +1,5 @@
 ﻿using BugReporter;
-using GitCommands;
+using GitCommands.Git;
 
 namespace BugReporterTests
 {

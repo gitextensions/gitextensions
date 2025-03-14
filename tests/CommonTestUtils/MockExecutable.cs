@@ -15,6 +15,7 @@ namespace CommonTestUtils
 
         public string Command => "mock-git.exe";
         public string WorkingDir => ".";
+        public string PrefixArguments => "";
 
         public IDisposable StageOutput(string arguments, string output, int? exitCode = 0, string? error = null)
         {

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
