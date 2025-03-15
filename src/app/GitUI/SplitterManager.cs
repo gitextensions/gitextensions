@@ -99,6 +99,10 @@ namespace GitUI
                         }
                     }
                 }
+                else if (_defaultDistance.HasValue)
+                {
+                    SetSplitterDistance(_defaultDistance.Value);
+                }
 
                 // Keep the collapsed states as in the designer if not stored yet
                 _splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: _splitter.Panel1Collapsed);
