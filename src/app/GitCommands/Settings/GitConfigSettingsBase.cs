@@ -46,6 +46,7 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
 
     /// <summary>
     ///  Turns the section and value names to lower case in order to match the output of "git config list".
+    ///  The case-sensitive subsection is not modified.
     /// </summary>
     /// <param name="name">The setting name.</param>
     /// <returns>The normalized setting name.</returns>
@@ -53,16 +54,16 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
     {
         if (name.Any(char.IsAsciiLetterUpper))
         {
-            int firstSeparator = name.IndexOf('.');
-            int lastSeparator = name.LastIndexOf('.');
-            if (lastSeparator < 0 || firstSeparator == lastSeparator)
+            int firstDotIndex = name.IndexOf('.');
+            int lastDotIndex = name.LastIndexOf('.');
+            if (lastDotIndex < 0 || firstDotIndex == lastDotIndex)
             {
                 Debug.WriteLine(@$"(No Exception) Setting name should be lowercase: ""{name}"".");
                 return name.ToLowerInvariant();
             }
 
-            ReadOnlySpan<char> section = name.AsSpan(0, firstSeparator);
-            ReadOnlySpan<char> variable = name.AsSpan(lastSeparator + 1);
+            ReadOnlySpan<char> section = name.AsSpan(0, firstDotIndex);
+            ReadOnlySpan<char> variable = name.AsSpan(lastDotIndex + 1);
 
             if (!section.ContainsAnyInRange('A', 'Z') && !variable.ContainsAnyInRange('A', 'Z'))
             {
@@ -71,7 +72,7 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
 
             Debug.WriteLine(@$"(No Exception) Setting section and variable name should be lowercase: ""{name}"".");
 
-            ReadOnlySpan<char> caseSignificant = name.AsSpan(firstSeparator, length: lastSeparator + 1 - firstSeparator);
+            ReadOnlySpan<char> caseSignificant = name.AsSpan(firstDotIndex, length: lastDotIndex + 1 - firstDotIndex);
             return $"{section.ToString().ToLowerInvariant()}{caseSignificant}{variable.ToString().ToLowerInvariant()}";
         }
 
