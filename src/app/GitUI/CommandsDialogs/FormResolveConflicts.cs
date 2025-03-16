@@ -684,7 +684,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                if (EnvUtils.RunningOnWindows())
+                if (EnvUtils.RunningOnWindows() && _mergetoolCmd is not null)
                 {
                     // This only works when on Windows....
                     const string executablePattern = ".exe";
