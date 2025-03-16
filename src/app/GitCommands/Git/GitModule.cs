@@ -278,21 +278,19 @@ namespace GitCommands
             }
         }
 
-        private GitEncodingSettingsGetter? _gitEncodingSettings;
-
         private GitEncodingSettingsGetter GitEncodingSettingsGetter
         {
             get
             {
-                if (_gitEncodingSettings is null)
+                if (field is null)
                 {
                     lock (_lock)
                     {
-                        _gitEncodingSettings ??= new GitEncodingSettingsGetter(ConfigFileSettings.CreateEffective(module: this));
+                        field ??= new GitEncodingSettingsGetter(ConfigFileSettings.CreateEffective(module: this));
                     }
                 }
 
-                return _gitEncodingSettings;
+                return field;
             }
         }
 
