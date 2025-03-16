@@ -229,9 +229,10 @@ namespace GitUI
             IReadOnlyList<GitItemStatus> allBaseToA = module.GetDiffFilesWithSubmodulesStatus(baseRevId, firstRev.ObjectId, firstRev.FirstParentId, cancellationToken);
 
             GitItemStatusNameEqualityComparer comparer = new();
-            List<GitItemStatus> sameBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
-            List<GitItemStatus> onlyA = allBaseToA.Except(allBaseToB, comparer).ToList();
-            List<GitItemStatus> onlyB = allBaseToB.Except(allBaseToA, comparer).ToList();
+            GitItemStatus[] allAToBExceptExactRenameCopy = [.. allAToB.Where(i => !((i.IsRenamed || i.IsCopied) && i.RenameCopyPercentage == "100"))];
+            GitItemStatus[] sameBaseToAandB = [.. allBaseToB.Intersect(allBaseToA, comparer).Except(allAToBExceptExactRenameCopy, comparer)];
+            GitItemStatus[] onlyA = [.. allBaseToA.Except(allBaseToB, comparer)];
+            GitItemStatus[] onlyB = [.. allBaseToB.Except(allBaseToA, comparer)];
 
             foreach (IReadOnlyList<GitItemStatus> l in new[] { allAToB, allBaseToB, allBaseToA })
             {
@@ -246,9 +247,9 @@ namespace GitUI
                 // Always show where the change is done
                 // This means that if a file is added in A it is shown as removed in the A->B diff,
                 // but marked with A
-                return sameBaseToAandB.Any(i => i.Name == f.Name) ? DiffBranchStatus.SameChange
-                    : onlyA.Any(i => i.Name == f.Name) ? DiffBranchStatus.OnlyAChange
-                    : onlyB.Any(i => i.Name == f.Name) ? DiffBranchStatus.OnlyBChange
+                return sameBaseToAandB.Any(i => comparer.Equals(i, f)) ? DiffBranchStatus.SameChange
+                    : onlyA.Any(i => comparer.Equals(i, f)) ? DiffBranchStatus.OnlyAChange
+                    : onlyB.Any(i => comparer.Equals(i, f)) ? DiffBranchStatus.OnlyBChange
                     : DiffBranchStatus.UnequalChange;
             }
 
