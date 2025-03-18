@@ -488,6 +488,8 @@ namespace GitCommands
             set => DetailedSettingsPath.SetEnum("CommitInfoPosition", value);
         }
 
+        public static ISetting<bool> MessageEditorWordWrap => Setting.Create(DetailedSettingsPath, nameof(MessageEditorWordWrap), false);
+
         public static bool ShowSplitViewLayout
         {
             get => DetailedSettingsPath.GetBool("ShowSplitViewLayout", true);
