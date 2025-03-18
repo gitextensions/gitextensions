@@ -68,7 +68,14 @@ namespace GitUI.SpellChecker
 
             _wordAtCursorExtractor = new WordAtCursorExtractor();
 
-            _ = new TextBoxSilencer(TextBox);
+            if (AppSettings.MessageEditorWordWrap.Value)
+            {
+                TextBox.WordWrap = true;
+            }
+            else
+            {
+                _ = new TextBoxSilencer(TextBox);
+            }
         }
 
         public override string Text
