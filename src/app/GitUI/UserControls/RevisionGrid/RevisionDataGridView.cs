@@ -56,8 +56,8 @@ namespace GitUI.UserControls.RevisionGrid
         private bool _highlightAuthoredRevisions;
         private bool _revisionGraphDrawAlternateBackColor;
         private Color _highlightedGrayTextColor;
-        private Color _grayTextColor;
-        private Color _highlightedGrayTextColorCustom;
+        private Color _nonRelativeNonSelectedGrayTextColor;
+        private Color _relativeSelectedGrayTextColor;
 
         /// <summary>
         /// Force refresh the gridview, set when revision graph is changed while loading revisions.
@@ -101,7 +101,7 @@ namespace GitUI.UserControls.RevisionGrid
             DoubleBuffered = true;
 
             _rowBackgroundBrush = new SolidBrush(AppColor.PanelBackground.GetThemeColor());
-            _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeBackgroundDarkerBy(0.025));
+            _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeBackgroundDarkerBy(Application.IsDarkModeEnabled ? -0.012 : 0.025));
             _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
             _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
 
@@ -238,30 +238,36 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         private Color GetForeground(bool isSelected, bool isFocused, bool isNonRelativeGray)
-        {
-            return (isNonRelativeGray, isSelectedAndFocused: isSelected && isFocused) switch
+            => (isNonRelativeGray, isSelectedAndFocused: isSelected && isFocused) switch
             {
+                // Unselected revisions of the currently checked out branch and all revisions reachable from HEAD
                 (isNonRelativeGray: false, isSelectedAndFocused: false) => SystemColors.ControlText,
-                (isNonRelativeGray: false, isSelectedAndFocused: true) => SystemColors.HighlightText,
-                (isNonRelativeGray: true, isSelectedAndFocused: false) => SystemColors.GrayText,
 
-                // (isGray: true, isSelected: true)
+                // Selected revisions of the currently checked out branch and all revisions reachable from HEAD
+                (isNonRelativeGray: false, isSelectedAndFocused: true) => Application.IsDarkModeEnabled ? SystemColors.ControlText : SystemColors.HighlightText,
+
+                // All revisions not reachable from HEAD, revisions aren't selected
+                (isNonRelativeGray: true, isSelectedAndFocused: false) => Application.IsDarkModeEnabled ? SystemColors.ControlText : SystemColors.GrayText,
+
+                // (isNonRelativeGray: true, isSelected: true)
                 _ => _highlightedGrayTextColor
             };
-        }
 
         private Color GetCommitBodyForeground(bool isSelected, bool isNonRelativeGray)
-        {
-            return (isNonRelativeGray, isSelected) switch
+            => (isNonRelativeGray, isSelected) switch
             {
+                // Unselected revisions of the currently checked out branch and all revisions reachable from HEAD
                 (isNonRelativeGray: false, isSelected: false) => SystemColors.GrayText,
-                (isNonRelativeGray: false, isSelected: true) => _highlightedGrayTextColor,
-                (isNonRelativeGray: true, isSelected: false) => _grayTextColor,
 
-                // (isGray: true, isSelected: true)
-                _ => _highlightedGrayTextColorCustom
+                // Selected revisions of the currently checked out branch and all revisions reachable from HEAD
+                (isNonRelativeGray: false, isSelected: true) => Application.IsDarkModeEnabled ? _relativeSelectedGrayTextColor : _highlightedGrayTextColor,
+
+                // All revisions not reachable from HEAD, revisions aren't selected
+                (isNonRelativeGray: true, isSelected: false) => _nonRelativeNonSelectedGrayTextColor,
+
+                // (isNonRelativeGray: true, isSelected: true)
+                _ => _relativeSelectedGrayTextColor
             };
-        }
 
         private Brush GetBackground(bool isSelected, bool isFocused, int rowIndex, GitRevision? revision)
         {
@@ -411,9 +417,14 @@ namespace GitUI.UserControls.RevisionGrid
 
             // Reload settings that will be used during drawing
             _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
-            _highlightedGrayTextColor = getHighlightedGrayTextColor();
-            _grayTextColor = getGrayTextColor(degreeOfGrayness: 1.4f);
-            _highlightedGrayTextColorCustom = getHighlightedGrayTextColor(degreeOfGrayness: 1.4f);
+
+            float degreeOfGrayness = Application.IsDarkModeEnabled ? 4.0f : 1f;
+            _highlightedGrayTextColor = GetHighlightedGrayTextColor(degreeOfGrayness);
+
+            // Note: The adaptive color fails here, step around 1.17f 145 -> 80
+            _nonRelativeNonSelectedGrayTextColor = Application.IsDarkModeEnabled ? Color.FromArgb(118, 118, 118) : GetGrayControlTextColor(degreeOfGrayness: 1.4f);
+            float relativeSelectedDegreeOfGrayness = Application.IsDarkModeEnabled ? 2.0f : 1.4f;
+            _relativeSelectedGrayTextColor = GetHighlightedGrayTextColor(degreeOfGrayness: relativeSelectedDegreeOfGrayness);
             _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;
             _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
 
@@ -998,14 +1009,14 @@ namespace GitUI.UserControls.RevisionGrid
             _monospaceFont = AppSettings.MonospaceFont;
         }
 
-        private static Color getHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
+        private static Color GetHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
             ColorHelper.GetHighlightGrayTextColor(
                 backgroundColorName: KnownColor.Control,
                 textColorName: KnownColor.ControlText,
                 highlightColorName: KnownColor.Highlight,
                 degreeOfGrayness);
 
-        private static Color getGrayTextColor(float degreeOfGrayness = 1f) =>
+        private static Color GetGrayControlTextColor(float degreeOfGrayness = 1f) =>
             ColorHelper.GetGrayTextColor(textColorName: KnownColor.ControlText, degreeOfGrayness);
     }
 }

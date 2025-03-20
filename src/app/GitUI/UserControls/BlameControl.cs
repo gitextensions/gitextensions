@@ -12,6 +12,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
@@ -49,6 +50,7 @@ namespace GitUI.Blame
         private static readonly IList<Color> AgeBucketGradientColors = GetAgeBucketGradientColors();
         private static readonly TranslationString _blameActualPreviousRevision = new("&Blame previous revision");
         private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame previous visible revision");
+        private readonly Color _commitHighlightColor;
         private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
         private readonly IGitBlameParser _gitBlameParser;
         private bool _loading;
@@ -78,6 +80,7 @@ namespace GitUI.Blame
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
 
+            _commitHighlightColor = Application.IsDarkModeEnabled ? AppColor.EditorBackground.GetThemeColor().MakeBackgroundDarkerBy(-0.06) : SystemColors.ControlLight;
             _gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
             _gitBlameParser = new GitBlameParser(() => UICommands.Module);
         }
@@ -238,8 +241,8 @@ namespace GitUI.Blame
                 {
                     if (prevLine != i - 1 && startLine != -1)
                     {
-                        BlameAuthor.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
-                        BlameFile.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
+                        BlameAuthor.HighlightLines(startLine, prevLine, _commitHighlightColor);
+                        BlameFile.HighlightLines(startLine, prevLine, _commitHighlightColor);
                         startLine = -1;
                     }
 

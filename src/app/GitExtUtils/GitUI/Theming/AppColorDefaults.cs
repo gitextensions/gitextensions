@@ -58,7 +58,7 @@
                 { AppColor.AnsiTerminalWhiteForeNormal, Color.FromArgb(0xbf, 0xbf, 0xbf) },
                 { AppColor.AnsiTerminalWhiteBackNormal, Color.FromArgb(0xe0, 0xe0, 0xe0) },
                 { AppColor.AnsiTerminalWhiteForeBold, Color.FromArgb(0xff, 0xff, 0xff) },
-                { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) }
+                { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) },
             };
 
         private static readonly Dictionary<string, Dictionary<AppColor, Color>> _variations = new()
