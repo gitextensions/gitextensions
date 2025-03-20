@@ -31,7 +31,7 @@ internal sealed class GraphCache
     internal void AdjustCapacity(int capacity)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
-        Capacity = capacity;
+        Capacity = Math.Max(Capacity, capacity);
     }
 
     internal void Allocate(int width, int height)
