@@ -77,7 +77,6 @@ namespace GitCommandsTests.DiffMergeTools
             }
 
             _fileSettings.DidNotReceive().SetValue(Arg.Any<string>(), Arg.Any<string>());
-            _fileSettings.DidNotReceive().SetPathValue(Arg.Any<string>(), Arg.Any<string>());
         }
 
         [Test]
@@ -95,12 +94,10 @@ namespace GitCommandsTests.DiffMergeTools
         {
             _configurationManager.ConfigureDiffMergeTool(toolName, toolType, toolPath, toolCommand);
 
-            _fileSettings.Received(1).SetValue(Arg.Any<string>(), Arg.Any<string>());
+            _fileSettings.Received(3).SetValue(Arg.Any<string>(), Arg.Any<string>());
             _fileSettings.Received(1).SetValue(expectedValueKey, "bla");
-
-            _fileSettings.Received(2).SetPathValue(Arg.Any<string>(), Arg.Any<string>());
-            _fileSettings.Received(1).SetPathValue(expectedPathKey, toolPath);
-            _fileSettings.Received(1).SetPathValue(expectedCommandKey, toolCommand);
+            _fileSettings.Received(1).SetValue(expectedPathKey, toolPath.ToPosixPath());
+            _fileSettings.Received(1).SetValue(expectedCommandKey, toolCommand.ToPosixPath());
         }
 
         [TestCase(null)]

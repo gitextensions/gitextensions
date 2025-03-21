@@ -14,6 +14,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     private static readonly GitVersion _v2_32_0 = new("2.32.0");
     private static readonly GitVersion _v2_35_0 = new("2.35.0");
     private static readonly GitVersion _v2_38_0 = new("2.38.0");
+    private static readonly GitVersion _v2_46_0 = new("2.46.0");
 
     /// <summary>
     /// The recommended Git version (normally latest official before a GE release).
@@ -141,6 +142,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
 
     public bool SupportAmendCommits => this >= _v2_32_0;
     public bool SupportGuiMergeTool => this >= _v2_20_0;
+    public bool SupportNewGitConfigSyntax => this >= _v2_46_0;
     public bool SupportRangeDiffPath => this >= _v2_38_0;
     public bool SupportRangeDiffTool => this >= _v2_19_0;
     public bool SupportRebaseMerges => this >= _v2_19_0;
