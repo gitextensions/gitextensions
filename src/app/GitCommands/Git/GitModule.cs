@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -8,6 +9,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Patches;
+using GitCommands.Remotes;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
@@ -183,6 +185,29 @@ namespace GitCommands
                 static bool HasGitModulesFile(string path)
                     => File.Exists(Path.Combine(path, ".gitmodules")) && IsValidGitWorkingDir(path);
             }
+        }
+
+        private FrozenDictionary<string, Color>? _remoteColors;
+
+        public void ResetRemoteColors()
+        {
+            _remoteColors = null;
+        }
+
+        public FrozenDictionary<string, Color> GetRemoteColors()
+        {
+            if (_remoteColors is null)
+            {
+                lock (_lock)
+                {
+                    _remoteColors ??= new ConfigFileRemoteSettingsManager(() => this)
+                                .LoadRemotes(false)
+                                .Where(r => !string.IsNullOrEmpty(r.Color) && !string.IsNullOrEmpty(r.Name))
+                                .ToFrozenDictionary(r => r.Name, r => ColorTranslator.FromHtml(r.Color), StringComparer.Ordinal);
+                }
+            }
+
+            return _remoteColors;
         }
 
         /// <inherit/>

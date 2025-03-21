@@ -56,8 +56,9 @@ namespace GitCommands.Remotes
         /// </param>
         /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
         /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
+        /// <param name="remoteColor">An optional color for the remote.</param>
         /// <returns>Result of the operation.</returns>
-        ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey);
+        ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey, string? remoteColor);
 
         /// <summary>
         ///  Marks the remote as enabled or disabled in .git/config file.
@@ -266,8 +267,9 @@ namespace GitCommands.Remotes
         /// </param>
         /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
         /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
+        /// <param name="remoteColor">An optional color for the remote.</param>
         /// <returns>Result of the operation.</returns>
-        public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey)
+        public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey, string? remoteColor)
         {
             if (string.IsNullOrWhiteSpace(remoteName))
             {
@@ -336,6 +338,7 @@ namespace GitCommands.Remotes
 
             UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePushUrl, remotePushUrl);
             UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
+            UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemoteColor, remoteColor);
 
             return new ConfigFileRemoteSaveResult(output, updateRemoteRequired);
         }
@@ -422,6 +425,8 @@ namespace GitCommands.Remotes
                     // Note: This only gets the last pushurl
                     PushUrl = module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
                     PuttySshKey = module.GetSetting(GetSettingKey(SettingKeyString.RemotePuttySshKey, remote, enabled)),
+
+                    Color = module.GetSetting(GetSettingKey(SettingKeyString.RemoteColor, remote, enabled)),
                 }));
             }
         }

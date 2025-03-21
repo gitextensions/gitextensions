@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Frozen;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Settings;
@@ -17,6 +18,19 @@ public interface IGitModule
     IReadOnlyList<IGitRef> GetRefs(RefsFilter getRef);
     IEnumerable<string> GetSettings(string setting);
     IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full);
+
+    /// <summary>
+    ///  Loads the user-defined colors for the remote branches specific for the current repository.
+    /// </summary>
+    /// <returns>
+    ///  The user-defined colors for the remote branches specific for the current repository.
+    /// </returns>
+    FrozenDictionary<string, Color> GetRemoteColors();
+
+    /// <summary>
+    /// Resets the colors of the remote to their default values.
+    /// </summary>
+    void ResetRemoteColors();
 
     /// <summary>
     /// Removes the registered remote by running <c>git remote rm</c> command.

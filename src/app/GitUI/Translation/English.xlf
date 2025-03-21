@@ -6624,6 +6624,14 @@ Value has been reset to empty value.</source>
         <source>Private key (*.ppk)</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnRemoteColor.Text">
+        <source>Set color</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnRemoteColorReset.Text">
+        <source>Default color</source>
+        <target />
+      </trans-unit>
       <trans-unit id="btnToggleState.toolTip1">
         <source>Enable or disable the selected remote</source>
         <target />
@@ -6666,6 +6674,10 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="lblMgtPuttyPanelHeader.Text">
         <source>PuTTY SSH</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblRemoteColor.Text">
+        <source>Color</source>
         <target />
       </trans-unit>
       <trans-unit id="pnlMgtDetails.Text">
