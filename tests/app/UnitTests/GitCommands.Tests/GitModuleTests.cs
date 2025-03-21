@@ -40,6 +40,10 @@ namespace GitCommandsTests
         [Test]
         public void ParseGitBlame()
         {
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+            using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
+            GitVersion.ResetVersion();
+
             string path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/README.blame");
             GitBlame result = _gitModule.ParseGitBlame(File.ReadAllText(path), Encoding.UTF8);
 
@@ -83,45 +87,49 @@ namespace GitCommandsTests
         [Test]
         public void FetchCmd()
         {
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+            using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
+            GitVersion.ResetVersion();
+
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags",
+                    "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch").Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --tags",
+                    "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", true).Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch",
+                    "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", null).Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow",
+                    "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", isUnshallow: true).Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force",
+                    "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true).Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "-c fetch.parallel=0 -c submodule.fetchJobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force --prune-tags",
+                    "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force --prune-tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true, pruneRemoteBranchesAndTags: true).Arguments);
             }
         }
@@ -466,10 +474,16 @@ namespace GitCommandsTests
             const string remoteName = "foo";
             const string output = "bar";
 
-            using (_executable.StageOutput($"remote rm \"{remoteName}\"", output))
-            {
-                Assert.AreEqual(output, _gitModule.RemoveRemote(remoteName));
-            }
+            using IDisposable remoteRemove = _executable.StageOutput($"remote rm \"{remoteName}\"", output);
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+            using IDisposable configListEffective = _executable.StageOutput("config list --includes --null", "");
+            using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
+            GitVersion.ResetVersion();
+
+            Assert.AreEqual(output, _gitModule.RemoveRemote(remoteName));
+
+            _gitModule.GetEffectiveSetting("reload now");
+            _gitModule.GetSettings("reload local settings, too");
         }
 
         [Test]
@@ -479,10 +493,16 @@ namespace GitCommandsTests
             const string newName = "far";
             const string output = "bar";
 
-            using (_executable.StageOutput($"remote rename \"{oldName}\" \"{newName}\"", output))
-            {
-                Assert.AreEqual(output, _gitModule.RenameRemote(oldName, newName));
-            }
+            using IDisposable remoteRename = _executable.StageOutput($"remote rename \"{oldName}\" \"{newName}\"", output);
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+            using IDisposable configListEffective = _executable.StageOutput("config list --includes --null", "");
+            using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
+            GitVersion.ResetVersion();
+
+            Assert.AreEqual(output, _gitModule.RenameRemote(oldName, newName));
+
+            _gitModule.GetEffectiveSetting("reload now");
+            _gitModule.GetSettings("reload local settings, too");
         }
 
         [Test]
@@ -494,7 +514,15 @@ namespace GitCommandsTests
 
             using (_executable.StageOutput($"remote add \"{name}\" \"{path.ToPosixPath()}\"", output))
             {
+                using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+                using IDisposable configListEffective = _executable.StageOutput("config list --includes --null", "");
+                using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
+                GitVersion.ResetVersion();
+
                 Assert.AreEqual(output, _gitModule.AddRemote(name, path));
+
+                _gitModule.GetEffectiveSetting("reload now");
+                _gitModule.GetSettings("reload local settings, too");
             }
 
             Assert.AreEqual("Please enter a name.", _gitModule.AddRemote("", path));
@@ -808,6 +836,8 @@ namespace GitCommandsTests
             module ??= new GitModule(path);
 
             typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(module, executable);
+            typeof(GitModule).GetField("_gitWindowsExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(module, executable);
             GitCommandRunner cmdRunner = new(executable, () => GitModule.SystemEncoding);
             typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)

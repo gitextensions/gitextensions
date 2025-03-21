@@ -340,7 +340,7 @@ namespace GitUI.CommandsDialogs
                     GitRef? selectedLocalBranch = (_NO_TRANSLATE_Branch.SelectedItem ?? _gitRefs.FirstOrDefault(b => b.IsHead && b.Name == _NO_TRANSLATE_Branch.Text)) as GitRef;
                     track = selectedLocalBranch is not null && string.IsNullOrEmpty(selectedLocalBranch.TrackingRemote) &&
                             !UserGitRemotes.Any(x => _NO_TRANSLATE_Branch.Text.StartsWith(x.Name, StringComparison.OrdinalIgnoreCase));
-                    string autoSetupMerge = Module.EffectiveConfigFile.GetValue("branch.autoSetupMerge");
+                    string autoSetupMerge = Module.GetEffectiveSetting("branch.autosetupmerge");
                     if (!string.IsNullOrWhiteSpace(autoSetupMerge) && autoSetupMerge.ToLowerInvariant() == "false")
                     {
                         track = false;
