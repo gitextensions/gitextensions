@@ -17,6 +17,11 @@
         public static string CredentialHelper = "credential.helper";
 
         /// <summary>
+        /// "remote.{0}.color"
+        /// </summary>
+        public static string RemoteColor = "remote.{0}.color";
+
+        /// <summary>
         /// "remote.{0}.push"
         /// </summary>
         public static string RemotePush = "remote.{0}.push";
