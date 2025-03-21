@@ -902,6 +902,8 @@ namespace GitUI
                       ? Module.GetSelectedBranch(emptyIfDetached: true)
                       : "");
 
+            _gridView.RemoteColors = Module.GetRemoteColors();
+
             // Revision info is read in three parallel steps:
             // 1. Read current commit, refs, prepare grid etc.
             // 2. Read stashes (if enabled).

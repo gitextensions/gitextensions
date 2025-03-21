@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System.Collections.Frozen;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -227,6 +228,8 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
+        internal FrozenDictionary<string, Color> RemoteColors { get; set; }
+
         internal void AddColumn(ColumnProvider columnProvider)
         {
             _columnProviders.Add(columnProvider);
@@ -317,7 +320,7 @@ namespace GitUI.UserControls.RevisionGrid
                 bool isNonRelativeGray = _revisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex);
                 Color foreColor = GetForeground(_isSelected, _isFocused, isNonRelativeGray);
                 Color commitBodyForeColor = GetCommitBodyForeground(_isSelected, isNonRelativeGray);
-                _cellStyle = new(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
+                _cellStyle = new(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont, RemoteColors);
             }
 
             if (_cellStyle is null)

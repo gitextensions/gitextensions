@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace GitUI.CommandsDialogs
 {
     partial class FormRemotes
@@ -30,27 +32,31 @@ namespace GitUI.CommandsDialogs
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            ListViewGroup listViewGroup2 = new ListViewGroup("ListViewGroup", HorizontalAlignment.Left);
+            FlowLayoutPanel flowLayoutPanelSsh;
+            ListViewGroup listViewGroup1 = new ListViewGroup("ListViewGroup", HorizontalAlignment.Left);
+            TestConnection = new Button();
+            LoadSSHKey = new Button();
+            flpnlRemoteColors = new FlowLayoutPanel();
+            btnRemoteColor = new Button();
+            btnRemoteColorReset = new Button();
             flpnlRemoteManagement = new TableLayoutPanel();
             pnlMgtDetails = new Panel();
             tblpnlMgtDetails = new TableLayoutPanel();
+            label2 = new Label();
+            Url = new GitUI.UserControls.CaseSensitiveComboBox();
+            folderBrowserButtonUrl = new GitUI.UserControls.FolderBrowserButton();
             label1 = new Label();
             RemoteName = new TextBox();
-            label2 = new Label();
-            Url = new UserControls.CaseSensitiveComboBox();
-            folderBrowserButtonUrl = new UserControls.FolderBrowserButton();
+            lblRemoteColor = new Label();
             checkBoxSepPushUrl = new CheckBox();
             labelPushUrl = new Label();
-            comboBoxPushUrl = new UserControls.CaseSensitiveComboBox();
-            folderBrowserButtonPushUrl = new UserControls.FolderBrowserButton();
+            comboBoxPushUrl = new GitUI.UserControls.CaseSensitiveComboBox();
+            folderBrowserButtonPushUrl = new GitUI.UserControls.FolderBrowserButton();
             pnlMgtPuttySsh = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             label3 = new Label();
             PuttySshKey = new TextBox();
             SshBrowse = new Button();
-            flowLayoutPanel3 = new FlowLayoutPanel();
-            TestConnection = new Button();
-            LoadSSHKey = new Button();
             lblMgtPuttyPanelHeader = new Label();
             lblHeaderLine2 = new Label();
             flowLayoutPanel2 = new FlowLayoutPanel();
@@ -64,7 +70,7 @@ namespace GitUI.CommandsDialogs
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             panel1 = new Panel();
-            Remotes = new UserControls.NativeListView();
+            Remotes = new GitUI.UserControls.NativeListView();
             columnHeader1 = new ColumnHeader();
             tabPage2 = new TabPage();
             tableLayoutPanel2 = new TableLayoutPanel();
@@ -81,12 +87,15 @@ namespace GitUI.CommandsDialogs
             RemoteCombo = new DataGridViewTextBoxColumn();
             MergeWith = new DataGridViewTextBoxColumn();
             toolTip1 = new ToolTip(components);
+            colorDialog = new ColorDialog();
+            flowLayoutPanelSsh = new FlowLayoutPanel();
+            flowLayoutPanelSsh.SuspendLayout();
+            flpnlRemoteColors.SuspendLayout();
             flpnlRemoteManagement.SuspendLayout();
             pnlMgtDetails.SuspendLayout();
             tblpnlMgtDetails.SuspendLayout();
             pnlMgtPuttySsh.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
-            flowLayoutPanel3.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             pnlManagementContainer.SuspendLayout();
             gbMgtPanel.SuspendLayout();
@@ -99,6 +108,91 @@ namespace GitUI.CommandsDialogs
             panelDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RemoteBranches).BeginInit();
             SuspendLayout();
+            // 
+            // flowLayoutPanelSsh
+            // 
+            flowLayoutPanelSsh.AutoSize = true;
+            flowLayoutPanelSsh.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.SetColumnSpan(flowLayoutPanelSsh, 2);
+            flowLayoutPanelSsh.Controls.Add(TestConnection);
+            flowLayoutPanelSsh.Controls.Add(LoadSSHKey);
+            flowLayoutPanelSsh.Dock = DockStyle.Fill;
+            flowLayoutPanelSsh.FlowDirection = FlowDirection.RightToLeft;
+            flowLayoutPanelSsh.Location = new Point(106, 31);
+            flowLayoutPanelSsh.Margin = new Padding(0);
+            flowLayoutPanelSsh.Name = "flowLayoutPanelSsh";
+            flowLayoutPanelSsh.Size = new Size(364, 31);
+            flowLayoutPanelSsh.TabIndex = 3;
+            // 
+            // TestConnection
+            // 
+            TestConnection.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            TestConnection.AutoSize = true;
+            TestConnection.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TestConnection.Image = Properties.Images.Putty;
+            TestConnection.ImageAlign = ContentAlignment.MiddleLeft;
+            TestConnection.Location = new Point(201, 3);
+            TestConnection.MinimumSize = new Size(160, 25);
+            TestConnection.Name = "TestConnection";
+            TestConnection.Size = new Size(160, 25);
+            TestConnection.TabIndex = 4;
+            TestConnection.Text = "Test connection";
+            TestConnection.UseVisualStyleBackColor = true;
+            TestConnection.Click += TestConnectionClick;
+            // 
+            // LoadSSHKey
+            // 
+            LoadSSHKey.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            LoadSSHKey.AutoSize = true;
+            LoadSSHKey.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            LoadSSHKey.Image = Properties.Images.Putty;
+            LoadSSHKey.ImageAlign = ContentAlignment.MiddleLeft;
+            LoadSSHKey.Location = new Point(35, 3);
+            LoadSSHKey.MinimumSize = new Size(160, 25);
+            LoadSSHKey.Name = "LoadSSHKey";
+            LoadSSHKey.Size = new Size(160, 25);
+            LoadSSHKey.TabIndex = 3;
+            LoadSSHKey.Text = "Load SSH key";
+            LoadSSHKey.UseVisualStyleBackColor = true;
+            LoadSSHKey.Click += LoadSshKeyClick;
+            // 
+            // flpnlRemoteColors
+            // 
+            flpnlRemoteColors.AutoSize = true;
+            flpnlRemoteColors.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tblpnlMgtDetails.SetColumnSpan(flpnlRemoteColors, 2);
+            flpnlRemoteColors.Controls.Add(btnRemoteColor);
+            flpnlRemoteColors.Controls.Add(btnRemoteColorReset);
+            flpnlRemoteColors.Dock = DockStyle.Fill;
+            flpnlRemoteColors.Location = new Point(106, 60);
+            flpnlRemoteColors.Margin = new Padding(0);
+            flpnlRemoteColors.Name = "flpnlRemoteColors";
+            flpnlRemoteColors.Size = new Size(364, 31);
+            flpnlRemoteColors.TabIndex = 6;
+            // 
+            // btnRemoteColor
+            // 
+            btnRemoteColor.AutoSize = true;
+            btnRemoteColor.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnRemoteColor.Location = new Point(3, 3);
+            btnRemoteColor.Name = "btnRemoteColor";
+            btnRemoteColor.Size = new Size(63, 25);
+            btnRemoteColor.TabIndex = 7;
+            btnRemoteColor.Text = "Set color";
+            btnRemoteColor.UseVisualStyleBackColor = false;
+            btnRemoteColor.Click += btnRemoteColor_Click;
+            // 
+            // btnRemoteColorReset
+            // 
+            btnRemoteColorReset.AutoSize = true;
+            btnRemoteColorReset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnRemoteColorReset.Location = new Point(72, 3);
+            btnRemoteColorReset.Name = "btnRemoteColorReset";
+            btnRemoteColorReset.Size = new Size(85, 25);
+            btnRemoteColorReset.TabIndex = 8;
+            btnRemoteColorReset.Text = "Default color";
+            btnRemoteColorReset.UseVisualStyleBackColor = false;
+            btnRemoteColorReset.Click += btnRemoteColorReset_Click;
             // 
             // flpnlRemoteManagement
             // 
@@ -116,77 +210,59 @@ namespace GitUI.CommandsDialogs
             flpnlRemoteManagement.RowStyles.Add(new RowStyle());
             flpnlRemoteManagement.RowStyles.Add(new RowStyle());
             flpnlRemoteManagement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            flpnlRemoteManagement.Size = new Size(514, 278);
+            flpnlRemoteManagement.Size = new Size(514, 309);
             flpnlRemoteManagement.TabIndex = 0;
             // 
             // pnlMgtDetails
             // 
             pnlMgtDetails.AutoSize = true;
+            pnlMgtDetails.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             pnlMgtDetails.Controls.Add(tblpnlMgtDetails);
             pnlMgtDetails.Dock = DockStyle.Top;
             pnlMgtDetails.Location = new Point(3, 3);
             pnlMgtDetails.Name = "pnlMgtDetails";
             pnlMgtDetails.Padding = new Padding(0, 0, 0, 8);
-            pnlMgtDetails.Size = new Size(508, 138);
+            pnlMgtDetails.Size = new Size(508, 169);
             pnlMgtDetails.TabIndex = 0;
             pnlMgtDetails.Text = "Details";
             // 
             // tblpnlMgtDetails
             // 
-            tblpnlMgtDetails.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tblpnlMgtDetails.AutoSize = true;
             tblpnlMgtDetails.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tblpnlMgtDetails.ColumnCount = 3;
             tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle());
-            tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
-            tblpnlMgtDetails.Controls.Add(label1, 0, 0);
-            tblpnlMgtDetails.Controls.Add(RemoteName, 1, 0);
-            tblpnlMgtDetails.Controls.Add(label2, 0, 1);
-            tblpnlMgtDetails.Controls.Add(Url, 1, 1);
-            tblpnlMgtDetails.Controls.Add(folderBrowserButtonUrl, 2, 1);
-            tblpnlMgtDetails.Controls.Add(checkBoxSepPushUrl, 0, 2);
-            tblpnlMgtDetails.Controls.Add(labelPushUrl, 0, 3);
-            tblpnlMgtDetails.Controls.Add(comboBoxPushUrl, 1, 3);
-            tblpnlMgtDetails.Controls.Add(folderBrowserButtonPushUrl, 2, 3);
+            tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle());
+            tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle());
+            tblpnlMgtDetails.Controls.Add(flpnlRemoteColors, 1, 2);
+            tblpnlMgtDetails.Controls.Add(label2, 0, 0);
+            tblpnlMgtDetails.Controls.Add(Url, 1, 0);
+            tblpnlMgtDetails.Controls.Add(folderBrowserButtonUrl, 2, 0);
+            tblpnlMgtDetails.Controls.Add(label1, 0, 1);
+            tblpnlMgtDetails.Controls.Add(RemoteName, 1, 1);
+            tblpnlMgtDetails.Controls.Add(lblRemoteColor, 0, 2);
+            tblpnlMgtDetails.Controls.Add(checkBoxSepPushUrl, 0, 3);
+            tblpnlMgtDetails.Controls.Add(labelPushUrl, 0, 4);
+            tblpnlMgtDetails.Controls.Add(comboBoxPushUrl, 1, 4);
+            tblpnlMgtDetails.Controls.Add(folderBrowserButtonPushUrl, 2, 4);
             tblpnlMgtDetails.Location = new Point(16, 11);
             tblpnlMgtDetails.Name = "tblpnlMgtDetails";
-            tblpnlMgtDetails.RowCount = 4;
+            tblpnlMgtDetails.RowCount = 5;
             tblpnlMgtDetails.RowStyles.Add(new RowStyle());
             tblpnlMgtDetails.RowStyles.Add(new RowStyle());
             tblpnlMgtDetails.RowStyles.Add(new RowStyle());
             tblpnlMgtDetails.RowStyles.Add(new RowStyle());
-            tblpnlMgtDetails.Size = new Size(470, 116);
+            tblpnlMgtDetails.RowStyles.Add(new RowStyle());
+            tblpnlMgtDetails.Size = new Size(470, 147);
             tblpnlMgtDetails.TabIndex = 11;
-            // 
-            // label1
-            // 
-            label1.Dock = DockStyle.Fill;
-            label1.Location = new Point(3, 0);
-            label1.MinimumSize = new Size(100, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(100, 29);
-            label1.TabIndex = 0;
-            label1.Text = "Name";
-            label1.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // RemoteName
-            // 
-            RemoteName.Dock = DockStyle.Fill;
-            RemoteName.Location = new Point(109, 3);
-            RemoteName.Name = "RemoteName";
-            RemoteName.Size = new Size(248, 23);
-            RemoteName.TabIndex = 1;
-            RemoteName.TextChanged += RemoteName_TextChanged;
-            RemoteName.Enter += RemoteName_Enter;
             // 
             // label2
             // 
             label2.Dock = DockStyle.Fill;
-            label2.Location = new Point(3, 29);
+            label2.Location = new Point(3, 0);
+            label2.MinimumSize = new Size(100, 0);
             label2.Name = "label2";
             label2.Size = new Size(100, 31);
-            label2.TabIndex = 2;
+            label2.TabIndex = 0;
             label2.Text = "Url";
             label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -196,10 +272,10 @@ namespace GitUI.CommandsDialogs
             Url.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             Url.AutoCompleteSource = AutoCompleteSource.ListItems;
             Url.FormattingEnabled = true;
-            Url.Location = new Point(109, 33);
+            Url.Location = new Point(109, 4);
             Url.Name = "Url";
             Url.Size = new Size(248, 23);
-            Url.TabIndex = 3;
+            Url.TabIndex = 1;
             Url.Enter += Url_Enter;
             // 
             // folderBrowserButtonUrl
@@ -207,23 +283,53 @@ namespace GitUI.CommandsDialogs
             folderBrowserButtonUrl.AutoSize = true;
             folderBrowserButtonUrl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             folderBrowserButtonUrl.Dock = DockStyle.Fill;
-            folderBrowserButtonUrl.Location = new Point(363, 32);
+            folderBrowserButtonUrl.Location = new Point(363, 3);
             folderBrowserButtonUrl.MinimumSize = new Size(104, 25);
             folderBrowserButtonUrl.Name = "folderBrowserButtonUrl";
             folderBrowserButtonUrl.PathShowingControl = Url;
             folderBrowserButtonUrl.Size = new Size(104, 25);
-            folderBrowserButtonUrl.TabIndex = 4;
+            folderBrowserButtonUrl.TabIndex = 2;
+            // 
+            // label1
+            // 
+            label1.Dock = DockStyle.Fill;
+            label1.Location = new Point(3, 31);
+            label1.Name = "label1";
+            label1.Size = new Size(100, 29);
+            label1.TabIndex = 3;
+            label1.Text = "Name";
+            label1.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // RemoteName
+            // 
+            RemoteName.Dock = DockStyle.Fill;
+            RemoteName.Location = new Point(109, 34);
+            RemoteName.Name = "RemoteName";
+            RemoteName.Size = new Size(248, 23);
+            RemoteName.TabIndex = 4;
+            RemoteName.TextChanged += RemoteName_TextChanged;
+            RemoteName.Enter += RemoteName_Enter;
+            // 
+            // lblRemoteColor
+            // 
+            lblRemoteColor.Dock = DockStyle.Fill;
+            lblRemoteColor.Location = new Point(3, 60);
+            lblRemoteColor.Name = "lblRemoteColor";
+            lblRemoteColor.Size = new Size(100, 31);
+            lblRemoteColor.TabIndex = 5;
+            lblRemoteColor.Text = "Color";
+            lblRemoteColor.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // checkBoxSepPushUrl
             // 
             checkBoxSepPushUrl.AutoSize = true;
             tblpnlMgtDetails.SetColumnSpan(checkBoxSepPushUrl, 2);
             checkBoxSepPushUrl.Dock = DockStyle.Fill;
-            checkBoxSepPushUrl.Location = new Point(3, 63);
+            checkBoxSepPushUrl.Location = new Point(3, 94);
             checkBoxSepPushUrl.Name = "checkBoxSepPushUrl";
             checkBoxSepPushUrl.Padding = new Padding(24, 0, 0, 0);
             checkBoxSepPushUrl.Size = new Size(354, 19);
-            checkBoxSepPushUrl.TabIndex = 5;
+            checkBoxSepPushUrl.TabIndex = 9;
             checkBoxSepPushUrl.Text = "Separate Push Url";
             checkBoxSepPushUrl.UseVisualStyleBackColor = true;
             checkBoxSepPushUrl.CheckedChanged += checkBoxSepPushUrl_CheckedChanged;
@@ -231,10 +337,10 @@ namespace GitUI.CommandsDialogs
             // labelPushUrl
             // 
             labelPushUrl.Dock = DockStyle.Fill;
-            labelPushUrl.Location = new Point(3, 85);
+            labelPushUrl.Location = new Point(3, 116);
             labelPushUrl.Name = "labelPushUrl";
             labelPushUrl.Size = new Size(100, 31);
-            labelPushUrl.TabIndex = 6;
+            labelPushUrl.TabIndex = 10;
             labelPushUrl.Text = "Push Url";
             labelPushUrl.TextAlign = ContentAlignment.MiddleLeft;
             labelPushUrl.Visible = false;
@@ -245,10 +351,10 @@ namespace GitUI.CommandsDialogs
             comboBoxPushUrl.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             comboBoxPushUrl.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxPushUrl.FormattingEnabled = true;
-            comboBoxPushUrl.Location = new Point(109, 89);
+            comboBoxPushUrl.Location = new Point(109, 120);
             comboBoxPushUrl.Name = "comboBoxPushUrl";
             comboBoxPushUrl.Size = new Size(248, 23);
-            comboBoxPushUrl.TabIndex = 7;
+            comboBoxPushUrl.TabIndex = 11;
             comboBoxPushUrl.Visible = false;
             comboBoxPushUrl.Enter += ComboBoxPushUrl_Enter;
             // 
@@ -257,12 +363,12 @@ namespace GitUI.CommandsDialogs
             folderBrowserButtonPushUrl.AutoSize = true;
             folderBrowserButtonPushUrl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             folderBrowserButtonPushUrl.Dock = DockStyle.Fill;
-            folderBrowserButtonPushUrl.Location = new Point(363, 88);
+            folderBrowserButtonPushUrl.Location = new Point(363, 119);
             folderBrowserButtonPushUrl.MinimumSize = new Size(104, 25);
             folderBrowserButtonPushUrl.Name = "folderBrowserButtonPushUrl";
             folderBrowserButtonPushUrl.PathShowingControl = comboBoxPushUrl;
             folderBrowserButtonPushUrl.Size = new Size(104, 25);
-            folderBrowserButtonPushUrl.TabIndex = 8;
+            folderBrowserButtonPushUrl.TabIndex = 12;
             folderBrowserButtonPushUrl.Visible = false;
             // 
             // pnlMgtPuttySsh
@@ -273,7 +379,7 @@ namespace GitUI.CommandsDialogs
             pnlMgtPuttySsh.Controls.Add(lblMgtPuttyPanelHeader);
             pnlMgtPuttySsh.Controls.Add(lblHeaderLine2);
             pnlMgtPuttySsh.Dock = DockStyle.Top;
-            pnlMgtPuttySsh.Location = new Point(3, 147);
+            pnlMgtPuttySsh.Location = new Point(3, 178);
             pnlMgtPuttySsh.Name = "pnlMgtPuttySsh";
             pnlMgtPuttySsh.Padding = new Padding(0, 0, 0, 8);
             pnlMgtPuttySsh.Size = new Size(508, 91);
@@ -292,7 +398,7 @@ namespace GitUI.CommandsDialogs
             tableLayoutPanel1.Controls.Add(label3, 0, 0);
             tableLayoutPanel1.Controls.Add(PuttySshKey, 1, 0);
             tableLayoutPanel1.Controls.Add(SshBrowse, 2, 0);
-            tableLayoutPanel1.Controls.Add(flowLayoutPanel3, 1, 1);
+            tableLayoutPanel1.Controls.Add(flowLayoutPanelSsh, 1, 1);
             tableLayoutPanel1.Location = new Point(16, 18);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
@@ -338,59 +444,12 @@ namespace GitUI.CommandsDialogs
             SshBrowse.UseVisualStyleBackColor = true;
             SshBrowse.Click += SshBrowseClick;
             // 
-            // flowLayoutPanel3
-            // 
-            flowLayoutPanel3.AutoSize = true;
-            flowLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.SetColumnSpan(flowLayoutPanel3, 2);
-            flowLayoutPanel3.Controls.Add(TestConnection);
-            flowLayoutPanel3.Controls.Add(LoadSSHKey);
-            flowLayoutPanel3.Dock = DockStyle.Fill;
-            flowLayoutPanel3.FlowDirection = FlowDirection.RightToLeft;
-            flowLayoutPanel3.Location = new Point(106, 31);
-            flowLayoutPanel3.Margin = new Padding(0);
-            flowLayoutPanel3.Name = "flowLayoutPanel3";
-            flowLayoutPanel3.Size = new Size(364, 31);
-            flowLayoutPanel3.TabIndex = 3;
-            // 
-            // TestConnection
-            // 
-            TestConnection.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            TestConnection.AutoSize = true;
-            TestConnection.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TestConnection.Image = Properties.Images.Putty;
-            TestConnection.ImageAlign = ContentAlignment.MiddleLeft;
-            TestConnection.Location = new Point(201, 3);
-            TestConnection.MinimumSize = new Size(160, 25);
-            TestConnection.Name = "TestConnection";
-            TestConnection.Size = new Size(160, 25);
-            TestConnection.TabIndex = 1;
-            TestConnection.Text = "Test connection";
-            TestConnection.UseVisualStyleBackColor = true;
-            TestConnection.Click += TestConnectionClick;
-            // 
-            // LoadSSHKey
-            // 
-            LoadSSHKey.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            LoadSSHKey.AutoSize = true;
-            LoadSSHKey.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            LoadSSHKey.Image = Properties.Images.Putty;
-            LoadSSHKey.ImageAlign = ContentAlignment.MiddleLeft;
-            LoadSSHKey.Location = new Point(35, 3);
-            LoadSSHKey.MinimumSize = new Size(160, 25);
-            LoadSSHKey.Name = "LoadSSHKey";
-            LoadSSHKey.Size = new Size(160, 25);
-            LoadSSHKey.TabIndex = 0;
-            LoadSSHKey.Text = "Load SSH key";
-            LoadSSHKey.UseVisualStyleBackColor = true;
-            LoadSSHKey.Click += LoadSshKeyClick;
-            // 
             // lblMgtPuttyPanelHeader
             // 
             lblMgtPuttyPanelHeader.AutoSize = true;
             lblMgtPuttyPanelHeader.Location = new Point(8, 0);
             lblMgtPuttyPanelHeader.Name = "lblMgtPuttyPanelHeader";
-            lblMgtPuttyPanelHeader.Size = new Size(64, 15);
+            lblMgtPuttyPanelHeader.Size = new Size(66, 15);
             lblMgtPuttyPanelHeader.TabIndex = 0;
             lblMgtPuttyPanelHeader.Text = "PuTTY SSH";
             // 
@@ -410,7 +469,7 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel2.Controls.Add(Save);
             flowLayoutPanel2.Dock = DockStyle.Top;
             flowLayoutPanel2.FlowDirection = FlowDirection.RightToLeft;
-            flowLayoutPanel2.Location = new Point(3, 244);
+            flowLayoutPanel2.Location = new Point(3, 275);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Padding = new Padding(0, 0, 20, 0);
             flowLayoutPanel2.Size = new Size(508, 31);
@@ -436,7 +495,7 @@ namespace GitUI.CommandsDialogs
             pnlManagementContainer.Location = new Point(197, 3);
             pnlManagementContainer.Name = "pnlManagementContainer";
             pnlManagementContainer.Padding = new Padding(8, 4, 8, 8);
-            pnlManagementContainer.Size = new Size(536, 297);
+            pnlManagementContainer.Size = new Size(536, 327);
             pnlManagementContainer.TabIndex = 0;
             // 
             // gbMgtPanel
@@ -447,7 +506,7 @@ namespace GitUI.CommandsDialogs
             gbMgtPanel.Dock = DockStyle.Top;
             gbMgtPanel.Location = new Point(8, 4);
             gbMgtPanel.Name = "gbMgtPanel";
-            gbMgtPanel.Size = new Size(520, 300);
+            gbMgtPanel.Size = new Size(520, 331);
             gbMgtPanel.TabIndex = 0;
             gbMgtPanel.TabStop = false;
             gbMgtPanel.Text = "Create New Remote";
@@ -464,7 +523,7 @@ namespace GitUI.CommandsDialogs
             panelButtons.Margin = new Padding(8);
             panelButtons.Name = "panelButtons";
             panelButtons.Padding = new Padding(4, 0, 0, 0);
-            panelButtons.Size = new Size(36, 281);
+            panelButtons.Size = new Size(36, 311);
             panelButtons.TabIndex = 1;
             // 
             // New
@@ -508,7 +567,7 @@ namespace GitUI.CommandsDialogs
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(744, 331);
+            tabControl1.Size = new Size(744, 361);
             tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -518,7 +577,7 @@ namespace GitUI.CommandsDialogs
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(736, 303);
+            tabPage1.Size = new Size(736, 333);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Remote repositories";
             tabPage1.UseVisualStyleBackColor = true;
@@ -531,7 +590,7 @@ namespace GitUI.CommandsDialogs
             panel1.Location = new Point(3, 3);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(8);
-            panel1.Size = new Size(194, 297);
+            panel1.Size = new Size(194, 327);
             panel1.TabIndex = 0;
             // 
             // Remotes
@@ -540,15 +599,15 @@ namespace GitUI.CommandsDialogs
             Remotes.Columns.AddRange(new ColumnHeader[] { columnHeader1 });
             Remotes.Dock = DockStyle.Fill;
             Remotes.FullRowSelect = true;
-            listViewGroup2.Header = "ListViewGroup";
-            listViewGroup2.Name = "listViewGroup1";
-            Remotes.Groups.AddRange(new ListViewGroup[] { listViewGroup2 });
+            listViewGroup1.Header = "ListViewGroup";
+            listViewGroup1.Name = "listViewGroup1";
+            Remotes.Groups.AddRange(new ListViewGroup[] { listViewGroup1 });
             Remotes.HeaderStyle = ColumnHeaderStyle.None;
             Remotes.LabelWrap = false;
             Remotes.Location = new Point(8, 8);
             Remotes.MultiSelect = false;
             Remotes.Name = "Remotes";
-            Remotes.Size = new Size(142, 281);
+            Remotes.Size = new Size(142, 311);
             Remotes.TabIndex = 1;
             Remotes.TileSize = new Size(136, 18);
             Remotes.UseCompatibleStateImageBehavior = false;
@@ -566,7 +625,7 @@ namespace GitUI.CommandsDialogs
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(736, 303);
+            tabPage2.Size = new Size(736, 333);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Default pull behavior (fetch & merge)";
             tabPage2.UseVisualStyleBackColor = true;
@@ -584,7 +643,7 @@ namespace GitUI.CommandsDialogs
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Size = new Size(730, 297);
+            tableLayoutPanel2.Size = new Size(730, 327);
             tableLayoutPanel2.TabIndex = 12;
             // 
             // panelDetails
@@ -597,7 +656,7 @@ namespace GitUI.CommandsDialogs
             panelDetails.Controls.Add(RemoteRepositoryCombo);
             panelDetails.Controls.Add(LocalBranchNameEdit);
             panelDetails.Controls.Add(SaveDefaultPushPull);
-            panelDetails.Location = new Point(3, 173);
+            panelDetails.Location = new Point(3, 203);
             panelDetails.Name = "panelDetails";
             panelDetails.Size = new Size(724, 121);
             panelDetails.TabIndex = 0;
@@ -691,7 +750,7 @@ namespace GitUI.CommandsDialogs
             RemoteBranches.ReadOnly = true;
             RemoteBranches.RowHeadersVisible = false;
             RemoteBranches.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            RemoteBranches.Size = new Size(724, 164);
+            RemoteBranches.Size = new Size(724, 194);
             RemoteBranches.TabIndex = 0;
             RemoteBranches.DataError += RemoteBranchesDataError;
             // 
@@ -713,19 +772,28 @@ namespace GitUI.CommandsDialogs
             MergeWith.Name = "MergeWith";
             MergeWith.ReadOnly = true;
             // 
+            // colorDialog
+            // 
+            colorDialog.AnyColor = true;
+            colorDialog.FullOpen = true;
+            // 
             // FormRemotes
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(744, 331);
+            ClientSize = new Size(744, 361);
             Controls.Add(tabControl1);
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(760, 370);
+            MinimumSize = new Size(760, 400);
             Name = "FormRemotes";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Remote repositories";
+            flowLayoutPanelSsh.ResumeLayout(false);
+            flowLayoutPanelSsh.PerformLayout();
+            flpnlRemoteColors.ResumeLayout(false);
+            flpnlRemoteColors.PerformLayout();
             flpnlRemoteManagement.ResumeLayout(false);
             flpnlRemoteManagement.PerformLayout();
             pnlMgtDetails.ResumeLayout(false);
@@ -736,8 +804,6 @@ namespace GitUI.CommandsDialogs
             pnlMgtPuttySsh.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            flowLayoutPanel3.ResumeLayout(false);
-            flowLayoutPanel3.PerformLayout();
             flowLayoutPanel2.ResumeLayout(false);
             pnlManagementContainer.ResumeLayout(false);
             pnlManagementContainer.PerformLayout();
@@ -796,7 +862,6 @@ namespace GitUI.CommandsDialogs
         private TableLayoutPanel flpnlRemoteManagement;
         private FlowLayoutPanel flowLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel1;
-        private FlowLayoutPanel flowLayoutPanel3;
         private Label lblHeaderLine2;
         private Panel pnlMgtDetails;
         private TableLayoutPanel tblpnlMgtDetails;
@@ -808,5 +873,10 @@ namespace GitUI.CommandsDialogs
         private Button btnToggleState;
         private ColumnHeader columnHeader1;
         private Panel panelDetails;
+        private Label lblRemoteColor;
+        private Button btnRemoteColor;
+        private ColorDialog colorDialog;
+        private Button btnRemoteColorReset;
+        private FlowLayoutPanel flpnlRemoteColors;
     }
 }

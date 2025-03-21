@@ -360,7 +360,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 }
             }
 
-            Color headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
+            Color headColor;
+            if (style.RemoteColors.Count < 1 || !style.RemoteColors.TryGetValue(gitRef.Remote, out headColor))
+            {
+                headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
+            }
 
             RefArrowType arrowType = gitRef.IsSelected
                 ? RefArrowType.Filled

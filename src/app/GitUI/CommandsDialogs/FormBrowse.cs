@@ -1688,6 +1688,9 @@ namespace GitUI.CommandsDialogs
 
             repoObjectsTree.ClearTrees();
 
+            // Reset branch colors whenever we open a new repository
+            e.GitModule.ResetRemoteColors();
+
             UICommands = UICommands.WithGitModule(e.GitModule);
             if (Module.IsValidGitWorkingDir())
             {
