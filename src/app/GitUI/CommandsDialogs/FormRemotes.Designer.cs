@@ -140,11 +140,11 @@ namespace GitUI.CommandsDialogs
             tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle());
             tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
-            tblpnlMgtDetails.Controls.Add(label1, 0, 0);
-            tblpnlMgtDetails.Controls.Add(RemoteName, 1, 0);
-            tblpnlMgtDetails.Controls.Add(label2, 0, 1);
-            tblpnlMgtDetails.Controls.Add(Url, 1, 1);
-            tblpnlMgtDetails.Controls.Add(folderBrowserButtonUrl, 2, 1);
+            tblpnlMgtDetails.Controls.Add(label2, 0, 0);
+            tblpnlMgtDetails.Controls.Add(Url, 1, 0);
+            tblpnlMgtDetails.Controls.Add(folderBrowserButtonUrl, 2, 0);
+            tblpnlMgtDetails.Controls.Add(label1, 0, 1);
+            tblpnlMgtDetails.Controls.Add(RemoteName, 1, 1);
             tblpnlMgtDetails.Controls.Add(checkBoxSepPushUrl, 0, 2);
             tblpnlMgtDetails.Controls.Add(labelPushUrl, 0, 3);
             tblpnlMgtDetails.Controls.Add(comboBoxPushUrl, 1, 3);
@@ -166,7 +166,7 @@ namespace GitUI.CommandsDialogs
             label1.MinimumSize = new Size(100, 0);
             label1.Name = "label1";
             label1.Size = new Size(100, 29);
-            label1.TabIndex = 0;
+            label1.TabIndex = 3;
             label1.Text = "Name";
             label1.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
             RemoteName.Location = new Point(109, 3);
             RemoteName.Name = "RemoteName";
             RemoteName.Size = new Size(248, 23);
-            RemoteName.TabIndex = 1;
+            RemoteName.TabIndex = 4;
             RemoteName.TextChanged += RemoteName_TextChanged;
             RemoteName.Enter += RemoteName_Enter;
             // 
@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs
             label2.Location = new Point(3, 29);
             label2.Name = "label2";
             label2.Size = new Size(100, 31);
-            label2.TabIndex = 2;
+            label2.TabIndex = 0;
             label2.Text = "Url";
             label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs
             Url.Location = new Point(109, 33);
             Url.Name = "Url";
             Url.Size = new Size(248, 23);
-            Url.TabIndex = 3;
+            Url.TabIndex = 1;
             Url.Enter += Url_Enter;
             // 
             // folderBrowserButtonUrl
@@ -212,7 +212,7 @@ namespace GitUI.CommandsDialogs
             folderBrowserButtonUrl.Name = "folderBrowserButtonUrl";
             folderBrowserButtonUrl.PathShowingControl = Url;
             folderBrowserButtonUrl.Size = new Size(104, 25);
-            folderBrowserButtonUrl.TabIndex = 4;
+            folderBrowserButtonUrl.TabIndex = 2;
             // 
             // checkBoxSepPushUrl
             // 
