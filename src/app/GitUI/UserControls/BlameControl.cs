@@ -6,6 +6,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
+using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
 using GitUI.CommandsDialogs;
@@ -80,6 +81,14 @@ namespace GitUI.Blame
 
             _gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
             _gitBlameParser = new GitBlameParser(() => UICommands.Module);
+        }
+
+        public void InitSplitterManager(SplitterManager splitterManager, string parentContainerPrefix)
+        {
+            splitterManager.AddSplitter(splitContainer1, $"{parentContainerPrefix}.{Name}.{splitContainer1.Name}",
+                defaultDistance: splitContainer1.Panel1MinSize + 1);
+            splitterManager.AddSplitter(splitContainer2, $"{parentContainerPrefix}.{Name}.{splitContainer2.Name}",
+                defaultDistance: splitContainer2.Panel1MinSize + 1);
         }
 
         public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin? gitHoster)
