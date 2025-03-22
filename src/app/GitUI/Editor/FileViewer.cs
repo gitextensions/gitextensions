@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Imaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -1199,6 +1200,16 @@ namespace GitUI.Editor
                                     string text = getFileText();
                                     DisplayAsHexDump(_cannotViewImage.Text, fileName, text, openWithDifftool);
                                     return;
+                                }
+
+                                if (image.FrameDimensionsList.Length > 0)
+                                {
+                                    FrameDimension frameDimension = new(image.FrameDimensionsList[0]);
+                                    if (image.GetFrameCount(frameDimension) > 1)
+                                    {
+                                        image.SelectActiveFrame(frameDimension, 0);
+                                        image = new Bitmap(image);
+                                    }
                                 }
 
                                 ResetView(ViewMode.Image, fileName, item);
