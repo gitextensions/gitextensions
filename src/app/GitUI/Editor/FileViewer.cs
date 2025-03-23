@@ -1208,7 +1208,9 @@ namespace GitUI.Editor
                                     if (image.GetFrameCount(frameDimension) > 1)
                                     {
                                         image.SelectActiveFrame(frameDimension, 0);
-                                        image = new Bitmap(image);
+                                        Bitmap firstFrame = new(image);
+                                        image.Dispose();
+                                        image = firstFrame;
                                     }
                                 }
 
