@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -8,6 +9,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Patches;
+using GitCommands.Remotes;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
@@ -42,6 +44,7 @@ namespace GitCommands
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
+        private FrozenDictionary<string, Color>? _remoteColors;
 
         // The executable may use Windows Git (native to the app, always used in special situations) or WSL Git.
         private readonly IGitCommandRunner _gitCommandRunner;
@@ -2080,6 +2083,30 @@ namespace GitCommands
             }
         }
 
+        public FrozenDictionary<string, Color> GetRemoteColors()
+        {
+            if (_remoteColors is null)
+            {
+                lock (_lock)
+                {
+                    _remoteColors ??= new ConfigFileRemoteSettingsManager(getModule: () => this)
+                                .LoadRemotes(loadDisabled: false)
+                                .Where(r => !string.IsNullOrEmpty(r.Color) && !string.IsNullOrEmpty(r.Name))
+                                .ToFrozenDictionary(r => r.Name, r => ColorTranslator.FromHtml(r.Color), StringComparer.Ordinal);
+                }
+            }
+
+            return _remoteColors;
+        }
+
+        public void ResetRemoteColors()
+        {
+            lock (_lock)
+            {
+                _remoteColors = null;
+            }
+        }
+
         public IEnumerable<string> GetSettings(string setting)
         {
             return ((ConfigFileSettings)LocalConfigFile).GetValues(setting);
@@ -4115,6 +4142,8 @@ namespace GitCommands
             {
                 _gitModule = gitModule;
             }
+
+            public FrozenDictionary<string, Color>? RemoteColors => _gitModule._remoteColors;
 
             public GitArgumentBuilder UpdateIndexCmd(bool showErrorsWhenStagingFiles) => GitModule.UpdateIndexCmd(showErrorsWhenStagingFiles);
 

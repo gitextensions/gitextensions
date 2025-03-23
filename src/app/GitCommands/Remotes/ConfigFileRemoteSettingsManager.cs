@@ -13,7 +13,7 @@ namespace GitCommands.Remotes
         /// <summary>
         /// Returns the default remote for push operation.
         /// </summary>
-        /// <returns>The <see cref="GitRef.Name"/> if found, otherwise <see langword="null"/>.</returns>
+        /// <returns>The <see cref="GitRef.Name"/> if found; otherwise, <see langword="null"/>.</returns>
         string? GetDefaultPushRemote(ConfigFileRemote remote, string branch);
 
         /// <summary>
@@ -32,14 +32,14 @@ namespace GitCommands.Remotes
         /// Returns true if input remote exists and is enabled.
         /// </summary>
         /// <param name="remoteName">Name of remote to check.</param>
-        /// <returns>True if input remote exists and is enabled.</returns>
+        /// <returns><see langword="true"/> if input remote exists and is enabled; otherwise, <see langword="false"/>.</returns>
         bool EnabledRemoteExists(string remoteName);
 
         /// <summary>
         /// Returns true if input remote exists and is disabled.
         /// </summary>
         /// <param name="remoteName">Name of remote to check.</param>
-        /// <returns>True if input remote exists and is disabled.</returns>
+        /// <returns><see langword="true"/> if input remote exists and is disabled; otherwise, <see langword="false"/>.</returns>
         bool DisabledRemoteExists(string remoteName);
 
         /// <summary>
@@ -56,13 +56,15 @@ namespace GitCommands.Remotes
         /// </param>
         /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
         /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
+        /// <param name="remoteColor">An optional color for the remote.</param>
         /// <returns>Result of the operation.</returns>
-        ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey);
+        ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey, string? remoteColor);
 
         /// <summary>
         ///  Marks the remote as enabled or disabled in .git/config file.
         /// </summary>
-        /// <param name="remoteName">The name of the remote.</param>
+        /// <param name="remoteName">An existing remote instance.</param>
+        /// <param name="disabled">The new state of the remote. <see langword="true"/> to disable the remote; otherwise <see langword="false"/>.</param>
         void ToggleRemoteState(string remoteName, bool disabled);
 
         /// <summary>
@@ -168,9 +170,6 @@ namespace GitCommands.Remotes
             }
         }
 
-        /// <summary>
-        /// Retrieves disabled remote names from the .git/config file.
-        /// </summary>
         public IReadOnlyList<string> GetDisabledRemoteNames()
         {
             IGitModule module = GetModule();
@@ -181,17 +180,11 @@ namespace GitCommands.Remotes
                 .ToList();
         }
 
-        /// <summary>
-        /// Retrieves enabled remote names.
-        /// </summary>
         public IReadOnlyList<string> GetEnabledRemoteNames()
         {
             return GetModule().GetRemoteNames();
         }
 
-        /// <summary>
-        /// Loads the list of remotes configured in .git/config file.
-        /// </summary>
         // TODO: candidate for Async implementations
         public IEnumerable<ConfigFileRemote> LoadRemotes(bool loadDisabled)
         {
@@ -202,13 +195,46 @@ namespace GitCommands.Remotes
                 return remotes;
             }
 
-            PopulateRemotes(remotes, true);
+            PopulateRemotes(module, remotes, true);
             if (loadDisabled)
             {
-                PopulateRemotes(remotes, false);
+                PopulateRemotes(module, remotes, false);
             }
 
             return remotes.OrderBy(x => x.Name);
+
+            // pass the list in to minimise allocations
+            void PopulateRemotes(IGitModule module, List<ConfigFileRemote> allRemotes, bool enabled)
+            {
+                Func<IReadOnlyList<string>> func;
+                if (enabled)
+                {
+                    func = module.GetRemoteNames;
+                }
+                else
+                {
+                    func = GetDisabledRemoteNames;
+                }
+
+                List<string> gitRemotes = [.. func().Where(x => !string.IsNullOrWhiteSpace(x))];
+                if (gitRemotes.Count == 0)
+                {
+                    return;
+                }
+
+                allRemotes.AddRange(gitRemotes.Select(remote => new ConfigFileRemote
+                {
+                    Disabled = !enabled,
+                    Name = remote,
+                    Url = module.GetSetting(GetSettingKey(SettingKeyString.RemoteUrl, remote, enabled)),
+                    Push = module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote, enabled)).ToList(),
+                    Color = module.GetSetting(GetSettingKey(SettingKeyString.RemoteColor, remote, enabled)),
+
+                    // Note: This only gets the last pushurl
+                    PushUrl = module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
+                    PuttySshKey = module.GetSetting(GetSettingKey(SettingKeyString.RemotePuttySshKey, remote, enabled))
+                }));
+            }
         }
 
         /// <summary>
@@ -232,42 +258,17 @@ namespace GitCommands.Remotes
             return string.Empty;
         }
 
-        /// <summary>
-        /// Returns true if input remote exists and is enabled.
-        /// </summary>
-        /// <param name="remoteName">Name of remote to check.</param>
-        /// <returns>True if input remote exists and is enabled.</returns>
         public bool EnabledRemoteExists(string remoteName)
         {
             return GetEnabledRemoteNames().Any(r => r == remoteName);
         }
 
-        /// <summary>
-        /// Returns true if input remote exists and is disabled.
-        /// </summary>
-        /// <param name="remoteName">Name of remote to check.</param>
-        /// <returns>True if input remote exists and is disabled.</returns>
         public bool DisabledRemoteExists(string remoteName)
         {
             return GetDisabledRemoteNames().Any(r => r == remoteName);
         }
 
-        /// <summary>
-        ///   Saves the remote details by creating a new or updating an existing remote entry in .git/config file.
-        /// </summary>
-        /// <param name="remote">An existing remote instance or <see langword="null"/> if creating a new entry.</param>
-        /// <param name="remoteName">
-        ///   <para>The remote name.</para>
-        ///   <para>If updating an existing remote and the name changed, it will result in remote name change and prompt for "remote update".</para>
-        /// </param>
-        /// <param name="remoteUrl">
-        ///   <para>The remote URL.</para>
-        ///   <para>If updating an existing remote and the URL changed, it will result in remote URL change and prompt for "remote update".</para>
-        /// </param>
-        /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
-        /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
-        /// <returns>Result of the operation.</returns>
-        public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey)
+        public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey, string? remoteColor)
         {
             if (string.IsNullOrWhiteSpace(remoteName))
             {
@@ -336,15 +337,11 @@ namespace GitCommands.Remotes
 
             UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePushUrl, remotePushUrl);
             UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
+            UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemoteColor, remoteColor);
 
             return new ConfigFileRemoteSaveResult(output, updateRemoteRequired);
         }
 
-        /// <summary>
-        ///  Marks the remote as enabled or disabled in .git/config file.
-        /// </summary>
-        /// <param name="remoteName">An existing remote instance.</param>
-        /// <param name="disabled">The new state of the remote. <see langword="true"/> to disable the remote; otherwise <see langword="false"/>.</param>
         public void ToggleRemoteState(string remoteName, bool disabled)
         {
             if (string.IsNullOrWhiteSpace(remoteName))
@@ -392,38 +389,6 @@ namespace GitCommands.Remotes
 
             module.LocalConfigFile.AddConfigSection(section);
             module.LocalConfigFile.Save();
-        }
-
-        // pass the list in to minimise allocations
-        private void PopulateRemotes(List<ConfigFileRemote> allRemotes, bool enabled)
-        {
-            IGitModule module = GetModule();
-
-            Func<IReadOnlyList<string>> func;
-            if (enabled)
-            {
-                func = () => module.GetRemoteNames();
-            }
-            else
-            {
-                func = GetDisabledRemoteNames;
-            }
-
-            List<string> gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-            if (gitRemotes.Any())
-            {
-                allRemotes.AddRange(gitRemotes.Select(remote => new ConfigFileRemote
-                {
-                    Disabled = !enabled,
-                    Name = remote,
-                    Url = module.GetSetting(GetSettingKey(SettingKeyString.RemoteUrl, remote, enabled)),
-                    Push = module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote, enabled)).ToList(),
-
-                    // Note: This only gets the last pushurl
-                    PushUrl = module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
-                    PuttySshKey = module.GetSetting(GetSettingKey(SettingKeyString.RemotePuttySshKey, remote, enabled)),
-                }));
-            }
         }
 
         private IGitModule GetModule()

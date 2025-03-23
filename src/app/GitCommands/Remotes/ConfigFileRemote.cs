@@ -5,6 +5,11 @@ namespace GitCommands.Remotes
     public class ConfigFileRemote
     {
         /// <summary>
+        /// Gets or sets value stored in .git/config via <see cref="SettingKeyString.RemoteColor"/> key.
+        /// </summary>
+        public string? Color { get; set; }
+
+        /// <summary>
         /// Gets or sets value indicating whether the remote is enabled or not.
         /// If remote section is [remote branch] then it is considered enabled, if it is [-remote branch] then it is disabled.
         /// </summary>
