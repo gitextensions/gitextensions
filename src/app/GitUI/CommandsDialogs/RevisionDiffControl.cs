@@ -509,9 +509,9 @@ namespace GitUI.CommandsDialogs
 
         private void ResetSelectedItemsTo(bool resetToParent, bool resetAndDelete)
         {
-            IReadOnlyList<FileStatusItem> selectedItems = DiffFiles.SelectedItems.ToList();
+            FileStatusItem[] selectedItems = [.. DiffFiles.SelectedItems];
 
-            if (!selectedItems.Any())
+            if (selectedItems.Length == 0)
             {
                 return;
             }
@@ -526,8 +526,9 @@ namespace GitUI.CommandsDialogs
                         continue;
                     }
 
-                    IReadOnlyList<GitItemStatus> resetItems = (resetToParent ? selectedItems.Items()
-                        : selectedItems.Items().Select(item => item.InvertStatus())).ToList();
+                    GitItemStatus[] resetItems = [.. resetToParent
+                        ? selectedItems.Items()
+                        : selectedItems.Items().Select(item => item.InvertStatus())];
                     Module.ResetChanges(id, resetItems, resetAndDelete: resetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: null);
 
                     if (output.Length > 0)
@@ -1248,8 +1249,8 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                FileStatusItem selected = DiffFiles.SelectedItem;
-                if (selected is null || !selected.SecondRevision.IsArtificial ||
+                FileStatusItem[] selected = [.. DiffFiles.SelectedItems];
+                if (selected.Length == 0 || !selected[0].SecondRevision.IsArtificial ||
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo,
                         MessageBoxIcon.Warning) !=
                     DialogResult.Yes)
@@ -1261,7 +1262,7 @@ namespace GitUI.CommandsDialogs
 
                 try
                 {
-                    DeleteFromFilesystem(DiffFiles.SelectedItems);
+                    DeleteFromFilesystem(selected);
                 }
                 finally
                 {
@@ -1457,7 +1458,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResetSelectedItemsWithConfirmation(bool resetToParent)
         {
-            IEnumerable<FileStatusItem> items = DiffFiles.SelectedItems;
+            FileStatusItem[] items = [.. DiffFiles.SelectedItems];
 
             // The "new" state could change when resetting, allow user to tick the checkbox.
             // If there are only changed files, it is safe to disable the checkboc (also for restting to selected).
