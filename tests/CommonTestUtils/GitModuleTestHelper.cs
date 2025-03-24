@@ -158,7 +158,7 @@ namespace CommonTestUtils
 
             // Ensure config is set to allow file submodules
             string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol)?.Trim('\n');
-            Assert.That(fileEnabled == "always");
+            ClassicAssert.That(fileEnabled == "always");
 
             // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
             IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();

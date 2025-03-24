@@ -51,9 +51,9 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
               {
                   await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                  Assert.AreEqual(/* default None + GenericBuildServerMock */2, _settingsPage.GetTestAccessor().BuildServerType.Items.Count);
-                  Assert.AreEqual(0, _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex);
-                  Assert.AreEqual("GenericBuildServerMock", _settingsPage.GetTestAccessor().BuildServerType.Items[1]);
+                  ClassicAssert.AreEqual(/* default None + GenericBuildServerMock */2, _settingsPage.GetTestAccessor().BuildServerType.Items.Count);
+                  ClassicAssert.AreEqual(0, _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex);
+                  ClassicAssert.AreEqual("GenericBuildServerMock", _settingsPage.GetTestAccessor().BuildServerType.Items[1]);
               });
         }
 
@@ -66,12 +66,12 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
                   await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                   // Default option, no custom control
-                  Assert.AreEqual(0, _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls.Count);
+                  ClassicAssert.AreEqual(0, _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls.Count);
 
                   // Select the custom build server
                   _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex = 1;
-                  Assert.AreEqual(1, _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls.Count);
-                  Assert.IsInstanceOf<IBuildServerSettingsUserControl>(_settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls[0]);
+                  ClassicAssert.AreEqual(1, _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls.Count);
+                  ClassicAssert.IsInstanceOf<IBuildServerSettingsUserControl>(_settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls[0]);
               });
         }
 

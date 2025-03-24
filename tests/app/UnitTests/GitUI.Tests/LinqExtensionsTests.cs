@@ -6,8 +6,8 @@
         [Test]
         public void AsReadOnlyList_returns_singleton_empty()
         {
-            Assert.AreSame(Array.Empty<int>(), new HashSet<int>().AsReadOnlyList());
-            Assert.AreSame(Array.Empty<int>(), new Dictionary<int, int>().Values.AsReadOnlyList());
+            ClassicAssert.AreSame(Array.Empty<int>(), new HashSet<int>().AsReadOnlyList());
+            ClassicAssert.AreSame(Array.Empty<int>(), new Dictionary<int, int>().Values.AsReadOnlyList());
         }
 
         [Test]
@@ -15,7 +15,7 @@
         {
             HashSet<int> set = [1, 2, 3];
 
-            Assert.AreEqual(new[] { 1, 2, 3 }, set.AsReadOnlyList());
+            ClassicAssert.AreEqual(new[] { 1, 2, 3 }, set.AsReadOnlyList());
         }
 
         [Test]
@@ -30,11 +30,11 @@
             {
                 if (e is IReadOnlyList<int>)
                 {
-                    Assert.AreSame(e, e.AsReadOnlyList());
+                    ClassicAssert.AreSame(e, e.AsReadOnlyList());
                 }
                 else
                 {
-                    Assert.AreNotSame(e, e.AsReadOnlyList());
+                    ClassicAssert.AreNotSame(e, e.AsReadOnlyList());
                 }
             }
         }
@@ -44,11 +44,11 @@
         {
             int[] ints = new[] { 0, 1, 2, 3 };
 
-            Assert.AreEqual(0, ints.IndexOf(i => i == 0));
-            Assert.AreEqual(1, ints.IndexOf(i => i == 1));
-            Assert.AreEqual(2, ints.IndexOf(i => i == 2));
-            Assert.AreEqual(3, ints.IndexOf(i => i == 3));
-            Assert.AreEqual(-1, ints.IndexOf(i => i == 4));
+            ClassicAssert.AreEqual(0, ints.IndexOf(i => i == 0));
+            ClassicAssert.AreEqual(1, ints.IndexOf(i => i == 1));
+            ClassicAssert.AreEqual(2, ints.IndexOf(i => i == 2));
+            ClassicAssert.AreEqual(3, ints.IndexOf(i => i == 3));
+            ClassicAssert.AreEqual(-1, ints.IndexOf(i => i == 4));
         }
     }
 }

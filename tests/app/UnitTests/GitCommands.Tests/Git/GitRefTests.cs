@@ -16,7 +16,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupRemoteRef(remoteBranchShortName, remoteName);
 
-            Assert.IsTrue(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsTrue(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -24,7 +24,7 @@ namespace GitCommandsTests.Git
         {
             GitRef localBranchRef = SetupLocalBranchWithATrackingReference("remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(null));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(null));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupRemoteRef(remoteBranchShortName, "upstream");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupRemoteRef("another_remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupRemoteRef("a_remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupLocalBranchWithATrackingReference("a_remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupLocalBranchWithATrackingReference("a_remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace GitCommandsTests.Git
             string completeName = $"refs/remotes/{remoteName}/{name}";
 
             GitRef remoteBranchRef = SetupRawRemoteRef(name, remoteName, completeName);
-            Assert.AreEqual(remoteBranchRef.LocalName, name);
+            ClassicAssert.AreEqual(remoteBranchRef.LocalName, name);
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace GitCommandsTests.Git
             string completeName = $"refs/remotes/{name}";
 
             GitRef remoteBranchRef = SetupRawRemoteRef(name, remoteName, completeName);
-            Assert.AreEqual(remoteBranchRef.LocalName, name);
+            ClassicAssert.AreEqual(remoteBranchRef.LocalName, name);
         }
 
         private static GitRef SetupRawRemoteRef(string remoteBranchShortName, string remoteName, string completeName)

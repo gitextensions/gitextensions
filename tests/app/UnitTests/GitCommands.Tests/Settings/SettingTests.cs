@@ -50,13 +50,13 @@ namespace GitCommandsTests.Settings
             ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.EqualTo(settingDefault));
-            Assert.That(setting.Value, Is.EqualTo(settingDefault));
-            Assert.That(setting.IsUnset, Is.True);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
+            ClassicAssert.That(setting.Value, Is.EqualTo(settingDefault));
+            ClassicAssert.That(setting.IsUnset, Is.True);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.EqualTo(value));
+            ClassicAssert.That(storedValue, Is.EqualTo(value));
         }
 
         [Test]
@@ -121,14 +121,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.EqualTo(settingDefault));
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -155,14 +155,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.EqualTo(settingDefault));
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         [Test]
@@ -186,7 +186,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.EqualTo(settingDefault));
+            ClassicAssert.That(storedValue, Is.EqualTo(settingDefault));
         }
 
         [Test]
@@ -226,7 +226,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.EqualTo(settingDefault));
+            ClassicAssert.That(storedValue, Is.EqualTo(settingDefault));
         }
 
         #endregion Setting
@@ -246,13 +246,13 @@ namespace GitCommandsTests.Settings
             ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-            Assert.That(setting.Value, Is.EqualTo(settingDefault ?? string.Empty));
-            Assert.That(setting.IsUnset, Is.True);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
+            ClassicAssert.That(setting.Value, Is.EqualTo(settingDefault ?? string.Empty));
+            ClassicAssert.That(setting.IsUnset, Is.True);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -290,7 +290,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.EqualTo(value ?? string.Empty));
+            ClassicAssert.That(storedValue, Is.EqualTo(value ?? string.Empty));
         }
 
         [Test]
@@ -314,14 +314,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-            Assert.That(setting.Value, Is.EqualTo(value ?? string.Empty));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
+            ClassicAssert.That(setting.Value, Is.EqualTo(value ?? string.Empty));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -347,14 +347,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-            Assert.That(setting.Value, Is.EqualTo(value ?? string.Empty));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
+            ClassicAssert.That(setting.Value, Is.EqualTo(value ?? string.Empty));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         #endregion String Setting
@@ -373,13 +373,13 @@ namespace GitCommandsTests.Settings
             ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.Null);
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.Null);
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -399,13 +399,13 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -430,14 +430,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -465,14 +465,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         [Test]
@@ -494,7 +494,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         [Test]
@@ -532,7 +532,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         #endregion Bool Setting
@@ -551,13 +551,13 @@ namespace GitCommandsTests.Settings
             ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.Null);
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.Null);
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -577,13 +577,13 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -608,14 +608,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -643,14 +643,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         [Test]
@@ -672,7 +672,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         [Test]
@@ -710,7 +710,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         #endregion Char Setting
@@ -729,13 +729,13 @@ namespace GitCommandsTests.Settings
             ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.Null);
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.Null);
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -756,13 +756,13 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -788,14 +788,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -824,14 +824,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         [Test]
@@ -853,7 +853,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         [Test]
@@ -891,7 +891,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         #endregion Byte Setting
@@ -910,13 +910,13 @@ namespace GitCommandsTests.Settings
             ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.Null);
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.Null);
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -937,13 +937,13 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -969,14 +969,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -1005,14 +1005,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         [Test]
@@ -1034,7 +1034,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         [Test]
@@ -1072,7 +1072,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         #endregion Int Setting
@@ -1091,13 +1091,13 @@ namespace GitCommandsTests.Settings
             ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.Null);
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.Null);
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -1118,13 +1118,13 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -1150,14 +1150,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -1186,14 +1186,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         [Test]
@@ -1215,7 +1215,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         [Test]
@@ -1253,7 +1253,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         #endregion Float Setting
@@ -1272,13 +1272,13 @@ namespace GitCommandsTests.Settings
             ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.Null);
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.Null);
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -1298,13 +1298,13 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -1347,7 +1347,7 @@ namespace GitCommandsTests.Settings
             bool isNumber = int.TryParse(storedValue, out _);
 
             // Assert
-            Assert.That(isNumber, Is.False);
+            ClassicAssert.That(isNumber, Is.False);
         }
 
         [Test]
@@ -1372,14 +1372,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -1407,14 +1407,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         [Test]
@@ -1436,7 +1436,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         [Test]
@@ -1474,7 +1474,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.Null);
+            ClassicAssert.That(storedValue, Is.Null);
         }
 
         public enum TestEnum
@@ -1499,13 +1499,13 @@ namespace GitCommandsTests.Settings
             ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.Null);
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.Null);
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -1530,13 +1530,13 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
         }
 
         [Test]
@@ -1568,14 +1568,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.True);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.True);
         }
 
         [Test]
@@ -1609,14 +1609,14 @@ namespace GitCommandsTests.Settings
             setting.Value = value;
 
             // Assert
-            Assert.That(setting, Is.Not.Null);
-            Assert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-            Assert.That(setting.Name, Is.EqualTo(settingName));
-            Assert.That(setting.Default, Is.Null);
-            Assert.That(setting.Value, Is.EqualTo(value));
-            Assert.That(setting.IsUnset, Is.False);
-            Assert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-            Assert.That(updated, Is.False);
+            ClassicAssert.That(setting, Is.Not.Null);
+            ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
+            ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
+            ClassicAssert.That(setting.Default, Is.Null);
+            ClassicAssert.That(setting.Value, Is.EqualTo(value));
+            ClassicAssert.That(setting.IsUnset, Is.False);
+            ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+            ClassicAssert.That(updated, Is.False);
         }
 
         public struct TestStruct

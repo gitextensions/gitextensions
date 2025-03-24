@@ -35,7 +35,7 @@ namespace GitExtensions.UITests
             bool debug = false)
             where T : Form
         {
-            Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
+            ClassicAssert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
 
             // Needed for FormBrowse, ScriptOptionsParser
             ManagedExtensibility.Initialise();
@@ -84,7 +84,7 @@ namespace GitExtensions.UITests
             finally
             {
                 form?.Dispose();
-                Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
+                ClassicAssert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
             }
 
             return;
@@ -109,7 +109,7 @@ namespace GitExtensions.UITests
                 {
                     Form form = new() { Text = $"Test {typeof(T).Name}" };
                     control = createControl(form);
-                    Assert.True(form.Controls.Contains(control));
+                    ClassicAssert.True(form.Controls.Contains(control));
                     Application.Run(form);
                 },
                 runTestAsync: form => runTestAsync(control));
@@ -130,7 +130,7 @@ namespace GitExtensions.UITests
                 Thread.Sleep(_processDelayMilliseconds);
             }
 
-            Assert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");
+            ClassicAssert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");
         }
 
         public static void ProcessEventsFor(int milliseconds)

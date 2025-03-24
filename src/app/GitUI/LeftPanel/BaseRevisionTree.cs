@@ -37,7 +37,9 @@ namespace GitUI.LeftPanel
 
             _updateTaskRunner.RunDetached(async cancellationToken =>
             {
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
                 await LoadingCompleted.Task;
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
 
                 await treeView.SwitchToMainThreadAsync(cancellationToken);
 

@@ -27,7 +27,7 @@ namespace CommonTestUtils
 
         public void BeforeTest(ITest test)
         {
-            Assert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
+            ClassicAssert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
             IList apartmentState = null;
             for (ITest scope = test; scope is not null; scope = scope.Parent)
@@ -46,7 +46,7 @@ namespace CommonTestUtils
                 return;
             }
 
-            Assert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
+            ClassicAssert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
 
             // This form is created to obtain a UI synchronization context only.
             using (new Form())

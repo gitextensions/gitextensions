@@ -52,7 +52,7 @@ namespace GitUITests
         public void Get_should_correct_work_with_slashes_and_backslashes_in_pattern(string pattern, string filePath)
         {
             Func<string?, bool> predicate = _provider.Get(pattern, workingDirDefault);
-            Assert.True(predicate(filePath));
+            ClassicAssert.True(predicate(filePath));
         }
 
         [TestCase(@"\test2\t", "D:/test1/test2/test3/")]
@@ -71,7 +71,7 @@ namespace GitUITests
         public void Get_should_work_correct_when_workingDir_end_with_slash_or_not(string pattern, string workingDir, string filePath)
         {
             Func<string?, bool> predicate = _provider.Get(pattern, workingDir);
-            Assert.True(predicate(filePath));
+            ClassicAssert.True(predicate(filePath));
         }
 
         [TestCase(@"tEsT2", @"D:/", "Test1/teST2/test3/")]
@@ -79,7 +79,7 @@ namespace GitUITests
         public void Get_should_work_with_different_cases(string pattern, string workingDir, string filePath)
         {
             Func<string?, bool> predicate = _provider.Get(pattern, workingDir);
-            Assert.True(predicate(filePath));
+            ClassicAssert.True(predicate(filePath));
         }
 
         [TestCase(@"D:/test1", @"D:/", "test1/test2/test3/", ExpectedResult = true)]

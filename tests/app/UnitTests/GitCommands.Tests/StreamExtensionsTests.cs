@@ -52,14 +52,14 @@ namespace GitCommandsTests
                 for (int chunkIndex = 0; chunkIndex < expectedChunks.Length; chunkIndex++)
                 {
                     byte[] expected = expectedChunks[chunkIndex];
-                    Assert.IsTrue(e.MoveNext());
-                    Assert.AreEqual(
+                    ClassicAssert.IsTrue(e.MoveNext());
+                    ClassicAssert.AreEqual(
                         expected,
                         e.Current.ToArray(),
                         $"input=[{string.Join(",", expected)}] chunkIndex={chunkIndex} bufferSize={{bufferSize}}");
                 }
 
-                Assert.IsFalse(e.MoveNext(), $"bufferSize={bufferSize}");
+                ClassicAssert.IsFalse(e.MoveNext(), $"bufferSize={bufferSize}");
             }
         }
     }

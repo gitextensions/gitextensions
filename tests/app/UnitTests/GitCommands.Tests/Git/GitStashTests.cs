@@ -11,12 +11,12 @@ namespace GitCommandsTests.Git
         [TestCase("stash@{3}: WIP on master: Test", 3, "stash@{3}", "WIP on master: Test")]
         public void Can_parse_stash_names(string rawStash, int index, string name, string message)
         {
-            Assert.IsTrue(GitStash.TryParse(rawStash, out GitStash? stash));
+            ClassicAssert.IsTrue(GitStash.TryParse(rawStash, out GitStash? stash));
 
-            Assert.NotNull(stash);
-            Assert.AreEqual(index, stash.Index);
-            Assert.AreEqual(message, stash.Message);
-            Assert.AreEqual(name, stash.Name);
+            ClassicAssert.NotNull(stash);
+            ClassicAssert.AreEqual(index, stash.Index);
+            ClassicAssert.AreEqual(message, stash.Message);
+            ClassicAssert.AreEqual(name, stash.Name);
         }
 
         [TestCase("stash@{0}:Very descriptive message")]
@@ -28,8 +28,8 @@ namespace GitCommandsTests.Git
         [TestCase("  ")]
         public void Identifies_invalid_stash_strings(string rawStash)
         {
-            Assert.IsFalse(GitStash.TryParse(rawStash, out GitStash? stash));
-            Assert.Null(stash);
+            ClassicAssert.IsFalse(GitStash.TryParse(rawStash, out GitStash? stash));
+            ClassicAssert.Null(stash);
         }
     }
 }

@@ -48,8 +48,8 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
               {
                   await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                  Assert.AreEqual(1, _settingsPage.GetTestAccessor().BuildServerType.Items.Count);
-                  Assert.AreEqual(0, _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex);
+                  ClassicAssert.AreEqual(1, _settingsPage.GetTestAccessor().BuildServerType.Items.Count);
+                  ClassicAssert.AreEqual(0, _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex);
               });
         }
 

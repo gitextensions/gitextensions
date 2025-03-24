@@ -164,7 +164,7 @@ namespace GitCommandsTests
             AppSettings.RememberAmendCommitState = true;
             await _manager.SetAmendStateAsync(amendState: true);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -177,7 +177,7 @@ namespace GitCommandsTests
             AppSettings.RememberAmendCommitState = false;
             await _manager.SetAmendStateAsync(amendState: true);
 
-            Assert.That(correctlyDeleted);
+            ClassicAssert.That(correctlyDeleted);
         }
 
         [TestCase(true)]
@@ -191,7 +191,7 @@ namespace GitCommandsTests
             AppSettings.RememberAmendCommitState = rememberAmendCommitState;
             await _manager.SetAmendStateAsync(amendState: false);
 
-            Assert.That(correctlyDeleted);
+            ClassicAssert.That(correctlyDeleted);
         }
 
         [Test]
@@ -330,7 +330,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -358,7 +358,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -372,7 +372,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -386,7 +386,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(message: null);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -400,7 +400,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(message: null);
 
-            Assert.That(!correctlyWritten);
+            ClassicAssert.That(!correctlyWritten);
         }
 
         [Test]
@@ -415,9 +415,9 @@ namespace GitCommandsTests
 
             await _manager.ResetCommitMessageAsync();
 
-            Assert.That(deletedA);
-            Assert.That(deletedC);
-            Assert.That(!deletedM);
+            ClassicAssert.That(deletedA);
+            ClassicAssert.That(deletedC);
+            ClassicAssert.That(!deletedM);
         }
 
         [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]

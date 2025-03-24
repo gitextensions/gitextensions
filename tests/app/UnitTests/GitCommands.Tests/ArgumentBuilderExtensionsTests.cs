@@ -45,7 +45,7 @@ namespace GitCommandsTests
 
             void Test(string expected, ArgumentBuilder command)
             {
-                Assert.AreEqual(expected, command.ToString());
+                ClassicAssert.AreEqual(expected, command.ToString());
             }
         }
 
@@ -102,7 +102,7 @@ namespace GitCommandsTests
 
             void Test(string expected, ArgumentBuilder command)
             {
-                Assert.AreEqual(expected, command.ToString());
+                ClassicAssert.AreEqual(expected, command.ToString());
             }
         }
 
@@ -135,7 +135,7 @@ namespace GitCommandsTests
 
             void Test(string expected, ArgumentBuilder command)
             {
-                Assert.AreEqual(expected, command.ToString());
+                ClassicAssert.AreEqual(expected, command.ToString());
             }
         }
 
@@ -192,7 +192,7 @@ namespace GitCommandsTests
 
             void Test(string expected, ArgumentBuilder command)
             {
-                Assert.AreEqual(expected, command.ToString());
+                ClassicAssert.AreEqual(expected, command.ToString());
             }
         }
 
@@ -214,13 +214,13 @@ namespace GitCommandsTests
                         typeof(T)
                     });
 
-                Assert.NotNull(method);
+                ClassicAssert.NotNull(method);
 
                 foreach (T member in Enum.GetValues(typeof(T)))
                 {
                     ArgumentBuilder args = [];
 
-                    Assert.DoesNotThrow(() => method.Invoke(null, new object[] { args, member }));
+                    ClassicAssert.DoesNotThrow(() => method.Invoke(null, new object[] { args, member }));
                 }
             }
         }
@@ -228,15 +228,15 @@ namespace GitCommandsTests
         [Test]
         public void Handle_artificial_objectid()
         {
-            Assert.Throws<ArgumentException>(() => new ArgumentBuilder
+            ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
             {
                 ObjectId.WorkTreeId
             });
-            Assert.Throws<ArgumentException>(() => new ArgumentBuilder
+            ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
             {
                 ObjectId.IndexId
             });
-            Assert.Throws<ArgumentException>(() => new ArgumentBuilder
+            ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
             {
                 ObjectId.CombinedDiffId
             });
@@ -249,7 +249,7 @@ namespace GitCommandsTests
             [
                 id
             ];
-            Assert.AreEqual(args.ToString(), "");
+            ClassicAssert.AreEqual(args.ToString(), "");
         }
 
         [Test]
@@ -338,8 +338,8 @@ namespace GitCommandsTests
             string[] args = batch.Select(item => item.Argument.ToString()).ToArray();
             int[] counts = batch.Select(item => item.BatchItemsCount).ToArray();
 
-            Assert.AreEqual(expected, args);
-            Assert.AreEqual(expectedCounts, counts);
+            ClassicAssert.AreEqual(expected, args);
+            ClassicAssert.AreEqual(expectedCounts, counts);
         }
 
         // 8: 'checkout'
@@ -359,7 +359,7 @@ namespace GitCommandsTests
         public void BuildBatchArguments_builder_throw_invalid_argument_exception(string command, string[] arguments, int maxLength,
             int baseLength = 0)
         {
-            Assert.Throws(typeof(ArgumentException), () => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength));
+            ClassicAssert.Throws(typeof(ArgumentException), () => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength));
         }
     }
 }

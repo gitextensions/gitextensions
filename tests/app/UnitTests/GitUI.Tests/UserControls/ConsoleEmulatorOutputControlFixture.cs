@@ -26,7 +26,7 @@ namespace GitUITests.UserControls
             filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk1)));
             filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk2)));
 
-            Assert.AreEqual(string.Empty, received);
+            ClassicAssert.AreEqual(string.Empty, received);
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace GitUITests.UserControls
             filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk2)));
             filter.Flush();
 
-            Assert.AreEqual(outputData, received);
+            ClassicAssert.AreEqual(outputData, received);
         }
 
         [Test]

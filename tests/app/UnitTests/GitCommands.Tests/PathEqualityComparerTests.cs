@@ -17,7 +17,7 @@ namespace GitCommandsTests
         [TestCase("\\\\my-pc\\Work\\GitExtensions\\", "//my-pc/WORK/GitExtensions/")]
         public void Equals(string input, string expected)
         {
-            Assert.AreEqual(_comparer.Equals(input, expected), true);
+            ClassicAssert.AreEqual(_comparer.Equals(input, expected), true);
         }
     }
 }

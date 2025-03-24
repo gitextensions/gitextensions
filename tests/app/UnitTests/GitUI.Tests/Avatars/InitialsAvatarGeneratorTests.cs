@@ -33,7 +33,7 @@ namespace GitUITests.Avatars
         {
             (string initials, int _) = new InitialsAvatarProvider().GetInitialsAndColorIndex(email, name);
 
-            Assert.AreEqual(expected, initials);
+            ClassicAssert.AreEqual(expected, initials);
         }
     }
 }

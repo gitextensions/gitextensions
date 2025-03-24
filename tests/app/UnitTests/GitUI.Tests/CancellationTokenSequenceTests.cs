@@ -12,12 +12,12 @@ namespace GitUITests
 
             CancellationToken token1 = sequence.Next();
 
-            Assert.False(token1.IsCancellationRequested);
+            ClassicAssert.False(token1.IsCancellationRequested);
 
             CancellationToken token2 = sequence.Next();
 
-            Assert.True(token1.IsCancellationRequested);
-            Assert.False(token2.IsCancellationRequested);
+            ClassicAssert.True(token1.IsCancellationRequested);
+            ClassicAssert.False(token2.IsCancellationRequested);
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace GitUITests
 
             sequence.Dispose();
 
-            Assert.Throws<OperationCanceledException>(() => sequence.Next());
+            ClassicAssert.Throws<OperationCanceledException>(() => sequence.Next());
         }
 
         [Test]
@@ -37,11 +37,11 @@ namespace GitUITests
 
             CancellationToken token = sequence.Next();
 
-            Assert.False(token.IsCancellationRequested);
+            ClassicAssert.False(token.IsCancellationRequested);
 
             sequence.CancelCurrent();
 
-            Assert.True(token.IsCancellationRequested);
+            ClassicAssert.True(token.IsCancellationRequested);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace GitUITests
 
             CancellationToken token = sequence.Next();
 
-            Assert.False(token.IsCancellationRequested);
+            ClassicAssert.False(token.IsCancellationRequested);
 
             sequence.CancelCurrent();
             sequence.CancelCurrent();
@@ -74,11 +74,11 @@ namespace GitUITests
 
             CancellationToken token = sequence.Next();
 
-            Assert.False(token.IsCancellationRequested);
+            ClassicAssert.False(token.IsCancellationRequested);
 
             sequence.Dispose();
 
-            Assert.True(token.IsCancellationRequested);
+            ClassicAssert.True(token.IsCancellationRequested);
         }
 
         [Test]
@@ -124,20 +124,20 @@ namespace GitUITests
                 .Select(i => Task.Run(() => ThreadMethodAsync(i)))
                 .ToList();
 
-            Assert.True(
+            ClassicAssert.True(
                 countdown.Wait(TimeSpan.FromSeconds(10)),
                 "Test should have completed within a reasonable amount of time");
 
             await Task.WhenAll(tasks);
 
-            Assert.AreEqual(loopCount, completedCount);
+            ClassicAssert.AreEqual(loopCount, completedCount);
 
             await Console.Out.WriteLineAsync("Winner by index: " + string.Join(",", winnerByIndex));
 
             // Assume hyper threading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
             if (logicalProcessorCount <= 2)
             {
-                Assert.Inconclusive("This test requires more than one physical processor to run.");
+                ClassicAssert.Inconclusive("This test requires more than one physical processor to run.");
             }
 
             return;
