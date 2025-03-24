@@ -1742,7 +1742,7 @@ namespace GitCommands
                     {
                         foreach (GitItemStatus file in nonDeletedFiles)
                         {
-                            UpdateIndex(inputWriter, file.Name);
+                            UpdateIndex(inputWriter, file.Name.TrimEnd('/'));
                         }
                     },
                     SystemEncoding,
