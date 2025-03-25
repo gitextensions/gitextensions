@@ -5867,7 +5867,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
-        <source>Load SSH key</source>
+        <source>&amp;Load SSH key</source>
         <target />
       </trans-unit>
       <trans-unit id="LocalColumn.HeaderText">
@@ -6502,7 +6502,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <target />
       </trans-unit>
       <trans-unit id="BranchName.HeaderText">
-        <source>Local branch name</source>
+        <source>&amp;Local branch name</source>
         <target />
       </trans-unit>
       <trans-unit id="Delete.toolTip1">
@@ -6510,7 +6510,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <target />
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
-        <source>Load SSH key</source>
+        <source>&amp;Load SSH key</source>
         <target />
       </trans-unit>
       <trans-unit id="MergeWith.HeaderText">
@@ -6530,7 +6530,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <target />
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
-        <source>Save changes</source>
+        <source>&amp;Save changes</source>
         <target />
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
@@ -6538,7 +6538,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <target />
       </trans-unit>
       <trans-unit id="TestConnection.Text">
-        <source>Test connection</source>
+        <source>&amp;Test connection</source>
         <target />
       </trans-unit>
       <trans-unit id="_btnDeleteTooltip.Text">
@@ -6579,11 +6579,11 @@ Inactive remote is completely invisible to git.</source>
         <target />
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
-        <source>Fetch Url</source>
+        <source>Fetch &amp;Url</source>
         <target />
       </trans-unit>
       <trans-unit id="_labelUrlAsFetchPush.Text">
-        <source>Url</source>
+        <source>&amp;Url</source>
         <target />
       </trans-unit>
       <trans-unit id="_lvgDisabledHeader.Text">
@@ -6637,7 +6637,7 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
-        <source>Separate Push Url</source>
+        <source>S&amp;eparate Push Url</source>
         <target />
       </trans-unit>
       <trans-unit id="gbMgtPanel.Text">
@@ -6645,27 +6645,27 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Name</source>
+        <source>&amp;Name</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Url</source>
+        <source>&amp;Url</source>
         <target />
       </trans-unit>
       <trans-unit id="label3.Text">
-        <source>Private key file</source>
+        <source>Private &amp;key file</source>
         <target />
       </trans-unit>
       <trans-unit id="label4.Text">
-        <source>Local branch name</source>
+        <source>L&amp;ocal branch name</source>
         <target />
       </trans-unit>
       <trans-unit id="label5.Text">
-        <source>Remote repository</source>
+        <source>&amp;Remote repository</source>
         <target />
       </trans-unit>
       <trans-unit id="label6.Text">
-        <source>Default merge with</source>
+        <source>De&amp;fault merge with</source>
         <target />
       </trans-unit>
       <trans-unit id="labelPushUrl.Text">
@@ -8751,7 +8751,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
-        <source>Fetch and prune</source>
+        <source>Fetch and &amp;prune</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllRemotes.Text">
