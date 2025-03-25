@@ -1372,6 +1372,7 @@ namespace GitCommands
             List<string> filesToCheckout = [];
             List<string> filesToReset = [];
             List<string> filesCannotCheckout = [];
+            HashSet<GitItemStatus> deletedItems = [];
             output = new();
             Lazy<List<GitItemStatus>> postUnstageStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
 
@@ -1386,10 +1387,12 @@ namespace GitCommands
                         if (File.Exists(path))
                         {
                             File.Delete(path);
+                            deletedItems.Add(item);
                         }
                         else if (Directory.Exists(path))
                         {
                             Directory.Delete(path, recursive: true);
+                            deletedItems.Add(item);
                         }
                     }
                     catch (IOException)
@@ -1403,7 +1406,7 @@ namespace GitCommands
 
                 if (resetId == ObjectId.IndexId)
                 {
-                    if (!postUnstageStatus.Value.Any(i => i.Name == item.Name))
+                    if (deletedItems.Contains(item) || !postUnstageStatus.Value.Any(i => i.Name == item.Name))
                     {
                         // Already removed (for instance new file)
                         continue;
