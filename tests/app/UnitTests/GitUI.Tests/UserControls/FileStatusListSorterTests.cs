@@ -46,6 +46,19 @@ public class FileStatusListSorterTests
     }
 
     [Test]
+    public async Task Sort_should_not_merge_single_file_with_root_node([Values(false, true)] bool flat)
+    {
+        GitItemStatus[] statuses =
+        [
+            new("root_file"),
+        ];
+
+        FileStatusList.StatusSorter statusSorter = new();
+        TreeNode rootNode = statusSorter.CreateTreeSortedByPath(statuses, flat, mergeSingleItemsWithFolder: true, createNode: status => new TreeNode(status.ToString()) { Tag = new FileStatusItem(firstRev: null, secondRev: new GitRevision(ObjectId.WorkTreeId), status) });
+        await Verify(Serialize(rootNode).ToString());
+    }
+
+    [Test]
     public async Task Sort_should_optionally_create_subfolder_nodes_for_single_files([Values(false, true)] bool mergeSingleItemsWithFolder)
     {
         GitItemStatus[] statuses =

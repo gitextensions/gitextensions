@@ -31,7 +31,7 @@ partial class FileStatusList
 
             void RemoveParentPath(TreeNode node)
             {
-                if (mergeSingleItemsWithFolder && node.Nodes.Count == 1 && node.Nodes[0].Nodes.Count == 0)
+                if (mergeSingleItemsWithFolder && node.Nodes.Count == 1 && node.Nodes[0].Nodes.Count == 0 && node.Parent is not null)
                 {
                     TreeNode singleItem = node.Nodes[0];
                     node.Nodes.Clear();
