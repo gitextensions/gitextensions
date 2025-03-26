@@ -26,7 +26,7 @@ namespace GitUI
     {
         private const string _showDiffForAllParentsItemName = nameof(TranslatedStrings.ShowDiffForAllParentsText);
 
-        private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
+        public static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FileStatusDiffCalculator _diffCalculator;
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
@@ -779,7 +779,6 @@ namespace GitUI
 
         public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
         {
-            await this.SwitchToMainThreadAsync(cancellationToken);
             FileStatusListLoading();
             UpdateToolbar(revisions);
 

@@ -305,13 +305,12 @@ namespace GitUI.CommandsDialogs
 
             FileStatusItem prevSelectedItem = DiffFiles.SelectedItem;
             FileStatusItem prevDiffItem = DiffFiles.FirstGroupItems.Contains(prevSelectedItem) ? prevSelectedItem : null;
-            await DiffFiles.SetDiffsAsync(revisions, _revisionGridInfo.CurrentCheckout, cancellationToken);
-            FileStatusItem[] firstGroupItems = DiffFiles.FirstGroupItems.ToArray();
-            await this.SwitchToMainThreadAsync(cancellationToken);
-
             try
             {
                 _isImplicitListSelection = true;
+
+                await DiffFiles.SetDiffsAsync(revisions, _revisionGridInfo.CurrentCheckout, cancellationToken);
+                FileStatusItem[] firstGroupItems = DiffFiles.FirstGroupItems.ToArray();
 
                 // First try the last item explicitly selected
                 if (_lastExplicitlySelectedItem is not null
@@ -338,7 +337,13 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
-                _isImplicitListSelection = false;
+                ThreadHelper.FileAndForget(async () =>
+                {
+                    // DiffFiles_SelectedIndexChanged is called asynchronously with throttling. _isImplicitListSelection must not be reset before.
+                    await Task.Delay(FileStatusList.SelectedIndexChangeThrottleDuration + TimeSpan.FromSeconds(1), cancellationToken);
+                    await this.SwitchToMainThreadAsync(cancellationToken);
+                    _isImplicitListSelection = false;
+                });
             }
         }
 
