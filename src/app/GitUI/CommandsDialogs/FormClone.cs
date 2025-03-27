@@ -239,7 +239,6 @@ namespace GitUI.CommandsDialogs
                 {
                     GitModule clonedGitModule = new(dirTo);
                     clonedGitModule.SetSetting(string.Format(SettingKeyString.RemotePuttySshKey, "origin"), _puttySshKey);
-                    clonedGitModule.LocalConfigFile.Save();
                 }
 
                 if (_openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
