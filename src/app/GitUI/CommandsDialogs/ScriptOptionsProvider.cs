@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs;
 internal class ScriptOptionsProvider : IScriptOptionsProvider
 {
     private const string _selectedRelativePaths = "SelectedRelativePaths";
-    private const string _lineNumber = "LineNumber";
+    internal const string _lineNumber = "LineNumber";
 
     private Func<IEnumerable<string>> _getSelectedRelativePaths;
     private Func<int?> _getCurrentLineNumber;

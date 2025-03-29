@@ -144,25 +144,25 @@ namespace GitUI
                 IScriptsRunner scriptsRunner = UICommands.GetRequiredService<IScriptsRunner>();
                 _ = scriptsRunner.RunScript(scriptInfo, owner: this, UICommands, FindScriptOptionsProvider());
                 return true;
+            }
+        }
 
-                IScriptOptionsProvider? FindScriptOptionsProvider()
+        internal IScriptOptionsProvider? FindScriptOptionsProvider()
+        {
+            for (Control control = this; control != null; control = control.Parent)
+            {
+                if (control is GitModuleControl gitModuleControl && gitModuleControl.GetScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider)
                 {
-                    for (Control control = this; control != null; control = control.Parent)
-                    {
-                        if (control is GitModuleControl gitModuleControl && gitModuleControl.GetScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider)
-                        {
-                            return scriptOptionsProvider;
-                        }
+                    return scriptOptionsProvider;
+                }
 
-                        if (control is GitModuleForm gitModuleForm)
-                        {
-                            return gitModuleForm.GetScriptOptionsProvider();
-                        }
-                    }
-
-                    return null;
+                if (control is GitModuleForm gitModuleForm)
+                {
+                    return gitModuleForm.GetScriptOptionsProvider();
                 }
             }
+
+            return null;
         }
 
         protected virtual IScriptOptionsProvider? GetScriptOptionsProvider()
