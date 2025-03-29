@@ -67,8 +67,10 @@ namespace GitUI
                 _splitter.SuspendLayout();
 
                 int prevDpi = settings.GetInt(DpiSettingsKey) ?? DpiUtil.DpiX;
-                int prevSize = settings.GetInt(SizeSettingsKey) ?? 0;
-                int prevDistance = settings.GetInt(DistanceSettingsKey) ?? 0;
+                int? prevSizeSetting = settings.GetInt(SizeSettingsKey);
+                int prevSize = prevSizeSetting ?? 0;
+                int? prevDistanceSetting = settings.GetInt(DistanceSettingsKey);
+                int prevDistance = prevDistanceSetting ?? 0;
 
                 if (prevSize > 0 && prevDistance > 0)
                 {
@@ -99,7 +101,7 @@ namespace GitUI
                         }
                     }
                 }
-                else if (_defaultDistance.HasValue)
+                else if (_defaultDistance.HasValue && !prevSizeSetting.HasValue && !prevDistanceSetting.HasValue)
                 {
                     SetSplitterDistance(_defaultDistance.Value);
                 }
