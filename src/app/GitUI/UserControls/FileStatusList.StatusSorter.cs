@@ -10,7 +10,7 @@ partial class FileStatusList
 {
     internal sealed class StatusSorter : IStatusSorter
     {
-        public TreeNode CreateTreeSortedByPath(IEnumerable<GitItemStatus> statuses, bool flat, Func<GitItemStatus, TreeNode> createNode)
+        public TreeNode CreateTreeSortedByPath(IEnumerable<GitItemStatus> statuses, bool flat, bool mergeSingleItemsWithFolder, Func<GitItemStatus, TreeNode> createNode)
         {
             TreeNode root = CreateParent(RelativePath.From(""));
 
@@ -22,12 +22,26 @@ partial class FileStatusList
                 parent.Nodes.Add(leaf);
             }
 
-            root.Items().ForEach(RemoveParentPath);
+            if (!flat)
+            {
+                root.Items().ForEach(RemoveParentPath);
+            }
 
             return root;
 
-            static void RemoveParentPath(TreeNode node)
+            void RemoveParentPath(TreeNode node)
             {
+                if (mergeSingleItemsWithFolder && node.Nodes.Count == 1 && node.Nodes[0].Nodes.Count == 0 && node.Parent is not null)
+                {
+                    TreeNode singleItem = node.Nodes[0];
+                    node.Nodes.Clear();
+                    node.ImageIndex = singleItem.ImageIndex;
+                    node.SelectedImageIndex = singleItem.SelectedImageIndex;
+                    node.StateImageIndex = 0;
+                    node.Tag = singleItem.Tag;
+                    node.Text = singleItem.Text;
+                }
+
                 if (node.Parent?.Tag is RelativePath parentPath)
                 {
                     if (parentPath.Length > 0 && node.Text.StartsWith(parentPath.Value))

@@ -72,8 +72,9 @@ namespace GitUI
         private readonly TranslationString _open = new("Open");
         private readonly TranslationString _directoryIsNotAValidRepository = new("The selected item is not a valid git repository.");
 
-        private readonly TranslationString _sortBy = new("&Sort by...");
-        private readonly TranslationString _sortOrder = new("&Sort order...");
+        private readonly TranslationString _sortBy = new("&Sort by");
+        private readonly TranslationString _sortGroupBy = new("&Sort and group by");
+        private readonly TranslationString _sortOrder = new("&Sort order");
 
         private readonly TranslationString _diffSelectedWithRememberedFile = new("&Diff with \"{0}\"");
         private readonly TranslationString _diffWithParent = new("Diff with A ");
@@ -272,6 +273,7 @@ Copy error details to clipboard?");
         public static string DirectoryInvalidRepository => _instance.Value._directoryIsNotAValidRepository.Text;
 
         public static string SortBy => _instance.Value._sortBy.Text;
+        public static string SortGroupBy => _instance.Value._sortGroupBy.Text;
         public static string SortOrder => _instance.Value._sortOrder.Text;
 
         public static string DiffSelectedWithRememberedFile => _instance.Value._diffSelectedWithRememberedFile.Text;
