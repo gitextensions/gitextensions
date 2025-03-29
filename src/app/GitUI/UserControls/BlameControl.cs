@@ -89,10 +89,9 @@ namespace GitUI.Blame
 
         public void InitSplitterManager(SplitterManager splitterManager, string parentContainerPrefix)
         {
-            splitterManager.AddSplitter(splitContainer1, $"{parentContainerPrefix}.{Name}.{splitContainer1.Name}",
-                defaultDistance: splitContainer1.Panel1MinSize + 1);
-            splitterManager.AddSplitter(splitContainer2, $"{parentContainerPrefix}.{Name}.{splitContainer2.Name}",
-                defaultDistance: splitContainer2.Panel1MinSize + 1);
+            string containerPrefix = $"{parentContainerPrefix}{Name}.";
+            splitterManager.AddSplitter(splitContainer1, $"{containerPrefix}{splitContainer1.Name}", defaultDistance: splitContainer1.Panel1MinSize + 1);
+            splitterManager.AddSplitter(splitContainer2, $"{containerPrefix}{splitContainer2.Name}", defaultDistance: splitContainer2.Panel1MinSize + 1);
         }
 
         public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin? gitHoster)
