@@ -10,13 +10,13 @@ namespace GitCommandsTests.Patches
         {
             Patch patch = new("header", "index", PatchFileType.Text, "A", "B", PatchChangeType.NewFile, "text");
 
-            Assert.AreEqual("header", patch.Header);
-            Assert.AreEqual("index", patch.Index);
-            Assert.AreEqual(PatchFileType.Text, patch.FileType);
-            Assert.AreEqual("A", patch.FileNameA);
-            Assert.AreEqual("B", patch.FileNameB);
-            Assert.AreEqual(PatchChangeType.NewFile, patch.ChangeType);
-            Assert.AreEqual("text", patch.Text);
+            ClassicAssert.AreEqual("header", patch.Header);
+            ClassicAssert.AreEqual("index", patch.Index);
+            ClassicAssert.AreEqual(PatchFileType.Text, patch.FileType);
+            ClassicAssert.AreEqual("A", patch.FileNameA);
+            ClassicAssert.AreEqual("B", patch.FileNameB);
+            ClassicAssert.AreEqual(PatchChangeType.NewFile, patch.ChangeType);
+            ClassicAssert.AreEqual("text", patch.Text);
         }
     }
 }

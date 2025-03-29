@@ -30,7 +30,7 @@ namespace GitUITests
             ThrowExceptionAsync(ex).FileAndForget();
 
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-            Assert.AreSame(ex, helper.Exception);
+            ClassicAssert.AreSame(ex, helper.Exception);
         }
 
         [Test]
@@ -43,34 +43,34 @@ namespace GitUITests
             YieldOntoControlMainThreadAsync(form).FileAndForget();
 
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-            Assert.Null(helper.Exception, helper.Message);
+            ClassicAssert.Null(helper.Exception, helper.Message);
         }
 
         [Test]
         public void ThrowIfNotOnUIThread()
         {
-            Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             ThreadHelper.ThrowIfNotOnUIThread();
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 await TaskScheduler.Default;
 
-                Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+                ClassicAssert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
-                Assert.Throws<COMException>(() => ThreadHelper.ThrowIfNotOnUIThread());
+                ClassicAssert.Throws<COMException>(() => ThreadHelper.ThrowIfNotOnUIThread());
             });
         }
 
         [Test]
         public void ThrowIfOnUIThread()
         {
-            Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
-            Assert.Throws<COMException>(() => ThreadHelper.ThrowIfOnUIThread());
+            ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            ClassicAssert.Throws<COMException>(() => ThreadHelper.ThrowIfOnUIThread());
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 await TaskScheduler.Default;
 
-                Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+                ClassicAssert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
                 ThreadHelper.ThrowIfOnUIThread();
             });
@@ -80,7 +80,7 @@ namespace GitUITests
         public void CompletedResultThrowsIfNotCompleted()
         {
             TaskCompletionSource<int> tcs = new();
-            Assert.Throws<InvalidOperationException>(() => tcs.Task.CompletedResult());
+            ClassicAssert.Throws<InvalidOperationException>(() => tcs.Task.CompletedResult());
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace GitUITests
         {
             TaskCompletionSource<int> tcs = new();
             tcs.SetResult(1);
-            Assert.AreEqual(1, tcs.Task.CompletedResult());
+            ClassicAssert.AreEqual(1, tcs.Task.CompletedResult());
         }
 
         [Test]
@@ -96,8 +96,8 @@ namespace GitUITests
         {
             TaskCompletionSource<int> tcs = new();
             tcs.SetCanceled();
-            AggregateException actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
-            Assert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
+            AggregateException actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
+            ClassicAssert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
         }
 
         [Test]
@@ -106,16 +106,16 @@ namespace GitUITests
             TaskCompletionSource<int> tcs = new();
             Exception ex = new();
             tcs.SetException(ex);
-            AggregateException actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
-            Assert.AreSame(ex, actual.InnerException);
-            Assert.AreEqual(1, actual.InnerExceptions.Count);
+            AggregateException actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
+            ClassicAssert.AreSame(ex, actual.InnerException);
+            ClassicAssert.AreEqual(1, actual.InnerExceptions.Count);
         }
 
         [Test]
         public void CompletedOrDefaultReturnsDefaultIfNotCompleted()
         {
             TaskCompletionSource<int> tcs = new();
-            Assert.AreEqual(0, tcs.Task.CompletedOrDefault());
+            ClassicAssert.AreEqual(0, tcs.Task.CompletedOrDefault());
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace GitUITests
         {
             TaskCompletionSource<int> tcs = new();
             tcs.SetResult(1);
-            Assert.AreEqual(1, tcs.Task.CompletedOrDefault());
+            ClassicAssert.AreEqual(1, tcs.Task.CompletedOrDefault());
         }
 
         [Test]
@@ -131,8 +131,8 @@ namespace GitUITests
         {
             TaskCompletionSource<int> tcs = new();
             tcs.SetCanceled();
-            AggregateException actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
-            Assert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
+            AggregateException actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
+            ClassicAssert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
         }
 
         [Test]
@@ -141,20 +141,20 @@ namespace GitUITests
             TaskCompletionSource<int> tcs = new();
             Exception ex = new();
             tcs.SetException(ex);
-            AggregateException actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
-            Assert.AreSame(ex, actual.InnerException);
-            Assert.AreEqual(1, actual.InnerExceptions.Count);
+            AggregateException actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
+            ClassicAssert.AreSame(ex, actual.InnerException);
+            ClassicAssert.AreEqual(1, actual.InnerExceptions.Count);
         }
 
         [Test]
         [Apartment(ApartmentState.MTA)]
         public void JoinableTaskFactoryConfiguredForMTA()
         {
-            Assert.AreEqual(ApartmentState.MTA, Thread.CurrentThread.GetApartmentState());
-            Assert.Null(SynchronizationContext.Current);
-            Assert.NotNull(ThreadHelper.JoinableTaskContext);
-            Assert.NotNull(ThreadHelper.JoinableTaskFactory);
-            Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            ClassicAssert.AreEqual(ApartmentState.MTA, Thread.CurrentThread.GetApartmentState());
+            ClassicAssert.Null(SynchronizationContext.Current);
+            ClassicAssert.NotNull(ThreadHelper.JoinableTaskContext);
+            ClassicAssert.NotNull(ThreadHelper.JoinableTaskFactory);
+            ClassicAssert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
         }
 
         [Test]

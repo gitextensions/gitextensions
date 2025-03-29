@@ -56,7 +56,7 @@ namespace GitUITests.CommandsDialogs
 
             // ensure absence of the trailing slash isn't a problem
             path = path[..^1];
-            Assert.DoesNotThrow(() => FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager));
+            ClassicAssert.DoesNotThrow(() => FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager));
         }
 
         [Test]

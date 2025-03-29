@@ -10,22 +10,22 @@ public sealed class ArrayExtensionsTests
     {
         int[] nums = Enumerable.Range(0, 10).ToArray();
 
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             new[] { 0, 1, 2, 3 },
             nums.Subsequence(0, 4));
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             new[] { 1, 2, 3, 4 },
             nums.Subsequence(1, 4));
 
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             nums,
             nums.Subsequence(0, 10));
 
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             Array.Empty<int>(),
             nums.Subsequence(0, 0));
 
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             Array.Empty<int>(),
             nums.Subsequence(9, 0));
     }
@@ -33,13 +33,13 @@ public sealed class ArrayExtensionsTests
     [Test]
     public void Append()
     {
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             new[] { 0, 1 },
             new[] { 0 }.Append(1));
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             new[] { 0 },
             Array.Empty<int>().Append(0));
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             new[] { 0, 1, 2 },
             Array.Empty<int>().Append(0).Append(1).Append(2));
     }

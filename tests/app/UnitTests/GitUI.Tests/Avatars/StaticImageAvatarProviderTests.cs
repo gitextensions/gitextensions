@@ -24,7 +24,7 @@ namespace GitUITests.Avatars
 
             Image result = await provider.GetAvatarAsync(_email, _name, _size);
 
-            Assert.AreSame(_img, result);
+            ClassicAssert.AreSame(_img, result);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace GitUITests.Avatars
             Image result1 = await provider.GetAvatarAsync(_email, _name, otherSize);
             Image result2 = await provider.GetAvatarAsync(_email, _name, otherSize);
 
-            Assert.AreSame(result1, result2);
+            ClassicAssert.AreSame(result1, result2);
         }
     }
 }

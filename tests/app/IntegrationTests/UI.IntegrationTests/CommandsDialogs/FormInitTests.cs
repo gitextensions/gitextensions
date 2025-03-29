@@ -33,7 +33,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    Assert.AreEqual(currentDir, form.GetTestAccessor().DirectoryCombo.Text);
+                    ClassicAssert.AreEqual(currentDir, form.GetTestAccessor().DirectoryCombo.Text);
                 },
                 currentDir);
         }
@@ -45,7 +45,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    Assert.AreEqual(_referenceRepository.Module.WorkingDir, form.GetTestAccessor().DirectoryCombo.Text);
+                    ClassicAssert.AreEqual(_referenceRepository.Module.WorkingDir, form.GetTestAccessor().DirectoryCombo.Text);
                 },
                 null);
         }
@@ -60,7 +60,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    Assert.IsFalse(form.GetTestAccessor().IsRootedDirectoryPath(input));
+                    ClassicAssert.IsFalse(form.GetTestAccessor().IsRootedDirectoryPath(input));
                 },
                 currentDir);
         }
@@ -75,7 +75,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    Assert.IsTrue(form.GetTestAccessor().IsRootedDirectoryPath(input));
+                    ClassicAssert.IsTrue(form.GetTestAccessor().IsRootedDirectoryPath(input));
                 },
                 currentDir);
         }
@@ -96,7 +96,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             UITest.RunForm(
                 () =>
                 {
-                    Assert.True(_commands.StartInitializeDialog(owner: null, path));
+                    ClassicAssert.True(_commands.StartInitializeDialog(owner: null, path));
                 },
                 testDriverAsync);
         }

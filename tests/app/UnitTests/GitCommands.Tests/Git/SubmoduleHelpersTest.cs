@@ -28,10 +28,10 @@ namespace GitCommandsTests.Git
 
             GitSubmoduleStatus status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
-            Assert.AreEqual(fileName, status.Name);
-            Assert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
-            Assert.AreEqual(fileName, status.OldName);
+            ClassicAssert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
+            ClassicAssert.AreEqual(fileName, status.Name);
+            ClassicAssert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
+            ClassicAssert.AreEqual(fileName, status.OldName);
 
             // Submodule name with spaces in the name
 
@@ -40,10 +40,10 @@ namespace GitCommandsTests.Git
 
             status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
-            Assert.AreEqual(fileName, status.Name);
-            Assert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
-            Assert.AreEqual(fileName, status.OldName);
+            ClassicAssert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
+            ClassicAssert.AreEqual(fileName, status.Name);
+            ClassicAssert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
+            ClassicAssert.AreEqual(fileName, status.OldName);
 
             // Submodule name in reverse diff, rename
 
@@ -52,20 +52,20 @@ namespace GitCommandsTests.Git
 
             status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
-            Assert.AreEqual(fileName, status.Name);
-            Assert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
-            Assert.AreEqual("Externals/conemu-inside-a", status.OldName);
+            ClassicAssert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
+            ClassicAssert.AreEqual(fileName, status.Name);
+            ClassicAssert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
+            ClassicAssert.AreEqual("Externals/conemu-inside-a", status.OldName);
 
             text = "diff --git a/Externals/ICSharpCode.TextEditor b/Externals/ICSharpCode.TextEditor\r\nnew file mode 160000\r\nindex 000000000..05321769f\r\n--- /dev/null\r\n+++ b/Externals/ICSharpCode.TextEditor\r\n@@ -0,0 +1 @@\r\n+Subproject commit 05321769f039f39fa7f6748e8f30d5c8f157c7dc\r\n";
             fileName = "Externals/ICSharpCode.TextEditor";
 
             status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"), status.Commit);
-            Assert.AreEqual(fileName, status.Name);
-            Assert.IsNull(status.OldCommit);
-            Assert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
+            ClassicAssert.AreEqual(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"), status.Commit);
+            ClassicAssert.AreEqual(fileName, status.Name);
+            ClassicAssert.IsNull(status.OldCommit);
+            ClassicAssert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
 
             // With user customized `diff.srcPrefix` and `diff.dstPrefix` settings: Submodule name with spaces in the name
 
@@ -74,10 +74,10 @@ namespace GitCommandsTests.Git
 
             status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
-            Assert.AreEqual(fileName, status.Name);
-            Assert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
-            Assert.AreEqual(fileName, status.OldName);
+            ClassicAssert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
+            ClassicAssert.AreEqual(fileName, status.Name);
+            ClassicAssert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
+            ClassicAssert.AreEqual(fileName, status.OldName);
 
             try
             {

@@ -74,7 +74,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 await Task.Delay(1000);
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
+                ClassicAssert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
             });
         }
 
@@ -87,7 +87,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
+                ClassicAssert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
 
                 using (Form tempForm = new())
                 {
@@ -104,7 +104,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
+                ClassicAssert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
             });
         }
 
@@ -119,8 +119,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ToolStripStatusLabel currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 ToolStripStatusLabel remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                Assert.AreEqual("master →", currentBranchNameLabelStatus.Text);
-                Assert.AreEqual("(remote not configured)", remoteNameLabelStatus.Text);
+                ClassicAssert.AreEqual("master →", currentBranchNameLabelStatus.Text);
+                ClassicAssert.AreEqual("(remote not configured)", remoteNameLabelStatus.Text);
             });
         }
 
@@ -142,8 +142,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                     await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
                 }
 
-                Assert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
-                Assert.AreEqual(string.Empty, remoteNameLabelStatus.Text);
+                ClassicAssert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
+                ClassicAssert.AreEqual(string.Empty, remoteNameLabelStatus.Text);
             });
         }
 
@@ -158,8 +158,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ToolStripStatusLabel currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 ToolStripStatusLabel remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                Assert.AreEqual("master →", currentBranchNameLabelStatus.Text);
-                Assert.AreEqual("origin/master", remoteNameLabelStatus.Text);
+                ClassicAssert.AreEqual("master →", currentBranchNameLabelStatus.Text);
+                ClassicAssert.AreEqual("origin/master", remoteNameLabelStatus.Text);
             });
         }
 
@@ -170,13 +170,13 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(form =>
             {
-                Assert.IsEmpty(form.GetTestAccessor().Message.Text);
+                ClassicAssert.IsEmpty(form.GetTestAccessor().Message.Text);
                 form.GetTestAccessor().Message.Text = generatedCommitMessage;
             });
 
             RunFormTest(form =>
             {
-                Assert.AreEqual(generatedCommitMessage, form.GetTestAccessor().Message.Text);
+                ClassicAssert.AreEqual(generatedCommitMessage, form.GetTestAccessor().Message.Text);
             });
         }
 
@@ -190,14 +190,14 @@ namespace GitExtensions.UITests.CommandsDialogs
                 form =>
                 {
                     string prefix = commitKind.ToString().ToLowerInvariant();
-                    Assert.AreEqual($"{prefix}! A commit message", form.GetTestAccessor().Message.Text);
+                    ClassicAssert.AreEqual($"{prefix}! A commit message", form.GetTestAccessor().Message.Text);
                     form.GetTestAccessor().Message.Text = generatedCommitMessage;
                 },
                 commitKind);
 
             RunFormTest(form =>
             {
-                Assert.IsEmpty(form.GetTestAccessor().Message.Text);
+                ClassicAssert.IsEmpty(form.GetTestAccessor().Message.Text);
             });
         }
 
@@ -210,14 +210,14 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    Assert.AreEqual($"amend! {oldCommitMessage}\n\n{oldCommitMessage}", form.GetTestAccessor().Message.Text);
+                    ClassicAssert.AreEqual($"amend! {oldCommitMessage}\n\n{oldCommitMessage}", form.GetTestAccessor().Message.Text);
                     form.GetTestAccessor().Message.Text = newCommitMessageWithAmend;
                 },
                 CommitKind.Amend);
 
             RunFormTest(form =>
             {
-                Assert.AreEqual(newCommitMessageWithAmend, form.GetTestAccessor().Message.Text);
+                ClassicAssert.AreEqual(newCommitMessageWithAmend, form.GetTestAccessor().Message.Text);
             });
         }
 
@@ -274,7 +274,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             {
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Assert.AreEqual("Stage all", form.GetTestAccessor().StageAllToolItem.ToolTipText);
+                ClassicAssert.AreEqual("Stage all", form.GetTestAccessor().StageAllToolItem.ToolTipText);
             });
 
             RunFormTest(async form =>
@@ -286,15 +286,15 @@ namespace GitExtensions.UITests.CommandsDialogs
                 testform.UnstagedList.ClearSelected();
                 testform.UnstagedList.SetFilter("file1");
 
-                Assert.AreEqual("Stage filtered", testform.StageAllToolItem.ToolTipText);
+                ClassicAssert.AreEqual("Stage filtered", testform.StageAllToolItem.ToolTipText);
 
                 testform.StageAllToolItem.PerformClick();
 
                 bool fileNotMatchedByFilterIsStillUnstaged = testform.UnstagedList.AllItems.Any(i => i.Item.Name == "file2.txt");
 
-                Assert.AreEqual(2, testform.StagedList.AllItemsCount);
-                Assert.AreEqual(1, testform.UnstagedList.AllItemsCount);
-                Assert.IsTrue(fileNotMatchedByFilterIsStillUnstaged);
+                ClassicAssert.AreEqual(2, testform.StagedList.AllItemsCount);
+                ClassicAssert.AreEqual(1, testform.UnstagedList.AllItemsCount);
+                ClassicAssert.IsTrue(fileNotMatchedByFilterIsStillUnstaged);
             });
         }
 
@@ -311,7 +311,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             {
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Assert.AreEqual("Unstage all", form.GetTestAccessor().UnstageAllToolItem.ToolTipText);
+                ClassicAssert.AreEqual("Unstage all", form.GetTestAccessor().UnstageAllToolItem.ToolTipText);
             });
 
             RunFormTest(async form =>
@@ -320,27 +320,27 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 FormCommit.TestAccessor testform = form.GetTestAccessor();
 
-                Assert.AreEqual(0, testform.StagedList.AllItemsCount);
-                Assert.AreEqual(3, testform.UnstagedList.AllItemsCount);
+                ClassicAssert.AreEqual(0, testform.StagedList.AllItemsCount);
+                ClassicAssert.AreEqual(3, testform.UnstagedList.AllItemsCount);
 
                 testform.StagedList.SetFilter("");
                 testform.StageAllToolItem.PerformClick();
 
-                Assert.AreEqual(3, testform.StagedList.AllItemsCount);
-                Assert.AreEqual(0, testform.UnstagedList.AllItemsCount);
+                ClassicAssert.AreEqual(3, testform.StagedList.AllItemsCount);
+                ClassicAssert.AreEqual(0, testform.UnstagedList.AllItemsCount);
 
                 testform.StagedList.ClearSelected();
                 testform.StagedList.SetFilter("file1");
 
-                Assert.AreEqual("Unstage filtered", testform.UnstageAllToolItem.ToolTipText);
+                ClassicAssert.AreEqual("Unstage filtered", testform.UnstageAllToolItem.ToolTipText);
 
                 testform.UnstageAllToolItem.PerformClick();
 
                 bool fileNotMatchedByFilterIsStillStaged = testform.StagedList.AllItems.Any(i => i.Item.Name == "file2.txt");
 
-                Assert.AreEqual(2, testform.UnstagedList.AllItemsCount);
-                Assert.AreEqual(1, testform.StagedList.AllItemsCount);
-                Assert.IsTrue(fileNotMatchedByFilterIsStillStaged);
+                ClassicAssert.AreEqual(2, testform.UnstagedList.AllItemsCount);
+                ClassicAssert.AreEqual(1, testform.StagedList.AllItemsCount);
+                ClassicAssert.IsTrue(fileNotMatchedByFilterIsStillStaged);
             });
         }
 
@@ -407,33 +407,33 @@ namespace GitExtensions.UITests.CommandsDialogs
                 FormCommit.TestAccessor testForm = form.GetTestAccessor();
 
                 // check initial state
-                Assert.False(testForm.Amend.Checked);
-                Assert.False(testForm.ResetAuthor.Checked);
-                Assert.False(testForm.ResetAuthor.Visible);
+                ClassicAssert.False(testForm.Amend.Checked);
+                ClassicAssert.False(testForm.ResetAuthor.Checked);
+                ClassicAssert.False(testForm.ResetAuthor.Visible);
 
                 testForm.Amend.Checked = true;
 
                 // check that reset author checkbox becomes visible when amend is checked
-                Assert.True(testForm.Amend.Checked);
-                Assert.True(testForm.ResetAuthor.Visible);
+                ClassicAssert.True(testForm.Amend.Checked);
+                ClassicAssert.True(testForm.ResetAuthor.Visible);
 
                 testForm.ResetAuthor.Checked = true;
 
-                Assert.True(testForm.Amend.Checked);
+                ClassicAssert.True(testForm.Amend.Checked);
 
                 testForm.Amend.Checked = false;
 
                 // check that reset author checkbox becomes invisible and unchecked when amend is unchecked
-                Assert.False(testForm.Amend.Checked);
-                Assert.False(testForm.ResetAuthor.Checked);
-                Assert.False(testForm.ResetAuthor.Visible);
+                ClassicAssert.False(testForm.Amend.Checked);
+                ClassicAssert.False(testForm.ResetAuthor.Checked);
+                ClassicAssert.False(testForm.ResetAuthor.Visible);
 
                 testForm.Amend.Checked = true;
 
                 // check that when amend is checked again reset author is still unchecked
-                Assert.True(testForm.Amend.Checked);
-                Assert.True(testForm.ResetAuthor.Visible);
-                Assert.False(testForm.ResetAuthor.Checked);
+                ClassicAssert.True(testForm.Amend.Checked);
+                ClassicAssert.True(testForm.ResetAuthor.Visible);
+                ClassicAssert.False(testForm.ResetAuthor.Checked);
             });
         }
 
@@ -539,7 +539,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // - if the user does not change the geometry, the height will oscillate to a constant value
                     int height1 = bounds1.Height;
                     int height2 = bounds2.Height;
-                    Assert.IsTrue(height1 >= height2 - 1 && height1 <= height2 + 1);
+                    ClassicAssert.IsTrue(height1 >= height2 - 1 && height1 <= height2 + 1);
                 });
         }
 
@@ -562,8 +562,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 testForm.SetMessageState(initialText, initialPosition);
                 testForm.IncludeFeatureParentheses = false;
                 (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
-                Assert.AreEqual(expectedText, message);
-                Assert.AreEqual(expectedPosition, selectionStart);
+                ClassicAssert.AreEqual(expectedText, message);
+                ClassicAssert.AreEqual(expectedPosition, selectionStart);
             });
         }
 
@@ -578,8 +578,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 testForm.SetMessageState(initialText, initialPosition);
                 testForm.IncludeFeatureParentheses = true;
                 (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
-                Assert.AreEqual(expectedText, message);
-                Assert.AreEqual(expectedPosition, selectionStart);
+                ClassicAssert.AreEqual(expectedText, message);
+                ClassicAssert.AreEqual(expectedPosition, selectionStart);
             });
         }
 
@@ -594,8 +594,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 testForm.SetMessageState(initialText, initialPosition);
                 testForm.IncludeFeatureParentheses = false;
                 (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
-                Assert.AreEqual(expectedText, message);
-                Assert.AreEqual(expectedPosition, selectionStart);
+                ClassicAssert.AreEqual(expectedText, message);
+                ClassicAssert.AreEqual(expectedPosition, selectionStart);
             });
         }
 
@@ -612,8 +612,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 testForm.SetMessageState(initialText, initialPosition);
                 testForm.IncludeFeatureParentheses = true;
                 (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
-                Assert.AreEqual(expectedText, message);
-                Assert.AreEqual(expectedPosition, selectionStart);
+                ClassicAssert.AreEqual(expectedText, message);
+                ClassicAssert.AreEqual(expectedPosition, selectionStart);
             });
         }
 
@@ -748,7 +748,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             UITest.RunForm(
                 showForm: () =>
                 {
-                    Assert.True(commitKind switch
+                    ClassicAssert.True(commitKind switch
                     {
                         CommitKind.Normal => _commands.StartCommitDialog(owner: null),
                         CommitKind.Squash => _commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),

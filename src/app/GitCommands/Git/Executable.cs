@@ -270,7 +270,9 @@ namespace GitCommands
 
             public void WaitForInputIdle() => _process.WaitForInputIdle();
 
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
             public Task<int> WaitForExitAsync() => _exitTaskCompletionSource.Task;
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
 
             public Task<int> WaitForExitAsync(CancellationToken token) => WaitForExitAsync().WithCancellation(token);
 

@@ -42,11 +42,11 @@ namespace GitCommandsTests.Patches
 
             Patch createdPatch = patches.First();
 
-            Assert.AreEqual(expectedPatch.Patch.Header, createdPatch.Header);
-            Assert.AreEqual(expectedPatch.Patch.FileNameA, createdPatch.FileNameA);
-            Assert.AreEqual(expectedPatch.Patch.Index, createdPatch.Index);
-            Assert.AreEqual(expectedPatch.Patch.ChangeType, createdPatch.ChangeType);
-            Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
+            ClassicAssert.AreEqual(expectedPatch.Patch.Header, createdPatch.Header);
+            ClassicAssert.AreEqual(expectedPatch.Patch.FileNameA, createdPatch.FileNameA);
+            ClassicAssert.AreEqual(expectedPatch.Patch.Index, createdPatch.Index);
+            ClassicAssert.AreEqual(expectedPatch.Patch.ChangeType, createdPatch.ChangeType);
+            ClassicAssert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
 
         [Test]
@@ -58,11 +58,11 @@ namespace GitCommandsTests.Patches
 
             Patch createdPatch = patches.First();
 
-            Assert.AreEqual(expectedPatch.Patch.Header, createdPatch.Header, "header");
-            Assert.AreEqual(expectedPatch.Patch.FileNameB, createdPatch.FileNameA, "fileA");
-            Assert.AreEqual(expectedPatch.Patch.Index, createdPatch.Index);
-            Assert.AreEqual(expectedPatch.Patch.ChangeType, createdPatch.ChangeType);
-            Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
+            ClassicAssert.AreEqual(expectedPatch.Patch.Header, createdPatch.Header, "header");
+            ClassicAssert.AreEqual(expectedPatch.Patch.FileNameB, createdPatch.FileNameA, "fileA");
+            ClassicAssert.AreEqual(expectedPatch.Patch.Index, createdPatch.Index);
+            ClassicAssert.AreEqual(expectedPatch.Patch.ChangeType, createdPatch.ChangeType);
+            ClassicAssert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace GitCommandsTests.Patches
         {
             IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
-            Assert.AreEqual(17, patches.Count());
+            ClassicAssert.AreEqual(17, patches.Count());
         }
 
         [Test]
@@ -78,8 +78,8 @@ namespace GitCommandsTests.Patches
         {
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
-            Assert.AreEqual(17, patches.Select(p => p.FileNameA).Distinct().Count());
-            Assert.AreEqual(17, patches.Select(p => p.FileNameB).Distinct().Count());
+            ClassicAssert.AreEqual(17, patches.Select(p => p.FileNameA).Distinct().Count());
+            ClassicAssert.AreEqual(17, patches.Select(p => p.FileNameB).Distinct().Count());
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace GitCommandsTests.Patches
         {
             IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigBinPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
-            Assert.AreEqual(248, patches.Count(p => p.FileType == PatchFileType.Binary));
+            ClassicAssert.AreEqual(248, patches.Count(p => p.FileType == PatchFileType.Binary));
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace GitCommandsTests.Patches
         {
             IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
-            Assert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.NewFile));
+            ClassicAssert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.NewFile));
         }
 
         [Test]
@@ -103,17 +103,17 @@ namespace GitCommandsTests.Patches
         {
             IEnumerable<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
-            Assert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.DeleteFile));
+            ClassicAssert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.DeleteFile));
         }
 
         [Test]
         public void TestCorrectlyLoadsChangeFiles()
         {
             IEnumerable<Patch> bigPatches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
-            Assert.AreEqual(15, bigPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
+            ClassicAssert.AreEqual(15, bigPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
 
             IEnumerable<Patch> smallPatches = PatchProcessor.CreatePatchesFromString(CreateSmallPatchExample().PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
-            Assert.AreEqual(1, smallPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
+            ClassicAssert.AreEqual(1, smallPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace GitCommandsTests.Patches
         {
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(_rebaseDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
-            Assert.AreEqual(13, patches.Count);
+            ClassicAssert.AreEqual(13, patches.Count);
         }
 
         [Test]
@@ -139,7 +139,7 @@ index cdf8bebba,55ff37bb9..000000000
 
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(diff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
-            Assert.AreEqual(2, patches.Count);
+            ClassicAssert.AreEqual(2, patches.Count);
         }
 
         [Test]
@@ -147,15 +147,15 @@ index cdf8bebba,55ff37bb9..000000000
         {
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(_colorDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
-            Assert.AreEqual(1, patches.Count);
+            ClassicAssert.AreEqual(1, patches.Count);
             Patch createdPatch = patches.First();
 
-            Assert.AreEqual(@"diff --git a/GitCommands/Patches/PatchProcessor.cs b/GitCommands/Patches/PatchProcessor.cs", createdPatch.Header, "header");
-            Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameA, "fileA");
-            Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameB, "fileB");
-            Assert.AreEqual("index 70b40..c1e6c 100644", createdPatch.Index);
-            Assert.AreEqual(PatchChangeType.ChangeFile, createdPatch.ChangeType);
-            Assert.AreEqual(PatchFileType.Text, createdPatch.FileType);
+            ClassicAssert.AreEqual(@"diff --git a/GitCommands/Patches/PatchProcessor.cs b/GitCommands/Patches/PatchProcessor.cs", createdPatch.Header, "header");
+            ClassicAssert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameA, "fileA");
+            ClassicAssert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameB, "fileB");
+            ClassicAssert.AreEqual("index 70b40..c1e6c 100644", createdPatch.Index);
+            ClassicAssert.AreEqual(PatchChangeType.ChangeFile, createdPatch.ChangeType);
+            ClassicAssert.AreEqual(PatchFileType.Text, createdPatch.FileType);
         }
 
         // Prefix must *not* contains a space or a '/' (except the mandatory one at the end)
@@ -167,15 +167,15 @@ index cdf8bebba,55ff37bb9..000000000
             string diffWithCutomPrefixes = _colorPrefixDiff.Replace("[PLACEHOLDER_PREFIX_SRC]", prefixSrc).Replace("[PLACEHOLDER_PREFIX_DST]", prefixDst);
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(diffWithCutomPrefixes, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
-            Assert.AreEqual(1, patches.Count);
+            ClassicAssert.AreEqual(1, patches.Count);
             Patch createdPatch = patches.First();
 
-            Assert.AreEqual(@$"diff --git {prefixSrc}GitCommands/Patches/PatchProcessor.cs {prefixDst}GitCommands/Patches/PatchProcessor.cs", createdPatch.Header, "header");
-            Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameA, "fileA");
-            Assert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameB, "fileB");
-            Assert.AreEqual("index 70b40..c1e6c 100644", createdPatch.Index);
-            Assert.AreEqual(PatchChangeType.ChangeFile, createdPatch.ChangeType);
-            Assert.AreEqual(PatchFileType.Text, createdPatch.FileType);
+            ClassicAssert.AreEqual(@$"diff --git {prefixSrc}GitCommands/Patches/PatchProcessor.cs {prefixDst}GitCommands/Patches/PatchProcessor.cs", createdPatch.Header, "header");
+            ClassicAssert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameA, "fileA");
+            ClassicAssert.AreEqual("GitCommands/Patches/PatchProcessor.cs", createdPatch.FileNameB, "fileB");
+            ClassicAssert.AreEqual("index 70b40..c1e6c 100644", createdPatch.Index);
+            ClassicAssert.AreEqual(PatchChangeType.ChangeFile, createdPatch.ChangeType);
+            ClassicAssert.AreEqual(PatchFileType.Text, createdPatch.FileType);
         }
 
         [Test]
@@ -183,15 +183,15 @@ index cdf8bebba,55ff37bb9..000000000
         {
             List<Patch> patches = PatchProcessor.CreatePatchesFromString(_colorBinDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
-            Assert.AreEqual(1, patches.Count);
+            ClassicAssert.AreEqual(1, patches.Count);
             Patch createdPatch = patches.First();
 
-            Assert.AreEqual(@"diff --git a/syscolor 3 gray.7z b/syscolor 3 gray.7z", createdPatch.Header, "header");
-            Assert.AreEqual("syscolor 3 gray.7z", createdPatch.FileNameA, "fileA");
-            Assert.AreEqual("syscolor 3 gray.7z", createdPatch.FileNameB, "fileB");
-            Assert.AreEqual("index 33b006c1..00000000", createdPatch.Index);
-            Assert.AreEqual(PatchChangeType.DeleteFile, createdPatch.ChangeType);
-            Assert.AreEqual(PatchFileType.Binary, createdPatch.FileType);
+            ClassicAssert.AreEqual(@"diff --git a/syscolor 3 gray.7z b/syscolor 3 gray.7z", createdPatch.Header, "header");
+            ClassicAssert.AreEqual("syscolor 3 gray.7z", createdPatch.FileNameA, "fileA");
+            ClassicAssert.AreEqual("syscolor 3 gray.7z", createdPatch.FileNameB, "fileB");
+            ClassicAssert.AreEqual("index 33b006c1..00000000", createdPatch.Index);
+            ClassicAssert.AreEqual(PatchChangeType.DeleteFile, createdPatch.ChangeType);
+            ClassicAssert.AreEqual(PatchFileType.Binary, createdPatch.FileType);
         }
 
         private static TestPatch CreateSmallPatchExample(bool reverse = false)

@@ -425,11 +425,11 @@ See the changes in the commit form.");
 
         private void tvGitTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            this.InvokeAndForget(ViewItem);
+            this.InvokeAndForget(ViewItemAsync);
 
             return;
 
-            Task ViewItem()
+            Task ViewItemAsync()
             {
                 return e.Node?.Tag is GitItem gitItem
                     ? ShowGitItemAsync(gitItem, line: null)

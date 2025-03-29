@@ -41,18 +41,18 @@ namespace GitUITests.Avatars
             ChainedAvatarProvider provider = new();
 
             Image image = await provider.GetAvatarAsync(_email1, _name1, _size);
-            Assert.Null(image);
+            ClassicAssert.Null(image);
         }
 
         [Test]
         public void Construction_with_null_parameters_is_permitted()
         {
-            Assert.Throws<ArgumentNullException>(() =>
+            ClassicAssert.Throws<ArgumentNullException>(() =>
             {
                 new ChainedAvatarProvider(null);
             });
 
-            Assert.Throws<ArgumentNullException>(() =>
+            ClassicAssert.Throws<ArgumentNullException>(() =>
             {
                 new ChainedAvatarProvider(null, null);
             });
@@ -95,10 +95,10 @@ namespace GitUITests.Avatars
             Image res3 = await chainedProvider.GetAvatarAsync(_email3, _name3, _size);
             Image res4 = await chainedProvider.GetAvatarAsync(_email4, _name4, _size);
 
-            Assert.AreSame(_img1, res1);
-            Assert.AreSame(_img4, res2);
-            Assert.AreSame(_img6, res3);
-            Assert.AreSame(null, res4);
+            ClassicAssert.AreSame(_img1, res1);
+            ClassicAssert.AreSame(_img4, res2);
+            ClassicAssert.AreSame(_img6, res3);
+            ClassicAssert.AreSame(null, res4);
         }
     }
 }

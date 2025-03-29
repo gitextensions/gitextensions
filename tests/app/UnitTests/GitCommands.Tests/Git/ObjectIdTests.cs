@@ -23,8 +23,8 @@ namespace GitCommandsTests.Git
         [TestCase("0123456789abcdef0123456789abcdef01234567")]
         public void TryParse_handles_valid_hashes(string sha1)
         {
-            Assert.True(ObjectId.TryParse(sha1, out ObjectId? id));
-            Assert.AreEqual(sha1.ToLower(), id.ToString());
+            ClassicAssert.True(ObjectId.TryParse(sha1, out ObjectId? id));
+            ClassicAssert.AreEqual(sha1.ToLower(), id.ToString());
         }
 
         [TestCase("00000000000000000000000000000000000000")]
@@ -35,7 +35,7 @@ namespace GitCommandsTests.Git
         [TestCase("  0000000000000000000000000000000000000000  ")]
         public void TryParse_identifies_invalid_hashes(string sha1)
         {
-            Assert.False(ObjectId.TryParse(sha1, out _));
+            ClassicAssert.False(ObjectId.TryParse(sha1, out _));
         }
 
         [TestCase("0000000000000000000000000000000000000000", 0)]
@@ -46,8 +46,8 @@ namespace GitCommandsTests.Git
         [TestCase("__0102030405060708091011121314151617181920__", 2)]
         public void TryParse_with_offset_handles_valid_hashes(string sha1, int offset)
         {
-            Assert.True(ObjectId.TryParse(sha1, offset, out ObjectId? id));
-            Assert.AreEqual(
+            ClassicAssert.True(ObjectId.TryParse(sha1, offset, out ObjectId? id));
+            ClassicAssert.AreEqual(
                 sha1.Substring(offset, 40),
                 id.ToString());
         }
@@ -57,7 +57,7 @@ namespace GitCommandsTests.Git
         [TestCase("0123456789abcdef0123456789abcdef01234567")]
         public void Parse_handles_valid_hashes(string sha1)
         {
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 sha1.ToLower(),
                 ObjectId.Parse(sha1).ToString());
         }
@@ -70,7 +70,7 @@ namespace GitCommandsTests.Git
         [TestCase("  0000000000000000000000000000000000000000  ")]
         public void Parse_throws_for_invalid_hashes(string sha1)
         {
-            Assert.Throws<FormatException>(() => ObjectId.Parse(sha1));
+            ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(sha1));
         }
 
         [TestCase("0000000000000000000000000000000000000000")]
@@ -78,7 +78,7 @@ namespace GitCommandsTests.Git
         [TestCase("0123456789abcdef0123456789abcdef01234567")]
         public void IsValid_identifies_valid_hashes(string sha1)
         {
-            Assert.True(ObjectId.IsValid(sha1));
+            ClassicAssert.True(ObjectId.IsValid(sha1));
         }
 
         [TestCase("00000000000000000000000000000000000000")]
@@ -89,7 +89,7 @@ namespace GitCommandsTests.Git
         [TestCase("  0000000000000000000000000000000000000000  ")]
         public void IsValid_identifies_invalid_hashes(string sha1)
         {
-            Assert.False(ObjectId.IsValid(sha1));
+            ClassicAssert.False(ObjectId.IsValid(sha1));
         }
 
         [TestCase("0000000000000000000000000000000000000000", 0)]
@@ -100,7 +100,7 @@ namespace GitCommandsTests.Git
         [TestCase("__0102030405060708091011121314151617181920__", 2)]
         public void Parse_with_offset_handles_valid_hashes(string sha1, int offset)
         {
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 sha1.Substring(offset, 40),
                 ObjectId.Parse(sha1.Substring(offset, 40)).ToString());
         }
@@ -111,15 +111,15 @@ namespace GitCommandsTests.Git
             ObjectId objectId = ObjectId.Random();
             string str = "XYZ" + objectId + "XYZ";
 
-            Assert.AreEqual(objectId, ObjectId.Parse(str, Sha40Regex().Match(str)));
-            Assert.Throws<FormatException>(() => ObjectId.Parse(str, Sha39Regex().Match(str)));
-            Assert.Throws<FormatException>(() => ObjectId.Parse(str, ShaXYZRegex().Match(str)));
+            ClassicAssert.AreEqual(objectId, ObjectId.Parse(str, Sha40Regex().Match(str)));
+            ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(str, Sha39Regex().Match(str)));
+            ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(str, ShaXYZRegex().Match(str)));
         }
 
         [Test]
         public void WorkTreeId_has_expected_value()
         {
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "1111111111111111111111111111111111111111",
                 ObjectId.WorkTreeId.ToString());
         }
@@ -127,7 +127,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void IndexId_has_expected_value()
         {
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "2222222222222222222222222222222222222222",
                 ObjectId.IndexId.ToString());
         }
@@ -135,7 +135,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void CombinedDiffId_has_expected_value()
         {
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "3333333333333333333333333333333333333333",
                 ObjectId.CombinedDiffId.ToString());
         }
@@ -143,53 +143,53 @@ namespace GitCommandsTests.Git
         [Test]
         public void WorkTreeId_is_artificial()
         {
-            Assert.IsTrue(ObjectId.WorkTreeId.IsArtificial);
+            ClassicAssert.IsTrue(ObjectId.WorkTreeId.IsArtificial);
         }
 
         [Test]
         public void IndexId_is_artificial()
         {
-            Assert.IsTrue(ObjectId.IndexId.IsArtificial);
+            ClassicAssert.IsTrue(ObjectId.IndexId.IsArtificial);
         }
 
         [Test]
         public void CombinedDiffId_is_artificial()
         {
-            Assert.IsTrue(ObjectId.CombinedDiffId.IsArtificial);
+            ClassicAssert.IsTrue(ObjectId.CombinedDiffId.IsArtificial);
         }
 
         [Test]
         public void Equivalent_ids_are_equal()
         {
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.Parse("0102030405060708091011121314151617181920"),
                 ObjectId.Parse("0102030405060708091011121314151617181920"));
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd"),
                 ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd"));
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.WorkTreeId,
                 ObjectId.WorkTreeId);
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.WorkTreeId,
                 ObjectId.Parse(GitRevision.WorkTreeGuid));
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.IndexId,
                 ObjectId.IndexId);
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.IndexId,
                 ObjectId.Parse(GitRevision.IndexGuid));
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.CombinedDiffId,
                 ObjectId.CombinedDiffId);
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.CombinedDiffId,
                 ObjectId.Parse(GitRevision.CombinedDiffGuid));
         }
@@ -197,11 +197,11 @@ namespace GitCommandsTests.Git
         [Test]
         public void Different_ids_are_not_equal()
         {
-            Assert.AreNotEqual(
+            ClassicAssert.AreNotEqual(
                 ObjectId.Parse("0000000000000000000000000000000000000000"),
                 ObjectId.Parse("0102030405060708091011121314151617181920"));
 
-            Assert.AreNotEqual(
+            ClassicAssert.AreNotEqual(
                 ObjectId.WorkTreeId,
                 ObjectId.IndexId);
         }
@@ -209,19 +209,19 @@ namespace GitCommandsTests.Git
         [Test]
         public void Equivalent_ids_have_equal_hash_codes()
         {
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode(),
                 ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode());
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd").GetHashCode(),
                 ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd").GetHashCode());
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.WorkTreeId.GetHashCode(),
                 ObjectId.WorkTreeId.GetHashCode());
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 ObjectId.IndexId.GetHashCode(),
                 ObjectId.IndexId.GetHashCode());
         }
@@ -229,11 +229,11 @@ namespace GitCommandsTests.Git
         [Test]
         public void Different_ids_have_different_hash_codes()
         {
-            Assert.AreNotEqual(
+            ClassicAssert.AreNotEqual(
                 ObjectId.Parse("0000000000000000000000000000000000000000").GetHashCode(),
                 ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode());
 
-            Assert.AreNotEqual(
+            ClassicAssert.AreNotEqual(
                 ObjectId.WorkTreeId.GetHashCode(),
                 ObjectId.IndexId.GetHashCode());
         }
@@ -250,11 +250,11 @@ namespace GitCommandsTests.Git
         {
             byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
 
-            Assert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id));
+            ClassicAssert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id));
 
             if (expected is not null)
             {
-                Assert.AreEqual(ObjectId.Parse(expected), id);
+                ClassicAssert.AreEqual(ObjectId.Parse(expected), id);
             }
         }
 
@@ -262,16 +262,16 @@ namespace GitCommandsTests.Git
         public void TryParse_bytes_throws_with_illegal_input(string source, int offset, [CanBeNull] string expected)
         {
             byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
-            Assert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id));
+            ClassicAssert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id));
         }
 
         [Test]
         public void TryParse_returns_false_when_array_null()
         {
-            Assert.False(ObjectId.TryParse(default, out ObjectId objectId));
-            Assert.Null(objectId);
-            Assert.False(ObjectId.TryParse(default(Span<byte>), out objectId));
-            Assert.Null(objectId);
+            ClassicAssert.False(ObjectId.TryParse(default, out ObjectId objectId));
+            ClassicAssert.Null(objectId);
+            ClassicAssert.False(ObjectId.TryParse(default(Span<byte>), out objectId));
+            ClassicAssert.Null(objectId);
         }
 
         [Test]
@@ -279,8 +279,8 @@ namespace GitCommandsTests.Git
         {
             byte[] bytes = new byte[ObjectId.Sha1CharCount];
 
-            Assert.False(ObjectId.TryParse(bytes.AsSpan(1), out ObjectId objectId));
-            Assert.Null(objectId);
+            ClassicAssert.False(ObjectId.TryParse(bytes.AsSpan(1), out ObjectId objectId));
+            ClassicAssert.Null(objectId);
         }
 
         [Test]
@@ -291,21 +291,21 @@ namespace GitCommandsTests.Git
 
             for (int length = 1; length < ObjectId.Sha1CharCount; length++)
             {
-                Assert.AreEqual(s[..length], id.ToShortString(length));
+                ClassicAssert.AreEqual(s[..length], id.ToShortString(length));
             }
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(ObjectId.Sha1CharCount + 1));
+            ClassicAssert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(-1));
+            ClassicAssert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(ObjectId.Sha1CharCount + 1));
         }
 
         [Test]
         public void Equals_using_operator()
         {
             string objectIdString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            Assert.IsTrue(ObjectId.Parse(objectIdString) == ObjectId.Parse(objectIdString));
-            Assert.IsFalse(ObjectId.Parse(objectIdString) != ObjectId.Parse(objectIdString));
-            Assert.IsFalse(ObjectId.Parse(objectIdString) == ObjectId.Random());
-            Assert.IsTrue(ObjectId.Parse(objectIdString) != ObjectId.Random());
+            ClassicAssert.IsTrue(ObjectId.Parse(objectIdString) == ObjectId.Parse(objectIdString));
+            ClassicAssert.IsFalse(ObjectId.Parse(objectIdString) != ObjectId.Parse(objectIdString));
+            ClassicAssert.IsFalse(ObjectId.Parse(objectIdString) == ObjectId.Random());
+            ClassicAssert.IsTrue(ObjectId.Parse(objectIdString) != ObjectId.Random());
         }
     }
 }

@@ -51,7 +51,7 @@ namespace GitCommandsTests.Git.Gpg
 
             CommitStatus actual = await _gpgController.GetRevisionCommitSignatureStatusAsync(revision);
 
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [TestCase]
@@ -83,7 +83,7 @@ namespace GitCommandsTests.Git.Gpg
 
             TagStatus actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
-            Assert.AreEqual(tagStatus, actual);
+            ClassicAssert.AreEqual(tagStatus, actual);
         }
 
         [TestCase(TagStatus.OneGood, "GOODSIG ... VALIDSIG ...")]
@@ -106,7 +106,7 @@ namespace GitCommandsTests.Git.Gpg
 
             TagStatus actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
-            Assert.AreEqual(tagStatus, actual);
+            ClassicAssert.AreEqual(tagStatus, actual);
         }
 
         [TestCase("return string")]
@@ -125,19 +125,19 @@ namespace GitCommandsTests.Git.Gpg
 
             string actual = _gpgController.GetCommitVerificationMessage(revision);
 
-            Assert.AreEqual(returnString, actual);
+            ClassicAssert.AreEqual(returnString, actual);
         }
 
         [TestCase]
         public void Validate_GetCommitVerificationMessage_null_revision()
         {
-            Assert.Throws<ArgumentNullException>(() => _gpgController.GetCommitVerificationMessage(null));
+            ClassicAssert.Throws<ArgumentNullException>(() => _gpgController.GetCommitVerificationMessage(null));
         }
 
         [TestCase]
         public void Validate_GetTagVerifyMessage_null_revision()
         {
-            Assert.Throws<ArgumentNullException>(() => _gpgController.GetTagVerifyMessage(null));
+            ClassicAssert.Throws<ArgumentNullException>(() => _gpgController.GetTagVerifyMessage(null));
         }
 
         [TestCase(0, "")]
@@ -193,7 +193,7 @@ namespace GitCommandsTests.Git.Gpg
 
             string actual = _gpgController.GetTagVerifyMessage(revision);
 
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.AreEqual(expected, actual);
 
             validate?.Dispose();
         }

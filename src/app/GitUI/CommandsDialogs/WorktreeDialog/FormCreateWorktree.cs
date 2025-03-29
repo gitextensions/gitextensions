@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             UpdateWorktreePathAndValidateWorktreeOptions();
 
-            void LoadBranchesAsync()
+            Task LoadBranchesAsync()
             {
                 string selectedBranch = UICommands.Module.GetSelectedBranch();
                 ExistingBranches = Module.GetRefs(RefsFilter.Heads);
@@ -60,6 +60,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
                     ValidateWorktreeOptions();
                 });
+
+                return Task.CompletedTask;
             }
         }
 

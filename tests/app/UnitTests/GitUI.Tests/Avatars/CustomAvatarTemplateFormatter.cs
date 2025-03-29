@@ -16,7 +16,7 @@ namespace GitUITests.Avatars
             Func<(string val1, string val2), string> formatter = TemplateFormatter.Create(template, ValueMappingProvider);
             string result = formatter((val1, val2));
 
-            Assert.AreEqual(expectation, result);
+            ClassicAssert.AreEqual(expectation, result);
         }
 
         [Test]
@@ -27,8 +27,8 @@ namespace GitUITests.Avatars
             string result1 = formatter(("x", "y"));
             string result2 = formatter(("a", "b"));
 
-            Assert.AreEqual("Example x Template y", result1);
-            Assert.AreEqual("Example a Template b", result2);
+            ClassicAssert.AreEqual("Example x Template y", result1);
+            ClassicAssert.AreEqual("Example a Template b", result2);
         }
 
         /// <summary>

@@ -64,15 +64,15 @@ namespace GitUITests.LeftPanel
         {
             // Act
             ToolStripItemWithKey[] menuItems = group.ToArray();
-            Assert.IsEmpty(_factoryQueue);
-            Assert.AreEqual(menuItems.Length, expectedTotal);
+            ClassicAssert.IsEmpty(_factoryQueue);
+            ClassicAssert.AreEqual(menuItems.Length, expectedTotal);
             int testIndex = 0;
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Checkout));
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Merge));
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rebase));
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.CreateBranch));
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Reset));
-            Assert.IsInstanceOf<ToolStripSeparator>(menuItems[testIndex++].Item);
+            ClassicAssert.IsInstanceOf<ToolStripSeparator>(menuItems[testIndex++].Item);
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rename));
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Delete));
         }
@@ -87,13 +87,13 @@ namespace GitUITests.LeftPanel
             const int expectedEnabled = 2; // create branch, rename
             int expectedDisabled = expectedTotal - expectedEnabled;
             ToolStripItemWithKey[] disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
-            Assert.AreEqual(disabledItems.Length, expectedDisabled);
+            ClassicAssert.AreEqual(disabledItems.Length, expectedDisabled);
             int testIndex = 0;
             AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Checkout));
             AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Merge));
             AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Rebase));
             AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Reset));
-            Assert.IsInstanceOf<ToolStripSeparator>(disabledItems[testIndex++].Item);
+            ClassicAssert.IsInstanceOf<ToolStripSeparator>(disabledItems[testIndex++].Item);
             AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Delete));
         }
 
@@ -101,7 +101,7 @@ namespace GitUITests.LeftPanel
         {
             ToolStripMenuItem item = menuItem.Item as ToolStripMenuItem;
             item.PerformClick();
-            Assert.AreEqual(caption, _testNode.CallStatck.Pop());
+            ClassicAssert.AreEqual(caption, _testNode.CallStatck.Pop());
         }
 
         private static MenuItemsGenerator<TestBranchNode> CreateGenerator(IMenuItemFactory factory)

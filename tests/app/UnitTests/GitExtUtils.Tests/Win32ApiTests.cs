@@ -12,8 +12,8 @@ namespace GitExtUtilsTests
         {
             Point point = ToLParam(x, y).ToPoint();
 
-            Assert.That(point.X, Is.EqualTo(x));
-            Assert.That(point.Y, Is.EqualTo(y));
+            ClassicAssert.That(point.X, Is.EqualTo(x));
+            ClassicAssert.That(point.Y, Is.EqualTo(y));
         }
 
         [Test]
@@ -23,8 +23,8 @@ namespace GitExtUtilsTests
         {
             Point point = ICSharpCode.TextEditor.Util.Win32Util.ToPoint(ToLParam(x, y));
 
-            Assert.That(point.X, Is.EqualTo(x));
-            Assert.That(point.Y, Is.EqualTo(y));
+            ClassicAssert.That(point.X, Is.EqualTo(x));
+            ClassicAssert.That(point.Y, Is.EqualTo(y));
         }
 
         private static IntPtr ToLParam(short x, short y) =>

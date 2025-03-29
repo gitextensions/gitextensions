@@ -47,7 +47,7 @@ namespace GitUITests.Avatars
             fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeFalse();
             _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
-            Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
+            ClassicAssert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
 
             fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeTrue();
         }
@@ -59,7 +59,7 @@ namespace GitUITests.Avatars
             fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeFalse();
             _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
-            Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
+            ClassicAssert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
 
             fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeTrue();
             fileSystem.File.Exists(_email1AvatarPath).Should().BeTrue();

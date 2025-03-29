@@ -49,17 +49,17 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             Setup(mergeGraphLanesHavingCommonParent);
 
-            Assert.AreEqual(0, _revisionGraph.GetCachedCount());
+            ClassicAssert.AreEqual(0, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(4, 2);
-            Assert.AreEqual(mergeGraphLanesHavingCommonParent ? 3 : 0, _revisionGraph.GetCachedCount());
+            ClassicAssert.AreEqual(mergeGraphLanesHavingCommonParent ? 3 : 0, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(4, 4);
-            Assert.AreEqual(mergeGraphLanesHavingCommonParent ? 5 : 0, _revisionGraph.GetCachedCount());
+            ClassicAssert.AreEqual(mergeGraphLanesHavingCommonParent ? 5 : 0, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(400, 400);
-            Assert.AreEqual(mergeGraphLanesHavingCommonParent ? 6 : 0, _revisionGraph.GetCachedCount());
+            ClassicAssert.AreEqual(mergeGraphLanesHavingCommonParent ? 6 : 0, _revisionGraph.GetCachedCount());
             _revisionGraph.LoadingCompleted();
-            Assert.AreEqual(mergeGraphLanesHavingCommonParent ? 6 + LookAhead : 0, _revisionGraph.GetCachedCount());
+            ClassicAssert.AreEqual(mergeGraphLanesHavingCommonParent ? 6 + LookAhead : 0, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(400, 400);
-            Assert.AreEqual(6 + LookAhead, _revisionGraph.GetCachedCount());
+            ClassicAssert.AreEqual(6 + LookAhead, _revisionGraph.GetCachedCount());
         }
 
         [Test]
@@ -67,9 +67,9 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             Setup(mergeGraphLanesHavingCommonParent);
 
-            Assert.AreEqual(6 + LookAhead, _revisionGraph.Count);
+            ClassicAssert.AreEqual(6 + LookAhead, _revisionGraph.Count);
             _revisionGraph.Clear();
-            Assert.AreEqual(0, _revisionGraph.Count);
+            ClassicAssert.AreEqual(0, _revisionGraph.Count);
         }
 
         [Test]
@@ -78,13 +78,13 @@ namespace GitUITests.UserControls.RevisionGrid
             Setup(mergeGraphLanesHavingCommonParent);
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-            Assert.IsTrue(_revisionGraph.GetNodeForRow(0).IsRelative);
-            Assert.IsTrue(_revisionGraph.GetNodeForRow(1).IsRelative);
-            Assert.IsTrue(_revisionGraph.GetNodeForRow(4).IsRelative);
+            ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(0).IsRelative);
+            ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(1).IsRelative);
+            ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(4).IsRelative);
             _revisionGraph.HighlightBranch(_revisionGraph.GetNodeForRow(1).Objectid);
-            Assert.IsFalse(_revisionGraph.GetNodeForRow(0).IsRelative);
-            Assert.IsTrue(_revisionGraph.GetNodeForRow(1).IsRelative);
-            Assert.IsTrue(_revisionGraph.GetNodeForRow(4).IsRelative);
+            ClassicAssert.IsFalse(_revisionGraph.GetNodeForRow(0).IsRelative);
+            ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(1).IsRelative);
+            ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(4).IsRelative);
         }
 
         [Test]
@@ -98,12 +98,12 @@ namespace GitUITests.UserControls.RevisionGrid
             }
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-            Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(0).GetLaneCount());
-            Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetLaneCount());
-            Assert.AreEqual(2, _revisionGraph.GetSegmentsForRow(2).GetLaneCount());
-            Assert.AreEqual(2, _revisionGraph.GetSegmentsForRow(3).GetLaneCount());
-            Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(4).GetLaneCount());
-            Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(5).GetLaneCount());
+            ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(0).GetLaneCount());
+            ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetLaneCount());
+            ClassicAssert.AreEqual(2, _revisionGraph.GetSegmentsForRow(2).GetLaneCount());
+            ClassicAssert.AreEqual(2, _revisionGraph.GetSegmentsForRow(3).GetLaneCount());
+            ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(4).GetLaneCount());
+            ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(5).GetLaneCount());
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace GitUITests.UserControls.RevisionGrid
             Setup(mergeGraphLanesHavingCommonParent);
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
+            ClassicAssert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
             GitRevision commit1 = new(ObjectId.Random());
 
@@ -123,12 +123,12 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.Add(commit2); // This commit is now dangling
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
+            ClassicAssert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
             _revisionGraph.Add(commit1); // Add the connecting commit
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
+            ClassicAssert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
             // Add a new head
             GitRevision newHead = new(ObjectId.Random());
@@ -136,7 +136,7 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.Add(newHead); // Add commit that has the current top node as parent.
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count); // Call to cache fix the order
-            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
+            ClassicAssert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
         }
 
         [Test] // https://github.com/gitextensions/gitextensions/issues/6193
@@ -178,7 +178,7 @@ namespace GitUITests.UserControls.RevisionGrid
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
 
-            Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetCurrentRevisionLane());
+            ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetCurrentRevisionLane());
 
             await VerifyGraphLayoutAsync(_revisionGraph);
         }

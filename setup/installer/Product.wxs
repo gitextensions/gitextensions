@@ -227,6 +227,9 @@
       <Component Id="TestableIO.System.IO.Abstractions.Wrappers.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\TestableIO.System.IO.Abstractions.Wrappers.dll" />
       </Component>
+      <Component Id="Testably.Abstractions.FileSystem.Interface.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Testably.Abstractions.FileSystem.Interface.dll" />
+      </Component>
       <Component Id="System.Reactive.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\System.Reactive.dll" />
       </Component>
@@ -691,6 +694,7 @@
       <ComponentRef Id="System.IO.Abstractions.dll" />
       <ComponentRef Id="TestableIO.System.IO.Abstractions.dll" />
       <ComponentRef Id="TestableIO.System.IO.Abstractions.Wrappers.dll" />
+      <ComponentRef Id="Testably.Abstractions.FileSystem.Interface.dll" />
       <ComponentRef Id="System.Reactive.dll" />
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />

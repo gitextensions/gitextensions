@@ -69,7 +69,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 () =>
                 {
                     // False because we haven't performed any actions
-                    Assert.False(_commands.StartPushDialog(owner: null, pushOnShow: false, forceWithLease: false, out _));
+                    ClassicAssert.False(_commands.StartPushDialog(owner: null, pushOnShow: false, forceWithLease: false, out _));
                 },
                 testDriverAsync);
         }

@@ -21,7 +21,7 @@ namespace GitExtUtilsTests
                 opposite);
 
             double expected = (example * (1 - alpha)) + (opposite * alpha);
-            Assert.That(transformed, Is.EqualTo(expected).Within(0.001));
+            ClassicAssert.That(transformed, Is.EqualTo(expected).Within(0.001));
         }
 
         [TestCase(0.4d, 0.7d, 0.6d, 0.8d, 0.2d, 0.3d)]
@@ -46,7 +46,7 @@ namespace GitExtUtilsTests
                 example,
                 opposite);
 
-            Assert.That(transformed, Is.EqualTo(expected).Within(0.001));
+            ClassicAssert.That(transformed, Is.EqualTo(expected).Within(0.001));
         }
 
         [TestCase("#000000", 0.5f)]
@@ -56,7 +56,7 @@ namespace GitExtUtilsTests
         {
             Color correspondingForeColor = ColorHelper.TestAccessor.GetContrastColor(ColorTranslator.FromHtml(backgroundColor), luminanceThreshold);
 
-            Assert.That(correspondingForeColor, Is.EqualTo(Color.White));
+            ClassicAssert.That(correspondingForeColor, Is.EqualTo(Color.White));
         }
 
         [TestCase("#FFFFFF", 0.5f)]
@@ -66,7 +66,7 @@ namespace GitExtUtilsTests
         {
             Color correspondingForeColor = ColorHelper.TestAccessor.GetContrastColor(ColorTranslator.FromHtml(backgroundColor), luminanceThreshold);
 
-            Assert.That(correspondingForeColor, Is.EqualTo(Color.Black));
+            ClassicAssert.That(correspondingForeColor, Is.EqualTo(Color.Black));
         }
     }
 }

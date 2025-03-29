@@ -71,7 +71,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.EqualTo(defaultValue));
+            ClassicAssert.That(storedValue, Is.EqualTo(defaultValue));
         }
 
         [Test]
@@ -112,21 +112,21 @@ namespace GitCommandsTests.Settings
             {
                 if (isISetting)
                 {
-                    Assert.That(storedValue, Is.EqualTo(value ?? string.Empty));
+                    ClassicAssert.That(storedValue, Is.EqualTo(value ?? string.Empty));
                 }
                 else
                 {
-                    Assert.That(storedValue, Is.EqualTo(value ?? defaultValue));
+                    ClassicAssert.That(storedValue, Is.EqualTo(value ?? defaultValue));
                 }
             }
             else if (Type.GetTypeCode(property.PropertyType) == TypeCode.DateTime)
             {
                 // We keep only the date
-                Assert.That(storedValue, Is.EqualTo(((DateTime)value).Date));
+                ClassicAssert.That(storedValue, Is.EqualTo(((DateTime)value).Date));
             }
             else
             {
-                Assert.That(storedValue, Is.EqualTo(value));
+                ClassicAssert.That(storedValue, Is.EqualTo(value));
             }
         }
 

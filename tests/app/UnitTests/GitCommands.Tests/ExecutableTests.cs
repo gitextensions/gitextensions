@@ -45,7 +45,7 @@ namespace GitCommandsTests
                 {
                     ctsWaitExit.CancelAfter(cancelDelay);
                     int exitCode = await process.WaitForExitAsync(ctsWaitExit.Token);
-                    Assert.Fail("should not have exited", exitCode);
+                    ClassicAssert.Fail($"should not have exited, received: {exitCode}");
                 }
                 catch (OperationCanceledException)
                 {

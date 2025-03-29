@@ -42,10 +42,10 @@ namespace GitUITests.UserControls
         {
             AuthorRevisionHighlighting sut = new();
             GitModule currentModule = NewModule();
-            Assert.True(sut.ProcessRevisionSelectionChange(currentModule,
+            ClassicAssert.True(sut.ProcessRevisionSelectionChange(currentModule,
                                                new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) }));
 
-            Assert.False(sut.ProcessRevisionSelectionChange(currentModule,
+            ClassicAssert.False(sut.ProcessRevisionSelectionChange(currentModule,
                                                new[]
                                                    {
                                                        NewRevisionWithAuthorEmail(ExpectedAuthorEmail2),

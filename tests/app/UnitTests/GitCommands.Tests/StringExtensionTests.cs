@@ -11,7 +11,7 @@
         [TestCase("Hello", 2, "He")]
         public void ShortenTo_works_as_expected(string s, int length, string expected)
         {
-            Assert.AreEqual(expected, s.ShortenTo(length));
+            ClassicAssert.AreEqual(expected, s.ShortenTo(length));
         }
 
         [TestCase("Hello World", "Hello", true)]
@@ -22,7 +22,7 @@
         [TestCase("Hello World", "ldi", false)]
         public void Contains_works_as_expected(string str, string other, bool expected)
         {
-            Assert.AreEqual(expected, str.Contains(other, StringComparison.InvariantCultureIgnoreCase));
+            ClassicAssert.AreEqual(expected, str.Contains(other, StringComparison.InvariantCultureIgnoreCase));
         }
 
         [TestCase("ABCDEFG", "ABC", "DEFG")]
@@ -33,7 +33,7 @@
         [TestCase("AB", "ABCD", "AB")]
         public void RemovePrefix_works_as_expected(string str, string prefix, string expected)
         {
-            Assert.AreEqual(expected, str.RemovePrefix(prefix));
+            ClassicAssert.AreEqual(expected, str.RemovePrefix(prefix));
         }
 
         [TestCase("ABCDEFG", "EFG", "ABCD")]
@@ -46,7 +46,7 @@
         [TestCase("ABCD", "", "ABCD")]
         public void RemoveSuffix_works_as_expected(string str, string prefix, string expected)
         {
-            Assert.AreEqual(expected, str.RemoveSuffix(prefix));
+            ClassicAssert.AreEqual(expected, str.RemoveSuffix(prefix));
         }
 
         [TestCase("ABCDEFG", 'A', "")]
@@ -59,7 +59,7 @@
         [TestCase("A", 'A', "")]
         public void SubstringUntil_works_as_expected(string str, char c, string expected)
         {
-            Assert.AreEqual(expected, str.SubstringUntil(c));
+            ClassicAssert.AreEqual(expected, str.SubstringUntil(c));
         }
 
         [TestCase("ABCABC", 'A', "ABC")]
@@ -71,7 +71,7 @@
         [TestCase("AAAA", 'A', "AAA")]
         public void SubstringUntilLast_works_as_expected(string str, char c, string expected)
         {
-            Assert.AreEqual(expected, str.SubstringUntilLast(c));
+            ClassicAssert.AreEqual(expected, str.SubstringUntilLast(c));
         }
 
         [TestCase("ABCDEFG", 'A', "BCDEFG")]
@@ -83,7 +83,7 @@
         [TestCase("ABBA", 'A', "BBA")]
         public void SubstringAfter_char_works_as_expected(string str, char c, string expected)
         {
-            Assert.AreEqual(expected, str.SubstringAfter(c));
+            ClassicAssert.AreEqual(expected, str.SubstringAfter(c));
         }
 
         [TestCase("ABCDEFG", "A", "BCDEFG")]
@@ -96,7 +96,7 @@
         [TestCase("ABBA", "A", "BBA")]
         public void SubstringAfter_string_works_as_expected(string str, string s, string expected)
         {
-            Assert.AreEqual(expected, str.SubstringAfter(s));
+            ClassicAssert.AreEqual(expected, str.SubstringAfter(s));
         }
 
         [TestCase("ABCABC", 'A', "BC")]
@@ -111,7 +111,7 @@
         [TestCase("ABBA", 'A', "")]
         public void SubstringAfterLast_char_works_as_expected(string str, char c, string expected)
         {
-            Assert.AreEqual(expected, str.SubstringAfterLast(c));
+            ClassicAssert.AreEqual(expected, str.SubstringAfterLast(c));
         }
 
         [TestCase("ABCABC", "A", "BC")]
@@ -128,7 +128,7 @@
         [TestCase("ABBA", "A", "")]
         public void SubstringAfterLast_string_works_as_expected(string str, string s, string expected)
         {
-            Assert.AreEqual(expected, str.SubstringAfterLast(s));
+            ClassicAssert.AreEqual(expected, str.SubstringAfterLast(s));
         }
 
         [TestCase("/usr/bin", false, "/usr/bin")]
@@ -146,7 +146,7 @@
         [TestCase("cmd /c \"echo \"\"Hello world\"\"\"", true, "cmd /c \"\"echo \"\"\"\"Hello world\"\"\"\"\"\"")]
         public void EscapeForCommandLine_works_as_expected(string s, bool forWindows, string expected)
         {
-            Assert.AreEqual(expected, s.EscapeForCommandLine(forWindows));
+            ClassicAssert.AreEqual(expected, s.EscapeForCommandLine(forWindows));
         }
 
         [TestCase(null, null)]
@@ -165,7 +165,7 @@
 
         public void QuoteIfUnquotedAndNE(string? str, string? expected)
         {
-            Assert.AreEqual(expected, str.QuoteIfNotQuotedAndNE());
+            ClassicAssert.AreEqual(expected, str.QuoteIfNotQuotedAndNE());
         }
 
         [TestCase(null, null)]
@@ -182,7 +182,7 @@
 
         public void RemoveQuotes(string? str, string? expected)
         {
-            Assert.AreEqual(expected, str.RemoveQuotes());
+            ClassicAssert.AreEqual(expected, str.RemoveQuotes());
         }
     }
 }

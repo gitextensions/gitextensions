@@ -50,7 +50,7 @@ namespace GitUITests
 
             if (problems.Count != 0)
             {
-                Assert.Fail(string.Join(
+                ClassicAssert.Fail(string.Join(
                     "\n\n--------\n\n",
                     problems.Select(p => $"Problem with type {p.typeName}\n\n{p.exception}")));
             }

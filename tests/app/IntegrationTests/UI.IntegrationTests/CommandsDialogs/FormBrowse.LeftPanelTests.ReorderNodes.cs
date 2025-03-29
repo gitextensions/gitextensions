@@ -183,7 +183,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
 
             string items = collection.OfType<object>().Select(n => n.ToString()).Join(", ");
-            Assert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
+            ClassicAssert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
         }
 
         private static void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)

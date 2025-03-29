@@ -102,7 +102,7 @@ namespace GitCommandsTests
         public void GetRevision_should_throw_if_revision_does_not_exist()
         {
             RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
-            Assert.Throws<ExternalOperationException>(() =>
+            ClassicAssert.Throws<ExternalOperationException>(() =>
                 reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: true, cancellationToken: default));
         }
 

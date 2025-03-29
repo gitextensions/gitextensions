@@ -17,7 +17,7 @@ public sealed class ToolStripUtilTests
             }
         };
 
-        Assert.AreEqual(5, root.FindToolStripItems().Count());
-        Assert.AreEqual(5, root.FindToolStripItems().Distinct().Count());
+        ClassicAssert.AreEqual(5, root.FindToolStripItems().Count());
+        ClassicAssert.AreEqual(5, root.FindToolStripItems().Distinct().Count());
     }
 }

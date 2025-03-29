@@ -73,9 +73,9 @@ namespace GitUI.CommandsDialogs
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.Run(DisplayRefLog);
+            ThreadHelper.JoinableTaskFactory.Run(DisplayRefLogAsync);
 
-            async Task DisplayRefLog()
+            async Task DisplayRefLogAsync()
             {
                 string item = (string)Branches.SelectedItem;
                 await TaskScheduler.Default;

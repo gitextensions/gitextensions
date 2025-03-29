@@ -63,6 +63,6 @@ public class RevisionFileNameTests
             AppSettings.FollowRenamesInFileHistoryExactOnly = originalFollowRenamesInFileHistoryExactOnly;
         }
 
-        Assert.AreEqual(expectedFileName, actualFileName);
+        ClassicAssert.AreEqual(expectedFileName, actualFileName);
     }
 }

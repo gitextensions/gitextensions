@@ -26,33 +26,33 @@ namespace GitUITests.UserControls
         {
             _accessor.SetGitAction(action, conflicts);
 
-            Assert.AreEqual(action, _accessor.Action);
-            Assert.AreEqual(conflicts, _accessor.HasConflicts);
+            ClassicAssert.AreEqual(action, _accessor.Action);
+            ClassicAssert.AreEqual(conflicts, _accessor.HasConflicts);
 
             switch (action)
             {
                 case InteractiveGitActionControl.GitAction.None:
-                    Assert.AreEqual(conflicts, _accessor.Visible);
-                    Assert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
-                    Assert.AreEqual(!conflicts, _accessor.Controls.Count == 0);
+                    ClassicAssert.AreEqual(conflicts, _accessor.Visible);
+                    ClassicAssert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
+                    ClassicAssert.AreEqual(!conflicts, _accessor.Controls.Count == 0);
                     break;
                 case InteractiveGitActionControl.GitAction.Bisect:
-                    Assert.That(_accessor.Visible);
-                    Assert.That(_accessor.Controls.Contains(_accessor.MoreButton));
+                    ClassicAssert.That(_accessor.Visible);
+                    ClassicAssert.That(_accessor.Controls.Contains(_accessor.MoreButton));
                     break;
                 case InteractiveGitActionControl.GitAction.Rebase:
                 case InteractiveGitActionControl.GitAction.Patch:
-                    Assert.That(_accessor.Visible);
-                    Assert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
-                    Assert.AreEqual(!conflicts, _accessor.Controls.Contains(_accessor.ContinueButton));
-                    Assert.That(_accessor.Controls.Contains(_accessor.AbortButton));
-                    Assert.That(_accessor.Controls.Contains(_accessor.MoreButton));
+                    ClassicAssert.That(_accessor.Visible);
+                    ClassicAssert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
+                    ClassicAssert.AreEqual(!conflicts, _accessor.Controls.Contains(_accessor.ContinueButton));
+                    ClassicAssert.That(_accessor.Controls.Contains(_accessor.AbortButton));
+                    ClassicAssert.That(_accessor.Controls.Contains(_accessor.MoreButton));
                     break;
                 case InteractiveGitActionControl.GitAction.Merge:
-                    Assert.That(_accessor.Visible);
-                    Assert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
-                    Assert.AreEqual(!conflicts, _accessor.Controls.Contains(_accessor.ContinueButton));
-                    Assert.That(_accessor.Controls.Contains(_accessor.AbortButton));
+                    ClassicAssert.That(_accessor.Visible);
+                    ClassicAssert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
+                    ClassicAssert.AreEqual(!conflicts, _accessor.Controls.Contains(_accessor.ContinueButton));
+                    ClassicAssert.That(_accessor.Controls.Contains(_accessor.AbortButton));
                     break;
             }
         }

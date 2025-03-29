@@ -25,8 +25,8 @@ namespace GitUITests.UserControls
                                      where !matched.Select(m => m.XMLModeFile).Contains(nd.Attribute("file").Value)
                                      select nd.Attribute("file").Value;
 
-            Assert.That(!missingInXML.Any(), "The SyntaxNodes.xml file is out of sync with the actual resources. Check the following resource names that don't exist in xml file. {0}", string.Join(",", missingInXML));
-            Assert.That(!missingInResources.Any(), "The SyntaxNodes.xml file is out of sync with the actual resources. Check the following resource names that don't exist in embedded resources. {0}", string.Join(",", missingInResources));
+            ClassicAssert.That(!missingInXML.Any(), "The SyntaxNodes.xml file is out of sync with the actual resources. Check the following resource names that don't exist in xml file. {0}", string.Join(",", missingInXML));
+            ClassicAssert.That(!missingInResources.Any(), "The SyntaxNodes.xml file is out of sync with the actual resources. Check the following resource names that don't exist in embedded resources. {0}", string.Join(",", missingInResources));
         }
     }
 }

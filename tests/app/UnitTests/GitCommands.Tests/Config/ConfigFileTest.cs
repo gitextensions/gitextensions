@@ -55,14 +55,14 @@ namespace GitCommandsTests.Config
 
         private void CheckValueIsEqual(ConfigFile configFile, string key, string expectedValue)
         {
-            Assert.AreEqual(GetConfigValue(configFile.FileName, key), configFile.GetValue(key, string.Empty), "git config --get");
-            Assert.AreEqual(expectedValue, configFile.GetValue(key, string.Empty), "ConfigFile");
+            ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, key), configFile.GetValue(key, string.Empty), "git config --get");
+            ClassicAssert.AreEqual(expectedValue, configFile.GetValue(key, string.Empty), "ConfigFile");
         }
 
         private void CheckIsNotEqual(ConfigFile configFile, string key, string expectedValue)
         {
-            Assert.AreNotEqual(GetConfigValue(configFile.FileName, key), expectedValue, "git config --get");
-            Assert.AreNotEqual(expectedValue, configFile.GetValue(key, string.Empty), "ConfigFile");
+            ClassicAssert.AreNotEqual(GetConfigValue(configFile.FileName, key), expectedValue, "git config --get");
+            ClassicAssert.AreNotEqual(expectedValue, configFile.GetValue(key, string.Empty), "ConfigFile");
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace GitCommandsTests.Config
 
             ConfigFile configFile = new(GetConfigFileName() + "\\");
 
-            Assert.IsNotNull(configFile);
+            ClassicAssert.IsNotNull(configFile);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace GitCommandsTests.Config
             }
             catch (Exception e)
             {
-                Assert.AreEqual("invalid setting name: nonexistentsetting", e.Message.ToLower());
+                ClassicAssert.AreEqual("invalid setting name: nonexistentsetting", e.Message.ToLower());
             }
         }
 
@@ -104,13 +104,13 @@ namespace GitCommandsTests.Config
                 GitModule.SystemEncoding.GetBytes(
                     string.Format("[branch \"BranchName1\"]{0}\tremote = origin1{0}", Environment.NewLine));
 
-            Assert.IsTrue(File.Exists(GetConfigFileName()));
+            ClassicAssert.IsTrue(File.Exists(GetConfigFileName()));
             byte[] fileContent = File.ReadAllBytes(GetConfigFileName());
 
-            Assert.AreEqual(expectedFileContent.Length, fileContent.Length);
+            ClassicAssert.AreEqual(expectedFileContent.Length, fileContent.Length);
             for (int index = 0; index < fileContent.Length; index++)
             {
-                Assert.AreEqual(expectedFileContent[index], fileContent[index]);
+                ClassicAssert.AreEqual(expectedFileContent[index], fileContent[index]);
             }
         }
 
@@ -199,7 +199,7 @@ namespace GitCommandsTests.Config
         public void TestWithNullSettings()
         {
             ConfigFile file = new(GetConfigFileName());
-            Assert.Throws<ArgumentNullException>(() => file.GetValue(null, null));
+            ClassicAssert.Throws<ArgumentNullException>(() => file.GetValue(null, null));
         }
 
         [Test]
@@ -503,24 +503,24 @@ namespace GitCommandsTests.Config
                 CheckIsNotEqual(configFile, remote, "origin1");
 
                 remote = "branch \"BranchName1\".remote";
-                Assert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
-                Assert.AreEqual("origin1", configFile.GetValue(remote, string.Empty), "ConfigFile");
+                ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
+                ClassicAssert.AreEqual("origin1", configFile.GetValue(remote, string.Empty), "ConfigFile");
 
                 remote = "branch \"BranchName2\".remote";
-                Assert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
-                Assert.AreEqual("origin2", configFile.GetValue(remote, string.Empty), "ConfigFile");
+                ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
+                ClassicAssert.AreEqual("origin2", configFile.GetValue(remote, string.Empty), "ConfigFile");
 
                 remote = "branch \"branchName2\".remote";
-                Assert.AreNotEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), "origin2", "git config --get");
-                Assert.AreNotEqual("origin2", configFile.GetValue(remote, string.Empty), "ConfigFile");
+                ClassicAssert.AreNotEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), "origin2", "git config --get");
+                ClassicAssert.AreNotEqual("origin2", configFile.GetValue(remote, string.Empty), "ConfigFile");
 
                 remote = "branch \"branchName2\".remote";
-                Assert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), string.Empty, "git config --get");
-                Assert.AreEqual("origin3", configFile.GetValue(remote, string.Empty), "ConfigFile");
+                ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), string.Empty, "git config --get");
+                ClassicAssert.AreEqual("origin3", configFile.GetValue(remote, string.Empty), "ConfigFile");
 
                 remote = "branch \"branchname2\".remote";
-                Assert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
-                Assert.AreEqual("", configFile.GetValue(remote, string.Empty), "ConfigFile");
+                ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
+                ClassicAssert.AreEqual("", configFile.GetValue(remote, string.Empty), "ConfigFile");
             }
         }
 
@@ -537,7 +537,7 @@ namespace GitCommandsTests.Config
             cfg.LoadFromString(configFileContent);
             string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
             string expected = "no";
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -553,7 +553,7 @@ namespace GitCommandsTests.Config
             cfg.LoadFromString(configFileContent);
             string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
             string expected = "no";
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -570,7 +570,7 @@ namespace GitCommandsTests.Config
             cfg.LoadFromString(configFileContent);
             string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
             string expected = "no";
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -587,7 +587,7 @@ namespace GitCommandsTests.Config
             cfg.LoadFromString(configFileContent);
             IEnumerable<string> actual = cfg.GetValues("status.showuntrackedfiles");
             IEnumerable<string> expected = new[] { "yes", "no" };
-            Assert.True(expected.SequenceEqual(actual));
+            ClassicAssert.True(expected.SequenceEqual(actual));
         }
 
         [Test]
@@ -603,7 +603,7 @@ namespace GitCommandsTests.Config
             cfg.LoadFromString(content.ToString());
             string actual = cfg.GetValue("branch.reporting_bad_behaviour.merge", string.Empty);
             string expected = "refs/heads/[en]reporting_bad_behaviour";
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -619,7 +619,7 @@ namespace GitCommandsTests.Config
             cfg.LoadFromString(content.ToString());
             string actual = cfg.GetValue("branch.[en]reporting_bad_behaviour.merge", string.Empty);
             string expected = "refs/heads/reporting_bad_behaviour";
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         /// <summary>

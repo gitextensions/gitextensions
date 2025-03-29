@@ -33,7 +33,7 @@ namespace GitUITests.Editor
         [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change, true, true, false)]
         public void Should_correctly_setup_IgnoreWhitespaceMethod_with_one_click(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace, bool ignoreEol, bool ignoreChange, bool ignoreAllSpace)
         {
-            Assert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+            ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
 
             FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
 
@@ -76,7 +76,7 @@ namespace GitUITests.Editor
         [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change)]
         public void Should_correctly_reset_IgnoreWhitespaceMethod_to_None_with_two_clicks(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace)
         {
-            Assert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+            ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
 
             FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
 
