@@ -8552,6 +8552,16 @@ help</source>
         <source>Remember choice</source>
         <target />
       </trans-unit>
+      <trans-unit id="_retry.Text">
+        <source>Retry</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_retryOpenVisualStudio.Text">
+        <source>Visual Studio failed to open the file.
+This can be caused by an opened dialog window or other pending operations.
+Try again?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_selectOnlyOneOrTwoRevisions.Text">
         <source>Select only one or two revisions. Abort.</source>
         <target />
