@@ -283,7 +283,7 @@ namespace GitUI.LeftPanel
             mnuBtnPruneAllBranchesFromARemote.Image = Properties.Images.PullFetchPrune;
             mnuBtnPruneAllBranchesFromARemote.Name = "mnuBtnPruneAllBranchesFromARemote";
             mnuBtnPruneAllBranchesFromARemote.Size = new Size(266, 26);
-            mnuBtnPruneAllBranchesFromARemote.Text = "Fetch and prune";
+            mnuBtnPruneAllBranchesFromARemote.Text = "Fetch and &prune";
             // 
             // mnuBtnOpenRemoteUrlInBrowser
             // 

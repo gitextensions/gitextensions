@@ -327,6 +327,7 @@
             folderBrowserButton1.PathShowingControl = comboBoxPullSource;
             folderBrowserButton1.Size = new Size(0, 0);
             folderBrowserButton1.TabIndex = 5;
+            folderBrowserButton1.Text = "Bro&wse...";
             // 
             // GroupMergeOptions
             // 
