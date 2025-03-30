@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace GitExtensions.Extensibility;
 
@@ -37,6 +38,22 @@ public static class DebugHelpers
         }
     }
 #pragma warning restore CS8763 // A method marked [DoesNotReturn] should not return.
+
+    [Conditional("DEBUG")]
+    public static void Trace(string message, [CallerMemberName] string caller = "")
+    {
+        const char noBreakSpace = '\u00a0';
+        Debug.WriteLine($"{caller}:{noBreakSpace}{message}");
+    }
+
+    [Conditional("DEBUG")]
+    public static void TraceIf(bool condition, string message, [CallerMemberName] string caller = "")
+    {
+        if (condition)
+        {
+            Trace(message, caller);
+        }
+    }
 
     private static bool IsTestRunning
         => Application.ExecutablePath.EndsWith("testhost.exe");
