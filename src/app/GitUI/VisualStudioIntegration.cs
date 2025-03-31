@@ -10,6 +10,7 @@ namespace GitUI
 {
     internal static class VisualStudioIntegration
     {
+        private const uint E_FAIL = 0x8000_4005;
         private const uint RPC_E_CALL_REJECTED = 0x8001_0001;
 
         static VisualStudioIntegration()
@@ -94,7 +95,14 @@ namespace GitUI
                     dte.ExecuteCommand("File.OpenFile", filePath);
                     if (lineNumber > 0)
                     {
-                        dte.ExecuteCommand("Edit.GoTo", lineNumber.ToString());
+                        try
+                        {
+                            dte.ExecuteCommand("Edit.GoTo", lineNumber.ToString());
+                        }
+                        catch (COMException exception) when ((uint)exception.HResult == E_FAIL)
+                        {
+                            Debug.WriteLine(exception);
+                        }
                     }
 
                     // Bring the Visual Studio window to the front of the desktop
