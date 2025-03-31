@@ -11,14 +11,14 @@ namespace GitCommandsTests.Helpers
         {
             if (Path.DirectorySeparatorChar == '\\')
             {
-                Assert.AreEqual("C:/Work/GitExtensions/".ToPosixPath(), "C:/Work/GitExtensions/");
-                Assert.AreEqual("C:\\Work\\GitExtensions\\".ToPosixPath(), "C:/Work/GitExtensions/");
+                ClassicAssert.AreEqual("C:/Work/GitExtensions/".ToPosixPath(), "C:/Work/GitExtensions/");
+                ClassicAssert.AreEqual("C:\\Work\\GitExtensions\\".ToPosixPath(), "C:/Work/GitExtensions/");
             }
             else
             {
-                Assert.AreEqual("C:/Work/GitExtensions/".ToPosixPath(), "C:/Work/GitExtensions/");
-                Assert.AreEqual("C:\\Work\\GitExtensions\\".ToPosixPath(), "C:\\Work\\GitExtensions\\");
-                Assert.AreEqual("/var/tmp/".ToPosixPath(), "/var/tmp/");
+                ClassicAssert.AreEqual("C:/Work/GitExtensions/".ToPosixPath(), "C:/Work/GitExtensions/");
+                ClassicAssert.AreEqual("C:\\Work\\GitExtensions\\".ToPosixPath(), "C:\\Work\\GitExtensions\\");
+                ClassicAssert.AreEqual("/var/tmp/".ToPosixPath(), "/var/tmp/");
             }
         }
 
@@ -27,109 +27,109 @@ namespace GitCommandsTests.Helpers
         {
             if (Path.DirectorySeparatorChar == '\\')
             {
-                Assert.AreEqual("C:\\Work\\GitExtensions\\".ToNativePath(), "C:\\Work\\GitExtensions\\");
-                Assert.AreEqual("C:/Work/GitExtensions/".ToNativePath(), "C:\\Work\\GitExtensions\\");
-                Assert.AreEqual("\\\\my-pc\\Work\\GitExtensions\\".ToNativePath(), "\\\\my-pc\\Work\\GitExtensions\\");
+                ClassicAssert.AreEqual("C:\\Work\\GitExtensions\\".ToNativePath(), "C:\\Work\\GitExtensions\\");
+                ClassicAssert.AreEqual("C:/Work/GitExtensions/".ToNativePath(), "C:\\Work\\GitExtensions\\");
+                ClassicAssert.AreEqual("\\\\my-pc\\Work\\GitExtensions\\".ToNativePath(), "\\\\my-pc\\Work\\GitExtensions\\");
             }
             else
             {
-                Assert.AreEqual("C:\\Work\\GitExtensions\\".ToNativePath(), "C:\\Work\\GitExtensions\\");
-                Assert.AreEqual("/Work/GitExtensions/".ToNativePath(), "/Work/GitExtensions/");
-                Assert.AreEqual("//server/share/".ToNativePath(), "//server/share/");
+                ClassicAssert.AreEqual("C:\\Work\\GitExtensions\\".ToNativePath(), "C:\\Work\\GitExtensions\\");
+                ClassicAssert.AreEqual("/Work/GitExtensions/".ToNativePath(), "/Work/GitExtensions/");
+                ClassicAssert.AreEqual("//server/share/".ToNativePath(), "//server/share/");
             }
         }
 
         [Test]
         public void ToWslPathTest()
         {
-            Assert.AreEqual(PathUtil.ToWslPath(null), null);
-            Assert.AreEqual(@"C:/Work/GitExtensions/".ToWslPath(), "/mnt/c/Work/GitExtensions/");
-            Assert.AreEqual(@"C:\Work\GitExtensions\".ToWslPath(), "/mnt/c/Work/GitExtensions/");
-            Assert.AreEqual(@"/var/tmp/".ToWslPath(), "/var/tmp/");
+            ClassicAssert.AreEqual(PathUtil.ToWslPath(null), null);
+            ClassicAssert.AreEqual(@"C:/Work/GitExtensions/".ToWslPath(), "/mnt/c/Work/GitExtensions/");
+            ClassicAssert.AreEqual(@"C:\Work\GitExtensions\".ToWslPath(), "/mnt/c/Work/GitExtensions/");
+            ClassicAssert.AreEqual(@"/var/tmp/".ToWslPath(), "/var/tmp/");
         }
 
         [Test]
         public void ToCygwinPathTest()
         {
-            Assert.AreEqual(PathUtil.ToCygwinPath(null), null);
-            Assert.AreEqual(@"C:/Work/GitExtensions/".ToCygwinPath(), "/cygdrive/c/Work/GitExtensions/");
-            Assert.AreEqual(@"C:\Work\GitExtensions\".ToCygwinPath(), "/cygdrive/c/Work/GitExtensions/");
-            Assert.AreEqual(@"/var/tmp/".ToCygwinPath(), "/var/tmp/");
+            ClassicAssert.AreEqual(PathUtil.ToCygwinPath(null), null);
+            ClassicAssert.AreEqual(@"C:/Work/GitExtensions/".ToCygwinPath(), "/cygdrive/c/Work/GitExtensions/");
+            ClassicAssert.AreEqual(@"C:\Work\GitExtensions\".ToCygwinPath(), "/cygdrive/c/Work/GitExtensions/");
+            ClassicAssert.AreEqual(@"/var/tmp/".ToCygwinPath(), "/var/tmp/");
         }
 
         [Test]
         public void ToMountPathTest()
         {
             const string prefix = "PrEfiX";
-            Assert.AreEqual(PathUtil.ToMountPath(null, prefix), null);
-            Assert.AreEqual(@"".ToMountPath(prefix), "");
-            Assert.AreEqual(@"C".ToMountPath(prefix), "C");
-            Assert.AreEqual(@".:".ToMountPath(prefix), $".:");
-            Assert.AreEqual(@"C:".ToMountPath(prefix), $"{prefix}c");
-            Assert.AreEqual(@"C:_".ToMountPath(prefix), $"{prefix}c_");
-            Assert.AreEqual(@"C:\".ToMountPath(prefix), $"{prefix}c/");
-            Assert.AreEqual(@"C:/".ToMountPath(prefix), $"{prefix}c/");
-            Assert.AreEqual(@"C:\folder".ToMountPath(prefix), $"{prefix}c/folder");
-            Assert.AreEqual(@"C:/Work/GitExtensions/".ToMountPath(prefix), $"{prefix}c/Work/GitExtensions/");
-            Assert.AreEqual(@"C:\Work\GitExtensions\".ToMountPath(prefix), $"{prefix}c/Work/GitExtensions/");
-            Assert.AreEqual(@"/var/tmp/".ToMountPath(prefix), "/var/tmp/");
+            ClassicAssert.AreEqual(PathUtil.ToMountPath(null, prefix), null);
+            ClassicAssert.AreEqual(@"".ToMountPath(prefix), "");
+            ClassicAssert.AreEqual(@"C".ToMountPath(prefix), "C");
+            ClassicAssert.AreEqual(@".:".ToMountPath(prefix), $".:");
+            ClassicAssert.AreEqual(@"C:".ToMountPath(prefix), $"{prefix}c");
+            ClassicAssert.AreEqual(@"C:_".ToMountPath(prefix), $"{prefix}c_");
+            ClassicAssert.AreEqual(@"C:\".ToMountPath(prefix), $"{prefix}c/");
+            ClassicAssert.AreEqual(@"C:/".ToMountPath(prefix), $"{prefix}c/");
+            ClassicAssert.AreEqual(@"C:\folder".ToMountPath(prefix), $"{prefix}c/folder");
+            ClassicAssert.AreEqual(@"C:/Work/GitExtensions/".ToMountPath(prefix), $"{prefix}c/Work/GitExtensions/");
+            ClassicAssert.AreEqual(@"C:\Work\GitExtensions\".ToMountPath(prefix), $"{prefix}c/Work/GitExtensions/");
+            ClassicAssert.AreEqual(@"/var/tmp/".ToMountPath(prefix), "/var/tmp/");
         }
 
         [Test]
         public void EnsureTrailingPathSeparatorTest()
         {
-            Assert.IsNull(((string)null).EnsureTrailingPathSeparator());
-            Assert.AreEqual("".EnsureTrailingPathSeparator(), "");
+            ClassicAssert.IsNull(((string)null).EnsureTrailingPathSeparator());
+            ClassicAssert.AreEqual("".EnsureTrailingPathSeparator(), "");
 
             if (Path.DirectorySeparatorChar == '\\')
             {
-                Assert.AreEqual("C".EnsureTrailingPathSeparator(), "C\\");
-                Assert.AreEqual("C:".EnsureTrailingPathSeparator(), "C:\\");
-                Assert.AreEqual("C:\\".EnsureTrailingPathSeparator(), "C:\\");
-                Assert.AreEqual("C:\\Work\\GitExtensions".EnsureTrailingPathSeparator(), "C:\\Work\\GitExtensions\\");
-                Assert.AreEqual("C:\\Work\\GitExtensions\\".EnsureTrailingPathSeparator(), "C:\\Work\\GitExtensions\\");
-                Assert.AreEqual("C:/Work/GitExtensions/".EnsureTrailingPathSeparator(), "C:/Work/GitExtensions/");
-                Assert.AreEqual("\\".EnsureTrailingPathSeparator(), "\\");
-                Assert.AreEqual("/".EnsureTrailingPathSeparator(), "/");
+                ClassicAssert.AreEqual("C".EnsureTrailingPathSeparator(), "C\\");
+                ClassicAssert.AreEqual("C:".EnsureTrailingPathSeparator(), "C:\\");
+                ClassicAssert.AreEqual("C:\\".EnsureTrailingPathSeparator(), "C:\\");
+                ClassicAssert.AreEqual("C:\\Work\\GitExtensions".EnsureTrailingPathSeparator(), "C:\\Work\\GitExtensions\\");
+                ClassicAssert.AreEqual("C:\\Work\\GitExtensions\\".EnsureTrailingPathSeparator(), "C:\\Work\\GitExtensions\\");
+                ClassicAssert.AreEqual("C:/Work/GitExtensions/".EnsureTrailingPathSeparator(), "C:/Work/GitExtensions/");
+                ClassicAssert.AreEqual("\\".EnsureTrailingPathSeparator(), "\\");
+                ClassicAssert.AreEqual("/".EnsureTrailingPathSeparator(), "/");
             }
             else
             {
-                Assert.AreEqual("/".EnsureTrailingPathSeparator(), "/");
-                Assert.AreEqual("/Work/GitExtensions".EnsureTrailingPathSeparator(), "/Work/GitExtensions/");
-                Assert.AreEqual("/Work/GitExtensions/".EnsureTrailingPathSeparator(), "/Work/GitExtensions/");
-                Assert.AreEqual("/Work/GitExtensions\\".EnsureTrailingPathSeparator(), "/Work/GitExtensions\\/");
+                ClassicAssert.AreEqual("/".EnsureTrailingPathSeparator(), "/");
+                ClassicAssert.AreEqual("/Work/GitExtensions".EnsureTrailingPathSeparator(), "/Work/GitExtensions/");
+                ClassicAssert.AreEqual("/Work/GitExtensions/".EnsureTrailingPathSeparator(), "/Work/GitExtensions/");
+                ClassicAssert.AreEqual("/Work/GitExtensions\\".EnsureTrailingPathSeparator(), "/Work/GitExtensions\\/");
             }
         }
 
         [Test]
         public void RemoveTrailingPathSeparatorTest()
         {
-            Assert.IsNull(((string)null).RemoveTrailingPathSeparator());
-            Assert.AreEqual("".RemoveTrailingPathSeparator(), "");
+            ClassicAssert.IsNull(((string)null).RemoveTrailingPathSeparator());
+            ClassicAssert.AreEqual("".RemoveTrailingPathSeparator(), "");
 
             char s = Path.DirectorySeparatorChar;
 
-            Assert.AreEqual($"C:{s}".RemoveTrailingPathSeparator(), "C:");
-            Assert.AreEqual("foo".RemoveTrailingPathSeparator(), "foo");
-            Assert.AreEqual($"foo{s}".RemoveTrailingPathSeparator(), "foo");
-            Assert.AreEqual($"foo{s}bar".RemoveTrailingPathSeparator(), $"foo{s}bar");
-            Assert.AreEqual($"foo{s}bar{s}".RemoveTrailingPathSeparator(), $"foo{s}bar");
+            ClassicAssert.AreEqual($"C:{s}".RemoveTrailingPathSeparator(), "C:");
+            ClassicAssert.AreEqual("foo".RemoveTrailingPathSeparator(), "foo");
+            ClassicAssert.AreEqual($"foo{s}".RemoveTrailingPathSeparator(), "foo");
+            ClassicAssert.AreEqual($"foo{s}bar".RemoveTrailingPathSeparator(), $"foo{s}bar");
+            ClassicAssert.AreEqual($"foo{s}bar{s}".RemoveTrailingPathSeparator(), $"foo{s}bar");
 
-            Assert.AreEqual("foo/".RemoveTrailingPathSeparator(), "foo");
-            Assert.AreEqual("foo/bar".RemoveTrailingPathSeparator(), "foo/bar");
-            Assert.AreEqual("foo/bar/".RemoveTrailingPathSeparator(), "foo/bar");
+            ClassicAssert.AreEqual("foo/".RemoveTrailingPathSeparator(), "foo");
+            ClassicAssert.AreEqual("foo/bar".RemoveTrailingPathSeparator(), "foo/bar");
+            ClassicAssert.AreEqual("foo/bar/".RemoveTrailingPathSeparator(), "foo/bar");
         }
 
         [Test]
         public void IsLocalFileTest()
         {
-            Assert.AreEqual(PathUtil.IsLocalFile("\\\\my-pc\\Work\\GitExtensions"), true);
-            Assert.AreEqual(PathUtil.IsLocalFile("//my-pc/Work/GitExtensions"), true);
-            Assert.AreEqual(PathUtil.IsLocalFile("C:\\Work\\GitExtensions"), true);
-            Assert.AreEqual(PathUtil.IsLocalFile("C:\\Work\\GitExtensions\\"), true);
-            Assert.AreEqual(PathUtil.IsLocalFile("/Work/GitExtensions"), true);
-            Assert.AreEqual(PathUtil.IsLocalFile("/Work/GitExtensions/"), true);
-            Assert.AreEqual(PathUtil.IsLocalFile("ssh://domain\\user@serverip/cache/git/something/something.git"), false);
+            ClassicAssert.AreEqual(PathUtil.IsLocalFile("\\\\my-pc\\Work\\GitExtensions"), true);
+            ClassicAssert.AreEqual(PathUtil.IsLocalFile("//my-pc/Work/GitExtensions"), true);
+            ClassicAssert.AreEqual(PathUtil.IsLocalFile("C:\\Work\\GitExtensions"), true);
+            ClassicAssert.AreEqual(PathUtil.IsLocalFile("C:\\Work\\GitExtensions\\"), true);
+            ClassicAssert.AreEqual(PathUtil.IsLocalFile("/Work/GitExtensions"), true);
+            ClassicAssert.AreEqual(PathUtil.IsLocalFile("/Work/GitExtensions/"), true);
+            ClassicAssert.AreEqual(PathUtil.IsLocalFile("ssh://domain\\user@serverip/cache/git/something/something.git"), false);
         }
 
         [Test]
@@ -137,47 +137,47 @@ namespace GitCommandsTests.Helpers
         {
             if (Path.DirectorySeparatorChar == '\\')
             {
-                Assert.AreEqual(PathUtil.GetFileName("\\\\my-pc\\Work\\GitExtensions"), "GitExtensions");
-                Assert.AreEqual(PathUtil.GetFileName("C:\\Work\\GitExtensions"), "GitExtensions");
-                Assert.AreEqual(PathUtil.GetFileName("C:\\Work\\GitExtensions\\"), "");
+                ClassicAssert.AreEqual(PathUtil.GetFileName("\\\\my-pc\\Work\\GitExtensions"), "GitExtensions");
+                ClassicAssert.AreEqual(PathUtil.GetFileName("C:\\Work\\GitExtensions"), "GitExtensions");
+                ClassicAssert.AreEqual(PathUtil.GetFileName("C:\\Work\\GitExtensions\\"), "");
             }
             else
             {
-                Assert.AreEqual(PathUtil.GetFileName("//my-pc/Work/GitExtensions"), "GitExtensions");
-                Assert.AreEqual(PathUtil.GetFileName("/Work/GitExtensions"), "GitExtensions");
-                Assert.AreEqual(PathUtil.GetFileName("/Work/GitExtensions/"), "");
+                ClassicAssert.AreEqual(PathUtil.GetFileName("//my-pc/Work/GitExtensions"), "GitExtensions");
+                ClassicAssert.AreEqual(PathUtil.GetFileName("/Work/GitExtensions"), "GitExtensions");
+                ClassicAssert.AreEqual(PathUtil.GetFileName("/Work/GitExtensions/"), "");
             }
         }
 
         [Test]
         public void GetRepositoryNameTest()
         {
-            Assert.AreEqual(PathUtil.GetRepositoryName("https://github.com/gitextensions/gitextensions.git"), "gitextensions");
-            Assert.AreEqual(PathUtil.GetRepositoryName("https://github.com/jeffqc/gitextensions"), "gitextensions");
-            Assert.AreEqual(PathUtil.GetRepositoryName("git://mygitserver/git/test.git"), "test");
-            Assert.AreEqual(PathUtil.GetRepositoryName("ssh://mygitserver/git/test.git"), "test");
-            Assert.AreEqual(PathUtil.GetRepositoryName("ssh://john.doe@mygitserver/git/test.git"), "test");
-            Assert.AreEqual(PathUtil.GetRepositoryName("ssh://john-abraham.doe@mygitserver/git/MyAwesomeRepo.git"), "MyAwesomeRepo");
-            Assert.AreEqual(PathUtil.GetRepositoryName("git@anotherserver.mysubnet.com:project/somerepo.git"), "somerepo");
-            Assert.AreEqual(PathUtil.GetRepositoryName("http://anotherserver.mysubnet.com/project/somerepo.git"), "somerepo");
-            Assert.AreEqual(PathUtil.GetRepositoryName("http://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
-            Assert.AreEqual(PathUtil.GetRepositoryName("ssh://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
-            Assert.AreEqual(PathUtil.GetRepositoryName("git://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
-            Assert.AreEqual(PathUtil.GetRepositoryName("git@anotherserver.mysubnet.com:project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("https://github.com/gitextensions/gitextensions.git"), "gitextensions");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("https://github.com/jeffqc/gitextensions"), "gitextensions");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("git://mygitserver/git/test.git"), "test");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("ssh://mygitserver/git/test.git"), "test");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("ssh://john.doe@mygitserver/git/test.git"), "test");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("ssh://john-abraham.doe@mygitserver/git/MyAwesomeRepo.git"), "MyAwesomeRepo");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("git@anotherserver.mysubnet.com:project/somerepo.git"), "somerepo");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("http://anotherserver.mysubnet.com/project/somerepo.git"), "somerepo");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("http://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("ssh://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("git://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName("git@anotherserver.mysubnet.com:project/Hello+G%C3%BCnter.git"), "Hello Günter");
 
-            Assert.AreEqual(PathUtil.GetRepositoryName(""), "");
-            Assert.AreEqual(PathUtil.GetRepositoryName(null), "");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName(""), "");
+            ClassicAssert.AreEqual(PathUtil.GetRepositoryName(null), "");
             if (Path.DirectorySeparatorChar == '\\')
             {
-                Assert.AreEqual(PathUtil.GetRepositoryName(@"C:\dev\my_repo"), "my_repo");
-                Assert.AreEqual(PathUtil.GetRepositoryName(@"C:\dev\Hello+G%C3%BCnter"), "Hello+G%C3%BCnter");
-                Assert.AreEqual(PathUtil.GetRepositoryName(@"\\networkshare\folder1\folder2\gitextensions"), "gitextensions");
+                ClassicAssert.AreEqual(PathUtil.GetRepositoryName(@"C:\dev\my_repo"), "my_repo");
+                ClassicAssert.AreEqual(PathUtil.GetRepositoryName(@"C:\dev\Hello+G%C3%BCnter"), "Hello+G%C3%BCnter");
+                ClassicAssert.AreEqual(PathUtil.GetRepositoryName(@"\\networkshare\folder1\folder2\gitextensions"), "gitextensions");
             }
             else
             {
-                Assert.AreEqual(PathUtil.GetRepositoryName(@"/dev/my_repo"), "my_repo");
-                Assert.AreEqual(PathUtil.GetRepositoryName(@"/dev/Hello+G%C3%BCnter"), "Hello+G%C3%BCnter");
-                Assert.AreEqual(PathUtil.GetRepositoryName(@"//networkshare/folder1/folder2/gitextensions"), "gitextensions");
+                ClassicAssert.AreEqual(PathUtil.GetRepositoryName(@"/dev/my_repo"), "my_repo");
+                ClassicAssert.AreEqual(PathUtil.GetRepositoryName(@"/dev/Hello+G%C3%BCnter"), "Hello+G%C3%BCnter");
+                ClassicAssert.AreEqual(PathUtil.GetRepositoryName(@"//networkshare/folder1/folder2/gitextensions"), "gitextensions");
             }
         }
 
@@ -245,7 +245,7 @@ namespace GitCommandsTests.Helpers
         [TestCase(" ", typeof(ArgumentException))]
         public void Resolve(string input, Type expectedException)
         {
-            Assert.Throws(expectedException, () => PathUtil.Resolve(input));
+            ClassicAssert.Throws(expectedException, () => PathUtil.Resolve(input));
         }
 
         [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions\", @"\\wsl$\Ubuntu\GitExtensions\")]
@@ -264,7 +264,7 @@ namespace GitCommandsTests.Helpers
         [TestCase(" ", typeof(ArgumentException))]
         public void ResolveWsl(string input, Type expectedException)
         {
-            Assert.Throws(expectedException, () => PathUtil.ResolveWsl(input));
+            ClassicAssert.Throws(expectedException, () => PathUtil.ResolveWsl(input));
         }
 
         [TestCase(@"C:\work\..\GitExtensions\", false)]
@@ -372,8 +372,8 @@ namespace GitCommandsTests.Helpers
         {
             string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            Assert.AreEqual(@"~\SomePath", PathUtil.GetDisplayPath(Path.Combine(home, "SomePath")));
-            Assert.AreEqual("c:\\SomePath", PathUtil.GetDisplayPath("c:\\SomePath"));
+            ClassicAssert.AreEqual(@"~\SomePath", PathUtil.GetDisplayPath(Path.Combine(home, "SomePath")));
+            ClassicAssert.AreEqual("c:\\SomePath", PathUtil.GetDisplayPath("c:\\SomePath"));
         }
 
         [TestCase("/foo/bar", new[] { "\\foo\\", "\\" })]
@@ -385,7 +385,7 @@ namespace GitCommandsTests.Helpers
         [TestCase("C:\\", new string[0])]
         public void FindAncestors(string path, string[] expected)
         {
-            Assert.AreEqual(expected, PathUtil.FindAncestors(path).ToArray());
+            ClassicAssert.AreEqual(expected, PathUtil.FindAncestors(path).ToArray());
         }
 
         private static IEnumerable<TestCaseData> InvalidFolders
@@ -441,7 +441,7 @@ namespace GitCommandsTests.Helpers
         [TestCase("https://myhost:12368/", true)]
         public void CanBeGitURL(string url, bool expected)
         {
-            Assert.AreEqual(expected, PathUtil.CanBeGitURL(url));
+            ClassicAssert.AreEqual(expected, PathUtil.CanBeGitURL(url));
         }
     }
 }

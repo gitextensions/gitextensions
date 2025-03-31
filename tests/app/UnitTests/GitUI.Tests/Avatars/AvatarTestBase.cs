@@ -73,7 +73,7 @@ namespace GitUITests.Avatars
 
             if (expected is not null)
             {
-                Assert.AreSame(expected, actual);
+                ClassicAssert.AreSame(expected, actual);
             }
         }
 
@@ -87,7 +87,7 @@ namespace GitUITests.Avatars
 
             if (expected is not null)
             {
-                Assert.AreSame(expected, actual);
+                ClassicAssert.AreSame(expected, actual);
             }
         }
 

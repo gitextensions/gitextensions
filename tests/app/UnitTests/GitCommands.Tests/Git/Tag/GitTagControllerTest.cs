@@ -34,7 +34,7 @@ namespace GitCommandsTests.Git.Tag
         public void CreateTagWithMessageThrowsIfTheWindowIsNull()
         {
             GitCreateTagArgs args = CreateAnnotatedTagArgs();
-            Assert.Throws<ArgumentNullException>(() => _controller.CreateTag(args, parentWindow: null));
+            ClassicAssert.Throws<ArgumentNullException>(() => _controller.CreateTag(args, parentWindow: null));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace GitCommandsTests.Git.Tag
             _uiCommands.StartCommandLineProcessDialog(Arg.Any<IWin32Window>(), Arg.Is<IGitCommand>(cmd => cmd.Arguments.StartsWith("tag")))
                 .Returns(uiResult);
 
-            Assert.AreEqual(uiResult, _controller.CreateTag(args, CreateTestingWindow()));
+            ClassicAssert.AreEqual(uiResult, _controller.CreateTag(args, CreateTestingWindow()));
 
             _fileSystem.File.Received(1).Delete(_tagMessageFile);
         }

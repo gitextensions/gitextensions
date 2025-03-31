@@ -38,7 +38,7 @@ namespace GitUITests.UserControls
         public void GetExpandedNodesState_should_return_no_expanded_nodes()
         {
             HashSet<string> expandedNodes = _root.GetExpandedNodesState();
-            Assert.AreEqual(0, expandedNodes.Count);
+            ClassicAssert.AreEqual(0, expandedNodes.Count);
         }
 
         [Test]
@@ -46,8 +46,8 @@ namespace GitUITests.UserControls
         {
             _b.Expand();
             HashSet<string> expandedNodes = _root.GetExpandedNodesState();
-            Assert.AreEqual(1, expandedNodes.Count);
-            Assert.AreEqual(true, expandedNodes.Contains(@"Root\B"));
+            ClassicAssert.AreEqual(1, expandedNodes.Count);
+            ClassicAssert.AreEqual(true, expandedNodes.Contains(@"Root\B"));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace GitUITests.UserControls
         {
             _root.ExpandAll();
             HashSet<string> expandedNodes = _root.GetExpandedNodesState();
-            Assert.AreEqual(8, expandedNodes.Count);
+            ClassicAssert.AreEqual(8, expandedNodes.Count);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace GitUITests.UserControls
             _root.RestoreExpandedNodesState(expandedNodes);
 
             HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
-            Assert.AreEqual(0, expandedNodesPost.Count);
+            ClassicAssert.AreEqual(0, expandedNodesPost.Count);
         }
 
         [Test]
@@ -75,8 +75,8 @@ namespace GitUITests.UserControls
             _root.RestoreExpandedNodesState(expandedNodes);
 
             HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
-            Assert.AreEqual(1, expandedNodesPost.Count);
-            Assert.AreEqual(true, expandedNodes.Contains(@"Root\B"));
+            ClassicAssert.AreEqual(1, expandedNodesPost.Count);
+            ClassicAssert.AreEqual(true, expandedNodes.Contains(@"Root\B"));
         }
 
         [Test]
@@ -97,8 +97,8 @@ namespace GitUITests.UserControls
             _root.RestoreExpandedNodesState(expandedNodes);
 
             HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
-            Assert.AreEqual(8, expandedNodesPost.Count);
-            Assert.AreEqual(expandedNodes, expandedNodesPost);
+            ClassicAssert.AreEqual(8, expandedNodesPost.Count);
+            ClassicAssert.AreEqual(expandedNodes, expandedNodesPost);
         }
 
         [Test]

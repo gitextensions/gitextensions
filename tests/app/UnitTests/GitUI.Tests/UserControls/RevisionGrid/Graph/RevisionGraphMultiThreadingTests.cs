@@ -36,7 +36,7 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.Add(revision);
         }
 
-        [Test, Timeout(10 /*min*/ * 60 /*s*/ * 1000 /*ms*/)]
+        [Test, CancelAfter(10 /*min*/ * 60 /*s*/ * 1000 /*ms*/)]
         public void ShouldReorderInTopoOrder()
         {
             for (int i = 0; i < _numberOfRepeats; i++)
@@ -64,7 +64,7 @@ namespace GitUITests.UserControls.RevisionGrid
                 _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
 
                 // Validate topo order
-                Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
+                ClassicAssert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
             }
         }
 
@@ -96,7 +96,7 @@ namespace GitUITests.UserControls.RevisionGrid
                 randomRevisions.Add(revision);
             }
 
-            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder(), "Revisions not reordered to topo order");
+            ClassicAssert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder(), "Revisions not reordered to topo order");
         }
 
         private void BuildCache()

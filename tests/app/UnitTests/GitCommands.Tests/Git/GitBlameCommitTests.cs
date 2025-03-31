@@ -37,7 +37,7 @@ namespace GitCommandsTests.Git
                 "test summary",
                 "fileName.txt");
 
-            Assert.AreEqual(str.ToString(), commit.ToString());
+            ClassicAssert.AreEqual(str.ToString(), commit.ToString());
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace GitCommandsTests.Git
                 "test summary",
                 "fileName.txt");
 
-            Assert.AreEqual(str.ToString(), commit.ToString(summaryBuilder));
+            ClassicAssert.AreEqual(str.ToString(), commit.ToString(summaryBuilder));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace GitCommandsTests.Git
                 "test summary",
                 "fileName.txt");
 
-            Assert.AreEqual(str.ToString(), commit.ToString(summaryBuilder));
+            ClassicAssert.AreEqual(str.ToString(), commit.ToString(summaryBuilder));
         }
     }
 }

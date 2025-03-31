@@ -170,7 +170,7 @@ namespace GitExtensions.UITests.ScriptEngine
 
                 // check for correct test setup
                 formBrowse.RevisionGridControl.GetTestAccessor().ClearSelection();
-                Assert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+                ClassicAssert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
                 formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull();
 
                 ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands))).Should()
@@ -194,7 +194,7 @@ namespace GitExtensions.UITests.ScriptEngine
                 // wait until the revisions are loaded
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Assert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+                ClassicAssert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
 
                 string errorMessage = null;
                 bool result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands);

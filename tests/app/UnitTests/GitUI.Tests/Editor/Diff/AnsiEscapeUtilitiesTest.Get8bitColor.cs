@@ -128,7 +128,7 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
     {
         int colorCode = 256;
 
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        ClassicAssert.Throws<ArgumentOutOfRangeException>(() =>
         {
             AnsiEscapeUtilities.TestAccessor.Get8bitColor(colorCode, fore: true, bold: false, dim: false);
         });

@@ -11,7 +11,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void GetStringEncodingNull()
         {
-            Assert.Throws<ArgumentNullException>(() => EncodingHelper.GetString(new byte[] { 0x30 }, new byte[] { 0x31 }, null));
+            ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.GetString(new byte[] { 0x30 }, new byte[] { 0x31 }, null));
         }
 
         [Test]
@@ -22,7 +22,7 @@ namespace GitCommandsTests.Git
 
             string getString = EncodingHelper.GetString(testBytes, null, Encoding.ASCII);
 
-            Assert.AreEqual(asciiString, getString);
+            ClassicAssert.AreEqual(asciiString, getString);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace GitCommandsTests.Git
 
             string getString = EncodingHelper.GetString(null, testBytes, Encoding.ASCII);
 
-            Assert.AreEqual(asciiString, getString);
+            ClassicAssert.AreEqual(asciiString, getString);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace GitCommandsTests.Git
 
             string getString = EncodingHelper.GetString(testBytesOutput, testBytesError, Encoding.ASCII);
 
-            Assert.AreEqual(asciiString + Environment.NewLine + asciiString.ToUpper(), getString);
+            ClassicAssert.AreEqual(asciiString + Environment.NewLine + asciiString.ToUpper(), getString);
         }
 
         [Test]
@@ -60,13 +60,13 @@ namespace GitCommandsTests.Git
 
             string getString = EncodingHelper.GetString(null, testBytes, Encoding.UTF8);
 
-            Assert.AreEqual(utf8String, getString);
+            ClassicAssert.AreEqual(utf8String, getString);
         }
 
         [Test]
         public void ConvertToTestEncodingNull()
         {
-            Assert.Throws<ArgumentNullException>(() => EncodingHelper.ConvertTo(null, "abcd"));
+            ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.ConvertTo(null, "abcd"));
         }
 
         [Test]
@@ -75,13 +75,13 @@ namespace GitCommandsTests.Git
             string unicodeString = "\u30a2\u30c3";
             byte[] convertedBytes = EncodingHelper.ConvertTo(Encoding.UTF8, unicodeString);
 
-            Assert.AreEqual(convertedBytes.Length, 6);
-            Assert.AreEqual(convertedBytes[0], 0xE3);
-            Assert.AreEqual(convertedBytes[1], 0x82);
-            Assert.AreEqual(convertedBytes[2], 0xA2);
-            Assert.AreEqual(convertedBytes[3], 0xE3);
-            Assert.AreEqual(convertedBytes[4], 0x83);
-            Assert.AreEqual(convertedBytes[5], 0x83);
+            ClassicAssert.AreEqual(convertedBytes.Length, 6);
+            ClassicAssert.AreEqual(convertedBytes[0], 0xE3);
+            ClassicAssert.AreEqual(convertedBytes[1], 0x82);
+            ClassicAssert.AreEqual(convertedBytes[2], 0xA2);
+            ClassicAssert.AreEqual(convertedBytes[3], 0xE3);
+            ClassicAssert.AreEqual(convertedBytes[4], 0x83);
+            ClassicAssert.AreEqual(convertedBytes[5], 0x83);
         }
 
         [Test]
@@ -90,18 +90,18 @@ namespace GitCommandsTests.Git
             string unicodeString = "\u30a2\u30c3";
             byte[] convertedBytes = EncodingHelper.ConvertTo(Encoding.Unicode, unicodeString);
 
-            Assert.AreEqual(convertedBytes.Length, 4);
-            Assert.AreEqual(convertedBytes[0], 0xA2);
-            Assert.AreEqual(convertedBytes[1], 0x30);
-            Assert.AreEqual(convertedBytes[2], 0xC3);
-            Assert.AreEqual(convertedBytes[3], 0x30);
+            ClassicAssert.AreEqual(convertedBytes.Length, 4);
+            ClassicAssert.AreEqual(convertedBytes[0], 0xA2);
+            ClassicAssert.AreEqual(convertedBytes[1], 0x30);
+            ClassicAssert.AreEqual(convertedBytes[2], 0xC3);
+            ClassicAssert.AreEqual(convertedBytes[3], 0x30);
         }
 
         [Test]
         public void DecodeStringTestEncodingNull()
         {
             Encoding enc = null;
-            Assert.Throws<ArgumentNullException>(() => EncodingHelper.DecodeString(new byte[] { 0x30 }, new byte[] { 0x31 }, ref enc));
+            ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.DecodeString(new byte[] { 0x30 }, new byte[] { 0x31 }, ref enc));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace GitCommandsTests.Git
 
             string decodedString = EncodingHelper.DecodeString(testBytes, null, ref enc);
 
-            Assert.AreEqual(asciiString, decodedString);
+            ClassicAssert.AreEqual(asciiString, decodedString);
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace GitCommandsTests.Git
 
             string decodedString = EncodingHelper.DecodeString(null, testBytes, ref enc);
 
-            Assert.AreEqual(asciiString, decodedString);
+            ClassicAssert.AreEqual(asciiString, decodedString);
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace GitCommandsTests.Git
 
             string decodedString = EncodingHelper.DecodeString(testBytesOutput, testBytesError, ref enc);
 
-            Assert.AreEqual(asciiString + Environment.NewLine + asciiString.ToUpper(), decodedString);
+            ClassicAssert.AreEqual(asciiString + Environment.NewLine + asciiString.ToUpper(), decodedString);
         }
 
         [Test]
@@ -158,8 +158,8 @@ namespace GitCommandsTests.Git
 
             string decodedString = EncodingHelper.DecodeString(null, testBytes, ref enc);
 
-            Assert.AreEqual(utf8String, decodedString);
-            Assert.AreEqual(new UTF8Encoding(), enc);
+            ClassicAssert.AreEqual(utf8String, decodedString);
+            ClassicAssert.AreEqual(new UTF8Encoding(), enc);
         }
 
         // Insert a Test here which checks whether EncodingHelper.DecodeString

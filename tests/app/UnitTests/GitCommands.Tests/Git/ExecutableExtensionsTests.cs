@@ -57,10 +57,10 @@ namespace GitCommandsTests.Git
             // GetOutput always ignore error output (will not add to cache).
             string output = _executable.GetOutput(arguments, cache: cache);
 
-            Assert.AreEqual($"Hello", output);
+            ClassicAssert.AreEqual($"Hello", output);
 
             // Cache should still have a single item
-            Assert.AreEqual(1, cache.GetCachedCommands().Count);
+            ClassicAssert.AreEqual(1, cache.GetCachedCommands().Count);
         }
 
         [Test]
@@ -76,14 +76,14 @@ namespace GitCommandsTests.Git
             {
                 string output = _executable.GetOutput(arguments, cache: cache);
 
-                Assert.AreEqual(commandOutput, output);
+                ClassicAssert.AreEqual(commandOutput, output);
             }
 
             // Validate data stored in cache afterwards
-            Assert.AreEqual(1, cache.GetCachedCommands().Count);
-            Assert.IsTrue(cache.TryGet(arguments, out string? outputBytes, out string? errorBytes));
-            Assert.AreEqual(GitModule.SystemEncoding.GetBytes(commandOutput), outputBytes);
-            Assert.IsEmpty(errorBytes);
+            ClassicAssert.AreEqual(1, cache.GetCachedCommands().Count);
+            ClassicAssert.IsTrue(cache.TryGet(arguments, out string? outputBytes, out string? errorBytes));
+            ClassicAssert.AreEqual(GitModule.SystemEncoding.GetBytes(commandOutput), outputBytes);
+            ClassicAssert.IsEmpty(errorBytes);
         }
 
         // Process argument upper bound is actually (short.MaxValue - 1)
@@ -104,14 +104,14 @@ namespace GitCommandsTests.Git
                 GenerateStringByLength(Math.Max(1, arg2Len - appLength - len - 1))
             }, appLength, maxLength);
 
-            Assert.AreEqual(argCount, args.Count);
+            ClassicAssert.AreEqual(argCount, args.Count);
 
             // The reset command runs in the GE repo dir, so the result depends on workTree contents
             int index = 0;
             ExecutionResult? result = _gitExecutable.RunBatchCommand(args, (eventArgs) =>
             {
-                Assert.IsTrue(eventArgs.ExecutionResult);
-                Assert.AreEqual(expectedProcessedCounts[index], eventArgs.ProcessedCount);
+                ClassicAssert.IsTrue(eventArgs.ExecutionResult);
+                ClassicAssert.AreEqual(expectedProcessedCounts[index], eventArgs.ProcessedCount);
                 index++;
             });
         }
@@ -128,8 +128,8 @@ namespace GitCommandsTests.Git
                     GenerateStringByLength(Math.Max(1, arg2Len - _appPath.Length - 4))
                 }, _appPath.Length + 3, maxLength);
 
-            ExternalOperationException ex = Assert.Throws<ExternalOperationException>(() => _gitExecutable.RunBatchCommand(args));
-            Assert.IsInstanceOf<Win32Exception>(ex.InnerException);
+            ExternalOperationException ex = ClassicAssert.Throws<ExternalOperationException>(() => _gitExecutable.RunBatchCommand(args));
+            ClassicAssert.IsInstanceOf<Win32Exception>(ex.InnerException);
         }
 
         private static string GenerateStringByLength(int length)

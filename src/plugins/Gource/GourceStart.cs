@@ -102,11 +102,11 @@ namespace GitExtensions.Plugins.Gource
                 .GroupBy(t => t.name)
                 .Select(g => (g.First().email, name: g.Key));
 
-            await Task.WhenAll(authors.Select(DownloadImage));
+            await Task.WhenAll(authors.Select(DownloadImageAsync));
 
             return gourceAvatarsDir;
 
-            async Task DownloadImage((string email, string name) author)
+            async Task DownloadImageAsync((string email, string name) author)
             {
                 try
                 {

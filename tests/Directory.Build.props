@@ -11,4 +11,7 @@
     <Nullable>annotations</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Using Include="NUnit.Framework.Legacy" />
+  </ItemGroup>
 </Project>

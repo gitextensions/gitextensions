@@ -59,8 +59,8 @@ namespace CommonTestUtils
 
         public void Verify()
         {
-            Assert.IsEmpty(_outputStackByArguments, "All staged output should have been consumed.");
-            Assert.IsEmpty(_commandArgumentsSet, "All staged output should have been consumed.");
+            ClassicAssert.IsEmpty(_outputStackByArguments, "All staged output should have been consumed.");
+            ClassicAssert.IsEmpty(_commandArgumentsSet, "All staged output should have been consumed.");
 
             foreach (MockProcess process in _processes)
             {
@@ -176,14 +176,14 @@ namespace CommonTestUtils
             public void Verify()
             {
                 // all output should have been read
-                Assert.AreEqual(StandardOutput.BaseStream.Length, StandardOutput.BaseStream.Position);
+                ClassicAssert.AreEqual(StandardOutput.BaseStream.Length, StandardOutput.BaseStream.Position);
 
                 // Only verify if std input is not closed.
                 // ExecutableExtensions.ExecuteAsync will close std input when writeInput action is specified
                 if (StandardInput.BaseStream is not null && StandardInput.BaseStream.CanRead)
                 {
                     // no input should have been written (yet)
-                    Assert.AreEqual(0, StandardInput.BaseStream.Length);
+                    ClassicAssert.AreEqual(0, StandardInput.BaseStream.Length);
                 }
             }
         }

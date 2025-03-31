@@ -22,7 +22,7 @@ namespace GitUITests.Avatars
         {
             HotSwapAvatarProvider provider = new();
             Image image = await provider.GetAvatarAsync(_email, _name, 16);
-            Assert.Null(image);
+            ClassicAssert.Null(image);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace GitUITests.Avatars
 
             Image result = await provider.GetAvatarAsync(_email, _name, _size);
 
-            Assert.AreSame(_img, result);
+            ClassicAssert.AreSame(_img, result);
         }
     }
 }

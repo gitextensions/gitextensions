@@ -265,7 +265,7 @@ namespace GitCommandsTests.Remote
             _remotesManager.ConfigureRemotes("origin");
 
             string mergeWith = "";
-            Assert.AreEqual(mergeWith, refs[0].MergeWith);
+            ClassicAssert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(0).MergeWith = mergeWith;
         }
 
@@ -281,7 +281,7 @@ namespace GitCommandsTests.Remote
             _remotesManager.ConfigureRemotes("origin");
 
             string mergeWith = "";
-            Assert.AreEqual(mergeWith, refs[0].MergeWith);
+            ClassicAssert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(0).MergeWith = mergeWith;
         }
 
@@ -299,7 +299,7 @@ namespace GitCommandsTests.Remote
 
             string mergeWith = "";
 
-            Assert.AreEqual(mergeWith, refs[0].MergeWith);
+            ClassicAssert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(0).MergeWith = mergeWith;
         }
 
@@ -316,7 +316,7 @@ namespace GitCommandsTests.Remote
 
             string mergeWith = "";
 
-            Assert.AreEqual(mergeWith, refs[0].MergeWith);
+            ClassicAssert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(0).MergeWith = mergeWith;
         }
 
@@ -332,7 +332,7 @@ namespace GitCommandsTests.Remote
 
             _remotesManager.ConfigureRemotes("origin");
             string mergeWith = "develop";
-            Assert.AreEqual(mergeWith, refs[0].MergeWith);
+            ClassicAssert.AreEqual(mergeWith, refs[0].MergeWith);
             refs[0].Received(1).MergeWith = mergeWith;
         }
 
@@ -364,12 +364,12 @@ namespace GitCommandsTests.Remote
             _configFile.GetConfigSections().Returns(x => sections);
 
             IReadOnlyList<GitExtensions.Extensibility.Git.Remote> disabledRemotes = _remotesManager.GetDisabledRemotes();
-            Assert.AreEqual(1, disabledRemotes.Count);
-            Assert.AreEqual(disabledRemoteName, disabledRemotes[0].Name);
+            ClassicAssert.AreEqual(1, disabledRemotes.Count);
+            ClassicAssert.AreEqual(disabledRemoteName, disabledRemotes[0].Name);
 
             IReadOnlyList<string> disabledRemoteNames = _remotesManager.GetDisabledRemoteNames();
-            Assert.AreEqual(1, disabledRemoteNames.Count);
-            Assert.AreEqual(disabledRemoteName, disabledRemoteNames[0]);
+            ClassicAssert.AreEqual(1, disabledRemoteNames.Count);
+            ClassicAssert.AreEqual(disabledRemoteName, disabledRemoteNames[0]);
         }
 
         [Test]
@@ -384,8 +384,8 @@ namespace GitCommandsTests.Remote
             _configFile.GetConfigSections().Returns(x => sections);
 
             IReadOnlyList<string> enabledRemoteNames = _remotesManager.GetEnabledRemoteNames();
-            Assert.AreEqual(1, enabledRemoteNames.Count);
-            Assert.AreEqual(enabledRemoteName, enabledRemoteNames[0]);
+            ClassicAssert.AreEqual(1, enabledRemoteNames.Count);
+            ClassicAssert.AreEqual(enabledRemoteName, enabledRemoteNames[0]);
         }
 
         [Test]
@@ -399,8 +399,8 @@ namespace GitCommandsTests.Remote
             List<IConfigSection> sections = [new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
-            Assert.IsTrue(_remotesManager.EnabledRemoteExists(enabledRemoteName));
-            Assert.IsFalse(_remotesManager.EnabledRemoteExists(disabledRemoteName));
+            ClassicAssert.IsTrue(_remotesManager.EnabledRemoteExists(enabledRemoteName));
+            ClassicAssert.IsFalse(_remotesManager.EnabledRemoteExists(disabledRemoteName));
         }
 
         [Test]
@@ -414,8 +414,8 @@ namespace GitCommandsTests.Remote
             List<IConfigSection> sections = [new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true)];
             _configFile.GetConfigSections().Returns(x => sections);
 
-            Assert.IsTrue(_remotesManager.DisabledRemoteExists(disabledRemoteName));
-            Assert.IsFalse(_remotesManager.DisabledRemoteExists(enabledRemoteName));
+            ClassicAssert.IsTrue(_remotesManager.DisabledRemoteExists(disabledRemoteName));
+            ClassicAssert.IsFalse(_remotesManager.DisabledRemoteExists(enabledRemoteName));
         }
 
         public class IntegrationTests

@@ -9,7 +9,7 @@ namespace GitUIPluginInterfacesTests
         public void ThrowWhenUserPluginsPathAlreadyInitialized()
         {
             ManagedExtensibility.SetUserPluginsPath("A");
-            Assert.Throws<InvalidOperationException>(() => ManagedExtensibility.SetUserPluginsPath("B"));
+            ClassicAssert.Throws<InvalidOperationException>(() => ManagedExtensibility.SetUserPluginsPath("B"));
         }
     }
 }

@@ -22,8 +22,8 @@ namespace GitUITests.CommandsDialogs
             string lowercasePath = path.ToLower();
             bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
 
-            Assert.IsFalse(isExistingOnFileSystem);
-            Assert.IsNull(exactPath);
+            ClassicAssert.IsFalse(isExistingOnFileSystem);
+            ClassicAssert.IsNull(exactPath);
         }
 
         [Test]
@@ -34,9 +34,9 @@ namespace GitUITests.CommandsDialogs
             string lowercasePath = path.ToLower();
             bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
 
-            Assert.IsTrue(isExistingOnFileSystem);
+            ClassicAssert.IsTrue(isExistingOnFileSystem);
 
-            Assert.AreEqual(path, exactPath);
+            ClassicAssert.AreEqual(path, exactPath);
         }
 
         [TestCase("Folder1\\file1.txt", true, true)]
@@ -52,8 +52,8 @@ namespace GitUITests.CommandsDialogs
 
             string expected = Path.Combine(repo.TemporaryPath, relativePath);
 
-            Assert.AreEqual(isResolved, _controller.TryGetExactPath(expected, out string exactPath));
-            Assert.AreEqual(doesMatch, exactPath == expected);
+            ClassicAssert.AreEqual(isResolved, _controller.TryGetExactPath(expected, out string exactPath));
+            ClassicAssert.AreEqual(doesMatch, exactPath == expected);
         }
     }
 }

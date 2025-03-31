@@ -24,8 +24,8 @@ namespace GitUITests.UserControls
         [Test]
         public void Should_show_all_sort_options()
         {
-            Assert.IsTrue(_itemUnderTest.HasDropDownItems);
-            Assert.AreEqual(EnumHelper.GetValues<GitRefsSortBy>().Length, _itemUnderTest.DropDownItems.Count);
+            ClassicAssert.IsTrue(_itemUnderTest.HasDropDownItems);
+            ClassicAssert.AreEqual(EnumHelper.GetValues<GitRefsSortBy>().Length, _itemUnderTest.DropDownItems.Count);
         }
 
         private static IEnumerable<TestCaseData> SortOrderOptions
@@ -83,11 +83,11 @@ namespace GitUITests.UserControls
         private void AssertOnlyCheckedItemIs(GitRefsSortBy sortType)
         {
             ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i.Tag.Equals(sortType));
-            Assert.IsTrue(matchingSubItem.Checked);
+            ClassicAssert.IsTrue(matchingSubItem.Checked);
 
             foreach (ToolStripMenuItem otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))
             {
-                Assert.IsFalse(otherItem.Checked);
+                ClassicAssert.IsFalse(otherItem.Checked);
             }
         }
     }

@@ -13,10 +13,10 @@ namespace GitExtUtilsTests
             control.SetTag(1);
             control.SetTag(2f);
 
-            Assert.That(control.HasTag<int>(), Is.True);
-            Assert.That(control.GetTag<int>(), Is.EqualTo(1));
-            Assert.That(control.HasTag<float>(), Is.True);
-            Assert.That(control.GetTag<float>(), Is.EqualTo(2f));
+            ClassicAssert.That(control.HasTag<int>(), Is.True);
+            ClassicAssert.That(control.GetTag<int>(), Is.EqualTo(1));
+            ClassicAssert.That(control.HasTag<float>(), Is.True);
+            ClassicAssert.That(control.GetTag<float>(), Is.EqualTo(2f));
         }
 
         [Test]
@@ -25,8 +25,8 @@ namespace GitExtUtilsTests
             Control control = new();
             control.Tag = new object();
 
-            Assert.That(control.HasTag<int>(), Is.False);
-            Assert.That(control.GetTag<int>(), Is.EqualTo(default(int)));
+            ClassicAssert.That(control.HasTag<int>(), Is.False);
+            ClassicAssert.That(control.GetTag<int>(), Is.EqualTo(default(int)));
         }
 
         [Test]
@@ -37,8 +37,8 @@ namespace GitExtUtilsTests
 
             control.SetTag(1);
 
-            Assert.That(control.HasTag<int>(), Is.True);
-            Assert.That(control.GetTag<int>(), Is.EqualTo(1));
+            ClassicAssert.That(control.HasTag<int>(), Is.True);
+            ClassicAssert.That(control.GetTag<int>(), Is.EqualTo(1));
         }
 
         [Test]
@@ -48,11 +48,11 @@ namespace GitExtUtilsTests
             control.SetTag("key", 1);
             control.SetTag("key", 2f);
 
-            Assert.That(control.HasTag<int>("key"), Is.False);
-            Assert.That(control.GetTag<int>("key"), Is.EqualTo(default(int)));
+            ClassicAssert.That(control.HasTag<int>("key"), Is.False);
+            ClassicAssert.That(control.GetTag<int>("key"), Is.EqualTo(default(int)));
 
-            Assert.That(control.HasTag<float>("key"), Is.True);
-            Assert.That(control.GetTag<float>("key"), Is.EqualTo(2f));
+            ClassicAssert.That(control.HasTag<float>("key"), Is.True);
+            ClassicAssert.That(control.GetTag<float>("key"), Is.EqualTo(2f));
         }
     }
 }
