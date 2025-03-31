@@ -50,6 +50,9 @@ namespace GitUI
         private readonly TranslationString _confirmBranchCheckoutCaption = new("Confirm checkout");
         private readonly TranslationString _confirmBranchCheckout = new(@"Are you sure you want to check out branch ""{0}""?");
 
+        private readonly TranslationString _retry = new("Retry");
+        private readonly TranslationString _retryOpenVisualStudio = new("Visual Studio failed to open the file.\nThis can be caused by an opened dialog window or other pending operations.\nTry again?");
+
         // internal for FormTranslate
         internal MessageBoxes()
         {
@@ -136,6 +139,9 @@ namespace GitUI
                 ? Confirm(owner, string.Format(Instance._confirmBranchCheckout.Text, branchName), Instance._confirmBranchCheckoutCaption.Text)
                 : true;
 
+        public static bool ConfirmRetryOpenVisualStudio(IWin32Window? owner = null)
+            => Confirm(owner, Instance._retryOpenVisualStudio.Text, Instance._retry.Text);
+
         public static void ShellNotFound(IWin32Window? owner)
             => ShowError(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text);
 
@@ -146,6 +152,6 @@ namespace GitUI
             => Show(owner, text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
 
         private static DialogResult Show(IWin32Window? owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
-            => MessageBox.Show(owner, text, caption, buttons, icon);
+            => MessageBox.Show(owner ?? Form.ActiveForm, text, caption, buttons, icon);
     }
 }

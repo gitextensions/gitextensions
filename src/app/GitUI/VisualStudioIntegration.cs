@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
@@ -9,6 +10,9 @@ namespace GitUI
 {
     internal static class VisualStudioIntegration
     {
+        private const uint E_FAIL = 0x8000_4005;
+        private const uint RPC_E_CALL_REJECTED = 0x8001_0001;
+
         static VisualStudioIntegration()
         {
             ThreadHelper.FileAndForget(async () =>
@@ -34,21 +38,43 @@ namespace GitUI
             // just create the static instance
         }
 
-        public static void OpenFile(string filePath)
+        public static void OpenFile(string filePath, int lineNumber = 0)
         {
             ThreadHelper.FileAndForget(async () =>
             {
-                if (!await TryOpenFileInRunningInstanceAsync(filePath))
+                while (true)
                 {
-                    if (_devEnvPath is not null)
+                    try
                     {
-                        using IProcess process = new Executable(_devEnvPath).Start(filePath);
+                        if (await TryOpenFileInRunningInstanceAsync(filePath, lineNumber))
+                        {
+                            return;
+                        }
+
+                        break;
                     }
+                    catch (COMException exception) when ((uint)exception.HResult == RPC_E_CALL_REJECTED)
+                    {
+                        Trace.WriteLine(exception);
+                        Form activeForm = Form.ActiveForm;
+                        await activeForm.SwitchToMainThreadAsync();
+                        if (!MessageBoxes.ConfirmRetryOpenVisualStudio(activeForm))
+                        {
+                            return;
+                        }
+
+                        await TaskScheduler.Default;
+                    }
+                }
+
+                if (_devEnvPath is not null)
+                {
+                    using IProcess process = new Executable(_devEnvPath).Start(filePath);
                 }
             });
         }
 
-        public static async Task<bool> TryOpenFileInRunningInstanceAsync(string filePath)
+        public static async Task<bool> TryOpenFileInRunningInstanceAsync(string filePath, int lineNumber = 0)
         {
             if (!File.Exists(filePath))
             {
@@ -67,6 +93,17 @@ namespace GitUI
                 {
                     // Open the file
                     dte.ExecuteCommand("File.OpenFile", filePath);
+                    if (lineNumber > 0)
+                    {
+                        try
+                        {
+                            dte.ExecuteCommand("Edit.GoTo", lineNumber.ToString());
+                        }
+                        catch (COMException exception) when ((uint)exception.HResult == E_FAIL)
+                        {
+                            Debug.WriteLine(exception);
+                        }
+                    }
 
                     // Bring the Visual Studio window to the front of the desktop
                     NativeMethods.SetForegroundWindow(dte.MainWindow.HWnd);

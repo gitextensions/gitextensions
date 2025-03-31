@@ -13,7 +13,9 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.CommandsDialogs;
 using GitUI.Properties;
+using GitUI.ScriptsEngine;
 using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -165,10 +167,15 @@ namespace GitUI
                     string? itemName = SelectedItemAbsolutePath;
                     if (itemName is not null)
                     {
-                        VisualStudioIntegration.OpenFile(itemName);
+                        VisualStudioIntegration.OpenFile(itemName, GetLineNumber());
                     }
                 };
                 return item;
+
+                int GetLineNumber()
+                    => FindScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider
+                        ? int.Parse(scriptOptionsProvider.GetValues(ScriptOptionsProvider._lineNumber).FirstOrDefault("0"))
+                        : 0;
             }
         }
 
