@@ -2283,6 +2283,19 @@ namespace GitUI.CommandsDialogs
             }
 
             LeftSplitContainer.Panel2Collapsed = !AppSettings.OutputHistoryPanelVisible.Value;
+
+            // Account for shift by 2px as for RevisionsSplitContainer
+            if (!LeftSplitContainer.Panel2Collapsed && LeftSplitContainer.FixedPanel == FixedPanel.Panel2)
+            {
+                try
+                {
+                    LeftSplitContainer.SplitterDistance += 2;
+                }
+                catch (Exception)
+                {
+                    // Catching because bad value can raise an exception
+                }
+            }
         }
 
         private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
