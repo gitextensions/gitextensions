@@ -42,6 +42,7 @@ public static class DebugHelpers
     [Conditional("DEBUG")]
     public static void Trace(string message, [CallerMemberName] string caller = "")
     {
+        // colon and noBreakSpace are used to detect such messages in order to show them in the Output History
         const char noBreakSpace = '\u00a0';
         Debug.WriteLine($"{caller}:{noBreakSpace}{message}");
     }
