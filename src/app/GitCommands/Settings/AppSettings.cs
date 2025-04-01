@@ -1029,6 +1029,12 @@ namespace GitCommands
             set => SetEnum("checkoutbranchaction", value);
         }
 
+        public static bool CheckoutOtherBranchAfterReset
+        {
+            get => GetBool("checkoutotherbranchafterreset", true);
+            set => SetBool("checkoutotherbranchafterreset", value);
+        }
+
         public static bool UseDefaultCheckoutBranchAction
         {
             get => GetBool("UseDefaultCheckoutBranchAction", false);

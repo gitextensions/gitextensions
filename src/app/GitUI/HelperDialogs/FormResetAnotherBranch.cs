@@ -29,9 +29,9 @@ namespace GitUI.HelperDialogs
             InitializeComponent();
 
             pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image);
-            labelResetBranchWarning.AutoSize = true;
-            labelResetBranchWarning.Dock = DockStyle.Fill;
-            labelResetBranchWarning.SetForeColorForBackColor();
+            lblResetBranchWarning.AutoSize = true;
+            lblResetBranchWarning.Dock = DockStyle.Fill;
+            lblResetBranchWarning.SetForeColorForBackColor();
 
             Height = tableLayoutPanel1.Height + tableLayoutPanel1.Top;
             tableLayoutPanel1.Dock = DockStyle.Fill;
@@ -39,6 +39,9 @@ namespace GitUI.HelperDialogs
             ActiveControl = Branches;
 
             InitializeComplete();
+
+            cbxCheckoutBranch.Checked = AppSettings.CheckoutOtherBranchAfterReset;
+            cbxCheckoutBranch.CheckedChanged += (s, e) => AppSettings.CheckoutOtherBranchAfterReset = cbxCheckoutBranch.Checked;
 
             Ok.Enabled = false;
         }
@@ -105,6 +108,11 @@ namespace GitUI.HelperDialogs
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {
+                if (cbxCheckoutBranch.Checked)
+                {
+                    UICommands.StartCheckoutBranch(this, gitRefToReset.Name);
+                }
+
                 UICommands.RepoChangedNotifier.Notify();
                 Close();
             }
