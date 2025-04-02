@@ -73,7 +73,7 @@ namespace GitUI
         private readonly TranslationString _directoryIsNotAValidRepository = new("The selected item is not a valid git repository.");
 
         private readonly TranslationString _sortBy = new("&Sort by");
-        private readonly TranslationString _sortGroupBy = new("&Sort and group by");
+        private readonly TranslationString _sortGroupBy = new("Sort and group &by");
         private readonly TranslationString _sortOrder = new("&Sort order");
 
         private readonly TranslationString _diffSelectedWithRememberedFile = new("&Diff with \"{0}\"");

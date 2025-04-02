@@ -1540,7 +1540,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target />
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
-        <source>&amp;Sort and group by</source>
+        <source>Sort and group &amp;by</source>
         <target />
       </trans-unit>
       <trans-unit id="btnAsTree.ToolTipText">
@@ -3993,15 +3993,15 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="addFileToGitIgnoreToolStripMenuItem.Text">
-        <source>Add file to .gitignore</source>
+        <source>Add file to .&amp;gitignore</source>
         <target />
       </trans-unit>
       <trans-unit id="addFileToGitInfoExcludeLocallyToolStripMenuItem.Text">
-        <source>Add file to .git/info/exclude</source>
+        <source>Add file to .git/info/e&amp;xclude</source>
         <target />
       </trans-unit>
       <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
-        <source>Assume unchanged</source>
+        <source>&amp;Assume unchanged</source>
         <target />
       </trans-unit>
       <trans-unit id="branchNameLabel.Text">
@@ -4045,7 +4045,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="commitSubmoduleChanges.Text">
-        <source>Commit submodule changes</source>
+        <source>Co&amp;mmit submodule changes</source>
         <target />
       </trans-unit>
       <trans-unit id="commitTemplatesToolStripMenuItem.Text">
@@ -4057,7 +4057,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="copyFolderNameMenuItem.Text">
-        <source>Copy folder name</source>
+        <source>&amp;Copy folder name</source>
         <target />
       </trans-unit>
       <trans-unit id="createBranchToolStripButton.Text">
@@ -4073,11 +4073,11 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="deleteFileToolStripMenuItem.Text">
-        <source>Delete file</source>
+        <source>&amp;Delete file</source>
         <target />
       </trans-unit>
       <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
-        <source>Do not assume unchanged</source>
+        <source>Do not &amp;assume unchanged</source>
         <target />
       </trans-unit>
       <trans-unit id="doNotSkipWorktreeToolStripMenuItem.Text">
@@ -4085,7 +4085,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="editFileToolStripMenuItem.Text">
-        <source>Edit file</source>
+        <source>&amp;Edit file</source>
         <target />
       </trans-unit>
       <trans-unit id="editGitIgnoreToolStripMenuItem.Text">
@@ -4097,7 +4097,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="filenameToClipboardToolStripMenuItem.Text">
-        <source>Copy full path</source>
+        <source>&amp;Copy full path</source>
         <target />
       </trans-unit>
       <trans-unit id="generateListOfChangesInSubmodulesChangesToolStripMenuItem.Text">
@@ -4105,7 +4105,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="interactiveAddToolStripMenuItem.Text">
-        <source>Interactive Add</source>
+        <source>&amp;Interactive Add</source>
         <target />
       </trans-unit>
       <trans-unit id="modifyCommitMessageButton.Text">
@@ -4117,23 +4117,23 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show in folder</source>
+        <source>Show in &amp;folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
-        <source>Show in folder</source>
+        <source>Show in &amp;folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
-        <source>Open</source>
+        <source>&amp;Open</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
+        <source>O&amp;pen with difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>Open with...</source>
+        <source>Open &amp;with...</source>
         <target />
       </trans-unit>
       <trans-unit id="refreshDialogOnFormFocusToolStripMenuItem.Text">
@@ -4145,11 +4145,11 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
-        <source>Reset chunk of file</source>
+        <source>Reset chunk of fi&amp;le</source>
         <target />
       </trans-unit>
       <trans-unit id="resetSubmoduleChanges.Text">
-        <source>Reset submodule changes</source>
+        <source>&amp;Reset submodule changes</source>
         <target />
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
@@ -4181,39 +4181,39 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="skipWorktreeToolStripMenuItem.Text">
-        <source>Skip worktree</source>
+        <source>S&amp;kip worktree</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedCopyPathToolStripMenuItem14.Text">
-        <source>Copy full path</source>
+        <source>&amp;Copy full path</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedEditFileToolStripMenuItem11.Text">
-        <source>Edit file</source>
+        <source>&amp;Edit file</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedFileHistoryToolStripMenuItem6.Text">
-        <source>View file history</source>
+        <source>View file &amp;history</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedOpenDifftoolToolStripMenuItem9.Text">
-        <source>Open with difftool</source>
+        <source>O&amp;pen with difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
-        <source>Show in folder</source>
+        <source>Show in &amp;folder</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedOpenToolStripMenuItem7.Text">
-        <source>Open</source>
+        <source>&amp;Open</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedOpenWithToolStripMenuItem8.Text">
-        <source>Open with...</source>
+        <source>Open &amp;with...</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedResetChanges.Text">
-        <source>Reset file or directory changes</source>
+        <source>&amp;Reset file or directory changes</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedRunScriptToolStripMenuItem.Text">
@@ -4221,11 +4221,11 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
-        <source>Stash submodule changes</source>
+        <source>S&amp;tash submodule changes</source>
         <target />
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
-        <source>Stop tracking this file</source>
+        <source>Stop &amp;tracking this file</source>
         <target />
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
@@ -4253,19 +4253,19 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="tsmiResetUnstagedChanges.Text">
-        <source>Reset file or directory changes</source>
+        <source>&amp;Reset file or directory changes</source>
         <target />
       </trans-unit>
       <trans-unit id="updateSubmoduleMenuItem.Text">
-        <source>Update submodule</source>
+        <source>&amp;Update submodule</source>
         <target />
       </trans-unit>
       <trans-unit id="viewFileHistoryToolStripItem.Text">
-        <source>View file history</source>
+        <source>View file &amp;history</source>
         <target />
       </trans-unit>
       <trans-unit id="viewHistoryMenuItem.Text">
-        <source>View history</source>
+        <source>View &amp;history</source>
         <target />
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
@@ -10539,7 +10539,7 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_disableMenuItem.Text">
-        <source>Disable this dropdown</source>
+        <source>&amp;Disable this dropdown</source>
         <target />
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
@@ -10949,7 +10949,7 @@ the last selected commit.</source>
         <target />
       </trans-unit>
       <trans-unit id="_sortGroupBy.Text">
-        <source>&amp;Sort and group by</source>
+        <source>Sort and group &amp;by</source>
         <target />
       </trans-unit>
       <trans-unit id="_sortOrder.Text">
