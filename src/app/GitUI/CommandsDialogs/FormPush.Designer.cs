@@ -440,7 +440,7 @@
             LoadSSHKey.Name = "LoadSSHKey";
             LoadSSHKey.Size = new Size(137, 25);
             LoadSSHKey.TabIndex = 3;
-            LoadSSHKey.Text = "Load SSH key";
+            LoadSSHKey.Text = "&Load SSH key";
             LoadSSHKey.UseVisualStyleBackColor = true;
             LoadSSHKey.Click += LoadSshKeyClick;
             // 
@@ -511,6 +511,7 @@
             folderBrowserButton1.PathShowingControl = PushDestination;
             folderBrowserButton1.Size = new Size(0, 0);
             folderBrowserButton1.TabIndex = 5;
+            folderBrowserButton1.Text = "Bro&wse...";
             // 
             // Pull
             // 
