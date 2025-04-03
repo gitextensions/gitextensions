@@ -1535,12 +1535,48 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Co&amp;llapse root folders</source>
         <target />
       </trans-unit>
+      <trans-unit id="_deleteFailed.Text">
+        <source>Delete file failed</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteSelectedFiles.Text">
+        <source>Are you sure you want to delete the selected file(s)?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteSelectedFilesCaption.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_expandAll.Text">
         <source>E&amp;xpand all</source>
         <target />
       </trans-unit>
+      <trans-unit id="_firstRevision.Text">
+        <source>First: A </source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_multipleDescription.Text">
+        <source>&lt;multiple&gt;</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetSelectedChangesText.Text">
+        <source>Are you sure you want to reset all selected files to {0}?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileFilterAllFiles.Text">
+        <source>All files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileFilterCurrentFormat.Text">
+        <source>Current format</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_selectAll.Text">
         <source>S&amp;elect all</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectedRevision.Text">
+        <source>Second: B </source>
         <target />
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
@@ -1607,8 +1643,24 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Find in commit files using git-grep regular expression...</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiCherryPickChanges.Text">
+        <source>Cherr&amp;y pick changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCommitSubmoduleChanges.Text">
+        <source>&amp;Commit submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCopyPaths.Text">
+        <source>Copy &amp;path(s)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiDenseTree.Text">
         <source>&amp;Dense tree (merge single item with its folder node)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiDiffTwoSelected.Text">
+        <source>&amp;Diff the selected files</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiFindUsingBoth.Text">
@@ -1647,16 +1699,60 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>Group by file &amp;status - tree</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiOpenWithDifftool.Text">
+        <source>Open with &amp;difftool</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiRefreshOnFormFocus.Text">
         <source>&amp;Refresh artificial commits on form focus</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiRememberFirstRevDiff.Text">
+        <source>R&amp;emember First for diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiRememberSecondRevDiff.Text">
+        <source>&amp;Remember Second for diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiResetFileTo.Text">
+        <source>&amp;Reset file(s) to</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiResetSubmoduleChanges.Text">
+        <source>R&amp;eset submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiRunScript.Text">
+        <source>Run script</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiSaveAs.Text">
+        <source>S&amp;ave selected as...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowFindInCommitFilesGitGrep.Text">
+        <source>Show 'Find in commit fi&amp;les using git-grep'</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowGroupNodesInFlatList.Text">
         <source>Show &amp;group nodes in flat list (if multiple)</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiShowInFolder.Text">
+        <source>Show &amp;in folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiStashSubmoduleChanges.Text">
+        <source>S&amp;tash submodule changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiToolbar.Text">
         <source>Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiUpdateSubmodule.Text">
+        <source>&amp;Update submodule</source>
         <target />
       </trans-unit>
     </body>
@@ -9146,174 +9242,6 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="tsbShowTags.ToolTipText">
         <source>Tags</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="RevisionDiffControl" source-language="en">
-    <body>
-      <trans-unit id="_deleteFailed.Text">
-        <source>Delete file failed</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFiles.Text">
-        <source>Are you sure you want to delete the selected file(s)?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFilesCaption.Text">
-        <source>Delete</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_firstRevision.Text">
-        <source>First: A </source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_multipleDescription.Text">
-        <source>&lt;multiple&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_resetSelectedChangesText.Text">
-        <source>Are you sure you want to reset all selected files to {0}?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_saveFileFilterAllFiles.Text">
-        <source>All files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_saveFileFilterCurrentFormat.Text">
-        <source>Current format</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_selectedRevision.Text">
-        <source>Second: B </source>
-        <target />
-      </trans-unit>
-      <trans-unit id="blameToolStripMenuItem.Text">
-        <source>&amp;Blame</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
-        <source>Cherr&amp;y pick changes</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="copyPathsToolStripMenuItem.Text">
-        <source>Copy &amp;path(s)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffCommitSubmoduleChanges.Text">
-        <source>&amp;Commit submodule changes</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffDeleteFileToolStripMenuItem.Text">
-        <source>De&amp;lete file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffEditWorkingDirectoryFileToolStripMenuItem.Text">
-        <source>&amp;Edit working directory file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffFilterFileInGridToolStripMenuItem.Text">
-        <source>Filter file in &amp;grid</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffOpenRevisionFileToolStripMenuItem.Text">
-        <source>Ope&amp;n this revision (temp file)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffOpenRevisionFileWithToolStripMenuItem.Text">
-        <source>Open this revision &amp;with... (temp file)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffOpenWorkingDirectoryFileWithToolStripMenuItem.Text">
-        <source>&amp;Open working directory file with...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffResetSubmoduleChanges.Text">
-        <source>R&amp;eset submodule changes</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
-        <source>Show in File &amp;tree</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
-        <source>S&amp;tash submodule changes</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffTwoSelectedDifftoolToolStripMenuItem.Text">
-        <source>&amp;Diff the selected files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
-        <source>&amp;Update submodule</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File &amp;history</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find file...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="firstToLocalToolStripMenuItem.Text">
-        <source>First -&gt; &amp;Working directory</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>&amp;First -&gt; Second</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show &amp;in folder</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with &amp;difftool</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="rememberFirstRevDiffToolStripMenuItem.Text">
-        <source>R&amp;emember First for diff</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="rememberSecondRevDiffToolStripMenuItem.Text">
-        <source>&amp;Remember Second for diff</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="resetFileToToolStripMenuItem.Text">
-        <source>&amp;Reset file(s) to</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="saveAsToolStripMenuItem1.Text">
-        <source>S&amp;ave selected as...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="saveToolStripMenuItem.Text">
-        <source>Save</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="selectedToLocalToolStripMenuItem.Text">
-        <source>&amp;Second -&gt; Working directory</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showFindInCommitFilesGitGrepDialogToolStripMenuItem.Text">
-        <source>Find in &amp;commit files using git-grep...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showFindInCommitFilesGitGrepToolStripMenuItem.Text">
-        <source>Show 'Find in commit fi&amp;les using git-grep'</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="stageFileToolStripMenuItem.Text">
-        <source>&amp;Stage file(s)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="unstageFileToolStripMenuItem.Text">
-        <source>&amp;Unstage file(s)</source>
         <target />
       </trans-unit>
     </body>

@@ -32,6 +32,7 @@ namespace GitUI
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileStatusList));
             FileStatusListView = new MultiSelectTreeView();
             columnHeader = new ColumnHeader();
             NoFiles = new Label();
@@ -76,7 +77,51 @@ namespace GitUI
             tsmiFindUsingDialog = new ToolStripMenuItem();
             tsmiFindUsingInputBox = new ToolStripMenuItem();
             tsmiFindUsingBoth = new ToolStripMenuItem();
+            ItemContextMenu = new ContextMenuStrip(components);
+            tsmiUpdateSubmodule = new ToolStripMenuItem();
+            tsmiResetSubmoduleChanges = new ToolStripMenuItem();
+            tsmiStashSubmoduleChanges = new ToolStripMenuItem();
+            tsmiCommitSubmoduleChanges = new ToolStripMenuItem();
+            sepSubmodule = new ToolStripSeparator();
+            tsmiStageFile = new ToolStripMenuItem();
+            tsmiUnstageFile = new ToolStripMenuItem();
+            tsmiResetFileTo = new ToolStripMenuItem();
+            tsmiResetFileToSelected = new ToolStripMenuItem();
+            tsmiResetFileToParent = new ToolStripMenuItem();
+            tsmiCherryPickChanges = new ToolStripMenuItem();
+            sepGit = new ToolStripSeparator();
+            tsmiOpenWithDifftool = new ToolStripMenuItem();
+            tsmiSecondDiffCaption = new ToolStripMenuItem();
+            tsmiFirstDiffCaption = new ToolStripMenuItem();
+            tsmiDiffFirstToSelected = new ToolStripMenuItem();
+            tsmiDiffSelectedToLocal = new ToolStripMenuItem();
+            tsmiDiffFirstToLocal = new ToolStripMenuItem();
+            sepDifftoolRemember = new ToolStripSeparator();
+            tsmiDiffTwoSelected = new ToolStripMenuItem();
+            tsmiDiffWithRemembered = new ToolStripMenuItem();
+            tsmiRememberSecondRevDiff = new ToolStripMenuItem();
+            tsmiRememberFirstRevDiff = new ToolStripMenuItem();
+            tsmiOpenWorkingDirectoryFileWith = new ToolStripMenuItem();
+            tsmiOpenRevisionFile = new ToolStripMenuItem();
+            tsmiOpenRevisionFileWith = new ToolStripMenuItem();
+            tsmiSaveAs = new ToolStripMenuItem();
+            tsmiEditWorkingDirectoryFile = new ToolStripMenuItem();
+            tsmiDeleteFile = new ToolStripMenuItem();
+            sepFile = new ToolStripSeparator();
+            tsmiCopyPaths = new GitUI.CommandsDialogs.Menus.CopyPathsToolStripMenuItem();
+            tsmiShowInFolder = new ToolStripMenuItem();
+            sepBrowse = new ToolStripSeparator();
+            tsmiShowInFileTree = new ToolStripMenuItem();
+            tsmiFilterFileInGrid = new ToolStripMenuItem();
+            tsmiFileHistory = new ToolStripMenuItem();
+            tsmiBlame = new ToolStripMenuItem();
+            tsmiFindFile = new ToolStripMenuItem();
+            tsmiOpenFindInCommitFilesGitGrepDialog = new ToolStripMenuItem();
+            tsmiShowFindInCommitFilesGitGrep = new ToolStripMenuItem();
+            sepScripts = new ToolStripSeparator();
+            tsmiRunScript = new ToolStripMenuItem();
             Toolbar.SuspendLayout();
+            ItemContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // FileStatusListView
@@ -152,7 +197,7 @@ namespace GitUI
             FilterWatermarkLabel.Location = new Point(0, 48);
             FilterWatermarkLabel.Name = "FilterWatermarkLabel";
             FilterWatermarkLabel.Padding = new Padding(2, 3, 2, 0);
-            FilterWatermarkLabel.Size = new Size(210, 20);
+            FilterWatermarkLabel.Size = new Size(210, 18);
             FilterWatermarkLabel.TabIndex = 6;
             FilterWatermarkLabel.Text = "Filter files using a regular expression...";
             FilterWatermarkLabel.Click += FilterWatermarkLabel_Click;
@@ -504,9 +549,324 @@ namespace GitUI
             tsmiFindUsingBoth.Text = "Using &both";
             tsmiFindUsingBoth.Click += FindUsing_Click;
             // 
+            // ItemContextMenu
+            // 
+            ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiSaveAs, tsmiEditWorkingDirectoryFile, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepScripts, tsmiRunScript });
+            ItemContextMenu.Name = "DiffContextMenu";
+            ItemContextMenu.Size = new Size(296, 606);
+            // 
+            // tsmiUpdateSubmodule
+            // 
+            tsmiUpdateSubmodule.Image = Properties.Images.SubmodulesUpdate;
+            tsmiUpdateSubmodule.Name = "tsmiUpdateSubmodule";
+            tsmiUpdateSubmodule.Size = new Size(295, 22);
+            tsmiUpdateSubmodule.Tag = "1";
+            tsmiUpdateSubmodule.Text = "&Update submodule";
+            tsmiUpdateSubmodule.Click += UpdateSubmodule_Click;
+            // 
+            // tsmiResetSubmoduleChanges
+            // 
+            tsmiResetSubmoduleChanges.Image = Properties.Images.ResetWorkingDirChanges;
+            tsmiResetSubmoduleChanges.Name = "tsmiResetSubmoduleChanges";
+            tsmiResetSubmoduleChanges.Size = new Size(295, 22);
+            tsmiResetSubmoduleChanges.Text = "R&eset submodule changes";
+            tsmiResetSubmoduleChanges.Click += ResetSubmoduleChanges_Click;
+            // 
+            // tsmiStashSubmoduleChanges
+            // 
+            tsmiStashSubmoduleChanges.Image = Properties.Images.Stash;
+            tsmiStashSubmoduleChanges.Name = "tsmiStashSubmoduleChanges";
+            tsmiStashSubmoduleChanges.Size = new Size(295, 22);
+            tsmiStashSubmoduleChanges.Text = "S&tash submodule changes";
+            tsmiStashSubmoduleChanges.Click += StashSubmoduleChanges_Click;
+            // 
+            // tsmiCommitSubmoduleChanges
+            // 
+            tsmiCommitSubmoduleChanges.Image = Properties.Images.RepoStateDirtySubmodules;
+            tsmiCommitSubmoduleChanges.Name = "tsmiCommitSubmoduleChanges";
+            tsmiCommitSubmoduleChanges.Size = new Size(295, 22);
+            tsmiCommitSubmoduleChanges.Text = "&Commit submodule changes";
+            tsmiCommitSubmoduleChanges.Click += CommitSubmoduleChanges_Click;
+            // 
+            // sepSubmodule
+            // 
+            sepSubmodule.Name = "sepSubmodule";
+            sepSubmodule.Size = new Size(292, 6);
+            sepSubmodule.Tag = "1";
+            // 
+            // tsmiStageFile
+            // 
+            tsmiStageFile.Image = Properties.Images.Stage;
+            tsmiStageFile.Name = "tsmiStageFile";
+            tsmiStageFile.Size = new Size(295, 22);
+            tsmiStageFile.Text = "&Stage file(s)";
+            tsmiStageFile.Click += StageFile_Click;
+            // 
+            // tsmiUnstageFile
+            // 
+            tsmiUnstageFile.Image = Properties.Images.Unstage;
+            tsmiUnstageFile.Name = "tsmiUnstageFile";
+            tsmiUnstageFile.Size = new Size(295, 22);
+            tsmiUnstageFile.Text = "&Unstage file(s)";
+            tsmiUnstageFile.Click += UnstageFile_Click;
+            // 
+            // tsmiResetFileTo
+            // 
+            tsmiResetFileTo.DropDownItems.AddRange(new ToolStripItem[] { tsmiResetFileToSelected, tsmiResetFileToParent });
+            tsmiResetFileTo.Image = Properties.Images.ResetWorkingDirChanges;
+            tsmiResetFileTo.Name = "tsmiResetFileTo";
+            tsmiResetFileTo.Size = new Size(295, 22);
+            tsmiResetFileTo.Text = "&Reset file(s) to";
+            tsmiResetFileTo.DropDownOpening += ResetFileTo_DropDownOpening;
+            // 
+            // tsmiResetFileToSelected
+            // 
+            tsmiResetFileToSelected.Name = "tsmiResetFileToSelected";
+            tsmiResetFileToSelected.Size = new Size(67, 22);
+            tsmiResetFileToSelected.Click += ResetFile_Click;
+            // 
+            // tsmiResetFileToParent
+            // 
+            tsmiResetFileToParent.Name = "tsmiResetFileToParent";
+            tsmiResetFileToParent.Size = new Size(67, 22);
+            tsmiResetFileToParent.Click += ResetFile_Click;
+            // 
+            // tsmiCherryPickChanges
+            // 
+            tsmiCherryPickChanges.Image = Properties.Images.CherryPick;
+            tsmiCherryPickChanges.Name = "tsmiCherryPickChanges";
+            tsmiCherryPickChanges.Size = new Size(295, 22);
+            tsmiCherryPickChanges.Text = "Cherr&y pick changes";
+            tsmiCherryPickChanges.Visible = false;
+            tsmiCherryPickChanges.Click += CherryPickChanges_Click;
+            // 
+            // sepGit
+            // 
+            sepGit.Name = "sepGit";
+            sepGit.Size = new Size(292, 6);
+            // 
+            // tsmiOpenWithDifftool
+            // 
+            tsmiOpenWithDifftool.DropDownItems.AddRange(new ToolStripItem[] { tsmiSecondDiffCaption, tsmiFirstDiffCaption, tsmiDiffFirstToSelected, tsmiDiffSelectedToLocal, tsmiDiffFirstToLocal, sepDifftoolRemember, tsmiDiffTwoSelected, tsmiDiffWithRemembered, tsmiRememberSecondRevDiff, tsmiRememberFirstRevDiff });
+            tsmiOpenWithDifftool.Image = Properties.Images.Diff;
+            tsmiOpenWithDifftool.Name = "tsmiOpenWithDifftool";
+            tsmiOpenWithDifftool.Size = new Size(295, 22);
+            tsmiOpenWithDifftool.Text = "Open with &difftool";
+            tsmiOpenWithDifftool.DropDownOpening += OpenWithDifftool_DropDownOpening;
+            // 
+            // tsmiSecondDiffCaption
+            // 
+            tsmiSecondDiffCaption.Enabled = false;
+            tsmiSecondDiffCaption.Name = "tsmiSecondDiffCaption";
+            tsmiSecondDiffCaption.Size = new Size(227, 22);
+            // 
+            // tsmiFirstDiffCaption
+            // 
+            tsmiFirstDiffCaption.Enabled = false;
+            tsmiFirstDiffCaption.Name = "tsmiFirstDiffCaption";
+            tsmiFirstDiffCaption.Size = new Size(227, 22);
+            // 
+            // tsmiDiffFirstToSelected
+            // 
+            tsmiDiffFirstToSelected.Name = "tsmiDiffFirstToSelected";
+            tsmiDiffFirstToSelected.Size = new Size(227, 22);
+            tsmiDiffFirstToSelected.Text = "&First -> Second";
+            tsmiDiffFirstToSelected.Click += DiffFirstToSelected_Click;
+            // 
+            // tsmiDiffSelectedToLocal
+            // 
+            tsmiDiffSelectedToLocal.Name = "tsmiDiffSelectedToLocal";
+            tsmiDiffSelectedToLocal.Size = new Size(227, 22);
+            tsmiDiffSelectedToLocal.Text = "&Second -> Working directory";
+            tsmiDiffSelectedToLocal.Click += DiffSelectedToLocal_Click;
+            // 
+            // tsmiDiffFirstToLocal
+            // 
+            tsmiDiffFirstToLocal.Name = "tsmiDiffFirstToLocal";
+            tsmiDiffFirstToLocal.Size = new Size(227, 22);
+            tsmiDiffFirstToLocal.Text = "First -> &Working directory";
+            tsmiDiffFirstToLocal.Click += DiffFirstToLocal_Click;
+            // 
+            // sepDifftoolRemember
+            // 
+            sepDifftoolRemember.Name = "sepDifftoolRemember";
+            sepDifftoolRemember.Size = new Size(224, 6);
+            // 
+            // tsmiDiffTwoSelected
+            // 
+            tsmiDiffTwoSelected.Name = "tsmiDiffTwoSelected";
+            tsmiDiffTwoSelected.Size = new Size(227, 22);
+            tsmiDiffTwoSelected.Text = "&Diff the selected files";
+            tsmiDiffTwoSelected.Click += DiffTwoSelected_Click;
+            // 
+            // tsmiDiffWithRemembered
+            // 
+            tsmiDiffWithRemembered.Name = "tsmiDiffWithRemembered";
+            tsmiDiffWithRemembered.Size = new Size(227, 22);
+            tsmiDiffWithRemembered.Click += DiffWithRemembered_Click;
+            // 
+            // tsmiRememberSecondRevDiff
+            // 
+            tsmiRememberSecondRevDiff.Name = "tsmiRememberSecondRevDiff";
+            tsmiRememberSecondRevDiff.Size = new Size(227, 22);
+            tsmiRememberSecondRevDiff.Text = "&Remember Second for diff";
+            tsmiRememberSecondRevDiff.Click += RememberSecondRevDiff_Click;
+            // 
+            // tsmiRememberFirstRevDiff
+            // 
+            tsmiRememberFirstRevDiff.Name = "tsmiRememberFirstRevDiff";
+            tsmiRememberFirstRevDiff.Size = new Size(227, 22);
+            tsmiRememberFirstRevDiff.Text = "R&emember First for diff";
+            tsmiRememberFirstRevDiff.Click += RememberFirstRevDiff_Click;
+            // 
+            // tsmiOpenWorkingDirectoryFileWith
+            // 
+            tsmiOpenWorkingDirectoryFileWith.Image = Properties.Images.EditFile;
+            tsmiOpenWorkingDirectoryFileWith.Name = "tsmiOpenWorkingDirectoryFileWith";
+            tsmiOpenWorkingDirectoryFileWith.Size = new Size(295, 22);
+            tsmiOpenWorkingDirectoryFileWith.Text = "&Open working directory file with...";
+            tsmiOpenWorkingDirectoryFileWith.Click += OpenWorkingDirectoryFileWith_Click;
+            // 
+            // tsmiOpenRevisionFile
+            // 
+            tsmiOpenRevisionFile.Image = Properties.Images.ViewFile;
+            tsmiOpenRevisionFile.Name = "tsmiOpenRevisionFile";
+            tsmiOpenRevisionFile.Size = new Size(295, 22);
+            tsmiOpenRevisionFile.Text = "Ope&n this revision (temp file)";
+            tsmiOpenRevisionFile.Click += OpenRevisionFile_Click;
+            // 
+            // tsmiOpenRevisionFileWith
+            // 
+            tsmiOpenRevisionFileWith.Image = Properties.Images.ViewFile;
+            tsmiOpenRevisionFileWith.Name = "tsmiOpenRevisionFileWith";
+            tsmiOpenRevisionFileWith.Size = new Size(295, 22);
+            tsmiOpenRevisionFileWith.Text = "Open this revision &with... (temp file)";
+            tsmiOpenRevisionFileWith.Click += OpenRevisionFileWith_Click;
+            // 
+            // tsmiSaveAs
+            // 
+            tsmiSaveAs.Image = Properties.Images.SaveAs;
+            tsmiSaveAs.Name = "tsmiSaveAs";
+            tsmiSaveAs.ShortcutKeys = Keys.Control | Keys.S;
+            tsmiSaveAs.Size = new Size(295, 22);
+            tsmiSaveAs.Text = "S&ave selected as...";
+            tsmiSaveAs.Click += SaveAs_Click;
+            // 
+            // tsmiEditWorkingDirectoryFile
+            // 
+            tsmiEditWorkingDirectoryFile.Image = Properties.Images.EditFile;
+            tsmiEditWorkingDirectoryFile.Name = "tsmiEditWorkingDirectoryFile";
+            tsmiEditWorkingDirectoryFile.Size = new Size(295, 22);
+            tsmiEditWorkingDirectoryFile.Text = "&Edit working directory file";
+            tsmiEditWorkingDirectoryFile.Click += EditWorkingDirectoryFile_Click;
+            // 
+            // tsmiDeleteFile
+            // 
+            tsmiDeleteFile.Image = Properties.Images.DeleteFile;
+            tsmiDeleteFile.Name = "tsmiDeleteFile";
+            tsmiDeleteFile.Size = new Size(295, 22);
+            tsmiDeleteFile.Text = "De&lete file";
+            tsmiDeleteFile.Click += DeleteFile_Click;
+            // 
+            // sepFile
+            // 
+            sepFile.Name = "sepFile";
+            sepFile.Size = new Size(292, 6);
+            sepFile.Tag = "1";
+            // 
+            // tsmiCopyPaths
+            // 
+            tsmiCopyPaths.Image = (Image)resources.GetObject("tsmiCopyPaths.Image");
+            tsmiCopyPaths.Name = "CopyPathsToolStripMenuItem";
+            tsmiCopyPaths.Size = new Size(295, 22);
+            tsmiCopyPaths.Text = "Copy &path(s)";
+            // 
+            // tsmiShowInFolder
+            // 
+            tsmiShowInFolder.Image = Properties.Images.BrowseFileExplorer;
+            tsmiShowInFolder.Name = "tsmiShowInFolder";
+            tsmiShowInFolder.Size = new Size(295, 22);
+            tsmiShowInFolder.Text = "Show &in folder";
+            tsmiShowInFolder.Click += ShowInFolder_Click;
+            // 
+            // sepBrowse
+            // 
+            sepBrowse.Name = "sepBrowse";
+            sepBrowse.Size = new Size(292, 6);
+            // 
+            // tsmiShowInFileTree
+            // 
+            tsmiShowInFileTree.Image = Properties.Images.FileTree;
+            tsmiShowInFileTree.Name = "tsmiShowInFileTree";
+            tsmiShowInFileTree.Size = new Size(295, 22);
+            tsmiShowInFileTree.Text = "Show in File &tree";
+            tsmiShowInFileTree.Visible = false;
+            tsmiShowInFileTree.Click += ShowInFileTree_Click;
+            // 
+            // tsmiFilterFileInGrid
+            // 
+            tsmiFilterFileInGrid.Image = Properties.Images.FunnelPencil;
+            tsmiFilterFileInGrid.Name = "tsmiFilterFileInGrid";
+            tsmiFilterFileInGrid.Size = new Size(295, 22);
+            tsmiFilterFileInGrid.Visible = false;
+            tsmiFilterFileInGrid.Click += FilterFileInGrid_Click;
+            // 
+            // tsmiFileHistory
+            // 
+            tsmiFileHistory.Image = Properties.Images.FileHistory;
+            tsmiFileHistory.Name = "tsmiFileHistory";
+            tsmiFileHistory.Size = new Size(295, 22);
+            tsmiFileHistory.Text = "File &history";
+            tsmiFileHistory.Click += FileHistory_Click;
+            // 
+            // tsmiBlame
+            // 
+            tsmiBlame.Image = Properties.Images.Blame;
+            tsmiBlame.Name = "tsmiBlame";
+            tsmiBlame.Size = new Size(295, 22);
+            tsmiBlame.Text = "&Blame";
+            tsmiBlame.Visible = false;
+            tsmiBlame.Click += Blame_Click;
+            // 
+            // tsmiFindFile
+            // 
+            tsmiFindFile.Name = "tsmiFindFile";
+            tsmiFindFile.Size = new Size(295, 22);
+            tsmiFindFile.Text = "&Find file...";
+            tsmiFindFile.Click += FindFile_Click;
+            // 
+            // tsmiOpenFindInCommitFilesGitGrepDialog
+            // 
+            tsmiOpenFindInCommitFilesGitGrepDialog.Image = Properties.Images.ViewFile;
+            tsmiOpenFindInCommitFilesGitGrepDialog.Name = "tsmiOpenFindInCommitFilesGitGrepDialog";
+            tsmiOpenFindInCommitFilesGitGrepDialog.Size = new Size(295, 22);
+            tsmiOpenFindInCommitFilesGitGrepDialog.Text = "Find in &commit files using git-grep...";
+            tsmiOpenFindInCommitFilesGitGrepDialog.Click += OpenFindInCommitFilesGitGrepDialog_Click;
+            // 
+            // tsmiShowFindInCommitFilesGitGrep
+            // 
+            tsmiShowFindInCommitFilesGitGrep.CheckOnClick = true;
+            tsmiShowFindInCommitFilesGitGrep.Name = "tsmiShowFindInCommitFilesGitGrep";
+            tsmiShowFindInCommitFilesGitGrep.Size = new Size(295, 22);
+            tsmiShowFindInCommitFilesGitGrep.Text = "Show 'Find in commit fi&les using git-grep'";
+            tsmiShowFindInCommitFilesGitGrep.Click += ShowFindInCommitFilesGitGrep_Click;
+            // 
+            // sepScripts
+            // 
+            sepScripts.Name = "sepScripts";
+            sepScripts.Size = new Size(292, 6);
+            // 
+            // tsmiRunScript
+            // 
+            tsmiRunScript.Image = Properties.Images.Console;
+            tsmiRunScript.Name = "tsmiRunScript";
+            tsmiRunScript.Size = new Size(295, 22);
+            tsmiRunScript.Text = "Run script";
+            // 
             // FileStatusList
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
+            ContextMenuStrip = ItemContextMenu;
             Controls.Add(LoadingFiles);
             Controls.Add(NoFiles);
             Controls.Add(lblFindInCommitFilesGitGrepWatermark);
@@ -523,6 +883,7 @@ namespace GitUI
             Size = new Size(682, 485);
             Toolbar.ResumeLayout(false);
             Toolbar.PerformLayout();
+            ItemContextMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -573,5 +934,48 @@ namespace GitUI
         private ToolStripMenuItem tsmiGroupByFileStatusTree;
         private ToolStripMenuItem tsmiGroupByFileStatusFlat;
         private ToolStripMenuItem tsmiToolbar;
+        private ContextMenuStrip ItemContextMenu;
+        private ToolStripMenuItem tsmiUpdateSubmodule;
+        private ToolStripMenuItem tsmiResetSubmoduleChanges;
+        private ToolStripMenuItem tsmiStashSubmoduleChanges;
+        private ToolStripMenuItem tsmiCommitSubmoduleChanges;
+        private ToolStripSeparator sepSubmodule;
+        public ToolStripMenuItem tsmiStageFile;
+        public ToolStripMenuItem tsmiUnstageFile;
+        private ToolStripMenuItem tsmiResetFileTo;
+        public ToolStripMenuItem tsmiResetFileToSelected;
+        public ToolStripMenuItem tsmiResetFileToParent;
+        private ToolStripMenuItem tsmiCherryPickChanges;
+        private ToolStripSeparator sepGit;
+        private ToolStripMenuItem tsmiOpenWithDifftool;
+        private ToolStripMenuItem tsmiSecondDiffCaption;
+        private ToolStripMenuItem tsmiFirstDiffCaption;
+        public ToolStripMenuItem tsmiDiffFirstToSelected;
+        public ToolStripMenuItem tsmiDiffSelectedToLocal;
+        public ToolStripMenuItem tsmiDiffFirstToLocal;
+        private ToolStripSeparator sepDifftoolRemember;
+        private ToolStripMenuItem tsmiDiffTwoSelected;
+        private ToolStripMenuItem tsmiDiffWithRemembered;
+        private ToolStripMenuItem tsmiRememberSecondRevDiff;
+        private ToolStripMenuItem tsmiRememberFirstRevDiff;
+        public ToolStripMenuItem tsmiOpenWorkingDirectoryFileWith;
+        public ToolStripMenuItem tsmiOpenRevisionFile;
+        public ToolStripMenuItem tsmiOpenRevisionFileWith;
+        private ToolStripMenuItem tsmiSaveAs;
+        public ToolStripMenuItem tsmiEditWorkingDirectoryFile;
+        public ToolStripMenuItem tsmiDeleteFile;
+        private ToolStripSeparator sepFile;
+        private CommandsDialogs.Menus.CopyPathsToolStripMenuItem tsmiCopyPaths;
+        private ToolStripMenuItem tsmiShowInFolder;
+        private ToolStripSeparator sepBrowse;
+        public ToolStripMenuItem tsmiShowInFileTree;
+        public ToolStripMenuItem tsmiFilterFileInGrid;
+        public ToolStripMenuItem tsmiFileHistory;
+        public ToolStripMenuItem tsmiBlame;
+        public ToolStripMenuItem tsmiFindFile;
+        public ToolStripMenuItem tsmiOpenFindInCommitFilesGitGrepDialog;
+        private ToolStripMenuItem tsmiShowFindInCommitFilesGitGrep;
+        private ToolStripSeparator sepScripts;
+        private ToolStripMenuItem tsmiRunScript;
     }
 }

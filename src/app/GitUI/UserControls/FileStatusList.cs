@@ -8,6 +8,7 @@ using System.Reactive.Subjects;
 using System.Text.RegularExpressions;
 using System.Windows.Automation;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
@@ -28,9 +29,12 @@ namespace GitUI
         private const string _showDiffForAllParentsItemName = nameof(TranslatedStrings.ShowDiffForAllParentsText);
 
         public static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
-        private readonly IFullPathResolver _fullPathResolver;
+
         private readonly FileStatusDiffCalculator _diffCalculator;
+        private readonly IFullPathResolver _fullPathResolver;
+        private readonly IGitRevisionTester _gitRevisionTester;
         private readonly FileAssociatedIconProvider _iconProvider = new();
+        private readonly IRevisionDiffController _revisionDiffController;
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
         private static readonly StatusSorter _sorter = new();
         private readonly IReadOnlyList<GitItemStatus> _noItemStatuses;
@@ -85,7 +89,16 @@ namespace GitUI
             Disposed += (sender, e) =>
             {
                 _formFindInCommitFilesGitGrep?.Dispose();
+                _customDiffToolsSequence.Dispose();
             };
+
+            tsmiCopyPaths.Initialize(getUICommands: () => UICommands,
+                getSelectedFilePaths: () => SelectedFolder is RelativePath relativePath
+                    ? [relativePath.Value]
+                    : SelectedItems.Select(fsi => fsi.Item.Name));
+            tsmiFilterFileInGrid.Text = TranslatedStrings.FilterFileInGrid;
+            tsmiShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
+            SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
 
             CreateTreeContextMenuItems();
             _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
@@ -125,6 +138,8 @@ namespace GitUI
 
             _diffCalculator = new FileStatusDiffCalculator(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
+            _revisionDiffController = new RevisionDiffController(() => Module, _fullPathResolver);
             _noItemStatuses =
             [
                 new GitItemStatus(name: $"- {NoFiles.Text} -")
@@ -468,7 +483,7 @@ namespace GitUI
         [DefaultValue(false)]
         public bool CanUseFindInCommitFilesGitGrep { get; set; }
 
-        public void SetFindInCommitFilesGitGrepVisibility(bool visible)
+        private void SetFindInCommitFilesGitGrepVisibility(bool visible)
         {
             if (!CanUseFindInCommitFilesGitGrep || cboFindInCommitFilesGitGrep.Visible == visible)
             {
@@ -1610,6 +1625,8 @@ namespace GitUI
 
             InsertTreeContextMenuItems(cm.Items, index: 0);
             UpdateStatusOfTreeContextMenuItems();
+
+            UpdateStatusOfMenuItems();
 
             // TODO The handling of _NO_TRANSLATE_openSubmoduleMenuItem need to be revised
             // This code handles the 'bold' in the menu for submodules. Other default actions are not set to bold.
