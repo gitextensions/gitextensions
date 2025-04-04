@@ -21,9 +21,13 @@ public readonly struct ExecutionResult
         ExitCode = exitCode;
     }
 
+    public string? ExitCodeDisplay => ExitCode is int exitCode ? FormatExitCode(exitCode) : "null";
+
     public bool ExitedSuccessfully => ExitCode == Success;
 
     public string AllOutput => string.Concat(StandardOutput, Environment.NewLine, StandardError);
+
+    public static string FormatExitCode(int exitCode) => Math.Abs(exitCode) <= 128 ? $"{exitCode}" : 0x$"{exitCode:X8} ({exitCode} dec)";
 
     public void ThrowIfErrorExit(string? errorMessage = null)
     {

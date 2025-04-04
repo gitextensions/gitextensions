@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitExtensions.Extensibility;
 using GitUI;
 
 namespace GitCommands.Logging
@@ -166,7 +167,7 @@ namespace GitCommands.Logging
                 s.Append("Started at:  ").AppendLine($"{StartedAt:O}");
                 s.Append("UI Thread?:  ").AppendLine($"{IsOnMainThread}");
                 s.Append("Duration:    ").AppendLine(Duration is not null ? $"{Duration.Value.TotalMilliseconds:0.###} ms" : "still running");
-                s.Append("Exit code:   ").AppendLine(ExitCode is not null ? $"{ExitCode}" : Exception is not null ? $"{Exception}" : "unknown");
+                s.Append("Exit code:   ").AppendLine(ExitCode is int exitCode ? ExecutionResult.FormatExitCode(exitCode) : Exception is not null ? $"{Exception}" : "unknown");
                 s.Append("Error:       ").AppendLine(Error is not null ? Error : "not captured");
                 s.Append("Call stack:  ").Append(CallStack is not null ? $"{Environment.NewLine}{CallStack}" : "not captured");
 
