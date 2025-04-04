@@ -92,6 +92,7 @@ namespace GitUI
             FileStatusListView.ShowRootLines = false;
             FileStatusListView.Size = new Size(682, 439);
             FileStatusListView.TabIndex = 9;
+            FileStatusListView.BeforeExpand += FileStatusListView_BeforeExpand;
             FileStatusListView.DrawNode += FileStatusListView_DrawNode;
             FileStatusListView.DoubleClick += FileStatusListView_DoubleClick;
             FileStatusListView.KeyDown += FileStatusListView_KeyDown;

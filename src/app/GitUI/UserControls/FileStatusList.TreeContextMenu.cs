@@ -54,7 +54,7 @@ partial class FileStatusList
     {
         foreach (TreeNode node in FileStatusListView.SelectedNodes)
         {
-            node.ExpandAll();
+            ExpandAll(node);
         }
     }
 
@@ -63,7 +63,7 @@ partial class FileStatusList
         HashSet<TreeNode> selectedItems = [];
         foreach (TreeNode node in FileStatusListView.SelectedNodes)
         {
-            node.ExpandAll();
+            ExpandAll(node);
             foreach (TreeNode leaf in node.Items().Where(node => node.Tag is FileStatusItem))
             {
                 selectedItems.Add(leaf);
