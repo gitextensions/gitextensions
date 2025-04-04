@@ -45,20 +45,17 @@ public static partial class Commands
     }
 
     /// <summary>
-    ///  Sets or unsets a git config setting.
+    ///  Removes a git config (sub)section.
     /// </summary>
     /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the affected repo.</param>
     /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
-    /// <param name="setting">The name of the setting (may contain dots, e.g. "core.autocrlf").</param>
-    /// <param name="value">The value of the setting or <see langword="null"/> for removing the setting.</param>
-    public static void SetGitSetting(this IExecutable gitExecutable, GitSettingLevel settingLevel, string setting, string? value)
+    /// <param name="section">The name of the section.</param>
+    /// <param name="subsection">The optional name of the subsection.</param>
+    public static void RemoveConfigSection(this IExecutable gitExecutable, GitSettingLevel settingLevel, string section, string? subsection = null)
     {
-        bool isSet = !string.IsNullOrEmpty(value);
-        bool newSyntax = gitExecutable.SupportNewGitConfigSyntax();
         GitArgumentBuilder args = new("config")
             {
-                { newSyntax, isSet ? "set" : "unset" },
-                { !newSyntax && !isSet, "--unset" },
+                gitExecutable.SupportNewGitConfigSyntax() ? "remove-section" : "--remove-section",
                 settingLevel switch
                 {
                     GitSettingLevel.Local => "--local",
@@ -66,7 +63,37 @@ public static partial class Commands
                     GitSettingLevel.SystemWide => "--system",
                     GitSettingLevel.Effective or _ => throw new ArgumentOutOfRangeException(nameof(settingLevel))
                 },
-                setting,
+                "--",
+                subsection is null ? section : @$"""{section}.{subsection}"""
+            };
+        gitExecutable.Execute(args);
+    }
+
+    /// <summary>
+    ///  Sets or unsets a git config setting.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the affected repo.</param>
+    /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
+    /// <param name="setting">The name of the setting (may contain dots, e.g. "core.autocrlf").</param>
+    /// <param name="value">The value of the setting or <see langword="null"/> for removing the setting.</param>
+    public static void SetGitSetting(this IExecutable gitExecutable, GitSettingLevel settingLevel, string setting, string? value, bool append)
+    {
+        bool isSet = !string.IsNullOrEmpty(value);
+        bool newSyntax = gitExecutable.SupportNewGitConfigSyntax();
+        GitArgumentBuilder args = new("config")
+            {
+                { newSyntax, isSet ? "set" : "unset" },
+                { !newSyntax && !isSet, "--unset" },
+                { isSet && append, newSyntax ? "--append" : "--add" },
+                settingLevel switch
+                {
+                    GitSettingLevel.Local => "--local",
+                    GitSettingLevel.Global => "--global",
+                    GitSettingLevel.SystemWide => "--system",
+                    GitSettingLevel.Effective or _ => throw new ArgumentOutOfRangeException(nameof(settingLevel))
+                },
+                "--",
+                setting.Quote(),
                 { isSet, QuoteSettingValue(value) }
             };
         ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);

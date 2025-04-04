@@ -509,7 +509,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
-            showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showuntrackedfiles") != "no";
+            showUntrackedFilesToolStripMenuItem.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
             MinimizeBox = Owner is null;
             LoadCustomDifftools();
 
@@ -2744,7 +2744,7 @@ namespace GitUI.CommandsDialogs
                     return;
 
                     // Do not cache results in order to update the info on FormActivate
-                    string GetSetting(string key) => Module.GetEffectiveGitSetting(key) ?? $"/{string.Format(TranslatedStrings.NotConfigured, key)}/";
+                    string GetSetting(string key) => Module.GetEffectiveSetting(key, defaultValue: $"/{string.Format(TranslatedStrings.NotConfigured, key)}/");
                 });
         }
 
