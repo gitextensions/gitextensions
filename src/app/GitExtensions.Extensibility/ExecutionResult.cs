@@ -27,7 +27,7 @@ public readonly struct ExecutionResult
 
     public string AllOutput => string.Concat(StandardOutput, Environment.NewLine, StandardError);
 
-    public static string FormatExitCode(int exitCode) => Math.Abs(exitCode) <= 128 ? $"{exitCode}" : $"{exitCode:X8} hex ({exitCode} dec)";
+    public static string FormatExitCode(int exitCode) => Math.Abs(exitCode) <= 128 ? $"{exitCode}" : 0x$"{exitCode:X8} ({exitCode} dec)";
 
     public void ThrowIfErrorExit(string? errorMessage = null)
     {
