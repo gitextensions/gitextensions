@@ -1029,11 +1029,7 @@ namespace GitCommands
             set => SetEnum("checkoutbranchaction", value);
         }
 
-        public static bool CheckoutOtherBranchAfterReset
-        {
-            get => GetBool("checkoutotherbranchafterreset", true);
-            set => SetBool("checkoutotherbranchafterreset", value);
-        }
+        public static ISetting<bool> CheckoutOtherBranchAfterReset { get; } = Setting.Create(DialogSettingsPath, nameof(CheckoutOtherBranchAfterReset), defaultValue: true);
 
         public static bool UseDefaultCheckoutBranchAction
         {
