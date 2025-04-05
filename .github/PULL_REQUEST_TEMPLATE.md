@@ -8,7 +8,7 @@ Fixes #
 - 
 - 
 
-## Screenshots <!-- Remove this section if PR does not change UI -->
+## Screenshots <!-- Include variants with higher scaling, e.g. 150% or 200%. Remove this section if PR does not change UI -->
 
 ### Before
 
