@@ -233,13 +233,13 @@ namespace GitUI.CommandsDialogs
             tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle());
             tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle());
             tblpnlMgtDetails.ColumnStyles.Add(new ColumnStyle());
-            tblpnlMgtDetails.Controls.Add(flpnlRemoteColors, 1, 2);
             tblpnlMgtDetails.Controls.Add(label2, 0, 0);
             tblpnlMgtDetails.Controls.Add(Url, 1, 0);
             tblpnlMgtDetails.Controls.Add(folderBrowserButtonUrl, 2, 0);
             tblpnlMgtDetails.Controls.Add(label1, 0, 1);
             tblpnlMgtDetails.Controls.Add(RemoteName, 1, 1);
             tblpnlMgtDetails.Controls.Add(lblRemoteColor, 0, 2);
+            tblpnlMgtDetails.Controls.Add(flpnlRemoteColors, 1, 2);
             tblpnlMgtDetails.Controls.Add(checkBoxSepPushUrl, 0, 3);
             tblpnlMgtDetails.Controls.Add(labelPushUrl, 0, 4);
             tblpnlMgtDetails.Controls.Add(comboBoxPushUrl, 1, 4);
@@ -257,6 +257,7 @@ namespace GitUI.CommandsDialogs
             // 
             // label2
             // 
+            label2.AutoSize = true;
             label2.Dock = DockStyle.Fill;
             label2.Location = new Point(3, 0);
             label2.MinimumSize = new Size(100, 0);
@@ -292,6 +293,7 @@ namespace GitUI.CommandsDialogs
             // 
             // label1
             // 
+            label1.AutoSize = true;
             label1.Dock = DockStyle.Fill;
             label1.Location = new Point(3, 31);
             label1.Name = "label1";
@@ -312,6 +314,7 @@ namespace GitUI.CommandsDialogs
             // 
             // lblRemoteColor
             // 
+            lblRemoteColor.AutoSize = true;
             lblRemoteColor.Dock = DockStyle.Fill;
             lblRemoteColor.Location = new Point(3, 60);
             lblRemoteColor.Name = "lblRemoteColor";
@@ -336,6 +339,7 @@ namespace GitUI.CommandsDialogs
             // 
             // labelPushUrl
             // 
+            labelPushUrl.AutoSize = true;
             labelPushUrl.Dock = DockStyle.Fill;
             labelPushUrl.Location = new Point(3, 116);
             labelPushUrl.Name = "labelPushUrl";

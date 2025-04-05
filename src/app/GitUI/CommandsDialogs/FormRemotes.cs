@@ -113,6 +113,9 @@ Inactive remote is completely invisible to git.");
             // Set the minimum height of the color button to be the same as the reset button
             btnRemoteColor.MinimumSize = new Size(DpiUtil.Scale(60), btnRemoteColorReset.Height);
 
+            // Prevent btnRemoteColorReset from blinking out soon after form loads
+            btnRemoteColorReset.Visible = false;
+
             // remove text from 'new' and 'delete' buttons because now they are represented by icons
             New.Text = string.Empty;
             Delete.Text = string.Empty;
