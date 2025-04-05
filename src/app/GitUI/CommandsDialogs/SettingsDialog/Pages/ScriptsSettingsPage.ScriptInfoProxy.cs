@@ -21,7 +21,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             [Browsable(false)]
             public ImageList? ImageList { get; set; }
 
+#if DEBUG
+            [Category(ScriptCategory)]
+            [PropertyOrder(0)]
+            [ReadOnly(true)]
+#else
             [Browsable(false)]
+#endif
             public int HotkeyCommandIdentifier { get; set; }
 
             [Category(ScriptCategory)]
