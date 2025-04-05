@@ -17,9 +17,31 @@
 * Use pattern matching and switch expressions wherever possible.
 * Use `nameof` instead of string literals when referring to member names.
 
+## Xml-doc Comments
+
+* Use 'langword' tag for "true", "false" and "null" values in xml-doc comments.
+  For example, use:
+    /// <param><see langword="true"/> if the condition is true; otherwise, <see langword="false"/>.</param>
+
+  instead of
+    /// <param>true if the condition is true; otherwise, false.</param>
+
+* When adding xml-doc comments, use the `///` syntax and ensure that the comments are properly formatted.
+  Also, for multiline comments, add an extra space for additional readability.
+  For example, use:
+    /// <summary>
+    ///  This is API summary.
+    /// </summary>
+
+  instead of
+    /// <summary>
+    /// This is API summary.
+    /// </summary>
+
+
 ### **Variable Declarations:**  
 
-*  Never use `var` for primitive types. Use `var` only when the type is obvious from context. When in doubt, opt for an explicit type declaration.
+*  Never use `var`, always use explicit type declaration.
 * Prefer simplified "new()" construct over to "new MyType()" where the type is already declared.
   For example: "MyType t = new()" instead of "var t = new MyType()" or "MyType t = new MyType()".
 

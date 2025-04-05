@@ -4,7 +4,7 @@ using GitExtUtils;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using static GitUI.ScriptsEngine.ScriptsManager;
+using static GitUI.ScriptsEngine.DistributedScriptsManager;
 
 namespace GitUITests.Script;
 
