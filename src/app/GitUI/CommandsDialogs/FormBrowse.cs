@@ -1692,6 +1692,12 @@ namespace GitUI.CommandsDialogs
             e.GitModule.ResetRemoteColors();
 
             UICommands = UICommands.WithGitModule(e.GitModule);
+
+            if (Module is GitModule gitModule)
+            {
+                _scriptsManager.Initialize(gitModule.EffectiveSettings);
+            }
+
             if (Module.IsValidGitWorkingDir())
             {
                 RevisionGrid.SuspendRefreshRevisions();
