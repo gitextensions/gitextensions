@@ -402,15 +402,9 @@ namespace GitUI.CommandsDialogs
 
         public void InitSplitterManager(SplitterManager splitterManager)
         {
-            if (IsFileTreeMode)
-            {
-                splitterManager.AddSplitter(DiffSplitContainer, "FileTreeSplitContainer");
-            }
-            else
-            {
-                splitterManager.AddSplitter(DiffSplitContainer, nameof(DiffSplitContainer));
-                splitterManager.AddSplitter(LeftSplitContainer, $"{nameof(RevisionDiffControl)}.{nameof(LeftSplitContainer)}");
-            }
+            NestedSplitterManager nested = new(splitterManager, Name);
+            nested.AddSplitter(DiffSplitContainer);
+            nested.AddSplitter(LeftSplitContainer);
         }
 
         public SplitContainer HorizontalSplitter => DiffSplitContainer;
