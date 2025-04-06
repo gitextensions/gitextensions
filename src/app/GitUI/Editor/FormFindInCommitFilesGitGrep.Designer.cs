@@ -113,8 +113,10 @@ namespace GitUI
             // 
             btnSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnSearch.AutoSize = true;
+            btnSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnSearch.DialogResult = DialogResult.Cancel;
             btnSearch.Location = new Point(337, 8);
+            btnSearch.MinimumSize = new Size(75, 25);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(75, 25);
             btnSearch.TabIndex = 7;
