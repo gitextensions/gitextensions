@@ -193,6 +193,7 @@ namespace GitUI.CommandsDialogs
             btnRemoteColorReset.Text = "Default color";
             btnRemoteColorReset.UseVisualStyleBackColor = false;
             btnRemoteColorReset.Click += btnRemoteColorReset_Click;
+            btnRemoteColorReset.Visible = false;
             // 
             // flpnlRemoteManagement
             // 
