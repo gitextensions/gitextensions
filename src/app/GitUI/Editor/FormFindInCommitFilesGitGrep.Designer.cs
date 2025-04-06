@@ -143,7 +143,7 @@ namespace GitUI
             lblSearchCommitGitGrepWatermark.ForeColor = SystemColors.GrayText;
             lblSearchCommitGitGrepWatermark.Location = new Point(93, 8);
             lblSearchCommitGitGrepWatermark.Name = "lblSearchCommitGitGrepWatermark";
-            lblSearchCommitGitGrepWatermark.Padding = new Padding(2);
+            lblSearchCommitGitGrepWatermark.Padding = new Padding(2, 0, 2, 0);
             lblSearchCommitGitGrepWatermark.Size = new Size(162, 19);
             lblSearchCommitGitGrepWatermark.TabIndex = 3;
             lblSearchCommitGitGrepWatermark.Text = "git-grep regular expression...";
