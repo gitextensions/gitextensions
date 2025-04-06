@@ -112,8 +112,8 @@ Inactive remote is completely invisible to git.");
             // Persist the text of the buttons to be able to restore it whenever the color is reset
             btnRemoteColor.Tag = btnRemoteColor.Text;
 
-            // Set the minimum height of the color button to be the same as the reset button
-            btnRemoteColor.MinimumSize = new Size(DpiUtil.Scale(60), btnRemoteColorReset.Height);
+            // Set the minimum height of the color button after initialization
+            btnRemoteColor.MinimumSize = new Size(DpiUtil.Scale(60), btnRemoteColor.Height);
 
             // remove text from 'new' and 'delete' buttons because now they are represented by icons
             New.Text = string.Empty;
