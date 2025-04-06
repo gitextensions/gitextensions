@@ -26,14 +26,12 @@ partial class FormFindInCommitFilesGitGrep
         chkMatchCase = new CheckBox();
         btnSearch = new Button();
         chkShowSearchBox = new CheckBox();
-        lblSearchCommitGitGrepWatermark = new Label();
         MainPanel.SuspendLayout();
         ControlsPanel.SuspendLayout();
         SuspendLayout();
         // 
         // MainPanel
         // 
-        MainPanel.Controls.Add(lblSearchCommitGitGrepWatermark);
         MainPanel.Controls.Add(chkMatchCase);
         MainPanel.Controls.Add(chkMatchWholeWord);
         MainPanel.Controls.Add(txtOptions);
@@ -75,8 +73,6 @@ partial class FormFindInCommitFilesGitGrep
         cboFindInCommitFilesGitGrep.Name = "cboFindInCommitFilesGitGrep";
         cboFindInCommitFilesGitGrep.Size = new Size(323, 23);
         cboFindInCommitFilesGitGrep.TabIndex = 1;
-        cboFindInCommitFilesGitGrep.GotFocus += cboSearchCommitGitGrep_GotFocus;
-        cboFindInCommitFilesGitGrep.LostFocus += cboSearchCommitGitGrep_LostFocus;
         // 
         // txtOptions
         // 
@@ -136,19 +132,6 @@ partial class FormFindInCommitFilesGitGrep
         chkShowSearchBox.UseVisualStyleBackColor = true;
         chkShowSearchBox.CheckedChanged += chkShowSearchBox_CheckedChanged;
         // 
-        // lblSearchCommitGitGrepWatermark
-        // 
-        lblSearchCommitGitGrepWatermark.AutoSize = true;
-        lblSearchCommitGitGrepWatermark.BackColor = SystemColors.Window;
-        lblSearchCommitGitGrepWatermark.ForeColor = SystemColors.GrayText;
-        lblSearchCommitGitGrepWatermark.Location = new Point(93, 8);
-        lblSearchCommitGitGrepWatermark.Name = "lblSearchCommitGitGrepWatermark";
-        lblSearchCommitGitGrepWatermark.Padding = new Padding(2);
-        lblSearchCommitGitGrepWatermark.Size = new Size(162, 19);
-        lblSearchCommitGitGrepWatermark.TabIndex = 3;
-        lblSearchCommitGitGrepWatermark.Text = "git-grep regular expression...";
-        lblSearchCommitGitGrepWatermark.Click += lblSearchCommitGitGrepWatermark_Click;
-        // 
         // FormFindInCommitFilesGitGrep
         // 
         AcceptButton = btnSearch;
@@ -175,7 +158,6 @@ partial class FormFindInCommitFilesGitGrep
 
     #endregion
 
-    private Label lblSearchCommitGitGrepWatermark;
     private Label label1;
     private Label lblOptions;
     private ComboBox cboFindInCommitFilesGitGrep;
