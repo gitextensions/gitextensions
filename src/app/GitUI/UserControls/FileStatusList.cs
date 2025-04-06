@@ -1,6 +1,5 @@
 #nullable enable
 
-using System.Collections.Frozen;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -31,6 +30,7 @@ namespace GitUI
         public static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FileStatusDiffCalculator _diffCalculator;
+        private readonly FileAssociatedIconProvider _iconProvider = new();
         private readonly SortDiffListContextMenuItem _sortByContextMenu;
         private static readonly StatusSorter _sorter = new();
         private readonly IReadOnlyList<GitItemStatus> _noItemStatuses;
@@ -67,14 +67,13 @@ namespace GitUI
         public event EventHandler? FilterChanged;
 
         public new event EventHandler? DoubleClick;
-        public new event KeyEventHandler? KeyDown;
         public new event EnterEventHandler? Enter;
 
         [Description("Disable showing open submodule menu items as bold")]
         [DefaultValue(false)]
         public bool DisableSubmoduleMenuItemBold { get; set; }
 
-        private record ImageListData(ImageList ImageList, FrozenDictionary<string, int> StateImageIndexMap);
+        private record ImageListData(ImageList ImageList, Dictionary<string, int> StateImageIndexMap, Image DefaultFileImage, int IconSize);
 
         private static readonly ImageListData _imageListData = CreateImageListData();
 
@@ -181,14 +180,19 @@ namespace GitUI
 
         private static ImageListData CreateImageListData()
         {
-            const int rowHeight = 18;
+            const int fixedIconSize = 16;
+            const int rowHeight = fixedIconSize + 2;
             const int imageWidth = rowHeight;
+
+            int iconSize = DpiUtil.Scale(fixedIconSize);
 
             ImageList list = new()
             {
                 ColorDepth = ColorDepth.Depth32Bit,
                 ImageSize = DpiUtil.Scale(new Size(imageWidth, rowHeight)), // Scale ImageSize and images scale automatically
             };
+
+            Bitmap defaultFileImage = Pad(Images.File);
 
             // Note: The order of images also affects sorting by file status as second key after DiffBranchStatus
             (string imageKey, Bitmap icon)[] images =
@@ -233,7 +237,7 @@ namespace GitUI
                 (nameof(Images.SubmoduleRevisionSemiDown), Pad(Images.SubmoduleRevisionSemiDown)),
                 (nameof(Images.SubmoduleRevisionSemiDownDirty), Pad(Images.SubmoduleRevisionSemiDownDirty)),
                 (nameof(FileStatusDiffCalculator.GitGrepIconName), Pad(Images.ViewFile)),
-                (nameof(Images.File), Pad(Images.File)),
+                (nameof(ImageListData.DefaultFileImage), defaultFileImage),
                 (nameof(Images.Diff), Pad(Images.Diff)),
                 (nameof(Images.DiffR), Pad(Images.DiffR)),
                 (nameof(Images.DiffB), Pad(Images.DiffB)),
@@ -248,20 +252,32 @@ namespace GitUI
                 stateImageIndexDict.Add(images[i].imageKey, i);
             }
 
-            return new ImageListData(list, stateImageIndexDict.ToFrozenDictionary());
+            return new ImageListData(list, stateImageIndexDict, defaultFileImage, iconSize);
 
-            static Bitmap Pad(Bitmap input, int width = imageWidth, int height = rowHeight, int offsetX = 0, int offsetY = 1)
+            Bitmap Pad(Bitmap input, int offsetX = 0, int offsetY = 1)
+                => Scale(input, iconSize, list.ImageSize, offsetX, offsetY);
+        }
+
+        private static Bitmap Scale(Bitmap input, int iconSize, Size paddedSize, int offsetX = 0, int offsetY = 1)
+        {
+            int deltaWidth = paddedSize.Width - iconSize;
+            int deltaHeight = paddedSize.Height - iconSize;
+            DebugHelpers.Assert(deltaWidth >= 0, "Can only increase image width");
+            DebugHelpers.Assert(deltaHeight >= 0, "Can only increase image height");
+            Bitmap scaled = new(paddedSize.Width, paddedSize.Height, input.PixelFormat);
+            using Graphics g = Graphics.FromImage(scaled);
+            int x = (deltaWidth / 2) + offsetX;
+            int y = (deltaHeight / 2) + offsetY;
+            if (input.Width == iconSize)
             {
-                int deltaWidth = width - input.Width;
-                int deltaHeight = height - input.Height;
-                DebugHelpers.Assert(deltaWidth >= 0, "Can only increase image width");
-                DebugHelpers.Assert(deltaHeight >= 0, "Can only increase image height");
-                Bitmap scaled = new(width, height, input.PixelFormat);
-                using Graphics g = Graphics.FromImage(scaled);
-                g.DrawImageUnscaled(input, (deltaWidth / 2) + offsetX, (deltaHeight / 2) + offsetY);
-
-                return scaled;
+                g.DrawImageUnscaled(input, x, y);
             }
+            else
+            {
+                g.DrawImage(input, x, y, iconSize + 1, iconSize + 1);
+            }
+
+            return scaled;
         }
 
         protected override void OnRuntimeLoad()
@@ -328,7 +344,7 @@ namespace GitUI
                         DiffListSortType.FilePath or DiffListSortType.FilePathFlat
                             => null,
                         DiffListSortType.FileExtension or DiffListSortType.FileExtensionFlat
-                            => new GroupBy(status => GroupKey.From(Path.GetExtension(status.Name)), GetImageKey: _ => nameof(Images.File), GetLabel: group => group.Key.Value),
+                            => new GroupBy(status => GroupKey.From(Path.GetExtension(status.Name)), GetImageKey: GetExtensionImageKey, GetLabel: group => group.Key.Value),
                         DiffListSortType.FileStatus or DiffListSortType.FileStatusFlat
                             => new GroupBy(GetStatusKey, GetImageKey: group => GetItemImageKey(group.First()), GetLabel: _ => ""),
                         _ => throw new NotSupportedException($"{sortType} is not a supported sorting method.")
@@ -346,6 +362,12 @@ namespace GitUI
                 .Subscribe();
 
             return;
+
+            static string GetExtensionImageKey(IGrouping<GroupKey, GitItemStatus> group)
+            {
+                string extension = group.Key.Value;
+                return _imageListData.StateImageIndexMap.ContainsKey(extension) ? extension : nameof(ImageListData.DefaultFileImage);
+            }
 
             static GroupKey GetStatusKey(GitItemStatus status)
             {
@@ -736,7 +758,15 @@ namespace GitUI
             }
         }
 
-        public void SelectAll() => SelectItems(_ => true);
+        public void SelectAll()
+        {
+            foreach (TreeNode node in FileStatusListView.Nodes)
+            {
+                ExpandAll(node);
+            }
+
+            SelectItems(_ => true);
+        }
 
         public void SelectFirstVisibleItem()
         {
@@ -1148,6 +1178,11 @@ namespace GitUI
 
             DataSourceChanged?.Invoke(this, EventArgs.Empty);
 
+            if (items.Count > 0 && gitGrepState != GitGrepState.Preparing)
+            {
+                LoadFileIcons(FileStatusListView.Items(), cancellationToken);
+            }
+
             return;
 
             void EnsureSelectedIndexChangeSubscription()
@@ -1207,6 +1242,11 @@ namespace GitUI
                         ? CreateNode(i.Statuses[0], i)
                         : CreateGroup(emptyGroup ? noItemStatuses : i.Statuses.Where(isFilterMatch), i, cancellationToken);
 
+                if (state == ExpandCollapseState.PartiallyExpanded)
+                {
+                    ReplaceChildrenOfFolderNodesWithPlaceholder(diffGroup.Nodes.Cast<TreeNode>());
+                }
+
                 if (showDiffGroups)
                 {
                     rootNodes.Add(new TreeNodeInfo(diffGroup, state));
@@ -1255,6 +1295,7 @@ namespace GitUI
                             groupNode.Text = groupBy.GetLabel(group);
                             groupNode.ImageIndex = _imageListData.StateImageIndexMap[groupBy.GetImageKey(group)];
                             groupNode.SelectedImageIndex = groupNode.ImageIndex;
+                            groupNode.Tag = group.Key;
                         }
 
                         if (showGroupNodes)
@@ -1336,6 +1377,11 @@ namespace GitUI
 
             int GetItemImageIndex(GitItemStatus gitItemStatus, bool isGitGrep)
             {
+                if (isGitGrep && Path.GetExtension(gitItemStatus.Name) is string extension && _imageListData.StateImageIndexMap.TryGetValue(extension, out int imageIndex))
+                {
+                    return imageIndex;
+                }
+
                 string imageKey = gitItemStatus.IsStatusOnly || !string.IsNullOrWhiteSpace(gitItemStatus.ErrorMessage)
                     ? gitItemStatus == noItemStatuses[0] && !isGitGrep ? nameof(Images.FileStatusCopiedSame) : nameof(Images.FileStatusUnknown)
                     : GetItemImageKey(gitItemStatus);
@@ -1366,7 +1412,7 @@ namespace GitUI
 
             if (!string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
             {
-                return nameof(FileStatusDiffCalculator.GitGrepIconName);
+                return nameof(ImageListData.DefaultFileImage);
             }
 
             if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
@@ -1704,17 +1750,14 @@ namespace GitUI
             switch (e.KeyData)
             {
                 case Keys.Control | Keys.A:
-                    {
-                        SelectAll();
-                        e.Handled = true;
-                        break;
-                    }
+                    SelectAll();
+                    e.Handled = true;
+                    break;
 
-                default:
-                    {
-                        KeyDown?.Invoke(sender, e);
-                        break;
-                    }
+                case Keys.Multiply:
+                    // Do not set e.Handled = true in order to avoid the Ding sound (yet another speciality of TreeView)
+                    ExpandAll(FileStatusListView.FocusedNode);
+                    break;
             }
         }
 
