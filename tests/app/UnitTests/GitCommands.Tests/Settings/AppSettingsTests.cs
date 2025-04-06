@@ -249,7 +249,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.AutoStash)], false, false, false);
                 yield return (properties[nameof(AppSettings.RebaseAutoStash)], false, false, false);
                 yield return (properties[nameof(AppSettings.CheckoutBranchAction)], LocalChangesAction.DontChange, false, false);
-                yield return (properties[nameof(AppSettings.CheckoutOtherBranchAfterReset)], true, false, true);
+                yield return (properties[nameof(AppSettings.CheckoutOtherBranchAfterReset)], true, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.UseDefaultCheckoutBranchAction)], false, false, false);
                 yield return (properties[nameof(AppSettings.DontShowHelpImages)], false, false, false);
                 yield return (properties[nameof(AppSettings.AlwaysShowAdvOpt)], false, false, false);
