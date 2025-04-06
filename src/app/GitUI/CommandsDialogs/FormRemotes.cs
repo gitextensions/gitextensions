@@ -5,8 +5,10 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Infrastructure;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls;
 using Microsoft;
 using ResourceManager;
@@ -379,7 +381,7 @@ Inactive remote is completely invisible to git.");
         private void btnRemoteColor_Click(object sender, EventArgs e)
         {
             colorDialog.Color = btnRemoteColor.BackColor == Color.Transparent
-                ? Color.Black
+                ? AppColor.RemoteBranch.GetThemeColor()
                 : btnRemoteColor.BackColor;
 
             if (colorDialog.ShowDialog() == DialogResult.OK)
