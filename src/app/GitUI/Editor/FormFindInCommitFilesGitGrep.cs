@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI;
 
 namespace GitUI;
 
@@ -124,6 +125,8 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         lblSearchCommitGitGrepWatermark.Visible = cboFindInCommitFilesGitGrep.Visible && !cboFindInCommitFilesGitGrep.Focused && string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
         if (lblSearchCommitGitGrepWatermark.Visible)
         {
+            int nonTextHeight = (cboFindInCommitFilesGitGrep.ClientRectangle.Height - cboFindInCommitFilesGitGrep.Font.Height) / 2;
+            lblSearchCommitGitGrepWatermark.Top = cboFindInCommitFilesGitGrep.Top + nonTextHeight;
             lblSearchCommitGitGrepWatermark.BringToFront();
         }
     }

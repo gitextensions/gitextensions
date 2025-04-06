@@ -113,8 +113,10 @@ namespace GitUI
             // 
             btnSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnSearch.AutoSize = true;
+            btnSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnSearch.DialogResult = DialogResult.Cancel;
             btnSearch.Location = new Point(337, 8);
+            btnSearch.MinimumSize = new Size(75, 25);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(75, 25);
             btnSearch.TabIndex = 7;
@@ -141,7 +143,7 @@ namespace GitUI
             lblSearchCommitGitGrepWatermark.ForeColor = SystemColors.GrayText;
             lblSearchCommitGitGrepWatermark.Location = new Point(93, 8);
             lblSearchCommitGitGrepWatermark.Name = "lblSearchCommitGitGrepWatermark";
-            lblSearchCommitGitGrepWatermark.Padding = new Padding(2);
+            lblSearchCommitGitGrepWatermark.Padding = new Padding(2, 0, 2, 0);
             lblSearchCommitGitGrepWatermark.Size = new Size(162, 19);
             lblSearchCommitGitGrepWatermark.TabIndex = 3;
             lblSearchCommitGitGrepWatermark.Text = "git-grep regular expression...";
