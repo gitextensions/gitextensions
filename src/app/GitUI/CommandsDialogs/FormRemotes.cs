@@ -378,6 +378,10 @@ Inactive remote is completely invisible to git.");
 
         private void btnRemoteColor_Click(object sender, EventArgs e)
         {
+            colorDialog.Color = btnRemoteColor.BackColor == Color.Transparent
+                ? Color.Black
+                : btnRemoteColor.BackColor;
+
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
                 SetRemoteColor(colorDialog.Color);
