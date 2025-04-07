@@ -191,6 +191,13 @@ namespace GitUI
             }
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            LoadCustomDifftools();
+        }
+
         private static ImageListData CreateImageListData()
         {
             const int fixedIconSize = 16;
@@ -444,30 +451,6 @@ namespace GitUI
         public IEnumerable<FileStatusItem> AllItems => FileStatusListView.ItemTags<FileStatusItem>();
 
         public int AllItemsCount => AllItems.Count();
-
-        public override ContextMenuStrip? ContextMenuStrip
-        {
-            get { return FileStatusListView.ContextMenuStrip; }
-            set
-            {
-                if (FileStatusListView.ContextMenuStrip == value)
-                {
-                    return;
-                }
-
-                if (FileStatusListView.ContextMenuStrip is not null)
-                {
-                    FileStatusListView.ContextMenuStrip.Opening -= FileStatusListView_ContextMenu_Opening;
-                }
-
-                FileStatusListView.ContextMenuStrip = value;
-
-                if (FileStatusListView.ContextMenuStrip is not null)
-                {
-                    FileStatusListView.ContextMenuStrip.Opening += FileStatusListView_ContextMenu_Opening;
-                }
-            }
-        }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -974,8 +957,12 @@ namespace GitUI
             UpdateFileStatusListView([]);
         }
 
-        private string? GetDescriptionForRevision(ObjectId? objectId) =>
-            DescribeRevision is not null ? DescribeRevision(objectId) : objectId?.ToShortString();
+        private string? GetDescriptionForRevision(ObjectId? objectId)
+            => DescribeRevision is not null ? DescribeRevision(objectId)
+                : objectId is null ? ""
+                : objectId == ObjectId.WorkTreeId ? ResourceManager.TranslatedStrings.Workspace
+                : objectId == ObjectId.IndexId ? ResourceManager.TranslatedStrings.Index
+                : objectId.ToShortString();
 
         public void SetNoFilesText(string text)
         {
@@ -1613,7 +1600,7 @@ namespace GitUI
 
         // Event handlers
 
-        private void FileStatusListView_ContextMenu_Opening(object? sender, CancelEventArgs e)
+        private void ItemContextMenu_Opening(object? sender, CancelEventArgs e)
         {
             if (sender is null || (SelectedItem?.Item.IsStatusOnly ?? false))
             {

@@ -19,11 +19,51 @@ namespace GitUI;
 
 partial class FileStatusList
 {
+    /* Mnemonics
+        A Save as
+        B Blame
+        C Find in commit files, Commit submodule
+        D Open with difftool
+        E Edit, Reset submodule, Select all (on folder)
+        F Find file
+        G Filter in grid
+        H History
+        I Show in folder
+        J
+        K Skip worktree
+        L Delete, Show "Find in commit files"
+        M Assume unchanged
+        N Open temp
+        O Open (on file), Open (submodule), Collapse all (folder)
+        P Copy paths
+        Q
+        R Reset files
+        S Stage, Sort and group by
+        T Show in file tree, Stash submodule
+        U Unstage, Update submodule
+        V Open in VS
+        W Open temp with
+        X Add file to .git/info/exclude, Expand all (on folder)
+        Y Cherry pick
+        Z
+        . Add file to .gitignore
+
+        Without mnemonic but with hotkey
+        - Open with
+
+        Not important
+        - Stop tracking this file
+        - Reset chunk of file
+        - Interactive add
+    */
+
     private Action? _blame;
     private Action? _cherryPickChanges;
     private Action? _filterFileInGrid;
     private Action<bool>? _openInFileTreeTab_AsBlame;
     private Action? _refreshParent;
+    private Action? _stage;
+    private Action? _unstage;
 
     private Func<GitRevision?>? _getCurrentRevision;
     private Func<int>? _getLineNumber;
@@ -33,6 +73,7 @@ partial class FileStatusList
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private readonly IFindFilePredicateProvider _findFilePredicateProvider = new FindFilePredicateProvider();
     private readonly IFileStatusListContextMenuController _itemContextMenuController = new FileStatusListContextMenuController();
+    private readonly CancellationTokenSequence _interactiveAddResetChunkSequence = new();
     private readonly RememberFileContextMenuController _rememberFileContextMenuController = RememberFileContextMenuController.Default;
 
     private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
@@ -44,6 +85,56 @@ partial class FileStatusList
     private readonly TranslationString _saveFileFilterAllFiles = new("All files");
     private readonly TranslationString _saveFileFilterCurrentFormat = new("Current format");
     private readonly TranslationString _selectedRevision = new("Second: B ");
+    private readonly TranslationString _stopTrackingFail = new("Fail to stop tracking the file '{0}'.");
+
+    private readonly TranslationString _skipWorktreeToolTip = new("Hide already tracked files that will change but that you don\'t want to commit."
+        + Environment.NewLine + "Suitable for some config files modified locally.");
+    private readonly TranslationString _assumeUnchangedToolTip = new("Tell git to not check the status of this file for performance benefits."
+        + Environment.NewLine + "Use this feature when a file is big and never change."
+        + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
+
+    private void AddFileToGitIgnore_Click(object sender, EventArgs e)
+    {
+        AddFileToIgnoreFile(localExclude: false);
+    }
+
+    private void AddFileToGitInfoExclude_Click(object sender, EventArgs e)
+    {
+        AddFileToIgnoreFile(localExclude: true);
+    }
+
+    private void AddFileToIgnoreFile(bool localExclude)
+    {
+        string[] fileNames = [.. SelectedItems.Select(item => "/" + item.Item.Name)];
+        if (fileNames.Length > 0 && UICommands.StartAddToGitIgnoreDialog(this, localExclude, fileNames))
+        {
+            RequestRefresh();
+        }
+    }
+
+    private void AssumeUnchanged_Click(object sender, EventArgs e)
+    {
+        Module.AssumeUnchangedFiles([.. SelectedItems.Items()], tsmiAssumeUnchanged.Checked, out _);
+        RequestRefresh();
+    }
+
+    public void BindContextMenu(Action refreshParent, Action? stage, Action? unstage)
+    {
+        _refreshParent = refreshParent;
+        _stage = stage;
+        _unstage = unstage;
+
+        tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
+        tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
+    }
+
+    public void BindContextMenu(Action cherryPickChanges, Func<bool> getSupportLinePatching)
+    {
+        _cherryPickChanges = cherryPickChanges;
+        _getSupportLinePatching = getSupportLinePatching;
+
+        tsmiCherryPickChanges.Visible = true;
+    }
 
     public void BindContextMenu(
         Action? blame,
@@ -69,18 +160,24 @@ partial class FileStatusList
         tsmiCherryPickChanges.Visible = true;
         tsmiShowInFileTree.Visible = true;
         tsmiFilterFileInGrid.Visible = true;
-        tsmiBlame.Visible = true;
 
-        if (!CanUseFindInCommitFilesGitGrep || _isFileTreeMode)
+        if (CanUseFindInCommitFilesGitGrep && !_isFileTreeMode)
         {
-            tsmiOpenFindInCommitFilesGitGrepDialog.Visible = false;
-            tsmiShowFindInCommitFilesGitGrep.Visible = false;
+            tsmiOpenFindInCommitFilesGitGrepDialog.Visible = true;
+            tsmiShowFindInCommitFilesGitGrep.Visible = true;
         }
     }
 
     private void Blame_Click(object sender, EventArgs e)
     {
-        _blame?.Invoke();
+        if (_blame is not null)
+        {
+            _blame?.Invoke();
+        }
+        else
+        {
+            StartFileHistoryDialog(showBlame: true);
+        }
     }
 
     public void CancelLoadCustomDifftools()
@@ -272,17 +369,7 @@ partial class FileStatusList
 
     private void FileHistory_Click(object sender, EventArgs e)
     {
-        (string? fileName, GitRevision? revision) = SelectedFolder is RelativePath relativePath
-            ? (relativePath.Length == 0 ? null : relativePath.Value, _getCurrentRevision?.Invoke())
-            : SelectedItem is FileStatusItem item && item.Item.IsTracked
-                ? (item.Item.Name, item.SecondRevision)
-                : (null, null);
-        if (fileName is null)
-        {
-            return;
-        }
-
-        UICommands.StartFileHistoryDialog(this, fileName, revision);
+        StartFileHistoryDialog(showBlame: false);
     }
 
     private void FilterFileInGrid_Click(object sender, EventArgs e)
@@ -437,6 +524,22 @@ partial class FileStatusList
         }
     }
 
+    private void InteractiveAdd_Click(object sender, EventArgs e)
+    {
+        if (SelectedGitItem is not GitItemStatus item)
+        {
+            return;
+        }
+
+        CancellationToken token = _interactiveAddResetChunkSequence.Next();
+        ThreadHelper.FileAndForget(async () =>
+        {
+            await Module.AddInteractiveAsync(item);
+            await this.SwitchToMainThreadAsync(token);
+            RequestRefresh();
+        });
+    }
+
     public void LoadCustomDifftools()
     {
         List<CustomDiffMergeTool> menus =
@@ -557,6 +660,15 @@ partial class FileStatusList
                                            && _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[0], isSecondRevision: false);
     }
 
+    private void OpenWorkingDirectoryFile_Click(object sender, EventArgs e)
+    {
+        if (SelectedGitItem is GitItemStatus gitItemStatus
+            && _fullPathResolver.Resolve(gitItemStatus.Name) is string fileName)
+        {
+            OsShellUtil.Open(fileName.ToNativePath());
+        }
+    }
+
     private void OpenWorkingDirectoryFileWith_Click(object sender, EventArgs e)
     {
         if (SelectedGitItem is GitItemStatus gitItemStatus
@@ -600,6 +712,22 @@ partial class FileStatusList
     private void RequestRefresh()
     {
         _refreshParent?.Invoke();
+    }
+
+    private void ResetChunkOfFile_Click(object sender, EventArgs e)
+    {
+        if (SelectedGitItem is not GitItemStatus item)
+        {
+            return;
+        }
+
+        CancellationToken token = _interactiveAddResetChunkSequence.Next();
+        ThreadHelper.FileAndForget(async () =>
+        {
+            await Module.ResetInteractiveAsync(item);
+            await this.SwitchToMainThreadAsync(token);
+            RequestRefresh();
+        });
     }
 
     private void ResetFile_Click(object sender, EventArgs e)
@@ -791,11 +919,38 @@ partial class FileStatusList
         FormBrowse.OpenContainingFolder(this, Module);
     }
 
+    private void SkipWorktree_Click(object sender, EventArgs e)
+    {
+        Module.SkipWorktreeFiles([.. SelectedItems.Items()], tsmiSkipWorktree.Checked, out _);
+        RequestRefresh();
+    }
+
     private void StageFile_Click(object sender, EventArgs e)
     {
+        if (_stage is not null)
+        {
+            _stage();
+            return;
+        }
+
         GitItemStatus[] files = [.. SelectedItems.Where(item => item.Item.Staged == StagedStatus.WorkTree).Select(i => i.Item)];
         Module.StageFiles(files, out _);
         RequestRefresh();
+    }
+
+    private void StartFileHistoryDialog(bool showBlame)
+    {
+        (string? fileName, GitRevision? revision) = SelectedFolder is RelativePath relativePath
+            ? (relativePath.Length == 0 ? null : relativePath.Value, _getCurrentRevision?.Invoke())
+            : SelectedItem is FileStatusItem item && item.Item.IsTracked
+                ? (item.Item.Name, item.SecondRevision)
+                : (null, null);
+        if (fileName is null)
+        {
+            return;
+        }
+
+        UICommands.StartFileHistoryDialog(this, fileName, revision, showBlame: showBlame);
     }
 
     private void StashSubmoduleChanges_Click(object sender, EventArgs e)
@@ -810,8 +965,31 @@ partial class FileStatusList
         RequestRefresh();
     }
 
+    private void StopTracking_Click(object sender, EventArgs e)
+    {
+        if (SelectedGitItem?.Name is not string filename)
+        {
+            return;
+        }
+
+        if (Module.StopTrackingFile(filename))
+        {
+            RequestRefresh();
+        }
+        else
+        {
+            MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
     private void UnstageFile_Click(object sender, EventArgs e)
     {
+        if (_unstage is not null)
+        {
+            _unstage();
+            return;
+        }
+
         GitItemStatus[] files = [.. SelectedItems.Where(item => item.Item.Staged == StagedStatus.Index).Select(i => i.Item)];
         Module.BatchUnstageFiles(files);
         RequestRefresh();
@@ -825,7 +1003,7 @@ partial class FileStatusList
         // Hide the obviously no action options when single selected, handle them in actions if multi select
 
         // open submodule is added in FileStatusList
-        tsmiFileHistory.Font = (SelectedItem?.Item.IsSubmodule ?? false) && AppSettings.OpenSubmoduleDiffInSeparateWindow
+        tsmiFileHistory.Font = ((SelectedItem?.Item.IsSubmodule ?? false) && AppSettings.OpenSubmoduleDiffInSeparateWindow) || _openInFileTreeTab_AsBlame is null
             ? new Font(tsmiFileHistory.Font, FontStyle.Regular)
             : new Font(tsmiFileHistory.Font, FontStyle.Bold);
 
@@ -878,11 +1056,11 @@ partial class FileStatusList
 
         // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
         tsmiShowInFileTree.Visible = _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
-        tsmiFilterFileInGrid.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
+        tsmiFilterFileInGrid.Enabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
-        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value
-            ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
-            : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
+                ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
+                : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         if (!tsmiBlame.Enabled)
         {
             tsmiBlame.Checked = false;
@@ -891,6 +1069,32 @@ partial class FileStatusList
         sepScripts.Visible = ItemContextMenu.AddUserScripts(tsmiRunScript, ExecuteCommand, script => script.OnEvent == ScriptEvent.ShowInFileList, UICommands);
 
         tsmiShowFindInCommitFilesGitGrep.Checked = FindInCommitFilesGitGrepVisible;
+
+        bool isSubmodule = selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnySubmodule;
+        bool isSingleFile = selectionInfo.SelectedGitItemCount == 1 && !isSubmodule;
+
+        bool canResetAddInteractively = selectionInfo.IsAnyItemWorkTree && isSingleFile;
+        tsmiResetChunkOfFile.Visible = canResetAddInteractively;
+        tsmiInteractiveAdd.Visible = canResetAddInteractively;
+
+        bool canOpenFile = selectionInfo.SelectedGitItemCount == 1 && selectionInfo.AllFilesExist;
+        tsmiOpenWorkingDirectoryFile.Visible = canOpenFile;
+        tsmiOpenWorkingDirectoryFileWith.Visible = canOpenFile;
+
+        bool canIgnoreFiles = selectionInfo.IsAnyItemWorkTree && !isSubmodule;
+        bool canStopTracking = isSingleFile && selectionInfo.IsAnyTracked;
+
+        sepIgnore.Visible = canIgnoreFiles || canStopTracking;
+
+        tsmiAddFileToGitIgnore.Visible = canIgnoreFiles;
+        tsmiAddFileToGitInfoExclude.Visible = canIgnoreFiles;
+        tsmiSkipWorktree.Visible = canIgnoreFiles && selectionInfo.IsAnyTracked;
+        tsmiAssumeUnchanged.Visible = canIgnoreFiles && selectionInfo.IsAnyTracked;
+
+        tsmiStopTracking.Visible = canStopTracking;
+
+        tsmiSkipWorktree.ToolTipText = _skipWorktreeToolTip.Text;
+        tsmiAssumeUnchanged.ToolTipText = _assumeUnchangedToolTip.Text;
     }
 
     private void UpdateSubmodule_Click(object sender, EventArgs e)

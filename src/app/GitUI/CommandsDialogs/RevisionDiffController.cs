@@ -3,7 +3,6 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -119,7 +118,8 @@ namespace GitUI.CommandsDialogs
             return selectionInfo.SelectedGitItemCount > 0
                 && !selectionInfo.IsBareRepository
                 && selectionInfo.IsAnyTracked
-                && !selectionInfo.IsDisplayOnlyDiff;
+                && !selectionInfo.IsDisplayOnlyDiff
+                && !(selectionInfo.IsAnySubmodule && selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnyItemWorkTree);
         }
 
         #region Main menu items
@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SupportPatches;
+            return selectionInfo.SupportPatches && !selectionInfo.IsAnyItemWorkTree;
         }
 
         // Stage/unstage must limit the selected items, IsStaged is not reflecting Staged status

@@ -88,6 +88,8 @@ namespace GitUI
             tsmiResetFileTo = new ToolStripMenuItem();
             tsmiResetFileToSelected = new ToolStripMenuItem();
             tsmiResetFileToParent = new ToolStripMenuItem();
+            tsmiResetChunkOfFile = new ToolStripMenuItem();
+            tsmiInteractiveAdd = new ToolStripMenuItem();
             tsmiCherryPickChanges = new ToolStripMenuItem();
             sepGit = new ToolStripSeparator();
             tsmiOpenWithDifftool = new ToolStripMenuItem();
@@ -101,6 +103,7 @@ namespace GitUI
             tsmiDiffWithRemembered = new ToolStripMenuItem();
             tsmiRememberSecondRevDiff = new ToolStripMenuItem();
             tsmiRememberFirstRevDiff = new ToolStripMenuItem();
+            tsmiOpenWorkingDirectoryFile = new ToolStripMenuItem();
             tsmiOpenWorkingDirectoryFileWith = new ToolStripMenuItem();
             tsmiOpenRevisionFile = new ToolStripMenuItem();
             tsmiOpenRevisionFileWith = new ToolStripMenuItem();
@@ -118,6 +121,12 @@ namespace GitUI
             tsmiFindFile = new ToolStripMenuItem();
             tsmiOpenFindInCommitFilesGitGrepDialog = new ToolStripMenuItem();
             tsmiShowFindInCommitFilesGitGrep = new ToolStripMenuItem();
+            sepIgnore = new ToolStripSeparator();
+            tsmiAddFileToGitIgnore = new ToolStripMenuItem();
+            tsmiAddFileToGitInfoExclude = new ToolStripMenuItem();
+            tsmiSkipWorktree = new ToolStripMenuItem();
+            tsmiAssumeUnchanged = new ToolStripMenuItem();
+            tsmiStopTracking = new ToolStripMenuItem();
             sepScripts = new ToolStripSeparator();
             tsmiRunScript = new ToolStripMenuItem();
             Toolbar.SuspendLayout();
@@ -551,9 +560,10 @@ namespace GitUI
             // 
             // ItemContextMenu
             // 
-            ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiSaveAs, tsmiEditWorkingDirectoryFile, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepScripts, tsmiRunScript });
+            ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiSaveAs, tsmiEditWorkingDirectoryFile, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
             ItemContextMenu.Name = "DiffContextMenu";
-            ItemContextMenu.Size = new Size(296, 606);
+            ItemContextMenu.Size = new Size(296, 788);
+            ItemContextMenu.Opening += ItemContextMenu_Opening;
             // 
             // tsmiUpdateSubmodule
             // 
@@ -599,7 +609,7 @@ namespace GitUI
             tsmiStageFile.Image = Properties.Images.Stage;
             tsmiStageFile.Name = "tsmiStageFile";
             tsmiStageFile.Size = new Size(295, 22);
-            tsmiStageFile.Text = "&Stage file(s)";
+            tsmiStageFile.Text = "&Stage selected";
             tsmiStageFile.Click += StageFile_Click;
             // 
             // tsmiUnstageFile
@@ -607,7 +617,7 @@ namespace GitUI
             tsmiUnstageFile.Image = Properties.Images.Unstage;
             tsmiUnstageFile.Name = "tsmiUnstageFile";
             tsmiUnstageFile.Size = new Size(295, 22);
-            tsmiUnstageFile.Text = "&Unstage file(s)";
+            tsmiUnstageFile.Text = "&Unstage selected";
             tsmiUnstageFile.Click += UnstageFile_Click;
             // 
             // tsmiResetFileTo
@@ -630,6 +640,22 @@ namespace GitUI
             tsmiResetFileToParent.Name = "tsmiResetFileToParent";
             tsmiResetFileToParent.Size = new Size(67, 22);
             tsmiResetFileToParent.Click += ResetFile_Click;
+            // 
+            // tsmiResetChunkOfFile
+            // 
+            tsmiResetChunkOfFile.Name = "tsmiResetChunkOfFile";
+            tsmiResetChunkOfFile.Size = new Size(295, 22);
+            tsmiResetChunkOfFile.Text = "Reset chunk of file...";
+            tsmiResetChunkOfFile.Visible = false;
+            tsmiResetChunkOfFile.Click += ResetChunkOfFile_Click;
+            // 
+            // tsmiInteractiveAdd
+            // 
+            tsmiInteractiveAdd.Name = "tsmiInteractiveAdd";
+            tsmiInteractiveAdd.Size = new Size(295, 22);
+            tsmiInteractiveAdd.Text = "Interactive add...";
+            tsmiInteractiveAdd.Visible = false;
+            tsmiInteractiveAdd.Click += InteractiveAdd_Click;
             // 
             // tsmiCherryPickChanges
             // 
@@ -719,12 +745,20 @@ namespace GitUI
             tsmiRememberFirstRevDiff.Text = "R&emember First for diff";
             tsmiRememberFirstRevDiff.Click += RememberFirstRevDiff_Click;
             // 
+            // tsmiOpenWorkingDirectoryFile
+            // 
+            tsmiOpenWorkingDirectoryFile.Image = Properties.Images.EditFile;
+            tsmiOpenWorkingDirectoryFile.Name = "tsmiOpenWorkingDirectoryFile";
+            tsmiOpenWorkingDirectoryFile.Size = new Size(295, 22);
+            tsmiOpenWorkingDirectoryFile.Text = "&Open working directory file";
+            tsmiOpenWorkingDirectoryFile.Click += OpenWorkingDirectoryFile_Click;
+            // 
             // tsmiOpenWorkingDirectoryFileWith
             // 
             tsmiOpenWorkingDirectoryFileWith.Image = Properties.Images.EditFile;
             tsmiOpenWorkingDirectoryFileWith.Name = "tsmiOpenWorkingDirectoryFileWith";
             tsmiOpenWorkingDirectoryFileWith.Size = new Size(295, 22);
-            tsmiOpenWorkingDirectoryFileWith.Text = "&Open working directory file with...";
+            tsmiOpenWorkingDirectoryFileWith.Text = "Open working directory file with...";
             tsmiOpenWorkingDirectoryFileWith.Click += OpenWorkingDirectoryFileWith_Click;
             // 
             // tsmiOpenRevisionFile
@@ -825,7 +859,6 @@ namespace GitUI
             tsmiBlame.Name = "tsmiBlame";
             tsmiBlame.Size = new Size(295, 22);
             tsmiBlame.Text = "&Blame";
-            tsmiBlame.Visible = false;
             tsmiBlame.Click += Blame_Click;
             // 
             // tsmiFindFile
@@ -841,6 +874,7 @@ namespace GitUI
             tsmiOpenFindInCommitFilesGitGrepDialog.Name = "tsmiOpenFindInCommitFilesGitGrepDialog";
             tsmiOpenFindInCommitFilesGitGrepDialog.Size = new Size(295, 22);
             tsmiOpenFindInCommitFilesGitGrepDialog.Text = "Find in &commit files using git-grep...";
+            tsmiOpenFindInCommitFilesGitGrepDialog.Visible = false;
             tsmiOpenFindInCommitFilesGitGrepDialog.Click += OpenFindInCommitFilesGitGrepDialog_Click;
             // 
             // tsmiShowFindInCommitFilesGitGrep
@@ -849,7 +883,53 @@ namespace GitUI
             tsmiShowFindInCommitFilesGitGrep.Name = "tsmiShowFindInCommitFilesGitGrep";
             tsmiShowFindInCommitFilesGitGrep.Size = new Size(295, 22);
             tsmiShowFindInCommitFilesGitGrep.Text = "Show 'Find in commit fi&les using git-grep'";
+            tsmiShowFindInCommitFilesGitGrep.Visible = false;
             tsmiShowFindInCommitFilesGitGrep.Click += ShowFindInCommitFilesGitGrep_Click;
+            // 
+            // sepIgnore
+            // 
+            sepIgnore.Name = "sepIgnore";
+            sepIgnore.Size = new Size(292, 6);
+            // 
+            // tsmiAddFileToGitIgnore
+            // 
+            tsmiAddFileToGitIgnore.Image = Properties.Images.AddToGitIgnore;
+            tsmiAddFileToGitIgnore.Name = "tsmiAddFileToGitIgnore";
+            tsmiAddFileToGitIgnore.Size = new Size(295, 22);
+            tsmiAddFileToGitIgnore.Text = "Add file to &.gitignore";
+            tsmiAddFileToGitIgnore.Click += AddFileToGitIgnore_Click;
+            // 
+            // tsmiAddFileToGitInfoExclude
+            // 
+            tsmiAddFileToGitInfoExclude.Image = Properties.Images.AddToGitIgnore;
+            tsmiAddFileToGitInfoExclude.Name = "tsmiAddFileToGitInfoExclude";
+            tsmiAddFileToGitInfoExclude.Size = new Size(295, 22);
+            tsmiAddFileToGitInfoExclude.Text = "Add file to .git/info/exclude";
+            tsmiAddFileToGitInfoExclude.Click += AddFileToGitInfoExclude_Click;
+            // 
+            // tsmiSkipWorktree
+            // 
+            tsmiSkipWorktree.CheckOnClick = true;
+            tsmiSkipWorktree.Name = "tsmiSkipWorktree";
+            tsmiSkipWorktree.Size = new Size(295, 22);
+            tsmiSkipWorktree.Text = "S&kip worktree";
+            tsmiSkipWorktree.Click += SkipWorktree_Click;
+            // 
+            // tsmiAssumeUnchanged
+            // 
+            tsmiAssumeUnchanged.CheckOnClick = true;
+            tsmiAssumeUnchanged.Name = "tsmiAssumeUnchanged";
+            tsmiAssumeUnchanged.Size = new Size(295, 22);
+            tsmiAssumeUnchanged.Text = "Assu&me unchanged";
+            tsmiAssumeUnchanged.Click += AssumeUnchanged_Click;
+            // 
+            // tsmiStopTracking
+            // 
+            tsmiStopTracking.Image = Properties.Images.StopTrackingFile;
+            tsmiStopTracking.Name = "tsmiStopTracking";
+            tsmiStopTracking.Size = new Size(295, 22);
+            tsmiStopTracking.Text = "Stop tracking this file";
+            tsmiStopTracking.Click += StopTracking_Click;
             // 
             // sepScripts
             // 
@@ -958,6 +1038,7 @@ namespace GitUI
         private ToolStripMenuItem tsmiDiffWithRemembered;
         private ToolStripMenuItem tsmiRememberSecondRevDiff;
         private ToolStripMenuItem tsmiRememberFirstRevDiff;
+        public ToolStripMenuItem tsmiOpenWorkingDirectoryFile;
         public ToolStripMenuItem tsmiOpenWorkingDirectoryFileWith;
         public ToolStripMenuItem tsmiOpenRevisionFile;
         public ToolStripMenuItem tsmiOpenRevisionFileWith;
@@ -977,5 +1058,13 @@ namespace GitUI
         private ToolStripMenuItem tsmiShowFindInCommitFilesGitGrep;
         private ToolStripSeparator sepScripts;
         private ToolStripMenuItem tsmiRunScript;
+        private ToolStripMenuItem tsmiResetChunkOfFile;
+        private ToolStripMenuItem tsmiInteractiveAdd;
+        private ToolStripSeparator sepIgnore;
+        public ToolStripMenuItem tsmiAddFileToGitIgnore;
+        private ToolStripMenuItem tsmiAddFileToGitInfoExclude;
+        private ToolStripMenuItem tsmiSkipWorktree;
+        private ToolStripMenuItem tsmiAssumeUnchanged;
+        private ToolStripMenuItem tsmiStopTracking;
     }
 }
