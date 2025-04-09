@@ -189,7 +189,25 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void buttonOpenSelectedWorktree_Click(object sender, EventArgs e)
         {
-            if (!CanActOnSelectedWorkspace(out WorkTree workTree))
+            OpenSelectedWorktree();
+        }
+
+        private void WorktreesOnCellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            OpenSelectedWorktree();
+        }
+
+        private void Worktrees_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                OpenSelectedWorktree();
+            }
+        }
+
+        private void OpenSelectedWorktree()
+        {
+            if (!CanActOnSelectedWorkspace(out WorkTree? workTree))
             {
                 return;
             }

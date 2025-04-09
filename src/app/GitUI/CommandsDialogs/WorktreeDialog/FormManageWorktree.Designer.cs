@@ -146,6 +146,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Worktrees.Size = new Size(674, 265);
             Worktrees.TabIndex = 2;
             Worktrees.SelectionChanged += Worktrees_SelectionChanged;
+            Worktrees.CellDoubleClick += WorktreesOnCellDoubleClick;
+            Worktrees.KeyDown += Worktrees_KeyDown;
             // 
             // Path
             // 
