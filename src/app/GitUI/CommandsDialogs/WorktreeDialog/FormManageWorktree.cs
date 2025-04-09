@@ -35,6 +35,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             Worktrees.Columns[3].DefaultCellStyle.Font = AppSettings.MonospaceFont;
             Worktrees.Columns[3].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            Worktrees.Select();
 
             InitializeComplete();
         }
