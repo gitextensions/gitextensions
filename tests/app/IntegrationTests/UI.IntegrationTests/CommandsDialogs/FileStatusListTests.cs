@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.ComponentModel.Design;
+using FluentAssertions;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using NSubstitute;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {
@@ -16,9 +18,18 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
+            ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
+            IGitModule module = Substitute.For<IGitModule>();
+            GitUICommands commands = new(serviceContainer, module);
+            IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
+            uiCommandsSource.UICommands.Returns(x => commands);
+
             _form = new Form();
-            _fileStatusList = new FileStatusList();
-            _fileStatusList.Parent = _form;
+            _fileStatusList = new FileStatusList
+            {
+                Parent = _form,
+                UICommandsSource = uiCommandsSource
+            };
             _form.Show(); // must be visible to be able to change the focus
         }
 
