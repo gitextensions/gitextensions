@@ -149,6 +149,9 @@ namespace GitUI
                 }
             ];
 
+            tsmiDiffFirstToSelected.Font = new Font(tsmiDiffFirstToSelected.Font, FontStyle.Bold);
+            tsmiResetFileToParent.Font = new Font(tsmiResetFileToParent.Font, FontStyle.Bold);
+
             base.Enter += FileStatusList_Enter;
 
             return;
