@@ -624,7 +624,8 @@ namespace GitUI.CommandsDialogs
             }
 
             // route to visible controls which have their own hotkeys
-            return SelectedDiff.ProcessHotkey(keyData);
+            return _currentFilesList.ProcessHotkey(keyData)
+                || SelectedDiff.ProcessHotkey(keyData);
         }
 
         private void FileViewer_TopScrollReached(object sender, EventArgs e)

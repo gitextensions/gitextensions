@@ -306,6 +306,7 @@ namespace GitUI
         protected override void OnRuntimeLoad()
         {
             base.OnRuntimeLoad();
+            ReloadHotkeys();
             VisualStudioIntegration.Init();
         }
 

@@ -103,6 +103,7 @@ namespace GitUI.CommandsDialogs
             FindInCommitFilesUsingGitGrep = 17,
             GoToFirstParent = 18,
             GoToLastParent = 19,
+            OpenWorkingDirectoryFile = 20,
         }
 
         public bool ExecuteCommand(Command cmd)
@@ -112,46 +113,45 @@ namespace GitUI.CommandsDialogs
 
         protected override bool ExecuteCommand(int cmd)
         {
-            if ((DiffFiles.FilterFilesByNameRegexFocused || DiffFiles.FindInCommitFilesGitGrepFocused) && IsTextEditKey(GetShortcutKeys(cmd)))
+            if ((Command)cmd == Command.SelectFirstGroupChanges)
             {
-                return false;
-            }
+                // If no other subcontrol than DiffFiles is focused, focus DiffFiles and let it select all changes of the first diff group
+                if (ContainsFocus && !DiffFiles.Focused)
+                {
+                    return false;
+                }
 
-            DiffFiles.UpdateStatusOfMenuItems();
+                DiffFiles.Focus();
+            }
 
             switch ((Command)cmd)
             {
-                case Command.DeleteSelectedFiles: DiffFiles.tsmiDeleteFile.PerformClick(); break;
-                case Command.ShowHistory: DiffFiles.tsmiFileHistory.PerformClick(); break;
-                case Command.Blame: DiffFiles.tsmiBlame.PerformClick(); break;
-                case Command.OpenWithDifftool: OpenFilesWithDiffTool(RevisionDiffKind.DiffAB); break;
-                case Command.OpenWithDifftoolFirstToLocal: OpenFilesWithDiffTool(RevisionDiffKind.DiffALocal); break;
-                case Command.OpenWithDifftoolSelectedToLocal: OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal); break;
-                case Command.OpenWorkingDirectoryFileWith: DiffFiles.tsmiOpenWorkingDirectoryFileWith.PerformClick(); break;
-                case Command.EditFile: DiffFiles.tsmiEditWorkingDirectoryFile.PerformClick(); break;
-                case Command.OpenAsTempFile: DiffFiles.tsmiOpenRevisionFile.PerformClick(); break;
-                case Command.OpenAsTempFileWith: DiffFiles.tsmiOpenRevisionFileWith.PerformClick(); break;
-                case Command.ResetSelectedFiles: return ResetSelectedFilesWithConfirmation();
-                case Command.StageSelectedFile: return StageSelectedFiles();
-                case Command.UnStageSelectedFile: return UnstageSelectedFiles();
-                case Command.ShowFileTree: DiffFiles.tsmiShowInFileTree.PerformClick(); break;
-                case Command.FilterFileInGrid: DiffFiles.tsmiFilterFileInGrid.PerformClick(); break;
-                case Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFileNotFocused();
-                case Command.FindFile: DiffFiles.tsmiFindFile.PerformClick(); break;
-                case Command.FindInCommitFilesUsingGitGrep:
-                    if (IsFileTreeMode)
-                    {
-                        return base.ExecuteCommand(cmd);
-                    }
-
-                    DiffFiles.tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
-                    break;
                 case Command.GoToFirstParent: return ForwardToRevisionGrid(RevisionGridControl.Command.GoToFirstParent);
                 case Command.GoToLastParent: return ForwardToRevisionGrid(RevisionGridControl.Command.GoToLastParent);
+
+                case Command.DeleteSelectedFiles:
+                case Command.ShowHistory:
+                case Command.Blame:
+                case Command.OpenWithDifftool:
+                case Command.EditFile:
+                case Command.OpenAsTempFile:
+                case Command.OpenAsTempFileWith:
+                case Command.OpenWithDifftoolFirstToLocal:
+                case Command.OpenWithDifftoolSelectedToLocal:
+                case Command.ResetSelectedFiles:
+                case Command.StageSelectedFile:
+                case Command.UnStageSelectedFile:
+                case Command.ShowFileTree:
+                case Command.FilterFileInGrid:
+                case Command.SelectFirstGroupChanges:
+                case Command.FindFile:
+                case Command.OpenWorkingDirectoryFileWith:
+                case Command.FindInCommitFilesUsingGitGrep:
+                case Command.OpenWorkingDirectoryFile:
+                    return DiffFiles.ExecuteCommand((Command)cmd);
+
                 default: return base.ExecuteCommand(cmd);
             }
-
-            return true;
 
             bool ForwardToRevisionGrid(RevisionGridControl.Command command)
             {
@@ -165,18 +165,6 @@ namespace GitUI.CommandsDialogs
 
                 return false;
             }
-
-            bool SelectFirstGroupChangesIfFileNotFocused()
-            {
-                if (ContainsFocus && !DiffFiles.Focused)
-                {
-                    return false;
-                }
-
-                DiffFiles.SelectedItems = DiffFiles.FirstGroupItems;
-                DiffFiles.Focus();
-                return true;
-            }
         }
 
         internal IScriptOptionsProvider? ScriptOptionsProvider => GetScriptOptionsProvider();
@@ -189,24 +177,8 @@ namespace GitUI.CommandsDialogs
         public void ReloadHotkeys()
         {
             LoadHotkeys(HotkeySettingsName);
-            DiffFiles.tsmiDeleteFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
-            DiffFiles.tsmiFileHistory.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
-            DiffFiles.tsmiBlame.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
-            DiffFiles.tsmiDiffFirstToSelected.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftool);
-            DiffFiles.tsmiDiffFirstToLocal.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftoolFirstToLocal);
-            DiffFiles.tsmiDiffSelectedToLocal.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftoolSelectedToLocal);
-            DiffFiles.tsmiOpenWorkingDirectoryFileWith.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWorkingDirectoryFileWith);
-            DiffFiles.tsmiEditWorkingDirectoryFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
-            DiffFiles.tsmiOpenRevisionFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFile);
-            DiffFiles.tsmiOpenRevisionFileWith.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFileWith);
-            DiffFiles.tsmiResetFileToParent.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetSelectedFiles);
-            DiffFiles.tsmiStageFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
-            DiffFiles.tsmiUnstageFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnStageSelectedFile);
-            DiffFiles.tsmiShowInFileTree.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowFileTree);
-            DiffFiles.tsmiFilterFileInGrid.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
-            DiffFiles.tsmiFindFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
-            DiffFiles.tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindInCommitFilesUsingGitGrep);
 
+            DiffFiles.ReloadHotkeys();
             DiffText.ReloadHotkeys();
         }
 
@@ -632,40 +604,6 @@ namespace GitUI.CommandsDialogs
             _revisionFileTree.SelectFileOrFolder(focusView, name, line, requestBlame);
         }
 
-        private void StageFiles()
-        {
-            List<GitItemStatus> files = DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.WorkTree).Select(i => i.Item).ToList();
-
-            Module.StageFiles(files, out _);
-            RequestRefresh();
-        }
-
-        private void UnstageFiles()
-        {
-            Module.BatchUnstageFiles(DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.Index).Select(i => i.Item).ToList());
-            RequestRefresh();
-        }
-
-        private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, string? toolName = null)
-        {
-            using (WaitCursorScope.Enter())
-            {
-                foreach (FileStatusItem item in DiffFiles.SelectedItems)
-                {
-                    if (item.FirstRevision?.ObjectId == ObjectId.CombinedDiffId)
-                    {
-                        // CombinedDiff cannot be viewed in a difftool
-                        // Disabled in menus but can be activated from shortcuts, just ignore
-                        continue;
-                    }
-
-                    // If item.FirstRevision is null, compare to root commit
-                    GitRevision?[] revs = { item.SecondRevision, item.FirstRevision };
-                    UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked, customTool: toolName);
-                }
-            }
-        }
-
         public void SwitchFocus(bool alreadyContainedFocus)
         {
             if (alreadyContainedFocus && DiffFiles.Focused)
@@ -692,73 +630,6 @@ namespace GitUI.CommandsDialogs
                     && ((DiffText.Visible && DiffText.ProcessHotkey(keyData))
                         || (BlameControl.Visible && BlameControl.ProcessHotkey(keyData))));
         }
-
-        /// <summary>
-        /// Hotkey handler.
-        /// </summary>
-        /// <returns>true if hotkey handled.</returns>
-        private bool StageSelectedFiles()
-        {
-            if (!DiffFiles.Focused)
-            {
-                return false;
-            }
-
-            if (!DiffFiles.tsmiStageFile.Enabled)
-            {
-                // Hotkey executed when menu is disabled
-                return true;
-            }
-
-            StageFiles();
-            return true;
-        }
-
-        /// <summary>
-        /// Hotkey handler.
-        /// </summary>
-        /// <returns>true if hotkey handled.</returns>
-        private bool UnstageSelectedFiles()
-        {
-            if (!DiffFiles.Focused)
-            {
-                return false;
-            }
-
-            if (!DiffFiles.tsmiUnstageFile.Enabled)
-            {
-                // Hotkey executed when menu is disabled
-                return true;
-            }
-
-            UnstageFiles();
-            return true;
-        }
-
-        /// <summary>
-        /// Hotkey handler.
-        /// </summary>
-        /// <returns>true if hotkey handled.</returns>
-        private bool ResetSelectedFilesWithConfirmation()
-        {
-            if (!DiffFiles.Focused)
-            {
-                return false;
-            }
-
-            DiffFiles.InitResetFileToToolStripMenuItem();
-            if (!DiffFiles.tsmiResetFileToParent.Enabled)
-            {
-                // Hotkey executed when menu is disabled
-                return true;
-            }
-
-            // Reset to first (parent)
-            DiffFiles.ResetSelectedItemsWithConfirmation(resetToParent: true);
-            return true;
-        }
-
-        private static bool RenamedIndexItem(FileStatusItem item) => item.Item.IsRenamed && item.Item.Staged == StagedStatus.Index;
 
         internal void RegisterGitHostingPluginInBlameControl()
         {

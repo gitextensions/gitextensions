@@ -12,7 +12,6 @@ using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using Microsoft;
 using ResourceManager;
 
 namespace GitUI;
@@ -355,16 +354,89 @@ partial class FileStatusList
 
     private void EditWorkingDirectoryFile_Click(object sender, EventArgs e)
     {
-        Validates.NotNull(_getLineNumber);
-
         if (SelectedItem is null)
         {
             return;
         }
 
         string? fileName = _fullPathResolver.Resolve(SelectedItem.Item.Name);
-        UICommands.StartFileEditorDialog(fileName, lineNumber: _getLineNumber());
+        UICommands.StartFileEditorDialog(fileName, lineNumber: GetLineNumber());
         RequestRefresh();
+    }
+
+    internal bool ExecuteCommand(RevisionDiffControl.Command cmd) => ExecuteCommand((int)cmd);
+
+    protected override bool ExecuteCommand(int cmd)
+    {
+        if ((FilterFilesByNameRegexFocused || FindInCommitFilesGitGrepFocused) && IsTextEditKey(GetShortcutKeys(cmd)))
+        {
+            return false;
+        }
+
+        UpdateStatusOfMenuItems();
+
+        switch ((RevisionDiffControl.Command)cmd)
+        {
+            case RevisionDiffControl.Command.DeleteSelectedFiles: tsmiDeleteFile.PerformClick(); break;
+            case RevisionDiffControl.Command.ShowHistory: tsmiFileHistory.PerformClick(); break;
+            case RevisionDiffControl.Command.Blame: tsmiBlame.PerformClick(); break;
+            case RevisionDiffControl.Command.OpenWithDifftool: OpenFilesWithDiffTool(RevisionDiffKind.DiffAB); break;
+            case RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal: OpenFilesWithDiffTool(RevisionDiffKind.DiffALocal); break;
+            case RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal: OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal); break;
+            case RevisionDiffControl.Command.OpenWorkingDirectoryFile: tsmiOpenWorkingDirectoryFile.PerformClick(); break;
+            case RevisionDiffControl.Command.OpenWorkingDirectoryFileWith: tsmiOpenWorkingDirectoryFileWith.PerformClick(); break;
+            case RevisionDiffControl.Command.EditFile: tsmiEditWorkingDirectoryFile.PerformClick(); break;
+            case RevisionDiffControl.Command.OpenAsTempFile: tsmiOpenRevisionFile.PerformClick(); break;
+            case RevisionDiffControl.Command.OpenAsTempFileWith: tsmiOpenRevisionFileWith.PerformClick(); break;
+            case RevisionDiffControl.Command.ResetSelectedFiles: return ResetSelectedFilesWithConfirmation();
+            case RevisionDiffControl.Command.StageSelectedFile: tsmiStageFile.PerformClick(); break;
+            case RevisionDiffControl.Command.UnStageSelectedFile: tsmiUnstageFile.PerformClick(); break;
+            case RevisionDiffControl.Command.ShowFileTree: tsmiShowInFileTree.PerformClick(); break;
+            case RevisionDiffControl.Command.FilterFileInGrid: tsmiFilterFileInGrid.PerformClick(); break;
+            case RevisionDiffControl.Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFocused();
+            case RevisionDiffControl.Command.FindFile: tsmiFindFile.PerformClick(); break;
+            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep:
+                if (_isFileTreeMode)
+                {
+                    return base.ExecuteCommand(cmd);
+                }
+
+                tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
+                break;
+            default: return base.ExecuteCommand(cmd);
+        }
+
+        return true;
+
+        bool ResetSelectedFilesWithConfirmation()
+        {
+            if (!Focused)
+            {
+                return false;
+            }
+
+            InitResetFileToToolStripMenuItem();
+            if (!tsmiResetFileToParent.Enabled)
+            {
+                // Hotkey executed when menu is disabled
+                return true;
+            }
+
+            // Reset to first (parent)
+            ResetSelectedItemsWithConfirmation(resetToParent: true);
+            return true;
+        }
+
+        bool SelectFirstGroupChangesIfFocused()
+        {
+            if (!Focused)
+            {
+                return false;
+            }
+
+            SelectedItems = FirstGroupItems;
+            return true;
+        }
     }
 
     private void FileHistory_Click(object sender, EventArgs e)
@@ -424,6 +496,13 @@ partial class FileStatusList
             firstIsParent: firstIsParent,
             localExists: localExists);
     }
+
+    private int GetLineNumber()
+        => _getLineNumber is not null
+            ? _getLineNumber()
+            : FindScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider
+                ? int.Parse(scriptOptionsProvider.GetValues(ScriptOptionsProvider._lineNumber).FirstOrDefault("0"))
+                : 0;
 
     private static ContextMenuSelectionInfo GetSelectionInfo(FileStatusItem[] selectedItems, RelativePath? selectedFolder, bool isBareRepository, bool supportLinePatching, IFullPathResolver fullPathResolver)
     {
@@ -679,6 +758,30 @@ partial class FileStatusList
     public void RepositoryChanged()
     {
         _rememberFileContextMenuController.RememberedDiffFileItem = null;
+    }
+
+    public void ReloadHotkeys()
+    {
+        HotkeysEnabled = true;
+        LoadHotkeys(RevisionDiffControl.HotkeySettingsName);
+        tsmiDeleteFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.DeleteSelectedFiles);
+        tsmiFileHistory.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ShowHistory);
+        tsmiBlame.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.Blame);
+        tsmiDiffFirstToSelected.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenWithDifftool);
+        tsmiDiffFirstToLocal.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal);
+        tsmiDiffSelectedToLocal.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal);
+        tsmiOpenWorkingDirectoryFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenWorkingDirectoryFile);
+        tsmiOpenWorkingDirectoryFileWith.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenWorkingDirectoryFileWith);
+        tsmiEditWorkingDirectoryFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.EditFile);
+        tsmiOpenRevisionFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenAsTempFile);
+        tsmiOpenRevisionFileWith.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenAsTempFileWith);
+        tsmiResetFileToParent.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ResetSelectedFiles);
+        tsmiStageFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.StageSelectedFile);
+        tsmiUnstageFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.UnStageSelectedFile);
+        tsmiShowInFileTree.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ShowFileTree);
+        tsmiFilterFileInGrid.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FilterFileInGrid);
+        tsmiFindFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindFile);
+        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
     }
 
     private void RememberFirstRevDiff_Click(object sender, EventArgs e)
