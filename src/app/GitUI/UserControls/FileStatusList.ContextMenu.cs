@@ -497,31 +497,26 @@ partial class FileStatusList
         ObjectId? selectedId = SelectedItems.SecondIds().FirstOrDefault();
         ObjectId? parentId = SelectedItems.FirstIds().FirstOrDefault();
 
-        if (!CanResetToSecond(selectedId))
+        bool canResetToSecond = CanResetToSecond(selectedId);
+        tsmiResetFileToSelected.Enabled = canResetToSecond;
+        tsmiResetFileToSelected.Visible = canResetToSecond;
+        if (canResetToSecond)
         {
-            tsmiResetFileToSelected.Enabled = false;
-            tsmiResetFileToSelected.Visible = false;
-        }
-        else
-        {
-            tsmiResetFileToSelected.Enabled = true;
-            tsmiResetFileToSelected.Visible = true;
             tsmiResetFileToSelected.Text =
                 _selectedRevision + GetDescriptionForRevision(selectedId);
         }
 
-        if (!CanResetToFirst(parentId, SelectedItems))
+        bool canResetToFirst = CanResetToFirst(parentId, SelectedItems);
+        tsmiResetFileToParent.Enabled = canResetToFirst;
+        tsmiResetFileToParent.Visible = canResetToFirst;
+        if (canResetToFirst)
         {
-            tsmiResetFileToParent.Enabled = false;
-            tsmiResetFileToParent.Visible = false;
-        }
-        else
-        {
-            tsmiResetFileToParent.Enabled = true;
-            tsmiResetFileToParent.Visible = true;
             tsmiResetFileToParent.Text =
                 _firstRevision + GetDescriptionForRevision(parentId);
         }
+
+        bool canReset = canResetToSecond || canResetToFirst;
+        tsmiResetFileTo.Enabled = canReset;
     }
 
     private void InteractiveAdd_Click(object sender, EventArgs e)
@@ -627,6 +622,9 @@ partial class FileStatusList
         tsmiDiffFirstToSelected.Enabled = _itemContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo);
         tsmiDiffFirstToLocal.Enabled = _itemContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo);
         tsmiDiffSelectedToLocal.Enabled = _itemContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo);
+        tsmiDiffFirstToLocal.Visible
+            = tsmiDiffSelectedToLocal.Visible
+            = !_itemContextMenuController.ShouldHideToLocal(selectionInfo);
 
         List<FileStatusItem> diffFiles = SelectedItems.ToList();
         sepDifftoolRemember.Visible = diffFiles.Count == 1 || diffFiles.Count == 2;
@@ -730,14 +728,18 @@ partial class FileStatusList
         });
     }
 
-    private void ResetFile_Click(object sender, EventArgs e)
+    private void ResetFile_Click(object? sender, EventArgs e)
     {
-        ResetSelectedItemsWithConfirmation(resetToParent: sender == tsmiResetFileToParent);
-    }
+        if (sender == tsmiResetFileTo)
+        {
+            sender = tsmiResetFileToParent;
+            if (!tsmiResetFileToParent.Enabled)
+            {
+                return;
+            }
+        }
 
-    private void ResetFileTo_DropDownOpening(object sender, EventArgs e)
-    {
-        InitResetFileToToolStripMenuItem();
+        ResetSelectedItemsWithConfirmation(resetToParent: sender == tsmiResetFileToParent);
     }
 
     public void ResetSelectedItemsWithConfirmation(bool resetToParent)
@@ -1020,7 +1022,12 @@ partial class FileStatusList
         tsmiUnstageFile.Enabled
             = tsmiUnstageFile.Visible
             = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo);
-        tsmiResetFileTo.Enabled = _revisionDiffController.ShouldShowResetFileMenus(selectionInfo);
+        InitResetFileToToolStripMenuItem();
+        if (!_revisionDiffController.ShouldShowResetFileMenus(selectionInfo))
+        {
+            tsmiResetFileTo.Enabled = false;
+        }
+
         tsmiCherryPickChanges.Enabled = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
 
         sepFile.Visible = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo)

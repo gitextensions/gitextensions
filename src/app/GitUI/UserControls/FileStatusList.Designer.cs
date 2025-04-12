@@ -627,7 +627,7 @@ namespace GitUI
             tsmiResetFileTo.Name = "tsmiResetFileTo";
             tsmiResetFileTo.Size = new Size(295, 22);
             tsmiResetFileTo.Text = "&Reset file(s) to";
-            tsmiResetFileTo.DropDownOpening += ResetFileTo_DropDownOpening;
+            tsmiResetFileTo.Click += ResetFile_Click;
             // 
             // tsmiResetFileToSelected
             // 
@@ -679,6 +679,7 @@ namespace GitUI
             tsmiOpenWithDifftool.Size = new Size(295, 22);
             tsmiOpenWithDifftool.Text = "Open with &difftool";
             tsmiOpenWithDifftool.DropDownOpening += OpenWithDifftool_DropDownOpening;
+            tsmiOpenWithDifftool.Click += DiffFirstToSelected_Click;
             // 
             // tsmiSecondDiffCaption
             // 
