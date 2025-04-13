@@ -415,10 +415,23 @@ partial class FileStatusList
 
                 tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
                 break;
+            case RevisionDiffControl.Command.OpenInVisualStudio: tsmiOpenInVisualStudio.PerformClick(); break;
+            case RevisionDiffControl.Command.AddFileToGitIgnore: return AddFileToGitIgnore();
             default: return base.ExecuteCommand(cmd);
         }
 
         return true;
+
+        bool AddFileToGitIgnore()
+        {
+            if (!Focused)
+            {
+                return false;
+            }
+
+            tsmiAddFileToGitIgnore.PerformClick();
+            return true;
+        }
 
         bool ResetSelectedFilesWithConfirmation()
         {
@@ -682,7 +695,7 @@ partial class FileStatusList
 
     private void OpenInVisualStudio_Click(object sender, EventArgs e)
     {
-        if (SelectedItemAbsolutePath is string itemName)
+        if (VisualStudioIntegration.IsVisualStudioInstalled && SelectedItemAbsolutePath is string itemName)
         {
             VisualStudioIntegration.OpenFile(itemName, GetLineNumber());
         }
@@ -803,6 +816,8 @@ partial class FileStatusList
         tsmiFilterFileInGrid.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FilterFileInGrid);
         tsmiFindFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindFile);
         tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
+        tsmiOpenInVisualStudio.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenInVisualStudio);
+        tsmiAddFileToGitIgnore.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.AddFileToGitIgnore);
     }
 
     private void RememberFirstRevDiff_Click(object sender, EventArgs e)
