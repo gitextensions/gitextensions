@@ -128,6 +128,13 @@ partial class FileStatusList
         tsmiRefreshOnFormFocus.Visible = canAutoRefresh;
         sepToolbar.Visible = canAutoRefresh;
 
+        sepShow.Visible = canAutoRefresh;
+        tsmiShowIgnoredFiles.Visible = canAutoRefresh;
+        tsmiShowSkipWorktreeFiles.Visible = canAutoRefresh;
+        tsmiShowAssumeUnchangedFiles.Visible = canAutoRefresh;
+        tsmiShowUntrackedFiles.Visible = canAutoRefresh;
+        tsmiShowUntrackedFiles.Checked = canAutoRefresh && Module.EffectiveConfigFile.GetValue("status.showuntrackedfiles") != "no";
+
         tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
         tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
     }
@@ -825,7 +832,14 @@ partial class FileStatusList
 
     private void RequestRefresh()
     {
-        _refreshParent?.Invoke();
+        if (_refreshParent is not null)
+        {
+            _refreshParent.Invoke();
+        }
+        else
+        {
+            btnRefresh.PerformClick();
+        }
     }
 
     private void ResetChunkOfFile_Click(object sender, EventArgs e)

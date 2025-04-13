@@ -90,6 +90,18 @@ partial class FileStatusList
         UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
     }
 
+    private void EditGitIgnore_Click(object sender, EventArgs e)
+    {
+        UICommands.StartEditGitIgnoreDialog(this, localExcludes: false);
+        RequestRefresh();
+    }
+
+    private void EditLocallyIgnoredFiles_Click(object sender, EventArgs e)
+    {
+        UICommands.StartEditGitIgnoreDialog(this, localExcludes: true);
+        RequestRefresh();
+    }
+
     private void Filter_ButtonClick(object sender, EventArgs e)
     {
         FilterFiles(_NO_TRANSLATE_FilterComboBox.Text);
@@ -172,6 +184,11 @@ partial class FileStatusList
         tsmiShowDiffForAllParents.ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip;
     }
 
+    private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
+    {
+        RequestRefresh();
+    }
+
     private void ShowDiffForAllParents_Click(object sender, EventArgs e)
     {
         AppSettings.ShowDiffForAllParents = tsmiShowDiffForAllParents.Checked;
@@ -190,6 +207,21 @@ partial class FileStatusList
     {
         AppSettings.FileStatusShowGroupNodesInFlatList.Value = tsmiShowGroupNodesInFlatList.Checked;
         UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
+    }
+
+    private void ShowIgnoredFiles_Click(object sender, EventArgs e)
+    {
+        RequestRefresh();
+    }
+
+    private void ShowSkipWorktreeFiles_Click(object sender, EventArgs e)
+    {
+        RequestRefresh();
+    }
+
+    private void ShowUntrackedFiles_Click(object sender, EventArgs e)
+    {
+        RequestRefresh();
     }
 
     private void UpdateToolbar()

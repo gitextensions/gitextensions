@@ -33,20 +33,6 @@ namespace GitUI.CommandsDialogs
             toolStripContainer1 = new ToolStripContainer();
             Loading = new LoadingControl();
             Unstaged = new GitUI.FileStatusList();
-            toolbarUnstaged = new GitUI.ToolStripEx();
-            toolRefreshItem = new ToolStripButton();
-            toolStripSeparator6 = new ToolStripSeparator();
-            workingToolStripMenuItem = new ToolStripDropDownButton();
-            showIgnoredFilesToolStripMenuItem = new ToolStripMenuItem();
-            showSkipWorktreeFilesToolStripMenuItem = new ToolStripMenuItem();
-            showAssumeUnchangedFilesToolStripMenuItem = new ToolStripMenuItem();
-            showUntrackedFilesToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator1 = new ToolStripSeparator();
-            editGitIgnoreToolStripMenuItem = new ToolStripMenuItem();
-            editLocallyIgnoredFilesToolStripMenuItem = new ToolStripMenuItem();
-            deleteAllUntrackedFilesToolStripMenuItem = new ToolStripMenuItem();
-            toolStripMenuItem2 = new ToolStripSeparator();
-            selectionFilterToolStripMenuItem = new ToolStripMenuItem();
             toolStripProgressBar1 = new ToolStripProgressBar();
             toolbarSelectionFilter = new GitUI.ToolStripEx();
             toolStripLabel1 = new ToolStripLabel();
@@ -120,7 +106,6 @@ namespace GitUI.CommandsDialogs
             toolStripContainer1.ContentPanel.SuspendLayout();
             toolStripContainer1.TopToolStripPanel.SuspendLayout();
             toolStripContainer1.SuspendLayout();
-            toolbarUnstaged.SuspendLayout();
             toolbarSelectionFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(LoadingStaged)).BeginInit();
             toolbarStaged.SuspendLayout();
@@ -228,7 +213,6 @@ namespace GitUI.CommandsDialogs
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
-            toolStripContainer1.TopToolStripPanel.Controls.Add(toolbarUnstaged);
             toolStripContainer1.TopToolStripPanel.Controls.Add(toolbarSelectionFilter);
             // 
             // Loading
@@ -255,131 +239,6 @@ namespace GitUI.CommandsDialogs
             Unstaged.DataSourceChanged += Staged_DataSourceChanged;
             Unstaged.DoubleClick += Unstaged_DoubleClick;
             Unstaged.Enter += Unstaged_Enter;
-            // 
-            // toolbarUnstaged
-            // 
-            toolbarUnstaged.AutoSize = false;
-            toolbarUnstaged.BackColor = SystemColors.Control;
-            toolbarUnstaged.ClickThrough = true;
-            toolbarUnstaged.Dock = DockStyle.None;
-            toolbarUnstaged.DrawBorder = false;
-            toolbarUnstaged.GripStyle = ToolStripGripStyle.Hidden;
-            toolbarUnstaged.Items.AddRange(new ToolStripItem[] {
-            toolRefreshItem,
-            toolStripSeparator6,
-            workingToolStripMenuItem,
-            toolStripProgressBar1});
-            toolbarUnstaged.Location = new Point(0, 0);
-            toolbarUnstaged.Name = "toolbarUnstaged";
-            toolbarUnstaged.Padding = new Padding(2, 1, 2, 1);
-            toolbarUnstaged.RenderMode = ToolStripRenderMode.System;
-            toolbarUnstaged.Size = new Size(397, 25);
-            toolbarUnstaged.Stretch = true;
-            toolbarUnstaged.TabIndex = 12;
-            // 
-            // toolRefreshItem
-            // 
-            toolRefreshItem.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolRefreshItem.Image = Properties.Images.ReloadRevisions;
-            toolRefreshItem.Name = "toolRefreshItem";
-            toolRefreshItem.Size = new Size(23, 20);
-            toolRefreshItem.Text = "Refresh";
-            toolRefreshItem.Click += RescanChangesToolStripMenuItemClick;
-            // 
-            // toolStripSeparator6
-            // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(6, 23);
-            // 
-            // workingToolStripMenuItem
-            // 
-            workingToolStripMenuItem.AutoToolTip = false;
-            workingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-            showIgnoredFilesToolStripMenuItem,
-            showSkipWorktreeFilesToolStripMenuItem,
-            showAssumeUnchangedFilesToolStripMenuItem,
-            showUntrackedFilesToolStripMenuItem,
-            toolStripSeparator1,
-            editGitIgnoreToolStripMenuItem,
-            editLocallyIgnoredFilesToolStripMenuItem,
-            deleteAllUntrackedFilesToolStripMenuItem,
-            toolStripMenuItem2,
-            selectionFilterToolStripMenuItem});
-            workingToolStripMenuItem.Image = Properties.Images.WorkingDirChanges;
-            workingToolStripMenuItem.Name = "workingToolStripMenuItem";
-            workingToolStripMenuItem.Size = new Size(178, 20);
-            workingToolStripMenuItem.Text = "&Working directory changes";
-            // 
-            // showIgnoredFilesToolStripMenuItem
-            // 
-            showIgnoredFilesToolStripMenuItem.Name = "showIgnoredFilesToolStripMenuItem";
-            showIgnoredFilesToolStripMenuItem.Size = new Size(242, 22);
-            showIgnoredFilesToolStripMenuItem.Text = "Show ignored files";
-            showIgnoredFilesToolStripMenuItem.Click += ShowIgnoredFilesToolStripMenuItemClick;
-            // 
-            // showSkipWorktreeFilesToolStripMenuItem
-            // 
-            showSkipWorktreeFilesToolStripMenuItem.Name = "showSkipWorktreeFilesToolStripMenuItem";
-            showSkipWorktreeFilesToolStripMenuItem.Size = new Size(242, 22);
-            showSkipWorktreeFilesToolStripMenuItem.Text = "Show skip-worktree files";
-            showSkipWorktreeFilesToolStripMenuItem.Click += ShowSkipWorktreeFilesToolStripMenuItemClick;
-            // 
-            // showAssumeUnchangedFilesToolStripMenuItem
-            // 
-            showAssumeUnchangedFilesToolStripMenuItem.Name = "showAssumeUnchangedFilesToolStripMenuItem";
-            showAssumeUnchangedFilesToolStripMenuItem.Size = new Size(242, 22);
-            showAssumeUnchangedFilesToolStripMenuItem.Text = "Show assumed-unchanged files";
-            showAssumeUnchangedFilesToolStripMenuItem.Click += ShowAssumeUnchangedFilesToolStripMenuItemClick;
-            // 
-            // showUntrackedFilesToolStripMenuItem
-            // 
-            showUntrackedFilesToolStripMenuItem.Checked = true;
-            showUntrackedFilesToolStripMenuItem.CheckState = CheckState.Checked;
-            showUntrackedFilesToolStripMenuItem.Name = "showUntrackedFilesToolStripMenuItem";
-            showUntrackedFilesToolStripMenuItem.Size = new Size(242, 22);
-            showUntrackedFilesToolStripMenuItem.Text = "Show untracked files";
-            showUntrackedFilesToolStripMenuItem.Click += ShowUntrackedFilesToolStripMenuItemClick;
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(239, 6);
-            // 
-            // editGitIgnoreToolStripMenuItem
-            // 
-            editGitIgnoreToolStripMenuItem.Image = Properties.Images.EditGitIgnore;
-            editGitIgnoreToolStripMenuItem.Name = "editGitIgnoreToolStripMenuItem";
-            editGitIgnoreToolStripMenuItem.Size = new Size(242, 22);
-            editGitIgnoreToolStripMenuItem.Text = "Edit ignored files";
-            editGitIgnoreToolStripMenuItem.Click += EditGitIgnoreToolStripMenuItemClick;
-            // 
-            // editLocallyIgnoredFilesToolStripMenuItem
-            // 
-            editLocallyIgnoredFilesToolStripMenuItem.Image = Properties.Images.EditGitIgnore;
-            editLocallyIgnoredFilesToolStripMenuItem.Name = "editLocallyIgnoredFilesToolStripMenuItem";
-            editLocallyIgnoredFilesToolStripMenuItem.Size = new Size(242, 22);
-            editLocallyIgnoredFilesToolStripMenuItem.Text = "Edit locally ignored files";
-            editLocallyIgnoredFilesToolStripMenuItem.Click += EditGitInfoExcludeToolStripMenuItemClick;
-            // 
-            // deleteAllUntrackedFilesToolStripMenuItem
-            // 
-            deleteAllUntrackedFilesToolStripMenuItem.Name = "deleteAllUntrackedFilesToolStripMenuItem";
-            deleteAllUntrackedFilesToolStripMenuItem.Size = new Size(242, 22);
-            deleteAllUntrackedFilesToolStripMenuItem.Text = "Delete all untracked files";
-            deleteAllUntrackedFilesToolStripMenuItem.Click += DeleteAllUntrackedFilesToolStripMenuItemClick;
-            // 
-            // toolStripMenuItem2
-            // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(239, 6);
-            // 
-            // selectionFilterToolStripMenuItem
-            // 
-            selectionFilterToolStripMenuItem.CheckOnClick = true;
-            selectionFilterToolStripMenuItem.Name = "selectionFilterToolStripMenuItem";
-            selectionFilterToolStripMenuItem.Size = new Size(242, 22);
-            selectionFilterToolStripMenuItem.Text = "Selection filter";
-            selectionFilterToolStripMenuItem.CheckedChanged += ToggleShowSelectionFilter;
             // 
             // toolStripProgressBar1
             // 
@@ -939,6 +798,7 @@ namespace GitUI.CommandsDialogs
             commitStatusStrip.BackColor = SystemColors.Control;
             commitStatusStrip.Items.AddRange(new ToolStripItem[] {
             commitAuthorStatus,
+            toolStripProgressBar1,
             toolStripStatusBranchIcon,
             branchNameLabel,
             remoteNameLabel,
@@ -1073,8 +933,6 @@ namespace GitUI.CommandsDialogs
             toolStripContainer1.TopToolStripPanel.PerformLayout();
             toolStripContainer1.ResumeLayout(false);
             toolStripContainer1.PerformLayout();
-            toolbarUnstaged.ResumeLayout(false);
-            toolbarUnstaged.PerformLayout();
             toolbarSelectionFilter.ResumeLayout(false);
             toolbarSelectionFilter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(LoadingStaged)).EndInit();
@@ -1120,24 +978,12 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
         private GitUI.UserControls.RevisionGrid.LoadingControl Loading;
         private FileStatusList Unstaged;
-        private ToolStripEx toolbarUnstaged;
         private ToolStripProgressBar toolStripProgressBar1;
-        private ToolStripDropDownButton workingToolStripMenuItem;
-        private ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
-        private ToolStripMenuItem showAssumeUnchangedFilesToolStripMenuItem;
-        private ToolStripMenuItem showSkipWorktreeFilesToolStripMenuItem;
-        private ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
-        private ToolStripMenuItem editLocallyIgnoredFilesToolStripMenuItem;
-        private ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private ToolStripEx toolbarStaged;
         private FileStatusList Staged;
         private Button Cancel;
         private ToolStripButton toolStageItem;
         private ToolStripButton toolUnstageItem;
-        private ToolStripButton toolRefreshItem;
-        private ToolStripSeparator toolStripSeparator6;
         private ToolStripButton toolStageAllItem;
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripSeparator toolStripSeparator11;
@@ -1146,12 +992,10 @@ namespace GitUI.CommandsDialogs
         private ToolStripTextBox toolAuthor;
         private ToolStripSeparator toolStripSeparator2;
         private PictureBox LoadingStaged;
-        private ToolStripSeparator toolStripMenuItem2;
         private ToolStripContainer toolStripContainer1;
         private ToolStripEx toolbarSelectionFilter;
         private ToolStripLabel toolStripLabel1;
         private ToolStripComboBox selectionFilter;
-        private ToolStripMenuItem selectionFilterToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem generateListOfChangesInSubmodulesChangesToolStripMenuItem;
         private ToolStripDropDownButton commitTemplatesToolStripMenuItem;
