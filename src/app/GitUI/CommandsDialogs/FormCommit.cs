@@ -223,8 +223,8 @@ namespace GitUI.CommandsDialogs
 
             _currentFilesList = Unstaged;
 
-            Unstaged.BindContextMenu(RescanChanges, toolStageItem.PerformClick, unstage: null);
-            Staged.BindContextMenu(RescanChanges, stage: null, toolUnstageItem.PerformClick);
+            Unstaged.BindContextMenu(RescanChanges, canAutoRefresh: true, toolStageItem.PerformClick, unstage: null);
+            Staged.BindContextMenu(RescanChanges, canAutoRefresh: false, stage: null, toolUnstageItem.PerformClick);
 
             CommitAndPush.Text = _commitAndPush.Text;
 
@@ -244,7 +244,6 @@ namespace GitUI.CommandsDialogs
             StageInSuperproject.Checked = AppSettings.StageInSuperprojectAfterCommit;
             closeDialogAfterEachCommitToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterLastCommit;
-            refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
             ShowOnlyMyMessagesToolStripMenuItem.Checked = AppSettings.CommitDialogShowOnlyMyMessages;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
@@ -3039,6 +3038,11 @@ namespace GitUI.CommandsDialogs
 
         internal TestAccessor GetTestAccessor()
             => new(this);
+
+        private void Options_DropDownOpening(object sender, EventArgs e)
+        {
+            refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
+        }
 
         internal readonly struct TestAccessor
         {
