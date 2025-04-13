@@ -901,6 +901,10 @@ namespace GitUI.Editor
                     {
                         internalFileViewer.GoToNextChange(NumberOfContextLines);
                     }
+                    else
+                    {
+                        internalFileViewer.GoToNextChange(NumberOfContextLines, keepFirstVisibleLine: true);
+                    }
 
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
