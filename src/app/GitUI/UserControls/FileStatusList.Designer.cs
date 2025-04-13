@@ -48,8 +48,7 @@ namespace GitUI
             Toolbar = new ToolStripEx();
             btnCollapseGroups = new ToolStripButton();
             sepRefresh = new ToolStripSeparator();
-            btnRefresh = new ToolStripSplitButton();
-            tsmiRefreshOnFormFocus = new ToolStripMenuItem();
+            btnRefresh = new ToolStripButton();
             sepAsTree = new ToolStripSeparator();
             btnAsTree = new ToolStripSplitButton();
             tsmiGroupByFilePathTree = new ToolStripMenuItem();
@@ -61,8 +60,6 @@ namespace GitUI
             sepListOptions = new ToolStripSeparator();
             tsmiDenseTree = new ToolStripMenuItem();
             tsmiShowGroupNodesInFlatList = new ToolStripMenuItem();
-            sepToolbar = new ToolStripSeparator();
-            tsmiToolbar = new ToolStripMenuItem();
             sepGroupBy = new ToolStripSeparator();
             btnByPath = new ToolStripButton();
             btnByExtension = new ToolStripButton();
@@ -77,6 +74,12 @@ namespace GitUI
             tsmiFindUsingDialog = new ToolStripMenuItem();
             tsmiFindUsingInputBox = new ToolStripMenuItem();
             tsmiFindUsingBoth = new ToolStripMenuItem();
+            sepSettings = new ToolStripSeparator();
+            btnSettings = new ToolStripDropDownButton();
+            tsmiRefreshOnFormFocus = new ToolStripMenuItem();
+            tsmiShowDiffForAllParents = new ToolStripMenuItem();
+            sepToolbar = new ToolStripSeparator();
+            tsmiToolbar = new ToolStripMenuItem();
             ItemContextMenu = new ContextMenuStrip(components);
             tsmiUpdateSubmodule = new ToolStripMenuItem();
             tsmiResetSubmoduleChanges = new ToolStripMenuItem();
@@ -107,8 +110,9 @@ namespace GitUI
             tsmiOpenWorkingDirectoryFileWith = new ToolStripMenuItem();
             tsmiOpenRevisionFile = new ToolStripMenuItem();
             tsmiOpenRevisionFileWith = new ToolStripMenuItem();
-            tsmiSaveAs = new ToolStripMenuItem();
             tsmiEditWorkingDirectoryFile = new ToolStripMenuItem();
+            tsmiOpenInVisualStudio = new ToolStripMenuItem();
+            tsmiSaveAs = new ToolStripMenuItem();
             tsmiDeleteFile = new ToolStripMenuItem();
             sepFile = new ToolStripSeparator();
             tsmiCopyPaths = new GitUI.CommandsDialogs.Menus.CopyPathsToolStripMenuItem();
@@ -289,7 +293,7 @@ namespace GitUI
             Toolbar.ClickThrough = true;
             Toolbar.DrawBorder = false;
             Toolbar.GripStyle = ToolStripGripStyle.Hidden;
-            Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep });
+            Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep, sepSettings, btnSettings });
             Toolbar.Location = new Point(0, 0);
             Toolbar.Name = "Toolbar";
             Toolbar.RenderMode = ToolStripRenderMode.Professional;
@@ -315,21 +319,11 @@ namespace GitUI
             // btnRefresh
             // 
             btnRefresh.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnRefresh.DropDownItems.AddRange(new ToolStripItem[] { tsmiRefreshOnFormFocus });
             btnRefresh.Image = Properties.Images.ReloadRevisions;
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(32, 22);
+            btnRefresh.Size = new Size(23, 22);
             btnRefresh.ToolTipText = "Refresh artificial commit";
             btnRefresh.Visible = false;
-            // 
-            // tsmiRefreshOnFormFocus
-            // 
-            tsmiRefreshOnFormFocus.CheckOnClick = true;
-            tsmiRefreshOnFormFocus.Enabled = false;
-            tsmiRefreshOnFormFocus.Name = "tsmiRefreshOnFormFocus";
-            tsmiRefreshOnFormFocus.Size = new Size(286, 22);
-            tsmiRefreshOnFormFocus.Text = "&Refresh artificial commits on form focus";
-            tsmiRefreshOnFormFocus.Click += RefreshOnFormFocus_Click;
             // 
             // sepAsTree
             // 
@@ -339,7 +333,7 @@ namespace GitUI
             // btnAsTree
             // 
             btnAsTree.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnAsTree.DropDownItems.AddRange(new ToolStripItem[] { tsmiGroupByFilePathTree, tsmiGroupByFilePathFlat, tsmiGroupByFileExtensionTree, tsmiGroupByFileExtensionFlat, tsmiGroupByFileStatusTree, tsmiGroupByFileStatusFlat, sepListOptions, tsmiDenseTree, tsmiShowGroupNodesInFlatList, sepToolbar, tsmiToolbar });
+            btnAsTree.DropDownItems.AddRange(new ToolStripItem[] { tsmiGroupByFilePathTree, tsmiGroupByFilePathFlat, tsmiGroupByFileExtensionTree, tsmiGroupByFileExtensionFlat, tsmiGroupByFileStatusTree, tsmiGroupByFileStatusFlat, sepListOptions, tsmiDenseTree, tsmiShowGroupNodesInFlatList });
             btnAsTree.Image = Properties.Images.FileTree;
             btnAsTree.Name = "btnAsTree";
             btnAsTree.Size = new Size(32, 22);
@@ -417,17 +411,6 @@ namespace GitUI
             tsmiShowGroupNodesInFlatList.Size = new Size(340, 22);
             tsmiShowGroupNodesInFlatList.Text = "Show &group nodes in flat list (if multiple)";
             tsmiShowGroupNodesInFlatList.Click += ShowGroupNodesInFlatList_Click;
-            // 
-            // sepToolbar
-            // 
-            sepToolbar.Name = "sepToolbar";
-            sepToolbar.Size = new Size(337, 6);
-            // 
-            // tsmiToolbar
-            // 
-            tsmiToolbar.Name = "tsmiToolbar";
-            tsmiToolbar.Size = new Size(340, 22);
-            tsmiToolbar.Text = "Toolbar";
             // 
             // sepGroupBy
             // 
@@ -558,9 +541,53 @@ namespace GitUI
             tsmiFindUsingBoth.Text = "Using &both";
             tsmiFindUsingBoth.Click += FindUsing_Click;
             // 
+            // sepSettings
+            // 
+            sepSettings.Name = "sepSettings";
+            sepSettings.Size = new Size(6, 25);
+            // 
+            // btnSettings
+            // 
+            btnSettings.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnSettings.DropDownItems.AddRange(new ToolStripItem[] { tsmiRefreshOnFormFocus, tsmiShowDiffForAllParents, sepToolbar, tsmiToolbar });
+            btnSettings.Image = Properties.Images.Settings;
+            btnSettings.Name = "btnSettings";
+            btnSettings.Size = new Size(29, 22);
+            btnSettings.Text = "Settings";
+            btnSettings.DropDownOpening += Settings_DropDownOpening;
+            // 
+            // tsmiRefreshOnFormFocus
+            // 
+            tsmiRefreshOnFormFocus.CheckOnClick = true;
+            tsmiRefreshOnFormFocus.Name = "tsmiRefreshOnFormFocus";
+            tsmiRefreshOnFormFocus.Size = new Size(286, 22);
+            tsmiRefreshOnFormFocus.Text = "&Refresh artificial commits on form focus";
+            tsmiRefreshOnFormFocus.Visible = false;
+            tsmiRefreshOnFormFocus.Click += RefreshOnFormFocus_Click;
+            // 
+            // tsmiShowDiffForAllParents
+            // 
+            tsmiShowDiffForAllParents.CheckOnClick = true;
+            tsmiShowDiffForAllParents.Name = "tsmiShowDiffForAllParents";
+            tsmiShowDiffForAllParents.Size = new Size(286, 22);
+            tsmiShowDiffForAllParents.Text = "&Show file differences for all parents";
+            tsmiShowDiffForAllParents.Click += ShowDiffForAllParents_Click;
+            // 
+            // sepToolbar
+            // 
+            sepToolbar.Name = "sepToolbar";
+            sepToolbar.Size = new Size(283, 6);
+            sepToolbar.Visible = false;
+            // 
+            // tsmiToolbar
+            // 
+            tsmiToolbar.Name = "tsmiToolbar";
+            tsmiToolbar.Size = new Size(286, 22);
+            tsmiToolbar.Text = "&Toolbar";
+            // 
             // ItemContextMenu
             // 
-            ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiSaveAs, tsmiEditWorkingDirectoryFile, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
+            ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiEditWorkingDirectoryFile, tsmiOpenInVisualStudio, tsmiSaveAs, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
             ItemContextMenu.Name = "DiffContextMenu";
             ItemContextMenu.Size = new Size(296, 788);
             ItemContextMenu.Opening += ItemContextMenu_Opening;
@@ -778,6 +805,22 @@ namespace GitUI
             tsmiOpenRevisionFileWith.Text = "Open this revision &with... (temp file)";
             tsmiOpenRevisionFileWith.Click += OpenRevisionFileWith_Click;
             // 
+            // tsmiEditWorkingDirectoryFile
+            // 
+            tsmiEditWorkingDirectoryFile.Image = Properties.Images.EditFile;
+            tsmiEditWorkingDirectoryFile.Name = "tsmiEditWorkingDirectoryFile";
+            tsmiEditWorkingDirectoryFile.Size = new Size(295, 22);
+            tsmiEditWorkingDirectoryFile.Text = "&Edit working directory file";
+            tsmiEditWorkingDirectoryFile.Click += EditWorkingDirectoryFile_Click;
+            // 
+            // tsmiOpenInVisualStudio
+            // 
+            tsmiOpenInVisualStudio.Image = Properties.Images.VisualStudio16;
+            tsmiOpenInVisualStudio.Name = "tsmiOpenInVisualStudio";
+            tsmiOpenInVisualStudio.Size = new Size(295, 22);
+            tsmiOpenInVisualStudio.Text = "Open in &Visual Studio";
+            tsmiOpenInVisualStudio.Click += OpenInVisualStudio_Click;
+            // 
             // tsmiSaveAs
             // 
             tsmiSaveAs.Image = Properties.Images.SaveAs;
@@ -786,14 +829,6 @@ namespace GitUI
             tsmiSaveAs.Size = new Size(295, 22);
             tsmiSaveAs.Text = "S&ave selected as...";
             tsmiSaveAs.Click += SaveAs_Click;
-            // 
-            // tsmiEditWorkingDirectoryFile
-            // 
-            tsmiEditWorkingDirectoryFile.Image = Properties.Images.EditFile;
-            tsmiEditWorkingDirectoryFile.Name = "tsmiEditWorkingDirectoryFile";
-            tsmiEditWorkingDirectoryFile.Size = new Size(295, 22);
-            tsmiEditWorkingDirectoryFile.Text = "&Edit working directory file";
-            tsmiEditWorkingDirectoryFile.Click += EditWorkingDirectoryFile_Click;
             // 
             // tsmiDeleteFile
             // 
@@ -985,11 +1020,14 @@ namespace GitUI
         private Label DeleteSearchButton;
         private ToolStripEx Toolbar;
         private ToolStripButton btnCollapseGroups;
-        private ToolStripSplitButton btnRefresh;
-        private ToolStripMenuItem tsmiRefreshOnFormFocus;
+        private ToolStripSeparator sepRefresh;
+        private ToolStripButton btnRefresh;
+        private ToolStripSeparator sepAsTree;
         private ToolStripSplitButton btnAsTree;
+        private ToolStripSeparator sepListOptions;
         private ToolStripMenuItem tsmiDenseTree;
         private ToolStripMenuItem tsmiShowGroupNodesInFlatList;
+        private ToolStripSeparator sepGroupBy;
         private ToolStripButton btnByPath;
         private ToolStripButton btnByExtension;
         private ToolStripButton btnByStatus;
@@ -1003,18 +1041,18 @@ namespace GitUI
         private ToolStripMenuItem tsmiFindUsingDialog;
         private ToolStripMenuItem tsmiFindUsingInputBox;
         private ToolStripMenuItem tsmiFindUsingBoth;
-        private ToolStripSeparator sepRefresh;
-        private ToolStripSeparator sepAsTree;
-        private ToolStripSeparator sepGroupBy;
-        private ToolStripSeparator sepListOptions;
+        private ToolStripSeparator sepSettings;
+        private ToolStripDropDownButton btnSettings;
+        private ToolStripMenuItem tsmiRefreshOnFormFocus;
+        private ToolStripMenuItem tsmiShowDiffForAllParents;
         private ToolStripSeparator sepToolbar;
+        private ToolStripMenuItem tsmiToolbar;
         private ToolStripMenuItem tsmiGroupByFilePathTree;
         private ToolStripMenuItem tsmiGroupByFilePathFlat;
         private ToolStripMenuItem tsmiGroupByFileExtensionTree;
         private ToolStripMenuItem tsmiGroupByFileExtensionFlat;
         private ToolStripMenuItem tsmiGroupByFileStatusTree;
         private ToolStripMenuItem tsmiGroupByFileStatusFlat;
-        private ToolStripMenuItem tsmiToolbar;
         private ContextMenuStrip ItemContextMenu;
         private ToolStripMenuItem tsmiUpdateSubmodule;
         private ToolStripMenuItem tsmiResetSubmoduleChanges;
@@ -1043,8 +1081,9 @@ namespace GitUI
         public ToolStripMenuItem tsmiOpenWorkingDirectoryFileWith;
         public ToolStripMenuItem tsmiOpenRevisionFile;
         public ToolStripMenuItem tsmiOpenRevisionFileWith;
-        private ToolStripMenuItem tsmiSaveAs;
         public ToolStripMenuItem tsmiEditWorkingDirectoryFile;
+        public ToolStripMenuItem tsmiOpenInVisualStudio;
+        private ToolStripMenuItem tsmiSaveAs;
         public ToolStripMenuItem tsmiDeleteFile;
         private ToolStripSeparator sepFile;
         private CommandsDialogs.Menus.CopyPathsToolStripMenuItem tsmiCopyPaths;

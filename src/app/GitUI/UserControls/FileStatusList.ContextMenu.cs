@@ -117,11 +117,16 @@ partial class FileStatusList
         RequestRefresh();
     }
 
-    public void BindContextMenu(Action refreshParent, Action? stage, Action? unstage)
+    public void BindContextMenu(Action refreshParent, bool canAutoRefresh, Action? stage, Action? unstage)
     {
         _refreshParent = refreshParent;
         _stage = stage;
         _unstage = unstage;
+
+        btnRefresh.Click += (s, e) => refreshParent();
+        btnRefresh.Visible = canAutoRefresh;
+        tsmiRefreshOnFormFocus.Visible = canAutoRefresh;
+        sepToolbar.Visible = canAutoRefresh;
 
         tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
         tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
@@ -667,6 +672,14 @@ partial class FileStatusList
         ShowFindInCommitFileGitGrepDialog(_getSelectedText?.Invoke() ?? "");
     }
 
+    private void OpenInVisualStudio_Click(object sender, EventArgs e)
+    {
+        if (SelectedItemAbsolutePath is string itemName)
+        {
+            VisualStudioIntegration.OpenFile(itemName, GetLineNumber());
+        }
+    }
+
     private void OpenRevisionFile_Click(object sender, EventArgs e)
     {
         SaveSelectedItemToTempFile(fileName => OsShellUtil.Open(fileName));
@@ -1131,7 +1144,7 @@ partial class FileStatusList
             tsmiResetFileTo.Enabled = false;
         }
 
-        tsmiCherryPickChanges.Enabled = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
+        tsmiCherryPickChanges.Visible = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
 
         sepFile.Visible = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo)
             || _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo)
@@ -1147,6 +1160,7 @@ partial class FileStatusList
         tsmiSaveAs.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
         tsmiShowInFolder.Visible = _revisionDiffController.ShouldShowMenuShowInFolder(selectionInfo);
         tsmiEditWorkingDirectoryFile.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
+        tsmiOpenInVisualStudio.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) && VisualStudioIntegration.IsVisualStudioInstalled;
         tsmiDeleteFile.Text = ResourceManager.TranslatedStrings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
         tsmiDeleteFile.Enabled = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
         tsmiDeleteFile.Visible = tsmiDeleteFile.Enabled;

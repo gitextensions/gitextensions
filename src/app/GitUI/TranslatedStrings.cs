@@ -50,7 +50,6 @@ namespace GitUI
         private readonly TranslationString _tag = new("Tag");
         private readonly TranslationString _remote = new("Remote");
         private readonly TranslationString _openWithGitExtensions = new("&Open with Git Extensions");
-        private readonly TranslationString _openInVisualStudio = new("Open in &Visual Studio");
         private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new("Enable automatic continuous scroll (without ALT button)");
         private readonly TranslationString _noRevision = new("No revision");
 
@@ -241,7 +240,6 @@ Copy error details to clipboard?");
         public static string Remote => _instance.Value._remote.Text;
         public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
         public static string FilterFileInGrid => _instance.Value._filterFileInGrid.Text;
-        public static string OpenInVisualStudio => _instance.Value._openInVisualStudio.Text;
         public static string ContScrollToNextFileOnlyWithAlt => _instance.Value._contScrollToNextFileOnlyWithAlt.Text;
         public static string NoRevision => _instance.Value._noRevision.Text;
 

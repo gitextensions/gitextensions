@@ -82,7 +82,7 @@ namespace GitUI.CommandsDialogs
             ShowOnlyMyMessagesToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
             generateListOfChangesInSubmodulesChangesToolStripMenuItem = new ToolStripMenuItem();
-            toolStripMenuItem3 = new ToolStripDropDownButton();
+            tsmiOptions = new ToolStripDropDownButton();
             closeDialogAfterEachCommitToolStripMenuItem = new ToolStripMenuItem();
             closeDialogAfterAllFilesCommittedToolStripMenuItem = new ToolStripMenuItem();
             refreshDialogOnFormFocusToolStripMenuItem = new ToolStripMenuItem();
@@ -765,7 +765,7 @@ namespace GitUI.CommandsDialogs
             toolbarCommit.GripStyle = ToolStripGripStyle.Hidden;
             toolbarCommit.Items.AddRange(new ToolStripItem[] {
             commitMessageToolStripMenuItem,
-            toolStripMenuItem3,
+            tsmiOptions,
             commitTemplatesToolStripMenuItem,
             createBranchToolStripButton});
             toolbarCommit.Location = new Point(177, 0);
@@ -813,11 +813,11 @@ namespace GitUI.CommandsDialogs
             generateListOfChangesInSubmodulesChangesToolStripMenuItem.Text = "Generate a list of changes in submodules";
             generateListOfChangesInSubmodulesChangesToolStripMenuItem.Click += generateListOfChangesInSubmodulesChangesToolStripMenuItem_Click;
             // 
-            // toolStripMenuItem3
+            // tsmiOptions
             // 
-            toolStripMenuItem3.Alignment = ToolStripItemAlignment.Right;
-            toolStripMenuItem3.AutoToolTip = false;
-            toolStripMenuItem3.DropDownItems.AddRange(new ToolStripItem[] {
+            tsmiOptions.Alignment = ToolStripItemAlignment.Right;
+            tsmiOptions.AutoToolTip = false;
+            tsmiOptions.DropDownItems.AddRange(new ToolStripItem[] {
             closeDialogAfterEachCommitToolStripMenuItem,
             closeDialogAfterAllFilesCommittedToolStripMenuItem,
             refreshDialogOnFormFocusToolStripMenuItem,
@@ -829,10 +829,11 @@ namespace GitUI.CommandsDialogs
             toolStripSeparator14,
             gpgSignCommitToolStripComboBox,
             toolStripGpgKeyTextBox});
-            toolStripMenuItem3.Name = "toolStripMenuItem3";
-            toolStripMenuItem3.RightToLeft = RightToLeft.No;
-            toolStripMenuItem3.Size = new Size(62, 23);
-            toolStripMenuItem3.Text = "&Options";
+            tsmiOptions.Name = "toolStripMenuItem3";
+            tsmiOptions.RightToLeft = RightToLeft.No;
+            tsmiOptions.Size = new Size(62, 23);
+            tsmiOptions.Text = "&Options";
+            tsmiOptions.DropDownOpening += Options_DropDownOpening;
             // 
             // closeDialogAfterEachCommitToolStripMenuItem
             // 
@@ -1113,7 +1114,7 @@ namespace GitUI.CommandsDialogs
         private ToolTip fileTooltip;
         private ToolStripEx toolbarCommit;
         private ToolStripDropDownButton commitMessageToolStripMenuItem;
-        private ToolStripDropDownButton toolStripMenuItem3;
+        private ToolStripDropDownButton tsmiOptions;
         private ToolStripMenuItem closeDialogAfterEachCommitToolStripMenuItem;
         private ToolStripMenuItem closeDialogAfterAllFilesCommittedToolStripMenuItem;
         private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;

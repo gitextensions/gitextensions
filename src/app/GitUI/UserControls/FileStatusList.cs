@@ -15,7 +15,6 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
-using GitUI.ScriptsEngine;
 using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -26,8 +25,6 @@ namespace GitUI
 {
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private const string _showDiffForAllParentsItemName = nameof(TranslatedStrings.ShowDiffForAllParentsText);
-
         public static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
         private readonly FileStatusDiffCalculator _diffCalculator;
@@ -39,10 +36,7 @@ namespace GitUI
         private static readonly StatusSorter _sorter = new();
         private readonly IReadOnlyList<GitItemStatus> _noItemStatuses;
         private readonly ToolStripItem _NO_TRANSLATE_openSubmoduleMenuItem;
-        private readonly ToolStripItem _openInVisualStudioSeparator = new ToolStripSeparator();
-        private readonly ToolStripItem _NO_TRANSLATE_openInVisualStudioMenuItem;
         private readonly CancellationTokenSequence _reloadSequence = new();
-        private readonly ToolStripItem _showDiffForAllParentsSeparator = new ToolStripSeparator() { Name = $"{_showDiffForAllParentsItemName}Separator" };
         private readonly ToolStripItem _sortBySeparator = new ToolStripSeparator();
         private readonly SolidBrush _inactiveSelectionHighlightBrush = new(AppColor.InactiveSelectionHighlight.GetThemeColor());
         private readonly SolidBrush _backgroundBrush = new(AppColor.PanelBackground.GetThemeColor());
@@ -102,7 +96,6 @@ namespace GitUI
 
             CreateTreeContextMenuItems();
             _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
-            _NO_TRANSLATE_openInVisualStudioMenuItem = CreateOpenInVisualStudioMenuItem();
             _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
             {
                 Name = "sortListByContextMenuItem"
@@ -167,30 +160,6 @@ namespace GitUI
                 };
                 item.Click += (_, _) => this.InvokeAndForget(OpenSubmoduleAsync);
                 return item;
-            }
-
-            ToolStripMenuItem CreateOpenInVisualStudioMenuItem()
-            {
-                ToolStripMenuItem item = new()
-                {
-                    Name = "openInVisualStudioMenuItem",
-                    Text = TranslatedStrings.OpenInVisualStudio,
-                    Image = Images.VisualStudio16
-                };
-                item.Click += (_, _) =>
-                {
-                    string? itemName = SelectedItemAbsolutePath;
-                    if (itemName is not null)
-                    {
-                        VisualStudioIntegration.OpenFile(itemName, GetLineNumber());
-                    }
-                };
-                return item;
-
-                int GetLineNumber()
-                    => FindScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider
-                        ? int.Parse(scriptOptionsProvider.GetValues(ScriptOptionsProvider._lineNumber).FirstOrDefault("0"))
-                        : 0;
             }
         }
 
@@ -346,7 +315,8 @@ namespace GitUI
         {
             btnRefresh.Click += (s, e) => refreshArtificial();
             btnRefresh.Visible = true;
-            tsmiRefreshOnFormFocus.Enabled = canAutoRefresh;
+            tsmiRefreshOnFormFocus.Visible = canAutoRefresh;
+            sepToolbar.Visible = canAutoRefresh;
 
             DescribeRevision = describeRevision;
             _diffCalculator.DescribeRevision = describeRevision;
@@ -1639,64 +1609,10 @@ namespace GitUI
                     : new Font(_NO_TRANSLATE_openSubmoduleMenuItem.Font, FontStyle.Regular);
             }
 
-            if (!cm.Items.Find(_NO_TRANSLATE_openInVisualStudioMenuItem.Name!, true).Any())
-            {
-                cm.Items.Add(_openInVisualStudioSeparator);
-                cm.Items.Add(_NO_TRANSLATE_openInVisualStudioMenuItem);
-            }
-
-            bool canOpenInVisualStudio = File.Exists(SelectedItemAbsolutePath) && VisualStudioIntegration.IsVisualStudioInstalled;
-            _NO_TRANSLATE_openInVisualStudioMenuItem.Enabled = canOpenInVisualStudio;
-            _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = canOpenInVisualStudio;
-            _openInVisualStudioSeparator.Visible = canOpenInVisualStudio;
-
             if (!_isFileTreeMode && !cm.Items.Find(_sortByContextMenu.Name!, true).Any())
             {
                 cm.Items.Add(_sortBySeparator);
                 cm.Items.Add(_sortByContextMenu);
-            }
-
-            // Show 'Show file differences for all parents' menu item if it is possible that there are multiple first revisions
-            bool mayBeMultipleRevs = _enableDisablingShowDiffForAllParents;
-
-            ToolStripItem[] diffItem = cm.Items.Find(_showDiffForAllParentsItemName, true);
-            if (diffItem.Length == 0)
-            {
-                cm.Items.Add(_showDiffForAllParentsSeparator);
-                _showDiffForAllParentsSeparator.Visible = mayBeMultipleRevs;
-
-                ToolStripMenuItem showAllDifferencesItem = new(TranslatedStrings.ShowDiffForAllParentsText)
-                {
-                    Checked = AppSettings.ShowDiffForAllParents,
-                    ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip,
-                    Name = _showDiffForAllParentsItemName,
-                    CheckOnClick = true,
-                    Visible = mayBeMultipleRevs
-                };
-                showAllDifferencesItem.CheckedChanged += (s, e) =>
-                {
-                    AppSettings.ShowDiffForAllParents = showAllDifferencesItem.Checked;
-                    CancellationToken cancellationToken = _reloadSequence.Next();
-                    FileStatusListLoading();
-                    ThreadHelper.FileAndForget(async () =>
-                    {
-                        IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: true, refreshGrep: false, cancellationToken);
-
-                        await this.SwitchToMainThreadAsync(cancellationToken);
-                        UpdateFileStatusListView(gitItemStatusesWithDescription, cancellationToken: cancellationToken);
-                    });
-                };
-                cm.Items.Add(showAllDifferencesItem);
-            }
-            else
-            {
-                diffItem[0].Visible = mayBeMultipleRevs;
-
-                ToolStripItem[] sepItem = cm.Items.Find(_showDiffForAllParentsSeparator.Name!, true);
-                if (sepItem.Length > 0)
-                {
-                    sepItem[0].Visible = mayBeMultipleRevs;
-                }
             }
         }
 
