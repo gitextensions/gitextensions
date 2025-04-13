@@ -1662,6 +1662,10 @@ Suitable for some config files modified locally.</source>
         <source>Find in commit files using git-grep regular expression...</source>
         <target />
       </trans-unit>
+      <trans-unit id="tmsiEditLocallyIgnoredFiles.Text">
+        <source>Edit &amp;locally ignored files</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiAddFileToGitIgnore.Text">
         <source>Add file to &amp;.gitignore</source>
         <target />
@@ -1672,6 +1676,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="tsmiAssumeUnchanged.Text">
         <source>Assu&amp;me unchanged</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiBlame.Text">
+        <source>&amp;Blame</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCherryPickChanges.Text">
@@ -1686,12 +1694,48 @@ Suitable for some config files modified locally.</source>
         <source>Copy &amp;path(s)</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiDeleteFile.Text">
+        <source>De&amp;lete file</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiDenseTree.Text">
         <source>&amp;Dense tree (merge single item with its folder node)</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiDiffFirstToLocal.Text">
+        <source>First -&gt; &amp;Working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiDiffFirstToSelected.Text">
+        <source>&amp;First -&gt; Second</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiDiffSelectedToLocal.Text">
+        <source>&amp;Second -&gt; Working directory</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiDiffTwoSelected.Text">
         <source>&amp;Diff the selected files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiEditGitIgnore.Text">
+        <source>&amp;Edit ignored files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiEditWorkingDirectoryFile.Text">
+        <source>&amp;Edit working directory file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiFileHistory.Text">
+        <source>File &amp;history</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiFilterFileInGrid.Text">
+        <source>Filter file in &amp;grid</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiFindFile.Text">
+        <source>&amp;Find file...</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiFindUsingBoth.Text">
@@ -1734,8 +1778,32 @@ Suitable for some config files modified locally.</source>
         <source>Interactive add...</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiOpenFindInCommitFilesGitGrepDialog.Text">
+        <source>Find in &amp;commit files using git-grep...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiOpenInVisualStudio.Text">
+        <source>Open in &amp;Visual Studio</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiOpenRevisionFile.Text">
+        <source>Ope&amp;n this revision (temp file)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiOpenRevisionFileWith.Text">
+        <source>Open this revision &amp;with... (temp file)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiOpenWithDifftool.Text">
         <source>Open with &amp;difftool</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiOpenWorkingDirectoryFile.Text">
+        <source>&amp;Open working directory file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiOpenWorkingDirectoryFileWith.Text">
+        <source>Open working directory file with...</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiRefreshOnFormFocus.Text">
@@ -1770,6 +1838,10 @@ Suitable for some config files modified locally.</source>
         <source>S&amp;ave selected as...</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiShowAssumeUnchangedFiles.Text">
+        <source>Show &amp;assumed-unchanged files</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiShowDiffForAllParents.Text">
         <source>&amp;Show file differences for all parents</source>
         <target />
@@ -1782,12 +1854,32 @@ Suitable for some config files modified locally.</source>
         <source>Show &amp;group nodes in flat list (if multiple)</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiShowIgnoredFiles.Text">
+        <source>Show &amp;ignored files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowInFileTree.Text">
+        <source>Show in File &amp;tree</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiShowInFolder.Text">
         <source>Show &amp;in folder</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiShowSkipWorktreeFiles.Text">
+        <source>Show &amp;skip-worktree files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowUntrackedFiles.Text">
+        <source>Show &amp;untracked files</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiSkipWorktree.Text">
         <source>S&amp;kip worktree</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiStageFile.Text">
+        <source>&amp;Stage selected</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiStashSubmoduleChanges.Text">
@@ -1800,6 +1892,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="tsmiToolbar.Text">
         <source>&amp;Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiUnstageFile.Text">
+        <source>&amp;Unstage selected</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiUpdateSubmodule.Text">
@@ -3966,26 +4062,6 @@ Do you want to continue?</source>
         <source>Documentation...</source>
         <target />
       </trans-unit>
-      <trans-unit id="_deleteFailed.Text">
-        <source>Delete file failed</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFiles.Text">
-        <source>Are you sure you want to delete the selected file(s)?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFilesCaption.Text">
-        <source>Delete</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteUntrackedFiles.Text">
-        <source>Are you sure you want to delete all untracked files?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteUntrackedFilesCaption.Text">
-        <source>Delete untracked files.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_enterCommitMessage.Text">
         <source>Please enter commit message</source>
         <target />
@@ -4055,18 +4131,6 @@ How do you want to proceed?</source>
 Do you want to continue?</source>
         <target />
       </trans-unit>
-      <trans-unit id="_onlyStageChunkOfSingleFileError.Text">
-        <source>You can only use this option when selecting a single file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_resetStageChunkOfFileCaption.Text">
-        <source>Unstage chunk of file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_selectOnlyOneFile.Text">
-        <source>You must have only one file selected.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_selectionFilterErrorToolTip.Text">
         <source>Error {0}</source>
         <target />
@@ -4093,10 +4157,6 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_statusBarBranchWithoutRemote.Text">
         <source>(remote not configured)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_stopTrackingFail.Text">
-        <source>Fail to stop tracking the file '{0}'.</source>
         <target />
       </trans-unit>
       <trans-unit id="_templateLoadErrorCaption.Text">
@@ -4184,18 +4244,6 @@ You can unset the template:
         <source>Create branch</source>
         <target />
       </trans-unit>
-      <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
-        <source>Delete all untracked files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="editGitIgnoreToolStripMenuItem.Text">
-        <source>Edit ignored files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="editLocallyIgnoredFilesToolStripMenuItem.Text">
-        <source>Edit locally ignored files</source>
-        <target />
-      </trans-unit>
       <trans-unit id="generateListOfChangesInSubmodulesChangesToolStripMenuItem.Text">
         <source>Generate a list of changes in submodules</source>
         <target />
@@ -4216,36 +4264,12 @@ You can unset the template:
         <source>(Remote name)</source>
         <target />
       </trans-unit>
-      <trans-unit id="selectionFilterToolStripMenuItem.Text">
-        <source>Selection filter</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
-        <source>Show assumed-unchanged files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
-        <source>Show ignored files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showSkipWorktreeFilesToolStripMenuItem.Text">
-        <source>Show skip-worktree files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showUntrackedFilesToolStripMenuItem.Text">
-        <source>Show untracked files</source>
-        <target />
-      </trans-unit>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
         <target />
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
         <source>Author: (Format: "name &lt;mail&gt;")</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolRefreshItem.Text">
-        <source>Refresh</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStageItem.Text">
@@ -4262,10 +4286,6 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="tsmiOptions.Text">
         <source>&amp;Options</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="workingToolStripMenuItem.Text">
-        <source>&amp;Working directory changes</source>
         <target />
       </trans-unit>
     </body>

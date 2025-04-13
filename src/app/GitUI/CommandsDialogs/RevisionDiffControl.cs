@@ -104,6 +104,8 @@ namespace GitUI.CommandsDialogs
             GoToFirstParent = 18,
             GoToLastParent = 19,
             OpenWorkingDirectoryFile = 20,
+            OpenInVisualStudio = 21,
+            AddFileToGitIgnore = 22,
         }
 
         public bool ExecuteCommand(Command cmd)
@@ -148,6 +150,8 @@ namespace GitUI.CommandsDialogs
                 case Command.OpenWorkingDirectoryFileWith:
                 case Command.FindInCommitFilesUsingGitGrep:
                 case Command.OpenWorkingDirectoryFile:
+                case Command.OpenInVisualStudio:
+                case Command.AddFileToGitIgnore:
                     return DiffFiles.ExecuteCommand((Command)cmd);
 
                 default: return base.ExecuteCommand(cmd);

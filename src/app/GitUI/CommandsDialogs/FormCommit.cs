@@ -52,19 +52,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitAndForcePush = new("Commit && force &push");
 
-        private readonly TranslationString _deleteFailed = new("Delete file failed");
-
-        private readonly TranslationString _deleteSelectedFiles =
-            new("Are you sure you want to delete the selected file(s)?");
-
-        private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
-
-        private readonly TranslationString _deleteUntrackedFiles =
-            new("Are you sure you want to delete all untracked files?");
-
-        private readonly TranslationString _deleteUntrackedFilesCaption =
-            new("Delete untracked files.");
-
         private readonly TranslationString _enterCommitMessage = new("Please enter commit message");
         private readonly TranslationString _enterCommitMessageCaption = new("Commit message");
         private readonly TranslationString _commitMessageDisabled = new("Commit Message is requested during commit");
@@ -96,13 +83,8 @@ namespace GitUI.CommandsDialogs
             new("This commit will be unreferenced when switching to another branch and can be lost." +
                                   Environment.NewLine + Environment.NewLine + "Do you want to continue?");
 
-        private readonly TranslationString _onlyStageChunkOfSingleFileError =
-            new("You can only use this option when selecting a single file");
-
-        private readonly TranslationString _resetStageChunkOfFileCaption = new("Unstage chunk of file");
         private readonly TranslationString _stageDetails = new("Stage Details");
         private readonly TranslationString _stageFiles = new("Stage {0} files");
-        private readonly TranslationString _selectOnlyOneFile = new("You must have only one file selected.");
 
         private readonly TranslationString _stageAll = new("Stage all");
         private readonly TranslationString _stageFiltered = new("Stage filtered");
@@ -142,8 +124,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _templateNotFoundCaption = new("Template Error");
         private readonly TranslationString _templateNotFound = new($"Template not found: {{0}}.{Environment.NewLine}{Environment.NewLine}You can set your template:{Environment.NewLine}\t$ git config commit.template ./.git_commit_msg.txt{Environment.NewLine}You can unset the template:{Environment.NewLine}\t$ git config --unset commit.template");
         private readonly TranslationString _templateLoadErrorCaption = new("Template could not be loaded");
-
-        private readonly TranslationString _stopTrackingFail = new("Fail to stop tracking the file '{0}'.");
 
         private readonly TranslationString _statusBarBranchWithoutRemote = new("(remote not configured)");
         private readonly TranslationString _untrackedRemote = new("(untracked)");
@@ -656,22 +636,22 @@ namespace GitUI.CommandsDialogs
 
         internal enum Command
         {
-            AddToGitIgnore = 0,
-            DeleteSelectedFiles = 1,
+            /* obsolete: AddToGitIgnore = 0, */
+            /* obsolete: DeleteSelectedFiles = 1, */
             FocusUnstagedFiles = 2,
             FocusSelectedDiff = 3,
             FocusStagedFiles = 4,
             FocusCommitMessage = 5,
-            ResetSelectedFiles = 6,
-            StageSelectedFile = 7,
-            UnStageSelectedFile = 8,
-            ShowHistory = 9,
+            /* obsolete: ResetSelectedFiles = 6, */
+            /* obsolete: StageSelectedFile = 7, */
+            /* obsolete: UnStageSelectedFile = 8, */
+            /* obsolete: ShowHistory = 9, */
             ToggleSelectionFilter = 10,
             StageAll = 11,
             OpenWithDifftool = 12,
-            OpenFile = 13,
-            OpenFileWith = 14,
-            EditFile = 15,
+            /* obsolete: OpenFile = 13, */
+            /* obsolete: OpenFileWith = 14, */
+            /* obsolete: EditFile = 15, */
             AddSelectionToCommitMessage = 16,
             CreateBranch = 17,
             Refresh = 18,
@@ -712,28 +692,6 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        private bool AddToGitIgnore()
-        {
-            if (!Unstaged.Focused)
-            {
-                return false;
-            }
-
-            Unstaged.tsmiAddFileToGitIgnore.PerformClick();
-            return true;
-        }
-
-        private bool DeleteSelectedFiles()
-        {
-            if (!Unstaged.Focused)
-            {
-                return false;
-            }
-
-            DeleteFileToolStripMenuItemClick(this, EventArgs.Empty);
-            return true;
-        }
-
         private bool FocusStagedFiles()
         {
             Staged.Focus();
@@ -758,39 +716,6 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        private bool ResetSelectedFiles()
-        {
-            if (!Unstaged.Focused && !Staged.Focused)
-            {
-                return false;
-            }
-
-            ResetFilesClick(this, EventArgs.Empty);
-            return true;
-        }
-
-        private bool StageSelectedFile()
-        {
-            if (!Unstaged.Focused)
-            {
-                return false;
-            }
-
-            StageClick(this, EventArgs.Empty);
-            return true;
-        }
-
-        private bool UnStageSelectedFile()
-        {
-            if (!Staged.Focused)
-            {
-                return false;
-            }
-
-            UnstageFilesClick(this, EventArgs.Empty);
-            return true;
-        }
-
         private bool StageAllFiles()
         {
             if (Unstaged.IsEmpty)
@@ -799,24 +724,6 @@ namespace GitUI.CommandsDialogs
             }
 
             StageAllAccordingToFilter();
-            return true;
-        }
-
-        private bool StartFileHistoryDialog()
-        {
-            if (!Unstaged.Focused && !Staged.Focused)
-            {
-                return false;
-            }
-
-            if (_currentFilesList.SelectedItem?.Item is not null)
-            {
-                if ((!_currentFilesList.SelectedItem.Item.IsNew) && (!_currentFilesList.SelectedItem.Item.IsRenamed))
-                {
-                    UICommands.StartFileHistoryDialog(this, _currentFilesList.SelectedItem.Item.Name);
-                }
-            }
-
             return true;
         }
 
@@ -845,24 +752,15 @@ namespace GitUI.CommandsDialogs
         {
             switch ((Command)cmd)
             {
-                case Command.AddToGitIgnore: return AddToGitIgnore();
                 case Command.ConventionalCommit_PrefixMessage: OpenConventionalCommitMenu(insertScope: false); return true;
                 case Command.ConventionalCommit_PrefixMessageWithScope: OpenConventionalCommitMenu(insertScope: true); return true;
-                case Command.DeleteSelectedFiles: return DeleteSelectedFiles();
                 case Command.FocusStagedFiles: return FocusStagedFiles();
                 case Command.FocusUnstagedFiles: return FocusUnstagedFiles();
                 case Command.FocusSelectedDiff: return FocusSelectedDiff();
                 case Command.FocusCommitMessage: return FocusCommitMessage();
-                case Command.ResetSelectedFiles: return ResetSelectedFiles();
-                case Command.StageSelectedFile: return StageSelectedFile();
-                case Command.UnStageSelectedFile: return UnStageSelectedFile();
-                case Command.ShowHistory: return StartFileHistoryDialog();
                 case Command.ToggleSelectionFilter: return ToggleSelectionFilter();
                 case Command.StageAll: return StageAllFiles();
                 case Command.OpenWithDifftool: OpenWithDiffTool(); return true;
-                case Command.OpenFile: _currentFilesList.tsmiOpenWorkingDirectoryFile.PerformClick(); return true;
-                case Command.OpenFileWith: _currentFilesList.tsmiOpenWorkingDirectoryFileWith.PerformClick(); return true;
-                case Command.EditFile: _currentFilesList.tsmiEditWorkingDirectoryFile.PerformClick(); return true;
                 case Command.AddSelectionToCommitMessage: return AddSelectionToCommitMessage();
                 case Command.CreateBranch: createBranchToolStripButton.PerformClick(); return true;
                 case Command.Refresh: RescanChanges(); return true;
@@ -1987,62 +1885,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void ResetFilesClick(object sender, EventArgs e)
-        {
-            _shouldRescanChanges = false;
-            try
-            {
-                if (!_currentFilesList.SelectedItems.Any())
-                {
-                    return;
-                }
-
-                // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !DeletableItem(item)), _currentFilesList.SelectedItems.Any(item => DeletableItem(item)));
-                if (resetType == FormResetChanges.ActionEnum.Cancel)
-                {
-                    return;
-                }
-
-                // remember max selected index
-                _currentFilesList.StoreNextItemToSelect();
-
-                IReadOnlyList<GitItemStatus> selectedItems = _currentFilesList.SelectedItems.Items().ToList();
-                toolStripProgressBar1.Visible = true;
-                toolStripProgressBar1.Maximum = selectedItems.Count(item => item.Staged == StagedStatus.Index);
-                toolStripProgressBar1.Value = 0;
-                ObjectId? resetId = _currentFilesList == Unstaged ? ObjectId.IndexId : null;
-
-                Module.ResetChanges(resetId, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: (eventArgs) =>
-                {
-                    toolStripProgressBar1.Value = Math.Max(0, Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + eventArgs.ProcessedCount));
-                });
-
-                toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
-                toolStripProgressBar1.Visible = false;
-
-                if (AppSettings.RevisionGraphShowArtificialCommits)
-                {
-                    UICommands.RepoChangedNotifier.Notify();
-                }
-
-                if (!string.IsNullOrEmpty(output.ToString()))
-                {
-                    MessageBox.Show(this, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            finally
-            {
-                _shouldRescanChanges = true;
-            }
-
-            Initialize();
-
-            return;
-
-            static bool DeletableItem(FileStatusItem item) => item.Item.IsNew || item.Item.IsRenamed;
-        }
-
         private void ResetSoftClick(object sender, EventArgs e)
         {
             if (!AppSettings.DontConfirmAmend)
@@ -2068,76 +1910,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void DeleteFileToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            try
-            {
-                if (Unstaged.SelectedGitItem is null ||
-                    MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
-                    DialogResult.Yes)
-                {
-                    return;
-                }
-
-                SelectedDiff.Clear();
-
-                Unstaged.StoreNextItemToSelect();
-                foreach (FileStatusItem item in Unstaged.SelectedItems)
-                {
-                    string path = _fullPathResolver.Resolve(item.Item.Name);
-                    bool isDir = (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
-                    if (isDir)
-                    {
-                        Directory.Delete(path, recursive: true);
-                    }
-                    else
-                    {
-                        File.Delete(path);
-                    }
-                }
-
-                Initialize();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void SolveMergeConflictsClick(object sender, EventArgs e)
         {
             if (UICommands.StartResolveConflictsDialog(this, false))
             {
                 Initialize();
             }
-        }
-
-        private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.StartEditGitIgnoreDialog(this, localExcludes: false);
-            Initialize();
-        }
-
-        private void EditGitInfoExcludeToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.StartEditGitIgnoreDialog(this, localExcludes: true);
-            Initialize();
-        }
-
-        private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(this,
-                _deleteUntrackedFiles.Text,
-                _deleteUntrackedFilesCaption.Text,
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question) !=
-                DialogResult.Yes)
-            {
-                return;
-            }
-
-            FormProcess.ShowDialog(this, UICommands, arguments: "clean -f", Module.WorkingDir, input: null, useDialogSettings: true);
-            Initialize();
         }
 
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
@@ -2324,20 +2102,6 @@ namespace GitUI.CommandsDialogs
         private void RescanChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             RescanChanges();
-        }
-
-        private void OpenFilesWithDiffTool(IEnumerable<FileStatusItem> items, object sender)
-        {
-            ToolStripMenuItem item = sender as ToolStripMenuItem;
-            if (item?.DropDownItems != null)
-            {
-                // "main menu" clicked, cancel dropdown manually, invoke default mergetool
-                item.HideDropDown();
-                item.Owner.Hide();
-            }
-
-            string? toolName = item?.Tag as string;
-            OpenFilesWithDiffTool(items, toolName);
         }
 
         private void OpenFilesWithDiffTool(IEnumerable<FileStatusItem> items, string? toolName = null)
@@ -2662,14 +2426,6 @@ namespace GitUI.CommandsDialogs
         private void OnSelectionFilterIndexChanged(object sender, EventArgs e)
         {
             Unstaged.SetSelectionFilter(selectionFilter.Text);
-        }
-
-        private void ToggleShowSelectionFilter(object sender, EventArgs e)
-        {
-            bool visible = !AppSettings.CommitDialogSelectionFilter;
-
-            AppSettings.CommitDialogSelectionFilter = visible;
-            toolbarSelectionFilter.Visible = visible;
         }
 
         #endregion
@@ -3048,6 +2804,8 @@ namespace GitUI.CommandsDialogs
             internal ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
 
             internal bool ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
+
+            internal bool ExecuteCommand(RevisionDiffControl.Command command) => _formCommit._currentFilesList.ExecuteCommand(command);
 
             internal Rectangle Bounds => _formCommit.Bounds;
 

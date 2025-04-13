@@ -690,7 +690,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 ta.UnstagedList.SelectedItems = ta.UnstagedList.AllItems;
                 ta.UnstagedList.Focus();
-                ta.ExecuteCommand(FormCommit.Command.StageSelectedFile);
+                ta.ExecuteCommand(RevisionDiffControl.Command.StageSelectedFile);
 
                 ta.StagedList.SelectedGitItem = ta.StagedList.AllItems.Single(i => i.Item.Name.Contains("original2.txt")).Item;
 
