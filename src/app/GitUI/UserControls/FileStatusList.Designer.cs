@@ -76,6 +76,14 @@ namespace GitUI
             tsmiFindUsingBoth = new ToolStripMenuItem();
             sepSettings = new ToolStripSeparator();
             btnSettings = new ToolStripDropDownButton();
+            tsmiShowIgnoredFiles = new ToolStripMenuItem();
+            tsmiShowSkipWorktreeFiles = new ToolStripMenuItem();
+            tsmiShowAssumeUnchangedFiles = new ToolStripMenuItem();
+            tsmiShowUntrackedFiles = new ToolStripMenuItem();
+            sepShow = new ToolStripSeparator();
+            tsmiEditGitIgnore = new ToolStripMenuItem();
+            tmsiEditLocallyIgnoredFiles = new ToolStripMenuItem();
+            sepEdit = new ToolStripSeparator();
             tsmiRefreshOnFormFocus = new ToolStripMenuItem();
             tsmiShowDiffForAllParents = new ToolStripMenuItem();
             sepToolbar = new ToolStripSeparator();
@@ -549,12 +557,77 @@ namespace GitUI
             // btnSettings
             // 
             btnSettings.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnSettings.DropDownItems.AddRange(new ToolStripItem[] { tsmiRefreshOnFormFocus, tsmiShowDiffForAllParents, sepToolbar, tsmiToolbar });
+            btnSettings.DropDownItems.AddRange(new ToolStripItem[] { tsmiShowIgnoredFiles, tsmiShowSkipWorktreeFiles, tsmiShowAssumeUnchangedFiles, tsmiShowUntrackedFiles, sepShow, tsmiEditGitIgnore, tmsiEditLocallyIgnoredFiles, sepEdit, tsmiRefreshOnFormFocus, tsmiShowDiffForAllParents, sepToolbar, tsmiToolbar });
             btnSettings.Image = Properties.Images.Settings;
             btnSettings.Name = "btnSettings";
             btnSettings.Size = new Size(29, 22);
             btnSettings.Text = "Settings";
             btnSettings.DropDownOpening += Settings_DropDownOpening;
+            // 
+            // tsmiShowIgnoredFiles
+            // 
+            tsmiShowIgnoredFiles.CheckOnClick = true;
+            tsmiShowIgnoredFiles.Name = "tsmiShowIgnoredFiles";
+            tsmiShowIgnoredFiles.Size = new Size(286, 22);
+            tsmiShowIgnoredFiles.Text = "Show &ignored files";
+            tsmiShowIgnoredFiles.Visible = false;
+            tsmiShowIgnoredFiles.Click += ShowIgnoredFiles_Click;
+            // 
+            // tsmiShowSkipWorktreeFiles
+            // 
+            tsmiShowSkipWorktreeFiles.CheckOnClick = true;
+            tsmiShowSkipWorktreeFiles.Name = "tsmiShowSkipWorktreeFiles";
+            tsmiShowSkipWorktreeFiles.Size = new Size(286, 22);
+            tsmiShowSkipWorktreeFiles.Text = "Show &skip-worktree files";
+            tsmiShowSkipWorktreeFiles.Visible = false;
+            tsmiShowSkipWorktreeFiles.Click += ShowSkipWorktreeFiles_Click;
+            // 
+            // tsmiShowAssumeUnchangedFiles
+            // 
+            tsmiShowAssumeUnchangedFiles.CheckOnClick = true;
+            tsmiShowAssumeUnchangedFiles.Name = "tsmiShowAssumeUnchangedFiles";
+            tsmiShowAssumeUnchangedFiles.Size = new Size(286, 22);
+            tsmiShowAssumeUnchangedFiles.Text = "Show &assumed-unchanged files";
+            tsmiShowAssumeUnchangedFiles.Visible = false;
+            tsmiShowAssumeUnchangedFiles.Click += ShowAssumeUnchangedFiles_Click;
+            // 
+            // tsmiShowUntrackedFiles
+            // 
+            tsmiShowUntrackedFiles.Checked = true;
+            tsmiShowUntrackedFiles.CheckOnClick = true;
+            tsmiShowUntrackedFiles.CheckState = CheckState.Checked;
+            tsmiShowUntrackedFiles.Name = "tsmiShowUntrackedFiles";
+            tsmiShowUntrackedFiles.Size = new Size(286, 22);
+            tsmiShowUntrackedFiles.Text = "Show &untracked files";
+            tsmiShowUntrackedFiles.Visible = false;
+            tsmiShowUntrackedFiles.Click += ShowUntrackedFiles_Click;
+            // 
+            // sepShow
+            // 
+            sepShow.Name = "sepShow";
+            sepShow.Size = new Size(283, 6);
+            sepShow.Visible = false;
+            // 
+            // tsmiEditGitIgnore
+            // 
+            tsmiEditGitIgnore.Image = Properties.Images.EditGitIgnore;
+            tsmiEditGitIgnore.Name = "tsmiEditGitIgnore";
+            tsmiEditGitIgnore.Size = new Size(286, 22);
+            tsmiEditGitIgnore.Text = "&Edit ignored files";
+            tsmiEditGitIgnore.Click += EditGitIgnore_Click;
+            // 
+            // tmsiEditLocallyIgnoredFiles
+            // 
+            tmsiEditLocallyIgnoredFiles.Image = Properties.Images.EditGitIgnore;
+            tmsiEditLocallyIgnoredFiles.Name = "tmsiEditLocallyIgnoredFiles";
+            tmsiEditLocallyIgnoredFiles.Size = new Size(286, 22);
+            tmsiEditLocallyIgnoredFiles.Text = "Edit &locally ignored files";
+            tmsiEditLocallyIgnoredFiles.Click += EditLocallyIgnoredFiles_Click;
+            // 
+            // sepEdit
+            // 
+            sepEdit.Name = "sepEdit";
+            sepEdit.Size = new Size(283, 6);
             // 
             // tsmiRefreshOnFormFocus
             // 
@@ -1043,6 +1116,14 @@ namespace GitUI
         private ToolStripMenuItem tsmiFindUsingBoth;
         private ToolStripSeparator sepSettings;
         private ToolStripDropDownButton btnSettings;
+        public ToolStripMenuItem tsmiShowIgnoredFiles;
+        public ToolStripMenuItem tsmiShowSkipWorktreeFiles;
+        public ToolStripMenuItem tsmiShowAssumeUnchangedFiles;
+        public ToolStripMenuItem tsmiShowUntrackedFiles;
+        private ToolStripSeparator sepShow;
+        private ToolStripMenuItem tsmiEditGitIgnore;
+        private ToolStripMenuItem tmsiEditLocallyIgnoredFiles;
+        private ToolStripSeparator sepEdit;
         private ToolStripMenuItem tsmiRefreshOnFormFocus;
         private ToolStripMenuItem tsmiShowDiffForAllParents;
         private ToolStripSeparator sepToolbar;
@@ -1059,11 +1140,11 @@ namespace GitUI
         private ToolStripMenuItem tsmiStashSubmoduleChanges;
         private ToolStripMenuItem tsmiCommitSubmoduleChanges;
         private ToolStripSeparator sepSubmodule;
-        public ToolStripMenuItem tsmiStageFile;
-        public ToolStripMenuItem tsmiUnstageFile;
+        private ToolStripMenuItem tsmiStageFile;
+        private ToolStripMenuItem tsmiUnstageFile;
         private ToolStripMenuItem tsmiResetFileTo;
-        public ToolStripMenuItem tsmiResetFileToSelected;
-        public ToolStripMenuItem tsmiResetFileToParent;
+        private ToolStripMenuItem tsmiResetFileToSelected;
+        private ToolStripMenuItem tsmiResetFileToParent;
         private ToolStripMenuItem tsmiCherryPickChanges;
         private ToolStripSeparator sepGit;
         private ToolStripMenuItem tsmiOpenWithDifftool;
@@ -1079,22 +1160,22 @@ namespace GitUI
         private ToolStripMenuItem tsmiRememberFirstRevDiff;
         public ToolStripMenuItem tsmiOpenWorkingDirectoryFile;
         public ToolStripMenuItem tsmiOpenWorkingDirectoryFileWith;
-        public ToolStripMenuItem tsmiOpenRevisionFile;
-        public ToolStripMenuItem tsmiOpenRevisionFileWith;
+        private ToolStripMenuItem tsmiOpenRevisionFile;
+        private ToolStripMenuItem tsmiOpenRevisionFileWith;
         public ToolStripMenuItem tsmiEditWorkingDirectoryFile;
-        public ToolStripMenuItem tsmiOpenInVisualStudio;
+        private ToolStripMenuItem tsmiOpenInVisualStudio;
         private ToolStripMenuItem tsmiSaveAs;
-        public ToolStripMenuItem tsmiDeleteFile;
+        private ToolStripMenuItem tsmiDeleteFile;
         private ToolStripSeparator sepFile;
         private CommandsDialogs.Menus.CopyPathsToolStripMenuItem tsmiCopyPaths;
         private ToolStripMenuItem tsmiShowInFolder;
         private ToolStripSeparator sepBrowse;
-        public ToolStripMenuItem tsmiShowInFileTree;
-        public ToolStripMenuItem tsmiFilterFileInGrid;
-        public ToolStripMenuItem tsmiFileHistory;
+        private ToolStripMenuItem tsmiShowInFileTree;
+        private ToolStripMenuItem tsmiFilterFileInGrid;
+        private ToolStripMenuItem tsmiFileHistory;
         public ToolStripMenuItem tsmiBlame;
-        public ToolStripMenuItem tsmiFindFile;
-        public ToolStripMenuItem tsmiOpenFindInCommitFilesGitGrepDialog;
+        private ToolStripMenuItem tsmiFindFile;
+        private ToolStripMenuItem tsmiOpenFindInCommitFilesGitGrepDialog;
         private ToolStripMenuItem tsmiShowFindInCommitFilesGitGrep;
         private ToolStripSeparator sepScripts;
         private ToolStripMenuItem tsmiRunScript;

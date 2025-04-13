@@ -478,7 +478,6 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
-            showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showuntrackedfiles") != "no";
             MinimizeBox = Owner is null;
 
             base.OnLoad(e);
@@ -823,7 +822,7 @@ namespace GitUI.CommandsDialogs
 
         private bool ToggleSelectionFilter()
         {
-            bool visible = !selectionFilterToolStripMenuItem.Checked;
+            bool visible = !toolbarSelectionFilter.Visible;
             SetVisibilityOfSelectionFilter(visible);
             if (visible)
             {
@@ -889,10 +888,10 @@ namespace GitUI.CommandsDialogs
             IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
             {
                 return Module.GetAllChangedFilesWithSubmodulesStatus(
-                    !showIgnoredFilesToolStripMenuItem.Checked,
-                    !showAssumeUnchangedFilesToolStripMenuItem.Checked,
-                    !showSkipWorktreeFilesToolStripMenuItem.Checked,
-                    showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No,
+                    !Unstaged.tsmiShowIgnoredFiles.Checked,
+                    !Unstaged.tsmiShowAssumeUnchangedFiles.Checked,
+                    !Unstaged.tsmiShowSkipWorktreeFiles.Checked,
+                    Unstaged.tsmiShowUntrackedFiles.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No,
                     cancellationToken: default);
             }
 
@@ -932,7 +931,6 @@ namespace GitUI.CommandsDialogs
             toolUnstageAllItem.Enabled = enable;
             toolStageItem.Enabled = enable;
             toolStageAllItem.Enabled = enable;
-            workingToolStripMenuItem.Enabled = enable;
             btnResetUnstagedChanges.Enabled = Unstaged.AllItems.Any();
         }
 
@@ -1066,7 +1064,6 @@ namespace GitUI.CommandsDialogs
             UpdateButtonStates();
 
             EnableStageButtons(true);
-            workingToolStripMenuItem.Enabled = true;
 
             bool inTheMiddleOfConflictedMerge = Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
@@ -1520,10 +1517,8 @@ namespace GitUI.CommandsDialogs
         {
             if (_shouldRescanChanges)
             {
-                toolRefreshItem.Enabled = false;
                 Initialize();
                 Message.RefreshAutoCompleteWords();
-                toolRefreshItem.Enabled = true;
             }
         }
 
@@ -2145,24 +2140,6 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
-        private void ShowIgnoredFilesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            showIgnoredFilesToolStripMenuItem.Checked = !showIgnoredFilesToolStripMenuItem.Checked;
-            RescanChanges();
-        }
-
-        private void ShowAssumeUnchangedFilesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            showAssumeUnchangedFilesToolStripMenuItem.Checked = !showAssumeUnchangedFilesToolStripMenuItem.Checked;
-            RescanChanges();
-        }
-
-        private void ShowSkipWorktreeFilesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            showSkipWorktreeFilesToolStripMenuItem.Checked = !showSkipWorktreeFilesToolStripMenuItem.Checked;
-            RescanChanges();
-        }
-
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
             string msg = AppSettings.LastCommitMessage;
@@ -2411,12 +2388,6 @@ namespace GitUI.CommandsDialogs
             {
                 _bypassActivatedEventHandler = false;
             }
-        }
-
-        private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            showUntrackedFilesToolStripMenuItem.Checked = !showUntrackedFilesToolStripMenuItem.Checked;
-            RescanChanges();
         }
 
         private void CommitAndPush_Click(object sender, EventArgs e)
@@ -2680,7 +2651,6 @@ namespace GitUI.CommandsDialogs
 
         private void SetVisibilityOfSelectionFilter(bool visible)
         {
-            selectionFilterToolStripMenuItem.Checked = visible;
             toolbarSelectionFilter.Visible = visible;
         }
 
