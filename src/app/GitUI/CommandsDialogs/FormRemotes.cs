@@ -63,10 +63,10 @@ namespace GitUI.CommandsDialogs
             new("Select ssh key file");
 
         private readonly TranslationString _labelUrlAsFetch =
-            new("Fetch Url");
+            new("Fetch &Url");
 
         private readonly TranslationString _labelUrlAsFetchPush =
-            new("Url");
+            new("&Url");
 
         private readonly TranslationString _gbMgtPanelHeaderNew =
             new("Create New Remote");

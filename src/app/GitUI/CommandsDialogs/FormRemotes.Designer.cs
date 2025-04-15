@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs
             TestConnection.Name = "TestConnection";
             TestConnection.Size = new Size(160, 25);
             TestConnection.TabIndex = 4;
-            TestConnection.Text = "Test connection";
+            TestConnection.Text = "&Test connection";
             TestConnection.UseVisualStyleBackColor = true;
             TestConnection.Click += TestConnectionClick;
             // 
@@ -152,7 +152,7 @@ namespace GitUI.CommandsDialogs
             LoadSSHKey.Name = "LoadSSHKey";
             LoadSSHKey.Size = new Size(160, 25);
             LoadSSHKey.TabIndex = 3;
-            LoadSSHKey.Text = "Load SSH key";
+            LoadSSHKey.Text = "&Load SSH key";
             LoadSSHKey.UseVisualStyleBackColor = true;
             LoadSSHKey.Click += LoadSshKeyClick;
             // 
@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs
             label2.Name = "label2";
             label2.Size = new Size(100, 31);
             label2.TabIndex = 0;
-            label2.Text = "Url";
+            label2.Text = "&Url";
             label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Url
@@ -291,6 +291,7 @@ namespace GitUI.CommandsDialogs
             folderBrowserButtonUrl.PathShowingControl = Url;
             folderBrowserButtonUrl.Size = new Size(104, 25);
             folderBrowserButtonUrl.TabIndex = 2;
+            folderBrowserButtonUrl.Text = "&Browse...";
             // 
             // label1
             // 
@@ -300,7 +301,7 @@ namespace GitUI.CommandsDialogs
             label1.Name = "label1";
             label1.Size = new Size(100, 29);
             label1.TabIndex = 3;
-            label1.Text = "Name";
+            label1.Text = "&Name";
             label1.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // RemoteName
@@ -334,7 +335,7 @@ namespace GitUI.CommandsDialogs
             checkBoxSepPushUrl.Padding = new Padding(24, 0, 0, 0);
             checkBoxSepPushUrl.Size = new Size(354, 19);
             checkBoxSepPushUrl.TabIndex = 9;
-            checkBoxSepPushUrl.Text = "Separate Push Url";
+            checkBoxSepPushUrl.Text = "Sep&arate Push Url";
             checkBoxSepPushUrl.UseVisualStyleBackColor = true;
             checkBoxSepPushUrl.CheckedChanged += checkBoxSepPushUrl_CheckedChanged;
             // 
@@ -346,7 +347,7 @@ namespace GitUI.CommandsDialogs
             labelPushUrl.Name = "labelPushUrl";
             labelPushUrl.Size = new Size(100, 31);
             labelPushUrl.TabIndex = 10;
-            labelPushUrl.Text = "Push Url";
+            labelPushUrl.Text = "&Push Url";
             labelPushUrl.TextAlign = ContentAlignment.MiddleLeft;
             labelPushUrl.Visible = false;
             // 
@@ -374,6 +375,7 @@ namespace GitUI.CommandsDialogs
             folderBrowserButtonPushUrl.PathShowingControl = comboBoxPushUrl;
             folderBrowserButtonPushUrl.Size = new Size(104, 25);
             folderBrowserButtonPushUrl.TabIndex = 12;
+            folderBrowserButtonPushUrl.Text = "Bro&wse...";
             folderBrowserButtonPushUrl.Visible = false;
             // 
             // pnlMgtPuttySsh
@@ -421,7 +423,7 @@ namespace GitUI.CommandsDialogs
             label3.Name = "label3";
             label3.Size = new Size(100, 31);
             label3.TabIndex = 0;
-            label3.Text = "Private key file";
+            label3.Text = "Private &key file";
             label3.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // PuttySshKey
@@ -444,7 +446,7 @@ namespace GitUI.CommandsDialogs
             SshBrowse.Name = "SshBrowse";
             SshBrowse.Size = new Size(104, 25);
             SshBrowse.TabIndex = 2;
-            SshBrowse.Text = " Browse...";
+            SshBrowse.Text = "Brows&e...";
             SshBrowse.TextImageRelation = TextImageRelation.ImageBeforeText;
             SshBrowse.UseVisualStyleBackColor = true;
             SshBrowse.Click += SshBrowseClick;
@@ -489,7 +491,7 @@ namespace GitUI.CommandsDialogs
             Save.Name = "Save";
             Save.Size = new Size(130, 25);
             Save.TabIndex = 0;
-            Save.Text = "Save changes";
+            Save.Text = "&Save changes";
             Save.UseVisualStyleBackColor = true;
             Save.Click += SaveClick;
             // 
@@ -673,7 +675,7 @@ namespace GitUI.CommandsDialogs
             label4.Name = "label4";
             label4.Size = new Size(108, 15);
             label4.TabIndex = 0;
-            label4.Text = "Local branch name";
+            label4.Text = "L&ocal branch name";
             // 
             // label5
             // 
@@ -682,7 +684,7 @@ namespace GitUI.CommandsDialogs
             label5.Name = "label5";
             label5.Size = new Size(104, 15);
             label5.TabIndex = 1;
-            label5.Text = "Remote repository";
+            label5.Text = "&Remote repository";
             // 
             // label6
             // 
@@ -691,7 +693,7 @@ namespace GitUI.CommandsDialogs
             label6.Name = "label6";
             label6.Size = new Size(108, 15);
             label6.TabIndex = 2;
-            label6.Text = "Default merge with";
+            label6.Text = "&Default merge with";
             // 
             // DefaultMergeWithCombo
             // 
@@ -732,7 +734,7 @@ namespace GitUI.CommandsDialogs
             SaveDefaultPushPull.Name = "SaveDefaultPushPull";
             SaveDefaultPushPull.Size = new Size(130, 25);
             SaveDefaultPushPull.TabIndex = 3;
-            SaveDefaultPushPull.Text = "Save changes";
+            SaveDefaultPushPull.Text = "&Save changes";
             SaveDefaultPushPull.TextImageRelation = TextImageRelation.ImageBeforeText;
             SaveDefaultPushPull.UseVisualStyleBackColor = true;
             SaveDefaultPushPull.Click += SaveDefaultPushPullClick;

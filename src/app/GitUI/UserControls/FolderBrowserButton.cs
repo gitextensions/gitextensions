@@ -19,6 +19,15 @@ namespace GitUI.UserControls
         public Control? PathShowingControl { get; set; }
 
         /// <summary>
+        /// Specifies the text label of the button.
+        /// </summary>
+        public override string Text
+        {
+            get => buttonBrowse.Text;
+            set => buttonBrowse.Text = value;
+        }
+
+        /// <summary>
         /// Opens a a folder picker dialog with the path in "getter" preselected and
         /// if OK is returned uses "setter" to set the path.
         /// </summary>
