@@ -58,7 +58,10 @@ namespace GitUI.NBugReports
             if (exception is ExternalOperationException externalOperationException)
             {
                 // Exit code: <n>
-                AppendIfNotEmpty(externalOperationException.ExitCode.ToString(), TranslatedStrings.ExitCode);
+                if (externalOperationException.ExitCode is int exitCode)
+                {
+                    AppendIfNotEmpty(ExecutionResult.FormatExitCode(exitCode), TranslatedStrings.ExitCode);
+                }
 
                 // Command: <command>
                 AppendIfNotEmpty(externalOperationException.Command, TranslatedStrings.Command);
