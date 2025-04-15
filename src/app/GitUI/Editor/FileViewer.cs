@@ -517,6 +517,11 @@ namespace GitUI.Editor
             internalFileViewer.ClearHighlighting();
         }
 
+        internal void IgnoreGutterLineChanged()
+        {
+            internalFileViewer.IgnoreGutterLineChanged();
+        }
+
         public string GetText() => internalFileViewer.GetText();
 
         /// <summary>

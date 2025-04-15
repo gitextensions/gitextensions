@@ -59,6 +59,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
         ICSharpCode.TextEditor.Document.HighlightColor lineNumberPainterColor = textArea.Document.HighlightingStrategy.GetColorFor("LineNumbers");
         Brush fillBrush = textArea.Enabled ? BrushRegistry.GetBrush(lineNumberPainterColor.BackgroundColor) : SystemBrushes.InactiveBorder;
         Brush drawBrush = BrushRegistry.GetBrush(lineNumberPainterColor.Color);
+        Brush currentLineBrush = BrushRegistry.GetBrush(SystemColors.WindowText);
 
         for (int y = 0; y < ((DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / fontHeight) + 1; ++y)
         {
@@ -108,11 +109,12 @@ public class DiffViewerLineNumberControl : AbstractMargin
                 g.FillRectangle(brush, new Rectangle(leftWidth, backgroundRectangle.Top, rightWidth, backgroundRectangle.Height));
             }
 
+            Brush lineBrush = curLine == textArea.Caret.Line && MarkSelectedLine ? currentLineBrush : drawBrush;
             if (diffLine.LeftLineNumber != DiffLineInfo.NotApplicableLineNum)
             {
                 g.DrawString(diffLine.LeftLineNumber.ToString(),
                     lineNumberPainterColor.GetFont(TextEditorProperties.FontContainer),
-                    drawBrush,
+                    lineBrush,
                     new Point(_textHorizontalMargin, backgroundRectangle.Top));
             }
 
@@ -120,7 +122,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
             {
                 g.DrawString(diffLine.RightLineNumber.ToString(),
                     lineNumberPainterColor.GetFont(TextEditorProperties.FontContainer),
-                    drawBrush,
+                    lineBrush,
                     new Point(leftWidth, backgroundRectangle.Top));
             }
         }
@@ -138,6 +140,8 @@ public class DiffViewerLineNumberControl : AbstractMargin
         _diffLines = _empty;
         MaxLineNumber = 0;
     }
+
+    public override bool IsVisible => _visible;
 
     public void SetVisibility(bool visible)
     {
