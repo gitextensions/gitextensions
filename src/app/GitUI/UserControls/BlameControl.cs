@@ -70,6 +70,7 @@ namespace GitUI.Blame
             BlameAuthor.SelectedLineChanged += SelectedLineChanged;
             BlameAuthor.RequestDiffView += ActiveTextAreaControlDoubleClick;
             BlameAuthor.EscapePressed += () => EscapePressed?.Invoke();
+            BlameAuthor.DontMarkGutterSelectedLine();
 
             BlameFile.IsReadOnly = true;
             BlameFile.VScrollPositionChanged += BlameFile_VScrollPositionChanged;
