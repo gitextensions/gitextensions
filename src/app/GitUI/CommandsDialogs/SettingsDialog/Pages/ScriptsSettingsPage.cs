@@ -13,7 +13,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ScriptsSettingsPage : SettingsPageWithHeader
+    public partial class ScriptsSettingsPage : DistributedSettingsPage
     {
         private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new("Arguments help");
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new(@"Use {option} for normal replacement.
@@ -187,11 +187,14 @@ Diff selection:
             lvScripts.LargeImageList = lvScripts.SmallImageList = EmbeddedIcons;
             _imagesLoaded = true;
 
-            BindScripts(_scripts, null);
+            BindScripts(_scripts, selectedScript: null);
         }
 
         protected override void SettingsToPage()
         {
+            Validates.NotNull(CurrentSettings);
+            _scriptsManager.Initialize(CurrentSettings);
+
             _scripts.Clear();
 
             foreach (ScriptInfo script in _scriptsManager.GetScripts())
@@ -203,7 +206,7 @@ Diff selection:
 
             if (_imagesLoaded)
             {
-                BindScripts(_scripts, null);
+                BindScripts(_scripts, selectedScript: null);
             }
 
             base.SettingsToPage();
@@ -211,17 +214,15 @@ Diff selection:
 
         protected override void PageToSettings()
         {
-            // TODO: this is an abomination, the whole script persistence must be scorched and rewritten
-
-            BindingList<ScriptInfo> scripts = _scriptsManager.GetScripts();
-            scripts.Clear();
-
-            foreach (ScriptInfoProxy proxy in _scripts)
+            // Update the currently edited script
+            ScriptInfo? selectedScript = SelectedScript;
+            if (selectedScript is null)
             {
-                scripts.Add(proxy);
+                return;
             }
 
-            AppSettings.OwnScripts = _scriptsManager.SerializeIntoXml();
+            _scriptsManager.Update(selectedScript);
+            _scriptsManager.Save();
 
             base.PageToSettings();
         }
@@ -237,6 +238,8 @@ Diff selection:
 
                 if (scripts.Count < 1)
                 {
+                    SelectedScript = null;
+                    propertyGrid1.SelectedObject = null;
                     btnAdd.Focus();
                     return;
                 }
@@ -308,11 +311,12 @@ Diff selection:
         private void btnAdd_Click(object sender, EventArgs e)
         {
             ScriptInfoProxy script = _scripts.AddNew();
-            script.HotkeyCommandIdentifier = Math.Max(ScriptsManager.MinimumUserScriptID, _scripts.Max(s => s.HotkeyCommandIdentifier)) + 1;
             script.Name = "<New Script>";
             script.Enabled = true;
 
-            BindScripts(_scripts, script);
+            _scriptsManager.Add(script);
+
+            BindScripts(_scripts, selectedScript: script);
 
             propertyGrid1.Focus();
         }
@@ -341,8 +345,11 @@ Diff selection:
                 return;
             }
 
+            // This will save us from iterating over the saved collection later
+            _scriptsManager.Remove(SelectedScript);
+
             _scripts.Remove(SelectedScript);
-            BindScripts(_scripts, null);
+            BindScripts(_scripts, selectedScript: null);
         }
 
         private void btnMoveDown_Click(object sender, EventArgs e)
@@ -394,6 +401,7 @@ Diff selection:
         {
             if (lvScripts.SelectedItems.Count < 1 || !(lvScripts.SelectedItems[0].Tag is ScriptInfoProxy script))
             {
+                SelectedScript = null;
                 propertyGrid1.SelectedObject = null;
                 return;
             }
