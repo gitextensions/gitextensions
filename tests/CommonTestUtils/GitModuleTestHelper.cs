@@ -6,6 +6,7 @@ using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUI;
 using NUnit.Framework;
 
 namespace CommonTestUtils
@@ -38,7 +39,7 @@ namespace CommonTestUtils
             //
             //  fatal: LF would be replaced by CRLF in .gitmodules
             //         Failed to register submodule 'repo2'
-            module.GitExecutable.GetOutput(@"config core.safecrlf false");
+            module.SetSetting("core.safecrlf", "false");
 
             return;
 
@@ -138,12 +139,12 @@ namespace CommonTestUtils
         /// </summary>
         private static void SetRepoConfig(GitModule module)
         {
-            ConfigFileSettings localConfigFile = (ConfigFileSettings)module.LocalConfigFile;
-            localConfigFile.SetString(SettingKeyString.UserName, "author");
-            localConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
-            new GitEncodingSettingsSetter(localConfigFile).FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-            localConfigFile.SetString(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
-            localConfigFile.Save();
+            GitConfigSettings localSettings = new(module.GitExecutable, GitSettingLevel.Local);
+            localSettings.SetValue(SettingKeyString.UserName, "author");
+            localSettings.SetValue(SettingKeyString.UserEmail, "author@mail.com");
+            new GitEncodingSettingsSetter(localSettings).FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            localSettings.SetValue(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
+            localSettings.Save();
         }
 
         /// <summary>
@@ -157,7 +158,7 @@ namespace CommonTestUtils
             subModuleHelper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial empty commit""");
 
             // Ensure config is set to allow file submodules
-            string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol)?.Trim('\n');
+            string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol);
             ClassicAssert.That(fileEnabled == "always");
 
             // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
@@ -196,8 +197,17 @@ namespace CommonTestUtils
                 // we want to delete, so we need to make sure the timers that will try to auto-save there
                 // are stopped before actually deleting, else the timers will throw on a background thread.
                 // Note that the intermittent failures mentioned below are likely related too.
-                ((ConfigFileSettings)Module.EffectiveConfigFile).SettingsCache.Dispose();
-                Module.EffectiveSettings.SettingsCache.Dispose();
+                if (Module.GetTestAccessor().EffectiveSettings is not null)
+                {
+                    if (ThreadHelper.JoinableTaskContext is null)
+                    {
+                        Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
+                    }
+                    else
+                    {
+                        Module.EffectiveSettings.SettingsCache.Dispose();
+                    }
+                }
 
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
                 foreach (string file in Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories))

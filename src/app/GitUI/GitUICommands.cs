@@ -1544,16 +1544,14 @@ namespace GitUI
 
         private static bool UninstallEditor()
         {
-            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-
-            string? coreEditor = configFileGlobalSettings.GetValue("core.editor");
+            GitConfigSettings globalSettings = new(new Executable(AppSettings.GitCommand), GitSettingLevel.Global);
+            string? coreEditor = globalSettings.GetValue("core.editor");
             string? path = AppSettings.GetInstallDir().ToPosixPath();
             if (path is not null && coreEditor?.Contains(path, StringComparison.InvariantCultureIgnoreCase) is true)
             {
-                configFileGlobalSettings.SetValue("core.editor", "");
+                globalSettings.SetValue("core.editor", value: null);
+                globalSettings.Save();
             }
-
-            configFileGlobalSettings.Save();
 
             return true;
         }

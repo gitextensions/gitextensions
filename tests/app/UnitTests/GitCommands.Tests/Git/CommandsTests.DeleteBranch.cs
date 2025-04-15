@@ -1,6 +1,5 @@
 using GitCommands;
 using GitCommands.Git;
-using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
@@ -24,8 +23,8 @@ namespace GitCommandsTests_Git
         public void ctor_should_have_expected_values()
         {
             const string remoteName = "origin";
-            string completeName = $"refs/remotes/{remoteName}/branch_name";
-            GitRef remoteBranchRef = SetupRawRemoteRef(remoteName, completeName);
+            const string completeName = $"refs/remotes/{remoteName}/branch_name";
+            GitRef remoteBranchRef = SetupRawRemoteRef(localBranchName: "local_branch_name", remoteName, completeName);
 
             IGitCommand cmd = Commands.DeleteBranch(new IGitRef[] { remoteBranchRef }, force: false);
 
@@ -42,10 +41,8 @@ namespace GitCommandsTests_Git
                 // Test local branches only
                 List<IGitRef> localRefs = [];
                 IGitModule localGitModule = Substitute.For<IGitModule>();
-                IConfigFileSettings localConfigFileSettings = Substitute.For<IConfigFileSettings>();
-                localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns(string.Empty);
-                localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(string.Empty);
-                localGitModule.LocalConfigFile.Returns(localConfigFileSettings);
+                localGitModule.GetEffectiveSetting($"branch.{name}.merge").Returns(string.Empty);
+                localGitModule.GetEffectiveSetting($"branch.{name}.remote").Returns(string.Empty);
                 GitRef localBranchRef = new(localGitModule, ObjectId.Random(), $"refs/heads/{name}");
 
                 localRefs.Add(localBranchRef);
@@ -56,7 +53,7 @@ namespace GitCommandsTests_Git
                 // Test local and remote branches
                 const string remoteName = "origin";
                 string completeName = $"refs/remotes/{remoteName}/{name}";
-                GitRef remoteBranchRef = SetupRawRemoteRef(remoteName, completeName);
+                GitRef remoteBranchRef = SetupRawRemoteRef(localBranchName: name, remoteName, completeName);
 
                 List<IGitRef> mixedRefs = [localBranchRef, remoteBranchRef];
 
@@ -78,13 +75,11 @@ namespace GitCommandsTests_Git
             ClassicAssert.AreEqual(expected, cmd.Arguments);
         }
 
-        private static GitRef SetupRawRemoteRef(string remoteName, string completeName)
+        private static GitRef SetupRawRemoteRef(string localBranchName, string remoteName, string completeName)
         {
             IGitModule localGitModule = Substitute.For<IGitModule>();
-            IConfigFileSettings localConfigFileSettings = Substitute.For<IConfigFileSettings>();
-            localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns(completeName);
-            localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(remoteName);
-            localGitModule.LocalConfigFile.Returns(localConfigFileSettings);
+            localGitModule.GetEffectiveSetting($"branch.{localBranchName}.merge").Returns(completeName);
+            localGitModule.GetEffectiveSetting($"branch.{localBranchName}.remote").Returns(remoteName);
             GitRef remoteBranchRef = new(localGitModule, ObjectId.Random(), completeName, remoteName);
             return remoteBranchRef;
         }
