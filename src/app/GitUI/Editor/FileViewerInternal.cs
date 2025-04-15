@@ -424,7 +424,7 @@ namespace GitUI.Editor
         /// For range-diff, it is the next block of commit summary header.
         /// </summary>
         /// <param name="contextLines">Number of context lines, to include header for new diff.</param>
-        public void GoToNextChange(int contextLines)
+        public void GoToNextChange(int contextLines, bool keepFirstVisibleLine = false)
         {
             // Skip the file header
             bool hasDiffHeader = _textHighlightService is (PatchHighlightService or CombinedDiffHighlightService);
@@ -439,8 +439,12 @@ namespace GitUI.Editor
                 {
                     if (emptyLineCheck)
                     {
-                        // Include the header with the (possible) function summary line
-                        FirstVisibleLine = Math.Max(line - contextLines - 1, 0);
+                        if (!keepFirstVisibleLine)
+                        {
+                            // Include the header with the (possible) function summary line
+                            FirstVisibleLine = Math.Max(line - contextLines - 1, 0);
+                        }
+
                         LineAtCaret = line;
                         return;
                     }
