@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
             DiffFiles.InvokeAndForget(async () =>
             {
                 await SetDiffsAsync(revisions);
-                if (DiffFiles.SelectedItem is null)
+                if (!DiffFiles.SelectedItems.Any())
                 {
                     DiffFiles.SelectStoredNextItem();
                 }
@@ -279,8 +279,8 @@ namespace GitUI.CommandsDialogs
             {
                 await SetDiffsAsync(revisions);
 
-                // Select something by default, except range diff
-                if (DiffFiles.SelectedItem is null && !(DiffFiles.FirstGroupItems.Count() == 1 && DiffFiles.FirstGroupItems.FirstOrDefault().Item.IsRangeDiff))
+                // Select something by default
+                if (!DiffFiles.SelectedItems.Any())
                 {
                     DiffFiles.SelectFirstVisibleItem();
                 }
@@ -777,7 +777,10 @@ namespace GitUI.CommandsDialogs
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenInFileTreeTab(requestBlame: false);
+            if (!IsFileTreeMode)
+            {
+                OpenInFileTreeTab(requestBlame: false);
+            }
         }
 
         private void diffFilterFileInGridToolStripMenuItem_Click(object sender, EventArgs e)
@@ -848,7 +851,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
-            diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+            diffShowInFileTreeToolStripMenuItem.Visible = !IsFileTreeMode && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
             diffFilterFileInGridToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
             fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
             blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectionInfo);
@@ -1048,13 +1051,14 @@ namespace GitUI.CommandsDialogs
             }
 
             // The order is always the order in the list, not clicked order, but the (last) selected is known
-            int firstIndex = DiffFiles.SelectedItem == diffFiles[0] ? 1 : 0;
+            int firstIndex = DiffFiles.FocusedItem == diffFiles[0] ? 1 : 0;
+            int secondIndex = 1 - firstIndex;
 
             // Fallback to first revision if second revision cannot be used
             bool isFirstItemSecondRev = _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[firstIndex], isSecondRevision: true);
             string first = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, diffFiles[firstIndex], isSecondRevision: isFirstItemSecondRev);
-            bool isSecondItemSecondRev = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(DiffFiles.SelectedItem, isSecondRevision: true);
-            string second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, DiffFiles.SelectedItem, isSecondRevision: isSecondItemSecondRev);
+            bool isSecondItemSecondRev = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(diffFiles[secondIndex], isSecondRevision: true);
+            string second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, diffFiles[secondIndex], isSecondRevision: isSecondItemSecondRev);
 
             Module.OpenFilesWithDifftool(first, second, customTool: toolName);
         }
@@ -1222,13 +1226,14 @@ namespace GitUI.CommandsDialogs
             diffRememberStripSeparator.Visible = diffFiles.Count == 1 || diffFiles.Count == 2;
 
             // The order is always the order in the list, not clicked order, but the (last) selected is known
-            int firstIndex = diffFiles.Count == 2 && DiffFiles.SelectedItem == diffFiles[0] ? 1 : 0;
+            int firstIndex = diffFiles.Count == 2 && DiffFiles.FocusedItem == diffFiles[0] ? 1 : 0;
+            int secondIndex = 1 - firstIndex;
 
             diffTwoSelectedDifftoolToolStripMenuItem.Visible = diffFiles.Count == 2;
             diffTwoSelectedDifftoolToolStripMenuItem.Enabled =
                 diffFiles.Count == 2
                 && _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[firstIndex])
-                && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(DiffFiles.SelectedItem);
+                && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(diffFiles[secondIndex]);
 
             diffWithRememberedDifftoolToolStripMenuItem.Visible = diffFiles.Count == 1 && _rememberFileContextMenuController.RememberedDiffFileItem is not null;
             diffWithRememberedDifftoolToolStripMenuItem.Enabled =
