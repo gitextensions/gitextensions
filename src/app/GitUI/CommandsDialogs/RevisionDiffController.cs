@@ -181,9 +181,8 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo)
         {
-            return (selectionInfo.SelectedGitItemCount == 1 || selectionInfo.SelectedFolder is not null)
-                && !selectionInfo.IsDeleted
-                && !selectionInfo.IsStatusOnly;
+            return (selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnyTracked && !selectionInfo.IsDeleted)
+                || selectionInfo.SelectedFolder is not null;
         }
 
         public bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo)
