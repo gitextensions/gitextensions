@@ -84,7 +84,7 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.Caret.PositionChanged += GutterSelectedLineChanged;
         }
 
-        public void IgnoreGutterLineChanged()
+        public void DontMarkGutterSelectedLine()
         {
             TextEditor.ActiveTextAreaControl.Caret.PositionChanged -= GutterSelectedLineChanged;
             TextEditor.ActiveTextAreaControl.TextArea.GutterMargin.MarkSelectedLine = false;
@@ -640,7 +640,6 @@ namespace GitUI.Editor
 
         public void GoToLine(int lineNumber)
         {
-            GutterSelectedLineChanged(lineNumber);
             TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, GetCaretOffset(lineNumber, rightFile: true));
             TextEditor.ActiveTextAreaControl.CenterViewOn(TextEditor.ActiveTextAreaControl.Caret.Position.Line, treshold: 5);
         }
