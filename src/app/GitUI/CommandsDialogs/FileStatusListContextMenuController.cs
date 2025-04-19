@@ -1,10 +1,13 @@
-﻿using GitExtensions.Extensibility.Git;
+﻿#nullable enable
+
+using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
     public interface IFileStatusListContextMenuController
     {
+        bool ShouldHideToLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuFirstToSelected(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuFirstToLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuSelectedToLocal(ContextMenuDiffToolInfo selectionInfo);
@@ -38,6 +41,12 @@ namespace GitUI.CommandsDialogs
 
     public class FileStatusListContextMenuController : IFileStatusListContextMenuController
     {
+        public bool ShouldHideToLocal(ContextMenuDiffToolInfo selectionInfo)
+        {
+            return (selectionInfo.SelectedRevision?.ObjectId == ObjectId.WorkTreeId && selectionInfo.SelectedItemParentRevs?.All(parentId => parentId == ObjectId.IndexId) is true)
+                || (selectionInfo.SelectedRevision?.ObjectId == ObjectId.IndexId && selectionInfo.SelectedItemParentRevs?.All(parentId => parentId == ObjectId.WorkTreeId) is true);
+        }
+
         public bool ShouldShowMenuFirstToSelected(ContextMenuDiffToolInfo selectionInfo)
         {
             return selectionInfo.SelectedRevision is not null;

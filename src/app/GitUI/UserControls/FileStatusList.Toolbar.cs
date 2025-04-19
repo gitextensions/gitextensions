@@ -89,6 +89,18 @@ partial class FileStatusList
         UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
     }
 
+    private void EditGitIgnore_Click(object sender, EventArgs e)
+    {
+        UICommands.StartEditGitIgnoreDialog(this, localExcludes: false);
+        RequestRefresh();
+    }
+
+    private void EditLocallyIgnoredFiles_Click(object sender, EventArgs e)
+    {
+        UICommands.StartEditGitIgnoreDialog(this, localExcludes: true);
+        RequestRefresh();
+    }
+
     private void Filter_ButtonClick(object sender, EventArgs e)
     {
         FilterFiles(_NO_TRANSLATE_FilterComboBox.Text);
@@ -162,10 +174,53 @@ partial class FileStatusList
         AppSettings.RefreshArtificialCommitOnApplicationActivated = tsmiRefreshOnFormFocus.Checked;
     }
 
+    private void Settings_DropDownOpening(object sender, EventArgs e)
+    {
+        tsmiRefreshOnFormFocus.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
+
+        tsmiShowDiffForAllParents.Visible = _enableDisablingShowDiffForAllParents;
+        tsmiShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
+        tsmiShowDiffForAllParents.ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip;
+    }
+
+    private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
+    {
+        RequestRefresh();
+    }
+
+    private void ShowDiffForAllParents_Click(object sender, EventArgs e)
+    {
+        AppSettings.ShowDiffForAllParents = tsmiShowDiffForAllParents.Checked;
+        CancellationToken cancellationToken = _reloadSequence.Next();
+        FileStatusListLoading();
+        ThreadHelper.FileAndForget(async () =>
+        {
+            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: true, refreshGrep: false, cancellationToken);
+
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            UpdateFileStatusListView(gitItemStatusesWithDescription, cancellationToken: cancellationToken);
+        });
+    }
+
     private void ShowGroupNodesInFlatList_Click(object sender, EventArgs e)
     {
         AppSettings.FileStatusShowGroupNodesInFlatList.Value = tsmiShowGroupNodesInFlatList.Checked;
         UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
+    }
+
+    private void ShowIgnoredFiles_Click(object sender, EventArgs e)
+    {
+        RequestRefresh();
+    }
+
+    private void ShowSkipWorktreeFiles_Click(object sender, EventArgs e)
+    {
+        RequestRefresh();
+    }
+
+    private void ShowUntrackedFiles_Click(object sender, EventArgs e)
+    {
+        RequestRefresh();
     }
 
     private void UpdateToolbar()
@@ -174,8 +229,6 @@ partial class FileStatusList
         btnCollapseGroups.Visible = hasGroups;
         sepRefresh.Visible = hasGroups && btnRefresh.Visible;
         sepAsTree.Visible = hasGroups || btnRefresh.Visible;
-
-        tsmiRefreshOnFormFocus.Checked = tsmiRefreshOnFormFocus.Enabled && AppSettings.RefreshArtificialCommitOnApplicationActivated;
 
         DiffListSortType sortType = DiffListSortService.Instance.DiffListSorting;
         btnByPath.Checked = sortType is DiffListSortType.FilePath or DiffListSortType.FilePathFlat;
@@ -220,7 +273,7 @@ partial class FileStatusList
                 {
                     CheckOnClick = true,
                     Checked = AppSettings.GetBool(settingsKey, defaultValue: true),
-                    Enabled = toolbarItem != btnAsTree,
+                    Enabled = toolbarItem != btnSettings,
                     Image = toolbarItem.Image,
                     Text = toolbarItem is ToolStripSeparator ? $"Separator '{Toolbar.Items[itemIndex + 1].ToolTipText}'" : toolbarItem.ToolTipText,
                 };

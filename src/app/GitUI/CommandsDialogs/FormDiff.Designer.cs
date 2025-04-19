@@ -39,18 +39,6 @@ namespace GitUI.CommandsDialogs
             btnAnotherSecondBranch = new Button();
             btnAnotherSecondCommit = new Button();
             diffShowInFileTreeToolStripMenuItem = new ToolStripMenuItem();
-            DiffContextMenu = new ContextMenuStrip(components);
-            openWithDifftoolToolStripMenuItem = new ToolStripMenuItem();
-            firstToSelectedToolStripMenuItem = new ToolStripMenuItem();
-            firstToLocalToolStripMenuItem = new ToolStripMenuItem();
-            selectedToLocalToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator32 = new ToolStripSeparator();
-            copyPathsToolStripMenuItem = new CopyPathsToolStripMenuItem();
-            openContainingFolderToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator33 = new ToolStripSeparator();
-            fileHistoryDiffToolstripMenuItem = new ToolStripMenuItem();
-            blameToolStripMenuItem = new ToolStripMenuItem();
-            findInDiffToolStripMenuItem = new ToolStripMenuItem();
             mainLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(splitContainer1)).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -61,7 +49,6 @@ namespace GitUI.CommandsDialogs
             firstCommitPanel.SuspendLayout();
             secondCommitGroup.SuspendLayout();
             secondCommitPanel.SuspendLayout();
-            DiffContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayoutPanel
@@ -329,100 +316,6 @@ namespace GitUI.CommandsDialogs
             diffShowInFileTreeToolStripMenuItem.Size = new Size(210, 22);
             diffShowInFileTreeToolStripMenuItem.Text = "Show in File tree";
             // 
-            // DiffContextMenu
-            // 
-            DiffContextMenu.Items.AddRange(new ToolStripItem[] {
-            openWithDifftoolToolStripMenuItem,
-            toolStripSeparator32,
-            copyPathsToolStripMenuItem,
-            openContainingFolderToolStripMenuItem,
-            toolStripSeparator33,
-            fileHistoryDiffToolstripMenuItem,
-            blameToolStripMenuItem,
-            findInDiffToolStripMenuItem});
-            DiffContextMenu.Name = "DiffContextMenu";
-            DiffContextMenu.Size = new Size(211, 148);
-            DiffContextMenu.Opening += diffContextToolStripMenuItem_Opening;
-            // 
-            // openWithDifftoolToolStripMenuItem
-            // 
-            openWithDifftoolToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-            firstToSelectedToolStripMenuItem,
-            firstToLocalToolStripMenuItem,
-            selectedToLocalToolStripMenuItem});
-            openWithDifftoolToolStripMenuItem.Image = Properties.Images.Diff;
-            openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
-            openWithDifftoolToolStripMenuItem.Size = new Size(210, 22);
-            openWithDifftoolToolStripMenuItem.Text = "Open with &difftool";
-            openWithDifftoolToolStripMenuItem.DropDownOpening += openWithDifftoolToolStripMenuItem_DropDownOpening;
-            // 
-            // firstToSelectedToolStripMenuItem
-            // 
-            firstToSelectedToolStripMenuItem.Name = "firstToSelectedToolStripMenuItem";
-            firstToSelectedToolStripMenuItem.ShortcutKeys = Keys.F3;
-            firstToSelectedToolStripMenuItem.Size = new Size(254, 22);
-            firstToSelectedToolStripMenuItem.Text = "First -> Compare";
-            firstToSelectedToolStripMenuItem.Click += openWithDifftoolToolStripMenuItem_Click;
-            // 
-            // firstToLocalToolStripMenuItem
-            // 
-            firstToLocalToolStripMenuItem.Name = "firstToLocalToolStripMenuItem";
-            firstToLocalToolStripMenuItem.Size = new Size(254, 22);
-            firstToLocalToolStripMenuItem.Text = "First -> Working directory";
-            firstToLocalToolStripMenuItem.Click += openWithDifftoolToolStripMenuItem_Click;
-            // 
-            // selectedToLocalToolStripMenuItem
-            // 
-            selectedToLocalToolStripMenuItem.Name = "selectedToLocalToolStripMenuItem";
-            selectedToLocalToolStripMenuItem.Size = new Size(254, 22);
-            selectedToLocalToolStripMenuItem.Text = "Compare -> Working directory";
-            selectedToLocalToolStripMenuItem.Click += openWithDifftoolToolStripMenuItem_Click;
-            // 
-            // toolStripSeparator32
-            // 
-            toolStripSeparator32.Name = "toolStripSeparator32";
-            toolStripSeparator32.Size = new Size(207, 6);
-            // 
-            // copyPathsToolStripMenuItem
-            // 
-            copyPathsToolStripMenuItem.Name = "copyPathsToolStripMenuItem";
-            // 
-            // openContainingFolderToolStripMenuItem
-            // 
-            openContainingFolderToolStripMenuItem.Image = Properties.Images.BrowseFileExplorer;
-            openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
-            openContainingFolderToolStripMenuItem.Size = new Size(210, 22);
-            openContainingFolderToolStripMenuItem.Text = "Show &in folder";
-            openContainingFolderToolStripMenuItem.Click += openContainingFolderToolStripMenuItem_Click;
-            // 
-            // toolStripSeparator33
-            // 
-            toolStripSeparator33.Name = "toolStripSeparator33";
-            toolStripSeparator33.Size = new Size(207, 6);
-            // 
-            // fileHistoryDiffToolstripMenuItem
-            // 
-            fileHistoryDiffToolstripMenuItem.Image = Properties.Images.FileHistory;
-            fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
-            fileHistoryDiffToolstripMenuItem.Size = new Size(210, 22);
-            fileHistoryDiffToolstripMenuItem.Text = "File &history";
-            fileHistoryDiffToolstripMenuItem.Click += fileHistoryDiffToolStripMenuItem_Click;
-            // 
-            // blameToolStripMenuItem
-            // 
-            blameToolStripMenuItem.Image = Properties.Images.Blame;
-            blameToolStripMenuItem.Name = "blameToolStripMenuItem";
-            blameToolStripMenuItem.Size = new Size(210, 22);
-            blameToolStripMenuItem.Text = "&Blame";
-            blameToolStripMenuItem.Click += blameToolStripMenuItem_Click;
-            // 
-            // findInDiffToolStripMenuItem
-            // 
-            findInDiffToolStripMenuItem.Name = "findInDiffToolStripMenuItem";
-            findInDiffToolStripMenuItem.Size = new Size(210, 22);
-            findInDiffToolStripMenuItem.Text = "&Find file...";
-            findInDiffToolStripMenuItem.Click += findInDiffToolStripMenuItem_Click;
-            // 
             // FormDiff
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -450,7 +343,6 @@ namespace GitUI.CommandsDialogs
             secondCommitGroup.PerformLayout();
             secondCommitPanel.ResumeLayout(false);
             secondCommitPanel.PerformLayout();
-            DiffContextMenu.ResumeLayout(false);
             ResumeLayout(false);
 
         }
@@ -466,18 +358,6 @@ namespace GitUI.CommandsDialogs
         private Button btnSwap;
         private Button btnAnotherFirstBranch;
         private ToolStripMenuItem diffShowInFileTreeToolStripMenuItem;
-        private ContextMenuStrip DiffContextMenu;
-        private ToolStripMenuItem openWithDifftoolToolStripMenuItem;
-        private ToolStripMenuItem firstToSelectedToolStripMenuItem;
-        private ToolStripMenuItem firstToLocalToolStripMenuItem;
-        private ToolStripMenuItem selectedToLocalToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator32;
-        private CopyPathsToolStripMenuItem copyPathsToolStripMenuItem;
-        private ToolStripMenuItem openContainingFolderToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator33;
-        private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
-        private ToolStripMenuItem blameToolStripMenuItem;
-        private ToolStripMenuItem findInDiffToolStripMenuItem;
         private Button btnAnotherFirstCommit;
         private FlowLayoutPanel firstCommitPanel;
         private Label lblFirstCommit;

@@ -3,7 +3,6 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -119,7 +118,8 @@ namespace GitUI.CommandsDialogs
             return selectionInfo.SelectedGitItemCount > 0
                 && !selectionInfo.IsBareRepository
                 && selectionInfo.IsAnyTracked
-                && !selectionInfo.IsDisplayOnlyDiff;
+                && !selectionInfo.IsDisplayOnlyDiff
+                && !(selectionInfo.IsAnySubmodule && selectionInfo.SelectedGitItemCount == 1);
         }
 
         #region Main menu items
@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SupportPatches;
+            return selectionInfo.SupportPatches && !selectionInfo.IsAnyItemWorkTree;
         }
 
         // Stage/unstage must limit the selected items, IsStaged is not reflecting Staged status
@@ -181,10 +181,8 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1
-                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false)
-                && !selectionInfo.IsDeleted
-                && !selectionInfo.IsStatusOnly;
+            return (selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnyTracked && !selectionInfo.IsDeleted)
+                || selectionInfo.SelectedFolder is not null;
         }
 
         public bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo)
@@ -194,7 +192,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo)
         {
-            return ShouldShowMenuFileHistory(selectionInfo) && !selectionInfo.IsAnySubmodule;
+            return ShouldShowMenuFileHistory(selectionInfo) && !selectionInfo.IsAnySubmodule && selectionInfo.SelectedFolder is null;
         }
         #endregion
 

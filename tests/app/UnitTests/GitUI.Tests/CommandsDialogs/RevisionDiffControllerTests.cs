@@ -440,7 +440,7 @@ namespace GitUITests.CommandsDialogs
         public void BrowseDiff_StatusOnlyDiff(bool t)
         {
             GitRevision rev = new(ObjectId.Random());
-            ContextMenuSelectionInfo selectionInfo = CreateContextMenuSelectionInfo(rev, isStatusOnly: t);
+            ContextMenuSelectionInfo selectionInfo = CreateContextMenuSelectionInfo(rev, isStatusOnly: t, isAnyTracked: !t);
             _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().Be(!t);
             _controller.ShouldShowMenuShowInFolder(selectionInfo).Should().Be(!t);
             _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().Be(!t);
