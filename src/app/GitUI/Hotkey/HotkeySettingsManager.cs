@@ -249,6 +249,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.GoToParent, Keys.Control | Keys.P),
                     Hk(FormBrowse.Command.GoToSubmodule, Keys.None),
                     Hk(FormBrowse.Command.GoToSuperproject, Keys.None),
+                    Hk(FormBrowse.Command.ManageWorkTrees, Keys.Control | Keys.Alt | Keys.W),
                     Hk(FormBrowse.Command.MergeBranches, Keys.Control | Keys.M),
                     Hk(FormBrowse.Command.OpenAsTempFile, OpenAsTempFileHotkey),
                     Hk(FormBrowse.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
@@ -269,8 +270,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.StashPop, Keys.Control | Keys.Alt | Keys.Down),
                     Hk(FormBrowse.Command.StashStaged, Keys.Control | Keys.Shift | Keys.Alt | Keys.Up),
                     Hk(FormBrowse.Command.ToggleBetweenArtificialAndHeadCommits, Keys.Control | Keys.OemBackslash),
-                    Hk(FormBrowse.Command.ToggleLeftPanel, Keys.Control | Keys.Alt | Keys.C),
-                    Hk(FormBrowse.Command.ManageWorkTrees, Keys.Control | Keys.Alt | Keys.W)),
+                    Hk(FormBrowse.Command.ToggleLeftPanel, Keys.Control | Keys.Alt | Keys.C)),
                 new HotkeySettings(
                     RepoObjectsTree.HotkeySettingsName,
                     Hk(RepoObjectsTree.Command.Delete, Keys.Delete),

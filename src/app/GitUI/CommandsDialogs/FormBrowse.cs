@@ -1016,8 +1016,6 @@ namespace GitUI.CommandsDialogs
                     applyPatchToolStripMenuItem.Enabled = !bareRepository;
                 }
 
-                manageWorktreeToolStripMenuItem.ShortcutKeys = Keys.ControlKey | Keys.Alt | Keys.W;
-
                 stashChangesToolStripMenuItem.Enabled = !bareRepository;
                 stashStagedToolStripMenuItem.Visible = Module.GitVersion.SupportStashStaged;
 
@@ -1918,6 +1916,7 @@ namespace GitUI.CommandsDialogs
 
             // REPOSITORY menu
             CloseRepository = 15,
+            ManageWorkTrees = 49,
 
             // COMMANDS menu
             Commit = 7,
@@ -1967,7 +1966,6 @@ namespace GitUI.CommandsDialogs
             GoToParent = 38,
 
             /* deprecated: RotateApplicationIcon = 14, */
-            ManageWorkTrees = 50,
         }
 
         private void AddNotes()
