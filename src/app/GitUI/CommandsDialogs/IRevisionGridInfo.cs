@@ -1,4 +1,6 @@
-﻿using GitExtensions.Extensibility.Git;
+﻿#nullable enable
+
+using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs;

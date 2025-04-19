@@ -35,8 +35,9 @@ namespace GitUI.CommandsDialogs
 
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    revisionDiff.FallbackFollowedFile = path;
-                    fileTree.FallbackFollowedFile = path;
+                    RelativePath relativePath = RelativePath.From(path);
+                    revisionDiff.FallbackFollowedFile = relativePath;
+                    fileTree.FallbackFollowedFile = relativePath;
                 }
             };
 
