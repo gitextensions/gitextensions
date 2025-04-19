@@ -62,7 +62,7 @@
             // buttonSelectMultipleRemotes
             // 
             buttonSelectMultipleRemotes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonSelectMultipleRemotes.Image = Properties.Images.Select;
+            buttonSelectMultipleRemotes.Image = Properties.Images.SelectBranch;
             buttonSelectMultipleRemotes.Location = new Point(158, 0);
             buttonSelectMultipleRemotes.Margin = new Padding(0);
             buttonSelectMultipleRemotes.Name = "buttonSelectMultipleRemotes";

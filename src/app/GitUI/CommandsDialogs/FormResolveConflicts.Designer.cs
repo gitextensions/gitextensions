@@ -409,7 +409,7 @@ namespace GitUI.CommandsDialogs
             // merge
             // 
             merge.ContextMenuStrip = ConflictedFilesContextMenu;
-            merge.Image = Properties.Images.Select;
+            merge.Image = Properties.Images.SelectBranch;
             merge.ImageAlign = ContentAlignment.MiddleLeft;
             merge.Location = new Point(331, 0);
             merge.Margin = new Padding(0, 0, 0, 2);

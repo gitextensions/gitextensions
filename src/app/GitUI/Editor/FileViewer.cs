@@ -124,10 +124,10 @@ namespace GitUI.Editor
             diffAppearanceToolStripMenuItem.Visible = false;
             SetStateOfContextLinesButtons();
 
-            automaticContinuousScrollToolStripMenuItem.Image = Images.UiScrollBar.AdaptLightness();
+            automaticContinuousScrollToolStripMenuItem.AdaptImageLightness();
             automaticContinuousScrollToolStripMenuItem.Checked = AppSettings.AutomaticContinuousScroll;
 
-            showNonPrintChars.Image = Images.ShowWhitespace.AdaptLightness();
+            showNonPrintChars.AdaptImageLightness();
             showNonprintableCharactersToolStripMenuItem.Image = showNonPrintChars.Image;
             bool showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(reload: !AppSettings.RememberShowNonPrintingCharsPreference);
             showNonPrintChars.Checked = showNonPrintingChars;
@@ -135,11 +135,13 @@ namespace GitUI.Editor
             ToggleNonPrintingChars(showNonPrintingChars);
 
             ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(reload: !AppSettings.RememberShowSyntaxHighlightingInDiff);
-            showSyntaxHighlighting.Image = Resources.SyntaxHighlighting.AdaptLightness();
+            showSyntaxHighlighting.AdaptImageLightness();
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
-            showSyntaxHighlightingToolStripMenuItem.Image = Resources.SyntaxHighlighting.AdaptLightness();
+            showSyntaxHighlightingToolStripMenuItem.AdaptImageLightness();
             showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
             automaticContinuousScrollToolStripMenuItem.Text = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
+
+            showGitWordColoringToolStripMenuItem.AdaptImageLightness();
 
             IsReadOnly = true;
 
