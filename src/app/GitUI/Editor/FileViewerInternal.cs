@@ -81,11 +81,29 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextEditorProperties.EnableFolding = false;
             _lineNumbersControl = new DiffViewerLineNumberControl(TextEditor.ActiveTextAreaControl.TextArea);
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+            TextEditor.ActiveTextAreaControl.Caret.PositionChanged += GutterSelectedLineChanged;
+        }
+
+        public void DontMarkGutterSelectedLine()
+        {
+            TextEditor.ActiveTextAreaControl.Caret.PositionChanged -= GutterSelectedLineChanged;
+            TextEditor.ActiveTextAreaControl.TextArea.GutterMargin.MarkSelectedLine = false;
         }
 
         public void SetContinuousScrollManager(ContinuousScrollEventManager continuousScrollEventManager)
         {
             _continuousScrollEventManager = continuousScrollEventManager;
+        }
+
+        internal void GutterSelectedLineChanged(object sender, EventArgs e)
+        {
+            GutterSelectedLineChanged(TextEditor.ActiveTextAreaControl.Caret.Line);
+        }
+
+        internal void GutterSelectedLineChanged(int lineNo)
+        {
+            _lineNumbersControl.SelectedLineChanged(lineNo);
+            TextEditor.ActiveTextAreaControl.TextArea.GutterMargin.SelectedLineChanged(lineNo);
         }
 
         private void SelectionManagerSelectionChanged(object sender, EventArgs e)
@@ -285,6 +303,7 @@ namespace GitUI.Editor
             // important to set after the text was changed
             // otherwise the may be rendering artifacts as noted in #5568
             TextEditor.ShowLineNumbers = ShowLineNumbers ?? !hasLineNumberControl;
+            GutterSelectedLineChanged(-1);
             if (ShowLineNumbers.HasValue && !ShowLineNumbers.Value)
             {
                 Padding = new Padding(DpiUtil.Scale(5), Padding.Top, Padding.Right, Padding.Bottom);
