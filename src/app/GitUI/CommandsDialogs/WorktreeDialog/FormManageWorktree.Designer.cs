@@ -213,6 +213,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // 
             // FormManageWorktree
             // 
+            AcceptButton = buttonOpenSelectedWorktree;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(697, 361);
