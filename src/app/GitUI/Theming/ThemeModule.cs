@@ -31,7 +31,7 @@ namespace GitUI.Theming
                 new HighlightColor(SystemColors.WindowText, AppColor.EditorBackground.GetThemeColor(), bold: false, italic: false, adaptable: false));
             strategy.SetColorFor("LineNumbers",
                 new HighlightColor(SystemColors.GrayText, AppColor.LineNumberBackground.GetThemeColor(), bold: false, italic: false, adaptable: false));
-            strategy.SetColorFor("LineNumberCurrent",
+            strategy.SetColorFor("LineNumberSelected",
                 new HighlightColor(SystemColors.WindowText, AppColor.LineNumberBackground.GetThemeColor(), bold: true, italic: false, adaptable: false));
             if (Application.IsDarkModeEnabled)
             {

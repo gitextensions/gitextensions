@@ -57,7 +57,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
         int fontHeight = textArea.TextView.FontHeight;
         ICSharpCode.TextEditor.Document.HighlightColor lineNumberPainterColor = textArea.Document.HighlightingStrategy.GetColorFor("LineNumbers");
-        ICSharpCode.TextEditor.Document.HighlightColor lineNumberCurrentPainterColor = textArea.Document.HighlightingStrategy.GetColorFor("LineNumberCurrent");
+        ICSharpCode.TextEditor.Document.HighlightColor lineNumberCurrentPainterColor = textArea.Document.HighlightingStrategy.GetColorFor("LineNumberSelected");
         Brush fillBrush = textArea.Enabled ? BrushRegistry.GetBrush(lineNumberPainterColor.BackgroundColor) : SystemBrushes.InactiveBorder;
         Brush drawBrush = BrushRegistry.GetBrush(lineNumberPainterColor.Color);
         Brush currentLineBrush = BrushRegistry.GetBrush(lineNumberCurrentPainterColor.Color);
