@@ -214,3 +214,4 @@ YYYY/MM/DD, github id, Full name, email
 2024/09/26, georg138, Georg Siebke, github(at)georgsiebke.de
 2024/10/21, chkoddi,Chandar,chkoddi@live.com
 2024/11/05, anhtrvn, Anh Tran, anhtran18202(at)gmail.com
+2025/04/19, borzag, Boris Zagar, boris.zagar(at)gmail.com
