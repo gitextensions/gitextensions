@@ -90,6 +90,10 @@ public class MultiSelectTreeView : NativeTreeView
                 {
                     FocusedNode = value;
                 }
+                else
+                {
+                    SelectedNodesChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
 
             Invalidate();
@@ -102,6 +106,12 @@ public class MultiSelectTreeView : NativeTreeView
 
     public void SetSelectedNodes(HashSet<TreeNode> selectedNodes, TreeNode? focusedNode)
     {
+        bool focusedNodeUnchanged = FocusedNode == focusedNode;
+        if (_selectedNodes.SequenceEqual(selectedNodes) && focusedNodeUnchanged)
+        {
+            return;
+        }
+
         _selectedNodes = selectedNodes;
         if (focusedNode is not null)
         {
@@ -109,6 +119,10 @@ public class MultiSelectTreeView : NativeTreeView
         }
 
         Invalidate();
+        if (focusedNodeUnchanged)
+        {
+            SelectedNodesChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public bool UpdateSuspended => _updateSuspendCount > 0;
@@ -216,18 +230,23 @@ public class MultiSelectTreeView : NativeTreeView
 
         void UpdateSelection(bool replace, bool addRange)
         {
+            bool changed = false;
+
             if (replace)
             {
-                _selectedNodes = [newFocusedNode];
+                if (_selectedNodes.Count != 1 || _selectedNodes.First() != newFocusedNode)
+                {
+                    changed = true;
+                    _selectedNodes = [newFocusedNode];
+                }
             }
             else
             {
+                changed = true;
                 if (!_selectedNodes.Remove(newFocusedNode))
                 {
                     _selectedNodes.Add(newFocusedNode);
                 }
-
-                SelectedNodesChanged?.Invoke(this, e);
             }
 
             if (addRange)
@@ -267,8 +286,15 @@ public class MultiSelectTreeView : NativeTreeView
                 return;
             }
 
-            FocusedNode = newFocusedNode;
             _toBeFocusedNode = newFocusedNode;
+            if (FocusedNode != newFocusedNode)
+            {
+                FocusedNode = newFocusedNode;
+            }
+            else if (changed)
+            {
+                SelectedNodesChanged?.Invoke(this, e);
+            }
         }
     }
 
