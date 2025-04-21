@@ -1,0 +1,97 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+      GE_USE_LATEST_DOTNET: true
+      VERSION: 5.3.0.${{ github.run_number }}
+
+    steps:
+
+      - name: Set version
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          echo "VERSION=${{ env.VERSION }}-dev-${{ github.run_attempt }}" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Determine required .NET version
+        run: |
+          .\eng\Update-DotnetVersion.ps1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Install submodules
+        run: |
+          git submodule update --init --recursive
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Set version
+        run: |
+          cd eng
+          python set_version_to.py -v ${{ env.VERSION }} -t ${{ env.VERSION }}
+
+      - name: Determine build arguments
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+            # if building a PR override the hash with the PR commit's so the build contains the PR's hash instead of the merge-commit's hash
+            if ('${{ github.sha }}' -ne '${{ github.event.pull_request.head.sha }}')
+            {
+                $gitCommit = $(git rev-parse --short ${{ github.event.pull_request.head.sha }})
+                $buildArgs += " /p:GitCommit=$gitCommit /p:GitSha=${{ github.event.pull_request.head.sha }}"
+            }
+            echo "BuildArgs=$buildArgs" >> $GITHUB_ENV
+
+      - name: Show all environment variables 
+        run: |
+          echo "##[group]Environment variables"
+          Get-ChildItem env:
+          echo "##[endgroup]"
+          exit 1
+
+      - name: Build VC++
+        run: |
+            dotnet build .\src\native\build.proj -c Release --verbosity q --nologo /bl:.\artifacts\log\native.binlog
+
+      - name: Build .NET
+        shell: pwsh
+        run: |
+            $cmd = "dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog ${{ env.BuildArgs }}"
+            Invoke-Expression $cmd
+
+      - name: Update English translations
+        run: |
+          pushd .\src\app\GitExtensions
+          dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m
+          popd
+
+      - name: Run tests
+        run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx
+
+      - name: Publish artifacts
+        run: dotnet publish -c Release --no-build --verbosity q
+
+  # arm64:
+  #   runs-on: windows-11-arm
+
