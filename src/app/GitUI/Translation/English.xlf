@@ -6848,7 +6848,11 @@ Value has been reset to empty value.</source>
         <source>The entered value '{0}' is not the name of an existing local branch.</source>
         <target />
       </trans-unit>
-      <trans-unit id="labelResetBranchWarning.Text">
+      <trans-unit id="cbxCheckoutBranch.Text">
+        <source>Chec&amp;kout branch after reset</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblResetBranchWarning.Text">
         <source>You can only reset a branch safely if there is a direct path from it to selected revision.
 Forcing a branch to reset if it has not been merged might leave some commits unreachable.</source>
         <target />
