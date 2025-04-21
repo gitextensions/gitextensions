@@ -902,13 +902,9 @@ namespace GitUI.Editor
                     {
                         GoToLine(line.Value);
                     }
-                    else if (viewMode == ViewMode.Grep && ShowEntireFile)
-                    {
-                        internalFileViewer.GoToNextChange(NumberOfContextLines);
-                    }
                     else
                     {
-                        internalFileViewer.GoToNextChange(NumberOfContextLines, keepFirstVisibleLine: true);
+                        internalFileViewer.GoToFirstChange(NumberOfContextLines);
                     }
 
                     TextLoaded?.Invoke(this, null);

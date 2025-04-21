@@ -438,27 +438,46 @@ namespace GitUI.Editor
             => _textHighlightService.IsSearchMatch(_lineNumbersControl, indexInText);
 
         /// <summary>
-        /// Go to next change
-        /// For normal diffs, this is the next diff
+        /// Go to the first change.
+        /// For normal diffs, this is the first diff.
+        /// For range-diff, it is the first block of commit summary header.
+        /// </summary>
+        public void GoToFirstChange(int contextLines)
+        {
+            GoToNextChange(contextLines, fromTop: true);
+        }
+
+        /// <summary>
+        /// Go to the next change.
+        /// For normal diffs, this is the next diff.
         /// For range-diff, it is the next block of commit summary header.
         /// </summary>
         /// <param name="contextLines">Number of context lines, to include header for new diff.</param>
-        public void GoToNextChange(int contextLines, bool keepFirstVisibleLine = false)
+        public void GoToNextChange(int contextLines)
+        {
+            GoToNextChange(contextLines, fromTop: false);
+        }
+
+        private void GoToNextChange(int contextLines, bool fromTop)
         {
             // Skip the file header
             bool hasDiffHeader = _textHighlightService is (PatchHighlightService or CombinedDiffHighlightService);
             int firstValidIndex = hasDiffHeader ? 4 : 0;
-            int startIndex = Math.Max(firstValidIndex, LineAtCaret);
+            int startIndex = fromTop ? firstValidIndex : Math.Max(firstValidIndex, LineAtCaret);
             int totalNumberOfLines = TotalNumberOfLines;
 
-            bool emptyLineCheck = false;
+            bool emptyLineCheck = fromTop;
             for (int line = startIndex; line < totalNumberOfLines; line++)
             {
                 if (IsSearchMatch(line))
                 {
                     if (emptyLineCheck)
                     {
-                        if (!keepFirstVisibleLine)
+                        if (fromTop && IsLineVisible(line))
+                        {
+                            // Keep FirstVisibleLine
+                        }
+                        else
                         {
                             // Include the header with the (possible) function summary line
                             FirstVisibleLine = Math.Max(line - contextLines - 1, 0);
@@ -472,6 +491,14 @@ namespace GitUI.Editor
                 {
                     emptyLineCheck = true;
                 }
+            }
+
+            return;
+
+            bool IsLineVisible(int line)
+            {
+                int firstVisibleLine = FirstVisibleLine;
+                return firstVisibleLine <= line && line < firstVisibleLine + TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
             }
         }
 

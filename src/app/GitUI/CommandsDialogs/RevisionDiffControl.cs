@@ -767,7 +767,8 @@ namespace GitUI.CommandsDialogs
 
         private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
-            ShowSelectedFile(ensureNoSwitchToFilter: true);
+            int? line = DiffText.Visible ? DiffText.CurrentFileLine : BlameControl.CurrentFileLine;
+            ShowSelectedFile(ensureNoSwitchToFilter: true, line);
         }
 
         private void DiffText_PatchApplied(object sender, EventArgs e)
