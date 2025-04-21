@@ -32,8 +32,10 @@ namespace GitUI.CommandsDialogs
 
             new ToolStripItem[]
             {
-                recoverLostObjectsToolStripMenuItem,
-                branchSelect,
+                recoverLostObjectsToolStripMenuItem, // Repository->Git maintenance->Recover lost objects
+                branchSelect, // main toolbar
+
+                // main toolbar and submenu
                 toolStripButtonPull,
                 pullToolStripMenuItem,
                 pullToolStripMenuItem1,
@@ -44,7 +46,6 @@ namespace GitUI.CommandsDialogs
                 fetchPruneAllToolStripMenuItem,
                 toolStripButtonPush,
                 pushToolStripMenuItem,
-                branchToolStripMenuItem,
             }.ForEach(ColorHelper.AdaptImageLightness);
 
             pullToolStripMenuItem1.Tag = GitPullAction.None;
