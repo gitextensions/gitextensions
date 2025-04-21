@@ -1134,6 +1134,7 @@ namespace GitUI.CommandsDialogs
             pullToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.PullOrFetch);
             pushToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Push);
             rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Rebase);
+            manageWorktreeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ManageWorkTrees);
 
             fileToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
             helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
@@ -1920,6 +1921,7 @@ namespace GitUI.CommandsDialogs
 
             // REPOSITORY menu
             CloseRepository = 15,
+            ManageWorkTrees = 49,
 
             // COMMANDS menu
             Commit = 7,
@@ -1966,7 +1968,7 @@ namespace GitUI.CommandsDialogs
             OpenCommitsWithDifftool = 35,
             ToggleBetweenArtificialAndHeadCommits = 36,
             GoToChild = 37,
-            GoToParent = 38
+            GoToParent = 38,
 
             /* deprecated: RotateApplicationIcon = 14, */
         }
@@ -2098,6 +2100,7 @@ namespace GitUI.CommandsDialogs
                 case Command.MergeBranches: UICommands.StartMergeBranchDialog(this, null); break;
                 case Command.CreateTag: UICommands.StartCreateTagDialog(this, RevisionGrid.LatestSelectedRevision); break;
                 case Command.Rebase: rebaseToolStripMenuItem.PerformClick(); break;
+                case Command.ManageWorkTrees: manageWorktreeToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

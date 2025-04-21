@@ -146,6 +146,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Worktrees.Size = new Size(674, 265);
             Worktrees.TabIndex = 2;
             Worktrees.SelectionChanged += Worktrees_SelectionChanged;
+            Worktrees.CellDoubleClick += WorktreesOnCellDoubleClick;
+            Worktrees.KeyDown += Worktrees_KeyDown;
             // 
             // Path
             // 
@@ -211,6 +213,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // 
             // FormManageWorktree
             // 
+            AcceptButton = buttonOpenSelectedWorktree;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(697, 361);

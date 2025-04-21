@@ -249,6 +249,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.GoToParent, Keys.Control | Keys.P),
                     Hk(FormBrowse.Command.GoToSubmodule, Keys.None),
                     Hk(FormBrowse.Command.GoToSuperproject, Keys.None),
+                    Hk(FormBrowse.Command.ManageWorkTrees, Keys.Control | Keys.Alt | Keys.W),
                     Hk(FormBrowse.Command.MergeBranches, Keys.Control | Keys.M),
                     Hk(FormBrowse.Command.OpenAsTempFile, OpenAsTempFileHotkey),
                     Hk(FormBrowse.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
