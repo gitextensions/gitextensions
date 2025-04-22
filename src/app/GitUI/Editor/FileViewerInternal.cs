@@ -313,7 +313,7 @@ namespace GitUI.Editor
             TextEditor.Refresh();
 
             // Restore position if contentIdentification matches the capture
-            bool positionSet = _currentViewPositionCache.Restore(contentIdentification);
+            bool positionSet = _currentViewPositionCache.Restore(contentIdentification) && LineAtCaret != 0;
 
             if (_shouldScrollToBottom || _shouldScrollToTop)
             {
