@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel.ContextMenu;
 using GitUI.LeftPanel.Interfaces;
@@ -154,8 +155,11 @@ namespace GitUI.LeftPanel
             RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
             RegisterClick<RemoteRepoNode>(mnuBtnPruneAllBranchesFromARemote, remote => remote.Prune());
             RegisterClick<RemoteRepoNode>(mnuBtnOpenRemoteUrlInBrowser, remote => remote.OpenRemoteUrlInBrowser());
+            mnubtnEnableRemote.AdaptImageLightness();
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemote, remote => remote.Enable(fetch: false));
+            mnubtnEnableRemoteAndFetch.AdaptImageLightness();
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemoteAndFetch, remote => remote.Enable(fetch: true));
+            mnubtnDisableRemote.AdaptImageLightness();
             RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());
 
             // SubmoduleNode

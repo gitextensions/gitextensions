@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using GitExtUtils.GitUI.Theming;
+using ResourceManager;
 
 namespace GitUI.UserControls;
 
@@ -23,7 +24,7 @@ public partial class PasswordInput : TranslatedControl
     private void ShowPassword_Click(object sender, EventArgs e)
     {
         Password.UseSystemPasswordChar = !Password.UseSystemPasswordChar;
-        ShowPassword.Image = Password.UseSystemPasswordChar ? Properties.Images.EyeClosed : Properties.Images.EyeOpened;
+        ShowPassword.Image = (Password.UseSystemPasswordChar ? Properties.Images.EyeClosed : Properties.Images.EyeOpened).AdaptLightness();
         Password.Focus();
     }
 

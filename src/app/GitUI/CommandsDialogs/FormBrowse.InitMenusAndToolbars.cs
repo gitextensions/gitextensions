@@ -32,8 +32,10 @@ namespace GitUI.CommandsDialogs
 
             new ToolStripItem[]
             {
-                recoverLostObjectsToolStripMenuItem,
-                branchSelect,
+                recoverLostObjectsToolStripMenuItem, // Repository->Git maintenance->Recover lost objects
+                branchSelect, // main toolbar
+
+                // main toolbar and submenu
                 toolStripButtonPull,
                 pullToolStripMenuItem,
                 pullToolStripMenuItem1,
@@ -44,7 +46,6 @@ namespace GitUI.CommandsDialogs
                 fetchPruneAllToolStripMenuItem,
                 toolStripButtonPush,
                 pushToolStripMenuItem,
-                branchToolStripMenuItem,
             }.ForEach(ColorHelper.AdaptImageLightness);
 
             pullToolStripMenuItem1.Tag = GitPullAction.None;
@@ -283,32 +284,32 @@ namespace GitUI.CommandsDialogs
             switch (defaultPullAction)
             {
                 case GitPullAction.Fetch:
-                    toolStripButtonPull.Image = Images.PullFetch.AdaptLightness();
+                    toolStripButtonPull.Image = fetchToolStripMenuItem.Image;
                     toolStripButtonPull.ToolTipText = _pullFetch.Text;
                     break;
 
                 case GitPullAction.FetchAll:
-                    toolStripButtonPull.Image = Images.PullFetchAll.AdaptLightness();
+                    toolStripButtonPull.Image = fetchAllToolStripMenuItem.Image;
                     toolStripButtonPull.ToolTipText = _pullFetchAll.Text;
                     break;
 
                 case GitPullAction.FetchPruneAll:
-                    toolStripButtonPull.Image = Images.PullFetchPruneAll.AdaptLightness();
+                    toolStripButtonPull.Image = fetchPruneAllToolStripMenuItem.Image;
                     toolStripButtonPull.ToolTipText = _pullFetchPruneAll.Text;
                     break;
 
                 case GitPullAction.Merge:
-                    toolStripButtonPull.Image = Images.PullMerge.AdaptLightness();
+                    toolStripButtonPull.Image = mergeToolStripMenuItem.Image;
                     toolStripButtonPull.ToolTipText = _pullMerge.Text;
                     break;
 
                 case GitPullAction.Rebase:
-                    toolStripButtonPull.Image = Images.PullRebase.AdaptLightness();
+                    toolStripButtonPull.Image = rebaseToolStripMenuItem.Image;
                     toolStripButtonPull.ToolTipText = _pullRebase.Text;
                     break;
 
                 default:
-                    toolStripButtonPull.Image = Images.Pull.AdaptLightness();
+                    toolStripButtonPull.Image = pullToolStripMenuItem.Image;
                     toolStripButtonPull.ToolTipText = _pullOpenDialog.Text;
                     break;
             }

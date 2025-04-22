@@ -2,6 +2,7 @@
 
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 
@@ -10,7 +11,7 @@ namespace GitUI;
 partial class FileStatusList
 {
     private readonly Image _treeImage = Images.FileTree;
-    private readonly Image _flatListImage = Images.DocumentTree;
+    private readonly Image _flatListImage = Images.DocumentTree.AdaptLightness();
 
     private void ApplyGroupBy()
     {
