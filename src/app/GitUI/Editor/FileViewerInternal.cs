@@ -254,7 +254,8 @@ namespace GitUI.Editor
         /// <param name="text">The text to set in the editor.</param>
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         /// <param name="viewMode">the view viewMode in the file viewer, the kind of info shown</param>
-        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring, string? contentIdentification)
+        /// <returns><see langword="true"/> if a position was set.</returns>
+        public bool SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring, string? contentIdentification)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -312,7 +313,7 @@ namespace GitUI.Editor
             TextEditor.Refresh();
 
             // Restore position if contentIdentification matches the capture
-            _currentViewPositionCache.Restore(contentIdentification);
+            bool positionSet = _currentViewPositionCache.Restore(contentIdentification);
 
             if (_shouldScrollToBottom || _shouldScrollToTop)
             {
@@ -320,11 +321,14 @@ namespace GitUI.Editor
                 if (scrollBar.Visible)
                 {
                     scrollBar.Value = _shouldScrollToTop ? 0 : Math.Max(0, scrollBar.Maximum - scrollBar.Height - _bottomBlankHeight);
+                    positionSet = true;
                 }
 
                 _shouldScrollToTop = false;
                 _shouldScrollToBottom = false;
             }
+
+            return positionSet;
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -893,18 +897,18 @@ namespace GitUI.Editor
                 }
             }
 
-            public void Restore(string? contentIdentification)
+            public bool Restore(string? contentIdentification)
             {
                 _currentIdentification = contentIdentification;
                 if (_viewer.TotalNumberOfLines <= 1 || string.IsNullOrEmpty(contentIdentification) || string.IsNullOrEmpty(_currentIdentification))
                 {
-                    return;
+                    return false;
                 }
 
                 bool sameIdentification = contentIdentification == _capturedIdentification;
                 if (!sameIdentification)
                 {
-                    return;
+                    return false;
                 }
 
                 ViewPosition viewPosition = _currentViewPosition;
@@ -933,6 +937,8 @@ namespace GitUI.Editor
                         _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
                     }
                 }
+
+                return true;
             }
 
             /// <summary>
