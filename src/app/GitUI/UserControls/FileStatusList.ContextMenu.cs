@@ -172,7 +172,7 @@ partial class FileStatusList
         tsmiShowInFileTree.Visible = true;
         tsmiFilterFileInGrid.Visible = true;
 
-        if (CanUseFindInCommitFilesGitGrep && !_isFileTreeMode)
+        if (CanUseFindInCommitFilesGitGrep)
         {
             tsmiOpenFindInCommitFilesGitGrepDialog.Visible = true;
             tsmiShowFindInCommitFilesGitGrep.Visible = true;
