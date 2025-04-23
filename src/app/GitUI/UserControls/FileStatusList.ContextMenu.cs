@@ -476,6 +476,20 @@ partial class FileStatusList
 
     private void FindFile_Click(object sender, EventArgs e)
     {
+        if (LoadingFiles.Visible)
+        {
+            this.InvokeAndForget(async () =>
+            {
+                while (LoadingFiles.Visible)
+                {
+                    await Task.Delay(100);
+                }
+
+                FindFile_Click(this, EventArgs.Empty);
+            });
+            return;
+        }
+
         IReadOnlyList<GitItemStatus> candidates = GitItemStatuses;
 
         IEnumerable<GitItemStatus> FindDiffFilesMatches(string name)
