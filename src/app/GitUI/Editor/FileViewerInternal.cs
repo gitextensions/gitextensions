@@ -313,7 +313,7 @@ namespace GitUI.Editor
             TextEditor.Refresh();
 
             // Restore position if contentIdentification matches the capture
-            bool positionSet = _currentViewPositionCache.Restore(contentIdentification) && LineAtCaret != 0;
+            bool positionSet = _currentViewPositionCache.Restore(contentIdentification) && LineAtCaret > FirstLineAfterHeader;
 
             if (_shouldScrollToBottom || _shouldScrollToTop)
             {
@@ -441,6 +441,15 @@ namespace GitUI.Editor
         private bool IsSearchMatch(int indexInText)
             => _textHighlightService.IsSearchMatch(_lineNumbersControl, indexInText);
 
+        private int FirstLineAfterHeader
+        {
+            get
+            {
+                bool hasDiffHeader = _textHighlightService is (PatchHighlightService or CombinedDiffHighlightService);
+                return hasDiffHeader ? 5 : 0;
+            }
+        }
+
         /// <summary>
         /// Go to the first change.
         /// For normal diffs, this is the first diff.
@@ -465,8 +474,7 @@ namespace GitUI.Editor
         private void GoToNextChange(int contextLines, bool fromTop)
         {
             // Skip the file header
-            bool hasDiffHeader = _textHighlightService is (PatchHighlightService or CombinedDiffHighlightService);
-            int firstValidIndex = hasDiffHeader ? 4 : 0;
+            int firstValidIndex = FirstLineAfterHeader;
             int startIndex = fromTop ? firstValidIndex : Math.Max(firstValidIndex, LineAtCaret);
             int totalNumberOfLines = TotalNumberOfLines;
 
