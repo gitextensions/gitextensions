@@ -1180,7 +1180,8 @@ namespace GitUI
                     .ToHashSet();
             }
 
-            (List<TreeNodeInfo> nodes, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, expandIfFewFiles: !_isFileTreeMode, gitGrepState, _noItemStatuses, cancellationToken);
+            bool expandIfFewFiles = !_isFileTreeMode || _filter is not null || !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
+            (List<TreeNodeInfo> nodes, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, expandIfFewFiles, gitGrepState, _noItemStatuses, cancellationToken);
 
             GitItemStatusesWithDescription = items;
             if (nodes.Count > 0)
@@ -1293,6 +1294,11 @@ namespace GitUI
             {
                 bool emptyGroup = showGroupLabel && i.Statuses.Count == 0;
 
+                (TreeNode diffGroup, int shownCount)
+                    = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
+                        ? (CreateNode(i.Statuses[0], i), 1)
+                        : CreateGroup(emptyGroup ? noItemStatuses : i.Statuses.Where(isFilterMatch), i, cancellationToken);
+
                 // Always expand grep results
                 // Collapse some groups for diffs with common BASE
                 ExpandCollapseState state
@@ -1300,18 +1306,13 @@ namespace GitUI
                         ? ExpandCollapseState.Collapsed
                         : hasGrepGroup
                             ? FileStatusDiffCalculator.IsGrepItemStatuses(i)
-                                ? expandIfFewFiles && i.Statuses.Count < 100
+                                ? expandIfFewFiles && shownCount < 100
                                     ? ExpandCollapseState.Expanded
                                     : ExpandCollapseState.PartiallyExpanded
                                 : ExpandCollapseState.Collapsed
                             : ((i.Statuses.Count <= 7 && i.IconName == nameof(Images.Diff)) || items.Count < 3 || i == items[0]) && i.Statuses.Count > 0
                                 ? ExpandCollapseState.Expanded
                                 : ExpandCollapseState.Collapsed;
-
-                TreeNode diffGroup
-                    = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
-                        ? CreateNode(i.Statuses[0], i)
-                        : CreateGroup(emptyGroup ? noItemStatuses : i.Statuses.Where(isFilterMatch), i, cancellationToken);
 
                 if (state == ExpandCollapseState.PartiallyExpanded)
                 {
@@ -1340,7 +1341,7 @@ namespace GitUI
 
             return (rootNodes, showDiffGroups, filesPresent);
 
-            TreeNode CreateGroup(IEnumerable<GitItemStatus> itemStatuses, FileStatusWithDescription fileStatusWithDescription, CancellationToken cancellationToken)
+            (TreeNode, int ShownCount) CreateGroup(IEnumerable<GitItemStatus> itemStatuses, FileStatusWithDescription fileStatusWithDescription, CancellationToken cancellationToken)
             {
                 TreeNode diffGroup;
 
@@ -1391,7 +1392,7 @@ namespace GitUI
                 diffGroup.Tag = fileStatusWithDescription.FirstRev;
                 diffGroup.Text = GetGroupName(fileStatusWithDescription, shownCount);
 
-                return diffGroup;
+                return (diffGroup, shownCount);
 
                 TreeNode CreateCountedNode(GitItemStatus item)
                 {
