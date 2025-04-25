@@ -1501,7 +1501,14 @@ namespace GitUI.CommandsDialogs
             _skipUpdate = false;
             if (!Unstaged.HasSelection)
             {
-                Unstaged.SelectFirstVisibleItem();
+                if (Unstaged.FocusedItem is null)
+                {
+                    Unstaged.SelectFirstVisibleItem();
+                }
+                else
+                {
+                    Unstaged.SelectedItems = [Unstaged.FocusedItem];
+                }
             }
 
             UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
@@ -1756,7 +1763,14 @@ namespace GitUI.CommandsDialogs
             _skipUpdate = false;
             if (!Staged.HasSelection)
             {
-                Staged.SelectFirstVisibleItem();
+                if (Staged.FocusedItem is null)
+                {
+                    Staged.SelectFirstVisibleItem();
+                }
+                else
+                {
+                    Staged.SelectedItems = [Staged.FocusedItem];
+                }
             }
 
             StagedSelectionChanged(Staged, EventArgs.Empty);
