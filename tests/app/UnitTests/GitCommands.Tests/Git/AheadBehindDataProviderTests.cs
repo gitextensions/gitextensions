@@ -76,6 +76,10 @@ namespace GitCommandsTests.Git
         [TestCase("::gone::::::branch-with-no-more-remote")]
         [TestCase("::::::::")]
         [TestCase("results!")]
+
+        // Cover the case where a push refspec is defined for the remote. When this value is set, for-each-ref shows
+        // 'refs/remotes/origin/name' as the default push location for any untracked branch 'name'.
+        [TestCase("gone::::refs/remotes/origin/new-branch::::new-branch")]
         public void GetData_should_return_empty_if_git_output_has_no_data(string result)
         {
             SetResultOfGitCommand(result);
