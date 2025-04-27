@@ -87,7 +87,7 @@ namespace GitUI
 
                 if (!result.ExitedSuccessfully)
                 {
-                    string output = $"{result.StandardError}{Environment.NewLine}Git output (exit code: {result.ExitCode}): {Environment.NewLine}{result.StandardOutput}";
+                    string output = $"{result.StandardError}{Environment.NewLine}Git output (exit code: {result.ExitCodeDisplay}): {Environment.NewLine}{result.StandardOutput}";
                     await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
                     return;
                 }
@@ -117,7 +117,7 @@ namespace GitUI
 
                 if (!result.ExitedSuccessfully)
                 {
-                    string output = $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {result}{Environment.NewLine}";
+                    string output = $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCodeDisplay}): {result}{Environment.NewLine}";
                     await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
                     return;
                 }
@@ -173,7 +173,7 @@ namespace GitUI
 
                 if (!result.ExitedSuccessfully)
                 {
-                    string output = $"Git command exit code: {result}{Environment.NewLine}{result.StandardError}";
+                    string output = $"Git command exit code: {result.ExitCodeDisplay}{Environment.NewLine}{result.StandardError}";
                     await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
                     return;
                 }

@@ -2277,7 +2277,7 @@ namespace GitCommands
                 cancellationToken: cancellationToken);
             if (!result.ExitedSuccessfully)
             {
-                return (Patch: null, ErrorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
+                return (Patch: null, ErrorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCodeDisplay}): {args}{Environment.NewLine}");
             }
 
             string patch = result.StandardOutput;

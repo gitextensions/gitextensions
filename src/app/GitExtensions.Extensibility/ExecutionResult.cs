@@ -21,9 +21,20 @@ public readonly struct ExecutionResult
         ExitCode = exitCode;
     }
 
+    /// <summary>
+    ///  Gets a verbose string with the <see cref="ExitCode"/> using <see cref="FormatExitCode"/>.
+    /// </summary>
+    public string? ExitCodeDisplay => ExitCode is int exitCode ? FormatExitCode(exitCode) : "null";
+
     public bool ExitedSuccessfully => ExitCode == Success;
 
     public string AllOutput => string.Concat(StandardOutput, Environment.NewLine, StandardError);
+
+    /// <summary>
+    ///  Returns a verbose string of an <paramref name="exitCode"/>.
+    ///  Absolute values from 128 are presented as hexadecimal and decimal numbers.
+    /// </summary>
+    public static string FormatExitCode(int exitCode) => Math.Abs(exitCode) <= 128 ? $"{exitCode}" : $"0x{exitCode:X8} ({exitCode} dec)";
 
     public void ThrowIfErrorExit(string? errorMessage = null)
     {
