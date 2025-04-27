@@ -273,10 +273,9 @@ namespace GitUITests.GitUICommandsTests
         public void RunCommandBasedOnArgument_searchfile()
             => RunCommandBasedOnArgument<SearchWindow<string>>(new string[] { "ge.exe", "searchfile" }, expectedResult: false);
 
-        [Ignore("FormSettings throws unhandled exceptions when opened this way, works from real command line")]
         [Test]
         public void RunCommandBasedOnArgument_settings()
-            => RunCommandBasedOnArgument<FormSettings>(new string[] { "ge.exe", "settings" });
+            => RunCommandBasedOnArgument<FormSettings>(new string[] { "ge.exe", "settings" }, expectedResult: false /* because dialog is not closed using OK button */);
 
         [Test]
         public void RunCommandBasedOnArgument_stash()
