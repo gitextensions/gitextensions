@@ -469,7 +469,6 @@ namespace GitCommandsTests
             helper.Module.GetSubmodulesLocalPaths().Should().Equal(new string[] { "Externals/NBug" });
         }
 
-        [Ignore("Flaky test - issue #7681")]
         [Test]
         public void GetSuperprojectCurrentCheckout()
         {

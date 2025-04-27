@@ -106,14 +106,13 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
         }
 
-        [Ignore("Unstable UTF8EncodingSealed result")]
+        [Ignore("Test cannot pass because _commands.Module.FilesEncoding has a preamble which is always used by FormEditor.SaveChanges")]
         [Test]
         public void Should_preserve_encoding_utf8()
         {
             Should_preserve_encoding(new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         }
 
-        [Ignore("Unstable UTF8EncodingSealed result")]
         [Test]
         public void Should_preserve_encoding_utf8_bom()
         {
@@ -122,7 +121,9 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private void Should_preserve_encoding(Encoding encoding)
         {
-            ClassicAssert.AreEqual(new UTF8Encoding(encoderShouldEmitUTF8Identifier: false), _commands.Module.FilesEncoding);
+            ClassicAssert.AreEqual(_commands.Module.FilesEncoding.ToString(), UTF8Encoding.Default.ToString());
+            ClassicAssert.That(_commands.Module.FilesEncoding.GetPreamble().SequenceEqual(UTF8Encoding.Default.GetPreamble())
+                || _commands.Module.FilesEncoding.GetPreamble().SequenceEqual(encoding.GetPreamble()));
 
             string filePath = Path.Combine(_referenceRepository.Module.WorkingDir, Path.GetRandomFileName());
 

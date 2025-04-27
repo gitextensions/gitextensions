@@ -372,7 +372,7 @@ internal class GitlabAdapterTests
     }
 
     [Test]
-    [Ignore("Settings check should be added first")]
+    [Ignore("Settings check should be added first. Otherwise, System.UnauthorizedAccessException : Attempted to perform an unauthorized operation.")]
     public void Should_handle_unauthorized_access_exception()
     {
         _apiClient.GetPipelinesAsync(Arg.Any<DateTime?>(), false, 1, Arg.Any<CancellationToken>())
